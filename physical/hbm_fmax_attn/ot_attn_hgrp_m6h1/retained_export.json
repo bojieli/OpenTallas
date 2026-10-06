@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm-attn-m6h1-retained-export.v1",
+  "selected": false,
+  "contextual_tile_closed": false,
+  "input_evidence": "b32d59700 one-head m6h1 SS60 FF25",
+  "input_hash_verified": true,
+  "input_sha256": {
+    "6_final.odb": "e9e3989ad0fa31f6ba2cbafbc4959bbf6b3e56f5114a065a7a83eea1d880fffb",
+    "6_final.sdc": "6eb93c1474114c27e92b190110607d9a9825fa682b9ff9c21e04d7fe6e621b4e",
+    "6_final.spef": "4bbf6b68578078cac67cfe2f94dd028cd0bce33a1d5533da4b20cdf47e104778"
+  },
+  "export_tool_sha256": "b9dc9527ce2ee7b59283b889d33368da84651c7c0908d6690359ede88a862bdf",
+  "SS_setup_ps": 18.91120593455753,
+  "FF_hold_ps": 1.5452361612489085,
+  "macro_size_um": [
+    294.782,
+    294.782
+  ],
+  "outputs": {
+    "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+    "ot_attn_hgrp_m6h1_ff.lib": "484934cafcc02bde4d1041c98ddd828784f45c5ee463048d3a523fb589e90df6",
+    "ot_attn_hgrp_m6h1_ss.lib": "710a7b69676e9e088d6f87661def6a4584732dfd199da0774caa1c128d52c2b5"
+  },
+  "jobs_rebuilt": 0,
+  "resource_guard": "/srv/opentallas-scratch/admit.sh 24",
+  "observed_export_ss_rss_GiB": 2.0
+}

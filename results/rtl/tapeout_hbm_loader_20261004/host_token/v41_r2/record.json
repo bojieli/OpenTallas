@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL_FUNCTIONAL",
+  "run_rc": 1,
+  "run_seconds": 36551.682721421996,
+  "terminal_lines": [
+    "HOST_IMAGE_VISIBLE die=0 bytes=134217728 CRC=13787831 readback=13787831 sectors=4194304",
+    "HOST_IMAGE_VISIBLE die=1 bytes=134217728 CRC=582fba63 readback=582fba63 sectors=4194304",
+    "CODE_PUBLISHED accepted=21470 actualSRAMwrites=21470",
+    "STEP 0 MISMATCH pos 0 in 0 next 213 expected in 0 next 2815 fault 0",
+    "%Error: /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_host_token/rtl/test/hbm_accel/tb_hbm_accel_loader_token_host.sv:172: Verilog $stop"
+  ],
+  "nominal_clocks_only": true
+}

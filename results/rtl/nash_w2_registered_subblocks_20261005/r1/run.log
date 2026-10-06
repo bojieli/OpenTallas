@@ -1,0 +1,3 @@
+ACTUAL_PROGRAM_PUT private RAM8192B A 4096 B 4224 each64B, guard64B
+/srv/opentallas-scratch2/jobs/nash-w2-registered-subblocks-exact-72c067c9c-r1/src/tools/nash_w2_publication_gate.sh: line 41: 3179360 Aborted                    (core dumped) "$job/obj/Vtb_hbm_integrated_w2_publication_nash" +CORRUPT_READBACK > "$job/corrupt.log" 2>&1
+PASS normal + expected nonzero corrupted actual RAM readback

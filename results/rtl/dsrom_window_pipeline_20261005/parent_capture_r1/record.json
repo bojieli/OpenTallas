@@ -1,0 +1,71 @@
+{
+  "status": "PASS_ACTUAL_FIRST_CONSUMER_GOLDEN_CAPTURE_MECHANISM_ONLY",
+  "terminal_exit": 0,
+  "upstream_source_pin": "674c457407131cf43e47e4a961e5e0c27e895b6f",
+  "pinned_four_source_snapshot": "33288664422d7f4a9c57a6b05361e7448cbac56e",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/tb_window_attention_capture.sv": "a60efc2a2607723f996e44b3843300d23a16b7c2518284e549525990d4f5f4eb",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv": "fb3b7974c4f8fb512e831745871246040ffa63368eaa7de2e0140e6ff6232074",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  },
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/mencius-window-attention-capture-r1",
+  "supervisor": 1616318,
+  "golden": {
+    "path": "/srv/opentallas-scratch2/jobs/mencius-window-pipeline-r1/vec/L0.rows",
+    "sha256": "0c8ab9073125988af02b5632466c0b86f43f56723afc78d5d67e443d43890ac8",
+    "basis": "retained passing L0 WINDOW vectors; no generation/seed replay",
+    "configurations": 1,
+    "seed_repeats": 0
+  },
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 4,
+    "TROWS": 640,
+    "tiles": 64,
+    "actual_SRAM_macros": 68
+  },
+  "result": {
+    "full_golden_capture_snapshots": 7,
+    "code_scale_representation_comparisons": 14336,
+    "blocked_writes": 2,
+    "lane_masked_write": 1,
+    "read_before_write": true,
+    "unknown_uninitialized_payload_preserved": true,
+    "reset_guards_capture_valid": true,
+    "reset_does_not_clear_SRAM_payload": true,
+    "original_E1_R0_edges_preserved": true,
+    "added_cycles": 0
+  },
+  "tools": {
+    "compile": "Icarus -g2012 -DOT_MEM_NO_INIT; actual existing SRAM functional model",
+    "compile_wall_seconds": 0.71,
+    "compile_max_RSS_KiB": 54432,
+    "simulation_wall_seconds": 2.49,
+    "simulation_max_RSS_KiB": 25724
+  },
+  "admission": {
+    "unchanged_guard": "/srv/opentallas-scratch/admit.sh",
+    "declared_peak_GiB": 4,
+    "CPU_threads": 1,
+    "NVMe": true,
+    "unlimited": true,
+    "pre_load": 116.36,
+    "post_load": 113.73,
+    "pre_MemAvailable_KiB": 568096324,
+    "post_MemAvailable_KiB": 563681028,
+    "ledger": "mencius-window-attention-capture-r1 removed only after terminal0 verified"
+  },
+  "priced_before_build": "results/uarch/dsrom_window_pipeline_20261005/parent_caller_prebuild.json",
+  "preserved_setup_failure": "source_checkout_failure.txt; before workload admission, missing remote Git object; live source/object stores left unchanged, exact four-source git archive used instead",
+  "simulation_clock": "10ns functional bench; no timing/frequency/performance claim",
+  "full_WINDOW_exact_344_not_repeated": true,
+  "performance_140ns_miss_retained": true,
+  "actual_parent_caller_completion_proven": false,
+  "parent_CTS_load_slot_proven": false,
+  "routed_SS_FF_proven": false,
+  "adoption": false
+}

@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS_TREE_FULL32_LOCKSTEP",
+  "NSM": 32,
+  "NL": 128,
+  "cycles": 2048,
+  "grants": 209,
+  "new_cycles": 0,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv": "c27b8f4b91b09253b224dd3478fcdf4244de24e29a9d349b41190a072f885749",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_mux32_tree_ls.sv": "58c1a151fc8adb62ccfb5329d7dff480f4791370129d336bead51e5260a6f0d0"
+  },
+  "adopted": false
+}

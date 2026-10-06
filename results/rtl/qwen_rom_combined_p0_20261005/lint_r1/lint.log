@@ -1,0 +1,1227 @@
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:114:41: Instance has missing pin: 'qi'
+  114 |     ot_qwen_s4_checked_state #(.W(E1W)) u_e1(.clk(wr_clk),.por_n(por_n),.en(wr_online&&!wr_fault),.d(e1_next),.q(e1),.bad(e1_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:148:41: Instance has missing pin: 'qi'
+  148 |     ot_qwen_s4_checked_state #(.W(D0W)) u_d0(.clk(rd_clk),.por_n(por_n),.en(advance),
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:155:41: Instance has missing pin: 'qi'
+  155 |     ot_qwen_s4_checked_state #(.W(D1W)) u_d1(.clk(rd_clk),.por_n(por_n),.en(advance),.d(d1_next),.q(d1),.bad(d1_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:161:41: Instance has missing pin: 'qi'
+  161 |     ot_qwen_s4_checked_state #(.W(D2W)) u_d2(.clk(rd_clk),.por_n(por_n),.en(advance),.d(d2_next),.q(d2),.bad(d2_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:189:41: Instance has missing pin: 'qi'
+  189 |     ot_qwen_s4_checked_state #(.W(D3W)) u_d3(.clk(rd_clk),.por_n(por_n),.en(advance&&!due_bad),.d(d3_next),.q(d3),.bad(d3_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:44:93: Instance has missing pin: 'retired_source'
+   44 |     ot_qwen_s4_protected_ring #(.WIDTH(TAGW),.DEPTH(AD),.PC_ID(PC_ID),.KIND(2),.SYNC(SYNC)) u_a(
+      |                                                                                             ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:18:25: ... Location of port declaration
+   18 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:44:93: Instance has missing pin: 'retired_source_valid'
+   44 |     ot_qwen_s4_protected_ring #(.WIDTH(TAGW),.DEPTH(AD),.PC_ID(PC_ID),.KIND(2),.SYNC(SYNC)) u_a(
+      |                                                                                             ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:17: ... Location of port declaration
+   19 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:57:42: Instance has missing pin: 'qi'
+   57 |     ot_qwen_s4_checked_state #(.W(LP+3)) u_credit(.clk(hclk),.por_n(por_n),
+      |                                          ^~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:62:30: Instance has missing pin: 'qi'
+   62 |     ot_qwen_s4_checked_state u_room(.clk(clk),.por_n(por_n),.en(!c_fault),
+      |                              ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:65:91: Instance has missing pin: 'retired_source'
+   65 |     ot_qwen_s4_protected_ring #(.WIDTH(WW),.DEPTH(WB),.PC_ID(PC_ID),.KIND(1),.SYNC(SYNC)) u_w(
+      |                                                                                           ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:18:25: ... Location of port declaration
+   18 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:65:91: Instance has missing pin: 'retired_source_valid'
+   65 |     ot_qwen_s4_protected_ring #(.WIDTH(WW),.DEPTH(WB),.PC_ID(PC_ID),.KIND(1),.SYNC(SYNC)) u_w(
+      |                                                                                           ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:17: ... Location of port declaration
+   19 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:83:44: Instance has missing pin: 'qi'
+   83 |         ot_qwen_s4_checked_state #(.W(CW)) u_cache(.clk(hclk),.por_n(por_n),
+      |                                            ^~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:87:42: Instance has missing pin: 'qi'
+   87 |     ot_qwen_s4_checked_state #(.W(2*WP)) u_ptr(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                          ^~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:93:40: Instance has missing pin: 'qi'
+   93 |     ot_qwen_s4_checked_state #(.W(25)) u_head(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                        ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:99:42: Instance has missing pin: 'qi'
+   99 |     ot_qwen_s4_checked_state #(.W(WW+1)) u_completion(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                          ^~~~~~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:104:30: Instance has missing pin: 'qi'
+  104 |     ot_qwen_s4_checked_state u_cs(.clk(clk),.por_n(por_n),.en(!cb),
+      |                              ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:106:30: Instance has missing pin: 'qi'
+  106 |     ot_qwen_s4_checked_state u_hs(.clk(hclk),.por_n(por_n),.en(!hb),
+      |                              ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:39:39: Instance has missing pin: 'qi'
+   39 |     ot_qwen_s4_checked_state #(.W(7)) u_cs(.clk(clk),.por_n(por_n),.en(!cb),
+      |                                       ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:43:64: Instance has missing pin: 'retired_source'
+   43 |     ot_qwen_s4_protected_ring #(.WIDTH(30),.DEPTH(4),.KIND(3)) u_desc(
+      |                                                                ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:18:25: ... Location of port declaration
+   18 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:43:64: Instance has missing pin: 'retired_source_valid'
+   43 |     ot_qwen_s4_protected_ring #(.WIDTH(30),.DEPTH(4),.KIND(3)) u_desc(
+      |                                                                ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:17: ... Location of port declaration
+   19 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:48:63: Instance has missing pin: 'retired_source'
+   48 |     ot_qwen_s4_protected_ring #(.WIDTH(3),.DEPTH(4),.KIND(4)) u_go(
+      |                                                               ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:18:25: ... Location of port declaration
+   18 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:48:63: Instance has missing pin: 'retired_source_valid'
+   48 |     ot_qwen_s4_protected_ring #(.WIDTH(3),.DEPTH(4),.KIND(4)) u_go(
+      |                                                               ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:17: ... Location of port declaration
+   19 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:109:126: Instance has missing pin: 'wr_rd'
+  109 |         ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ), .PULLIN(PULLIN)) u_ctl (
+      |                                                                                                                              ^~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv:30:28: ... Location of port declaration
+   30 |   input  wire [2*NCH-1:0]  wr_rd, output wire [2*NCH-1:0] col_aq     
+      |                            ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:109:126: Instance has missing pin: 'col_aq'
+  109 |         ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ), .PULLIN(PULLIN)) u_ctl (
+      |                                                                                                                              ^~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv:30:59: ... Location of port declaration
+   30 |   input  wire [2*NCH-1:0]  wr_rd, output wire [2*NCH-1:0] col_aq     
+      |                                                           ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:94:5: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+   94 |     if(PROTECTED)begin:protected_front
+      |     ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:127:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  127 |         if(PROTECTED)begin:protected_path
+      |         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv:32:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                                : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl'
+   32 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv:37:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                                : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl'
+   37 |     localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+      |                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:296:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  296 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:298:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  298 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:300:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  300 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:301:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  301 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:304:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  304 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:306:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  306 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:565:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  565 |     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
+      |                        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:571:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  571 |     end else if (LANES) begin : g_kv_addr_prep
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:636:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  636 |     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+      |                        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:650:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  650 |     end else if (LANES) begin : g_gm
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:707:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  707 |     generate if (LANES) begin : g_operand
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:726:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PORTS' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  726 |     generate if (PORTS) begin : g_atag
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:744:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  744 |     generate if (LANES) begin : g_lanes
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:804:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  804 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:804:32: Operator VAR 'ALWAYS' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  804 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:805:48: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  805 |             localparam integer HOLD_TO = PRUNE ? NPG : G;       
+      |                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:816:44: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  816 |             localparam integer R1 = ALWAYS ? R0 : ((HOLD_TO > R0) ? HOLD_TO : R0);
+      |                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:820:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  820 |             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
+      |                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:835:17: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  835 |                 if (ALWAYS) begin : g_a
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:873:35: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'PORTS' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  873 |     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
+      |                                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:99:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[0].u'
+   99 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:106:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[0].u'
+  106 |     localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+      |                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_sfu_q.sv:372:38: Operator ADD expects 46 bits on the LHS, but LHS's ARRAYSEL generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane.u_exp'
+  372 |     always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_sfu_q.sv:372:29: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's ADD generates 46 bits.
+                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane.u_exp'
+  372 |     always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
+      |                             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:32:36: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc.u_w'
+   32 |     initial if (SYNC!=2 || DEPTH<4 || (DEPTH&(DEPTH-1)) || PIECES*DEPTH>1024)
+      |                                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:81:74: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wr_occupancy' generates 5 bits.
+                                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc.u_w'
+   81 |     assign wr_ready=wr_online&&rr_ok&&!wr_fault&&allow_new&&(wr_occupancy<DEPTH);
+      |                                                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:92:42: Logical operator IF expects 1 bit on the If, but If's AND generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc.u_w'
+   92 |             if(pos<=71)for(k=0;k<7;k=k+1)if(pos&(1<<k))partials[g*8+k]=partials[g*8+k]^code[pos-1];
+      |                                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:81:74: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wr_occupancy' generates 7 bits.
+                                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc.u_a'
+   81 |     assign wr_ready=wr_online&&rr_ok&&!wr_fault&&allow_new&&(wr_occupancy<DEPTH);
+      |                                                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:158:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  158 |     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:160:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  160 |     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:161:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  161 |     wire preall_ok = !REF_MODE && ref_n <= RW'(T_RP + 2) && ref_n >= RW'(T_RP) && (|open);
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:272:57: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  272 |           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
+      |                                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:334:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  334 |     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
+      |                                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:347:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  347 |                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      |                                     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:365:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  365 |                    !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+      |                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:389:64: Operator FUNCREF 'act_bank' expects 32 bits on the Function Argument, but Function Argument's VARREF 'act_sel' generates 3 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  389 |       else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
+      |                                                                ^~~~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:384:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  384 |       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
+      |                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:383:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  383 |       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      |                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:418:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  418 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:418:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  418 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:418:64: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  418 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:418:64: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  418 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:424:31: Operator COND expects 32 or 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  424 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:424:31: Operator COND expects 32 or 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  424 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:446:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  446 |           if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+      |                        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:459:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  459 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:459:78: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  459 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:81:74: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wr_occupancy' generates 3 bits.
+                                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.protected_front.u_control.u_go'
+   81 |     assign wr_ready=wr_online&&rr_ok&&!wr_fault&&allow_new&&(wr_occupancy<DEPTH);
+      |                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:63:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'cura0' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   63 |     wire [AW-1:0] cura = cura0 + LANE * asi;
+      |                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:63:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   63 |     wire [AW-1:0] cura = cura0 + LANE * asi;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:64:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curb0' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   64 |     wire [AW-1:0] curb = curb0 + LANE * bsi;
+      |                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:64:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   64 |     wire [AW-1:0] curb = curb0 + LANE * bsi;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:65:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curc0' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   65 |     wire [AW-1:0] curc = curc0 + LANE * csi;
+      |                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:65:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   65 |     wire [AW-1:0] curc = curc0 + LANE * csi;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:66:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curd0' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   66 |     wire [AW-1:0] curd = curd0 + LANE * dsi;
+      |                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:66:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   66 |     wire [AW-1:0] curd = curd0 + LANE * dsi;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:85:49: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'ex' generates 8 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   85 |             ex = v[30:23]; mt = v[22:0]; e = ex - 127;
+      |                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:98:24: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+   98 |                     sh = 14 - e;
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_vstream_lane.sv:329:28: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'KV_FP8' generates 32 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su.g_lane[63].u_lane'
+  329 |         kv_wdata <= KV_FP8 ? fp8r(out) : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
+      |                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:344:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  344 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:356:35: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  356 |     wire [$clog2(GT):0] per_round = GT >> i_split;
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:358:55: Operator SHIFTL expects 18 bits on the LHS, but LHS's CONST '16'h1' generates 16 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  358 |     wire [NW-1:0]    kc_in = i_wsrc ? ((i_k + ((16'd1 << i_split) - 16'd1)) >> i_split) : i_k;
+      |                                                       ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:358:67: Operator SUB expects 18 bits on the RHS, but RHS's CONST '16'h1' generates 16 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  358 |     wire [NW-1:0]    kc_in = i_wsrc ? ((i_k + ((16'd1 << i_split) - 16'd1)) >> i_split) : i_k;
+      |                                                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:368:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  368 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:368:38: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  368 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:381:45: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  381 |                 nb <= 0; nb_t <= 0; nb_step <= per_round * (W * IL);
+      |                                             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:382:34: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  382 |                 lb <= 0; lb_step <= per_round * W;
+      |                                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:389:59: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'nb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  389 |                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
+      |                                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:389:53: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  389 |                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
+      |                                                     ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:562:39: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xc' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  562 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:562:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  562 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:832:125: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  832 |                 ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+      |                                                                                                                             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:838:69: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'sp_sel' generates 4 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  838 |                     always @(posedge clk) lq[32*p +: 32] <= (sp_sel >= lv) ? s_out : held[32*p +: 32];
+      |                                                                     ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:906:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_lb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  906 |                 (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:907:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_nb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  907 |                              (pre_nb + (gb + pg)*(W*IL) < pre_nout));
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:922:66: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'pre_sbase' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  922 |                 scale_addr[sg*AW +: AW] <= !pre_scale_active[sg] ? pre_sbase :
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:923:52: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_sbase' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  923 |                     (SCALE_LOCAL != 0) ? pre_sbase + pre_t * IL + pre_j :
+      |                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:923:65: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pre_j' generates 3 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  923 |                     (SCALE_LOCAL != 0) ? pre_sbase + pre_t * IL + pre_j :
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:924:52: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_sbase' generates 24 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  924 |                                          pre_sbase + (pre_nb >> LW) + (gb + sg) * IL;
+      |                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:924:62: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pre_nb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  924 |                                          pre_sbase + (pre_nb >> LW) + (gb + sg) * IL;
+      |                                                              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:922:41: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  922 |                 scale_addr[sg*AW +: AW] <= !pre_scale_active[sg] ? pre_sbase :
+      |                                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:931:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'raw_lb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  931 |                 (raw_mmode ? (raw_lb + (gb + GROUP)*W + LANE < raw_nout) :
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:932:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'raw_nb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  932 |                              (raw_nb + (gb + GROUP)*(W*IL) + LANE < raw_nout));
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:987:33: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  987 |     wire [$clog2(GT):0] r_ports = GT >> r_split;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:995:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_lb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  995 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:995:76: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_nb' generates 19 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  995 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1008:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_oa' generates 24 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1008 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1008:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1008 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1081:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 18 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1081 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1081:31: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1081 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1150:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1150 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1151:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1151 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:1152:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+ 1152 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:24:82: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'w_sec' generates 24 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc'
+   24 |     wire write_identity_ok=({w_sec[1:0],w_sec[15],w_sec[5:2]}==7'(PC_ID))&&(w_sec<MEM_WORDS);
+      |                                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:25:88: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'h_lrow' generates 8 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc'
+   25 |     wire landing_identity_ok=({h_lsec[1:0],h_lsec[15],h_lsec[5:2]}==7'(PC_ID))&&(h_lrow<MEM_WORDS/131072);
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:63:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wocc' generates 5 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc'
+   63 |         .d(warm_ok&&(WB-(wocc+WP'(w_v&&wwr)))>=3),.q(room_q),.bad(room_bad));
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:63:30: Operator ADD expects 32 bits on the RHS, but RHS's EXTEND generates 5 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.pc[127].protected_path.u_cdc'
+   63 |         .d(warm_ok&&(WB-(wocc+WP'(w_v&&wwr)))>=3),.q(room_q),.bad(room_bad));
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:24:23: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'd_row' generates 19 bits.
+                                                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.protected_front.u_control'
+   24 |     wire cfg_ok=(d_row<MEM_ROWS)&&(d_n>0)&&(d_n<=1024);
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_hdc_vstream_rt.sv:113:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'i_nin' generates 18 bits.
+                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su'
+  113 |     wire [NW-1:0] nvec_in = (i_nin + (SW - 1)) >> LS;
+      |                                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_hdc_vstream_rt.sv:113:27: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su'
+  113 |     wire [NW-1:0] nvec_in = (i_nin + (SW - 1)) >> LS;
+      |                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_hdc_vstream_rt.sv:131:39: Operator SUB expects 19 bits on the RHS, but RHS's CONST '17'h8' generates 17 bits.
+                                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.g_vsu.u_su'
+  131 |             fin_th <= {1'b0, nvec_in} - 17'd8;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_me_array_w12.sv:349:42: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                                                                           : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me'
+  349 |         else if (go && ready && (i_split > SMAX)) range_fault <= 1'b1;
+      |                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_me_array_w12.sv:375:33: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's DIVS generates 32 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me'
+  375 |             wire [SMAX:0] quads = (1 << x_split) / TG;           
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:26:34: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:26:28: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:54: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:33: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 18 bits.
+                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:56: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'shifted' generates 18 bits.
+                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:18: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:57:43: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+   57 |     assign fault = fault_raw | (PROTECTED && protected_cf);
+      |                                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:110:60: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  110 |             .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(PROTECTED?protected_n:dq_n),
+      |                                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:110:137: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  110 |             .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(PROTECTED?protected_n:dq_n),
+      |                                                                                                                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:110:178: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  110 |             .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(PROTECTED?protected_n:dq_n),
+      |                                                                                                                                                                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:111:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  111 |             .go(PROTECTED?protected_go:go_q), .next_posted(1'b0), .row_v(row_v[sk*32 +: 32]), .row_op(row_op[sk*96 +: 96]),
+      |                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:170:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  170 |             if (!PROTECTED && d_v) begin
+      |                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:174:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  174 |             if (!PROTECTED && go) g_tog <= ~g_tog;
+      |                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:175:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  175 |             if(PROTECTED && protected_cf) begin fault_raw<=1;fault_code[4]<=1;end
+      |                          ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:184:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  184 |     assign d_rdy = PROTECTED ? protected_ready : (!d_pend && dr2);
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:227:51: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  227 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:227:60: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  227 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:227:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'P' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  227 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:227:69: Operator MODDIVS expects 64 bits on the LHS, but LHS's VARREF 'q' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  227 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:245:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PROTECTED' generates 32 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  245 |             if (PROTECTED && protected_hf) begin h_fault<=1;h_code[4]<=1;end
+      |                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:252:24: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  252 |                     mem[wc_addr[q]] = h_cdata[q*256 +: 256];
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:254:68: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  254 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:254:79: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  254 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:262:46: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  262 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:262:71: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  262 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:262:95: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 19 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  262 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:306:66: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'PULLIN' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  306 |                                 if (now < p_ref0[q] + (p_nref[q] - PULLIN) * 118 * CYC - 2 * CYC) v("REFpb pulled in too far", q, bk);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:317:48: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  317 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:317:72: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  317 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:319:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'ls' generates 17 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  319 |                     automatic longint a = longint'(b_row[q][bk]) * 131072 + ls;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:332:64: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  332 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:332:75: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  332 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:333:43: Operator LTS expects 64 bits on the RHS, but RHS's VARREF 'MEM_WORDS' generates 32 bits.
+                                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  333 |                         rq_dat[q][k] = (a < MEM_WORDS) ? mem[a] : 256'd0;
+      |                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv:333:61: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm'
+  333 |                         rq_dat[q][k] = (a < MEM_WORDS) ? mem[a] : 256'd0;
+      |                                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:183:39: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  183 |         n_of = 11'(({7'd0, p[NW-1:4]} + 1) * SPT);
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:237:37: Operator MODDIV expects 32 or 11 bits on the LHS, but LHS's VARREF 't' generates 9 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  237 |                     l_tile[li] = (t % 48) * 32 + d / 4;
+      |                                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:237:52: Operator DIV expects 32 or 11 bits on the LHS, but LHS's VARREF 'd' generates 7 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  237 |                     l_tile[li] = (t % 48) * 32 + d / 4;
+      |                                                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:238:32: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 9 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  238 |                     l_loc[li]  = (t / 48) * 2 + h;
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:241:27: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'a' generates 20 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  241 |                     w = a - KVB;
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:241:23: Operator ASSIGN expects 17 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  241 |                     w = a - KVB;
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:243:27: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'a' generates 20 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  243 |                     if (a >= KVB + 131072 || pp != P[12:0]) l_bad[li] = 1'b1;
+      |                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:244:32: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 13 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  244 |                     l_tile[li] = q * 128 + (pp % 512) / 4;
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:245:43: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'pp' generates 13 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  245 |                     l_loc[li]  = KL + (pp / 512) * 2 + h;
+      |                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:245:32: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  245 |                     l_loc[li]  = KL + (pp / 512) * 2 + h;
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:234:23: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'a' generates 20 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  234 |                 if (a < KVB) begin
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:284:40: Operator MODDIV expects 32 or 11 bits on the LHS, but LHS's VARREF 't' generates 9 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  284 |                     b_tile[pi][0] = (t % 48) * 32 + d / 4;
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:284:55: Operator DIV expects 32 or 11 bits on the LHS, but LHS's VARREF 'd' generates 7 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  284 |                     b_tile[pi][0] = (t % 48) * 32 + d / 4;
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:285:34: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 9 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  285 |                     b_loc[pi][0] = (t / 48) * 2 + h;
+      |                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:292:27: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'a' generates 18 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  292 |                     w = a - KVB;
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:292:23: Operator ASSIGN expects 17 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  292 |                     w = a - KVB;
+      |                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:297:39: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 13 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  297 |                         b_tile[pi][0] = q * 128 + (pp % 512) / 4;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:298:44: Operator ADD expects 32 or 13 bits on the LHS, but LHS's VARREF 'q' generates 3 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  298 |                         b_tile[pi][1] = (q + 1) * 128 + (pp % 512) / 4;
+      |                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:298:39: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 13 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  298 |                         b_tile[pi][1] = (q + 1) * 128 + (pp % 512) / 4;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:299:49: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'pp' generates 13 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  299 |                         b_loc[pi][0] = KL + (pp / 512) * 2 + h;
+      |                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:299:38: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  299 |                         b_loc[pi][0] = KL + (pp / 512) * 2 + h;
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:300:49: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'pp' generates 13 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  300 |                         b_loc[pi][1] = KL + (pp / 512) * 2 + h;
+      |                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:300:38: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  300 |                         b_loc[pi][1] = KL + (pp / 512) * 2 + h;
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:281:23: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'a' generates 18 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  281 |                 if (a < KVB) begin
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:359:21: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rr' generates 7 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  359 |             p = (rr + pp_i) % NPC;
+      |                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:366:32: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 11 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  366 |                             tl = b_tile[p][ak];
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:444:78: Operator ADD expects 32 or 17 bits on the RHS, but RHS's SEL generates 6 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  444 |             if (sc < 128) wb_rel = {sc[6], 16'd0} / 2 + ({8'd0, T} * 17'd64) + sc[5:0];         
+      |                                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:445:87: Operator ADD expects 17 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  445 |             else wb_rel = 17'd65536 + {(sc[2] ? 17'd32768 : 17'd0)} + P[12:0] * 17'd4 + sc[1:0];   
+      |                                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:507:63: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pos_hint' generates 18 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  507 |                      !(active && nx_layer == lyr) && pos_hint < WINP && w_valid == 0;
+      |                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:534:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rr' generates 7 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  534 |             rr <= (rr == NPC - 1) ? 0 : rr + 1'b1;
+      |                       ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:551:34: Operator ASSIGNDLY expects 9 bits on the Assign RHS, but Assign RHS's SEL generates 14 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  551 |                 P <= posted_p; T <= posted_p[NW-1:4]; PL <= posted_p[3:0];
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:552:23: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  552 |                 lbase <= posted * LAYER_SEC;
+      |                       ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:576:29: Operator ASSIGNDLY expects 9 bits on the Assign RHS, but Assign RHS's SEL generates 14 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  576 |                 P <= pos; T <= pos[NW-1:4]; PL <= pos[3:0];
+      |                             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:577:23: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  577 |                 lbase <= layer * LAYER_SEC;
+      |                       ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:585:25: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pos' generates 18 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  585 |                 if (pos >= WINP) begin fault <= 1'b1; fault_code[1] <= 1'b1; end       
+      |                         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:595:24: Bit extraction of var[127:0] requires 7 bit index, not 8 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  595 |                     w_v[wp_pc[ki]] <= 1'b1;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:596:56: Operator ADD expects 24 bits on the RHS, but RHS's FUNCREF 'wb_rel' generates 17 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  596 |                     w_sec[wp_pc[ki]*24 +: 24] <= lbase + wb_rel(wp_sec[ki]);
+      |                                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:657:31: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'a' generates 20 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  657 |                         w = a - KVB;
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:657:27: Operator ASSIGN expects 17 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  657 |                         w = a - KVB;
+      |                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:652:27: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'a' generates 20 bits.
+                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_kv'
+  652 |                     if (a < KVB) begin
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:105:23: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  105 |     assign c_tag      = {tok_r, pos_r[7:0], {(8 - DAW){1'b0}}, seg};
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:125:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'q_n' generates 3 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  125 |     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_v) < QD;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:131:48: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'nw' generates 9 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  131 |     wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
+      |                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:131:27: Operator ASSIGNW expects 9 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  131 |     wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:135:18: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  135 |         vm_raddr = vw + rd_k;
+      |                  ^
+%Warning-SELRANGE: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:161:70: Selection index out of range: 65:48 outside 63:0
+                                                                                                      : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  161 |                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
+      |                                                                      ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:186:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  186 |                     q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:186:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  186 |                     q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:186:65: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  186 |                     q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:186:65: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  186 |                     q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/rom/ot_qwen_tp_seq_w12.sv:193:53: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.seq'
+  193 |                             vm_we <= 1'b1; vm_waddr <= vw + rx_k; vm_wdata <= r_data;
+      |                                                     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:263:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  263 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:271:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  271 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:305:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  305 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:367:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  367 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:368:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  368 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:369:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  369 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:369:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  369 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:369:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  369 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:370:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  370 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:371:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  371 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:372:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  372 |         dyn[6] <= dyn_tiles_zero;                  
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:379:47: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  379 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:379:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  379 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:381:50: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  381 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:381:96: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  381 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:381:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  381 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:383:38: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  383 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:383:14: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  383 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:387:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  387 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:400:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  400 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:401:44: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  401 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:401:16: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  401 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:431:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  431 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:433:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                             : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  433 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv:429:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core'
+  429 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_embed_rom.sv:37:34: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'code_addr' generates 24 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_emb.u_emb'
+   37 |         if (code_re && code_addr < ROWS * 64) code_q <= codes[code_addr];
+      |                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_embed_rom.sv:38:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'scale_addr' generates 18 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_emb.u_emb'
+   38 |         if (scale_re && scale_addr < ROWS) scale_q <= scales[scale_addr];
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_embed_rom.sv:42:40: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'code_addr' generates 24 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_emb.u_emb'
+   42 |         else if ((code_re && code_addr >= ROWS * 64) || (scale_re && scale_addr >= ROWS)) fault <= 1'b1;
+      |                                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_embed_rom.sv:42:81: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'scale_addr' generates 18 bits.
+                                                                                                          : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_emb.u_emb'
+   42 |         else if ((code_re && code_addr >= ROWS * 64) || (scale_re && scale_addr >= ROWS)) fault <= 1'b1;
+      |                                                                                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_rom_bank.sv:39:28: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'bsel' generates 12 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_sc[47].u_bank'
+   39 |             sel_q <= (bsel < NB) ? (NB'(1) << bsel) : {NB{1'b0}};
+      |                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rt_rom_bank.sv:40:22: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'bsel' generates 12 bits.
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.g_sc[47].u_bank'
+   40 |             if (bsel >= NB) addr_fault <= 1'b1;
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:269:59: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  269 |                 if (crom_re[li] && crom_addr[li*24 +: 24] >= crom_words) rom_fault <= 1'b1;
+      |                                                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:308:36: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  308 |             if (va_re[vi]) begin a = va_addr[vi*24 +: 24]; va_q[vi*32 +: 32] <= (a < VM_ELEMS) ? vm[a] : 32'd0; end
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:309:36: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  309 |             if (vb_re[vi]) begin a = vb_addr[vi*24 +: 24]; vb_q[vi*32 +: 32] <= (a < VM_ELEMS) ? vm[a] : 32'd0; end
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:310:36: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  310 |             if (vc_re[vi]) begin a = vc_addr[vi*24 +: 24]; vc_q[vi*32 +: 32] <= (a < VM_ELEMS) ? vm[a] : 32'd0; end
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:320:40: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  320 |                 if (vx_re[vi]) begin a = vx_addr[vi*24 +: 24]; rq[vi*32 +: 32] = (a < VM_ELEMS) ? vm[a] : 32'd0; end
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:342:39: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  342 |             if (vw_su_we[vi]) begin a = vw_su_addr[vi*24 +: 24]; if (a < VM_ELEMS) vm[a] <= vw_su_data[vi*32 +: 32]; end
+      |                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:343:50: Bit extraction of array[177807:0] requires 18 bit index, not 24 bits.
+                                                                                                                                                                                 : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  343 |         if (vw_rd_we && vw_rd_addr < VM_ELEMS) vm[vw_rd_addr] <= vw_rd_data;
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:343:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'vw_rd_addr' generates 24 bits.
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  343 |         if (vw_rd_we && vw_rd_addr < VM_ELEMS) vm[vw_rd_addr] <= vw_rd_data;
+      |                                    ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_w12_matvec.sv:780:29: Replication of more that --replication-limit 8192 is suspect: 98304
+                                                                                                         : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me.u_top'
+  780 |         assign lfault = {G*W{1'b0}};
+      |                             ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_me_array_w12.sv:318:66: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                           : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me'
+  318 |         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q({GT*W*8{1'b0}}),
+      |                                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_me_array_w12.sv:320:50: Replication of more that --replication-limit 8192 is suspect: 3145728
+                                                                                                           : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_me'
+  320 |         .kv_re(kv_re), .kv_addr(), .kv_q({GT*W*32{1'b0}}),
+      |                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv:213:57: Replication of more that --replication-limit 8192 is suspect: 1572864
+                                                                                                                                                                                  : ... note: In instance 'ot_qwen_rom_combined_p0_20261005'
+  213 |         .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+      |                                                         ^
+%Warning-UNSIGNED: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:209:33: Comparison is constant due to unsigned arithmetic
+                                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  209 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                                 ^~
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+%Warning-CMPCONST: /srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:209:23: Comparison is constant due to limited range
+                                                                                                                                            : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  209 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                       ^~
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.
+%Warning-CMPCONST: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Comparison is constant due to limited range
+                                                                                                    : ... note: In instance 'ot_qwen_rom_combined_p0_20261005.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.h' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.t' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.d' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.w' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.pp' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:221:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk1.q' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  221 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.s' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.a' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.h' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.t' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.d' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.lm' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.w' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.pp' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:262:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk2.q' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  262 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk3.ok' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.hl_pop' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.h_got' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.seen_q' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk3.unnamedblk4.p' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk3.unnamedblk4.need' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk3.unnamedblk4.tl' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:324:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk3.unnamedblk4.qv' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  324 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:453:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk5.cpl' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  453 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:453:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk5.wpo' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  453 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:453:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk5.fid_ok' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  453 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:453:5: Latch inferred for signal 'ot_qwen_rom_combined_p0_20261005.u_kv.unnamedblk5.fid' (not all control paths of combinational always assign a value)
+                                                                                                                : ... Suggest use of always_latch for intentional latches
+  453 |     always @(*) begin
+      |     ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 11.675 MB sources in 82 modules, into 928.134 MB in 881 C++ files needing 0.000 MB
+- Verilator: Walltime 242.129 s (elab=2.673, cvt=220.064, bld=0.000); cpu 242.113 s on 1 threads; allocated 18426.527 MB

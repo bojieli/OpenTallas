@@ -1,0 +1,22 @@
+{
+  "status": "TT_MAPPED_INVENTORY_NOT_PHYSICAL_CLOSURE",
+  "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "host": "ot-epyc2",
+  "remote_work": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/run/work",
+  "stat_sha256": "bdc4b5487363bb86c8503a9ba48443b0cdb4ceb387b659a80343e1755a68bb15",
+  "corner": "TT",
+  "cell_count": 3703567,
+  "FF_cells_by_type": {
+    "DFFASRHQNx1_ASAP7_75t_R": 42213,
+    "DFFHQNx1_ASAP7_75t_R": 749660
+  },
+  "whole_leaf_FF_cells": 791873,
+  "mapped_cell_area_um2": 505293.869518,
+  "mapped_sequential_area_um2": 234602.960038,
+  "scalar_port_bits": 70354,
+  "actual_parent_root_clock_capacitance_fF": null,
+  "routed_SS_FF_qualified": false,
+  "parent_slot_fit": false,
+  "adoption": false,
+  "note": "Completed local synthesis reused by the existing live driver. ORFS SS60/FF25 full physical flow remains pending. Count includes unchanged source/WMUX/control state; no unsupported delta versus the folded original screen is inferred. Bulk mapped netlists and objects retained on NVMe. 344 exact PASS and 140ns performance FAIL retained; no rerun or adoption."
+}

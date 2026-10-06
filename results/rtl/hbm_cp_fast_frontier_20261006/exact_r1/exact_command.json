@@ -1,0 +1,17 @@
+[
+  "iverilog",
+  "-g2012",
+  "-s",
+  "tb_su_cp_grouped_owner",
+  "-Ptb_su_cp_grouped_owner.BALANCED_OWNER_BOUNDARY_TEST=1",
+  "-Ptb_su_cp_grouped_owner.FOUR_COMBINATIONAL_CUTS_TEST=1",
+  "-Ptb_su_cp_grouped_owner.FAST_OWNER_FRONTIER_TEST=1",
+  "-o",
+  "/tmp/harvey-cp-fast-frontier-exact-r1/exact.vvp",
+  "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+  "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv"
+]

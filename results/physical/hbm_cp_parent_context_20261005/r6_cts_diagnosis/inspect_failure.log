@@ -1,0 +1,160 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "association_cells": [
+    {
+      "name": "_4525_",
+      "master": "NOR2x1_ASAP7_75t_R",
+      "bbox_um": [
+        19.332,
+        56.97,
+        19.656,
+        57.24
+      ],
+      "location_um": [
+        19.332,
+        56.97
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": "cp_association",
+      "area_um2": 0.08748,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "net1691",
+          "sig": "SIGNAL"
+        },
+        {
+          "pin": "B",
+          "io": "INPUT",
+          "net": "_2359_",
+          "sig": "SIGNAL"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": "VDD",
+          "sig": "POWER"
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": "VSS",
+          "sig": "GROUND"
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "net695",
+          "sig": "SIGNAL"
+        }
+      ]
+    },
+    {
+      "name": "_4530_",
+      "master": "AND2x4_ASAP7_75t_R",
+      "bbox_um": [
+        19.278,
+        56.43,
+        19.818,
+        56.7
+      ],
+      "location_um": [
+        19.278,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": "cp_association",
+      "area_um2": 0.1458,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "net1721",
+          "sig": "SIGNAL"
+        },
+        {
+          "pin": "B",
+          "io": "INPUT",
+          "net": "_2364_",
+          "sig": "SIGNAL"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": "VDD",
+          "sig": "POWER"
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": "VSS",
+          "sig": "GROUND"
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "net697",
+          "sig": "SIGNAL"
+        }
+      ]
+    }
+  ],
+  "pairs": 9,
+  "regions": [
+    {
+      "name": "cp_body",
+      "type": "EXCLUSIVE",
+      "boxes_um": [
+        [
+          17.28,
+          17.28,
+          60.48,
+          56.16
+        ]
+      ],
+      "groups": [
+        "cp_body"
+      ]
+    },
+    {
+      "name": "cp_association",
+      "type": "EXCLUSIVE",
+      "boxes_um": [
+        [
+          17.28,
+          56.16,
+          22.464,
+          60.48
+        ]
+      ],
+      "groups": [
+        "cp_association"
+      ]
+    }
+  ],
+  "clock_summary": [
+    {
+      "kind": "CTS_buffer",
+      "group": null,
+      "status": "PLACED",
+      "count": 35,
+      "area_um2": 10.497600000000002
+    },
+    {
+      "kind": "CTS_dummy",
+      "group": null,
+      "status": "PLACED",
+      "count": 26,
+      "area_um2": 3.382560000000001
+    }
+  ]
+}

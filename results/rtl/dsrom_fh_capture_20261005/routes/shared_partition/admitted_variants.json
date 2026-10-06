@@ -1,0 +1,62 @@
+{
+  "observed_at": "2026-10-06T01:19:37.486790+00:00",
+  "C18": {
+    "state": "ACTUAL ADMITTED LIVE",
+    "host": "ot-epyc2",
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "shared_partition": "comb",
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb",
+    "guard_GiB": 48,
+    "threads": 16,
+    "pre_guard": {
+      "load1": 89.68,
+      "idle_cores": 44.104793931336516,
+      "RAM_GiB": 566.8795318603516,
+      "disk_GiB": 2069.656177520752
+    },
+    "post_guard": {
+      "load1": 89.68,
+      "idle_cores": 46.26252834023923,
+      "RAM_GiB": 566.6303291320801,
+      "disk_GiB": 2069.65616607666
+    },
+    "supervisor_pid": 2546022,
+    "reuse": "13 exact synthesis/floorplan hashes verified, no synthesis or exact rerun",
+    "geometry": "64lane+41nonempty shared regions, allmembers/pad/taps/5percentguard; same1.32mm2 slot/64fixedSRAM",
+    "density": 0.29,
+    "extra_cycles": 0,
+    "exact": "62878/+25 retained unchanged source",
+    "qualified": false,
+    "first_dispatch_failure": "empty log/vanished supervisor before guard, preserved independently; no admitted driver or source timing failure"
+  },
+  "C19": {
+    "state": "ACTUAL ADMITTED LIVE",
+    "host": "ot-epyc2",
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "shared_partition": "receivers",
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers",
+    "guard_GiB": 48,
+    "threads": 16,
+    "pre_guard": {
+      "load1": 88.94,
+      "idle_cores": 42.202971071149335,
+      "RAM_GiB": 556.3496780395508,
+      "disk_GiB": 2069.5455055236816
+    },
+    "post_guard": {
+      "load1": 88.94,
+      "idle_cores": 38.47613084989826,
+      "RAM_GiB": 556.085620880127,
+      "disk_GiB": 2069.2324409484863
+    },
+    "supervisor_pid": 2562095,
+    "reuse": "13 exact synthesis/floorplan hashes verified, no synthesis or exact rerun",
+    "geometry": "64lane+41nonempty shared regions, allmembers/pad/taps/5percentguard; same1.32mm2 slot/64fixedSRAM",
+    "density": 0.29,
+    "extra_cycles": 0,
+    "exact": "62878/+25 retained unchanged source",
+    "qualified": false
+  }
+}

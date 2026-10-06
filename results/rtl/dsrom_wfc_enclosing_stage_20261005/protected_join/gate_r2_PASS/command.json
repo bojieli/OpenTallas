@@ -1,0 +1,15 @@
+{
+  "source_commit": "42d3fc00431268a3954d6a3c689683f6b1b7421c",
+  "caller_source": "42d3fc00431268a3954d6a3c689683f6b1b7421c",
+  "provider_source": "554d7b0c9",
+  "supplier_gate_reused": "R2normal+R3UEonly",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "bash",
+    "/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r2/src/tools/dsrom_wfc_protected_exact.sh",
+    "/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r2/out"
+  ],
+  "reservation_basis": "Source-enabled elaboration121MB, prior actual full866 enclosure runtime1022MB, supplier288macros4GiB1worker; 8GiB for changed 4worker frontend/compile/runtime, no process/time caps",
+  "seed_configurations": 1
+}

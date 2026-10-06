@@ -1,0 +1,19 @@
+{
+  "owner": "Claude S81-DIE",
+  "commit": "165ec7d3e894a0cebe47168a602c4d2ff4c2ed4d",
+  "original_path": "results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv",
+  "original_blob_sha256": "3489d33c4750876d6a8339f6b2ba7c55cc8b7e5a64494424a8276caab9a9dff7",
+  "selected_top": "dsfd_cfifo",
+  "selected_module_sha256": "004b4c7fd2c85424b829c591e70f6fcadd2124c75c7ba6aa6f8dbe3634e8777a",
+  "selected_source": "physical/hbm_die_abstracts_20261006/links/callers/selected_dsfd_cfifo_r8.sv",
+  "module_body_byte_identical": true,
+  "W": 564,
+  "exact_gate": "NOT_RUN; enclosing source protocol unresolved; owner r8 retained",
+  "closed": false,
+  "reset_clock_unknown": [
+    "actual column co clock-tree load/insertion",
+    "source producer reservation and writer/read-side fault-status observation across equal-frequency phases",
+    "actual cold reset/quiesce authority before FIFO flush"
+  ],
+  "no_W512_credit": true
+}

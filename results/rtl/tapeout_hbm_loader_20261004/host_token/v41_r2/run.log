@@ -1,0 +1,12 @@
+%Warning: die1_p1.hex:0: $readmem file not found
+%Warning: die1_p0.hex:0: $readmem file not found
+%Warning: die0_p1.hex:0: $readmem file not found
+%Warning: die0_p0.hex:0: $readmem file not found
+HOST_IMAGE_VISIBLE die=0 bytes=134217728 CRC=13787831 readback=13787831 sectors=4194304
+HOST_IMAGE_VISIBLE die=1 bytes=134217728 CRC=582fba63 readback=582fba63 sectors=4194304
+CODE_PUBLISHED accepted=21470 actualSRAMwrites=21470
+LOADED 5346 instruction words x 4 SMs, 43 commands x 2 dies
+STEP 0 MISMATCH pos 0 in 0 next 213 expected in 0 next 2815 fault 0
+[170216534000] %Fatal: tb_hbm_accel_loader_token_host.sv:172: Assertion failed in tb_hbm_accel_loader_token_host: token mismatch actual host-loaded image
+%Error: /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_host_token/rtl/test/hbm_accel/tb_hbm_accel_loader_token_host.sv:172: Verilog $stop
+Aborting...

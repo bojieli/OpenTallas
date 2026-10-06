@@ -1,0 +1,46 @@
+{
+  "source_commit": "39cf60c225faed7ac730101c120d0a32c685b2cf",
+  "prior_orfs": "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11b/work/orfs",
+  "load_after_guard": [
+    38.81298828125,
+    46.0107421875,
+    63.37353515625
+  ],
+  "diagnostic_only": true,
+  "constraints_changed": false,
+  "cores": 16,
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "sha256": {
+    "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11b/work/orfs/config.mk": "f734980d7a5572ea1a12a662f2b10a7c33713b1ac1e88b18c4ccaad3f05d701e",
+    "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11b/work/orfs/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11b/base/3_place.odb": "9e0be129cea489a07dc879e5773725ec85263463b9627ae21b7d25cbfe6e2337",
+    "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11b/work/orfs/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11b/base/3_place.sdc": "8dfbac61b79449cc5f6336722d2fe48e970e58ff7b8bad131fe86ba88f5d9864",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/hbm_accel/r5a_cts_diagnose.py": "d56125b0e403a3a3ce1de56f86045f8be540636d4520139718324750892c42b3",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/hbm_accel/r5a_cts_capture.tcl": "3d45c6628f9376c17128e44941664b8612e427f94d9c14ee0995ac90f1bcbebc",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1"
+  },
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "-v",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/source:/src:ro",
+    "-v",
+    "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/capture/orfs:/work",
+    "-w",
+    "/OpenROAD-flow-scripts/flow",
+    "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "bash",
+    "-lc",
+    "source /OpenROAD-flow-scripts/env.sh; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 PRE_CTS_TCL=/src/physical/hbm_accel/r5a_cts_capture.tcl CTS_SNAPSHOTS=1 do-4_1_cts"
+  ],
+  "load_at_execution": [
+    38.4599609375,
+    45.697265625,
+    63.0849609375
+  ]
+}

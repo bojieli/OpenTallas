@@ -1,0 +1,617 @@
+{
+  "source_read_main": "acea829e6",
+  "scope": "Actual landed leaf view validation and emitted native index/VM source binding; no generator or engine RTL change; no whole-parent qualification",
+  "ROM_and_leaf_views": {
+    "read_main": "acea829e6",
+    "views": [
+      {
+        "kind": "head_elem_A",
+        "lef": "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz",
+        "sha256": "0bd29f9155f06f3297b85830dfce439a8fc06352363b3ba81bf86064ac159b80",
+        "size_um": [
+          [
+            "275.231",
+            "275.231"
+          ]
+        ],
+        "pins": 460,
+        "physical_record": "results/physical_abi3/asap7/chip/dsrom_recovery_head_20261004/r4_A/physical.json",
+        "parent_closed": false
+      },
+      {
+        "kind": "head_elem_B",
+        "lef": "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz",
+        "sha256": "f12004448d0d630436249918482a8c3747ad2886cd849f06cb99902507c3adea",
+        "size_um": [
+          [
+            "268.906",
+            "268.906"
+          ]
+        ],
+        "pins": 460,
+        "physical_record": "results/physical_abi3/asap7/chip/dsrom_recovery_head_20261004/r4_B/physical.json",
+        "parent_closed": false
+      },
+      {
+        "kind": "ot_meso_fifo",
+        "root": "physical/hbm_die_abstracts_20261006/links/meso_w512_d4",
+        "receipt_sha256": "294e9a89d404febfa6996745fbeae71fbcdcc1be96eedf4fd1af98cf01189ad3",
+        "files": {
+          "ot_meso_fifo_ss.lib": "1c7ca5bc31cc39d9581b3db4b97ebfedc674a250205f3cc5afd3eb8ecc712577",
+          "ot_meso_fifo.lef": "b64d3008e38750aefa753e7511e10ebc987fc96d4c06e581104bc8c896d93569",
+          "ot_meso_fifo.sdc": "1bb36ee283e8c50bb77a2f284b0c708a1e97d17f9924749c127ce2f39892184f",
+          "clock_paths_ss.txt": "b6a4f525c70cc23468ee2a35a67b8777304db6609a595e6f65e6544df0cf03db",
+          "export_ff.tcl": "6b5e869210ffe264b8bd313e997d76ccaecf52a5a6d9a9b86a9f5680319a79c6",
+          "export_ss.log": "e17a93e75a67311a67c7fb6d90eef5559f606d11252bfdbca73666750ad3311a",
+          "export_ff.log": "2471aaa015b9a20f24cbeb2aaa7a4b228d57a7197334f7a3ba4972e6bfd287cc",
+          "pins_ss.tsv": "8dea9e75e018bbcfa358a72a5351ec5718a6aa54f3ce8a9c3a7720ae45b1811f",
+          "export_ss.tcl": "2f44bc920ef1008a151b00ef476b9aa5c8b4387f9b3d05b14d3ccc36185e9b66",
+          "clock_paths_ff.txt": "24ad1ec913ddfc49f66aa781ee62bc0eb87e0e7e7593e8bde3610e7269308cd5",
+          "ot_meso_fifo_ff.lib": "f72f93a973179d61a9da946566e25ffba7ba2e6bb60285cbf72cac7998a2815c",
+          "pins_ff.tsv": "d052389be7020ef8fc00911190fa76b8f33b3ab9e4ef2e2a3c044e6cff03eaef"
+        },
+        "file_hashes_verified": true,
+        "parent_closed": false,
+        "clock_caps_fF": {
+          "ss": {
+            "rclk": 14.6673,
+            "wclk": 15.1067
+          },
+          "ff": {
+            "rclk": 15.089,
+            "wclk": 15.5284
+          }
+        },
+        "source_qualification_scope": "leaf only; actual full parent still open"
+      },
+      {
+        "kind": "ot_attn_hgrp_m6h1",
+        "root": "physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1",
+        "receipt_sha256": "753965a455447c265ed56aff60f06f88ebceb757fe5777f3654235e1c9a11c18",
+        "files": {
+          "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+          "ot_attn_hgrp_m6h1_ff.lib": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+          "ot_attn_hgrp_m6h1_ss.lib": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b"
+        },
+        "file_hashes_verified": true,
+        "parent_closed": false,
+        "clock_caps_fF": {
+          "ss": 16.3802,
+          "ff": 16.8015
+        },
+        "source_qualification_scope": "leaf only; actual full parent still open"
+      },
+      {
+        "kind": "hfd_barrier_K32_leaf",
+        "root": "physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32",
+        "master": "ot_gpu_barrier_node",
+        "parameters": {
+          "K": 32
+        },
+        "size_um": [
+          8.66,
+          8.66
+        ],
+        "pins": 70,
+        "files": {
+          "ot_gpu_barrier_node.lef": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+          "ot_gpu_barrier_node_ff.lib": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+          "ot_gpu_barrier_node_ss.lib": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7"
+        },
+        "hashes_and_arcs_verified": true,
+        "output_arcs_each_corner": 33,
+        "clock_contract": {
+          "master": "ot_gpu_barrier_node",
+          "parameters": {
+            "K": 32
+          },
+          "input_clock": "clk",
+          "cold_or_source_reset": "rst_n (source behavior retained; enclosing reset qualification open)",
+          "corners": {
+            "ss": {
+              "pin": "clk",
+              "capacitance_fF": 0.9247,
+              "internal_CTS_paths": {
+                "min_clock_tree_path": {
+                  "rise_ps": 44.23618,
+                  "fall_ps": 51.1759
+                },
+                "max_clock_tree_path": {
+                  "rise_ps": 46.75456,
+                  "fall_ps": 53.3395
+                }
+              },
+              "time_unit": "1ps",
+              "capacitance_unit": "1fF",
+              "output_clock_arcs": 33
+            },
+            "ff": {
+              "pin": "clk",
+              "capacitance_fF": 0.9952,
+              "internal_CTS_paths": {
+                "min_clock_tree_path": {
+                  "rise_ps": 22.65489,
+                  "fall_ps": 23.63301
+                },
+                "max_clock_tree_path": {
+                  "rise_ps": 23.62895,
+                  "fall_ps": 24.58861
+                }
+              },
+              "time_unit": "1ps",
+              "capacitance_unit": "1fF",
+              "output_clock_arcs": 33
+            }
+          },
+          "period_ps": 833,
+          "setup_uncertainty_ps": 60,
+          "hold_uncertainty_ps": 25,
+          "fixture_output_load_fF": 3.898,
+          "actual_parent_receiver_loads": null,
+          "parent_clock_skew": null,
+          "parent_qualified": false,
+          "source_signoff_reused": true
+        },
+        "qualification": "real K32 leaf only",
+        "parent_closed": false,
+        "source_SHA": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+        "actual_die_pin_binding": "OPEN: historical hfd_barrier ck3/t_cmdproc64 differs from real clk/rst_n/arr32/up/rel_in/rel32; Claude corrected generator source owner must bind native senses, not command64 alias",
+        "orientation_qualification": "LEF symmetry not declared; no generated die rotation/orientation credit"
+      },
+      {
+        "kind": "ot_su12_full_leaf",
+        "root": "physical/hbm_die_abstracts_20261006/compute/ot_su12_full",
+        "master": "ot_su12_full",
+        "size_um": [
+          345.759,
+          345.759
+        ],
+        "LEF_pins": 2253,
+        "library_signal_port_bits": 2253,
+        "output_CQ_arcs_each_corner": 299,
+        "files": {
+          "ot_su12_full_ss.lib": "c1467aaeef25234b42b250dbf03c7d0d7dde2e2dfaf3c12ee9422e4f4895f955",
+          "ot_su12_full_ff.lib": "b5afbeedf31e16ba3405923702e7140dbdb5f1f7969d4ee6943055d26027651d",
+          "pins.tsv": "5580e900e58d11c589e89a224c5666f0d70da54075e053a700db3d998923b138",
+          "source_constraint.sdc": "ba765e4f8f7c7110751b29b05a059c0054770da6459003a358a33f921c9a27da",
+          "interface.sdc": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+          "ot_su12_full.lef": "0ecdcc2efebeae4dca2d936db9adf77e8a6d0f6f66991fbf12fab65f8d33c940"
+        },
+        "file_hashes_and_arc_counts_verified": true,
+        "clock_caps_fF": {
+          "ss": 18.5962,
+          "ff": 19.0179
+        },
+        "clock_contract": {
+          "pin": "clk",
+          "name": "core_clk",
+          "period_ps": 833,
+          "setup_uncertainty_ps": 60,
+          "hold_uncertainty_ps": 25,
+          "SS_setup_slack_ps": 4.77,
+          "FF_hold_slack_ps": 5.33,
+          "scope": "Retained lane internal signoff reused. Real propagated lane clock arcs extracted in LIB; quarter clock/CTS/load/root remain OPEN. Never inherit lane clockQ for parent."
+        },
+        "actual_clock_tree_paths_ps": {
+          "ss": {
+            "min_clock_tree_path": {
+              "cell_rise": 477.55649,
+              "cell_fall": 542.74268
+            },
+            "max_clock_tree_path": {
+              "cell_rise": 549.38239,
+              "cell_fall": 612.24219
+            }
+          },
+          "ff": {
+            "min_clock_tree_path": {
+              "cell_rise": 295.4216,
+              "cell_fall": 310.9548
+            },
+            "max_clock_tree_path": {
+              "cell_rise": 351.36005,
+              "cell_fall": 370.2092
+            }
+          }
+        },
+        "source": {
+          "name": "ot_su12_full",
+          "route_root": "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/retained/ot_su12_full",
+          "host": "ot-epyc1tb",
+          "adoption_commit": "5b68fde75b73d073b48c839283f538418b998b34",
+          "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+          "corner_record": "results/rtl/hbm_su_c12_20261005/lane_routes/full_u30_h25/corner_sta.json",
+          "hashes": {
+            "odb": "4aa5e82406c2e53bfa0a9f3827b3f50418e54b259ac3d2810b75bb1e46f595e8",
+            "spef": "cc23fb15f9875c1081e9b70d35474204a2c82e97ba8536a30b98a0b5895a3c8d",
+            "sdc": "7a4708e2fa60118eb1cd1cb7b3495c0565e8296a2543921b480ad9cd459f6411"
+          },
+          "ss_setup_ps": 4.77,
+          "ff_hold_ps": 5.33,
+          "io": "outputs 299 input_paths 710 not_register_direct 0",
+          "parent_qualified": false
+        },
+        "qualification_scope": "one retained full c12 lane leaf; SU/SFU/HC quarters and actual serial-die parent OPEN",
+        "parent_closed": false,
+        "quarter_closed": false,
+        "actual_family_binding": "Real donor leaf for compute owner; cannot replace complete hfd_su/SFU64/HC64 by one lane or inherit its receiver insertion",
+        "manifest_sha256": "998923e13655570acdabb841349b69374d4af008ae4f2ee29722ea6d3be09e40"
+      }
+    ],
+    "cfg": {
+      "root": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+      "files": {
+        "ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+        "ot_rom_4096x72_m8.v": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
+        "ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+        "ot_rom_4096x72_m8_ff.lib": "b5f09ecc876a340f8a6d6bdd3ff7d185a934b17cf990e469e1ffca7055a9a470",
+        "ot_rom_4096x72_m8_ss.lib": "5dd9fd0eeb9438bb41d9b687b8fdb7d52cad11cfd8dd25001f3a46555d941e15",
+        "ot_rom_4096x72_m8_tt.lib": "37a56b32f239ec2c943bf640131f67d0d2fd152a73a32da608e0551a12647336"
+      },
+      "alignment": {
+        "allowed_orientations": [
+          "R0",
+          "MX",
+          "MY",
+          "R180"
+        ],
+        "layers": {
+          "M4": {
+            "orientation_invariant": true,
+            "origin_0_legal_all_orientations": true,
+            "rule_mod_track_nm": {
+              "MX": [
+                0
+              ],
+              "MY": [
+                0
+              ],
+              "R0": [
+                0
+              ],
+              "R180": [
+                0
+              ]
+            }
+          }
+        },
+        "m5_crossing_at_origin_0": {
+          "MY": {
+            "L": true,
+            "R": true
+          },
+          "R0": {
+            "L": true,
+            "R": true
+          }
+        },
+        "pass": true,
+        "signal_pins": 86,
+        "size_um": [
+          38.04,
+          62.952
+        ],
+        "symmetry": [
+          "X",
+          "Y"
+        ]
+      },
+      "origin_rule": "x = 0 and y = 0 mod 0.048 um (on the site / row grid) in R0, MX, MY and R180",
+      "actual_current_copy": "results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef",
+      "copy_sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+      "copy_is_v1": true,
+      "v2_alignment_checked_from_actual_LEF": true
+    },
+    "Z20": {
+      "source_owner": "Claude QELEM",
+      "candidate_sizes_um": [
+        [
+          510.84,
+          209.52
+        ],
+        [
+          510.84,
+          192.24
+        ],
+        [
+          510.84,
+          177.12
+        ]
+      ],
+      "qualified_successor_export_received": false,
+      "do_not_use": "failed Rcap0 or Z18 timing-only candidate"
+    },
+    "no_generator_edits": true,
+    "no_full_die_launch": true,
+    "old_generator_findings_scope": "r7 selections: r8 wired glue165ec7d3e supersedes connectivity; cfgv1/Rcap0/v3 view selections still require owner correction"
+  },
+  "native_index_VM": {
+    "source_read_main": "acea829e6",
+    "source_hashes": {
+      "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv": "1ca1dff79e7ee4375e8a422d8c5b916b86644a3a3231810653636556db29b279",
+      "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+      "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": "1a79190bb283e76672c7c644fdd0f8cb4d9ca264cd356ea1b2a7c9e22d1dc539",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_stack.sv": "abf43b8461e0bbe162eecc6d61391e84908ec9dbcee769a5fee57475b5aac850",
+      "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa"
+    },
+    "native_index": {
+      "NS": 16,
+      "NK": 4,
+      "Q": 4,
+      "W": 16,
+      "IW": 20,
+      "FPL": 7,
+      "FML": 5,
+      "QL": 5,
+      "ENABLE": 0,
+      "SOURCE_VM_ENABLE": 0,
+      "caller_identity_bits": {
+        "job": 32,
+        "gen": 4,
+        "pos": 20,
+        "rank": 7
+      },
+      "query_read": {
+        "addr_bits": 32,
+        "tag_bits": 8,
+        "words": 32,
+        "response_bits": 1024,
+        "outstanding": 1,
+        "read_count": 129,
+        "original_q_base": 64,
+        "rotated_q_base": 4160,
+        "first_actual_O_tail": 4224,
+        "scaled_weight_base": 8288,
+        "tail_words": 64,
+        "address_units": "FP32 words, as original SU opcode scalar addressing; do not reinterpret as byte/macro row without adapter",
+        "query_addresses": "cursor0..127: ((cursor[1]?4160:64) +128*cursor[6:2]+32*cursor[1:0]); first tag128 reads32 weights at8288",
+        "actual_source_descriptor": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20.json",
+        "release": "rsp_v && rsp_r only after full pending tag/job/gen/pos/rank match; mismatch faults and leaves read debt held"
+      }
+    },
+    "current_diagnostic_geometry": {
+      "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-die-fix/cases/r16b/a_real",
+      "source": "442556f88703b441c48d323607d4a2acad0e320b",
+      "def_sha256": "9d4f0275310595a85927451b7ed2646a71937a715a514e56cfee1b0c02b4091e",
+      "index_master": "hfd_index_q",
+      "size_um": [
+        930.072,
+        5529.576
+      ],
+      "pins": 4714,
+      "instances": {
+        "SW": {
+          "origin_um": [
+            6480.432,
+            6607.44
+          ],
+          "DEF_orientation": "N"
+        },
+        "SE": {
+          "origin_um": [
+            16127.424,
+            6607.44
+          ],
+          "DEF_orientation": "FN"
+        },
+        "NW": {
+          "origin_um": [
+            6480.432,
+            12484.8
+          ],
+          "DEF_orientation": "FS"
+        },
+        "NE": {
+          "origin_um": [
+            16127.424,
+            12484.8
+          ],
+          "DEF_orientation": "S"
+        }
+      },
+      "VM_master": "hfd_vm",
+      "VM_size_um": [
+        1814.376,
+        1403.976
+      ],
+      "VM_origin_um": [
+        10861.776,
+        13562.64
+      ],
+      "is_placeholder": true,
+      "is_real_index_macro": false,
+      "credit": "diagnostic geometry only"
+    },
+    "existing_model_deficit": {
+      "r7_total_index_reservation_mm2": 20.57,
+      "r7_source_grade": "model",
+      "r7_reservation_per_quarter_mm2": 5.1425,
+      "current_scorer_and_join_CELL_estimate_mm2": 23.67273884544,
+      "current_cell_per_quarter_mm2": 5.91818471136,
+      "cell_deficit_against_entire_reservation_mm2": 3.102738845440001,
+      "cell_area_excludes": [
+        "selector/quantiser complete mapped bodies",
+        "protected selector macros/codec/receiver",
+        "loaded clock and boundary nets",
+        "any final ordered gather adapter"
+      ],
+      "minimum_footprint_at_explicit_50pct_utilization_mm2": 47.34547769088,
+      "minimum_per_quarter_at_50pct_mm2": 11.83636942272,
+      "footprint_deficit_at_50pct_mm2": 26.775477690880003,
+      "model_cell_estimate_is_not_mapped_area": true,
+      "slot_fit": false
+    },
+    "clock_binding": "Actual r16b emitted die.v: hb_coll/pll_stream -> n_clk_stream -> hb_index_{SW,SE,NW,NE}/ck and hb_vm/ck; hb_coll/por_stream -> n_rst_stream -> same rst pins. SDC stream833ps; hb_coll/pll_serial -> n_clk_serial1111ps; hb_coll/pll_hbm -> n_clk_hbm1024ps. Actual propagated parent CTS/skew/wire/load not qualified. Related3:4 must not inherit generator asynchronous waiver.",
+    "provider_hooks": {
+      "root_write": "wr_v/wr_ready bank1/address7/data2063/owner192 -> actual SRAM WRITE/VERIFY/CAPTURE/CHECK -> wr_ACK_v held until wr_ACK_ready, full wr_ACK_owner returned",
+      "multicast_release": "rd_v/rd_ready -> four tap_v/tap_ready sends; each later tap_ACK_v with same owner192 required exactly once; native_release only after all4 acked, not at payload acceptance",
+      "scope": "activation multicast root is NOT SU lane-native VM or1024-bit index response provider; it cannot be directly wired by truncating/padding2063 bits",
+      "write_publication": "SU vm_we/vm_waddr/vm_wdata pulses and engine done do not supply a provider ACK. Caller must retain reservation/debt through actual memory data+check receipt before giving source_ready/start or complete_v; implement adapter ACK path under Gibbs ownership."
+    },
+    "expert_control_ownership": "expert_stack already owns32PC REFpb row state through expert_service plus protected ownership CDC; streamservice PCWB also owns32PC. Gibbs must choose one actual row/C-A arbiter/calendar/PHY receipt owner before connecting shared controller. No double grant, fake ready or payload_drained=issuer lease release.",
+    "DS_VM_owner": "Copernicus distinct; no DS provider substitution",
+    "clock_binding_checked_in_actual_emitted_netlist": true
+  },
+  "coordination_notes": [
+    "/tmp/claude-review-20261003/TURING_TO_CLAUDE_S81_DIE_ROM_REAL_VIEWS_20261006.txt",
+    "/tmp/claude-review-20261003/TURING_TO_CLAUDE_QWEN_PHYS_ROM_MISSING_TOP_20261006.txt",
+    "/tmp/claude-review-20261003/TURING_TO_BACON_GIBBS_NATIVE_INDEX_ACK_BINDING_20261006.txt",
+    "/tmp/claude-review-20261003/TURING_TO_CLAUDE_HBM_DIE_FIX_INDEX_VIEW_BINDING_20261006.txt"
+  ],
+  "builds_launched": 0,
+  "passing_source_gates_repeated": 0,
+  "generator_edits": 0,
+  "parent_qualified": false,
+  "S81_r8_superseding_physical_binding": {
+    "source_commit": "165ec7d3e",
+    "generator_sha256": "30f29d560ba418757b322a02ad96c1012163f8148e9e1773f9672a483d851a7b",
+    "floorplan_json_sha256": "8425afe95ed469476ce42d0fbc90d06ed0f33ea11f841f124d36103d81348672",
+    "floorplan_def_sha256": "b62237677d3bc4ceb66b8464181ca15ea1ce839dc4ece887ba9c3e9b7e7eef32",
+    "glue_sha256": "3489d33c4750876d6a8339f6b2ba7c55cc8b7e5a64494424a8276caab9a9dff7",
+    "VM": {
+      "primitive": "ot_sram_1r1w_512x128_m4_r2c2",
+      "library_ss": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+      "library_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+      "SS_clock_pin_fF": 8.6838,
+      "FF_clock_pin_fF": 10.3732,
+      "SS_data_address_pin_fF": 0.5788,
+      "FF_data_address_pin_fF": 0.6837,
+      "SS_clkQ_ps_table_range": [
+        524.0725,
+        619.2032
+      ],
+      "SS_slew_axis_ps": [
+        5,
+        20,
+        80,
+        160,
+        320
+      ],
+      "SS_load_axis_fF": [
+        0.72,
+        2.88,
+        11.52,
+        23.04,
+        46.08
+      ],
+      "SS_clkQ_at20ps_slew_2p88fF_ps": 528.6025,
+      "scope": "actual committed macro library model, not measured new WFC loaded context",
+      "full_AW15_backend_source": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+      "DEPTH_GROUPS": 16,
+      "macro_count": 256,
+      "macro_area_each_um2": 5177.6323,
+      "macro_area_total_mm2": 1.3254738688,
+      "existing_VM_slot_mm2": 0.89234,
+      "minimum_macro_only_deficit_mm2": 0.43313386880000004,
+      "read_valid_registered_edges": 5,
+      "write_ACK_registered_edges": 4,
+      "read_owner_bits": 227,
+      "mutable_protection": "rawmacrobackend explicitly unprotected; not selected protectedmemoryqualification; real backend mustretain owner/protection/olddata/writeprecedence",
+      "FF_clkQ_at20ps_slew_2p88fF_ps": 349.7289
+    },
+    "VM_finite_resize_decision": {
+      "existing_slot_area_mm2": 0.89234,
+      "successor_reserved_outline_um": [
+        1015.2,
+        2620.0800000000004
+      ],
+      "successor_reserved_area_mm2": 2.6599052160000003,
+      "delta_area_mm2": 1.7675652160000004,
+      "existing_real_macro_count": 256,
+      "primitive_LEF_width_um": 174.12,
+      "primitive_LEF_height_um": 29.736,
+      "native_source_count_preserved": true,
+      "macro_columns": 5,
+      "slot_rows": 64,
+      "slot_count": 320,
+      "positive_empty_protection_slots": 64,
+      "empty_slots_are_not_macro_instances": true,
+      "macro_gap_um": 10.8,
+      "macro_halo_um": 17.28,
+      "macro_occupied_envelope_width_um": 948.3600000000001,
+      "actual_256_macro_body_mm2": 1.3254738739200003,
+      "reserved_protection_slot_count_is_not_RTL_protection_evidence": true,
+      "source_non_drop_in_gaps": [
+        "olddataread/writecollision semantics",
+        "allnativewriterport/grant/visiblecompletion",
+        "mutableECC and codecarea",
+        "real3:4callerVMtransport"
+      ],
+      "admission": "ExistingVMphysicalslot insufficient. Resize SAMEspineVMslab with explicitpositive64slotprotection+channelreserve; protectedsourcebinding ownedZeno/Copernicus and nativeVMowner, no rawpayloadadoption",
+      "new_engine_build_before_source_model": false,
+      "actual_selected_parent_rect_um": [
+        15182.64,
+        11238.48,
+        16197.815999999999,
+        13858.536
+      ],
+      "source_macro_instance_inventory": "256 realv2 source macros +64 EMPTY positiveprotection reservations; no 320instance claim"
+    },
+    "actual_sp_vm_DEF_anchor_um": [
+      15174,
+      11238.48
+    ],
+    "actual_selected_parent_rect_um": [
+      15182.64,
+      11238.48,
+      16197.815999999999,
+      13858.536
+    ],
+    "clock_contract": {
+      "WFC": "native u_ctrl.clk streaming1.2GHz833.333ps phase0",
+      "VM_parent": "sp_vm serial0.9GHz1111.111ps in actual selectedfloorplan",
+      "source_behavior": "native behavioral VM sameclk oneedge; not evidence of realcrossdomainmemory",
+      "source_phase_policy_ps": 0,
+      "SS_setup_ps": 60,
+      "FF_hold_ps": 25,
+      "crossing": "actual3:4 transport required; existing source-owned related boundary must be bound; no assumed sameedgephase/no waivedpath"
+    },
+    "VM_clock_root": "sp_collective/pll_serial -> clk_serial -> sp_vm/ck; por_serial -> sp_vm/rst. Actual generator bus construction source; propagated physical insertion/skew/receiver wires still absent.",
+    "VM_to_field_ratio": {
+      "hx_W": {
+        "DEF_anchor_um": [
+          15100.128,
+          12512.88
+        ],
+        "master": "dsfd_l2r_vr_564x1__hx_W"
+      },
+      "hx_E": {
+        "DEF_anchor_um": [
+          16193.52,
+          12512.88
+        ],
+        "master": "dsfd_l2r_vr_564x1__hx_E"
+      },
+      "source": "sp_vm.xw/xe[564:0] -> hx_W/E.i[564:0]; i[0]valid, i[564:1]payload564; write ck/rs serial, read cks/rss stream; fo=cks; od={data564,rv,reset_sync}; st={0,w_live,w_rdy}",
+      "primitive": "ot_ratio_cdc_fifo W564",
+      "protected_caller_native_ACK_implemented": false,
+      "not_a_protected_VM_provider": "only field outbound ratio glue; not xa/xb arbitration, checked write visibility or full identity receipt"
+    },
+    "column_meso": {
+      "instances": 128,
+      "W": 564,
+      "qualified_existing_W512_leaf_applies": false
+    },
+    "packing_counts_owner_current": {
+      "FH177": 2304,
+      "FH192": 2050,
+      "FH209": 1798,
+      "not_earlier_draft_counts": true
+    },
+    "station_roundtrip_cycles_excluding_tree_owner": 135,
+    "HC": {
+      "split": [
+        "sp_hc_s",
+        "sp_hc_n"
+      ],
+      "t_vm_bits": 1024,
+      "mutual_n_s_bits": 1024,
+      "corridor_um": 604.8,
+      "source_owner": "Claude SU-FUSION",
+      "functional_return_provider_confirmed": false
+    },
+    "full_parent_qualified": false,
+    "Turing_generator_edits": 0
+  }
+}

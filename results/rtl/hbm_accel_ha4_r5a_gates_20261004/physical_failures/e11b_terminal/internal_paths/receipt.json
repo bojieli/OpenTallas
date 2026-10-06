@@ -1,0 +1,63 @@
+{
+  "source_commit": "5c17fac5d2677545ae2205466520606279798d64",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "diagnostic_only": true,
+  "constraints_changed": false,
+  "orfs": "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/capture/orfs",
+  "helpers_sha256": {
+    "physical/hbm_accel/r5a_cts_internal_paths.py": "504078be26e2416bb81e948bc5c66125a0344c5d8684e03f4517cca594d504e9",
+    "tools/w18/corner_sta.py": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "snapshot_sha256": {
+    "r5a_pre_repair.odb": "28774e4fec8f26596fbc8a27cd0760c10817b52a39211608af5576f5badba764",
+    "r5a_pre_repair.sdc": "63092bfec37835da8c4ace9ef6e9d231e6787f8743af011151ed996700e61720"
+  },
+  "ss": {
+    "command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-internal-5c17fa/source:/src:ro",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/capture/orfs:/work:ro",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-internal-5c17fa/paths:/diag",
+      "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "bash",
+      "-lc",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads 16 -no_init -exit /diag/ss.tcl"
+    ],
+    "load_at_execution": [
+      34.9052734375,
+      41.6044921875,
+      51.3251953125
+    ],
+    "exit": 0
+  },
+  "ff": {
+    "command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-internal-5c17fa/source:/src:ro",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/capture/orfs:/work:ro",
+      "-v",
+      "/srv/opentallas-scratch2/codex/r5a-internal-5c17fa/paths:/diag",
+      "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "bash",
+      "-lc",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads 16 -no_init -exit /diag/ff.tcl"
+    ],
+    "load_at_execution": [
+      36.900390625,
+      39.6298828125,
+      49.2431640625
+    ],
+    "exit": 0
+  }
+}

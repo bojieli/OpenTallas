@@ -1,0 +1,19 @@
+[
+  "docker",
+  "run",
+  "--rm",
+  "--name",
+  "codex_lagrange_ctl64_d760_diag_20261005",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/ctl64_d760_diagnostic/source:/src:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/ctl64_d760_diagnostic/work:/work",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/ctl64_d760_diagnostic:/diag",
+  "-w",
+  "/OpenROAD-flow-scripts/flow",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "bash",
+  "-lc",
+  "trap 'chmod -R a+rwX /work /diag >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /diag/patch_new_container.py && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=1 do-4_1_cts"
+]

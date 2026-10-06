@@ -1,0 +1,628 @@
+
+-- Executing script file `/out/canonical.ys' --
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+Imported 42 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz', decompressing using zlib.
+
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+Imported 37 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+Imported 34 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+Imported 56 cell types from liberty file.
+
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+6. Executing SLANG frontend.
+Top level design units:
+    ot_v41_v9_parent_clock_context_frontend
+
+../out/ot_v41_pair_pq_ld_frontend.sv:48:21: warning: asynchronous load value missing for variable '\u_ld.ld_a'
+        if (!rst_n) begin
+                    ^~~~~
+../out/ot_v41_pair_pq_ld_frontend.sv:47:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) begin
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../out/ot_v41_pair_pq_ld_frontend.sv:48:21: warning: asynchronous load value missing for variable '\u_ld.ld_np'
+        if (!rst_n) begin
+                    ^~~~~
+../out/ot_v41_pair_pq_ld_frontend.sv:47:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) begin
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Build succeeded: 0 errors, 2 warnings
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$992'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$990'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$987'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$981'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$973'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$949'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$942'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$692'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$691'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$685'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$679'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$657'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$551'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$521'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$482'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$474'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$366'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$359'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$303'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$286'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$273'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$244'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$240'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$232'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$227'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$219'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$212'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$205'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$198'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$194'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$186'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$181'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$173'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$166'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$159'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$152'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$141'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$127'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$120'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$113'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$106'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$102'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$99'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$98'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$95'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$76'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$72'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$51'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$38'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$21'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$0'.
+Cleaned up 9 empty switches.
+<suppressed ~407 debug messages>
+
+6.2. Executing TRIBUF pass.
+
+6.3. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 26 switch rules as full_case in process $482 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 10 switch rules as full_case in process $736 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 31 switch rules as full_case in process $366 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 4 switch rules as full_case in process $692 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 4 switch rules as full_case in process $657 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 2 switch rules as full_case in process $38 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 3 switch rules as full_case in process $21 in module ot_v41_v9_parent_clock_context_frontend.
+Marked 5 switch rules as full_case in process $551 in module ot_v41_v9_parent_clock_context_frontend.
+Removed a total of 0 dead cases.
+
+6.4. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 11 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.5. Executing PROC_INIT pass (extract init attributes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~167 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$992'.
+     1/1: $sticky_fault$997
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$482'.
+     1/27: $u_return.u_n.u_add.s4_lz$509
+     2/27: $u_return.u_n.u_add.s4_lz$508
+     3/27: $u_return.u_n.u_add.s4_lz$507
+     4/27: $u_return.u_n.u_add.s4_lz$506
+     5/27: $u_return.u_n.u_add.s4_lz$505
+     6/27: $u_return.u_n.u_add.s4_lz$504
+     7/27: $u_return.u_n.u_add.s4_lz$503
+     8/27: $u_return.u_n.u_add.s4_lz$502
+     9/27: $u_return.u_n.u_add.s4_lz$501
+    10/27: $u_return.u_n.u_add.s4_lz$500
+    11/27: $u_return.u_n.u_add.s4_lz$499
+    12/27: $u_return.u_n.u_add.s4_lz$498
+    13/27: $u_return.u_n.u_add.s4_lz$497
+    14/27: $u_return.u_n.u_add.s4_lz$496
+    15/27: $u_return.u_n.u_add.s4_lz$495
+    16/27: $u_return.u_n.u_add.s4_lz$494
+    17/27: $u_return.u_n.u_add.s4_lz$493
+    18/27: $u_return.u_n.u_add.s4_lz$492
+    19/27: $u_return.u_n.u_add.s4_lz$491
+    20/27: $u_return.u_n.u_add.s4_lz$490
+    21/27: $u_return.u_n.u_add.s4_lz$489
+    22/27: $u_return.u_n.u_add.s4_lz$488
+    23/27: $u_return.u_n.u_add.s4_lz$487
+    24/27: $u_return.u_n.u_add.s4_lz$486
+    25/27: $u_return.u_n.u_add.s4_lz$485
+    26/27: $u_return.u_n.u_add.s4_lz$484
+    27/27: $u_return.u_n.u_add.s4_lz$483
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$736'.
+     1/16: $$root.ot_v41_ret_pkg.norm.k$905
+     2/16: $$root.ot_v41_ret_pkg.norm.k$889
+     3/16: $$root.ot_v41_ret_pkg.norm.k$873
+     4/16: $$root.ot_v41_ret_pkg.norm.k$857
+     5/16: $$root.ot_v41_ret_pkg.norm.k$841
+     6/16: $$root.ot_v41_ret_pkg.norm.k$816
+     7/16: $$root.ot_v41_ret_pkg.norm.k$800
+     8/16: $$root.ot_v41_ret_pkg.norm.k$784
+     9/16: $$root.ot_v41_ret_pkg.norm.k$768
+    10/16: $$root.ot_v41_ret_pkg.norm.k$752
+    11/16: $913
+    12/16: $910
+    13/16: $907
+    14/16: $824
+    15/16: $821
+    16/16: $818
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$366'.
+     1/35: $u_return.u_n.u_add.shift_right_jam_28.shifted$458 [27:1]
+     2/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$452
+     3/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$449
+     4/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$446
+     5/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$443
+     6/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$440
+     7/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$437
+     8/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$434
+     9/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$431
+    10/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$428
+    11/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$425
+    12/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$422
+    13/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$419
+    14/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$416
+    15/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$413
+    16/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$410
+    17/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$407
+    18/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$404
+    19/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$401
+    20/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$398
+    21/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$395
+    22/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$392
+    23/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$389
+    24/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$386
+    25/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$383
+    26/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$380
+    27/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$377
+    28/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$374
+    29/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$455
+    30/35: $u_return.u_n.u_add.shift_right_jam_28.bit_index$459
+    31/35: $u_return.u_n.u_add.shift_right_jam_28.shifted$458 [0]
+    32/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$457
+    33/35: $u_return.u_n.u_add.shift_right_jam_28.shifted$461
+    34/35: $u_return.u_n.u_add.shift_right_jam_28.bit_index$462
+    35/35: $u_return.u_n.u_add.shift_right_jam_28.discarded$460
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$692'.
+     1/5: $u_return.u_n.fault$735
+     2/5: $u_return.u_n.br$705
+     3/5: $u_return.u_n.ar$703
+     4/5: $u_return.u_n.bw$701
+     5/5: $u_return.u_n.aw$699
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$657'.
+     1/5: $$root.ot_v41_ret_pkg.norm.k$656
+     2/5: $$root.ot_v41_ret_pkg.norm.k$640
+     3/5: $$root.ot_v41_ret_pkg.norm.k$624
+     4/5: $$root.ot_v41_ret_pkg.norm.k$608
+     5/5: $$root.ot_v41_ret_pkg.norm.k$592
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$51'.
+     1/1: $u_ld.c_d$55
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$38'.
+     1/2: $u_ld.act$47
+     2/2: $u_ld.act$48
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$21'.
+     1/8: $u_ld.ld_run$30
+     2/8: $u_ld.ld_a$33
+     3/8: $u_ld.ld_k$32
+     4/8: $u_ld.ld_run$31
+     5/8: $u_ld.ld_a$36
+     6/8: $u_ld.ld_k$35
+     7/8: $u_ld.ld_run$34
+     8/8: $u_ld.ld_np$37
+Creating decoders for process `\ot_v41_v9_parent_clock_context_frontend.$551'.
+     1/6: $u_return.u_n.u_add.err$557
+     2/6: $u_return.u_n.u_add.y$556
+     3/6: $u_return.u_n.u_add.err$559
+     4/6: $u_return.u_n.u_add.y$558
+     5/6: $u_return.u_n.u_add.err$561
+     6/6: $u_return.u_n.u_add.y$560
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$992'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$992'.
+Found and cleaned up 53 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$482'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$482'.
+Found and cleaned up 22 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$736'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$736'.
+Found and cleaned up 59 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$366'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$366'.
+Found and cleaned up 9 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$692'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$692'.
+Found and cleaned up 9 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$657'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$657'.
+Found and cleaned up 1 empty switch in `\ot_v41_v9_parent_clock_context_frontend.$51'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$51'.
+Found and cleaned up 3 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$38'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$38'.
+Found and cleaned up 5 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$21'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$21'.
+Found and cleaned up 5 empty switches in `\ot_v41_v9_parent_clock_context_frontend.$551'.
+Removing empty process `ot_v41_v9_parent_clock_context_frontend.$551'.
+Cleaned up 167 empty switches.
+
+6.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+<suppressed ~89 debug messages>
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_v41_v9_parent_clock_context_frontend
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_v41_v9_parent_clock_context_frontend
+Removed 0 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+
+9. Executing FLATTEN pass (flatten design).
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 1100 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 1001 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 978 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 969 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 967 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+<suppressed ~399 debug messages>
+Removed a total of 133 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_v9_parent_clock_context_frontend..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$498: \u_ld.ld_run -> 1'0
+      Replacing known input bits on port A of cell $procmux$478: \u_ld.ld_run -> 1'1
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$418.
+    dead port 1/2 on $mux $procmux$422.
+    dead port 2/2 on $mux $procmux$422.
+    dead port 1/2 on $mux $procmux$411.
+    dead port 2/2 on $mux $procmux$411.
+    dead port 1/2 on $mux $procmux$408.
+    dead port 2/2 on $mux $procmux$408.
+    dead port 1/2 on $mux $procmux$425.
+    dead port 2/2 on $mux $procmux$425.
+    dead port 1/2 on $mux $procmux$395.
+    dead port 1/2 on $mux $procmux$392.
+    dead port 1/2 on $mux $procmux$388.
+    dead port 1/2 on $mux $procmux$385.
+    dead port 1/2 on $mux $procmux$433.
+    dead port 2/2 on $mux $procmux$433.
+    dead port 1/2 on $mux $procmux$437.
+    dead port 2/2 on $mux $procmux$437.
+    dead port 1/2 on $mux $procmux$472.
+    dead port 2/2 on $mux $procmux$480.
+    dead port 1/2 on $mux $procmux$483.
+    dead port 1/2 on $mux $procmux$489.
+    dead port 1/2 on $mux $procmux$495.
+    dead port 1/2 on $mux $procmux$501.
+    dead port 1/2 on $mux $procmux$522.
+    dead port 1/2 on $mux $procmux$525.
+    dead port 1/2 on $mux $procmux$163.
+    dead port 1/2 on $mux $procmux$160.
+    dead port 1/2 on $mux $procmux$531.
+    dead port 1/2 on $mux $procmux$154.
+    dead port 1/2 on $mux $procmux$534.
+    dead port 1/2 on $mux $procmux$541.
+    dead port 1/2 on $mux $procmux$548.
+Removed 32 multiplexer ports.
+<suppressed ~355 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_v9_parent_clock_context_frontend.
+    New input vector for $reduce_or cell $371: \u_return.u_n.u_add.s1_small
+    Consolidated identical input bits for $mux cell $911:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$911y
+      New ports: A=1'0, B=1'1, Y=$911y [0]
+      New connections: $911y [31:1] = { $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] $911y [0] }
+    Consolidated identical input bits for $mux cell $908:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$908y
+      New ports: A=1'0, B=1'1, Y=$908y [0]
+      New connections: $908y [31:1] = { $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] $908y [0] }
+    Consolidated identical input bits for $mux cell $822:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$822y
+      New ports: A=1'0, B=1'1, Y=$822y [0]
+      New connections: $822y [31:1] = { $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] $822y [0] }
+    Consolidated identical input bits for $mux cell $819:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$819y
+      New ports: A=1'0, B=1'1, Y=$819y [0]
+      New connections: $819y [31:1] = { $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] $819y [0] }
+  Optimizing cells in module \ot_v41_v9_parent_clock_context_frontend.
+Performed a total of 5 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 941 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 937 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 933 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Changing const-value async load to async reset on $driver$u_sp.g_bst.u_bst.g_line.line ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_ld.c_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_ld.fault ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Handling D = Q on $driver$u_ld.fault ($aldff) from module ot_v41_v9_parent_clock_context_frontend (removing D path).
+Changing const-value async load to async reset on $driver$u_ld.ld_run ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_ld.ld_k ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_ld.pend ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Handling D = Q on $driver$u_ld.pend ($aldff) from module ot_v41_v9_parent_clock_context_frontend (removing D path).
+Changing const-value async load to async reset on $driver$u_ld.act ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qb.rst_reg ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qb.b_cdec ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qb.b_go ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qb.b_cfg_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qb.g_bx.b_xs_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$q0_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_ir.u_gm.q ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_ir.r_go ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qz_cg.u_z.q ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_mac[0].o_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_mac[0].bkf_r ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_mac[1].g_mz.u_rst.q ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$sticky_fault ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_mac[1].o_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_mac[1].bkf_r ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qo.busy_d ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qo.ff_d ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qo.ffq ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$g_qx.g_qo.fq ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_byp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_sub ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_sign ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_err ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_code ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_exp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_dist ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_big ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s1_small ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_byp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_sub ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_sign ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_err ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_code ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_exp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_big ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s2_small ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_byp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_sub ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_sign ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_zero ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_err ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_code ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_exp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s3_val ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_byp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_sign ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_zero ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_err ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_code ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_exp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.s4_val ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.y ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.err ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.u_add.valid_out ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.fault ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.ar ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.aw ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.br ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.bw ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.ac ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.bc ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.aw8 ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Adding EN signal on $driver$u_return.u_n.aw8 ($aldff) from module ot_v41_v9_parent_clock_context_frontend (D = $719y, Q = \u_return.u_n.aw8).
+Changing const-value async load to async reset on $driver$u_return.u_n.bw8 ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Adding EN signal on $driver$u_return.u_n.bw8 ($aldff) from module ot_v41_v9_parent_clock_context_frontend (D = $725y, Q = \u_return.u_n.bw8).
+Changing const-value async load to async reset on $driver$u_return.u_n.ap ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.vp ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.u_n.by_v ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_prv.g_one.line ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Changing const-value async load to async reset on $driver$u_return.g_rv[0].q ($aldff) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 0 on $driver$u_return.u_n.u_add.s2_big ($adff) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 1 on $driver$u_return.u_n.u_add.s2_big ($adff) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 2 on $driver$u_return.u_n.u_add.s2_big ($adff) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 27 on $driver$u_return.u_n.u_add.s2_big ($adff) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 0 on $driver$u_ld.pend ($dlatch) from module ot_v41_v9_parent_clock_context_frontend.
+Setting constant 0-bit at position 0 on $driver$u_ld.fault ($dlatch) from module ot_v41_v9_parent_clock_context_frontend.
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_v9_parent_clock_context_frontend..
+Removed 25 unused cells and 521 unused wires.
+<suppressed ~216 debug messages>
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+<suppressed ~11 debug messages>
+
+10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_v9_parent_clock_context_frontend..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $536: \u_return.u_n.u_add.s5_round [24:1] -> { 1'1 \u_return.u_n.u_add.s5_round [23:1] }
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $26.
+Removed 1 multiplexer ports.
+<suppressed ~309 debug messages>
+
+10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_v9_parent_clock_context_frontend.
+  Optimizing cells in module \ot_v41_v9_parent_clock_context_frontend.
+Performed a total of 2 changes.
+
+10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 718 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 716 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+10.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $driver$u_ld.ld_np ($dffe) from module ot_v41_v9_parent_clock_context_frontend (D = $26y, Q = \u_ld.ld_np).
+Adding EN signal on $driver$u_ld.ld_k ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $procmux$509_Y, Q = \u_ld.ld_k).
+Adding EN signal on $driver$u_ld.c_d ($dff) from module ot_v41_v9_parent_clock_context_frontend (D = $54y, Q = \u_ld.c_d).
+Adding EN signal on $driver$u_ld.act ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $procmux$476_Y, Q = \u_ld.act).
+Adding EN signal on $driver$sticky_fault ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = 1'1, Q = \sticky_fault).
+Adding EN signal on $driver$u_return.u_n.fault ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = 1'1, Q = \u_return.u_n.fault).
+Adding EN signal on $driver$u_return.u_n.ar ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $702y, Q = \u_return.u_n.ar).
+Adding EN signal on $driver$u_return.u_n.aw ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $698y, Q = \u_return.u_n.aw).
+Adding EN signal on $driver$u_return.u_n.br ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $704y, Q = \u_return.u_n.br).
+Adding EN signal on $driver$u_return.u_n.bw ($adff) from module ot_v41_v9_parent_clock_context_frontend (D = $700y, Q = \u_return.u_n.bw).
+
+10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_v9_parent_clock_context_frontend..
+Removed 8 unused cells and 21 unused wires.
+<suppressed ~9 debug messages>
+
+10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+<suppressed ~2 debug messages>
+
+10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_v9_parent_clock_context_frontend..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~293 debug messages>
+
+10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_v9_parent_clock_context_frontend.
+Performed a total of 0 changes.
+
+10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_v9_parent_clock_context_frontend'.
+Computing hashes of 711 cells of `\ot_v41_v9_parent_clock_context_frontend'.
+Finding duplicate cells in `\ot_v41_v9_parent_clock_context_frontend'.
+Removed a total of 0 cells.
+
+10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_v9_parent_clock_context_frontend..
+
+10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_v9_parent_clock_context_frontend.
+
+10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+11. Executing JSON backend.
+
+12. Executing RTLIL backend.
+Output filename: /out/parent_fixed.rtlil
+
+13. Printing statistics.
+
+=== ot_v41_v9_parent_clock_context_frontend ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      928 wires
+    21320 wire bits
+      380 public wires
+    19716 public wire bits
+       34 ports
+     4273 port bits
+        6 memories
+     8320 memory bits
+      711 cells
+       42   $add
+       60   $adff
+       10   $adffe
+       13   $bmux
+       31   $dff
+        2   $dffe
+       22   $eq
+       38   $ge
+        3   $gt
+       87   $logic_and
+       41   $logic_not
+       26   $logic_or
+       39   $lt
+        6   $memrd_v2
+        6   $memwr_v2
+      199   $mux
+        3   $ne
+       15   $not
+       31   $or
+        1   $reduce_and
+        7   $reduce_bool
+        3   $reduce_or
+       17   $shl
+        1   $shr
+        6   $sub
+        1   $xor
+        1   ICGx1_ASAP7_75t_R
+

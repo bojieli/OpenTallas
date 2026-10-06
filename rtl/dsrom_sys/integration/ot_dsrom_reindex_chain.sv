@@ -26,6 +26,7 @@
 // out_last until the next start.
 // ---------------------------------------------------------------------------
 module ot_dsrom_reindex_chain #(
+    parameter integer OPT_REINDEX_PARENT = 0,
     parameter integer Q    = 4,        // stacks = select quarters
     parameter integer NPC  = 32,
     parameter integer WB   = 128,
@@ -127,7 +128,7 @@ module ot_dsrom_reindex_chain #(
 
     genvar s, l;
     generate for (s = 0; s < Q; s = s + 1) begin : g_stack
-        ot_hdc_v41x_idx_kgather_ps #(.NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW),
+        ot_dsrom_reindex_gather #(.OPT_PARENT(OPT_REINDEX_PARENT), .NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW),
             .BEATW(BEATW), .DW(DW), .LBW(LBW), .LMW(LMW), .DF(DF), .LSW(LSW)) u_kg (
             .clk(clk), .rst_n(rst_n), .lw_v(lw_v[s]), .lw_slot(lw_slot), .lw_addr(lw_addr),
             .lw_blk(lw_blk[s*LBW +: LBW]),

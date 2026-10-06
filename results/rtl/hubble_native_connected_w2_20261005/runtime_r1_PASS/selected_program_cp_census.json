@@ -1,0 +1,129 @@
+{
+  "scope": "Executable bounded Hubble W2 component caller, not a selected full-token/system command image or SU CP binding.",
+  "measured_source_commit": "a86d3cfd32b62f28e86abcbcd8044b57baf20db1",
+  "caller": "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv",
+  "runner": "tools/hubble_w2_connected_runtime.py",
+  "command_processor": {
+    "module": "ot_ds_hbm_cmdproc20",
+    "source_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "ENABLE": 1,
+    "NSM": 2,
+    "NCMD": 4,
+    "clock_period_ns": 1,
+    "silicon_timing_qualified": false
+  },
+  "program": [
+    {
+      "slot": 0,
+      "word": "1000100000000321",
+      "opcode": "LAUNCH",
+      "mask": "01",
+      "entry_pc_hex": "00000321"
+    },
+    {
+      "slot": 1,
+      "word": "2000000000000000",
+      "opcode": "END"
+    }
+  ],
+  "selected_case": {
+    "layer": 20,
+    "retained_source_sm": 4,
+    "operation_ids": [
+      0,
+      1
+    ],
+    "paired_descriptor_count": 1,
+    "numeric_rows_per_operation": 2,
+    "caller_NC": 8,
+    "caller_SUB": 4,
+    "seq_hex": "case/seq.hex",
+    "upstream": "Retained actual native GU/SwiGLU operand packets; producer is not running live in this caller."
+  },
+  "source_derived_CP_census": {
+    "doorbell_transactions": 1,
+    "LAUNCH_commands": 1,
+    "selected_SM_mask": 1,
+    "END_commands": 1,
+    "shared_release_callbacks": 1,
+    "CPL_completions": 1,
+    "CPL_consumptions": 1,
+    "selected_SU_CP_bind_transactions": 0
+  },
+  "observed_transport": {
+    "native_requests": 64,
+    "native_returns": 64,
+    "source_sector_reads": 212,
+    "result_writes": 4,
+    "result_full_readbacks": 4,
+    "total_provider_requests": 220,
+    "numeric_publications": 4,
+    "shared_releases": 1
+  },
+  "publication_bytes": {
+    "row_bytes": 32,
+    "allocated_seats": 4,
+    "result_payload_bytes": 128,
+    "provider_write_bytes": 128,
+    "provider_readback_bytes": 128,
+    "request_width_bits": 337,
+    "response_width_bits": 273,
+    "native_line_bits": 1088
+  },
+  "calendar": {
+    "last_full_readback_cycle": 12826,
+    "shared_release_cycle": 12828,
+    "last_readback_to_release_edges_observed": 2,
+    "gate_final_cycle": 12845,
+    "gate_final_includes_held_CPL": true,
+    "held_CPL_edges_asserted": 12,
+    "release_to_CPL_edges_source_derived": 3,
+    "CPL_onset_cycle_logged": false,
+    "ordering": "CP WAIT blocks the next command FETCH until release-generated sm_done; END follows; completion is held until CPL take. No second CP transaction overlap credit."
+  },
+  "model_accounting": "Price W2 execution and four-row publication once inside this one owned transaction. 12845 is final testbench cycle count including setup/stalls/held CPL, not an isolated publication service latency or full-token decode latency. Earlier rows publish interleaved with remaining native requests; use actual runtime events for that schedule.",
+  "actual_rows_and_write_readback_events": [
+    {
+      "op": 0,
+      "row": 0,
+      "fp32_bits": "3dd91184",
+      "result_cycle": 11170,
+      "write_cycle": 11397,
+      "read_request_cycle": 11417,
+      "verified_cycle": 11465,
+      "address": 119265280
+    },
+    {
+      "op": 0,
+      "row": 1,
+      "fp32_bits": "3caccd6c",
+      "result_cycle": 11556,
+      "write_cycle": 12127,
+      "read_request_cycle": 12147,
+      "verified_cycle": 12196,
+      "address": 119265312
+    },
+    {
+      "op": 1,
+      "row": 0,
+      "fp32_bits": "3d9c2d26",
+      "result_cycle": 12358,
+      "write_cycle": 12587,
+      "read_request_cycle": 12607,
+      "verified_cycle": 12655,
+      "address": 119265344
+    },
+    {
+      "op": 1,
+      "row": 1,
+      "fp32_bits": "bbd91c50",
+      "result_cycle": 12752,
+      "write_cycle": 12759,
+      "read_request_cycle": 12777,
+      "verified_cycle": 12826,
+      "address": 119265376
+    }
+  ],
+  "physical_context": "No parent slot/channel reservation, SS60/FF25 context closure, frequency, performance-gain or adoption claim supplied by this functional gate.",
+  "dependency_retention": "Preserve remote root /srv/opentallas-scratch2/jobs/hubble-native-connected-w2-r1 including original/ case/ src/ build/ until Harvey/Jason/main explicitly release these source dependencies; donor archives and old 1344 PVE vvp remain preserved."
+}

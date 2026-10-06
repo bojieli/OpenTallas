@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS_CHANGED_SOURCE_SS_SYNTHESIS",
+  "shape": {
+    "NSM": 32,
+    "NL": 128,
+    "OWNER64": 1,
+    "TXCTRL": 1,
+    "TREE": 1,
+    "RXOH": 1,
+    "RDUP": 16
+  },
+  "cells_including_kept_helpers": 1279853,
+  "DFF": 304836,
+  "cell_um2": 176005.750499,
+  "sequential_cell_um2": 90842.643719,
+  "synthesis_check_problems": 0,
+  "previous_same_shape_SS_cell_um2": 178333.520399,
+  "cell_area_delta_um2": -2327.769900000014,
+  "cell_count_delta": -31558,
+  "exact_gate": "context32_tree_exact_r1 PASS32/128TX/256RX/789cycles/0extra",
+  "contextual_SS_FF": false,
+  "actual_distributed_pin_and_RC_binding_pending": true,
+  "adopted": false
+}

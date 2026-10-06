@@ -1,0 +1,125 @@
+{
+  "status": "pass",
+  "cases": 18,
+  "rows": [
+    {
+      "case": "whole_n2_i8_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 149
+    },
+    {
+      "case": "whole_n2_i8_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 149
+    },
+    {
+      "case": "whole_n2_i24_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 164
+    },
+    {
+      "case": "whole_n2_i24_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 164
+    },
+    {
+      "case": "whole_n2_i40_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 174
+    },
+    {
+      "case": "whole_n2_i40_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 174
+    },
+    {
+      "case": "whole_n3_i8_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 155
+    },
+    {
+      "case": "whole_n3_i8_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 155
+    },
+    {
+      "case": "whole_n3_i24_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 173
+    },
+    {
+      "case": "whole_n3_i24_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 173
+    },
+    {
+      "case": "whole_n3_i40_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 179
+    },
+    {
+      "case": "whole_n3_i40_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 179
+    },
+    {
+      "case": "whole_n5_i8_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 163
+    },
+    {
+      "case": "whole_n5_i8_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 163
+    },
+    {
+      "case": "whole_n5_i24_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 179
+    },
+    {
+      "case": "whole_n5_i24_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 179
+    },
+    {
+      "case": "whole_n5_i40_tree0",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 195
+    },
+    {
+      "case": "whole_n5_i40_tree1",
+      "pass_": true,
+      "vm_mismatch_words": 0,
+      "cycles": 195
+    }
+  ],
+  "source_commit": "1659b138d",
+  "N": 64,
+  "M": 16,
+  "no_rebuild": true,
+  "original_launcher_exit": 1,
+  "original_launcher_failure": "JSON encoder could not serialize layout numpy arrays AFTER all18 numericalchecksPASS; originalwhole_gate.log/exit preserved",
+  "original_log_sha256": "1769fc3bcf362ea2d953a9dde99c5294781bb82f149cb7e1eae82e6898f16baa",
+  "original_case_source_sha256": "25a89c31e287b0a5c6d5721d1fd16614264637e15158698fbbf5e94dd4022d5d",
+  "executable_sha256": "5b5c48c9283040bfbaea04eb32dddb98b95da83be73fec9408b699699db8d3d9",
+  "SS_FF_qualified": false,
+  "adopted": false
+}

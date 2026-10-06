@@ -1,0 +1,28 @@
+{
+  "scope": "48 original retained actual GU FP32 rows, four expert/matrix spans; expected comparator only, no liveTC/sourceoracle",
+  "live_full_chain": false,
+  "source_record_sha256": "3c54fa39cb6d4566447f05bc55f0e329dfe28b98d47524597a02b1e3640cb80a",
+  "archive_sha256": "0faf7c41dc99a98203de44099439013b7e31033d822420a5c3239d9a88543b6c",
+  "rows": 9216,
+  "spans": 768,
+  "experts": [
+    41,
+    65
+  ],
+  "files": {
+    "expected.hex": "490f64f85ee913dab9c66d93cd9c320ce594cb103d76014311f1be48acf8ebd9",
+    "actual.hex": "931195fc8b10bbeb1fdaabf72fb3a11cf6b47f182f331611b7ee2cfa10f355d4",
+    "descriptors.hex": "183b0078ef8494351245af19a4dd53386859bebea3721cb1f81700d76b7b13b7"
+  },
+  "selected_original_spans": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "selected_files_sha256": {
+    "expected.hex": "1075f663627cb5c909b1e5e669552db73ceb8deca65f6995d120227cec7c57a7",
+    "actual.hex": "3a9fe43bc7b4e7e50e94143d11a7d02ff5fcdf9b502d4d19f5dcc021f964492a",
+    "descriptors.hex": "5b80f43b596f4e98f5b187d6e69b290410ae00fb0ed6bc2bd148d1dcb0ed9c47"
+  }
+}

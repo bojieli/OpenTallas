@@ -1,0 +1,370 @@
+
+-- Running command `read_verilog -sv rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv; chparam -set ENABLE 1 ot_hdc_v41_fh_fault_retire; hierarchy -top ot_hdc_v41_fh_fault_retire; proc; flatten; opt; write_json /tmp/dsrom-fh-fault-retire-retention.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41_fh_fault_retire'.
+Generating RTLIL representation for module `\ot_hdc_v41_fh_fault_relay'.
+Generating RTLIL representation for module `\ot_hdc_v41_fh_fault_copy'.
+Successfully finished Verilog frontend.
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41_fh_fault_retire'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_hdc_v41_fh_fault_retire\ENABLE=1'.
+Warning: Replacing memory \g_cut.packet_pipe with list of registers. See rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:40
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_v41_fh_fault_retire
+Used module:     \ot_hdc_v41_fh_fault_relay
+Used module:     \ot_hdc_v41_fh_fault_copy
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hdc_v41_fh_fault_retire
+Used module:     \ot_hdc_v41_fh_fault_relay
+Used module:     \ot_hdc_v41_fh_fault_copy
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:81$8 in module ot_hdc_v41_fh_fault_copy.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:75$5 in module ot_hdc_v41_fh_fault_relay.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26 in module ot_hdc_v41_fh_fault_retire.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hdc_v41_fh_fault_copy.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:81$8'.
+Found async reset \rst_n in `\ot_hdc_v41_fh_fault_relay.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:75$5'.
+Found async reset \rst_n in `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hdc_v41_fh_fault_copy.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:81$8'.
+     1/1: $0\q[0:0]
+Creating decoders for process `\ot_hdc_v41_fh_fault_relay.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:75$5'.
+     1/1: $0\q[0:0]
+Creating decoders for process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+     1/5: $0\g_cut.st[31:0]
+     2/5: $0\g_cut.packet_pipe[3][5509:0]
+     3/5: $0\g_cut.packet_pipe[2][5509:0]
+     4/5: $0\g_cut.packet_pipe[1][5509:0]
+     5/5: $0\g_cut.packet_pipe[0][5509:0]
+Creating decoders for process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+     1/15: $1\g_cut.r[31:0]
+     2/15: $0\g_cut.quadrant_fault[3:0] [3]
+     3/15: $0\g_cut.quadrant_fault[3:0] [2]
+     4/15: $0\g_cut.quadrant_fault[3:0] [1]
+     5/15: $0\g_cut.quadrant_fault[3:0] [0]
+     6/15: $0\g_cut.row_fault[7:0] [6]
+     7/15: $0\g_cut.row_fault[7:0] [5]
+     8/15: $0\g_cut.row_fault[7:0] [4]
+     9/15: $0\g_cut.row_fault[7:0] [3]
+    10/15: $0\g_cut.row_fault[7:0] [2]
+    11/15: $0\g_cut.row_fault[7:0] [1]
+    12/15: $0\g_cut.row_fault[7:0] [0]
+    13/15: $0\g_cut.valid_pipe[3:0]
+    14/15: $0\g_cut.row_fault[7:0] [7]
+    15/15: $0\g_cut.r[31:0]
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hdc_v41_fh_fault_copy.\q' using process `\ot_hdc_v41_fh_fault_copy.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:81$8'.
+  created $adff cell `$procdff$57' with positive edge clock and negative level reset.
+Creating register for signal `\ot_hdc_v41_fh_fault_relay.\q' using process `\ot_hdc_v41_fh_fault_relay.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:75$5'.
+  created $adff cell `$procdff$58' with positive edge clock and negative level reset.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.packet_pipe[2]' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+  created $dff cell `$procdff$59' with positive edge clock.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.st' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+  created $dff cell `$procdff$60' with positive edge clock.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.packet_pipe[0]' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+  created $dff cell `$procdff$61' with positive edge clock.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.packet_pipe[1]' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+  created $dff cell `$procdff$62' with positive edge clock.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.packet_pipe[3]' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+  created $dff cell `$procdff$63' with positive edge clock.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.row_fault' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+  created $adff cell `$procdff$64' with positive edge clock and negative level reset.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.quadrant_fault' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+  created $adff cell `$procdff$65' with positive edge clock and negative level reset.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.valid_pipe' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+  created $adff cell `$procdff$66' with positive edge clock and negative level reset.
+Creating register for signal `\ot_hdc_v41_fh_fault_retire.\g_cut.r' using process `\ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+  created $dff cell `$procdff$67' with positive edge clock.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hdc_v41_fh_fault_copy.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:81$8'.
+Removing empty process `ot_hdc_v41_fh_fault_relay.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:75$5'.
+Removing empty process `ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:39$25'.
+Removing empty process `ot_hdc_v41_fh_fault_retire.$proc$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:43$26'.
+Cleaned up 0 empty switches.
+
+5. Executing FLATTEN pass (flatten design).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[0].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[1].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[2].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[3].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[4].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[5].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[6].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[7].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[8].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[9].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[10].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[11].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[12].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[13].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[14].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_relay[15].u_relay (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[0].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[1].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[2].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[3].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[4].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[5].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[6].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[7].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[8].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[9].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[10].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[11].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[12].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[13].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[14].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[15].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[16].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[17].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[18].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[19].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[20].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[21].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[22].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[23].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[24].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[25].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[26].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[27].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[28].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[29].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[30].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[31].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[32].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[33].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[34].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[35].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[36].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[37].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[38].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[39].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[40].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[41].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[42].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[43].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[44].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[45].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[46].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[47].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[48].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[49].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[50].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[51].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[52].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[53].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[54].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[55].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[56].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[57].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[58].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[59].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[60].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[61].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[62].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_lane[63].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_write[0].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_write[1].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_write[2].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.g_write[3].u_copy (found keep_hierarchy property).
+Keeping ot_hdc_v41_fh_fault_retire.g_cut.u_status (found keep_hierarchy property).
+No more expansions possible.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_v41_fh_fault_retire.
+Optimizing module ot_hdc_v41_fh_fault_relay.
+Optimizing module ot_hdc_v41_fh_fault_copy.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hdc_v41_fh_fault_retire'.
+<suppressed ~3 debug messages>
+Finding identical cells in module `\ot_hdc_v41_fh_fault_relay'.
+Finding identical cells in module `\ot_hdc_v41_fh_fault_copy'.
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_retire..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_relay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_copy..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hdc_v41_fh_fault_retire.
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:69$56: { \g_cut.valid_pipe [0] \g_cut.valid_pipe [1] \g_cut.valid_pipe [2] \g_cut.valid_pipe [3] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:49$55: { \g_cut.row_fault [6] \g_cut.row_fault [7] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:49$54: { \g_cut.row_fault [4] \g_cut.row_fault [5] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:49$53: { \g_cut.row_fault [2] \g_cut.row_fault [3] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:49$52: { \g_cut.row_fault [0] \g_cut.row_fault [1] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$49: { \poison [56] \poison [57] \poison [58] \poison [59] \poison [60] \poison [61] \poison [62] \poison [63] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$46: { \poison [48] \poison [49] \poison [50] \poison [51] \poison [52] \poison [53] \poison [54] \poison [55] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$43: { \poison [40] \poison [41] \poison [42] \poison [43] \poison [44] \poison [45] \poison [46] \poison [47] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$40: { \poison [32] \poison [33] \poison [34] \poison [35] \poison [36] \poison [37] \poison [38] \poison [39] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$37: { \poison [24] \poison [25] \poison [26] \poison [27] \poison [28] \poison [29] \poison [30] \poison [31] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$34: { \poison [16] \poison [17] \poison [18] \poison [19] \poison [20] \poison [21] \poison [22] \poison [23] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$31: { \poison [8] \poison [9] \poison [10] \poison [11] \poison [12] \poison [13] \poison [14] \poison [15] }
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:48$28: { \poison [0] \poison [1] \poison [2] \poison [3] \poison [4] \poison [5] \poison [6] \poison [7] }
+  Optimizing cells in module \ot_hdc_v41_fh_fault_retire.
+  Optimizing cells in module \ot_hdc_v41_fh_fault_relay.
+    New input vector for $reduce_or cell $reduce_or$rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:76$7: { \d [0] \d [1] \d [2] \d [3] }
+  Optimizing cells in module \ot_hdc_v41_fh_fault_relay.
+  Optimizing cells in module \ot_hdc_v41_fh_fault_copy.
+Performed a total of 14 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hdc_v41_fh_fault_retire'.
+Finding identical cells in module `\ot_hdc_v41_fh_fault_relay'.
+Finding identical cells in module `\ot_hdc_v41_fh_fault_copy'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$67 ($dff) from module ot_hdc_v41_fh_fault_retire.
+Replaced 1 DFF cells.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_retire..
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_relay..
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_copy..
+Removed 3 unused cells and 26 unused wires.
+<suppressed ~6 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_v41_fh_fault_copy.
+Optimizing module ot_hdc_v41_fh_fault_relay.
+Optimizing module ot_hdc_v41_fh_fault_retire.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_copy..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_relay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_hdc_v41_fh_fault_retire..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hdc_v41_fh_fault_copy.
+  Optimizing cells in module \ot_hdc_v41_fh_fault_relay.
+  Optimizing cells in module \ot_hdc_v41_fh_fault_retire.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hdc_v41_fh_fault_copy'.
+Finding identical cells in module `\ot_hdc_v41_fh_fault_relay'.
+Finding identical cells in module `\ot_hdc_v41_fh_fault_retire'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_copy..
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_relay..
+Finding unused cells or wires in module \ot_hdc_v41_fh_fault_retire..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_v41_fh_fault_copy.
+Optimizing module ot_hdc_v41_fh_fault_relay.
+Optimizing module ot_hdc_v41_fh_fault_retire.
+
+6.16. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing JSON backend.
+
+8. Printing statistics.
+
+=== ot_hdc_v41_fh_fault_copy ===
+
+   Number of wires:                  4
+   Number of wire bits:              4
+   Number of public wires:           4
+   Number of public wire bits:       4
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $adff                           1
+
+=== ot_hdc_v41_fh_fault_relay ===
+
+   Number of wires:                  5
+   Number of wire bits:              8
+   Number of public wires:           4
+   Number of public wire bits:       7
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $adff                           1
+     $reduce_or                      1
+
+=== ot_hdc_v41_fh_fault_retire ===
+
+   Number of wires:                 41
+   Number of wire bits:          33327
+   Number of public wires:          23
+   Number of public wire bits:   33299
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                121
+     $adff                           3
+     $dff                            4
+     $logic_or                      16
+     $reduce_or                     13
+     ot_hdc_v41_fh_fault_copy       69
+     ot_hdc_v41_fh_fault_relay      16
+
+=== design hierarchy ===
+
+   ot_hdc_v41_fh_fault_retire        1
+     ot_hdc_v41_fh_fault_copy       69
+     ot_hdc_v41_fh_fault_relay      16
+
+   Number of wires:                397
+   Number of wire bits:          33731
+   Number of public wires:         363
+   Number of public wire bits:   33687
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                137
+     $adff                          88
+     $dff                            4
+     $logic_or                      16
+     $reduce_or                     29
+

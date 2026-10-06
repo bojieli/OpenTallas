@@ -26,12 +26,14 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer PULLIN    = 0,
     parameter integer WQ        = 4,
     parameter integer WBUF      = 16,
+    parameter integer PROTECTED = 0,
     parameter integer SYNC      = 2,
-    parameter integer RSEL      = 0,       // r8 landing read select (ot_qwen_stream4_cdc_pc), default the r6/r7 structure
+    parameter integer RSEL      = 0,       // ot_qwen_stream4_cdc_pc landing read select: 1 = r9 (closed route r9a)
     parameter integer RNG       = 10
 ) (
     input  wire                 clk,
-    input  wire                 rst_n,
+    input  wire                 rst_n, // cold POR only
+    input  wire                 warm_rst_n, // protected path: admission pause, never erase debt
     input  wire                 hclk,          // external periodic controller clock (1,024 ps)
     input  wire                 d_v,
     output wire                 d_rdy,
@@ -50,9 +52,11 @@ module ot_qwen_hbm_stream4_cdc #(
     output wire [NPC-1:0]       w_room,
     output wire [NPC-1:0]       wd_v,
     output wire [NPC*TAGW-1:0]  wd_tag,
-    output reg                  fault,
+    output wire                 fault,
     output reg  [15:0]          fault_code
 );
+    reg fault_raw;
+    assign fault = fault_raw | (PROTECTED && protected_cf);
     localparam integer LR = 64;
     localparam integer CYC = 1024;
     localparam longint BURST=1024, TCCDL=2560, CL=12500, CWL=6250, RCD=19375, RCDW=9375, RP=16250, RAS=28125,
@@ -87,14 +91,26 @@ module ot_qwen_hbm_stream4_cdc #(
     reg  desc_v_q, go_q; reg [18:0] dq_row; reg [10:0] dq_n;
     wire [NSTK-1:0] desc_rk, sfault_k, busy_k;
     wire desc_r = &desc_rk, sfault = |sfault_k, busy_all = &busy_k;
+    wire protected_dv,protected_go,protected_cf,protected_hf,protected_ready;
+    wire [18:0] protected_row;wire [10:0] protected_n;
+    if(PROTECTED)begin:protected_front
+        ot_qwen_s4_protected_control #(.MEM_ROWS(MEM_WORDS/131072)) u_control(.clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(warm_rst_n),
+            .d_v(d_v),.d_rdy(protected_ready),.d_row(d_row),.d_n(d_n),.go(go),
+            .desc_v(protected_dv),.desc_r(desc_r),.desc_row(protected_row),.desc_n(protected_n),
+            .busy_all(busy_all),.h_go(protected_go),
+            .c_external_fault(|c_fault_p),.h_external_fault(h_fault|sfault|(|h_fault_p)),.c_fault(protected_cf),.h_fault(protected_hf));
+    end else begin:raw_front
+        assign {protected_dv,protected_go,protected_cf,protected_hf,protected_ready}=5'b0;
+        assign protected_row=0;assign protected_n=0;
+    end
     wire [NPC-1:0] row_v, col_v, col_we, busy, wr_r;
     wire [NPC*3-1:0] row_op; wire [NPC*5-1:0] row_bank, col_bank, col_col; wire [NPC*19-1:0] row_row;
     wire [NPC*3-1:0] cred_ret;
     wire [NPC-1:0] wr_v; wire [NPC*5-1:0] wr_bank, wr_col; wire [NPC*24-1:0] wr_sec;
     for (genvar sk = 0; sk < NSTK; sk = sk + 1) begin : stk
         ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ), .PULLIN(PULLIN)) u_ctl (
-            .clk(hclk), .rst_n(h_rst_n), .desc_v(desc_v_q && desc_r), .desc_r(desc_rk[sk]), .desc_row(dq_row), .desc_n(dq_n),
-            .go(go_q), .next_posted(1'b0), .row_v(row_v[sk*32 +: 32]), .row_op(row_op[sk*96 +: 96]),
+            .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(PROTECTED?protected_n:dq_n),
+            .go(PROTECTED?protected_go:go_q), .next_posted(1'b0), .row_v(row_v[sk*32 +: 32]), .row_op(row_op[sk*96 +: 96]),
             .row_bank(row_bank[sk*160 +: 160]), .row_row(row_row[sk*608 +: 608]),
             .col_v(col_v[sk*32 +: 32]), .col_bank(col_bank[sk*160 +: 160]), .col_col(col_col[sk*160 +: 160]),
             .cred_ret(cred_ret[sk*96 +: 96]), .busy(busy[sk*32 +: 32]), .fault(sfault_k[sk]),
@@ -110,6 +126,18 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC*24-1:0] h_csec; wire [NPC*256-1:0] h_cdata; wire [NPC*TAGW-1:0] h_ctag;
     wire [NPC-1:0] h_wcon = col_v & col_we;
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
+        if(PROTECTED)begin:protected_path
+        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+            .clk(clk), .por_n(rst_n), .warm_rst_n(warm_rst_n),
+            .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
+            .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
+            .w_room(w_room[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
+            .hclk(hclk),
+            .h_lv(lp_v[q]), .h_lsec(lp_sec[q]), .h_lrow(lp_row[q]), .h_ldata(lp_dat[q]), .h_cred(cred_ret[q*3 +: 3]),
+            .h_wv(wr_v[q]), .h_wsec(wr_sec[q*24 +: 24]), .h_hand(wr_v[q] && wr_r[q]), .h_wcon(h_wcon[q]),
+            .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),
+            .h_av(ap_v[q]), .h_atag(ap_tag[q]), .h_fault(h_fault_p[q]));
+        end else begin:raw_path
         ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_cdc (
             .clk(clk), .c_arst_n(rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
@@ -120,6 +148,7 @@ module ot_qwen_hbm_stream4_cdc #(
             .h_wv(wr_v[q]), .h_wsec(wr_sec[q*24 +: 24]), .h_hand(wr_v[q] && wr_r[q]), .h_wcon(h_wcon[q]),
             .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),
             .h_av(ap_v[q]), .h_atag(ap_tag[q]), .h_fault(h_fault_p[q]));
+        end
         assign wr_bank[q*5 +: 5] = l2bank(wr_sec[q*24 +: 17]);
         assign wr_col[q*5 +: 5]  = l2col(wr_sec[q*24 +: 17]);
     end
@@ -135,25 +164,26 @@ module ot_qwen_hbm_stream4_cdc #(
     always @(posedge clk or negedge c_rst_n) begin
         if (!c_rst_n) begin
             ccyc <= 0; d_tog <= 0; g_tog <= 0; a1 <= 0; a2 <= 0; a_seen <= 0; d_pend <= 0; dr1 <= 0; dr2 <= 0;
-            hf1 <= 0; hf2 <= 0; fault <= 0; fault_code <= 0;
+            hf1 <= 0; hf2 <= 0; fault_raw <= 0; fault_code <= 0;
         end else begin
             ccyc <= ccyc + 1;
             a1 <= a_tog; a2 <= a1; dr1 <= desc_r; dr2 <= dr1; hf1 <= h_fault; hf2 <= hf1;
             if (a2 != a_seen) begin a_seen <= a2; d_pend <= 1'b0; end
-            if (d_v) begin
-                if (!d_rdy) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
+            if (!PROTECTED && d_v) begin
+                if (!d_rdy) begin fault_raw <= 1'b1; fault_code[0] <= 1'b1; end
                 d_row_c <= d_row; d_n_c <= d_n; d_tog <= ~d_tog; d_pend <= 1'b1;
             end
-            if (go) g_tog <= ~g_tog;
+            if (!PROTECTED && go) g_tog <= ~g_tog;
+            if(PROTECTED && protected_cf) begin fault_raw<=1;fault_code[4]<=1;end
             for (p = 0; p < NPC; p = p + 1) begin
-                if (l_pop[p] && !l_v[p]) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
-                if (w_v[p] && l2port(w_sec[p*24 +: 17]) != p) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
+                if (l_pop[p] && !l_v[p]) begin fault_raw <= 1'b1; fault_code[1] <= 1'b1; end
+                if (w_v[p] && l2port(w_sec[p*24 +: 17]) != p) begin fault_raw <= 1'b1; fault_code[3] <= 1'b1; end
             end
-            if (|c_fault_p) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
-            if (hf2) begin fault <= 1'b1; fault_code <= fault_code | h_code; end
+            if (|c_fault_p) begin fault_raw <= 1'b1; fault_code[3] <= 1'b1; end
+            if (hf2) begin fault_raw <= 1'b1; fault_code <= fault_code | h_code; end
         end
     end
-    assign d_rdy = !d_pend && dr2;
+    assign d_rdy = PROTECTED ? protected_ready : (!d_pend && dr2);
 
     // ---- controller domain: mailbox, DRAM checker, returns ----
     reg d1, d2, d_seen, g1, g2, g_seen, go_req;
@@ -214,6 +244,7 @@ module ot_qwen_hbm_stream4_cdc #(
             go_q <= 1'b0;
             if ((go_req || g2 != g_seen) && busy_all && !go_q) begin go_q <= 1'b1; go_req <= 1'b0; end
             if (sfault) begin h_fault <= 1'b1; h_code[9] <= 1'b1; end
+            if (PROTECTED && protected_hf) begin h_fault<=1;h_code[4]<=1;end
             if (|h_fault_p) begin h_fault <= 1'b1; h_code[2] <= 1'b1; end
             // the WR commands of the previous edge: write the captured entry to the array
             for (q = 0; q < NPC; q = q + 1) if (wc_pend[q]) begin

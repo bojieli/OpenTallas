@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_hdc_v41x_vred_slice64_c12 top=ot_hdc_v41x_vred_slice64_c12 purpose=signoff_target
+  synth: cells=1223392 area=161891.769 um2 seq_area=35320.000 um2 macros=611823
+  pnr:   wirelength=3356151 um vias=6399363 DRC=0 antenna_nets=0 Fmax=1210.06 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/hbm-su-red/r2/routes/s2_u25_fp/physical.json

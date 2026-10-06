@@ -1,0 +1,12 @@
+Production PQ / producing-column G1 selection under finite HBM request backpressure.
+NC8, active1, RMAX256, PQ_ENABLE1, G1ASB0, XMAP0, PACK_W2=0. No engine RTL change; production default-off parameters unchanged.
+Actual request-ready is low 11 of every37 edges. Accepted request address/tag must remain stable until acceptance; the real finite512-slot response ledger records only accepted requests. Original completed stress payload and expected97rows reused without regenerating numerics.
+Exact PASS:97/97rows across13 operations,1544 accepted requests,649 stalled-request edges,2746 cycles; faults0 and all row/consumed-line counts exact.
+Negative FAIL as required:one actual HBM return payload complemented before DUT capture;1 numerical mismatching rows. Runtime simulation completes; comparator returns1, confirming bad numeric results do not pass.
+Terminal supervisor3664226 exit0; positive comparator0, negative comparator1. Remote executable/objects retained at ot-epyc2:/srv/opentallas-scratch2/jobs/euclid-issue-service-stall-r2/work/build.
+The1ns bench clock establishes component exactness only. No SS/FF, whole-SM/token/rate/adoption claim. Existing routed failures remain unchanged; Claude owns structural SM closure.
+Replay with the retained original fixture:
+python3 tools/dshbm_sm_pq_service_stall.py build --work NEW_DIRECTORY
+python3 tools/dshbm_sm_pq_service_stall.py run --work NEW_DIRECTORY --fixture /srv/opentallas-scratch2/jobs/euclid-issue-service-stall-r1/fixture
+python3 tools/dshbm_sm_pq_service_stall.py run --work NEW_DIRECTORY --fixture /srv/opentallas-scratch2/jobs/euclid-issue-service-stall-r1/fixture --corrupt-return
+Last command must exit1 and report a numerical mismatch; do not treat it as PASS merely because simulation exited.

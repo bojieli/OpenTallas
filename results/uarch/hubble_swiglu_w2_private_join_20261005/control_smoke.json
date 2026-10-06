@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_CONTROL_ONLY",
+  "numerical_producer": "186-edge deterministic stub, no numerical math",
+  "checks": [
+    "144 ordered packets captured in72 words",
+    "64 xwrites in original fragment/beat order",
+    "all active packet/exponent bits and inactive template bits",
+    "complete seen mask before writes",
+    "owner mutation sticky rejection before any writes",
+    "defaultOFF outputs inert"
+  ],
+  "admission_to_operands_ready_edges": 323,
+  "native_numerical_join_executed": false,
+  "build": "iverilog -g2012 -s tb; extracted privatecapture module + capture_control_smoke.sv",
+  "actual_stdout": [
+    "CAPTURE_CONTROL_SMOKE_PASS packets=144 inputs=72 capture_words=72 xwrites=64 admission_to_done=323",
+    "OWNER_REJECTION_AND_DEFAULT_OFF_PASS"
+  ],
+  "caller_sha256": "4fa6657fe3497a1b2c2e1b6439a826ff21d6731b3bc40b82440e26fe6842e0ea",
+  "smoke_sha256": "544b46396ddbc19691e858fbd8faf1a0c4a9430d61714ad086b753f55107d6d9",
+  "scope": "Private capture/transpose contract only; pending numerical joined exact gate, gain and parent SS60/FF25 context. No fullGU/fulltoken/adoption."
+}

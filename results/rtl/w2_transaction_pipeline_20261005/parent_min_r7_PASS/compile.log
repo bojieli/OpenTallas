@@ -1,0 +1,48 @@
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 57 (other_lease_v) of ot_hbm_w2_protected_parent_context expects 2 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 1 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 59 (other_release_v) of ot_hbm_w2_protected_parent_context expects 2 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 1 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 60 (other_lease_job) of ot_hbm_w2_protected_parent_context expects 64 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 63 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 61 (other_release_job) of ot_hbm_w2_protected_parent_context expects 64 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 63 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 62 (other_lease_gen) of ot_hbm_w2_protected_parent_context expects 8 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 7 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 63 (other_release_gen) of ot_hbm_w2_protected_parent_context expects 8 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 7 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 64 (other_lease_token) of ot_hbm_w2_protected_parent_context expects 34 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 33 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 65 (other_release_token) of ot_hbm_w2_protected_parent_context expects 34 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 33 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 66 (other_lease_pos) of ot_hbm_w2_protected_parent_context expects 40 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 39 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 67 (other_release_pos) of ot_hbm_w2_protected_parent_context expects 40 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 39 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 74 (observe_req) of ot_hbm_w2_protected_parent_context expects 4 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 3 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 75 (observe_rsp) of ot_hbm_w2_protected_parent_context expects 4 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 3 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 76 (observe_req_we) of ot_hbm_w2_protected_parent_context expects 4 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 3 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 77 (observe_rsp_we) of ot_hbm_w2_protected_parent_context expects 4 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 3 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 78 (return_offer) of ot_hbm_w2_protected_parent_context expects 4 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 3 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 79 (observe_req_tag) of ot_hbm_w2_protected_parent_context expects 64 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 63 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 80 (observe_rsp_tag) of ot_hbm_w2_protected_parent_context expects 64 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 63 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 86 (other_req_v) of ot_hbm_w2_protected_parent_context expects 3 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 2 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 87 (other_req_we) of ot_hbm_w2_protected_parent_context expects 3 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 2 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 88 (other_rsp_rdy) of ot_hbm_w2_protected_parent_context expects 3 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 2 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 89 (other_req_addr) of ot_hbm_w2_protected_parent_context expects 96 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 95 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 90 (other_req_wstrb) of ot_hbm_w2_protected_parent_context expects 96 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 95 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 91 (other_req_wdata) of ot_hbm_w2_protected_parent_context expects 768 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 767 high bits of the port.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37: warning: Port 92 (other_req_tag) of ot_hbm_w2_protected_parent_context expects 48 bits, got 1.
+rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:37:        : Padding 47 high bits of the port.

@@ -1,0 +1,99 @@
+Mon Oct  5 22:34:47 UTC 2026
+ 15:34:47 up 20:38, 40 users,  load average: 218.59, 151.88, 94.83
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 444640100352 125916372992    32501760 653559472128 771977764864
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762197692416 2387011465216  25% /srv/opentallas-scratch2
+measured_cpu_idle 7.8064012490242e-05 free_cores 0.009992193598750976
+Mon Oct  5 22:35:09 UTC 2026
+ 15:35:09 up 20:39, 44 users,  load average: 220.34, 156.59, 97.60
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 443861987328 126627385344     8200192 653601259520 772755877888
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762261520384 2386947637248  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.0003121829392023726 free_cores 0.03995941621790369
+Mon Oct  5 22:35:30 UTC 2026
+ 15:35:30 up 20:39, 43 users,  load average: 221.24, 161.87, 100.91
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 444433428480 125851037696     8216576 653807165440 772184436736
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762448134144 2386761023488  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.0001562255897516013 free_cores 0.019996875488204967
+Mon Oct  5 22:35:51 UTC 2026
+ 15:35:51 up 20:39, 44 users,  load average: 196.16, 160.30, 101.71
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 449699315712 120584867840     8216576 653807460352 766918549504
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762448138240 2386761019392  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.4594594594594595 free_cores 58.810810810810814
+Mon Oct  5 22:36:12 UTC 2026
+ 15:36:12 up 20:40, 42 users,  load average: 155.37, 153.34, 100.67
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 464282976256 106000986112     8196096 653807693824 752334888960
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762448154624 2386761003008  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.5756889686938871 free_cores 73.68818799281755
+Mon Oct  5 22:36:33 UTC 2026
+ 15:36:33 up 20:40, 44 users,  load average: 124.71, 146.48, 99.53
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 464077840384 106239918080     8212480 653773991936 752540024832
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762448175104 2386760982528  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.6725041044484403 free_cores 86.08052536940036
+Mon Oct  5 22:36:34 UTC 2026
+ 15:36:34 up 20:40, 45 users,  load average: 124.71, 146.48, 99.53
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 464114327552 106136588288     8224768 653840785408 752503537664
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762448175104 2386760982528  25% /srv/opentallas-scratch2
+after_guard_idle 0.6461105024260447 free_cores 82.70214431053373
+MACRO_TRACK_GATE PASS macros=1 hooks=2 warnings=1 record=/srv/opentallas-scratch2/codex/w5-context-20261005/route-r2/macro_gate.json
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+13. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_rom_elem_w10.sv
+14. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm.sv
+15. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain.sv
+16. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree.sv
+17. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes.sv
+18. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv
+19. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+20. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+21. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_cg.sv
+22. Executing Verilog-2005 frontend: /src/rtl/proto/ot_fp32_add_rne_pipe.sv
+23. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_fadd.sv
+24. Executing Verilog-2005 frontend: /src/rtl/common/ot_prefix.sv
+25. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bmul2.sv
+26. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm2_w10.sv
+27. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain2.sv
+28. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree2.sv
+29. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes2.sv
+30. Executing Verilog-2005 frontend: /src/rtl/experimental/w5_context/ot_w5_stage.sv
+31. Executing Verilog-2005 frontend: /src/rtl/experimental/w5_context/ot_w5_context.sv
+32. Executing Verilog-2005 frontend: /src/rtl/experimental/w5_context/ot_w5_loader.sv
+33. Executing Verilog-2005 frontend: /src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv
+34. Executing Verilog-2005 frontend: /src/rtl/v41die/ot_v41_retn_w17w10.sv
+35. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_ret.sv
+/src/rtl/v41rom/ot_v41_ret.sv:75: ERROR: syntax error, unexpected TOK_IMPORT
+
+Elapsed time: 0:00.58[h:]min:sec. CPU time: user 0.55 sys 0.03 (99%). Peak memory: 83072KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch2/codex/w5-context-20261005/route-r2/out

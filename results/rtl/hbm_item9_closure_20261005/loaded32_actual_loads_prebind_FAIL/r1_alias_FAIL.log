@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/codex-item9-loaded32-min-20261005/tools/hbm_item9_actual_loads.py", line 41, in <module>
+    response=net['netnames']['g_on.rsp_data']['bits'];assert len(response)==4096 and len(set(response))==4096
+             ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'g_on.rsp_data'

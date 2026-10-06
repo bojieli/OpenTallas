@@ -1,0 +1,156 @@
+{
+  "verdict": "PASS_ACTUAL_PROTECTED_PROVIDER_JOIN_NOT_PHYSICAL_QUALIFICATION",
+  "source_commit": "42d3fc00431268a3954d6a3c689683f6b1b7421c",
+  "provider_source": "554d7b0c9",
+  "tool": "Verilator5.050 2026-07-01",
+  "build_exit": 0,
+  "runtime_exit": 0,
+  "nominal": {
+    "MAXU": 866,
+    "SOURCE": 0,
+    "VM_words": 32768,
+    "VM_word_bits": 512,
+    "real_VM_SRAMs": 288,
+    "canonical_prompt_SRAMs": 14,
+    "ROMs": 4,
+    "literal_commands": 668,
+    "actual_fixture_engine_retirements": 192,
+    "independent_VM_write_checks": 41,
+    "independent_output_flit_checks": 47,
+    "whole_stage_ACKs": 1,
+    "provider_accepted_replied_consumed_retired_bundles": 136,
+    "actual_XA_read_captures": 46,
+    "fast_cycles": 17510,
+    "native_capture_fast_edges": 8
+  },
+  "negatives": {
+    "wrong_owner_external_read_consume_refused": true,
+    "warm_provider_owned_debt_preserved": true,
+    "WFC_and_canonical_whole_owner_pending_preserved": true,
+    "whole_ACK_unchanged": true
+  },
+  "observed_service": {
+    "XBpreload_writes": {
+      "bundles": [
+        1,
+        47
+      ],
+      "accept_to_reply_fast_edges": [
+        20,
+        21
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        7
+      ]
+    },
+    "XBhighword_read": {
+      "bundles": [
+        48,
+        48
+      ],
+      "accept_to_reply_fast_edges": [
+        12,
+        12
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "XA_canonical_writes": {
+      "bundles": [
+        49,
+        89
+      ],
+      "accept_to_reply_fast_edges": [
+        20,
+        21
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "actual_XAread_XBread_fourwriter_sameedge": {
+      "bundles": [
+        90,
+        90
+      ],
+      "accept_to_reply_fast_edges": [
+        71,
+        71
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "remaining_XA_reads": {
+      "bundles": [
+        91,
+        135
+      ],
+      "accept_to_reply_fast_edges": [
+        12,
+        13
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        7
+      ]
+    },
+    "XB_lastwriter_readback": {
+      "bundles": [
+        136,
+        136
+      ],
+      "accept_to_reply_fast_edges": [
+        13,
+        13
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    }
+  },
+  "bench_clock": {
+    "fast_period_ps": 833.334,
+    "slow_period_ps": 1111.112,
+    "phase_ps": 0,
+    "ratio": "3:4; four fast edges = three slow edges3333.336ps"
+  },
+  "performance": {
+    "build_seconds": 28.024,
+    "build_frontend_allocated_MB": 267.191,
+    "generated_CPP_MB": 22.307,
+    "runtime_seconds": 3.929,
+    "runtime_allocated_MB": 11,
+    "total_wall_seconds": 32.14,
+    "peak_job_RSS_KiB": 462452
+  },
+  "prior_failure": {
+    "path": "../gate_r1_FAIL/result.json",
+    "diagnosis": "R1 final xb_service returned nextnegedge after registered retirement became high, before nextposedge actual monitor/adapter receipt sampling. R2 awaits that actualconsumeredge; identical full equality counters and independentgold nowPASS.",
+    "independent_required_binding_fix": "Removed XA simultaneousread/write serialization. Sameowner native signals both preserved; distinct simultaneous XA owners EXPLICITREJECT rather than reorder/drop."
+  },
+  "supplier_reused": "Normal MODE0 full2MiB948cycles +CE/warm/identity and soleUE-only618ns actual5.032; unchanged554source, no provider PASSreplay",
+  "scope": "minimum real canonical SOURCE0 WFC/XA/XB/C8 owned service hookup; external finite engine-retirement protocol fixture, NOT whole numerical native engines or alloverlapping native owners",
+  "unsupported_binding": "Distinct simultaneous native XA RX/TX owners cannot share provider commonowner47 lease. Adapter rejects beforeacceptance with sticky fault. Full allcaller adoption requires source-owned multilease/proven upstream admission, no false fullparent claim.",
+  "root": "ot-agidock128:/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r2",
+  "retained_objects": "R1 and R2 sources, all generatedobjects/binaries/uniqueSRAM initialization artifacts retained in place; no active gate child after terminal",
+  "SS60_FF25_qualified": false,
+  "hub_routing_gate": "PENDING_PHYSICAL_CHANGED_CONTEXT",
+  "adopted": false,
+  "raw_sha256": {
+    "resources.log": "0cb8e7b97e69b3aa86c4c68f9b536cf78c9cda71a1fdf7b8eb327c6183c8d02f",
+    "build.log.gz": "493586ab0c6f63f1e724196d503154e771f1364c922f917d449b6d29f992c785",
+    "verdict": "eab96ac6ad52943abd56d3856f78af5dc7ef44c3c79c58a3c3385d10f3986620",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "tool.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "headroom.jsonl": "3abe23f811f8c3a554e0ee86304112a0476e090cf27ef85e76be82c656aefaec",
+    "command.json": "813bb8bab7a71ae0e454c67aede1f01d3d7d5afa303721c5467c6554b7bd21cc",
+    "run.log": "af221f5da84cfa8c8bc165c675b34fd2c25eec7f0fe698cdae7a369a8ee4304c"
+  }
+}

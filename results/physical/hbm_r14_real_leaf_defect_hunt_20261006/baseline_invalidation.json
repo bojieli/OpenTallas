@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.hbm-r14-baseline-invalidation.v1",
+ "evidence_main": "7ccef3810",
+ "evidence_handoff": "/tmp/claude-review-20261003/handoff_to_codex_20261004/claude_dielint_hbm_abstract_list_20261006.txt",
+ "handoff_sha256": "6420b6da542880fa96eea803298305a1034117e35ea3155c0026fd7890cba922",
+ "diagnostic_source": "77ef36ea3/r14b",
+ "local_grid_only_result_main": "8045d16e0",
+ "old_jobs_complete": true,
+ "new_placement_on_old_baseline_allowed": false,
+ "parent_placement_credit": false,
+ "clock_and_corridor_inheritance_allowed": false,
+ "hardened_family_coverage_claim": false,
+ "real_internal_macro_views": [
+  "ot_hbm_accel_bd_col",
+  "ot_hbm_accel_tc16",
+  "ot_sram_1r1w_512x256_m1_r2c2",
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "real_PHY_view": "ot_hbm3e_phy_v41x_aw30_e8p5",
+ "pin_only_placeholder_views": [
+  "ot_pdie_serdes",
+  "ot_pdie_ucie"
+ ],
+ "open_integration_dependencies": [
+  "stream service/SFU/HC/VM functional tops",
+  "attention query operand and real KV/row interfaces",
+  "collective endpoint ABI, pclk, rank/pf configuration",
+  "HC output and barrier arrive",
+  "168 forwarded stations fclk_i/fclk_o",
+  "at least48 mesoW512 FIFOs physically allocated",
+  "tc16/bd_col blackbox LB/IL/TAGW parameters",
+  "all connected clock/reset endpoints and single-net PLL ports",
+  "south16 SM orientation and complete link RX"
+ ],
+ "superseded_baseline_defects": {
+  "south_SM_orientation_wrong": 16,
+  "SM_unclocked": 28,
+  "attention_tiles_unclocked": 64,
+  "RX_bound_bits": 4131,
+  "RX_required_bits": 4376
+ },
+ "preserved_measurement_scope": "Copied real bd/tc geometry only:532480 off-track before,0 after<=.024um shifts; not corrected die placement or functional abstract coverage",
+ "next_gate": "Claude HBM-DIE-FIX corrected regenerated inventory with all endpoints/clocks/reset bound; recheck actual views/orientations/channel geometry before Codex placement",
+ "generator_owner": "Claude HBM-DIE-FIX",
+ "S81_generator_and_rerun_owner": "Claude S81-DIE",
+ "Codex_scope": "placement defect hunt after corrected handoff, no generator edits",
+ "SSFF_qualified": false,
+ "IR_qualified": false
+}

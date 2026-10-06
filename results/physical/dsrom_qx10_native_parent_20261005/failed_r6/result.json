@@ -1,0 +1,56 @@
+{
+  "variant": "R6",
+  "source_commit": "32bfe2971",
+  "remote_overlay_commit": "b4008e46f0929abac421abbcfdcec3393fed69aa",
+  "baseline": "R4",
+  "resumed_at": "2_4_floorplan_pdn",
+  "PDN": "PASS",
+  "actual_four_ROMs": true,
+  "all_protective_families_present": true,
+  "fq_alias_verified_in_actual_ODB": true,
+  "fq_D": "INV(AND3(ffq.QN,bkf0.QN,bkf1.QN))",
+  "all_61_original_source_pins_unchanged": true,
+  "smoke_replayed": false,
+  "synthesis_repeated": false,
+  "reused_objects_unchanged": [
+    "1_2_yosys.v",
+    "1_synth.odb",
+    "2_3_floorplan_tapcell.odb"
+  ],
+  "pdn_checkpoint_sha256": "89549f1d02a58150646919c65f62b8f42dd00fb3e9aff808efcffb5d102f52ba",
+  "actual_terminal": "FAIL global_place_skip_io.tcl:19 GPL-0304 during uniform-density query",
+  "actual_placement_components": {
+    "movable": 248447,
+    "unassigned": 0,
+    "qx10_parent": 211245,
+    "qx10_engine": 37202
+  },
+  "tool": "OpenROAD26Q3-1510-g6cb3f2b704",
+  "tool_source_diagnosis": {
+    "GPL0304": "NaN/Inf initial step length in NesterovPlace::init",
+    "GPL0306": "component has no placed instances",
+    "Replace::initNesterovPlace": "Unconditionally creates core PlacerBase and one per region group; no empty-component filter",
+    "Replace::getUniformTargetDensity": "Initializes NesterovPlace while redirecting logger output, hiding full GPL0304 error message",
+    "inference": "The core component is empty because every movable cell is in a fence group; this matches GPL0306 and the pinned-source failure mechanism",
+    "source_urls": [
+      "https://github.com/The-OpenROAD-Project/OpenROAD/blob/6cb3f2b704/src/gpl/src/replace.cpp",
+      "https://github.com/The-OpenROAD-Project/OpenROAD/blob/6cb3f2b704/src/gpl/src/nesterovPlace.cpp"
+    ]
+  },
+  "next_required_correction": "Handle empty unconstrained placement component in the source-pinned tool envelope, preserving both nonempty fence groups and geometry; resume from retained PDN checkpoint. No density-penalty sweep.",
+  "boundary_hold_candidate_selected": false,
+  "added_pipeline_cycles": 0,
+  "model_zero_stages_and_measured_field_zero_cycle_delta_agree": true,
+  "SS60_FF25_qualified": false,
+  "full_field_missing_input_clocks": true,
+  "qualified_element_handoff": false,
+  "evidence_sha256": {
+    "placement_component_probe.log": "ecba6523b806754756d1ae0bc3b6ad01d1a3eff58ea3b3d29b5995b1c61bf8d3",
+    "resume.receipt.json": "b9d6c4a7576787bab58951ce26a8e6b2fd08024de24de8018e0344282fb321df",
+    "capacity.jsonl": "d74b4db63bf8b15122aec3f5cd30b5bf4976ee40b7a4153f11ed3386d7ba9025",
+    "resume.log": "c133f8c8b8d175bcb70cd3c5731092263777852e900c5bb96d49f73650a2f98b",
+    "placement_component_capacity.jsonl": "1fe2419ff3b603ac4f1472def5aca71a1a99aa77749113f3760771c8a45d9023",
+    "terminal.json": "a982c1d249e945261f67f80b41ce5ace2a15cfa3a503567329546ea0965834e0",
+    "pdn.log": "314468420c0a6c469500da5bffdfb6f49970563d269db8de51106c5a3931dcb3"
+  }
+}

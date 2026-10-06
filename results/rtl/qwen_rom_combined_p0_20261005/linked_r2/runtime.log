@@ -1,0 +1,5 @@
+LINKED_FIRST_HELD_ROW core_edge=72 controller_edge=59
+LINKED_WARM_BEGIN core_edge=1935 write_reserved=136 ACK=104 debt=32
+{"case":"released_P8191_L0_rank0","core_edges":1994,"controller_edges":1623,"first_row_core_edge":72,"warm_begin_core_edge":1935,"warm_end_core_edge":1959,"drain_core_edge":1994,"warm_begin_debt":32,"fill_cycles":1480,"fill_sectors":131072,"write_sectors":136,"response_stall":7975,"write_latency_max":73,"backing_fnv1a64":"2211f2089ac1eabe","slice_fnv1a64":"a60b5bf88bf526a6","full_token":false,"physical_qualified":false}
+PASS_RELEASED_P8191_LINKED_JOIN core_edges=2010 controller_edges=1636 descriptor=1 go=1 h_descriptor=1 h_go=1 rows=131072 ACK=136 debt=0 warm_held=1
+PASS_RELEASED_P8191_ACK_IDENTITY_REJECT debt_before=2 debt_after=2 fault=0004

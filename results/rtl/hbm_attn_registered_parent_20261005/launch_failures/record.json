@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.h16.registered-parent.actual-failed-mapping.v1",
+  "source": "9e32814c3",
+  "actual_mapped_macro_count": 16,
+  "actual_yosys_ff_count": 7019,
+  "intended_wrapper_ff_count": 34540,
+  "extra_producer_fixture_ff": 1618,
+  "actual_ODB_standard_cell_count": 19557,
+  "actual_ODB_standard_cell_area_um2": 3027.9015000001823,
+  "verdict": "FAILED_SHAPE_AND_MACRO_LINK_NAME",
+  "original_clock_failures_preserved": true,
+  "attempts": {
+    "1": "argumentvalidation terminal2 before build",
+    "2": "stage correction not transferred terminal2 before build",
+    "3": "synthesis/floorplan terminal1 MPL0020 slash hierarchy; four row/sixteen local FF banks merged despite wire keep"
+  },
+  "required_source_fix": "kept hierarchical row/head bank instances and actual ODB u_tile/ prefix; no clock/IO/ETM/density change",
+  "SS_FF_qualified": false,
+  "adopted": false
+}

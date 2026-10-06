@@ -1,0 +1,29 @@
+{
+  "base_source": "rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv",
+  "base_sha256": "aa23ad3a1a9998fd9be6969b96f4de57eec0eae88bbd4cb7c930707ecdacf6bc",
+  "source": "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_gu_sm20.sv",
+  "sha256": "e081b25449a545075e0f610264ccce5db56d84273c97da994b0e70ba1f3c8b5c",
+  "literal_changes": [
+    [
+      "module ot_hbm_accel_simt_sm #(",
+      "module ot_hbm_integrated_gu_sm20 #("
+    ],
+    [
+      "input  wire [15:0]           launch_token,",
+      "input  wire [16:0]           launch_token,"
+    ],
+    [
+      "input  wire [15:0]           launch_pos,",
+      "input  wire [19:0]           launch_pos,"
+    ],
+    [
+      "gu_join_frame[51:36] == launch_token && gu_join_frame[68:53] == launch_pos",
+      "gu_join_frame[52:36] == launch_token && gu_join_frame[72:53] == launch_pos"
+    ],
+    [
+      "ur[0] <= {16'd0, launch_token}; ur[1] <= {16'd0, launch_pos};",
+      "ur[0] <= {15'd0, launch_token}; ur[1] <= {12'd0, launch_pos};"
+    ]
+  ],
+  "Claude_hierarchical_SM_unchanged": true
+}
