@@ -1,0 +1,23 @@
+{
+  "scope": "retained actual GU and source route inputs; live SwiGLU only",
+  "experts": [
+    41,
+    65
+  ],
+  "elements_per_expert": 2304,
+  "limit_bits": "41200000",
+  "source_sha256": {
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert41/g.mem": "e984abc08329b92001d3b394cf2cdc12579e30e98582aab0c494cb4669a25618",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert65/g.mem": "72080543c4114d407bd3dcfcb783624744ee9a95a7aea3fcfa2f9fe62c067728",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert41/u.mem": "f67b997ae9ec2a7175738f6547c81357df4c48896bb951df86dea297c72a6e7b",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert65/u.mem": "268c6109d99eb420462ebe2e320f94ffe182272dfdedb0c556c9ba74af980086",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert41/w.mem": "997657d1bbac19ec55419e666b5e6636b2defd3d80705587a289c3a8086d1192",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu/expert65/w.mem": "efe14ee51e402e5910619e03f2bdba1c1ea000a6deba2b9c8ac0f1ff84a0f7d6",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r2/inputs/srv/opentallas/jobs-overflow/hubble-gu-w2-router-source-20261005/config.json": "dfc59cc4c2f54e38341bb8786aa047bc22c7066bd7e91bd6cf1054ba9591778c"
+  },
+  "prepared_sha256": {
+    "g.mem": "e8e4eac4c0e35acc2f0241c186bccf07d628ed9070aa8000f701da18d28a11a1",
+    "u.mem": "50d33084c2318f9e1e726b03076e4d181caefd626272aca301c3093a55188735",
+    "w.mem": "c581845d671c5fc17032d9419a45088a0a73eeec3dcc19876488f076a8408b81"
+  }
+}
