@@ -46,8 +46,7 @@ def main():
     r = prepare(a.authority_job, source, top,
                 source / 'rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv',
                 a.output, backend_dependencies=deps,
-                cdc_consumer_join=True, landing_rsel=1)
-    r['frontend'].append('-GPARALLEL_TRANSPORT=1')
+                cdc_consumer_join=True, landing_rsel=1, parallel_transport=True)
     r['parallel_transport'] = True
     r['cdc_binding_scope'] = ('128 independent protected 32-byte sector lanes; '
                               'actual ot_qwen_stream4_cdc_pc RSEL=1; '
