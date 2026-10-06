@@ -51,7 +51,7 @@ KEYS = ("QPIPE", "QP_XS", "QP_CAP", "QP_P1", "shift_L", "compared_cycles", "exem
         "gated_edges", "closed_cycles", "hits", "issues", "rows", "nonzero", "classes_mask", "wraps", "q_advances",
         "mtp_restarts", "rejected", "go_gate_closed", "go_mid_drain", "go_walking", "resets")
 CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
-BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
+BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
           "neg_qxca": ["+define+QX_MUTANT_CA", "-GQX=8"], "neg_qxnca": ["+define+QX_MUTANT_NCA", "-GQX=8"],
           "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "qx8": CHK + ["-GQX=8"], "neg_fw": ["+define+ST_MUTANT_FW"], "qx9": CHK + ["-GQX=9"], "neg_ns": ["+define+BT_MUTANT_NS"], "neg_pd": ["+define+CH_MUTANT_PD"], "neg_dp10": ["+define+QP_MUTANT_DP"], "neg_tree9": ["+define+QP_MUTANT_TREE"], "neg_xc": ["+define+ST_MUTANT_XC", "-GQX=8"], "neg_qxsf": ["+define+QX_MUTANT_SF", "-GQX=8"], "neg_qxhz": ["+define+QX_MUTANT_HZ", "-GQX=8"], "neg_p2s": ["+define+BT_MUTANT_P2S", "-GQX=8"],
@@ -126,7 +126,7 @@ def main() -> None:
         m = 1 if a.quick else max(2, a.seeds // 2)
         record["measurement_mode"] = ("quick: one seed per configuration" if a.quick else
                                       "pos x %d seeds, every other configuration x %d" % (n, m))
-        jobs = [("pos", s) for s in range(1, n + 1)] + [("pos_pq0", s) for s in range(1, n + 1)] + [("qz0", 100 + s) for s in range(1, m + 1)]
+        jobs = [("pos", s) for s in range(1, n + 1)] + [("pos_pq0", s) for s in range(1, n + 1)] + [("pos_qw", s) for s in range(1, n + 1)] + [("pos_qw", 1, ("+nan_sparse",))] + [("qz0", 100 + s) for s in range(1, m + 1)]
         jobs += [("qx9", 1400 + s) for s in range(1, m + 1)]
         jobs += [("qx8", 1300 + s) for s in range(1, m + 1)]
         jobs += [("qx7", 1200 + s) for s in range(1, m + 1)]

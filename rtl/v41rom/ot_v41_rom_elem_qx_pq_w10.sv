@@ -208,6 +208,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer QX = 0,           // see the header; 0 = the QY circuit
     parameter integer PQ = 0,           // see the PQ header: 0 = the qx element
     parameter integer RT = 3,           // PQ: settle cycles after the replay
+    parameter integer QW = 0,           // 1: lanes decode the weight codes before their P0 register (bterm4 WD)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -1708,9 +1709,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
     if (FAST != 0 && QPIPE != 0) begin : g_l3
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
             .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),

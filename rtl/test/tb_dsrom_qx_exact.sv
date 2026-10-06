@@ -64,7 +64,10 @@ module tb_dsrom_qx_exact;
 `ifdef QX_DUT_PQ0
  // QX_DUT_PQ0 (2026-10-06): the PQ successor ot_v41_rom_elem_q_qxpq_w10 at PQ = 0 must equal the qx element
  wire dut_walking, dut_bank_free, dut_sh_free;
- ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+`ifndef QX_QW
+`define QX_QW 0
+`endif
+ ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QW(`QX_QW), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
 `else
  ot_v41_rom_elem_q_qx_w10 #(.QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
 `endif
