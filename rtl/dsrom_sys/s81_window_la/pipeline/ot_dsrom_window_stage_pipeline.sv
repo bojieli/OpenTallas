@@ -242,9 +242,15 @@ module ot_dsrom_window_stage_pipeline #(
                 assign write_sector[(4*r+b)*PITCH+k]=row_we[r];
             end
             if (SPLIT_COLUMNS) begin : g_split
-                (* keep_hierarchy = "yes" *) ot_dsrom_window_column #(.WIDTH(CWID)) u_column (
-                    .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
-                    .read_v(req_v), .read_addr(raddr), .read_data(q));
+                if(CWID==256) begin : g_payload
+                    (* keep_hierarchy = "yes" *) ot_dsrom_window_column_256 u_column (
+                        .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                        .read_v(req_v), .read_addr(raddr), .read_data(q));
+                end else begin : g_scale
+                    (* keep_hierarchy = "yes" *) ot_dsrom_window_column_128 u_column (
+                        .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                        .read_v(req_v), .read_addr(raddr), .read_data(q));
+                end
             end else begin : g_flat
                 reg [CWID-1:0] mem [0:31];
                 for (genvar r=0;r<32;r=r+1) begin : g_write
@@ -359,4 +365,28 @@ module ot_dsrom_window_column #(
             if(read_v) rh<=read_addr[4:3];
             if(pending) read_data<=rq[rh];
         end
+endmodule
+
+// Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
+module ot_dsrom_window_column_128 (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [127:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [127:0] read_data
+);
+    ot_dsrom_window_column #(.WIDTH(128)) u_logic (.*);
+endmodule
+
+// Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
+module ot_dsrom_window_column_256 (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [255:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [255:0] read_data
+);
+    ot_dsrom_window_column #(.WIDTH(256)) u_logic (.*);
 endmodule
