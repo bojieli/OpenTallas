@@ -22,7 +22,8 @@ assert sources and libs and params==dict(ENABLE=1,NO=2,REGISTERED_CURRENT=1,REGI
 for path in libs:assert path.stat().st_mtime<=started, 'library changed after map began'
 inventory=json.loads((w.parent/'mapped_inventory.json').read_text())
 assert sha(w/'mapped.v')==inventory['netlist_normalization']['normalized_netlist_sha256']
-for f in ['mapped.v','mapped.raw.v','stat.txt']:assert (w/f).stat().st_mtime<=(w/'yosys.log').stat().st_mtime
+# Normalized mapped.v is emitted after the successful log; its digest is checked above.
+for f in ['mapped.raw.v','stat.txt']:assert (w/f).stat().st_mtime<=(w/'yosys.log').stat().st_mtime
 record=dict(schema='completed-yosys-map-for-route-reuse-v1',terminal='PASS',route_terminal=False,
  design=dict(parameters=params,sources=sources),corner=dict(liberty=[dict(path=str(x),sha256=sha(x)) for x in sorted(libs)]),
  artifacts={x:sha(w/x) for x in ['synth.ys','yosys.log','mapped.raw.v','mapped.v','stat.txt']},
