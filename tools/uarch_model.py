@@ -176,7 +176,7 @@ def dsrom_fh_fault_retire_model(integrated_parent=False):
             measured_cycles=None,
             requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
         protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
-        flow_control='4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains',
+        flow_control='4-slot valid pipeline; warm-index debt clears only on matched fault-free actual memory commit ACK; retain debt and refuse reuse through missing/bad receipts or quarantine',
         integrated_parent=bool(integrated_parent),
         commit_contract='Warm ACK must match in-flight8-bit identity, actual word address and lane mask; wrong/missing ACK keeps debt quarantined. Real SRAM commit timing or test consumer memory-write edge supplies ACK; pipeline emission alone does not.',
         floorplan=dict(existing_width_um=2000,existing_height_um=660,

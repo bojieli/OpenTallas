@@ -55,7 +55,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     wire [G*W-1:0] mem_valid,mem_corrected,mem_poison,mem_committed;
     wire memory_fault,child_fault;
     wire [G-1:0] memory_address_fault;
-    wire retire_busy,retire_warm_ack,child_warm;
+    wire retire_busy,retire_warm_ack,child_warm,child_leaf_v,child_ov;
     wire [159:0] raw_tag;
     wire raw_v;
     wire [G*AW-1:0] raw_addr;
@@ -71,6 +71,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     ot_hdc_v41_fh_ctx #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.ALAT(ALAT),
         .CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.RETIRE(RETIRE)) u_head (
         .retire_busy(retire_busy),.retire_warm_ack(retire_warm_ack),.warm_emit(child_warm),
+        .leaf_valid(child_leaf_v),.result_valid(child_ov),
         .clk(clk),.rst_n(rst_n),.ra_re(ra_re),.ra_addr(ra_addr),.ra_q(ra_q),
         .o_we(child_we),.leaf(child_leaf),.fault(child_fault),
         .s3_v_in(s3_v_in),
@@ -104,13 +105,13 @@ module ot_hdc_v41_fh_macro_ctx #(
 `endif
         wire rv,rw,retired_warm_payload,retired_ov,retired_leaf_v;
         wire [PW-1:0] packet={child_leaf,child_we,raw_addr,raw_mask,raw_data,
-            raw_tag,raw_v,ov1_in,tv_in,child_warm};
+            raw_tag,raw_v,child_ov,child_leaf_v,child_warm};
         wire [PW-1:0] retired;
         wire [63:0] veto;
         wire [3:0] write_veto,retired_we;
         wire [3135:0] retired_leaf;
         ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW)) u_parent (
-            .clk(clk),.rst_n(rst_n),.packet_v(raw_v||(|child_we)||child_warm||tv_in),
+            .clk(clk),.rst_n(rst_n),.packet_v(raw_v||child_ov||(|child_we)||child_warm||child_leaf_v),
             .warm(child_warm),.packet(packet),.warm_word(raw_addr[23:0]),.warm_mask(raw_mask[15:0]),
             .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(child_fault),
             .sink_busy(commit_busy),.ack_v(commit_ack_v),.ack_id(commit_ack_id),
