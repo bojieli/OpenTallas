@@ -9888,6 +9888,12 @@ def hbm_existing_cp_local_pg_model():
     return cp_local_pg_model()
 
 
+def hbm_existing_w2_parent_physical_model():
+    """Finite current protected W2 parent, inside the existing service block."""
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_w2_parent_physical_20261005/model.json').read_text())
+
+
 def hbm_existing_h16_boundary_pg_model():
     """Finite H16 bottom rail stitches; connectivity does not qualify loaded IR."""
     import json
@@ -10564,6 +10570,12 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             external_projection_is_distributed_caller_boundary=True,
             single_hb_coll_perimeter_pin_fit_qualified=False,
             next_build='source-pinned full32 loaded context synthesis; keep objects for real distributed pin/CTS binding',
+            actual_full32_SS_synthesis_cell_um2=178333.520399,
+            actual_full32_SS_synthesis_sequential_cell_um2=90842.643719,
+            actual_full32_SS_synthesis_DFF_count=304836,
+            prebuild_cell_upper_exceeded_for_NSM32=True,
+            measured_cell_area_replaces_prebuild_proxy_for_future_placement=True,
+            synthesis_record='results/rtl/hbm_item9_closure_20261005/loaded32_synth_r5/inventory.json',
             actual_context_route_qualified=False),
         latency=dict(new_mux_cycles_per_collective=0, new_mux_cycles_per_record=0,
             new_mux_token_delta_ns=0, retained_XREG_cycles_per_collective=2,
@@ -11073,10 +11085,27 @@ def hbm_attn_registered_parent_model():
         placement_area_at_half_utilization_um2=2*(ff_body+buffer_reserve),
         retained_outline_um=old['replicas']['chosen_tile_outline_um'],
         macro_replicas=16, new_macro_replicas=0,
+        actual_retained_mapping=dict(source='e5624a88a', FF_count=36158, FF_type='DFFASRHQNx1_ASAP7_75t_R',
+            INV_count=36174,phase_clock_inverters=16,BUFx2_count=529,macro_count=16,
+            standard_cell_area_um2=15328.77048,FF_area_um2=13706.77464,
+            mapped_INV_area_um2=1582.25076,
+            clock_pin_SS_fF_per_FF=.433982,FF_clock_pin_total_SS_fF=36158*.433982,
+            macro_clock_pin_total_SS_fF=16*16.3802,
+            combined_FF_macro_clock_pins_SS_fF=36158*.433982+16*16.3802,
+            negative_edge_FF_count=16*(w+1),positive_edge_FF_count=36158-16*(w+1),
+            clock_wire_and_phase_inverter_input_capacitance_not_yet_included=True,
+            per_block_FF_and_payload_reach_verified=True,
+            nonconstant_ordered_macro_payload_bits=25888,own_receiver_D_associations=544,
+            CTS_and_tracks_qualified=False, added_token_cycles_unchanged=3),
+        retained_banks=dict(row_instances=4,head_instances=16,
+            implementation='kept hierarchical row/head bank instances; wire keep alone actually merged firstmapping to7019FF',
+            required_total_mapped_FF_count=ff+w,
+            root_and_fixture_FF=w*2+2,row_FF=w*4,head_launch_and_local_POR_FF=16*(w+1),receiver_FF=16*34,
+            requirement='confirm actual synthesis instance counts before contextual clock qualification'),
         finite_cell_space=dict(core_um=[1349.082,1349.730], macro_with_halo_um=304.782,
             free_area_um2=1349.082*1349.730-16*304.782**2,
             half_utilization_cell_capacity_um2=(1349.082*1349.730-16*304.782**2)*.5,
-            required_cell_area_upper_um2=ff_body+buffer_reserve+source_fixture_ff*.37908,
+            required_cell_area_upper_um2=max(ff_body+buffer_reserve+source_fixture_ff*.37908,15328.77048+buffer_reserve),
             fit_is_analytical_only=True),
         qualified_PG_hook=dict(commit='d1775001d',sha256='5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786',
             VDD_connected=True,VSS_connected=True,IR_qualified=False,added_M2_M3_area_um2=.2268,

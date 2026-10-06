@@ -10,6 +10,7 @@ import argparse
 from collections import deque
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -19,6 +20,7 @@ ap = argparse.ArgumentParser(description=__doc__)
 ap.add_argument('--input', default=os.environ.get('FHCONE_INPUT'), required=not os.environ.get('FHCONE_INPUT'))
 ap.add_argument('--output', default=os.environ.get('FHCONE_OUTPUT'), required=not os.environ.get('FHCONE_OUTPUT'))
 ap.add_argument('--receipt', default=os.environ.get('FHCONE_RECEIPT'), required=not os.environ.get('FHCONE_RECEIPT'))
+ap.add_argument('--rect-strips', action='store_true', default=os.environ.get('FHCONE_RECT_STRIPS') == '1')
 a = ap.parse_args()
 assert Path(a.input).resolve() != Path(a.output).resolve()
 assert not Path(a.output).exists()
@@ -97,15 +99,54 @@ for n in comb:
 receipt = dict(input_sha256=hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),
                added_by_lane=added, mapped_combinational_cells=len(comb),
                shared_multilane_combinational_cells=shared, groups=[])
+dbu = db.getTech().getDbUnitsPerMicron()
+assert dbu == 1000
+row0 = list(b.getRows())[0]
+origin = row0.getOrigin()
+site = row0.getSite()
+sx, sy = site.getWidth(), site.getHeight()
+def rect(box):
+    return (box.xMin(), box.yMin(), box.xMax(), box.yMax())
+rows = [rect(row.getBBox()) for row in b.getRows()]
+taps = [rect(i.getBBox()) for i in insts if i.getMaster().getName().startswith('TAPCELL')]
+def intersection(x, y):
+    return max(0, min(x[2], y[2])-max(x[0], y[0])) * max(0, min(x[3], y[3])-max(x[1], y[1])) / 1e6
+macros = {}
+for i in insts:
+    if i.getMaster().isBlock():
+        lane = int(re.search(r'g_bank\[(\d+)\]', i.getName().replace('\\', '')).group(1))
+        macros[lane] = rect(i.getBBox())
+assert set(macros) == set(range(64))
 for lane, g in sorted(groups.items()):
     cells = list(g.getInsts())
     assert not any(i.getMaster().isBlock() for i in cells)
     area = sum(i.getMaster().getWidth()*i.getMaster().getHeight() for i in cells)/1e6
     padded = sum((i.getMaster().getWidth()+4*54)*i.getMaster().getHeight() for i in cells)/1e6
-    receipt['groups'].append(dict(lane=lane, members=len(cells), area_um2=area, padded_area_um2=padded))
+    region = g.getRegion()
+    old = list(region.getBoundaries())
+    assert len(old) == 1
+    box = rect(old[0])
+    if a.rect_strips:
+        # Entirely above the real29.7um SRAM plus its2um row halo, with
+        # additional escape space. Boundaries land on actual std-cell sites.
+        x1 = origin[0] + math.ceil((box[0]-origin[0])/sx)*sx
+        x2 = origin[0] + math.floor((box[2]-origin[0])/sx)*sx
+        y1 = origin[1] + math.ceil((macros[lane][1]+33000-origin[1])/sy)*sy
+        y2 = origin[1] + math.floor((box[3]-origin[1])/sy)*sy
+        box = (x1, y1, x2, y2)
+        assert y1 >= macros[lane][3]+2000 and x1<x2 and y1<y2
+        odb.dbBox.destroy(old[0])
+        odb.dbBox.create(region, *box)
+    usable = sum(intersection(box, row) for row in rows) - sum(intersection(box, tap) for tap in taps)
+    assert padded < usable*0.95, ('guard5 row capacity exceeded', lane, padded, usable)
+    receipt['groups'].append(dict(lane=lane, members=len(cells), area_um2=area, padded_area_um2=padded,
+                                  rectangle_dbu=box, usable_after_taps_um2=usable,
+                                  capacity_after_guard5_um2=usable*0.95,
+                                  guarded_padded_fraction=padded/(usable*0.95)))
 odb.write_db(db, a.output)
 receipt['output_sha256'] = hashlib.sha256(Path(a.output).read_bytes()).hexdigest()
-receipt.update(geometry_changed=False, macro_pins_changed=False, logic_changed=False,
+receipt.update(geometry_changed=a.rect_strips, macro_geometry_changed=False,
+               region_geometry_changed=a.rect_strips, macro_pins_changed=False, logic_changed=False,
                added_cycles=0, source_RTL='fd25e1e26c8e50f543a200b7bb46346fabc6c72d')
 Path(a.receipt).write_text(json.dumps(receipt, indent=2)+'\n')
 print(json.dumps(receipt, indent=2))

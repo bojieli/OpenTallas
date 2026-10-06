@@ -39,13 +39,14 @@ puts "OT_QX10_NATIVE_REGIONS parent_cells=$count(parent) parent_area=$area(paren
 foreach {family expression} {
     ff_d {u_qx\.u_e\.g_qo\.ff_d\[}
     ffq {u_qx\.u_e\.g_qo\.g_qyf\.ffq(\[|\$)}
-    fq {u_qx\.u_e\.g_qo\.g_qyf\.fq(\[|\$)}
+    fq {^u_qx\.u_e\.(g_qo\.g_qyf\.fq|fault)(\[|\$)}
 } {
     set fault_count 0
     foreach inst [$block getInsts] {
         set name [string map {\\ {}} [$inst getName]]
         if {[regexp $expression $name] && [string match DFF* [[$inst getMaster] getName]]} {incr fault_count}
     }
+    if {$family eq "fq" && $fault_count!=1} {error "QX10 requires one actual fq output register"}
     if {!$fault_count} {error "QX10 fault producer absent after mapping: $family; no constant fault waiver"}
 }
 foreach bank {0 1} {
@@ -57,3 +58,49 @@ foreach bank {0 1} {
     }
     if {!$found} {error "QX10 bank${bank} actual protective bkf_r producer absent"}
 }
+
+# Slang aliases the source fq register to its engine output port, fault.
+# Accept that exact alias only after proving the mapped OR-of-three producers.
+# QN outputs through AND3 + INV implement ffq | bkf0 | bkf1, not TIEHI/LO.
+proc qx10_unique_driver {net} {
+    if {$net eq "NULL"} {error "fault semantic gate found an unconnected net"}
+    set drivers {}
+    foreach terminal [$net getITerms] {
+        if {[$terminal getIoType] eq "OUTPUT"} {lappend drivers $terminal}
+    }
+    if {[llength $drivers]!=1} {error "fault semantic gate requires one actual driver"}
+    return [lindex $drivers 0]
+}
+set aliases {}
+foreach inst [$block getInsts] {
+    set name [string map {\\ {}} [$inst getName]]
+    if {[regexp {^u_qx\.u_e\.fault\$} $name] &&
+        [string match DFF* [[$inst getMaster] getName]]} {lappend aliases $inst}
+}
+if {[llength $aliases]} {
+    if {[llength $aliases]!=1} {error "engine fault register alias is not unique"}
+    set fq_reg [lindex $aliases 0]
+    set inv_pin [qx10_unique_driver [[$fq_reg findITerm D] getNet]]
+    set inv [$inv_pin getInst]
+    if {[[$inv getMaster] getName] ne "INVx1_ASAP7_75t_R" ||
+        [[$inv_pin getMTerm] getName] ne "Y"} {error "fault fq D is not the actual OR output"}
+    set and_pin [qx10_unique_driver [[$inv findITerm A] getNet]]
+    set and_cell [$and_pin getInst]
+    if {[[$and_cell getMaster] getName] ne "AND3x1_ASAP7_75t_R" ||
+        [[$and_pin getMTerm] getName] ne "Y"} {error "fault fq OR lost its three producers"}
+    set producers {}
+    foreach input {A B C} {
+        set producer_pin [qx10_unique_driver [[$and_cell findITerm $input] getNet]]
+        set producer [$producer_pin getInst]
+        if {![string match DFF* [[$producer getMaster] getName]] ||
+            [[$producer_pin getMTerm] getName] ne "QN"} {error "fault producer is not a real QN register"}
+        if {[[$producer findITerm CLK] getNet] ne [[$fq_reg findITerm CLK] getNet]} {error "fault producer lost its real root-clock relation"}
+        lappend producers [string map {\\ {}} [$producer getName]]
+    }
+    set expected [list {u_qx.u_e.g_qo.g_qyf.ffq$_DFF_PN0_} \
+        {u_qx.u_e.g_mac[0].g_qyb.bkf_r$_DFF_PN0_} \
+        {u_qx.u_e.g_mac[1].g_qyb.bkf_r$_DFF_PN0_}]
+    if {[lsort $producers] ne [lsort $expected]} {error "fault fq no longer captures ffq and both actual bank faults"}
+    puts "OT_QX10_FAULT_FQ_ALIAS register=[$fq_reg getName] actual_OR_producers=$producers"
+}
+rename qx10_unique_driver {}
