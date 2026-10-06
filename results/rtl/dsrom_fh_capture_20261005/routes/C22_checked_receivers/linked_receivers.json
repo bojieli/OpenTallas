@@ -1,0 +1,242 @@
+{
+  "stage": "linked_pre_floorplan",
+  "receiver_gate": "PASS",
+  "instances": [
+    "g_native_grant_receiver.reply_check$_SDFF_PN1_",
+    "g_native_grant_receiver.reply_v$_SDFF_PN0_",
+    "g_native_grant_receiver.request_check$_SDFF_PN1_",
+    "g_native_grant_receiver.request_v$_SDFF_PN0_"
+  ],
+  "pins": [
+    {
+      "instance": "g_native_grant_receiver.reply_check$_SDFF_PN1_",
+      "pin": "CLK",
+      "direction": "INPUT",
+      "net": "clk",
+      "report_summary": [
+        "Net clk",
+        " Pin capacitance: 34796.023438-48819.429688",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 34796.023438-48819.429688",
+        " Number of drivers: 1",
+        " Number of loads: 108887",
+        " Number of pins: 108888",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_check$_SDFF_PN1_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.319089-0.446638"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.reply_check$_SDFF_PN1_",
+      "pin": "D",
+      "direction": "INPUT",
+      "net": "_082186_",
+      "report_summary": [
+        "Net _082186_",
+        " Pin capacitance: 0.860269-1.103492",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.860269-1.103492",
+        " Number of drivers: 1",
+        " Number of loads: 2",
+        " Number of pins: 3",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_check$_SDFF_PN1_/D input (DFFHQNx1_ASAP7_75t_R) 0.442001-0.524726"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.reply_check$_SDFF_PN1_",
+      "pin": "QN",
+      "direction": "OUTPUT",
+      "net": "_003257_",
+      "report_summary": [
+        "Net _003257_",
+        " Pin capacitance: 0.418268-0.578766",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.418268-0.578766",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_check$_SDFF_PN1_/QN output (DFFHQNx1_ASAP7_75t_R)"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.reply_v$_SDFF_PN0_",
+      "pin": "CLK",
+      "direction": "INPUT",
+      "net": "clk",
+      "report_summary": [
+        "Net clk",
+        " Pin capacitance: 34796.023438-48819.429688",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 34796.023438-48819.429688",
+        " Number of drivers: 1",
+        " Number of loads: 108887",
+        " Number of pins: 108888",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_v$_SDFF_PN0_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.319089-0.446638"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.reply_v$_SDFF_PN0_",
+      "pin": "D",
+      "direction": "INPUT",
+      "net": "_082103_",
+      "report_summary": [
+        "Net _082103_",
+        " Pin capacitance: 0.442001-0.524726",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.442001-0.524726",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_v$_SDFF_PN0_/D input (DFFHQNx1_ASAP7_75t_R) 0.442001-0.524726"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.reply_v$_SDFF_PN0_",
+      "pin": "QN",
+      "direction": "OUTPUT",
+      "net": "_078403_",
+      "report_summary": [
+        "Net _078403_",
+        " Pin capacitance: 0.418268-0.578766",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.418268-0.578766",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.reply_v$_SDFF_PN0_/QN output (DFFHQNx1_ASAP7_75t_R)"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_check$_SDFF_PN1_",
+      "pin": "CLK",
+      "direction": "INPUT",
+      "net": "clk",
+      "report_summary": [
+        "Net clk",
+        " Pin capacitance: 34796.023438-48819.429688",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 34796.023438-48819.429688",
+        " Number of drivers: 1",
+        " Number of loads: 108887",
+        " Number of pins: 108888",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_check$_SDFF_PN1_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.319089-0.446638"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_check$_SDFF_PN1_",
+      "pin": "D",
+      "direction": "INPUT",
+      "net": "_082102_",
+      "report_summary": [
+        "Net _082102_",
+        " Pin capacitance: 0.860269-1.103492",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.860269-1.103492",
+        " Number of drivers: 1",
+        " Number of loads: 2",
+        " Number of pins: 3",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_check$_SDFF_PN1_/D input (DFFHQNx1_ASAP7_75t_R) 0.442001-0.524726"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_check$_SDFF_PN1_",
+      "pin": "QN",
+      "direction": "OUTPUT",
+      "net": "_003341_",
+      "report_summary": [
+        "Net _003341_",
+        " Pin capacitance: 0.418268-0.578766",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.418268-0.578766",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_check$_SDFF_PN1_/QN output (DFFHQNx1_ASAP7_75t_R)"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_v$_SDFF_PN0_",
+      "pin": "CLK",
+      "direction": "INPUT",
+      "net": "clk",
+      "report_summary": [
+        "Net clk",
+        " Pin capacitance: 34796.023438-48819.429688",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 34796.023438-48819.429688",
+        " Number of drivers: 1",
+        " Number of loads: 108887",
+        " Number of pins: 108888",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_v$_SDFF_PN0_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.319089-0.446638"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_v$_SDFF_PN0_",
+      "pin": "D",
+      "direction": "INPUT",
+      "net": "_082101_",
+      "report_summary": [
+        "Net _082101_",
+        " Pin capacitance: 0.442001-0.524726",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.442001-0.524726",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_v$_SDFF_PN0_/D input (DFFHQNx1_ASAP7_75t_R) 0.442001-0.524726"
+      ]
+    },
+    {
+      "instance": "g_native_grant_receiver.request_v$_SDFF_PN0_",
+      "pin": "QN",
+      "direction": "OUTPUT",
+      "net": "_078384_",
+      "report_summary": [
+        "Net _078384_",
+        " Pin capacitance: 0.418268-0.578766",
+        " Wire capacitance: 0.000000",
+        " Total capacitance: 0.418268-0.578766",
+        " Number of drivers: 1",
+        " Number of loads: 1",
+        " Number of pins: 2",
+        ""
+      ],
+      "receiver_load_lines": [
+        " g_native_grant_receiver.request_v$_SDFF_PN0_/QN output (DFFHQNx1_ASAP7_75t_R)"
+      ]
+    }
+  ],
+  "capacitance_scope": "Active WC Liberty min/max pin capacitance; unplaced wire capacitance zero is not closure evidence",
+  "signal_units": "as reported by canonical ASAP7 OpenSTA"
+}

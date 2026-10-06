@@ -9053,6 +9053,55 @@
         "accepted_sha256": "b409ef04dc1f39e6d6ffb8dc5e256c43dd5847e4f6cd12f1fb7a7f601eabc3df",
         "verdict": "BYTE_IDENTICAL_ENABLED_BODY_NO_GATE_REPLAY"
       }
+    },
+    "active_map_distribution_review": {
+      "owner": "Descartes sole physical continuation",
+      "host": "ot-epyc1tb",
+      "controller_PID": 160281,
+      "run": "/srv/opentallas-scratch/codex/w2-check-station-f11de13f0/route-r1",
+      "mapped_netlist": "work/mapped.v",
+      "mapped_netlist_bytes": 19619348,
+      "method": "read-only mapped-cell connectivity; follow BUF/INV output trees, count terminal pin loads; no synthesis/STA/route run",
+      "large_roots": [
+        {
+          "net": "_089564_",
+          "driver": "_149620_",
+          "cell": "AND3x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 4056
+        },
+        {
+          "net": "_089565_",
+          "driver": "_149621_",
+          "cell": "OR3x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3669
+        },
+        {
+          "net": "_088332_",
+          "driver": "_148175_",
+          "cell": "NOR2x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3568
+        },
+        {
+          "net": "_088333_",
+          "driver": "_148176_",
+          "cell": "OR2x2_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3429
+        }
+      ],
+      "critical_source_fact": "VERIFY local input_bad terminates at verdict registers; bank-wide fault/fatal branch and phase cases still gate all word state updates. Shared capture/hold distribution remains; registering checker depth did not remove this class.",
+      "mapped_mux_fact": "_088332_/_088333_ complementary guards feed next-state AO21/AND2 muxes, including out_data[1454] alias; _089564_/_089565_ similarly drive common capture/hold muxes.",
+      "association_limit": "mapped roots have no usable exact fault/phase public aliases in these excerpts; class association is source/mux structure, not a claim of identical old _059064_ net or6963fanout",
+      "R2_reference": {
+        "root": "_059064_",
+        "terminal_sinks": 6963,
+        "buffers": 523,
+        "postplace_buffer_tree": true
+      },
+      "current_counts_are_not_postplace_buffer_counts": true,
+      "source_local_candidate_if_new_path_confirms": "distribute protected per-stripe capture/freeze/phase control so global fault terminates at one fail-closed publication permission gate plus bounded per-stripe control inputs, not every datapath D hold mux; retain global current/input binding, owner/debt and all-stripes positive completion. Derive actual registered state/cycles before any RTL; no simple registered global broadcast or cached normal.",
+      "source_or_model_variant_implemented": false,
+      "active_route_touched": false,
+      "same_source_variant_launched": false
     }
   },
   "RESULT_producer_binding_request_to_Gibbs": {
@@ -9072,7 +9121,49 @@
       "u_formatter_provider publication_done/source_reverse_done"
     ],
     "parent_edits_owner": "Gibbs; Codex does not duplicate",
-    "implementation_status": "WAIT_ACTUAL_PRODUCER_BINDING",
-    "released_RESULT_kernel": false
+    "implementation_status": "ACTUAL_LSU_UFROMV_RESULT_PROGRAM_SOURCE_IMPLEMENTED_DEFAULT_OFF",
+    "released_RESULT_kernel": false,
+    "program_source": "tools/gpu_sys/hbm_selected_result_program.py",
+    "model_function": "tools/uarch_model.py:hbm_native_selected_result_model",
+    "program_source_sha256": "585f2a0ac673bdb03830759752b60788b67a34c7a6ca8a1069505522e219854e",
+    "actual_sink": {
+      "byte_base": 458752,
+      "byte_limit": 460800,
+      "IDs_U32": 512,
+      "kind4_checked_rows": 32,
+      "final_row_byte": 460736,
+      "producer": "Gauss actual global512 merge/protected landing/checked sink writer"
+    },
+    "program_instructions": [
+      "UMOVI U4,0x70000",
+      "LDG V0,[U4],raw32,count1",
+      "UFROMV U5,V0,lane0",
+      "RESULT U5",
+      "EXIT"
+    ],
+    "program_words_hex": [
+      "2804000000070000",
+      "3800040000000000",
+      "2b05000000000000",
+      "3500050000000000",
+      "3200000000000000"
+    ],
+    "source_emit_API": "source_program(enable=False) returnsNone; explicit enable=True plus actual caller-allocated entry_pc required. CLI --enable --entry-pc <actual linked PC> --out <new output directory>. No expected payload input or result immediate.",
+    "source_only_validation": "instruction encoding/count1/address/raw32/UFROMV scoreboard use/defaultOFF/actualIMW14 boundary checked; no numerical RTL/CP integration PASS",
+    "parent_launch_locator": "dut.g_on.g_die[0].native_launch[0], launch_pc and actual_cp_frame; Gibbs owns disjoint actual launch coordination/parent edits",
+    "native_route": "real SM0 a_req/a_rsp -> u_shared existing p_req/p_rsp -> existing AW3 CDC -> same HBM bank; kind3 is arena-only and not used",
+    "required_postrelease_allocation_key": "actual persistent sink reservation for BYTE[0x70000,0x70800) under same full73 actual_cp_frame, retained after shared borrower release through native LSU return/RESULT/EXIT/CP completion",
+    "allocation_block_source": "ot_hbm_formatter_preinstall.sv RELEASE retires n=0 after borrower_release_ACK&&!gather_retained; source960625099 install_consumer clears n=0 after gather_released&&!gather_retained&&!formatter_retained. Old book/frame cannot authorize later native read.",
+    "allocation_source_owner": "Gibbs actual parent allocation/launch with Gauss producer; no copied bookvalid/shadow owner",
+    "CP_RESULT_contract": "SM emits fullU32 loaded ID. Original ot_ds_hbm_cmdproc20 END status3 for(res_q>>17)!=0; selected index IDs may20bits. Preserve refusal, no truncation or full-token result claim.",
+    "missing": [
+      "actual persistent postrelease sink reservation/identity authority",
+      "actual linked five-word instruction PC and deferred same-session native launch",
+      "actual native provider RTT/composed CP calendar for measured latency",
+      "Gauss live producer joined to consumer runtime"
+    ],
+    "new_engine_RTL": false,
+    "new_parent": false,
+    "numerical_qualified": false
   }
 }

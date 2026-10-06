@@ -1,5 +1,5 @@
 {
-  "status": "PREPARED NOT STARTED; no C21 restart or duplicate route",
+  "status": "ADMITTED fullroute current controller1968857; receiver retention PASS; SSFF/DRC pending",
   "owner": "Codex:Fermat:head",
   "source_fix": "d0488d023",
   "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C22_checked_receivers",
@@ -9,7 +9,7 @@
     "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/C22_checked_receivers_guarded.py"
   ],
   "fresh_pre_post_conditions": "load<128 idle>=16 availableRAM>=148GiB NVMe>=30GiB, unchanged admit.sh48GiB NUM_CORES16",
-  "actual_required_receiver_gate": "PRE_FLOORPLAN counts4 real DFF cells; fail immediately if pruned",
+  "actual_required_receiver_gate": "PASS all4 real DFF signal D/CLK/QN connected with WC pin/net cap reports after linking; preCTS zero wire cap not qualification",
   "actual_rowcapacity": "POST_PDN actual64group cell/padding area vs macro-free rows/taps guard5 and0.60 density; all fixed macros unchanged",
   "reuse": "C21 mapped netlist all cells/logic unchanged; only expose existing receiver output nets. No reuse of wrong ODB that pruned receivers; regenerate physical objects. No synth or exact replay.",
   "pin_helpers": {
