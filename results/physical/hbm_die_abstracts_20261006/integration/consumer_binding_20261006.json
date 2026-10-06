@@ -80,6 +80,83 @@
           "ff": 16.8015
         },
         "source_qualification_scope": "leaf only; actual full parent still open"
+      },
+      {
+        "kind": "hfd_barrier_K32_leaf",
+        "root": "physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32",
+        "master": "ot_gpu_barrier_node",
+        "parameters": {
+          "K": 32
+        },
+        "size_um": [
+          8.66,
+          8.66
+        ],
+        "pins": 70,
+        "files": {
+          "ot_gpu_barrier_node.lef": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+          "ot_gpu_barrier_node_ff.lib": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+          "ot_gpu_barrier_node_ss.lib": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7"
+        },
+        "hashes_and_arcs_verified": true,
+        "output_arcs_each_corner": 33,
+        "clock_contract": {
+          "master": "ot_gpu_barrier_node",
+          "parameters": {
+            "K": 32
+          },
+          "input_clock": "clk",
+          "cold_or_source_reset": "rst_n (source behavior retained; enclosing reset qualification open)",
+          "corners": {
+            "ss": {
+              "pin": "clk",
+              "capacitance_fF": 0.9247,
+              "internal_CTS_paths": {
+                "min_clock_tree_path": {
+                  "rise_ps": 44.23618,
+                  "fall_ps": 51.1759
+                },
+                "max_clock_tree_path": {
+                  "rise_ps": 46.75456,
+                  "fall_ps": 53.3395
+                }
+              },
+              "time_unit": "1ps",
+              "capacitance_unit": "1fF",
+              "output_clock_arcs": 33
+            },
+            "ff": {
+              "pin": "clk",
+              "capacitance_fF": 0.9952,
+              "internal_CTS_paths": {
+                "min_clock_tree_path": {
+                  "rise_ps": 22.65489,
+                  "fall_ps": 23.63301
+                },
+                "max_clock_tree_path": {
+                  "rise_ps": 23.62895,
+                  "fall_ps": 24.58861
+                }
+              },
+              "time_unit": "1ps",
+              "capacitance_unit": "1fF",
+              "output_clock_arcs": 33
+            }
+          },
+          "period_ps": 833,
+          "setup_uncertainty_ps": 60,
+          "hold_uncertainty_ps": 25,
+          "fixture_output_load_fF": 3.898,
+          "actual_parent_receiver_loads": null,
+          "parent_clock_skew": null,
+          "parent_qualified": false,
+          "source_signoff_reused": true
+        },
+        "qualification": "real K32 leaf only",
+        "parent_closed": false,
+        "source_SHA": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+        "actual_die_pin_binding": "OPEN: historical hfd_barrier ck3/t_cmdproc64 differs from real clk/rst_n/arr32/up/rel_in/rel32; Claude corrected generator source owner must bind native senses, not command64 alias",
+        "orientation_qualification": "LEF symmetry not declared; no generated die rotation/orientation credit"
       }
     ],
     "cfg": {
