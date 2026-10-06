@@ -34,6 +34,10 @@ module ot_qwen_w12_ksa #(parameter integer W = 8) (
 endmodule
 module ot_qwen_w12_bmul #(
     parameter integer LAT = 5           // 6: the product is cut after its carry-save rows (1.2 GHz @ SS)
+                                        // 7: + a kept input register (each lane its own copy of the shared x
+                                        //    operand: the 16-lane fanout leaves the decode cone)
+                                        // 8: + the decoded operands registered before the exponent add
+                                        //    (margin rule 2026-10-06: tile_tp2_t4 SS -83.8 ps on s3_x -> dec -> s1_e)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -58,19 +62,47 @@ module ot_qwen_w12_bmul #(
             end
         end
     endfunction
-    wire [17:0] da = dec(a[30:23], a[22:16]);
-    wire [17:0] db = dec(b[30:23], b[22:16]);
+    // LAT >= 7: kept input register (values and timing of every later stage unchanged, one cycle later)
+    wire [31:0] a_i, b_i;
+    wire        v_i;
+    generate if (LAT >= 7) begin : g_inreg
+        (* keep *) reg [31:0] a_r;
+        (* keep *) reg [31:0] b_r;
+        reg v_r;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_r <= 1'b0; else v_r <= v;
+        always @(posedge clk) begin a_r <= a; b_r <= b; end
+        assign a_i = a_r; assign b_i = b_r; assign v_i = v_r;
+    end else begin : g_noinreg
+        assign a_i = a; assign b_i = b; assign v_i = v;
+    end endgenerate
+    wire [17:0] da0 = dec(a_i[30:23], a_i[22:16]);
+    wire [17:0] db0 = dec(b_i[30:23], b_i[22:16]);
+    wire        s0_s = a_i[31] ^ b_i[31];
+    wire        s0_z = (a_i[30:16] == 15'd0) || (b_i[30:16] == 15'd0);
+    wire        s0_nf = (a_i[30:23] == 8'hFF) || (b_i[30:23] == 8'hFF);
+    // LAT >= 8: the decoded operands and side bits registered before the exponent add
+    wire [17:0] da, db;
+    wire        d_s, d_z, d_nf, d_v;
+    generate if (LAT >= 8) begin : g_decreg
+        reg [17:0] da_r, db_r;
+        reg        s_r, z_r, nf_r, v_r;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_r <= 1'b0; else v_r <= v_i;
+        always @(posedge clk) begin da_r <= da0; db_r <= db0; s_r <= s0_s; z_r <= s0_z; nf_r <= s0_nf; end
+        assign da = da_r; assign db = db_r; assign d_s = s_r; assign d_z = z_r; assign d_nf = nf_r; assign d_v = v_r;
+    end else begin : g_nodecreg
+        assign da = da0; assign db = db0; assign d_s = s0_s; assign d_z = s0_z; assign d_nf = s0_nf; assign d_v = v_i;
+    end endgenerate
     reg        s1_v, s1_s, s1_z, s1_nf;
     reg [7:0]  s1_a, s1_b;
     reg signed [10:0] s1_e;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
-        else s1_v <= v;
+        else s1_v <= d_v;
     end
     always @(posedge clk) begin
-        s1_s <= a[31] ^ b[31];
-        s1_z <= (a[30:16] == 15'd0) || (b[30:16] == 15'd0);
-        s1_nf <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF);
+        s1_s <= d_s;
+        s1_z <= d_z;
+        s1_nf <= d_nf;
         s1_a <= da[17:10]; s1_b <= db[17:10];
         s1_e <= $signed(da[9:0]) + $signed(db[9:0]);
     end
