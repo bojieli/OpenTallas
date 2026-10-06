@@ -69,6 +69,18 @@ class ComponentReuse(unittest.TestCase):
         args=self.work/'private.f';args.write_text('--cc\n--hierarchical-block native___05Fexp,native___05Fexp_1\n')
         self.jobs.append(dict(prefix='Vprivate',top='native___05Fexp_1',directory=str(self.work/'private'),verilator_args=str(args),deps=[],sources=[]))
         self.assertEqual(self.contracts()['Vprivate']['original_module'],'native__exp')
+    def test_own_include_content_change_rejects(self):
+        self.edit('constant.svh','`define VALUE 1\n')
+        self.edit('helper.sv','`include "constant.svh"\nmodule helper(input x,output y);assign y=`VALUE;endmodule\n')
+        before=self.contracts();self.edit('constant.svh','`define VALUE 0\n')
+        self.assertNotEqual(before['Vhelper'],self.contracts()['Vhelper'])
+    def test_generation_time_input_replacement_rejects(self):
+        d=self.work/'generated';d.mkdir();binary=self.work/'verilator_bin';binary.write_text('original')
+        st=binary.stat();record=d/'Vleaf__verFiles.dat'
+        record.write_text(f'S {st.st_size} {st.st_ino} 0 0 {st.st_mtime_ns//10**9} {st.st_mtime_ns%10**9} "unhashed" "{binary}"\n')
+        self.assertIn(str(binary),R.recorded_dependencies(d,'Vleaf'))
+        binary.write_text('changed implementation')
+        with self.assertRaises(ValueError):R.recorded_dependencies(d,'Vleaf')
     def test_macro_constructed_module_refuses_enrollment(self):
         self.edit('parent.sv','`define MOD(x) name``x\nmodule parent; endmodule\n')
         with self.assertRaises(ValueError):self.contracts()

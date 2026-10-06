@@ -273,7 +273,7 @@ def source_index(work,m):
             if word=='`define':macro_roots.update(re.findall(r'\b[A-Za-z_]\w*\b',line))
     for rel in m['sources']:
         text=clean((work/'src'/rel).read_text());texts[rel]=text
-        contexts[rel]=digest([events,state])
+        entering_context=digest([events,state])
         for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
             if name in modules:raise ValueError('Ambiguous module implementation '+name)
             modules[name]=rel
@@ -283,6 +283,7 @@ def source_index(work,m):
         directives(text)
         events.extend(re.findall(r'/\*\s*verilator[\s\S]*?\*/|//\s*verilator[^\n]*',
                                  (work/'src'/rel).read_text()))
+        contexts[rel]=digest([entering_context,events,state])
     return modules,texts,contexts,globals_,macro_roots
 
 def tool_identity(tool):
@@ -323,6 +324,7 @@ def component_contracts(work,m,jobs,tool_pins):
                implementation_order=[p for p in m['sources'] if p in closure],
                preprocessor_context={p:contexts[p] for p in sorted(closure)},
                compilation_units=globals_,hierarchy_configuration=config,tool=tool_pins,
+               include_files={p:h for p,h in m['source_sha256'].items() if p.endswith(('.svh','.vh'))},
                cflags=j.get('cflags',[]),dependencies={p:digest(v) for p,v in deps.items()})
         contracts[prefix]=c;return c
     for j in jobs:contract(j['prefix'])
@@ -334,6 +336,29 @@ def terminal_path(old,prefix):
         ref=old/(prefix+'.retained.json')
         if ref.exists():p=Path(json.loads(ref.read_text())['terminal'])
     return p
+
+def recorded_dependencies(directory,prefix):
+    """Verify legacy generation-time dependency signatures before hashing them.
+
+    Verilator recorded inode, size and nanosecond mtime for every read input.
+    ctime is excluded because adding a hardlink changes it without editing the
+    file. New enrollment pins the actual bytes as well as these original rows.
+    Missing/replaced/modified compiler, source or child-interface inputs refuse
+    enrollment; the current tool version is never assumed to be the old tool.
+    """
+    p=directory/(prefix+'__verFiles.dat');rows={}
+    for line in p.read_text().splitlines():
+        if not line.startswith('S '):continue
+        parts=shlex.split(line)
+        if len(parts)!=9:raise ValueError('Unsupported Verilator dependency signature')
+        path=Path(parts[8]);stat=path.stat()
+        expected=[int(parts[1]),int(parts[2]),int(parts[5])*10**9+int(parts[6])]
+        if [stat.st_size,stat.st_ino,stat.st_mtime_ns]!=expected:
+            raise ValueError('Input changed since model generation '+str(path))
+        rows[str(path)]=dict(signature=expected,sha256=sha(path))
+    if not any(Path(p).name=='verilator_bin' for p in rows):
+        raise ValueError('No generation-time compiler signature')
+    return rows
 
 def enroll_models(a):
     """Read completed models only; no compiler, admission or live-directory writes."""
@@ -351,6 +376,9 @@ def enroll_models(a):
             rejected[prefix]='Compiler/model failure';continue
         if j['top']=='ot_ds_hbm_cluster20_integrated':
             rejected[prefix]='Parent always rebuilt against current source';continue
+        try:dependency_signatures=recorded_dependencies(directory,prefix)
+        except (OSError,ValueError) as e:
+            rejected[prefix]=str(e);continue
         artifacts={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*') if p.is_file()}
         if any(p.endswith(('.a','.o','.so')) for p in artifacts):
             rejected[prefix]='Compiled archives require their C++ compiler/build envelope';continue
@@ -369,6 +397,7 @@ def enroll_models(a):
         models[prefix]=dict(contract=contracts[prefix],contract_sha256=digest(contracts[prefix]),
             directory=str(directory),artifacts=artifacts,
             interfaces={p:h for p,h in artifacts.items() if p.endswith(('.sv','.h'))},
+            generation_inputs=dependency_signatures,
             terminal=str(terminal),terminal_sha256=sha(terminal),parse_only_diagnostics=parse_only)
     write(out/'models.json',dict(work=str(work),tool=tool_pins,models=models,rejected=rejected))
     print(json.dumps(dict(enrolled=list(models),rejected=rejected,compiler_invoked=False)))
@@ -411,13 +440,16 @@ def compile_plan(a):
         pins={str(graph):sha(graph)}
         for j in jobs:pins[j['verilator_args']]=sha(j['verilator_args'])
         write(out/'inputs.json',dict(plan_sha256=pins,source_sha256=m['source_sha256'],
-            driver_sha256=sha(__file__),parameters=m['parameters'],jobs=len(jobs)))
+            driver_sha256=sha(__file__),parameters=m['parameters'],jobs=len(jobs),
+            enrollment_sha256=sha(a.enrollment) if a.enrollment else None))
         write(out/'supervisor.json',dict(pid=os.getpid(),host=socket.gethostname(),
               memory_gib=a.memory_gib,cpu_cores=a.cpu_cores))
     inputs=json.loads((out/'inputs.json').read_text())
     for path,h in inputs['plan_sha256'].items():
         if sha(path)!=h:raise ValueError('Derived graph changed '+path)
     if sha(__file__)!=inputs['driver_sha256']:raise ValueError('Compile driver changed')
+    if a.enrollment and sha(a.enrollment)!=inputs['enrollment_sha256']:
+        raise ValueError('Component enrollment changed across admission')
     snap=capacity(out)
     write(out/('post_guard.json' if a.admitted else 'pre_guard.json'),snap)
     if not fits(snap,a):return 75
