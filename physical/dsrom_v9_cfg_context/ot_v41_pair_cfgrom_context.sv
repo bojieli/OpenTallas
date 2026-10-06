@@ -30,7 +30,7 @@ module ot_v41_pair_cfgrom_context #(
     );
     if (HARD_CFG != 0) begin : g_hard_cfg
         wire [71:0] q;
-        (* keep, dont_touch = "true" *)
+        (* keep = 1, dont_touch = 1 *)
         ot_rom_4096x72_m8
 `ifndef SYNTHESIS
             #(.VIAMAP(VIAMAP))
