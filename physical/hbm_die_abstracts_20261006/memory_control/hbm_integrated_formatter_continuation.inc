@@ -33,7 +33,7 @@ template<class D> static void check_formatter_edge(const D& d,const FormatterFix
            "formatter accepted actual source pair differs");
   }
  }
- if((d.gather_rsp_v&1)&&(d.gather_rsp_r&1)&&bits(d.gather_rsp,1,3)==4){
+ if((d.gather_rsp_v&1)&&d.fixture_formatter_sink_rsp_r&&bits(d.gather_rsp,1,3)==4){
   require(bits(d.gather_rsp,0,1),"actual selected sink response unchecked");
   require(bits(d.gather_rsp,564,32)==0x9234abcf&&bits(d.gather_rsp,596,4)==11&&
    bits(d.gather_rsp,600,17)==0x10003&&bits(d.gather_rsp,617,20)==0xfffff,"actual sink checked full73 differs");
@@ -53,7 +53,7 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
   require(bits(d.fixture_formatter_descriptor,64*i+32*k,32)==f.descriptor[i][k],"compiled helper geometry differs from actual installed recipe");
  s.preedge_observer=[&]{
   check_formatter_edge(d,f);
-  if((d.gather_rsp_v&1)&&(d.gather_rsp_r&1)&&bits(d.gather_rsp,1,3)==4){
+  if((d.gather_rsp_v&1)&&d.fixture_formatter_sink_rsp_r&&bits(d.gather_rsp,1,3)==4){
    unsigned row=(bits(d.gather_rsp,20,32)-f.descriptor[3][0])/64;
    require(row<32&&!sink_seen[row],"duplicate actual sink publication");sink_seen[row]=true;++sink_checked;
   }
@@ -153,11 +153,11 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
   s.wait([&]{return d.fixture_formatter_mem_returns==returned+1;});s.neg();d.gather_rsp_r=0;
  }
  require((d.gather_arena_visible&1)&&d.fixture_formatter_mem_returns==6144,"actual complete arena not published");
- // Gauss is sole numerical child/writer. Its literal header is required before
- // this wait can complete. No CPP pair query, ready tie, kind4 payload, source
- // reverse or release offer stands in for that child.
+ // Gauss actual numerical child/writer is wired in the wrapper. No CPP
+ // pair query, ready tie, kind4 payload, reverse or release offer replaces it.
  s.phase="Gauss actual6144 consumer returns,32 checked sink stores and reverse drain";
  s.wait([&]{return d.fixture_formatter_pairs==6144&&(d.gather_sink_visible&1)&&d.fixture_formatter_reverses==1;});
+ require(d.fixture_formatter_checked_sink_words==32&&d.fixture_formatter_captured_words==32,"actual numeric landing/sink census differs");
  require(sink_checked==32,"all actual checked golden sink returns required before retirement");
  s.phase="actual formatter/gather/shared borrower retirement";
  s.wait([&]{return !(d.fixture_formatter_retained&1)&&!(d.gather_retained&1)&&!(d.preinstall_retained&1);});

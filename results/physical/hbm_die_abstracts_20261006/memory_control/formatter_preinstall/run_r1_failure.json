@@ -1,0 +1,11 @@
+{
+  "exit_code": 134,
+  "classification": "Gauss diagnostic caused simulator abort, not RTL failure",
+  "reason": "GDB VPI handle lookup outside permitted VPI callback mode triggered vpi_mode_flag assertion",
+  "simtime_ticks_before_abort": 811175000,
+  "actual_source_ACK_count": "unavailable; no inferred count",
+  "observed_negative_assertions": "{\n  \"status\": \"SOURCE_IMPLEMENTED_FULL_COMPONENT_GATE_RUNNING\",\n  \"enabled_successor_lint_exit\": 0,\n  \"new_source_lint_warnings\": 0,\n  \"unchanged_original_bridge_width_warnings\": 2,\n  \"iverilog_compile_exit\": 0,\n  \"observed_negative_assertions\": [\n    \"NEGATIVE partial descriptor refused\",\n    \"NEGATIVE foreign full73 refused\",\n    \"NEGATIVE readback mismatch retained/no book\",\n    \"NEGATIVE protected DUE quarantined\"\n  ],\n  \"full_component_positive_pass\": false,\n  \"runtime_pid\": 550744,\n  \"runtime_root\": \"/tmp/ot-gauss-formatter-receipt-producer-20261006\",\n  \"runtime_live_log\": \"results/physical/hbm_die_abstracts_20261006/memory_control/formatter_preinstall/run_r1.log\",\n  \"runtime_binary\": \"/tmp/gauss-preinstall.vvp\",\n  \"binary_sha256\": \"ce2660b2868ec75171473f08ef6b3477f099ffd4cda9eade59ba9165abcfa6d7\",\n  \"debug_note\": \"SIGINT diagnostic at simulation time35045000 ticks produced VVP Stop prompt; process still running. No source restart or gate PASS inferred. Retain raw log/resources until terminal.\",\n  \"RAM_observed_KiB\": 25968,\n  \"CPU_threads\": 1,\n  \"numerical_pass\": false,\n  \"parent_connected\": false,\n  \"physical_closed\": false,\n  \"source_scope\": \"only additive preinstall producer/composition/fixture and own model/evidence; Gibbs owns selected parent replacement\",\n  \"source_mapping\": \"fixture-only full plane bases0x81000/0xb1000 are not a production installed book; real sourcebook pending Noether/Gibbs. Contiguous full-plane source spans required; fragmented records refused\",\n  \"synthesis_limit\": \"observational hierarchical protected row/lease exports lint/elaborate; synthesis portability not qualified; original bridge/borrow files unchanged\"\n}\n",
+  "RAM_peak_KiB": 25344,
+  "elapsed_seconds": 1751.79,
+  "next_gate": "positive-only with inline actual counters; no repeated passed negatives; original binary/log/resources retained"
+}
