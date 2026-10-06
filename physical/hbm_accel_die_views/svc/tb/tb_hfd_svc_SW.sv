@@ -1,4 +1,5 @@
 // bench (gen_svc.py) for hfd_svc_SW
+`timescale 1ps/1ps
 module tb_hfd_svc_SW;
   localparam [7:0] FWDV = 8'b01010101;
 `include "tb_svc_body.svh"

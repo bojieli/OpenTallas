@@ -6,8 +6,10 @@ O=$1; mkdir -p $O; V=physical/hbm_accel_die_views/svc
 SRC="rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_phybind.sv"
 rc=0
 for st in SW SE NW NE; do
-  verilator --lint-only -Wall -Wno-UNUSEDSIGNAL -Wno-UNUSEDPARAM -Wno-DECLFILENAME -Wno-PINCONNECTEMPTY -Wno-WIDTHEXPAND -Wno-WIDTHTRUNC \
-    --top-module hfd_svc_$st $SRC $V/rtl/hfd_svc_$st.sv > $O/lint_$st.log 2>&1; echo "lint_$st rc=$?" >> $O/summary.txt
+  # connectivity lint: yosys hierarchy -check + check -assert (undriven / multiply driven / unconnected cells)
+  docker run --rm -v $PWD:/s:ro -w /s openroad/orfs:latest /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -q -p \
+    "read_verilog -sv $SRC $V/rtl/hfd_svc_$st.sv; hierarchy -check -top hfd_svc_$st; proc; flatten; opt_clean; check -assert" \
+    > $O/lint_$st.log 2>&1; r=$?; echo "lint_$st rc=$r" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
 done
 for st in SW NE; do
   iverilog -g2012 -o $O/sim_$st.vvp -I $V/tb -s tb_hfd_svc_$st $SRC $V/rtl/hfd_svc_$st.sv $V/tb/tb_svc_physide.sv $V/tb/tb_hfd_svc_$st.sv > $O/build_$st.log 2>&1

@@ -5,7 +5,6 @@
 //   e kind 0 (W, lane tag[2:0])  -> line on SM tag[2:0] with the W data f(addr ^ W_SALT, beat)
 //   e kind 1 (KV)                -> kv {v, tag13, data1024 = f(addr, 0..3)}
 //   e kind 2 (index keys)        -> ik data1024 = f(addr, 0..3)
-`timescale 1ps/1ps
   localparam integer TCK = 1024, TFW = 833;
   localparam [31:0] W_SALT = 32'h5a5a_0000;
   reg ck = 0, rst = 0, fck = 0;
@@ -90,7 +89,8 @@
   integer outst [0:7], done_lines = 0, want_lines = 0, kv_want = 0, kv_got = 0, ik_want = 0, ik_got = 0;
   reg [31:0] kv_a [0:63]; reg [9:0] kv_t [0:63]; reg [31:0] ik_a [0:63];
   function automatic [1087:0] lineof(input [31:0] a);
-    lineof = {f(a, 4)[63:0], f(a, 3), f(a, 2), f(a, 1), f(a, 0)};
+    reg [255:0] b4;
+    begin b4 = f(a, 4); lineof = {b4[63:0], f(a, 3), f(a, 2), f(a, 1), f(a, 0)}; end
   endfunction
   always @(posedge ck) begin
     for (k = 0; k < 8; k = k + 1) if (ln[k][0]) begin : chk

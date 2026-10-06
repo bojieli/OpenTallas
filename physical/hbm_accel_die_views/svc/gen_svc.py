@@ -105,7 +105,7 @@ def main():
                'endmodule', '`default_nettype wire', '']
         (HERE / 'rtl' / f'{mst}.sv').write_text('\n'.join(L_))
         # bench top for this master (uniform nets of tb_svc_body.svh in core order)
-        T = [f'// bench (gen_svc.py) for {mst}', f'module tb_{mst};',
+        T = [f'// bench (gen_svc.py) for {mst}', '`timescale 1ps/1ps', f'module tb_{mst};',
              f"  localparam [7:0] FWDV = 8'b{''.join('1' if f else '0' for f in reversed(fwd))};",
              '`include "tb_svc_body.svh"']
         conns = []
