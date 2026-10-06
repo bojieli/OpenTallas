@@ -456,30 +456,48 @@ module ot_v41_spine_pqc_w17w10 #(
         if (bw_v) have_n[bw_par] = 15'(bw_k) + 15'(VRD);
         if (aq_wv) have_n[aq_par] = {aq_blk, 5'd0} + 15'd64;
     end
-    wire        h_take;                          // the head is (re)loaded this cycle
-    wire [EW-1:0] he_n = !h_take ? he : (qcnt != 4'd0) ? fq[qrp] : r3_e;
-    wire        hv_n = !h_take ? hv : (qcnt != 4'd0) || r3_v;
     // the streamer's control copy (kept): {hv, need, spar, w[0], lp, lo, tag} and both `have` counts
+    // v13 (margin-first): THREE kept copies of the control register, each with its own need-vs-have compare and
+    // advance: copy 0 loads the head (he, ~140 flops), copy 1 forms the copies' own next state, copy 2 drives the
+    // counters / timers / streamer state (v11 R128 at 833: u_cc -> he +32, -> gap_ok +24, -> sm_run +28 ps, one
+    // advance net with ~250 loads).  The copies hold identical values every cycle.
     localparam integer CCW = 1 + 15 + 1 + 1 + 1 + 1 + 2 + 30;
-    wire [CCW-1:0] cc;
-    ot_v41_kreg #(.W(CCW), .AR(1)) u_cc (.clk(clk), .arst_n(rst_n),
-        .d({hv_n, he_n[EW-49 -: 15], he_n[EW-64], he_n[EW-48], he_n[EW-65], he_n[EW-66], he_n[EW-68 -: 2],
-            have_n[1], have_n[0]}), .q(cc));
-    wire        c_hv = cc[CCW-1];
-    wire [14:0] c_need = cc[CCW-2 -: 15];
+    localparam integer NCC = 3;
+    wire [NCC-1:0] s_advk, h_takek;
+    wire [CCW-1:0] cck [0:NCC-1];
+    wire [EW-1:0] he_n = !h_takek[0] ? he : (qcnt != 4'd0) ? fq[qrp] : r3_e;
+    wire        hv_n = !h_takek[0] ? hv : (qcnt != 4'd0) || r3_v;
+    // copy 1's own next state (the same value as {hv_n, he_n fields} through copy 1's advance)
+    wire [EW-1:0] he_c = !h_takek[1] ? he : (qcnt != 4'd0) ? fq[qrp] : r3_e;
+    wire        hv_c = !h_takek[1] ? hv : (qcnt != 4'd0) || r3_v;
+    wire [CCW-1:0] cc_d = {hv_c, he_c[EW-49 -: 15], he_c[EW-64], he_c[EW-48], he_c[EW-65], he_c[EW-66], he_c[EW-68 -: 2],
+                           have_n[1], have_n[0]};
+    genvar gcc;
+    generate for (gcc = 0; gcc < NCC; gcc = gcc + 1) begin : g_cc
+        wire [CCW-1:0] cc;
+        ot_v41_kreg #(.W(CCW), .AR(1)) u_cc (.clk(clk), .arst_n(rst_n), .d(cc_d), .q(cc));
+        assign cck[gcc] = cc;
+        wire        k_hv = cc[CCW-1];
+        wire [14:0] k_need = cc[CCW-2 -: 15];
+        wire        k_spar = cc[CCW-17];
+        wire        k_w0 = cc[CCW-18];
+        wire [14:0] k_have1 = cc[29:15], k_have0 = cc[14:0];
+        wire        k_ge0, k_ge1;           // need <= have: the carry of have + ~need + 1 (prefix adders)
+        ot_v41_ksadd #(.W(15)) u_g0 (.a(k_have0), .b(~k_need), .cin(1'b1), .s(), .cout(k_ge0));
+        ot_v41_ksadd #(.W(15)) u_g1 (.a(k_have1), .b(~k_need), .cin(1'b1), .s(), .cout(k_ge1));
+        // (need >= 32 for every stream word, so an empty buffer never satisfies it: masking the compare = clearing have)
+        wire        k_ok = !k_w0 || (k_spar ? (k_ge1 && !clr_q[1]) : (k_ge0 && !clr_q[0]));
+        assign s_advk[gcc] = sm_run && sm_arm && k_hv && k_ok;
+        assign h_takek[gcc] = s_advk[gcc] || !hv;
+    end endgenerate
+    wire [CCW-1:0] cc = cck[2];
     wire        c_spar = cc[CCW-17];
-    wire        c_w0 = cc[CCW-18];
     assign      s_lp_c = cc[CCW-19];
     assign      s_lo_c = cc[CCW-20];
     wire [1:0]  c_tag = cc[CCW-21 -: 2];
-    wire [14:0] c_have1 = cc[29:15], c_have0 = cc[14:0];
-    wire       h_ge0, h_ge1;            // need <= have: the carry of have + ~need + 1 (prefix adders)
-    ot_v41_ksadd #(.W(15)) u_g0 (.a(c_have0), .b(~c_need), .cin(1'b1), .s(), .cout(h_ge0));
-    ot_v41_ksadd #(.W(15)) u_g1 (.a(c_have1), .b(~c_need), .cin(1'b1), .s(), .cout(h_ge1));
-    // (need >= 32 for every stream word, so an empty buffer never satisfies it: masking the compare = clearing have)
-    wire        s_ok = !c_w0 || (c_spar ? (h_ge1 && !clr_q[1]) : (h_ge0 && !clr_q[0]));
-    wire        s_adv = sm_run && sm_arm && c_hv && s_ok;
-    assign      h_take = s_adv || !hv;
+    wire        s_adv = s_advk[2];                 // control copy
+    wire        h_take = h_takek[2];
+    wire        s_adv_h = s_advk[0];               // head copy
     reg         tm_bad;              // a beat of another op than the streamer's (registered check)
     reg         st_end;              // the last beat of an op was sent last cycle
     reg  [1:0]  st_tag;
@@ -575,8 +593,8 @@ module ot_v41_spine_pqc_w17w10 #(
             p1_xs_v <= 1'b0; p1_xb_v <= 1'b0; bt_xs_v <= 1'b0; bt_xb_v <= 1'b0;
             bt_go <= 1'b0; bt_gobf <= 1'b0; bt_cfg <= 1'b0; bt_tag <= 2'd0; bt_ph <= '0; bt_np <= 3'd0;
         end else begin
-            p1_xs_v <= s_adv && hw[0] && !h_fam;
-            p1_xb_v <= s_adv && hw[0] && h_fam;
+            p1_xs_v <= s_adv_h && hw[0] && !h_fam;
+            p1_xb_v <= s_adv_h && hw[0] && h_fam;
             bt_xs_v <= p1_xs_v; bt_xb_v <= p1_xb_v;
             bt_go <= p1_go; bt_gobf <= p1_gobf; bt_cfg <= p1_cfg; bt_tag <= p1_tag; bt_ph <= p1_ph; bt_np <= p1_np;
         end

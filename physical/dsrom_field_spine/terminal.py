@@ -18,11 +18,11 @@ except Exception as e:  # noqa: BLE001
     (out / f"{tag}_terminal.json").write_text(json.dumps(d, indent=1) + "\n"); print(json.dumps(d)); sys.exit(1)
 names = {n.split("/")[0] for n in re.findall(r"^\s*DFF\w+\s+\\?(\S+)", net, re.M)}
 pat = dict(g_ixb=r"u_sp\.g_ixb\[\d+\]\.u_ix", g_ixq=r"u_sp\.g_ixq\[\d+\]\.u_ix",
-           g_sel=r"u_sp\.g_reg\[\d+\]\.g_sel\[\d+\]\.u_s", u_rsfm=r"u_sp\.g_reg\[\d+\]\.u_rsfm", u_cc=r"u_sp\.u_cc",
+           g_sel=r"u_sp\.g_reg\[\d+\]\.g_sel\[\d+\]\.u_s", u_rsfm=r"u_sp\.g_reg\[\d+\]\.u_rsfm", u_cc=r"u_sp\.g_cc\[\d+\]\.u_cc",
            g_aqi=r"u_sp\.g_aqi\[\d+\]\.u_c", g_qwe=r"u_sp\.g_qwe\[\d+\]\.u_we", g_bwb=r"u_sp\.g_bwb\[\d+\]\.u_bwb",
            u_aoh=r"u_sp\.u_aoh\d", g_grp=r"u_sp\.g_grp\[\d+\]\.u_rep",
            **{f"u_oh{i}": rf"u_sp\.g_reg\[\d+\]\.u_oh{i}" for i in range(5)})
-exp = dict(g_ixb=32, g_ixq=8, g_sel=4 * R, u_rsfm=R, u_cc=1, g_aqi=9, g_qwe=8, g_bwb=16, u_aoh=2, g_grp=(R + 7) // 8,
+exp = dict(g_ixb=32, g_ixq=8, g_sel=4 * R, u_rsfm=R, u_cc=3, g_aqi=9, g_qwe=8, g_bwb=16, u_aoh=2, g_grp=(R + 7) // 8,
            **{f"u_oh{i}": R for i in range(5)})
 act = {k: sum(bool(re.fullmatch(p, n)) for n in names) for k, p in pat.items()}
 # v10 / v11 kept copies: g_ixc (stage-3 BF16 read sub-index, ot_v41_kreg) and the quantisers' s11 exponent copies
