@@ -6,15 +6,14 @@
 # od1 -> od2 -> OREG) absorb the moved wire.  Ports: QSS_ANCHOR_RE (default res_in / o_* / ov).
 set qa_re [expr {[info exists ::env(QSS_ANCHOR_RE)] ? $::env(QSS_ANCHOR_RE) : {^(res_in|o_|ov$)}}]
 set qa_block [ord::get_db_block]
-set qa_core [$qa_block getCoreArea]
+set ::qa_core [$qa_block getCoreArea]
 set qa_dbu [[$qa_block getTech] getDbUnitsPerMicron]
 proc qa_is_seq {inst} { return [regexp {DFF|DHL|DLL|SDF} [[$inst getMaster] getName]] }
 proc qa_is_buf {inst} { return [regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]] }
 proc qa_put {inst x y} {
-  global qa_core
   set w [[$inst getMaster] getWidth]
-  set xl [expr {max([$qa_core xMin], min($x, [$qa_core xMax] - $w))}]
-  set yl [expr {max([$qa_core yMin], min($y, [$qa_core yMax] - [[$inst getMaster] getHeight]))}]
+  set xl [expr {max([$::qa_core xMin], min($x, [$::qa_core xMax] - $w))}]
+  set yl [expr {max([$::qa_core yMin], min($y, [$::qa_core yMax] - [[$inst getMaster] getHeight]))}]
   $inst setLocation $xl $yl
   $inst setPlacementStatus PLACED
   return $w
@@ -45,12 +44,12 @@ foreach bt [$qa_block getBTerms] {
   set net [$bt getNet]; if {$net eq "NULL"} { incr qa_skip; continue }
   set bb [$bt getBBox]
   set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
-  set right [expr {$px > ([$qa_core xMin] + [$qa_core xMax]) / 2}]
+  set right [expr {$px > ([$::qa_core xMin] + [$::qa_core xMax]) / 2}]
   # walk through port / placement buffers and inverters (<= 4 levels) to the boundary flop; chain is pin-side first
   set chain [qa_walk $net [expr {[$bt getIoType] eq "INPUT"}] 4]
   if {[llength $chain] == 0 || ![qa_is_seq [lindex $chain end]]} { incr qa_skip; continue }
   # pin-side first: [port buffer, flop] (buffer nearest the pin)
-  set x [expr {$right ? [$qa_core xMax] : [$qa_core xMin]}]
+  set x [expr {$right ? [$::qa_core xMax] : [$::qa_core xMin]}]
   foreach i $chain {
     set w [[$i getMaster] getWidth]
     if {$right} { set x [expr {$x - $w}]; qa_put $i $x $py } else { qa_put $i $x $py; set x [expr {$x + $w}] }
