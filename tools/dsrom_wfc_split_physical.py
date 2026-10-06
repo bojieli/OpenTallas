@@ -33,8 +33,8 @@ CTRL = "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 MACRO = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
 MNAME = "ot_sram_1r1w_512x128_m4_r2c2"
 PERIOD_PS = 833
-KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1),
-                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1)}
+KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1),
+                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1)}
 # Estimated die-tree insertion delay [min, max] ps at the element's clock pins (r1 routes: src 505..588,
 # stg 312..401).  The routed SDC times IO against io_clk carrying it as SOURCE latency (kept after CTS
 # propagates the clocks), i.e. the neighbours' registers hang off the same tree -- the same model as

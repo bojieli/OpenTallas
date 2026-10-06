@@ -129,6 +129,9 @@
 `ifndef OT_WFC_TXQ_SLICE
 `define OT_WFC_TXQ_SLICE 0
 `endif
+`ifndef OT_WFC_RDY_LT
+`define OT_WFC_RDY_LT 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -152,6 +155,9 @@ module ot_rom_pkg_ctrl_wfc #(
     // registered completion, read-in-flight, write and read pointers (one-hot), so no control net fans
     // out to all 512 x TXQ queue bits (0 cycles)
     parameter integer TXQ_SLICE = `OT_WFC_TXQ_SLICE,
+    // RDY_LT: the payload word-free compare (rx word < txh) that gates in_ready / vm_we as a log-depth
+    // compare (0 cycles)
+    parameter integer RDY_LT = `OT_WFC_RDY_LT,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -464,10 +470,16 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [VWA:0]   txh;
     wire [VWA-1:0] rx_word = rxw;
     // (closed: the job_done select after the two compares, not before one)
-    wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
+    wire rw_lt_txh;
+    generate if (RDY_LT) begin : g_rdy_lt
+        ot_rom_pkg_ctrl_wfc_lt #(.W(VWA+1)) u_lt(.a({1'b0, rx_word}), .b(txh), .lt(rw_lt_txh));
+    end else begin : g_rdy_direct
+        assign rw_lt_txh = rx_word < txh;
+    end endgenerate
+    wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rw_lt_txh) || rx_word >= TXB + XWORDS;
     // a core start needs !running, so job_done = 0 there: the start terms use these job_done-free forms
     wire tx_hold_i = tx_st == T_DATA || tx_st == T_SHDR || tx_st == T_SDATA;
-    wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < txh || rx_word >= TXB + XWORDS;
+    wire rx_word_free_i = !(tx_st == T_DATA) || rw_lt_txh || rx_word >= TXB + XWORDS;
     wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
     wire core_free = !running || job_done;
     // counter increments (PRECOMP: log-depth) and the position check compares
