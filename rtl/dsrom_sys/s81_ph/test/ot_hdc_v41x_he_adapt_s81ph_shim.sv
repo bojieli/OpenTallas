@@ -49,5 +49,7 @@ module ot_hdc_v41x_he_adapt #(
     output wire [MP*1024-1:0] o_data,
     output wire              fault
 );
+    // the bench (tb_hdc_core_v41x) reads the adapter's debug counters by hierarchy
+    wire [31:0] dbg_ops = u_x.u_he.dbg_ops, dbg_elems = u_x.u_he.dbg_elems;
     ot_s81ph_he_xing #(.DF(`S81PH_DF), .DR(`S81PH_DR), .NEG(`S81PH_NEG), .HW(HW), .TL(TL), .KCMAX(KCMAX), .PMAX(PMAX), .BAW(BAW), .AW(AW), .NW(NW), .S(S), .MP(MP)) u_x (.*);
 endmodule
