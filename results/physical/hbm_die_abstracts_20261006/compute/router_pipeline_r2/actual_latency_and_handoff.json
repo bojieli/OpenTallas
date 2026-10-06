@@ -1,0 +1,28 @@
+{
+  "source_commit": "03e7926ba",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182"
+  },
+  "actual_pass_marker": "ROUTER_SUCCESSOR_REAL384_K6_PASS checked=64 tail=48 II=24 reset_cancel=1 bubbles=1",
+  "tail_cycles": 48,
+  "input_II_cycles": 24,
+  "original_baseline_tail_cycles": 23,
+  "total_added_cycles_vs_baseline": 25,
+  "prior_cut_tail_cycles": 28,
+  "incremental_added_cycles_vs_prior_cut": 20,
+  "composition_rule": "Use original23 +TOTAL25 =48, OR alreadypriced prior28 +INCREMENT20 =48. Never add25+20. Unchanged24 inputbeats count once.",
+  "added_ns_vs_baseline_at_1p2GHz": 20.833333333333336,
+  "DS40_nonoverlapped_total_added_ns_vs_baseline": 833.3333333333334,
+  "added_ns_vs_prior_cut_at_1p2GHz": 16.666666666666668,
+  "DS40_nonoverlapped_incremental_added_ns_vs_prior_cut": 666.6666666666667,
+  "clock_qualified": false,
+  "physical_qualified": false,
+  "rate_adopted": false,
+  "parent_qualified": false,
+  "protection_scope": "existing enclosing protected owner/activation/debt held contract unchanged and stillrequires actual connected parent; no phase-seat/mask newauthoritative flag",
+  "Lagrange_recommendation_consumed": "LAGRANGE_ROUTER_HIERARCHY_CHUNK14_RECOMMENDATION.patch.txt; previous W6phase-seat proposal explicitlysuperseded",
+  "mapped_retention": "PENDING actual32control DFFs/distinctQ/receiverloads; no keep-onlyproof"
+}
