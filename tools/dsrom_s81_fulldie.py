@@ -2675,7 +2675,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', rev=REV, cc_reach_um=CC_REACH, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3086,6 +3086,8 @@ def buses_r8(m):
 
 
 LANES_VCH, LANES_CORR = 26, 16
+VCH_INTERLEAVE = False          # --vch-interleave (S81-RERUN, default off): strided VCH lane order
+VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
 HUB_LANE_PITCH = 72.0           # r9 hub-bus lane spacing in the VCH (was 12 um: v2 GRT overflow in the VCH west strip)
 
 # ---------------------------------------------------------------- r9: q-element boundary banks and column relays
@@ -3367,6 +3369,11 @@ def vch_x(m, tag):
     if tag not in d:
         d[tag] = len(d)
     i = d[tag] % LANES_VCH
+    if VCH_INTERLEAVE:
+        # S81-RERUN v3 GRT i50 (r9m215): the first ~14 chain tags filled lanes 0..13, i.e. the VCH WEST half only,
+        # with the 'sp' hub lanes on top of them (scan overflow 2466, max window 1.37 on M9 at x_vch + 0..300 um):
+        # stride the lane index so successive chains alternate across the whole VCH width
+        i = (i * VCH_LANE_STRIDE) % LANES_VCH
     return m['x_vch'] + 60.0 + (VCH8 - 120.0) * (i + 0.5) / LANES_VCH
 
 
@@ -4220,8 +4227,13 @@ def main(argv=None):
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
     ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
                     'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
+    ap.add_argument('--vch-interleave', action='store_true', help='r9: strided VCH lane order (chains spread over '
+                    'the whole VCH width; default off)')
     a = ap.parse_args(argv)
     set_cc_reach(a.cc_reach_um)
+    global VCH_INTERLEAVE
+    if a.vch_interleave:
+        VCH_INTERLEAVE = True
     global REV, HEAD_DIES
     REV, HEAD_DIES = a.rev, a.head_dies
     configure(a.die, a.gen)
@@ -4299,6 +4311,7 @@ def main(argv=None):
                     if v_.get('gen') == 'r8':
                         REV = v_.get('rev', 'r8')
                         set_cc_reach(v_.get('cc_reach_um'))
+                        VCH_INTERLEAVE = bool(v_.get('vch_interleave'))
                         HEAD_DIES = v_.get('head_dies', 12)
                         configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                         slot_geometry(v_.get('elem_frame_h'))
