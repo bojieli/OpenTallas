@@ -326,6 +326,7 @@ end else begin:g_on
         wire [636:0] shared_gather_rsp;
         wire shared_gather_req_v,shared_gather_req_r,shared_gather_rsp_v,shared_gather_rsp_r;
         wire fmt_req_v,fmt_req_r,fmt_rsp_r,fmt_retained,fmt_fault,bridge_release_r;
+        wire fmt_lease_valid;wire [72:0] fmt_lease_frame;
         wire store_req_v,store_req_r,store_rsp_r,store_fault;
         wire [VM_AW-1:0] store_vm_raddr;
         assign normal_vm_raddr[d*32+:32]=32'(store_vm_raddr);
@@ -360,6 +361,7 @@ end else begin:g_on
          .job(cpl_job),.gen(cpl_generation),.token(launch_token),.pos(launch_pos),
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
          .gather_retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),
+         .owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame),
          .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),
          .pair_job(index_pair[d*85+53+:32]),.pair_gen(index_pair[d*85+49+:4]),.pair_pos(index_pair[d*85+29+:20]),
          .pair_rank(index_pair[d*85+22+:7]),.pair_word(index_pair[d*85+16+:6]),.pair_tag(index_pair[d*85+:16]),
@@ -371,7 +373,7 @@ end else begin:g_on
          .bridge_rsp_v(shared_gather_rsp_v&&formatter_response),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(shared_gather_rsp),
          .release_v(formatter_release_v[d]),.release_r(formatter_release_r[d]),
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
-         .release_pos(gather_release_frame[d*73+53+:20]),
+         .release_pos(gather_release_frame[d*73+53+:20]),.release_token17(gather_release_frame[d*73+36+:17]),
          .publication_done(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]));
         ot_hbm_integrated_gather_owner #(.ENABLE(1),.VM_AW(VM_AW)) u_shared(
          .clk(clk_sm),.por_n(rst_sm_n),
@@ -380,6 +382,7 @@ end else begin:g_on
          .job(cpl_job),.gen(cpl_generation),.token(launch_token),.pos(launch_pos),
          .retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),.sink_visible(gather_sink_visible[d]),.fault(shared_fault),
          .bound_arena_base(bound_arena_base),.bound_arena_limit(bound_arena_limit),
+         .formatter_lease_valid(fmt_lease_valid),.formatter_lease_frame(fmt_lease_frame),
          .req_v(shared_gather_req_v),.req_r(shared_gather_req_r),
          .req_kind(shared_gather_req[0+:3]),.req_addr(shared_gather_req[3+:32]),.req_tag(shared_gather_req[35+:16]),
          .req_rank(shared_gather_req[51+:7]),.req_word(shared_gather_req[58+:6]),.req_data(shared_gather_req[64+:512]),

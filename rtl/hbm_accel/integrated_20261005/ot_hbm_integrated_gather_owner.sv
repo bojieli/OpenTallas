@@ -14,6 +14,9 @@ module ot_hbm_integrated_gather_owner #(
  input wire [16:0] token, input wire [19:0] pos,
  output wire retained,arena_visible,sink_visible,fault,
  output wire [31:0] bound_arena_base,bound_arena_limit,
+ // Existing checked shared-borrow grant and existing protected retained frame.
+ // Export only: no second owner seat, grant source, or completion authority.
+ output wire formatter_lease_valid,output wire [72:0] formatter_lease_frame,
  // All addresses here are BYTE addresses. kind: 0 source read, 1 score
  // store, 2 ID store, 3 formatter read, 4 final ID sink store.
  input wire req_v, output wire req_r, input wire [2:0] req_kind,
@@ -67,6 +70,8 @@ module ot_hbm_integrated_gather_owner #(
  wire [63:0] all_rsp_tag;wire [1023:0] all_rsp_data;
  assign borrow_granted=grants[0];assign borrow_release_ack=releases[0];
  assign borrow_fault=arb_fault|provider_fault;
+ assign formatter_lease_valid=ENABLE&&borrow_granted&&retained&&!fault;
+ assign formatter_lease_frame={held_pos,held_token,held_gen,held_job};
  assign fault=bridge_fault|arb_fault|(ENABLE!=0&&provider_fault);
  assign peer_lease_granted=grants[2:1];assign peer_release_r=releases[2:1];
  assign p_req_rdy={all_req_rdy[3:2],all_req_rdy[0]};assign b_req_rdy=all_req_rdy[1];
