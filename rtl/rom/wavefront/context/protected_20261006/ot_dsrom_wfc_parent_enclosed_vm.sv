@@ -50,7 +50,7 @@ module ot_dsrom_wfc_parent_enclosed_vm #(
     parameter [DESTS*3-1:0] ROUTE_INIT = {DESTS*3{1'b0}}
 ) (
     input  wire               clk,
-    input wire advance,memory_step,
+    input wire advance,memory_step,read_step,write_step,
     input  wire               rst_n,
     // run configuration (SOURCE)
     input  wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] cfg_users,
@@ -101,7 +101,9 @@ module ot_dsrom_wfc_parent_enclosed_vm #(
     output reg                wf_reject,      // a verified token was rejected
     output wire [USER_W-1:0] vm_owner_user,
     output wire [NW-1:0] vm_owner_pos,
-    output wire vm_read_capture,
+    output wire vm_read_capture,vm_owner_conflict,
+    output wire [USER_W-1:0] vm_read_owner_user,
+    output wire [NW-1:0] vm_read_owner_pos,
     output wire core_done_accepted,
     output wire [USER_W-1:0] core_owner_user,
     output reg                wf_squash       // a squashed result was discarded
@@ -206,8 +208,8 @@ module ot_dsrom_wfc_parent_enclosed_vm #(
         .SIDE_USH(SIDE_USH),
         .WAVE(WAVE),
         .WIN(WIN)) u_ctrl (
-        .clk(clk),.advance(advance),.memory_step(memory_step),
-        .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),
+        .clk(clk),.advance(advance),.memory_step(memory_step),.read_step(read_step),.write_step(write_step),
+        .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),.vm_owner_conflict(vm_owner_conflict),.vm_read_owner_user(vm_read_owner_user),.vm_read_owner_pos(vm_read_owner_pos),
         .rst_n(rn),
         .cfg_users(cfg_users),
         .cfg_prompt_len(cfg_prompt_len),

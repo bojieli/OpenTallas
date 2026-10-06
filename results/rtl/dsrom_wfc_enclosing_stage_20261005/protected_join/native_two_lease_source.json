@@ -1,0 +1,22 @@
+{
+  "result": "SOURCE_IMPLEMENTED_NEW_DISTINCT_OWNER_GATE_PENDING",
+  "model_before_RTL": "504715330",
+  "source": "actual unchanged canonical WFC nextRX hdr_user/hdr_pos vs oldTX tx_user/tx_pos, rx_word_free compares RXwriteword behindTXreadpointer",
+  "legal_example": "RX(865,p+1) writes row0 while TX(865,p) reads row1: native may assert XAwe andXAre together under distinct true owners",
+  "mechanism": "First captured TXread lease, RX tuple stays source/router held and unaccepted; TX-only issue/capture enters actualWFC queue, provider readconsume/fence/retire completes. Then saved distinct RXlease verifies currently held rawXAwrite owner, RX-only write request/positive readback/actual native acceptance/consume/fence/retire before nextTXread. Both source pulses advance once. XB held unaccepted during pair, sameowner read2/write5 path keeps native priority and olddata.",
+  "caller_control_FF": 224,
+  "incremental_FF": 98,
+  "payload_copy_FF": 0,
+  "provider_RTL_unchanged": "554d7b0c9",
+  "defaultOFF": true,
+  "scope": "native SOURCE0 previousTX/nextRX overlap plus held XB owner; not full array/native arithmetic/finalSSFF",
+  "lint": {
+    "tool": "actual5.050",
+    "exit": 0,
+    "seconds": 2.756,
+    "allocated_MB": 122.148
+  },
+  "meaningful_changed_gate": "82 independently checked native VMwrites across real p0 andp1,47 actual old p0 outputflits, both real C8tuple lifecycles, actualsplitproviderrequests/receipts exactowner, held XB highwordread unaccepted duringpair then checked read/consume/retire, wrongowner+warmdebt. One config, no supplier replay.",
+  "adopted": false,
+  "SS60FF25": false
+}

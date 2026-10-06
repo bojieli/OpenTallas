@@ -151,7 +151,7 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
     parameter integer WIN          = 6       // WAVE: positions of one user in flight
 ) (
     input  wire               clk, advance,
-    input wire memory_step,
+    input wire memory_step,read_step,write_step,
     input  wire               rst_n,
     // run configuration (SOURCE)
     input  wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] cfg_users,
@@ -202,7 +202,9 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
     output reg                wf_reject,      // a verified token was rejected
     output wire [USER_W-1:0] vm_owner_user,
     output wire [NW-1:0] vm_owner_pos,
-    output wire vm_read_capture,
+    output wire vm_read_capture,vm_owner_conflict,
+    output wire [USER_W-1:0] vm_read_owner_user,
+    output wire [NW-1:0] vm_read_owner_pos,
     output wire core_done_accepted,
     output wire [USER_W-1:0] core_owner_user,
     output reg                wf_squash       // a squashed result was discarded
@@ -499,7 +501,14 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
     // Actual RX header or retained TX owner, independent of whole ACK.
     assign vm_owner_user = vm_we ? ((rx_st==R_SIDE)?side_user:hdr_user) : (job_done?cur_user:tx_user);
     assign vm_owner_pos = vm_we ? hdr_pos : (job_done?cur_pos:tx_pos);
+    assign vm_read_owner_user = job_done?cur_user:tx_user;
+    assign vm_read_owner_pos = job_done?cur_pos:tx_pos;
     assign vm_read_capture = advance && rd_inflight && !job_done && !q_hdr_r && !q_hdr_s;
+    // One provider lease cannot truthfully label two concurrent XA owners.
+    // Same-owner native read/write is bundled, never reordered or discarded.
+    assign vm_owner_conflict = vm_we && vm_re &&
+        ({((rx_st==R_SIDE)?side_user:hdr_user),hdr_pos} !=
+         {(job_done?cur_user:tx_user),(job_done?cur_pos:tx_pos)});
     wire side_ok = (SIDE_IN == 0) ||
                    ((hdr_user < MAXU) && (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN));
     wire side_payload = (rx_st == R_SIDE) && in_valid && in_ready;
@@ -531,11 +540,14 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
             vm_we = in_valid && in_ready;
         end
         rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
-        if (vm_we && ((job_done && SEND_HIDDEN) || ((tx_st==T_DATA || tx_st==T_SDATA) && tx_space))) begin in_ready=0;vm_we=0;rx_last_word=0;end
         rx_side_last = side_payload && in_last && side_user < MAXU;
         vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
 
+        if (!write_step) begin
+            in_ready=0;rx_hdr=0;rx_res=0;rx_side=0;vm_we=0;rx_last_word=0;rx_side_last=0;
+        end
+        if (!read_step) vm_re=0;
         if (!memory_step) begin
             in_ready=0;rx_hdr=0;rx_res=0;rx_side=0;vm_we=0;vm_re=0;rx_last_word=0;rx_side_last=0;
         end
@@ -557,6 +569,7 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
         if (st_wk)  begin start_tok_i = e_tok; start_pos_i = e_pos; st_user = e_user; end
         // the registered reset root releases one cycle after rst_n: take nothing from the link and start
         // nothing until then (the reference releases with rst_n; a flit offered in that cycle must wait)
+        if (!write_step) begin st_rx=0;st_new=0;st_q=0;st_fb=0;st_wk=0;start_i=0;end
         if (!rx_enable) begin
             in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0; vm_we = 1'b0;
             st_rx = 1'b0; st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0; start_i = 1'b0;

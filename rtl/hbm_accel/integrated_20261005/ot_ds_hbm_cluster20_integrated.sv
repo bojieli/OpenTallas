@@ -47,9 +47,10 @@ module ot_ds_hbm_cluster20_integrated #(
  // Ordered adapter request85 low tag16/word6/rank7/pos20/gen4/job32.
  // Response599 low UE1/checked1/data512/tag16/word6/rank7/pos20/gen4/job32.
  input wire [ND-1:0] formatter_start_v,index_pair_v,index_pairs_r,formatter_release_v,
- input wire [ND*85-1:0] index_pair,
+ // TOKEN comes from the retained request caller, not the live CP launch.
+ input wire [ND*85-1:0] index_pair,input wire [ND*17-1:0] index_pair_token17,
  output wire [ND-1:0] formatter_start_r,index_pair_r,index_pairs_v,formatter_release_r,
- output wire [ND*599-1:0] index_pairs,
+ output wire [ND*599-1:0] index_pairs,output wire [ND*73-1:0] index_pairs_frame73,
  // Existing caller rv/rop/rrow NC8 fields, held installed output extents.
  input wire [ND-1:0] w2_reserve_v,w2_output_installed,w2_pair_op,w2_result_v,w2_native_done,w2_assembly_drained,
  input wire [ND*2-1:0] w2_rows_a,w2_rows_b,
@@ -95,7 +96,7 @@ generate if(COMBINED_ENABLE==0) begin:g_original
  assign normal_busy=0;assign normal_done=0;assign normal_vm_re=0;assign normal_vm_raddr=0;
  assign normal_e_valid=0;assign normal_e_data=0;assign normal_e_last=0;assign normal_e_mode=0;assign normal_e_tag=0;assign normal_o_ready=0;
  assign cp_reset_ack=0;
- assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign formatter_release_r=0;
+ assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign index_pairs_frame73=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
  assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
@@ -109,7 +110,7 @@ end else if(ENABLE==0) begin:g_off
  assign normal_busy=0;assign normal_done=0;assign normal_vm_re=0;assign normal_vm_raddr=0;
  assign normal_e_valid=0;assign normal_e_data=0;assign normal_e_last=0;assign normal_e_mode=0;assign normal_e_tag=0;assign normal_o_ready=0;
  assign cp_reset_ack=0;
- assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign formatter_release_r=0;
+ assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign index_pairs_frame73=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
  assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
@@ -362,10 +363,11 @@ end else begin:g_on
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
          .gather_retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),
          .owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame),
-         .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),
+         .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),.pair_token(index_pair_token17[d*17+:17]),
          .pair_job(index_pair[d*85+53+:32]),.pair_gen(index_pair[d*85+49+:4]),.pair_pos(index_pair[d*85+29+:20]),
          .pair_rank(index_pair[d*85+22+:7]),.pair_word(index_pair[d*85+16+:6]),.pair_tag(index_pair[d*85+:16]),
          .pairs_v(index_pairs_v[d]),.pairs_r(index_pairs_r[d]),.pairs(index_pairs[d*599+2+:512]),
+         .pairs_frame(index_pairs_frame73[d*73+:73]),
          .pairs_job(index_pairs[d*599+567+:32]),.pairs_gen(index_pairs[d*599+563+:4]),.pairs_pos(index_pairs[d*599+543+:20]),
          .pairs_rank(index_pairs[d*599+536+:7]),.pairs_word(index_pairs[d*599+530+:6]),.pairs_tag(index_pairs[d*599+514+:16]),
          .pairs_checked(index_pairs[d*599+1]),.pairs_uncorrectable(index_pairs[d*599]),.retained(fmt_retained),.fault(fmt_fault),
