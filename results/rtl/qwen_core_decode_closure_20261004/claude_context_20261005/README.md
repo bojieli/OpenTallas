@@ -34,13 +34,18 @@ Item 2 of the Qwen3-8B ROM physical closure: route `ot_qwen_rom_core` (the final
 
 ## Routed results (final 6_final SS at 0.833 ns, 60 ps uncertainty; FF hold at 25 ps)
 
+The **SS60 column is the verdict** (die-context boundary). The `plain` numbers are the ideal-port-edge artifact the
+handoff's recipe starts from: with the delay charged at the clock port, every boundary register is charged the
+block's own ~300 ps of insertion (and the output min delays are over-credited), so a design can look hundreds of ps
+worse there. `verdict.json` carries both columns side by side.
+
 | variant | RTL | post-CTS WNS | **SS60 (die context)** | viol | **FF25 hold** | DRC | cells µm² |
 |---|---|---|---|---|---|---|---|
-| `c1_plain` | DEC_LA h | -494 | -425.8 (ideal-port boundary) | 940 | +7.18 | 0 | 7,229 |
+| `c1_plain` | DEC_LA h (plain-SDC artifact) | -494 | -425.8 / plain -425.8 | 940 | +7.18 | 0 | 7,229 |
 | `r3_f2ba` | +FB2+BOUND+AMQ | -106.7 | -71.8 | 196 | +7.55 | 0 | 7,160 |
 | `r4_f2ba` | +FB2+BOUND+AMQ, keep attrs | -268.2 | -19.0 | 19 | +6.82 | 0 | 6,885 |
-| **`r5_f2ba`** | **+FB2+BOUND (adopted)** | **-26.96** | **+6.27** | **0** | **+6.92** | **0** | **6,945** |
-| `r5b_f3ba` | +FB3+BOUND+AMQ | -13.26 | +0.87 | 0 | +7.12 | 0 | 6,922 |
+| `r5_f2ba` | +FB2+BOUND, 0 added cycles | -26.96 | +6.27 | 0 | +6.92 | 0 | 6,945 |
+| **`r5b_f3ba`** | **+FB3+BOUND+AMQ (CLOSED, proven)** | **-13.26** | **+0.87** | **0** | **+7.12** | **0** | **6,922** |
 | `r5b_f3ba_m25` | FB3+BOUND+AMQ, `SETUP_SLACK_MARGIN=25` | -26.27 | -7.43 | 0 | +8.00 | 0 | 6,926 |
 | `r5b_f3ba_td` | FB3+BOUND+AMQ, no GPL routability | -55.25 | -37.45 | 8 | +8.95 | 0 | 6,917 |
 | `r5_f3ba_u25` | FB3+BOUND+AMQ, util 25 / density 0.45 | -14.52 | -3.68 | 0 | +6.96 | 0 | 6,982 |
@@ -82,12 +87,33 @@ The +3/+4 cycle deltas are `DEC_LA_AMQ`'s one cycle per core program END, which 
 
 ## Added cycles and rate
 
-`r5_f2ba` (adopted) adds **0 cycles**: FB2 is a fan-out/copy change, `DEC_LA_BOUND` narrows a table exactly. So the
+**Adopted (r5b_f3ba, closed):** SS60 **+0.87 ps**, FF25 hold **+7.12 ps**, 0 violating endpoints, DRC 0, GRT final
+congestion clean (297,997 µm total wirelength; 0 antenna, 0 max-fanout, 0 max-cap, 0 max-slew violations), 6,921.55 µm²
+standard cells.
+
+`r5_f2ba` adds **0 cycles**: FB2 is a fan-out/copy change, `DEC_LA_BOUND` narrows a table exactly. So the
 P8191 plain-AR token stays at the measured 193,955 cycles (main 756e8c54f) and the 8K rate above it is unchanged.
-`DEC_LA_AMQ`/FB3 would add 1 cycle per core program END (1 per layer program + 4 for the chunked head), i.e. ~0.02 %
-of the token; it is kept as a default-off margin lever only.
+`DEC_LA_AMQ` (in `r5b_f3ba`) adds 1 cycle per core program END, measured on the benches as +3 cycles on a layer
+program (`k_L0` 49,582 → 49,585, `k_AR0` 14,581 → 14,584, `k_D0r` 30,618 → 30,621) and +4 on the chunked head
+(`c_H1`/`c_H2` 12,000 → 12,004). Composed with the P8191 token record
+(`results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json`): 193,955 + 36×3 + 4 = 194,067 cycles, i.e.
+**6,186.98 → 6,183.44 tok/s (−0.057 %)** at 1.2 GHz. The adopted `r5_f2ba` does not carry it (0 cycles).
+
+## One-cycle issue loop
+
+`DEC_LA_ISSUE_FB` keeps the issue loop at one cycle: `issue`, `me_go` and `su_go` are still combinational functions of
+the same NEXT fields, the same `unit_ready` / chase conditions, on the same edge; FB1/FB2 only split and re-select
+those conditions (copies per unit, one-hot select registered at LOAD), and FB3 moves the `start` input off the
+data-register enables. No state, no edge and no issue condition changed. Confirmed in the routed netlists: the
+`u_la_am_gt` / `u_ge_*` comparators and the `(* keep *)` issue copies survive the cut (`prep/cut_report.json`
+`cell_graph_identical`), and the achieved post-CTS WNS improvements (+41.8 ps reg-to-reg) come with the identical
+state set.
 
 ## Reproduce
 
 `jobs/run_variant.sh NAME FALLBACK BOUNDARY UTIL DENSITY [extra]` — FALLBACK `N` = `DEC_LA_ISSUE_FB`, suffix `b` =
-`DEC_LA_BOUND`, suffix `a` = `DEC_LA_AMQ` (adopted: `r5_f2ba 2b ref 30 0.5`).
+`DEC_LA_BOUND`, suffix `a` = `DEC_LA_AMQ`.
+
+- Adopted and proven: `r5b_f3ba 3ba ref 30 0.5`.
+- Preferred if its proof lands: `r5_f2ba 2b ref 30 0.5` — the same closure with 62 ps more margin and no added cycle
+  (`DEC_LA_AMQ = 0` is the same state set and the same one-cycle loop; the parameter only selects the argmax path).
