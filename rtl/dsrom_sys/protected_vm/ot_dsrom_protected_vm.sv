@@ -22,22 +22,23 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
   reg debt,debt_check,launch,launch_check,received,received_check,acked,acked_check;
   reg poison,poison_check,retired;
   reg backend_fault0,backend_fault1,init0,init1;
+  wire [2:0] transport_fault;
   wire bad=source_packet!=~source_check||held_reply!=~held_check||serial!=~serial_check||exhausted!=~exhausted_check||
    debt!=~debt_check||launch!=~launch_check||received!=~received_check||acked!=~acked_check||poison!=~poison_check;
-  assign fault=bad||poison||backend_fault1;assign quarantined=fault&&debt;
+  assign fault=bad||poison||backend_fault1||(|transport_fault);assign quarantined=fault&&debt;
   assign pending=debt;assign port_retired=retired;assign initializing=init1;
   wire [REQ_CODE-1:0] encoded_request;wire [REQ_BITS-1:0] unused_req;
   wire unused_req_ce,unused_req_ue;
   ot_dsrom_vm_codec #(.BITS(REQ_BITS)) u_req_encode(.raw_in(source_packet),.encoded(encoded_request),
    .coded_in(REQ_CODE'(0)),.decoded(unused_req),.corrected(unused_req_ce),.uncorrectable(unused_req_ue));
   wire req_fifo_ready,req_s_v,req_s_ready;wire [REQ_CODE-1:0] req_s_code;
-  ot_ratio_cdc_fifo #(.W(REQ_CODE),.DEPTH(2)) u_request(
+  ot_dsrom_vm_ratio_fifo #(.W(REQ_CODE),.DEPTH(2)) u_request(
    .wclk(fast_clk),.wrst_n(cold_n&&fast_rst_n),.w_v(launch&&!fault),.w_rdy(req_fifo_ready),.w_d(encoded_request),
-   .rclk(slow_clk),.rrst_n(cold_n&&slow_rst_n),.r_v(req_s_v),.r_rdy(req_s_ready),.r_d(req_s_code),.w_live(),.r_live());
+   .rclk(slow_clk),.rrst_n(cold_n&&slow_rst_n),.r_v(req_s_v),.r_rdy(req_s_ready),.r_d(req_s_code),.w_live(),.r_live(),.control_fault(transport_fault[0]));
   wire rep_s_v,rep_s_ready,rep_f_v,rep_f_ready;wire [REP_CODE-1:0] rep_s_code,rep_f_code;
-  ot_ratio_cdc_fifo #(.W(REP_CODE),.DEPTH(2)) u_reply(
+  ot_dsrom_vm_ratio_fifo #(.W(REP_CODE),.DEPTH(2)) u_reply(
    .wclk(slow_clk),.wrst_n(cold_n&&slow_rst_n),.w_v(rep_s_v),.w_rdy(rep_s_ready),.w_d(rep_s_code),
-   .rclk(fast_clk),.rrst_n(cold_n&&fast_rst_n),.r_v(rep_f_v),.r_rdy(rep_f_ready),.r_d(rep_f_code),.w_live(),.r_live());
+   .rclk(fast_clk),.rrst_n(cold_n&&fast_rst_n),.r_v(rep_f_v),.r_rdy(rep_f_ready),.r_d(rep_f_code),.w_live(),.r_live(),.control_fault(transport_fault[1]));
   wire rep_ce,rep_ue;wire [REP_CODE-1:0] unused_rep_encoded;
   ot_dsrom_vm_codec #(.BITS(REP_BITS)) u_reply_decode(.raw_in(REP_BITS'(0)),.encoded(unused_rep_encoded),
    .coded_in(rep_f_code),.decoded(decoded_reply),.corrected(rep_ce),.uncorrectable(rep_ue));
@@ -47,9 +48,9 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
    .encoded(encoded_receipt),.coded_in(144'd0),.decoded(unused_ack),.corrected(unused_ack_ce),.uncorrectable(unused_ack_ue));
   wire ack_fifo_ready,ack_s_v,ack_s_ready;wire [143:0] ack_s_code;
   wire consume_ok=consume_v&&debt&&received&&!acked&&!fault&&fast_rst_n&&consume_owner==source_packet.owner&&allcopies_fenced;
-  ot_ratio_cdc_fifo #(.W(144),.DEPTH(2)) u_receipt(
+  ot_dsrom_vm_ratio_fifo #(.W(144),.DEPTH(2)) u_receipt(
    .wclk(fast_clk),.wrst_n(cold_n&&fast_rst_n),.w_v(consume_ok),.w_rdy(ack_fifo_ready),.w_d(encoded_receipt),
-   .rclk(slow_clk),.rrst_n(cold_n&&slow_rst_n),.r_v(ack_s_v),.r_rdy(ack_s_ready),.r_d(ack_s_code),.w_live(),.r_live());
+   .rclk(slow_clk),.rrst_n(cold_n&&slow_rst_n),.r_v(ack_s_v),.r_rdy(ack_s_ready),.r_d(ack_s_code),.w_live(),.r_live(),.control_fault(transport_fault[2]));
   wire backend_debt,backend_fault,backend_init;
   ot_dsrom_vm_backend u_backend(.clk(slow_clk),.cold_n(cold_n),.rst_n(slow_rst_n),
    .req_v(req_s_v),.req_ready(req_s_ready),.req_code(req_s_code),
