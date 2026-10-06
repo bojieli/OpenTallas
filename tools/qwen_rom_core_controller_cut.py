@@ -19,9 +19,12 @@ def cut(design, top, drop_feedthrough=False):
     if drop_feedthrough:
         # DEC_LA_PINREG cut: an output that is only a wire from input pins (or a constant) is not the block's logic
         # (the die routes it past the block: unit -> memory port), so it leaves the block with the inputs it carries
-        inbits={b for p in module['ports'].values() if p['direction']=='input' for b in p['bits'] if isinstance(b,int)}
+        # (no bit driven by a cell: input-pin bits, constants or undriven bits)
+        driven={b for cell in module['cells'].values()
+                for pn,bits in cell['connections'].items() if cell.get('port_directions',{}).get(pn)=='output'
+                for b in bits if isinstance(b,int)}
         for n,p in module['ports'].items():
-            if n not in removed and p['direction']=='output' and all((not isinstance(b,int)) or b in inbits for b in p['bits']):
+            if n not in removed and p['direction']=='output' and not any(isinstance(b,int) and b in driven for b in p['bits']):
                 removed[n]=p
         outbits={b for n,p in module['ports'].items() if n not in removed and p['direction']=='output'
                  for b in p['bits'] if isinstance(b,int)}
