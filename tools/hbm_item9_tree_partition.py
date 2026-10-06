@@ -20,6 +20,8 @@ if hold.exists():
  candidate=json.loads(replacement.read_text())
  assert candidate['actual_parent_layout_sha256']!=instruction['invalid_parent_layout_sha256']
  assert hashlib.sha256(replacement.read_bytes()).hexdigest()!=instruction['invalid_allocation_sha256']
+ regenerated_layout=Path(candidate['actual_parent_layout_file'])
+ assert hashlib.sha256(regenerated_layout.read_bytes()).hexdigest()==candidate['actual_parent_layout_sha256']
  assert {x['caller'] for x in candidate['local_caller_proposal']}==set(range(32))
  allocation=replacement
 s=json.loads((loads/'summary.json').read_text());a=json.loads(allocation.read_text())
@@ -113,7 +115,7 @@ summary=dict(source_mapped_sha256=s['mapped_sha256'],mapped_JSON_sha256=s['artif
  local_allocations=regions,endpoint_allocation=a['baseline_endpoint_mux']['proposed_child_bbox_um'],
  parent_layout_sha256=a['actual_parent_layout_sha256'],
  parent_channel_upper_before_other_claims=a.get('central_flat_mux_common_west_cut',{}).get('four_layer_upper_before_other_claims'),
- parent_geometry_regenerated=hold.exists(),
+ parent_geometry_regenerated_source_pinned=hold.exists(),
  primary_caller_inputs_are_source_local=True,distributed_request_bits=131072,shared_response_bits=4096,shared_response_real_receivers=32,
  actual_intermediate_gate_affinities=True,payload_affinity_separate_from_shared_control=payload_only,
  zero_origin_control_buffers_use_actual_receiver_affinity=receiver_affinity,

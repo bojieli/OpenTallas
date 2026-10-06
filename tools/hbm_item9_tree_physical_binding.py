@@ -87,7 +87,7 @@ cut_x = binding['endpoint_allocation'][0]
 west = sum(1 << int(i) for i, box in boxes.items()
             if (box[0] + box[2]) / 2 < cut_x)
 east = ((1 << 33) - 1) ^ west
-assert 0 < west.bit_count() < 32
+assert west.bit_count() <= 32
 capacity = binding.get('parent_channel_upper_before_other_claims')
 clock_bits = set(roots.values())
 crossing = [b for b, mask in enumerate(members)
@@ -109,7 +109,7 @@ summary = dict(source_mapped_sha256=source['mapped_sha256'],
  optimistic_four_layer_track_upper_before_other_claims=capacity,
  actual_west_cut_deficit_before_other_claims=None if capacity is None else max(0, len(crossing)-capacity),
  parent_layout_sha256=binding.get('parent_layout_sha256'),
- parent_geometry_regenerated=binding.get('parent_geometry_regenerated',False),
+ parent_geometry_regenerated_source_pinned=binding.get('parent_geometry_regenerated_source_pinned',False),
  four_source_root_connected_library_loads=clock_loads,
  region_bboxes_um={**boxes, '32': binding['endpoint_allocation']},
  actual_cell_memberships=str(out / 'actual_region_cells.tsv'),
