@@ -227,7 +227,9 @@ static bool token_writes(const Layer& L, int neg) {
     const int P = L.P, T = P >> 4, PL = P & 15;
     auto su_op = [&](bool isv, int h, int d0) {
         uint64_t w0 = cyc;
-        while (!top->kv_write_drained) { tick(); if (cyc - w0 > 200000) return false; }
+        // a fault ends the wait: the fail-closed service never drains after it (the protected model
+        // simulates ~75 cycles/s, so waiting out the 200,000-cycle bound looked like a hang)
+        while (!top->kv_write_drained) { if (top->fault) return false; tick(); if (cyc - w0 > 200000) return false; }
         drain_wait += cyc - w0;
         top->kv_we = 0;
         for (int l = 0; l < 64; l++) {
@@ -338,7 +340,7 @@ static void iso(const std::string& name, int layer, int P, uint32_t seed, int ne
              "\"kv_ok_after_start\":%lu,\"su_drain_wait\":%lu,\"violations\":%ld", P, top->st_fill_cycles, top->st_fill_sectors,
              fc ? sec / fc : 0.0, fc ? sec * 32 / (fc * 0.833333) * 1e-3 : 0.0, (unsigned long)kvok, (unsigned long)drain_wait,
              (long)top->rootp->tb_qwen_rt_kv_stream4__DOT__u_hbm__DOT__viol);
-    if (neg) { report(name, top->fault != 0, top->fault ? "faulted as required (code " + std::to_string(top->fault_code) + ")" : "no fault", kv); return; }
+    if (neg) { report(name, top->fault != 0, top->fault ? "faulted as required (code " + std::to_string(top->fault_code) + ", observed by cycle " + std::to_string(cyc - t0) + " after start)" : "no fault", kv); return; }
     std::string why = !ok ? "timeout" : top->fault ? "fault code " + std::to_string(top->fault_code) : check_slices(L);
     if (why.empty()) why = check_hbm_token(L);
     report(name, why.empty(), why.empty() ? "slices and token HBM codes exact" : why, kv);
