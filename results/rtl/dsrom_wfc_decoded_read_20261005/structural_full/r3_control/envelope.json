@@ -1,0 +1,27 @@
+{
+  "owner": "Zeno",
+  "source_commit": "50a6f2f22",
+  "main": "0d83af3f4",
+  "source_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r3",
+  "output_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-exact-r3",
+  "command": [
+    "bash",
+    "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r3/tools/dsrom_wfc_structural_nominal_exact.sh",
+    "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-exact-r3",
+    "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-exact-r2"
+  ],
+  "source_sha256": {
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "4032da3c9b4baa4f4639b836379d8f5eba3b365c68b708edbaeb185784dbcc62",
+    "rtl/test/dsrom_wavefront/tb_wfc_structural_full.sv": "fbaa3d8c46a3b7d120bcc0be534324d0aa1e89c44dd16ad253aac3da3239de9a",
+    "rtl/test/dsrom_wavefront/tb_wfc_source_lifecycle.sv": "8d69bf4528dae5090be0e7c79913420de5fe4b8f620c1c02ed75a47ee481b5fc",
+    "tools/dsrom_wfc_structural_nominal_exact.sh": "57ada6b3d008ec0ea951e90f0407db2580f864cc181055779d6e915ee6ac3713"
+  },
+  "compiler_workers": 4,
+  "expected_peak_GB": 18,
+  "resource_basis": "Unchanged full866/three-lane controller hardware; same admitted18GiB frontend envelope, actual previous runtime1.019GB. Eight-entry independent gold header queues and heldtuple monitors negligible additional storage; no memory/time caps.",
+  "purpose": "ONLY corrected nominal SOURCE0 full20000/fault0 independent exact oracle; minimum SOURCE1 prompt/END/warm lifecycle; completed fullSOURCE1R2 retained/sha256verified and NOT replayed",
+  "previous_terminal": "R1FAIL134 preserved and inputfirstdivergence proven; R2terminal0 fullSOURCE1gold27712 each/fault0 and deliberatelyfaulting SOURCE0negative retained. No controller RTLchange.",
+  "dispatch": "Zeno sole owner via Kant authoritative admit18/fresh PREPOST4idleCPUs/load<128/RAM>=118GiB/free20GiB; exact launch.lock duplicate exclusion",
+  "runtime_caps": null
+}
