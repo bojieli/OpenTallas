@@ -86,6 +86,25 @@ write_json {out/'mapped.json'}
     unmapped=[(n,c['type']) for n,c in design['cells'].items() if c['type'].startswith('$')]
     (out/'mapped_inventory.json').write_text(json.dumps(dict(FF=len(ff),cells=len(design['cells']),unmapped=unmapped,netnames=design['netnames']),indent=2)+'\n')
     if len(ff)!=16 or unmapped:raise RuntimeError(f'protected source retention/mapping gap FF={len(ff)} unmapped={unmapped}')
+    # Canonical export retains JSON cell names. The original Yosys Verilog
+    # writer shortened auto names, so those names cannot identify STA pins.
+    (out/'export.ys').write_text(f'read_json {out/"mapped.json"}\nwrite_verilog -norename -noattr {out/"mapped.sta.v"}\n')
+    run(['yosys','-s',str(out/'export.ys')],out/'export.log')
+    actual_cells=cells(libs['SS'])
+    drivers={}
+    for name,c in design['cells'].items():
+        for port,bits in c['connections'].items():
+            if actual_cells[c['type']]['ports'][port]['direction']=='output':
+                for b in bits:drivers[b]=(name,port)
+    def state_flop(bit):
+        name,port=drivers[bit];c=design['cells'][name]
+        if c['type'].startswith('DFF'):return name,port
+        # Library Q polarity mapping can insert an inverter between a kept
+        # logical source register name and its real mapped physical Q pin.
+        if not c['type'].startswith(('INV','BUF')):raise RuntimeError('source register not flop/inverter: '+name)
+        inputs=[b for p,bs in c['connections'].items() if actual_cells[c['type']]['ports'][p]['direction']=='input' for b in bs]
+        if len(inputs)!=1:raise RuntimeError('ambiguous mapped register '+name)
+        return state_flop(inputs[0])
     # Find actual Q nets by literal retained source bit and report both
     # primary/shadow paths without relying on generated mapper cell names.
     groups={}
@@ -93,12 +112,11 @@ write_json {out/'mapped.json'}
         key='on.'+group
         bits=[b for n,row in design['netnames'].items() if n==key or n.startswith(key+'[') for b in row['bits']];q=[];d=[]
         if not bits:raise RuntimeError('missing source state '+key)
-        for name,c in ff:
-            if any(b in bits for b in c['connections'].get('QN',c['connections'].get('Q',[]))):
-                q.append(name+'/QN' if 'QN' in c['connections'] else name+'/Q');d.append(name+'/D')
+        for b in bits:
+            name,port=state_flop(b);q.append(name+'/'+port);d.append(name+'/D')
         groups[group]=dict(Q=q,D=d)
+    if len({p for g in groups.values() for p in g['Q']})!=16:raise RuntimeError('shadow rails not independently retained')
     (out/'path_pins.json').write_text(json.dumps(groups,indent=2)+'\n')
-    actual_cells=cells(libs['SS'])
     badbits=design['netnames']['on.bad']['bits'];badpins=[]
     for name,c in design['cells'].items():
         for port,bits in c['connections'].items():
@@ -114,7 +132,7 @@ write_json {out/'mapped.json'}
             mapped_area_library_units=sum(libcells[c['type']]['area'] for c in design['cells'].values()),
             pins=footprint,bad_driver_pins=badpins),indent=2)+'\n')
         tcl='\n'.join('read_liberty '+str(x) for x in libs[corner])+f'''
-read_verilog {out/'mapped.v'}
+read_verilog {out/'mapped.sta.v'}
 link_design {TOP}
 create_clock -name ref -period 277.777777777778 -waveform {{0 138.888888888889}} [get_ports pll_vco]
 set_clock_uncertainty -setup 60 [get_clocks ref]
@@ -127,17 +145,19 @@ report_worst_slack -max -digits 6
 report_worst_slack -min -digits 6
 report_tns -digits 6
 puts "DIVIDER_ALL_MAX"
-report_checks -path_delay max -group_path_count 20 -format full_clock_expanded -fields {{slew cap input nets fanout}} -digits 6
+report_checks -path_delay max -group_path_count 20 -format full_clock_expanded -fields {{slew cap input fanout}} -digits 6
 puts "DIVIDER_ALL_MIN"
-report_checks -path_delay min -group_path_count 20 -format full_clock_expanded -fields {{slew cap input nets fanout}} -digits 6
+report_checks -path_delay min -group_path_count 20 -format full_clock_expanded -fields {{slew cap input fanout}} -digits 6
 '''
         for name in ('fq','fqn','fh','fhn','f','fn','s','sn','sq','sqn','failed','failed_n'):
             g=groups[name]
             if g['Q']:
                 for sense in ('max','min'):
-                    tcl+=f'puts "DIVIDER_FROM_{name}_{sense}"\nreport_checks -from [get_pins {{{" ".join(g["Q"])}}}] -path_delay {sense} -group_path_count 20 -format full_clock_expanded -fields {{slew cap input nets fanout}} -digits 6\n'
+                    tcl+=f'puts "DIVIDER_FROM_{name}_{sense}"\nreport_checks -from [get_pins {{{" ".join(g["Q"])}}}] -path_delay {sense} -group_path_count 20 -format full_clock_expanded -fields {{slew cap input fanout}} -digits 6\n'
         for sense in ('max','min'):
-            tcl+=f'puts "DIVIDER_BADRAIL_{sense}"\nreport_checks -through [get_pins {{{" ".join(badpins)}}}] -path_delay {sense} -group_path_count 32 -format full_clock_expanded -fields {{slew cap input nets fanout}} -digits 6\n'
+            tcl+=f'puts "DIVIDER_BADRAIL_{sense}"\nreport_checks -through [get_pins {{{" ".join(badpins)}}}] -path_delay {sense} -group_path_count 32 -format full_clock_expanded -fields {{slew cap input fanout}} -digits 6\n'
+        for sense in ('max','min'):
+            tcl+=f'puts "DIVIDER_FQ_FH_{sense}"\nreport_checks -from [get_pins {{{" ".join(groups["fq"]["Q"])}}}] -to [get_pins {{{" ".join(groups["fh"]["D"]+groups["fhn"]["D"])}}}] -path_delay {sense} -group_path_count 4 -format full_clock_expanded -fields {{slew cap input fanout}} -digits 6\n'
         tcl+='''puts "DIVIDER_PULSEWIDTH"
 report_check_types -min_period -min_pulse_width -violators -digits 6
 puts "DIVIDER_SLEW_CAP"
