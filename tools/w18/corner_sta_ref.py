@@ -22,8 +22,8 @@ def main(argv=None):
     o = a.orfs_dir.resolve()
     shutil.copy(a.extra_sdc, o / "w18_extra.sdc")
 
-    def script(corner, base, macros):
-        s = _orig(corner, base, macros)
+    def script(corner, base, macros, post_sdc=()):
+        s = _orig(corner, base, macros, post_sdc)
         check = "max" if corner == "ss" else "min"
         s = s.replace("set_propagated_clock [all_clocks]\n",
                       "set_propagated_clock [all_clocks]\nread_sdc /work/w18_extra.sdc\n", 1)
