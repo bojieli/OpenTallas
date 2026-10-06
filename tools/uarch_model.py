@@ -11614,3 +11614,9 @@ def hbm_swiglu_w2_private_join_model():
         result['latency']['measured_join_edges'] = None  # stage edges were not logged
         result['adopted'] = False
     return result
+
+
+def dsrom_protected_vm_model():
+    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
+    from dsrom_protected_vm import model
+    return model()
