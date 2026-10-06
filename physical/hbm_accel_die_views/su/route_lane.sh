@@ -1,10 +1,11 @@
 #!/bin/bash
 # CLAUDE HBM-ABSTRACTS (hub): re-harden a CLOSED hub lane element (unchanged RTL) in a die-dense footprint with every
 # pin on the left edge (mirrored columns in the quarter face a shared channel).  r2 recipe (default): signals M2-M5,
-# pins M4, PDN top M6 (su/pdn_lane_m6.tcl) so M6 / M7 over the lane stay open to the quarter and the quarter's M7
+# pins M4 on every track (a light lane's 2,251 pins need 2,251 of the 3,375 M4 tracks of its 162 um edge; the
+# platform's 2-track spacing gives 1,672 slots), PDN top M6 (su/pdn_lane_m6.tcl) so M6 / M7 over the lane stay open to the quarter and the quarter's M7
 # stripes feed the lane; r1 (MAXL=M7 PINL="M4 M6" PDN=common/pdn_view.tcl) blocks every quarter layer over a lane.
 # SS60/FF25 at 0.833 ns, IO false-pathed (register-direct, checked after the route), corner STA.
-#   route_lane.sh <label> <top> <W> <H> [run_abi3_physical args]   env: R (scratch base), SRC (snapshot dir, default src0), SRCS, KEEP, CORES, NEED, MAXL, PINL, PDN
+#   route_lane.sh <label> <top> <W> <H> [run_abi3_physical args]   env: R (scratch base), SRC (snapshot dir, default src0), SRCS, KEEP, CORES, NEED, MAXL, PINL, PDN, PPA
 R=${R:?}; lab=$1; top=$2; W_=$3; H_=$4; shift 4
 W=$R/routes/$lab; mkdir -p $W; cd $R/${SRC:-src0}
 export OT_ORFS_NUM_CORES=${CORES:-8} NUM_CORES=${CORES:-8} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
@@ -14,6 +15,7 @@ S=""; for s in $SRCS; do S="$S --source $s"; done
   --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
   --die-area 0 0 $W_ $H_ --core-area 0 0.54 $W_ $(python3 -c "print(round($H_-0.54,3))") --orfs-var IO_CONSTRAINTS=/src/physical/hbm_accel_die_views/su/io_left.tcl --routing-layers M2 ${MAXL:-M5} --orfs-var "IO_PLACER_H=${PINL:-M4}" \
+  --orfs-var "PLACE_PINS_ARGS=${PPA:--min_distance 1 -min_distance_in_tracks}" \
   --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/${PDN:-su/pdn_lane_m6.tcl} \
   --place-density ${PD:-0.65} --hold-margin-ns ${HM:-0.01} --orfs-var ADDER_MAP_FILE= \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag hub_$lab \

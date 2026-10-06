@@ -9,7 +9,7 @@ K="ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x ot_dsrom_fdiv_f12 ot_hdc_fsqrt
 HCS="rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv"
 RL=$E/$SRC/physical/hbm_accel_die_views/su/route_lane.sh
 case $3 in
-light) for v in "a:75.6:162.0" "b:79.92:162.0" "c:84.24:162.0" "d:88.56:162.0"; do l=${v%%:*}; r=${v#*:}; R=$E SRC=$SRC SRCS="$SU" KEEP="$K" CORES=8 NEED=14 nohup $RL l2light_$l ot_su12_light ${r%%:*} ${r#*:} > l2light_$l.launch 2>&1 & done;;
+light) for v in "a:75.6:162.0" "b:79.92:162.0" "c:84.24:162.0" "d:88.56:162.0"; do l=${v%%:*}; r=${v#*:}; R=$E SRC=$SRC SRCS="$SU" KEEP="$K" CORES=8 NEED=14 nohup $RL l3light_$l ot_su12_light ${r%%:*} ${r#*:} > l3light_$l.launch 2>&1 & done;;
 sfu) for v in "a:164.16:320.76" "b:159.84:330.48" "c:168.48:313.2"; do l=${v%%:*}; r=${v#*:}; R=$E SRC=$SRC SRCS="$SU" KEEP="$K" CORES=12 NEED=24 nohup $RL l2sfu_$l ot_su12_sfu ${r%%:*} ${r#*:} > l2sfu_$l.launch 2>&1 & done;;
 hc) for v in "a:85.32:115.02" "b:90.72:110.16" "c:79.92:120.42"; do l=${v%%:*}; r=${v#*:}; R=$E SRC=$SRC SRCS="$HCS" CORES=6 NEED=8 nohup $RL l2hc_$l ot_dsrom_su_hcpost_lane ${r%%:*} ${r#*:} --param ML=5 --param AL=5 > l2hc_$l.launch 2>&1 & done;;
 esac
