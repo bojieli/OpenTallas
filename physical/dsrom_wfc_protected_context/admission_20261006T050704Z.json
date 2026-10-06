@@ -1,0 +1,31 @@
+{
+  "physical_status": "NOT_STARTED_CPU_ADMISSION_REFUSED",
+  "preflight_exit": 75,
+  "fresh_actual": [
+    {
+      "utc": "2026-10-06T05:07:04Z",
+      "stage": "pre-guard",
+      "cpus": 128,
+      "load1": 275.283203125,
+      "idle_cpus": 0.969772709521206,
+      "available_bytes": 505701322752,
+      "nvme_free_bytes": 1943419842560,
+      "threads": 16,
+      "guard": "/srv/opentallas-scratch/admit.sh",
+      "reservation_GiB": 64,
+      "cpu_fit": false,
+      "fit": false
+    }
+  ],
+  "remote_source": "/srv/opentallas-scratch2/codex/zeno-wfc-r4-physical/source",
+  "remote_runroot": "/srv/opentallas-scratch2/codex/zeno-wfc-r4-physical/u55",
+  "supervisor": null,
+  "container": null,
+  "guard_invoked": false,
+  "queued": false,
+  "source_recipe_commit": "9de481ff8",
+  "current_R4_SS_FF": null,
+  "external_context": "boundary_pending.json",
+  "existing_SOURCE1": "preserved GRT, not relaunched/retired",
+  "adopted": false
+}

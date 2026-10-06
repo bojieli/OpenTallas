@@ -26,7 +26,7 @@ module tb_wfc_protected_stage;
  reg xb_re=0;reg[14:0]xb_raddr=0;wire[511:0]xb_rq;
  reg xb_v=0,xb_consume_v=0;reg[46:0]xb_owner={16'd9,10'd865,21'd0},xb_consume_owner=0;
  wire xb_ready,xb_reply_v,xb_port_retired;wire[46:0]xb_reply_owner;wire[3:0]xb_row_visible;
- wire vm_pending,vm_initializing,vm_fault,vm_quarantined,vm_port_retired;wire[2:0]vm_phase;
+ wire vm_pending,vm_initializing,vm_fault,vm_quarantined,vm_port_retired;wire[3:0]vm_phase;
  wire context_v;wire[46:0]context_identity;wire[20:0]context_token;wire[13:0]context_entry;
  wire native_start;wire[20:0]native_token,native_pos;wire[13:0]native_entry;wire[9:0]native_user;
  wire[46:0]native_identity;wire[20:0]captured_token,captured_pos;wire[13:0]captured_pc;
@@ -41,6 +41,8 @@ module tb_wfc_protected_stage;
  integer exposed_edge=-1,capture_edges=-1;
  reg[46:0]owner=0;reg holding=0;reg[100:0]held_result;
  integer accepts=0,replies=0,consumes=0,port_retires=0,readcaptures=0,slow_edges=0,accepted_edge=-1,reply_edge=-1,consume_edge=-1;
+ integer split_pairs=0,paired_writes=0,paired_read_edge=-1;
+ reg[46:0]paired_rx_owner;
  reg negative_phase=0,output_held=0;reg[512:0]held_flit;
  always @(posedge slow_clk)slow_edges=slow_edges+1;
  always @(posedge fast_clk)begin
@@ -48,7 +50,19 @@ module tb_wfc_protected_stage;
   if(cold_n&&fast_rst_n&&!negative_phase&&(cfg_fault||whole_fault||wfc_fault||vm_fault||dut.adapter_fault))$fatal(1,"first nominal fault cycle%0d cfg%0b whole%0b wfc%0b",cycles,cfg_fault,whole_fault,wfc_fault);
   if(output_held&&(!out_valid||{out_last,out_data}!==held_flit))$fatal(1,"held output valid/data/last lifetime violated");
   output_held=out_valid&&!out_ready;if(output_held)held_flit={out_last,out_data};
-  if(dut.provider_request_v&&dut.provider_request_ready)begin accepts=accepts+1;accepted_edge=cycles;end
+  if(dut.provider_request_v&&dut.provider_request_ready)begin
+   accepts=accepts+1;accepted_edge=cycles;
+   if(dut.u_adapter.g_live.split)begin
+    split_pairs=split_pairs+1;paired_read_edge=cycles;paired_rx_owner=dut.xa_owner;
+    if(dut.provider_request_owner!=={16'd9,10'd865,21'd0}||paired_rx_owner!=={16'd9,10'd865,21'd1}||dut.provider_read_enable!=1||dut.provider_write_enable!=0||xb_ready)$fatal(1,"legal overlapping owners not admitted as olddata-read first");
+   end
+   if(dut.u_adapter.g_live.second_write)begin
+    paired_writes=paired_writes+1;
+    if(dut.provider_request_owner!==paired_rx_owner||dut.provider_read_enable!=0||dut.provider_write_enable!=1||xb_ready||readcaptures==0)$fatal(1,"paired write lost lease/priority/read consumption");
+    $display("NATIVE_TWO_LEASE pair%0d TXowner0004ec200000 RXowner%h fast_read_accept_to_write_accept%0d",paired_writes,dut.provider_request_owner,cycles-paired_read_edge);
+   end
+  end
+  if(dut.u_adapter.g_live.flags[8]&&xb_ready)$fatal(1,"XB accepted during held two-owner pair");
   if(dut.u_adapter.g_live.state==1&&dut.provider_reply_v)begin replies=replies+1;reply_edge=cycles;
    $display("PROTECTED_SERVICE reply bundle%0d owner%h fast_accept_to_reply%0d slow_edges%0d",accepts,dut.provider_reply_owner,cycles-accepted_edge,slow_edges);
   end
@@ -120,7 +134,7 @@ module tb_wfc_protected_stage;
    if(xb_reply_owner!==xb_owner||xb_row_visible!==we||(rd&&xb_rq!==expected))$fatal(1,"actual owned XB protected reply/olddata mismatch row%0d",row);
    repeat(3)begin @(negedge fast_clk);if(!xb_reply_v||!vm_pending||xb_reply_owner!==xb_owner||(rd&&xb_rq!==expected)||xb_port_retired)$fatal(1,"read/visible reply retired before consume");end
    xb_consume_owner=xb_owner;xb_consume_v=1;@(posedge fast_clk);@(negedge fast_clk);xb_consume_v=0;
-   wait(xb_port_retired);@(negedge fast_clk);
+   wait(xb_port_retired);@(posedge fast_clk);@(negedge fast_clk);
   end
  endtask
  initial begin
@@ -186,14 +200,22 @@ module tb_wfc_protected_stage;
   repeat(5)begin @(negedge fast_clk);if(!vm_pending||!xb_reply_v||xb_rq!=={16{32'd1}}||xb_port_retired)$fatal(1,"whole ACK/readcopy debt conflated");end
   if(acks!=1||port_retires==accepts)$fatal(1,"whole ACK did not stay distinct from held provider debt");
   xb_consume_owner=owner;xb_consume_v=1;@(posedge fast_clk);@(negedge fast_clk);xb_consume_v=0;
-  wait(xb_port_retired);wait(flits==47);wait(!vm_pending);repeat(5)@(negedge fast_clk);
-  xb_service(0,0,1,0,{16{32'd4444}});
+  wait(xb_port_retired);@(posedge fast_clk);@(negedge fast_clk);
+  // Literal native rx_word_free permits next position to overwrite only rows
+  // already read by previous TX. Keep both distinct owners, do not reject it.
+  native_fragment_done=0;
+  fork
+   send_job(1,5);
+   begin wait(split_pairs>0);xb_owner={16'd9,10'd865,21'd1};xb_service(32767,0,1,0,{16{32'habcddcba}});end
+  join
+  wait(flits==47);wait(!vm_pending);wait(requests==2);wait(starts==2);repeat(5)@(negedge fast_clk);
+  xb_service(0,0,1,0,{16{32'd1}});
 
-  if(cfg_fault||whole_fault||wfc_fault||busy||producer_pending||writes!=41||commands!=668||retirements!=192||readcaptures!=46||accepts!=port_retires||accepts!=consumes||accepts!=replies)$fatal(1,"joint nominal mechanism failed");
-  $display("PROTECTED_JOIN_NOMINAL PASS MAXU866 fullVM32768x512 commands668 retirements192 independentWrites41 independentFlits47 actualACK1 cycles%0d nativeCaptureEdges%0d protectedBundles%0d readCaptures%0d",cycles,capture_edges,accepts,readcaptures);
+  if(cfg_fault||whole_fault||wfc_fault||!busy||!producer_pending||writes!=82||commands!=668||retirements!=192||readcaptures!=46||accepts!=port_retires||accepts!=consumes||accepts!=replies||split_pairs==0||split_pairs!=paired_writes)$fatal(1,"joint nominal mechanism failed cfg%0b whole%0b wfc%0b busy%0b pending%0b writes%0d commands%0d retirements%0d captures%0d accepts%0d retires%0d consumes%0d replies%0d",cfg_fault,whole_fault,wfc_fault,busy,producer_pending,writes,commands,retirements,readcaptures,accepts,port_retires,consumes,replies);
+  $display("PROTECTED_JOIN_NOMINAL PASS MAXU866 fullVM32768x512 commands668 retirements192 independentWrites82 independentFlits47 actualACK1 legalSplitPairs%0d cycles%0d nativeCaptureEdges%0d protectedBundles%0d readCaptures%0d",split_pairs,cycles,capture_edges,accepts,readcaptures);
   // New caller negative under a second real WFC owner: wrong external read
   // consumption cannot authorize a reverse receipt or erase accepted debt.
-  native_fragment_done=0;send_job(1,5);wait(requests==2);wait(starts==2);@(negedge fast_clk);
+  @(negedge fast_clk);
   xb_owner=owner;xb_v=1;xb_re=1;xb_raddr=32767;
   @(posedge fast_clk);while(!xb_ready)@(posedge fast_clk);
   @(negedge fast_clk);xb_v=0;xb_re=0;

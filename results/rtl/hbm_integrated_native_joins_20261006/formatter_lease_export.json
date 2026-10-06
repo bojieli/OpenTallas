@@ -1,0 +1,25 @@
+{
+  "scope": "actual source-bound formatter lease/owner output export, no new grant/storage",
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": "882d121877c05999659055c73ded1e5fdfb579cbbc747b56ea08d8a387e9fa87",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "34b8f4c572eac5b45c16c52162774501fc091eeda9d1fab392d3ae3db075fa64",
+    "tools/hbm_opt_integrated_20261005_w2_on.py": "3287fcba810562f356f95607c1446099ef73a30f9087c64fe9f947b946c882b6"
+  },
+  "grant": "u_shared.borrow_granted=grants[0] && retained && !fault",
+  "frame": "{u_bridge.held_pos20,held_token17,held_gen4,held_job32}; protected code rows9/10",
+  "boundary_bits": 74,
+  "added_state_bits": 0,
+  "added_pipeline_edges": 0,
+  "loaded_port_delay": "unqualified",
+  "ENABLE1_gather_owner_elaboration_rc": 0,
+  "numerical_rerun": false,
+  "parent_qualified": false,
+  "worker_namespace": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv",
+  "actual_gather_arena_byte_reservation": [
+    118763520,
+    119156736
+  ],
+  "production_lease_installed": false,
+  "wrapper_build": "owner building; full parent missing until source handoff",
+  "release_token_bits": 17
+}

@@ -1,0 +1,65 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:32:29: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   32 |  assign binding_fault=ENABLE&&((vm_read_v&&!request_match)||(index_rsp_v&&!response_match));
+      |                             ^~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:33:28: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   33 |  assign index_read_v=ENABLE&&vm_read_v&&request_match;
+      |                            ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:34:25: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   34 |  assign vm_read_r=ENABLE&&index_read_r&&request_match;
+      |                         ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:35:31: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   35 |  assign index_read_addr=ENABLE?vm_read_addr:0;
+      |                               ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:36:32: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   36 |  assign index_read_frame=ENABLE?source_cp_frame:0;
+      |                                ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:37:31: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   37 |  assign index_read_rank=ENABLE?vm_read_rank:0;
+      |                               ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:38:30: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   38 |  assign index_read_tag=ENABLE?vm_read_tag:0;
+      |                              ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:39:32: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   39 |  assign index_read_words=ENABLE?vm_read_words:0;
+      |                                ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:42:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   42 |  assign vm_rsp_v=ENABLE&&index_rsp_v&&response_match;
+      |                        ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:43:27: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   43 |  assign index_rsp_r=ENABLE&&vm_rsp_r&&response_match;
+      |                           ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:44:27: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   44 |  assign vm_rsp_data=ENABLE?index_rsp_data:0;
+      |                           ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:45:26: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   45 |  assign vm_rsp_tag=ENABLE?index_rsp_tag:0;
+      |                          ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:46:26: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   46 |  assign vm_rsp_job=ENABLE?index_rsp_frame[31:0]:0;
+      |                          ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:47:26: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   47 |  assign vm_rsp_gen=ENABLE?index_rsp_frame[35:32]:0;
+      |                          ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:48:26: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   48 |  assign vm_rsp_pos=ENABLE?index_rsp_frame[72:53]:0;
+      |                          ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv:49:27: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_native_index_frame_binding
+   49 |  assign vm_rsp_rank=ENABLE?index_rsp_rank:0;
+      |                           ^
