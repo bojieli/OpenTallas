@@ -1,0 +1,110 @@
+{
+ "master": "hfd_loader",
+ "cfg_bits": 688,
+ "cfg_inputs": [
+  [
+   "ld",
+   "h_dma_wdata",
+   64
+  ],
+  [
+   "ld",
+   "m_arready",
+   1
+  ],
+  [
+   "ld",
+   "m_rvalid",
+   1
+  ],
+  [
+   "ld",
+   "m_rdata",
+   64
+  ],
+  [
+   "ld",
+   "m_rresp",
+   2
+  ],
+  [
+   "ld",
+   "m_rlast",
+   1
+  ],
+  [
+   "ld",
+   "m_awready",
+   1
+  ],
+  [
+   "ld",
+   "m_wready",
+   1
+  ],
+  [
+   "ld",
+   "m_bvalid",
+   1
+  ],
+  [
+   "ld",
+   "m_bresp",
+   2
+  ],
+  [
+   "ld",
+   "req_rdy",
+   2
+  ],
+  [
+   "ld",
+   "rsp_v",
+   2
+  ],
+  [
+   "ld",
+   "rsp_we",
+   2
+  ],
+  [
+   "ld",
+   "rsp_tag",
+   32
+  ],
+  [
+   "ld",
+   "rsp_data",
+   512
+  ]
+ ],
+ "folded_output_bits": 330,
+ "folded_outputs": [
+  "w_ld_m_arvalid",
+  "w_ld_m_araddr",
+  "w_ld_m_arlen",
+  "w_ld_m_arsize",
+  "w_ld_m_rready",
+  "w_ld_m_awvalid",
+  "w_ld_m_awaddr",
+  "w_ld_m_awlen",
+  "w_ld_m_awsize",
+  "w_ld_m_wvalid",
+  "w_ld_m_wdata",
+  "w_ld_m_wstrb",
+  "w_ld_m_wlast",
+  "w_ld_m_bready",
+  "w_ld_req_we",
+  "w_ld_req_wstrb",
+  "w_ld_req_tag",
+  "w_ld_rsp_rdy",
+  "w_ld_irq",
+  "w_ld_fault"
+ ],
+ "forwarded_clock_outputs": 1,
+ "forwarded_clock_inputs": 1,
+ "die_input_bits": 259,
+ "die_input_bits_used": 243,
+ "die_output_bits": 598,
+ "die_output_bits_driven": 250
+}

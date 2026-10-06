@@ -1,0 +1,230 @@
+{
+ "schema": "opentallas.hbm_die_views_recompose.v1",
+ "ledger": {
+  "meso_extra": 3,
+  "gather": 2,
+  "cdist": 2,
+  "barrier": 4,
+  "coll": 8,
+  "serdes": 8,
+  "vm": 8,
+  "router": 8,
+  "cmdproc": 4,
+  "quant": 17,
+  "quant_points_bound": 161,
+  "quant_points_gate": 0
+ },
+ "grt_work": "/tmp/claude-1000/hbmabs/r16g_i50",
+ "bases": {
+  "stages_430": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 4.41,
+    "gather": 686,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
+   },
+   "ds_wire_priced": {
+    "AR_us": 533.077,
+    "MTP_step_us": 1108.907,
+    "tau": 4.159,
+    "AR_tok_s": 1875.9,
+    "MTP_tok_s": 3750.5
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 13.847,
+     "AR_us": 546.924,
+     "AR_delta_pct": 2.6,
+     "AR_tok_s": 1828.4,
+     "MTP_step_us": 1122.754,
+     "MTP_delta_pct": 1.25,
+     "MTP_tok_s": 3704.3
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 16.128,
+     "AR_us": 549.205,
+     "AR_delta_pct": 3.03,
+     "AR_tok_s": 1820.8,
+     "MTP_step_us": 1125.035,
+     "MTP_delta_pct": 1.45,
+     "MTP_tok_s": 3696.8
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1168433,
+     "margin_cycles": 1170147,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
+     "ar_tok_s": 1027.0,
+     "ar_tok_s_margin": 1025.5
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 563574,
+     "margin_cycles": 565288,
+     "added_cycles": 1714,
+     "delta_pct": 0.3,
+     "ar_tok_s": 2129.3,
+     "ar_tok_s_margin": 2122.8
+    }
+   }
+  },
+  "stages_430_median_bundle": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 4.409,
+    "gather": 686,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
+   },
+   "ds_wire_priced": {
+    "AR_us": 525.791,
+    "MTP_step_us": 1101.621,
+    "tau": 4.159,
+    "AR_tok_s": 1901.9,
+    "MTP_tok_s": 3775.3
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 13.846,
+     "AR_us": 539.637,
+     "AR_delta_pct": 2.63,
+     "AR_tok_s": 1853.1,
+     "MTP_step_us": 1115.467,
+     "MTP_delta_pct": 1.26,
+     "MTP_tok_s": 3728.5
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 16.127,
+     "AR_us": 541.918,
+     "AR_delta_pct": 3.07,
+     "AR_tok_s": 1845.3,
+     "MTP_step_us": 1117.748,
+     "MTP_delta_pct": 1.46,
+     "MTP_tok_s": 3720.9
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1167632,
+     "margin_cycles": 1169346,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
+     "ar_tok_s": 1027.7,
+     "ar_tok_s_margin": 1026.2
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 562773,
+     "margin_cycles": 564487,
+     "added_cycles": 1714,
+     "delta_pct": 0.3,
+     "ar_tok_s": 2132.3,
+     "ar_tok_s_margin": 2125.8
+    }
+   }
+  },
+  "stages_430_manhattan": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 4.409,
+    "gather": 686,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
+   },
+   "ds_wire_priced": {
+    "AR_us": 512.725,
+    "MTP_step_us": 1088.555,
+    "tau": 4.159,
+    "AR_tok_s": 1950.4,
+    "MTP_tok_s": 3820.7
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 13.846,
+     "AR_us": 526.571,
+     "AR_delta_pct": 2.7,
+     "AR_tok_s": 1899.1,
+     "MTP_step_us": 1102.401,
+     "MTP_delta_pct": 1.27,
+     "MTP_tok_s": 3772.7
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 16.127,
+     "AR_us": 528.852,
+     "AR_delta_pct": 3.15,
+     "AR_tok_s": 1890.9,
+     "MTP_step_us": 1104.682,
+     "MTP_delta_pct": 1.48,
+     "MTP_tok_s": 3764.9
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1166501,
+     "margin_cycles": 1168215,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
+     "ar_tok_s": 1028.7,
+     "ar_tok_s_margin": 1027.2
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 561642,
+     "margin_cycles": 563356,
+     "added_cycles": 1714,
+     "delta_pct": 0.31,
+     "ar_tok_s": 2136.6,
+     "ar_tok_s_margin": 2130.1
+    }
+   }
+  }
+ }
+}

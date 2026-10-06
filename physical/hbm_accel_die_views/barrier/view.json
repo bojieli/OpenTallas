@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_barrier",
+ "kind": "barrier",
+ "status": "closed",
+ "lef": "hfd_barrier.lef",
+ "lib": {
+  "ss": "hfd_barrier_ss.lib",
+  "ff": "hfd_barrier_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_barrier.lef": "74bdd04c099997d76f0d2d4dfc0b7c9ae307f250ded52033ee3c88d3e8449031",
+  "hfd_barrier_ss.lib": "86076db0dcd336fe8246fc26a26a636b8a80c45a2b31fd14a21dc48c331b76a6",
+  "hfd_barrier_ff.lib": "23e3a09d644265ee3e23d5cb6b833c858e32e5593fd0e51ed55bc27bb5c30f15"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "positions": "exact",
+  "problems": [],
+  "obs_above_generator": [],
+  "pg_pins": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ]
+  },
+  "gen_pins": 130,
+  "view_pins": 130
+ },
+ "size_um": [
+  1399.656,
+  36.696
+ ],
+ "source": {
+  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45",
+  "host": "ot-epyc1tb",
+  "SOURCE_COMMIT": "369b4c934fd63644fae5685479072e2f806fa53b",
+  "ss_setup_ps": 197.0,
+  "ff_hold_ps": 20.82,
+  "closes_signoff_SS60_FF25": true,
+  "clock_period_ns": 0.833,
+  "status": "pass",
+  "drc": 0,
+  "antenna": 0,
+  "cell_um2": 388.134,
+  "seq_um2": 114.132,
+  "core_um2": 49504.8,
+  "macro_um2": 0
+ },
+ "wrapper": {
+  "master": "hfd_barrier",
+  "cfg_bits": 0,
+  "cfg_inputs": [],
+  "folded_output_bits": 0,
+  "folded_outputs": [],
+  "forwarded_clock_outputs": 0,
+  "forwarded_clock_inputs": 0,
+  "die_input_bits": 66,
+  "die_input_bits_used": 64,
+  "die_output_bits": 64,
+  "die_output_bits_driven": 64
+ },
+ "bench": "tb_hfd_barrier.sv 800 checks 0 mismatches; negative (face_stages 2 wrapper) fails",
+ "note": "margin-first (owner rule 2026-10-06): kept output regs, face_stages 3 (pin flop + 2 stages each face, +4 cycles barrier round trip vs the b1 view), routed at 770 ps effective (io_vclk_m_145: vclk at the measured 132-159 ps insertion, IO 0.2 T + 150 ps), hold margin 40 ps, signed off at 833/60 SS, 25 FF. Supersedes b1_pd55 (FF +8.54 < +15).",
+ "defects": []
+}

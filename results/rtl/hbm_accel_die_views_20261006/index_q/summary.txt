@@ -1,0 +1,4 @@
+lint rc=0
+sim rc=0 IDXQ_BENCH PASS
+neg rc=1 (must be nonzero) FATAL: physical/hbm_accel_die_views/index_q/tb/tb_hfd_index_q.sv:52: IDXQ_BENCH FAIL
+overall rc=0

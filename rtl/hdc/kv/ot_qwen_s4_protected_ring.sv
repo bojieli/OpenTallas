@@ -6,7 +6,7 @@
 // Warm reset is NOT connected to por_n. No accepted record is erased/replayed.
 module ot_qwen_s4_protected_ring #(
     parameter integer WIDTH=281, DEPTH=64, PC_ID=0, KIND=0, SYNC=2,
-    parameter integer WIRE_STAGES=0, READ_RSEL=0,
+    parameter integer WIRE_STAGES=0, READ_RSEL=0, RAW_SECTOR_LANES=0,
     parameter integer P=$clog2(DEPTH)+1,
     parameter integer PIECES=(WIDTH+1+43)/44,
     parameter integer CW=PIECES*72
@@ -24,7 +24,8 @@ module ot_qwen_s4_protected_ring #(
     output wire [P-1:0] rd_owner,
     input wire retire,
     output wire [P-1:0] retired,
-    output wire rd_fault
+    output wire rd_fault,
+    output wire wr_quiet,rd_quiet
 );
     import ot_gpu_w6_secded_pkg::*;
     localparam integer A=P-1, E1W=PIECES*104+P+1;
@@ -128,13 +129,17 @@ module ot_qwen_s4_protected_ring #(
         end
     end
     reg [CW-1:0] mem [0:DEPTH-1];
+    wire lane_push;wire [CW-1:0] lane_code;wire [P-1:0] lane_owner;
     wire [P-1:0] enc_owner=e1[PIECES*104+:P];
     wire commit=ev&&!wr_fault&&wr_online;
     generate if(WIRE_STAGES==0)begin:local_memory
         assign wire_release=release_gray;assign wire_release_i=rsi[2*P+:P];
         assign wire_publish=publish_gray;assign wire_publish_i=wsi[2*P+:P];
         assign wire_receive_fault=0;assign wire_remote_fault=0;
-        always @(posedge wr_clk)if(commit)mem[enc_owner[A-1:0]]<=encoded;
+        assign lane_push=commit;assign lane_code=encoded;assign lane_owner=enc_owner;
+        if(!RAW_SECTOR_LANES)begin:store
+            always @(posedge wr_clk)if(commit)mem[enc_owner[A-1:0]]<=encoded;
+        end
     end else begin:wire_path
         // The entire wire uses the real source clock. Storage, publication
         // Gray and credit-source synchronizers are at the remote endpoint.
@@ -173,7 +178,10 @@ module ot_qwen_s4_protected_ring #(
         ot_qwen_s4_checked_state #(.W(2*P+1)) u_arrived(.clk(wr_clk),.por_n(por_n),.en(!arrived_bad),
             .d({arrived[2*P]||poison[WIRE_STAGES]||arrival_overflow,(arrived_next>>1)^arrived_next,arrived_next}),
             .q(arrived),.qi(arrived_i),.bad(arrived_bad));
-        always @(posedge wr_clk)if(arrival_take)mem[arrived_bin[A-1:0]]<=code[WIRE_STAGES];
+        assign lane_push=arrival_take;assign lane_code=code[WIRE_STAGES];assign lane_owner=arrived_bin;
+        if(!RAW_SECTOR_LANES)begin:store
+            always @(posedge wr_clk)if(arrival_take)mem[arrived_bin[A-1:0]]<=code[WIRE_STAGES];
+        end
         assign wire_publish=arrived[P+:P];assign wire_publish_i=arrived_i[P+:P];
         assign wire_receive_fault=arrival_fault;
         (* async_reg="true", keep *) reg [P-1:0] cr0,cr1,ci0,ci1;
@@ -203,7 +211,8 @@ module ot_qwen_s4_protected_ring #(
     // Four read cuts, advanced together or held. A bad output cannot retire;
     // its complete owner and source slot remain occupied through quarantine.
     wire advance=rd_online&&!rd_fault&&(!v3||rd_ready);
-    wire fetch=advance&&ww_ok&&(fetch_bin!=published_r);
+    wire lane_available;
+    wire fetch=advance&&ww_ok&&(fetch_bin!=published_r)&&lane_available;
     wire [P-1:0] fetch_next=fetch_bin+P'(fetch);
     wire delivery_order_bad=v3&&(rd_owner!=delivered_bin);
     wire delivered_now=rd_valid&&rd_ready;
@@ -215,7 +224,31 @@ module ot_qwen_s4_protected_ring #(
         .d({r_sticky||bad_retire,delivered_next,(release_next>>1)^release_next,release_next,fetch_next}),.q(rs),.qi(rsi),.bad(rs_bad));
     assign retired=release_bin;
     wire [CW-1:0] read_code;
-    generate if(READ_RSEL)begin:r9_read
+    generate if(RAW_SECTOR_LANES)begin:sector_lanes
+        // Whole sealed code, simultaneous lanes. Existing protected owner,
+        // decode, held D0 and retirement remain authoritative.
+        localparam integer N=(CW+255)/256;
+        wire [N-1:0] valid,bad;
+        for(genvar g=0;g<N;g=g+1)begin:lane
+            localparam integer LO=g*256, B=(LO+256>CW)?CW-LO:256;
+            wire [16:0] owner;wire [7:0] ident;wire [255:0] code;
+            wire cf,hf;
+            ot_qwen_stream4_cdc_pc #(.TAGW(9),.LD(DEPTH),.WB(4),.AD(4),.SYNC(SYNC),.RSEL(1),.RNG(10)) u_raw(
+                .clk(rd_clk),.c_arst_n(por_n),.hclk(wr_clk),.h_arst_n(por_n),
+                .h_lv(lane_push),.h_lsec(17'(lane_owner)),.h_lrow(8'(PC_ID)),
+                .h_ldata({{(256-B){1'b0}},lane_code[LO+:B]}),
+                .l_v(valid[g]),.l_sec(owner),.l_row(ident),.l_data(code),.l_pop(fetch),
+                .w_v(1'b0),.w_sec(24'b0),.w_data(256'b0),.w_tag(9'b0),.c_fault(cf),
+                .h_hand(1'b0),.h_wcon(1'b0),.h_av(1'b0),.h_atag(9'b0),.h_fault(hf));
+            assign read_code[LO+:B]=code[0+:B];
+            // Both lanes are driven on the same source/destination edges.
+            // No raw credit is used to release a protected source slot.
+            assign bad[g]=cf||hf||(valid[g]&&((owner!=17'(fetch_bin))||(ident!=8'(PC_ID))));
+        end
+        assign lane_available=&valid;
+        assign read_select_fault=(|bad)||((|valid)&&!(&valid));
+    end else if(READ_RSEL)begin:r9_read
+        assign lane_available=1'b1;
         // Owner c8ba43664 RSEL1 column mux, applied to the FULL immutable
         // sealed word. Existing checked D0 is the held-valid register: it
         // captures only on advance, never the void r6/r7/r8 unconditional
@@ -244,6 +277,7 @@ module ot_qwen_s4_protected_ring #(
         end
         assign read_select_fault=|group_bad;
     end else begin:existing_read
+        assign lane_available=1'b1;
         assign read_code=mem[fetch_bin[A-1:0]];
         assign read_select_fault=1'b0;
     end endgenerate
@@ -291,6 +325,9 @@ module ot_qwen_s4_protected_ring #(
     ot_qwen_s4_checked_state #(.W(D3W)) u_d3(.clk(rd_clk),.por_n(por_n),.en(advance&&!due_bad),.d(d3_next),.q(d3),.bad(d3_bad));
     assign rd_valid=v3&&!rd_fault&&!due_bad;
     assign rd_data=d3[WIDTH-1:0];assign rd_owner=d3[WIDTH+1+:P];
+    assign wr_quiet=wr_online&&rr_ok&&!wr_fault&&(accept_bin==released_w)&&!ev;
+    assign rd_quiet=rd_online&&ww_ok&&!rd_fault&&(published_r==release_bin)&&
+        (fetch_bin==release_bin)&&(delivered_bin==release_bin)&&!(v0||v1||v2||v3);
     // A decode UE prevents this edge's pipeline advance immediately. It is
     // retained independently of warm reset in the held reader pipeline.
 endmodule

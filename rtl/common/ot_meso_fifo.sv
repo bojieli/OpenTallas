@@ -55,7 +55,9 @@ module ot_meso_fifo #(
     parameter int CREDITS  = 8,      // receive buffer entries = writer credits
     parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)
     parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)
-    parameter bit ENABLE   = 0
+    parameter bit ENABLE   = 0,
+    parameter bit RDREG    = 0       // register the data-ring readout (slot -> one-hot select -> readout flop) before the
+                                     // read side: +1 period crossing latency, the crossing arc ends at the select
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -110,7 +112,7 @@ module ot_meso_fifo #(
         // credit ring rclk -> wclk
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
-        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_data (
+        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG)) u_data (
             .tclk(wclk), .t_v(w_send), .t_d(w_d),
             .rclk(rclk), .r_align(r_align), .r_on(r_on),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
@@ -296,7 +298,9 @@ module ot_meso_ring #(
     parameter int DEPTH    = 4,
     parameter int OFFSET   = 2,
     parameter int GUARD_LO = 0,
-    parameter int GUARD_HI = 4
+    parameter int GUARD_HI = 4,
+    parameter bit RDREG    = 0       // readout flops: r_d / r_v / r_lap_ok captured at the consuming rclk edge (r_v,
+                                     // r_lap_ok masked by r_on of that cycle), presented one period later
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -388,11 +392,24 @@ module ot_meso_ring #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
                                                       .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
     end
-    ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v));
-    ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap_ok));
+    logic r_v_c, r_lap_c;
+    ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v_c));
+    ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap_c));
+    if (RDREG) begin : g_rdreg
+        // captured at the same rclk edge the unregistered reader would consume them (same crossing window); a
+        // pointer not yet placed in that cycle presents no word and no lap fault
+        logic r_v_q, r_lap_q;
+        always_ff @(posedge rclk) begin
+            r_v_q   <= r_v_c && r_on;
+            r_lap_q <= r_lap_c || !r_on;
+        end
+        assign r_v = r_v_q; assign r_lap_ok = r_lap_q;
+    end else begin : g_comb
+        assign r_v = r_v_c; assign r_lap_ok = r_lap_c;
+    end
 
     // guards on the falling read edge, then 3 rising flops
     wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);            // rp + GUARD_LO: consumed at the next rising edge + GUARD_LO
@@ -444,7 +461,7 @@ endmodule
 // One chunk of the data-ring read: its own one-hot copy of the slot index (placed and advanced with rp), then a
 // one-hot AND-OR of the DEPTH slots.  Kept hierarchy keeps the replicated index registers from being merged.
 (* keep_hierarchy *)
-module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4) (
+module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0) (
     input  logic                    clk,
     input  logic                    align,
     input  logic                    on,
@@ -457,8 +474,17 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4) (
         if (align) di <= DEPTH'(1) << place;
         else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
     end
+    logic [W-1:0] y_c;
     always_comb begin
-        y = '0;
-        for (int i = 0; i < DEPTH; i++) y = y | (sd[i*W +: W] & {W{di[i]}});
+        y_c = '0;
+        for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{di[i]}});
+    end
+    if (REG) begin : g_reg
+        // the crossing's capture flop sits next to the select (RDREG): the arc is slot -> AND-OR -> this flop
+        logic [W-1:0] y_q;
+        always_ff @(posedge clk) y_q <= y_c;
+        assign y = y_q;
+    end else begin : g_comb
+        assign y = y_c;
     end
 endmodule

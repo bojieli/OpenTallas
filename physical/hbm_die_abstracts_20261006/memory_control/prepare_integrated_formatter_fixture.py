@@ -18,6 +18,8 @@ from hbm_opt_integrated_20261005_gather import compile_normal_gather
 
 PHASE = 'L20.op14.index_scores.pre_candidate_mask.local_top512'
 GOLD_SHA = '5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45'
+FINAL_REFERENCE = ROOT / 'results/rtl/hbm_index_tp96_producer_20261006/final_reference_r1/ids.u32'
+FINAL_REFERENCE_SHA = 'fa5fd356d42ffeb6aae1d8eea2fd43f65192b27ba7bbffe054461fce034df19d'
 
 
 def sha(p):
@@ -64,14 +66,32 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
         # become a production installer publication merely by existing on disk.
         artifacts = None
     producer = load(producer_path)
+    if artifacts is not None:
+        # The emitted producer must be the exact producer enrolled in the book,
+        # with canonical installer-relative paths. An absolute emitter scratch
+        # path must not bypass the installer's source_artifacts authority.
+        installed_producer = book['index_producer']
+        for name in ('source_path', 'source_phase_path'):
+            key = producer[name]
+            if not isinstance(key, str):
+                raise ValueError('producer source path must be a string')
+            path = Path(key)
+            if (path.is_absolute()
+                    or not path.parts or '..' in path.parts
+                    or path.as_posix() != key):
+                raise ValueError('producer source path must be installer-root normalized: ' + str(key))
+            if installed_producer.get(name) != key:
+                raise ValueError('emitted producer differs from installed book source: ' + key)
+            try:
+                (root / path).resolve().relative_to(root.resolve())
+            except ValueError:
+                raise ValueError('producer source resolves outside installer root: ' + key)
+            if key not in artifacts or sha(root / path) != artifacts[key]:
+                raise ValueError('actual emitted producer/phase not installed and pinned: ' + key)
     phase_path = Path(producer['source_phase_path'])
     if not phase_path.is_absolute():
         phase_path = root / phase_path
     phase = load(phase_path)
-    for name in ('source_path', 'source_phase_path'):
-        p = producer[name]
-        if artifacts is not None and (p not in artifacts or sha(root / p) != artifacts[p]):
-            raise ValueError('actual emitted producer/phase not installed and pinned: ' + p)
     if producer['source_path'] != 'tools/hbm_index_tp96_producer.py':
         raise ValueError('selected actual TP96 producer required')
     if any(producer.get(k) != v for k, v in {
@@ -158,11 +178,13 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
             raise ValueError('saved unmasked FP32-exact reference required')
         if not np.array_equal(planes['scores'], scores.view('<u4')[ids]):
             raise ValueError('actual source score differs from independent saved reference')
-        # This independent selection is used only for final readback comparison.
-        # It is not emitted as a command, source operand or sink write payload.
-        global_ids = np.arange(1048576, dtype=np.uint32)
-        top = np.lexsort((global_ids, -saved))[:512]
-        final_ids = np.sort(top).astype('<u4')
+    # Exact captured independent final selection, comparison only. Preserve
+    # its actual order; do not regenerate a host selection from scores.
+    if sha(FINAL_REFERENCE) != FINAL_REFERENCE_SHA:
+        raise ValueError('captured L20 final U32 reference pin differs')
+    final_ids = np.fromfile(FINAL_REFERENCE, dtype='<u4')
+    if final_ids.shape != (512,) or len(np.unique(final_ids)) != 512 or (final_ids >= 1048576).any():
+        raise ValueError('captured final selection extent differs')
     output.mkdir(parents=True, exist_ok=False)
     for name in ('scores.mem', 'ids.mem'):
         shutil.copyfile(producer_path.parent / name, output / name)
@@ -177,7 +199,7 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
            len(occupied), compiled['entry_pc'], 20, 20, 0]
     (output / 'formatter.cfg').write_text(''.join(f'{v:08x}\n' for v in cfg))
     source_pins = {str(producer_path): sha(producer_path), str(phase_path): sha(phase_path),
-                   str(gold_path): GOLD_SHA}
+                   str(gold_path): GOLD_SHA, str(FINAL_REFERENCE): FINAL_REFERENCE_SHA}
     if book_path is not None:
         source_pins[str(book_path)] = book_sha
     else:
@@ -187,9 +209,12 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
         source_pins=source_pins,
         files={p.name: sha(p) for p in output.iterdir()},
         independent_gold_usage='sink_gold.mem comparison only; never offered to DUT',
+        installed_producer_paths_checked=artifacts is not None,
+        installed_producer_source_artifacts={producer[k]: artifacts[producer[k]]
+            for k in ('source_path', 'source_phase_path')} if artifacts is not None else None,
         native_external_stage_recipe=book_path is not None,
         normal_SM_entry_enrolled=book_path is None,
-        producer_source_sha256=sha(ROOT / producer['source_path']),
+        producer_source_sha256=sha((root if artifacts is not None else ROOT) / producer['source_path']),
         production_installation_complete=False,
         hardware_reservation_granted=False, numerical_runtime_qualified=False,
         full_token_qualified=False, physical_qualified=False)

@@ -1,0 +1,61 @@
+{
+  "status": "MODEL_BEFORE_RTL",
+  "existing_model": "results/uarch/hbm_index_w15_formatter_20261005/plane_major/model.json",
+  "actual_child_sources": [
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+    "rtl/chip/ot_coll_topk_merge.sv"
+  ],
+  "geometry": {
+    "N": 96,
+    "NMAX": 512,
+    "LW": 16,
+    "P": 64,
+    "PF": 16,
+    "LDW": 1,
+    "DIG": 4,
+    "n": 512,
+    "k": 512,
+    "stride": 0
+  },
+  "MACs_per_cycle": 0,
+  "new_selector_arithmetic": false,
+  "new_provider_ports": 0,
+  "new_SRAM_bytes": 0,
+  "replicas": 1,
+  "sink_words": 32,
+  "sink_useful_bits": 16384,
+  "landing_W6_rows": 256,
+  "landing_coded_FF": 18432,
+  "control_useful_bits": 192,
+  "control_W6_rows": 3,
+  "control_coded_FF": 216,
+  "new_retention_coded_FF": 18720,
+  "capacity": "Reserve full512U32 output before merger GO; core readyless max1x512beat/cycle atPF16. Serial checked sink cannot backpressure merger. Landing captures each emitted beat exactly once.",
+  "existing_loader": "original orderedadapter load edge, no new hostsort/scorer/golden",
+  "ports": {
+    "query_bits": 102,
+    "pair_return_bits": 672,
+    "sink_request_bits": 649,
+    "sink_response_bits": 637
+  },
+  "traffic_bytes": {
+    "sink_writes": 2048,
+    "sink_readbacks": 2048
+  },
+  "latency": "existing orderadapter/core latencies reused unchanged; new outputcapture1 edge/beat concurrent with merge, sink32 * actual bridge four-sector memory service + W6 landing decode/CE stalls, final actual ACK acceptance + held reverse; price actual edges from runtime, no guessed memory clock/ns or ratecredit",
+  "area": "New18648codedFF+codec/mux/control requires mapped area/floorplan/SSFF closure; cannot fit or borrow preinstall control slot budget. No hardened view/clockQ/caps credit.",
+  "production_book": "results/rtl/hbm_formatter_preinstall_parent_20261006/fullplane_install_recipe_r1/workspace.json",
+  "production_book_sha256": "c18419a44e9c4268e1beef5619b3ac345766b856b6d6d3d64fa4b55194944363",
+  "production_capacity_bytes": 134217728,
+  "occupied_prefix_end": 118763520,
+  "sink_base": 119156736,
+  "sink_limit": 119158784,
+  "phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+  "runtime_owner": "Lorentz/Gibbs; no Gauss numerical engine launch",
+  "numerical_pass": false,
+  "physical_closed": false,
+  "rate_credit": 0,
+  "fatal_event_W6_rows": 1,
+  "fatal_event_coded_FF": 72,
+  "readyless_CE_policy": "Protected fatal event latches if control CE prevents a core output capture; quarantine instead of silent dropped output. Selected landing CE scrub stalls sink admission, DUE quarantines."
+}

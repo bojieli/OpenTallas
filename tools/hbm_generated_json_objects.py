@@ -127,7 +127,7 @@ def capacity(out,a):
     row=dict(host=socket.gethostname(),load=os.getloadavg()[0],idle=os.cpu_count()*delta[3]/sum(delta),
              available_bytes=mem,disk_free=shutil.disk_usage(out).free)
     write(out/('post_guard.json' if a.admitted else 'pre_guard.json'),row)
-    return row['load']<128 and row['idle']>=a.workers and mem>=a.memory_gib*2**30 and row['disk_free']>=a.disk_reserve_bytes
+    return row['load']<128 and row['load']+a.workers<=getattr(a,'max_projected_load',128) and row['idle']>=a.workers and mem>=a.memory_gib*2**30 and row['disk_free']>=a.disk_reserve_bytes
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -139,6 +139,7 @@ def main():
     p.add_argument('--reuse-archives',type=Path,help='Completed exact model/compiler/flags archive build; no C++ replay')
     p.add_argument('--harness',type=Path);p.add_argument('--workers',type=int,required=True)
     p.add_argument('--memory-gib',type=int,required=True);p.add_argument('--disk-reserve-bytes',type=int,required=True)
+    p.add_argument('--max-projected-load',type=float,default=128)
     p.add_argument('--host',required=True);p.add_argument('--compiler',type=Path,default=Path(shutil.which('g++') or '/missing'))
     p.add_argument('--archiver',type=Path,default=Path(shutil.which('ar') or '/missing'))
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS);a=p.parse_args()

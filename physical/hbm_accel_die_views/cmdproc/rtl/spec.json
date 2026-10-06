@@ -1,0 +1,574 @@
+{
+ "master": "hfd_cmdproc",
+ "note": "Two ot_hfd_cmdproc20_m (ENABLE 1, NSM 16): ot_ds_hbm_cmdproc20 with its 256 x 64 command memory in an ot_sram_2rw_512x64_m4_r2c2 macro (make_cmdproc_m.py; cycle-exact, tb_cmdproc_m_equiv.sv), on the die ports. Program store and doorbell are loaded through the loader bus f_loader (cmd_we/addr/wdata 73 b + db_v/token/pos/job/generation 74 b); launch_v[n] drives SM n start and d_valid, launch_pc the op fields (40 b) and d_base, launch_pos d_lines; SM arrive -> t_barrier, barrier release f_barrier -> release_in, SM released -> sm_done. res_v/res_data/sm_fault/cpl_rdy have no die net (cfg chain); completion/status outputs fold into spare die output bits. The pipelined issue sequencer of the ledger is not built.",
+ "instances": [
+  {
+   "name": "cpS",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
+   "params": {
+    "TW": 17,
+    "PW": 20,
+    "CONTEXT_POSITIONS": 1048576,
+    "ENABLE": 1,
+    "NSM": 16,
+    "NCMD": 256
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cmd_we": "die:f_loader[0:1]",
+    "cmd_addr": "die:f_loader[1:9]",
+    "cmd_wdata": "die:f_loader[9:73]",
+    "db_v": "die:f_loader[73:74]",
+    "db_token": "die:f_loader[74:91]",
+    "db_pos": "die:f_loader[91:111]",
+    "db_job": "die:f_loader[111:143]",
+    "db_generation": "die:f_loader[143:147]",
+    "launch_v": [
+     "die:cSW[0:1]+cSW[103:104]+cSW[206:207]+cSW[309:310]+cSW[412:413]+cSW[515:516]+cSW[618:619]+cSW[721:722]+cSE[0:1]+cSE[103:104]+cSE[206:207]+cSE[309:310]+cSE[412:413]+cSE[515:516]+cSE[618:619]+cSE[721:722]",
+     "die:cSW[45:46]+cSW[148:149]+cSW[251:252]+cSW[354:355]+cSW[457:458]+cSW[560:561]+cSW[663:664]+cSW[766:767]+cSE[45:46]+cSE[148:149]+cSE[251:252]+cSE[354:355]+cSE[457:458]+cSE[560:561]+cSE[663:664]+cSE[766:767]"
+    ],
+    "launch_pc": [
+     "die:cSW[1:33]",
+     "die:cSW[104:136]",
+     "die:cSW[207:239]",
+     "die:cSW[310:342]",
+     "die:cSW[413:445]",
+     "die:cSW[516:548]",
+     "die:cSW[619:651]",
+     "die:cSW[722:754]",
+     "die:cSE[1:33]",
+     "die:cSE[104:136]",
+     "die:cSE[207:239]",
+     "die:cSE[310:342]",
+     "die:cSE[413:445]",
+     "die:cSE[516:548]",
+     "die:cSE[619:651]",
+     "die:cSE[722:754]",
+     "die:cSW[46:78]",
+     "die:cSW[149:181]",
+     "die:cSW[252:284]",
+     "die:cSW[355:387]",
+     "die:cSW[458:490]",
+     "die:cSW[561:593]",
+     "die:cSW[664:696]",
+     "die:cSW[767:799]",
+     "die:cSE[46:78]",
+     "die:cSE[149:181]",
+     "die:cSE[252:284]",
+     "die:cSE[355:387]",
+     "die:cSE[458:490]",
+     "die:cSE[561:593]",
+     "die:cSE[664:696]",
+     "die:cSE[767:799]"
+    ],
+    "launch_pos": [
+     "die:cSW[78:98]",
+     "die:cSW[181:201]",
+     "die:cSW[284:304]",
+     "die:cSW[387:407]",
+     "die:cSW[490:510]",
+     "die:cSW[593:613]",
+     "die:cSW[696:716]",
+     "die:cSW[799:819]",
+     "die:cSE[78:98]",
+     "die:cSE[181:201]",
+     "die:cSE[284:304]",
+     "die:cSE[387:407]",
+     "die:cSE[490:510]",
+     "die:cSE[593:613]",
+     "die:cSE[696:716]",
+     "die:cSE[799:819]"
+    ],
+    "launch_token": [
+     "die:t_su_SW[0:17]",
+     "die:t_su_SE[0:17]"
+    ],
+    "sm_done": "die:cSW[44:45]+cSW[147:148]+cSW[250:251]+cSW[353:354]+cSW[456:457]+cSW[559:560]+cSW[662:663]+cSW[765:766]+cSE[44:45]+cSE[147:148]+cSE[250:251]+cSE[353:354]+cSE[456:457]+cSE[559:560]+cSE[662:663]+cSE[765:766]",
+    "sm_fault": "cfg",
+    "res_v": "cfg",
+    "res_data": "cfg",
+    "cpl_rdy": "const:1"
+   }
+  },
+  {
+   "name": "cpN",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
+   "params": {
+    "TW": 17,
+    "PW": 20,
+    "CONTEXT_POSITIONS": 1048576,
+    "ENABLE": 1,
+    "NSM": 16,
+    "NCMD": 256
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cmd_we": "die:f_loader[147:148]",
+    "cmd_addr": "die:f_loader[148:156]",
+    "cmd_wdata": "die:f_loader[156:220]",
+    "db_v": "die:f_loader[220:221]",
+    "db_token": "die:f_loader[221:238]",
+    "db_pos": "die:f_loader[238:258]",
+    "db_job": "die:f_loader[258:290]",
+    "db_generation": "die:f_loader[290:294]",
+    "launch_v": [
+     "die:cNW[0:1]+cNW[103:104]+cNW[206:207]+cNW[309:310]+cNW[412:413]+cNW[515:516]+cNW[618:619]+cNW[721:722]+cNE[0:1]+cNE[103:104]+cNE[206:207]+cNE[309:310]+cNE[412:413]+cNE[515:516]+cNE[618:619]+cNE[721:722]",
+     "die:cNW[45:46]+cNW[148:149]+cNW[251:252]+cNW[354:355]+cNW[457:458]+cNW[560:561]+cNW[663:664]+cNW[766:767]+cNE[45:46]+cNE[148:149]+cNE[251:252]+cNE[354:355]+cNE[457:458]+cNE[560:561]+cNE[663:664]+cNE[766:767]"
+    ],
+    "launch_pc": [
+     "die:cNW[1:33]",
+     "die:cNW[104:136]",
+     "die:cNW[207:239]",
+     "die:cNW[310:342]",
+     "die:cNW[413:445]",
+     "die:cNW[516:548]",
+     "die:cNW[619:651]",
+     "die:cNW[722:754]",
+     "die:cNE[1:33]",
+     "die:cNE[104:136]",
+     "die:cNE[207:239]",
+     "die:cNE[310:342]",
+     "die:cNE[413:445]",
+     "die:cNE[516:548]",
+     "die:cNE[619:651]",
+     "die:cNE[722:754]",
+     "die:cNW[46:78]",
+     "die:cNW[149:181]",
+     "die:cNW[252:284]",
+     "die:cNW[355:387]",
+     "die:cNW[458:490]",
+     "die:cNW[561:593]",
+     "die:cNW[664:696]",
+     "die:cNW[767:799]",
+     "die:cNE[46:78]",
+     "die:cNE[149:181]",
+     "die:cNE[252:284]",
+     "die:cNE[355:387]",
+     "die:cNE[458:490]",
+     "die:cNE[561:593]",
+     "die:cNE[664:696]",
+     "die:cNE[767:799]"
+    ],
+    "launch_pos": [
+     "die:cNW[78:98]",
+     "die:cNW[181:201]",
+     "die:cNW[284:304]",
+     "die:cNW[387:407]",
+     "die:cNW[490:510]",
+     "die:cNW[593:613]",
+     "die:cNW[696:716]",
+     "die:cNW[799:819]",
+     "die:cNE[78:98]",
+     "die:cNE[181:201]",
+     "die:cNE[284:304]",
+     "die:cNE[387:407]",
+     "die:cNE[490:510]",
+     "die:cNE[593:613]",
+     "die:cNE[696:716]",
+     "die:cNE[799:819]"
+    ],
+    "launch_token": [
+     "die:t_su_NW[0:17]",
+     "die:t_su_NE[0:17]"
+    ],
+    "sm_done": "die:cNW[44:45]+cNW[147:148]+cNW[250:251]+cNW[353:354]+cNW[456:457]+cNW[559:560]+cNW[662:663]+cNW[765:766]+cNE[44:45]+cNE[147:148]+cNE[250:251]+cNE[353:354]+cNE[456:457]+cNE[559:560]+cNE[662:663]+cNE[765:766]",
+    "sm_fault": "cfg",
+    "res_v": "cfg",
+    "res_data": "cfg",
+    "cpl_rdy": "const:1"
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "t_barrier",
+   0,
+   1,
+   "i_cSW[43]"
+  ],
+  [
+   "cSW",
+   41,
+   42,
+   "i_f_barrier[0]"
+  ],
+  [
+   "t_barrier",
+   1,
+   2,
+   "i_cSW[146]"
+  ],
+  [
+   "cSW",
+   144,
+   145,
+   "i_f_barrier[1]"
+  ],
+  [
+   "t_barrier",
+   2,
+   3,
+   "i_cSW[249]"
+  ],
+  [
+   "cSW",
+   247,
+   248,
+   "i_f_barrier[2]"
+  ],
+  [
+   "t_barrier",
+   3,
+   4,
+   "i_cSW[352]"
+  ],
+  [
+   "cSW",
+   350,
+   351,
+   "i_f_barrier[3]"
+  ],
+  [
+   "t_barrier",
+   4,
+   5,
+   "i_cSW[455]"
+  ],
+  [
+   "cSW",
+   453,
+   454,
+   "i_f_barrier[4]"
+  ],
+  [
+   "t_barrier",
+   5,
+   6,
+   "i_cSW[558]"
+  ],
+  [
+   "cSW",
+   556,
+   557,
+   "i_f_barrier[5]"
+  ],
+  [
+   "t_barrier",
+   6,
+   7,
+   "i_cSW[661]"
+  ],
+  [
+   "cSW",
+   659,
+   660,
+   "i_f_barrier[6]"
+  ],
+  [
+   "t_barrier",
+   7,
+   8,
+   "i_cSW[764]"
+  ],
+  [
+   "cSW",
+   762,
+   763,
+   "i_f_barrier[7]"
+  ],
+  [
+   "t_barrier",
+   8,
+   9,
+   "i_cSE[43]"
+  ],
+  [
+   "cSE",
+   41,
+   42,
+   "i_f_barrier[8]"
+  ],
+  [
+   "t_barrier",
+   9,
+   10,
+   "i_cSE[146]"
+  ],
+  [
+   "cSE",
+   144,
+   145,
+   "i_f_barrier[9]"
+  ],
+  [
+   "t_barrier",
+   10,
+   11,
+   "i_cSE[249]"
+  ],
+  [
+   "cSE",
+   247,
+   248,
+   "i_f_barrier[10]"
+  ],
+  [
+   "t_barrier",
+   11,
+   12,
+   "i_cSE[352]"
+  ],
+  [
+   "cSE",
+   350,
+   351,
+   "i_f_barrier[11]"
+  ],
+  [
+   "t_barrier",
+   12,
+   13,
+   "i_cSE[455]"
+  ],
+  [
+   "cSE",
+   453,
+   454,
+   "i_f_barrier[12]"
+  ],
+  [
+   "t_barrier",
+   13,
+   14,
+   "i_cSE[558]"
+  ],
+  [
+   "cSE",
+   556,
+   557,
+   "i_f_barrier[13]"
+  ],
+  [
+   "t_barrier",
+   14,
+   15,
+   "i_cSE[661]"
+  ],
+  [
+   "cSE",
+   659,
+   660,
+   "i_f_barrier[14]"
+  ],
+  [
+   "t_barrier",
+   15,
+   16,
+   "i_cSE[764]"
+  ],
+  [
+   "cSE",
+   762,
+   763,
+   "i_f_barrier[15]"
+  ],
+  [
+   "t_barrier",
+   16,
+   17,
+   "i_cNW[43]"
+  ],
+  [
+   "cNW",
+   41,
+   42,
+   "i_f_barrier[16]"
+  ],
+  [
+   "t_barrier",
+   17,
+   18,
+   "i_cNW[146]"
+  ],
+  [
+   "cNW",
+   144,
+   145,
+   "i_f_barrier[17]"
+  ],
+  [
+   "t_barrier",
+   18,
+   19,
+   "i_cNW[249]"
+  ],
+  [
+   "cNW",
+   247,
+   248,
+   "i_f_barrier[18]"
+  ],
+  [
+   "t_barrier",
+   19,
+   20,
+   "i_cNW[352]"
+  ],
+  [
+   "cNW",
+   350,
+   351,
+   "i_f_barrier[19]"
+  ],
+  [
+   "t_barrier",
+   20,
+   21,
+   "i_cNW[455]"
+  ],
+  [
+   "cNW",
+   453,
+   454,
+   "i_f_barrier[20]"
+  ],
+  [
+   "t_barrier",
+   21,
+   22,
+   "i_cNW[558]"
+  ],
+  [
+   "cNW",
+   556,
+   557,
+   "i_f_barrier[21]"
+  ],
+  [
+   "t_barrier",
+   22,
+   23,
+   "i_cNW[661]"
+  ],
+  [
+   "cNW",
+   659,
+   660,
+   "i_f_barrier[22]"
+  ],
+  [
+   "t_barrier",
+   23,
+   24,
+   "i_cNW[764]"
+  ],
+  [
+   "cNW",
+   762,
+   763,
+   "i_f_barrier[23]"
+  ],
+  [
+   "t_barrier",
+   24,
+   25,
+   "i_cNE[43]"
+  ],
+  [
+   "cNE",
+   41,
+   42,
+   "i_f_barrier[24]"
+  ],
+  [
+   "t_barrier",
+   25,
+   26,
+   "i_cNE[146]"
+  ],
+  [
+   "cNE",
+   144,
+   145,
+   "i_f_barrier[25]"
+  ],
+  [
+   "t_barrier",
+   26,
+   27,
+   "i_cNE[249]"
+  ],
+  [
+   "cNE",
+   247,
+   248,
+   "i_f_barrier[26]"
+  ],
+  [
+   "t_barrier",
+   27,
+   28,
+   "i_cNE[352]"
+  ],
+  [
+   "cNE",
+   350,
+   351,
+   "i_f_barrier[27]"
+  ],
+  [
+   "t_barrier",
+   28,
+   29,
+   "i_cNE[455]"
+  ],
+  [
+   "cNE",
+   453,
+   454,
+   "i_f_barrier[28]"
+  ],
+  [
+   "t_barrier",
+   29,
+   30,
+   "i_cNE[558]"
+  ],
+  [
+   "cNE",
+   556,
+   557,
+   "i_f_barrier[29]"
+  ],
+  [
+   "t_barrier",
+   30,
+   31,
+   "i_cNE[661]"
+  ],
+  [
+   "cNE",
+   659,
+   660,
+   "i_f_barrier[30]"
+  ],
+  [
+   "t_barrier",
+   31,
+   32,
+   "i_cNE[764]"
+  ],
+  [
+   "cNE",
+   762,
+   763,
+   "i_f_barrier[31]"
+  ]
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5
+}

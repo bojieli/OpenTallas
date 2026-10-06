@@ -114,7 +114,7 @@ def summarise(cfg: dict, recs: list) -> dict:
 
     # round trip A->B->A: the two ring lags plus one output (capture) register period on each side, against the two
     # register stages it replaces; consistent with the measured crossing latency = ring lag + 1 period
-    rt = [round((r["data_lag0_ps"] + r["credit_lag0_ps"]) / T + 2 * OUT_REG_PERIODS - 2.0, 3) for r in s0]
+    rt = [round((r["data_lag0_ps"] + r["credit_lag0_ps"]) / T + OUT_REG_PERIODS + 1 - 2.0, 3) for r in s0]
     rt_int = {}
     for x in rt:
         k = str(round(x))
@@ -154,7 +154,12 @@ def main(argv=None):
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=max(4, (os.cpu_count() or 8) // 2))
     ap.add_argument("--configs", default=",".join(CONFIGS))
+    ap.add_argument("--rdreg", action="store_true", help="ot_meso_fifo RDREG=1 (registered data-ring readout, +1 period)")
     a = ap.parse_args(argv)
+    global OUT_REG_PERIODS
+    if a.rdreg:
+        os.environ["RDREG"] = "1"
+        OUT_REG_PERIODS = 2      # data side: readout flop + the output (capture) register (credit ring unchanged)
     a.work.mkdir(parents=True, exist_ok=True)
     out = dict(schema="opentallas.meso_fifo.campaign.v1", scope="DIGITAL_ONLY dual-clock RTL simulation with a "
                "physical lag-window checker; edges closer than 20 ps processed in random order; not an MTBF proof",
@@ -164,6 +169,7 @@ def main(argv=None):
     dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", RTL, BENCH, BUILD],
                            capture_output=True, text=True).stdout.strip()
     out["git"] = dict(head=git, sources_dirty=bool(dirty))
+    out["rdreg"] = bool(a.rdreg)
     for name in a.configs.split(","):
         cfg = CONFIGS[name]
         tb = build(a.work, name, cfg)
