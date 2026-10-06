@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_CONTROL_TAIL_CUT=0,SU_OWNER_VETO_POLARITY=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_CONTROL_TAIL_CUT=0,SU_OWNER_VETO_POLARITY=0,SU_PIN_MARGIN=0,SU_RELEASE_REPLAY=0,SU_ADMIT_SHADOW=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  // Opt-in preinstall uses the actual 128MiB allocator successor. ENTRY_PC
  // remains caller-supplied metadata; it does not enroll a normal SM program.
@@ -508,6 +508,11 @@ end else begin:g_on
         wire su_selected,su_quiet;wire [31:0] su_job;wire [3:0] su_gen;
         wire [16:0] su_token;wire [19:0] su_pos;
         wire su_lease_v,su_release_v,su_release_r;wire [3:0] su_retired;
+        wire su_admit_busy;
+        // PIN_MARGIN CP outputs lag the launch pin by 3 edges: the admit guard must
+        // cover them (bench admit_margin_20261006: SHADOW 3 exact, 2 minimum, 0 unsafe).
+        initial if(SU_PIN_MARGIN&&SU_ADMIT_SHADOW<2)$fatal(1,"SU_PIN_MARGIN requires SU_ADMIT_SHADOW>=2 (3 qualified)");
+        ot_hbm_integrated_admit_guard #(.SHADOW(SU_ADMIT_SHADOW)) u_admit_guard(.clk(clk_sm),.por_n(rst_sm_n),.launch_any(|launch_v),.cp_busy(su_pending||su_selected||su_owned),.busy(su_admit_busy));
         wire cp_idle,cp_cpl_v,cp_retire_ready,native_credit_empty,shared_idle;
         wire cp_reset_wait,cp_reset_n,cp_reset_fault;
         ot_hbm_integrated_cp_reset #(.ENABLE(LOCAL_CP_RESET_ENABLE)) u_cp_reset(
@@ -535,7 +540,7 @@ end else begin:g_on
         wire all_prior_quiet=!(|busy)&&!(|launch_v)&&!(|a_req_v)&&!(|a_rsp_v)&&
                              !(|obs_req)&&!(|obs_rsp);
         wire preinstall_accept=FORMATTER_PREINSTALL_ENABLE&&preinstall_begin_v[d]&&preinstall_begin_r[d];
-        wire all_routes_drained=!preinstall_accept&&native_credit_empty&&shared_idle&&!su_pending&&!su_owned&&
+        wire all_routes_drained=!preinstall_accept&&native_credit_empty&&shared_idle&&!su_admit_busy&&
                                 !preinstall_retained[d]&&!gather_retained[d]&&!fmt_retained&&!sfu_retained[d]&&!norm_retained[d]&&(!SFU_NATIVE_VM_ENABLE||!sfu_vm_retained[d])&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
         assign db_rdy[d]=cp_idle&&all_routes_drained&&!cp_reset_wait;
         assign cpl_v[d]=cp_cpl_v&&all_routes_drained;
@@ -579,12 +584,12 @@ end else begin:g_on
         wire sfu_route=SFU_C12_ENABLE&&sfu_retained[d];
         wire [72:0] peer0_frame=sfu_route?sfu_held_frame[d*73+:73]:norm_route?norm_held_frame[d*73+:73]:su_provider_frame;
         wire [72:0] actual_cp_frame={launch_pos,launch_token,cpl_generation,cpl_job};
-        wire sfu_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_pending&&!su_selected&&!su_owned&&!norm_retained[d]&&!cp_reset_wait&&
+        wire sfu_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_admit_busy&&!norm_retained[d]&&!cp_reset_wait&&
                        sfu_enroll_frame[d*73+:73]==actual_cp_frame;
         // Admission checks the offered tuple; after acceptance the SAME coded
         // stage owns the tuple. No preseeded or shadow descriptor.
         wire [72:0] norm_allocation_target=norm_retained[d]?norm_held_frame[d*73+:73]:norm_enroll_frame[d*73+:73];
-        wire norm_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==actual_cp_frame))));
+        wire norm_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_admit_busy&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==actual_cp_frame))));
         assign norm_enroll_r[d]=norm_offer_r&&norm_admit;
         assign sfu_enroll_r[d]=sfu_offer_r&&sfu_admit;
         wire [336:0] su_provider_req;
@@ -674,7 +679,7 @@ end else begin:g_on
          .rsp_v(w2_sink_rsp_v),.rsp_r(w2_sink_rsp_r),.rsp(w2_provider_rsp));
         assign su_owned=peer_grants[0]&&!sfu_route&&!norm_route;assign su_release_r=peer_releases[0]&&!sfu_route&&!norm_route;
         wire [11:0] su_owned_frontier_terms;
-        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_cp(
+        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY),.PIN_MARGIN(SU_PIN_MARGIN),.RELEASE_REPLAY(SU_RELEASE_REPLAY?3:0)) u_su_cp(
          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
          .native_launch(native_launch),.lease_v(su_lease_v),.lease_granted(su_owned),
