@@ -76,8 +76,8 @@ if __name__=='__main__':
         prepared=json.loads((a.output/'prepared.json').read_text())
         if prepared.get('qualified_hot_gate'):
             hot=json.loads(Path(prepared['qualified_hot_gate']).read_text())
-            if hot['status']!='PASS_COMPILER_EQUIVALENCE' or not hot['adopted']:
-                raise RuntimeError('compiler trace and speed qualification required')
+            if hot['status'] not in ('PASS_COMPILER_EQUIVALENCE', 'PASS_NATIVE_SOURCE_EQUIVALENCE') or not hot['adopted']:
+                raise RuntimeError('changed native archive trace and speed qualification required')
             if hot['new_archive_sha256']!=prepared['completed_top_sha256']:
                 raise RuntimeError('selected optimized archive differs from qualified compiler candidate')
     try: dispatch(a) if a.phase=='dispatch' else child(a)
