@@ -3,7 +3,11 @@
  "lever": "qelem_pq",
  "verdict": "PENDING_SSFF",
  "exact": true,
- "ss_ff": null,
+ "ss_ff": {
+  "basis": "routed ORFS of the PQ q-element ot_v41_rom_elem_q_qxpq_w10 (QX 10, PQ 1, QM margin-first), FH 192.24, routed at 0.770 ns, sign-off SS 60 ps / FF 25 ps at 0.833 ns; accept SS >= +40 / FF >= +15 ps (owner 2026-10-06)",
+  "routes": "Z26a (QM=5, EPYC2 /srv/opentallas-scratch2/scratch/claude/qelem-qm; data only) -> QM=6 route (EPYC3); history Z25a (QM=4, killed in GRT: post-CTS rp_d -138 / lane-0 decode -97..-115 / prow -37 at 770), Z24b (QM=3), Z22a-g (lean), Z23a-d / Z24a (killed for the single-route rule)",
+  "status": "pending"
+ },
  "nodes": {
   "E1.wkv": {
    "us": 0.615,
@@ -2364,5 +2368,18 @@
    "rtl/v41rom/ot_v41_segtree6.sv"
   ]
  },
- "note": "PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=0 QM=5, pair FILE SWAP rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP 32 / GUARD 202 / GSLACK 32. Replaces field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go."
+ "note": "PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=0 QM=5, pair FILE SWAP rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP 32 / GUARD 202 / GSLACK 32. Replaces field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go.",
+ "owner_go": "OWNER 2026-10-06: ADOPT PQ with the q-element once Z24b closes (SS >= +40 / FF >= +15) and the PQ spine closes (field-spine agent); headline uses it only with both",
+ "qm": {
+  "QM": 5,
+  "note": "field cycles measured at QM = 5 on the v13b PQ spine (merged tree 86dc4493a; QM 4/5: +1 lane cycle, +1 replay cycle, +1 output cycle over QM = 2)",
+  "measurement_QM2_record": "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qm2.json",
+  "measurement_QM0_record": "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem.json"
+ },
+ "field_wire_reprice": {
+  "record": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json",
+  "sha256": "3f497ad4c973c56693c45485c043b0c4010b080071a8f5e7e2441ac959910f34",
+  "geom": "f157.68",
+  "note": "CLAUDE DS-REPRICE 2026-10-06: node times re-priced from the r8 die's per-frame round trip (was 80 cycles a phase / once a PQ node); measured cycles unchanged [carried from the QM = 2 lever; this QM = 5 record is S81-wire priced until tools/dsrom_field_reprice_r8.py record --levers re-runs at adoption]"
+ }
 }
