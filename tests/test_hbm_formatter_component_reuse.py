@@ -85,6 +85,17 @@ class ComponentReuse(unittest.TestCase):
         self.edit('parent.sv','`define MOD(x) name``x\nmodule parent; endmodule\n')
         with self.assertRaises(ValueError):self.contracts()
 
+    def test_current_published_norm_flags_are_explicit_snapshot_selection(self):
+        document={'parameters':{'ENABLE':1,'NORM_C12_ENABLE':1},
+                  'norm_native_production_candidate':{'parameters':{'NORM_NATIVE_VM_ENABLE':1,'NORM_NATIVE_INPUT_CP':1,'NORM_N':64}}}
+        self.assertEqual(R.selected_parameters(document),document['parameters'])
+        selected=R.selected_parameters(document,True)
+        self.assertEqual(selected['NORM_NATIVE_INPUT_CP'],1)
+        self.assertEqual(selected['ENABLE'],1)
+        self.assertNotIn('NORM_NATIVE_INPUT_CP',document['parameters'])
+        document['norm_native_production_candidate']['parameters']['NORM_NATIVE_INPUT_CP']=0
+        with self.assertRaises(ValueError):R.selected_parameters(document,True)
+
     def test_generation_time_output_tampering_rejects(self):
         d=self.work/'generated';d.mkdir()
         binary=self.work/'verilator_bin';binary.write_text('compiler')

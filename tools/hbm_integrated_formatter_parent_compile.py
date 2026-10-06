@@ -56,10 +56,20 @@ def files():
         if s not in paths:raise ValueError('Missing actual selected source '+s)
     return paths
 
-def prepare(work,body_pin,partition_reduction=False):
+def selected_parameters(document,native_norm_production=False):
+    parameters=dict(document['parameters'])
+    if native_norm_production:
+        candidate=document['norm_native_production_candidate']['parameters']
+        if candidate.get('NORM_NATIVE_VM_ENABLE')!=1 or candidate.get('NORM_NATIVE_INPUT_CP')!=1:
+            raise ValueError('Actual Gibbs native norm production flags unavailable')
+        parameters.update(candidate)
+    return parameters
+
+def prepare(work,body_pin,partition_reduction=False,native_norm_production=False):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
+    parameters=selected_parameters(json.loads((ROOT/SELECTED).read_text()),native_norm_production)
     work.mkdir(parents=True,exist_ok=False)
     paths=files();all_files=paths+INCLUDES
     missing=[s for s in all_files if not (ROOT/s).is_file()]
@@ -135,8 +145,9 @@ def prepare(work,body_pin,partition_reduction=False):
         binding_sha256=sha(ROOT/'tools/hbm_opt_integrated_20261005_w2_on.py'),
         hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in blocks},
         partition_reduction=partition_reduction,
+        native_norm_production=native_norm_production,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
-        sources=paths,includes=INCLUDES,parameters=PARAMS,body_owner_sha256=body_pin,
+        sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
         prepared_bytes=sum((ROOT/s).stat().st_size for s in all_files if s not in missing),
         full_parent_elaborated=False,numerical=False,physical_qualified=False,
@@ -148,7 +159,7 @@ def prepare(work,body_pin,partition_reduction=False):
 def verified(work):
     m=json.loads((work/'prepared.json').read_text())
     if not m['source_ready']:raise ValueError('Actual owner-pinned body/source closure not ready; no guard/compiler')
-    if m['parameters']!=json.loads((work/'src'/SELECTED).read_text())['parameters']:
+    if m['parameters']!=selected_parameters(json.loads((work/'src'/SELECTED).read_text()),m.get('native_norm_production',False)):
         raise ValueError('Snapshot differs from its pinned selected parameters')
     if sha(work/'src/files.f')!=m['files_f_sha256']:raise ValueError('Source list changed')
     if sha(work/'runner.py')!=m['runner_sha256']:raise ValueError('Runner changed')
@@ -548,6 +559,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true');g.add_argument('--enroll-models',action='store_true')
     p.add_argument('--partition-reduction',action='store_true',help='Opt-in future real reducer partitions after measured peak/convergence justifies them')
+    p.add_argument('--native-norm-production',action='store_true',help='Consume literal Gibbs published norm production candidate flags')
     p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
@@ -555,5 +567,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())
