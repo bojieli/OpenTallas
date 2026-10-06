@@ -76,6 +76,26 @@ module tb_s81ph_gather_capture;
     // ---------------- write collection
     reg [50:0] refq [0:NR-1][$];
     reg [50:0] dutq [0:NR-1][$];
+    // individually valid rows (fail-closed criterion for fault runs): every reference-root row of the current phase
+    // that is not an error row, has pos <= np, an address < 2^19 and lies within its root's quota, as the VM write
+    // {data, addr19} the capture would make for it
+    reg [50:0] allq [0:NR-1][$];
+    integer acnt [0:NR-1];
+    integer ka;
+    always @(posedge ck) begin
+        for (ka = 0; ka < NR; ka = ka + 1) begin
+            if (p_v) acnt[ka] = 0;
+            else if (rr_v[ka]) begin : arow
+                reg [15:0] arow_r; reg [2:0] apos; reg [33:0] aad; reg [31:0] adat;
+                arow_r = rr_row[16*ka +: 16]; apos = rr_pos[3*ka +: 3];
+                aad = {4'b0, p_ob} + {18'b0, arow_r} + ({31'b0, apos} * {4'b0, p_ops});
+                adat = (p_fmt == 1 || (p_fmt == 0 && (arow_r < p_rs ? p_lo : p_hi))) ? rr_fp[32*ka +: 32] : {rr_bf[16*ka +: 16], 16'b0};
+                if (!rr_e[ka] && apos <= p_np && aad < (34'd1 << 19) && acnt[ka] < quota[19*ka +: 19]) allq[ka].push_back({adat, aad[18:0]});
+                acnt[ka] = acnt[ka] + 1;
+            end
+        end
+    end
+    initial for (ka = 0; ka < NR; ka = ka + 1) acnt[ka] = 0;
     integer k;
     always @(posedge ck) for (k = 0; k < NR; k = k + 1) if (rv_valid[k]) refq[k].push_back({rv_data[32*k +: 32], rv_addr[30*k +: 19]});
     always @(posedge ckv) for (k = 0; k < NR; k = k + 1) begin
@@ -142,7 +162,9 @@ module tb_s81ph_gather_capture;
             // ORDERED (default): every root's write sequence equal.  +UNORD (pipelined root, ot_s81ph_ret_root_p):
             // every root's writes equal as a multiset (rows of one root may complete in another order: VM state is
             // the same, addresses within a phase are distinct); counts of roots whose order differs are reported.
-            // Fault runs (ref_fault): fail closed = the DUT faults too and makes no write the reference does not make.
+            // Fault runs (ref_fault): fail closed = the DUT faults too and every DUT write is the write of an individually
+            // valid row of the phase (allq; the faulted phase is void: rd64 stops 1 cycle after the bad row, the pipelined
+            // capture 6 cycles after).
             integer bad, tot, tr, td, reord, extra, j, hit;
             reg unord;
             unord = $test$plusargs("UNORD");
@@ -151,8 +173,8 @@ module tb_s81ph_gather_capture;
                 tr = refq[k].size(); td = dutq[k].size(); tot = tot + tr;
                 if (ref_fault && unord) begin
                     for (rr = 0; rr < td; rr = rr + 1) begin
-                        hit = 0; for (j = 0; j < tr; j = j + 1) if (refq[k][j] == dutq[k][rr]) hit = 1;
-                        if (!hit) begin extra = extra + 1; bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: dut write %h not made by ref", k, dutq[k][rr]); end
+                        hit = 0; for (j = 0; j < allq[k].size(); j = j + 1) if (allq[k][j] == dutq[k][rr]) hit = 1;
+                        if (!hit) begin extra = extra + 1; bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: dut write %h is not an individually valid row", k, dutq[k][rr]); end
                     end
                 end else if (tr != td) begin bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: ref %0d writes, dut %0d", k, tr, td); end
                 else begin
