@@ -15,13 +15,15 @@
 //   E(t+2) SRAM samples its registered inputs
 //   E(t+3) bank-local protected capture (assembled 288-bit SECDED code, no enable)
 //   E(t+4) coded 5:1 bank mux register (DMR one-hot select)
-//   E(t+5) coded transport register + registered UE/corrected flags
-//   E(t+6) W6 decode, virtual-bank steer, fault gate -> output flops at pins
-// Protection: payload stays SECDED-coded until the output flop; the pipeline
-// tag word is the original single SECDED control word (correcting); every new
-// derived select/request register is duplicated and compared. Detected faults
-// set a duplicated sticky fault one edge later; a response whose own code is
-// uncorrectable, or any response after a detection, is never delivered valid.
+//   E(t+5) coded transport register + registered syndrome + UE/corrected flags
+//   E(t+6) W6 correction, virtual-bank steer, fault gate -> output flops at pins
+// Protection: payload stays SECDED-coded until the output stage (decode split
+// at the syndrome register); pipeline tags, visible bit, visible metadata and
+// every derived select/request register are duplicated in kept shadow modules
+// and compared (fail-closed: an upset faults instead of being corrected).
+// Detected faults set a duplicated sticky fault one edge later; a response
+// whose own code is uncorrectable, or any response after a detection, is never
+// delivered valid; a receipt whose metadata copies disagree is never visible.
 // Difference against the original only under a fault: inhibition of NEW
 // rd_r/wr_r acceptance follows detection by one edge (fail-closed).
 // Duplicate ("b") copies live in their own kept hierarchy so synthesis cannot
@@ -132,6 +134,30 @@ module ot_qwen_hbm_code_pair_margin #(
   import ot_hbm_r14_pkg::*;
   import ot_gpu_w6_secded_pkg::*;
   localparam integer BANKS=5;
+  // decode64 split at its syndrome: {overall, syndrome[6:0]} then correction.
+  // w6_correct(code, w6_syndrome(code)) == decode64(code)[63:0] for every code.
+  function automatic [7:0] w6_syndrome(input [71:0] code);
+    logic [6:0] syndrome; integer p,k;
+    begin
+      syndrome='0;
+      for (k=0;k<7;k=k+1)
+        for (p=1;p<=71;p=p+1)
+          if ((p & (1<<k)) != 0) syndrome[k]=syndrome[k]^code[p-1];
+      w6_syndrome={^code, syndrome};
+    end
+  endfunction
+  function automatic [63:0] w6_correct(input [71:0] code, input [7:0] syn);
+    logic [71:0] c; integer p,j;
+    begin
+      c=code;
+      if (syn[6:0]!=0) begin
+        if (syn[7] && syn[6:0]<=71) c[syn[6:0]-1]=~c[syn[6:0]-1];
+      end
+      j=0; w6_correct='0;
+      for (p=1;p<=71;p=p+1)
+        if ((p & (p-1)) != 0) begin w6_correct[j]=c[p-1]; j=j+1; end
+    end
+  endfunction
   generate if (!ENABLE || ROWS>BANKS*1024) begin : off
     assign wr_r=0; assign visible_v=0; assign visible_id='0;
     assign visible_tag=0; assign visible_beat=0;
@@ -139,7 +165,10 @@ module ot_qwen_hbm_code_pair_margin #(
     assign rd_r=0; assign rsp_v=0; assign rom_rd=0;
     assign rd_corrected=0; assign rd_uncorrectable=0; assign fault=0;
   end else begin : on
-    // Pipeline tag word (single SECDED word, as the original control word).
+    // Pipeline tags and visible bit: plain registers plus a kept duplicate.
+    // (A SECDED word costs a decode64+encode64 in the one-cycle loop, measured
+    // -543 ps pre-placement at 770 ps; duplicate-and-compare keeps the loop
+    // to plain logic and fails closed on any upset.)
     typedef struct packed {
       logic visible;
       logic [4:0][1:0] v;      // per stage, per port valid
@@ -150,22 +179,20 @@ module ot_qwen_hbm_code_pair_margin #(
       identity_t id; logic [11:0] tag; logic [4:0] beat;
       logic [12:0] row; logic [11:0] column;
     } metadata_t;
-    reg [71:0] control_code;
-    reg [287:0] metadata_code;
-    wire [65:0] cd=decode64(control_code);
+    reg [$bits(control_t)-1:0] ctl_a;
+    wire [$bits(control_t)-1:0] ctl_b;
     control_t c, n;
-    assign c=cd[$bits(control_t)-1:0];
-    wire control_bad=cd[65] || (|cd[63:$bits(control_t)]);
-    wire [255:0] metadata_raw;
-    wire [3:0] metadata_ue;
-    for(genvar k=0;k<4;k=k+1) begin : md
-      wire [65:0] d=decode64(metadata_code[k*72+:72]);
-      assign metadata_raw[k*64+:64]=d[63:0];
-      assign metadata_ue[k]=d[65];
-    end
+    assign c=ctl_a;
+    wire control_bad=(ctl_a!=ctl_b);
+    // Visible receipt metadata: plain register drives the pins directly (the
+    // original decoded SECDED to the pins, -439 ps pre-placement); the kept
+    // duplicate must agree in the same cycle or visible_v stays low.
+    reg [$bits(metadata_t)-1:0] meta_a;
+    wire [$bits(metadata_t)-1:0] meta_b, meta_next;
     metadata_t m;
-    assign m=metadata_raw[$bits(metadata_t)-1:0];
-    wire metadata_bad=c.visible && ((|metadata_ue) || (|metadata_raw[255:$bits(metadata_t)]));
+    assign m=meta_a;
+    wire metadata_same=(meta_a==meta_b);
+    wire metadata_bad=!metadata_same;
     // Duplicated sticky fault: every use sees the OR of both copies.
     reg fq_a; wire fq_b;
     assign fault=fq_a || fq_b;
@@ -174,7 +201,7 @@ module ot_qwen_hbm_code_pair_margin #(
     wire format_ok=!wr_kind && column_ok && (wr_row<ROWS);
     assign wr_r=wr_span_bound && format_ok && !fault && (!c.visible || visible_r);
     wire write_fire=wr_v && wr_r;
-    assign visible_v=c.visible && !fault;
+    assign visible_v=c.visible && !fault && metadata_same;
     assign visible_id=m.id; assign visible_tag=m.tag; assign visible_beat=m.beat;
     assign visible_row=m.row; assign visible_column=m.column;
     wire [1:0] read_fire, request_bad;
@@ -241,6 +268,7 @@ module ot_qwen_hbm_code_pair_margin #(
     reg [1:0] vld5_a, unc5, corr5;
     wire [1:0] vld5_b;
     reg [287:0] sel_code [0:1], sel_code2 [0:1];
+    reg [31:0] syn5 [0:1];        // registered W6 syndrome+overall parity per 72-bit word
     reg [2659:0] rom_rd_q;
     reg [1:0] rsp_v_q, corr_q, unc_q;
     wire [1:0] sel_err;
@@ -256,9 +284,10 @@ module ot_qwen_hbm_code_pair_margin #(
         wire [65:0] d=decode64(sel_code[p][k*72+:72]);
         assign ue_w[k]=d[65]; assign co_w[k]=d[64];
       end
+      wire [31:0] syn_now;
       for(genvar k=0;k<4;k=k+1) begin : dec
-        wire [65:0] d=decode64(sel_code2[p][k*72+:72]);
-        assign out_data[p][k*64+:64]=d[63:0];
+        assign syn_now[k*8+:8]=w6_syndrome(sel_code[p][k*72+:72]);
+        assign out_data[p][k*64+:64]=w6_correct(sel_code2[p][k*72+:72],syn5[p][k*8+:8]);
       end
       for(genvar b=0;b<BANKS;b=b+1) begin : sel
         assign msel_next[p][b]=c.v[2][p] && c.pb[2][p*3+:3]==3'(b);   // E(t+3)
@@ -276,6 +305,7 @@ module ot_qwen_hbm_code_pair_margin #(
       always @(posedge clk) begin
         sel_code[p]<=mux_tree;        // E(t+4)
         sel_code2[p]<=sel_code[p];    // E(t+5)
+        syn5[p]<=syn_now;             // E(t+5)
       end
       always @(posedge clk or negedge por_n)
         if(!por_n) begin
@@ -319,22 +349,19 @@ module ot_qwen_hbm_code_pair_margin #(
       if(visible_v && visible_r) n.visible=0;
       if(write_fire) n.visible=1;
     end
-    wire detect=control_bad || metadata_bad || (|request_bad) || format_bad ||
+    assign meta_next=write_fire ? {wr_owned.id,wr_owned.physical_tag,wr_owned.beat,wr_row,wr_column} : meta_a;
+    ot_qwen_hbm_code_shadow_r #(.W($bits(control_t))) u_ctl_b(.clk(clk),.por_n(por_n),.d(n),.q(ctl_b));
+    ot_qwen_hbm_code_shadow_r #(.W($bits(metadata_t))) u_meta_b(.clk(clk),.por_n(por_n),
+      .d(write_fire ? {wr_owned.id,wr_owned.physical_tag,wr_owned.beat,wr_row,wr_column} : meta_b),.q(meta_b));
+    wire detect=control_bad || (c.visible && metadata_bad) || (|request_bad) || format_bad ||
                 (|bank_err) || (|sel_err) || (|unc5) || (fq_a!=fq_b);
     ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || detect),.q(fq_b));
     always @(posedge clk or negedge por_n) begin
-      if(!por_n) begin control_code<=0; metadata_code<=0; fq_a<=0; end
+      if(!por_n) begin ctl_a<=0; meta_a<=0; fq_a<=0; end
       else begin
         fq_a<=fq_a || detect;
-        if(!control_bad) begin
-          control_code<=encode64(64'(n));
-          if(write_fire) begin : receipt
-            metadata_t next_metadata;
-            next_metadata={wr_owned.id,wr_owned.physical_tag,wr_owned.beat,wr_row,wr_column};
-            for(integer k=0;k<4;k=k+1)
-              metadata_code[k*72+:72]<=encode64(64'(256'(next_metadata)>>(k*64)));
-          end
-        end
+        ctl_a<=n;
+        meta_a<=meta_next;
       end
     end
   end endgenerate

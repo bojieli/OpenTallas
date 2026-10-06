@@ -141,28 +141,37 @@ module tb_code_pair_margin;
     // Phase 3: identical single-bit SRAM corruption in both DUTs, then reads.
     begin : single_bit
       reg [255:0] a;
-      for(integer j=0;j<6;j=j+1) begin
+      for(integer j=0;j<24;j=j+1) begin
         integer col, b, row, bit_i;
-        a=rnd256(); col=j%2; b=j%5; row=b*1024+7; bit_i=(j*41)%256;
+        a=rnd256(); col=j%2; b=j%5; row=b*1024+7; bit_i=(j*41+(j/6)*7)%256;
         write_row(row,col,a); idle(8);
         case(col*5+b)
           0: begin dut_o.u_leaf.on.column[0].bank[0].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
                    dut_m.on.column[0].bank[0].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
-          6: begin dut_o.u_leaf.on.column[1].bank[1].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
-                   dut_m.on.column[1].bank[1].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          1: begin dut_o.u_leaf.on.column[0].bank[1].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[0].bank[1].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
           2: begin dut_o.u_leaf.on.column[0].bank[2].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
                    dut_m.on.column[0].bank[2].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
-          8: begin dut_o.u_leaf.on.column[1].bank[3].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
-                   dut_m.on.column[1].bank[3].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          3: begin dut_o.u_leaf.on.column[0].bank[3].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[0].bank[3].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
           4: begin dut_o.u_leaf.on.column[0].bank[4].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
                    dut_m.on.column[0].bank[4].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
-          default: begin dut_o.u_leaf.on.column[1].bank[0].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+          5: begin dut_o.u_leaf.on.column[1].bank[0].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
                    dut_m.on.column[1].bank[0].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          6: begin dut_o.u_leaf.on.column[1].bank[1].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[1].bank[1].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          7: begin dut_o.u_leaf.on.column[1].bank[2].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[1].bank[2].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          8: begin dut_o.u_leaf.on.column[1].bank[3].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[1].bank[3].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          9: begin dut_o.u_leaf.on.column[1].bank[4].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
+                   dut_m.on.column[1].bank[4].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
+          default: $fatal(1,"bad injection target");
         endcase
         read_one(col,row,j%5); idle(LAT_DELTA+4);
       end
     end
-    if(corrected_seen<6) $fatal(1,"single-bit corrections not observed (%0d)",corrected_seen);
+    if(corrected_seen<24) $fatal(1,"single-bit corrections not observed (%0d)",corrected_seen);
     if(valid_rsp<1000) $fatal(1,"too few valid responses compared (%0d)",valid_rsp);
     // Phase 4 (optional negatives; fault is sticky, so each is its own run).
     if(neg_ue || neg_dmr) begin

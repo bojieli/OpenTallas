@@ -9,25 +9,34 @@
   "module": "ot_qwen_hbm_code_pair_margin (separate default-off top; original files byte-identical)",
   "stages": "E(t) pin request regs (DMR) -> E(t+1) kept per-bank request/write regs (keep_hierarchy) -> E(t+2) SRAM -> E(t+3) enable-free bank-local coded capture -> E(t+4) coded 5:1 mux (DMR one-hot) -> E(t+5) coded transport + registered UE/corrected -> E(t+6) decode/steer/gate into output flops",
   "fault": "single SECDED tag word as original; duplicated sticky fault; acceptance inhibited one edge after detection; never delivers an uncorrectable or post-detection response valid",
-  "protection_netlist": "duplicate copies are instances of kept shadow modules (ot_qwen_hbm_code_shadow_r/_n); route synthesises with SYNTH_HIERARCHICAL=1 so the copies are not merged"
+  "protection_netlist": "duplicate copies are instances of kept shadow modules (ot_qwen_hbm_code_shadow_r/_n); route synthesises with SYNTH_HIERARCHICAL=1 so the copies are not merged",
+  "revision2": "control tags/visible bit/metadata as duplicated plain registers; W6 decode split at a registered syndrome; enable-free capture"
  },
  "price": {
   "status": "PRICED_BEFORE_ROUTE",
+  "revision": 2,
   "default_enabled": false,
   "added_read_edges": 5,
   "added_write_edges_exposed": 0,
   "added_write_edges_internal": 2,
   "II": 1,
   "backpressure": false,
-  "added_ff": 7700,
+  "added_ff": 7990,
   "added_ff_breakdown": {
    "central_request": 374,
    "per_bank_kept": 3530,
    "mux_transport_output": 3868,
-   "control": -72
+   "syndrome": 64,
+   "duplicated_state_vs_secded": 154
   },
-  "added_decode64_instances": 7,
-  "ff_area_um2_proxy": 2245.3,
+  "codecs": {
+   "payload_encode64": 4,
+   "payload_syndrome_for_flags_decode64": 8,
+   "payload_syndrome_split": 8,
+   "payload_correction": 8,
+   "control_and_metadata_secded": "replaced by duplicate-and-compare (fail-closed)"
+  },
+  "ff_area_um2_proxy": 2329.9,
   "headline_cost_fraction": 0.00032707529273238696,
   "headline_cost_percent": 0.0327,
   "pre_approved_limit_percent": 2.0,
@@ -35,25 +44,47 @@
   "signoff_period_ps": 833.333,
   "accept_ss_ps": 40,
   "accept_ff_ps": 15,
-  "fault_semantics": "fault-free cycle-exact (+5 edges on responses); new acceptance inhibited one edge after a detection; uncorrectable or post-detection responses never delivered valid"
+  "prelayout_probe_r0": "SECDED control loop -543 ps, metadata decode->visible pins -439 ps, decode->rom_rd flops -402 ps at 770 ps (EPYC1 probe_r0, floorplan stage)",
+  "fault_semantics": "fault-free cycle-exact (+5 edges on responses); upsets of tags/metadata fail closed (no silent correction); new acceptance inhibited one edge after a detection; uncorrectable or post-detection responses never delivered valid"
  },
  "bench": {
   "tool": "Verilator 5.050 (EPYC1)",
   "runner": "tools/hbm_payload/run_code_pair_margin.sh",
-  "exact": "seeds 1,2,3 (+4,5 under negatives): margin vs unchanged context, same-cycle rd_r/wr_r/visible_* identical, rom_rd/rsp_v/rd_corrected/rd_uncorrectable == original delayed 5 edges; ~6,292 compared cycles and ~5,300 valid responses per seed; 6 single-bit SRAM corruptions corrected identically; default-off top drives nothing",
+  "exact": "seeds 1,2,3 (+4,5 under negatives): ~6,670 compared cycles and ~5,350 valid responses per seed, rom_rd/rsp_v/flags == original delayed 5 edges, handshakes same-cycle; 24 single-bit SRAM corruptions over all 10 banks corrected identically; default-off top drives nothing",
   "negatives_pass": "+NEG_UE (double-bit SRAM error): fault raised, response never valid, rd_uncorrectable reported, no acceptance after fault; +NEG_DMR (one request copy upset): fault raised, response never valid",
   "mutants_fail": "CODE_PAIR_MARGIN_MUTANT_TAG_SKEW: delayed response mismatch at cycle 168 (FAIL as required); CODE_PAIR_MARGIN_MUTANT_NO_UE_GATE: corrupted response delivered valid (FAIL as required)",
   "original_banklocal_bench": "PASS_CODE_PAYLOAD_PAIR_BANKLOCAL checks=79 (unchanged leaf)",
   "logs": "results/rtl/qwen_code_pair_margin_20261006/bench/"
  },
  "sources": {
-  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "eebb827f43dd16e283df4fbea8547662a950967e6a17fa6fe2774715254e49c5",
-  "rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv": "fa441652f7112b5095dc342682cc04c72ea0aeab208dad88885e76d223c9172c",
+  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "c4ba2ec5042224872bd7c81981409408f914dcf41abbe71495fb0c35bbc4deee",
+  "rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv": "382f2ec9bfabcf7497b2c9d2ae5d400d745e1dc2863cfedb21cca90d8deaa634",
   "tools/hbm_payload/run_code_pair_margin.sh": "9f73c25305301825990fda9d8b2f661a44d27bda70b415fa2b4541fc2de46f68",
   "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
   "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
   "physical/qwen_code_pair/ot_qwen_hbm_code_pair_context.sv": "633ae741c0d32b80190d8f2ca9979da144977d3afbd8cd57035aec4ab39b52ae"
  },
  "adopted": false,
- "physical": "one route pending at 770 ps, sign-off 833.333 ps (SS >= +40, FF >= +15, DRC 0)"
+ "physical": "one route pending at 770 ps, sign-off 833.333 ps (SS >= +40, FF >= +15, DRC 0)",
+ "probe_r0": {
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair/probe_r0",
+  "scope": "revision 1 (SECDED control word, decoded metadata pins, unsplit decode) synthesised and floorplanned at 770 ps, stopped at global placement (pre-layout fail; not a route verdict)",
+  "hierarchy_kept": true,
+  "capture_fences": "2560 flops / 10 regions bound by connectivity",
+  "failing_classes": [
+   "   -543.1    67 on.control_code[*]$_DFFE_PN0N_/QN -> on.control_code[*]$_DFFE_PN0N_/D",
+   "   -438.8   192 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_id[*]",
+   "   -404.0    13 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_row[*]",
+   "   -401.6  2560 on.sel_code2[*][*]$_DFF_P_/QN -> rom_rd[*]$_DFF_PN0_/D",
+   "   -375.8     5 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_beat[*]",
+   "   -375.8    12 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_column[*]",
+   "   -375.8    12 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_tag[*]",
+   "   -362.9    10 on.control_code[*]$_DFFE_PN0N_/QN -> on.msel_a[*]$_DFF_PN0_/D",
+   "   -362.9    22 on.control_code[*]$_DFFE_PN0N_/QN -> on.stage[*].u_sel_b/q[*]$_DFF_PN0_/D",
+   "   -361.6   265 on.control_code[*]$_DFFE_PN0N_/QN -> on.metadata_code[*]$_DFFE_PN0P_/D",
+   "   -334.9    10 on.control_code[*]$_DFFE_PN0N_/QN -> on.osel_a[*]$_DFF_PN0_/D",
+   "   -259.5     2 on.control_code[*]$_DFFE_PN0N_/QN -> on.unc5[*]$_DFF_PN0_/D"
+  ]
+ }
 }
