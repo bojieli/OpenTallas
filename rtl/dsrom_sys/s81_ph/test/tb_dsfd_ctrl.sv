@@ -78,7 +78,7 @@ module tb_dsfd_ctrl;
     reg live_seen;
     integer c0;
     longint t_iss [0:NPC-1][0:NMAX-1];
-    longint lat_q_sum, lat_q_max, lat_r_sum, lat_r_max, lat_q_n, lat_r_n;
+    longint lat_q_sum, lat_q_max, lat_r_sum, lat_r_max, lat_q_n, lat_r_n, lat_q_min, lat_r_min;
     always @(posedge cks) begin
         for (c0 = 0; c0 < NPC; c0 = c0 + 1) begin
             if (rk[c0]) crd[c0] = crd[c0] + 1;
@@ -111,6 +111,7 @@ module tb_dsfd_ctrl;
                 end
                 lat_q_sum = lat_q_sum + ($time - t_iss[c1][acc_dut[c1]]); lat_q_n = lat_q_n + 1;
                 if ($time - t_iss[c1][acc_dut[c1]] > lat_q_max) lat_q_max = $time - t_iss[c1][acc_dut[c1]];
+                if ($time - t_iss[c1][acc_dut[c1]] < lat_q_min) lat_q_min = $time - t_iss[c1][acc_dut[c1]];
                 acc_dut[c1] = acc_dut[c1] + 1;
             end
             if (u_bus.kr_v[c1] && u_bus.kr_rdy[c1]) begin
@@ -139,6 +140,7 @@ module tb_dsfd_ctrl;
                 end
                 lat_r_sum = lat_r_sum + ($time - ht); lat_r_n = lat_r_n + 1;
                 if ($time - ht > lat_r_max) lat_r_max = $time - ht;
+                if ($time - ht < lat_r_min) lat_r_min = $time - ht;
                 dmap[{rd[8192 + c2*17 +: 17], rd[8736 + c2*4 +: 4]}] = rd[c2*256 +: 256];
                 rsp_dut[c2] = rsp_dut[c2] + 1;
             end
@@ -221,7 +223,7 @@ module tb_dsfd_ctrl;
         if (!$value$plusargs("n=%d", n_req)) n_req = 48;
         if (!$value$plusargs("p=%d", p_iss)) p_iss = 40;
         void'($urandom(seed));
-        errors = 0; lat_q_sum = 0; lat_q_max = 0; lat_r_sum = 0; lat_r_max = 0; lat_q_n = 0; lat_r_n = 0;
+        errors = 0; lat_q_sum = 0; lat_q_max = 0; lat_r_sum = 0; lat_r_max = 0; lat_q_n = 0; lat_r_n = 0; lat_q_min = 64'd1 << 40; lat_r_min = 64'd1 << 40;
         rq = 0; r_kv = 0; r_kwe = 0; r_kaddr = 0; r_klen = 0; r_ktag = 0; r_kwdata = 0; r_kwstrb = 0;
         clear();
         rst = 0; r_rst_n = 0; repeat (8) @(posedge ckh); rst = 1; r_rst_n = 1;
@@ -230,6 +232,8 @@ module tb_dsfd_ctrl;
         rst = 0; r_rst_n = 0; repeat (6) @(posedge ckh); clear(); rst = 1; r_rst_n = 1;
         p_iss = 100;
         run_phase(1);
+        $display("latency min (the crossing alone): request rq issue -> PHY accept %0.2f cks cycles; response PHY accept -> rd %0.2f cks cycles",
+                 (1.0 * lat_q_min) / CKS_PS, (1.0 * lat_r_min) / CKS_PS);
         $display("latency: request rq issue -> PHY accept mean %0.2f max %0.2f cks cycles; response PHY -> rd mean %0.2f max %0.2f cks cycles (cks %0d ps, ckh %0d ps)",
                  (1.0 * lat_q_sum / lat_q_n) / CKS_PS, (1.0 * lat_q_max) / CKS_PS, (1.0 * lat_r_sum / lat_r_n) / CKS_PS,
                  (1.0 * lat_r_max) / CKS_PS, CKS_PS, CKH_PS);
