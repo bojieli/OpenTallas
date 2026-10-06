@@ -170,5 +170,26 @@
    },
    "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
   }
+ },
+ "rtl_cycle_costs": {
+  "cmdproc_rdreg": {
+   "views": [
+    "hfd_cmdproc_s",
+    "hfd_cmdproc_n"
+   ],
+   "change": "ot_hfd_cmdproc20_m RDREG 1: the command-memory SRAM read word is registered (state S_RD between FETCH and EXEC)",
+   "cycles": "+1 per executed command (FETCH -> RD -> EXEC); launch/completion values unchanged",
+   "basis": "cpss3/cpsn3 SS -123/-106 ps on u_cmem b_rd_out -> decode (SRAM clk->Q 495 ps at SS); owner rule: stage every macro output",
+   "bench": "tb_cmdproc_rd_equiv.sv: 3 seeds x 300 tokens (656-982 launches) launch/completion hashes MATCH; mutant (cmd_q captured at EXEC) DIFF; lockstep RDREG 0 200,000 cycles 0 mismatches",
+   "recompose_note": "per token: (commands executed by each cmdproc per token) x 1 cycle at 1.2 GHz; a 200-command program costs 0.17 us"
+  },
+  "loader_crc_arith": {
+   "views": [
+    "hfd_loader"
+   ],
+   "cycles": "0",
+   "change": "CRC partials/state fold as constant GF(2) matrices (balanced XOR trees); wide counters as (* keep *) Kogge-Stone adds with rem_q / vin / wa_q / ra_q registers",
+   "bench": "tb_loader_m_equiv.sv 4 seeds x 85 descriptors 0 mismatches; mutants (2 matrix, verify address, store read address) 46-110 mismatches"
+  }
  }
 }
