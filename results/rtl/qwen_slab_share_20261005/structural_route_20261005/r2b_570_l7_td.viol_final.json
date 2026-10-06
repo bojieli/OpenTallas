@@ -1,0 +1,88 @@
+{
+ "ss": {
+  "endpoints": 62,
+  "groups": [
+   {
+    "cls": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 31,
+    "worst_ps": -113.8
+   },
+   {
+    "cls": "_*_/D",
+    "n": 11,
+    "worst_ps": -98.5
+   },
+   {
+    "cls": "d_gots[*]$_DFF_P_/D",
+    "n": 9,
+    "worst_ps": -48.3
+   },
+   {
+    "cls": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 10,
+    "worst_ps": -41.9
+   },
+   {
+    "cls": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -10.4
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_mul[*].g_in.a_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 31,
+    "worst_ps": -113.8,
+    "example": "g_mul[0].g_in.a_q[29]$_DFF_P_/QN -> g_mul[0].u_mul.u_c1.g_r.r[58]$_DFF_PN0_/D"
+   },
+   {
+    "start": "t_ots[*]$_DFF_P_/QN",
+    "end": "d_gots[*]$_DFF_P_/D",
+    "n": 9,
+    "worst_ps": -48.3,
+    "example": "t_ots[13]$_DFF_P_/QN -> d_gots[22]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 6,
+    "worst_ps": -41.9,
+    "example": "g_col[3].g_bank[0].cap4[145]$_DFF_P_/QN -> g_col[3].m5[145]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].sel5c[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -23.4,
+    "example": "g_col[3].g_bank[1].sel5c[0]$_DFF_P_/QN -> g_col[3].m5[60]$_DFF_P_/D"
+   },
+   {
+    "start": "res_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -10.4,
+    "example": "res_q[174]$_DFF_P_/QN -> g_mul[5].g_in.a_q[14]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 1,
+  "groups": [
+   {
+    "cls": "g_mul[*].u_mul.s2_mr[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.6
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/QN",
+    "end": "g_mul[*].u_mul.s2_mr[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.6,
+    "example": "g_mul[0].u_mul.u_c2.g_r.r[78]$_DFF_PN0_/QN -> g_mul[0].u_mul.s2_mr[30]$_DFF_P_/D"
+   }
+  ]
+ }
+}
