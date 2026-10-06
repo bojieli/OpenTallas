@@ -1,0 +1,415 @@
+{
+  "corner": "SS",
+  "source_mapped_sha256": "fc0035eee0e4a078ffd141beb244c44d7d8a278466876aec9f64f7a313b41c24",
+  "completed_SS_report": true,
+  "FF_still_running": true,
+  "source_report_sha256": "d966b92c39d96e1bec2857d817befc3a702ea773efdfe636cde9a9e566cefd9f",
+  "source_report_remote": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-mapped-STA-r2/ss.log",
+  "reported_setup_recovery_paths": 23182,
+  "classes": {
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.g_sm_caller[*].bst[*]/SETN": {
+      "paths": 32,
+      "worst_slack_ps": -133083.47,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.g_sm_caller[0].bst[0]$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_cap[*].g_on.u_idle/q/SETN": {
+      "paths": 16,
+      "worst_slack_ps": -133083.47,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_cap[0].g_on.u_idle/q$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_txs[*].g_on.u_sw/q[*]/SETN": {
+      "paths": 16,
+      "worst_slack_ps": -133083.47,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_txs[0].g_on.u_sw/q[0]$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]/SETN": {
+      "paths": 16,
+      "worst_slack_ps": -133083.47,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[0].g_on.u_sel/q[0]$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[*].g_on.u_w/q[*]/SETN": {
+      "paths": 16,
+      "worst_slack_ps": -133083.47,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[0].g_on.u_w/q[0]$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.g_sm_caller[*].bst[*]/RESETN": {
+      "paths": 64,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.g_sm_caller[0].bst[1]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.flt_sm/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.flt_sm$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.flt_sync[*]/RESETN": {
+      "paths": 2,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.flt_sync[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_rxs[*].g_on.a_q[*]/RESETN": {
+      "paths": 4096,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_rxs[0].g_on.a_q[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_rxs[*].g_on.g_lane[*].g_onehot.g_byte[*].u_sel/q[*]/RESETN": {
+      "paths": 8192,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_rxs[0].g_on.g_lane[0].g_onehot.g_byte[0].u_sel/q[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_rxs[*].g_on.u_cq/q[*]/RESETN": {
+      "paths": 32,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_rxs[0].g_on.u_cq/q[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_rxs[*].g_on.u_d/q[*]/RESETN": {
+      "paths": 8192,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_rxs[0].g_on.u_d/q[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q/RESETN": {
+      "paths": 512,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_txs[0].g_on.g_mask_la.g_word[0].g_byte[0].u_mask_bit/q$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_txs[*].g_on.u_sw/q[*]/RESETN": {
+      "paths": 112,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_txs[0].g_on.u_sw/q[1]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.g_xreg.xv/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_xreg.xv$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.mode_q/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.mode_q$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.nexp[*]/RESETN": {
+      "paths": 9,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.nexp[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.npop[*]/RESETN": {
+      "paths": 9,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.npop[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.nrec[*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.nrec[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.off_tab[*][*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.off_tab[1][0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.qa_bad/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.qa_bad$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.qa_v/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.qa_v$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.rcv[*]/RESETN": {
+      "paths": 9,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.rcv[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.seq[*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.seq[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.st[*]/RESETN": {
+      "paths": 2,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.st[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.sw[*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.sw[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]/RESETN": {
+      "paths": 240,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[0].g_on.u_sel/q[10]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rbin[*]/RESETN": {
+      "paths": 4,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rbin[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rgray[*]/RESETN": {
+      "paths": 5,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rgray[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray_s[*][*]/RESETN": {
+      "paths": 10,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray_s[0][0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[*].g_on.u_f/q[*]/RESETN": {
+      "paths": 48,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[0].g_on.u_f/q[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[*].g_on.u_w/q[*]/RESETN": {
+      "paths": 112,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[0].g_on.u_w/q[1]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.ovf/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.ovf$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rgray_s[*][*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rgray_s[0][0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[*]/RESETN": {
+      "paths": 4,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]/RESETN": {
+      "paths": 3,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_mux.u_impl.g_on.busy/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_mux.u_impl.g_on.busy$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_mux.u_impl.g_on.g_dsl[*].g_on.u_own/q[*]/RESETN": {
+      "paths": 320,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_mux.u_impl.g_on.g_dsl[0].g_on.u_own/q[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_mux.u_impl.g_on.own[*]/RESETN": {
+      "paths": 5,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_mux.u_impl.g_on.own[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_mux.u_impl.g_on.sent/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -109375.92,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_mux.u_impl.g_on.sent$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]/SETN": {
+      "paths": 16,
+      "worst_slack_ps": -420.95,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_sl[0].g_on.u_sel/q[0]$_DFF_PN1_/SETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.dv[*]/RESETN": {
+      "paths": 2,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.dv[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.flt_lk/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.flt_lk$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.ovf/RESETN": {
+      "paths": 1,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.ovf$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rgray_s[*][*]/RESETN": {
+      "paths": 10,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rgray_s[0][0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wbin[*]/RESETN": {
+      "paths": 4,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wbin[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray[*]/RESETN": {
+      "paths": 5,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray[0]$_DFFE_PN0P_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]/RESETN": {
+      "paths": 112,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_sl[0].g_on.u_sel/q[1]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rbin[*]/RESETN": {
+      "paths": 4,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rbin[0]$_DFFE_PN0N_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rgray[*]/RESETN": {
+      "paths": 3,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.rgray[0]$_DFFE_PN0N_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray_s[*][*]/RESETN": {
+      "paths": 8,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray_s[0][0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.uv[*]/RESETN": {
+      "paths": 2,
+      "worst_slack_ps": -201.09,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.uv[0]$_DFF_PN0_/RESETN"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_ep.g_on.dmask[*]/D": {
+      "paths": 128,
+      "worst_slack_ps": -124863.06,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.dmask[10]$_DFFE_PP_/D"
+    },
+    "g_on.u_rst.g_on.u_sm.rst_n/QN -> g_on.u_rst.g_on.u_sm.n[*]/D": {
+      "paths": 3,
+      "worst_slack_ps": -116917.16,
+      "example_startpoint": "g_on.u_rst.g_on.u_sm.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_rst.g_on.u_sm.n[2]$_DFFE_PN0P_/D"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_rst.g_on.u_x1.s[*]/D": {
+      "paths": 1,
+      "worst_slack_ps": -342.35,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_rst.g_on.u_x1.s[0]$_DFF_PN0_/D"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q/D": {
+      "paths": 512,
+      "worst_slack_ps": -70.98,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[4]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_txs[0].g_on.g_mask_la.g_word[7].g_byte[0].u_mask_bit/q$_DFF_PN0_/D"
+    },
+    "g_on.u_ep.g_on.st[*]/QN -> caller_done[*]": {
+      "paths": 23,
+      "worst_slack_ps": -44.42,
+      "example_startpoint": "g_on.u_ep.g_on.st[1]$_DFFE_PN0P_/QN",
+      "example_endpoint": "caller_done[22]"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[*].g_on.u_w/q[*]/D": {
+      "paths": 128,
+      "worst_slack_ps": -43.45,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[2]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.g_wrdup.g_ws[0].g_on.u_w/q[5]$_DFF_PN0_/D"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.sw[*]/D": {
+      "paths": 4,
+      "worst_slack_ps": -37.64,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[2]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.sw[4]$_DFFE_PN0P_/D"
+    },
+    "g_on.u_mux.u_impl.g_on.own[*]/QN -> caller_done[*]": {
+      "paths": 4,
+      "worst_slack_ps": -32.87,
+      "example_startpoint": "g_on.u_mux.u_impl.g_on.own[1]$_DFF_PN0_/QN",
+      "example_endpoint": "caller_done[25]"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[*]/D": {
+      "paths": 1,
+      "worst_slack_ps": -30.99,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[2]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[1]$_DFFE_PN0P_/D"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.g_txs[*].g_on.u_sw/q[*]/D": {
+      "paths": 80,
+      "worst_slack_ps": -13.64,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[4]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.g_txs[0].g_on.u_sw/q[7]$_DFF_PN0_/D"
+    },
+    "g_on.u_ep.g_on.nrec[*]/QN -> g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]/D": {
+      "paths": 1,
+      "worst_slack_ps": -11.1,
+      "example_startpoint": "g_on.u_ep.g_on.nrec[2]$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[1]$_DFFE_PN0P_/D"
+    },
+    "g_on.u_rst.g_on.u_link.rst_n/QN -> g_on.u_rst.g_on.u_link.n[*]/D": {
+      "paths": 3,
+      "worst_slack_ps": -438.89,
+      "example_startpoint": "g_on.u_rst.g_on.u_link.rst_n$_DFFE_PN0P_/QN",
+      "example_endpoint": "g_on.u_rst.g_on.u_link.n[2]$_DFFE_PN0P_/D"
+    }
+  },
+  "reported_worst_slack_ps": -133083.4749069254,
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "ideal_clocks": true,
+  "wire_RC": false,
+  "unbuffered_post_synthesis": true,
+  "SS_hold_no_failing_paths": true,
+  "routed_SS_FF_qualified": false,
+  "adopted": false,
+  "reported_path_class_count": 64,
+  "reported_reset_setup_recovery_paths": 22429,
+  "reported_other_setup_paths": 753,
+  "max_capacitance_reset_driver": {
+    "pin": "_1138268_/Y",
+    "limit_fF": 46.08,
+    "load_fF": 15613.12,
+    "reported_slack_fF": -15567.04,
+    "post_synthesis_unbuffered": true
+  }
+}

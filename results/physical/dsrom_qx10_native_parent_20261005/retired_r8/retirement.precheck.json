@@ -1,0 +1,23 @@
+{
+  "source_commit": "9da2e2a05dcf7ff718ec4a069f24822be0d21d8f",
+  "source_ref": "refs/preserve/noether-r8-owner-stop-20261006",
+  "independent_active_consumers": [],
+  "checkpoints": {
+    "1_2_yosys.v": {
+      "bytes": 38997134,
+      "sha256": "3b5b8fc95fb5b84b292f3a4bc598ce94baa050f29c7b228ee38bfb4640bd7a51"
+    },
+    "2_4_floorplan_pdn.odb": {
+      "bytes": 176748174,
+      "sha256": "89549f1d02a58150646919c65f62b8f42dd00fb3e9aff808efcffb5d102f52ba"
+    },
+    "3_4_place_resized.odb": {
+      "bytes": 285484004,
+      "sha256": "3d12d11e365a38cedcae2a312a959f9e9c61ae288f0b1710b7dfb6ead5df26da"
+    }
+  },
+  "owned_container": "270e4ecb1d94",
+  "controller": 765324,
+  "authorization": "Explicit ownerSTOP old qframe plus owner instruction retire obsolete R8; taller frame replaces old geometry",
+  "cause": "DPL0702 oldframe2615119 violations/274323 illegal cells; no continued-run consumer"
+}

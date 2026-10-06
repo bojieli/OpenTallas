@@ -10556,6 +10556,23 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             retained_context_cell_um2=29809.2, mux_bit_delta=0,
             extra_buffer_reset_CTS_area_um2=None, actual_floorplan_slot=None,
             actual_slot_fit=False),
+        physical_capacity_policy=dict(
+            objective='routable loaded SS/FF closure; do not minimise die area at the routing limit',
+            standard_cell_utilization_basis='placed standard-cell area / actually available standard-cell row area',
+            macro_footprint_basis='actual macro outlines and obstruction/halo union, accounted separately from standard cells',
+            channel_capacity_basis='actual reserved tracks after other claims, PG, vias and clock trunks',
+            CTS_reset_and_loaded_repair_area_um2=None,
+            current_macro_obstruction_and_row_area_um2=None,
+            current_reserved_channel_capacity=None,
+            positive_routing_clock_PG_and_repair_margin_required=True,
+            unknown_margin_is_not_free_capacity=True,
+            fit_only_at_limit_action='coordinate Turing larger slot or repartition before physical launch',
+            repartition_latency_price_required_before_RTL=True,
+            die_count_and_transport_latency_must_be_composed=True,
+            arbitrary_density_sweep_for_timing=False,
+            live_jobs_restart_for_settings=False,
+            peer_q_frames_or_generators_in_scope=False,
+            current_parent_geometry_qualified=False),
         characterization_floorplan=dict(die_bbox_um=[0,0,540,540],
             core_bbox_um=[2.16,2.16,538.84,538.84],
             core_area_um2=(538.84-2.16)**2,
@@ -11405,3 +11422,40 @@ def hbm_smh_macro_band_price(macros, cells=0):
         macro_clk_to_q='Original SS SRAM library retained; full SS setup/FF hold required',
         all_class_closure=False,parent_context_closed=False,adopted=False)
     return base
+
+
+def dsrom_wfc_canonical_enclosing_price():
+    """Wire current canonical finite L19 producers to the measured WFC/C8 slice.
+
+    This is source integration, not a VM macro/crossing qualification. Existing
+    producer and controller proofs are reused; no pipeline or arithmetic lever.
+    """
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    enclosing = dsrom_wfc_enclosing_stage_price()
+    producer = json.loads((root / 'results/uarch/dsrom_wfc_producers_20261005/model_v2.json').read_text())
+    mapped = json.loads((root / 'results/uarch/dsrom_wfc_producers_20261005/mapped_model.json').read_text())
+    return dict(schema='opentallas.wfc.canonical_enclosing.v1', MAXU=866,
+        SOURCE=0, layer=19, MACs_per_cycle=0, replicas=1,
+        enclosing=enclosing, producer=producer,
+        mapped_producer_body_um2=mapped['total_mapped_um2'],
+        control_plus_producer_mapped_and_budget_um2=enclosing['control_body_budget_um2']+mapped['total_mapped_um2'],
+        control_plus_producer_upper_um2=enclosing['control_body_budget_um2']+producer['geometry']['macro_body_um2']+producer['geometry']['logic_upper_um2'],
+        new_FF_bits=0, new_memory_ports=0, new_completion_authorities=0,
+        added_pipeline_edges=0, added_token_latency_ns=0,
+        memory_bytes_per_cycle=producer['memory'],
+        request_boundary_bits=83, result_boundary_bits=101,
+        cfg_descriptor_boundary_bits=82, prompt_request_bits=36, prompt_reply_bits=22,
+        control_track_demand=enclosing['control_track_demand'],
+        producer_reserved_tracks=producer['routing']['local_tracks_reserved'],
+        parent_shared_track_capacity_not_duplicated=True,
+        VM_mutable_bits=enclosing['VM_mutable_bits'], VM_physical_area_included=False,
+        completion_contract='L19 stage_handoff only; no SOURCE1 HEAD/token authority',
+        cfg_prompt_lifecycle='actual finite programming bank and synchronous protected prompt service; real boot/admission waits retained',
+        backend_receipts='actual command takes, identity-matched retirement/restore/drain and final source fences remain ports',
+        clocks='canonical cfg/prompt/whole producers and WFC/C8 capture use root clk; physical native VM 3:4 crossing remains required',
+        default_ENABLE=0, default_STRUCTURAL=0,
+        retained_full866_gate='d1a5fbefc', retained_enclosing_gate='0d27741b0',
+        retained_producer_gate='baed7ff2a',
+        P_and_R_ready=False, SS_FF_closed=False, adopted=False)
