@@ -31,7 +31,7 @@
   "--sdc-append",
   "physical/hbm_attn_registered_parent/parent.sdc",
   "--stages",
-  "synth,pnr",
+  "pnr",
   "--die-area",
   "0",
   "0",

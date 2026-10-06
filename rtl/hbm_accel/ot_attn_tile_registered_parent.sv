@@ -1,3 +1,20 @@
+// Retained instances prevent identical physical row/head banks being merged.
+(* keep_hierarchy="true" *)
+module ot_attn_parent_row_bank(input wire clk,input wire por_n,
+    input wire [1617:0] d,output reg [1617:0] q);
+    always @(posedge clk or negedge por_n)
+        if(!por_n) q<=0; else q<=d;
+endmodule
+
+(* keep_hierarchy="true" *)
+module ot_attn_parent_head_bank(input wire clk,input wire por_n,
+    input wire [1617:0] d,output reg [1617:0] q,output reg local_por_n);
+    always @(negedge clk or negedge por_n)
+        if(!por_n) local_por_n<=0;else local_por_n<=1;
+    always @(negedge clk or negedge local_por_n)
+        if(!local_por_n) q<=0;else q<=d;
+endmodule
+
 // Mandatory parent endpoint repair; canonical hardened head remains unchanged.
 // Model: hbm_attn_registered_parent_model; REGISTER_PARENT is off by default.
 module ot_attn_tile_registered_parent #(parameter REGISTER_PARENT=0) (
@@ -26,21 +43,17 @@ end else begin : registered_parent
         else launch <= packet;
     for (genvar r=0;r<4;r=r+1) begin : row
         // Keep the four physical row branches, even though beats are identical.
-        (* keep="true", dont_touch="true" *) reg [1617:0] row_launch;
-        always @(posedge clk or negedge por_release[1])
-            if (!por_release[1]) row_launch <= 0;
-            else row_launch <= launch;
+        wire [1617:0] row_launch;
+        (* keep="true",dont_touch="true",keep_hierarchy="true" *)
+        ot_attn_parent_row_bank u_row_launch (.clk(clk),.por_n(por_release[1]),
+            .d(launch),.q(row_launch));
         for (genvar c=0;c<4;c=c+1) begin : head
             localparam integer G=r*4+c;
-            (* keep="true", dont_touch="true" *) reg local_por_n;
-            always @(negedge clk or negedge por_release[1])
-                if (!por_release[1]) local_por_n <= 0;
-                else local_por_n <= 1;
-            // Opposite-edge launch creates a real half-cycle min-delay relation.
-            (* keep="true", dont_touch="true" *) reg [1617:0] macro_launch;
-            always @(negedge clk or negedge local_por_n)
-                if (!local_por_n) macro_launch <= 0;
-                else macro_launch <= row_launch;
+            wire local_por_n;
+            wire [1617:0] macro_launch;
+            (* keep="true",dont_touch="true",keep_hierarchy="true" *)
+            ot_attn_parent_head_bank u_macro_launch (.clk(clk),.por_n(por_release[1]),
+                .d(row_launch),.q(macro_launch),.local_por_n(local_por_n));
             wire lv,lmode,lw2v,v;
             wire [2:0] bank,operand_bank;
             wire [7:0] group_id;
