@@ -123,6 +123,7 @@ module tb_dsrom_qx_exact;
  ev_t dq [key_t][$];
  integer rqt [key_t][$];
  integer dqt [key_t][$];
+ integer ref_nan_rows = 0;   // reference row outputs with the error flag (a NaN code in a term): NaN coverage
  integer seq_matched = 0, seq_dropped = 0, rflt = 0, dflt = 0;
  // measured extra output delay per matched partial: dut cycle - ref cycle - L (cycles)
  integer dmax = -1000, dmin = 1000; longint dsum = 0; integer dhist [0:15];
@@ -193,6 +194,7 @@ module tb_dsrom_qx_exact;
  endtask
  always @(negedge clk) if (SEQ != 0) begin
    for (int m = 0; m < 2; m++) begin
+     if (av[m] && rf_rst_n && ae[m]) ref_nan_rows++;
      if (av[m] && rf_rst_n) seq_push(0, {1'(m), ar[16*m +: 16], asg[5*m +: 5], ap[3*m +: 3]}, {ad[32*m +: 32], ar[16*m +: 16], an[5*m +: 5], ae[m]});
      if (bv[m] && rst_n)    seq_push(1, {1'(m), br[16*m +: 16], bsg[5*m +: 5], bp[3*m +: 3]}, {bd[32*m +: 32], br[16*m +: 16], bn[5*m +: 5], be[m]});
    end
@@ -259,6 +261,9 @@ module tb_dsrom_qx_exact;
      end
    end
    xs_e0=10'd100+10'($urandom%50); xs_e1=10'd100+10'($urandom%50);
+   // +nan_sparse: x scales that keep the terms finite (the default 100..149 overflows about two terms in three, which
+   // sets the row error flag on every row and masks any single NaN source)
+   if (nan_sparse) begin xs_e0 = 10'(-200 + int'($urandom % 100)); xs_e1 = 10'(-200 + int'($urandom % 100)); end
  endtask
  // mode 0 sparse FP4 two sub-blocks (8-bit wrap), 1 all eight FP8 classes, 2 empty Q family, 3 random
  task automatic configure(input integer mode);
@@ -366,6 +371,7 @@ module tb_dsrom_qx_exact;
      seq_wait_quiet;
      if (seq_pending() != 0) $fatal(1, "sequence: %0d events still pending at the end", seq_pending());
      if (rflt != dflt) $fatal(1, "fault differs at the end (ref %0d dut %0d)", rflt, dflt);
+     $display("NAN_ROWS ref=%0d", ref_nan_rows);
      $display("SEQ matched=%0d dropped_at_reset=%0d extra_delay_cycles min=%0d max=%0d mean_x1000=%0d", seq_matched, seq_dropped,
               dmin, dmax, seq_matched ? (dsum * 1000) / seq_matched : 0);
      $write("SEQ extra_delay_hist"); for (int i = 0; i < 16; i++) $write(" %0d", dhist[i]); $write("\n");
