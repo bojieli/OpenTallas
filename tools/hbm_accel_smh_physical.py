@@ -334,7 +334,7 @@ def cmd_block(a):
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
-    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M6", "HOLD_SLACK_MARGIN": a.hold_margin,
+    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": a.max_layer, "HOLD_SLACK_MARGIN": a.hold_margin,
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_block.tcl", "MACRO_PLACE_HALO": "3 3"}
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
@@ -452,7 +452,7 @@ def cmd_top(a):
     sdc += (ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_sm_v_die_budget.sdc").read_text().splitlines()
     (work / "constraint.sdc").write_text("\n".join(sdc) + "\n")
     views = [f"{VIEWS}/{n}" for n in PIECES]
-    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M9", "HOLD_SLACK_MARGIN": "20",
+    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M4", "MAX_ROUTING_LAYER": "M9", "HOLD_SLACK_MARGIN": "20",
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_top.tcl", "MACRO_PLACE_HALO": "0.5 0.5",
              "CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -macro_clustering_size 1 "
                          "-macro_clustering_max_diameter 20",
@@ -483,6 +483,8 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--geom", default=None)
     b.add_argument("--pd", default="0.60")
+    b.add_argument("--max-layer", default="M7", help="top signal layer inside a hardened piece (M2-M7 default: the "
+                   "bundle pin fields need the extra tracks; the parent keeps M7/M8 for the abutment hops)")
     b.add_argument("--lat", default="720", help="the block's own measured clock insertion (ps): the parent balances "
                    "internal flops, so a neighbour's flop sits at the same latency relative to this block's pin")
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
