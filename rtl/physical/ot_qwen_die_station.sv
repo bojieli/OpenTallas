@@ -19,9 +19,9 @@ module ot_qwen_die_station #(
     output wire          a_r,
     output wire [DW-1:0] b_d,
     input  wire          b_r,
-    output wire [DW-1:0] t_d,
+    output wire [((TAP != 0) ? DW : 1)-1:0] t_d,     // 1 bit (tied 0) when TAP = 0
     input  wire          t_r,
-    output wire [DW-1:0] c_d,
+    output wire [((SPLIT != 0) ? DW : 1)-1:0] c_d,   // 1 bit (tied 0) when SPLIT = 0
     input  wire          c_r
 );
     (* keep *) reg [DW-1:0] b_q;
@@ -32,14 +32,14 @@ module ot_qwen_die_station #(
         always @(posedge clk) t_q <= a_d;
         assign t_d = t_q;
     end else begin : g_notap
-        assign t_d = {DW{1'b0}};
+        assign t_d = 1'b0;
     end endgenerate
     generate if (SPLIT != 0) begin : g_split
         (* keep *) reg [DW-1:0] c_q;
         always @(posedge clk) c_q <= a_d;
         assign c_d = c_q;
     end else begin : g_nosplit
-        assign c_d = {DW{1'b0}};
+        assign c_d = 1'b0;
     end endgenerate
     // ready inputs captured at their pins, the AND registered at the output pin
     reg br_q, tr_q, cr_q, ar_q;

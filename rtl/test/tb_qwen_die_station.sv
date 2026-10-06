@@ -6,7 +6,7 @@ module tb_qwen_die_station;
     localparam integer DW = 508;
     reg clk = 0, rst_n = 0, b_r = 0, t_r = 0, c_r = 0;
     reg [DW-1:0] a_d = 0;
-    wire [DW-1:0] b_d, t_d, c_d; wire a_r;
+    wire [DW-1:0] b_d, t_d; wire [(SPLIT ? DW : 1)-1:0] c_d; wire a_r;
     ot_qwen_die_station #(.DW(DW), .TAP(1), .SPLIT(SPLIT)) u (.clk(clk), .rst_n(rst_n), .a_d(a_d), .a_r(a_r), .b_d(b_d),
         .b_r(b_r), .t_d(t_d), .t_r(t_r), .c_d(c_d), .c_r(c_r));
     always #1 clk = ~clk;
