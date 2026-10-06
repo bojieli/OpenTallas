@@ -5,7 +5,7 @@
 // Backend SRAM readback/transport and publication remain actual parent inputs.
 // Conditional child proof only; do not substitute this for the parent VM.
 (* keep_hierarchy *)
-module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0)(
+module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0)(
  input wire fast_clk,cold_n,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
  input wire [31:0] native_ordinal,
@@ -19,13 +19,19 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0)(
  output wire bounds_fault, endpoint_fault,
  output wire [ot_dsrom_vm_pkg::REQ_BITS-1:0] captured_request,captured_request_check,
  output wire [ot_dsrom_vm_pkg::REP_BITS-1:0] captured_reply,captured_reply_check,
+ output wire request_checked_v,reply_checked_v,guard_busy,
  output wire head_ack_v,
  output wire [7:0] head_ack_id,
  output wire [23:0] head_ack_word,
  output wire [15:0] head_ack_mask
 );
  import ot_dsrom_vm_pkg::*;
- generate if(ENABLE) begin : g_native_endpoints
+ generate if(ENABLE && CHECK_PIPE) begin : g_distributed_check
+  ot_hdc_v41_fh_checked_permission u_guard(.*);
+ end else if(ENABLE) begin : g_native_endpoints
+  assign request_checked_v=request_accept&&!endpoint_fault;
+  assign reply_checked_v=published_reply_v&&!endpoint_fault;
+  assign guard_busy=0;
   wire [1:0] read_enable=0;
   wire [29:0] read_addr=0;
   wire [4:0] write_enable={head_we,1'b0};
@@ -94,6 +100,7 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0)(
   assign head_ack_word={9'b0,held_reply.wa[15+:15]};
   assign head_ack_mask=held_reply.wm[16+:16];
  end else begin : g_off
+  assign request_checked_v=0;assign reply_checked_v=0;assign guard_busy=0;
   assign bounds_fault=0;assign endpoint_fault=0;assign captured_request=0;assign captured_request_check=0;
   assign captured_reply=0;assign captured_reply_check=0;assign head_ack_v=0;
   assign head_ack_id=0;assign head_ack_word=0;assign head_ack_mask=0;
