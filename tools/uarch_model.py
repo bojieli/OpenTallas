@@ -12225,3 +12225,20 @@ def hbm_pcwb_p2_return_binding_model():
         PHY_contract='ordered untagged returns per PC; local ordinal minted at actual READ acceptance, not at descriptor/read-ready',
         full73_source='explicit accepted owner_frame73 input; no producer/transport/IRS or job-only alias',
         physical_closed=False,SS_uncertainty_ps=60,FF_uncertainty_ps=25,token_rate_credit=0)
+
+
+def dsrom_wfc_common_clock_source_model():
+    """Missing W18 common-root /3,/4 producer, additive integration only."""
+    return dict(default=0, replica_count=1, MACs_per_cycle=0,
+        memory_port_bytes_per_cycle=0, communication_intensity=0,
+        boundary_bits_per_cycle=dict(clock_inputs=1, clock_outputs=2, cold_reset=1, fault=1),
+        state_FF_bits=16, FF_area_floor_um2=16*DFF_UM2, fast_clock_OR_gates=1,
+        combinational_area_um2=None, actual_mapped_loads_required=True,
+        root_period_ps=2500/9, fast_period_ps=2500/3, slow_period_ps=10000/9,
+        generated_clock_edges=dict(fast=[1,4,7], slow=[1,5,9]),
+        replica_mux_demux_cost=0, added_pipeline_cycles=0,
+        latency_contribution='Existing model W18 /3,/4 domains; no new data pipeline. Source clkQ, clock-wire, reset-release, phase/skew and PLL jitter must be measured.',
+        routing_tracks_needed=dict(root_clock=1, generated_clocks=2, POR=1, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        protection='Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.',
+        physical_closed=False, PLL_IP_qualified=False)
