@@ -1605,7 +1605,7 @@ def build_qwen(variant=None):
                 dom='link' if k_ == 'host_b' else 'stream_1p2')
     notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
                  f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
-    m = dict(die='qwen', geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, heads=heads,
+    m = dict(die='qwen', geo=geo, insts=insts, regions=regions, internal_nets=[], groups=groups, hub=hub, tiles=tiles, heads=heads,
              links=links, host=host, coll=coll, notes=notes, variant=variant, stn_faces={}, tile_element=T,
              final_round=Q_FINAL_ROUND, out=Q_OUT, col_x=col_x, qcols=qcols)
     m['buses'], m['paths'] = buses_qwen(m)
@@ -1646,6 +1646,7 @@ def _q_head_pins(mst):
 
 def buses_qwen(m):
     B, P = [], defaultdict(list)
+    internal_nets = m.setdefault('internal_nets', [])
     station, chain = _router(m, B, P)
     g = m['geo']
     T = m['tile_element']
@@ -1710,8 +1711,14 @@ def buses_qwen(m):
                     sub = tl[i * (2 ** lv): i * (2 ** lv) + span]
                     hostt = next(f't_{c}_{r}' for c, r in sub if f't_{c}_{r}' not in used)
                     used.add(hostt)
-                    B.append((f'tree_{nb}_{lv}_{i}a', 'tree_block', Q_TREE_BITS, [level[i], (hostt, 'n_a')]))
-                    B.append((f'tree_{nb}_{lv}_{i}b', 'tree_block', Q_TREE_BITS, [level[i + 1], (hostt, 'n_b')]))
+                    # the host tile's own t_out feeding its own n_a is INSIDE the element (not a die net): emit it
+                    # as an internal connection, never as a die-level bus (a self net is unroutable / degenerate)
+                    for cid_, peer in ((f'tree_{nb}_{lv}_{i}a', level[i]), (f'tree_{nb}_{lv}_{i}b', level[i + 1])):
+                        if peer[0] == hostt:
+                            internal_nets.append(dict(id=cid_, bits=Q_TREE_BITS, at=hostt, port=peer[1],
+                                                           note='host tile consumes its own t_out: element-internal'))
+                        else:
+                            B.append((cid_, 'tree_block', Q_TREE_BITS, [peer, (hostt, 'n_a' if cid_.endswith('a') else 'n_b')]))
                     nxt.append((hostt, 'n_y'))
                 level = nxt
                 lv += 1
@@ -1849,6 +1856,7 @@ def q_check(m):
                                                               'capacity_over_goal_pct')),
                power=die_power(m)['peak_in_phase_w'], notes=m['notes'],
                buses=len(m['buses']), wires=sum(b[2] for b in m['buses']),
+               replicated_copy_pin_check=_copy_pins(m), internal_nets=len(m.get('internal_nets', [])),
                instances=len(m['insts']))
     mp = manhattan_paths(m)
     worst = {}
@@ -1858,6 +1866,25 @@ def q_check(m):
             worst[k] = (v['stages_430'], p, v['um'])
     out['manhattan_worst'] = worst
     return out
+
+
+def _copy_pins(m):
+    """Every replicated copy must own its pins: no die net may connect two ends to the same instance, and no port of
+    one instance may carry two different die nets (the DS-die failure class: 128 nets unroutable)."""
+    deg = defaultdict(lambda: defaultdict(list))
+    selfnets = []
+    for bid, cls, bits, eps in m['buses']:
+        if len({e[0] for e in eps}) < len(eps):
+            selfnets.append(bid)
+            continue
+        for inst, port in eps:
+            deg[inst][port].append(bid)
+    multi = {(i, p): ids for i, d in deg.items() for p, ids in d.items() if len(ids) > 1}
+    return dict(self_nets=len(selfnets), self_net_examples=selfnets[:5], ports_with_two_nets=len(multi),
+                examples=[(k, v[:3]) for k, v in list(multi.items())[:5]],
+                instances_without_pins=[it.name for it in m['insts'] if it.name not in deg and
+                                        it.kind not in ('phy', 'link', 'serdes_slab', 'host_slab')][:10],
+                verdict='PASS' if not selfnets else 'FAIL')
 
 
 DENS.update(tile=1.05, head=0.6)
