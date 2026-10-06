@@ -842,29 +842,31 @@ module ot_hdc_v41x_vec #(
                        promote ? 2'd0 : pst;
     // every candidate of the next marks is subtracted from n_rtot in parallel; the selects (emit / promote state) last
     wire [15:0] n_amark = (!PROM[11] && EMIT[11] && !STRT[11]) ? e_tot : a_mark;
-    // round 5: every candidate subtracted from r_tot and from r_tot + 1 (rtot1_r) in parallel, + 1 of the latter;
-    // this cycle's retire (ret_i) is the last select, so it no longer feeds the subtracts (n_rtot - X = ret_i ? x1 : x0)
-    wire [15:0] dk0, dm0, de0, dA0, dB0, dk1, dm1, de1, dA1, dB1, dk2, dm2, de2, dA2, dB2;
+    // round 6: r_tot, r_tot + 1, r_tot + 2 are registers (rtot1_r, rtot2_r), so every candidate count is ONE subtract
+    // per mark (pv_mark, a_mark, e_tot; and r_tot - e_tot - 1 for an emit's e_tot + 1).  n_amark / e_tot_n / the
+    // started state / this cycle's retire are all late selects among those subtracts (on registered control copies).
+    reg  [15:0] rtot2_r;
+    wire [15:0] dk0, dm0, de0, dk1, dm1, de1, dk2, dm2, de2, dem;
     wire [9:0]  unused_cc;
     ot_hdc_kadd #(.W(16), .K(KK)) u_dk (.a(r_tot), .b(~pv_mark), .cin(1'b1), .s(dk0), .cout(unused_cc[0]));
     ot_hdc_kadd #(.W(16), .K(KK)) u_dm (.a(r_tot), .b(~a_mark), .cin(1'b1), .s(dm0), .cout(unused_cc[1]));
     ot_hdc_kadd #(.W(16), .K(KK)) u_de (.a(r_tot), .b(~e_tot), .cin(1'b1), .s(de0), .cout(unused_cc[2]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dA (.a(r_tot), .b(~n_amark), .cin(1'b1), .s(dA0), .cout(unused_cc[3]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dB (.a(r_tot), .b(~e_tot_n), .cin(1'b1), .s(dB0), .cout(unused_cc[4]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dk1 (.a(rtot1_r), .b(~pv_mark), .cin(1'b1), .s(dk1), .cout(unused_cc[5]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dm1 (.a(rtot1_r), .b(~a_mark), .cin(1'b1), .s(dm1), .cout(unused_cc[6]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_de1 (.a(rtot1_r), .b(~e_tot), .cin(1'b1), .s(de1), .cout(unused_cc[7]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dA1 (.a(rtot1_r), .b(~n_amark), .cin(1'b1), .s(dA1), .cout(unused_cc[8]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dB1 (.a(rtot1_r), .b(~e_tot_n), .cin(1'b1), .s(dB1), .cout(unused_cc[9]));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dk2 (.a(dk1), .inc(1'b1), .y(dk2));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dm2 (.a(dm1), .inc(1'b1), .y(dm2));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_de2 (.a(de1), .inc(1'b1), .y(de2));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dA2 (.a(dA1), .inc(1'b1), .y(dA2));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dB2 (.a(dB1), .inc(1'b1), .y(dB2));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dem (.a(r_tot), .b(~e_tot), .cin(1'b0), .s(dem), .cout(unused_cc[3]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dk1 (.a(rtot1_r), .b(~pv_mark), .cin(1'b1), .s(dk1), .cout(unused_cc[4]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dm1 (.a(rtot1_r), .b(~a_mark), .cin(1'b1), .s(dm1), .cout(unused_cc[5]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_de1 (.a(rtot1_r), .b(~e_tot), .cin(1'b1), .s(de1), .cout(unused_cc[6]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dk2 (.a(rtot2_r), .b(~pv_mark), .cin(1'b1), .s(dk2), .cout(unused_cc[7]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dm2 (.a(rtot2_r), .b(~a_mark), .cin(1'b1), .s(dm2), .cout(unused_cc[8]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_de2 (.a(rtot2_r), .b(~e_tot), .cin(1'b1), .s(de2), .cout(unused_cc[9]));
     wire        pv_upd = EMIT[14] && LAST[14];
+    wire        am_e = !PROM[11] && EMIT[11] && !STRT[11];             // n_amark == e_tot
+    wire        nst_k = PROM[0] ? 1'b0 : (EMIT[0] && !STRT[0]) ? 1'b1 : STRT[0];   // n_st on control copy 0
+    // r_j - X for r_j = r_tot + j: pv_mark (k), a_mark (m), e_tot (e); e_tot_n = e_tot + EMIT[14] shifts e by one
     wire [15:0] cp_r0 = pv_upd ? (STRT[14] ? dm0 : de0) : dk0, cp_r1 = pv_upd ? (STRT[14] ? dm1 : de1) : dk1,
                 cp_r2 = pv_upd ? (STRT[14] ? dm2 : de2) : dk2;
-    wire [15:0] ce_r0 = n_st ? dA0 : dB0, ce_r1 = n_st ? dA1 : dB1, ce_r2 = n_st ? dA2 : dB2;
+    wire [15:0] dA0 = am_e ? de0 : dm0, dA1 = am_e ? de1 : dm1, dA2 = am_e ? de2 : dm2;
+    wire [15:0] dB0 = EMIT[14] ? dem : de0, dB1 = EMIT[14] ? de0 : de1, dB2 = EMIT[14] ? de1 : de2;
+    wire [15:0] ce_r0 = nst_k ? dA0 : dB0, ce_r1 = nst_k ? dA1 : dB1, ce_r2 = nst_k ? dA2 : dB2;
     always @(posedge clk) begin
         cnt_p0 <= ret_i ? cp_r1 : cp_r0;                         // r_tot - pv_mark, next cycle
         cnt_p1 <= ret_i ? cp_r2 : cp_r1;
@@ -942,12 +944,12 @@ module ot_hdc_v41x_vec #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0; rtot1_r <= 16'd1;
+            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0; rtot1_r <= 16'd1; rtot2_r <= 16'd2;
             cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0;
         end else begin
             e_tot <= e_tot_n;
             r_tot <= n_rtot;
-            rtot1_r <= rtot1_n;
+            rtot1_r <= rtot1_n; rtot2_r <= rtot2_n;
             rp_tot <= rp_tot_n;
             cpF <= EMIT[13] ? a_dF : m_cpF;
             cpM <= EMIT[13] ? a_dM : m_cpM;
@@ -1010,7 +1012,10 @@ module ot_hdc_v41x_vec #(
     ot_hdc_kinc #(.W(16), .K(KK)) u_anv (.a(a_nv), .inc(1'b1), .y(a_nv_p1));
     ot_hdc_kinc #(.W(16), .K(KK)) u_etn (.a(e_tot), .inc(EMIT[14]), .y(e_tot_n));
     ot_hdc_kinc #(.W(16), .K(KK)) u_rpn (.a(rp_tot), .inc(ret_p), .y(rp_tot_n));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_r1n (.a(n_rtot), .inc(1'b1), .y(rtot1_n));
+    wire [15:0] rtot3_w;
+    ot_hdc_kinc #(.W(16), .K(KK)) u_r3 (.a(rtot2_r), .inc(1'b1), .y(rtot3_w));
+    assign rtot1_n = ret_i ? rtot2_r : rtot1_r;                  // n_rtot + 1
+    wire [15:0] rtot2_n = ret_i ? rtot3_w : rtot2_r;             // n_rtot + 2
     ot_hdc_kinc #(.W(16), .K(KK)) u_emn (.a(emitted), .inc(EMIT[16]), .y(emitted_n));
     ot_hdc_kadd #(.W(24), .K(KK)) u_acc2 (.a(acc2_r), .b({8'd0, a_chmul}), .cin(1'b0), .s(acc2_n), .cout(unused_lc[5]));
     ot_hdc_kadd #(.W(16), .K(KK)) u_nd1 (.a(a_chlead), .b(acc2_r[23:8]), .cin(1'b0), .s(need1_n), .cout(unused_lc[6]));
