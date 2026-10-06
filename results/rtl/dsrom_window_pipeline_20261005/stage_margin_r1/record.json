@@ -1,0 +1,45 @@
+{
+ "status": "EXACT_PASS_DEFAULT_OFF_PHYSICAL_PENDING",
+ "lever": "ot_dsrom_window_stage_pipeline MARGIN=1",
+ "source_commit": "dc83ece626357861a1cc43e55b0afb75e7bb7d89",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "710342f3e4a624f1c0b3eaf18aa08c91f382299e292200d275fc29a8babcaf85",
+  "rtl/test/dsrom_sys/s81_window_la/tb_window_stage_margin.sv": "d21a55c284e73b3a22da74a374a7e907860813443bf01bd23a508f2720f73983",
+  "rtl/test/dsrom_sys/s81_window_la/tb_window_stage_read_qualification.sv": "be13a9538c93ed57ee3524658a2700b4cce76319eb16b6625d26877150d36a5c",
+  "tools/dsrom_window_pipeline_gate.py": "f4fecf00e0421fe5b8ab77a84273a90164e2192c6211b5b2f446db32b468367f",
+  "rtl/test/dsrom_sys/s81_window_la/tb_dsrom_s81_window_la.sv": "9e1ab1f48972f6c4b76fe52f13910f3cab458fe209b887323bb11df72e9c5171"
+ },
+ "unit": {
+  "simulator": "Icarus 12 (EPYC1)",
+  "rows": "L0.rows sha256 0c8ab9073125988af02b5632466c0b86f43f56723afc78d5d67e443d43890ac8",
+  "original_tb_MARGIN0": "PASS reads=269 lanes=645 denied=16 races=2 (identical to stage_read_qualification_r2), SPLIT_COLUMNS 0 and 1",
+  "derived_tb_MARGIN0": "PASS reads=397 lanes=1151 denied=19 races=2 conflict_stalls=112",
+  "derived_tb_MARGIN1": "PASS reads=397 lanes=1149 denied=18 races=2 conflict_stalls=112, SPLIT_COLUMNS 0 and 1 (witnesses at the effective request edge)",
+  "negatives": {
+   "rsp_unstaged (lane mux reads unregistered bank output)": "FAIL golden read mismatch",
+   "chosen_unaligned (write enables not staged with the bank beat copies)": "FAIL golden read mismatch",
+   "fifo_overrun (in_rdy held high)": "FAIL landing identity/payload mismatch sector=1783"
+  }
+ },
+ "full_gate": {
+  "tool": "tools/dsrom_window_pipeline_gate.py --stage-margin 1",
+  "simulator": "Verilator 5.050",
+  "cases": 344,
+  "pass_": 344,
+  "measured_vs_r1_lf_128_cases": {
+   "stream_cycles_delta": 130,
+   "la_load_cycles_delta": 2,
+   "own_row_write_cycles_delta": 0
+  }
+ },
+ "cycle_cost": {
+  "per_window_job_measured": 132,
+  "model_upper": 131,
+  "layers": 61,
+  "token_us": 6.71,
+  "fraction_of_AR_1687_9_tok_s": 0.011325809000000001,
+  "within_owner_2pct": true
+ },
+ "physical": "route at 770 ps, sign-off 833.333 ps pending",
+ "adoption": false
+}

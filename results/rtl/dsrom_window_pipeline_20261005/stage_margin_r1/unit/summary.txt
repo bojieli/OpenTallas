@@ -1,0 +1,8 @@
+m0 rc=0 PASS MARGIN=0 NPC32 full128 stage golden reads=397 lanes=1151 denied=19 completion_races=2 conflict_stalls=112 effective-edge reset/owner-snapshot/masked-unknown 
+m1 rc=0 PASS MARGIN=1 NPC32 full128 stage golden reads=397 lanes=1149 denied=18 completion_races=2 conflict_stalls=112 effective-edge reset/owner-snapshot/masked-unknown 
+m1_split rc=0 PASS MARGIN=1 NPC32 full128 stage golden reads=397 lanes=1149 denied=18 completion_races=2 conflict_stalls=112 effective-edge reset/owner-snapshot/masked-unknown 
+neg_chosen_unaligned rc=1 FATAL: /srv/opentallas-scratch/claude/takeover-ds/window-stage/bench/src/rtl/test/dsrom_sys/s81_window_la/tb_window_stage_margin.sv:112: golden read mismatch row=0 mask=1 good=1/1 fault=0/0 
+neg_fifo_overrun rc=1 FATAL: /srv/opentallas-scratch/claude/takeover-ds/window-stage/bench/src/rtl/test/dsrom_sys/s81_window_la/tb_window_stage_margin.sv:99: landing identity/payload mismatch sector=1783 
+neg_rsp_unstaged rc=1 FATAL: /srv/opentallas-scratch/claude/takeover-ds/window-stage/bench/src/rtl/test/dsrom_sys/s81_window_la/tb_window_stage_margin.sv:112: golden read mismatch row=0 mask=1 good=1/1 fault=0/0 
+orig_tb_m0 rc=0 PASS NPC32 full128 stage golden reads=269 lanes=645 denied=16 completion_races=2 unchanged3edges reset/owner-snapshot/masked-unknown 
+orig_tb_m0_split rc=0 PASS NPC32 full128 stage golden reads=269 lanes=645 denied=16 completion_races=2 unchanged3edges reset/owner-snapshot/masked-unknown 
