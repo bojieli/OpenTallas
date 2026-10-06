@@ -65,6 +65,20 @@ set_clock_uncertainty -hold 25 [get_clocks io_clk]
 set_input_delay {io} -clock io_clk $ins
 set_output_delay {io} -clock io_clk [all_outputs]
 """
+# --die-skew S (route SDC only): the neighbour's register sits on the same die tree but its clock may arrive
+# up to S ps before / after ours.  IO is timed against core_clk's PROPAGATED arrival at one of the element's
+# own boundary registers (-reference_pin: per corner, so the BC hold repair is not driven by an SS latency
+# estimate), widened by S plus the element's own insertion spread (SPREAD, so any register may be the far
+# one) -- the route then sees what the die150 signoff mode checks: SS setup and FF/SS hold with the die skew.
+SPREAD_PS = 60
+SDC_IO_REF = """# die IO budget: IO vs core_clk at a boundary register, +-{skew} ps die skew + {spread} ps insertion spread
+set refp [lindex [get_pins -quiet {{g_link_reg.u_rx.pv*/CLK}}] 0]
+if {{$refp == ""}} {{ set refp [lindex [all_registers -edge_triggered -clock_pins] 0] }}
+set_input_delay -max {imax} -clock core_clk -reference_pin $refp $ins
+set_input_delay -min {imin} -clock core_clk -reference_pin $refp $ins
+set_output_delay -max {imax} -clock core_clk -reference_pin $refp [all_outputs]
+set_output_delay -min {imin} -clock core_clk -reference_pin $refp [all_outputs]
+"""
 SDC_TAIL = """set_load 2.0 [all_outputs]
 set_max_fanout 32 [current_design]
 set_max_transition 320 [current_design]
@@ -156,11 +170,12 @@ def cmd_prep(a):
     for name, per in (("constraint.sdc", rp), ("signoff.sdc", PERIOD_PS)):
         if a.ideal_io:
             ioc = SDC_IDEAL_IO.format(io=io)
+        elif a.die_skew and name == "constraint.sdc":
+            ioc = SDC_IO_REF.format(skew=a.die_skew, spread=SPREAD_PS, imax=round(io + a.die_skew + SPREAD_PS, 1),
+                                    imin=round(io - a.die_skew - SPREAD_PS, 1))
         else:
             lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
-            # --die-skew: the owner's die-clock IO budget (neighbour arrives up to S ps before / after the
-            # element's insertion) carried INTO the route, so repair_timing pads hold for it and sizes setup
-            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin - a.die_skew, lmax=lmax + a.die_skew, lmid=(lmin + lmax) // 2)
+            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
         # the route may be over-constrained (owner margin rule: ~770 ps); signoff is always at 833 ps
         (case / name).write_text(SDC.format(p=per, io_clk=ioc) + SDC_TAIL)
     src = a.src.resolve()

@@ -118,6 +118,7 @@ module tb_wf_ctrl_equiv;
         reg [RSTD:0] rsh = 0;
         always @(posedge clk) rsh <= {rsh[RSTD-1:0], rst_n};
         wire rst_n_ref = rsh[RSTD-1];
+        wire link_busy, link_acc;   // OT_WFC_LINK_REG: flits inside the registered link / taken by the DUT logic
         if (gi == 0) begin : r
             ot_rom_pkg_ctrl_wf #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
@@ -137,17 +138,14 @@ module tb_wf_ctrl_equiv;
                 .l_valid(l_out_valid), .l_ready(l_out_ready), .l_data({l_out_last, l_out_data}),
                 .c_valid(out_valid), .c_ready(out_ready), .c_data({out_last, out_data}));
             // flits inside the registered link (both directions), for the quiescence test
-            wire busy = atx.v || c.g_link_reg.u_rx.pv || c.g_link_reg.u_rx.cnt != 0 || c.g_link_reg.u_tx.v || arx.pv || arx.cnt != 0;
-            wire acc = c.g_link_reg.u_rx.c_valid && c.lk_in_ready;   // a flit taken by the DUT's controller logic
+            assign link_busy = atx.v || c.g_link_reg.u_rx.pv || c.g_link_reg.u_rx.cnt != 0 || c.g_link_reg.u_tx.v || arx.pv || arx.cnt != 0;
+            assign link_acc = c.g_link_reg.u_rx.c_valid && c.lk_in_ready;   // a flit taken by the DUT's controller logic
         end else begin : d
             `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
                 .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.*);
         end
-        wire link_busy, link_acc;
-        if (gi == 1 && `OT_WFC_LINK_REG) begin : lb
-            assign link_busy = d.busy; assign link_acc = d.acc;
-        end else begin : nb
+        if (!(gi == 1 && `OT_WFC_LINK_REG)) begin : nb
             assign link_busy = 1'b0; assign link_acc = in_valid && in_ready;
         end
         // The reference's combinational ready may be high while its actual
