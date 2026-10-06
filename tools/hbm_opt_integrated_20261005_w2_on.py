@@ -29,7 +29,9 @@ PEER_FILES = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
 # Exact installed dimensions: original two-die/four-SM parent.
 # The collective tag pipeline does not support a one-rank reduction fabric.
 PARAMS = dict(ENABLE=1, COMBINED_ENABLE=1, W2_RESULT_ENABLE=1,
-              W2_SECTOR_ENABLE=1, ND=2, NSM=2, NS=2, NPC=2,
+              W2_SECTOR_ENABLE=1, SU_ENABLE=1, SU_PROVIDER_ADAPTER=1,
+              SU_REGISTERED_OUTPUTS=1, SU_REGISTERED_STATUS=1, SU_REGISTERED_BOUNDARY=1,
+              SU_BALANCED_OWNER_BOUNDARY=1, SU_FOUR_COMBINATIONAL_CUTS=1, SU_FAST_OWNER_FRONTIER=1, ND=2, NSM=2, NS=2, NPC=2,
               MEM_WORDS=2097152, VM_AW=21)
 
 def prepare(own, peer, work):
@@ -44,6 +46,7 @@ def prepare(own, peer, work):
         'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv',
         'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv']]
     files += [(own, x) for x in OWN_FILES]
+    files += [(own, 'rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv')]
     # Parse-time native executor fields are required even with SU disabled.
     includes = ['rtl/test/tb_hdc_v41x_vec_fields.svh']
     missing = [str(root / rel) for root, rel in files if not (root / rel).is_file()]
