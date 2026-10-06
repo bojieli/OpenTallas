@@ -80,7 +80,7 @@ def run(work,reservation,inventory,threads,activity,phase='all'):
  obj=work/'obj'
  cmd=[VC.VERILATOR,'--cc','--exe',*(['--build'] if phase=='all' else []),'--timing','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNOPTFLAT',
       '--top-module','tb_hdc_v41x_vec','--prefix','Vtb','-Mdir',str(obj),'-j',str(threads),
-      '-GN=1024','-GM=256','-GREDROGS=2','-GBCAST_STAGES=7','-GRET_STAGES=8','-GMLAT=6','-GALAT=6',
+      '-GN=1024','-GM=256','-GBCAST_STAGES=7','-GRET_STAGES=8','-GMLAT=6','-GALAT=6',
       *C12.vflags().split(),*[f'-G{k}={v}' for k,v in dict(VMA=VC.VMA,KVA=VC.KVA,CRA=VC.CRA,WRA=VC.WRA,XBA=VC.XBA).items()],
       '-I'+str(ROOT/'rtl/test')]
  if activity:cmd+=['--trace-fst']
