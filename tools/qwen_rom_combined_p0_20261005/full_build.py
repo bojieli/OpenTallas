@@ -129,6 +129,7 @@ def prepare(job, source, numerical_top, provider, output,
                 '--prefix', 'Vdie', '--mod-prefix', 'Vdie', '--threads', '1',
                 '--Mdir', str(obj), '-Wno-fatal', '-Wno-TIMESCALEMOD',
                 '-I/srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc',
+                '-I'+str(source/'rtl/hdc/kv'),  # ot_qwen_kv_map_m.svh (KV_MAP option M, default off)
                 *hierarchy, *params, *map(str, paths+configs)]
     # Compile this top only. VM_HIER_LIBS is supplied on make's command line,
     # pointing to completed archives, so no retained leaf Makefile is invoked.

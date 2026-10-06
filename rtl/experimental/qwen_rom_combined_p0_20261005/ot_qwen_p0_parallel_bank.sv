@@ -4,7 +4,8 @@
 // No shared row arbiter, no raw bypass. A minimal gate does not prove routing.
 module ot_qwen_p0_parallel_bank #(
     parameter integer ENABLE=0,PC_BASE=0,MEM_WORDS=36*131072,
-    parameter integer LANDING_RSEL=0,LOCAL_WIRE_SPANS=0
+    parameter integer LANDING_RSEL=0,LOCAL_WIRE_SPANS=0,
+    parameter integer KV_MAP=0 // 1: option-M PC identity (ot_qwen_kv_map_m.svh); default off
 )(
     input wire clk,hclk,por_n,warm_rst_n,
     output wire [31:0] l_v,w_room,wd_v,c_fault,h_fault,c_quiet,h_quiet,
@@ -33,7 +34,7 @@ module ot_qwen_p0_parallel_bank #(
         for(genvar pc=0;pc<32;pc=pc+1)begin:lane
             ot_qwen_s4_parallel_protected_pc #(.ENABLE(1),.PC_ID(PC_BASE+pc),
                 .MEM_WORDS(MEM_WORDS),.LANDING_RSEL(LANDING_RSEL),
-                .LOCAL_WIRE_SPANS(LOCAL_WIRE_SPANS)) u_pc(
+                .LOCAL_WIRE_SPANS(LOCAL_WIRE_SPANS),.KV_MAP(KV_MAP)) u_pc(
                 .clk(clk),.hclk(hclk),.por_n(por_n),.warm_rst_n(warm_rst_n),
                 .l_v(l_v[pc]),
                 .l_sec(l_sec[pc*17+:17]),
