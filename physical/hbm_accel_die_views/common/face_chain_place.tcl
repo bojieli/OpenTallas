@@ -13,6 +13,14 @@
 #     pass-through, input chain + output chain), all its flops are spread evenly from P to that pin instead.
 # Inputs are handled first so that an output chain fed by an input chain starts from the moved input stage.
 set fc_n [expr {[info exists ::env(OT_FC_STAGES)] ? $::env(OT_FC_STAGES) : 5}]
+# per-port depth (hbm_die_wrap port_stages): OT_FC_FILE = <master>_face_stages.tcl (array fc_ps), else OT_FC_STAGES
+array set fc_ps {}
+if {[info exists ::env(OT_FC_FILE)] && $::env(OT_FC_FILE) ne ""} { source $::env(OT_FC_FILE) }
+proc fc_np {bt} {
+  global fc_ps fc_n
+  set port [regsub {\[.*} [$bt getName] {}]
+  return [expr {[info exists fc_ps($port)] ? $fc_ps($port) : $fc_n}]
+}
 set fc_blk [ord::get_db_block]
 set fc_dbu [$fc_blk getDbUnitsPerMicron]
 set fc_core [$fc_blk getCoreArea]
@@ -87,6 +95,7 @@ foreach bt [$fc_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
+  set fc_n0 $fc_n; set fc_n [fc_np $bt]
   set chain {}; set cur $net; set thru ""
   while {1} {
     set ld [fc_loads $cur]
@@ -100,8 +109,9 @@ foreach bt [$fc_blk getBTerms] {
     set cur [fc_out_net $i]
     if {$cur eq "NULL"} break
     set nf 0; foreach c $chain { incr nf [lindex $c 1] }
-    if {$thru eq "" && $nf >= 2 * $fc_n} break
+    if {$thru eq "" && $nf >= 10} break
   }
+  set fc_n $fc_n0
   set flops {}; foreach c $chain { if {[lindex $c 1]} { lappend flops [lindex $c 0] } }
   if {![llength $flops]} continue
   if {$thru ne ""} {
@@ -124,7 +134,7 @@ foreach bt [$fc_blk getBTerms] {
   set k 0; set grp {}; set last ""; set moves {}
   foreach c $chain {
     lassign $c i sq
-    if {$k >= $fc_n} break
+    if {$k >= [fc_np $bt]} break
     lappend grp $i
     if {$sq} { lappend moves [list $k $grp]; set grp {}; set last $i; incr k }
   }
@@ -134,21 +144,23 @@ foreach bt [$fc_blk getBTerms] {
   set pts {}; foreach i $ld { lappend pts [fc_center $i] }
   set B [fc_cent $pts]
   fc_rec $bt $P $B
+  set nn [fc_np $bt]
   foreach mv $moves {
     lassign $mv kk grp
-    set p [fc_lerp $P $B [expr {double($kk)/$fc_n}]]
+    set p [fc_lerp $P $B [expr {double($kk)/$nn}]]
     foreach g $grp { fc_move $g $p; set fc_done([$g getName]) 1; incr n_moved }
   }
   incr n_in
 }
 # ---- outputs: walk back N flops from every pin, gather pins per flop (shared group copies serve several pins)
-array set fc_stage {}; array set fc_pins {}; array set fc_a {}; array set fc_inst {}; array set fc_hang {}
+array set fc_nn {}; array set fc_stage {}; array set fc_pins {}; array set fc_a {}; array set fc_inst {}; array set fc_hang {}
 foreach bt [$fc_blk getBTerms] {
   if {[$bt getIoType] ne "OUTPUT"} continue
   if {[info exists fc_done(pin:[$bt getName])]} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
-  set k [expr {$fc_n - 1}]; set cur $net; set pend {}; set walked {}
+  set nn [fc_np $bt]
+  set k [expr {$nn - 1}]; set cur $net; set pend {}; set walked {}
   while {$k >= 0} {
     set d [fc_driver $cur]
     if {$d eq "NULL"} break
@@ -178,7 +190,7 @@ foreach bt [$fc_blk getBTerms] {
   for {set q 0} {$q < [llength $walked]} {incr q} {
     lassign [lindex $walked $q] f kk pd
     set nm [$f getName]
-    set fc_stage($nm) $kk; set fc_inst($nm) $f; lappend fc_pins($nm) $P
+    set fc_stage($nm) $kk; set fc_inst($nm) $f; lappend fc_pins($nm) $P; set fc_nn($nm) $nn
     if {![info exists fc_a($nm)]} { set fc_a($nm) $A }
     # pd = single-input cells between this flop and the flop downstream of it
     foreach c $pd { set fc_hang([$c getName]) [list $c $nm] }
@@ -187,7 +199,7 @@ foreach bt [$fc_blk getBTerms] {
 }
 foreach nm [array names fc_stage] {
   set B [fc_cent $fc_pins($nm)]
-  set p [fc_lerp $fc_a($nm) $B [expr {double($fc_stage($nm)+1)/$fc_n}]]
+  set p [fc_lerp $fc_a($nm) $B [expr {double($fc_stage($nm)+1)/$fc_nn($nm)}]]
   fc_move $fc_inst($nm) $p; incr n_moved
   set fc_pos($nm) $p
 }
