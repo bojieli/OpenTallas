@@ -10603,6 +10603,9 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             new_cycles_per_collective=0, new_cycles_per_record=0, composed_token_delta_ns=0,
             logical_west_cut_payload_upper_bits=2*width,
             control_and_CTS_tracks_must_be_measured=True,
+            measured_full32_grants=209, measured_mux_cycles=2048,
+            measured_completed_callers=32, measured_TX_records=128, measured_RX_records=256,
+            measured_context_cycles=789, measured_new_cycles=0, exact_gate_passed=True,
             source_ready_before_changed_exact_and_synthesis=False,
             channel_and_clock_qualified=False, adopted=False),
         actual_32SM_caller_context=dict(
