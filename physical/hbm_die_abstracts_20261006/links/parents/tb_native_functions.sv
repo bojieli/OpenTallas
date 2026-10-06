@@ -86,6 +86,13 @@ module tb_native_functions;
   #1;if(!fault||rel||ov||mr)$fatal(1,"wrong-owner ACK was authorized");
   tick();@(negedge clk);av=0;tick();if(!fault||drain)$fatal(1,"wrong-owner fault lost debt");
   $display("PASS negative actual wrong-owner ACK rejected, debt retained");
+  // An empty reserved ACK seat also needs repair before new ownership can
+  // be accepted. Otherwise the upstream would be promised a missing receipt.
+  cold();@(negedge clk);
+  m.held.receipts[0].reserved.u_ack.u_state.code[0]=m.held.receipts[0].reserved.u_ack.u_state.code[0]^72'b1;
+  #1;if(mr||drain||!pause||fault)$fatal(1,"repairing empty ACK seat promised capacity/drain");
+  repeat(8)tick();if(!mr||!drain||pause||fault)$fatal(1,"ACK reservation repair did not recover");
+  $display("PASS reserved empty ACK CE blocks new ownership and drain until repaired");
   // Real checked permission-seat UE, not a callback/injected fault input.
   cold();@(negedge clk);gv=255;tick();@(negedge clk);gv=0;repeat(3)tick();
   @(negedge clk);g.held.u_permissions.code[0]=g.held.u_permissions.code[0]^72'b11;
