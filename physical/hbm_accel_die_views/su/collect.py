@@ -56,8 +56,8 @@ def route_facts(host, d):
 
 
 def margin_ok(f):
-    """owner margin rule 2026-10-06: SS >= +60 ps, FF >= +15 ps at 833."""
-    return closed(f) and f['ss_worst_slack_ps'] >= 60 and f['ff_worst_hold_slack_ps'] >= 15
+    """owner margin rule 2026-10-06: SS >= +40 ps (accept line, owner UPDATE 2; design target +60), FF >= +15 ps at 833."""
+    return closed(f) and f['ss_worst_slack_ps'] >= 40 and f['ff_worst_hold_slack_ps'] >= 15
 
 
 def closed(f):
@@ -115,9 +115,9 @@ def main():
     if any(l in ('M8', 'M9') for l in lay['pg']['VDD'] + lay['pg']['VSS'] + lay['obs']):
         defects.append('PDN contract: M8/M9 used inside the quarter')
     if closed(f) and not margin_ok(f):
-        defects.append(f"MARGIN: SS {f['ss_worst_slack_ps']} / FF {f['ff_worst_hold_slack_ps']} ps under the +60 / +15 owner target")
+        defects.append(f"MARGIN: SS {f['ss_worst_slack_ps']} / FF {f['ff_worst_hold_slack_ps']} ps under the +40 / +15 owner accept line")
     if not lane.get('margin_ok'):
-        defects.append('lane view under the +60 / +15 owner margin target (see source.lane)')
+        defects.append('lane view under the +40 / +15 owner accept line (see source.lane)')
     defects.append('ENVELOPE: SU/SFU/HC function (controller, die-port protocol) not built; die bits map onto lane pins '
                    'by the generator rule (tools/hbm_hub_quarter_gen.py)')
     view = dict(schema='opentallas.hbm_die_view.v1', master=m, kind=a.quarter, status='interim-not-closed',
