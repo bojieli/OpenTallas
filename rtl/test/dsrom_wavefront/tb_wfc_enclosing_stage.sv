@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module wfc_enclosing_case #(parameter STRUCTURAL=0)(output reg finished=0);
+module wfc_enclosing_case #(parameter STRUCTURAL=0,NEGATIVE=0)(output reg finished=0);
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,in_valid=0,in_last=0,out_ready=0;
  reg [511:0]in_data=0;
@@ -107,6 +107,16 @@ module wfc_enclosing_case #(parameter STRUCTURAL=0)(output reg finished=0);
    c8_write_quiet=1;wait(retired==1);repeat(5)@(negedge clk);
    if(acks||flits||!busy)$fatal(1,"fragment/C8 retirement substituted for whole-stage completion");
    whole_stage_identity=saved_owner;whole_stage_v=1;
+   if(NEGATIVE)begin
+     wait(dut.g_stage.u_boundary.u_ctrl.g_control_completion.v===1);
+     @(negedge clk);whole_stage_identity=saved_owner^47'd1;
+     #0.01;if(whole_stage_accepted)$fatal(1,"wrong identity received same-edge retirement ACK");
+     repeat(3)@(negedge clk);
+     if(!fault||!busy||acks||whole_stage_accepted||stage_request_identity!=saved_owner)
+       $fatal(1,"wrong identity after qualified capture erased owner/retired job");
+     $display("ENCLOSING_WRONG_OWNER full866 after_actual_completion_capture false_ACK=0 owned_job_retained=1 quarantine=1 PASS");
+     finished=1;
+   end else begin
    wait(acks==1);wait(flits==47);repeat(8)@(negedge clk);
    if(fault||busy||writes!=41)$fatal(1,"real enclosing nominal transfer failed");
    $display("ENCLOSING_NOMINAL mode=%0d MAXU866 fullVM32768x512 user865 request_stall8 restore_stall6 actual_C8_retire1 whole_ACK1 exact_writes41 exact_flits47 PASS",STRUCTURAL);
@@ -120,6 +130,7 @@ module wfc_enclosing_case #(parameter STRUCTURAL=0)(output reg finished=0);
    if(xb_rq!=={16{32'habcddcba}})$fatal(1,"warm reset erased finite mutable VM");xb_re=0;
    $display("ENCLOSING_WARM mode=%0d second_owned_job_retained=1 quarantine=1 false_ACK=0 fullVM_highword_preserved=1 PASS",STRUCTURAL);
    finished=1;
+   end
  end
 endmodule
 module tb_wfc_enclosing_stage;
@@ -127,4 +138,9 @@ module tb_wfc_enclosing_stage;
  wfc_enclosing_case #(.STRUCTURAL(0))original(a);
  wfc_enclosing_case #(.STRUCTURAL(1))changed(b);
  initial begin wait(a&&b);$display("ENCLOSING_MINIMUM_MECHANISM PASS no_canonical_producer_or_SSFF_claim");$finish;end
+endmodule
+
+module tb_wfc_enclosing_wrong_owner;
+ wire a;wfc_enclosing_case #(.STRUCTURAL(1),.NEGATIVE(1))bad_owner(a);
+ initial begin wait(a);$display("ENCLOSING_WRONG_OWNER_ALL PASS");$finish;end
 endmodule
