@@ -3,7 +3,7 @@
 
 Source-only preparation. Does not compile/run or qualify a physical source.
 The existing protected adapter may be used for additive port integration; the
-owner r8 endpoint still requires a genuine protected source/physical handoff.
+owner r9 endpoint still requires a genuine protected source/physical handoff.
 """
 import argparse
 import hashlib
@@ -53,7 +53,11 @@ def finite_boundary(source):
     core=cell/m['utilization']
     link=m['selected_transport']
     planned_total=link['conservative_area_charge_die_mm2']+core
-    return dict(scope='ACTUAL EXISTING PROTECTED BOUNDARY; rawR8 leaf reuse proposed, not agreed/selected',
+    return dict(scope='ACTUAL EXISTING PROTECTED BOUNDARY; corrected r9 leaf reuse proposed, not agreed/selected',
+        owner_successor=dict(source_commit='c8ba43664',variant='r9 RSEL1',
+            historical_routes=dict(r6='VOID_HELD_SLOT_RELOAD_BUG',r7='VOID_HELD_SLOT_RELOAD_BUG',r8='VOID_HELD_SLOT_RELOAD_BUG'),
+            owner_reported_old_mismatches=11950,owner_reported_checked_beats=23867,
+            owner_reported_r9_mismatches=0,report_is_not_protected_context_gold=True),
         actual_domains=m['actual_parent_clock_relation'],rings=rings,
         visibility='2-edge dual-rail pointer sampling +4 destination checked decode cuts after committed encoded slot; not an unconditional CDC metastability/backpressure bound',
         write_cache='actual WB16 checked cache, separate handoff and completion heads; capture only matching actual WR column. Cache-fill/head publication are real HCLK edges.',
@@ -65,13 +69,16 @@ def finite_boundary(source):
             existing_coded_word_bits=504,landing_owner_valid_bits=8,
             existing_DMR_capture_FF=2*(504+8),
             enable='advance = rd_online && !rd_fault && (!v3 || rd_ready)',
-            risk='rawR8 l_q loads unconditionally; protected u_d0 holds owned code/owner/valid on stall. Raw leaf timing does not qualify this1024FF capture-enable tree.',
+            risk='r6/r7/r8 unconditional reload corrupts held output after read pointer advances. r9 RSEL1 uses per-group kept valid vg and !vg || l_pop capture enable. Protected u_d0 holds code/owner/valid on !advance; preserve that enable and validate actual group-valid/selector alignment, not raw unconditional timing.',
             timing_arcs='actual select Q -> local column mux -> checked u_d0.D; actual advance/fault -> u_d0.EN; both code/owner rails; retain decoder u_d1/u_d2/u_d3 and actual hold minima',
-            added_latency_edges=0,physical_qualified=False),
+            added_latency_edges=None,latency_equivalence='PENDING_OWNER_REAL_GOLD',physical_qualified=False),
         loaded_setup_hold_or_slew_measured=False,protected_ETM=None,
         owner_leaf_reuse=dict(owner='Claude QWEN-PHYS',agreement='PENDING',selected=False,
-            mechanism='owner registered onehot selection/column mux only; no raw pointer/payload/ACK state becomes authority',
-            ports='clk,por_n,current_index,next_index,coded_rows -> code_word,read_fault',
+            mechanism='owner r9 registered onehot selection/column mux with held-valid per-group capture enable; no raw pointer/payload/ACK state becomes authority',
+            ports='PENDING owner mapping: clk,por_n,current_index,next_index,coded_rows,held_valid,capture_enable -> code_word,read_fault; no independent pop/retirement authority',
+            owner_source_commit='c8ba43664',required_variant='RSEL1; RSEL0 branch remains unconditional and is not the corrected leaf',
+            raw_group_enable='!vg || l_pop; vg_next = l_ren ? 1 : (l_pop ? 0 : vg)',
+            protected_group_enable='must agree mapping to existing advance/fetch and owned-valid; no unconditional D0 reload, no independent pointer advance',
             existing_protection='checked_state selector INIT1 + existing protected_ring rd_fault/advance/fetch/debt; existing u_d0 captures code_word',
             raw_width=281,raw_groups=10,max_column_bits=group_bits,
             coded_landing_bits=504,protected_groups=groups,
@@ -81,8 +88,10 @@ def finite_boundary(source):
             candidate_added_cell_mm2=cell,candidate_added_core_mm2=core,
             unchanged_existing_composed_die_mm2=link['conservative_area_charge_die_mm2'],
             candidate_composed_die_mm2=planned_total,candidate_scalar_margin_to858_mm2=858-planned_total,
-            candidate_composed_latency='same four decoder cuts; no new token-cycle assumption, stalls and existing wire/credit/capture paths still counted',
-            candidate_added_decoder_cycles=0,global_payload_bits_delta=0,
+            candidate_composed_latency='PENDING owner real golden comparison of held-valid selector/capture mapping; existing four decoder cuts remain, equality/zero added cycles unproven',
+            candidate_added_decoder_cycles=None,global_payload_bits_delta=0,
+            r9_group_valid_DMR_FF_if_separate=2*groups*128,
+            candidate_area_scope='selector-only lower-bound estimate; r9 held-valid copies/enable checks/buffers/load and any added capture cuts must be priced after owner source agreement; composed area is not complete r9 candidate fit',
             local_leaf_input_pins_max=64*group_bits,
             local_leaf_output_bits_max=group_bits,
             slot_fit=None,actual_caps_tracks_pin_access_and_clock_loads='owner finite loaded leaf/context required; no raw load equivalence assumed',
