@@ -4,7 +4,8 @@
 # hierarchy, routed in context of registered neighbours.  Run from a source root holding tools/ rtl/ physical/.
 # Usage: phys.sh <scratch dir> <tag>...   tag = c<PQ>r<R>_<v>:  R 16 (core-utilization 35) or 128 (480 x 480 um die);
 #   v = a (hold target 20 ps, slew margin 30%), b (20 ps, 40%), c (25 ps, 40%), d (22 ps, 45%, routability-off GPL),
-#   e (20 ps, 40%, repair buffer budget raised), f (25 ps, 40%, budget raised), g (22 ps, 45%, budget raised);
+#   e (20 ps, 40%, repair buffer budget raised), f (25 ps, 40%, budget raised), g (22 ps, 45%, budget raised),
+#   p / q (e with place density 0.55 / 0.70: extra placement diversity on EPYC2);
 #   a trailing k (e.g. c1r128_ck) also keeps ot_dsrom_aq12 as its own synthesis hierarchy: flattened, Yosys merges the
 #   quantiser's input register with the spine's BF16 stage-A register (same x_q bits) and ABC re-ripples its
 #   exponent subtract (v9 flat R128 post-CTS: aq12 m1 / s12_dd at -43..-474 ps); kept, it maps as the standalone
