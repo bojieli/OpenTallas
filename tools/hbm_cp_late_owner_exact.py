@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Exercise the default-off late-owner CP boundary against existing exact oracles."""
-import hashlib,json,subprocess
+import argparse,hashlib,json,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-out=ROOT/'results/rtl/hbm_cp_late_owner_20261006'
-out.mkdir(parents=True,exist_ok=True)
+parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,default=ROOT/'results/rtl/hbm_cp_late_owner_20261006')
+out=parser.parse_args().output.resolve()
+if out.exists():raise FileExistsError('Preserve prior exact evidence; supply a new --output directory')
+out.mkdir(parents=True)
 hashes={}
 for kind in ('exact','parent'):
     command=json.loads((ROOT/f'results/rtl/hbm_cp_control_tail_20261006/exact_r1/{kind}_command.json').read_text())

@@ -4,9 +4,9 @@ import argparse,hashlib,json,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--job-root',type=Path,required=True);ap.add_argument('--density',type=float,default=.55)
+    ap=argparse.ArgumentParser();ap.add_argument('--job-root',type=Path,required=True);ap.add_argument('--density',type=float,default=.55);ap.add_argument('--exact-record',type=Path,default=ROOT/'results/rtl/hbm_cp_late_owner_postmerge_20261006/terminal.json')
     args=ap.parse_args();job=args.job_root.resolve();job.mkdir(parents=True,exist_ok=True)
-    exact=json.loads((ROOT/'results/rtl/hbm_cp_late_owner_20261006/terminal.json').read_text())
+    exact=json.loads(args.exact_record.read_text())
     assert exact['pass_exact']
     for p,digest in exact['source_sha256'].items():assert hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==digest,p
     record=json.loads((ROOT/'results/physical/hbm_cp_control_tail_parent_context_20261006/r1_terminal/prepared.json').read_text())
@@ -30,7 +30,7 @@ p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
         # Same installed canonical GPL as Noether a0076e760/c3f2e5fb0:
         # initial placement removes an empty top-level component. The earlier
         # automatic-density prequery cannot initialize that empty component.
-        # Preserve exact modeled density0.5 and bind newly inserted IO cells
+        # Preserve the accepted fences and bind newly inserted IO cells
         # after native port buffering, before canonical initial placement.
         patch += '''
 p=Path('/OpenROAD-flow-scripts/flow/scripts/global_place.tcl')
