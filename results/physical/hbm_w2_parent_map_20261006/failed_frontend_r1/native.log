@@ -1,0 +1,72 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/output/read.ys' --
+
+1. Executing SLANG frontend.
+ERROR: Design elaboration failed; see full log for details
+Top level design units:
+    ot_hbm_w2_protected_parent_context
+
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv:111:13: warning: asynchronous load value missing for variable '\on.new_frame'
+  if(!por_n)begin control_code<=encode64(0);frame_lo<=encode64(0);frame_hi<=encode64(0);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv:110:10: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+ always @(posedge clk or negedge por_n)begin
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv:111:13: warning: asynchronous load value missing for variable '\on.next_debt'
+  if(!por_n)begin control_code<=encode64(0);frame_lo<=encode64(0);frame_hi<=encode64(0);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv:110:10: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+ always @(posedge clk or negedge por_n)begin
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:10:9: error: unroll limit of 4000 exhausted [--unroll-limit=]
+        for (p=1;p<=71;p=p+1)
+        ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:65:5: note: loop contributes to unroll tally
+    for(i=0;i<WORDS;i=i+1)
+    ^~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:9:7: note: loop contributes to unroll tally
+      for (k=0;k<7;k=k+1)
+      ^~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:7:7: note: loop contributes to unroll tally
+      for (p=1;p<=71;p=p+1)
+      ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:10:9: error: unroll limit of 4000 exhausted [--unroll-limit=]
+        for (p=1;p<=71;p=p+1)
+        ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:73:4: note: loop contributes to unroll tally
+   for(integer k=0;k<NC*9;k=k+1)code[k]<=encode64(next_ledger[k*64+:64]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:9:7: note: loop contributes to unroll tally
+      for (k=0;k<7;k=k+1)
+      ^~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:7:7: note: loop contributes to unroll tally
+      for (p=1;p<=71;p=p+1)
+      ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:65:13: warning: asynchronous load value missing for variable '\on.captured'
+  if(!por_n)begin
+            ^~~~~
+../src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:64:10: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+ always @(posedge clk or negedge por_n)begin
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:10:9: error: unroll limit of 4000 exhausted [--unroll-limit=]
+        for (p=1;p<=71;p=p+1)
+        ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:65:5: note: loop contributes to unroll tally
+    for(i=0;i<WORDS;i=i+1)
+    ^~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:9:7: note: loop contributes to unroll tally
+      for (k=0;k<7;k=k+1)
+      ^~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:7:7: note: loop contributes to unroll tally
+      for (p=1;p<=71;p=p+1)
+      ^~~~~~~~~~~~~~~~~~~~~
+
+Build failed: 3 errors, 3 warnings
+<suppressed ~1505 debug messages>

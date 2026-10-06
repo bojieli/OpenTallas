@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.h16.registered-parent.boundary-exact.v1",
+  "verdict": "PASS",
+  "cycles": 2415,
+  "checked_beats": 2376,
+  "heads": 16,
+  "packet_bits": 1618,
+  "output_bits": 529,
+  "extra_positive_edges": 3,
+  "checks": [
+    "all1618bits per-head launch ordering",
+    "all529 output association",
+    "default parameter OFF byte-for-bit legacy behavior",
+    "two midstream POR assertions and full pipeline flushing"
+  ],
+  "leaf_surrogate": "every input bit contributes to synchronous output; minimum boundary mechanism only, no arithmetic/head gate credit",
+  "macro_timing": "actual NB5 LEF/SSFF views unchanged; no physical timing result yet",
+  "source_sha256": {
+    "rtl/hbm_accel/ot_attn_tile_registered_parent.sv": "67a61d9dc0509f7f7cce197b7f5be5d0b597677a2c21354c88739117907d50bc",
+    "rtl/test/tb_h16_registered_parent.sv": "2b0802d4a8fb7130294ceac3aa0462655276f767bcfc5fedefdffe8439bf5319",
+    "tools/uarch_model.py": "a585517cffc3d7a9236b56192cfbefe2c690d59be06dbfc5af1ce011df226027",
+    "results/uarch/hbm_attn_registered_parent_20261005/model.json": "74a66614687d10c02acdcf273aa3e15df42b4f6afe61e80fa23e9e2f5b99a51c"
+  },
+  "SS_FF_qualified": false,
+  "parent_die_qualified": false,
+  "adopted": false
+}

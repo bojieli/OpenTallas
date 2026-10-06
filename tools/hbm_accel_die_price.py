@@ -92,15 +92,15 @@ def record(m, root, out=None, only=''):
                     cases[key]['windows_baseline_subtracted'] = windows(d, m, base)
                 else:
                     cases[key]['windows'] = windows(d, m)
-                if d.parent.name != F.FINAL_ROUND:
+                if d.parent.name != m.get('final_round', F.FINAL_ROUND):
                     cases[key]['note'] = ('earlier round: wire_by_class / window labels use the final net and region map '
                                           '(approximate); overflow figures are exact')
             elif man.get('case') == 'c':
                 cases[key] = Q.record_c(d)
                 cases[key]['group'] = d.parent.name
-                if man.get('power_w', 1.0) == 0.0 and man.get('bump_sites', 1) == 0:
-                    cases[key]['no_core_load'] = ('window lies wholly in a link / host strip: no core-grid load and '
-                                                     'no core power bumps (the macros are on their own supplies)')
+                if man.get('power_w', 1.0) == 0.0:
+                    cases[key]['no_core_load'] = ('Window has zero modeled core power. Grid/load sites and power '
+                                                 'bumps may remain, but a zero-current solve is not loaded IR evidence.')
         except Exception as e:  # noqa: BLE001
             cases[key] = dict(error=repr(e))
     ir = defaultdict(list)
@@ -121,10 +121,16 @@ def record(m, root, out=None, only=''):
                            worst_window=worst[1] if worst else None, failing=[r[1] for r in ok if not r[2]],
                            incomplete=[r[1] for r in rows if r[0] is None],
                            no_core_load_windows=ir.get(g_ + '#na', []))
+    out = Path(out) if out else ROOT / F.OUT / 'feasibility.json'
+    if out.is_file():       # r10+: rounds live in two scratch roots; keep every earlier round's record (failures included)
+        old = json.loads(out.read_text())
+        for k_, v_ in old.get('cases', {}).items():
+            cases.setdefault(k_, v_)
+        for k_, v_ in old.get('ir_summary', {}).items():
+            summary.setdefault(k_, v_)
     rec = dict(schema='opentallas.hbm-accel-die-floorplan.feasibility.v1',
                tool_sha256=dict(fp=F.sha('tools/hbm_accel_die_fp.py'), price=F.sha('tools/hbm_accel_die_price.py')),
                cases=cases, ir_summary=summary)
-    out = Path(out) if out else ROOT / F.OUT / 'feasibility.json'
     out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
     print(json.dumps(dict(cases=len(cases), ir_summary=summary), indent=1))
     return 0
@@ -148,11 +154,19 @@ def routed_paths(m, grt_work):
     by = {it.name: it for it in m['insts']}
     bus = {b_[0]: b_ for b_ in m['buses']}
 
+    pxy = m.get('pin_xy')
+
     def manh(b):
         def near(it, q):
             return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
         e = bus[b][3]
         A, B = by[e[0][0]], by[e[-1][0]]
+        if pxy:                 # fixed-pin elements: from the pin (the box distance of abutting tiles is 0)
+            pa, pb = pxy(*e[0]), pxy(*e[-1])
+            if pa or pb:
+                pa = pa or near(A, pb)
+                pb = pb or near(B, pa)
+                return abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
         a = near(A, (B.x + B.w / 2, B.y + B.h / 2))
         bb = near(B, a)
         a = near(A, bb)
@@ -259,6 +273,28 @@ def price(m, grt_work, out=None):
     return 0
 
 
+def floor(m):
+    """Plan-time Manhattan floor of a floorplan (no GRT): every path's stages from the placed station / pin boxes, priced
+    by the same terms as `price` (the stages_430_manhattan basis)."""
+    rp = {}
+    for p, v in F.manhattan_paths(m).items():
+        rp[p] = dict(segments=v['segments'], routed_um=v['um'], stages_430=v['stages_430'], stages_504=v['stages_504'],
+                     stages_430_mean_bundle=v['stages_430'], stages_430_median_bundle=v['stages_430'],
+                     stages_430_manhattan=v['stages_430'])
+    cm = class_max(rp)
+    s_ = _price(m, rp, cm, 'stages_430_manhattan')
+    g_ = s_['compositions']['ds_matched']['rows']['gate']
+    out = dict(die_mm2=round(m['geo']['W'] * m['geo']['H'] / 1e6, 2), one_way_cycles=s_['one_way_cycles'],
+               ds_added_us=s_['compositions']['ds_matched']['added_us'],
+               terms_us={k: v['us'] for k, v in s_['compositions']['ds_matched']['terms'].items()},
+               ds_gate_AR_tok_s=g_['AR_tok_s_priced'], ds_gate_MTP_tok_s=g_['MTP_tok_s_priced'],
+               qwen_tp4=s_['qwen_8k']['b_TP4_iso_silicon']['ar_tok_s_priced'],
+               qwen_tp2=s_['qwen_8k']['a_TP2_same_silicon']['ar_tok_s_priced'],
+               worst={c: e['worst'] for c, e in cm.items() if not c.startswith('hub_')})
+    print(json.dumps(out, indent=1))
+    return out
+
+
 def _price(m, rp, cm, key):
     hz = F.CLK_HZ
 
@@ -268,19 +304,22 @@ def _price(m, rp, cm, key):
     def hubmax(rx):
         v = [e[key] for k_, e in cm.items() if re.fullmatch(rx, k_)]
         return max(v) if v else 0
+    fwd = m['variant'].get('fwd')
     S = dict(
         xbcast=st('xbcast') + hubmax(r'hub_su_\w+_vm') + MESO_CYC,
         control=st('control') + MESO_CYC,
         result=st('result') + MESO_CYC,
-        weight=st('weight'),
+        weight=st('weight') + (MESO_CYC if fwd else 0),       # r15: row-1 lines end in a meso station
         expert_req=st('expert_req') + MESO_CYC,
         kv=st('kv') + MESO_CYC,
         ik=st('ik') + MESO_CYC,
-        link=st('link'),
+        link=st('link') + (MESO_CYC if fwd else 0),           # r15: meso into the macro / endpoint pclk
         su_coll=hubmax(r'hub_su_\w+_coll'),
         coll_su=hubmax(r'hub_coll_su_\w+'),
         attn_out=st('attn_out'),
     )
+    if 'attn_q' in cm:      # r15 attn_rtl: the query operand VM -> farthest tile (r1-r14b had no query net)
+        S['attn_q'] = st('attn_q') + MESO_CYC
     comps = {}
     for tag, rel in (('ds_matched', F.MATCHED), ('ds_inherited', F.ALLMEAS)):
         comp = json.loads((ROOT / rel).read_text())
@@ -311,17 +350,21 @@ def _price(m, rp, cm, key):
             'stream service -> scan quadrant (near-HBM attention) per first-access KV / window / embedding read')
         add('index_keys_wire', n.get('index_scores', 0), S['ik'], 'stream service -> index quarter per index scan')
         add('attn_out_wire', n.get('attn', 0), S['attn_out'], 'tile row end -> index quarter -> SU per attention step')
+        if 'attn_q' in S:
+            add('attn_q_wire', n.get('attn', 0), S['attn_q'],
+                'VM -> corner tile query chain + packet hops to the farthest tile + meso, per attention step (r15)')
         tot_us = round(sum(v['us'] for v in terms.values()), 3)
         rows = {}
         if tag == 'ds_matched':
             g = comp['gate']
+            tau = g.get('tau', 3.8879)          # the gate's tau (4.159 owner 6-class blend since 2026-10-05; r8 used 3.8879)
             for name, ar, mtp in (('gate', g['AR_us'], g['MTP_step_us']), ('matched', comp['headline']['AR_us'],
                                                                            comp['headline']['MTP_step_us']),
                                   ('today', g['today_AR_us'], g['today_MTP_step_us'])):
                 rows[name] = dict(AR_us=ar, AR_priced_us=round(ar + tot_us, 3), AR_delta_pct=round(100 * tot_us / ar, 2),
                                   MTP_step_us=mtp, MTP_step_priced_us=round(mtp + tot_us, 3),
                                   AR_tok_s_priced=round(1e6 / (ar + tot_us), 1),
-                                  MTP_tok_s_priced=round(3.8879 * 1e6 / (mtp + tot_us), 1))
+                                  MTP_tok_s_priced=round(tau * 1e6 / (mtp + tot_us), 1), tau=tau)
             rows['note'] = ('the MTP step carries the same die-level traversals as the AR walk (the P6 verify walk has '
                             'the AR node sequence; the draft is off-die-path); today-clock rows priced at 1.2 GHz wire '
                             'stages (conservative: their SM clock is lower)')
@@ -352,3 +395,141 @@ def _price(m, rp, cm, key):
                      'measured inside its cycles; the W12 tile die (1,536 tiles, 421.5 MiB SRAM residence, ~382 mm2 tile '
                      'core) is NOT this SM die and is not floorplanned here')
     return dict(one_way_cycles=S, compositions=comps, qwen_8k=qwen)
+
+
+# ------------------------------------------------------------------------------------------------ Qwen tile die
+Q_BASES = (('stages_430', 'BOUND: longest k16 bundle of each routed segment (every bit registered in time)'),
+           ('stages_430_median_bundle', 'median bundle of each routed segment (GRT outlier detours excluded)'),
+           ('stages_430_mean_bundle', 'mean bundle of each routed segment'),
+           ('stages_430_manhattan', 'FLOOR: Manhattan length between the placed pins of each segment (no detour)'))
+
+
+def _q_vehicle(rel):
+    """The measured vehicle's own wire-stage parameters (bd, nws, tws, ord) from a stage's token_result.json."""
+    d = json.loads((ROOT / rel).read_text())['design_point']
+    return {k: d[k] for k in ('tp', 'bd', 'nws', 'tws', 'ord')}
+
+
+def q_one_way(m, rp, key):
+    """One-way die-level depths (cycles at 1.2 GHz) of the Qwen tile die for one basis.  Element-internal forwarding
+    is fixed by construction: hop_stages per tile pitch (corridor and fill banks every <= 430.56 um)."""
+    T = m['tile_element']
+    hop = T['hop_stages']
+
+    def mx(prefix):
+        v = [(e[key], p) for p, e in rp.items() if p.startswith(prefix) and key in e]
+        return max(v) if v else (0, None)
+    bd, bdp = mx('bd_')
+    tr, trp = mx('tree_')
+    tw, twp = mx('tws_')
+    fl, flp = mx('fill_')
+    st, stp = mx('stat_')
+    lk, lkp = mx('link_')
+    return dict(
+        bd=bd + 8 * hop, bd_worst=bdp, bd_die_net=bd, bd_element=8 * hop,
+        tree=tr, tree_worst=trp,
+        tws=tw + MESO_CYC, tws_worst=twp,
+        coll=rp['coll_tx'][key] + rp['coll_rx'][key],
+        link=lk, link_worst=lkp,
+        fill=fl + F.QROWS * hop + MESO_CYC, fill_worst=flp, fill_element=F.QROWS * hop,
+        stat=st, stat_worst=stp)
+
+
+def _q_price(m, S_, key):
+    hz = F.CLK_HZ
+    me = json.loads((ROOT / F.Q_ME_OPS).read_text())['me_ops']
+    qa = json.loads((ROOT / F.QWEN_ALL).read_text())
+    ch = json.loads((ROOT / F.Q_CHAINS).read_text())
+    out = {}
+    veh_of_tp = {}
+
+    def terms(veh, stages):
+        """stages: [(name, count, decoder layer?, crossings, kv first access?)]"""
+        me_ops = sum(c * (me['per_layer_pass'] if dec else me['per_head']) for _, c, dec, _, _ in stages)
+        cr = sum(c * x for _, c, _, x, _ in stages)
+        kv = sum(c * k for _, c, _, _, k in stages)
+        t = dict(
+            bd_delta=dict(count=me_ops, cycles_each=max(0, S_['bd'] - veh['bd']),
+                          basis=f'x / instruction broadcast: floorplan {S_["bd"]} (head chain + entry + 8 tile hops) '
+                                f'against the vehicle bd {veh["bd"]}, once per ME op (6 a layer, 1 the head)'),
+            tree_delta=dict(count=me_ops, cycles_each=max(0, S_['tree'] - 4 * veh['nws']),
+                            basis=f'in-block split tree, worst leaf -> root {S_["tree"]} against 4 levels x nws '
+                                  f'{veh["nws"]}, once per ME op'),
+            tws_delta=dict(count=me_ops, cycles_each=max(0, S_['tws'] - veh['tws']),
+                           basis=f'block word -> port slice -> core tree top {S_["tws"]} (incl. meso 2) against the '
+                                 f'vehicle tws {veh["tws"]}, once per ME op'),
+            collective=dict(count=cr, cycles_each=S_['coll'] + 2 * S_['link'],
+                            basis='core <-> collective block round trip + collective <-> farthest SerDes both ways, per '
+                                  'switch crossing (the TP link budget LAT excludes the on-die run)'),
+            kv_first_access=dict(count=kv, cycles_each=S_['fill'] + S_['stat'],
+                                 basis='stream service -> farthest tile of its column (fill net + 16 element hops + '
+                                       'async FIFO) + service -> core status counts, per layer whose KV segment the '
+                                       'engine waits for (kv_wait > 0)'),
+            stream_first_word=dict(count=1, cycles_each=S_['fill'] + S_['stat'],
+                                   basis='the same depth once a token for the stream\'s first word (later words are '
+                                         'prefetched behind it: a constant pipeline shift)'))
+        for v in t.values():
+            v['cycles'] = v['count'] * v['cycles_each']
+        return t, me_ops
+    for dn_, d in qa['designs'].items():
+        veh = _q_vehicle(d['stages'][-1]['source'])
+        veh_of_tp[veh['tp']] = veh
+        st_ = [(s_['stage'], s_['count'], s_['stage'] != 'head', s_.get('coll_crossings', 0),
+                1 if s_['attribution_die0'].get('kv_wait', 0) > 0 else 0) for s_ in d['stages']]
+        t, me_ops = terms(veh, st_)
+        add = sum(v['cycles'] for v in t.values())
+        base = d['composed_cycles']
+        out[dn_] = dict(composed_cycles=base, ar_tok_s=d['ar_tok_s'], vehicle_wire_stages=veh, me_ops=me_ops,
+                        terms=t, added_cycles=add, priced_cycles=base + add,
+                        ar_tok_s_priced=round(hz / (base + add), 1), delta_pct=round(100 * add / base, 2),
+                        source=F.QWEN_ALL)
+    for row, tp in (('a_AR_spread', 2), ('b_AR_spread', 4)):
+        r_ = ch['rows'][row]
+        st_ = []
+        for cnt, term, cyc in r_['composition']:
+            head = 'head' in term
+            st_.append((term, cnt, not head, 1 if head else 2, 0 if head else 1))
+        t, me_ops = terms(veh_of_tp[tp], st_)
+        add = sum(v['cycles'] for v in t.values())
+        base = r_['cycles']
+        out[row] = dict(composed_cycles=base, ar_tok_s=r_['tok_s'], vehicle_wire_stages=veh_of_tp[tp], me_ops=me_ops,
+                        terms=t, added_cycles=add, priced_cycles=base + add,
+                        ar_tok_s_priced=round(hz / (base + add), 1), delta_pct=round(100 * add / base, 2),
+                        source=F.Q_CHAINS, note='every layer streamed (spread): 2 crossings and a KV first access a '
+                                                'layer, head 1 crossing')
+    return out
+
+
+def price_qwen(m, grt_work, out=None):
+    grt_work = Path(grt_work)
+    tp = F.q_tree_paths(m)
+    m2 = dict(m, paths=dict(m['paths'], **{f'tree_{t}': ids for t, ids in tp.items()}))
+    rp = routed_paths(m2, grt_work)
+    rec = dict(schema='opentallas.hbm-accel-qwen-die.wire-stages.v1', grt_case=str(grt_work.name),
+               stage_pitch_um=F.LINK_STAGE_UM, meso_crossing_cycles=MESO_CYC, clock_hz=F.CLK_HZ,
+               tile_hop_stages=m['tile_element']['hop_stages'], bases={})
+    for key, basis in Q_BASES:
+        S_ = q_one_way(m2, rp, key)
+        rows = _q_price(m, S_, key)
+        rec['bases'][key] = dict(basis=basis, one_way_cycles=S_, rows=rows,
+                                 summary={k: dict(ar_tok_s=v['ar_tok_s'], ar_tok_s_priced=v['ar_tok_s_priced'],
+                                                  delta_pct=v['delta_pct'], added_cycles=v['added_cycles'])
+                                          for k, v in rows.items()})
+    b = rec['bases']['stages_430']
+    rec.update(one_way_cycles=b['one_way_cycles'], qwen_8k=b['rows'])
+    rec['paths'] = {p: v for p, v in rp.items() if not p.startswith('tree_')}
+    tr = {p: v for p, v in rp.items() if p.startswith('tree_') and 'stages_430' in v}
+    rec['tree_paths_summary'] = dict(paths=len(tr), max_stages_430=max(v['stages_430'] for v in tr.values()),
+                                     max_stages_430_manhattan=max(v['stages_430_manhattan'] for v in tr.values()))
+    rec['me_ops_source'] = F.Q_ME_OPS
+    rec['scope'] = ('Qwen3-8B HBM accelerator tile die (the HA8 W12 vehicle\'s organisation): the vehicle cycles carry '
+                    'its own bd / nws / tws stage parameters; the floorplan prices the excess of the routed depths '
+                    'over them per ME op, plus the die-level collective run per crossing and the fill + status depth '
+                    'per KV first access and once a token.  Deltas are clamped at 0 (a shorter floorplan path is not '
+                    'credited).  Bounds from routed length, not die-level STA.')
+    rec['tool_sha256'] = dict(fp=F.sha('tools/hbm_accel_die_fp.py'), price=F.sha('tools/hbm_accel_die_price.py'))
+    out = Path(out) if out else ROOT / F.Q_OUT / 'wire_stages.json'
+    out.write_text(json.dumps(rec, indent=1) + '\n')
+    print(json.dumps({k: dict(one_way=v['one_way_cycles'], summary=v['summary']) for k, v in rec['bases'].items()},
+                     indent=1, default=str)[:8000])
+    return 0

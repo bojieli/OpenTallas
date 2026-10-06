@@ -1,0 +1,6 @@
+read_liberty -lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_slang --top ot_v41_v9_parent_clock_context_frontend /out/ot_v41_v9_parent_clock_context_frontend.sv /out/ot_v41_pair_pq_ld_frontend.sv /src/rtl/v41die/ot_v41_retn_w17w10.sv /src/rtl/v41rom/ot_v41_ret.sv /src/rtl/v41rom/ot_v41_kreg.sv /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv; hierarchy -top ot_v41_v9_parent_clock_context_frontend; proc; flatten; opt; write_json /out/parent_fixed.json; write_rtlil /out/parent_fixed.rtlil; stat

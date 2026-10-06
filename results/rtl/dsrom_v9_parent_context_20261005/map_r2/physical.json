@@ -1,0 +1,255 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T21:56:57.265113+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_v9_parent_clock_context",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.727,
+    "core_input_delay_min_ns": 0.36,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_v9_parent_context/boundary.sdc",
+          "sha256": "e4c4ae0503bbcf913c7ff5887d7fc8d4f7a1efb8c7847ceee463dbfad54f34bb"
+        }
+      ],
+      "lines": [
+        "set gp [get_pins -quiet g_qx.g_cg.u_cg.u_icg/GCLK]",
+        "set cp [get_pins -quiet g_qx.g_cg.u_cg.u_icg/CLK]",
+        "if {[llength $gp]!=1 || [llength $cp]!=1} {error \"literal source ICG pins missing\"}",
+        "create_generated_clock -name q_gated -master_clock core_clk -source $cp -combinational $gp",
+        "set_clock_uncertainty -setup 60 [get_clocks {core_clk q_gated}]",
+        "set_clock_uncertainty -hold 25 [get_clocks {core_clk q_gated}]",
+        "set_clock_gating_check -setup 60 -hold 25 [get_cells g_qx.g_cg.u_cg.u_icg]",
+        "set gi [get_ports {tree_valid* tree_idle* tree_payload* busy_source frontend_fault_source bank_fault_source* walk_busy}]",
+        "remove_input_delay $gi",
+        "set_input_delay -min 360 -clock q_gated $gi",
+        "set_input_delay -max 727 -clock q_gated $gi",
+        "set go [get_ports {engine_xs*}]",
+        "remove_output_delay $go",
+        "set_output_delay -min 360 -clock q_gated $go",
+        "set_output_delay -max 727 -clock q_gated $go",
+        "remove_output_delay [get_ports engine_clk]",
+        "source /src/physical/dsrom_v9_parent_context/loaded_ports.sdc"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.727,
+    "output_delay_min_ns": 0.36,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context.sv",
+        "sha256": "0379c347f52652be54fecdc2404cd0bccc883cd45f394e2c2f829163e5f3c364",
+        "size_bytes": 8857
+      },
+      {
+        "path": "rtl/v41die/ot_v41_pair_pq_ld.sv",
+        "sha256": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+        "size_bytes": 3742
+      },
+      {
+        "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+        "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+        "size_bytes": 2053
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_ret.sv",
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "size_bytes": 9658
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_kreg.sv",
+        "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+        "size_bytes": 1505
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_cg.sv",
+        "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "size_bytes": 2051
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      }
+    ],
+    "top": "ot_v41_v9_parent_clock_context"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\ncp /work/constraint.sdc /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 4 thread(s).\nmkdir -p /work/objects/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\nlink_design ot_v41_v9_parent_clock_context\nread_sdc /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.sdc\nError: 1_2_yosys.sdc, 22 invalid command name \"remove_input_delay\"\n\nElapsed time: 0:02.41[h:]min:sec. CPU time: user 2.28 sys 0.13 (99%). Peak memory: 445648KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_synth.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T21:56:31.681209+00:00",
+  "git": {
+    "commit": "d7635aa4c7b0661a520e01cf6cee3899f23a7531",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41_v9_parent_clock_context",
+      "--source",
+      "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context.sv",
+      "--source",
+      "rtl/v41die/ot_v41_pair_pq_ld.sv",
+      "--source",
+      "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_ret.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_kreg.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_cg.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      ".060",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--core-input-delay-min-ns",
+      ".360",
+      "--core-input-delay-max-ns",
+      ".727",
+      "--output-delay-min-ns",
+      ".360",
+      "--output-delay-max-ns",
+      ".727",
+      "--sdc-append",
+      "physical/dsrom_v9_parent_context/boundary.sdc",
+      "--stages",
+      "pnr",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--die-area",
+      "0",
+      "0",
+      "1040.256",
+      "239.76",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "1038.096",
+      "237.60",
+      "--place-density",
+      ".5",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--orfs-var",
+      "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl",
+      "--orfs-var",
+      "FASTROUTE_TCL=/src/physical/dsrom_v9_parent_context/fastroute.tcl",
+      "--routing-layers",
+      "M2",
+      "M8",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_v9_parent_context/regions.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/dsrom_v9_parent_context/clock.tcl",
+      "--step-tcl",
+      "POST_CTS=physical/dsrom_v9_parent_context/clock.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/dsrom_v9_parent_context/replay_checks.tcl",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r2/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r2/work"
+    ],
+    "driver": {
+      "commit": "d7635aa4c7b0661a520e01cf6cee3899f23a7531",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r2"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r2"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

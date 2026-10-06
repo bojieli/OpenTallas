@@ -1,0 +1,19 @@
+%Warning: die1_p1.hex:0: $readmem file not found
+%Warning: die1_p0.hex:0: $readmem file not found
+%Warning: die0_p1.hex:0: $readmem file not found
+%Warning: die0_p0.hex:0: $readmem file not found
+HOST_IMAGE_VISIBLE die=0 bytes=134217728 CRC=13787831 readback=13787831 sectors=4194304
+HOST_IMAGE_VISIBLE die=1 bytes=134217728 CRC=582fba63 readback=582fba63 sectors=4194304
+CODE_PUBLISHED accepted=21470 actualSRAMwrites=21470
+LOADED 5346 instruction words x 4 SMs, 43 commands x 2 dies
+STEP 0 pos 0 in 0 next 2815 OK  (step 6380917 clk_sm cycles, sim cycle 204093125) fault 0
+STEP 1 pos 1 in 3563 next 3537 OK  (step 6405249 clk_sm cycles, sim cycle 210498424) fault 0
+STEP 2 pos 2 in 3745 next 2047 OK  (step 6388722 clk_sm cycles, sim cycle 216887197) fault 0
+CQ kind 2 status 2 slot 0 tag 7 pos 2 token 2047 step_cycles 6388722 generated 1
+BAR tokens counter 1
+BAR MSIs 0
+TB_GPU_HBM_SYSTEM PASS steps=3 cq_tokens=1 clk_sm_cycles=216888173 fails=0
+- /srv/opentallas-scratch2/scratch/codex/hbmsm-host-smoke-5f2337714/src/rtl/test/hbm_accel/tb_hbm_accel_loader_token_host.sv:287: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 181ms; walltime 39705.341 s; speed 4.556 us/s
+- Verilator: cpu 315343.298 s on 8 threads; allocated 2911 MB

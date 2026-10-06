@@ -1,0 +1,42 @@
+{
+  "status": "PASS_ACTUAL_HEADER_ARCHIVE_BINDING_ONLY",
+  "required_DPI_prototypes": [
+    "extern long long ot_hdc_fmul_protectlib_combo_update(void* handle___05FV, svLogic v, const svLogicVecVal* a, const svLogicVecVal* b, svLogicVecVal* y, svLogic* fault);",
+    "extern long long ot_hdc_fmul_protectlib_seq_update(void* handle___05FV, svLogic clk, svLogic rst_n, svLogicVecVal* y, svLogic* fault);",
+    "extern long long ot_hdc_qadd_protectlib_combo_update(void* handle___05FV, svLogic v, const svLogicVecVal* a, const svLogicVecVal* b, svLogicVecVal* y, svLogic* fault);",
+    "extern long long ot_hdc_qadd_protectlib_seq_update(void* handle___05FV, svLogic clk, svLogic rst_n, svLogicVecVal* y, svLogic* fault);",
+    "extern void ot_hdc_fmul_protectlib_check_hash(int protectlib_hash___05FV);",
+    "extern void ot_hdc_fmul_protectlib_combo_ignore(void* handle___05FV, svLogic v, const svLogicVecVal* a, const svLogicVecVal* b);",
+    "extern void ot_hdc_fmul_protectlib_final(void* handle___05FV);",
+    "extern void ot_hdc_qadd_protectlib_check_hash(int protectlib_hash___05FV);",
+    "extern void ot_hdc_qadd_protectlib_combo_ignore(void* handle___05FV, svLogic v, const svLogicVecVal* a, const svLogicVecVal* b);",
+    "extern void ot_hdc_qadd_protectlib_final(void* handle___05FV);",
+    "extern void* ot_hdc_fmul_protectlib_create(const char* scope___05FV);",
+    "extern void* ot_hdc_qadd_protectlib_create(const char* scope___05FV);"
+  ],
+  "actual_import_symbols": [
+    "ot_hdc_fmul_protectlib_check_hash",
+    "ot_hdc_fmul_protectlib_combo_ignore",
+    "ot_hdc_fmul_protectlib_combo_update",
+    "ot_hdc_fmul_protectlib_create",
+    "ot_hdc_fmul_protectlib_final",
+    "ot_hdc_fmul_protectlib_seq_update",
+    "ot_hdc_qadd_protectlib_check_hash",
+    "ot_hdc_qadd_protectlib_combo_ignore",
+    "ot_hdc_qadd_protectlib_combo_update",
+    "ot_hdc_qadd_protectlib_create",
+    "ot_hdc_qadd_protectlib_final",
+    "ot_hdc_qadd_protectlib_seq_update"
+  ],
+  "readonly_archive_sha256": {
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_fmul/libot_hdc_fmul.a": "9b38f4588b783b1e38d6cdb62d36f1e8718715f1402981aebb5b16e90ed4d9fa",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_qadd/libot_hdc_qadd.a": "6c703354d9406f5a32a189c237e9a75fd8346f105ae80ad1e28be04627eb999e",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a": "85455fa33f43a2569b9356edd2643d1c16d46554b2c435716f3857f1ebad8df5"
+  },
+  "canonical_runtime": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator",
+  "make_fragment": "# Genuine retained 5.050 protectlibs; top-only build, no child targets.\nVM_HIER_LIBS := /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_fmul/libot_hdc_fmul.a /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_qadd/libot_hdc_qadd.a /srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a\n",
+  "frontend_rerun": false,
+  "engine_rebuild": false,
+  "full_token_pass": false,
+  "physical_qualified": false
+}

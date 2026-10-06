@@ -1,0 +1,362 @@
+{
+  "scope": "Actual H16 boundary VSS rail landing in existing slot, source d42ab0308",
+  "actual_native_core_um": [
+    0,
+    0,
+    1349.082,
+    1349.73
+  ],
+  "selected_model_slot_um": [
+    1349.112,
+    1349.976
+  ],
+  "actual_tap_master": "TAPCELL_ASAP7_75t_R",
+  "actual_tap_VSS_M1_y_um": [
+    -0.009,
+    0.009
+  ],
+  "actual_unconnected_bottom_rail_segments_x_um": [
+    [
+      304.83,
+      347.976
+    ],
+    [
+      652.806,
+      695.952
+    ],
+    [
+      1000.782,
+      1043.928
+    ],
+    [
+      1348.758,
+      1349.082
+    ]
+  ],
+  "existing_connections": [
+    "M1-M2",
+    "M2-M5",
+    "M5-M8",
+    "M8-M9",
+    "macro M6-M9"
+  ],
+  "macro_M6_M9_connection_changed": false,
+  "upper_M8_M9_grid": {
+    "width_um": 0.474,
+    "pitch_um": 5.4,
+    "total_PG_fraction": 0.17555555555555555,
+    "unchanged": true
+  },
+  "M6_M9_signal_track_delta": 0,
+  "MAC_per_cycle_delta": 0,
+  "memory_bytes_per_cycle_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "FF_bits_added": 0,
+  "replicas": 1,
+  "RTL_latency_edges_added": 0,
+  "area_or_slot_resize": false,
+  "PG_connected_qualified": true,
+  "loaded_IR_qualified": false,
+  "CTS_hold_original_failure_preserved": true,
+  "actual_M2_width_table_um": [
+    0.018,
+    0.09,
+    0.162,
+    0.234,
+    0.306,
+    0.378
+  ],
+  "initial_width_054_rejected_PDN0114_preserved": true,
+  "wide_full_boundary_stripe_rejected_PDN0179": true,
+  "selected_repair": {
+    "mechanism": "Original M1 taps -> retained 9-cut M1/M2 rail arrays -> isolated M2 bottom rail -> local M2/M3 bridge -> connected .540 ground rail -> original M5/M8/M9; original macro M6/M9 feeds untouched",
+    "count": 4,
+    "M2_landing_width_um": 0.09,
+    "M2_landing_length_um": 0.09,
+    "M3_width_um": 0.09,
+    "M3_extent_y_um": [
+      0.018,
+      0.558
+    ],
+    "M2_M3_native_vias_per_bridge": 2,
+    "other_net_M3_clearance_um": 0.048,
+    "maximum_local_M3_signal_tracks_per_bridge": 8,
+    "added_M2_metal_um2": 0.0324,
+    "added_M3_metal_um2": 0.19440000000000002,
+    "upper_M6_M9_tracks_added": 0,
+    "existing_tap_and_upper_grid_unchanged": true,
+    "loaded_IR_qualified": false,
+    "native_M3_pitch_um": 0.036,
+    "actual_M3_native_rule_um": {
+      "min_spacing": 0.018,
+      "end_to_end": 0.031,
+      "corner": 0.02
+    },
+    "actual_M2_M3_lower_via_center_y_um": 0.036,
+    "bottom_M2_extent_y_um": [
+      -0.009,
+      0.081
+    ],
+    "existing_outward_PG_envelope_extended": false,
+    "native_via": "VIA23",
+    "minimal_landing_basis": "Actual VIA23 M2 landing .028 x .018 fits legal .090-square widened rail; .180-long trial landing excluded the finite edge unnecessarily.",
+    "patches": [
+      {
+        "x_um": 326.421,
+        "lower_M2_bbox_um": [
+          326.376,
+          -0.009,
+          326.466,
+          0.081
+        ],
+        "M3_bbox_um": [
+          326.376,
+          0.018,
+          326.466,
+          0.558
+        ],
+        "via_centers_um": [
+          [
+            326.421,
+            0.036
+          ],
+          [
+            326.421,
+            0.54
+          ]
+        ],
+        "native_tech_via": "VIA23"
+      },
+      {
+        "x_um": 674.397,
+        "lower_M2_bbox_um": [
+          674.352,
+          -0.009,
+          674.442,
+          0.081
+        ],
+        "M3_bbox_um": [
+          674.352,
+          0.018,
+          674.442,
+          0.558
+        ],
+        "via_centers_um": [
+          [
+            674.397,
+            0.036
+          ],
+          [
+            674.397,
+            0.54
+          ]
+        ],
+        "native_tech_via": "VIA23"
+      },
+      {
+        "x_um": 1022.373,
+        "lower_M2_bbox_um": [
+          1022.328,
+          -0.009,
+          1022.418,
+          0.081
+        ],
+        "M3_bbox_um": [
+          1022.328,
+          0.018,
+          1022.418,
+          0.558
+        ],
+        "via_centers_um": [
+          [
+            1022.373,
+            0.036
+          ],
+          [
+            1022.373,
+            0.54
+          ]
+        ],
+        "native_tech_via": "VIA23"
+      },
+      {
+        "x_um": 1349.037,
+        "lower_M2_bbox_um": [
+          1348.992,
+          -0.009,
+          1349.082,
+          0.081
+        ],
+        "M3_bbox_um": [
+          1348.992,
+          0.018,
+          1349.082,
+          0.558
+        ],
+        "via_centers_um": [
+          [
+            1349.037,
+            0.036
+          ],
+          [
+            1349.037,
+            0.54
+          ]
+        ],
+        "native_tech_via": "VIA23"
+      }
+    ],
+    "M2_signal_tracks_reserved_per_landing_upper": 8,
+    "M3_signal_tracks_reserved_per_bridge_upper": 8,
+    "routing_capacity_credit": 0,
+    "M1_M2_rail_vias": [
+      {
+        "x_um": 326.421,
+        "y_um": 0,
+        "native_block_via": "via1_2_324_18_1_9_36_36",
+        "V1_cuts": 9,
+        "M1_box_um": [
+          -0.153,
+          -0.009,
+          0.153,
+          0.009
+        ],
+        "M2_box_um": [
+          -0.155,
+          -0.009,
+          0.155,
+          0.009
+        ]
+      },
+      {
+        "x_um": 674.397,
+        "y_um": 0,
+        "native_block_via": "via1_2_324_18_1_9_36_36",
+        "V1_cuts": 9,
+        "M1_box_um": [
+          -0.153,
+          -0.009,
+          0.153,
+          0.009
+        ],
+        "M2_box_um": [
+          -0.155,
+          -0.009,
+          0.155,
+          0.009
+        ]
+      },
+      {
+        "x_um": 1022.373,
+        "y_um": 0,
+        "native_block_via": "via1_2_324_18_1_9_36_36",
+        "V1_cuts": 9,
+        "M1_box_um": [
+          -0.153,
+          -0.009,
+          0.153,
+          0.009
+        ],
+        "M2_box_um": [
+          -0.155,
+          -0.009,
+          0.155,
+          0.009
+        ]
+      },
+      {
+        "x_um": 1348.92,
+        "y_um": 0,
+        "native_block_via": "via1_2_324_18_1_9_36_36",
+        "V1_cuts": 9,
+        "M1_box_um": [
+          -0.153,
+          -0.009,
+          0.153,
+          0.009
+        ],
+        "M2_box_um": [
+          -0.155,
+          -0.009,
+          0.155,
+          0.009
+        ]
+      }
+    ],
+    "additional_V1_cuts": 36,
+    "additional_M1_M2_via_metal_outside_existing_rail": 0,
+    "new_V1_routing_obstructions_outside_existing_M1_M2_rails": 0,
+    "added_M2_M3_metal_um2": 0.2268,
+    "M2_M3_metal_area_is_geometry_not_cell_area": true
+  },
+  "rejected_fullwidth_ground_bus": {
+    "bbox_um": [
+      0,
+      0,
+      1349.082,
+      0.09
+    ],
+    "width_um": 0.09,
+    "center_y_um": 0.045,
+    "metal_area_um2": 121.41738000000001,
+    "tracks_reserved_upper": 6,
+    "minimum_clearance_to_next_VDD_rail_um": 0.171,
+    "status": "REJECTED_PDN0179_not_selected"
+  },
+  "source_baseline": {
+    "RTL_commit": "d42ab03089f6da7a0f747f5bb4bbbc2a2debbb38",
+    "original_failure_commit": "07bae34b9",
+    "PG_ODB_sha256": "62a7b8df2ebb7ac1e053137f6a99bdc0b19d515762653c2d00112d17f1793b08",
+    "tapcell_ODB_sha256": "2440509e27a90875d2ca80b937e6659ea844f77090da4962004dbbca17599544"
+  },
+  "qualification_scope": "Native retained-PDN VDD/VSS connectivity and added-geometry grid/PG-clearance only; no DRT, EM, loaded IR or SS/FF timing credit.",
+  "actual_H16_macro_count": 16,
+  "existing_DS_outer_tile_replica_count": 64,
+  "replication_credit": "No outer hook or hardened tile credit until the source owner emits actual qualified tile abstract.",
+  "tool_image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "native_OpenROAD": "26Q3-1510-g6cb3f2b704",
+  "M1_M2_actual_gap": "Four M1 y=0 rails have no native V1 arrays; y=.540 rail arrays exist. Ground tap pins require both M1-M2 and M2-M3 continuity.",
+  "M3_only_trial": {
+    "native_API": "PASS",
+    "Tcl_Python_ODB_byte_identity": true,
+    "VDD_connectivity": "PASS",
+    "VSS_connectivity": "FAIL_PSM0069_four_M1_rails_eleven_tap_endcap_pins",
+    "record": "r5/verify.log",
+    "ODB_sha256": "82b6c80ff541a4df1ea93d8781859fe0ef6197935dd47a66e20d873d2605dc98"
+  },
+  "hook_sha256": "5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786",
+  "selected_candidate_ODB_sha256": "893618bbc863f0e22a69adf0637187901b2886075ced2872d82d08b529b6b381",
+  "existing_upper_routing_model": {
+    "source": "results/uarch/hbm_attn_h16_context_20261005/model.json",
+    "sha256": "dce33b7398694efe5d64d833bb9705ec1c08b02f2089f7056e6560cb63bb5b30",
+    "analytical_not_measured": true,
+    "row_capacity_tracks_after_PG_vias_and_clock_reserve": 3304,
+    "row_demand_tracks": 1754,
+    "whole_tile_capacity_tracks": 12995,
+    "clock_tracks_reserved_per_row": 64,
+    "internal_route_layer_pair": [
+      "M8",
+      "M9"
+    ],
+    "PG_hook_M8_M9_capacity_delta": 0,
+    "ground_stitch_lower_track_reserve_in_each_local_band": {
+      "M2": 8,
+      "M3": 8
+    },
+    "no_unreserved_upper_track_credit": true
+  },
+  "qualification_record": "complete_native/verify.log",
+  "terminal_exit": 0,
+  "native_VDD_all_shapes_connected": true,
+  "native_VSS_all_shapes_connected": true,
+  "native_Tcl_API_passed": true,
+  "original_clock_source_constraint_change": false,
+  "resource_observation": {
+    "M3_only_checker_sampled_VmHWM_kB": 10744020,
+    "sample_is_peak_lower_bound_not_complete_maximum": true,
+    "complete_test_capacity_RAM_GiB": 16,
+    "complete_test_threads": 16,
+    "actual_exec_guard": "complete_native/actual_exec_guard.json",
+    "no_AS_wall_file_caps": true
+  }
+}

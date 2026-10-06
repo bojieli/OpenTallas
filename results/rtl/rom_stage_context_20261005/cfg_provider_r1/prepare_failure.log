@@ -1,0 +1,17 @@
+Tue Oct  6 01:08:40 UTC 2026
+ 18:08:40 up 23:12, 52 users,  load average: 42.44, 44.57, 49.51
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 486870269952 81023860736    12509184 656201736192 729747595264
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 914742579200 2234466578432  30% /srv/opentallas-scratch2
+measured_idle_cores 86.29022427131359
+Tue Oct  6 01:08:41 UTC 2026
+ 18:08:41 up 23:12, 49 users,  load average: 42.25, 44.50, 49.46
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 486849384448 80990113792    12484608 656256376832 729768480768
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 914795012096 2234414145536  30% /srv/opentallas-scratch2
+after_guard_idle_cores 87.03039774947253
+python3: can't open file '/srv/opentallas-scratch2/codex/w5-context-20261005/wt-d1676840a/tools/w5_context_power.py': [Errno 2] No such file or directory

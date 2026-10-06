@@ -1,0 +1,17 @@
+{
+  "source_driver_sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+  "source_driver_line700": "write_verilog -noattr mapped.raw.v is after synth/dfflibmap/ABC; final mapped export",
+  "own_invocation": "--stages pnr --macro-view; run_synthesis(host) not called",
+  "actual_ORFS_input": "Original RTL source list, not a CUT/elaborated -noattr Verilog file",
+  "canonical_RTLIL_sha256": "1bbe7d299328771102bcba2771be16e875604ea5a6be0a512328c5e232ce1ecf",
+  "canonical_keep_attribute_count": 46,
+  "canonical_keep_hierarchy_attribute_count": 81,
+  "canonical_attributes_not_stripped": true,
+  "resume_uses_mapped_synth_ODB": true,
+  "new_variants_use_make_o_completed_1_2": true,
+  "new_ABC": false,
+  "RTL_unchanged": true,
+  "golden_replayed": false,
+  "numeric_Qwen_domain_borrowed": false,
+  "real_macro_clkQ_wire_capture_unchanged": true
+}

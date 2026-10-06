@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS_PC_SHARED_CONTROL_WITH_TRANSIENT_RAIL_CREDIT_RETENTION",
+  "CLK_ps": 833.333,
+  "HCLK_ps": 1024,
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "1f2f5eaac4c18c8e4c6a4d235acc989a974b464e613159e818fed70aedaf9309",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5d77bb9aeac2bbec8784d92798e30bee7f2a5a91752199abf06a11b12c79a098",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "33c1eb1b3b5dd65cc5b5f3e16c91ab3285119bf6377527b06dbd5173a55242df",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ports.sv": "9c8c3c1ae55d60ba8b5229a59decaf19403f6180d0cc8f5743ded2b040fc03c4"
+  },
+  "raw_failure": "ports_r3/terminal.json",
+  "whole_interface_exact32": false,
+  "physical_qualified": false,
+  "adopted": false
+}

@@ -1,0 +1,1981 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_CORNER ff
+OT_WS 6.398423457731894e-12
+OT_TNS 0.0
+Startpoint: por_n (input port clocked by core_clk)
+Endpoint: u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 ^ input external delay
+   0.00    0.00 ^ por_n (in)
+   9.81    9.81 ^ hold2010/Y (BUFx2_ASAP7_75t_R)
+  11.33   21.14 ^ hold2006/Y (BUFx2_ASAP7_75t_R)
+  11.28   32.42 ^ hold2004/Y (BUFx2_ASAP7_75t_R)
+  11.22   43.64 ^ hold2007/Y (BUFx2_ASAP7_75t_R)
+  11.81   55.45 ^ input1248/Y (BUFx2_ASAP7_75t_R)
+  12.12   67.57 ^ hold2008/Y (BUFx2_ASAP7_75t_R)
+  26.28   93.85 ^ hold2005/Y (BUFx2_ASAP7_75t_R)
+  30.59  124.44 ^ place1873/Y (BUFx6f_ASAP7_75t_R)
+   2.44  126.88 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         126.88   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  23.16   42.66 ^ clkbuf_2_0__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  27.94   70.60 ^ clkbuf_leaf_36_clk/Y (BUFx24_ASAP7_75t_R)
+   2.04   72.64 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.64   clock uncertainty
+   0.00   97.64   clock reconvergence pessimism
+  22.84  120.48   library removal time
+         120.48   data required time
+---------------------------------------------------------
+         120.48   data required time
+        -126.88   data arrival time
+---------------------------------------------------------
+           6.40   slack (MET)
+
+
+Startpoint: release_r (input port clocked by core_clk)
+Endpoint: u_su_cp.on.phase_q[4]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 v input external delay
+   1.45    1.45 v release_r (in)
+  14.00   15.45 v hold2174/Y (BUFx2_ASAP7_75t_R)
+  13.59   29.04 v input1249/Y (BUFx2_ASAP7_75t_R)
+  14.75   43.79 v u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/fast.g[0].n/hold2175/Y (BUFx2_ASAP7_75t_R)
+   7.92   51.71 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/fast.g[0].n/_0_/Y (NAND3x2_ASAP7_75t_R)
+  11.89   63.60 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/hold2176/Y (BUFx2_ASAP7_75t_R)
+  11.07   74.67 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/_1_/Y (OR4x1_ASAP7_75t_R)
+   4.88   79.55 v u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/_2_/Y (INVx2_ASAP7_75t_R)
+  12.64   92.19 v place1676/Y (BUFx2_ASAP7_75t_R)
+  14.35  106.54 v _3581_/Y (AO21x1_ASAP7_75t_R)
+   8.07  114.61 ^ _3582_/Y (NAND2x1_ASAP7_75t_R)
+   5.67  120.27 v _3583_/Y (INVx1_ASAP7_75t_R)
+   0.05  120.32 v u_su_cp.on.phase_q[4]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+         120.32   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  22.64   42.14 ^ clkbuf_2_2__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  28.73   70.86 ^ clkbuf_leaf_7_clk/Y (BUFx24_ASAP7_75t_R)
+   1.62   72.49 ^ u_su_cp.on.phase_q[4]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.49   clock uncertainty
+   0.00   97.49   clock reconvergence pessimism
+  12.53  110.02   library hold time
+         110.02   data required time
+---------------------------------------------------------
+         110.02   data required time
+        -120.32   data arrival time
+---------------------------------------------------------
+          10.30   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 6.398424
+OT_WS_OUT 52.387608
+OT_WS_R2R 11.451361
+OT_WS_I2R 6.398424
+OT_ACTUAL_FF u_su_association.on.associated_n$_DFFE_PN1P_/D 20.047825
+OT_ACTUAL_FF u_su_association.on.associated_n$_DFFE_PN1P_/SETN 41.497597
+OT_ACTUAL_FF u_su_association.on.associated_q$_DFFE_PN0P_/D 35.137505
+OT_ACTUAL_FF u_su_association.on.associated_q$_DFFE_PN0P_/RESETN 32.180454
+OT_ACTUAL_FF u_su_cp.on.checked_valid_q$_DFFE_PN0P_/D 45.645321
+OT_ACTUAL_FF u_su_cp.on.checked_valid_q$_DFFE_PN0P_/RESETN 31.918634
+OT_ACTUAL_FF u_su_cp.on.decoder_start_q$_DFF_PN0_/D 33.195049
+OT_ACTUAL_FF u_su_cp.on.decoder_start_q$_DFF_PN0_/RESETN 31.545059
+OT_ACTUAL_FF u_su_cp.on.ecc_fault_q$_DFF_PN0_/D 68.471855
+OT_ACTUAL_FF u_su_cp.on.ecc_fault_q$_DFF_PN0_/RESETN 27.025799
+OT_ACTUAL_FF u_su_cp.on.frame_hi[0]$_DFFE_PN0P_/D 31.186581
+OT_ACTUAL_FF u_su_cp.on.frame_hi[0]$_DFFE_PN0P_/RESETN 56.085178
+OT_ACTUAL_FF u_su_cp.on.frame_hi[10]$_DFFE_PN0P_/D 16.242577
+OT_ACTUAL_FF u_su_cp.on.frame_hi[10]$_DFFE_PN0P_/RESETN 59.628372
+OT_ACTUAL_FF u_su_cp.on.frame_hi[11]$_DFFE_PN0P_/D 17.739525
+OT_ACTUAL_FF u_su_cp.on.frame_hi[11]$_DFFE_PN0P_/RESETN 62.179817
+OT_ACTUAL_FF u_su_cp.on.frame_hi[12]$_DFFE_PN0P_/D 15.867530
+OT_ACTUAL_FF u_su_cp.on.frame_hi[12]$_DFFE_PN0P_/RESETN 60.786667
+OT_ACTUAL_FF u_su_cp.on.frame_hi[13]$_DFFE_PN0P_/D 47.625252
+OT_ACTUAL_FF u_su_cp.on.frame_hi[13]$_DFFE_PN0P_/RESETN 74.117546
+OT_ACTUAL_FF u_su_cp.on.frame_hi[14]$_DFFE_PN0P_/D 44.758919
+OT_ACTUAL_FF u_su_cp.on.frame_hi[14]$_DFFE_PN0P_/RESETN 26.037338
+OT_ACTUAL_FF u_su_cp.on.frame_hi[15]$_DFFE_PN0P_/D 37.225590
+OT_ACTUAL_FF u_su_cp.on.frame_hi[15]$_DFFE_PN0P_/RESETN 55.767723
+OT_ACTUAL_FF u_su_cp.on.frame_hi[16]$_DFFE_PN0P_/D 42.662609
+OT_ACTUAL_FF u_su_cp.on.frame_hi[16]$_DFFE_PN0P_/RESETN 77.428177
+OT_ACTUAL_FF u_su_cp.on.frame_hi[17]$_DFFE_PN0P_/D 41.189648
+OT_ACTUAL_FF u_su_cp.on.frame_hi[17]$_DFFE_PN0P_/RESETN 75.519005
+OT_ACTUAL_FF u_su_cp.on.frame_hi[18]$_DFFE_PN0P_/D 43.551212
+OT_ACTUAL_FF u_su_cp.on.frame_hi[18]$_DFFE_PN0P_/RESETN 77.676826
+OT_ACTUAL_FF u_su_cp.on.frame_hi[19]$_DFFE_PN0P_/D 42.034645
+OT_ACTUAL_FF u_su_cp.on.frame_hi[19]$_DFFE_PN0P_/RESETN 78.390945
+OT_ACTUAL_FF u_su_cp.on.frame_hi[1]$_DFFE_PN0P_/D 18.192719
+OT_ACTUAL_FF u_su_cp.on.frame_hi[1]$_DFFE_PN0P_/RESETN 47.807938
+OT_ACTUAL_FF u_su_cp.on.frame_hi[20]$_DFFE_PN0P_/D 43.275085
+OT_ACTUAL_FF u_su_cp.on.frame_hi[20]$_DFFE_PN0P_/RESETN 79.054718
+OT_ACTUAL_FF u_su_cp.on.frame_hi[21]$_DFFE_PN0P_/D 45.014145
+OT_ACTUAL_FF u_su_cp.on.frame_hi[21]$_DFFE_PN0P_/RESETN 77.980591
+OT_ACTUAL_FF u_su_cp.on.frame_hi[22]$_DFFE_PN0P_/D 39.157227
+OT_ACTUAL_FF u_su_cp.on.frame_hi[22]$_DFFE_PN0P_/RESETN 77.302635
+OT_ACTUAL_FF u_su_cp.on.frame_hi[23]$_DFFE_PN0P_/D 38.715977
+OT_ACTUAL_FF u_su_cp.on.frame_hi[23]$_DFFE_PN0P_/RESETN 67.552269
+OT_ACTUAL_FF u_su_cp.on.frame_hi[24]$_DFFE_PN0P_/D 41.975021
+OT_ACTUAL_FF u_su_cp.on.frame_hi[24]$_DFFE_PN0P_/RESETN 78.471413
+OT_ACTUAL_FF u_su_cp.on.frame_hi[25]$_DFFE_PN0P_/D 38.245949
+OT_ACTUAL_FF u_su_cp.on.frame_hi[25]$_DFFE_PN0P_/RESETN 78.566185
+OT_ACTUAL_FF u_su_cp.on.frame_hi[26]$_DFFE_PN0P_/D 40.948410
+OT_ACTUAL_FF u_su_cp.on.frame_hi[26]$_DFFE_PN0P_/RESETN 78.832466
+OT_ACTUAL_FF u_su_cp.on.frame_hi[27]$_DFFE_PN0P_/D 44.168404
+OT_ACTUAL_FF u_su_cp.on.frame_hi[27]$_DFFE_PN0P_/RESETN 78.530670
+OT_ACTUAL_FF u_su_cp.on.frame_hi[28]$_DFFE_PN0P_/D 39.969353
+OT_ACTUAL_FF u_su_cp.on.frame_hi[28]$_DFFE_PN0P_/RESETN 67.825623
+OT_ACTUAL_FF u_su_cp.on.frame_hi[29]$_DFFE_PN0P_/D 47.228561
+OT_ACTUAL_FF u_su_cp.on.frame_hi[29]$_DFFE_PN0P_/RESETN 76.184395
+OT_ACTUAL_FF u_su_cp.on.frame_hi[2]$_DFFE_PN0P_/D 16.405460
+OT_ACTUAL_FF u_su_cp.on.frame_hi[2]$_DFFE_PN0P_/RESETN 60.473904
+OT_ACTUAL_FF u_su_cp.on.frame_hi[30]$_DFFE_PN0P_/D 45.727734
+OT_ACTUAL_FF u_su_cp.on.frame_hi[30]$_DFFE_PN0P_/RESETN 76.733635
+OT_ACTUAL_FF u_su_cp.on.frame_hi[31]$_DFFE_PN0P_/D 31.274143
+OT_ACTUAL_FF u_su_cp.on.frame_hi[31]$_DFFE_PN0P_/RESETN 55.769653
+OT_ACTUAL_FF u_su_cp.on.frame_hi[32]$_DFFE_PN0P_/D 49.913109
+OT_ACTUAL_FF u_su_cp.on.frame_hi[32]$_DFFE_PN0P_/RESETN 63.686180
+OT_ACTUAL_FF u_su_cp.on.frame_hi[33]$_DFFE_PN0P_/D 40.486134
+OT_ACTUAL_FF u_su_cp.on.frame_hi[33]$_DFFE_PN0P_/RESETN 78.145889
+OT_ACTUAL_FF u_su_cp.on.frame_hi[34]$_DFFE_PN0P_/D 39.849957
+OT_ACTUAL_FF u_su_cp.on.frame_hi[34]$_DFFE_PN0P_/RESETN 77.642197
+OT_ACTUAL_FF u_su_cp.on.frame_hi[35]$_DFFE_PN0P_/D 40.850960
+OT_ACTUAL_FF u_su_cp.on.frame_hi[35]$_DFFE_PN0P_/RESETN 77.649025
+OT_ACTUAL_FF u_su_cp.on.frame_hi[36]$_DFFE_PN0P_/D 40.630653
+OT_ACTUAL_FF u_su_cp.on.frame_hi[36]$_DFFE_PN0P_/RESETN 78.987289
+OT_ACTUAL_FF u_su_cp.on.frame_hi[37]$_DFFE_PN0P_/D 43.690338
+OT_ACTUAL_FF u_su_cp.on.frame_hi[37]$_DFFE_PN0P_/RESETN 78.924034
+OT_ACTUAL_FF u_su_cp.on.frame_hi[38]$_DFFE_PN0P_/D 40.248005
+OT_ACTUAL_FF u_su_cp.on.frame_hi[38]$_DFFE_PN0P_/RESETN 77.423737
+OT_ACTUAL_FF u_su_cp.on.frame_hi[39]$_DFFE_PN0P_/D 47.281395
+OT_ACTUAL_FF u_su_cp.on.frame_hi[39]$_DFFE_PN0P_/RESETN 48.445885
+OT_ACTUAL_FF u_su_cp.on.frame_hi[3]$_DFFE_PN0P_/D 30.954941
+OT_ACTUAL_FF u_su_cp.on.frame_hi[3]$_DFFE_PN0P_/RESETN 56.326805
+OT_ACTUAL_FF u_su_cp.on.frame_hi[40]$_DFFE_PN0P_/D 44.391392
+OT_ACTUAL_FF u_su_cp.on.frame_hi[40]$_DFFE_PN0P_/RESETN 63.337601
+OT_ACTUAL_FF u_su_cp.on.frame_hi[41]$_DFFE_PN0P_/D 44.252289
+OT_ACTUAL_FF u_su_cp.on.frame_hi[41]$_DFFE_PN0P_/RESETN 51.092838
+OT_ACTUAL_FF u_su_cp.on.frame_hi[42]$_DFFE_PN0P_/D 39.439972
+OT_ACTUAL_FF u_su_cp.on.frame_hi[42]$_DFFE_PN0P_/RESETN 50.108181
+OT_ACTUAL_FF u_su_cp.on.frame_hi[43]$_DFFE_PN0P_/D 41.036217
+OT_ACTUAL_FF u_su_cp.on.frame_hi[43]$_DFFE_PN0P_/RESETN 63.682587
+OT_ACTUAL_FF u_su_cp.on.frame_hi[44]$_DFFE_PN0P_/D 45.728046
+OT_ACTUAL_FF u_su_cp.on.frame_hi[44]$_DFFE_PN0P_/RESETN 48.443554
+OT_ACTUAL_FF u_su_cp.on.frame_hi[45]$_DFFE_PN0P_/D 47.820080
+OT_ACTUAL_FF u_su_cp.on.frame_hi[45]$_DFFE_PN0P_/RESETN 63.377026
+OT_ACTUAL_FF u_su_cp.on.frame_hi[46]$_DFFE_PN0P_/D 38.396652
+OT_ACTUAL_FF u_su_cp.on.frame_hi[46]$_DFFE_PN0P_/RESETN 62.646111
+OT_ACTUAL_FF u_su_cp.on.frame_hi[47]$_DFFE_PN0P_/D 41.030556
+OT_ACTUAL_FF u_su_cp.on.frame_hi[47]$_DFFE_PN0P_/RESETN 63.438545
+OT_ACTUAL_FF u_su_cp.on.frame_hi[48]$_DFFE_PN0P_/D 38.392048
+OT_ACTUAL_FF u_su_cp.on.frame_hi[48]$_DFFE_PN0P_/RESETN 55.912052
+OT_ACTUAL_FF u_su_cp.on.frame_hi[49]$_DFFE_PN0P_/D 40.493839
+OT_ACTUAL_FF u_su_cp.on.frame_hi[49]$_DFFE_PN0P_/RESETN 63.433826
+OT_ACTUAL_FF u_su_cp.on.frame_hi[4]$_DFFE_PN0P_/D 15.369740
+OT_ACTUAL_FF u_su_cp.on.frame_hi[4]$_DFFE_PN0P_/RESETN 60.485214
+OT_ACTUAL_FF u_su_cp.on.frame_hi[50]$_DFFE_PN0P_/D 41.197845
+OT_ACTUAL_FF u_su_cp.on.frame_hi[50]$_DFFE_PN0P_/RESETN 63.337601
+OT_ACTUAL_FF u_su_cp.on.frame_hi[51]$_DFFE_PN0P_/D 39.166100
+OT_ACTUAL_FF u_su_cp.on.frame_hi[51]$_DFFE_PN0P_/RESETN 49.207027
+OT_ACTUAL_FF u_su_cp.on.frame_hi[52]$_DFFE_PN0P_/D 40.529884
+OT_ACTUAL_FF u_su_cp.on.frame_hi[52]$_DFFE_PN0P_/RESETN 62.376465
+OT_ACTUAL_FF u_su_cp.on.frame_hi[53]$_DFFE_PN0P_/D 39.454136
+OT_ACTUAL_FF u_su_cp.on.frame_hi[53]$_DFFE_PN0P_/RESETN 61.354603
+OT_ACTUAL_FF u_su_cp.on.frame_hi[54]$_DFFE_PN0P_/D 37.473713
+OT_ACTUAL_FF u_su_cp.on.frame_hi[54]$_DFFE_PN0P_/RESETN 60.322441
+OT_ACTUAL_FF u_su_cp.on.frame_hi[55]$_DFFE_PN0P_/D 37.658730
+OT_ACTUAL_FF u_su_cp.on.frame_hi[55]$_DFFE_PN0P_/RESETN 59.121887
+OT_ACTUAL_FF u_su_cp.on.frame_hi[56]$_DFFE_PN0P_/D 40.377880
+OT_ACTUAL_FF u_su_cp.on.frame_hi[56]$_DFFE_PN0P_/RESETN 66.371086
+OT_ACTUAL_FF u_su_cp.on.frame_hi[57]$_DFFE_PN0P_/D 40.076138
+OT_ACTUAL_FF u_su_cp.on.frame_hi[57]$_DFFE_PN0P_/RESETN 60.960403
+OT_ACTUAL_FF u_su_cp.on.frame_hi[58]$_DFFE_PN0P_/D 46.860802
+OT_ACTUAL_FF u_su_cp.on.frame_hi[58]$_DFFE_PN0P_/RESETN 77.628456
+OT_ACTUAL_FF u_su_cp.on.frame_hi[59]$_DFFE_PN0P_/D 39.358414
+OT_ACTUAL_FF u_su_cp.on.frame_hi[59]$_DFFE_PN0P_/RESETN 59.167229
+OT_ACTUAL_FF u_su_cp.on.frame_hi[5]$_DFFE_PN0P_/D 15.514638
+OT_ACTUAL_FF u_su_cp.on.frame_hi[5]$_DFFE_PN0P_/RESETN 56.448151
+OT_ACTUAL_FF u_su_cp.on.frame_hi[60]$_DFFE_PN0P_/D 40.269871
+OT_ACTUAL_FF u_su_cp.on.frame_hi[60]$_DFFE_PN0P_/RESETN 66.507713
+OT_ACTUAL_FF u_su_cp.on.frame_hi[61]$_DFFE_PN0P_/D 37.487549
+OT_ACTUAL_FF u_su_cp.on.frame_hi[61]$_DFFE_PN0P_/RESETN 67.860497
+OT_ACTUAL_FF u_su_cp.on.frame_hi[62]$_DFFE_PN0P_/D 46.426182
+OT_ACTUAL_FF u_su_cp.on.frame_hi[62]$_DFFE_PN0P_/RESETN 77.214706
+OT_ACTUAL_FF u_su_cp.on.frame_hi[63]$_DFFE_PN0P_/D 31.421844
+OT_ACTUAL_FF u_su_cp.on.frame_hi[63]$_DFFE_PN0P_/RESETN 17.680885
+OT_ACTUAL_FF u_su_cp.on.frame_hi[64]$_DFFE_PN0P_/D 42.046021
+OT_ACTUAL_FF u_su_cp.on.frame_hi[64]$_DFFE_PN0P_/RESETN 17.951515
+OT_ACTUAL_FF u_su_cp.on.frame_hi[65]$_DFFE_PN0P_/D 39.289238
+OT_ACTUAL_FF u_su_cp.on.frame_hi[65]$_DFFE_PN0P_/RESETN 48.593323
+OT_ACTUAL_FF u_su_cp.on.frame_hi[66]$_DFFE_PN0P_/D 42.058331
+OT_ACTUAL_FF u_su_cp.on.frame_hi[66]$_DFFE_PN0P_/RESETN 49.615173
+OT_ACTUAL_FF u_su_cp.on.frame_hi[67]$_DFFE_PN0P_/D 45.250832
+OT_ACTUAL_FF u_su_cp.on.frame_hi[67]$_DFFE_PN0P_/RESETN 17.872051
+OT_ACTUAL_FF u_su_cp.on.frame_hi[68]$_DFFE_PN0P_/D 36.283134
+OT_ACTUAL_FF u_su_cp.on.frame_hi[68]$_DFFE_PN0P_/RESETN 66.724297
+OT_ACTUAL_FF u_su_cp.on.frame_hi[69]$_DFFE_PN0P_/D 42.568913
+OT_ACTUAL_FF u_su_cp.on.frame_hi[69]$_DFFE_PN0P_/RESETN 17.711124
+OT_ACTUAL_FF u_su_cp.on.frame_hi[6]$_DFFE_PN0P_/D 23.364893
+OT_ACTUAL_FF u_su_cp.on.frame_hi[6]$_DFFE_PN0P_/RESETN 60.472698
+OT_ACTUAL_FF u_su_cp.on.frame_hi[70]$_DFFE_PN0P_/D 38.216984
+OT_ACTUAL_FF u_su_cp.on.frame_hi[70]$_DFFE_PN0P_/RESETN 24.863098
+OT_ACTUAL_FF u_su_cp.on.frame_hi[71]$_DFFE_PN0P_/D 31.207947
+OT_ACTUAL_FF u_su_cp.on.frame_hi[71]$_DFFE_PN0P_/RESETN 25.268024
+OT_ACTUAL_FF u_su_cp.on.frame_hi[7]$_DFFE_PN0P_/D 26.527489
+OT_ACTUAL_FF u_su_cp.on.frame_hi[7]$_DFFE_PN0P_/RESETN 55.962055
+OT_ACTUAL_FF u_su_cp.on.frame_hi[8]$_DFFE_PN0P_/D 11.467175
+OT_ACTUAL_FF u_su_cp.on.frame_hi[8]$_DFFE_PN0P_/RESETN 15.953933
+OT_ACTUAL_FF u_su_cp.on.frame_hi[9]$_DFFE_PN0P_/D 16.320507
+OT_ACTUAL_FF u_su_cp.on.frame_hi[9]$_DFFE_PN0P_/RESETN 57.591766
+OT_ACTUAL_FF u_su_cp.on.frame_lo[0]$_DFFE_PN0P_/D 31.042154
+OT_ACTUAL_FF u_su_cp.on.frame_lo[0]$_DFFE_PN0P_/RESETN 23.727186
+OT_ACTUAL_FF u_su_cp.on.frame_lo[10]$_DFFE_PN0P_/D 13.927082
+OT_ACTUAL_FF u_su_cp.on.frame_lo[10]$_DFFE_PN0P_/RESETN 71.748329
+OT_ACTUAL_FF u_su_cp.on.frame_lo[11]$_DFFE_PN0P_/D 15.062597
+OT_ACTUAL_FF u_su_cp.on.frame_lo[11]$_DFFE_PN0P_/RESETN 71.076645
+OT_ACTUAL_FF u_su_cp.on.frame_lo[12]$_DFFE_PN0P_/D 18.997929
+OT_ACTUAL_FF u_su_cp.on.frame_lo[12]$_DFFE_PN0P_/RESETN 68.085800
+OT_ACTUAL_FF u_su_cp.on.frame_lo[13]$_DFFE_PN0P_/D 12.671906
+OT_ACTUAL_FF u_su_cp.on.frame_lo[13]$_DFFE_PN0P_/RESETN 70.745476
+OT_ACTUAL_FF u_su_cp.on.frame_lo[14]$_DFFE_PN0P_/D 16.601324
+OT_ACTUAL_FF u_su_cp.on.frame_lo[14]$_DFFE_PN0P_/RESETN 68.399422
+OT_ACTUAL_FF u_su_cp.on.frame_lo[15]$_DFFE_PN0P_/D 30.551596
+OT_ACTUAL_FF u_su_cp.on.frame_lo[15]$_DFFE_PN0P_/RESETN 68.456367
+OT_ACTUAL_FF u_su_cp.on.frame_lo[16]$_DFFE_PN0P_/D 23.819502
+OT_ACTUAL_FF u_su_cp.on.frame_lo[16]$_DFFE_PN0P_/RESETN 66.572800
+OT_ACTUAL_FF u_su_cp.on.frame_lo[17]$_DFFE_PN0P_/D 17.429197
+OT_ACTUAL_FF u_su_cp.on.frame_lo[17]$_DFFE_PN0P_/RESETN 68.497002
+OT_ACTUAL_FF u_su_cp.on.frame_lo[18]$_DFFE_PN0P_/D 16.245407
+OT_ACTUAL_FF u_su_cp.on.frame_lo[18]$_DFFE_PN0P_/RESETN 71.565659
+OT_ACTUAL_FF u_su_cp.on.frame_lo[19]$_DFFE_PN0P_/D 15.557063
+OT_ACTUAL_FF u_su_cp.on.frame_lo[19]$_DFFE_PN0P_/RESETN 71.676346
+OT_ACTUAL_FF u_su_cp.on.frame_lo[1]$_DFFE_PN0P_/D 30.065783
+OT_ACTUAL_FF u_su_cp.on.frame_lo[1]$_DFFE_PN0P_/RESETN 68.676651
+OT_ACTUAL_FF u_su_cp.on.frame_lo[20]$_DFFE_PN0P_/D 13.842781
+OT_ACTUAL_FF u_su_cp.on.frame_lo[20]$_DFFE_PN0P_/RESETN 70.333931
+OT_ACTUAL_FF u_su_cp.on.frame_lo[21]$_DFFE_PN0P_/D 14.877710
+OT_ACTUAL_FF u_su_cp.on.frame_lo[21]$_DFFE_PN0P_/RESETN 69.364876
+OT_ACTUAL_FF u_su_cp.on.frame_lo[22]$_DFFE_PN0P_/D 23.255322
+OT_ACTUAL_FF u_su_cp.on.frame_lo[22]$_DFFE_PN0P_/RESETN 70.787445
+OT_ACTUAL_FF u_su_cp.on.frame_lo[23]$_DFFE_PN0P_/D 14.123202
+OT_ACTUAL_FF u_su_cp.on.frame_lo[23]$_DFFE_PN0P_/RESETN 69.462517
+OT_ACTUAL_FF u_su_cp.on.frame_lo[24]$_DFFE_PN0P_/D 14.406260
+OT_ACTUAL_FF u_su_cp.on.frame_lo[24]$_DFFE_PN0P_/RESETN 72.351402
+OT_ACTUAL_FF u_su_cp.on.frame_lo[25]$_DFFE_PN0P_/D 17.202698
+OT_ACTUAL_FF u_su_cp.on.frame_lo[25]$_DFFE_PN0P_/RESETN 69.410797
+OT_ACTUAL_FF u_su_cp.on.frame_lo[26]$_DFFE_PN0P_/D 16.363619
+OT_ACTUAL_FF u_su_cp.on.frame_lo[26]$_DFFE_PN0P_/RESETN 69.835358
+OT_ACTUAL_FF u_su_cp.on.frame_lo[27]$_DFFE_PN0P_/D 17.718029
+OT_ACTUAL_FF u_su_cp.on.frame_lo[27]$_DFFE_PN0P_/RESETN 71.060516
+OT_ACTUAL_FF u_su_cp.on.frame_lo[28]$_DFFE_PN0P_/D 19.115980
+OT_ACTUAL_FF u_su_cp.on.frame_lo[28]$_DFFE_PN0P_/RESETN 69.656723
+OT_ACTUAL_FF u_su_cp.on.frame_lo[29]$_DFFE_PN0P_/D 23.819010
+OT_ACTUAL_FF u_su_cp.on.frame_lo[29]$_DFFE_PN0P_/RESETN 69.444061
+OT_ACTUAL_FF u_su_cp.on.frame_lo[2]$_DFFE_PN0P_/D 17.693514
+OT_ACTUAL_FF u_su_cp.on.frame_lo[2]$_DFFE_PN0P_/RESETN 68.150459
+OT_ACTUAL_FF u_su_cp.on.frame_lo[30]$_DFFE_PN0P_/D 15.978330
+OT_ACTUAL_FF u_su_cp.on.frame_lo[30]$_DFFE_PN0P_/RESETN 68.631042
+OT_ACTUAL_FF u_su_cp.on.frame_lo[31]$_DFFE_PN0P_/D 30.826231
+OT_ACTUAL_FF u_su_cp.on.frame_lo[31]$_DFFE_PN0P_/RESETN 69.339371
+OT_ACTUAL_FF u_su_cp.on.frame_lo[32]$_DFFE_PN0P_/D 15.499497
+OT_ACTUAL_FF u_su_cp.on.frame_lo[32]$_DFFE_PN0P_/RESETN 69.089676
+OT_ACTUAL_FF u_su_cp.on.frame_lo[33]$_DFFE_PN0P_/D 19.193979
+OT_ACTUAL_FF u_su_cp.on.frame_lo[33]$_DFFE_PN0P_/RESETN 75.191620
+OT_ACTUAL_FF u_su_cp.on.frame_lo[34]$_DFFE_PN0P_/D 15.448899
+OT_ACTUAL_FF u_su_cp.on.frame_lo[34]$_DFFE_PN0P_/RESETN 78.275841
+OT_ACTUAL_FF u_su_cp.on.frame_lo[35]$_DFFE_PN0P_/D 18.158558
+OT_ACTUAL_FF u_su_cp.on.frame_lo[35]$_DFFE_PN0P_/RESETN 69.356064
+OT_ACTUAL_FF u_su_cp.on.frame_lo[36]$_DFFE_PN0P_/D 18.617025
+OT_ACTUAL_FF u_su_cp.on.frame_lo[36]$_DFFE_PN0P_/RESETN 77.424057
+OT_ACTUAL_FF u_su_cp.on.frame_lo[37]$_DFFE_PN0P_/D 14.982272
+OT_ACTUAL_FF u_su_cp.on.frame_lo[37]$_DFFE_PN0P_/RESETN 77.864075
+OT_ACTUAL_FF u_su_cp.on.frame_lo[38]$_DFFE_PN0P_/D 13.125973
+OT_ACTUAL_FF u_su_cp.on.frame_lo[38]$_DFFE_PN0P_/RESETN 74.316483
+OT_ACTUAL_FF u_su_cp.on.frame_lo[39]$_DFFE_PN0P_/D 23.903692
+OT_ACTUAL_FF u_su_cp.on.frame_lo[39]$_DFFE_PN0P_/RESETN 76.546936
+OT_ACTUAL_FF u_su_cp.on.frame_lo[3]$_DFFE_PN0P_/D 30.936523
+OT_ACTUAL_FF u_su_cp.on.frame_lo[3]$_DFFE_PN0P_/RESETN 68.671638
+OT_ACTUAL_FF u_su_cp.on.frame_lo[40]$_DFFE_PN0P_/D 15.466031
+OT_ACTUAL_FF u_su_cp.on.frame_lo[40]$_DFFE_PN0P_/RESETN 77.930290
+OT_ACTUAL_FF u_su_cp.on.frame_lo[41]$_DFFE_PN0P_/D 17.486692
+OT_ACTUAL_FF u_su_cp.on.frame_lo[41]$_DFFE_PN0P_/RESETN 78.113380
+OT_ACTUAL_FF u_su_cp.on.frame_lo[42]$_DFFE_PN0P_/D 21.516899
+OT_ACTUAL_FF u_su_cp.on.frame_lo[42]$_DFFE_PN0P_/RESETN 78.881111
+OT_ACTUAL_FF u_su_cp.on.frame_lo[43]$_DFFE_PN0P_/D 24.417627
+OT_ACTUAL_FF u_su_cp.on.frame_lo[43]$_DFFE_PN0P_/RESETN 75.041336
+OT_ACTUAL_FF u_su_cp.on.frame_lo[44]$_DFFE_PN0P_/D 24.049374
+OT_ACTUAL_FF u_su_cp.on.frame_lo[44]$_DFFE_PN0P_/RESETN 76.139931
+OT_ACTUAL_FF u_su_cp.on.frame_lo[45]$_DFFE_PN0P_/D 23.603821
+OT_ACTUAL_FF u_su_cp.on.frame_lo[45]$_DFFE_PN0P_/RESETN 75.663376
+OT_ACTUAL_FF u_su_cp.on.frame_lo[46]$_DFFE_PN0P_/D 24.723799
+OT_ACTUAL_FF u_su_cp.on.frame_lo[46]$_DFFE_PN0P_/RESETN 76.157623
+OT_ACTUAL_FF u_su_cp.on.frame_lo[47]$_DFFE_PN0P_/D 24.731897
+OT_ACTUAL_FF u_su_cp.on.frame_lo[47]$_DFFE_PN0P_/RESETN 23.057653
+OT_ACTUAL_FF u_su_cp.on.frame_lo[48]$_DFFE_PN0P_/D 23.919956
+OT_ACTUAL_FF u_su_cp.on.frame_lo[48]$_DFFE_PN0P_/RESETN 23.594625
+OT_ACTUAL_FF u_su_cp.on.frame_lo[49]$_DFFE_PN0P_/D 22.997652
+OT_ACTUAL_FF u_su_cp.on.frame_lo[49]$_DFFE_PN0P_/RESETN 23.042000
+OT_ACTUAL_FF u_su_cp.on.frame_lo[4]$_DFFE_PN0P_/D 13.704815
+OT_ACTUAL_FF u_su_cp.on.frame_lo[4]$_DFFE_PN0P_/RESETN 70.604713
+OT_ACTUAL_FF u_su_cp.on.frame_lo[50]$_DFFE_PN0P_/D 26.789064
+OT_ACTUAL_FF u_su_cp.on.frame_lo[50]$_DFFE_PN0P_/RESETN 21.935606
+OT_ACTUAL_FF u_su_cp.on.frame_lo[51]$_DFFE_PN0P_/D 19.025795
+OT_ACTUAL_FF u_su_cp.on.frame_lo[51]$_DFFE_PN0P_/RESETN 76.551155
+OT_ACTUAL_FF u_su_cp.on.frame_lo[52]$_DFFE_PN0P_/D 24.690624
+OT_ACTUAL_FF u_su_cp.on.frame_lo[52]$_DFFE_PN0P_/RESETN 74.260262
+OT_ACTUAL_FF u_su_cp.on.frame_lo[53]$_DFFE_PN0P_/D 15.234515
+OT_ACTUAL_FF u_su_cp.on.frame_lo[53]$_DFFE_PN0P_/RESETN 74.242249
+OT_ACTUAL_FF u_su_cp.on.frame_lo[54]$_DFFE_PN0P_/D 26.690775
+OT_ACTUAL_FF u_su_cp.on.frame_lo[54]$_DFFE_PN0P_/RESETN 21.610811
+OT_ACTUAL_FF u_su_cp.on.frame_lo[55]$_DFFE_PN0P_/D 21.794525
+OT_ACTUAL_FF u_su_cp.on.frame_lo[55]$_DFFE_PN0P_/RESETN 69.633675
+OT_ACTUAL_FF u_su_cp.on.frame_lo[56]$_DFFE_PN0P_/D 11.747992
+OT_ACTUAL_FF u_su_cp.on.frame_lo[56]$_DFFE_PN0P_/RESETN 75.520844
+OT_ACTUAL_FF u_su_cp.on.frame_lo[57]$_DFFE_PN0P_/D 14.442198
+OT_ACTUAL_FF u_su_cp.on.frame_lo[57]$_DFFE_PN0P_/RESETN 70.229256
+OT_ACTUAL_FF u_su_cp.on.frame_lo[58]$_DFFE_PN0P_/D 13.037793
+OT_ACTUAL_FF u_su_cp.on.frame_lo[58]$_DFFE_PN0P_/RESETN 63.640732
+OT_ACTUAL_FF u_su_cp.on.frame_lo[59]$_DFFE_PN0P_/D 22.307018
+OT_ACTUAL_FF u_su_cp.on.frame_lo[59]$_DFFE_PN0P_/RESETN 66.158234
+OT_ACTUAL_FF u_su_cp.on.frame_lo[5]$_DFFE_PN0P_/D 19.992640
+OT_ACTUAL_FF u_su_cp.on.frame_lo[5]$_DFFE_PN0P_/RESETN 67.078804
+OT_ACTUAL_FF u_su_cp.on.frame_lo[60]$_DFFE_PN0P_/D 22.024605
+OT_ACTUAL_FF u_su_cp.on.frame_lo[60]$_DFFE_PN0P_/RESETN 23.232098
+OT_ACTUAL_FF u_su_cp.on.frame_lo[61]$_DFFE_PN0P_/D 22.279457
+OT_ACTUAL_FF u_su_cp.on.frame_lo[61]$_DFFE_PN0P_/RESETN 23.271482
+OT_ACTUAL_FF u_su_cp.on.frame_lo[62]$_DFFE_PN0P_/D 15.314437
+OT_ACTUAL_FF u_su_cp.on.frame_lo[62]$_DFFE_PN0P_/RESETN 24.006908
+OT_ACTUAL_FF u_su_cp.on.frame_lo[63]$_DFFE_PN0P_/D 23.095242
+OT_ACTUAL_FF u_su_cp.on.frame_lo[63]$_DFFE_PN0P_/RESETN 23.569674
+OT_ACTUAL_FF u_su_cp.on.frame_lo[64]$_DFFE_PN0P_/D 12.783767
+OT_ACTUAL_FF u_su_cp.on.frame_lo[64]$_DFFE_PN0P_/RESETN 22.383276
+OT_ACTUAL_FF u_su_cp.on.frame_lo[65]$_DFFE_PN0P_/D 13.537699
+OT_ACTUAL_FF u_su_cp.on.frame_lo[65]$_DFFE_PN0P_/RESETN 17.966253
+OT_ACTUAL_FF u_su_cp.on.frame_lo[66]$_DFFE_PN0P_/D 13.319623
+OT_ACTUAL_FF u_su_cp.on.frame_lo[66]$_DFFE_PN0P_/RESETN 65.254799
+OT_ACTUAL_FF u_su_cp.on.frame_lo[67]$_DFFE_PN0P_/D 11.767976
+OT_ACTUAL_FF u_su_cp.on.frame_lo[67]$_DFFE_PN0P_/RESETN 63.475307
+OT_ACTUAL_FF u_su_cp.on.frame_lo[68]$_DFFE_PN0P_/D 17.236685
+OT_ACTUAL_FF u_su_cp.on.frame_lo[68]$_DFFE_PN0P_/RESETN 65.047386
+OT_ACTUAL_FF u_su_cp.on.frame_lo[69]$_DFFE_PN0P_/D 22.736410
+OT_ACTUAL_FF u_su_cp.on.frame_lo[69]$_DFFE_PN0P_/RESETN 69.069122
+OT_ACTUAL_FF u_su_cp.on.frame_lo[6]$_DFFE_PN0P_/D 23.030834
+OT_ACTUAL_FF u_su_cp.on.frame_lo[6]$_DFFE_PN0P_/RESETN 67.037834
+OT_ACTUAL_FF u_su_cp.on.frame_lo[70]$_DFFE_PN0P_/D 17.202608
+OT_ACTUAL_FF u_su_cp.on.frame_lo[70]$_DFFE_PN0P_/RESETN 61.856895
+OT_ACTUAL_FF u_su_cp.on.frame_lo[71]$_DFFE_PN0P_/D 30.849018
+OT_ACTUAL_FF u_su_cp.on.frame_lo[71]$_DFFE_PN0P_/RESETN 23.691799
+OT_ACTUAL_FF u_su_cp.on.frame_lo[7]$_DFFE_PN0P_/D 32.003067
+OT_ACTUAL_FF u_su_cp.on.frame_lo[7]$_DFFE_PN0P_/RESETN 68.613907
+OT_ACTUAL_FF u_su_cp.on.frame_lo[8]$_DFFE_PN0P_/D 17.409462
+OT_ACTUAL_FF u_su_cp.on.frame_lo[8]$_DFFE_PN0P_/RESETN 72.998108
+OT_ACTUAL_FF u_su_cp.on.frame_lo[9]$_DFFE_PN0P_/D 18.394903
+OT_ACTUAL_FF u_su_cp.on.frame_lo[9]$_DFFE_PN0P_/RESETN 72.342621
+OT_ACTUAL_FF u_su_cp.on.pc_code[0]$_DFFE_PN0P_/D 34.247730
+OT_ACTUAL_FF u_su_cp.on.pc_code[0]$_DFFE_PN0P_/RESETN 67.579735
+OT_ACTUAL_FF u_su_cp.on.pc_code[10]$_DFFE_PN0P_/D 21.991415
+OT_ACTUAL_FF u_su_cp.on.pc_code[10]$_DFFE_PN0P_/RESETN 52.484211
+OT_ACTUAL_FF u_su_cp.on.pc_code[11]$_DFFE_PN0P_/D 15.741387
+OT_ACTUAL_FF u_su_cp.on.pc_code[11]$_DFFE_PN0P_/RESETN 51.930904
+OT_ACTUAL_FF u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D 23.323267
+OT_ACTUAL_FF u_su_cp.on.pc_code[12]$_DFFE_PN0P_/RESETN 54.501419
+OT_ACTUAL_FF u_su_cp.on.pc_code[13]$_DFFE_PN0P_/D 22.792782
+OT_ACTUAL_FF u_su_cp.on.pc_code[13]$_DFFE_PN0P_/RESETN 53.899162
+OT_ACTUAL_FF u_su_cp.on.pc_code[14]$_DFFE_PN0P_/D 16.167234
+OT_ACTUAL_FF u_su_cp.on.pc_code[14]$_DFFE_PN0P_/RESETN 52.035320
+OT_ACTUAL_FF u_su_cp.on.pc_code[15]$_DFFE_PN0P_/D 28.094624
+OT_ACTUAL_FF u_su_cp.on.pc_code[15]$_DFFE_PN0P_/RESETN 56.966156
+OT_ACTUAL_FF u_su_cp.on.pc_code[16]$_DFFE_PN0P_/D 22.696339
+OT_ACTUAL_FF u_su_cp.on.pc_code[16]$_DFFE_PN0P_/RESETN 64.605263
+OT_ACTUAL_FF u_su_cp.on.pc_code[17]$_DFFE_PN0P_/D 14.352921
+OT_ACTUAL_FF u_su_cp.on.pc_code[17]$_DFFE_PN0P_/RESETN 53.726051
+OT_ACTUAL_FF u_su_cp.on.pc_code[18]$_DFFE_PN0P_/D 20.328281
+OT_ACTUAL_FF u_su_cp.on.pc_code[18]$_DFFE_PN0P_/RESETN 62.469528
+OT_ACTUAL_FF u_su_cp.on.pc_code[19]$_DFFE_PN0P_/D 20.974230
+OT_ACTUAL_FF u_su_cp.on.pc_code[19]$_DFFE_PN0P_/RESETN 61.638138
+OT_ACTUAL_FF u_su_cp.on.pc_code[1]$_DFFE_PN0P_/D 24.346254
+OT_ACTUAL_FF u_su_cp.on.pc_code[1]$_DFFE_PN0P_/RESETN 57.122223
+OT_ACTUAL_FF u_su_cp.on.pc_code[20]$_DFFE_PN0P_/D 22.375490
+OT_ACTUAL_FF u_su_cp.on.pc_code[20]$_DFFE_PN0P_/RESETN 52.504501
+OT_ACTUAL_FF u_su_cp.on.pc_code[21]$_DFFE_PN0P_/D 15.231920
+OT_ACTUAL_FF u_su_cp.on.pc_code[21]$_DFFE_PN0P_/RESETN 54.705006
+OT_ACTUAL_FF u_su_cp.on.pc_code[22]$_DFFE_PN0P_/D 20.050995
+OT_ACTUAL_FF u_su_cp.on.pc_code[22]$_DFFE_PN0P_/RESETN 54.451679
+OT_ACTUAL_FF u_su_cp.on.pc_code[23]$_DFFE_PN0P_/D 16.994919
+OT_ACTUAL_FF u_su_cp.on.pc_code[23]$_DFFE_PN0P_/RESETN 53.096458
+OT_ACTUAL_FF u_su_cp.on.pc_code[24]$_DFFE_PN0P_/D 21.241098
+OT_ACTUAL_FF u_su_cp.on.pc_code[24]$_DFFE_PN0P_/RESETN 66.032539
+OT_ACTUAL_FF u_su_cp.on.pc_code[25]$_DFFE_PN0P_/D 17.776114
+OT_ACTUAL_FF u_su_cp.on.pc_code[25]$_DFFE_PN0P_/RESETN 56.347691
+OT_ACTUAL_FF u_su_cp.on.pc_code[26]$_DFFE_PN0P_/D 11.527640
+OT_ACTUAL_FF u_su_cp.on.pc_code[26]$_DFFE_PN0P_/RESETN 56.192009
+OT_ACTUAL_FF u_su_cp.on.pc_code[27]$_DFFE_PN0P_/D 20.132742
+OT_ACTUAL_FF u_su_cp.on.pc_code[27]$_DFFE_PN0P_/RESETN 54.678513
+OT_ACTUAL_FF u_su_cp.on.pc_code[28]$_DFFE_PN0P_/D 17.154840
+OT_ACTUAL_FF u_su_cp.on.pc_code[28]$_DFFE_PN0P_/RESETN 52.574043
+OT_ACTUAL_FF u_su_cp.on.pc_code[29]$_DFFE_PN0P_/D 19.012430
+OT_ACTUAL_FF u_su_cp.on.pc_code[29]$_DFFE_PN0P_/RESETN 55.227295
+OT_ACTUAL_FF u_su_cp.on.pc_code[2]$_DFFE_PN0P_/D 15.700393
+OT_ACTUAL_FF u_su_cp.on.pc_code[2]$_DFFE_PN0P_/RESETN 13.581635
+OT_ACTUAL_FF u_su_cp.on.pc_code[30]$_DFFE_PN0P_/D 13.450047
+OT_ACTUAL_FF u_su_cp.on.pc_code[30]$_DFFE_PN0P_/RESETN 13.164900
+OT_ACTUAL_FF u_su_cp.on.pc_code[31]$_DFFE_PN0P_/D 30.755245
+OT_ACTUAL_FF u_su_cp.on.pc_code[31]$_DFFE_PN0P_/RESETN 55.277588
+OT_ACTUAL_FF u_su_cp.on.pc_code[32]$_DFFE_PN0P_/D 21.852777
+OT_ACTUAL_FF u_su_cp.on.pc_code[32]$_DFFE_PN0P_/RESETN 56.536678
+OT_ACTUAL_FF u_su_cp.on.pc_code[33]$_DFFE_PN0P_/D 17.458313
+OT_ACTUAL_FF u_su_cp.on.pc_code[33]$_DFFE_PN0P_/RESETN 54.300858
+OT_ACTUAL_FF u_su_cp.on.pc_code[34]$_DFFE_PN0P_/D 13.485095
+OT_ACTUAL_FF u_su_cp.on.pc_code[34]$_DFFE_PN0P_/RESETN 13.228058
+OT_ACTUAL_FF u_su_cp.on.pc_code[35]$_DFFE_PN0P_/D 15.576582
+OT_ACTUAL_FF u_su_cp.on.pc_code[35]$_DFFE_PN0P_/RESETN 13.961776
+OT_ACTUAL_FF u_su_cp.on.pc_code[36]$_DFFE_PN0P_/D 23.318222
+OT_ACTUAL_FF u_su_cp.on.pc_code[36]$_DFFE_PN0P_/RESETN 13.969339
+OT_ACTUAL_FF u_su_cp.on.pc_code[37]$_DFFE_PN0P_/D 14.864540
+OT_ACTUAL_FF u_su_cp.on.pc_code[37]$_DFFE_PN0P_/RESETN 12.882861
+OT_ACTUAL_FF u_su_cp.on.pc_code[38]$_DFFE_PN0P_/D 41.932091
+OT_ACTUAL_FF u_su_cp.on.pc_code[38]$_DFFE_PN0P_/RESETN 63.421741
+OT_ACTUAL_FF u_su_cp.on.pc_code[39]$_DFFE_PN0P_/D 33.798313
+OT_ACTUAL_FF u_su_cp.on.pc_code[39]$_DFFE_PN0P_/RESETN 59.328445
+OT_ACTUAL_FF u_su_cp.on.pc_code[3]$_DFFE_PN0P_/D 24.946747
+OT_ACTUAL_FF u_su_cp.on.pc_code[3]$_DFFE_PN0P_/RESETN 69.049004
+OT_ACTUAL_FF u_su_cp.on.pc_code[40]$_DFFE_PN0P_/D 38.853024
+OT_ACTUAL_FF u_su_cp.on.pc_code[40]$_DFFE_PN0P_/RESETN 59.278015
+OT_ACTUAL_FF u_su_cp.on.pc_code[41]$_DFFE_PN0P_/D 37.677715
+OT_ACTUAL_FF u_su_cp.on.pc_code[41]$_DFFE_PN0P_/RESETN 60.962471
+OT_ACTUAL_FF u_su_cp.on.pc_code[42]$_DFFE_PN0P_/D 41.012577
+OT_ACTUAL_FF u_su_cp.on.pc_code[42]$_DFFE_PN0P_/RESETN 75.257797
+OT_ACTUAL_FF u_su_cp.on.pc_code[43]$_DFFE_PN0P_/D 37.889851
+OT_ACTUAL_FF u_su_cp.on.pc_code[43]$_DFFE_PN0P_/RESETN 73.793098
+OT_ACTUAL_FF u_su_cp.on.pc_code[44]$_DFFE_PN0P_/D 42.712814
+OT_ACTUAL_FF u_su_cp.on.pc_code[44]$_DFFE_PN0P_/RESETN 61.339073
+OT_ACTUAL_FF u_su_cp.on.pc_code[45]$_DFFE_PN0P_/D 50.053421
+OT_ACTUAL_FF u_su_cp.on.pc_code[45]$_DFFE_PN0P_/RESETN 73.952385
+OT_ACTUAL_FF u_su_cp.on.pc_code[46]$_DFFE_PN0P_/D 36.457741
+OT_ACTUAL_FF u_su_cp.on.pc_code[46]$_DFFE_PN0P_/RESETN 75.220482
+OT_ACTUAL_FF u_su_cp.on.pc_code[47]$_DFFE_PN0P_/D 37.194511
+OT_ACTUAL_FF u_su_cp.on.pc_code[47]$_DFFE_PN0P_/RESETN 75.122437
+OT_ACTUAL_FF u_su_cp.on.pc_code[48]$_DFFE_PN0P_/D 40.268845
+OT_ACTUAL_FF u_su_cp.on.pc_code[48]$_DFFE_PN0P_/RESETN 71.526299
+OT_ACTUAL_FF u_su_cp.on.pc_code[49]$_DFFE_PN0P_/D 39.401779
+OT_ACTUAL_FF u_su_cp.on.pc_code[49]$_DFFE_PN0P_/RESETN 73.844513
+OT_ACTUAL_FF u_su_cp.on.pc_code[4]$_DFFE_PN0P_/D 16.666773
+OT_ACTUAL_FF u_su_cp.on.pc_code[4]$_DFFE_PN0P_/RESETN 54.624748
+OT_ACTUAL_FF u_su_cp.on.pc_code[50]$_DFFE_PN0P_/D 38.784725
+OT_ACTUAL_FF u_su_cp.on.pc_code[50]$_DFFE_PN0P_/RESETN 73.065041
+OT_ACTUAL_FF u_su_cp.on.pc_code[51]$_DFFE_PN0P_/D 37.254589
+OT_ACTUAL_FF u_su_cp.on.pc_code[51]$_DFFE_PN0P_/RESETN 75.048775
+OT_ACTUAL_FF u_su_cp.on.pc_code[52]$_DFFE_PN0P_/D 44.852634
+OT_ACTUAL_FF u_su_cp.on.pc_code[52]$_DFFE_PN0P_/RESETN 72.097649
+OT_ACTUAL_FF u_su_cp.on.pc_code[53]$_DFFE_PN0P_/D 41.215912
+OT_ACTUAL_FF u_su_cp.on.pc_code[53]$_DFFE_PN0P_/RESETN 60.223228
+OT_ACTUAL_FF u_su_cp.on.pc_code[54]$_DFFE_PN0P_/D 45.957058
+OT_ACTUAL_FF u_su_cp.on.pc_code[54]$_DFFE_PN0P_/RESETN 72.718262
+OT_ACTUAL_FF u_su_cp.on.pc_code[55]$_DFFE_PN0P_/D 43.410221
+OT_ACTUAL_FF u_su_cp.on.pc_code[55]$_DFFE_PN0P_/RESETN 75.215279
+OT_ACTUAL_FF u_su_cp.on.pc_code[56]$_DFFE_PN0P_/D 44.140949
+OT_ACTUAL_FF u_su_cp.on.pc_code[56]$_DFFE_PN0P_/RESETN 61.511158
+OT_ACTUAL_FF u_su_cp.on.pc_code[57]$_DFFE_PN0P_/D 40.071377
+OT_ACTUAL_FF u_su_cp.on.pc_code[57]$_DFFE_PN0P_/RESETN 64.986435
+OT_ACTUAL_FF u_su_cp.on.pc_code[58]$_DFFE_PN0P_/D 37.732033
+OT_ACTUAL_FF u_su_cp.on.pc_code[58]$_DFFE_PN0P_/RESETN 64.676849
+OT_ACTUAL_FF u_su_cp.on.pc_code[59]$_DFFE_PN0P_/D 41.320324
+OT_ACTUAL_FF u_su_cp.on.pc_code[59]$_DFFE_PN0P_/RESETN 61.250450
+OT_ACTUAL_FF u_su_cp.on.pc_code[5]$_DFFE_PN0P_/D 19.089708
+OT_ACTUAL_FF u_su_cp.on.pc_code[5]$_DFFE_PN0P_/RESETN 57.308643
+OT_ACTUAL_FF u_su_cp.on.pc_code[60]$_DFFE_PN0P_/D 42.299011
+OT_ACTUAL_FF u_su_cp.on.pc_code[60]$_DFFE_PN0P_/RESETN 58.157410
+OT_ACTUAL_FF u_su_cp.on.pc_code[61]$_DFFE_PN0P_/D 40.128853
+OT_ACTUAL_FF u_su_cp.on.pc_code[61]$_DFFE_PN0P_/RESETN 71.167709
+OT_ACTUAL_FF u_su_cp.on.pc_code[62]$_DFFE_PN0P_/D 45.797375
+OT_ACTUAL_FF u_su_cp.on.pc_code[62]$_DFFE_PN0P_/RESETN 74.557541
+OT_ACTUAL_FF u_su_cp.on.pc_code[63]$_DFFE_PN0P_/D 36.746994
+OT_ACTUAL_FF u_su_cp.on.pc_code[63]$_DFFE_PN0P_/RESETN 56.995880
+OT_ACTUAL_FF u_su_cp.on.pc_code[64]$_DFFE_PN0P_/D 42.330818
+OT_ACTUAL_FF u_su_cp.on.pc_code[64]$_DFFE_PN0P_/RESETN 70.137573
+OT_ACTUAL_FF u_su_cp.on.pc_code[65]$_DFFE_PN0P_/D 37.617088
+OT_ACTUAL_FF u_su_cp.on.pc_code[65]$_DFFE_PN0P_/RESETN 62.637188
+OT_ACTUAL_FF u_su_cp.on.pc_code[66]$_DFFE_PN0P_/D 43.195370
+OT_ACTUAL_FF u_su_cp.on.pc_code[66]$_DFFE_PN0P_/RESETN 59.670059
+OT_ACTUAL_FF u_su_cp.on.pc_code[67]$_DFFE_PN0P_/D 38.635017
+OT_ACTUAL_FF u_su_cp.on.pc_code[67]$_DFFE_PN0P_/RESETN 71.219353
+OT_ACTUAL_FF u_su_cp.on.pc_code[68]$_DFFE_PN0P_/D 45.083187
+OT_ACTUAL_FF u_su_cp.on.pc_code[68]$_DFFE_PN0P_/RESETN 65.983749
+OT_ACTUAL_FF u_su_cp.on.pc_code[69]$_DFFE_PN0P_/D 45.571983
+OT_ACTUAL_FF u_su_cp.on.pc_code[69]$_DFFE_PN0P_/RESETN 64.965591
+OT_ACTUAL_FF u_su_cp.on.pc_code[6]$_DFFE_PN0P_/D 12.228323
+OT_ACTUAL_FF u_su_cp.on.pc_code[6]$_DFFE_PN0P_/RESETN 54.417110
+OT_ACTUAL_FF u_su_cp.on.pc_code[70]$_DFFE_PN0P_/D 38.995243
+OT_ACTUAL_FF u_su_cp.on.pc_code[70]$_DFFE_PN0P_/RESETN 64.220726
+OT_ACTUAL_FF u_su_cp.on.pc_code[71]$_DFFE_PN0P_/D 15.329418
+OT_ACTUAL_FF u_su_cp.on.pc_code[71]$_DFFE_PN0P_/RESETN 67.561455
+OT_ACTUAL_FF u_su_cp.on.pc_code[7]$_DFFE_PN0P_/D 19.833315
+OT_ACTUAL_FF u_su_cp.on.pc_code[7]$_DFFE_PN0P_/RESETN 54.348621
+OT_ACTUAL_FF u_su_cp.on.pc_code[8]$_DFFE_PN0P_/D 14.891637
+OT_ACTUAL_FF u_su_cp.on.pc_code[8]$_DFFE_PN0P_/RESETN 52.050255
+OT_ACTUAL_FF u_su_cp.on.pc_code[9]$_DFFE_PN0P_/D 16.867071
+OT_ACTUAL_FF u_su_cp.on.pc_code[9]$_DFFE_PN0P_/RESETN 52.355217
+OT_ACTUAL_FF u_su_cp.on.phase_n[0]$_DFF_PN0_/D 20.960415
+OT_ACTUAL_FF u_su_cp.on.phase_n[0]$_DFF_PN0_/RESETN 32.701981
+OT_ACTUAL_FF u_su_cp.on.phase_n[1]$_DFF_PN1_/D 40.850788
+OT_ACTUAL_FF u_su_cp.on.phase_n[1]$_DFF_PN1_/SETN 42.476051
+OT_ACTUAL_FF u_su_cp.on.phase_n[2]$_DFF_PN1_/D 40.207329
+OT_ACTUAL_FF u_su_cp.on.phase_n[2]$_DFF_PN1_/SETN 43.773945
+OT_ACTUAL_FF u_su_cp.on.phase_n[3]$_DFF_PN1_/D 26.456587
+OT_ACTUAL_FF u_su_cp.on.phase_n[3]$_DFF_PN1_/SETN 42.190598
+OT_ACTUAL_FF u_su_cp.on.phase_n[4]$_DFF_PN1_/D 12.227879
+OT_ACTUAL_FF u_su_cp.on.phase_n[4]$_DFF_PN1_/SETN 41.979141
+OT_ACTUAL_FF u_su_cp.on.phase_n[5]$_DFF_PN1_/D 35.679676
+OT_ACTUAL_FF u_su_cp.on.phase_n[5]$_DFF_PN1_/SETN 41.162045
+OT_ACTUAL_FF u_su_cp.on.phase_n[6]$_DFF_PN1_/D 32.539860
+OT_ACTUAL_FF u_su_cp.on.phase_n[6]$_DFF_PN1_/SETN 39.882557
+OT_ACTUAL_FF u_su_cp.on.phase_n[7]$_DFF_PN1_/D 16.230858
+OT_ACTUAL_FF u_su_cp.on.phase_n[7]$_DFF_PN1_/SETN 40.197929
+OT_ACTUAL_FF u_su_cp.on.phase_n[8]$_DFF_PN1_/D 43.483341
+OT_ACTUAL_FF u_su_cp.on.phase_n[8]$_DFF_PN1_/SETN 25.271313
+OT_ACTUAL_FF u_su_cp.on.phase_q[0]$_DFF_PN1_/D 20.590078
+OT_ACTUAL_FF u_su_cp.on.phase_q[0]$_DFF_PN1_/SETN 43.713074
+OT_ACTUAL_FF u_su_cp.on.phase_q[1]$_DFF_PN0_/D 41.914070
+OT_ACTUAL_FF u_su_cp.on.phase_q[1]$_DFF_PN0_/RESETN 33.456753
+OT_ACTUAL_FF u_su_cp.on.phase_q[2]$_DFF_PN0_/D 29.794548
+OT_ACTUAL_FF u_su_cp.on.phase_q[2]$_DFF_PN0_/RESETN 33.655594
+OT_ACTUAL_FF u_su_cp.on.phase_q[3]$_DFF_PN0_/D 32.848930
+OT_ACTUAL_FF u_su_cp.on.phase_q[3]$_DFF_PN0_/RESETN 33.166248
+OT_ACTUAL_FF u_su_cp.on.phase_q[4]$_DFF_PN0_/D 10.300178
+OT_ACTUAL_FF u_su_cp.on.phase_q[4]$_DFF_PN0_/RESETN 33.062027
+OT_ACTUAL_FF u_su_cp.on.phase_q[5]$_DFF_PN0_/D 26.853312
+OT_ACTUAL_FF u_su_cp.on.phase_q[5]$_DFF_PN0_/RESETN 31.153580
+OT_ACTUAL_FF u_su_cp.on.phase_q[6]$_DFF_PN0_/D 46.358639
+OT_ACTUAL_FF u_su_cp.on.phase_q[6]$_DFF_PN0_/RESETN 31.434772
+OT_ACTUAL_FF u_su_cp.on.phase_q[7]$_DFF_PN0_/D 28.609989
+OT_ACTUAL_FF u_su_cp.on.phase_q[7]$_DFF_PN0_/RESETN 31.145670
+OT_ACTUAL_FF u_su_cp.on.phase_q[8]$_DFF_PN0_/D 31.337051
+OT_ACTUAL_FF u_su_cp.on.phase_q[8]$_DFF_PN0_/RESETN 21.921396
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.bad_q$_DFFE_PN0P_/D 21.695742
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.bad_q$_DFFE_PN0P_/RESETN 21.687624
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[0]$_DFFE_PN0P_/D 44.669853
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[0]$_DFFE_PN0P_/RESETN 6.927056
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[100]$_DFFE_PN0P_/D 44.179543
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[100]$_DFFE_PN0P_/RESETN 69.414742
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[101]$_DFFE_PN0P_/D 42.583973
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[101]$_DFFE_PN0P_/RESETN 72.388290
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[102]$_DFFE_PN0P_/D 37.984352
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[102]$_DFFE_PN0P_/RESETN 64.728401
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[103]$_DFFE_PN0P_/D 43.378780
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[103]$_DFFE_PN0P_/RESETN 69.884956
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[104]$_DFFE_PN0P_/D 43.277451
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[104]$_DFFE_PN0P_/RESETN 71.487053
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[105]$_DFFE_PN0P_/D 42.515129
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[105]$_DFFE_PN0P_/RESETN 69.957481
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[106]$_DFFE_PN0P_/D 41.338043
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[106]$_DFFE_PN0P_/RESETN 71.519196
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[107]$_DFFE_PN0P_/D 42.978504
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[107]$_DFFE_PN0P_/RESETN 71.761375
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[108]$_DFFE_PN0P_/D 43.403446
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[108]$_DFFE_PN0P_/RESETN 74.512268
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[109]$_DFFE_PN0P_/D 48.956367
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[109]$_DFFE_PN0P_/RESETN 75.386375
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[10]$_DFFE_PN0P_/D 42.109524
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[10]$_DFFE_PN0P_/RESETN 21.174660
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[110]$_DFFE_PN0P_/D 46.594791
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[110]$_DFFE_PN0P_/RESETN 74.943176
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[111]$_DFFE_PN0P_/D 44.521797
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[111]$_DFFE_PN0P_/RESETN 71.540192
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[112]$_DFFE_PN0P_/D 48.380833
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[112]$_DFFE_PN0P_/RESETN 75.336975
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[113]$_DFFE_PN0P_/D 46.995464
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[113]$_DFFE_PN0P_/RESETN 70.000175
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[114]$_DFFE_PN0P_/D 42.648781
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[114]$_DFFE_PN0P_/RESETN 72.600090
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[115]$_DFFE_PN0P_/D 45.334167
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[115]$_DFFE_PN0P_/RESETN 75.965569
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[116]$_DFFE_PN0P_/D 48.647163
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[116]$_DFFE_PN0P_/RESETN 74.417442
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[117]$_DFFE_PN0P_/D 53.794796
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[117]$_DFFE_PN0P_/RESETN 76.550003
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[118]$_DFFE_PN0P_/D 45.584980
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[118]$_DFFE_PN0P_/RESETN 77.056747
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[119]$_DFFE_PN0P_/D 40.398060
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[119]$_DFFE_PN0P_/RESETN 72.830978
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[11]$_DFFE_PN0P_/D 44.907951
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[11]$_DFFE_PN0P_/RESETN 21.755417
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[120]$_DFFE_PN0P_/D 46.920307
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[120]$_DFFE_PN0P_/RESETN 75.367714
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[121]$_DFFE_PN0P_/D 43.720924
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[121]$_DFFE_PN0P_/RESETN 77.291481
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[122]$_DFFE_PN0P_/D 47.426201
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[122]$_DFFE_PN0P_/RESETN 76.523163
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[123]$_DFFE_PN0P_/D 44.575809
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[123]$_DFFE_PN0P_/RESETN 71.292274
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[124]$_DFFE_PN0P_/D 42.520840
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[124]$_DFFE_PN0P_/RESETN 70.305511
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[125]$_DFFE_PN0P_/D 47.463825
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[125]$_DFFE_PN0P_/RESETN 77.017517
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[126]$_DFFE_PN0P_/D 43.991894
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[126]$_DFFE_PN0P_/RESETN 77.469643
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[127]$_DFFE_PN0P_/D 47.003658
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[127]$_DFFE_PN0P_/RESETN 69.981384
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[128]$_DFFE_PN0P_/D 46.237667
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[128]$_DFFE_PN0P_/RESETN 20.924929
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[129]$_DFFE_PN0P_/D 48.178879
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[129]$_DFFE_PN0P_/RESETN 74.830963
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[12]$_DFFE_PN0P_/D 43.485416
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[12]$_DFFE_PN0P_/RESETN 21.654345
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[130]$_DFFE_PN0P_/D 47.591599
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[130]$_DFFE_PN0P_/RESETN 20.939985
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[131]$_DFFE_PN0P_/D 44.555840
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[131]$_DFFE_PN0P_/RESETN 20.913494
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[132]$_DFFE_PN0P_/D 44.117619
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[132]$_DFFE_PN0P_/RESETN 70.658104
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[133]$_DFFE_PN0P_/D 47.269024
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[133]$_DFFE_PN0P_/RESETN 71.278542
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[134]$_DFFE_PN0P_/D 50.232624
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[134]$_DFFE_PN0P_/RESETN 76.913216
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[135]$_DFFE_PN0P_/D 49.047424
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[135]$_DFFE_PN0P_/RESETN 77.128098
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[136]$_DFFE_PN0P_/D 51.665131
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[136]$_DFFE_PN0P_/RESETN 21.914665
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[137]$_DFFE_PN0P_/D 31.225634
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[137]$_DFFE_PN0P_/RESETN 59.586102
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[138]$_DFFE_PN0P_/D 44.688774
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[138]$_DFFE_PN0P_/RESETN 66.361641
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[139]$_DFFE_PN0P_/D 33.995659
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[139]$_DFFE_PN0P_/RESETN 71.011665
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[13]$_DFFE_PN0P_/D 50.480267
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[13]$_DFFE_PN0P_/RESETN 19.800495
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[140]$_DFFE_PN0P_/D 32.052078
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[140]$_DFFE_PN0P_/RESETN 66.888992
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[141]$_DFFE_PN0P_/D 31.377081
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[141]$_DFFE_PN0P_/RESETN 59.209652
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[142]$_DFFE_PN0P_/D 29.777813
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[142]$_DFFE_PN0P_/RESETN 67.579300
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[143]$_DFFE_PN0P_/D 31.334755
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[143]$_DFFE_PN0P_/RESETN 68.888336
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[144]$_DFFE_PN0P_/D 32.775116
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[144]$_DFFE_PN0P_/RESETN 71.195938
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[145]$_DFFE_PN0P_/D 31.659105
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[145]$_DFFE_PN0P_/RESETN 66.661232
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[146]$_DFFE_PN0P_/D 31.623308
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[146]$_DFFE_PN0P_/RESETN 72.254730
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[147]$_DFFE_PN0P_/D 29.615837
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[147]$_DFFE_PN0P_/RESETN 71.531250
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[148]$_DFFE_PN0P_/D 31.469007
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[148]$_DFFE_PN0P_/RESETN 71.381248
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[149]$_DFFE_PN0P_/D 30.343761
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[149]$_DFFE_PN0P_/RESETN 69.503014
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[14]$_DFFE_PN0P_/D 44.297016
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[14]$_DFFE_PN0P_/RESETN 22.320951
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[150]$_DFFE_PN0P_/D 30.232483
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[150]$_DFFE_PN0P_/RESETN 67.909859
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[151]$_DFFE_PN0P_/D 33.430252
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[151]$_DFFE_PN0P_/RESETN 71.812706
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[152]$_DFFE_PN0P_/D 32.769539
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[152]$_DFFE_PN0P_/RESETN 67.798958
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[153]$_DFFE_PN0P_/D 30.372072
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[153]$_DFFE_PN0P_/RESETN 68.774902
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[154]$_DFFE_PN0P_/D 30.655811
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[154]$_DFFE_PN0P_/RESETN 68.775345
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[155]$_DFFE_PN0P_/D 30.465582
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[155]$_DFFE_PN0P_/RESETN 68.776428
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[156]$_DFFE_PN0P_/D 31.196337
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[156]$_DFFE_PN0P_/RESETN 71.454803
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[157]$_DFFE_PN0P_/D 30.853529
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[157]$_DFFE_PN0P_/RESETN 71.896423
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[158]$_DFFE_PN0P_/D 35.946732
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[158]$_DFFE_PN0P_/RESETN 68.890335
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[159]$_DFFE_PN0P_/D 29.768042
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[159]$_DFFE_PN0P_/RESETN 88.738113
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[15]$_DFFE_PN0P_/D 42.009598
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[15]$_DFFE_PN0P_/RESETN 22.579689
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[160]$_DFFE_PN0P_/D 31.716671
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[160]$_DFFE_PN0P_/RESETN 71.828850
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[161]$_DFFE_PN0P_/D 31.334797
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[161]$_DFFE_PN0P_/RESETN 66.772682
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[162]$_DFFE_PN0P_/D 30.242760
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[162]$_DFFE_PN0P_/RESETN 67.987312
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[163]$_DFFE_PN0P_/D 30.372261
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[163]$_DFFE_PN0P_/RESETN 68.011932
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[164]$_DFFE_PN0P_/D 31.334240
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[164]$_DFFE_PN0P_/RESETN 68.385078
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[165]$_DFFE_PN0P_/D 31.381571
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[165]$_DFFE_PN0P_/RESETN 66.410240
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[166]$_DFFE_PN0P_/D 31.582237
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[166]$_DFFE_PN0P_/RESETN 68.510559
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[167]$_DFFE_PN0P_/D 31.125116
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[167]$_DFFE_PN0P_/RESETN 68.983711
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[168]$_DFFE_PN0P_/D 30.372475
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[168]$_DFFE_PN0P_/RESETN 68.616722
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[169]$_DFFE_PN0P_/D 30.616211
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[169]$_DFFE_PN0P_/RESETN 66.860367
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[16]$_DFFE_PN0P_/D 45.172462
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[16]$_DFFE_PN0P_/RESETN 19.691942
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[170]$_DFFE_PN0P_/D 30.056360
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[170]$_DFFE_PN0P_/RESETN 68.922440
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[171]$_DFFE_PN0P_/D 31.008682
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[171]$_DFFE_PN0P_/RESETN 68.979958
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[172]$_DFFE_PN0P_/D 32.230766
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[172]$_DFFE_PN0P_/RESETN 68.990074
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[173]$_DFFE_PN0P_/D 31.403151
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[173]$_DFFE_PN0P_/RESETN 89.785912
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[174]$_DFFE_PN0P_/D 31.302814
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[174]$_DFFE_PN0P_/RESETN 89.788551
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[175]$_DFFE_PN0P_/D 30.652981
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[175]$_DFFE_PN0P_/RESETN 89.405472
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[176]$_DFFE_PN0P_/D 31.222906
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[176]$_DFFE_PN0P_/RESETN 89.638420
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[177]$_DFFE_PN0P_/D 30.366890
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[177]$_DFFE_PN0P_/RESETN 89.748207
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[178]$_DFFE_PN0P_/D 29.913307
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[178]$_DFFE_PN0P_/RESETN 88.759003
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[179]$_DFFE_PN0P_/D 30.431831
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[179]$_DFFE_PN0P_/RESETN 90.707870
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[17]$_DFFE_PN0P_/D 45.051033
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[17]$_DFFE_PN0P_/RESETN 22.419607
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[180]$_DFFE_PN0P_/D 31.663706
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[180]$_DFFE_PN0P_/RESETN 88.626816
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[181]$_DFFE_PN0P_/D 31.118996
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[181]$_DFFE_PN0P_/RESETN 91.086594
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[182]$_DFFE_PN0P_/D 31.268051
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[182]$_DFFE_PN0P_/RESETN 90.147972
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[183]$_DFFE_PN0P_/D 33.102493
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[183]$_DFFE_PN0P_/RESETN 90.814995
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[184]$_DFFE_PN0P_/D 30.983618
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[184]$_DFFE_PN0P_/RESETN 66.674095
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[185]$_DFFE_PN0P_/D 31.956209
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[185]$_DFFE_PN0P_/RESETN 90.884132
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[186]$_DFFE_PN0P_/D 32.209854
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[186]$_DFFE_PN0P_/RESETN 90.840530
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[187]$_DFFE_PN0P_/D 31.789627
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[187]$_DFFE_PN0P_/RESETN 90.905434
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[188]$_DFFE_PN0P_/D 31.083948
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[188]$_DFFE_PN0P_/RESETN 72.223572
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[189]$_DFFE_PN0P_/D 30.185160
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[189]$_DFFE_PN0P_/RESETN 91.831764
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_/D 44.879551
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_/RESETN 20.017376
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[190]$_DFFE_PN0P_/D 29.780478
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[190]$_DFFE_PN0P_/RESETN 72.008804
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[191]$_DFFE_PN0P_/D 37.158569
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[191]$_DFFE_PN0P_/RESETN 68.800247
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[19]$_DFFE_PN0P_/D 48.126022
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[19]$_DFFE_PN0P_/RESETN 19.797331
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/D 43.776539
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/RESETN 6.398424
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[20]$_DFFE_PN0P_/D 47.917240
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[20]$_DFFE_PN0P_/RESETN 22.360668
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[21]$_DFFE_PN0P_/D 46.219238
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[21]$_DFFE_PN0P_/RESETN 19.294718
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[22]$_DFFE_PN0P_/D 47.738590
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[22]$_DFFE_PN0P_/RESETN 22.080685
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[23]$_DFFE_PN0P_/D 48.168499
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[23]$_DFFE_PN0P_/RESETN 22.139360
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[24]$_DFFE_PN0P_/D 50.771011
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[24]$_DFFE_PN0P_/RESETN 22.351509
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[25]$_DFFE_PN0P_/D 43.752460
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[25]$_DFFE_PN0P_/RESETN 21.892002
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[26]$_DFFE_PN0P_/D 49.352737
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[26]$_DFFE_PN0P_/RESETN 19.893240
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[27]$_DFFE_PN0P_/D 48.685284
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[27]$_DFFE_PN0P_/RESETN 13.867366
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[28]$_DFFE_PN0P_/D 45.470001
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[28]$_DFFE_PN0P_/RESETN 13.953436
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[29]$_DFFE_PN0P_/D 45.109543
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[29]$_DFFE_PN0P_/RESETN 12.582644
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[2]$_DFFE_PN0P_/D 45.201038
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[2]$_DFFE_PN0P_/RESETN 13.461829
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[30]$_DFFE_PN0P_/D 44.235062
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[30]$_DFFE_PN0P_/RESETN 73.070549
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[31]$_DFFE_PN0P_/D 44.512157
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[31]$_DFFE_PN0P_/RESETN 7.215284
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[32]$_DFFE_PN0P_/D 39.498745
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[32]$_DFFE_PN0P_/RESETN 63.102966
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[33]$_DFFE_PN0P_/D 29.594847
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[33]$_DFFE_PN0P_/RESETN 66.470444
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[34]$_DFFE_PN0P_/D 30.299429
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[34]$_DFFE_PN0P_/RESETN 66.838951
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[35]$_DFFE_PN0P_/D 29.995062
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[35]$_DFFE_PN0P_/RESETN 67.330849
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[36]$_DFFE_PN0P_/D 29.770451
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[36]$_DFFE_PN0P_/RESETN 68.362152
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[37]$_DFFE_PN0P_/D 30.406427
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[37]$_DFFE_PN0P_/RESETN 68.287392
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[38]$_DFFE_PN0P_/D 35.481327
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[38]$_DFFE_PN0P_/RESETN 68.907562
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[39]$_DFFE_PN0P_/D 31.855129
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[39]$_DFFE_PN0P_/RESETN 57.223961
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[3]$_DFFE_PN0P_/D 39.157921
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[3]$_DFFE_PN0P_/RESETN 15.216314
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[40]$_DFFE_PN0P_/D 30.532993
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[40]$_DFFE_PN0P_/RESETN 65.846329
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[41]$_DFFE_PN0P_/D 30.555302
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[41]$_DFFE_PN0P_/RESETN 65.865227
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[42]$_DFFE_PN0P_/D 31.502113
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[42]$_DFFE_PN0P_/RESETN 68.300186
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[43]$_DFFE_PN0P_/D 36.479286
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[43]$_DFFE_PN0P_/RESETN 68.654121
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[44]$_DFFE_PN0P_/D 31.730349
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[44]$_DFFE_PN0P_/RESETN 68.371849
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[45]$_DFFE_PN0P_/D 29.854807
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[45]$_DFFE_PN0P_/RESETN 62.362614
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[46]$_DFFE_PN0P_/D 30.384993
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[46]$_DFFE_PN0P_/RESETN 66.742775
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[47]$_DFFE_PN0P_/D 30.469759
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[47]$_DFFE_PN0P_/RESETN 65.079094
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[48]$_DFFE_PN0P_/D 29.709173
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[48]$_DFFE_PN0P_/RESETN 65.960892
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[49]$_DFFE_PN0P_/D 30.961962
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[49]$_DFFE_PN0P_/RESETN 65.894775
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[4]$_DFFE_PN0P_/D 45.464787
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[4]$_DFFE_PN0P_/RESETN 10.854206
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[50]$_DFFE_PN0P_/D 31.609320
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[50]$_DFFE_PN0P_/RESETN 67.508957
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[51]$_DFFE_PN0P_/D 44.635262
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[51]$_DFFE_PN0P_/RESETN 66.162216
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[52]$_DFFE_PN0P_/D 44.038612
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[52]$_DFFE_PN0P_/RESETN 66.382622
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[53]$_DFFE_PN0P_/D 30.170242
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[53]$_DFFE_PN0P_/RESETN 67.702538
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[54]$_DFFE_PN0P_/D 32.291428
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[54]$_DFFE_PN0P_/RESETN 57.252716
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[55]$_DFFE_PN0P_/D 31.587914
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[55]$_DFFE_PN0P_/RESETN 57.178291
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[56]$_DFFE_PN0P_/D 29.826502
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[56]$_DFFE_PN0P_/RESETN 57.264931
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[57]$_DFFE_PN0P_/D 31.096626
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[57]$_DFFE_PN0P_/RESETN 65.132607
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[58]$_DFFE_PN0P_/D 29.883713
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[58]$_DFFE_PN0P_/RESETN 66.610672
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[59]$_DFFE_PN0P_/D 30.404533
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[59]$_DFFE_PN0P_/RESETN 63.280643
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[5]$_DFFE_PN0P_/D 42.687111
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[5]$_DFFE_PN0P_/RESETN 22.174692
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[60]$_DFFE_PN0P_/D 30.839907
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[60]$_DFFE_PN0P_/RESETN 20.426382
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[61]$_DFFE_PN0P_/D 30.359777
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[61]$_DFFE_PN0P_/RESETN 21.100607
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[62]$_DFFE_PN0P_/D 30.662195
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[62]$_DFFE_PN0P_/RESETN 21.060736
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[63]$_DFFE_PN0P_/D 42.141979
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[63]$_DFFE_PN0P_/RESETN 59.158138
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[64]$_DFFE_PN0P_/D 53.152939
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[64]$_DFFE_PN0P_/RESETN 23.562790
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[65]$_DFFE_PN0P_/D 46.836784
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[65]$_DFFE_PN0P_/RESETN 16.388447
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[66]$_DFFE_PN0P_/D 55.430439
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[66]$_DFFE_PN0P_/RESETN 24.747843
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[67]$_DFFE_PN0P_/D 54.451416
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[67]$_DFFE_PN0P_/RESETN 24.646784
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[68]$_DFFE_PN0P_/D 46.413090
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[68]$_DFFE_PN0P_/RESETN 16.647669
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[69]$_DFFE_PN0P_/D 47.472485
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[69]$_DFFE_PN0P_/RESETN 71.677528
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[6]$_DFFE_PN0P_/D 41.301094
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[6]$_DFFE_PN0P_/RESETN 22.126966
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[70]$_DFFE_PN0P_/D 46.670662
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[70]$_DFFE_PN0P_/RESETN 18.671827
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[71]$_DFFE_PN0P_/D 42.648254
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[71]$_DFFE_PN0P_/RESETN 19.394985
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[72]$_DFFE_PN0P_/D 51.473049
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[72]$_DFFE_PN0P_/RESETN 22.610081
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[73]$_DFFE_PN0P_/D 51.677956
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[73]$_DFFE_PN0P_/RESETN 22.793129
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[74]$_DFFE_PN0P_/D 52.123604
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[74]$_DFFE_PN0P_/RESETN 71.640762
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[75]$_DFFE_PN0P_/D 54.722374
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[75]$_DFFE_PN0P_/RESETN 71.889206
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[76]$_DFFE_PN0P_/D 51.454468
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[76]$_DFFE_PN0P_/RESETN 72.101128
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[77]$_DFFE_PN0P_/D 49.877998
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[77]$_DFFE_PN0P_/RESETN 71.939026
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[78]$_DFFE_PN0P_/D 52.932041
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[78]$_DFFE_PN0P_/RESETN 71.337105
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[79]$_DFFE_PN0P_/D 45.886032
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[79]$_DFFE_PN0P_/RESETN 70.653679
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[7]$_DFFE_PN0P_/D 46.569748
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[7]$_DFFE_PN0P_/RESETN 21.805613
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[80]$_DFFE_PN0P_/D 46.416164
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[80]$_DFFE_PN0P_/RESETN 71.229469
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[81]$_DFFE_PN0P_/D 46.857338
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[81]$_DFFE_PN0P_/RESETN 72.248154
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[82]$_DFFE_PN0P_/D 49.443851
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[82]$_DFFE_PN0P_/RESETN 71.887703
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[83]$_DFFE_PN0P_/D 46.652557
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[83]$_DFFE_PN0P_/RESETN 71.623474
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[84]$_DFFE_PN0P_/D 48.757790
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[84]$_DFFE_PN0P_/RESETN 72.025856
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[85]$_DFFE_PN0P_/D 45.738731
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[85]$_DFFE_PN0P_/RESETN 24.059490
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[86]$_DFFE_PN0P_/D 43.585968
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[86]$_DFFE_PN0P_/RESETN 70.643822
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[87]$_DFFE_PN0P_/D 47.171593
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[87]$_DFFE_PN0P_/RESETN 23.578180
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[88]$_DFFE_PN0P_/D 47.036293
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[88]$_DFFE_PN0P_/RESETN 73.741707
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[89]$_DFFE_PN0P_/D 46.593834
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[89]$_DFFE_PN0P_/RESETN 23.288872
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[8]$_DFFE_PN0P_/D 43.928318
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[8]$_DFFE_PN0P_/RESETN 12.918875
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[90]$_DFFE_PN0P_/D 44.240265
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[90]$_DFFE_PN0P_/RESETN 70.634293
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[91]$_DFFE_PN0P_/D 44.528702
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[91]$_DFFE_PN0P_/RESETN 24.608648
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[92]$_DFFE_PN0P_/D 46.338421
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[92]$_DFFE_PN0P_/RESETN 73.689194
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[93]$_DFFE_PN0P_/D 49.097866
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[93]$_DFFE_PN0P_/RESETN 73.614326
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[94]$_DFFE_PN0P_/D 41.974064
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[94]$_DFFE_PN0P_/RESETN 72.561417
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[95]$_DFFE_PN0P_/D 46.330814
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[95]$_DFFE_PN0P_/RESETN 73.738960
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[96]$_DFFE_PN0P_/D 47.569386
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[96]$_DFFE_PN0P_/RESETN 74.200020
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[97]$_DFFE_PN0P_/D 43.029663
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[97]$_DFFE_PN0P_/RESETN 68.866051
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[98]$_DFFE_PN0P_/D 42.091469
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[98]$_DFFE_PN0P_/RESETN 23.916702
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[99]$_DFFE_PN0P_/D 43.558365
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[99]$_DFFE_PN0P_/RESETN 24.697536
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[9]$_DFFE_PN0P_/D 47.211403
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.data_q[9]$_DFFE_PN0P_/RESETN 19.769867
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][10]$_DFFE_PN0P_/D 19.107300
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][10]$_DFFE_PN0P_/RESETN 62.535297
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][11]$_DFFE_PN0P_/D 18.047516
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][11]$_DFFE_PN0P_/RESETN 48.665001
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][12]$_DFFE_PN0P_/D 17.538963
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][12]$_DFFE_PN0P_/RESETN 54.645344
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][13]$_DFFE_PN0P_/D 16.604864
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][13]$_DFFE_PN0P_/RESETN 54.174236
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][14]$_DFFE_PN0P_/D 16.890795
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][14]$_DFFE_PN0P_/RESETN 13.853363
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][16]$_DFFE_PN0P_/D 17.318424
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][16]$_DFFE_PN0P_/RESETN 47.200756
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][17]$_DFFE_PN0P_/D 17.551273
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][17]$_DFFE_PN0P_/RESETN 57.944401
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][18]$_DFFE_PN0P_/D 17.697107
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][18]$_DFFE_PN0P_/RESETN 66.105804
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][19]$_DFFE_PN0P_/D 16.950649
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][19]$_DFFE_PN0P_/RESETN 46.268253
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][20]$_DFFE_PN0P_/D 16.839682
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][20]$_DFFE_PN0P_/RESETN 13.634497
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][21]$_DFFE_PN0P_/D 17.942245
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][21]$_DFFE_PN0P_/RESETN 54.728764
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][22]$_DFFE_PN0P_/D 17.479191
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][22]$_DFFE_PN0P_/RESETN 10.797252
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][23]$_DFFE_PN0P_/D 17.328638
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][23]$_DFFE_PN0P_/RESETN 53.780495
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][24]$_DFFE_PN0P_/D 17.485992
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][24]$_DFFE_PN0P_/RESETN 63.619137
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][25]$_DFFE_PN0P_/D 17.440792
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][25]$_DFFE_PN0P_/RESETN 48.270763
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][26]$_DFFE_PN0P_/D 17.294977
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][26]$_DFFE_PN0P_/RESETN 55.398132
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][27]$_DFFE_PN0P_/D 18.183199
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][27]$_DFFE_PN0P_/RESETN 52.917183
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][28]$_DFFE_PN0P_/D 17.074154
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][28]$_DFFE_PN0P_/RESETN 47.672493
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][29]$_DFFE_PN0P_/D 18.567877
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][29]$_DFFE_PN0P_/RESETN 55.450645
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][2]$_DFFE_PN0P_/D 17.562431
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][2]$_DFFE_PN0P_/RESETN 42.480907
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][30]$_DFFE_PN0P_/D 16.844137
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][30]$_DFFE_PN0P_/RESETN 14.054994
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][32]$_DFFE_PN0P_/D 17.316523
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][32]$_DFFE_PN0P_/RESETN 66.691696
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][33]$_DFFE_PN0P_/D 18.625351
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][33]$_DFFE_PN0P_/RESETN 46.943062
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][34]$_DFFE_PN0P_/D 16.611401
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][34]$_DFFE_PN0P_/RESETN 42.340897
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][35]$_DFFE_PN0P_/D 16.299685
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][35]$_DFFE_PN0P_/RESETN 41.200974
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][36]$_DFFE_PN0P_/D 17.039516
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][36]$_DFFE_PN0P_/RESETN 42.387955
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][37]$_DFFE_PN0P_/D 16.915344
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][37]$_DFFE_PN0P_/RESETN 42.472122
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][38]$_DFFE_PN0P_/D 17.126925
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][38]$_DFFE_PN0P_/RESETN 66.431725
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][39]$_DFFE_PN0P_/D 16.842001
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][39]$_DFFE_PN0P_/RESETN 64.479156
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][40]$_DFFE_PN0P_/D 19.175779
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][40]$_DFFE_PN0P_/RESETN 64.445549
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][41]$_DFFE_PN0P_/D 21.197655
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][41]$_DFFE_PN0P_/RESETN 60.325050
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][42]$_DFFE_PN0P_/D 20.439352
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][42]$_DFFE_PN0P_/RESETN 71.675720
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][43]$_DFFE_PN0P_/D 19.454632
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][43]$_DFFE_PN0P_/RESETN 71.873383
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][44]$_DFFE_PN0P_/D 16.882933
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][44]$_DFFE_PN0P_/RESETN 64.850456
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][45]$_DFFE_PN0P_/D 18.347414
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][45]$_DFFE_PN0P_/RESETN 57.915646
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][46]$_DFFE_PN0P_/D 19.382523
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][46]$_DFFE_PN0P_/RESETN 57.335773
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][47]$_DFFE_PN0P_/D 20.473907
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][47]$_DFFE_PN0P_/RESETN 75.343941
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][48]$_DFFE_PN0P_/D 17.683035
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][48]$_DFFE_PN0P_/RESETN 62.445492
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][49]$_DFFE_PN0P_/D 16.793755
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][49]$_DFFE_PN0P_/RESETN 64.168030
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][4]$_DFFE_PN0P_/D 17.763763
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][4]$_DFFE_PN0P_/RESETN 48.552647
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][50]$_DFFE_PN0P_/D 19.745955
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][50]$_DFFE_PN0P_/RESETN 58.158688
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][51]$_DFFE_PN0P_/D 19.040165
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][51]$_DFFE_PN0P_/RESETN 73.111542
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][52]$_DFFE_PN0P_/D 17.784233
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][52]$_DFFE_PN0P_/RESETN 64.040359
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][53]$_DFFE_PN0P_/D 17.395239
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][53]$_DFFE_PN0P_/RESETN 63.393791
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][54]$_DFFE_PN0P_/D 18.875908
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][54]$_DFFE_PN0P_/RESETN 64.064240
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][55]$_DFFE_PN0P_/D 18.022306
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][55]$_DFFE_PN0P_/RESETN 57.129272
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][56]$_DFFE_PN0P_/D 16.459833
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][56]$_DFFE_PN0P_/RESETN 64.451332
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][57]$_DFFE_PN0P_/D 16.719139
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][57]$_DFFE_PN0P_/RESETN 65.155128
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][58]$_DFFE_PN0P_/D 17.818565
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][58]$_DFFE_PN0P_/RESETN 64.943512
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][59]$_DFFE_PN0P_/D 17.602953
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][59]$_DFFE_PN0P_/RESETN 61.029694
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][5]$_DFFE_PN0P_/D 17.342524
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][5]$_DFFE_PN0P_/RESETN 41.505730
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][60]$_DFFE_PN0P_/D 18.120825
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][60]$_DFFE_PN0P_/RESETN 57.310837
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][61]$_DFFE_PN0P_/D 18.595549
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][61]$_DFFE_PN0P_/RESETN 61.140369
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][62]$_DFFE_PN0P_/D 17.902437
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][62]$_DFFE_PN0P_/RESETN 61.172955
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][64]$_DFFE_PN0P_/D 16.526398
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][64]$_DFFE_PN0P_/RESETN 63.111809
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][65]$_DFFE_PN0P_/D 17.110432
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][65]$_DFFE_PN0P_/RESETN 63.248325
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][66]$_DFFE_PN0P_/D 16.882870
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][66]$_DFFE_PN0P_/RESETN 64.190323
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][67]$_DFFE_PN0P_/D 18.522753
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][67]$_DFFE_PN0P_/RESETN 20.420610
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][68]$_DFFE_PN0P_/D 16.672649
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][68]$_DFFE_PN0P_/RESETN 64.920898
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][69]$_DFFE_PN0P_/D 16.977253
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][69]$_DFFE_PN0P_/RESETN 21.720945
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][6]$_DFFE_PN0P_/D 17.043373
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][6]$_DFFE_PN0P_/RESETN 61.371422
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][70]$_DFFE_PN0P_/D 17.141794
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][70]$_DFFE_PN0P_/RESETN 66.533180
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][8]$_DFFE_PN0P_/D 17.558712
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][8]$_DFFE_PN0P_/RESETN 48.667473
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][9]$_DFFE_PN0P_/D 17.714233
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[0][9]$_DFFE_PN0P_/RESETN 46.823227
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][10]$_DFFE_PN0P_/D 26.608660
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][10]$_DFFE_PN0P_/RESETN 67.345352
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][11]$_DFFE_PN0P_/D 20.445318
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][11]$_DFFE_PN0P_/RESETN 71.673042
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][12]$_DFFE_PN0P_/D 27.864960
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][12]$_DFFE_PN0P_/RESETN 67.657516
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][13]$_DFFE_PN0P_/D 26.216856
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][13]$_DFFE_PN0P_/RESETN 71.371323
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][14]$_DFFE_PN0P_/D 27.558199
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][14]$_DFFE_PN0P_/RESETN 67.778030
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][16]$_DFFE_PN0P_/D 27.779980
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][16]$_DFFE_PN0P_/RESETN 66.972305
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][17]$_DFFE_PN0P_/D 27.631390
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][17]$_DFFE_PN0P_/RESETN 71.264290
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][18]$_DFFE_PN0P_/D 23.907259
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][18]$_DFFE_PN0P_/RESETN 70.715767
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][19]$_DFFE_PN0P_/D 25.923777
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][19]$_DFFE_PN0P_/RESETN 70.861191
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][20]$_DFFE_PN0P_/D 21.951580
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][20]$_DFFE_PN0P_/RESETN 69.051170
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][21]$_DFFE_PN0P_/D 20.443403
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][21]$_DFFE_PN0P_/RESETN 15.508067
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][22]$_DFFE_PN0P_/D 20.634897
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][22]$_DFFE_PN0P_/RESETN 18.179403
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][23]$_DFFE_PN0P_/D 21.683537
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][23]$_DFFE_PN0P_/RESETN 69.908409
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][24]$_DFFE_PN0P_/D 18.821041
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][24]$_DFFE_PN0P_/RESETN 11.381410
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][25]$_DFFE_PN0P_/D 22.828760
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][25]$_DFFE_PN0P_/RESETN 69.675041
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][26]$_DFFE_PN0P_/D 19.195797
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][26]$_DFFE_PN0P_/RESETN 67.466850
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][27]$_DFFE_PN0P_/D 17.995348
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][27]$_DFFE_PN0P_/RESETN 23.754082
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][28]$_DFFE_PN0P_/D 22.725531
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][28]$_DFFE_PN0P_/RESETN 70.244766
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][29]$_DFFE_PN0P_/D 20.013235
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][29]$_DFFE_PN0P_/RESETN 65.782501
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][2]$_DFFE_PN0P_/D 30.210398
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][2]$_DFFE_PN0P_/RESETN 67.112953
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][30]$_DFFE_PN0P_/D 18.882257
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][30]$_DFFE_PN0P_/RESETN 67.600067
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][32]$_DFFE_PN0P_/D 19.183578
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][32]$_DFFE_PN0P_/RESETN 65.039085
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][33]$_DFFE_PN0P_/D 18.791885
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][33]$_DFFE_PN0P_/RESETN 77.845634
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][34]$_DFFE_PN0P_/D 18.127001
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][34]$_DFFE_PN0P_/RESETN 22.840897
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][35]$_DFFE_PN0P_/D 19.531967
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][35]$_DFFE_PN0P_/RESETN 67.001724
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][36]$_DFFE_PN0P_/D 16.962854
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][36]$_DFFE_PN0P_/RESETN 23.012287
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][37]$_DFFE_PN0P_/D 17.449265
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][37]$_DFFE_PN0P_/RESETN 22.926439
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][38]$_DFFE_PN0P_/D 21.658848
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][38]$_DFFE_PN0P_/RESETN 23.440098
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][39]$_DFFE_PN0P_/D 17.608513
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][39]$_DFFE_PN0P_/RESETN 76.822517
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][40]$_DFFE_PN0P_/D 16.983477
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][40]$_DFFE_PN0P_/RESETN 77.830353
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][41]$_DFFE_PN0P_/D 17.605528
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][41]$_DFFE_PN0P_/RESETN 24.388838
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][42]$_DFFE_PN0P_/D 17.444651
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][42]$_DFFE_PN0P_/RESETN 77.734734
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][43]$_DFFE_PN0P_/D 18.861925
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][43]$_DFFE_PN0P_/RESETN 22.071302
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][44]$_DFFE_PN0P_/D 17.474382
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][44]$_DFFE_PN0P_/RESETN 78.494934
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][45]$_DFFE_PN0P_/D 16.888407
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][45]$_DFFE_PN0P_/RESETN 74.809853
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][46]$_DFFE_PN0P_/D 18.135487
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][46]$_DFFE_PN0P_/RESETN 73.805878
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][47]$_DFFE_PN0P_/D 20.409342
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][47]$_DFFE_PN0P_/RESETN 22.277082
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][48]$_DFFE_PN0P_/D 18.297579
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][48]$_DFFE_PN0P_/RESETN 69.637711
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][49]$_DFFE_PN0P_/D 19.599960
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][49]$_DFFE_PN0P_/RESETN 69.762337
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][4]$_DFFE_PN0P_/D 26.547314
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][4]$_DFFE_PN0P_/RESETN 70.608200
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][50]$_DFFE_PN0P_/D 20.202223
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][50]$_DFFE_PN0P_/RESETN 23.165110
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][51]$_DFFE_PN0P_/D 19.349897
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][51]$_DFFE_PN0P_/RESETN 77.391914
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][52]$_DFFE_PN0P_/D 17.218851
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][52]$_DFFE_PN0P_/RESETN 77.598511
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][53]$_DFFE_PN0P_/D 16.994205
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][53]$_DFFE_PN0P_/RESETN 74.698997
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][54]$_DFFE_PN0P_/D 19.415997
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][54]$_DFFE_PN0P_/RESETN 70.402534
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][55]$_DFFE_PN0P_/D 21.573999
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][55]$_DFFE_PN0P_/RESETN 19.907076
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][56]$_DFFE_PN0P_/D 18.069559
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][56]$_DFFE_PN0P_/RESETN 77.092125
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][57]$_DFFE_PN0P_/D 18.650124
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][57]$_DFFE_PN0P_/RESETN 70.138481
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][58]$_DFFE_PN0P_/D 21.950602
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][58]$_DFFE_PN0P_/RESETN 22.485527
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][59]$_DFFE_PN0P_/D 23.668859
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][59]$_DFFE_PN0P_/RESETN 22.082628
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][5]$_DFFE_PN0P_/D 30.439228
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][5]$_DFFE_PN0P_/RESETN 68.156937
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][60]$_DFFE_PN0P_/D 19.132439
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][60]$_DFFE_PN0P_/RESETN 78.306725
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][61]$_DFFE_PN0P_/D 17.065834
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][61]$_DFFE_PN0P_/RESETN 78.446014
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][62]$_DFFE_PN0P_/D 17.279997
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][62]$_DFFE_PN0P_/RESETN 24.050539
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][64]$_DFFE_PN0P_/D 17.859846
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][64]$_DFFE_PN0P_/RESETN 70.442360
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][65]$_DFFE_PN0P_/D 20.098499
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][65]$_DFFE_PN0P_/RESETN 23.541599
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][66]$_DFFE_PN0P_/D 18.686663
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][66]$_DFFE_PN0P_/RESETN 21.869604
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][67]$_DFFE_PN0P_/D 16.753202
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][67]$_DFFE_PN0P_/RESETN 21.152954
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][68]$_DFFE_PN0P_/D 18.733688
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][68]$_DFFE_PN0P_/RESETN 71.068863
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][69]$_DFFE_PN0P_/D 17.239439
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][69]$_DFFE_PN0P_/RESETN 69.905495
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][6]$_DFFE_PN0P_/D 26.777628
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][6]$_DFFE_PN0P_/RESETN 27.357908
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][70]$_DFFE_PN0P_/D 21.728119
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][70]$_DFFE_PN0P_/RESETN 61.380249
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][8]$_DFFE_PN0P_/D 24.106619
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][8]$_DFFE_PN0P_/RESETN 69.146049
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][9]$_DFFE_PN0P_/D 19.356586
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[1][9]$_DFFE_PN0P_/RESETN 10.214288
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][10]$_DFFE_PN0P_/D 17.737860
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][10]$_DFFE_PN0P_/RESETN 62.095119
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][11]$_DFFE_PN0P_/D 17.642582
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][11]$_DFFE_PN0P_/RESETN 62.498367
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][12]$_DFFE_PN0P_/D 18.708742
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][12]$_DFFE_PN0P_/RESETN 61.310928
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][13]$_DFFE_PN0P_/D 17.038462
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][13]$_DFFE_PN0P_/RESETN 57.872276
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][14]$_DFFE_PN0P_/D 18.077929
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][14]$_DFFE_PN0P_/RESETN 57.515938
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][16]$_DFFE_PN0P_/D 17.931643
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][16]$_DFFE_PN0P_/RESETN 77.044136
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][17]$_DFFE_PN0P_/D 17.823936
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][17]$_DFFE_PN0P_/RESETN 58.492046
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][18]$_DFFE_PN0P_/D 16.937431
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][18]$_DFFE_PN0P_/RESETN 58.146336
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][19]$_DFFE_PN0P_/D 17.266987
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][19]$_DFFE_PN0P_/RESETN 76.754936
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][20]$_DFFE_PN0P_/D 19.089550
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][20]$_DFFE_PN0P_/RESETN 78.214241
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][21]$_DFFE_PN0P_/D 18.581865
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][21]$_DFFE_PN0P_/RESETN 78.115295
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][22]$_DFFE_PN0P_/D 17.344252
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][22]$_DFFE_PN0P_/RESETN 76.922791
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][23]$_DFFE_PN0P_/D 19.398607
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][23]$_DFFE_PN0P_/RESETN 81.163727
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][24]$_DFFE_PN0P_/D 19.868309
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][24]$_DFFE_PN0P_/RESETN 81.179451
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][25]$_DFFE_PN0P_/D 17.536291
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][25]$_DFFE_PN0P_/RESETN 81.077301
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][26]$_DFFE_PN0P_/D 17.542891
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][26]$_DFFE_PN0P_/RESETN 56.418926
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][27]$_DFFE_PN0P_/D 16.676682
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][27]$_DFFE_PN0P_/RESETN 56.608940
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][28]$_DFFE_PN0P_/D 22.459570
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][28]$_DFFE_PN0P_/RESETN 29.890396
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][29]$_DFFE_PN0P_/D 16.978642
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][29]$_DFFE_PN0P_/RESETN 77.768234
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][2]$_DFFE_PN0P_/D 16.972950
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][2]$_DFFE_PN0P_/RESETN 60.965275
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][30]$_DFFE_PN0P_/D 16.453068
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][30]$_DFFE_PN0P_/RESETN 56.625412
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][32]$_DFFE_PN0P_/D 19.413603
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][32]$_DFFE_PN0P_/RESETN 80.734421
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][33]$_DFFE_PN0P_/D 16.444977
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][33]$_DFFE_PN0P_/RESETN 57.425037
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][34]$_DFFE_PN0P_/D 18.047806
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][34]$_DFFE_PN0P_/RESETN 78.901360
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][35]$_DFFE_PN0P_/D 17.856092
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][35]$_DFFE_PN0P_/RESETN 78.887520
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][36]$_DFFE_PN0P_/D 19.804770
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][36]$_DFFE_PN0P_/RESETN 83.500069
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][37]$_DFFE_PN0P_/D 21.324213
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][37]$_DFFE_PN0P_/RESETN 29.744331
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][38]$_DFFE_PN0P_/D 18.029779
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][38]$_DFFE_PN0P_/RESETN 89.976303
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][39]$_DFFE_PN0P_/D 19.512732
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][39]$_DFFE_PN0P_/RESETN 62.851170
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][40]$_DFFE_PN0P_/D 20.494635
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][40]$_DFFE_PN0P_/RESETN 63.203320
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][41]$_DFFE_PN0P_/D 20.516130
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][41]$_DFFE_PN0P_/RESETN 62.956375
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][42]$_DFFE_PN0P_/D 18.885345
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][42]$_DFFE_PN0P_/RESETN 63.250515
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][43]$_DFFE_PN0P_/D 17.472288
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][43]$_DFFE_PN0P_/RESETN 63.269848
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][44]$_DFFE_PN0P_/D 20.712065
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][44]$_DFFE_PN0P_/RESETN 61.550694
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][45]$_DFFE_PN0P_/D 17.608311
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][45]$_DFFE_PN0P_/RESETN 67.207405
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][46]$_DFFE_PN0P_/D 17.616499
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][46]$_DFFE_PN0P_/RESETN 66.516113
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][47]$_DFFE_PN0P_/D 18.116772
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][47]$_DFFE_PN0P_/RESETN 65.664917
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][48]$_DFFE_PN0P_/D 18.142439
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][48]$_DFFE_PN0P_/RESETN 63.976021
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][49]$_DFFE_PN0P_/D 17.838030
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][49]$_DFFE_PN0P_/RESETN 66.607620
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][4]$_DFFE_PN0P_/D 17.897940
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][4]$_DFFE_PN0P_/RESETN 62.289425
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][50]$_DFFE_PN0P_/D 18.592676
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][50]$_DFFE_PN0P_/RESETN 65.645493
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][51]$_DFFE_PN0P_/D 18.503401
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][51]$_DFFE_PN0P_/RESETN 65.493538
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][52]$_DFFE_PN0P_/D 18.479954
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][52]$_DFFE_PN0P_/RESETN 83.964615
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][53]$_DFFE_PN0P_/D 18.120617
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][53]$_DFFE_PN0P_/RESETN 84.597275
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][54]$_DFFE_PN0P_/D 20.192646
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][54]$_DFFE_PN0P_/RESETN 30.292713
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][55]$_DFFE_PN0P_/D 18.036245
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][55]$_DFFE_PN0P_/RESETN 28.134495
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][56]$_DFFE_PN0P_/D 21.510002
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][56]$_DFFE_PN0P_/RESETN 30.116549
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][57]$_DFFE_PN0P_/D 18.423693
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][57]$_DFFE_PN0P_/RESETN 28.047911
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][58]$_DFFE_PN0P_/D 17.719049
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][58]$_DFFE_PN0P_/RESETN 85.128754
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][59]$_DFFE_PN0P_/D 19.164343
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][59]$_DFFE_PN0P_/RESETN 27.739006
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][5]$_DFFE_PN0P_/D 18.154034
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][5]$_DFFE_PN0P_/RESETN 57.070461
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][60]$_DFFE_PN0P_/D 17.591013
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][60]$_DFFE_PN0P_/RESETN 29.921801
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][61]$_DFFE_PN0P_/D 20.135643
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][61]$_DFFE_PN0P_/RESETN 28.023640
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][62]$_DFFE_PN0P_/D 16.462505
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][62]$_DFFE_PN0P_/RESETN 57.126289
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][64]$_DFFE_PN0P_/D 19.319345
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][64]$_DFFE_PN0P_/RESETN 27.605696
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][65]$_DFFE_PN0P_/D 21.668756
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][65]$_DFFE_PN0P_/RESETN 55.060165
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][66]$_DFFE_PN0P_/D 17.384163
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][66]$_DFFE_PN0P_/RESETN 66.510384
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][67]$_DFFE_PN0P_/D 15.798682
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][67]$_DFFE_PN0P_/RESETN 81.008713
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][68]$_DFFE_PN0P_/D 21.541595
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][68]$_DFFE_PN0P_/RESETN 34.491173
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][69]$_DFFE_PN0P_/D 20.935135
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][69]$_DFFE_PN0P_/RESETN 34.042923
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][6]$_DFFE_PN0P_/D 16.841501
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][6]$_DFFE_PN0P_/RESETN 57.573349
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][70]$_DFFE_PN0P_/D 22.826761
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][70]$_DFFE_PN0P_/RESETN 78.842766
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][8]$_DFFE_PN0P_/D 17.076195
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][8]$_DFFE_PN0P_/RESETN 62.377075
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][9]$_DFFE_PN0P_/D 17.482939
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_code[2][9]$_DFFE_PN0P_/RESETN 62.355606
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[0]$_DFFE_PN0P_/D 34.405304
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[0]$_DFFE_PN0P_/RESETN 66.888786
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[1]$_DFFE_PN0P_/D 41.050900
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[1]$_DFFE_PN0P_/RESETN 77.674507
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[2]$_DFFE_PN0P_/D 40.515530
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_overall[2]$_DFFE_PN0P_/RESETN 79.926758
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][0]$_DFFE_PN0P_/D 48.009319
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][0]$_DFFE_PN0P_/RESETN 64.528038
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][1]$_DFFE_PN0P_/D 46.838646
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][1]$_DFFE_PN0P_/RESETN 64.249008
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][2]$_DFFE_PN0P_/D 54.205517
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][2]$_DFFE_PN0P_/RESETN 64.072708
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][3]$_DFFE_PN0P_/D 53.474663
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][3]$_DFFE_PN0P_/RESETN 66.573898
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][4]$_DFFE_PN0P_/D 49.881210
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][4]$_DFFE_PN0P_/RESETN 66.676140
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][5]$_DFFE_PN0P_/D 36.545635
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][5]$_DFFE_PN0P_/RESETN 66.392921
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][6]$_DFFE_PN0P_/D 36.173584
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[0][6]$_DFFE_PN0P_/RESETN 66.293884
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][0]$_DFFE_PN0P_/D 50.721512
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][0]$_DFFE_PN0P_/RESETN 75.337624
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][1]$_DFFE_PN0P_/D 52.067226
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][1]$_DFFE_PN0P_/RESETN 75.275856
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][2]$_DFFE_PN0P_/D 49.981270
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][2]$_DFFE_PN0P_/RESETN 75.383324
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][3]$_DFFE_PN0P_/D 53.684212
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][3]$_DFFE_PN0P_/RESETN 75.524879
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][4]$_DFFE_PN0P_/D 52.967602
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][4]$_DFFE_PN0P_/RESETN 76.882652
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][5]$_DFFE_PN0P_/D 38.517544
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][5]$_DFFE_PN0P_/RESETN 77.518494
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][6]$_DFFE_PN0P_/D 33.798771
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[1][6]$_DFFE_PN0P_/RESETN 77.872345
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][0]$_DFFE_PN0P_/D 47.989246
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][0]$_DFFE_PN0P_/RESETN 34.193897
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][1]$_DFFE_PN0P_/D 47.742809
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][1]$_DFFE_PN0P_/RESETN 34.235294
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][2]$_DFFE_PN0P_/D 56.163525
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][2]$_DFFE_PN0P_/RESETN 29.814804
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][3]$_DFFE_PN0P_/D 53.353539
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][3]$_DFFE_PN0P_/RESETN 81.521011
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][4]$_DFFE_PN0P_/D 53.388412
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][4]$_DFFE_PN0P_/RESETN 81.484764
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][5]$_DFFE_PN0P_/D 40.826210
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][5]$_DFFE_PN0P_/RESETN 81.491165
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][6]$_DFFE_PN0P_/D 31.010069
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.held_syndrome[2][6]$_DFFE_PN0P_/RESETN 80.475349
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[0]$_DFF_PN1_/D 29.556448
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[0]$_DFF_PN1_/SETN 27.024979
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[1]$_DFF_PN0_/D 40.664417
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[1]$_DFF_PN0_/RESETN 31.417883
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[2]$_DFF_PN0_/D 96.060287
+OT_ACTUAL_FF u_su_cp.on.registered_header.decoder.state[2]$_DFF_PN0_/RESETN 72.070099
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[0]$_DFF_PN0_/D 32.337902
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[0]$_DFF_PN0_/RESETN 23.107475
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[1]$_DFF_PN0_/D 28.415791
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[1]$_DFF_PN0_/RESETN 66.707764
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[2]$_DFF_PN0_/D 28.841770
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[2]$_DFF_PN0_/RESETN 73.760292
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[3]$_DFF_PN0_/D 16.854483
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[3]$_DFF_PN0_/RESETN 69.938347
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[4]$_DFF_PN0_/D 19.472250
+OT_ACTUAL_FF u_su_cp.on.registered_status.owner_match_q[4]$_DFF_PN0_/RESETN 12.294208
+OT_ACTUAL_FF u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/D 14.899152
+OT_ACTUAL_FF u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/SETN 39.283638
+OT_ACTUAL_FF u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/D 11.451361
+OT_ACTUAL_FF u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/RESETN 27.315359
+OT_ACTUAL_FF u_su_cp.on.registered_status.shape_q$_DFF_PN0_/D 46.809986
+OT_ACTUAL_FF u_su_cp.on.registered_status.shape_q$_DFF_PN0_/RESETN 66.957245
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[0]$_DFF_PN1_/D 27.634151
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[0]$_DFF_PN1_/SETN 36.979683
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[1]$_DFF_PN1_/D 49.506859
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[1]$_DFF_PN1_/SETN 43.623169
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[2]$_DFF_PN1_/D 46.160000
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[2]$_DFF_PN1_/SETN 43.501778
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[3]$_DFF_PN0_/D 41.091011
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[3]$_DFF_PN0_/RESETN 33.957294
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[4]$_DFF_PN1_/D 30.042608
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[4]$_DFF_PN1_/SETN 40.430984
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[5]$_DFF_PN1_/D 39.312962
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[5]$_DFF_PN1_/SETN 41.286037
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[6]$_DFF_PN1_/D 17.341032
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_n[6]$_DFF_PN1_/SETN 39.314842
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[0]$_DFF_PN0_/D 26.302862
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[0]$_DFF_PN0_/RESETN 29.108438
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[1]$_DFF_PN0_/D 43.571175
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[1]$_DFF_PN0_/RESETN 34.216465
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[2]$_DFF_PN0_/D 54.256329
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[2]$_DFF_PN0_/RESETN 33.956711
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[3]$_DFF_PN1_/D 35.471806
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[3]$_DFF_PN1_/SETN 43.438496
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[4]$_DFF_PN0_/D 20.367922
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[4]$_DFF_PN0_/RESETN 30.680500
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[5]$_DFF_PN0_/D 42.121937
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[5]$_DFF_PN0_/RESETN 34.127605
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[6]$_DFF_PN0_/D 32.429394
+OT_ACTUAL_FF u_su_cp.on.registered_status.status_q[6]$_DFF_PN0_/RESETN 30.602659
+OT_COMBINATIONAL_D _3465_/D 86.292671
+OT_COMBINATIONAL_D _3466_/D 84.136559
+OT_COMBINATIONAL_D _3493_/D 73.122032
+OT_COMBINATIONAL_D _3512_/D 31.543226
+OT_COMBINATIONAL_D _3520_/D 82.733337
+OT_COMBINATIONAL_D _3528_/D 67.106201
+OT_COMBINATIONAL_D _3548_/D 20.994879
+OT_COMBINATIONAL_D _3553_/D 39.536736
+OT_COMBINATIONAL_D _3561_/D 21.822655
+OT_COMBINATIONAL_D _3562_/D 19.587700
+OT_COMBINATIONAL_D _3567_/D 30.334999
+OT_COMBINATIONAL_D _3570_/D 49.409046
+OT_COMBINATIONAL_D _3573_/D 118.569679
+OT_COMBINATIONAL_D _3593_/D 31.459398
+OT_COMBINATIONAL_D _3604_/D 70.428337
+OT_COMBINATIONAL_D _3615_/D 68.115601
+OT_COMBINATIONAL_D _4521_/D 114.537453
+OT_COMBINATIONAL_D _4536_/D 126.712143
+OT_COMBINATIONAL_D _4544_/D 140.674301
+OT_COMBINATIONAL_D _4550_/D 113.584961
+OT_COMBINATIONAL_D _4555_/D 117.753571
+OT_COMBINATIONAL_D _4579_/D 119.146385
+OT_COMBINATIONAL_D _4591_/D 121.988312
+OT_COMBINATIONAL_D _4617_/D 118.085419
+OT_COMBINATIONAL_D _4621_/D 118.388802
+OT_COMBINATIONAL_D _4625_/D 121.762993
+OT_COMBINATIONAL_D _4630_/D 118.986458
+OT_COMBINATIONAL_D _4652_/D 107.883797
+OT_COMBINATIONAL_D _4660_/D 122.448441
+OT_COMBINATIONAL_D _4668_/D 102.026611
+OT_COMBINATIONAL_D _4688_/D 98.412430
+OT_COMBINATIONAL_D _4696_/D 122.129890
+OT_COMBINATIONAL_D _4700_/D 126.180328
+OT_COMBINATIONAL_D _4707_/D 88.522758
+OT_COMBINATIONAL_D _4731_/D 88.450623
+OT_COMBINATIONAL_D _4756_/D 91.118134
+OT_COMBINATIONAL_D _4760_/D 93.500877
+OT_COMBINATIONAL_D _4765_/D 94.318459
+OT_COMBINATIONAL_D _4769_/D 87.190636
+OT_COMBINATIONAL_D _4789_/D 116.321182
+OT_COMBINATIONAL_D _4799_/D 131.112625
+OT_COMBINATIONAL_D _4827_/D 87.404572
+OT_COMBINATIONAL_D _4836_/D 110.548920
+OT_COMBINATIONAL_D _4860_/D 154.628998
+OT_COMBINATIONAL_D _4865_/D 127.343231
+OT_COMBINATIONAL_D _4869_/D 137.879898
+OT_COMBINATIONAL_D _4882_/D 154.002243
+OT_COMBINATIONAL_D _4905_/D 105.013359
+OT_COMBINATIONAL_D _4924_/D 142.363281
+OT_COMBINATIONAL_D _4946_/D 100.362358
+OT_COMBINATIONAL_D _4951_/D 105.476105
+OT_COMBINATIONAL_D _4955_/D 98.230347
+OT_COMBINATIONAL_D _4976_/D 142.774857
+OT_COMBINATIONAL_D _4980_/D 146.261765
+OT_COMBINATIONAL_D _4985_/D 145.571930
+OT_COMBINATIONAL_D _4989_/D 144.553543
+OT_COMBINATIONAL_D _4994_/D 87.316811
+OT_COMBINATIONAL_D _5010_/D 85.147873
+OT_COMBINATIONAL_D _5018_/D 130.239624
+OT_COMBINATIONAL_D _5022_/D 143.332932
+OT_COMBINATIONAL_D _5044_/D 125.151665
+OT_COMBINATIONAL_D _5060_/D 127.994392
+OT_COMBINATIONAL_D _5083_/D 125.427597
+OT_COMBINATIONAL_D _5087_/D 134.606247
+OT_COMBINATIONAL_D _5091_/D 124.694893
+OT_COMBINATIONAL_D _5108_/D 144.250092
+OT_COMBINATIONAL_D _5112_/D 119.895348
+OT_COMBINATIONAL_D _5117_/D 124.580544
+OT_COMBINATIONAL_D _5121_/D 120.495819
+OT_COMBINATIONAL_D _5152_/D 105.222023
+OT_COMBINATIONAL_D _5173_/D 150.387344
+OT_COMBINATIONAL_D _5178_/D 139.409790
+OT_COMBINATIONAL_D _5184_/D 120.810875
+OT_COMBINATIONAL_D _5190_/D 96.590141
+OT_COMBINATIONAL_D _5217_/D 116.268494
+OT_COMBINATIONAL_D _5254_/D 114.361244
+OT_COMBINATIONAL_D _5259_/D 115.522354
+OT_COMBINATIONAL_D _5263_/D 120.718285
+OT_COMBINATIONAL_D _5267_/D 116.209267
+OT_COMBINATIONAL_D _5288_/D 139.669464
+OT_COMBINATIONAL_D _5304_/D 95.211594
+OT_COMBINATIONAL_D _5321_/D 95.188484
+OT_COMBINATIONAL_D _5330_/D 120.811821
+OT_COMBINATIONAL_D _5334_/D 141.421066
+OT_COMBINATIONAL_D _5355_/D 113.692238
+OT_COMBINATIONAL_D _5390_/D 110.142632
+OT_COMBINATIONAL_D _5394_/D 117.837959
+OT_COMBINATIONAL_D _5398_/D 115.758163
+OT_COMBINATIONAL_D _5402_/D 110.568230
+OT_COMBINATIONAL_D _5419_/D 141.505554
+OT_COMBINATIONAL_D _5959_/D 54.601795
+OT_COMBINATIONAL_D _5964_/D 70.046257
+OT_COMBINATIONAL_D _5969_/D 53.959270
+OT_COMBINATIONAL_D _5974_/D 51.755119
+OT_COMBINATIONAL_D _5979_/D 60.756180
+OT_COMBINATIONAL_D _5981_/D 58.554474
+OT_COMBINATIONAL_D _5989_/D 65.522293
+OT_COMBINATIONAL_D _5994_/D 63.143589
+OT_COMBINATIONAL_D _5995_/D 35.499546
+OT_COMBINATIONAL_D _6005_/D 77.459152
+OT_COMBINATIONAL_D _6010_/D 54.571880
+OT_COMBINATIONAL_D _6015_/D 59.527660
+OT_COMBINATIONAL_D _6020_/D 59.033714
+OT_COMBINATIONAL_D _6025_/D 49.714104
+OT_COMBINATIONAL_D _6027_/D 43.345020
+OT_COMBINATIONAL_D _6035_/D 52.957104
+OT_COMBINATIONAL_D _6040_/D 39.494144
+OT_COMBINATIONAL_D _6041_/D 38.076237
+OT_COMBINATIONAL_D _6043_/D 85.077271
+OT_COMBINATIONAL_D _6044_/D 66.718681
+OT_COMBINATIONAL_D _6045_/D 88.004700
+OT_COMBINATIONAL_D _6046_/D 70.462692
+OT_COMBINATIONAL_D _6047_/D 88.286667
+OT_COMBINATIONAL_D _6048_/D 87.984146
+OT_COMBINATIONAL_D _6049_/D 85.483452
+OT_COMBINATIONAL_D _6050_/D 101.849724
+OT_COMBINATIONAL_D _6051_/D 100.532738
+OT_COMBINATIONAL_D _6052_/D 97.196060
+OT_COMBINATIONAL_D _6053_/D 84.412811
+OT_COMBINATIONAL_D _6054_/D 97.151421
+OT_COMBINATIONAL_D _6055_/D 87.434113
+OT_COMBINATIONAL_D _6056_/D 103.572548
+OT_COMBINATIONAL_D _6057_/D 92.060059
+OT_COMBINATIONAL_D _6058_/D 86.381004
+OT_COMBINATIONAL_D _6059_/D 81.494598
+OT_COMBINATIONAL_D _6060_/D 62.005222
+OT_COMBINATIONAL_D _6061_/D 50.603100
+OT_COMBINATIONAL_D _6062_/D 70.872917
+OT_COMBINATIONAL_D _6063_/D 65.120224
+OT_COMBINATIONAL_D _6064_/D 68.148857
+OT_COMBINATIONAL_D _6065_/D 54.732254
+OT_COMBINATIONAL_D _6066_/D 63.062172
+OT_COMBINATIONAL_D _6067_/D 49.506859
+OT_COMBINATIONAL_D _6075_/D 94.635521
+OT_COMBINATIONAL_D _6085_/D 139.146484
+OT_COMBINATIONAL_D _6097_/D 119.679352
+OT_COMBINATIONAL_D _6113_/D 14.899152
+OT_COMBINATIONAL_D _6133_/D 94.560272
+OT_COMBINATIONAL_D _6162_/D 65.530426
+OT_COMBINATIONAL_D _6167_/D 57.334679
+OT_COMBINATIONAL_D _6172_/D 49.033714
+OT_COMBINATIONAL_D _6177_/D 57.063992
+OT_COMBINATIONAL_D _6179_/D 44.097599
+OT_COMBINATIONAL_D u_su_association.on.fast_receiver.admit/_1_/D 152.177521
+OT_COMBINATIONAL_D u_su_association.on.fast_receiver.executor/_1_/D 154.230408
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/g0/_1_/D 152.763626
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/g1/_1_/D 153.779144
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/root/_1_/D 145.306519
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].g[0].a/_0_/D 163.466751
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].g[1].a/_0_/D 161.369064
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].g[2].a/_0_/D 154.434174
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].g[3].a/_0_/D 164.841660
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].middle/_0_/D 154.434174
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[0].tail/_0_/D 151.970078
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].g[0].a/_0_/D 165.714096
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].g[1].a/_0_/D 160.457886
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].g[2].a/_0_/D 163.935791
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].g[3].a/_0_/D 163.157211
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].middle/_0_/D 154.736923
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[1].tail/_0_/D 150.804489
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].g[0].a/_0_/D 164.575607
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].g[1].a/_0_/D 162.091812
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].g[2].a/_0_/D 165.887802
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].g[3].a/_0_/D 166.324265
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].middle/_0_/D 153.602798
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[2].tail/_0_/D 152.763641
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].g[0].a/_0_/D 161.802185
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].g[1].a/_0_/D 161.721741
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].g[2].a/_0_/D 161.033737
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].g[3].a/_0_/D 162.737549
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].middle/_0_/D 159.710953
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].root/_0_/D 154.062744
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[3].tail/_0_/D 148.692337
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].g[0].a/_0_/D 163.525650
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].g[1].a/_0_/D 161.205521
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].g[2].a/_0_/D 165.059540
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].g[3].a/_0_/D 154.667480
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].middle/_0_/D 163.188477
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[4].tail/_0_/D 152.608383
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].g[0].a/_0_/D 165.604416
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].g[1].a/_0_/D 165.869431
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].g[2].a/_0_/D 167.512161
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].g[3].a/_0_/D 167.417084
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].middle/_0_/D 164.680573
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[5].tail/_0_/D 154.406219
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].g[0].a/_0_/D 165.350021
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].g[1].a/_0_/D 162.768112
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].g[2].a/_0_/D 166.052658
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].g[3].a/_0_/D 165.933853
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].middle/_0_/D 164.029266
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[6].tail/_0_/D 154.142120
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].g[0].a/_0_/D 162.166885
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].g[1].a/_0_/D 160.671799
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].g[2].a/_0_/D 162.963715
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].g[3].a/_0_/D 163.601746
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].middle/_0_/D 161.069382
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[7].tail/_0_/D 150.053726
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].g[0].a/_0_/D 165.847107
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].g[1].a/_0_/D 165.447220
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].g[2].a/_0_/D 165.485382
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].g[3].a/_0_/D 167.163147
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].middle/_0_/D 164.460892
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].root/_0_/D 161.406830
+OT_COMBINATIONAL_D u_su_cp.on.four_combinational_cuts.phase_check/word[8].tail/_0_/D 156.399918
+OT_COMBINATIONAL_D u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/_1_/D 62.807842
+OT_COMBINATIONAL_D u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.done_gate/_1_/D 129.517120
+OT_COMBINATIONAL_D u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.release_gate/_1_/D 128.478760
+OT_ACTUAL_OUTPUT association_fault 126.519188
+OT_ACTUAL_OUTPUT done 119.883621
+OT_ACTUAL_OUTPUT exec_owned 109.826096
+OT_ACTUAL_OUTPUT fault 112.451660
+OT_ACTUAL_OUTPUT held_gen[0] 133.964264
+OT_ACTUAL_OUTPUT held_gen[1] 135.290985
+OT_ACTUAL_OUTPUT held_gen[2] 136.340714
+OT_ACTUAL_OUTPUT held_gen[3] 138.332382
+OT_ACTUAL_OUTPUT held_job[0] 141.193481
+OT_ACTUAL_OUTPUT held_job[10] 139.424393
+OT_ACTUAL_OUTPUT held_job[11] 135.654343
+OT_ACTUAL_OUTPUT held_job[12] 132.420685
+OT_ACTUAL_OUTPUT held_job[13] 131.745895
+OT_ACTUAL_OUTPUT held_job[14] 138.899033
+OT_ACTUAL_OUTPUT held_job[15] 141.157227
+OT_ACTUAL_OUTPUT held_job[16] 138.596832
+OT_ACTUAL_OUTPUT held_job[17] 134.759201
+OT_ACTUAL_OUTPUT held_job[18] 136.518860
+OT_ACTUAL_OUTPUT held_job[19] 132.213104
+OT_ACTUAL_OUTPUT held_job[1] 143.214005
+OT_ACTUAL_OUTPUT held_job[20] 133.989014
+OT_ACTUAL_OUTPUT held_job[21] 136.931519
+OT_ACTUAL_OUTPUT held_job[22] 136.258026
+OT_ACTUAL_OUTPUT held_job[23] 137.897247
+OT_ACTUAL_OUTPUT held_job[24] 132.337357
+OT_ACTUAL_OUTPUT held_job[25] 144.915390
+OT_ACTUAL_OUTPUT held_job[26] 139.877121
+OT_ACTUAL_OUTPUT held_job[27] 137.351852
+OT_ACTUAL_OUTPUT held_job[28] 129.933121
+OT_ACTUAL_OUTPUT held_job[29] 129.659561
+OT_ACTUAL_OUTPUT held_job[2] 138.939117
+OT_ACTUAL_OUTPUT held_job[30] 131.837463
+OT_ACTUAL_OUTPUT held_job[31] 129.894669
+OT_ACTUAL_OUTPUT held_job[3] 140.772751
+OT_ACTUAL_OUTPUT held_job[4] 146.381927
+OT_ACTUAL_OUTPUT held_job[5] 136.630112
+OT_ACTUAL_OUTPUT held_job[6] 143.308365
+OT_ACTUAL_OUTPUT held_job[7] 143.713394
+OT_ACTUAL_OUTPUT held_job[8] 138.342743
+OT_ACTUAL_OUTPUT held_job[9] 138.709671
+OT_ACTUAL_OUTPUT held_pos[0] 134.613037
+OT_ACTUAL_OUTPUT held_pos[10] 138.472519
+OT_ACTUAL_OUTPUT held_pos[11] 149.373795
+OT_ACTUAL_OUTPUT held_pos[12] 135.753250
+OT_ACTUAL_OUTPUT held_pos[13] 148.578644
+OT_ACTUAL_OUTPUT held_pos[14] 145.230743
+OT_ACTUAL_OUTPUT held_pos[15] 151.562943
+OT_ACTUAL_OUTPUT held_pos[16] 148.610382
+OT_ACTUAL_OUTPUT held_pos[17] 137.757812
+OT_ACTUAL_OUTPUT held_pos[18] 137.320190
+OT_ACTUAL_OUTPUT held_pos[19] 139.837265
+OT_ACTUAL_OUTPUT held_pos[1] 134.501328
+OT_ACTUAL_OUTPUT held_pos[2] 137.983063
+OT_ACTUAL_OUTPUT held_pos[3] 129.535156
+OT_ACTUAL_OUTPUT held_pos[4] 132.594009
+OT_ACTUAL_OUTPUT held_pos[5] 131.355408
+OT_ACTUAL_OUTPUT held_pos[6] 140.120728
+OT_ACTUAL_OUTPUT held_pos[7] 137.451035
+OT_ACTUAL_OUTPUT held_pos[8] 129.717178
+OT_ACTUAL_OUTPUT held_pos[9] 129.249908
+OT_ACTUAL_OUTPUT held_token[0] 134.942184
+OT_ACTUAL_OUTPUT held_token[10] 131.719727
+OT_ACTUAL_OUTPUT held_token[11] 131.810028
+OT_ACTUAL_OUTPUT held_token[12] 131.719284
+OT_ACTUAL_OUTPUT held_token[13] 138.160324
+OT_ACTUAL_OUTPUT held_token[14] 144.053955
+OT_ACTUAL_OUTPUT held_token[15] 130.972916
+OT_ACTUAL_OUTPUT held_token[16] 129.758636
+OT_ACTUAL_OUTPUT held_token[1] 145.105026
+OT_ACTUAL_OUTPUT held_token[2] 138.443176
+OT_ACTUAL_OUTPUT held_token[3] 135.843826
+OT_ACTUAL_OUTPUT held_token[4] 142.388657
+OT_ACTUAL_OUTPUT held_token[5] 139.710312
+OT_ACTUAL_OUTPUT held_token[6] 141.488617
+OT_ACTUAL_OUTPUT held_token[7] 143.766663
+OT_ACTUAL_OUTPUT held_token[8] 141.933655
+OT_ACTUAL_OUTPUT held_token[9] 132.811508
+OT_ACTUAL_OUTPUT lease_v 113.912796
+OT_ACTUAL_OUTPUT native_launch[0] 52.387608
+OT_ACTUAL_OUTPUT native_launch[1] 61.162090
+OT_ACTUAL_OUTPUT new_request_permit 111.984215
+OT_ACTUAL_OUTPUT owned 117.733643
+OT_ACTUAL_OUTPUT pending 113.855949
+OT_ACTUAL_OUTPUT quiet 118.225197
+OT_ACTUAL_OUTPUT release_v 77.702744
+OT_ACTUAL_OUTPUT selected 96.442482
+OT_ACTUAL_OUTPUT selected_pc[0] 152.533096
+OT_ACTUAL_OUTPUT selected_pc[10] 149.350693
+OT_ACTUAL_OUTPUT selected_pc[11] 148.782608
+OT_ACTUAL_OUTPUT selected_pc[12] 150.308487
+OT_ACTUAL_OUTPUT selected_pc[13] 135.246307
+OT_ACTUAL_OUTPUT selected_pc[14] 154.097198
+OT_ACTUAL_OUTPUT selected_pc[15] 154.799530
+OT_ACTUAL_OUTPUT selected_pc[16] 133.792953
+OT_ACTUAL_OUTPUT selected_pc[17] 144.602844
+OT_ACTUAL_OUTPUT selected_pc[18] 153.228119
+OT_ACTUAL_OUTPUT selected_pc[19] 136.069778
+OT_ACTUAL_OUTPUT selected_pc[1] 158.691025
+OT_ACTUAL_OUTPUT selected_pc[20] 147.115524
+OT_ACTUAL_OUTPUT selected_pc[21] 143.842911
+OT_ACTUAL_OUTPUT selected_pc[22] 146.617172
+OT_ACTUAL_OUTPUT selected_pc[23] 145.990143
+OT_ACTUAL_OUTPUT selected_pc[24] 144.329285
+OT_ACTUAL_OUTPUT selected_pc[25] 145.540680
+OT_ACTUAL_OUTPUT selected_pc[26] 143.970093
+OT_ACTUAL_OUTPUT selected_pc[27] 138.008835
+OT_ACTUAL_OUTPUT selected_pc[28] 148.542130
+OT_ACTUAL_OUTPUT selected_pc[29] 148.783310
+OT_ACTUAL_OUTPUT selected_pc[2] 154.855072
+OT_ACTUAL_OUTPUT selected_pc[30] 155.377640
+OT_ACTUAL_OUTPUT selected_pc[31] 155.501129
+OT_ACTUAL_OUTPUT selected_pc[3] 157.841888
+OT_ACTUAL_OUTPUT selected_pc[4] 151.801315
+OT_ACTUAL_OUTPUT selected_pc[5] 157.832779
+OT_ACTUAL_OUTPUT selected_pc[6] 152.436722
+OT_ACTUAL_OUTPUT selected_pc[7] 150.045975
+OT_ACTUAL_OUTPUT selected_pc[8] 155.785294
+OT_ACTUAL_OUTPUT selected_pc[9] 135.466965
+OT_GROUP_TRUE_RECURRENCE
+Startpoint: u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  18.36   18.36 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  20.86   39.21 ^ clkbuf_2_2__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  26.70   65.91 ^ clkbuf_leaf_6_clk/Y (BUFx24_ASAP7_75t_R)
+   0.91   66.82 ^ u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  41.24  108.05 ^ u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   7.31  115.36 v _6140_/Y (NAND2x1_ASAP7_75t_R)
+   0.10  115.46 v u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+         115.46   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  22.64   42.14 ^ clkbuf_2_2__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  29.14   71.28 ^ clkbuf_leaf_6_clk/Y (BUFx24_ASAP7_75t_R)
+   1.10   72.38 ^ u_su_cp.on.registered_status.qualification_fault_q$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.38   clock uncertainty
+  -5.56   91.82   clock reconvergence pessimism
+  12.19  104.01   library hold time
+         104.01   data required time
+---------------------------------------------------------
+         104.01   data required time
+        -115.46   data arrival time
+---------------------------------------------------------
+          11.45   slack (MET)
+
+
+OT_GROUP_INPUT_TO_TRUE_FF
+Startpoint: por_n (input port clocked by core_clk)
+Endpoint: u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 ^ input external delay
+   0.00    0.00 ^ por_n (in)
+   9.81    9.81 ^ hold2010/Y (BUFx2_ASAP7_75t_R)
+  11.33   21.14 ^ hold2006/Y (BUFx2_ASAP7_75t_R)
+  11.28   32.42 ^ hold2004/Y (BUFx2_ASAP7_75t_R)
+  11.22   43.64 ^ hold2007/Y (BUFx2_ASAP7_75t_R)
+  11.81   55.45 ^ input1248/Y (BUFx2_ASAP7_75t_R)
+  12.12   67.57 ^ hold2008/Y (BUFx2_ASAP7_75t_R)
+  26.28   93.85 ^ hold2005/Y (BUFx2_ASAP7_75t_R)
+  30.59  124.44 ^ place1873/Y (BUFx6f_ASAP7_75t_R)
+   2.44  126.88 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         126.88   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  23.16   42.66 ^ clkbuf_2_0__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  27.94   70.60 ^ clkbuf_leaf_36_clk/Y (BUFx24_ASAP7_75t_R)
+   2.04   72.64 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.64   clock uncertainty
+   0.00   97.64   clock reconvergence pessimism
+  22.84  120.48   library removal time
+         120.48   data required time
+---------------------------------------------------------
+         120.48   data required time
+        -126.88   data arrival time
+---------------------------------------------------------
+           6.40   slack (MET)
+
+
+Startpoint: release_r (input port clocked by core_clk)
+Endpoint: u_su_cp.on.phase_q[4]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 v input external delay
+   1.45    1.45 v release_r (in)
+  14.00   15.45 v hold2174/Y (BUFx2_ASAP7_75t_R)
+  13.59   29.04 v input1249/Y (BUFx2_ASAP7_75t_R)
+  14.75   43.79 v u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/fast.g[0].n/hold2175/Y (BUFx2_ASAP7_75t_R)
+   7.92   51.71 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/fast.g[0].n/_0_/Y (NAND3x2_ASAP7_75t_R)
+  11.89   63.60 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/hold2176/Y (BUFx2_ASAP7_75t_R)
+  11.07   74.67 ^ u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/_1_/Y (OR4x1_ASAP7_75t_R)
+   4.88   79.55 v u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/_2_/Y (INVx2_ASAP7_75t_R)
+  12.64   92.19 v place1676/Y (BUFx2_ASAP7_75t_R)
+  14.35  106.54 v _3581_/Y (AO21x1_ASAP7_75t_R)
+   8.07  114.61 ^ _3582_/Y (NAND2x1_ASAP7_75t_R)
+   5.67  120.27 v _3583_/Y (INVx1_ASAP7_75t_R)
+   0.05  120.32 v u_su_cp.on.phase_q[4]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+         120.32   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  22.64   42.14 ^ clkbuf_2_2__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  28.73   70.86 ^ clkbuf_leaf_7_clk/Y (BUFx24_ASAP7_75t_R)
+   1.62   72.49 ^ u_su_cp.on.phase_q[4]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.49   clock uncertainty
+   0.00   97.49   clock reconvergence pessimism
+  12.53  110.02   library hold time
+         110.02   data required time
+---------------------------------------------------------
+         110.02   data required time
+        -120.32   data arrival time
+---------------------------------------------------------
+          10.30   slack (MET)
+
+
+OT_GROUP_OUTPUT
+Startpoint: launch_v[0] (input port clocked by core_clk)
+Endpoint: native_launch[0] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 ^ input external delay
+   0.52    0.52 ^ launch_v[0] (in)
+  11.72   12.24 ^ hold2320/Y (BUFx2_ASAP7_75t_R)
+  11.27   23.50 ^ hold2206/Y (BUFx2_ASAP7_75t_R)
+  15.72   39.22 ^ input1245/Y (BUFx2_ASAP7_75t_R)
+  16.94   56.16 ^ _3572_/Y (AND2x2_ASAP7_75t_R)
+  19.95   76.12 ^ output1333/Y (BUFx3_ASAP7_75t_R)
+   1.27   77.39 ^ native_launch[0] (out)
+          77.39   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+   0.00   25.00   output external delay
+          25.00   data required time
+---------------------------------------------------------
+          25.00   data required time
+         -77.39   data arrival time
+---------------------------------------------------------
+          52.39   slack (MET)
+
+
+OT_GROUP_RESET_RECOVERY_REMOVAL
+Startpoint: por_n (input port clocked by core_clk)
+Endpoint: u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+   0.00    0.00 ^ input external delay
+   0.00    0.00 ^ por_n (in)
+   9.81    9.81 ^ hold2010/Y (BUFx2_ASAP7_75t_R)
+  11.33   21.14 ^ hold2006/Y (BUFx2_ASAP7_75t_R)
+  11.28   32.42 ^ hold2004/Y (BUFx2_ASAP7_75t_R)
+  11.22   43.64 ^ hold2007/Y (BUFx2_ASAP7_75t_R)
+  11.81   55.45 ^ input1248/Y (BUFx2_ASAP7_75t_R)
+  12.12   67.57 ^ hold2008/Y (BUFx2_ASAP7_75t_R)
+  26.28   93.85 ^ hold2005/Y (BUFx2_ASAP7_75t_R)
+  30.59  124.44 ^ place1873/Y (BUFx6f_ASAP7_75t_R)
+   2.44  126.88 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         126.88   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  19.49   19.49 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  23.16   42.66 ^ clkbuf_2_0__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  27.94   70.60 ^ clkbuf_leaf_36_clk/Y (BUFx24_ASAP7_75t_R)
+   2.04   72.64 ^ u_su_cp.on.registered_header.decoder.data_q[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   97.64   clock uncertainty
+   0.00   97.64   clock reconvergence pessimism
+  22.84  120.48   library removal time
+         120.48   data required time
+---------------------------------------------------------
+         120.48   data required time
+        -126.88   data arrival time
+---------------------------------------------------------
+           6.40   slack (MET)
+
+

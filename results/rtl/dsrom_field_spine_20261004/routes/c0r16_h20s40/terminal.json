@@ -1,0 +1,45 @@
+{
+  "route_rc": 0,
+  "verdict": "FAIL_PHYSICAL_SCREEN",
+  "SS_ps": -4.765743355505947,
+  "FF_ps": 4.7848391915295,
+  "SI": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0
+  },
+  "drc": 0,
+  "antenna": 0,
+  "replicas": {
+    "expected": {
+      "g_ixb": 32,
+      "g_ixq": 8,
+      "g_sel": 64,
+      "u_rsfm": 16,
+      "u_cc": 1,
+      "g_aqi": 4,
+      "g_bwb": 4,
+      "u_oh0": 16,
+      "u_oh1": 16,
+      "u_oh2": 16,
+      "u_oh3": 16,
+      "u_oh4": 16
+    },
+    "actual": {
+      "g_ixb": 32,
+      "g_ixq": 8,
+      "g_sel": 64,
+      "u_rsfm": 16,
+      "u_cc": 1,
+      "g_aqi": 4,
+      "g_bwb": 4,
+      "u_oh0": 16,
+      "u_oh1": 16,
+      "u_oh2": 16,
+      "u_oh3": 16,
+      "u_oh4": 16
+    },
+    "passed": true
+  },
+  "area_um2": 40194.2
+}

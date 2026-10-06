@@ -1,0 +1,77 @@
+{
+  "status": "PASS_MINIMUM_ACTUAL_CONSUMER_LINKED_JOIN",
+  "RTL_source_commit": "82946934d",
+  "driver_source_commit": "4fd3fe006",
+  "scope": "one actual released L0/rank0 P8191 layer, full 4-stack/128-PC protected service; numerical source/protocol join only",
+  "shape": {
+    "layer": 0,
+    "rank": 0,
+    "position": 8191,
+    "NSTK": 4,
+    "NPC": 128,
+    "tiles": 1536,
+    "G": 6144,
+    "WBW": 4,
+    "CRED": 32,
+    "WBUF": 16,
+    "SYNC": 2,
+    "PULLIN": 0,
+    "PROTECTED": 1
+  },
+  "positive": {
+    "case": "released_P8191_L0_rank0",
+    "core_edges": 1994,
+    "controller_edges": 1623,
+    "first_row_core_edge": 72,
+    "warm_begin_core_edge": 1935,
+    "warm_end_core_edge": 1959,
+    "drain_core_edge": 1994,
+    "warm_begin_debt": 32,
+    "fill_cycles": 1480,
+    "fill_sectors": 131072,
+    "write_sectors": 136,
+    "response_stall": 7975,
+    "write_latency_max": 73,
+    "backing_fnv1a64": "2211f2089ac1eabe",
+    "slice_fnv1a64": "a60b5bf88bf526a6",
+    "full_token": false,
+    "physical_qualified": false
+  },
+  "held_rows": {
+    "core_edges": 24,
+    "identity_and_payload_stable": true,
+    "no_retirement": true
+  },
+  "ACK_negative": {
+    "debt_before": 2,
+    "debt_after": 2,
+    "fault_code": 4
+  },
+  "handshakes": {
+    "core_descriptor": 1,
+    "core_GO": 1,
+    "HCLK_descriptor": 1,
+    "HCLK_GO": 1,
+    "rows": 131072,
+    "write_reserved": 136,
+    "ACK": 136,
+    "final_debt": 0
+  },
+  "numerical_checks": {
+    "backing_bytes": 4194304,
+    "registered_slice_bytes": 12582912,
+    "all_bytes_equal": true
+  },
+  "clocks": {
+    "core_period_fs": 833333,
+    "controller_period_fs": 1024000,
+    "independent_roots": true
+  },
+  "cycle_scope": "start through final drain and three registered visibility edges; excludes cold reset; includes intentional held24/warm24; not a rate baseline",
+  "model_rebuilt_after_startup_fix": false,
+  "new_controller_or_transport": false,
+  "physical_stack_adapter_ready": false,
+  "full36_plus_head_exercised": false,
+  "adopted": false,
+  "previous_runtime_startup_failure_preserved": "../linked_r1_failed"
+}

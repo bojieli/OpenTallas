@@ -1,0 +1,53 @@
+{
+  "status": "LIVE_PROTECTED_L0_FILL_AND_NATIVE_HOST_PATCH_PREPARED",
+  "source": "b04e893e7",
+  "supervisor": 135123,
+  "simulator": 153089,
+  "driver_link_exit": 0,
+  "actual_top_reused": true,
+  "physical_qualified": false,
+  "full_token_pass": false,
+  "minimum_layer_pass": false,
+  "live_job_changed": false,
+  "sampling_method": "Read-only /proc/153089/mem; actual compiled Vdie vtable/name getter; no attach/stop/write; asynchronous scalar snapshots",
+  "scope": "Verified die0 only, other rank transaction progress not sampled",
+  "samples": [
+    {
+      "unix_time": 1791267346.6456037,
+      "core_cycle": 1589,
+      "fill_sectors": 5460,
+      "stall_kv": 998,
+      "write_sectors": 0,
+      "mem_fault": 0,
+      "core_fault": 0,
+      "numeric_fault": 0
+    },
+    {
+      "unix_time": 1791267581.741239,
+      "core_cycle": 2267,
+      "fill_sectors": 8172,
+      "stall_kv": 1676,
+      "write_sectors": 0,
+      "mem_fault": 0,
+      "core_fault": 0,
+      "numeric_fault": 0
+    }
+  ],
+  "host_seconds_per_core_edge": 0.34674872479959223,
+  "accepted_sectors_per_core_edge": 4.0,
+  "native_source_preparation": {
+    "status": "PREPARED_HOST_ONLY_NOT_COMPILED_OR_RUN",
+    "source_sha256": "73467672e4103247143ac924d6b03be79dd1048afa830a99b73dbe794ffad747",
+    "output_sha256": "e5ec72dca8182b3b22d0733612d8f78459796278274496eda206cc7ebcae6b74",
+    "enable": "QWEN_P0_NATIVE_REENTRY_SKIP=1; defaultOFF",
+    "wall_attribution": "QWEN_P0_NATIVE_PROFILE=1; defaultOFF; host steady-clock only, no DUT time/pin mutation",
+    "changed": "Skip one redundant die/collective eval reentry after explicit rising eval, before any input rewiring",
+    "preserved": "All pin and clock events, tile eval/capture edges, fixed-point propagation, released state, arithmetic, faults and drain",
+    "generated_model_changed": false,
+    "exactness_pass": false,
+    "performance_gain_measured": false
+  },
+  "native_validation": "Source emission/Python AST/diff PASS only; no TU compile/runtime/exactness/performance qualification yet",
+  "Descartes_disjoint_task": "native_fabric_patch.py: per-tile combinational dirty eval; keep all actual clock/tile captures, tree/fault scans and preload/injection invalidation",
+  "Socrates_scope": "native_settle_patch.py, all runtime, archive reuse and minimum numerical/performance validation; one full36/head final smoke remains required"
+}

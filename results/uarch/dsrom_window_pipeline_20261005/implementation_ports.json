@@ -1,0 +1,13 @@
+{
+  "status": "SOURCE_IMPLEMENTATION_PORT_ACCOUNTING_CORRECTION",
+  "source_pin": "03068c85baec9f30a1f4158b29599e1d4f1e4f1e",
+  "logical_columns": 68,
+  "eight_entry_read_groups_per_column": 4,
+  "actual_group_read_ports": 272,
+  "internal_read_bytes_per_request_cycle": 8448,
+  "terminal_read_bytes_per_response_cycle": 2112,
+  "extra_read_FF_bits": 67584,
+  "read_mux_2to1_bits": 523776,
+  "physical_adoption": false,
+  "note": "Prebuild record retained unchanged. Four independently captured groups per column imply four physical FF read mux paths, although only one group feeds the final mux. Existing extra-read FF and total31-mux-bit-per-output prices already cover these groups; this corrects the port/bandwidth labels, without an area or latency credit."
+}

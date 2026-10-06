@@ -1,0 +1,7 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=0 warnings=0
+view=asap7 corner=TT block=ot_hbm_integrated_w2_result_sink top=ot_hbm_integrated_w2_result_sink purpose=characterization
+  pnr:   wirelength=176848 um vias=354156 DRC=0 antenna_nets=0 Fmax=638.40 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/jobs/nash-w2-sink-registered-72c067c9c-route-r1/physical.json

@@ -1,0 +1,58 @@
+Startpoint: u_ld.u_p/ld_a[10]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by w5_loader)
+Endpoint: cm_a[10] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock w5_loader (rise edge)
+                                  0.000000    0.000000   clock source latency
+     1   19.554710    0.000000    0.000000    0.000000 ^ clk (in)
+                                                         clk (net)
+                      0.061803    0.019497    0.019497 ^ wire95643/A (BUFx12f_ASAP7_75t_R)
+     1   18.010456    0.011508    0.022968    0.042464 ^ wire95643/Y (BUFx12f_ASAP7_75t_R)
+                                                         net95642 (net)
+                      0.058002    0.017838    0.060303 ^ wire95642/A (BUFx24_ASAP7_75t_R)
+     2   35.589436    0.011875    0.029813    0.090116 ^ wire95642/Y (BUFx24_ASAP7_75t_R)
+                                                         net95641 (net)
+                      0.142394    0.044477    0.134593 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    8.709037    0.013868    0.039819    0.174412 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_0_clk (net)
+                      0.014197    0.001443    0.175855 ^ clkbuf_1_0__f_clk/A (BUFx24_ASAP7_75t_R)
+     2   14.312737    0.011176    0.020156    0.196011 ^ clkbuf_1_0__f_clk/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_1_0__leaf_clk (net)
+                      0.015754    0.003564    0.199575 ^ u_ld.g_protected.u_freeze.u_icg/CLK (ICGx1_ASAP7_75t_R)
+     1    2.128337    0.015558    0.015588    0.215163 ^ u_ld.g_protected.u_freeze.u_icg/GCLK (ICGx1_ASAP7_75t_R)
+                                                         u_ld.g_protected.u_freeze.gclk (net)
+                      0.015559    0.000092    0.215255 ^ clkbuf_0_u_ld.g_protected.u_freeze.gclk/A (BUFx24_ASAP7_75t_R)
+    16   41.126625    0.024985    0.024406    0.239661 ^ clkbuf_0_u_ld.g_protected.u_freeze.gclk/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_0_u_ld.g_protected.u_freeze.gclk (net)
+                      0.030181    0.005931    0.245592 ^ clkbuf_4_0_0_u_ld.g_protected.u_freeze.gclk/A (BUFx24_ASAP7_75t_R)
+    12    9.862784    0.010304    0.024215    0.269807 ^ clkbuf_4_0_0_u_ld.g_protected.u_freeze.gclk/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_4_0_0_u_ld.g_protected.u_freeze.gclk (net)
+                      0.010556    0.000730    0.270537 ^ u_ld.u_p/ld_a[10]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    3.141659    0.027682    0.044969    0.315506 ^ u_ld.u_p/ld_a[10]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                         u_ld.u_p/_008_ (net)
+                      0.027683    0.000068    0.315574 ^ u_ld.u_p/_366_/A (INVx1_ASAP7_75t_R)
+     2    1.383306    0.013394    0.010985    0.326559 v u_ld.u_p/_366_/Y (INVx1_ASAP7_75t_R)
+                                                         net2752 (net)
+                      0.013395    0.000071    0.326630 v output2753/A (BUFx2_ASAP7_75t_R)
+     1    9.122375    0.028855    0.023711    0.350341 v output2753/Y (BUFx2_ASAP7_75t_R)
+                                                         cm_a[10] (net)
+                      0.032350    0.005229    0.355570 v cm_a[10] (out)
+                                              0.355570   data arrival time
+
+                                  0.000000    0.000000   clock core_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (propagated)
+                                  0.025000    0.025000   clock uncertainty
+                                  0.000000    0.025000   clock reconvergence pessimism
+                                 -0.166667   -0.141667   output external delay
+                                             -0.141667   data required time
+---------------------------------------------------------------------------------------------
+                                             -0.141667   data required time
+                                             -0.355570   data arrival time
+---------------------------------------------------------------------------------------------
+                                              0.497237   slack (MET)
+
+

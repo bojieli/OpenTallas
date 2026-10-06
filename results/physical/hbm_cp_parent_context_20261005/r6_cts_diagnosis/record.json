@@ -1,0 +1,32 @@
+{
+  "scope": "same-source CTS-only diagnosis from frozen placed checkpoint; capture error state only",
+  "source": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/region_retry_r5/source",
+  "checkpoint_sha256": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+  "frozen_inputs": {
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_4_floorplan_pdn.odb": "2b97be5fcd7d6cf8c36bab25eeb623741dea7c7695f4779355431a6e603a60b8",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_1_place_gp_skip_io.odb": "5c60d934479f6778223e499f49c2a9ea86bf6a6cca8dba299f3cbd2746e02a35",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_floorplan.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_1_floorplan.odb": "25f99ee77a63088e4a6c4a568e65876e47aa7a7860aa46114126c25851e46c4e",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_place.odb": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_2_floorplan_macro.odb": "25f99ee77a63088e4a6c4a568e65876e47aa7a7860aa46114126c25851e46c4e",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_3_place_gp.odb": "c1ccf15dda807f5d793f25ebe196153d7b903ad72188b2344b7d3d267cf09e9d",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_3_floorplan_tapcell.odb": "40738a82989dbf3c23d5d28804d62e92f1aaf2baff700dfd4a3ee6daeacf3dee",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_1_floorplan.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.v": "04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_2_place_iop.odb": "b6d6ca2a4e3ee7be6aa5a7d05d23268256141b1c05662d414f5c9341c06710c5",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.sdc": "7edd2da68bd4c83bf80da15ebc1f788e1462364a2574af8ff56136018725b68c",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_5_place_dp.odb": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_place.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_synth.odb": "a4d018339957f64d2dccbbc38285bba99e78ad10a18c7d77b841c4ea2b42f106",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_floorplan.odb": "2b97be5fcd7d6cf8c36bab25eeb623741dea7c7695f4779355431a6e603a60b8",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_synth.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_failure_probe_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_4_place_resized.odb": "f502362f49257c7af7bef0eead8c80aa474587f461ed48cc7d8777fcee9c4a63"
+  },
+  "source_phase_ps": 0,
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "NUM_CORES": 16,
+  "exit": 2,
+  "failure_captured": true,
+  "synthesis_floorplan_PDN_replayed": false
+}

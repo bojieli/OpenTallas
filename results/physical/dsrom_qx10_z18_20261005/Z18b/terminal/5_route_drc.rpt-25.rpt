@@ -1,0 +1,834 @@
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1627_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_ir.r_xs_q0\[52\]$_DFF_P_
+	bbox = (250.6860, 10.9030) - (250.7020, 10.9040) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[72\]$_DFF_P_
+	bbox = (253.1700, 11.1760) - (253.1860, 11.1760) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[72\]$_DFF_P_
+	bbox = (253.1700, 11.1760) - (253.1860, 11.1770) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1290_u_e.g_cg.u_cg.gclk_regs inst:u_e.f_q0\[1\]\[134\]$_DFFE_PP_
+	bbox = (260.0820, 12.0430) - (260.0980, 12.0440) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1290_u_e.g_cg.u_cg.gclk_regs inst:u_e.f_q0\[1\]\[134\]$_DFFE_PP_
+	bbox = (260.0820, 12.0440) - (260.0980, 12.0440) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1280_u_e.g_cg.u_cg.gclk_regs inst:u_e.i2x_q0\[128\]$_DFF_P_
+	bbox = (260.6220, 9.0160) - (260.6380, 9.0160) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1280_u_e.g_cg.u_cg.gclk_regs inst:u_e.i2x_q0\[128\]$_DFF_P_
+	bbox = (260.6220, 9.0160) - (260.6380, 9.0170) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1293_u_e.g_cg.u_cg.gclk_regs inst:u_e.fw_q0\[86\]$_DFF_P_
+	bbox = (265.3740, 14.4160) - (265.3900, 14.4160) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1293_u_e.g_cg.u_cg.gclk_regs inst:u_e.fw_q0\[86\]$_DFF_P_
+	bbox = (265.3740, 14.4160) - (265.3900, 14.4170) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1278_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[196\]$_DFF_P_
+	bbox = (267.3180, 12.3160) - (267.3340, 12.3170) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[194\]$_DFF_P_
+	bbox = (269.8020, 7.4560) - (269.8180, 7.4570) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1272_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[231\]$_DFF_P_
+	bbox = (269.8020, 11.7160) - (269.8180, 11.7160) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1272_u_e.g_cg.u_cg.gclk_regs inst:u_e.g_qb.g_bx.b_xs_q0\[231\]$_DFF_P_
+	bbox = (269.8020, 11.7160) - (269.8180, 11.7170) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs inst:u_e.f_q0\[2\]\[160\]$_DFFE_PP_
+	bbox = (270.0180, 12.2560) - (270.0340, 12.2560) on Layer M1
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs inst:u_e.f_q0\[2\]\[160\]$_DFFE_PP_
+	bbox = (270.0180, 12.2560) - (270.0340, 12.2570) on Layer M1
+violation type: Metal Spacing
+	srcs: net:net18552 net:net46248
+	bbox = (246.3710, 10.5660) - (246.3790, 10.5840) on Layer M2
+violation type: Metal Spacing
+	srcs: net:_016340_ net:_016346_
+	bbox = (248.6750, 11.2860) - (248.6830, 11.3040) on Layer M2
+violation type: Metal Spacing
+	srcs: net:u_e.i2x_q0\[148\] net:u_e.i2x_q0\[95\]
+	bbox = (262.3550, 10.0980) - (262.3630, 10.1160) on Layer M2
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50057
+	bbox = (267.7190, 8.8200) - (267.7270, 8.8380) on Layer M2
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50889
+	bbox = (267.7550, 7.2360) - (267.7630, 7.2540) on Layer M2
+violation type: Metal Spacing
+	srcs: net:VSS net:net50255
+	bbox = (246.0450, 5.6530) - (246.0600, 5.6540) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50461
+	bbox = (246.0450, 6.7330) - (246.0600, 6.7670) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50461
+	bbox = (246.0450, 7.2730) - (246.0600, 7.3070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[74\]
+	bbox = (246.0450, 8.8930) - (246.0600, 8.9270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net16733 net:VSS
+	bbox = (246.0450, 10.5130) - (246.0600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net50264
+	bbox = (246.2370, 9.1630) - (246.2400, 9.1970) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016882_ net:VDD
+	bbox = (246.2370, 10.2430) - (246.2400, 10.2770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net13997 net:VDD
+	bbox = (246.2370, 11.8630) - (246.2400, 11.8970) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net29873 net:net46009
+	bbox = (247.3920, 10.0490) - (247.4100, 10.0570) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[78\]
+	bbox = (248.7450, 8.3530) - (248.7600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016876_ net:VSS
+	bbox = (248.7450, 10.5130) - (248.7600, 10.5140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net31326 net:VSS
+	bbox = (248.7450, 10.5460) - (248.7600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net31326 net:VSS
+	bbox = (248.7450, 11.0530) - (248.7600, 11.0870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net31326 net:VSS
+	bbox = (248.7450, 11.5930) - (248.7600, 11.6270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1624_u_e.g_cg.u_cg.gclk_regs net:VDD
+	bbox = (248.9370, 9.7030) - (248.9400, 9.7370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[2\] net:VDD
+	bbox = (248.9370, 10.2430) - (248.9400, 10.2770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[30\] net:VDD
+	bbox = (248.9370, 12.4030) - (248.9400, 12.4370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50289
+	bbox = (251.4450, 9.4330) - (251.4600, 9.4670) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50289
+	bbox = (251.4450, 9.9730) - (251.4600, 10.0070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net24905 net:VSS
+	bbox = (251.4450, 10.5130) - (251.4600, 10.5140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[95\]
+	bbox = (251.4450, 11.0530) - (251.4600, 11.0540) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1632_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (251.4450, 13.2130) - (251.4600, 13.2140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50488
+	bbox = (254.1450, 7.8130) - (254.1600, 7.8470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50864
+	bbox = (254.1450, 8.3860) - (254.1600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (254.1450, 8.8930) - (254.1600, 8.9270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (254.1450, 9.4330) - (254.1600, 9.4340) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net49060
+	bbox = (254.1450, 10.5460) - (254.1600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1632_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (254.1450, 11.0530) - (254.1600, 11.0540) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50921
+	bbox = (254.1450, 13.2460) - (254.1600, 13.2470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[109\]
+	bbox = (256.8450, 8.8930) - (256.8600, 8.8940) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net49874
+	bbox = (259.5450, 7.2730) - (259.5600, 7.2740) on Layer M3
+violation type: Metal Spacing
+	srcs: net:xs_q0[122] net:VSS
+	bbox = (259.5450, 7.8130) - (259.5600, 7.8140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016760_ net:VSS
+	bbox = (259.5450, 10.5130) - (259.5600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.g_qb.g_bx.b_xs_q0\[73\]
+	bbox = (259.5450, 11.5930) - (259.5600, 11.5940) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1280_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (259.5450, 12.7060) - (259.5600, 12.7070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net1204 net:VDD
+	bbox = (259.7370, 7.5430) - (259.7400, 7.5770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net1203 net:VDD
+	bbox = (259.7370, 13.4830) - (259.7400, 13.5170) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net20171 net:VSS
+	bbox = (262.2450, 5.6530) - (262.2600, 5.6540) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net20171 net:VSS
+	bbox = (262.2450, 5.6860) - (262.2600, 5.6870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[132\] net:VSS
+	bbox = (262.2450, 8.3860) - (262.2600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1276_u_e.g_cg.u_cg.gclk_regs net:VSS
+	bbox = (262.2450, 9.4660) - (262.2600, 9.4670) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net45630
+	bbox = (262.2450, 10.5130) - (262.2600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net45630
+	bbox = (262.2450, 11.0530) - (262.2600, 11.0870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[133\]
+	bbox = (262.2450, 12.6730) - (262.2600, 12.7070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18184 net:net49462
+	bbox = (264.0240, 12.5870) - (264.0420, 12.5950) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net45430 net:net50334
+	bbox = (264.7080, 9.6770) - (264.7260, 9.6910) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50335
+	bbox = (264.9450, 7.8130) - (264.9600, 7.8470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50335
+	bbox = (264.9450, 8.3860) - (264.9600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net49776
+	bbox = (264.9450, 10.5130) - (264.9600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18256 net:VSS
+	bbox = (264.9450, 12.1330) - (264.9600, 12.1340) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016753_ net:VDD
+	bbox = (265.1370, 7.5430) - (265.1400, 7.5770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.i2x_q0\[134\] net:VDD
+	bbox = (265.1370, 10.2430) - (265.1400, 10.2770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net45645
+	bbox = (265.1370, 10.7830) - (265.1400, 10.8170) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_015080_ net:net45359
+	bbox = (267.3000, 9.5450) - (267.3180, 9.5530) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016751_ net:net18360
+	bbox = (267.5160, 7.9250) - (267.5340, 7.9330) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016703_ net:VSS
+	bbox = (267.6450, 6.1930) - (267.6600, 6.1940) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18289 net:VSS
+	bbox = (267.6450, 6.2260) - (267.6600, 6.2270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50612
+	bbox = (267.6450, 7.8130) - (267.6600, 7.8470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_131681_ net:VSS
+	bbox = (267.6450, 9.9730) - (267.6600, 10.0070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net45596
+	bbox = (267.6450, 12.6730) - (267.6600, 12.6740) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net33587 net:VSS
+	bbox = (267.6450, 14.3260) - (267.6600, 14.3270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net50889
+	bbox = (267.8370, 6.4630) - (267.8400, 6.4970) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net50889
+	bbox = (267.8370, 7.0030) - (267.8400, 7.0370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_016190_ net:VDD
+	bbox = (267.8370, 10.2430) - (267.8400, 10.2770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18256 net:net50889
+	bbox = (268.0200, 5.4050) - (268.0380, 5.4190) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18125 net:net36509
+	bbox = (270.0360, 9.5090) - (270.0540, 9.5170) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18345 net:VSS
+	bbox = (270.3450, 9.4660) - (270.3600, 9.4670) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net37221
+	bbox = (270.3450, 9.9730) - (270.3600, 10.0070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net37221
+	bbox = (270.3450, 10.5130) - (270.3600, 10.5470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net50494
+	bbox = (270.5370, 5.9230) - (270.5400, 5.9570) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net12428 net:VDD
+	bbox = (270.5370, 9.1630) - (270.5400, 9.1970) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net45758
+	bbox = (273.0450, 7.8130) - (273.0600, 7.8140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[135\] net:u_e.i2x_q0\[142\]
+	bbox = (263.2190, 7.5840) - (263.2210, 7.6080) on Layer M4
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net49462
+	bbox = (263.6900, 11.5680) - (263.7010, 11.5920) on Layer M4
+violation type: Metal Spacing
+	srcs: net:_016700_ net:net49964
+	bbox = (268.1930, 9.7440) - (268.2100, 9.7680) on Layer M4
+violation type: Metal Spacing
+	srcs: net:net31326 net:net50712
+	bbox = (246.4800, 5.3150) - (246.5040, 5.3170) on Layer M5
+violation type: Metal Spacing
+	srcs: net:net37927 net:net50640
+	bbox = (246.8640, 11.9870) - (246.8880, 11.9890) on Layer M5
+violation type: Metal Spacing
+	srcs: net:net13731 net:net49829
+	bbox = (263.6640, 10.2940) - (263.6880, 10.3090) on Layer M5
+violation type: Metal Spacing
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9280, 10.4030) - (266.9520, 10.4050) on Layer M5
+violation type: Metal Spacing
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0720, 8.0510) - (267.0960, 8.0530) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net18552 net:net46248
+	bbox = (246.3710, 10.5660) - (246.3790, 10.5660) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:net18552 net:net46248
+	bbox = (246.3710, 10.5660) - (246.3790, 10.5840) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:net18552 net:net46248
+	bbox = (246.3710, 10.5840) - (246.3790, 10.5840) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:_016340_ net:_016346_
+	bbox = (248.6750, 11.2860) - (248.6830, 11.2860) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:_016340_ net:_016346_
+	bbox = (248.6750, 11.2860) - (248.6830, 11.3040) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:_016340_ net:_016346_
+	bbox = (248.6750, 11.3040) - (248.6830, 11.3040) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[148\] net:u_e.i2x_q0\[95\]
+	bbox = (262.3550, 10.0980) - (262.3630, 10.0980) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[148\] net:u_e.i2x_q0\[95\]
+	bbox = (262.3550, 10.0980) - (262.3630, 10.1160) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[148\] net:u_e.i2x_q0\[95\]
+	bbox = (262.3550, 10.1160) - (262.3630, 10.1160) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50057
+	bbox = (267.7190, 8.8200) - (267.7270, 8.8200) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50057
+	bbox = (267.7190, 8.8200) - (267.7270, 8.8380) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50057
+	bbox = (267.7190, 8.8380) - (267.7270, 8.8380) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50889
+	bbox = (267.7550, 7.2360) - (267.7630, 7.2360) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50889
+	bbox = (267.7550, 7.2360) - (267.7630, 7.2540) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50889
+	bbox = (267.7550, 7.2540) - (267.7630, 7.2540) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:net29873 net:net46009
+	bbox = (247.3920, 10.0490) - (247.3920, 10.0570) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net29873 net:net46009
+	bbox = (247.3920, 10.0490) - (247.4100, 10.0570) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net29873 net:net46009
+	bbox = (247.4100, 10.0490) - (247.4100, 10.0570) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_065480_ net:net45413
+	bbox = (263.5560, 10.1720) - (263.5560, 10.2010) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_065480_ net:net45413
+	bbox = (263.5560, 10.1720) - (263.5740, 10.2010) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_065480_ net:net45413
+	bbox = (263.5740, 10.1720) - (263.5740, 10.2010) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18184 net:net49462
+	bbox = (264.0240, 12.5870) - (264.0240, 12.5950) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18184 net:net49462
+	bbox = (264.0240, 12.5870) - (264.0420, 12.5950) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18184 net:net49462
+	bbox = (264.0420, 12.5870) - (264.0420, 12.5950) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45430 net:net50334
+	bbox = (264.7080, 9.6770) - (264.7080, 9.6910) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45430 net:net50334
+	bbox = (264.7080, 9.6770) - (264.7260, 9.6910) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45430 net:net50334
+	bbox = (264.7260, 9.6770) - (264.7260, 9.6910) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net50334
+	bbox = (265.6800, 6.8810) - (265.6800, 6.9070) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net50334
+	bbox = (265.6800, 6.8810) - (265.6980, 6.9070) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net50334
+	bbox = (265.6980, 6.8810) - (265.6980, 6.9070) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45992 net:net50592
+	bbox = (266.1840, 9.0410) - (266.1840, 9.0670) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45992 net:net50592
+	bbox = (266.1840, 9.0410) - (266.2020, 9.0670) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net45992 net:net50592
+	bbox = (266.2020, 9.0410) - (266.2020, 9.0670) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_015080_ net:net45359
+	bbox = (267.3000, 9.5450) - (267.3000, 9.5530) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_015080_ net:net45359
+	bbox = (267.3000, 9.5450) - (267.3180, 9.5530) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_015080_ net:net45359
+	bbox = (267.3180, 9.5450) - (267.3180, 9.5530) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net18360
+	bbox = (267.5160, 7.9250) - (267.5160, 7.9330) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net18360
+	bbox = (267.5160, 7.9250) - (267.5340, 7.9330) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016751_ net:net18360
+	bbox = (267.5340, 7.9250) - (267.5340, 7.9330) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18256 net:net50889
+	bbox = (268.0200, 5.4050) - (268.0200, 5.4190) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18256 net:net50889
+	bbox = (268.0200, 5.4050) - (268.0380, 5.4190) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18256 net:net50889
+	bbox = (268.0380, 5.4050) - (268.0380, 5.4190) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18125 net:net36509
+	bbox = (270.0360, 9.5090) - (270.0360, 9.5170) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18125 net:net36509
+	bbox = (270.0360, 9.5090) - (270.0540, 9.5170) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:net18125 net:net36509
+	bbox = (270.0540, 9.5090) - (270.0540, 9.5170) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_016877_ net:net18572
+	bbox = (246.7730, 11.2320) - (246.8050, 11.2320) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:_016877_ net:net18572
+	bbox = (246.7730, 11.2320) - (246.8050, 11.2560) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:_016877_ net:net18572
+	bbox = (246.7730, 11.2560) - (246.8050, 11.2560) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1276_u_e.g_cg.u_cg.gclk_regs net:net45718
+	bbox = (261.7130, 7.7280) - (261.7400, 7.7280) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1276_u_e.g_cg.u_cg.gclk_regs net:net45718
+	bbox = (261.7130, 7.7280) - (261.7400, 7.7520) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1276_u_e.g_cg.u_cg.gclk_regs net:net45718
+	bbox = (261.7130, 7.7520) - (261.7400, 7.7520) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[135\] net:u_e.i2x_q0\[142\]
+	bbox = (263.2190, 7.5840) - (263.2210, 7.5840) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[135\] net:u_e.i2x_q0\[142\]
+	bbox = (263.2190, 7.5840) - (263.2210, 7.6080) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[135\] net:u_e.i2x_q0\[142\]
+	bbox = (263.2190, 7.6080) - (263.2210, 7.6080) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net49462
+	bbox = (263.6900, 11.5680) - (263.7010, 11.5680) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net49462
+	bbox = (263.6900, 11.5680) - (263.7010, 11.5920) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net49462
+	bbox = (263.6900, 11.5920) - (263.7010, 11.5920) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net45318 net:net49739
+	bbox = (263.9450, 8.4480) - (263.9770, 8.4480) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net45318 net:net49739
+	bbox = (263.9450, 8.4480) - (263.9770, 8.4720) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net45318 net:net49739
+	bbox = (263.9450, 8.4720) - (263.9770, 8.4720) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18213 net:net50334
+	bbox = (264.6590, 9.6960) - (264.6970, 9.6960) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18213 net:net50334
+	bbox = (264.6590, 9.6960) - (264.6970, 9.7200) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18213 net:net50334
+	bbox = (264.6590, 9.7200) - (264.6970, 9.7200) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:net50653
+	bbox = (266.8210, 9.3120) - (266.8670, 9.3120) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:net50653
+	bbox = (266.8210, 9.3120) - (266.8670, 9.3360) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:net50653
+	bbox = (266.8210, 9.3360) - (266.8670, 9.3360) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:_016700_ net:net49964
+	bbox = (268.1930, 9.7440) - (268.2100, 9.7440) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:_016700_ net:net49964
+	bbox = (268.1930, 9.7440) - (268.2100, 9.7680) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:_016700_ net:net49964
+	bbox = (268.1930, 9.7680) - (268.2100, 9.7680) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net36183 net:net50235
+	bbox = (268.5500, 9.9360) - (268.5850, 9.9360) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net36183 net:net50235
+	bbox = (268.5500, 9.9360) - (268.5850, 9.9600) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net36183 net:net50235
+	bbox = (268.5500, 9.9600) - (268.5850, 9.9600) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[158\] net:net50472
+	bbox = (268.6580, 7.8720) - (268.6930, 7.8720) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[158\] net:net50472
+	bbox = (268.6580, 7.8720) - (268.6930, 7.8960) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[158\] net:net50472
+	bbox = (268.6580, 7.8960) - (268.6930, 7.8960) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18288 net:net46005
+	bbox = (269.2220, 10.3680) - (269.2690, 10.3680) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18288 net:net46005
+	bbox = (269.2220, 10.3680) - (269.2690, 10.3920) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18288 net:net46005
+	bbox = (269.2220, 10.3920) - (269.2690, 10.3920) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18345 net:net33966
+	bbox = (269.3660, 9.5520) - (269.4130, 9.5520) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18345 net:net33966
+	bbox = (269.3660, 9.5520) - (269.4130, 9.5760) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net18345 net:net33966
+	bbox = (269.3660, 9.5760) - (269.4130, 9.5760) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:net31326 net:net50712
+	bbox = (246.4800, 5.3150) - (246.4800, 5.3170) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net31326 net:net50712
+	bbox = (246.4800, 5.3150) - (246.5040, 5.3170) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net31326 net:net50712
+	bbox = (246.5040, 5.3150) - (246.5040, 5.3170) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net37927 net:net50640
+	bbox = (246.8640, 11.9870) - (246.8640, 11.9890) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net37927 net:net50640
+	bbox = (246.8640, 11.9870) - (246.8880, 11.9890) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net37927 net:net50640
+	bbox = (246.8880, 11.9870) - (246.8880, 11.9890) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net13731 net:net49829
+	bbox = (263.6640, 10.2940) - (263.6640, 10.3090) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net13731 net:net49829
+	bbox = (263.6640, 10.2940) - (263.6880, 10.3090) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net13731 net:net49829
+	bbox = (263.6880, 10.2940) - (263.6880, 10.3090) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net45468 net:net49796
+	bbox = (266.4480, 8.8750) - (266.4480, 8.9140) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net45468 net:net49796
+	bbox = (266.4480, 8.8750) - (266.4720, 8.9140) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net45468 net:net49796
+	bbox = (266.4720, 8.8750) - (266.4720, 8.9140) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9280, 10.4030) - (266.9280, 10.4050) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9280, 10.4030) - (266.9520, 10.4050) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9520, 10.4030) - (266.9520, 10.4050) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0720, 8.0510) - (267.0720, 8.0530) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0720, 8.0510) - (267.0960, 8.0530) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0960, 8.0510) - (267.0960, 8.0530) on Layer M5
+violation type: Short
+	srcs: net:net44747 net:net46069
+	bbox = (246.3790, 10.6380) - (246.4790, 10.6560) on Layer M2
+violation type: Short
+	srcs: net:net24252 net:net50696
+	bbox = (249.7630, 9.6660) - (249.7910, 9.6840) on Layer M2
+violation type: Short
+	srcs: net:_017906_ net:net44309
+	bbox = (254.2990, 13.7160) - (254.3360, 13.7340) on Layer M2
+violation type: Short
+	srcs: net:_065579_ net:u_e.g_ir.r_xs_q0\[111\]
+	bbox = (259.5910, 13.9860) - (259.6280, 14.0040) on Layer M2
+violation type: Short
+	srcs: net:clknet_7_68_0_u_e.g_cg.u_cg.gclk_regs net:net45634
+	bbox = (262.4350, 7.2360) - (262.4810, 7.2540) on Layer M2
+violation type: Short
+	srcs: net:_065477_ net:net13731
+	bbox = (262.9390, 9.5580) - (263.0120, 9.5760) on Layer M2
+violation type: Short
+	srcs: net:_065464_ net:net49748
+	bbox = (262.9390, 10.2960) - (262.9670, 10.3140) on Layer M2
+violation type: Short
+	srcs: net:_065477_ net:_065480_
+	bbox = (263.5510, 10.2060) - (263.6150, 10.2240) on Layer M2
+violation type: Short
+	srcs: net:_016722_ net:_016746_
+	bbox = (266.8990, 10.9800) - (266.9630, 10.9980) on Layer M2
+violation type: Short
+	srcs: net:u_e.g_mac\[1\].g_mz.u_x/net13824 net:net46110
+	bbox = (267.1510, 9.2160) - (267.1880, 9.2340) on Layer M2
+violation type: Short
+	srcs: net:clknet_leaf_1279_u_e.g_cg.u_cg.gclk_regs net:xs_q0[206]
+	bbox = (267.2590, 6.8220) - (267.3230, 6.8400) on Layer M2
+violation type: Short
+	srcs: net:net46124 net:net50612
+	bbox = (267.4030, 8.9820) - (267.5390, 9.0000) on Layer M2
+violation type: Short
+	srcs: net:net23056 net:net50615
+	bbox = (267.5830, 5.4360) - (267.5840, 5.4540) on Layer M2
+violation type: Short
+	srcs: net:u_e.i2x_q0\[158\] net:net50612
+	bbox = (267.6190, 8.0100) - (267.6830, 8.0280) on Layer M2
+violation type: Short
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net37439
+	bbox = (269.0950, 10.4760) - (269.1230, 10.4940) on Layer M2
+violation type: Short
+	srcs: net:net18449 net:net1201
+	bbox = (247.4640, 8.1310) - (247.4820, 8.1890) on Layer M3
+violation type: Short
+	srcs: net:net22282 net:net50700
+	bbox = (251.1360, 11.0830) - (251.1540, 11.1290) on Layer M3
+violation type: Short
+	srcs: net:net18078 net:VDD
+	bbox = (251.5470, 8.6230) - (251.5500, 8.6570) on Layer M3
+violation type: Short
+	srcs: net:u_e.i2x_q0\[86\] net:VDD
+	bbox = (251.5470, 11.8630) - (251.5500, 11.8970) on Layer M3
+violation type: Short
+	srcs: net:_016829_ net:net25919
+	bbox = (253.0800, 9.9310) - (253.0980, 10.1570) on Layer M3
+violation type: Short
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs net:net46217
+	bbox = (253.3680, 10.5610) - (253.3860, 10.6610) on Layer M3
+violation type: Short
+	srcs: net:u_e.i2x_q0\[116\] net:net45725
+	bbox = (253.6200, 10.6030) - (253.6380, 10.6250) on Layer M3
+violation type: Short
+	srcs: net:VDD net:net50921
+	bbox = (254.2470, 12.9430) - (254.2500, 12.9770) on Layer M3
+violation type: Short
+	srcs: net:u_e.i2x_q0\[75\] net:VDD
+	bbox = (256.9470, 7.5430) - (256.9500, 7.5770) on Layer M3
+violation type: Short
+	srcs: net:u_e.g_mac\[0\].g_mz.u_x/net17752 net:VDD
+	bbox = (256.9470, 11.3230) - (256.9500, 11.3570) on Layer M3
+violation type: Short
+	srcs: net:_016767_ net:net37457
+	bbox = (260.4960, 10.9390) - (260.5140, 10.9730) on Layer M3
+violation type: Short
+	srcs: net:clknet_leaf_1280_u_e.g_cg.u_cg.gclk_regs net:VDD
+	bbox = (262.3470, 15.1030) - (262.3500, 15.1370) on Layer M3
+violation type: Short
+	srcs: net:clknet_leaf_1280_u_e.g_cg.u_cg.gclk_regs net:VDD
+	bbox = (262.3470, 15.6430) - (262.3500, 15.6770) on Layer M3
+violation type: Short
+	srcs: net:_065464_ net:net49748
+	bbox = (262.9440, 10.2910) - (262.9620, 10.3190) on Layer M3
+violation type: Short
+	srcs: net:net18129 net:net1246
+	bbox = (263.7000, 8.5390) - (263.7180, 8.6090) on Layer M3
+violation type: Short
+	srcs: net:net18364 net:net50592
+	bbox = (266.1840, 9.2110) - (266.2020, 9.2930) on Layer M3
+violation type: Short
+	srcs: net:_065374_ net:net50244
+	bbox = (269.7480, 5.5390) - (269.7660, 5.5970) on Layer M3
+violation type: Short
+	srcs: net:clknet_leaf_1631_u_e.g_cg.u_cg.gclk_regs net:net45669
+	bbox = (252.8530, 10.9440) - (252.9470, 10.9680) on Layer M4
+violation type: Short
+	srcs: net:net1246 net:net49644
+	bbox = (263.9330, 8.5440) - (264.0380, 8.5680) on Layer M4
+violation type: Short
+	srcs: net:net18095 net:net50653
+	bbox = (266.8210, 9.3120) - (266.8670, 9.3360) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_016340_ net:_016346_
+	bbox = (248.6750, 11.2860) - (248.6830, 11.3040) on Layer M2
+violation type: Lef58SpacingEndOfLine
+	srcs: net:u_e.i2x_q0\[148\] net:u_e.i2x_q0\[95\]
+	bbox = (262.3550, 10.0980) - (262.3630, 10.1160) on Layer M2
+violation type: Lef58SpacingEndOfLine
+	srcs: net:clknet_leaf_1273_u_e.g_cg.u_cg.gclk_regs net:net50057
+	bbox = (267.7190, 8.8200) - (267.7270, 8.8380) on Layer M2
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net29873 net:net46009
+	bbox = (247.3920, 10.0490) - (247.4100, 10.0570) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_065480_ net:net45413
+	bbox = (263.5560, 10.1720) - (263.5740, 10.2010) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net18184 net:net49462
+	bbox = (264.0240, 12.5870) - (264.0420, 12.5950) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net45430 net:net50334
+	bbox = (264.7080, 9.6770) - (264.7260, 9.6910) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_016751_ net:net50334
+	bbox = (265.6800, 6.8810) - (265.6980, 6.9070) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net45992 net:net50592
+	bbox = (266.1840, 9.0410) - (266.2020, 9.0670) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_015080_ net:net45359
+	bbox = (267.3000, 9.5450) - (267.3180, 9.5530) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_016751_ net:net18360
+	bbox = (267.5160, 7.9250) - (267.5340, 7.9330) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net18256 net:net50889
+	bbox = (268.0200, 5.4050) - (268.0380, 5.4190) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net18125 net:net36509
+	bbox = (270.0360, 9.5090) - (270.0540, 9.5170) on Layer M3
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_016877_ net:net18572
+	bbox = (246.7730, 11.2320) - (246.8050, 11.2560) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:clknet_leaf_1276_u_e.g_cg.u_cg.gclk_regs net:net45718
+	bbox = (261.7130, 7.7280) - (261.7400, 7.7520) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:u_e.g_qb.g_bx.b_xs_q0\[135\] net:u_e.i2x_q0\[142\]
+	bbox = (263.2190, 7.5840) - (263.2210, 7.6080) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:clknet_leaf_1283_u_e.g_cg.u_cg.gclk_regs net:net49462
+	bbox = (263.6900, 11.5680) - (263.7010, 11.5920) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net45318 net:net49739
+	bbox = (263.9450, 8.4480) - (263.9770, 8.4720) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net18213 net:net50334
+	bbox = (264.6590, 9.6960) - (264.6970, 9.7200) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_016700_ net:net49964
+	bbox = (268.1930, 9.7440) - (268.2100, 9.7680) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net36183 net:net50235
+	bbox = (268.5500, 9.9360) - (268.5850, 9.9600) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:u_e.i2x_q0\[158\] net:net50472
+	bbox = (268.6580, 7.8720) - (268.6930, 7.8960) on Layer M4
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net31326 net:net50712
+	bbox = (246.4800, 5.3150) - (246.5040, 5.3170) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net37927 net:net50640
+	bbox = (246.8640, 11.9870) - (246.8880, 11.9890) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net13731 net:net49829
+	bbox = (263.6640, 10.2940) - (263.6880, 10.3090) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net45468 net:net49796
+	bbox = (266.4480, 8.8750) - (266.4720, 8.9140) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9280, 10.4030) - (266.9520, 10.4050) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0720, 8.0510) - (267.0960, 8.0530) on Layer M5
+violation type: Cut Short
+	srcs: net:_065464_ net:net49748
+	bbox = (262.9440, 10.2960) - (262.9620, 10.3140) on Layer V2
+violation type: Lef58CutSpacingTable
+	srcs: net:clknet_leaf_1632_u_e.g_cg.u_cg.gclk_regs net:net29898
+	bbox = (250.6860, 6.3600) - (250.7040, 6.3840) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net18169 net:net49748
+	bbox = (262.9260, 9.5760) - (262.9440, 9.6000) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net1246 net:net49756
+	bbox = (263.7180, 8.5680) - (263.7360, 8.5920) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net45430 net:net50334
+	bbox = (264.7080, 9.6720) - (264.7260, 9.6960) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net18256 net:net50889
+	bbox = (268.0200, 5.4000) - (268.0380, 5.4240) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net1283 net:net46005
+	bbox = (269.2980, 10.3440) - (269.3160, 10.3680) on Layer V3
+violation type: Lef58CutSpacingTable
+	srcs: net:net31326 net:net50712
+	bbox = (246.4800, 5.3040) - (246.5040, 5.3280) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:net37927 net:net50640
+	bbox = (246.8640, 11.9760) - (246.8880, 12.0000) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:net50025 net:net50210
+	bbox = (248.2800, 12.0720) - (248.3040, 12.0960) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:net16305 net:net46362
+	bbox = (254.6640, 11.2080) - (254.6880, 11.2320) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:_016796_ net:_016803_
+	bbox = (257.1600, 11.0160) - (257.1840, 11.0400) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:clknet_leaf_1281_u_e.g_cg.u_cg.gclk_regs net:net16305
+	bbox = (257.5920, 11.0160) - (257.6160, 11.0400) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:net24952 net:net50101
+	bbox = (265.7520, 9.2880) - (265.7760, 9.3120) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:u_e.i2x_q0\[75\] net:net1283
+	bbox = (266.9280, 10.3920) - (266.9520, 10.4160) on Layer V4
+violation type: Lef58CutSpacingTable
+	srcs: net:net18095 net:u_e.i2x_q0\[158\]
+	bbox = (267.0720, 8.0400) - (267.0960, 8.0640) on Layer V4

@@ -1,0 +1,3658 @@
+{
+  "scope": "Actual retained post-CTS failure geometry; original nine R5 marker pairs",
+  "failure_odb_sha256": "7b8a1829ee30ef53c1240185f4487f67a6ac1d83ec1c5d3b46389a258235aa07",
+  "dbu_per_um": 1000,
+  "pairs": [
+    {
+      "load": {
+        "name": "clkload0",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          49.734,
+          27.54,
+          50.922,
+          27.81
+        ],
+        "location_um": [
+          49.734,
+          27.54
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_2_2__f_clk",
+        "master": "BUFx8_ASAP7_75t_R",
+        "bbox_um": [
+          49.734,
+          27.54,
+          50.382,
+          27.81
+        ],
+        "location_um": [
+          49.734,
+          27.54
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.17496,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_0_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload16",
+        "master": "BUFx2_ASAP7_75t_R",
+        "bbox_um": [
+          56.052,
+          24.57,
+          56.322,
+          24.84
+        ],
+        "location_um": [
+          56.052,
+          24.57
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.0729,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_20_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_20_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          56.052,
+          24.57,
+          57.24,
+          24.84
+        ],
+        "location_um": [
+          56.052,
+          24.57
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_20_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload17",
+        "master": "BUFx8_ASAP7_75t_R",
+        "bbox_um": [
+          53.298,
+          20.52,
+          53.946,
+          20.79
+        ],
+        "location_um": [
+          53.298,
+          20.52
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.17496,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_21_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_21_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          53.298,
+          20.52,
+          54.486,
+          20.79
+        ],
+        "location_um": [
+          53.298,
+          20.52
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_21_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload18",
+        "master": "BUFx2_ASAP7_75t_R",
+        "bbox_um": [
+          46.44,
+          20.79,
+          46.71,
+          21.06
+        ],
+        "location_um": [
+          46.44,
+          20.79
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.0729,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_22_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_22_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          46.44,
+          20.79,
+          47.628,
+          21.06
+        ],
+        "location_um": [
+          46.44,
+          20.79
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_22_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload19",
+        "master": "BUFx8_ASAP7_75t_R",
+        "bbox_um": [
+          41.958,
+          24.03,
+          42.606,
+          24.3
+        ],
+        "location_um": [
+          41.958,
+          24.03
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.17496,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_23_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_23_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          41.958,
+          24.03,
+          43.146,
+          24.3
+        ],
+        "location_um": [
+          41.958,
+          24.03
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_2__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_23_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload4",
+        "master": "INVx4_ASAP7_75t_R",
+        "bbox_um": [
+          34.074,
+          25.92,
+          34.398,
+          26.19
+        ],
+        "location_um": [
+          34.074,
+          25.92
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.08748,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_26_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_26_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          34.074,
+          25.92,
+          35.262,
+          26.19
+        ],
+        "location_um": [
+          34.074,
+          25.92
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_0__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_26_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload5",
+        "master": "INVx2_ASAP7_75t_R",
+        "bbox_um": [
+          33.102,
+          18.9,
+          33.318,
+          19.17
+        ],
+        "location_um": [
+          33.102,
+          18.9
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.05832,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_27_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_27_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          33.102,
+          18.9,
+          34.29,
+          19.17
+        ],
+        "location_um": [
+          33.102,
+          18.9
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_0__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_27_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload6",
+        "master": "INVx4_ASAP7_75t_R",
+        "bbox_um": [
+          28.296,
+          22.95,
+          28.62,
+          23.22
+        ],
+        "location_um": [
+          28.296,
+          22.95
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.08748,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_28_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_28_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          28.296,
+          22.95,
+          29.484,
+          23.22
+        ],
+        "location_um": [
+          28.296,
+          22.95
+        ],
+        "orientation": "MX",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_0__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_28_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    },
+    {
+      "load": {
+        "name": "clkload7",
+        "master": "BUFx8_ASAP7_75t_R",
+        "bbox_um": [
+          20.088,
+          20.52,
+          20.736,
+          20.79
+        ],
+        "location_um": [
+          20.088,
+          20.52
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.17496,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_leaf_29_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": null,
+            "sig": null
+          }
+        ]
+      },
+      "buffer": {
+        "name": "clkbuf_leaf_29_clk",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          20.088,
+          20.52,
+          21.276,
+          20.79
+        ],
+        "location_um": [
+          20.088,
+          20.52
+        ],
+        "orientation": "R0",
+        "placement_status": "PLACED",
+        "fixed": false,
+        "group": null,
+        "area_um2": 0.32076,
+        "terms": [
+          {
+            "pin": "A",
+            "io": "INPUT",
+            "net": "clknet_2_0__leaf_clk",
+            "sig": "CLOCK"
+          },
+          {
+            "pin": "VDD",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "VSS",
+            "io": "INOUT",
+            "net": null,
+            "sig": null
+          },
+          {
+            "pin": "Y",
+            "io": "OUTPUT",
+            "net": "clknet_leaf_29_clk",
+            "sig": "CLOCK"
+          }
+        ]
+      }
+    }
+  ],
+  "regions": [
+    {
+      "name": "cp_body",
+      "type": "EXCLUSIVE",
+      "boxes_um": [
+        [
+          17.28,
+          17.28,
+          60.48,
+          56.16
+        ]
+      ],
+      "groups": [
+        "cp_body"
+      ]
+    },
+    {
+      "name": "cp_association",
+      "type": "EXCLUSIVE",
+      "boxes_um": [
+        [
+          17.28,
+          56.16,
+          22.464,
+          60.48
+        ]
+      ],
+      "groups": [
+        "cp_association"
+      ]
+    }
+  ],
+  "cell_summary": [
+    {
+      "kind": "other",
+      "group": "cp_body",
+      "status": "PLACED",
+      "count": 3384,
+      "area_um2": 476.3286000000023
+    },
+    {
+      "kind": "other",
+      "group": null,
+      "status": "PLACED",
+      "count": 1185,
+      "area_um2": 95.79060000000072
+    },
+    {
+      "kind": "other",
+      "group": "cp_association",
+      "status": "PLACED",
+      "count": 2,
+      "area_um2": 0.23328000000000002
+    },
+    {
+      "kind": "other",
+      "group": null,
+      "status": "LOCKED",
+      "count": 401,
+      "area_um2": 11.693159999999914
+    },
+    {
+      "kind": "CTS_buffer",
+      "group": null,
+      "status": "PLACED",
+      "count": 35,
+      "area_um2": 10.497600000000002
+    },
+    {
+      "kind": "CTS_dummy",
+      "group": null,
+      "status": "PLACED",
+      "count": 26,
+      "area_um2": 3.382560000000001
+    }
+  ],
+  "CTS_cells": [
+    {
+      "name": "clkbuf_leaf_3_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        33.21,
+        56.43,
+        34.398,
+        56.7
+      ],
+      "location_um": [
+        33.21,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_3_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_2_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        29.052,
+        57.24,
+        30.24,
+        57.51
+      ],
+      "location_um": [
+        29.052,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_2_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_1_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        57.78,
+        23.652,
+        58.05
+      ],
+      "location_um": [
+        22.464,
+        57.78
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_1_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_0_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        21.6,
+        26.73,
+        22.788,
+        27.0
+      ],
+      "location_um": [
+        21.6,
+        26.73
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_0_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_17_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        45.9,
+        58.05,
+        47.088,
+        58.32
+      ],
+      "location_um": [
+        45.9,
+        58.05
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_17_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_6_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        57.51,
+        23.652,
+        57.78
+      ],
+      "location_um": [
+        22.464,
+        57.51
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_6_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_5_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        57.24,
+        23.652,
+        57.51
+      ],
+      "location_um": [
+        22.464,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_5_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_4_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        24.84,
+        58.05,
+        26.028,
+        58.32
+      ],
+      "location_um": [
+        24.84,
+        58.05
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_4_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_16_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        51.57,
+        57.78,
+        52.758,
+        58.05
+      ],
+      "location_um": [
+        51.57,
+        57.78
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_16_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_15_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        57.132,
+        58.05,
+        58.32,
+        58.32
+      ],
+      "location_um": [
+        57.132,
+        58.05
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_15_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_14_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        54.594,
+        57.24,
+        55.782,
+        57.51
+      ],
+      "location_um": [
+        54.594,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_14_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_11_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        43.794,
+        56.16,
+        44.982,
+        56.43
+      ],
+      "location_um": [
+        43.794,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_11_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_10_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        32.022,
+        56.16,
+        33.21,
+        56.43
+      ],
+      "location_um": [
+        32.022,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_10_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_9_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        31.806,
+        57.24,
+        32.994,
+        57.51
+      ],
+      "location_um": [
+        31.806,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_9_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_8_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        26.676,
+        58.86,
+        27.864,
+        59.13
+      ],
+      "location_um": [
+        26.676,
+        58.86
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_8_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_7_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        58.59,
+        23.652,
+        58.86
+      ],
+      "location_um": [
+        22.464,
+        58.59
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_7_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_13_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        58.752,
+        57.24,
+        59.94,
+        57.51
+      ],
+      "location_um": [
+        58.752,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_13_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_12_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        47.358,
+        57.78,
+        48.546,
+        58.05
+      ],
+      "location_um": [
+        47.358,
+        57.78
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_12_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_18_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        51.894,
+        57.51,
+        53.082,
+        57.78
+      ],
+      "location_um": [
+        51.894,
+        57.51
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_18_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_19_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        57.078,
+        56.7,
+        58.266,
+        56.97
+      ],
+      "location_um": [
+        57.078,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_19_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_20_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        56.052,
+        24.57,
+        57.24,
+        24.84
+      ],
+      "location_um": [
+        56.052,
+        24.57
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_20_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_21_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        53.298,
+        20.52,
+        54.486,
+        20.79
+      ],
+      "location_um": [
+        53.298,
+        20.52
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_21_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_22_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        46.44,
+        20.79,
+        47.628,
+        21.06
+      ],
+      "location_um": [
+        46.44,
+        20.79
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_22_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_23_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        41.958,
+        24.03,
+        43.146,
+        24.3
+      ],
+      "location_um": [
+        41.958,
+        24.03
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_23_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_24_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        38.664,
+        56.43,
+        39.852,
+        56.7
+      ],
+      "location_um": [
+        38.664,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_24_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_25_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        36.18,
+        57.51,
+        37.368,
+        57.78
+      ],
+      "location_um": [
+        36.18,
+        57.51
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_25_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_26_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        34.074,
+        25.92,
+        35.262,
+        26.19
+      ],
+      "location_um": [
+        34.074,
+        25.92
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_26_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_27_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        33.102,
+        18.9,
+        34.29,
+        19.17
+      ],
+      "location_um": [
+        33.102,
+        18.9
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_27_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_28_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        28.296,
+        22.95,
+        29.484,
+        23.22
+      ],
+      "location_um": [
+        28.296,
+        22.95
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_28_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_leaf_29_clk",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        20.088,
+        20.52,
+        21.276,
+        20.79
+      ],
+      "location_um": [
+        20.088,
+        20.52
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_leaf_29_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_0_clk",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        39.744,
+        56.16,
+        40.392,
+        56.43
+      ],
+      "location_um": [
+        39.744,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_0_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_2_0__f_clk",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        27.756,
+        28.08,
+        28.404,
+        28.35
+      ],
+      "location_um": [
+        27.756,
+        28.08
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_0_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_2_0__leaf_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_2_1__f_clk",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        26.514,
+        56.43,
+        27.162,
+        56.7
+      ],
+      "location_um": [
+        26.514,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_0_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_2_1__leaf_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_2_2__f_clk",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        49.734,
+        27.54,
+        50.382,
+        27.81
+      ],
+      "location_um": [
+        49.734,
+        27.54
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_0_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkbuf_2_3__f_clk",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        50.814,
+        56.97,
+        51.462,
+        57.24
+      ],
+      "location_um": [
+        50.814,
+        56.97
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_0_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        }
+      ]
+    },
+    {
+      "name": "clkload0",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        49.734,
+        27.54,
+        50.922,
+        27.81
+      ],
+      "location_um": [
+        49.734,
+        27.54
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_2__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload1",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "bbox_um": [
+        51.678,
+        56.7,
+        52.866,
+        56.97
+      ],
+      "location_um": [
+        51.678,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_2_3__leaf_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload2",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        27.486,
+        56.7,
+        28.134,
+        56.97
+      ],
+      "location_um": [
+        27.486,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_2_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload3",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        37.044,
+        56.7,
+        37.314,
+        56.97
+      ],
+      "location_um": [
+        37.044,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_25_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload4",
+      "master": "INVx4_ASAP7_75t_R",
+      "bbox_um": [
+        34.074,
+        25.92,
+        34.398,
+        26.19
+      ],
+      "location_um": [
+        34.074,
+        25.92
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.08748,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_26_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload5",
+      "master": "INVx2_ASAP7_75t_R",
+      "bbox_um": [
+        33.102,
+        18.9,
+        33.318,
+        19.17
+      ],
+      "location_um": [
+        33.102,
+        18.9
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.05832,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_27_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload6",
+      "master": "INVx4_ASAP7_75t_R",
+      "bbox_um": [
+        28.296,
+        22.95,
+        28.62,
+        23.22
+      ],
+      "location_um": [
+        28.296,
+        22.95
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.08748,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_28_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload7",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        20.088,
+        20.52,
+        20.736,
+        20.79
+      ],
+      "location_um": [
+        20.088,
+        20.52
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_29_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload8",
+      "master": "INVx5_ASAP7_75t_R",
+      "bbox_um": [
+        33.21,
+        56.16,
+        33.588,
+        56.43
+      ],
+      "location_um": [
+        33.21,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.10206,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_3_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload9",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "bbox_um": [
+        27.162,
+        56.97,
+        28.35,
+        57.24
+      ],
+      "location_um": [
+        27.162,
+        56.97
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.32076,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_4_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload10",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        56.97,
+        23.112,
+        57.24
+      ],
+      "location_um": [
+        22.464,
+        56.97
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_5_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload11",
+      "master": "INVx2_ASAP7_75t_R",
+      "bbox_um": [
+        22.464,
+        56.16,
+        22.68,
+        56.43
+      ],
+      "location_um": [
+        22.464,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.05832,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_6_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload12",
+      "master": "INVx2_ASAP7_75t_R",
+      "bbox_um": [
+        26.568,
+        56.16,
+        26.784,
+        56.43
+      ],
+      "location_um": [
+        26.568,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.05832,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_8_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload13",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        33.75,
+        56.7,
+        34.02,
+        56.97
+      ],
+      "location_um": [
+        33.75,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_9_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload14",
+      "master": "INVx4_ASAP7_75t_R",
+      "bbox_um": [
+        34.398,
+        56.16,
+        34.722,
+        56.43
+      ],
+      "location_um": [
+        34.398,
+        56.16
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.08748,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_10_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload15",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        56.538,
+        56.43,
+        56.808,
+        56.7
+      ],
+      "location_um": [
+        56.538,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_19_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload16",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        56.052,
+        24.57,
+        56.322,
+        24.84
+      ],
+      "location_um": [
+        56.052,
+        24.57
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_20_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload17",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        53.298,
+        20.52,
+        53.946,
+        20.79
+      ],
+      "location_um": [
+        53.298,
+        20.52
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_21_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload18",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        46.44,
+        20.79,
+        46.71,
+        21.06
+      ],
+      "location_um": [
+        46.44,
+        20.79
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_22_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload19",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        41.958,
+        24.03,
+        42.606,
+        24.3
+      ],
+      "location_um": [
+        41.958,
+        24.03
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_23_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload20",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        42.876,
+        56.43,
+        43.146,
+        56.7
+      ],
+      "location_um": [
+        42.876,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_24_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload21",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        43.146,
+        56.43,
+        43.794,
+        56.7
+      ],
+      "location_um": [
+        43.146,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_11_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload22",
+      "master": "INVx3_ASAP7_75t_R",
+      "bbox_um": [
+        48.168,
+        56.43,
+        48.438,
+        56.7
+      ],
+      "location_um": [
+        48.168,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_12_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload23",
+      "master": "BUFx8_ASAP7_75t_R",
+      "bbox_um": [
+        58.806,
+        56.7,
+        59.454,
+        56.97
+      ],
+      "location_um": [
+        58.806,
+        56.7
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.17496,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_13_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload24",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        51.03,
+        56.43,
+        51.3,
+        56.7
+      ],
+      "location_um": [
+        51.03,
+        56.43
+      ],
+      "orientation": "MX",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_16_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    },
+    {
+      "name": "clkload25",
+      "master": "BUFx2_ASAP7_75t_R",
+      "bbox_um": [
+        45.63,
+        57.24,
+        45.9,
+        57.51
+      ],
+      "location_um": [
+        45.63,
+        57.24
+      ],
+      "orientation": "R0",
+      "placement_status": "PLACED",
+      "fixed": false,
+      "group": null,
+      "area_um2": 0.0729,
+      "terms": [
+        {
+          "pin": "A",
+          "io": "INPUT",
+          "net": "clknet_leaf_17_clk",
+          "sig": "CLOCK"
+        },
+        {
+          "pin": "VDD",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "VSS",
+          "io": "INOUT",
+          "net": null,
+          "sig": null
+        },
+        {
+          "pin": "Y",
+          "io": "OUTPUT",
+          "net": null,
+          "sig": null
+        }
+      ]
+    }
+  ]
+}

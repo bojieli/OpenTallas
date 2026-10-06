@@ -1,0 +1,369 @@
+{
+  "commit": "2a51dec7fb0694690d759bb995ff605193414384",
+  "sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kgather.sv": "0d4b41add2e98afde8503d5393d642fdc6e3c367de299631ce9758d3473eb01c",
+    "rtl/dsrom_sys/integration/ot_hdc_v41x_idx_kgather_ps.sv": "d4e4fffd0a40130ca6b57af1c5eb2a898895375edb0f011260009b01b8406c2a",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_mdrop.sv": "5e74932ad866aa491eea0ce0c1a7038bd29e648ec4c004d7e06fdcfb5faa5e2e",
+    "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv": "18e61f566cf15c32314e7011c57557fc9d0b5f1b73c6a4738e53e32f44fa3c99",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_gather.sv": "b8e18cfe06ed32605f0849435f50d6ff6c259af14ba137640b9826df08a7b763",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_gather_parent.sv": "7d894833258e245bebdc20dee2bcb99e003f55b01f7aa94a96d478fe701fc1c5",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "721776856893abf83ab657258db526ad4bdafe9602c46b4eae99fc2390fc0893",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgdata_parent.sv": "81ea8a2ef4fc8814ad30313c0429bf8111b92d853006a52c4da5f46b6ba63f77",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv": "efe426432312318e2f09cec91ba8119a7d5c346a60c65eba7f5cc5d25f0f3016",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv": "fc541e1b3e98d135659b33eb9339eb557f2f57e25768b911306247186dabf351",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv": "bff165be724d2e40dfd24f19eb3cc1b9f7e73b4c6dad6cde44b165ce8e6b439d",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv": "35d507cc120d31b45f417ce6f745f6e0c2cc35067274e49642674005f70af456",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf.sv": "eff7c641b0d2c8b79f5194606a6dfea4100f01639606096ab5be73340b5d7ad9",
+    "rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf_harness.cpp": "234f9b15fc509e1f0d360ceb4bea006938119065dcccf398b1bfe23d5e6dd032",
+    "tools/dsrom_reindex_parent_integration.py": "7ca879e5c80ec6bb83ef4ec21adfe9efb00cd37e639451e494ad4e1448d718c7",
+    "tools/dsrom_integ_reindex_wf.py": "4030156f3049c86e131fd1141ea06e27a4ac787750c8b24c6a0600b39cc466a7",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "runs": [
+    {
+      "name": "default_off_r3",
+      "lsw": 3,
+      "rank": 3,
+      "jobs": [
+        "r3_j0",
+        "r3_j1"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048574,
+          "slot": 6,
+          "start": 4106,
+          "first_key": 93,
+          "last_key": 673,
+          "last_scored": 721,
+          "done": 842,
+          "busy": 842,
+          "passes": 1,
+          "keys": 2024,
+          "out": 512,
+          "errors": 0
+        },
+        {
+          "job": 1,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 4949,
+          "first_key": 122,
+          "last_key": 611,
+          "last_scored": 659,
+          "done": 775,
+          "busy": 775,
+          "passes": 1,
+          "keys": 4040,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [
+        1
+      ],
+      "summary": {
+        "njobs": "2",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "2",
+        "errors": "0",
+        "cycles": "5751"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 0
+    },
+    {
+      "name": "parent_slots_r0",
+      "lsw": 3,
+      "rank": 0,
+      "jobs": [
+        "r0_j0",
+        "r0_j1"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048574,
+          "slot": 6,
+          "start": 4106,
+          "first_key": 102,
+          "last_key": 501,
+          "last_scored": 549,
+          "done": 671,
+          "busy": 671,
+          "passes": 1,
+          "keys": 1944,
+          "out": 512,
+          "errors": 0
+        },
+        {
+          "job": 1,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 4778,
+          "first_key": 223,
+          "last_key": 777,
+          "last_scored": 825,
+          "done": 942,
+          "busy": 942,
+          "passes": 1,
+          "keys": 3880,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [
+        1
+      ],
+      "summary": {
+        "njobs": "2",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "2",
+        "errors": "0",
+        "cycles": "5747"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 1
+    },
+    {
+      "name": "parent_slots_r1",
+      "lsw": 3,
+      "rank": 1,
+      "jobs": [
+        "r1_j0",
+        "r1_j1"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048574,
+          "slot": 6,
+          "start": 4106,
+          "first_key": 102,
+          "last_key": 712,
+          "last_scored": 760,
+          "done": 883,
+          "busy": 883,
+          "passes": 1,
+          "keys": 2160,
+          "out": 512,
+          "errors": 0
+        },
+        {
+          "job": 1,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 4990,
+          "first_key": 114,
+          "last_key": 742,
+          "last_scored": 790,
+          "done": 906,
+          "busy": 906,
+          "passes": 1,
+          "keys": 4328,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [
+        1
+      ],
+      "summary": {
+        "njobs": "2",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "2",
+        "errors": "0",
+        "cycles": "5923"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 1
+    },
+    {
+      "name": "parent_slots_r2",
+      "lsw": 3,
+      "rank": 2,
+      "jobs": [
+        "r2_j0",
+        "r2_j1"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048574,
+          "slot": 6,
+          "start": 4106,
+          "first_key": 102,
+          "last_key": 651,
+          "last_scored": 699,
+          "done": 821,
+          "busy": 821,
+          "passes": 1,
+          "keys": 2072,
+          "out": 512,
+          "errors": 0
+        },
+        {
+          "job": 1,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 4928,
+          "first_key": 124,
+          "last_key": 574,
+          "last_scored": 622,
+          "done": 734,
+          "busy": 734,
+          "passes": 1,
+          "keys": 4136,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [
+        1
+      ],
+      "summary": {
+        "njobs": "2",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "2",
+        "errors": "0",
+        "cycles": "5689"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 1
+    },
+    {
+      "name": "parent_slots_r3",
+      "lsw": 3,
+      "rank": 3,
+      "jobs": [
+        "r3_j0",
+        "r3_j1"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048574,
+          "slot": 6,
+          "start": 4106,
+          "first_key": 102,
+          "last_key": 674,
+          "last_scored": 722,
+          "done": 843,
+          "busy": 843,
+          "passes": 1,
+          "keys": 2024,
+          "out": 512,
+          "errors": 0
+        },
+        {
+          "job": 1,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 4950,
+          "first_key": 131,
+          "last_key": 614,
+          "last_scored": 662,
+          "done": 778,
+          "busy": 778,
+          "passes": 1,
+          "keys": 4040,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [
+        1
+      ],
+      "summary": {
+        "njobs": "2",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "2",
+        "errors": "0",
+        "cycles": "5755"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 1
+    },
+    {
+      "name": "parent_replay",
+      "lsw": 3,
+      "rank": 0,
+      "jobs": [
+        "replay_j0"
+      ],
+      "pass_": true,
+      "job": [
+        {
+          "job": 0,
+          "pos": 1048575,
+          "slot": 7,
+          "start": 2058,
+          "first_key": 24,
+          "last_key": 11993,
+          "last_scored": 12041,
+          "done": 12058,
+          "busy": 12058,
+          "passes": 3,
+          "keys": 51072,
+          "out": 512,
+          "errors": 0
+        }
+      ],
+      "handoff_cycles": [],
+      "summary": {
+        "njobs": "1",
+        "lsw": "3",
+        "mdrop": "1",
+        "lat": "48",
+        "key_errors": "0",
+        "short": "0",
+        "ovf": "0",
+        "hidden_out": "1",
+        "errors": "0",
+        "cycles": "14143"
+      },
+      "first_errors": [],
+      "OPT_REINDEX_PARENT": 1
+    }
+  ],
+  "scope": "one fullshape reindex stage; actual gather/list binding, existing scorer stand-in and unchanged golden mdrop/globalIDs/top512; no whole array",
+  "pass": true
+}

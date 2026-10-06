@@ -1,0 +1,169 @@
+{
+  "schema": "hbm.cp.fast.finite-parent-allocation.v1",
+  "source_commit": "e0e05a19ea611b2a889ec7a61f60199215e9028e",
+  "source_main": "ec8738dabbc8b714723457e7cf650300b2e256a3",
+  "default_off": true,
+  "replicas": 1,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "cycles_added": 0,
+  "source_FF_added": 0,
+  "clock": "clk_sm phase0 period833.333ps SS60/FF25 unchanged",
+  "external_pins": 236,
+  "boundary_bits": 12,
+  "boundary_delta_bits": 11,
+  "parent_outer_service_um": [
+    0,
+    0,
+    1814.376,
+    1403.976
+  ],
+  "old_parent_gross_um": [
+    583.2,
+    25.92,
+    660.96,
+    103.68
+  ],
+  "parent_gross_um": [
+    583.2,
+    25.92,
+    665.28,
+    108.0
+  ],
+  "parent_core_um": [
+    600.48,
+    43.2,
+    648.0,
+    90.72
+  ],
+  "local_die_um": [
+    0,
+    0,
+    82.08,
+    82.08
+  ],
+  "local_core_um": [
+    17.28,
+    17.28,
+    64.8,
+    64.8
+  ],
+  "association_um": [
+    17.28,
+    56.16,
+    22.464,
+    60.48
+  ],
+  "body_union_um": [
+    [
+      17.28,
+      17.28,
+      60.48,
+      56.16
+    ],
+    [
+      22.464,
+      56.16,
+      60.48,
+      60.48
+    ],
+    [
+      60.48,
+      17.28,
+      64.8,
+      64.8
+    ],
+    [
+      17.28,
+      60.48,
+      60.48,
+      64.8
+    ]
+  ],
+  "body_outline_um2": 2235.75552,
+  "placement_utilisation_ceiling": 0.5,
+  "cell_budget_um2": 1117.87776,
+  "prior_actual_body_um2": 868.85136,
+  "positive_source_growth_um2": 177.61232,
+  "charged_fixed_physical_um2": 11.69316,
+  "additional_future_CTS_repair_IO_allowance_um2": 40,
+  "charged_body_total_um2": 1098.15684,
+  "residual_cell_budget_um2": 19.72092,
+  "prior_measured_clock_dummy_cells": 74,
+  "prior_measured_clock_dummy_um2": 16.00884,
+  "clock_cost_already_inside_prior_body": true,
+  "association_prior_cells": 5,
+  "association_prior_area_um2": 0.83106,
+  "association_cell_budget_um2": 11.19744,
+  "association_growth_charged_to_body": false,
+  "association_successor_requirement": "Actual14 final nodes+9 bypass gates must remain <=11.19744um2 after map; excess is terminal allocation failure",
+  "PG": {
+    "native_hook": "physical/hbm_cp_parent_context_20261005/pdn.tcl",
+    "rails": "actual source-owned M1/M2 followpin; M3/M4/M7 thenM8/M9 actualvia chain",
+    "upper_pitch_um": 2.7669,
+    "halo_um": 17.28,
+    "new_core_pitch_periods": 11,
+    "existing_PG_not_released": true,
+    "new_PDN_validation_required": true,
+    "upper_width_um": 0.48
+  },
+  "M7": {
+    "boundary_y_um": 56.16,
+    "boundary_x_um": [
+      17.28,
+      22.464
+    ],
+    "checkpoint_sha256": "24ebc0757ffb28470eec488ce04b7b5148ee67cc66a413d956a727e9cd082766",
+    "native_candidates_after_PG_and_all_existing_guides": 25,
+    "reserved_factor_track_X_DBU": [
+      19664,
+      19728,
+      19792,
+      19856,
+      19920,
+      19984,
+      20048,
+      20112,
+      20176,
+      20240,
+      20304,
+      20368
+    ],
+    "DBU_per_um": 1000,
+    "net": "su_owned_frontier_terms[0:11]",
+    "port": "qualified_owned_terms[11:0]",
+    "owner_fanout_max": 12,
+    "heldbit_XOR_fanout": 1,
+    "residual_track_candidates": 13,
+    "reservation_scope": "native grid + actual PG + all crossing GRT guides; new detailed route must validate, no measured load credit",
+    "PG_escape_DBU": 128,
+    "old_signal_removal_credit": 0
+  },
+  "wire_cost": {
+    "extension_each_axis_um": 4.32,
+    "incremental_Manhattan_bound_um": 8.64,
+    "actual_RC_and_receiver_load": "consume new mapped/CTS/SPEF; not substituted with estimates"
+  },
+  "qualified": {
+    "retained43p2_native_DPL": true,
+    "zero_containment": true,
+    "zero_ungrouped_movable": true,
+    "FAST_new_source_route": false,
+    "FAST_new_PDN": false,
+    "SS_FF": false,
+    "IR": false
+  },
+  "hooks_sha256": {
+    "physical/hbm_cp_parent_context_20261005/fast_frontier_regions.tcl": "4b4ac49af7ab876b0c4fa234b5e50a43122891772186d2fa68922d0e3d0a4842"
+  },
+  "loaded_IR_policy": {
+    "source": "tools/hbm_accel_die_fp.py:1312",
+    "source_sha256": "351db816c5daa7c3efef57f89384df520830899e433ad6ff0867f0806c371da9",
+    "parent_rail_to_rail_budget_mV": 35.0,
+    "child_local_plus_parent_supply_drop_must_not_exceed_mV": 35.0,
+    "child_local_budget_rule": "35mV minus actual parent VDDdrop+VSSrise at child feeds, per corner and loadedwindow; cannot treat ideal child feed as entire budget",
+    "parent_feed_drop_not_measured": true,
+    "loaded_child_drops_required": true,
+    "no_IR_qualification_until_parent_supply_included": true
+  }
+}

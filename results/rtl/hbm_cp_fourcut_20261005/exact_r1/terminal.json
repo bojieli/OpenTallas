@@ -1,0 +1,43 @@
+{
+  "schema": "hbm.cp.fourcut.exact-connected.v1",
+  "verdict": "PASS_EXACT_CONNECTED",
+  "checks": 8713,
+  "phase_cases": 342,
+  "codec_basis_checks": 66,
+  "entry_basis_checks": 66,
+  "parent_checks": 266,
+  "foreign_cases": 15,
+  "accepted_debt_drained": 17,
+  "healthy_transactions": 2,
+  "warm_rearm": 1,
+  "prelease_edges": 5,
+  "grant_edges": 1,
+  "rearm_edges": 1,
+  "added_edges": 0,
+  "added_executor_start_edges": 1,
+  "added_FF": 0,
+  "parameters": {
+    "FOUR_COMBINATIONAL_CUTS": 1,
+    "SU_FOUR_COMBINATIONAL_CUTS": 1
+  },
+  "context_qualified": false,
+  "adopted": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "9527f0245a06c8457a7320d2123b3e6260b875d04e61a0ab58521bfbc0914e74",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "bb6731bdf3d07083cc6f5e68e81853f20c16a186ab2b76a0a7c13ba75659bd31",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "3e92bcb8fbb7bb10a52d6e0c61ff00c0599a5889fab504bd34320f9d7fa0310f",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv": "015376f98d52c985991ab08a7fce9345b6bc524fee5550bce197e0255ac10f3e",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv": "2e0c22045db63a02c052cbb67264ff448ed0d1c61d472af305af75bf05e13efe"
+  },
+  "peak_RSS_KiB": 8704,
+  "exact_seconds": 5.91,
+  "connected_seconds": 14.59,
+  "scope": "Retained fullframe342phase/ECC/ownerfault/fullrelease/warmCPL gate plus minimum realcmdproc+commonborrower+unchangedassociation parent context; no SU arithmetic/fulltoken claim"
+}

@@ -1,0 +1,88 @@
+{
+ "ss": {
+  "endpoints": 601,
+  "groups": [
+   {
+    "cls": "g_col[*].u_r2/addr_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -76.7
+   },
+   {
+    "cls": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 600,
+    "worst_ps": -23.5
+   }
+  ],
+  "paths": [
+   {
+    "start": "addr1[*]$_DFF_P_/QN",
+    "end": "g_col[*].u_r2/addr_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -76.7,
+    "example": "addr1[4]$_DFF_P_/QN -> g_col[0].u_r2/addr_q[4]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].u_rom/rd_out[*]",
+    "end": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 600,
+    "worst_ps": -23.5,
+    "example": "g_col[0].g_bank[2].u_rom/rd_out[182] -> g_col[0].g_bank[2].cap4[182]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 11,
+  "groups": [
+   {
+    "cls": "od2[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -4.4
+   },
+   {
+    "cls": "g_mul[*].u_mul.s2_prod[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -4.2
+   },
+   {
+    "cls": "g_alvl[*].g_node[*].cq[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.4
+   },
+   {
+    "cls": "g_col[*].g_pair.m5n[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -1.6
+   }
+  ],
+  "paths": [
+   {
+    "start": "od1[*]$_DFF_P_/QN",
+    "end": "od2[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -4.4,
+    "example": "od1[107]$_DFF_P_/QN -> od2[107]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/QN",
+    "end": "g_mul[*].u_mul.s2_prod[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -4.2,
+    "example": "g_mul[8].u_mul.u_c2.g_r.r[149]$_DFF_PN0_/QN -> g_mul[8].u_mul.s2_prod[21]$_DFF_P_/D"
+   },
+   {
+    "start": "g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/QN",
+    "end": "g_alvl[*].g_node[*].cq[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.4,
+    "example": "g_alvl[4].g_node[0].g_split.x1_q[8]$_DFF_P_/QN -> g_alvl[4].g_node[0].cq[8]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN",
+    "end": "g_col[*].g_pair.m5n[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -1.6,
+    "example": "g_col[2].g_bank[2].cap4[198]$_DFF_P_/QN -> g_col[2].g_pair.m5n[198]$_DFF_P_/D"
+   }
+  ]
+ }
+}

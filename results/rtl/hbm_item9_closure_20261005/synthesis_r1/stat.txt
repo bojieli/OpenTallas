@@ -1,0 +1,281 @@
+
+15. Printing statistics.
+
+=== noc_tw_coll_ctx_owner64 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   182296        - wires
+   182296        - wire bits
+    37631        - public wires
+    37631        - public wire bits
+    13411        - ports
+    13411        - port bits
+   155829 2.25E+04 cells
+      712   62.286   AND2x2_ASAP7_75t_R
+      516    45.14   AND3x1_ASAP7_75t_R
+       76    7.757   AND4x1_ASAP7_75t_R
+       11    1.283   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+    22956 2.01E+03   AO21x1_ASAP7_75t_R
+     3178  463.352   AO221x1_ASAP7_75t_R
+    17266 3.02E+03   AO222x2_ASAP7_75t_R
+    12251 1.61E+03   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+        7    0.816   AO32x1_ASAP7_75t_R
+        8      1.4   AOI211x1_ASAP7_75t_R
+      202   23.561   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+       15    2.187   AOI22x1_ASAP7_75t_R
+     4231  1.6E+03   DFFASRHQNx1_ASAP7_75t_R
+    31319  9132.62   DFFHQNx1_ASAP7_75t_R
+    30816 1.35E+03   INVx1_ASAP7_75t_R
+        6    0.787   MAJx2_ASAP7_75t_R
+      121   10.585   NAND2x1_ASAP7_75t_R
+    12864 1.13E+03   NOR2x1_ASAP7_75t_R
+        6    0.962   NOR3x1_ASAP7_75t_R
+       27    3.149   OA211x2_ASAP7_75t_R
+     7235  738.404   OA21x2_ASAP7_75t_R
+       28    4.899   OA222x2_ASAP7_75t_R
+        4    0.583   OA22x2_ASAP7_75t_R
+     4243  494.904   OAI21x1_ASAP7_75t_R
+       31     4.52   OAI22x1_ASAP7_75t_R
+      128   11.197   OR2x2_ASAP7_75t_R
+     3008   263.14   OR3x1_ASAP7_75t_R
+     3904  398.442   OR4x1_ASAP7_75t_R
+      565   65.902   OR5x1_ASAP7_75t_R
+       63   10.104   XNOR2x2_ASAP7_75t_R
+       27     4.33   XOR2x2_ASAP7_75t_R
+     1216        - submodules
+       16        -   $paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\ot_gpu_kreg_oh
+       16        -   $paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\ot_gpu_kreg_oh
+      576        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'0
+       16        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'1
+       16        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000010\RV=2'00
+       16        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000011\RV=3'000
+       48        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000001000\RV=8'00000001
+      512        -   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000010000\RV=u'0
+
+   Chip area for module '\noc_tw_coll_ctx_owner64': 22467.196800
+     of which used for sequential elements: 10736.507880 (47.79%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000010\RV=2'00 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        8        - wires
+        8        - wire bits
+        6        - public wires
+        6        - public wire bits
+        6        - ports
+        6        - port bits
+        4    0.846 cells
+        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+        2    0.087   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000010\RV=2'00': 0.845640
+     of which used for sequential elements: 0.758160 (89.66%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000011\RV=3'000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       11        - wires
+       11        - wire bits
+        8        - public wires
+        8        - public wire bits
+        8        - ports
+        8        - port bits
+        6    1.268 cells
+        3    1.137   DFFASRHQNx1_ASAP7_75t_R
+        3    0.131   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000011\RV=3'000': 1.268460
+     of which used for sequential elements: 1.137240 (89.66%)
+
+=== $paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\ot_gpu_kreg_oh ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       50        - wires
+       50        - wire bits
+       34        - public wires
+       34        - public wire bits
+       34        - ports
+       34        - port bits
+       32    6.765 cells
+       16    6.065   DFFASRHQNx1_ASAP7_75t_R
+       16      0.7   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\ot_gpu_kreg_oh': 6.765120
+     of which used for sequential elements: 6.065280 (89.66%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'1 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        5        - wires
+        5        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.423 cells
+        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'1': 0.422820
+     of which used for sequential elements: 0.379080 (89.66%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000001000\RV=8'00000001 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       26        - wires
+       26        - wire bits
+       18        - public wires
+       18        - public wire bits
+       18        - ports
+       18        - port bits
+       16    3.383 cells
+        8    3.033   DFFASRHQNx1_ASAP7_75t_R
+        8     0.35   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000001000\RV=8'00000001': 3.382560
+     of which used for sequential elements: 3.032640 (89.66%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'0 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        5        - wires
+        5        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.423 cells
+        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'0': 0.422820
+     of which used for sequential elements: 0.379080 (89.66%)
+
+=== $paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\ot_gpu_kreg_oh ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1538        - wires
+     1538        - wire bits
+     1026        - public wires
+     1026        - public wire bits
+     1026        - ports
+     1026        - port bits
+     1024  216.484 cells
+      512  194.089   DFFASRHQNx1_ASAP7_75t_R
+      512   22.395   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\ot_gpu_kreg_oh': 216.483840
+     of which used for sequential elements: 194.088960 (89.66%)
+
+=== $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000010000\RV=u'0 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       50        - wires
+       50        - wire bits
+       34        - public wires
+       34        - public wire bits
+       34        - ports
+       34        - port bits
+       32    6.765 cells
+       16    6.065   DFFASRHQNx1_ASAP7_75t_R
+       16      0.7   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000010000\RV=u'0': 6.765120
+     of which used for sequential elements: 6.065280 (89.66%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   191221 2.99E+04 noc_tw_coll_ctx_owner64
+     1024  216.484 $paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\ot_gpu_kreg_oh
+       32    6.765 $paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\ot_gpu_kreg_oh
+        2    0.423 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'0
+        2    0.423 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'1
+        4    0.846 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000010\RV=2'00
+        6    1.268 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000011\RV=3'000
+       16    3.383 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000001000\RV=8'00000001
+       32    6.765 $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000010000\RV=u'0
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   237816        - wires
+   237816        - wire bits
+    75455        - public wires
+    75455        - public wire bits
+    51235        - ports
+    51235        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+   191221 2.99E+04 cells
+      712   62.286   AND2x2_ASAP7_75t_R
+      516    45.14   AND3x1_ASAP7_75t_R
+       76    7.757   AND4x1_ASAP7_75t_R
+       11    1.283   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+    22956 2.01E+03   AO21x1_ASAP7_75t_R
+     3178  463.352   AO221x1_ASAP7_75t_R
+    17266 3.02E+03   AO222x2_ASAP7_75t_R
+    12251 1.61E+03   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+        7    0.816   AO32x1_ASAP7_75t_R
+        8      1.4   AOI211x1_ASAP7_75t_R
+      202   23.561   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+       15    2.187   AOI22x1_ASAP7_75t_R
+    21927 8.31E+03   DFFASRHQNx1_ASAP7_75t_R
+    31319  9132.62   DFFHQNx1_ASAP7_75t_R
+    48512 2.12E+03   INVx1_ASAP7_75t_R
+        6    0.787   MAJx2_ASAP7_75t_R
+      121   10.585   NAND2x1_ASAP7_75t_R
+    12864 1.13E+03   NOR2x1_ASAP7_75t_R
+        6    0.962   NOR3x1_ASAP7_75t_R
+       27    3.149   OA211x2_ASAP7_75t_R
+     7235  738.404   OA21x2_ASAP7_75t_R
+       28    4.899   OA222x2_ASAP7_75t_R
+        4    0.583   OA22x2_ASAP7_75t_R
+     4243  494.904   OAI21x1_ASAP7_75t_R
+       31     4.52   OAI22x1_ASAP7_75t_R
+      128   11.197   OR2x2_ASAP7_75t_R
+     3008   263.14   OR3x1_ASAP7_75t_R
+     3904  398.442   OR4x1_ASAP7_75t_R
+      565   65.902   OR5x1_ASAP7_75t_R
+       63   10.104   XNOR2x2_ASAP7_75t_R
+       27     4.33   XOR2x2_ASAP7_75t_R
+     1216 7.48E+03 submodules
+       16 3.46E+03   $paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\ot_gpu_kreg_oh
+       16  108.242   $paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\ot_gpu_kreg_oh
+      576  243.544   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'0
+       16    6.765   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000001\RV=1'1
+       16    13.53   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000010\RV=2'00
+       16   20.295   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000000011\RV=3'000
+       48  162.363   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000001000\RV=8'00000001
+      512 3.46E+03   $paramod\ot_gpu_kreg_oh\W=s32'00000000000000000000000000010000\RV=u'0
+
+   Chip area for top module '\noc_tw_coll_ctx_owner64': 29949.419520
+     of which used for sequential elements: 17444.707560 (58.25%)
+

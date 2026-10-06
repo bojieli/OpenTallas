@@ -1,0 +1,27 @@
+{
+ "rc": 1,
+ "time_s": 17.8,
+ "peak_GB": 1.26,
+ "counts": {
+  "Error-ERR": {
+   "top": 50
+  },
+  "Warning-PINMISSING": {
+   "top": 28237
+  }
+ },
+ "examples": {
+  "Warning-PINMISSING": [
+   "Instance has missing pin: 'busy'",
+   "Instance has missing pin: 'fault'",
+   "Instance has missing pin: 'busy'",
+   "Instance has missing pin: 'fault'"
+  ],
+  "Error-ERR": [
+   "Duplicate pin connection: 'pll'",
+   "Duplicate pin connection: 'pll'",
+   "Duplicate pin connection: 'pll'",
+   "Duplicate pin connection: 'pll'"
+  ]
+ }
+}

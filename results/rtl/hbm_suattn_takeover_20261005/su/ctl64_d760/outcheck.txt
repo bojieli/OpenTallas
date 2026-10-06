@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hbm-su-c12/outcheck.py", line 13, in <module>
+    sdc = next(base.glob("6_final.sdc"))
+StopIteration

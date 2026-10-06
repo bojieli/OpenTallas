@@ -1,0 +1,5 @@
+QUARTER_STIMULUS ready_phase=1 hardware_clock_unchanged=1
+[395000] %Fatal: ot_hdc_v41x_idx_lat.sv:600: Assertion failed in tb_dsrom_reindex_native_quarter.dut.enabled.u_score: idx array: slice 0 slot 1 index not consecutive
+%Error: /srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:600: Verilog $stop
+Aborting...
+QUARTER_DIAG accepted=0 received=0 checked=0 refused=0 invalid=0 stalled=0

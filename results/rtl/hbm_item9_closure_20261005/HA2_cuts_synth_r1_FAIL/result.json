@@ -1,0 +1,52 @@
+{
+  "owner": "Codex/Dirac item9",
+  "source_commit": "ceeb5e5ce90f15c8cf5766a2af6878da021d9723",
+  "sources_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv": "755267df5522c9bf08a612e4d504fe6eb1dbea9d33e4954b8d2a0b6dbafe172b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv": "e4053cb30b5651236ce2932329850a625e5500924087d86e30381abc77d4f5ff",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter_item9_cuts.sv": "7f3285cd01c6b730f02b78d71e164d6d7c968b945943fe1677379a4d10f256e1"
+  },
+  "shape": {
+    "CUTS": 1,
+    "NC": 8,
+    "NOG": 8,
+    "PFMAX": 384,
+    "LANES": 16,
+    "BF16": 1,
+    "INJ": 2,
+    "NPT": 8,
+    "LAT": 7,
+    "SLOTREG": 1
+  },
+  "constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "clock_roots": [
+      "clk"
+    ],
+    "false_paths": false,
+    "external_IO_budget_is_not_measured_parent_delay": true
+  },
+  "threads": 16,
+  "admission_guard_GiB": 64,
+  "admission_guard_unchanged": true,
+  "synthesis_only": true,
+  "actual_context_route_qualified": false,
+  "adopted": false,
+  "exit": 2,
+  "artifacts": {
+    "work/orfs/config.mk": {
+      "bytes": 1150,
+      "sha256": "b414085002d45850db62031c905f2bfc7a7605a7ba02d1f51b67b57e83f1755c"
+    },
+    "work/orfs/constraint.sdc": {
+      "bytes": 428,
+      "sha256": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86"
+    }
+  }
+}

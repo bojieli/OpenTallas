@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.router.successor.before_rtl.v1",
+  "canonical_shape": {
+    "N": 384,
+    "P": 16,
+    "K": 6,
+    "IW": 9,
+    "input_bits": 512,
+    "output_bits": 54
+  },
+  "unified_model": {
+    "path": "tools/uarch_model.py",
+    "sha256": "9d35ecc9b7e018d497b94285ebaf6047b5bec439b34ae726dec63229bfe031cf",
+    "DFF_um2": 0.2916
+  },
+  "measured_baseline_record": "router_pipeline_r1/flowrepair_r2_GRT_actual/record.json",
+  "baseline_mapped_FF": 45270,
+  "baseline_cell_um2": 35028.6,
+  "mechanism": "preserved lane hierarchy/local controls; each42bit merge comparison registers three14bit GT/EQ chunks and real candidates before selection",
+  "FF_inventory": {
+    "previous_source_upper": 49370,
+    "first_merge_extra_per_node": 528,
+    "other_merge_extra_per_node": 360,
+    "merge_nodes": 31,
+    "extra_merge_FF": 49848,
+    "extra_output_valid_FF": 20
+  },
+  "source_FF_upper": 99238,
+  "FF_delta_vs_previous_source": 49868,
+  "FF_delta_vs_measured_mapping": 53968,
+  "control_inventory_required": {
+    "x_first": 32,
+    "c_first": 32,
+    "x_v": 32,
+    "c_v": 32,
+    "x_last": 32,
+    "c_last": 32,
+    "finished": 32,
+    "ge_q": 192,
+    "valid_q": 192
+  },
+  "control_retention": "keep_hierarchy only intent; actual mapped32 instances/registers and loaded delivery must be verified, no freeclock/reset/protection credit",
+  "clock_sink_inventory": {
+    "total_source_FF_upper": 99238,
+    "new_clock_pin_cap_fF_SS_upper": 24104.159583999997,
+    "basis": "existing unifiedmodel DFFHQNx1 CLK0.446638fF; upper includes control FF, actual SSFF cellmix/caps measured at mapgate",
+    "root_input_cap": "not inferred from sinksum",
+    "new_CTS_reset_state_reserved": true
+  },
+  "internal_pipeline_boundaries": {
+    "first_merge_cut_bits_per_node": 528,
+    "other_merge_cut_bits_per_node": 360,
+    "tree_nodes_per_level": [
+      16,
+      8,
+      4,
+      2,
+      1
+    ],
+    "added_local_track_upper_per_level": [
+      25728,
+      12864,
+      6432,
+      3216,
+      1608
+    ],
+    "capacity_proven": false,
+    "capacity_binding": "actual Turing leaf frame/corridor allocation and native congestion must verify these distributed local bundles"
+  },
+  "bytes_per_input_cycle": 64,
+  "bits_per_input_cycle": 514,
+  "output_bits_per_vector": 55,
+  "vector_beats": 24,
+  "vector_II_cycles": 24,
+  "MACs_per_cycle": 0,
+  "memory_ports": {
+    "SRAM": 0,
+    "HBM": 0,
+    "ROM": 0
+  },
+  "boundary_tracks": {
+    "input": 514,
+    "output": 55,
+    "capacity": "Turing actual receiver/frame allocation remains required"
+  },
+  "baseline_tail_cycles": 23,
+  "previous_tail_cycles": 28,
+  "successor_tail_cycles": 48,
+  "extra_cycles_vs_previous": 20,
+  "extra_cycles_vs_baseline": 25,
+  "added_ns_per_layer_vs_previous": 16.666666666666668,
+  "nonoverlapped_token_delta_ns_vs_previous": 666.6666666666667,
+  "preserved_publication": "previous lane final commit24 remains until merge first candidate capture26; first next-vector commit26 happens after capture; no earlyvalid clear",
+  "period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "input_min_max_ps": 166.6,
+  "output_min_max_ps": 166.6,
+  "output_load_fF": 3.898,
+  "current_core_um2": 83666.1,
+  "cell_area_allowance_um2": 55842.235680000005,
+  "CTS_reset_predicate_repair_allowance_fraction": 0.1,
+  "old_slot_fit_at_55_to_60_percent": false,
+  "finite_candidate_frame": {
+    "die_side_um": 315.956,
+    "core_lower_um": [
+      2.052,
+      2.16
+    ],
+    "core_upper_um": [
+      313.909,
+      313.855
+    ],
+    "priced_target_utilization": 0.575
+  },
+  "parent_allocation": "OPEN: no existing leaf slot fit or parent closure inferred; Turing must consume priced finite frame",
+  "functional_gate": "ONE changed full384/K6 independent FP32 golden including II24 back-to-back, bank-phase and heldreset negatives",
+  "map_gate": "verify real local control DFFs after mapping before placement; detailed loadedclock/IO/receiver checks remain mandatory",
+  "adopted": false,
+  "physical_qualified": false
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "preserved_source": "955144253",
+    "builder": "build",
+    "variant": null,
+    "physical_geometry_ports_buses_paths_identical": true,
+    "instances": 348,
+    "buses": 595,
+    "shape_sha256": "c62452e4cdcee5d438ec030ce5703e4f3a4454b61edb87ee1d4a97c414134873"
+  },
+  {
+    "preserved_source": "06a6e0b62",
+    "builder": "build_qwen",
+    "variant": {
+      "x_trunk": 1.0
+    },
+    "physical_geometry_ports_buses_paths_identical": true,
+    "instances": 1737,
+    "buses": 6170,
+    "shape_sha256": "185ff0c15ef18b49d83f05699ad37d4b764bdf267bccd9171204b2f2e9fd4aa9"
+  },
+  {
+    "preserved_source": "06a6e0b62",
+    "builder": "build_qwen",
+    "variant": {},
+    "physical_geometry_ports_buses_paths_identical": true,
+    "instances": 1737,
+    "buses": 6264,
+    "shape_sha256": "a258ab493ae5661234bda0f085b2f2781cc7bdfbb332e2711ffa8c1a973103f1"
+  }
+]

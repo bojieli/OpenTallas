@@ -1,0 +1,333 @@
+{
+  "schema": "opentallas.dsrom.v9.cfg_provider.v1",
+  "inputs": {
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.json": "5a0d43ff6fadb327f5f91cd3bec44ea1a6e3b0312e0835ea883656c7495266f9",
+    "results/uarch/dsrom_v9_parent_context_20261005/model.json": "c43e12f555852a2a7d56767fa9c2affcb170129f6556747457675a9122171b46",
+    "results/rtl/dsrom_v9_cfg_context_20261005/capture/measured_terms.json": "3df967fe2316c9a4856b833d65122ac2706099500d890e8a9a65b397bc393af7",
+    "results/rtl/dsrom_v9_cfg_context_20261005/input_load/measured_terms.json": "814f0e65b0254b23148feaa1b95430cb5301022edcc3514ef1a951c216520723"
+  },
+  "scope": "one PHW6/NSEG8/CW25 native pair configuration provider; no full PHW10 field claim",
+  "compute": {
+    "added_MACs_per_cycle": 0,
+    "added_rounding_points": 0
+  },
+  "memory": {
+    "words": 1600,
+    "payload_bits": 48,
+    "physical_words": 4096,
+    "physical_bits": 72,
+    "payload_bytes_per_read": 6,
+    "macro_bytes_per_read": 9,
+    "read_ports": 1,
+    "reads_per_phase": 25,
+    "read_cycles_per_phase": 25,
+    "ROM_ECC": false,
+    "spare_bits": 24
+  },
+  "boundary": {
+    "logical_address_bits": 11,
+    "physical_address_bits": 12,
+    "payload_bits": 48,
+    "read_enable_bits": 1,
+    "selected_macro_replicas": 1
+  },
+  "mux_fanout": {
+    "first_read": "actual ld_start phase*25",
+    "subsequent_reads": "actual ld_a+1",
+    "enable": "ld_start || (ld_run && ld_k<CW-1)",
+    "banks": 1,
+    "payload_demux": 0,
+    "added_sequential_bits": 0
+  },
+  "geometry": {
+    "parent_bbox_um": [
+      2.16,
+      2.16,
+      525.096,
+      237.6
+    ],
+    "macro_bbox_um": [
+      4.32,
+      4.32,
+      42.336,
+      67.22999999999999
+    ],
+    "macro_body_um2": 2391.5865599999997,
+    "halo_um": 2.16,
+    "macro_reserved_um2": 2846.2492799999995,
+    "remaining_parent_um2": 120273.80256,
+    "parent_cell_upper_um2": 21413.976,
+    "added_logic_upper_um2": 1000.0,
+    "combined_cell_placement_upper_um2": 44827.952,
+    "analytical_fit": true,
+    "routed_fit": false
+  },
+  "routing": {
+    "local_provider_signal_bits": 61,
+    "clock_bits": 1,
+    "local_tracks_upper": 62,
+    "channel_capacity_tracks": 4291,
+    "capacity_basis": "existing native parent M4/M6 model, half clock/PG reserve",
+    "pin_escape_and_placement_unqualified": true
+  },
+  "clocks": {
+    "root": "same actual free clk as loader/D3",
+    "macro": "free clk; no new divider/gate",
+    "capture": "original loader c_d at next free edge",
+    "period_ps": 833.3333333333334,
+    "corners": {
+      "ss": {
+        "macro_clk_to_q_ps": 667.0755828482402,
+        "macro_setup_ps": 39.800541169166664,
+        "macro_hold_ps": 30.074020584583334,
+        "macro_min_period_ps": 634.9643841257918,
+        "macro_clock_cap_fF": 8.68376,
+        "address_pin_cap_fF": 0.578766,
+        "twelve_address_pin_cap_fF": 6.9451920000000005,
+        "uncertainty_ps": 60,
+        "remaining_after_intrinsic_clkQ_and_uncertainty_ps": 106.2577504850932,
+        "actual_slew_load_wire_capture_setup_unpriced": true
+      },
+      "ff": {
+        "macro_clk_to_q_ps": 415.35759506623356,
+        "macro_setup_ps": 24.694771075555558,
+        "macro_hold_ps": 19.67222053777778,
+        "macro_min_period_ps": 392.5548849232056,
+        "macro_clock_cap_fF": 10.3732,
+        "address_pin_cap_fF": 0.683716,
+        "twelve_address_pin_cap_fF": 8.204592,
+        "uncertainty_ps": 25,
+        "remaining_after_intrinsic_clkQ_and_uncertainty_ps": 392.9757382670998,
+        "actual_slew_load_wire_capture_setup_unpriced": true
+      }
+    },
+    "local_capture_cells_load_and_setup_priced": true,
+    "routed_wire_clock_slew_and_insertion_priced": false,
+    "SS_remaining_before_wire_and_skew_ps": 23.96
+  },
+  "latency": {
+    "added_loader_cycles": 0,
+    "added_engine_stages": 0,
+    "source_configuration_service_cycles": 27,
+    "mechanism": "macro reads first address on ld_start edge; one-word lookahead thereafter; original c_d/c_v/c_a sequence unchanged",
+    "token_rate_credit": 0,
+    "exact_gate_required": true
+  },
+  "build_ready_for_minimum_component": true,
+  "full_field_build_ready": false,
+  "physical_qualified": false,
+  "missing_input_clocks": true,
+  "mapped_capture": {
+    "schema": "opentallas.dsrom.cfg.loaded_capture.v1",
+    "source_model": "results/uarch/dsrom_v9_cfg_context_20261005/model.json",
+    "source_model_sha256": "e8e71ff7fdbf43dc4773326af1319fdb3ff2cb6577c74c6c805a08665f71066d",
+    "derived_netlist_sha256": "df9cebac072636be86e300794e506c21ced768e3d083345dff778cc07ab2577a",
+    "clock_period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "clock_insertion": "ideal retained pre-CTS deck, not measured insertion",
+    "clock_pin_slew_ps": 0,
+    "clock_pin_slew_measured": false,
+    "signal_wire_delays": "zero without extracted parasitics; unqualified",
+    "external_arrivals": "existing conditional 360/727ps cut retained; queried paths start at internal actual macro",
+    "reported_capture_paths": {
+      "SS": {
+        "min": {
+          "reported_paths": 48,
+          "unique_endpoints": 48,
+          "slack_ps": 662.53,
+          "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/SS_cfg_capture_min.rpt",
+          "sha256": "3dd3d3757ea6f52d97108dc7dd933e6d58af9da8814b4ec677c89a34f2a77ce5"
+        },
+        "max": {
+          "reported_paths": 48,
+          "unique_endpoints": 48,
+          "slack_ps": 23.96,
+          "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/SS_cfg_capture_max.rpt",
+          "sha256": "97ddfdb2c916dc27aac76e91da7067987db70ea6389915b71dfdd79650706b8a"
+        }
+      },
+      "FF": {
+        "min": {
+          "reported_paths": 48,
+          "unique_endpoints": 48,
+          "slack_ps": 398.0,
+          "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/FF_cfg_capture_min.rpt",
+          "sha256": "1ff734052faebdd68504f09e90934f25f117f4ec8d10a8a58537bf88cce65c62"
+        },
+        "max": {
+          "reported_paths": 48,
+          "unique_endpoints": 48,
+          "slack_ps": 316.97,
+          "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/FF_cfg_capture_max.rpt",
+          "sha256": "fae6916a67d56150fed855438516b8c94f6381a1e083df0e199f891e872db63c"
+        }
+      }
+    },
+    "SS_worst": {
+      "startpoint": "g_hard_cfg.u_cfg",
+      "capture": "u_ld.c_d[3]$_DFFE_PP_",
+      "macro_clkQ_ps": 665.94,
+      "capture_logic_ps": 54.6,
+      "data_arrival_ps": 720.54,
+      "capture_setup_ps": 28.83,
+      "remaining_before_wire_and_relative_skew_ps": 23.96
+    },
+    "FF_worst_hold": {
+      "capture": "u_ld.c_d[0]$_DFFE_PP_",
+      "macro_clkQ_ps": 414.25,
+      "capture_logic_ps": 17.41,
+      "data_arrival_ps": 431.66,
+      "capture_hold_ps": 8.67,
+      "remaining_before_relative_skew_ps": 398.0
+    },
+    "new_pipeline_stages": 0,
+    "enclosing_context_SSFF_closed": false,
+    "missing_input_clocks": true,
+    "route_or_synthesis_repeated": false,
+    "remote_root": "ot-epyc2:/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005/capture_probe"
+  },
+  "mapped_input_receiver_loads": {
+    "schema": "opentallas.dsrom.cfg.input_load.v1",
+    "derived_netlist_sha256": "df9cebac072636be86e300794e506c21ced768e3d083345dff778cc07ab2577a",
+    "scope": "finite PHW6 HARD_CFG1/PQ0 mapped provider, direct input receiver pins only",
+    "corners": {
+      "SS": {
+        "ports": {
+          "cfg_go": {
+            "receivers": 1,
+            "cap_fF": 0.5065
+          },
+          "cfg_np[0]": {
+            "receivers": 1,
+            "cap_fF": 0.511133
+          },
+          "cfg_np[1]": {
+            "receivers": 1,
+            "cap_fF": 0.511133
+          },
+          "cfg_np[2]": {
+            "receivers": 1,
+            "cap_fF": 0.511133
+          },
+          "cfg_ph[0]": {
+            "receivers": 7,
+            "cap_fF": 3.644506
+          },
+          "cfg_ph[1]": {
+            "receivers": 8,
+            "cap_fF": 4.205284
+          },
+          "cfg_ph[2]": {
+            "receivers": 2,
+            "cap_fF": 1.055679
+          },
+          "cfg_ph[3]": {
+            "receivers": 5,
+            "cap_fF": 2.927046
+          },
+          "cfg_ph[4]": {
+            "receivers": 1,
+            "cap_fF": 0.5065
+          },
+          "cfg_ph[5]": {
+            "receivers": 5,
+            "cap_fF": 2.663513
+          },
+          "clk": {
+            "receivers": 76,
+            "cap_fF": 42.07564500000006
+          },
+          "go": {
+            "receivers": 1,
+            "cap_fF": 0.489888
+          },
+          "rst_n": {
+            "receivers": 16,
+            "cap_fF": 10.052452000000002
+          }
+        },
+        "clock_receiver_families": {
+          "DFFASRHQNx1_ASAP7_75t_R": 8,
+          "DFFHQNx1_ASAP7_75t_R": 67,
+          "ot_rom_4096x72_m8": 1
+        },
+        "macro_clock_cap_fF": 8.6838,
+        "loader_clock_cap_fF": 33.39184500000006,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/input_load/input_load_probe/SS_input_receivers.tsv",
+        "sha256": "5b9d0773e50897c9f53d7a708298b862a01c2b261d8e12b28d74ec9cb2a04103"
+      },
+      "FF": {
+        "ports": {
+          "cfg_go": {
+            "receivers": 1,
+            "cap_fF": 0.577042
+          },
+          "cfg_np[0]": {
+            "receivers": 1,
+            "cap_fF": 0.612447
+          },
+          "cfg_np[1]": {
+            "receivers": 1,
+            "cap_fF": 0.612447
+          },
+          "cfg_np[2]": {
+            "receivers": 1,
+            "cap_fF": 0.612447
+          },
+          "cfg_ph[0]": {
+            "receivers": 7,
+            "cap_fF": 4.306287
+          },
+          "cfg_ph[1]": {
+            "receivers": 8,
+            "cap_fF": 5.056562
+          },
+          "cfg_ph[2]": {
+            "receivers": 2,
+            "cap_fF": 1.230737
+          },
+          "cfg_ph[3]": {
+            "receivers": 5,
+            "cap_fF": 3.416648
+          },
+          "cfg_ph[4]": {
+            "receivers": 1,
+            "cap_fF": 0.577042
+          },
+          "cfg_ph[5]": {
+            "receivers": 5,
+            "cap_fF": 3.155494
+          },
+          "clk": {
+            "receivers": 76,
+            "cap_fF": 49.067498999999955
+          },
+          "go": {
+            "receivers": 1,
+            "cap_fF": 0.576139
+          },
+          "rst_n": {
+            "receivers": 16,
+            "cap_fF": 11.771617999999998
+          }
+        },
+        "clock_receiver_families": {
+          "DFFASRHQNx1_ASAP7_75t_R": 8,
+          "DFFHQNx1_ASAP7_75t_R": 67,
+          "ot_rom_4096x72_m8": 1
+        },
+        "macro_clock_cap_fF": 10.3732,
+        "loader_clock_cap_fF": 38.69429899999996,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/input_load/input_load_probe/FF_input_receivers.tsv",
+        "sha256": "9a632b56fbb785b1b7046775c6fc28baaa9cc1e39507acc87c6f9c2f69f5f97c"
+      }
+    },
+    "unconnected_inputs": "external_cfg_q and e_sh_free/e_bank_free have no receivers in HARD_CFG1/PQ0; intentional inactive source branches, not clock/load waiver",
+    "enclosing_parent_increment": "not computed; these totals include original 75 loader DFFs. Do not add all76 receivers to existing native loader clock load. Joined mapping must recompute sharing and CTS load.",
+    "clock_wire_buffer_load_priced": false,
+    "clock_insertion_measured": false,
+    "full_field_missing_input_clocks": true,
+    "remote_root": "ot-epyc2:/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005/input_load_probe"
+  }
+}
