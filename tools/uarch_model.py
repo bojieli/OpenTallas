@@ -11117,3 +11117,9 @@ def hbm_attn_registered_parent_model():
         minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
         engine_source_anchor_qualified=False,
         route_ready=False, gain_credit=None)
+
+
+def dsrom_v9_cfg_context_model():
+    """Finite physical configuration-ROM provider for the native PHW6 pair."""
+    from dsrom_v9_cfg_context import model
+    return model(Path(__file__).resolve().parents[1])
