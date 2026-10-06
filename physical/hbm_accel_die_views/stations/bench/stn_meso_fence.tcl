@@ -11,6 +11,8 @@
 # cells (ABC) and a receive register that drives a block terminal ("b[158]$_DFF_P_"), so a sequential cell that
 # drives a terminal joins the group whose named cells reach its inputs through at most OT_DEPTH (4) unnamed cells.
 # Terminals: inputs that reach a group forwards within OT_DEPTH cells; outputs of the group's terminal registers.
+# ORFS sources step hooks inside a proc: the tables the helper procs read must be true globals
+global ot_pin ot_grp
 set ot_dens [expr {[info exists ::env(OT_FENCE_DENSITY)] ? $::env(OT_FENCE_DENSITY) : 0.60}]
 set ot_depth [expr {[info exists ::env(OT_DEPTH)] ? $::env(OT_DEPTH) : 4}]
 # OT_FENCE_POS: region centre as a fraction of the way from the feeding terminals' centroid to the driven ones' (the
