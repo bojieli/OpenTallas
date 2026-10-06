@@ -1,817 +1,2769 @@
 {
-  "schema": "hbm.item9.current32.finite-parent-contract.v1",
-  "source_main": "a0c8003b7",
-  "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
-  "caller_local_regions": [
-    {
-      "caller": 0,
-      "source_slot": "sm0",
-      "proposed_local_register_bbox_um": [
-        2342.848,
-        3184.816,
-        2822.848,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+ "schema": "hbm.item9.current32.finite-parent-contract.v1",
+ "source_main": "a0c8003b7",
+ "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
+ "caller_local_regions": [
+  {
+   "caller": 0,
+   "source_slot": "sm0",
+   "proposed_local_register_bbox_um": [
+    2342.848,
+    3184.816,
+    2822.848,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 1,
+   "source_slot": "sm1",
+   "proposed_local_register_bbox_um": [
+    4804.816000000001,
+    3184.816,
+    5284.816000000001,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 2,
+   "source_slot": "sm2",
+   "proposed_local_register_bbox_um": [
+    7266.784,
+    3184.816,
+    7746.784,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 3,
+   "source_slot": "sm3",
+   "proposed_local_register_bbox_um": [
+    9728.752,
+    3184.816,
+    10208.752,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 4,
+   "source_slot": "sm4",
+   "proposed_local_register_bbox_um": [
+    2342.848,
+    5776.816,
+    2822.848,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 5,
+   "source_slot": "sm5",
+   "proposed_local_register_bbox_um": [
+    4804.816000000001,
+    5776.816,
+    5284.816000000001,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 6,
+   "source_slot": "sm6",
+   "proposed_local_register_bbox_um": [
+    7266.784,
+    5776.816,
+    7746.784,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 7,
+   "source_slot": "sm7",
+   "proposed_local_register_bbox_um": [
+    9728.752,
+    5776.816,
+    10208.752,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 8,
+   "source_slot": "sm8",
+   "proposed_local_register_bbox_um": [
+    13329.176,
+    3184.816,
+    13809.176,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 9,
+   "source_slot": "sm9",
+   "proposed_local_register_bbox_um": [
+    15791.144,
+    3184.816,
+    16271.144,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 10,
+   "source_slot": "sm10",
+   "proposed_local_register_bbox_um": [
+    18253.112,
+    3184.816,
+    18733.112,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 11,
+   "source_slot": "sm11",
+   "proposed_local_register_bbox_um": [
+    20715.08,
+    3184.816,
+    21195.08,
+    3664.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 12,
+   "source_slot": "sm12",
+   "proposed_local_register_bbox_um": [
+    13329.176,
+    5776.816,
+    13809.176,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 13,
+   "source_slot": "sm13",
+   "proposed_local_register_bbox_um": [
+    15791.144,
+    5776.816,
+    16271.144,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 14,
+   "source_slot": "sm14",
+   "proposed_local_register_bbox_um": [
+    18253.112,
+    5776.816,
+    18733.112,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 15,
+   "source_slot": "sm15",
+   "proposed_local_register_bbox_um": [
+    20715.08,
+    5776.816,
+    21195.08,
+    6256.816
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 16,
+   "source_slot": "sm16",
+   "proposed_local_register_bbox_um": [
+    2342.848,
+    21211.88,
+    2822.848,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 17,
+   "source_slot": "sm17",
+   "proposed_local_register_bbox_um": [
+    4804.816000000001,
+    21211.88,
+    5284.816000000001,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 18,
+   "source_slot": "sm18",
+   "proposed_local_register_bbox_um": [
+    7266.784,
+    21211.88,
+    7746.784,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 19,
+   "source_slot": "sm19",
+   "proposed_local_register_bbox_um": [
+    9728.752,
+    21211.88,
+    10208.752,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 20,
+   "source_slot": "sm20",
+   "proposed_local_register_bbox_um": [
+    2342.848,
+    18879.08,
+    2822.848,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 21,
+   "source_slot": "sm21",
+   "proposed_local_register_bbox_um": [
+    4804.816000000001,
+    18879.08,
+    5284.816000000001,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 22,
+   "source_slot": "sm22",
+   "proposed_local_register_bbox_um": [
+    7266.784,
+    18879.08,
+    7746.784,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 23,
+   "source_slot": "sm23",
+   "proposed_local_register_bbox_um": [
+    9728.752,
+    18879.08,
+    10208.752,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 24,
+   "source_slot": "sm24",
+   "proposed_local_register_bbox_um": [
+    13329.176,
+    21211.88,
+    13809.176,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 25,
+   "source_slot": "sm25",
+   "proposed_local_register_bbox_um": [
+    15791.144,
+    21211.88,
+    16271.144,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 26,
+   "source_slot": "sm26",
+   "proposed_local_register_bbox_um": [
+    18253.112,
+    21211.88,
+    18733.112,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 27,
+   "source_slot": "sm27",
+   "proposed_local_register_bbox_um": [
+    20715.08,
+    21211.88,
+    21195.08,
+    21691.88
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 28,
+   "source_slot": "sm28",
+   "proposed_local_register_bbox_um": [
+    13329.176,
+    18879.08,
+    13809.176,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 29,
+   "source_slot": "sm29",
+   "proposed_local_register_bbox_um": [
+    15791.144,
+    18879.08,
+    16271.144,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 30,
+   "source_slot": "sm30",
+   "proposed_local_register_bbox_um": [
+    18253.112,
+    18879.08,
+    18733.112,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  },
+  {
+   "caller": 31,
+   "source_slot": "sm31",
+   "proposed_local_register_bbox_um": [
+    20715.08,
+    18879.08,
+    21195.08,
+    19359.08
+   ],
+   "mapped_FF_count": 8204,
+   "mapped_FF_area_um2": 2392.5488400000004,
+   "true_register_clock": "clk_sm",
+   "register_groups": {
+    "bst": 3,
+    "c_count": 8,
+    "c_data": 4096,
+    "c_mode": 1,
+    "vr": 4096
+   },
+   "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+  }
+ ],
+ "caller_local_FF_total": 262528,
+ "caller_vector_state_bits": 262144,
+ "actual_total_mapped_um2": 176005.75050004144,
+ "actual_total_FF": 304836,
+ "endpoint_parent_um": [
+  10861.776,
+  11735.28,
+  12676.152,
+  13139.256
+ ],
+ "endpoint_child_core_um": [
+  10866.776,
+  11740.28,
+  11446.776,
+  12740.28
+ ],
+ "endpoint_child_gross_um": [
+  10861.776,
+  11735.28,
+  11544.336,
+  12417.84
+ ],
+ "endpoint_cap_50pct_um2": 209952,
+ "endpoint_cells_conservative_after_caller_FF_floor_um2": 101789.68679899999,
+ "additional_CTS_PG_hold_reserve_um2": 40000,
+ "roots": [
+  "g_on.u_ep.clk_sm",
+  "g_on.u_mux.clk",
+  "g_on.g_sm_caller[s].clk_sm",
+  "g_on.u_rst.clk_sm",
+  "g_on.u_rst.clk_link",
+  "g_on.u_rst.clk_mem",
+  "g_on.u_rst.clk_host"
+ ],
+ "phase_ps": 0,
+ "period_ps": 833.3333333333,
+ "SS_setup_ps": 60,
+ "FF_hold_ps": 25,
+ "installed_clock_macro_terminal": false,
+ "request_bits": 131072,
+ "response_unique_bits": 4096,
+ "response_receiver_count": 32,
+ "response_loads_per_bit": {
+  "SS_leaf_pins": 33,
+  "SS_library_fF": 29.944183,
+  "FF_leaf_pins": 33,
+  "FF_library_fF": 34.942481,
+  "buffer_or_inverter_nodes": 6,
+  "wire_RC_included": false,
+  "propagated_CTS": false
+ },
+ "source_response": "u_mux.s_rsp_data4096sharedbroadcast ->32real4096bitvr receivers; not131072independentresponsewires",
+ "tracks": {
+  "shared_spine_um": 1036.8,
+  "raw_M6_M8_capacity": 29159,
+  "raw_M7_M9_capacity": 29159,
+  "single_spine_allrequest_deficit_before_PG_and_otherclaims": 101913,
+  "W_E_faces_after_PG_via_64clock_upper": 34366,
+  "N_S_faces_after_PG_via_64clock_upper": 44431,
+  "candidate_caller_split": [
+   7,
+   7,
+   9,
+   9
+  ],
+  "candidate_face_req_plus_broadcast": [
+   32768,
+   32768,
+   40960,
+   40960
+  ],
+  "remaining_before_ALL_other_claims": [
+   1598,
+   1598,
+   3471,
+   3471
+  ],
+  "actual_unreserved_capacity_qualified": false,
+  "flat_admission": false,
+  "resolution": "Dirac actual exactTREE source distribute fullrequestmux leaf+intermediate gates into32SMlocal480squareboxes and rowcorridors before sharedspine. ActualchangedSS synthesis/geometry/CTS/GRT required"
+ },
+ "wire": {
+  "max_bbox_Manhattan_um": 23596.224,
+  "geometric_430p56um_cuts": 55,
+  "installed_pipeline_edges": 0,
+  "source_combinational_path_still_requires_actual_SS_FF": true
+ },
+ "admission": "finitecellgeometryfits; single-spine fullrequest failsrawcapacity. Actual distributedmuxleaf/corridor/all-otherclaim binding required; no physicalroute/clock qualification",
+ "source_is_selected_sm_v_protocol": false,
+ "caller_SM_space": "finite childdecomposition charged againstselectedSMparent; actualmapped SMmacro must preserve these child areas and remainingmechanisms; obstruction notfunctionalmacro",
+ "outerroute_duplicate": false,
+ "source_mapped_sha256": "96fd23dbff2fd11ef322c6b7a0b13e8650242149afb599f83b2a6a112553f468",
+ "actual_caller_FF_area_um2": 76561.56288000006,
+ "baseline_endpoint_mux": {
+  "proposed_child_bbox_um": [
+   10866.776,
+   11740.28,
+   11446.776,
+   12740.28
+  ],
+  "actual_full32_cell_um2": 178333.520399,
+  "conservative_residual_cell_um2": 101771.95751899995,
+  "new_TREE_gate_upper_no_removed_credit_um2": 53657.600000000006,
+  "conservative_child_cell_um2": 155429.55751899997,
+  "body_capacity_at30percent_um2": 174000.0,
+  "includes_caller_capture_logic_in_residual_to_avoid_unmeasured_credit": true,
+  "CTS_repair_and_PG_actual_pending": true
+ },
+ "endpoint_cap_at30percent_um2": 174000,
+ "protected_HA2_deficit": {
+  "separate_vehicle_not_simultaneous_baseline_charge": true,
+  "actual_queue_storage_bits": 2267200,
+  "queue_FF_floor_um2": 661115.52,
+  "old_actual_PF384_native_cell_um2": 490159.0422,
+  "added_read_FF_floor_um2": 1791.5904,
+  "parent_body_lower_um2": 1153066.1526000001,
+  "slot_cell_capacity_at30percent_um2": 764202.1076927994,
+  "body_cell_deficit_lower_um2": 388864.04490720073,
+  "area_deficit_at30percent_lower_um2": 1296213.4830240025,
+  "required_resolution": "Actual protected queue macro mapping or explicit finite additional allocation; do not build a large flop-array parent"
+ },
+ "central_flat_mux_common_west_cut": {
+  "actual_sources_west": 16,
+  "unselected_data_wires_are_still_physical": true,
+  "request_bits": 65536,
+  "shared_response_bits": 4096,
+  "control_bits": 192,
+  "required_tracks_lower": 69824,
+  "M6_M7_each_upper_before_other_claims": 15325,
+  "M8_M9_each_upper_before_other_claims": 9972,
+  "four_layer_upper_before_other_claims": 50594,
+  "track_deficit_before_other_claims": 19230,
+  "usable_reserved_tracks": 0,
+  "required_resolution": "Distribute masked OR tree before the spine and price/install actual physical transport; no zero-wire 32-input central mux claim"
+ },
+ "root_clock": {
+  "port": "clk_sm",
+  "source_PHASE_ps": 0,
+  "period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "actual_mapped_caller_clock_sinks": 262528,
+  "physical_root_terminal": "not installed in existing outer ODB; must be installed/measured in own context then bound by Turing",
+  "source_pin_map_remote": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-register-pins-r1/actual_register_pins.jsonl"
+ },
+ "allocation_resolution": "Accept32source-local480square proposals within each selectedSMslot withpositivecost, do notcredit hardmacrofreecellspace. Baseline580x1000body fits30pct with18570.442481um2 residual CTS+repair. HA2 source requires1.296213483mm2 additionalslot (or realprotectedqueuemacromapping); donotlaunchgiantflopparent.",
+ "actual_TREE_library_loads": {
+  "mapped_sha256": "96fd23dbff2fd11ef322c6b7a0b13e8650242149afb599f83b2a6a112553f468",
+  "corners": {
+   "SS": {
+    "response_input_pin_count_min": 1,
+    "response_input_pin_count_max": 1,
+    "response_library_load_fF_min": 0.5065,
+    "response_library_load_fF_max": 0.5065,
+    "response_total_library_load_fF": 2074.624,
+    "actual_shared_branch_input_pins_min": 10,
+    "actual_shared_branch_input_pins_max": 10,
+    "actual_shared_branch_library_load_fF_min": 9.248990000000001,
+    "actual_shared_branch_library_load_fF_max": 9.248990000000001,
+    "actual_response_buffer_tree_nodes_min": 6,
+    "actual_response_buffer_tree_nodes_max": 6,
+    "actual_response_leaf_pin_load_fF_min": 29.944183000000002,
+    "actual_response_leaf_pin_load_fF_max": 29.944183000000002,
+    "actual_response_leaf_pin_count_min": 33,
+    "actual_response_leaf_pin_count_max": 33,
+    "clk_sm_total_connected_input_pin_load_fF": 130927.78611142914,
+    "clk_sm_connected_input_pins": 293768,
+    "response_per_bit_remote": "response_SS.json"
+   },
+   "FF": {
+    "response_input_pin_count_min": 1,
+    "response_input_pin_count_max": 1,
+    "response_library_load_fF_min": 0.577042,
+    "response_library_load_fF_max": 0.577042,
+    "response_total_library_load_fF": 2363.564032,
+    "actual_shared_branch_input_pins_min": 10,
+    "actual_shared_branch_input_pins_max": 10,
+    "actual_shared_branch_library_load_fF_min": 10.789799999999998,
+    "actual_shared_branch_library_load_fF_max": 10.789799999999998,
+    "actual_response_buffer_tree_nodes_min": 6,
+    "actual_response_buffer_tree_nodes_max": 6,
+    "actual_response_leaf_pin_load_fF_min": 34.942480999999994,
+    "actual_response_leaf_pin_load_fF_max": 34.942480999999994,
+    "actual_response_leaf_pin_count_min": 33,
+    "actual_response_leaf_pin_count_max": 33,
+    "clk_sm_total_connected_input_pin_load_fF": 152932.37413363368,
+    "clk_sm_connected_input_pins": 293768,
+    "response_per_bit_remote": "response_FF.json"
+   }
+  },
+  "units": "fF",
+  "actual_library_pin_loads": true,
+  "wire_RC_included": false,
+  "propagated_clocks": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "artifacts": {
+   "library_input_caps_ff.json": {
+    "bytes": 32591,
+    "sha256": "39255cf31ea50b384a9f5c867021e2a924053e6c38d11f3c46cd8a67479c896e"
+   },
+   "mapped.json": {
+    "bytes": 982446744,
+    "sha256": "e7dc1b933c5fe4456397ca8c880a603aeeca96ae4c0f5fd306f352abce2ca461"
+   },
+   "extract.py": {
+    "bytes": 910,
+    "sha256": "29d693d2f79e0f3d4e0684f0255937b1a5bd0f1be8b9779ad2ea595eddcea37f"
+   },
+   "pins.ys": {
+    "bytes": 253,
+    "sha256": "f1dda14ffbe630f4f46f4c76ce9f41d765a729949cca2dd6bdddca0cd598e356"
+   }
+  }
+ },
+ "actual_TREE_mapped_area_um2": 176005.75,
+ "actual_TREE_mapped_FF": 304836,
+ "distributed_TREE_allocation": {
+  "source": "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv TREE=1",
+  "actual_order": "heap nodes1..31, leaves32..63 caller0..31; unchanged bit order",
+  "masked_leaf_upper_um2_each": 851.7079365079364,
+  "intermediates": [
+   {
+    "heap_node": 31,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[31]",
+    "covered_callers": [
+     30,
+     31
+    ],
+    "host_SM": 30,
+    "allocation_bbox_um": [
+     18253.112,
+     18879.08,
+     18733.112,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 30,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[30]",
+    "covered_callers": [
+     28,
+     29
+    ],
+    "host_SM": 28,
+    "allocation_bbox_um": [
+     13329.176,
+     18879.08,
+     13809.176,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 29,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[29]",
+    "covered_callers": [
+     26,
+     27
+    ],
+    "host_SM": 26,
+    "allocation_bbox_um": [
+     18253.112,
+     21211.88,
+     18733.112,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 28,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[28]",
+    "covered_callers": [
+     24,
+     25
+    ],
+    "host_SM": 24,
+    "allocation_bbox_um": [
+     13329.176,
+     21211.88,
+     13809.176,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 27,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[27]",
+    "covered_callers": [
+     22,
+     23
+    ],
+    "host_SM": 23,
+    "allocation_bbox_um": [
+     9728.752,
+     18879.08,
+     10208.752,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 26,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[26]",
+    "covered_callers": [
+     20,
+     21
+    ],
+    "host_SM": 21,
+    "allocation_bbox_um": [
+     4804.816000000001,
+     18879.08,
+     5284.816000000001,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 25,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[25]",
+    "covered_callers": [
+     18,
+     19
+    ],
+    "host_SM": 19,
+    "allocation_bbox_um": [
+     9728.752,
+     21211.88,
+     10208.752,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 24,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[24]",
+    "covered_callers": [
+     16,
+     17
+    ],
+    "host_SM": 17,
+    "allocation_bbox_um": [
+     4804.816000000001,
+     21211.88,
+     5284.816000000001,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 23,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[23]",
+    "covered_callers": [
+     14,
+     15
+    ],
+    "host_SM": 14,
+    "allocation_bbox_um": [
+     18253.112,
+     5776.816,
+     18733.112,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 22,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[22]",
+    "covered_callers": [
+     12,
+     13
+    ],
+    "host_SM": 12,
+    "allocation_bbox_um": [
+     13329.176,
+     5776.816,
+     13809.176,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 21,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[21]",
+    "covered_callers": [
+     10,
+     11
+    ],
+    "host_SM": 10,
+    "allocation_bbox_um": [
+     18253.112,
+     3184.816,
+     18733.112,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 20,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[20]",
+    "covered_callers": [
+     8,
+     9
+    ],
+    "host_SM": 8,
+    "allocation_bbox_um": [
+     13329.176,
+     3184.816,
+     13809.176,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 19,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[19]",
+    "covered_callers": [
+     6,
+     7
+    ],
+    "host_SM": 7,
+    "allocation_bbox_um": [
+     9728.752,
+     5776.816,
+     10208.752,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 18,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[18]",
+    "covered_callers": [
+     4,
+     5
+    ],
+    "host_SM": 5,
+    "allocation_bbox_um": [
+     4804.816000000001,
+     5776.816,
+     5284.816000000001,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 17,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[17]",
+    "covered_callers": [
+     2,
+     3
+    ],
+    "host_SM": 3,
+    "allocation_bbox_um": [
+     9728.752,
+     3184.816,
+     10208.752,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 16,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[16]",
+    "covered_callers": [
+     0,
+     1
+    ],
+    "host_SM": 1,
+    "allocation_bbox_um": [
+     4804.816000000001,
+     3184.816,
+     5284.816000000001,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 15,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[15]",
+    "covered_callers": [
+     28,
+     29,
+     30,
+     31
+    ],
+    "host_SM": 28,
+    "allocation_bbox_um": [
+     13329.176,
+     18879.08,
+     13809.176,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 14,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[14]",
+    "covered_callers": [
+     24,
+     25,
+     26,
+     27
+    ],
+    "host_SM": 24,
+    "allocation_bbox_um": [
+     13329.176,
+     21211.88,
+     13809.176,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 13,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[13]",
+    "covered_callers": [
+     20,
+     21,
+     22,
+     23
+    ],
+    "host_SM": 23,
+    "allocation_bbox_um": [
+     9728.752,
+     18879.08,
+     10208.752,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 12,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[12]",
+    "covered_callers": [
+     16,
+     17,
+     18,
+     19
+    ],
+    "host_SM": 19,
+    "allocation_bbox_um": [
+     9728.752,
+     21211.88,
+     10208.752,
+     21691.88
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 11,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[11]",
+    "covered_callers": [
+     12,
+     13,
+     14,
+     15
+    ],
+    "host_SM": 12,
+    "allocation_bbox_um": [
+     13329.176,
+     5776.816,
+     13809.176,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 10,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[10]",
+    "covered_callers": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "host_SM": 8,
+    "allocation_bbox_um": [
+     13329.176,
+     3184.816,
+     13809.176,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 9,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[9]",
+    "covered_callers": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "host_SM": 7,
+    "allocation_bbox_um": [
+     9728.752,
+     5776.816,
+     10208.752,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 8,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[8]",
+    "covered_callers": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "host_SM": 3,
+    "allocation_bbox_um": [
+     9728.752,
+     3184.816,
+     10208.752,
+     3664.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 7,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[7]",
+    "covered_callers": [
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "host_SM": 28,
+    "allocation_bbox_um": [
+     13329.176,
+     18879.08,
+     13809.176,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 6,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[6]",
+    "covered_callers": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23
+    ],
+    "host_SM": 23,
+    "allocation_bbox_um": [
+     9728.752,
+     18879.08,
+     10208.752,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 5,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[5]",
+    "covered_callers": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "host_SM": 12,
+    "allocation_bbox_um": [
+     13329.176,
+     5776.816,
+     13809.176,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 4,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[4]",
+    "covered_callers": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "host_SM": 7,
+    "allocation_bbox_um": [
+     9728.752,
+     5776.816,
+     10208.752,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 3,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[3]",
+    "covered_callers": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "host_SM": 23,
+    "allocation_bbox_um": [
+     9728.752,
+     18879.08,
+     10208.752,
+     19359.08
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 2,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[2]",
+    "covered_callers": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "host_SM": 7,
+    "allocation_bbox_um": [
+     9728.752,
+     5776.816,
+     10208.752,
+     6256.816
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   },
+   {
+    "heap_node": 1,
+    "source_hierarchy": "g_on.u_mux.g_on.g_dsl[*].g_on.g_merge[1]",
+    "covered_callers": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "host_SM": 7,
+    "allocation_bbox_um": [
+     10866.776,
+     11740.28,
+     11446.776,
+     12740.28
+    ],
+    "OR_bits": 4096,
+    "cell_upper_um2": 851.7079365079364,
+    "clock": "combinational; inherited clk_sm data launches/captures, no borrowed insertion",
+    "pipeline_edges": 0
+   }
+  ],
+  "local_cell_upper_um2": {
+   "0": 851.7079365079364,
+   "1": 1703.4158730158729,
+   "2": 851.7079365079364,
+   "3": 2555.1238095238095,
+   "4": 851.7079365079364,
+   "5": 1703.4158730158729,
+   "6": 851.7079365079364,
+   "7": 4258.539682539682,
+   "8": 2555.1238095238095,
+   "9": 851.7079365079364,
+   "10": 1703.4158730158729,
+   "11": 851.7079365079364,
+   "12": 3406.8317460317458,
+   "13": 851.7079365079364,
+   "14": 1703.4158730158729,
+   "15": 851.7079365079364,
+   "16": 851.7079365079364,
+   "17": 1703.4158730158729,
+   "18": 851.7079365079364,
+   "19": 2555.1238095238095,
+   "20": 851.7079365079364,
+   "21": 1703.4158730158729,
+   "22": 851.7079365079364,
+   "23": 4258.539682539682,
+   "24": 2555.1238095238095,
+   "25": 851.7079365079364,
+   "26": 1703.4158730158729,
+   "27": 851.7079365079364,
+   "28": 3406.8317460317458,
+   "29": 851.7079365079364,
+   "30": 1703.4158730158729,
+   "31": 851.7079365079364
+  },
+  "total_gate_upper_um2": 53657.6,
+  "no_removed_endpoint_cell_credit": true,
+  "root_masked_request_width_bits": 4096,
+  "shared_response_width_bits": 4096,
+  "west_spine_request_response_bits_after_distributed_merge": {
+   "logical_lower_bound_bits": 8192,
+   "actual_r1_cut_signal_nets": 97751,
+   "lower_bound_not_actual_cut": true
+  },
+  "clock_library_load_SS_pF": 130.92778611142913,
+  "clock_library_load_FF_pF": 152.9323741336337,
+  "clock_connected_pins": 293768,
+  "source_edges_installed": 0,
+  "channel_admission": "PENDING_ACTUAL_RESERVED_CORRIDOR_TRACKS_AND_TREE_NODE_CONTAINMENT",
+  "flat_wiring_rejected": true,
+  "root_actual_pin": "g_on.u_ep.clk_sm; g_on.u_mux.clk; callersclk_sm phase0",
+  "real_outer_driver_present": false,
+  "qualification": "SOURCE_HEAP_PLACEMENT_PROPOSAL_ONLY; actual mapped r1 affinity cut fails47157 tracks, no8192 bit cut credit"
+ },
+ "actual_TREE_affinity_cut_r1": {
+  "source_mapped_sha256": "96fd23dbff2fd11ef322c6b7a0b13e8650242149afb599f83b2a6a112553f468",
+  "affinity_sha256": "98779e8d71f1e39bb6a4addc26478af293689df3e5ba834e642f99f198e7b61c",
+  "actual_region_cell_area_um2": {
+   "hb_coll": 30199.481099934445,
+   "caller_0": 4750.4556000034045,
+   "caller_10": 4549.397400003301,
+   "caller_11": 4524.903000003264,
+   "caller_12": 4833.0804600037345,
+   "caller_13": 4597.657200003398,
+   "caller_14": 4520.368620003279,
+   "caller_15": 4472.604540003238,
+   "caller_16": 4494.182940003265,
+   "caller_17": 4470.446700003238,
+   "caller_18": 4493.366460003277,
+   "caller_19": 4509.798120003316,
+   "caller_1": 4743.9091800034075,
+   "caller_20": 4455.473040003223,
+   "caller_21": 4485.42036000325,
+   "caller_22": 4400.72514000327,
+   "caller_23": 4581.108900003569,
+   "caller_24": 4494.095460003309,
+   "caller_25": 4423.528260003218,
+   "caller_26": 4396.890600003196,
+   "caller_27": 4357.349640003171,
+   "caller_28": 4567.7098800035665,
+   "caller_29": 4345.437780003217,
+   "caller_2": 4739.5060200034295,
+   "caller_30": 4261.938120003115,
+   "caller_31": 4238.08524000309,
+   "caller_3": 4753.765260003469,
+   "caller_4": 4684.845600003365,
+   "caller_5": 4713.451560003397,
+   "caller_6": 4753.838160003519,
+   "caller_7": 4944.019680003819,
+   "caller_8": 4662.217440003381,
+   "caller_9": 4586.693040003299
+  },
+  "actual_total_cell_area_um2": 176005.75050004144,
+  "actual_region_boundary_net_counts": {
+   "hb_coll": 43911,
+   "caller_0": 15238,
+   "caller_1": 15224,
+   "caller_2": 15335,
+   "caller_3": 16165,
+   "caller_4": 14438,
+   "caller_5": 15524,
+   "caller_6": 17515,
+   "caller_7": 24897,
+   "caller_8": 15265,
+   "caller_9": 13505,
+   "caller_10": 12743,
+   "caller_11": 12501,
+   "caller_12": 24131,
+   "caller_13": 16072,
+   "caller_14": 13053,
+   "caller_15": 11837,
+   "caller_16": 12061,
+   "caller_17": 12078,
+   "caller_18": 12690,
+   "caller_19": 14088,
+   "caller_20": 11618,
+   "caller_21": 12640,
+   "caller_22": 13429,
+   "caller_23": 22144,
+   "caller_24": 14234,
+   "caller_25": 11843,
+   "caller_26": 10953,
+   "caller_27": 10443,
+   "caller_28": 21799,
+   "caller_29": 12531,
+   "caller_30": 9522,
+   "caller_31": 8726
+  },
+  "actual_west16_cut_signal_nets": 97751,
+  "optimistic_four_layer_track_upper_before_other_claims": 50594,
+  "actual_west_cut_deficit_before_other_claims": 47157,
+  "four_source_root_connected_library_loads": {
+   "SS": {
+    "clk_sm": {
+     "input_pins": 293768,
+     "capacitance_fF": 130927.78611142914
     },
-    {
-      "caller": 1,
-      "source_slot": "sm1",
-      "proposed_local_register_bbox_um": [
-        4804.816000000001,
-        3184.816,
-        5284.816000000001,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+    "clk_link": {
+     "input_pins": 11061,
+     "capacitance_fF": 4938.048117999804
     },
-    {
-      "caller": 2,
-      "source_slot": "sm2",
-      "proposed_local_register_bbox_um": [
-        7266.784,
-        3184.816,
-        7746.784,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+    "clk_mem": {
+     "input_pins": 7,
+     "capacitance_fF": 3.0378739999999995
     },
-    {
-      "caller": 3,
-      "source_slot": "sm3",
-      "proposed_local_register_bbox_um": [
-        9728.752,
-        3184.816,
-        10208.752,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 4,
-      "source_slot": "sm4",
-      "proposed_local_register_bbox_um": [
-        2342.848,
-        5776.816,
-        2822.848,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 5,
-      "source_slot": "sm5",
-      "proposed_local_register_bbox_um": [
-        4804.816000000001,
-        5776.816,
-        5284.816000000001,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 6,
-      "source_slot": "sm6",
-      "proposed_local_register_bbox_um": [
-        7266.784,
-        5776.816,
-        7746.784,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 7,
-      "source_slot": "sm7",
-      "proposed_local_register_bbox_um": [
-        9728.752,
-        5776.816,
-        10208.752,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 8,
-      "source_slot": "sm8",
-      "proposed_local_register_bbox_um": [
-        13329.176,
-        3184.816,
-        13809.176,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 9,
-      "source_slot": "sm9",
-      "proposed_local_register_bbox_um": [
-        15791.144,
-        3184.816,
-        16271.144,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 10,
-      "source_slot": "sm10",
-      "proposed_local_register_bbox_um": [
-        18253.112,
-        3184.816,
-        18733.112,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 11,
-      "source_slot": "sm11",
-      "proposed_local_register_bbox_um": [
-        20715.08,
-        3184.816,
-        21195.08,
-        3664.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 12,
-      "source_slot": "sm12",
-      "proposed_local_register_bbox_um": [
-        13329.176,
-        5776.816,
-        13809.176,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 13,
-      "source_slot": "sm13",
-      "proposed_local_register_bbox_um": [
-        15791.144,
-        5776.816,
-        16271.144,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 14,
-      "source_slot": "sm14",
-      "proposed_local_register_bbox_um": [
-        18253.112,
-        5776.816,
-        18733.112,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 15,
-      "source_slot": "sm15",
-      "proposed_local_register_bbox_um": [
-        20715.08,
-        5776.816,
-        21195.08,
-        6256.816
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 16,
-      "source_slot": "sm16",
-      "proposed_local_register_bbox_um": [
-        2342.848,
-        21211.88,
-        2822.848,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 17,
-      "source_slot": "sm17",
-      "proposed_local_register_bbox_um": [
-        4804.816000000001,
-        21211.88,
-        5284.816000000001,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 18,
-      "source_slot": "sm18",
-      "proposed_local_register_bbox_um": [
-        7266.784,
-        21211.88,
-        7746.784,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 19,
-      "source_slot": "sm19",
-      "proposed_local_register_bbox_um": [
-        9728.752,
-        21211.88,
-        10208.752,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 20,
-      "source_slot": "sm20",
-      "proposed_local_register_bbox_um": [
-        2342.848,
-        18879.08,
-        2822.848,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 21,
-      "source_slot": "sm21",
-      "proposed_local_register_bbox_um": [
-        4804.816000000001,
-        18879.08,
-        5284.816000000001,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 22,
-      "source_slot": "sm22",
-      "proposed_local_register_bbox_um": [
-        7266.784,
-        18879.08,
-        7746.784,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 23,
-      "source_slot": "sm23",
-      "proposed_local_register_bbox_um": [
-        9728.752,
-        18879.08,
-        10208.752,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 24,
-      "source_slot": "sm24",
-      "proposed_local_register_bbox_um": [
-        13329.176,
-        21211.88,
-        13809.176,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 25,
-      "source_slot": "sm25",
-      "proposed_local_register_bbox_um": [
-        15791.144,
-        21211.88,
-        16271.144,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 26,
-      "source_slot": "sm26",
-      "proposed_local_register_bbox_um": [
-        18253.112,
-        21211.88,
-        18733.112,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 27,
-      "source_slot": "sm27",
-      "proposed_local_register_bbox_um": [
-        20715.08,
-        21211.88,
-        21195.08,
-        21691.88
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 28,
-      "source_slot": "sm28",
-      "proposed_local_register_bbox_um": [
-        13329.176,
-        18879.08,
-        13809.176,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 29,
-      "source_slot": "sm29",
-      "proposed_local_register_bbox_um": [
-        15791.144,
-        18879.08,
-        16271.144,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 30,
-      "source_slot": "sm30",
-      "proposed_local_register_bbox_um": [
-        18253.112,
-        18879.08,
-        18733.112,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
-    },
-    {
-      "caller": 31,
-      "source_slot": "sm31",
-      "proposed_local_register_bbox_um": [
-        20715.08,
-        18879.08,
-        21195.08,
-        19359.08
-      ],
-      "mapped_FF_count": 8204,
-      "mapped_FF_area_um2": 2392.5488400000004,
-      "true_register_clock": "clk_sm",
-      "register_groups": {
-        "bst": 3,
-        "c_count": 8,
-        "c_data": 4096,
-        "c_mode": 1,
-        "vr": 4096
-      },
-      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
+    "clk_host": {
+     "input_pins": 0,
+     "capacitance_fF": 0.0
     }
-  ],
-  "caller_local_FF_total": 262528,
-  "caller_vector_state_bits": 262144,
-  "actual_total_mapped_um2": 178333.520399,
-  "actual_total_FF": 304836,
-  "endpoint_parent_um": [
-    10861.776,
-    11735.28,
-    12676.152,
-    13139.256
-  ],
-  "endpoint_child_core_um": [
+   },
+   "FF": {
+    "clk_sm": {
+     "input_pins": 293768,
+     "capacitance_fF": 152932.37413363368
+    },
+    "clk_link": {
+     "input_pins": 11061,
+     "capacitance_fF": 5770.652459999461
+    },
+    "clk_mem": {
+     "input_pins": 7,
+     "capacitance_fF": 3.5220640000000003
+    },
+    "clk_host": {
+     "input_pins": 0,
+     "capacitance_fF": 0.0
+    }
+   }
+  },
+  "region_bboxes_um": {
+   "0": [
+    2342.848,
+    3184.816,
+    2822.848,
+    3664.816
+   ],
+   "1": [
+    4804.816000000001,
+    3184.816,
+    5284.816000000001,
+    3664.816
+   ],
+   "2": [
+    7266.784,
+    3184.816,
+    7746.784,
+    3664.816
+   ],
+   "3": [
+    9728.752,
+    3184.816,
+    10208.752,
+    3664.816
+   ],
+   "4": [
+    2342.848,
+    5776.816,
+    2822.848,
+    6256.816
+   ],
+   "5": [
+    4804.816000000001,
+    5776.816,
+    5284.816000000001,
+    6256.816
+   ],
+   "6": [
+    7266.784,
+    5776.816,
+    7746.784,
+    6256.816
+   ],
+   "7": [
+    9728.752,
+    5776.816,
+    10208.752,
+    6256.816
+   ],
+   "8": [
+    13329.176,
+    3184.816,
+    13809.176,
+    3664.816
+   ],
+   "9": [
+    15791.144,
+    3184.816,
+    16271.144,
+    3664.816
+   ],
+   "10": [
+    18253.112,
+    3184.816,
+    18733.112,
+    3664.816
+   ],
+   "11": [
+    20715.08,
+    3184.816,
+    21195.08,
+    3664.816
+   ],
+   "12": [
+    13329.176,
+    5776.816,
+    13809.176,
+    6256.816
+   ],
+   "13": [
+    15791.144,
+    5776.816,
+    16271.144,
+    6256.816
+   ],
+   "14": [
+    18253.112,
+    5776.816,
+    18733.112,
+    6256.816
+   ],
+   "15": [
+    20715.08,
+    5776.816,
+    21195.08,
+    6256.816
+   ],
+   "16": [
+    2342.848,
+    21211.88,
+    2822.848,
+    21691.88
+   ],
+   "17": [
+    4804.816000000001,
+    21211.88,
+    5284.816000000001,
+    21691.88
+   ],
+   "18": [
+    7266.784,
+    21211.88,
+    7746.784,
+    21691.88
+   ],
+   "19": [
+    9728.752,
+    21211.88,
+    10208.752,
+    21691.88
+   ],
+   "20": [
+    2342.848,
+    18879.08,
+    2822.848,
+    19359.08
+   ],
+   "21": [
+    4804.816000000001,
+    18879.08,
+    5284.816000000001,
+    19359.08
+   ],
+   "22": [
+    7266.784,
+    18879.08,
+    7746.784,
+    19359.08
+   ],
+   "23": [
+    9728.752,
+    18879.08,
+    10208.752,
+    19359.08
+   ],
+   "24": [
+    13329.176,
+    21211.88,
+    13809.176,
+    21691.88
+   ],
+   "25": [
+    15791.144,
+    21211.88,
+    16271.144,
+    21691.88
+   ],
+   "26": [
+    18253.112,
+    21211.88,
+    18733.112,
+    21691.88
+   ],
+   "27": [
+    20715.08,
+    21211.88,
+    21195.08,
+    21691.88
+   ],
+   "28": [
+    13329.176,
+    18879.08,
+    13809.176,
+    19359.08
+   ],
+   "29": [
+    15791.144,
+    18879.08,
+    16271.144,
+    19359.08
+   ],
+   "30": [
+    18253.112,
+    18879.08,
+    18733.112,
+    19359.08
+   ],
+   "31": [
+    20715.08,
+    18879.08,
+    21195.08,
+    19359.08
+   ],
+   "32": [
     10866.776,
     11740.28,
     11446.776,
     12740.28
-  ],
-  "endpoint_child_gross_um": [
-    10861.776,
-    11735.28,
-    11544.336,
-    12417.84
-  ],
-  "endpoint_cap_50pct_um2": 209952,
-  "endpoint_cells_conservative_after_caller_FF_floor_um2": 101789.68679899999,
-  "additional_CTS_PG_hold_reserve_um2": 40000,
-  "roots": [
-    "g_on.u_ep.clk_sm",
-    "g_on.u_mux.clk",
-    "g_on.g_sm_caller[s].clk_sm",
-    "g_on.u_rst.clk_sm",
-    "g_on.u_rst.clk_link",
-    "g_on.u_rst.clk_mem",
-    "g_on.u_rst.clk_host"
-  ],
-  "phase_ps": 0,
-  "period_ps": 833.3333333333,
-  "SS_setup_ps": 60,
-  "FF_hold_ps": 25,
-  "installed_clock_macro_terminal": false,
-  "request_bits": 131072,
-  "response_unique_bits": 4096,
-  "response_receiver_count": 32,
-  "response_loads_per_bit": 32,
-  "source_response": "u_mux.s_rsp_data4096sharedbroadcast ->32real4096bitvr receivers; not131072independentresponsewires",
-  "tracks": {
-    "shared_spine_um": 1036.8,
-    "raw_M6_M8_capacity": 29159,
-    "raw_M7_M9_capacity": 29159,
-    "single_spine_allrequest_deficit_before_PG_and_otherclaims": 101913,
-    "W_E_faces_after_PG_via_64clock_upper": 34366,
-    "N_S_faces_after_PG_via_64clock_upper": 44431,
-    "candidate_caller_split": [
-      7,
-      7,
-      9,
-      9
-    ],
-    "candidate_face_req_plus_broadcast": [
-      32768,
-      32768,
-      40960,
-      40960
-    ],
-    "remaining_before_ALL_other_claims": [
-      1598,
-      1598,
-      3471,
-      3471
-    ],
-    "actual_unreserved_capacity_qualified": false,
-    "flat_admission": false,
-    "resolution": "Dirac actual exactTREE source distribute fullrequestmux leaf+intermediate gates into32SMlocal480squareboxes and rowcorridors before sharedspine. ActualchangedSS synthesis/geometry/CTS/GRT required"
+   ]
   },
-  "wire": {
-    "max_bbox_Manhattan_um": 23596.224,
-    "geometric_430p56um_cuts": 55,
-    "installed_pipeline_edges": 0,
-    "source_combinational_path_still_requires_actual_SS_FF": true
+  "actual_cell_memberships": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-tree-physical-binding-r1/actual_region_cells.tsv",
+  "actual_member_count": 1279853,
+  "source_new_cycles": 0,
+  "all_other_claim_corridors_reserved": false,
+  "wire_RC_and_CTS_measured": false,
+  "physical_admission": false,
+  "physical_qualified": false,
+  "adopted": false
+ },
+ "historical_flat_actual_total_mapped_um2": 178333.520399,
+ "source_local_real_leaf_obstruction_check": [
+  {
+   "caller": 0,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm0__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm0__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm0__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm0__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4750.4556000034045,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
   },
-  "admission": "finitecellgeometryfits; single-spine fullrequest failsrawcapacity. Actual distributedmuxleaf/corridor/all-otherclaim binding required; no physicalroute/clock qualification",
-  "source_is_selected_sm_v_protocol": false,
-  "caller_SM_space": "finite childdecomposition charged againstselectedSMparent; actualmapped SMmacro must preserve these child areas and remainingmechanisms; obstruction notfunctionalmacro",
-  "outerroute_duplicate": false,
-  "source_mapped_sha256": "fc0035eee0e4a078ffd141beb244c44d7d8a278466876aec9f64f7a313b41c24",
-  "actual_caller_FF_area_um2": 76561.56288000006,
-  "baseline_endpoint_mux": {
-    "proposed_child_bbox_um": [
-      10866.776,
-      11740.28,
-      11446.776,
-      12740.28
-    ],
-    "actual_full32_cell_um2": 178333.520399,
-    "conservative_residual_cell_um2": 101771.95751899995,
-    "new_TREE_gate_upper_no_removed_credit_um2": 53657.600000000006,
-    "conservative_child_cell_um2": 155429.55751899997,
-    "body_capacity_at30percent_um2": 174000.0,
-    "includes_caller_capture_logic_in_residual_to_avoid_unmeasured_credit": true,
-    "CTS_repair_and_PG_actual_pending": true
+  {
+   "caller": 1,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm1__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm1__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm1__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm1__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4743.9091800034075,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
   },
-  "endpoint_cap_at30percent_um2": 174000,
-  "protected_HA2_deficit": {
-    "separate_vehicle_not_simultaneous_baseline_charge": true,
-    "actual_queue_storage_bits": 2267200,
-    "queue_FF_floor_um2": 661115.52,
-    "old_actual_PF384_native_cell_um2": 490159.0422,
-    "added_read_FF_floor_um2": 1791.5904,
-    "parent_body_lower_um2": 1153066.1526000001,
-    "slot_cell_capacity_at30percent_um2": 764202.1076927994,
-    "body_cell_deficit_lower_um2": 388864.04490720073,
-    "area_deficit_at30percent_lower_um2": 1296213.4830240025,
-    "required_resolution": "Actual protected queue macro mapping or explicit finite additional allocation; do not build a large flop-array parent"
+  {
+   "caller": 2,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm2__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm2__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm2__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm2__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4739.5060200034295,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
   },
-  "central_flat_mux_common_west_cut": {
-    "actual_sources_west": 16,
-    "unselected_data_wires_are_still_physical": true,
-    "request_bits": 65536,
-    "shared_response_bits": 4096,
-    "control_bits": 192,
-    "required_tracks_lower": 69824,
-    "M6_M7_each_upper_before_other_claims": 15325,
-    "M8_M9_each_upper_before_other_claims": 9972,
-    "four_layer_upper_before_other_claims": 50594,
-    "track_deficit_before_other_claims": 19230,
-    "usable_reserved_tracks": 0,
-    "required_resolution": "Distribute masked OR tree before the spine and price/install actual physical transport; no zero-wire 32-input central mux claim"
+  {
+   "caller": 3,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm3__bd_0_1_6",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm3__bd_0_1_7",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm3__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm3__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.1884660002,
+   "cell_um2": 4753.765260003469,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
   },
-  "root_clock": {
-    "port": "clk_sm",
-    "source_PHASE_ps": 0,
-    "period_ps": 833,
-    "SS_setup_uncertainty_ps": 60,
-    "FF_hold_uncertainty_ps": 25,
-    "actual_mapped_caller_clock_sinks": 262528,
-    "physical_root_terminal": "not installed in existing outer ODB; must be installed/measured in own context then bound by Turing",
-    "source_pin_map_remote": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-register-pins-r1/actual_register_pins.jsonl"
+  {
+   "caller": 4,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm4__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm4__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm4__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm4__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4684.845600003365,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
   },
-  "allocation_resolution": "Accept32source-local480square proposals within each selectedSMslot withpositivecost, do notcredit hardmacrofreecellspace. Baseline580x1000body fits30pct with18570.442481um2 residual CTS+repair. HA2 source requires1.296213483mm2 additionalslot (or realprotectedqueuemacromapping); donotlaunchgiantflopparent."
+  {
+   "caller": 5,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm5__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm5__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm5__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm5__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4713.451560003397,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 6,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm6__bd_0_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm6__bd_0_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm6__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm6__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599996,
+   "cell_um2": 4753.838160003519,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 7,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm7__bd_0_1_6",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm7__bd_0_1_7",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm7__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm7__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.1884660002,
+   "cell_um2": 4944.019680003819,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 8,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm8__bd_0_1_6",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm8__bd_0_1_7",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm8__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm8__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.1884660002,
+   "cell_um2": 4662.217440003381,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 9,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm9__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm9__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm9__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm9__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4586.693040003299,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 10,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm10__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm10__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm10__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm10__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4549.397400003301,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 11,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm11__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm11__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm11__tc_0_1_6",
+     "intersected_um2": 38646.84174399998
+    },
+    {
+     "macro": "sm11__tc_0_1_7",
+     "intersected_um2": 38646.84174399998
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4524.903000003264,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 12,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm12__bd_0_1_6",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm12__bd_0_1_7",
+     "intersected_um2": 16465.25248900012
+    },
+    {
+     "macro": "sm12__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm12__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.1884660002,
+   "cell_um2": 4833.0804600037345,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 13,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm13__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm13__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm13__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm13__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4597.657200003398,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 14,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm14__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm14__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm14__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm14__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4520.368620003279,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 15,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm15__bd_0_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm15__bd_0_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm15__tc_0_1_6",
+     "intersected_um2": 38646.84174400008
+    },
+    {
+     "macro": "sm15__tc_0_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599973,
+   "cell_um2": 4472.604540003238,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 16,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm16__bd_2_1_6",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm16__bd_2_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm16__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm16__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600075,
+   "cell_um2": 4494.182940003265,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 17,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm17__bd_2_1_6",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm17__bd_2_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm17__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm17__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600075,
+   "cell_um2": 4470.446700003238,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 18,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm18__bd_2_1_6",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm18__bd_2_1_7",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm18__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm18__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600075,
+   "cell_um2": 4493.366460003277,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 19,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm19__bd_2_1_6",
+     "intersected_um2": 16465.252489000468
+    },
+    {
+     "macro": "sm19__bd_2_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm19__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm19__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600098,
+   "cell_um2": 4509.798120003316,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 20,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm20__bd_2_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm20__bd_2_1_7",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm20__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm20__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599932,
+   "cell_um2": 4455.473040003223,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 21,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm21__bd_2_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm21__bd_2_1_7",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm21__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm21__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599932,
+   "cell_um2": 4485.42036000325,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 22,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm22__bd_2_1_6",
+     "intersected_um2": 16465.252488999886
+    },
+    {
+     "macro": "sm22__bd_2_1_7",
+     "intersected_um2": 16465.25248900035
+    },
+    {
+     "macro": "sm22__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm22__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599932,
+   "cell_um2": 4400.72514000327,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 23,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm23__bd_2_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm23__bd_2_1_7",
+     "intersected_um2": 16465.252489000468
+    },
+    {
+     "macro": "sm23__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm23__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599956,
+   "cell_um2": 4581.108900003569,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 24,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm24__bd_2_1_6",
+     "intersected_um2": 16465.252489000468
+    },
+    {
+     "macro": "sm24__bd_2_1_7",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm24__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm24__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600098,
+   "cell_um2": 4494.095460003309,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 25,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm25__bd_2_1_6",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm25__bd_2_1_7",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm25__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm25__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600052,
+   "cell_um2": 4423.528260003218,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 26,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm26__bd_2_1_6",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm26__bd_2_1_7",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm26__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm26__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600052,
+   "cell_um2": 4396.890600003196,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 27,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm27__bd_2_1_6",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm27__bd_2_1_7",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm27__tc_2_1_6",
+     "intersected_um2": 38646.84174400061
+    },
+    {
+     "macro": "sm27__tc_2_1_7",
+     "intersected_um2": 38646.841743999896
+    }
+   ],
+   "real_obstructed_um2": 110224.18846600052,
+   "cell_um2": 4357.349640003171,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 28,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm28__bd_2_1_6",
+     "intersected_um2": 16465.252489000002
+    },
+    {
+     "macro": "sm28__bd_2_1_7",
+     "intersected_um2": 16465.252489000468
+    },
+    {
+     "macro": "sm28__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm28__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599956,
+   "cell_um2": 4567.7098800035665,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 29,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm29__bd_2_1_6",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm29__bd_2_1_7",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm29__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm29__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599909,
+   "cell_um2": 4345.437780003217,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 30,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm30__bd_2_1_6",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm30__bd_2_1_7",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm30__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm30__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599909,
+   "cell_um2": 4261.938120003115,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  },
+  {
+   "caller": 31,
+   "real_bd_tc_obstructions": [
+    {
+     "macro": "sm31__bd_2_1_6",
+     "intersected_um2": 16465.25248899977
+    },
+    {
+     "macro": "sm31__bd_2_1_7",
+     "intersected_um2": 16465.252489000235
+    },
+    {
+     "macro": "sm31__tc_2_1_6",
+     "intersected_um2": 38646.841743999896
+    },
+    {
+     "macro": "sm31__tc_2_1_7",
+     "intersected_um2": 38646.84174399918
+    }
+   ],
+   "real_obstructed_um2": 110224.18846599909,
+   "cell_um2": 4238.08524000309,
+   "qualified": false,
+   "remaining_SM_xstore_ring_logic_still_open": true
+  }
+ ]
 }
