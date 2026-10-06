@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--job-root', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--fast-owner', action='store_true')
+    parser.add_argument('--phase-parallel', action='store_true', help='Changed exact18-bit phase validation; one contextual source vehicle')
     parser.add_argument('--variant', type=int, choices=(1,2,3), default=1,
                         help='Distinct installed GPL/DRT seeds, unchanged constraints and density')
     parser.add_argument('--resume-canonical', type=Path,
@@ -34,8 +35,9 @@ def main():
     # the pinned clean source checkout during physical execution.
     from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
     cp = json.loads((ROOT/context.CONTRACT).read_text())['CP']
-    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner)
-    inputs = json.loads((ROOT/'physical/hbm_cp_parent_context_20261005/inputs.json').read_text())
+    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner,phase_parallel=args.phase_parallel)
+    input_path=ROOT/('physical/hbm_cp_parent_context_20261005/phase_parallel_inputs.json' if args.phase_parallel else 'physical/hbm_cp_parent_context_20261005/inputs.json')
+    inputs = json.loads(input_path.read_text())
     assert inputs['parameters']['SU_FOUR_COMBINATIONAL_CUTS'] == 1
     assert inputs['checked_sources'] == checked
     model = json.loads((ROOT/inputs['four_cut_model']).read_text())
@@ -76,6 +78,11 @@ def main():
                  '--orfs-var', f'OR_SEED={args.variant}',
                  '--orfs-var', 'PLACE_DENSITY_LB_ADDON=']
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
+    if args.phase_parallel:
+        assert inputs['parameters']['SU_PARALLEL_PHASE_VALIDATION']==1
+        assert not (args.resume_canonical or args.resume_cts_sha256 or args.resume_io_sha256 or args.resume_resized_sha256), "Changed RTL needs fresh synthesis"
+        argv += ['--param','SU_PARALLEL_PHASE_VALIDATION=1']
+        argv[argv.index('--nickname-tag')+1]='harvey_cp_phase_parallel_context_r1'
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     if finite:
@@ -83,7 +90,7 @@ def main():
     record = dict(schema='hbm.cp.fourcut.context-route.v1', argv=argv,
         checked_sources=checked, exact_gate=model['exact_measurement'],
         exact_sha256=sha(ROOT/model['exact_measurement']),
-        physical_inputs_sha256=sha(ROOT/'physical/hbm_cp_parent_context_20261005/inputs.json'),
+        physical_inputs_sha256=sha(input_path),
         hook_sha256=sha(hook), source_changed=True, synthesis_required=True,
         old_R6_preserved=True, fences_changed=False, pins_changed=False,
         setup_ps=60, hold_ps=25, source_phase_ps=0,
