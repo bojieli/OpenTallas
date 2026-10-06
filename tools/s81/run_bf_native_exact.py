@@ -4,23 +4,31 @@ import argparse, hashlib, importlib.util, json, re, subprocess, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
-import prepare_dsrom_actual_element_rne_wake as prep
 
 def main():
- p=argparse.ArgumentParser(); p.add_argument('--work',type=Path,required=True); p.add_argument('--jobs',type=int,default=8); p.add_argument('--verilator',default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'); a=p.parse_args()
- if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip(): raise SystemExit('clean pinned worktree required')
- a.work.mkdir(parents=True,exist_ok=False)
- files=prep.package()
- wrapper=(ROOT/'rtl/s81/ot_s81_bf_native.sv').read_text().replace('ot_v41_rom_elem_w10 #(','cand_ot_v41_rom_elem_w10 #(')
- files['ot_s81_bf_native.sv']=wrapper
- pair='cand_ot_v41_pair_w17w10.sv'; files[pair]=files[pair].replace('cand_ot_v41_rom_elem_w10 #(','ot_s81_bf_native #(')
- bench='tb_dsrom_actual_element_rne_wake.sv'; files[bench]=files[bench].replace('cand_dut.u_e.','cand_dut.u_e.u_elem.')
- for name,data in files.items(): (a.work/name).write_text(data)
- plan=json.loads((ROOT/'results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json').read_text())['compile_plan_proposed_only']['bfcolumn']
- base=[a.verilator,*plan[1:]];base[base.index('-j')+1]=str(a.jobs)
+ p=argparse.ArgumentParser(); p.add_argument('--prepare-only',action='store_true'); p.add_argument('--prepared',action='store_true'); p.add_argument('--work',type=Path,required=True); p.add_argument('--jobs',type=int,default=8); p.add_argument('--verilator',default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'); a=p.parse_args()
+ if a.prepared:
+  prepared=json.loads((a.work/'prepared.json').read_text());files=prepared['files'];base=prepared['base'];record=prepared['record']
+  for n,d in files.items():
+   if (a.work/n).read_text()!=d: raise SystemExit('prepared source mismatch: '+n)
+ else:
+  if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip(): raise SystemExit('clean pinned worktree required')
+  a.work.mkdir(parents=True,exist_ok=False)
+  import prepare_dsrom_actual_element_rne_wake as prep
+  files=prep.package()
+  wrapper=(ROOT/'rtl/s81/ot_s81_bf_native.sv').read_text().replace('ot_v41_rom_elem_w10 #(','cand_ot_v41_rom_elem_w10 #(')
+  files['ot_s81_bf_native.sv']=wrapper
+  pair='cand_ot_v41_pair_w17w10.sv'; files[pair]=files[pair].replace('cand_ot_v41_rom_elem_w10 #(','ot_s81_bf_native #(')
+  bench='tb_dsrom_actual_element_rne_wake.sv'; files[bench]=files[bench].replace('cand_dut.u_e.','cand_dut.u_e.u_elem.')
+  for name,data in files.items(): (a.work/name).write_text(data)
+  plan=json.loads((ROOT/'results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json').read_text())['compile_plan_proposed_only']['bfcolumn']
+  base=plan.copy()
+  base.append('ot_s81_bf_native.sv')
+  record={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'top':'ot_s81_bf_native','BF16':1,'NB':2,'XF':8,'extra_cycles':0,'die_pin_compatible':False,'runs':[],'sources_sha256':{n:hashlib.sha256(d.encode()).hexdigest() for n,d in files.items()}}
+  (a.work/'prepared.json').write_text(json.dumps({'files':files,'base':base,'record':record}))
+  if a.prepare_only: return
+ base[0]=a.verilator;base[base.index('-j')+1]=str(a.jobs)
  base=[str(a.work/'dsrom_actual_element_numerical_rom.cpp') if x.startswith('/ABS/FRESH/') else x for x in base]
- base.append('ot_s81_bf_native.sv')
- record={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'top':'ot_s81_bf_native','BF16':1,'NB':2,'XF':8,'extra_cycles':0,'die_pin_compatible':False,'runs':[],'sources_sha256':{n:hashlib.sha256(d.encode()).hexdigest() for n,d in files.items()}}
  for name,negative in [('positive',False),('negative',True)]:
   obj='obj_'+name;cmd=base.copy();cmd[cmd.index('--Mdir')+1]=obj
   if negative:
