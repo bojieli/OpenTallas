@@ -52,6 +52,8 @@ module ot_dsrom_su_softmax #(
     parameter integer ELA   = LA,
     parameter integer ADD6  = 0,         // 1: every add is the six-cut f12 adder (ot_dsrom_su_softmax_add6) at the
                                          // register-to-register sites; 0: the keep-prefix LAT-4/LAT-5 adder
+    parameter integer EXP6  = 0,         // 1: the exp units' adds on the six-cut f12 adder too (ot_dsrom_su_softmax_exp6,
+                                         // add latency 6; ELA unused)
     parameter integer DIVF12 = 1         // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
 ) (
     input  wire                 clk,
@@ -84,7 +86,8 @@ module ot_dsrom_su_softmax #(
     localparam integer LVI = $clog2(CPV);        // in-vector tree levels
     localparam integer NPV = 512 / LPH;
     localparam integer LH = $clog2(LPH);
-    localparam integer D_EXP = 7 * ELM + 8 * ELA + 4;
+    localparam integer ELA_T = EXP6 ? 6 : ELA;    // the exp's add latency
+    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4;
     localparam integer D_DIV = DIVF12 ? 33 : 19;
 
     function automatic [31:0] okey(input [31:0] x);
@@ -185,8 +188,13 @@ module ot_dsrom_su_softmax #(
         wire fa, fe;
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, mx_v, sink[32*h +: 32], {~mx_d[32*h + 31], mx_d[32*h +: 31]}, sk_d[32*h +: 32], fa);
-        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+        if (EXP6) begin : g_x6
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
+        end else begin : g_x
+            ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+                                                 .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
+        end
     end endgenerate
     always @(posedge clk) if (skv[LA_T + D_EXP]) sk_hold <= sk_e;
     // the maxima back to the lanes
@@ -228,8 +236,13 @@ module ot_dsrom_su_softmax #(
         always @(posedge clk) if (mxdv[RWD]) mbn[32*l +: 32] <= {~mx_dn[32*HH + 31], mx_dn[32*HH +: 31]};
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, rv, s_rd[32*l +: 32], mbn[32*l +: 32], bd[32*l +: 32], fa);
-        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+        if (EXP6) begin : g_x6
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
+        end else begin : g_x
+            ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+        end
     end endgenerate
     wire e_at = bv[LA_T + D_EXP];
     wire e_last = blast[LA_T + D_EXP];

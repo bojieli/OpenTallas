@@ -20,9 +20,10 @@ module ot_dsrom_su_softmax_add #(
 );
     generate if (ADD6) begin : g_a6
         wire [1:0] err;
+        wire       vo;
         ot_dsrom_su_softmax_add6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
-                                    .valid_out());
-        assign fault = |err;
+                                    .valid_out(vo));
+        assign fault = vo && (err != 2'd0);    // ot_hdc_qadd_lat's convention (a fault only on a valid result)
     end else begin : g_a
         ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .fault(fault));
     end endgenerate
