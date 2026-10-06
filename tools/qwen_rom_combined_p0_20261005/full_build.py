@@ -15,7 +15,8 @@ import subprocess
 from emit import emit
 
 
-def prepare(job, source, numerical_top, provider, output):
+def prepare(job, source, numerical_top, provider, output,
+            consumer_prefix=None, backing_member=None, backend_dependencies=()):
     if not numerical_top.is_file() or not provider.is_file():
         raise ValueError('genuine owner numerical top and provider source required')
     module = re.search(r'^module\s+(\w+)', numerical_top.read_text(), re.M)
@@ -55,6 +56,10 @@ def prepare(job, source, numerical_top, provider, output):
         'rtl/hdc/kv/ot_qwen_s4_transport_context.sv')]
     deps += [exp/'ot_qwen_p0_full_consumer_exports.sv',
              exp/'ot_qwen_p0_full_transport_join.sv', provider]
+    # Owner CDC handoff may have a different literal hierarchy/backing. Use
+    # its actual source files and explicit access names, not an ABI alias or
+    # the completed numerical transport model in place of the CDC element.
+    deps += list(backend_dependencies)
     paths = list(dict.fromkeys(deps+paths))
     for path in paths:
         if not path.is_file():
@@ -108,6 +113,9 @@ def prepare(job, source, numerical_top, provider, output):
                   canonical_runtime=str(runtime), version=version,
                   frontend=frontend, compile_top=compile_top, link=link,
                   runtime=runtime_command,
+                  consumer_prefix=consumer_prefix or top+'__DOT__u_join__DOT__u_consumer__DOT__',
+                  backing_member=backing_member or top+'__DOT__u_numeric__DOT__mem',
+                  backend_dependencies=list(map(str, backend_dependencies)),
                   access_generation='Run access.py on genuine generated header with exact consumer-prefix/backing-member before driver TU',
                   reused_archives=list(map(str, retained)),
                   matching_runtime_sources=list(map(str, runtime_sources)),
@@ -124,6 +132,11 @@ if __name__ == '__main__':
     p.add_argument('--numerical-top', type=Path, required=True)
     p.add_argument('--provider', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--consumer-prefix', help='Exact owner top consumer hierarchy from generated header')
+    p.add_argument('--backing-member', help='Exact owner full36 backing member; no MEM1 substitution')
+    p.add_argument('--backend-dependency', type=Path, action='append', default=[],
+                   help='Actual additional owner source (e.g. qualified CDC element); preparation only')
     a = p.parse_args()
-    r = prepare(a.authority_job, a.source_root, a.numerical_top, a.provider, a.output)
+    r = prepare(a.authority_job, a.source_root, a.numerical_top, a.provider, a.output,
+                a.consumer_prefix, a.backing_member, a.backend_dependency)
     print(json.dumps(dict(status=r['status'], top=r['top'], version=r['version'])))

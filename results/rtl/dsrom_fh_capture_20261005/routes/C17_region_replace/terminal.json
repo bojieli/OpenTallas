@@ -1,0 +1,30 @@
+{
+  "observed_utc": "2026-10-06T03:24:48.756076+00:00",
+  "terminal": true,
+  "supervisor_absent": 882029,
+  "actual_make_exit": 2,
+  "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+  "physical_source": "e91af64c3",
+  "first_error": "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+  "first_error_line": 153,
+  "log_sha256": "7eeb4ce6a238d73a3f2c2674ed5b3dd2011e86bc80fb971e31dbbdef323f68b0",
+  "preserved_failed_checkpoint": "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/routes/C17_region_replace/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+  "cells_in_wrong_regions": 0,
+  "post_improvement_site_alignment_problems": 15,
+  "post_improvement_overlaps": 9,
+  "post_improvement_edge_spacing_violations": 1,
+  "post_improvement_padding_violations": 0,
+  "initial_legalization_edge_spacing_violations": 13,
+  "initial_legalization_padding_violations": 3,
+  "preCTS_SS_setup_ps": -2194.75,
+  "resized_SS_setup_ps": -2041.81,
+  "preCTS_hold_ps": 2.69,
+  "worst_path": {
+    "start": "u_memory.g_bank[56].u_lane/poison_q",
+    "end": "g_argmax_consumer[12].c[22]",
+    "cone": "global protected-SRAM fault veto feeding receiver"
+  },
+  "qualification": false,
+  "diagnosis": "Single-boundary grouping removes region violations. Initial legalizer leaves edge/padding violations; DPO then introduces site alignment/overlap problems. Need real legalized geometry, not a density waiver or fake cells.",
+  "restart": false
+}
