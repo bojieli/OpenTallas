@@ -71,8 +71,11 @@ def main():
         drc = int(mm.group(1)) if mm else None
     for f in (f'{m}.lef', f'{m}_ss.lib', f'{m}_ff.lib'):
         subprocess.run(['scp', '-q', f'{host}:{rd}/view/{f}', str(d / f)], check=True)
-    closed = (ss is not None and ff is not None and ss >= 0 and ff >= 0 and drc == 0 and ck.get('verdict') == 'MATCH'
-              and 'rc=0' in ex)
+    margin = json.loads(sh(host, f'cat {rd}/margin.json') or '{}')
+    cs_route = json.loads(sh(host, f'cat {rd}/corner_sta_route.json') or '{}')
+    # owner UPDATE 2 (2026-10-06): a view is closed at sign-off SS >= +40 ps and FF >= +15 ps (routed over-constrained)
+    closed = (ss is not None and ff is not None and ss >= 40 and ff >= 15 and drc == 0 and ck.get('verdict') == 'MATCH'
+              and 'rc=0' in ex and (not margin or 'signoff_corner_rc=0' in ex))
     view = dict(schema='opentallas.hbm_die_view.v1', master=m, kind='stations',
                 status='closed' if closed else 'interim-not-closed',
                 lef=f'{m}.lef', lib=dict(ss=f'{m}_ss.lib', ff=f'{m}_ff.lib'),
@@ -80,6 +83,10 @@ def main():
                            obs_layers=ck.get('obs_layers'), pg_pins=ck.get('pg_pins')),
                 source=dict(route=f'{host}:{rd}', SOURCE_COMMIT=commit, args=args, exit=ex.split(),
                             ss_setup_ps=ss, ff_hold_ps=ff, drc=drc, closes_signoff=cs.get('closes_signoff'),
+                            acceptance='SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)',
+                            margin=margin or None,
+                            route_sta=dict(ss=cs_route.get('setup_ss', {}).get('worst_slack_ps'),
+                                           ff=cs_route.get('hold_ff', {}).get('worst_slack_ps')) if cs_route else None,
                             rtl=f'physical/hbm_accel_die_views/stations/{m}/{m}.sv',
                             sdc=f'physical/hbm_accel_die_views/stations/{m}/{m}.sdc',
                             generator='tools/hbm_die_station_gen.py'),
