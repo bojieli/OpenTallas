@@ -30,7 +30,7 @@ act = {k: sum(bool(re.fullmatch(p, n)) for n in names) for k, p in pat.items()}
 names2 = {"/".join(n.split("/")[:2]) for n in re.findall(r"^\s*DFF\w+\s+\\?(\S+)", net, re.M) if n.count("/") >= 2}
 pat2 = dict(g_ixc=r"u_sp\.g_ixc\[\d+\]\.u_ix", g_s11c=r"u_sp\.g_aq\[\d+\]\.u_aq/g_s11c\[\d+\]\.u_c",
             g_selg=r"u_sp\.g_reg\[\d+\]\.g_sel\[\d+\]\.u_g")
-exp.update(g_ixc=64, g_s11c=8, g_selg=4 * R)   # v12: per-lane kept {row_ge, select outcomes} copies
+exp.update(g_ixc=64, g_s11c=16, g_selg=4 * R)   # v12: per-lane select copies; v13: 64 g_ixc, 8 s11 copies per aq12m
 act.update({k: sum(bool(re.fullmatch(p, n)) for n in (names | names2)) for k, p in pat2.items()})
 si = phy.get("signal_integrity_violations", {})
 d.update(SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["violating_d_pins"],

@@ -264,12 +264,14 @@ module ot_v41_spine_pqc_w17w10 #(
     // to the pinned module, so the function is the same.  v10: ot_dsrom_aq12f (rtl/hdc/v41x/ot_dsrom_aq12f.sv), the same
     // function and LATENCY with the v9 R = 128 quantiser classes fixed (kept s11 copies, prefix compares, split
     // nonfinite OR); lockstep-equivalent to ot_dsrom_aq12 on every output every cycle.
-    localparam integer AQL = 18;
+    // v13: ot_dsrom_aq12m (rtl/hdc/v41x/ot_dsrom_aq12m.sv), aq12f restaged for the margin rule, LATENCY 29 (+11);
+    // lockstep-equal to aq12f shifted by 11 cycles (results/rtl/dsrom_field_spine_20261004/aq12m_equivalence.json)
+    localparam integer AQL = 29;
     genvar gq;
     generate for (gq = 0; gq < 2; gq = gq + 1) begin : g_aq
         wire [511:0] unused_y;
         wire signed [9:0] e1;
-        ot_dsrom_aq12f u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam),
+        ot_dsrom_aq12m u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam),
             .x(x_q[1024*gq +: 1024]), .vo(aq_vo[gq]), .q(aq_q[256*gq +: 256]), .e(e1), .y(unused_y),
             .fault(aq_f[gq]));
         assign aq_e[10*gq +: 10] = e1;

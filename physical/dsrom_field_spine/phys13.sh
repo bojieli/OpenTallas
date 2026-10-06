@@ -8,19 +8,19 @@
 # Usage: phys13.sh <scratch dir> <tag>...   tag = c<PQ>r<R>_<v>[k]; v = e/f/g/h/p/q/r as phys.sh with hold targets raised
 #   (FF >= +15 ps over the 25 ps hold uncertainty): e 40 ps / slew 40%, f 45 / 40, g 42 / 45, h e + routability-off GPL,
 #   p / q / r: e at place density 0.55 / 0.70 / 0.62.  All with the raised repair buffer budget (IO hold buffering).
-# OT_FS_PERIOD (ns, default 0.770) overrides the routing clock; OT_FS_AQ (default ot_dsrom_aq12f) names the quantiser
+# OT_FS_PERIOD (ns, default 0.770) overrides the routing clock; OT_FS_AQ (default ot_dsrom_aq12m) names the quantiser
 # module (file rtl/hdc/v41x/<name>.sv), OT_FS_KM extra SYNTH_KEEP_MODULES.
 E=${1:?scratch dir}; shift
 O=$E/out; J=$E/jobs; mkdir -p $O $J
 export OT_ORFS_NUM_CORES=16 NUM_CORES=16 OT_FLOW_TIMEOUT_SECONDS=unlimited OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FS_MARGIN=1
-PER=${OT_FS_PERIOD:-0.770}; AQ=${OT_FS_AQ:-ot_dsrom_aq12f}
+PER=${OT_FS_PERIOD:-0.770}; AQ=${OT_FS_AQ:-ot_dsrom_aq12m}
 COMMON="--view asap7 --clock-period-ns $PER --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr"
 SP="--top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --source rtl/hdc/v41x/$AQ.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp_lat_f12.sv --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_prefix.sv"
 OV=(--orfs-var "VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS")
 BC=(--step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl)
 run() { # tag
   t=$1; c=${t%%_*}; v=${t##*_}; pq=${c:1:1}; r=${c#*r}
-  KM="ot_hdc_fp32_mul_f12_l5 ${OT_FS_KM:-}"; DENS=(); vl=${v:0:1}
+  KM="${OT_FS_MULKM:-ot_dsrom_aq12m_mul} ${OT_FS_KM:-}"; DENS=(); vl=${v:0:1}
   case $v in *k) KM="$KM $AQ";; esac
   case ${vl} in e) H=0.040; S=40; X=();; f) H=0.045; S=40; X=();; g) H=0.042; S=45; X=();;
              h) H=0.040; S=40; X=(--orfs-var GPL_ROUTABILITY_DRIVEN=0);;

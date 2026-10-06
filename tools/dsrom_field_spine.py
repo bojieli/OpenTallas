@@ -46,7 +46,8 @@ DIE = [ROOT / f"rtl/v41die/{n}.sv" for n in ("ot_v41_retn_w17w10", "ot_v41_pair_
                                              "ot_v41_field_pq_w17w10", "ot_v41_spine_pqc_w17w10", TOP)] + [ROOT / "rtl/v41rom/ot_v41_kreg.sv"]
 # v9: the spine's FP8 quantiser is ot_dsrom_aq12 (1.2 GHz FP8 path of ot_hdc_actquant) and its f12 multiplier
 # v10: ot_dsrom_aq12f (same function / latency; R128 quantiser classes fixed) replaces it in the spine
-DIE += [ROOT / p for p in ("rtl/hdc/v41x/ot_dsrom_aq12f.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+# v13: ot_dsrom_aq12m (margin restaging, LATENCY 29) replaces it in the spine
+DIE += [ROOT / p for p in ("rtl/hdc/v41x/ot_dsrom_aq12m.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
                            "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
                            "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv")]
 SOURCES = sorted(set(F.RTL + DIE + F1.ROMS + [F.TB, Path(__file__)] + F.TOOLS))
