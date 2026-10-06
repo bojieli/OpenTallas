@@ -42,7 +42,9 @@ def prepare(source, out, history, verilator):
         raise FileNotFoundError('genuine owner parallel protected RSEL1 adapter required')
     # Structural recipe check only; owner numerical/negative results remain
     # separate evidence. Never use the former full504 leaf as a rawCDC alias.
-    if 'ot_qwen_stream4_cdc_pc' not in leaf.read_text():
+    landing_sources = [leaf, source/'rtl/hdc/kv/ot_qwen_s4_protected_pc.sv',
+                       source/'rtl/hdc/kv/ot_qwen_s4_protected_ring.sv']
+    if not any('ot_qwen_stream4_cdc_pc #' in p.read_text() for p in landing_sources):
         raise ValueError('owner requested actual ot_qwen_stream4_cdc_pc RSEL1 instance absent')
     version = subprocess.check_output([str(verilator), '--version'], text=True).strip()
     if not version.startswith('Verilator 5.050 '):
