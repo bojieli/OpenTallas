@@ -356,6 +356,13 @@ def _r18_masters(v, m):
         # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
         # faces and staggered cluster groups), the rest in the free intervals from the top
         byn = {i.name: i for i in model['insts']}
+        # r18i: the IO link words spread over the IO band height (r18g i50: every collective / UCIe / SerDes / CDC
+        # group stacked in the top 180 um of the band, M6-M8 1.05-1.07 at the die's north edge)
+        for mst_, port_, yc_ in (('qfd_io_collective', 'ur', 1000.0), ('qfd_io_collective', 'sr', 1350.0),
+                                 ('qfd_io_collective', 'sd', 300.0), ('qfd_io_ucie', 'r', 1000.0),
+                                 ('qfd_io_serdes', 'r', 1350.0)):
+            if mst_ in out and port_ in out[mst_].ports and out[mst_].ports[port_][0] == 'face':
+                out[mst_].ports[port_] = out[mst_].ports[port_][:4] + (yc_,) + out[mst_].ports[port_][5:]
         for X in (iox,):
             M = out[X.master]
             want = []
@@ -372,7 +379,7 @@ def _r18_masters(v, m):
                     yc = None
                     pm = out.get(ot.master)
                     pspec = pm.ports.get(eps[1 - j][1].lstrip('*')) if pm is not None else None
-                    if X is xf and pspec is not None and pspec[0] == 'face' and \
+                    if pspec is not None and pspec[0] == 'face' and \
                             pspec[2] == ('W' if face == 'E' else 'E'):
                         yc = ot.y + pspec[4] - X.y
                         if not (span / 2 + 1.0 <= yc <= along - span / 2 - 1.0):
