@@ -66,7 +66,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
-             tree_interleave=False, corr_m9_adj=None, corr_um=None):
+             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -198,9 +198,66 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r11_io_faces'] = io_faces
     m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
+    m['b3r2']['r20f_bw_waypoint_every_cols'] = bw_wp
+    if bw_wp:
+        _bw_waypoints(v, m, bw_wp)
     if r18:
         _r18_post(v, m)
     return v, m
+
+
+BWP_H = 60.48       # r20f block-word waypoint frame height: 512 M4 face pins at 2 tracks (49.2 um) + margins, on GY
+
+
+def _bw_waypoints(v, m, every):
+    """r20f: block-word waypoints.  A block word (root tile -> its band slab in the spine) is a chain of registered
+    hops through waypoint stations in the corridors of its root row, one every `every` tile columns (5 x 319.68 =
+    1,598 um <= 4 x 430.56, the link waypoint rule), so a congested global route cannot detour it (r18j i50: the
+    worst word 81 routed stages against 64 at i5 / floorplan).  The stations stack downward from the corridor station
+    of that row; the hops keep the bus class (tree_spine) and the word's name on the first hop (bword_<b>), the rest
+    bwseg_<b>_<k>."""
+    col_x, row_y = m['col_x'], m['geo']['row_y']
+    st_y = v.dn((v.TILE_SLOT[1] - v.STATION[1]) / 2, v.GY)
+    slot_n, insts, out = {}, [], []
+    for bid, cl, bits, eps in m['buses']:
+        if not bid.startswith('bword_'):
+            out.append((bid, cl, bits, eps))
+            continue
+        b = bid[len('bword_'):]
+        (root, rp), (slab, sp) = eps
+        c, r = map(int, root.split('_')[1:])
+        west = c < v.COLS // 2
+        cols = [c + every * k for k in range(1, v.COLS) if c + every * k < v.COLS // 2] if west else \
+            [c - every * k for k in range(1, v.COLS) if c - every * k >= v.COLS // 2]
+        prev = (root, rp)
+        for k, cc in enumerate(cols):
+            n = slot_n.get((cc, r), 0)
+            slot_n[(cc, r)] = n + 1
+            # stacked downward from the corridor station of the row (the word's pins sit at the tile's mid height)
+            y = v.dn(row_y[r] + st_y - 2.16 - (n + 1) * (BWP_H + 2.16), v.GY)
+            if y < row_y[r] + 2.16:
+                raise ValueError(f'bw waypoints: corridor {cc} row {r} below its station is full ({n + 1})')
+            name = f'bwp_{b}_{k}'
+            insts.append(v.Inst(name, 'qfd_bwp', col_x(cc) + v.TILE_BODY_W, y, v.CORR - v.SHAVE, BWP_H - v.SHAVE,
+                                kind='waypoint', region='corridor'))
+            out.append((bid if k == 0 else f'bwseg_{b}_{k}', cl, bits, [prev, (name, 'w' if west else 'e')]))
+            prev = (name, 'e' if west else 'w')
+        out.append((bid if not cols else f'bwseg_{b}_{len(cols)}', cl, bits, [prev, (slab, sp)]))
+    m['insts'] += insts
+    m['buses'] = out
+    m['b3r2']['r20f_bw_waypoints'] = dict(stations=len(insts), every_cols=every,
+                                          max_per_corridor_slot=max(slot_n.values()) if slot_n else 0)
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        w = v.Master('qfd_bwp', v.CORR - v.SHAVE, BWP_H - v.SHAVE, 3, 'block-word waypoint: one registered 512-b '
+                     'tree-word hop (512 flops) in a corridor, standard cells M1-M3, die routing above')
+        w.face('w', v.TREE_BITS, 'W', 'M4', w.h / 2, 2)
+        w.face('e', v.TREE_BITS, 'E', 'M4', w.h / 2, 2)
+        o['qfd_bwp'] = w
+        return o
+    v.masters = masters
 
 
 # ------------------------------------------------------------------------------------------------ r18 (die-top lint)
@@ -1476,11 +1533,18 @@ def bword_stages(v, m, pitch=None):
         if bid.startswith('pfrag_'):
             frag[eps[0][0]] = eps[1][0]
     per = []
+    seg = {bid: eps for bid, cl, bits, eps in m['buses'] if bid.startswith(('bword_', 'bwseg_'))}
     for bid, cl, bits, eps in m['buses']:
         if not bid.startswith('bword_'):
             continue
         root, slab = eps[0][0], eps[1][0]
         legs = [(root, slab)]
+        b, k = bid[len('bword_'):], 1
+        while f'bwseg_{b}_{k}' in seg:          # r20f waypoint chain
+            a_, z_ = seg[f'bwseg_{b}_{k}'][0][0], seg[f'bwseg_{b}_{k}'][1][0]
+            legs.append((a_, z_))
+            slab = z_
+            k += 1
         if slab in frag:
             legs.append((slab, frag[slab]))
             slab = frag[slab]
@@ -1840,6 +1904,7 @@ def main(argv=None):
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
     ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
                     'fabric from per-stack landing crossbars (KV reconciliation)')
+    ap.add_argument('--bw-wp', type=int, default=0, help='r20f: block-word waypoint every N tile columns (0: off)')
     ap.add_argument('--corr-um', type=float, default=None, help='r20e: corridor width (um, on 0.432)')
     ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
     ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
@@ -1874,7 +1939,7 @@ def main(argv=None):
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um)
+                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:

@@ -102,6 +102,13 @@ def record(v, m, wl_path, pitch=None):
         root, slab = eps[0][0], eps[1][0]
         legs = [bid]
         geo = [cen(root, slab)]
+        b_, k_ = bid[len('bword_'):], 1
+        while f'bwseg_{b_}_{k_}' in bus:          # r20f waypoint chain: every hop is registered
+            a_, z_ = bus[f'bwseg_{b_}_{k_}'][2][0][0], bus[f'bwseg_{b_}_{k_}'][2][1][0]
+            legs.append(f'bwseg_{b_}_{k_}')
+            geo.append(cen(a_, z_))
+            slab = z_
+            k_ += 1
         if slab in frag:
             legs.append(frag[slab])
             nxt = bus[frag[slab]][2][1][0]
@@ -135,7 +142,7 @@ def record(v, m, wl_path, pitch=None):
     # ---- single-hop classes: element port -> element port must fit one measured stage
     single = {}
     for bid, (cl, bits, eps) in bus.items():
-        if cl in PIPELINED or bid.startswith(('bword_', 'pword_', 'pfrag_', 'lnk', 'fan_')):
+        if cl in PIPELINED or bid.startswith(('bword_', 'bwseg_', 'pword_', 'pfrag_', 'lnk', 'fan_')):
             continue
         r = L(bid)
         if r is None:
@@ -153,7 +160,7 @@ def record(v, m, wl_path, pitch=None):
     # ---- pipelined per-hop classes: worst hop between two stations
     hop = {}
     for bid, (cl, bits, eps) in bus.items():
-        if cl not in PIPELINED or bid.startswith(('bword_', 'pword_', 'pfrag_')):
+        if cl not in PIPELINED or bid.startswith(('bword_', 'bwseg_', 'pword_', 'pfrag_')):
             continue
         r = L(bid)
         if r is None:
@@ -187,10 +194,13 @@ def main(argv=None):
     ap.add_argument('--r18', action='store_true')
     ap.add_argument('--r19', action='store_true')
     ap.add_argument('--tree-interleave', action='store_true')
+    ap.add_argument('--corr-um', type=float, default=None)
+    ap.add_argument('--bw-wp', type=int, default=0)
     a = ap.parse_args(argv)
     v, m = B.selected(True, b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True,
                       bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc),
-                      r18=a.r18, r19=a.r19, tree_interleave=a.tree_interleave)
+                      r18=a.r18, r19=a.r19, tree_interleave=a.tree_interleave,
+                      corr_um=a.corr_um, bw_wp=a.bw_wp)
     rec = record(v, m, a.wirelength, pitch=skew_pitch(a.skew_ps) if a.skew_ps else None)
     rec['skew_ps'] = a.skew_ps
     rec['floorplan'] = dict(slab_group_h=a.slab_group_h, cdc=a.cdc, die=m['die'])
