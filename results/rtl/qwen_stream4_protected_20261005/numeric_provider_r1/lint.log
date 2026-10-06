@@ -1,0 +1,87 @@
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:51: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                   ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:60: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'P' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:69: Operator MODDIVS expects 64 bits on the LHS, but LHS's VARREF 'q' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                                     ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:130:24: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                   : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  130 |                     mem[wc_addr[q]] = h_cdata[q*256 +: 256];
+      |                        ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:132:68: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  132 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:132:79: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  132 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:127:103: Operator GTES expects 64 bits on the RHS, but RHS's VARREF 'MEM_WORDS' generates 32 bits.
+                                                                     : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  127 |                 if (!h_cv[q] || h_csec[q*24 +: 24] != 24'(wc_addr[q]) || wc_addr[q] < 0 || wc_addr[q] >= MEM_WORDS || aq_w[q]-aq_r[q] >= LR) begin
+      |                                                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:46: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:71: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:95: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 19 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:184:66: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'PULLIN' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  184 |                                 if (now < p_ref0[q] + (p_nref[q] - PULLIN) * 118 * CYC - 2 * CYC) v("REFpb pulled in too far", q, bk);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:195:48: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  195 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:195:72: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  195 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:197:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'ls' generates 17 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  197 |                     automatic longint a = longint'(b_row[q][bk]) * 131072 + ls;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:209:40: Operator GTES expects 64 bits on the RHS, but RHS's VARREF 'MEM_WORDS' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  209 |                         if (a < 0 || a >= MEM_WORDS || rq_w[q]-rq_r[q] >= LR)
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:212:64: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  212 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:212:75: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  212 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:213:43: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                   : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  213 |                         rq_dat[q][k] = mem[a];
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:234:34: Operator GTS expects 64 bits on the RHS, but RHS's VARREF 'CRED' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_s4_numeric_memory'
+  234 |                     if (lpend[q] > CRED) v("finite landing credit overflow",q,0);
+      |                                  ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.066 MB sources in 3 modules, into 0.373 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.044 s (elab=0.006, cvt=0.031, bld=0.000); cpu 0.044 s on 1 threads; allocated 43.152 MB

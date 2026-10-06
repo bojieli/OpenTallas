@@ -16,6 +16,7 @@ TOP = 'tb_hbm_accel_sm_capture_lsu'
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--ds20', action='store_true', help='Same d391 fixture on Rawls selected HBM token17/position20 copy')
     p.add_argument('--rtl-root', type=Path, required=True)
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--jobs', type=int, default=16, choices=range(1, 17))
@@ -33,12 +34,15 @@ def main():
            'rtl/gpu_sys/ot_gpu_simt_divlane.sv',
            'rtl/gpu_sys/ot_gpu_bd_line.sv',
            'rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv'] + deps
+    if a.ds20:
+        src[src.index('rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv')] = 'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv'
     verilator = Path(os.environ.get('OPENTALLAS_TOOL_ROOT',
                      str(Path.home() / '.local/opentallas-tools'))) / 'verilator-5.050/bin/verilator'
     cmd = [str(verilator), '--binary', '--timing', '-O2', '-j', str(a.jobs),
            '--threads', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
            '-Wno-WIDTH', '--x-assign', '0', '--x-initial', '0',
            '--top-module', TOP, '--Mdir', str(work / 'obj')]
+    if a.ds20:cmd += ['+define+OT_CAPTURE_DS20']
     cmd += [str(root / s) for s in dict.fromkeys(src)]
     cmd += [str(HERE / 'rtl/test/hbm_accel' / (TOP + '.sv'))]
     with (work / 'build.log').open('w') as log:

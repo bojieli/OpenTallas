@@ -1,0 +1,174 @@
+{
+  "u_rtr.od": {
+    "count": 806,
+    "worst": -106.730293,
+    "starts": {
+      "u_ctrl.txq_n": 409,
+      "u_rtr.g_in.rp": 397
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_rtr.od[0][52]$_DFFE_PP_"
+  },
+  "u_rtr.drops": {
+    "count": 32,
+    "worst": -95.558449,
+    "starts": {
+      "u_rtr.g_in.rp": 32
+    },
+    "start": "u_rtr.g_in[1].rp[0]$_DFFE_PN0P_",
+    "endpoint": "u_rtr.drops[31]$_DFF_PN0_"
+  },
+  "u_ctrl.txq_d": {
+    "count": 1669,
+    "worst": -87.445831,
+    "starts": {
+      "u_ctrl.txq_n": 1669
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.txq_d[1][79]$_DFFE_PP_"
+  },
+  "u_rtr.g_in.b_data": {
+    "count": 428,
+    "worst": -81.33683,
+    "starts": {
+      "u_ctrl.txq_r": 428
+    },
+    "start": "u_ctrl.txq_r[1]$_DFFE_PN0P_",
+    "endpoint": "u_rtr.g_in[0].b_data[2][97]$_DFFE_PP_"
+  },
+  "u_rtr.g_in.b_mask": {
+    "count": 12,
+    "worst": -52.395756,
+    "starts": {
+      "u_ctrl.txq_r": 12
+    },
+    "start": "u_ctrl.txq_r[1]$_DFFE_PN0P_",
+    "endpoint": "u_rtr.g_in[0].b_mask[1][1]$_DFFE_PP_"
+  },
+  "u_ctrl.cur_tok": {
+    "count": 21,
+    "worst": -38.971161,
+    "starts": {
+      "u_ctrl.rxw": 21
+    },
+    "start": "u_ctrl.rxw[1]$_DFFE_PN0P_",
+    "endpoint": "u_ctrl.cur_tok[14]$_DFFE_PN0P_"
+  },
+  "u_ctrl.tx_k": {
+    "count": 2,
+    "worst": -38.62022,
+    "starts": {
+      "u_ctrl.txq_n": 2
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.tx_k[14]$_DFFE_PN0P_"
+  },
+  "u_ctrl.hdr_pos1": {
+    "count": 4,
+    "worst": -36.250446,
+    "starts": {
+      "u_ctrl.hdr_pos": 4
+    },
+    "start": "u_ctrl.hdr_pos[3]$_DFFE_PN0P_",
+    "endpoint": "u_ctrl.hdr_pos1[20]$_DFFE_PN0P_"
+  },
+  "u_ctrl.cur_pos": {
+    "count": 9,
+    "worst": -33.148151,
+    "starts": {
+      "u_ctrl.rxw": 9
+    },
+    "start": "u_ctrl.rxw[1]$_DFFE_PN0P_",
+    "endpoint": "u_ctrl.cur_pos[20]$_DFFE_PN0P_"
+  },
+  "u_ctrl.txs": {
+    "count": 2,
+    "worst": -26.663561,
+    "starts": {
+      "u_ctrl.txq_n": 2
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.txs[14]$_DFFE_PN0P_"
+  },
+  "u_ctrl.hdr_pos": {
+    "count": 17,
+    "worst": -25.705326,
+    "starts": {
+      "u_ctrl.rst_q": 17
+    },
+    "start": "u_ctrl.rst_q$_DFF_PN0_",
+    "endpoint": "u_ctrl.hdr_pos[4]$_DFFE_PN0P_"
+  },
+  "u_ctrl.hdr_user": {
+    "count": 10,
+    "worst": -23.455793,
+    "starts": {
+      "u_ctrl.rst_q": 10
+    },
+    "start": "u_ctrl.rst_q$_DFF_PN0_",
+    "endpoint": "u_ctrl.hdr_user[9]$_DFFE_PN0P_"
+  },
+  "u_ctrl.proto_fault": {
+    "count": 1,
+    "worst": -22.817415,
+    "starts": {
+      "u_ctrl.txq_n": 1
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.proto_fault$_DFF_PN0_"
+  },
+  "u_ctrl.rxw": {
+    "count": 6,
+    "worst": -20.734303,
+    "starts": {
+      "u_ctrl.txq_n": 6
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.rxw[13]$_DFFE_PN0P_"
+  },
+  "u_ctrl.txh": {
+    "count": 2,
+    "worst": -11.676882,
+    "starts": {
+      "u_ctrl.txq_n": 2
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.txh[14]$_DFFE_PN0P_"
+  },
+  "u_rtr.g_in.cnt": {
+    "count": 2,
+    "worst": -10.654589,
+    "starts": {
+      "u_ctrl.txq_n": 2
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_rtr.g_in[0].cnt[1]$_DFF_PN0_"
+  },
+  "u_ctrl.rx_j": {
+    "count": 10,
+    "worst": -7.35112,
+    "starts": {
+      "u_ctrl.txq_n": 10
+    },
+    "start": "u_ctrl.txq_n[1]$_DFF_PN0_",
+    "endpoint": "u_ctrl.rx_j[14]$_DFFE_PN0P_"
+  },
+  "u_ctrl.hdr_tok": {
+    "count": 7,
+    "worst": -3.294365,
+    "starts": {
+      "u_ctrl.rst_q": 7
+    },
+    "start": "u_ctrl.rst_q$_DFF_PN0_",
+    "endpoint": "u_ctrl.hdr_tok[2]$_DFFE_PN0P_"
+  },
+  "u_rtr.busy": {
+    "count": 3,
+    "worst": -2.2361,
+    "starts": {
+      "u_rtr.g_in.rp": 3
+    },
+    "start": "u_rtr.g_in[1].rp[0]$_DFFE_PN0P_",
+    "endpoint": "u_rtr.busy[1]$_DFF_PN0_"
+  }
+}

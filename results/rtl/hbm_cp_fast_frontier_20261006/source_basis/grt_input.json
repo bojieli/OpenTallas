@@ -1,0 +1,10 @@
+{
+  "source": "174943d5e",
+  "stage": "Estimated global-route RC, actual propagated CTS; no extracted signoff claim",
+  "hashes": {
+    "5_1_grt.odb": "24ebc0757ffb28470eec488ce04b7b5148ee67cc66a413d956a727e9cd082766",
+    "5_1_grt.sdc": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7",
+    "route.guide": "1301ad15da7adfb2bb5d1788c8a16f714f488f27daf805c6aa01a608ba7841c3"
+  },
+  "command": "openroad -threads1 -no_init -exit /checkpoint/grt_census.tcl"
+}

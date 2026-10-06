@@ -9,6 +9,10 @@
 // DECODED_READ stays default-off. No parent instantiates this candidate yet.
 module ot_dsrom_wfc_parent_cut #(
     parameter integer DECODED_READ = 0,
+    parameter integer CONTROL_PIPE = 0,
+    parameter integer QUEUE_SHIFT = 0,
+    parameter integer HEADER_LOCAL = 0,
+    parameter integer PREFIX_INC = 0,
     parameter integer LOCAL_CONTROL = 0, // opt-in same-edge control locality
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
@@ -138,6 +142,17 @@ module ot_dsrom_wfc_parent_cut #(
     assign bl_tx_data = r_out_data[2*FLIT +: FLIT];
     assign bl_tx_last = r_out_last[2];
     assign r_out_ready = {bl_tx_ready, out_ready, pc_in_ready};
+    generate if (QUEUE_SHIFT) begin : g_queue_shift_router
+    ot_dsrom_wfc_router_cut #(.SHIFT_HEAD(QUEUE_SHIFT),.NP(3),.FW(FLIT),.BUF(4),.DESTS(DESTS),
+        .INPUT_READY_VALID(1),.ROUTE_INIT(ROUTE_INIT)) u_rtr (
+        .clk(clk),.rst_n(rn),
+        .in_valid(r_in_valid),.in_ready(r_in_ready),.in_credit(),
+        .in_data(r_in_data),.in_last(r_in_last),
+        .out_valid(r_out_valid),.out_ready(r_out_ready),
+        .out_data(r_out_data),.out_last(r_out_last),
+        .cfg_we(rcfg_we),.cfg_dest(rcfg_dest),.cfg_mask(rcfg_mask),
+        .drops(rtr_drops),.overflow(rtr_overflow));
+    end else begin : g_original_router
     ot_rom_fabric_router #(.NP(3),.FW(FLIT),.BUF(4),.DESTS(DESTS),
         .INPUT_READY_VALID(1),.ROUTE_INIT(ROUTE_INIT)) u_rtr (
         .clk(clk),.rst_n(rn),
@@ -147,8 +162,12 @@ module ot_dsrom_wfc_parent_cut #(
         .out_data(r_out_data),.out_last(r_out_last),
         .cfg_we(rcfg_we),.cfg_dest(rcfg_dest),.cfg_mask(rcfg_mask),
         .drops(rtr_drops),.overflow(rtr_overflow));
+    end endgenerate
     ot_rom_pkg_ctrl_wfc #(
         .DECODED_READ(DECODED_READ),
+        .CONTROL_PIPE(CONTROL_PIPE),
+        .QUEUE_SHIFT(QUEUE_SHIFT),
+        .HEADER_LOCAL(HEADER_LOCAL),.PREFIX_INC(PREFIX_INC),
         .LOCAL_CONTROL(LOCAL_CONTROL),
         .PKG_ID(PKG_ID),
         .FLIT(FLIT),

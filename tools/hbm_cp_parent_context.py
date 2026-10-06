@@ -8,11 +8,11 @@ ROOT=Path(__file__).resolve().parents[1]
 CONTRACT='results/rtl/hbm_child_contract_20261005/child_reservations.json'
 OUT=ROOT/'physical/hbm_cp_parent_context_20261005'
 
-def prepare():
+def prepare(four_cut=False,fast_owner=False):
     r=json.loads((ROOT/CONTRACT).read_text());cp=r['CP'];clock=r['clock']
     c=next(c for c in r['channels'] if c['child']=='CP')
     from uarch_model import hbm_cp_validate_allocated_sources
-    checked_sources=hbm_cp_validate_allocated_sources(ROOT,cp)
+    checked_sources=hbm_cp_validate_allocated_sources(ROOT,cp,fourcut=four_cut,fast_owner=fast_owner)
     OUT.mkdir(parents=True,exist_ok=True)
     gx,gy,gx1,gy1=cp['gross_bbox_um'];cx,cy,cx1,cy1=cp['core_bbox_um']
     assert abs(cx1-cx-43.2)<1e-8 and abs(cy1-cy-43.2)<1e-8
@@ -104,6 +104,12 @@ def prepare():
         parameters={k:1 for k in ['ENABLE','SU_ENABLE','SU_REGISTERED_OUTPUTS','SU_REGISTERED_STATUS','SU_REGISTERED_BOUNDARY','SU_BALANCED_OWNER_BOUNDARY']},
         source_faithful_top='ot_hbm_integrated_su_cp_context',joint_W2_parent_repeat=False)
     (OUT/'inputs.json').write_text(json.dumps(record,indent=2)+'\n')
+    if four_cut:
+        record['parameters']['SU_FOUR_COMBINATIONAL_CUTS']=1
+        record['four_cut_model']='results/uarch/hbm_cp_fast_frontier_20261006/model.json' if fast_owner else 'results/uarch/hbm_cp_fourcut_20261005/model.json'
+        if fast_owner:record['parameters']['SU_FAST_OWNER_FRONTIER']=1
+        record['four_cut_model_sha256']=hashlib.sha256((ROOT/record['four_cut_model']).read_bytes()).hexdigest()
+        (OUT/'inputs.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
 
 def corner_sta(orfs, output):
@@ -168,9 +174,11 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--corner-sta',metavar='ORFS_DIR')
     parser.add_argument('--output')
+    parser.add_argument('--four-cut',action='store_true')
+    parser.add_argument('--fast-owner',action='store_true')
     args=parser.parse_args()
     if args.corner_sta:
         if not args.output:parser.error('--corner-sta requires --output')
         corner_sta(args.corner_sta,args.output)
     else:
-        r=prepare();print(f"CP context: {len(r['pins'])} physical pins,234 signals; allocated43.2um core; analytical clock/load budgets")
+        r=prepare(args.four_cut or args.fast_owner,args.fast_owner);print(f"CP context: {len(r['pins'])} physical pins,234 signals; allocated43.2um core; analytical clock/load budgets")

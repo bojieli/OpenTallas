@@ -67,20 +67,20 @@ module tb_hbm_accel_r5a_stack_p2;
    .s_valid(s_valid),.s_ready(s_rdy),.s_data(s_data),.fault(fault));
   // Exercise faults on the actual receiver's held code, not a free external
   // encoder. One flipped DATA position corrects; two positions refuse.
+  reg[1151:0] inject_snapshot,injected;
   initial begin
    wait(rst_n);
    if(MUT==3||MUT==4)begin
     wait(dut.on.sm[0].v0);@(negedge clk);
-    if(MUT==3)begin
-     if(dut.on.sm[0].coded[2])force dut.on.sm[0].coded[2]=0;
-     else force dut.on.sm[0].coded[2]=1;
-    end else begin
-     if(dut.on.sm[0].coded[0])force dut.on.sm[0].coded[0]=0;
-     else force dut.on.sm[0].coded[0]=1;
-     if(dut.on.sm[0].coded[1])force dut.on.sm[0].coded[1]=0;
-     else force dut.on.sm[0].coded[1]=1;
-    end
-    @(posedge clk);#1;release dut.on.sm[0].coded[2];release dut.on.sm[0].coded[0];release dut.on.sm[0].coded[1];
+    inject_snapshot=dut.on.sm[0].coded;
+    injected=inject_snapshot ^ ((MUT==3)?1152'd4:1152'd3);
+    // One full-vector force preserves both flipped bits. Verify the mutation
+    // at the actual held receiver word before interpreting protection results.
+    force dut.on.sm[0].coded=injected;
+    #1;
+    $display("INJECT SM_code bit_count=%0d",$countones(dut.on.sm[0].coded^inject_snapshot));
+    if($countones(dut.on.sm[0].coded^inject_snapshot)!=(MUT==3?1:2))$fatal(1,"mutation did not reach actual held code");
+    @(posedge clk);#1;release dut.on.sm[0].coded;
    end
    if(MUT==9)begin
     wait(dut.on.sm[0].v1);@(negedge clk);

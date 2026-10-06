@@ -120,7 +120,12 @@ public:
         }
         clocks_.edge(tick_*833333+416666,ctl,[&]{m().clk=1;},settle);
         ++tick_;
-        if(!expect_fault)need(!m().fault,"actual linked endpoint fault");
+        if(!expect_fault && m().fault) {
+            if constexpr(linked_abi<M>) std::fprintf(stderr,"LINKED_FAULT core_edge=%llu code=%04x debt=%u rows=%llu writes=%llu ACK=%llu\n",
+                (unsigned long long)tick_,unsigned(m().fault_code),unsigned(m().join_debt),
+                (unsigned long long)rows_,(unsigned long long)writes_,(unsigned long long)acks_);
+            need(false,"actual linked endpoint fault");
+        }
     }
     template<class Predicate> void until(Predicate done,bool expect_fault=false) {
         while(!done())step(expect_fault); // no guessed simulation deadline
@@ -195,6 +200,7 @@ public:
             preload(fixture);m().hold_rows=1;auto begin=tick_;auto hbegin=clocks_.controller_rises();start();
             until([&]{for(int w=0;w<4;++w)if(m().join_row_valid[w])return true;return false;});
             auto first_row=tick_;auto row_count=rows_;
+            std::printf("LINKED_FIRST_HELD_ROW core_edge=%llu controller_edge=%llu\n",(unsigned long long)(first_row-begin),(unsigned long long)(clocks_.controller_rises()-hbegin));
             // Snapshot the existing producer output registers, not a new row buffer.
             std::array<uint32_t,4> held_valid{};
             std::array<uint32_t,68> held_sec{};
@@ -220,6 +226,7 @@ public:
             until([&]{return writes_==136;});
             need(m().wb_busy&&m().join_debt>0,"warm stimulus needs real accepted outstanding ACK debt");
             auto warm_begin=tick_;auto warm_debt=m().join_debt;
+            std::printf("LINKED_WARM_BEGIN core_edge=%llu write_reserved=%llu ACK=%llu debt=%u\n",(unsigned long long)(warm_begin-begin),(unsigned long long)writes_,(unsigned long long)acks_,unsigned(warm_debt));
             m().warm_rst_n=0;
             for(int i=0;i<24;++i)step();
             auto warm_end=tick_;m().warm_rst_n=1;
@@ -267,6 +274,8 @@ public:
 };
 int main(int argc,char** argv) {
     try {
+        Verilated::commandArgs(argc,argv);
+        std::setvbuf(stdout,nullptr,_IOLBF,0);
         if(argc==2&&std::string(argv[1])=="--compile-probe") {
             std::printf("PASS_DRIVER_TU_LINK linked_endpoint_ABI=%d runtime_exercised=0\n",int(linked_abi<Model>));return 0;
         }

@@ -1,0 +1,28 @@
+{
+  "terminal_exit": 2,
+  "first_error": "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+  "first_error_line": 39227,
+  "first_error_context": [
+    " u_memory.g_bank\\[8\\].u_lane/write_encoded_v_r$_DFF_PN0_",
+    " u_memory.g_bank\\[8\\].u_lane/write_row_encoded_r\\[1\\]$_DFF_P_",
+    " u_memory.g_bank\\[8\\].u_lane/write_v_r$_DFF_PN0_",
+    " u_memory.g_bank\\[8\\].u_lane/write_v_r$_DFF_PN0__43622",
+    "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+    "write_db /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+    "Error: detail_place.tcl, 39 DPL-0033",
+    "Elapsed time: 35:29.27[h:]min:sec. CPU time: user 2127.57 sys 1.61 (99%). Peak memory: 6153720KB.",
+    "make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1",
+    "make: *** [Makefile:511: /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp.odb] Error 2"
+  ],
+  "all_errors": [
+    "[ERROR DPL-0033] detailed placement checks failed during check placement."
+  ],
+  "placement_checks": [
+    "Found 11373 edge spacing violations and 1081 padding violations.",
+    "Found 3386 edge spacing violations and 481 padding violations."
+  ],
+  "log_path": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/C14_decode_split.log",
+  "log_sha256": "dfecc7ea6759049bfdbb098a67bcf474199d7656efe137807571dd54b12820b5",
+  "failed_checkpoint": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C14_decode_split/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+  "qualified": false
+}

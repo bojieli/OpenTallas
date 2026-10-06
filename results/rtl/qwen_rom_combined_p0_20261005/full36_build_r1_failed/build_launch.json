@@ -1,0 +1,27 @@
+{
+  "load": 77.67626953125,
+  "idle_CPUs": 44.95304238023834,
+  "MemAvailable_bytes": 653237833728,
+  "disk_free_bytes": 2295967956992,
+  "expected_peak_GiB": 128,
+  "workers": 16,
+  "estimate_source": "Kant00:07 inventory97.33GiB rounded128; no AS cap",
+  "source": "183a4dde5",
+  "runner": "8851eda12",
+  "supervisor": 1675013,
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "128",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/src/tools/qwen_rom_combined_p0_20261005/run_full.py",
+    "--output",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/full",
+    "--source",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/src",
+    "--stage",
+    "build",
+    "--workers",
+    "16"
+  ]
+}

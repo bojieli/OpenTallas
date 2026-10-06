@@ -36,7 +36,10 @@ foreach inst [$block getInsts] {
         [expr {int(($xx+225)*$dbu)}] [expr {int(($yy+65)*$dbu)}]
     set group [odb::dbGroup_create $block "fh_lane_$b"]
     $region addGroup $group
-    $group addInst $inst
+    # The SRAM is already fixed by place_inst. GPL treats a fixed macro in a
+    # std-cell fence group as movable area (measured lower-bound density1.88).
+    # Group only the local standard cells; the fixed SRAM remains an obstacle
+    # in this same lane region (measured lower-bound density0.12).
     foreach cell [$block getInsts] {
         set cn [string map [list "\\" ""] [$cell getName]]
         set local [expr {[string first "g_bank\[$b\].u_lane" $cn]>=0 || [string first "g_bank\[$b\]/u_lane" $cn]>=0}]

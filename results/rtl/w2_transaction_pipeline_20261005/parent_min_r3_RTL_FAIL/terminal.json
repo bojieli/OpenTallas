@@ -1,0 +1,17 @@
+{
+  "verdict": "FAIL_COLD_UNKNOWN_FAULT",
+  "observed": {
+    "cp_idle": 1,
+    "all_drained": "X",
+    "fault": "X",
+    "caller_quiet": 1,
+    "transport": 1,
+    "native_credit": 1,
+    "shared_idle": 1,
+    "adapter": 1,
+    "reset": 1
+  },
+  "source_sha256": "dbd64747288b05d4dbe8c96253a8d05a9d858e98d362668e80eecabc36d9b3dc",
+  "cause": "cdc_fault declared after new generate blocks; branch implicit net shadowed outer undriven fault. Move declaration before branches and enforce default_nettype none.",
+  "termination": "Own invalid-source simulator SIGTERM; no timeout or RTL clock/owner waiver"
+}

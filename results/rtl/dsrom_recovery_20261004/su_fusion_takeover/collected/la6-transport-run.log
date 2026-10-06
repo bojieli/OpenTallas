@@ -1,0 +1,56 @@
+SU_BOUNDARY gain_load cycle=6 vector=0
+SU_BOUNDARY gain_load cycle=7 vector=1
+SU_BOUNDARY gain_load cycle=8 vector=2
+SU_BOUNDARY gain_load cycle=9 vector=3
+SU_BOUNDARY gain_load cycle=10 vector=4
+SU_BOUNDARY go cycle=16
+SU_BOUNDARY input cycle=33 vector=0
+SU_BOUNDARY input cycle=34 vector=1
+SU_BOUNDARY lane_input cycle=50 vector=0
+SU_BOUNDARY input cycle=35 vector=2
+SU_BOUNDARY lane_input cycle=51 vector=1
+SU_BOUNDARY input cycle=36 vector=3
+SU_BOUNDARY lane_input cycle=52 vector=2
+SU_BOUNDARY input cycle=37 vector=4
+SU_BOUNDARY lane_input cycle=53 vector=3
+SU_BOUNDARY lane_input cycle=54 vector=4
+SU_BOUNDARY mix_output cycle=74 vector=0
+SU_BOUNDARY mix_output cycle=75 vector=1
+SU_BOUNDARY mix_output cycle=76 vector=2
+SU_BOUNDARY mix_output cycle=77 vector=3
+SU_BOUNDARY mix_output cycle=78 vector=4
+SU_BOUNDARY sumsq_root cycle=184
+SU_BOUNDARY scalar_input cycle=193
+SU_BOUNDARY reduction_scalar cycle=272
+SU_BOUNDARY scalar_broadcast cycle=281
+SU_BOUNDARY raw_y cycle=292 vector=0
+SU_BOUNDARY raw_y cycle=293 vector=1
+SU_BOUNDARY raw_y cycle=294 vector=2
+SU_BOUNDARY raw_y cycle=295 vector=3
+SU_BOUNDARY raw_y cycle=296 vector=4
+SU_BOUNDARY raw_q cycle=310 vector=0
+SU_BOUNDARY raw_q cycle=311 vector=1
+SU_BOUNDARY raw_q cycle=312 vector=2
+SU_BOUNDARY raw_q cycle=313 vector=3
+SU_BOUNDARY raw_q cycle=314 vector=4
+SU_BOUNDARY consumer_y cycle=315 vector=0
+SU_BOUNDARY consumer_y cycle=316 vector=1
+SU_BOUNDARY consumer_y cycle=317 vector=2
+SU_BOUNDARY consumer_y cycle=318 vector=3
+SU_BOUNDARY consumer_y cycle=319 vector=4
+SU_BOUNDARY consumer_q cycle=333 vector=0
+SU_BOUNDARY quant cycle=317 vector=0
+SU_BOUNDARY consumer_q cycle=334 vector=1
+SU_BOUNDARY quant cycle=318 vector=1
+SU_BOUNDARY consumer_q cycle=335 vector=2
+SU_BOUNDARY quant cycle=319 vector=2
+SU_BOUNDARY consumer_q cycle=336 vector=3
+SU_BOUNDARY quant cycle=320 vector=3
+SU_BOUNDARY consumer_q cycle=337 vector=4
+SU_BOUNDARY quant cycle=321 vector=4
+SUN go=16 y_last=303 r=256 ro_last=-1 q_last=321 ey=0 er=0 eq=0 checked_y=5120 checked_r=0 checked_q=160 fault=0
+PASS
+- /srv/opentallas-scratch2/jobs/su-fusion-la6-transport-r1/src/rtl/test/tb_dsrom_su_norm_la6_transport.sv:195: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 188.330 s; speed 8.934 ns/s
+- Verilator: cpu 188.316 s on 1 threads; allocated 806 MB

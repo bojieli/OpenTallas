@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 
-def model(root):
+def model(root, boundary_hold=False, hard_cfg=False):
     parent_path = root/'results/uarch/dsrom_v9_parent_context_20261005/model.json'
     boundary_path = root/'results/uarch/dsrom_v9_field_boundary_20261005/model.json'
     parent = json.loads(parent_path.read_text())
@@ -20,9 +20,22 @@ def model(root):
     box = parent['reserved_QX_bbox_um']
     engine_available = (box[2]-box[0])*(box[3]-box[1])-macro_area
     parent_upper = parent['area']['cell_upper_um2']
+    cfg = None; cfg_body = 0.; cfg_logic = 0.; cfg_reserve = 0.
+    if hard_cfg:
+        cfg_path=root/'results/uarch/dsrom_v9_cfg_context_20261005/model.json'
+        cfg=json.loads(cfg_path.read_text())
+        cfg_receipt=json.loads((root/'results/rtl/dsrom_v9_cfg_context_20261005/record.json').read_text())
+        if cfg_receipt['functional_gate']['verdict']!='PASS': raise ValueError('actual cfg source exact gate absent')
+        cfg_body=cfg['geometry']['macro_body_um2']
+        cfg_logic=cfg['geometry']['added_logic_upper_um2']
+        cfg_reserve=cfg['geometry']['macro_reserved_um2']
+        parent_upper+=cfg_logic
+    # Mandatory baseline hold repair: one positive buffer on each of the three
+    # source-matched Z18d data sinks. No clock load or sequential stage is added.
+    hold_area = 3 * .0729 if boundary_hold else 0.
     # Conservative sum: the parent projection's redundant engine boundary
     # registers remain in this bound, although the join instantiates them once.
-    fits = logic <= .6*engine_available and parent_upper <= .5*parent['parent_available_um2']
+    fits = logic + hold_area <= .6*engine_available and parent_upper <= .5*(parent['parent_available_um2']-cfg_reserve)
     return dict(schema='opentallas.dsrom.qx10.native_parent.v1',
         source=dict(engine='0032b735573af2d24416eee1cf5911c0ac99ff5d',
                     engine_sha256='88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6',
@@ -33,18 +46,50 @@ def model(root):
         compute=dict(FP8_MACs_per_cycle=64, FP4_MACs_per_cycle=128,
                      weight_payload_bytes_per_cycle=64, FP8_MACs_per_weight_byte=1,
                      new_MACs_per_cycle=0),
-        memory_bytes_per_cycle=dict(weight=68.5, configuration=6),
+        memory_bytes_per_cycle=dict(weight=68.5, configuration=6, configuration_macro=9 if hard_cfg else 0),
+        ROM_reliability=dict(selected_policy='fault-free ROM reads, no ECC', ROM_ECC=False,
+             SECDED=False, ROM_parity_sidecars=0, weight_physical_bits=274,
+             weight_used_packed_FP8_bits=264, weight_used_packed_FP4_bits=272,
+             weight_metadata='source exponent fields, not ECC; no ROM checking/correction in selected0032',
+             configuration_physical_bits=72 if hard_cfg else 0, configuration_payload_bits=48,
+             configuration_spare_bits=24 if hard_cfg else 0,
+             configuration_source='q[47:0]; upper24 unused, not parity',
+             mutable_control_identity_address_and_fault_protection_retained=True),
+        configuration_provider=dict(selected=hard_cfg, default_OFF=True,
+             source='physical/dsrom_v9_cfg_context/ot_v41_pair_cfgrom_context.sv' if hard_cfg else None,
+             finite_words=1600 if hard_cfg else 0, PHW=6, NSEG=8, CW=25,
+             physical_rows=4096 if hard_cfg else 0, macro_replicas=1 if hard_cfg else 0,
+             payload_receiver_bits=48, source_native_consumed_capture_bits=list(range(29))+[42] if hard_cfg else None,
+             native_consumed_receiver_count=30 if hard_cfg else None,
+             omitted_payload_bits='BF16-only base[41:29], unused[47:43] under existingq-wrapper BF16=0; not protection',
+             physical_address_bits=12 if hard_cfg else 0, read_enable_bits=1,
+             macro_bbox_um=cfg['geometry']['macro_bbox_um'] if hard_cfg else None,
+             macro_reserved_um2=cfg_reserve, additional_logic_upper_um2=cfg_logic,
+             measured_component_standard_cell_um2=cfg_receipt['mapped_component']['standard_cell_area_um2'] if hard_cfg else None,
+             exact_checks_per_PQ=6070 if hard_cfg else 0, exact_added_loader_cycles=0,
+             actual_receiver_bounds=cfg_receipt['receiver_measurements'] if hard_cfg else None,
+             timing=cfg['clocks'] if hard_cfg else None,
+             same_root_clock=True, original_capture_stage=True, extra_pipeline_stages=0,
+             full_field_clock_qualified=False),
         boundary_bits_per_cycle=dict(XS=549, configuration=54, go=1, pair_result=126, root_capture=69),
-        replicas=dict(element=1, logical_banks=2, real_weight_ROMs=4, first_return_node=1),
+        replicas=dict(element=1, logical_banks=2, real_weight_ROMs=4, real_configuration_ROMs=1 if hard_cfg else 0, first_return_node=1),
         mux_demux_fanout='unchanged QX10 ping-pong capture mux, QZ_NS8/QZ_NE4 copies, class-valid admission and protected return identity',
         floorplan=dict(slot_um=parent['full_slot_um'], engine_frame_um=parent['reserved_QX_frame_um'],
                        engine_bbox_um=box, parent_bbox_um=parent['parent_cell_bbox_um']),
-        area=dict(Z18a_total_um2=total, ROM_um2=macro_area, engine_logic_um2=logic,
+        area=dict(Z18a_total_um2=total, ROM_um2=macro_area+cfg_body, weight_ROM_um2=macro_area, configuration_ROM_um2=cfg_body, engine_logic_um2=logic+hold_area,
                   engine_stdcell_available_um2=engine_available, engine_density=.6,
-                  parent_conservative_cell_upper_um2=parent_upper, parent_density=.5,
-                  sum_conservative_body_um2=total+parent_upper, analytical_slot_fit=fits,
+                  parent_conservative_cell_upper_um2=parent_upper, parent_density=.5, parent_available_after_cfg_halo_um2=parent['parent_available_um2']-cfg_reserve,
+                  sum_conservative_body_um2=total+parent_upper+hold_area+cfg_body, analytical_slot_fit=fits,
                   routed_slot_fit=False),
-        routing=dict(local_boundary_tracks=809,
+        boundary_hold=dict(selected=boundary_hold, default=False,
+                           mandatory_baseline_repair=True, buffers=3 if boundary_hold else 0,
+                           cell='BUFx2_ASAP7_75t_R', added_area_um2=hold_area,
+                           added_clock_load_fF=0, added_register_stages=0,
+                           added_MACs=0, added_memory_bytes_per_cycle=0,
+                           added_boundary_bits_per_cycle=0,
+                           SS60_FF25_loaded_context_required=True,
+                           buffer_area_source='results/physical/dsrom_qx10_boundary_hold_20261005/buffer_library.json'),
+        routing=dict(local_boundary_tracks=809+(3 if boundary_hold else 0)+(62 if hard_cfg else 0),
                      conservative_channel_height_um=parent['parent_cell_bbox_um'][3]-parent['parent_cell_bbox_um'][1],
                      channel_capacity_source='existing M4/M6 48/64nm track estimates in uarch_model; 50% clock/PG reserve',
                      estimated_channel_capacity_tracks=int((235.44/.048+235.44/.064)*.5),

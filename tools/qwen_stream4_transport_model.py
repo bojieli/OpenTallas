@@ -76,14 +76,35 @@ def transport(allocation, interface, root=ROOT):
     local_ack_ff=local_spans*(72+local_ack_control_ff)
     local_receiver_and_credit_source_FF=128*((8*7+6)+(8*5+6)+(8*7+6))
     extra_endpoint_ff=4*2*(5+6+8+8+3+3+1+1)+128*2*(5+1)+global_receiver_and_credit_source_FF+local_receiver_and_credit_source_FF
+    # Independently kept flop banks, not extra ports on the charged sealed
+    # ring memories. Per-stack callback metadata preserves out-of-order real
+    # WR completions until the forward pool's ordered head can retire.
+    endpoint_banks=dict(
+        forward_callback=dict(replicas=4,entries=128,bits=29,ports='one delivery fill,32 actual ACK observations,one ordered release; distributed checked flops'),
+        return_callback=dict(replicas=4,entries=128,bits=10,ports='one delivery fill,32 actual consumer pops,one ordered release; distributed checked flops'),
+        source_write_identity=dict(replicas=4,entries=64,bits=15,ports='one accepted write grant,one validated service ACK; independent checked flop entries'),
+        landing_cache=dict(replicas=128,entries=2,bits=290,ports='one selected incoming landing across32PC/stack; one read+pop perPC; same-slot replacement only on real pop'),
+        landing_pointers=dict(replicas=128,entries=1,bits=4,ports='one selected fill plus independent actual consumer pop'),
+        root_control=dict(replicas=4,entries=1,bits=42,ports='one descriptor reservation and its reserved GO continuation; ordinal held through consume ACK'),
+        endpoint_control=dict(replicas=4,entries=1,bits=40,ports='grant history,round-robin,pending descriptor/GO consumption ACKs,sticky fault'),
+    )
+    callback_bank_ff=sum(2*b['replicas']*b['entries']*b['bits'] for b in endpoint_banks.values())
+    # Actual HCLK consumption events return over a sealed local CDC ring;
+    # per-stack copies of the previously shared control are charged positively.
+    controller_callback=ring(4,4,4,pair,util)
+    extra_controller_core=3*interface['shared_descriptor_GO']['cell_area_mm2']/util
+    extra_endpoint_ff+=callback_bank_ff
     # Exact gates still determine realized mux/decode area. Count raw muxes
     # and PC demux/semantic/owner compares positively before source.
     mux=4*504*31*3+4*32*296*3
+    callback_mux=4*(128*31*9*3+32*290*3+15*63*3)
+    callback_compare=4*(128*32*8*3+128*(9+5+3+8)*3+64*15*3)
+    mux+=callback_mux+callback_compare
     checks=3*((trunk_ff+local_ff-504*2*(trunk_spans+local_spans)+local_spans*local_ack_control_ff)//2+extra_endpoint_ff//2)
     buffers=math.ceil((trunk_ff+local_ff+local_ack_ff+extra_endpoint_ff)/7)
     pipeline_cell=((trunk_ff+local_ff+local_ack_ff+extra_endpoint_ff)*.2916+(mux+checks)*.08748+buffers*.10206)/1e6
     local_codec_cell=0
-    functional_core=ingress['core_mm2_all']+forward['core_mm2_all']+reverse['core_mm2_all']+(pipeline_cell+local_codec_cell)/util
+    functional_core=ingress['core_mm2_all']+forward['core_mm2_all']+reverse['core_mm2_all']+controller_callback['core_mm2_all']+extra_controller_core+(pipeline_cell+local_codec_cell)/util
     # Explicit capacity reserve, not a borrowed closure verdict: ten percent
     # extra cell/floorplan area for buffers and actual clock trees, plus the
     # actual site snapping will be resolved by the contextual floorplan.
@@ -95,14 +116,33 @@ def transport(allocation, interface, root=ROOT):
     # Includes encoder publication, receive visibility+decoder and returned
     # retirement pointer, not merely a straight-line geometric wire count.
     longest_credit_rtt=2*(max_local+max_trunk)+1+2+4+2+2
+    # Actual source clocks differ on the local legs. Landing/ACK code moves
+    # on HCLK; write code and both global trunks move on free CLK. Storage
+    # publication and the CDC decoder are separately priced at their clocks.
+    c_ps=833.333;h_ps=1024
+    write_to_local_cache_ps=(8+2+max_trunk+6+2+max_local)*c_ps+6*h_ps
+    landing_to_source_seat_ps=(2+max_local)*h_ps+(6+2+max_trunk+6)*c_ps
     return dict(schema='opentallas.qwen.stream4.selected-transport.prebuild.v1',
         selected='four independent sealed 504-bit full-record stack links with protected finite credit pools; existing PC ring codecs reused on local legs',
         default_OFF=True,implemented=False,NEAR_HBM=0,DSpark=False,ROM_ECC=False,
+        implemented_scope='stack32 finite arbiter/callback banks and literal full128 physical context; existing producer32 exact, loaded slots/pins and SSFF pending',
+        physical_source_top='rtl/hdc/kv/ot_qwen_s4_transport_context.sv',
+        physical_source_instance_template='active.stack[sk].pc[p].u_pc',
+        physical_source_clock_binding='all trunk hops and both anchors use actual free clk; local PC/controller/callback rings cross independent hclk; gated ME remains outside this cut',
         baseline_plan=allocation['baseline_plan'],actual_service_NWR=64,actual_top_WBW=4,
-        source_grants='one rotating PC grant per stack; at most four total; held one-edge grant reserves a queue slot even across warm admission pause',
+        source_grants='one rotating PC advertisement per stack plus its prior registered service grant; at most four writes per edge, eight advertised/issued slots total; both grant stages reserve ingress capacity across warm pause',
         grant_rotation_bound_CLK_edges=32,
         source_write_ingress=ingress,forward_frame_pool=forward,reverse_frame_pool=reverse,
-        maximum_source_write_entries=64,maximum_source_unspent_grants=4,
+        endpoint_checked_banks=endpoint_banks,endpoint_checked_bank_FF=callback_bank_ff,
+        controller_consumption_callback=controller_callback,
+        extra_per_stack_controller_core_mm2=extra_controller_core,
+        callback_mux_NAND2=callback_mux,callback_compare_NAND2=callback_compare,
+        repair_debt='quarantined owners,metadata,sealed payload and slots remain occupied until cold POR; no auto repair/replay or warm credit. No additional repair port assumed.',
+        consumed_ACK_contract='wd_accept is the real source service validated ACK event; wd_v alone does not release the return pool or checked source write ticket',
+        quiet_contract='service-only quiet after warm closes advertisements and both retained grant stages drain; controller refresh and external PHY/core obligations remain active',
+        controller_ACK_contract='desc/GO callbacks originate only at actual HCLK controller consumption, cross sealed4-bit depth4 ring, and retain ordinal until return-pool acceptance',
+        ordered_retirement='forward/reverse callback banks keep out-of-order completions until their exact8-bit pool owner reaches ordered release head; no second ring-memory read port',
+        maximum_source_write_entries=64,maximum_source_unspent_grants=8,
         frame_pool_includes_inflight_and_held=True,frame_pool_depth=128,
         control_reserved_entries=4,data_frame_admission_limit=124,
         reservation_basis='one descriptor, one GO, one latest status, one sticky fault per stack; controller consumption ACK and descriptor ordinal retained',
@@ -142,9 +182,20 @@ def transport(allocation, interface, root=ROOT):
         physical_slot_fit=None,complete_system_fit=False,physical_admission=False,
         root_CLK_ps=833.333,HCLK_ps=1024,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
         wire_span_um=430.56,max_local_spans=max_local,max_trunk_spans=max_trunk,
-        one_way_visibility_max_CLK_edges=max_oneway,one_way_visibility_max_ps=max_oneway*833.333,
+        one_way_visibility_max_CLK_edges=None,one_way_visibility_max_ps=None,
+        historical_geometry_only_visibility_CLK_edges=max_oneway,
         longest_credit_roundtrip_CLK_edges=longest_credit_rtt,
-        frame_pool_covers_no_stall_roundtrip=128>=longest_credit_rtt,
+        legacy_geometry_only_credit_bound_excludes_WR_and_consumer=True,
+        frame_pool_covers_no_stall_roundtrip=None,
+        composed_clock_path=dict(write_ingress_edges_CLK=8,global_encoder_edges_CLK=2,
+            global_wire_edges_CLK=max_trunk,global_visibility_decoder_edges_CLK=6,
+            local_write_encoder_wire_edges_CLK=2+max_local,local_write_visibility_decoder_edges_HCLK=6,
+            local_landing_ACK_encoder_wire_edges_HCLK=2+max_local,local_landing_ACK_visibility_decoder_edges_CLK=6,
+            write_to_local_cache_minimum_ps=write_to_local_cache_ps,
+            landing_or_WR_ACK_to_source_seat_minimum_ps=landing_to_source_seat_ps,
+            WR_fence='add actual controller grant/WR schedule,cache completion HCLK capture,explicit PHY ACK latency,ordered callback HOL,and real source validated ACK; no constant WR latency invented',
+            landing_release='source l_pop plus ordered return callback head; delivery to seat never returns global credit',
+            no_stall_guarantee=False,queue_and_paired_consumer_stalls_are_additional=True),
         peak_payload_per_stack_CLK_edge_bytes=289/8,peak_coded_per_direction_CLK_edge_bytes=504/8,
         peak_return_records_per_stack_CLK_edge=1,peak_return_records_all_stacks_CLK_edge=4,
         MACs_per_edge=0,compute_intensity_MAC_per_byte=0,
@@ -163,6 +214,20 @@ def transport(allocation, interface, root=ROOT):
             token_composition='first exposed fill >=32768 edges plus visibility; later fills >=max(0,32768-actual measured independent MLP window) each; add ordered write/ACK fences and unchanged head/core path once; component MLP3000 is not the actual36-layer calendar',
             price='return bandwidth and PC grant stalls are real; compose into each exposed fill and write visibility fence, retain posted prefetch overlap only when measured',
             whole_token_measured=False,rate_credit=False,adopted=False),
+        numerical_provider=dict(scope='SIMULATION_ONLY existing HBM3E checker; no new physical storage/controller/PHY',
+            module='ot_qwen_s4_numeric_memory',ranks=4,PCs_per_rank=128,stacks_per_rank=4,
+            layers_per_rank=36,words_per_layer=131072,word_bits=256,
+            backing_bytes_per_rank=36*131072*32,backing_bytes_four_ranks=4*36*131072*32,
+            read_and_write_ports='one actual column command/PC/HCLK; mutual exclusion RD/WR; captured WR one edge later',
+            peak_column_bytes_per_HCLK_per_rank=128*32,peak_return_bytes_per_HCLK_per_rank=128*32,
+            return_queue_depth_per_PC=64,ACK_queue_depth_per_PC=64,landing_credits_per_PC=32,
+            actual_credit_return_bits_per_rank_HCLK=128*3,
+            public_backing='mem[4718592] of 256 bits; preload/readback canonical5.050 exact generated accessor',
+            read_return_due_HCLK_edges=(12500+1024+10000+1023)//1024,
+            write_ACK_due_from_column_HCLK_edges=(6250+1024+10000+1023)//1024,
+            reset='cold resets protocol only, preserves backing; no warm reset input',
+            descriptor_GO_observations='actual4 commit pulses and4 3bit ordinals each; direct output nets, zero added FF/cycles',
+            physical_area_delta_mm2=0,physical_admission=False),
         warm_reset='closes fresh grants; every issued grant, frame, pointer, decoder and backend owner drains or stays held; POR alone erases',
         admission_blockers=['existing bbcb and corrected c625 actual32 terminals',
             'implement and exact-test actual shared frame links and protected ready/credit/control endpoints',
@@ -172,5 +237,7 @@ def transport(allocation, interface, root=ROOT):
             allocation['baseline_plan'],'tools/qwen_rom_fulldie.py',
             'rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv','rtl/hdc/kv/ot_qwen_s4_protected_ring.sv',
             'rtl/hdc/kv/ot_qwen_s4_protected_pc.sv','rtl/hdc/kv/ot_qwen_s4_interface_context.sv',
-            'rtl/hdc/kv/ot_qwen_s4_packet_link.sv',
+            'rtl/hdc/kv/ot_qwen_s4_packet_link.sv','rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv',
+            'rtl/hdc/kv/ot_qwen_s4_stack_transport.sv','rtl/hdc/kv/ot_qwen_s4_transport_context.sv',
+            'rtl/hdc/kv/ot_qwen_s4_protected_control.sv',
             'rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv']})

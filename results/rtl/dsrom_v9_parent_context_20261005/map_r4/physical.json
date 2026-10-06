@@ -1,0 +1,255 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T23:08:25.553576+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_v9_parent_clock_context",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.727,
+    "core_input_delay_min_ns": 0.36,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r3/physical/dsrom_v9_parent_context/boundary.sdc",
+          "sha256": "e7aa011ae64c521493c619d282516eed19e36301ac285fe2313e238a0939b1af"
+        }
+      ],
+      "lines": [
+        "set gp [get_pins -quiet g_qx.g_cg.u_cg.u_icg/GCLK]",
+        "set cp [get_pins -quiet g_qx.g_cg.u_cg.u_icg/CLK]",
+        "if {[llength $gp]!=1 || [llength $cp]!=1} {error \"literal source ICG pins missing\"}",
+        "create_generated_clock -name q_gated -master_clock core_clk -source $cp -combinational $gp",
+        "set_clock_uncertainty -setup 60 [get_clocks {core_clk q_gated}]",
+        "set_clock_uncertainty -hold 25 [get_clocks {core_clk q_gated}]",
+        "set_clock_gating_check -setup 60 -hold 25 [get_cells g_qx.g_cg.u_cg.u_icg]",
+        "set gi [get_ports {tree_valid* tree_idle* tree_payload* busy_source frontend_fault_source bank_fault_source* walk_busy}]",
+        "unset_input_delay $gi",
+        "set_input_delay -min 360 -clock q_gated $gi",
+        "set_input_delay -max 727 -clock q_gated $gi",
+        "set go [get_ports {engine_xs*}]",
+        "unset_output_delay $go",
+        "set_output_delay -min 360 -clock q_gated $go",
+        "set_output_delay -max 727 -clock q_gated $go",
+        "unset_output_delay [get_ports engine_clk]",
+        "source /src/physical/dsrom_v9_parent_context/loaded_ports.sdc"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.727,
+    "output_delay_min_ns": 0.36,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context.sv",
+        "sha256": "0379c347f52652be54fecdc2404cd0bccc883cd45f394e2c2f829163e5f3c364",
+        "size_bytes": 8857
+      },
+      {
+        "path": "rtl/v41die/ot_v41_pair_pq_ld.sv",
+        "sha256": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+        "size_bytes": 3742
+      },
+      {
+        "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+        "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+        "size_bytes": 2053
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_ret.sv",
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "size_bytes": 9658
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_kreg.sv",
+        "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+        "size_bytes": 1505
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_cg.sv",
+        "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "size_bytes": 2051
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      }
+    ],
+    "top": "ot_v41_v9_parent_clock_context"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n wire99321\n wire99322\n wire99325\n wire99326\n wire99329\n wire99334\n wire99335\n wire99338\n wire99339\n wire99343\n wire99344\n wire99348\n wire99352\n wire99353\n wire99356\n wire99357\n wire99361\n wire99365\n wire99366\n wire99369\n wire99372\n wire99373\n wire99377\n wire99381\n wire99385\n wire99386\n wire99389\n wire99390\n wire99391\n wire99392\n wire99393\n wire99396\n wire99397\n wire99398\n wire99399\n wire99402\n wire99405\n wire99408\n wire99409\n wire99412\n wire99413\n wire99416\n wire99419\n wire99420\n wire99421\n wire99424\n wire99425\n wire99428\n wire99432\n wire99436\n wire99442\n wire99443\n wire99446\n wire99447\n wire99450\n wire99453\n wire99454\n wire99458\n wire99461\n wire99462\n wire99465\n wire99466\n wire99467\n wire99470\n wire99476\n wire99477\n wire99480\n wire99484\n wire99488\n wire99489\n wire99495\n wire99496\n wire99499\n wire99500\n wire99506\n wire99510\n wire99511\n wire99514\n wire99515\n wire99519\n wire99520\n wire99523\n wire99524\n wire99535\n wire99536\n wire99539\n wire99540\n wire99543\n wire99547\n wire99551\n wire99555\n wire99559\n wire99562\n wire99563\n wire99567\n wire99570\n wire99573\n wire99576\n wire99577\n wire99580\n wire99585\n wire99590\n wire99593\n wire99594\n wire99598\n wire99602\n wire99606\n wire99607\n wire99611\n wire99614\n wire99620\n wire99621\n wire99624\n wire99630\n wire99634\n wire99638\n wire99641\n wire99642\n wire99643\n wire99646\n wire99647\n wire99648\n wire99651\n wire99652\n wire99656\n wire99659\n wire99660\n wire99664\n wire99668\n wire99673\n wire99674\n wire99675\n wire99678\n wire99679\n wire99683\n wire99687\n wire99690\n wire99691\n wire99693\n wire99694\n wire99698\n wire99701\n wire99702\n wire99705\n wire99708\n wire99709\n wire99715\n wire99716\n wire99720\n wire99721\n wire99728\n wire99729\n wire99733\n wire99736\n wire99737\n wire99738\n wire99742\n wire99743\n wire99747\n wire99748\n wire99751\n wire99754\n wire99755\n wire99758\n wire99761\n wire99764\n wire99765\n wire99768\n wire99769\n wire99772\n wire99778\n wire99782\n wire99783\n wire99787\n wire99790\n wire99793\n wire99794\n wire99798\n wire99799\n wire99803\n wire99806\n wire99807\n wire99808\n wire99811\n wire99814\n wire99815\n wire99816\n wire99819\n wire99820\n wire99823\n wire99827\n wire99830\n wire99831\n wire99834\n wire99837\n wire99841\n wire99845\n wire99849\n wire99852\n wire99853\n wire99857\n wire99861\n wire99862\n wire99866\n wire99867\n wire99870\n wire99871\n wire99872\n wire99876\n wire99877\n wire99881\n wire99885\n wire99886\n wire99890\n wire99894\n wire99895\n wire99899\n wire99903\n wire99904\n wire99908\n wire99909\n wire99914\n wire99915\n wire99918\n wire99919\n wire99923\n wire99924\n wire99927\n wire99930\n wire99931\n wire99932\n wire99936\n wire99937\n wire99941\n wire99947\n wire99950\n wire99951\n wire99955\n wire99958\n wire99959\n wire99963\n wire99964\n wire99968\n wire99972\n wire99975\n wire99976\n wire99980\n wire99981\n wire99985\n wire99986\n wire99992\n wire99993\n wire99997\n[ERROR DPL-0033] detailed placement checks failed during check placement.\nwrite_db /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp-failed.odb\nError: detail_place.tcl, 39 DPL-0033\n\nElapsed time: 0:02.83[h:]min:sec. CPU time: user 2.69 sys 0.14 (99%). Peak memory: 448264KB.\nElapsed time: 3:37.25[h:]min:sec. CPU time: user 283.06 sys 7.83 (133%). Peak memory: 645512KB.\nElapsed time: 0:01.97[h:]min:sec. CPU time: user 1.85 sys 0.12 (99%). Peak memory: 409608KB.\nElapsed time: 0:02.06[h:]min:sec. CPU time: user 1.94 sys 0.12 (99%). Peak memory: 378916KB.\nElapsed time: 0:07.26[h:]min:sec. CPU time: user 7.07 sys 0.19 (99%). Peak memory: 590060KB.\nElapsed time: 0:27.93[h:]min:sec. CPU time: user 61.56 sys 0.25 (221%). Peak memory: 711980KB.\nElapsed time: 0:02.57[h:]min:sec. CPU time: user 2.42 sys 0.15 (99%). Peak memory: 513868KB.\nElapsed time: 4:13.25[h:]min:sec. CPU time: user 406.38 sys 3.40 (161%). Peak memory: 3385292KB.\nElapsed time: 1:28.62[h:]min:sec. CPU time: user 103.07 sys 3.01 (119%). Peak memory: 1132868KB.\nElapsed time: 54:26.14[h:]min:sec. CPU time: user 3216.63 sys 49.17 (99%). Peak memory: 1506148KB.\nmake[1]: *** [Makefile:511: do-3_5_place_dp] Error 1\nmake: *** [Makefile:511: /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T22:03:51.783500+00:00",
+  "git": {
+    "commit": "a2beef00ca0319615b8c6020e2f82dd9e3a4d8db",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41_v9_parent_clock_context",
+      "--source",
+      "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context.sv",
+      "--source",
+      "rtl/v41die/ot_v41_pair_pq_ld.sv",
+      "--source",
+      "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_ret.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_kreg.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_cg.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      ".060",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--core-input-delay-min-ns",
+      ".360",
+      "--core-input-delay-max-ns",
+      ".727",
+      "--output-delay-min-ns",
+      ".360",
+      "--output-delay-max-ns",
+      ".727",
+      "--sdc-append",
+      "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r3/physical/dsrom_v9_parent_context/boundary.sdc",
+      "--stages",
+      "pnr",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--die-area",
+      "0",
+      "0",
+      "1040.256",
+      "239.76",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "1038.096",
+      "237.60",
+      "--place-density",
+      ".5",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--orfs-var",
+      "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl",
+      "--orfs-var",
+      "FASTROUTE_TCL=/src/physical/dsrom_v9_parent_context/fastroute.tcl",
+      "--routing-layers",
+      "M2",
+      "M8",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_v9_parent_context/regions.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/dsrom_v9_parent_context/clock.tcl",
+      "--step-tcl",
+      "POST_CTS=physical/dsrom_v9_parent_context/clock.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/dsrom_v9_parent_context/replay_checks.tcl",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work"
+    ],
+    "driver": {
+      "commit": "a2beef00ca0319615b8c6020e2f82dd9e3a4d8db",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r3/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r3"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/source-r3"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
