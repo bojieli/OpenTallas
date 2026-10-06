@@ -4,7 +4,7 @@
 # ~30 % utilisation square.  A station outline is the r16g die slot: long and sparse (meso_r32 39 x 285 um, 24 %), the
 # FIFO's I/O ends sit on opposite faces, and global placement spreads the ring and the receive buffer along the whole
 # length, so the crossing alone carries a 100+ um wire (routed SS -5 .. -83 ps, r4/r5).  This hook gives each FIFO
-# u_meso<k> an INCLUSIVE region at OT_FENCE_DENSITY (default 0.60) of its own cell area, spanning the outline's
+# u_meso<k> an INCLUSIVE region at OT_FENCE_DENSITY (default 0.45) of its own cell area, spanning the outline's
 # short side, centred between the terminals that feed it and the terminals it drives (OT_FENCE_POS; block centre
 # when either set is empty), so the crossing stays as compact as in the contract and the I/O legs carry the distance.
 # Membership: the FIFO's named cells (flops, kept select cells: u_meso<k>.*).  Synthesis renames the combinational
@@ -13,7 +13,7 @@
 # Terminals: inputs that reach a group forwards within OT_DEPTH cells; outputs of the group's terminal registers.
 # ORFS sources step hooks inside a proc: the tables the helper procs read must be true globals
 global ot_pin ot_grp
-set ot_dens [expr {[info exists ::env(OT_FENCE_DENSITY)] ? $::env(OT_FENCE_DENSITY) : 0.60}]
+set ot_dens [expr {[info exists ::env(OT_FENCE_DENSITY)] ? $::env(OT_FENCE_DENSITY) : 0.45}]
 set ot_depth [expr {[info exists ::env(OT_DEPTH)] ? $::env(OT_DEPTH) : 4}]
 # OT_FENCE_POS: region centre as a fraction of the way from the feeding terminals' centroid to the driven ones' (the
 # input leg is a half-period arc: forwarded data captured on the falling edge; the output leg has a full period)
@@ -136,7 +136,10 @@ foreach g [lsort [array names ot_mem]] {
   set r [odb::dbRegion_create $ot_blk "ot_fence_$g"]
   odb::dbBox_create $r $rx0 $ry0 $rx1 $ry1
   $r setRegionType INCLUSIVE
-  foreach i $ot_mem($g) { $r addInst $i }
+  # global placement places a region's cells through a group bound to it (a region alone only constrains the
+  # legaliser, which then drags the cells there after an unconstrained global placement: r8, 3x wirelength)
+  set grp [odb::dbGroup_create $r "ot_fence_grp_$g"]
+  foreach i $ot_mem($g) { $grp addInst $i }
   puts [format "OT_STN: fence %s %d cells %.1f um2 at %.2f -> (%.2f %.2f %.2f %.2f) um, %d in / %d out terminals" \
         $g [llength $ot_mem($g)] [expr {$area/$ot_dbu/$ot_dbu}] $ot_dens [expr {$rx0/double($ot_dbu)}] \
         [expr {$ry0/double($ot_dbu)}] [expr {$rx1/double($ot_dbu)}] [expr {$ry1/double($ot_dbu)}] [llength $ins] [llength $outs]]
