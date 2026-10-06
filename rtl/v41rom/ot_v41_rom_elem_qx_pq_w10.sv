@@ -405,7 +405,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // ---------------- PQ: banked output tags, op parity, configuration shadow + replay (see the PQ header) ------
     localparam integer CW = 3 * NSEG + 1;       // configuration words per load
     localparam integer RPW = 2 * NSEG + 1;      // replayed words: segments, classes, sub-blocks / positions
-    wire              pq_tp, pq_fault, pq_swap, pq_walking;
+    wire              pq_tp, pq_fault, pq_swap, pq_walking, pq_bank_free;
     wire [NB*TRW-1:0] pq_tree;
     wire [NB*3-1:0]   pq_pos;
     wire [NB-1:0]     pq_idle;
@@ -445,9 +445,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
     ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN)) u_pq (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v_x), .cfg_a(cfg_a_x), .cfg_d(cfg_d_x[25:0]), .go_e(go_e), .go_tag(go_tag_e), .walk_busy(walk_busy),
-        .walking(pq_walking), .tp(pq_tp), .bank_free(bank_free), .sh_free(sh_free), .swap(pq_swap), .fault(pq_fault),
+        .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(sh_free), .swap(pq_swap), .fault(pq_fault),
         .t_tree(pq_tree), .t_pos(pq_pos), .q_idle(pq_idle), .q_row(pq_row), .q_idx(pq_idx), .q_n(pq_n));
     assign walking = pq_walking;
+    // the tags module judges the load bank against go_e; a go still in the boundary / input registers (go_pin, go)
+    // switches the bank before the load's words arrive, so the load waits until that go has reached go_e
+    assign bank_free = pq_bank_free && (PQ == 0 || (!go_pin && !go));
     reg [7:0] drain;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) drain <= 8'd0;
@@ -1963,4 +1966,15 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     assign busy_c = w_run | i1_v | i2_v | drain != 8'd0;
     assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 3'd0);
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
+`ifdef QXPQ_DBG
+    reg dbg_pf, dbg_ff, dbg_bk;
+    always @(posedge clk) if (rst_n) begin
+        dbg_pf <= pq_fault; dbg_ff <= ffault; dbg_bk <= |bk_fault;
+        if (pq_fault && !dbg_pf) $display("QXPQ_DBG %m pq_fault t=%0t go_e=%b walking=%b sh_free=%b cfg_v_x=%b a=%0d", $time, go_e, pq_walking, sh_free, cfg_v_x, cfg_a_x);
+        if (ffault && !dbg_ff) $display("QXPQ_DBG %m ffault t=%0t", $time);
+        if ((|bk_fault) && !dbg_bk) $display("QXPQ_DBG %m bk_fault=%b t=%0t", bk_fault, $time);
+        if (go_e) $display("QXPQ_DBG %m go_e t=%0t tag=%0d walking=%b", $time, go_tag_e, pq_walking);
+        if (pq_swap) $display("QXPQ_DBG %m swap t=%0t", $time);
+    end
+`endif
 endmodule
