@@ -1,0 +1,31 @@
+{
+  "status": "FROZEN_MAPPED_AND_ROUTED_INPUT_ATTRIBUTES_RETAINED",
+  "source_driver_warning": "Shared unadapted tools/run_abi3_physical.py contains -noattr; owned adapter replaced it before BOTH actual synth runs, frozen synth.ys confirms.",
+  "owned_adapter_sha256": "339b898fb35a3a4c035f03f8fea423347c238f4346031f7bcac8fac2a7b7dc8d",
+  "NO2": {
+    "raw_sha256": "1500f9ead64c8c390d68ce52df40e957687da4f7a2d983ef05597822f494f6b7",
+    "attributes": {
+      "keep": 12,
+      "dont_touch": 12,
+      "src": 13734,
+      "hdlname": 20,
+      "keep_hierarchy": 1
+    },
+    "route_input_equals_selected_mapped": true
+  },
+  "NO3": {
+    "raw_sha256": "ce7047aefcb100f4f7e37eb2376c1b96f39fcc2e6e515d86e8786ce9006f80ee",
+    "attributes": {
+      "keep": 14,
+      "dont_touch": 14,
+      "src": 16982,
+      "hdlname": 22,
+      "keep_hierarchy": 1
+    },
+    "route_input_equals_selected_mapped": true
+  },
+  "normalization": "Only signed declaration qualifier removal; all cells/nets/ports/connectivity and attributes retained.",
+  "source_scope": "Actual static W2 bank has keep/dont_touch on failed/failed_n dual rails; no source keep/prefix attributes exist on code/check72/first. Static codec replaces only three GF2 function definitions; bank state/repair/load code remains unchanged.",
+  "attribution_limit": "opt_clean-purge removes unkept public aliases; source controller/code-bit attribution requires exact diagnostic before-purge capture. Alias removal alone does not imply dropped hardware.",
+  "live_jobs": "No flags changed and no progressing job restarted. NO2 terminal DRT-0305 after CTS; NO3 continues."
+}

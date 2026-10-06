@@ -1,0 +1,172 @@
+{
+ "rec": "/srv/opentallas-scratch/claude/qwen-hbm-power/runs/head/tile1000.rec",
+ "records": 2658,
+ "first_cyc": 1,
+ "last_cyc": 2882,
+ "replay_exact": true,
+ "replay_mismatches": 0,
+ "negative_control": {
+  "flip_record": 200,
+  "rc": 3,
+  "detected": true,
+  "line": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=0 mismatches=1768 first_bad=890"
+ },
+ "window_records": 512,
+ "reads": {
+  "rom_bank_reads": 1584,
+  "rom_reads_by_bank": {
+   "0": 1584
+  },
+  "kv_reads": 0
+ },
+ "window_reads": {
+  "w000000": {
+   "rom": 380,
+   "kv": 0
+  },
+  "w000512": {
+   "rom": 266,
+   "kv": 0
+  },
+  "w001024": {
+   "rom": 378,
+   "kv": 0
+  },
+  "w001536": {
+   "rom": 400,
+   "kv": 0
+  },
+  "w002048": {
+   "rom": 160,
+   "kv": 0
+  }
+ },
+ "saifs": {
+  "full": {
+   "begin": null,
+   "end": null,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_full.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=2658 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 39451265 value changes, duration 2216772 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_full.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  },
+  "w000000": {
+   "begin": 0,
+   "end": 512,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_w000000.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=512 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 6474922 value changes, duration 426591 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_w000000.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  },
+  "w000512": {
+   "begin": 512,
+   "end": 1024,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_w000512.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=512 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 7684944 value changes, duration 426591 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_w000512.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  },
+  "w001024": {
+   "begin": 1024,
+   "end": 1536,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_w001024.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=512 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 8586136 value changes, duration 426591 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_w001024.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  },
+  "w001536": {
+   "begin": 1536,
+   "end": 2048,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_w001536.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=512 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 8281038 value changes, duration 426591 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_w001536.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  },
+  "w002048": {
+   "begin": 2048,
+   "end": 2560,
+   "rtl_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/rtl_w002048.saif",
+   "rc": 0,
+   "replay": "TILE_REPLAY tile=1000 records=2658 first_cyc=1 last_cyc=2882 traced=512 mismatches=0 first_bad=-1",
+   "vcd2saif_rc": 0,
+   "vcd2saif": "vcd2saif: 50672 vars, 1149158 bits, 7443866 value changes, duration 426591 (1ps), 0 bits not written (name)\n",
+   "map": {
+    "pin_saif": "/srv/opentallas-scratch/claude/qwen-hbm-power/act/head_t1000/pin_w002048.saif",
+    "rtl_records": 1149158,
+    "flops": 102102,
+    "flops_matched": 102101,
+    "ports": 7920,
+    "ports_matched": 7920,
+    "flop_match_fraction": 0.9999902058725588,
+    "unmatched_examples": [
+     "u_node.u_wv.genblk1.g_one.line"
+    ]
+   }
+  }
+ }
+}

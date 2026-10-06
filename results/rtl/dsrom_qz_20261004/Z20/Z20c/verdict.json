@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.dsrom_qz.verdict.v1",
+ "date": "2026-10-06",
+ "run": "Z20c",
+ "verdict": "CLOSED_SSFF",
+ "one_line": "QX = 10 q-element on the taller frame 510.84 x 177.12 um (owner decision 2026-10-05: taller slot, fewer elements per die) closes: routed SS setup +3.54 ps at 60 ps, FF hold +0.61 ps at 25 ps, 0 DRC, 0 antenna; single-instance pin access PASS (0 DRT-0073)",
+ "source_commit": "e9b6fdd31 (QX = 10 RTL = 0032b7355, unchanged)",
+ "exact": "results/rtl/dsrom_qz_20261004/exact_qx10_quick.json (PASS, 15 positives / 29.51M cycles, 20/20 negatives)",
+ "frame_um": [
+  510.84,
+  177.12
+ ],
+ "area_um2": 90480.0,
+ "design_util_pct": 65,
+ "std_cell_gpl_util_pct": 46.1,
+ "flow": "results/rtl/dsrom_qz_20261004/Z20/launch.sh FH=177.12 QX=10 HM 0.025 SM 20, Z18d CTS (cluster 30/50/60 + -apply_ndr full -balance_levels), keepout v2, RLA 0.22, SS(WC) 0.833 ns, hold corners WC,BC",
+ "signoff": {
+  "SS_setup_wns_ps": 3.54,
+  "FF_hold_wns_ps": 0.61,
+  "drc": 0,
+  "antenna": 0,
+  "max_fanout": 0,
+  "max_cap": 0,
+  "max_slew_violations": 1,
+  "max_slew_note": "one pin (_166614_/B) 346.9 ps vs the 320 ps SDC max_transition (signal-integrity constraint); its slew is in the SS/FF timing above"
+ },
+ "siblings": {
+  "Z20a": {
+   "frame_h": 209.52,
+   "util_pct": 55,
+   "SS_ps": -4.75,
+   "FF": "met",
+   "verdict": "FAIL_SS"
+  },
+  "Z20b": {
+   "frame_h": 192.24,
+   "util_pct": 60,
+   "SS_ps": -2.68,
+   "FF": "met",
+   "verdict": "FAIL_SS"
+  },
+  "frame_D_history": "Z18c SS -3.90 / FF +7.01; Z18d SS +3.67 / FF -10.84 (151.2 um, 77 %); chase stopped by owner"
+ },
+ "abstract": "Z20c/routed_element.lef.gz (tools/dsrom_q_abstract.tcl; 736 pins, 510.84 x 177.12)",
+ "pin_access": {
+  "single_instance": "PASS (pa_single.log)",
+  "s81_die": "NOT YET: the S81 generator still has the 157.68 um element frame (8,811 overlaps with the taller abstract; pin access itself 0 DRT-0073); S81-DIE regenerates at SLOT_H 265.68"
+ },
+ "die_consequence": {
+  "method": "analytic: S81 field 128 frames x 6 tiers, slot = cfg row + element frame + halos (SLOT_H = 239.76 + FH - 151.2), a slot = 2 q pairs or 1 BF pair (519/2417 BF share kept); stages = ceil(81 x 2417 / pairs); each added stage = one measured stage hop (links.json 909 cycles = 0.7575 us) on the AR / MTP critical path of the published three-machine DS ROM composition (AR 592.926 us, MTP step 840.758 us)",
+  "die_mm2": "unchanged 858 (33 x 26 mm): field height 6 x 11 x 265.68 + 7 x 259.2 = 19,349 um <= 19,917 um",
+  "options": [
+   {
+    "frame_h_um": 151.2,
+    "slot_h_um": 239.76,
+    "slots_per_frame": 12,
+    "pairs_per_die": 2417,
+    "stages": 81,
+    "layer_dies": 324,
+    "added_layer_dies": 0,
+    "added_stage_hops": 0,
+    "added_AR_us": 0.0,
+    "AR_tok_s": 1686.6,
+    "MTP_tok_s": 4946.7
+   },
+   {
+    "frame_h_um": 177.12,
+    "slot_h_um": 265.68,
+    "slots_per_frame": 11,
+    "pairs_per_die": 2318,
+    "stages": 85,
+    "layer_dies": 340,
+    "added_layer_dies": 16,
+    "added_stage_hops": 4,
+    "added_AR_us": 3.03,
+    "AR_tok_s": 1678.0,
+    "MTP_tok_s": 4928.9
+   },
+   {
+    "frame_h_um": 192.24,
+    "slot_h_um": 280.8,
+    "slots_per_frame": 10,
+    "pairs_per_die": 2107,
+    "stages": 93,
+    "layer_dies": 372,
+    "added_layer_dies": 48,
+    "added_stage_hops": 12,
+    "added_AR_us": 9.09,
+    "AR_tok_s": 1661.1,
+    "MTP_tok_s": 4893.8
+   },
+   {
+    "frame_h_um": 209.52,
+    "slot_h_um": 298.08,
+    "slots_per_frame": 10,
+    "pairs_per_die": 2107,
+    "stages": 93,
+    "layer_dies": 372,
+    "added_layer_dies": 48,
+    "added_stage_hops": 12,
+    "added_AR_us": 9.09,
+    "AR_tok_s": 1661.1,
+    "MTP_tok_s": 4893.8
+   }
+  ],
+  "unvalidated": [
+   "stage partition at 2,318 pairs (layer-to-stage map not regenerated)",
+   "S81 die route at the new slot (S81-DIE)"
+  ]
+ }
+}

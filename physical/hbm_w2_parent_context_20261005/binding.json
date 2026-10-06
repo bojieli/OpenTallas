@@ -50,10 +50,10 @@
     "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
     "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
     "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
-    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "f0dcfe906acf77fc6768675421bf9cf5eee0d1a49371b4f99ceabcdf3633eed7",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "69e06924f0baaecf3d58d0b4d78bfc6876b5b0b2ef20df5a1afd58156bc06378",
     "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
     "results/uarch/hbm_attn_h16_context_20261005/model.json": "dce33b7398694efe5d64d833bb9705ec1c08b02f2089f7056e6560cb63bb5b30",
-    "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc": "65ab644e483c33b09d21f0e05d816273caa5c30801ce9a9eeb30f41576b7cc19",
+    "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc": "3968de9aacc1f25211a0590da7e104e4379eb0b077a7a6d5f850973516ccbfc2",
     "results/rtl/hbm_child_contract_20261005/child_reservations.json": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f"
   },
   "sized_context": {
@@ -241,6 +241,53 @@
     "live_producer_original_sink": true,
     "live_GU": false,
     "live_producer_new_protected_parent_gate": false
+  },
+  "station_CE_selector_handoff": {
+    "implementation": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv",
+    "parameter": "BALANCED_CE_SELECT",
+    "default": 0,
+    "owner_integration": "Gauss/Turing station only; no peer worktree changes or existing parent source replacement",
+    "actual_bank_scope": "native station payload cut2136payload+192owner+1valid=2329bits;37data W6words plus5repair words",
+    "packet_bits": 2329,
+    "data_words": 37,
+    "repair_words": 5,
+    "FF_bits": 3026,
+    "added_FF_bits": 0,
+    "added_state_or_memory_ports": 0,
+    "added_normal_edges": 0,
+    "added_CE_edges": 0,
+    "CE_repair_edges": 5,
+    "readyless_parent_contract_unchanged": true,
+    "linear_selector_mux_levels": 36,
+    "balanced_selector_leaves": 64,
+    "balanced_selector_mux_levels": 6,
+    "balanced_selector_node_allowance": 63,
+    "selector_index_width": 16,
+    "balanced_selector_cell_upper_um2": 208.02978000000002,
+    "selector_area_bound_is_not_mapped_or_station_fit": true,
+    "actual_propagated_clock_or_loaded_fanout": null,
+    "failed_source": "ac32ed3d6",
+    "failed_NO2_setup_ps": -1721.01,
+    "failed_NO3_setup_ps": -1735.69,
+    "mapped_pair": [
+      "_121746_",
+      "_118149_"
+    ],
+    "exact_mapped_register_src": "ot_hbm_w2_protected_bank_static.sv:76.2-104.5",
+    "mapped_word_bit_identity": null,
+    "association_limit": "both cells map to the protected bank sequential block; linear CE selection is inferred from the AO21 chain, not recovered word/bit attribution",
+    "CURRENT_flags": "normal/fault/repairing remain combinational from current code and all5repair words; no registered cached authorization",
+    "source_cut": "balance only the lowest-index correctable-stripe priority tree before selected snapshot capture; no CE correction/decode/encode waiver",
+    "gate_passed": true,
+    "gate_terminal": "results/rtl/w2_transaction_pipeline_20261005/ce_tree_full37_r2_PASS/terminal.json",
+    "current_source_sha256": "afe5be0c97c2d0645b8aaa07499e383095055433cb37e64acb6480056213d036",
+    "physical_qualified": false,
+    "headline_rate_credit": false,
+    "owner": "Gauss/Turing own station; central and peer station source untouched",
+    "optin": "Thread BALANCED_CE_SELECT=0 through station/native/frame defaults; ON selects ot_hbm_w2_protected_bank_ce_tree and ot_hbm_w2_protected_cut_ce_tree with BALANCED_CE_SELECT=1",
+    "alternative_static_consumption": "Apply only the balanced first-CE selector block to your static-expanded bank ON source; retain current codec equations and all sequential bytes. No codec replay is needed for an unchanged expansion.",
+    "current_flags": "Retain CURRENT normal/fault/repairing from live protected words and5repair words. Do not register normal or reuse a cached syndrome as authority.",
+    "remaining": "Gauss exact semantic word/bit reverse map of _121746_/_118149_ if preserved; source-local source association proven only to static bank sequential block. Measure changed fullshape station SS60/FF25; existing failures immutable."
   },
   "actual_caller_replacement_hook": {
     "schema": "opentallas.w2.actual-caller-replacement-hook.v1",
@@ -8886,5 +8933,18 @@
   "remaining_bindings": [
     "Claude SM/Franklin/Gibbs: actual pre-capture NC8/PIO2 caller port export/replacement hook, with the protected result stages and identity join replacing old stages once; post-capture rv/rop/rrow/rdata are not producer inputs",
     "Turing: existing retained-map floorplan continuation then actual region/CDC first-stage/CTS/receiver-load/SS60-FF25 extraction; external IO numbers remain budgets"
-  ]
+  ],
+  "station_CURRENT_registered_handoff": {
+    "owner": "Gauss station and Turing parent",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv",
+    "default_parameter": "REGISTERED_CURRENT=0",
+    "enabled_bank": "ot_hbm_w2_protected_bank_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "enabled_cut": "ot_hbm_w2_protected_cut_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "exact_mechanism": "per-stripe protected snapshot/check register; current equality fence; held parallel CE repair then recheck",
+    "changed_minimum_gate": "results/rtl/w2_transaction_pipeline_20261005/current_station_r1/terminal.json",
+    "targeted_fault_gate": "results/rtl/w2_transaction_pipeline_20261005/current_bank_r1/terminal.json",
+    "Gauss_next": "Use new bank/cut in own exact station source with defaults0. Static codec expansion only if needed, preserving four codecs and state machine; retain attrs. Map actual FF/area/current-check fanout against existing H55/V60 slot, bind SS60/FF25 and real receiver/forwarded clock. Fix native constantone POWER tie separately once changed source qualified. No unchanged density route.",
+    "Turing_next": "Consume NO2 15420/NO3 16646 source FF, quarter65358; four-stage serial publication added-edge upper68(56.6667ns), actual changed gate release90. Actual fit/loadedclock/old-calendar delta remain open; no cached owner/ready credit.",
+    "physical_qualified": false
+  }
 }

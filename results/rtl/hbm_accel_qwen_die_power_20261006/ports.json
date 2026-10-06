@@ -1,0 +1,716 @@
+{
+ "L0_t0000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.03484840573656363
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33793032929546085
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3447311856028961
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3384236415692008
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3567414630325815
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.013667837094825618
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.002292787089250905
+  }
+ },
+ "L0_t0001": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.03356481481481482
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3561573203842941
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33676258789334446
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3453561203355611
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35441957758980785
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.0136342317782761
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0020145850737956
+  }
+ },
+ "L0_t0003": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.03326676065162907
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35387513923698133
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34382233796296297
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3220284870161515
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3569514062935116
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.013727405397369781
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0018866339024644946
+  }
+ },
+ "L0_t0007": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.0325031328320802
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3563569296505152
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3475741219367864
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3321188170077973
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3501505499860763
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.013469974016076114
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0019909256648565857
+  }
+ },
+ "L0_t0015": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.0342479462545252
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3495457393483709
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34335458872876634
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.344733905075188
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3458940319548872
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.01372573036601529
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.002086515115914787
+  }
+ },
+ "L0_t0031": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.03468523739905319
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3554230628654971
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.013616539259594265
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.002121596308479532
+  }
+ },
+ "L0_t1000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.032905614731272625
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3407591243734336
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3478732638888889
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3412981237816764
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3510506953146756
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.013733791454408787
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0019440147678223337
+  }
+ },
+ "L20_t0000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.027457180127041743
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34487721188747733
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33071262477313973
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34532295683983666
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.350912049115245
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.01113500061405783
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0014352677305467332
+  }
+ },
+ "L20_t0001": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.02787545372050817
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35046010095281305
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.349429038821461
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33112070737862975
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3591237699920599
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.01114071476331482
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0013970515256352088
+  }
+ },
+ "L20_t0003": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.027634414700544466
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3586394765199637
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35099845096982757
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3333219607815336
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.36192983637704174
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.011152228347638607
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0014588620831442831
+  }
+ },
+ "L20_t0007": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.027168287772232305
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.36147877438747733
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35715690931261346
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3269694305807623
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35610324977313973
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.011198026827504332
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0014797979171392922
+  }
+ },
+ "L20_t0015": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.027450090744101634
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3556871916118421
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34634560032894735
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3372822673264519
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.34944366067377497
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.01115708963879754
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.001753514561592559
+  }
+ },
+ "L20_t0031": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.02768758507259528
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3218260832577132
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.011167153364354624
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0017296986657781308
+  }
+ },
+ "L20_t1000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.02785418557168784
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33291786595394735
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3382557282214156
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33336316781987296
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3459459363656987
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.011158368925944625
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.001455428163282668
+  }
+ },
+ "head_t0000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.0320553517682468
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2744669688205418
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2837799508559067
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2749975016459744
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2911618521914974
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.0572589770136402
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t0001": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.028022714446952597
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.290549020645222
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2954722476956358
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2843538374717833
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.29905518129232506
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.057198159054521185
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t0003": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.036102685289691495
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.298452637086155
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33484998118886383
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.28252636498307
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33929117287434163
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.05731526898510384
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t0007": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.029166078818660648
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33860118627727614
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3638676283860045
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2708171675131678
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.37295134969902183
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.057427287179574224
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t0015": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.035541290443942816
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3722422580417607
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.35923538609857036
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.33456487490594433
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3736053306057186
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.05717199318838858
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t0031": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.0262679881489842
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3162886803987961
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.05722050611856956
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ },
+ "head_t1000": {
+  "ib": {
+   "bits": 379,
+   "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+  },
+  "xl": {
+   "bits": 128,
+   "toggles_per_bit_per_clocked_cycle": 0.029174896538750942
+  },
+  "n_a": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.27645095584085777
+  },
+  "n_b": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.294921875
+  },
+  "t_out": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.2770373342268623
+  },
+  "n_y": {
+   "bits": 512,
+   "toggles_per_bit_per_clocked_cycle": 0.3007445094996238
+  },
+  "rom_rd": {
+   "bits": 2660,
+   "toggles_per_bit_per_clocked_cycle": 0.05718203522349893
+  },
+  "kv_q": {
+   "bits": 2048,
+   "toggles_per_bit_per_clocked_cycle": 0.0
+  }
+ }
+}

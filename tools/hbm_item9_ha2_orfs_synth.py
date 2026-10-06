@@ -36,8 +36,12 @@ def prepare_mapped_route(src, binding, out, utilization):
     assert b['clock_period_ps'] == 833 and b['setup_uncertainty_ps'] == 60 and b['hold_uncertainty_ps'] == 25
     assert b['clock_roots'] == ['clk']  # literal adapter ABI, not TU's pclk alias
     for field in ('producer_tuples', 'receiver_tuples', 'clock_pin_tuples',
-                  'reset_pin_tuples', 'corridor_segments'):
+                  'reset_pin_tuples', 'corridor_segments', 'route_memory_inventory_basis'):
         assert b[field], field
+    # Synthesis's 64 GiB inventory is not a measured P&R peak. Kant must
+    # supply the route inventory before using the unchanged host guard.
+    assert b['route_memory_owner'] == 'Kant'
+    assert isinstance(b['route_memory_guard_GiB'], (int, float)) and b['route_memory_guard_GiB'] > 0
     assert b['canonical_r14_geometry_used'] is False
     assert b['PG_and_clock_tracks_excluded_from_capacity'] is True
     sdc, pins = (Path(b[k]['path']) for k in ('SDC', 'pins_Tcl'))
@@ -70,7 +74,7 @@ def prepare_mapped_route(src, binding, out, utilization):
     record = dict(phase='PREPARED_NOT_ADMITTED', source_synth=r, source_bound_binding=b,
                   mapped_sha256=mh, exact_gate_reused=True, new_cycles=0,
                   full_protected_parent_included=False, physical_signoff=False, adopted=False,
-                  NUM_CORES=16, memory_guard_GiB=64, guard_unchanged=True,
+                  NUM_CORES=16, memory_guard_GiB=b['route_memory_guard_GiB'], guard_unchanged=True,
                   utilization_percent=utilization, driver_sha256=digest(Path(__file__)),
                   work_sha256={f: digest(work / f) for f in ('mapped.v', 'config.mk', 'constraint.sdc', 'pins.tcl')})
     (out / 'launch.json').write_text(json.dumps(record, indent=2) + '\n')

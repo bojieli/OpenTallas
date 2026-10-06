@@ -1,0 +1,74 @@
+{
+  "1_1_yosys_canonicalize.rtlil": {
+    "bytes": 2232036,
+    "sha256": "e879daa59dc62d445e386bd11a3bd6c0e6c35e684560acf678fa2853fcd3ff5f"
+  },
+  "1_2_yosys.sdc": {
+    "bytes": 57285,
+    "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+  },
+  "1_2_yosys.v": {
+    "bytes": 31525905,
+    "sha256": "10f6fc6591b2653c270eca3280fbe12b81a87fe6996fd95cc92f5d5b4255ef9f"
+  },
+  "1_synth.odb": {
+    "bytes": 117329627,
+    "sha256": "a83e84824456694fb5f02da0887721f533892c23f6a9a87e4d73e271768a37b6"
+  },
+  "1_synth.sdc": {
+    "bytes": 57285,
+    "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+  },
+  "2_1_floorplan.odb": {
+    "bytes": 117495335,
+    "sha256": "dced86616e6dea633e53d32cfed8822aad7604dc20fd85cbc7365cc4e3037405"
+  },
+  "2_1_floorplan.sdc": {
+    "bytes": 57285,
+    "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+  },
+  "2_2_floorplan_macro.odb": {
+    "bytes": 117495335,
+    "sha256": "dced86616e6dea633e53d32cfed8822aad7604dc20fd85cbc7365cc4e3037405"
+  },
+  "2_2_floorplan_macro.tcl": {
+    "bytes": 1,
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  "2_3_floorplan_tapcell.odb": {
+    "bytes": 119431518,
+    "sha256": "8e4a8f3aef7a71005d20b4f8f76f39f18a9dfec4a0f452e9a059f8e95f0277da"
+  },
+  "2_4_floorplan_pdn.odb": {
+    "bytes": 129621926,
+    "sha256": "998b4594e1cf45865820b91f2277b50736ffee055d8aed9458b8b0ba7fac9cfb"
+  },
+  "2_floorplan.odb": {
+    "bytes": 129621926,
+    "sha256": "998b4594e1cf45865820b91f2277b50736ffee055d8aed9458b8b0ba7fac9cfb"
+  },
+  "2_floorplan.sdc": {
+    "bytes": 57285,
+    "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+  },
+  "3_1_place_gp_skip_io.odb": {
+    "bytes": 129621926,
+    "sha256": "34f48f363e9b73f0b151021e1145d1a623f83790480f55e7a43ed590e83ed61a"
+  },
+  "3_2_place_iop.odb": {
+    "bytes": 129653942,
+    "sha256": "fecd8d4508bdc8661ed7c1d95910dcca4a843f7dc7f6688181bbf59b57060326"
+  },
+  "3_2_place_iop.tcl": {
+    "bytes": 52574,
+    "sha256": "ffd24b7e5b6ee70c20a578cebc1f578d3e2d5e1af11eb4ef969610d355735b4c"
+  },
+  "clock_period.txt": {
+    "bytes": 9,
+    "sha256": "e2a13ac29367204ad42dfc6962e94fe6fd7155353a0ed59d4c204fb31aa4095b"
+  },
+  "mem.json": {
+    "bytes": 16237441,
+    "sha256": "e4c1ed1181f37ded10e7a39e0603281b808a02332a53f93848e2734bc609c0b9"
+  }
+}

@@ -1,0 +1,23 @@
+[
+  "/srv/opentallas-scratch/admit.sh",
+  "64",
+  "--",
+  "/usr/bin/python3",
+  "/srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/r7/runner.py",
+  "--run",
+  "--work",
+  "/srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/r7",
+  "--tool",
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "--memory-gib",
+  "64",
+  "--cpu-cores",
+  "1",
+  "--disk-reserve-bytes",
+  "2147483648",
+  "--epyc2-hostname",
+  "climbing-locust",
+  "--host-kind",
+  "epyc2",
+  "--admitted"
+]

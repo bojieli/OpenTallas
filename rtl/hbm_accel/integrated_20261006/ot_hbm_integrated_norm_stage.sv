@@ -4,10 +4,10 @@
 // Existing stage216codedFF budget; no second descriptor/engine for this norm.
 // Supplier is the real clock-held vectorVM ABI, NOT a native1024 port alias.
 module ot_hbm_integrated_norm_stage #(
- parameter integer ENABLE=0,KIND=0,N=64,D=5120,RD=0,AW=24,
+ parameter integer ENABLE=0,NATIVE_VM=0,KIND=0,N=64,D=5120,RD=0,AW=24,
  parameter integer PUBLISH_QUANT=1,ROUTED=1,RW=9,BW=9,BCAST=7,RET=8
 )(
- input wire clk,por_n,warm_req,output wire warm_ack,
+ input wire clk,por_n,warm_req,input wire native_clock_enable,native_read_permit,output wire warm_ack,
  input wire enroll_v,output wire enroll_r,input wire [72:0] enroll_frame,
  input wire [31:0] enroll_pc,enroll_op,input wire [15:0] enroll_source,
  input wire [8:0] enroll_expert,input wire enroll_matrix,
@@ -28,14 +28,14 @@ module ot_hbm_integrated_norm_stage #(
  output wire q_valid,output wire [7:0] q_index,output wire [N*8-1:0] q_codes,
  output wire [(N/32)*10-1:0] q_exp,output wire [N*16-1:0] q_bf16,
  output wire [15:0] reserve_events,output wire [72:0] held_frame,
- output wire retained,fault,ce,due
+ output wire [72:0] q_frame,output wire retained,fault,ce,due
 );
  generate if(!ENABLE)begin:g_off
  assign warm_ack=0;assign enroll_r=0;assign lease_v=0;assign quiet=1;assign release_v=0;
  assign publication_v=0;assign rd_addr=0;assign rd_re=0;assign rd_src=0;
  assign vm_we=0;assign vm_waddr=0;assign vm_wdata=0;assign q_valid=0;assign q_index=0;
  assign q_codes=0;assign q_exp=0;assign q_bf16=0;assign reserve_events=0;
- assign held_frame=0;assign retained=0;assign fault=0;assign ce=0;assign due=0;
+ assign q_frame=0;assign held_frame=0;assign retained=0;assign fault=0;assign ce=0;assign due=0;
  end else begin:g_on
  wire [4*N*AW-1:0] child_rd_addr;wire [4*N-1:0] child_rd_re;
  wire [8*N-1:0] child_rd_src;wire [N-1:0] child_vm_we;
@@ -46,8 +46,10 @@ module ot_hbm_integrated_norm_stage #(
  assign rd_re=child_rd_re&{4*N{!fault}};
  assign vm_waddr=child_vm_waddr;assign vm_wdata=child_vm_wdata;
  assign vm_we=child_vm_we&{N{!fault}};
- assign q_valid=child_q_valid&&!fault;assign q_index=child_q_index;
+ assign q_frame=held_frame;assign q_valid=child_q_valid&&!fault;assign q_index=child_q_index;
  assign q_codes=child_q_codes;assign q_exp=child_q_exp;assign q_bf16=child_q_bf16;
+ wire child_clk;
+ ot_hdc_cg u_norm_icg(.clk(clk),.en(!por_n||!NATIVE_VM||(native_clock_enable&&!ce&&!due)),.gclk(child_clk));
  wire sr,start_v,start_r,finish_r,complete_v,issued,stage_fault;
  wire child_busy,child_done,child_fault;wire [31:0] child_id;
  wire source_match=allocation_valid&&allocation_frame==held_frame;
@@ -83,9 +85,9 @@ module ot_hbm_integrated_norm_stage #(
  .held_source(),.held_expert(),.held_matrix(),.held_row(),.held_count());
  ot_hbm_integrated_norm_vm #(.ENABLE(1),.KIND(KIND),.N(N),.D(D),.RD(RD),.AW(AW),
  .PUBLISH_QUANT(PUBLISH_QUANT),.ROUTED(ROUTED),.LM(5),.LA(6),.RW(RW),.BW(BW),.BCAST(BCAST),.RET(RET),
- .RXS(1),.SXC(1),.FREG(1),.HOLD_COMPLETION(1)) u_norm(
- .clk(clk),.rst_n(por_n),.cmd_valid(start_v),.cmd_ready(start_r),
- .completion_ready(finish_r&&!bad_child&&finish_match),
+ .RXS(1),.SXC(1),.FREG(1),.HOLD_COMPLETION(1),.FINITE_NATIVE_READS(NATIVE_VM)) u_norm(
+ .clk(child_clk),.rst_n(por_n),.cmd_valid(start_v),.cmd_ready(start_r),
+ .completion_ready(finish_r&&!bad_child&&finish_match),.native_read_permit(native_read_permit),
  .source_ready(permission),.landing_reserved(sink_match&&grant&&!stage_fault&&!bad_child),
  .busy(child_busy),.done(child_done),.fault(child_fault),.job_id(held_frame[31:0]),
  .xbase(xbase),.ubase(ubase),.wbase(wbase),.ybase(ybase),.gain_base(gain_base),

@@ -1,8 +1,18 @@
-# PRE_CTS_TCL: build the tree on the plain (ideal-referenced) SDC, then switch to the S1 die-context boundary before
-# the CTS-stage repair_timing (hold repair) runs.  Tested: Codex twoface_570 placement, physical/README S1 evidence.
+# PRE_CTS_TCL: build the tree on the plain (ideal-referenced) SDC, then switch to the S1 die-context boundary
+# (io_wc.sdc) before the CTS-stage repair_timing runs, re-applied after every parasitics estimate.
+proc qss_apply_io {} {
+  read_sdc $::env(QSS_SDC_DIR)/io_wc.sdc
+  puts "QSS S1 boundary referenced to the propagated tree"
+}
+source $::env(QSS_SDC_DIR)/rom_lead.tcl
 rename clock_tree_synthesis ::qss_cts_orig
 proc clock_tree_synthesis {args} {
   ::qss_cts_orig {*}$args
-  read_sdc $::env(QSS_SDC_DIR)/io_ref.sdc
-  puts "QSS S1 boundary referenced to the propagated tree"
+  qss_rom_lead [expr {[info exists ::env(QSS_ROM_LEAD_BUFS)] ? $::env(QSS_ROM_LEAD_BUFS) : 0}]
+  rename estimate_parasitics ::qss_est_orig
+  proc ::estimate_parasitics {args} {
+    ::qss_est_orig {*}$args
+    qss_apply_io
+  }
+  estimate_parasitics -placement
 }

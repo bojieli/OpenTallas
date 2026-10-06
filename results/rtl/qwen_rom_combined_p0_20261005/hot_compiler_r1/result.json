@@ -1,0 +1,48 @@
+{
+  "status": "PASS_COMPILER_EQUIVALENCE",
+  "baseline_reused_not_replayed": true,
+  "source_sha256": "bea0193fc07e2656367d3e79b0b51fcf160a15e6c198dc7a7cf79ec12428ac0d",
+  "old_archive_sha256": "dca4fc6d5b12f3c80f7def3e0320dc5b0bf8dbad079df0dfc7c366d6ac66d4d6",
+  "new_archive_sha256": "e283a35f7afa2ff874b66094417f4873ce8274c4084866b2acc64952ccc16e2f",
+  "traces_sha256": [
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100",
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100"
+  ],
+  "kv_hash": [
+    "c765d8517e5fc4b6",
+    "c765d8517e5fc4b6"
+  ],
+  "terminal": [
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=156.766478271 wall_per_core=0.305587677 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=132592059505 coll_ns=166332478 fabric_comb_ns=153146609 fabric_edge_ns=9263229340 propagate_ns=1700823888 full_token=0",
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=99.361458130 wall_per_core=0.193687053 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=78798725343 coll_ns=154618390 fabric_comb_ns=109203865 fabric_edge_ns=7069339965 propagate_ns=1186821353 full_token=0"
+  ],
+  "wall_seconds": [
+    156.766478271,
+    99.36145813
+  ],
+  "measured_speedup": 1.5777393087961118,
+  "adopted": true,
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "source_commit": "667eaf9b1",
+  "hot_CPP": "Vdie___024root__220.cpp",
+  "hot_symbol": "Vdie___024root___nba_sequent__TOP__227",
+  "actual_original_OPT_FAST": "-Os",
+  "optimized_one_object_flags": [
+    "-O3",
+    "-fno-fast-math",
+    "-ffp-contract=off"
+  ],
+  "CXX_sampled_peak_bytes": 1139011584,
+  "required_compile_CPUs": 1,
+  "estimated_compile_GiB": 16,
+  "no_AS_cap": true,
+  "supervisor_pid": 404175,
+  "candidate_pid": 407041,
+  "root": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/hot_O3_667eaf9b1",
+  "all_other_model_and_engine_objects_reused": true,
+  "frontend_regenerated": false,
+  "arithmetic_or_clock_changed": false,
+  "baseline_replayed": false,
+  "limits": "One short prefix/negative compiler gate; full36/head numerical smoke remains required. Wallmeasurement includestrace+negative, hostloads differ; not a steady ETA or silicon rate. Physical unqualified."
+}

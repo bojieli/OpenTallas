@@ -43,7 +43,9 @@ WIRE.  The vehicle holds the spine's BST = 2 broadcast stages and a root writing
 die geometry adds, per phase: VM x root -> farthest cluster 30 stages (less the 2 in the vehicle) and cluster -> VM
 33 (tools/uarch_model.DIE_SHRUNK_INTERIM expert_wire = 30 + 33, the model graph's own wire term); labelled
 'routed die geometry wire stages'.  The S81 floorplan's own trunk (results/rtl/dsrom_s81_fulldie_20261004
-floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.
+floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.  The COMPOSITION no longer
+uses either: since 2026-10-06 it takes each node's wire from the wired r8 die, per region (tools/dsrom_field_reprice_r8.py,
+results/rtl/dsrom_field_reprice_r8_20261006/reprice.json; adapter dsrom_1m_allmeasured_adapters.field_rows).
 """
 from __future__ import annotations
 
@@ -102,6 +104,10 @@ QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v4
                                               "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
                                               "ot_v41_bterm3_w10", "ot_v41_bterm4_w10",
                                               "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]
+# the QX 10 chain / adder files (ot_v41_chain4, ot_v41_fadd2) are listed before they are on main: keep only the
+# sources present, so --qelem builds the q-element of the checked-out tree (CLAUDE DS-INTEGRATION 2026-10-05: with
+# the two missing files the --qelem build failed on main)
+QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
 S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
 

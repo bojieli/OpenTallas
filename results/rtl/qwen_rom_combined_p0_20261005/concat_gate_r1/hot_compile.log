@@ -1,0 +1,3 @@
+/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/concat_gate_debff9a6f/src/Vdie___024root__220.cpp: In function ‘void Vdie___024root___nba_sequent__TOP__227(Vdie___024root*)’:
+/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/concat_gate_debff9a6f/src/Vdie___024root__220.cpp:3393:35: error: could not convert ‘& __Vtemp_30.VlWide<79872>::operator[](2048)’ from ‘EData*’ {aka ‘unsigned int*’} to ‘WDataOutP’
+ 3393 |     VL_SEL_WWII(2490368, 2555904, &__Vtemp_30[2048U], vlSelfRef.ot_qwen_p0_full_numeric__DOT__u_join__DOT__u_consumer__DOT__core__DOT__u_me__DOT__u_xnet__DOT__g_line__DOT__line, 0U, 2490368);

@@ -1,0 +1,103 @@
+{
+  "status": "SOURCE_VERIFIED_RETURN_CAPACITY_LIMIT",
+  "source_commit": "b04e893e7",
+  "protected_leaf_source": "3f3c2b790",
+  "final_runtime_pid": 349565,
+  "evidence_sources": {
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f",
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "695aabf92cfe0c42fa8650e22f98e309b93c9d22c70ce260980d4d6410e47d5f",
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv": "6179d3802cc4482ae527e3ad51f755aa1deaea6af58bac53421a4a01f3cd2106",
+    "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_full_consumer_exports.sv": "56c1421e8436363dc77ba0d289a56e93ef1576f0654538ed8371372711d66cb8"
+  },
+  "tile_source": {
+    "remote": "/srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+    "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+  },
+  "counter": {
+    "expression": "st_fill_sectors + $countones(l_v & l_pop & ~b_bad)",
+    "unit": "one accepted checked 256bit landing sector",
+    "payload_bytes_per_increment": 32,
+    "includes_valid_dropped_current_or_future_V_sectors": true,
+    "rd_command": "one mem[a]256bit word queued per RD; one queued record returned per PC/HCLK",
+    "burst": "BURST=1024ps is timing span; no data multiplicity"
+  },
+  "live_observation": {
+    "rank_scope": "verified die0 only",
+    "fill_delta": 2712,
+    "core_delta": 678,
+    "sectors_per_core": 4,
+    "bytes_per_core": 128,
+    "all_rank_steady_rate_measured": false
+  },
+  "source_capacity": {
+    "stacks_per_rank": 4,
+    "PCs_per_stack": 32,
+    "return_records_per_stack_core_max": 1,
+    "payload_bytes_per_record": 32,
+    "shared_return_traffic": [
+      "row landing",
+      "WRACK",
+      "descriptor consumed ACK",
+      "GO/status"
+    ],
+    "core_Hz_assumed": 1200000000,
+    "per_rank_payload_upper_bytes_per_second": 153600000000,
+    "TP_ranks": 4,
+    "system_payload_upper_bytes_per_second": 614400000000,
+    "upper_bound_not_physical_qualification": true
+  },
+  "traffic": {
+    "position": 8191,
+    "SPT": 2,
+    "nfill_per_PC": 1024,
+    "PCs_per_rank": 128,
+    "sectors_per_rank_layer": 131072,
+    "bytes_per_rank_layer": 4194304,
+    "bytes_system_layer": 16777216,
+    "layers": 36,
+    "bytes_per_rank_token": 150994944,
+    "bytes_system_token": 603979776,
+    "token_window_return_payload_MiB": 576
+  },
+  "floor": {
+    "fill_core_edges_per_layer": 32768,
+    "fill_core_edges_36": 1179648,
+    "at_assumed_1p2GHz_us": 983.04,
+    "max_tokens_per_second_payload_only": 1017.2526041666666,
+    "includes_compute_or_backpressure_or_control": false,
+    "system_bytes_per_second_needed_for_162us": 3728270222222.222,
+    "capacity_ratio_needed_for_162us": 6.068148148148148
+  },
+  "tile_residency": {
+    "tiles_per_rank": 1536,
+    "macros_per_tile": 2,
+    "usable_rows_per_macro": 128,
+    "payload_bits_per_row": 256,
+    "usable_bytes_per_rank": 12582912,
+    "usable_MiB_per_rank": 12,
+    "usable_MiB_system": 48,
+    "all36_window_MiB_per_rank": 144,
+    "address_contract": "lk/lv and kvw_addr map position/head/dimension only; no layer-select bits or per-layer valid/tag directory",
+    "mapped_window": "one current layer; next fill overwrites same addresses after kv_free",
+    "numeric_provider_backing": "144MiB/rank preloaded once outside tiles; not on-tile multi-layer residency"
+  },
+  "prefetch": {
+    "actual_full_host_sha256": "8e94008897ea20e354c4f323041b7671fb7bfc0104bcbfa75184106404ad652f",
+    "early_go": 1,
+    "posted_wb": 1,
+    "rm_next_layer": "L1..L35, then255 for head; no L0 next-token notice during head",
+    "post_gate": "want_post requires layer_retired and w_valid==0",
+    "release_gate": "early_go requires kv_free/free_seen + fill_done + wb_issued_all + posted descriptor + no outstanding token/start/descriptor hazard",
+    "on_early_go": "increment gen; lyr=posted; nfill=n_of(posted_p); clear ALL lcnt; fill_done=0; clear tail/assembly",
+    "on_normal_start": "increment gen; nfill=n_of(pos); clear ALL lcnt; fill_done=ideal only; no cache-hit test",
+    "on_prefilled_start": "reuse only same pre_lyr/pre_p next-layer fill context; no second refill for that same layer",
+    "overlap_scope": "next fill can overlap remaining current-layer MLP; it remains mandatory traffic",
+    "steady_semantics": "for subsequent supported8K-shape decode each layer is refilled after other layers overwrite its addresses; no delta-only/cache-resident36 path",
+    "pos_limit": "selected descriptor map faults at pos>=8192; no second token at P8192 is claimed"
+  },
+  "conclusion": "Four protected return links cannot support ~162us per token for mandatory all36 exact8K KV reload. 983.04us is payload-only source-capacity floor, not just cold-start tax; overlap cannot remove steady bytes/token.",
+  "method": "actual bound RTL/driver semantics and arithmetic only; no new pricing model, hardware, run, sweep or clock waiver",
+  "full_token_pass": false,
+  "physical_qualified": false
+}

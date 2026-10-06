@@ -1,0 +1,38 @@
+{
+  "status": "PASS_EQUIVALENCE",
+  "trace_sha256": [
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100",
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100"
+  ],
+  "kv_hash": [
+    "c765d8517e5fc4b6",
+    "c765d8517e5fc4b6"
+  ],
+  "terminal": [
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=177.898733317 wall_per_core=0.346781157 full_tile_evals=8828928 changed_tile_evals=0 invalidations=156 die_evals=13292 coll_evals=3323 reentry_skip=0 die_ns=146009020108 coll_ns=190661812 fabric_comb_ns=292361494 fabric_edge_ns=14182099901 propagate_ns=3213302773 full_token=0",
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=156.766478271 wall_per_core=0.305587677 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=132592059505 coll_ns=166332478 fabric_comb_ns=153146609 fabric_edge_ns=9263229340 propagate_ns=1700823888 full_token=0"
+  ],
+  "wall_seconds": [
+    177.898733317,
+    156.766478271
+  ],
+  "speedup": 1.1348008533397616,
+  "adopted": true,
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "source_commit": "02b0256ee",
+  "descartes_host_source": "d957b5d95",
+  "retained_model_source": "b04e893e7",
+  "retained_top_sha256": "dca4fc6d5b12f3c80f7def3e0320dc5b0bf8dbad079df0dfc7c366d6ac66d4d6",
+  "remote_root": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_gate_02b0256ee",
+  "supervisor": 301963,
+  "baseline_pid": 304581,
+  "patch_pid": 319820,
+  "core_edges": 513,
+  "clock_events": 1860,
+  "negative": "Actual PC0 protected r9 selector primary rail xor1 at tick448 followed by full fabric invalidation; no reset/fault mask",
+  "coverage": "Actual cold released preloads, all root/tile pins every settled core/HCLK event, dirty KV full clock captures, held decoder and PC0 landing state all ranks, consumer ownership, final all tile 258bit x130 physical KV array hashes",
+  "limits": "Prefix does not exercise all36 stages/full head/drain; other-PC internal state not hashed; all die/tile public pins hashed; one config; wall timings include host tracing and injection so not a token ETA",
+  "runtime_peak_bytes": 14078058496,
+  "clock_unchanged": true
+}
