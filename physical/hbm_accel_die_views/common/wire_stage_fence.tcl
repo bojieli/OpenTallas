@@ -1,17 +1,17 @@
-# POST_FLOORPLAN hook (CLAUDE HBM-ABSTRACTS svcidx): spread the wire stages of every ot_svc_vpipe chain evenly along
+# PRE_GLOBAL_PLACE hook (CLAUDE HBM-ABSTRACTS svcidx): spread the wire stages of every ot_svc_vpipe chain evenly along
 # the line between the terminals that feed the chain and the terminals it drives.
 # Why: a view outline is the r16g die slot (svc 8.5 mm x 0.26 mm, index quarter 0.93 x 5.53 mm) and its long paths
 # carry N wire-stage registers sized at <= 430 um a stage.  Global placement does not spread a register chain between
 # two far terminals: it clumps the chain (index_q idx_p55: u_kp stages 1..13 within y 1936..2924 while t_vm sits at
-# y 5430, routed WNS -5.2 ns).  This hook puts stage k of an N-stage chain in an INCLUSIVE region centred at
+# y 5430, routed WNS -5.2 ns).  This hook puts stage k of an N-stage chain at
 # A + (k+1)/(N+1) * (B - A), A / B = centroids of the nearest terminals reached backwards from stage 0 / forwards
 # from stage N-1 (breadth-first over cells, sequential cells included, nets with more than OT_WS_FANOUT loads
-# skipped), so every hop carries 1/(N+1) of the distance.  Region area = stage cell area / OT_WS_DENSITY (0.12),
-# square, clipped to the core; a box that would overlap an earlier one moves along the chain direction.
+# skipped), so every hop carries 1/(N+1) of the distance.  Stage k's flops are packed into free legal sites around that
+# point (pitch = cell width / OT_WS_DENSITY, default 0.12) and fixed (FIRM + do-not-touch): see the placement section.
 # Membership: flops named <chain>.gn.st[k].r[*] and <chain>.gn.rv[k] (synthesis keeps register names).
 # Terminal positions come from the IO constraint file (ORFS erases IO_CONSTRAINTS in the floorplan stage, so the
 # route passes the same file as OT_IO_FILE).
-global ws_pin ws_chain ws_fan ws_tok ws_n ws_seeds
+global ws_pin ws_chain ws_fan ws_tok ws_n ws_seeds occ
 set ws_seeds [expr {[info exists ::env(OT_WS_SEEDS)] ? $::env(OT_WS_SEEDS) : 8}]
 set ws_dens [expr {[info exists ::env(OT_WS_DENSITY)] ? $::env(OT_WS_DENSITY) : 0.12}]
 set ws_depth [expr {[info exists ::env(OT_WS_DEPTH)] ? $::env(OT_WS_DEPTH) : 24}]
@@ -80,18 +80,9 @@ proc ws_cent {l} {
   foreach p $l { set sx [expr {$sx+[lindex $p 0]}]; set sy [expr {$sy+[lindex $p 1]}] }
   return [list [expr {$sx/[llength $l]}] [expr {$sy/[llength $l]}]]
 }
-set boxes {}
-proc ws_ovl {b boxes} {
-  foreach o $boxes {
-    if {[lindex $b 0] < [lindex $o 2] && [lindex $o 0] < [lindex $b 2] && [lindex $b 1] < [lindex $o 3] && [lindex $o 1] < [lindex $b 3]} { return 1 }
-  }
-  return 0
-}
-set nreg 0
 # 1-bit return-token chains (u_dn / u_wdn / u_tb / u_eb) run against a data chain of the same depth in the same scope:
-# token stage k shares the region of data stage N-1-k
+# token stage k is packed with data stage N-1-k
 array set ws_tok {u_dn {u_bp u_p} u_wdn u_wp u_tb u_rq u_eb u_ep}
-array set ws_box {}
 proc ws_partner {c} {
   global ws_tok ws_n
   set leaf [lindex [split $c .] end]; set sc [join [lrange [split $c .] 0 end-1] .]
@@ -102,6 +93,7 @@ proc ws_partner {c} {
   }
   return "-"
 }
+array set ws_tgt {}; array set ws_cells {}
 foreach c [lsort -dictionary [array names ws_n]] {
   set N $ws_n($c)
   if {[ws_partner $c] ne ""} continue
@@ -136,40 +128,88 @@ foreach c [lsort -dictionary [array names ws_n]] {
   }
   for {set k 0} {$k < $N} {incr k} {
     if {![info exists ws_st($c,$k)]} continue
-    set area 0.0
-    foreach i $ws_st($c,$k) { set area [expr {$area + double([[$i getMaster] getWidth])*[[$i getMaster] getHeight]}] }
-    set s [expr {sqrt($area / $ws_dens)}]
-    set rw [expr {min($s, $cx1-$cx0)}]; set rh [expr {min($cy1-$cy0, max($s, $area / $ws_dens / $rw))}]
     set f [expr {double($k+1)/($N+1)}]
-    set mx [expr {[lindex $a 0]+$f*$dx}]; set my [expr {[lindex $a 1]+$f*$dy}]
-    for {set t 0} {$t < 40} {incr t} {
-      set rx0 [expr {round(max($cx0, min($cx1-$rw, $mx-$rw/2)))}]; set ry0 [expr {round(max($cy0, min($cy1-$rh, $my-$rh/2)))}]
-      set bx [list $rx0 $ry0 [expr {round($rx0+$rw)}] [expr {round($ry0+$rh)}]]
-      if {![ws_ovl $bx $boxes]} break
-      set step [expr {($t % 2 ? -1 : 1) * (($t/2)+1) * max($rw,$rh)}]
-      set mx [expr {[lindex $a 0]+$f*$dx + $step*$ux}]; set my [expr {[lindex $a 1]+$f*$dy + $step*$uy}]
-    }
-    lappend boxes $bx
-    set r [odb::dbRegion_create $ws_blk "ot_ws_[string map {. _ [ _ ] _} $c]_$k"]
-    odb::dbBox_create $r {*}$bx
-    $r setRegionType INCLUSIVE
-    foreach i $ws_st($c,$k) { $r addInst $i }
-    set ws_box($c,$k) $r
-    incr nreg
+    set ws_tgt($c,$k) [list [expr {[lindex $a 0]+$f*$dx}] [expr {[lindex $a 1]+$f*$dy}]]
+    set ws_cells($c,$k) $ws_st($c,$k)
   }
 }
+# return tokens join the cell list of their mirrored data stage
 set ntok 0
 foreach c [lsort -dictionary [array names ws_n]] {
   set pc [ws_partner $c]
   if {$pc eq ""} continue
-  if {$pc eq "-"} { puts "OT_WS: token chain $c N=$ws_n($c): no data chain of the same depth, left unfenced"; continue }
+  if {$pc eq "-"} { puts "OT_WS: token chain $c N=$ws_n($c): no data chain of the same depth, left free"; continue }
   set N $ws_n($c)
   for {set k 0} {$k < $N} {incr k} {
     set j [expr {$N-1-$k}]
-    if {![info exists ws_st($c,$k)] || ![info exists ws_box($pc,$j)]} continue
-    foreach i $ws_st($c,$k) { $ws_box($pc,$j) addInst $i }
+    if {![info exists ws_st($c,$k)] || ![info exists ws_cells($pc,$j)]} continue
+    set ws_cells($pc,$j) [concat $ws_cells($pc,$j) $ws_st($c,$k)]
     incr ntok
   }
 }
-puts "OT_WS: $ntok token stages placed with their data stage"
-puts "OT_WS: $nreg stage regions over [array size ws_n] chains (density $ws_dens)"
+if {[info exists ::env(OT_WS_REPORT)]} { return }
+# ---------------------------------------------------------------- explicit legal placement (FIRM + do-not-touch)
+# Regions are NOT honoured by this OpenROAD's global or detailed placement (m1_idx: 0/514 and 7/514 stage cells inside
+# their boxes after GP / DP), so each stage is packed into free legal sites around its target point and fixed.
+# Cell pitch inside a stage block = cell width / OT_WS_DENSITY (snapped to sites): room for the resizer's buffers and
+# for the stage's bus to escape; the block is roughly square.  Runs at PRE_GLOBAL_PLACE (tapcells and pins placed).
+set rows {}
+foreach r [$ws_blk getRows] {
+  set o [$r getOrigin]; set st [$r getSite]
+  lappend rows [list [lindex $o 1] [lindex $o 0] [expr {[lindex $o 0] + [$r getSiteCount]*[$st getWidth]}] [$st getWidth] [$st getHeight] [$r getOrient]]
+}
+set rows [lsort -integer -index 0 $rows]
+set nrows [llength $rows]
+set rowy0 [lindex $rows 0 0]; set rowh [lindex $rows 0 4]; set sitew [lindex $rows 0 3]
+# occupancy: per row, list of {x0 x1} of fixed instances (tapcells, endcaps) and of what this hook places
+array set occ {}
+foreach i [$ws_blk getInsts] {
+  if {![$i isFixed]} continue
+  set bb [$i getBBox]
+  for {set ri [expr {max(0, ([$bb yMin]-$rowy0)/$rowh)}]} {$ri < $nrows && [lindex $rows $ri 0] < [$bb yMax]} {incr ri} {
+    lappend occ($ri) [list [$bb xMin] [$bb xMax]]
+  }
+}
+proc ws_free {ri x0 x1} {
+  global occ
+  if {![info exists occ($ri)]} { return 1 }
+  foreach iv $occ($ri) { if {$x0 < [lindex $iv 1] && [lindex $iv 0] < $x1} { return 0 } }
+  return 1
+}
+set nplaced 0; set nfail 0; set nst 0
+foreach key [lsort -dictionary [array names ws_tgt]] {
+  set cells $ws_cells($key); set m [llength $cells]
+  set wsum 0; foreach i $cells { incr wsum [[$i getMaster] getWidth] }
+  set pitch [expr {max($sitew, int(ceil(double($wsum)/$m/$ws_dens/$sitew))*$sitew)}]
+  set K [expr {max(1, int(ceil(sqrt(double($m)*$rowh/$pitch))))}]
+  set tx [lindex $ws_tgt($key) 0]; set ty [lindex $ws_tgt($key) 1]
+  set r0 [expr {max(0, min($nrows-1, int(($ty-$rowy0)/$rowh)))}]
+  set q 0; set dr 0; set tries 0
+  # rows alternate around the target row; in each row up to K slots centred on the target x, sliding past occupancy
+  while {$q < $m && $tries < 4*$nrows} {
+    set ri [expr {$r0 + (($dr % 2) ? -(($dr+1)/2) : ($dr/2))}]; incr dr; incr tries
+    if {$ri < 0 || $ri >= $nrows} continue
+    set row [lindex $rows $ri]
+    set ry [lindex $row 0]; set rx0 [lindex $row 1]; set rx1 [lindex $row 2]
+    set x [expr {$rx0 + int((($tx - $K*$pitch/2.0) - $rx0)/$sitew)*$sitew}]
+    set x [expr {max($rx0, min($rx1 - $K*$pitch, $x))}]
+    set placed_row 0; set guard 0
+    while {$placed_row < $K && $q < $m && $guard < 4*$K} {
+      incr guard
+      set i [lindex $cells $q]; set w [[$i getMaster] getWidth]
+      if {$x + $w > $rx1} break
+      if {[ws_free $ri $x [expr {$x+$w}]]} {
+        $i setOrient [lindex $row 5]
+        $i setLocation $x $ry
+        $i setPlacementStatus FIRM
+        $i setDoNotTouch 1
+        lappend occ($ri) [list $x [expr {$x+$w}]]
+        incr q; incr placed_row
+      }
+      set x [expr {$x + $pitch}]
+    }
+  }
+  incr nplaced $q; incr nfail [expr {$m - $q}]; incr nst
+}
+puts "OT_WS: $ntok token stages joined their data stage; $nst stages, $nplaced cells placed FIRM, $nfail not placed (density $ws_dens)"
+if {$nfail > 0} { error "OT_WS: $nfail stage cells could not be placed" }

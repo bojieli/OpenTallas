@@ -796,6 +796,35 @@ def masters(m, k=1, port_bits=None):
     return M
 
 
+# Corner rule for fully packed faces (HBM die r16h, CLAUDE HBM-ABSTRACTS 2026-10-06): a master listed here keeps each
+# face run's corner-side end >= keep um from the corner, with the last `tail` pins at twice the pitch (the routed hfd_stn_r26
+# view showed 1-3 M5 spacing violations every time at 48 nm pitch within 0.65 um of the NE corner).  Empty = the old plan.
+CORNER_RULE = {}
+PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+
+
+def _corner_keep(poss, along, step, cr, off, p, label):
+    """the run keeps its centre where it can, its first and last `tail` gaps at twice the pitch, and both ends >= keep
+    from the face corners (shifted inward when not)."""
+    keep, tail = cr['keep'], cr['tail']
+    n = len(poss)
+    gaps = [step] * (n - 1)
+    gaps[:tail] = [2 * step] * tail
+    gaps[-tail:] = [2 * step] * tail
+    span = sum(gaps)
+    if span > along - 2 * keep + 1e-9:
+        raise ValueError(f'{label}: corner rule does not fit ({n} pins, span {span:.3f} um, face {along:.3f} um): widen')
+    centre = (poss[0] + poss[-1]) / 2
+    lo = min(max(centre - span / 2, keep), along - keep - span)
+    first = off + math.ceil((lo - off) / p - 1e-9) * p
+    if first + span > along - keep + 1e-9:
+        first -= p
+    out = [first]
+    for g in gaps:
+        out.append(out[-1] + g)
+    return out
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -821,6 +850,7 @@ def pin_rects(mst, k, wmap):
                 out.append((nm, 'M8', (x, yy - hw, x + 0.4 * k, yy + hw)))
             continue
         _, _, face, layer, centre, pitch = spec
+        centre = PIN_CENTRE.get((mst.name, port), centre)
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
@@ -833,8 +863,12 @@ def pin_rects(mst, k, wmap):
         first = off * k + math.ceil((start - off * k) / (p * k) - 1e-9) * p * k
         hw = 0.012 * k
         depth = 0.192 * (k if k > 1 else 1)
+        poss = [first + i * step for i in range(len(names))]
+        cr = CORNER_RULE.get(mst.name)
+        if cr and k == 1 and len(poss) > 2 * cr['tail']:
+            poss = _corner_keep(poss, along, step, cr, off, p, f'{mst.name}.{port}')
         for i, nm in enumerate(names):
-            pos = first + i * step
+            pos = poss[i]
             if face == 'W':
                 r = (0.0, pos - hw, depth, pos + hw)
             elif face == 'E':
