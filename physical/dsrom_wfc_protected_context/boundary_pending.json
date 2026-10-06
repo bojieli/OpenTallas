@@ -1,5 +1,5 @@
 {
-  "top": "ot_dsrom_wfc_protected_clocked_stage",
+  "top": "ot_dsrom_wfc_protected_inputclock_stage",
   "source": "1860b98a006d25c5009961adedf8b0fb24e18e9a",
   "internal_real": [
     "u_cfg:14SRAM",
@@ -20,8 +20,8 @@
       "host cmd_*, cold/fast/slow reset roots actual insertion/slew",
       "in_*/out_*, bl_rx_*/bl_tx_*, rcfg_* finite router/link endpoints and min/max arrival/load",
       "xb_v/owner/we4/waddr4/wdata4/re/raddr/consume* actual writer/read/consumer endpoint timing and load",
-      "current WFC/VM commonPLL parent root insertion/slew; standalone local propagated CTS is not parent CTS",
-      "pll_vco 3.6GHz analog IP input actual duty/jitter/minmaxslew/insertion contract; loaded divider pos/negedge SS/FF measured by this route"
+      "pll_vco 3.6GHz analog IP input actual duty/jitter/minmaxslew/insertion contract; loaded divider pos/negedge SS/FF measured by this route",
+      "fast_clk/slow_clk explicit external input roots: deliver literal clock_inputs.sdc for these ports and clock_source_fault source pin; preserve actual1.2/.9 waveform contract; producer-source SSFF qualification separate"
     ]
   },
   "qualification": "INTERNAL_REAL_SOURCE_ONLY_PENDING_EXTERNAL_ENDPOINT_TIMING",
@@ -37,13 +37,14 @@
     "RTL_ABI_incompatibility_found": false
   },
   "clock_source": {
-    "RTL": "physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv",
-    "instance": "u_common_clock",
-    "input": "pll_vco",
-    "reference_target_ps": 277.77777777777777,
-    "source_implemented": true,
-    "generated_clock_bindings": "actual mapped fast_clk/slow_clk driver pins",
-    "PLL_IP_qualified": false,
-    "parent_CTS_qualified": false
+    "body_boundary": "fast_clk / slow_clk / clock_source_fault",
+    "failed_generator_source": "76158a8b3",
+    "failure_evidence": "410492892",
+    "body_instantiates_failed_generator": false,
+    "clock_source_owner": "Turing structural repair",
+    "owner_SDC_required": "literal clock definitions at fast_clk/slow_clk with source pins, phase/duty, minmaxlatency/slew; no invented PLL or source qualification",
+    "target_fast_ps": 833.3333333333334,
+    "target_slow_ps": 1111.111111111111,
+    "body_route_qualifies_clock_source": false
   }
 }

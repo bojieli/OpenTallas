@@ -896,10 +896,10 @@ end else begin:g_on
          .rsp_v(norm_rsp_v),.rsp_r(norm_rsp_r),.rsp_data(sfu_vm_index_rsp_data[d*1024+:1024]),.rsp_frame(sfu_vm_index_rsp_frame[d*73+:73]),.rsp_tag(sfu_vm_index_rsp_tag[d*8+:8]),.rsp_rank(sfu_vm_index_rsp_rank[d*7+:7]),
          .pub_v(norm_pub_v),.pub_r(norm_pub_r),.pub_addr(norm_pub_addr),.pub_data(norm_pub_data),
          .ACK_v(norm_ACK_v),.ACK_r(norm_ACK_r),.ACK_frame(sfu_vm_publication_ACK_frame[d*73+:73]),.ACK_addr(sfu_vm_publication_ACK_addr[d*32+:32]));
-        ot_hbm_accel_su_parent_exec #(.ENABLE(SU_ENABLE),.IMW(IMW)) u_su_exec(
+        ot_hbm_accel_su_parent_exec #(.ENABLE(SU_ENABLE),.PROTECTED_FRAME_BIND(1),.IMW(IMW)) u_su_exec(
          .clk(clk_sm),.rst_n(rst_sm_n),.owned(su_executor_owned),.config_idle(db_rdy[d]&&!su_selected&&!gather_retained[d]&&!fmt_retained&&w2_route_quiet),
          .loader_we(SU_ENABLE && im_we[d*NSM] && im_addr[IMW-1]),.loader_addr(im_addr),.loader_data(im_data),
-         .selected_pc(su_executor_pc),.job_id(su_provider_frame[31:0]),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_request),
+         .selected_pc(su_executor_pc),.job_id(su_provider_frame[31:0]),.protected_frame(su_provider_frame),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_request),
          .rsp_v(su_rsp_v),.rsp_rdy(su_rsp_rdy),.rsp(su_response),.done(su_exec_done),.fault(su_exec_fault),
          .virtual_edges(),.read_requests(),.write_requests(),.publication_requests(),.retired_original_ops(su_retired));
         genvar u;

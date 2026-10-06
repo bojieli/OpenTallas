@@ -9489,6 +9489,23 @@ def hbm_w2_publication_model():
         live_GU=live['live_GU'], live_producer_new_protected_parent_gate=False)
     paths += [joined_dir/'terminal.json', joined_dir/'source.json', owner_dir/'source.json',
         root/physical_rel, root/map_rel, root/live_rel]
+    tree_rel='results/rtl/w2_transaction_pipeline_20261005/ce_tree_full37_r2_PASS'
+    tree_gate=json.loads((root/tree_rel/'terminal.json').read_text())
+    tree_source='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv'
+    tree_text=(root/tree_source).read_text()
+    compiled_tree=tree_text.split('\n// Same protected elastic-cut ABI and current positive permission gates.')[0]
+    tree_pins=json.loads((root/tree_rel/'source.json').read_text())
+    if hashlib.sha256(compiled_tree.encode()).hexdigest()!=tree_pins[tree_source]:
+        raise ValueError('Changed station CE-tree bank requires its own changed-source gate')
+    for rel,expected in tree_pins.items():
+        if rel != tree_source and hashlib.sha256((root/rel).read_bytes()).hexdigest()!=expected:
+            raise ValueError('Station CE-tree golden/gate source changed: '+rel)
+    for rel,expected in tree_gate['artifact_sha256'].items():
+        if hashlib.sha256((root/tree_rel/rel).read_bytes()).hexdigest()!=expected:
+            raise ValueError('Station CE-tree terminal pin changed: '+rel)
+    if tree_gate['verdict']!='PASS_FULL37_CE_TREE_BANK_GOLDEN_DEFAULT_OFF':
+        raise ValueError('Station CE-tree exact gate has not passed')
+    paths += [root/tree_source,root/tree_rel/'terminal.json',root/tree_rel/'source.json']
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -9605,6 +9622,29 @@ def hbm_w2_publication_model():
             parent_transport_budget_for_8_provider_transactions_edges=8*finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
             transport_budget_installed_and_minimum_measured=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        station_CE_selector_successor=dict(
+            implementation='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv',
+            parameter='BALANCED_CE_SELECT',default=0,
+            owner_integration='Gauss/Turing station only; no peer worktree changes or existing parent source replacement',
+            actual_bank_scope='native station payload cut2136payload+192owner+1valid=2329bits;37data W6words plus5repair words',
+            packet_bits=2329,data_words=37,repair_words=5,FF_bits=(37+5)*72+2,
+            added_FF_bits=0,added_state_or_memory_ports=0,added_normal_edges=0,added_CE_edges=0,
+            CE_repair_edges=5,readyless_parent_contract_unchanged=True,
+            linear_selector_mux_levels=36,balanced_selector_leaves=64,balanced_selector_mux_levels=6,
+            balanced_selector_node_allowance=63,selector_index_width=16,
+            balanced_selector_cell_upper_um2=63*16*.2+63*.10206,
+            selector_area_bound_is_not_mapped_or_station_fit=True,
+            actual_propagated_clock_or_loaded_fanout=None,
+            failed_source='ac32ed3d6',failed_NO2_setup_ps=-1721.01,failed_NO3_setup_ps=-1735.69,
+            mapped_pair=['_121746_','_118149_'],
+            exact_mapped_register_src='ot_hbm_w2_protected_bank_static.sv:76.2-104.5',
+            mapped_word_bit_identity=None,
+            association_limit='both cells map to the protected bank sequential block; linear CE selection is inferred from the AO21 chain, not recovered word/bit attribution',
+            CURRENT_flags='normal/fault/repairing remain combinational from current code and all5repair words; no registered cached authorization',
+            source_cut='balance only the lowest-index correctable-stripe priority tree before selected snapshot capture; no CE correction/decode/encode waiver',
+            gate_passed=True,gate_terminal=tree_rel+'/terminal.json',
+            current_source_sha256=hashlib.sha256((root/tree_source).read_bytes()).hexdigest(),
+            physical_qualified=False,headline_rate_credit=False),
         additive_parent_protection=parent_protection,
         dedicated_W2_context=dict(
             top='ot_hbm_w2_protected_parent_context', source_preparation_only=False,
@@ -11236,15 +11276,22 @@ def dsrom_window_parent_boundary_model():
             parent_timed_terminal_scalar_pins=69082+101082,
             default_parent_pin_layers={'horizontal':'M4', 'vertical':'M5'},
             default_parent_pin_pitch_um=.048,
-            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.048,
+            default_parent_pin_min_distance_tracks=2,
+            default_parent_effective_pin_spacing_um=.096,
+            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.096,
             historical_attention_placeholder_um=[2400,1700],
-            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.048,
-            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.048),
+            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.096,
+            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.096),
             historical_placeholder_is_not_allocated_WINDOW_slot=True,
             requested_pin_capacity_clock_PG_reserve_fraction=.20,
             requested_pin_capacity_signal_fraction_after_reserve=.60,
-            requested_outer_pin_perimeter_um=(69082+101082)*.048/(.80*.60),
-            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks; gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
+            requested_outer_pin_perimeter_um=(69082+101082)*.096/(.80*.60),
+            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks and measured ORFS default TWO-track IO spacing. Original one-track R3 bound was wrong and is retained as history. Gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
+            leaf_actual_IO_failure=dict(source_pin='81ce7328c',die_um=[1550,1550],
+                perimeter_um=6200, pins=70354, available_pin_positions=64520,
+                PPL_required_minimum_perimeter_um=6753.98,
+                error='PPL-0024', terminal_exit=1, CTS_reached=False,
+                actual_parent_clock_load_proof=False),
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
