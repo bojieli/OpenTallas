@@ -335,6 +335,12 @@ proc ::ot_pin_place_auto {re depth} {
     set dw [$die xMax]; set dh [$die yMax]
     set m0 [expr {int(round(1.08 * $dbu))}]
     set dp [expr {int(round($depth / 0.054)) * $sw}]
+    # the row-end boundary cells (PHY_EDGE_ROW_*, inserted by the tapcell step) sit at both ends of every row
+    set capw 0
+    foreach i [$::ot_blk getInsts] {
+        if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
+    }
+    set m0 [expr {$m0 + $capw}]
     set E [dict create W {} E {} S {} N {}]
     set skip 0
     foreach i [$::ot_blk getInsts] {
@@ -638,6 +644,12 @@ proc ::ot_pin_place_auto {re depth} {
     set dw [$die xMax]; set dh [$die yMax]
     set m0 [expr {int(round(1.08 * $dbu))}]
     set dp [expr {int(round($depth / 0.054)) * $sw}]
+    # the row-end boundary cells (PHY_EDGE_ROW_*, inserted by the tapcell step) sit at both ends of every row
+    set capw 0
+    foreach i [$::ot_blk getInsts] {
+        if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
+    }
+    set m0 [expr {$m0 + $capw}]
     set E [dict create W {} E {} S {} N {}]
     set skip 0
     foreach i [$::ot_blk getInsts] {
