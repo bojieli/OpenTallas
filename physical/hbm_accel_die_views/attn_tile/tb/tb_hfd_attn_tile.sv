@@ -43,7 +43,7 @@ module tb_hfd_attn_tile (input wire clk);
     // the view
     wire [1617:0] cf, rf; wire [528:0] o;
     hfd_attn_tile u_v (
-        .ck(clk), .rst(~rst_n),
+        .ck(clk), .rst(rst_n),
         .k((ROLE == 0) ? {3'b101, kp} : 1041'd0), .q((ROLE == 0) ? {2'b10, qp} : 582'd0),
         .ci((ROLE == 1) ? pkt : 1618'd0), .ri((ROLE == 2) ? pkt : 1618'd0), .i((ROLE == 3) ? iw : 529'd0),
         .cf(cf), .rf(rf), .o(o));

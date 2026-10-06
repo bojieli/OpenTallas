@@ -11,7 +11,8 @@
 //   ci [1617:0] S  packet from the tile below (column), {k[1037:0], q[579:0]} order;  cf [1617:0] N  forward up
 //   ri [1617:0] E  packet from the inner neighbour (row);                              rf [1617:0] W  forward out
 //   i  [528:0]  W  results from the outer neighbour {ov, oy[511:0], oflt[15:0]};       o  [528:0]  E  results inward
-//   ck E (clk_stream), rst E (active high, synchronous to ck; carried as data like the parent's rst_n)
+//   ck E (clk_stream), rst E (ACTIVE LOW, synchronous to ck, quasi-static: held >= 3 cycles; carried as data like the
+//   parent's rst_n - the die reset net's polarity is not stated by the generator, this view takes rst = rst_n)
 // Role: the generator binds k / q only on the corner tile, ci only on column tiles, ri only on row tiles, i on all but
 // the outermost; this view ORs the three packet sources, so an UNBOUND role input must be tied 0 at the die.
 // Interim contract (defects recorded in view.json): (1) k / q are sampled on ck (synchronous); the generator's
@@ -51,7 +52,7 @@ module hfd_attn_tile #(
     // the forwarded clocks k[1040:1038] / q[581:580] load only their pin-register flops; see header (1)
     // ---- NS stages from each face toward ROOT (rst rides with the local packet)
     wire [PW-1:0] loc_s, ci_s, ri_s;
-    ot_attn_die_pipe #(.W(PW), .N(NS)) u_sl (.clk(clk), .d({~rst_p, k_p[1037:0], q_p[579:0]}), .q(loc_s));
+    ot_attn_die_pipe #(.W(PW), .N(NS)) u_sl (.clk(clk), .d({rst_p, k_p[1037:0], q_p[579:0]}), .q(loc_s));
     ot_attn_die_pipe #(.W(PK), .N(NS)) u_sc (.clk(clk), .d(ci_p), .q(ci_s[PK-1:0]));
     ot_attn_die_pipe #(.W(PK), .N(NS)) u_sr (.clk(clk), .d(ri_p), .q(ri_s[PK-1:0]));
     assign ci_s[PK] = 1'b0;
