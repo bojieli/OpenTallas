@@ -33,6 +33,7 @@ import bisect
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 from collections import defaultdict
@@ -44,7 +45,9 @@ import qwen_rom_fulldie as Q  # noqa: E402  (Master, lef_text, pin_rects, esc, r
 
 OUT = 'results/rtl/dsrom_s81_fulldie_20261004'
 DECISION = 'results/uarch/dsrom_c_recheck_20261004/model.json'
-Q_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz'
+# OT_S81_Q_LEF (default unset = the R_cap0 abstract below): an alternative routed q abstract for the die-level
+# pin-access check of a successor element (e.g. the QX q-element), same port names, height <= the 157.68 frame.
+Q_LEF = os.environ.get('OT_S81_Q_LEF', 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz')
 CFG_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
 FIXED = 'results/uarch/dsrom_c_w4_20261003/inputs/fixed.json'
 CONTRACT = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/physical_contract.json'

@@ -102,6 +102,10 @@ QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v4
                                               "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
                                               "ot_v41_bterm3_w10", "ot_v41_bterm4_w10",
                                               "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]
+# the QX 10 chain / adder files (ot_v41_chain4, ot_v41_fadd2) are listed before they are on main: keep only the
+# sources present, so --qelem builds the q-element of the checked-out tree (CLAUDE DS-INTEGRATION 2026-10-05: with
+# the two missing files the --qelem build failed on main)
+QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
 S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
 

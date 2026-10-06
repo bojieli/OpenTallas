@@ -6,6 +6,8 @@
 //   amount's high bits; P2 shifts by {sh[4:2], 2'b00}.  (p << sh[1:0]) << 4 sh[4:2] == p << sh exactly (the 42-bit
 //   term never overflows: sh <= 28), so every output is bit-identical; two shifter levels move from P2 to P1b.
 //   Zero cycles.
+// NS = 1 (requires P1S = 1; route Z15a: p0 -> 64-input NaN OR -> pa_nan -20.8 ps): the NaN flag is registered in P1a as
+// four 8-lane partials (pa_nang) and ORed in P1b; with NS the full-width pa_nan is unused.  Zero cycles, bit-identical.
 // ot_v41_bterm3_w10: ot_v41_bterm2_w10 (byte-identical arithmetic) with two opt-in re-cuts for the DS-V4.1 ROM q-pair
 // element at SS 1.2 GHz (QPIPE, 2026-10-03):
 //   P1S = 1  splits P1 (decode + signed 4x4 product + shift amount) into P1a (decode: FP4 e2m1 / FP8 fields, sign,
@@ -23,7 +25,8 @@ module ot_v41_bterm4_w10 #(
     parameter integer TW = 8,
     parameter integer P1S = 0,
     parameter integer CSAM = 7,
-    parameter integer P2S = 0
+    parameter integer P2S = 0,
+    parameter integer NS = 0          // 1 (requires P1S = 1): the NaN flag as 4 registered 8-lane partials, ORed in P1b
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -100,6 +103,8 @@ module ot_v41_bterm4_w10 #(
     end else begin : g_p1s
         // P1a: the same decode, registered as {sign, x significand, w significand, shift amount}
         reg               pa_v, pa_first, pa_last, pa_nan;
+        reg [3:0]         pa_nang;      // NS: per 8 lanes
+        reg [3:0]         nang;
         reg signed [10:0] pa_es;
         reg               pa_sg [0:31];
         reg [3:0]         pa_xs [0:31];
@@ -112,11 +117,12 @@ module ot_v41_bterm4_w10 #(
         always @(posedge clk) begin
             pa_first <= p0_first; pa_last <= p0_last;
             pa_es <= p0_xe + p0_we;
-            nan = 1'b0;
+            nan = 1'b0; nang = 4'd0;
             for (i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
                 wc = p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8];
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+                nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 pa_sg[i] <= xc[7] ^ wc[7];
                 pa_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
                 pa_ws[i] <= {(wc[6:3] != 4'd0), wc[2:0]};
@@ -124,11 +130,16 @@ module ot_v41_bterm4_w10 #(
                 wf = (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
                 pa_sh[i] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
             end
-            pa_nan <= nan;
+            pa_nan <= nan; pa_nang <= nang;
         end
         // P1b: the signed 4x4 product
         always @(posedge clk) begin
-            p1_first <= pa_first; p1_last <= pa_last; p1_es <= pa_es; p1_nan <= pa_nan;
+            p1_first <= pa_first; p1_last <= pa_last; p1_es <= pa_es;
+`ifdef BT_MUTANT_NS
+            p1_nan <= (NS != 0) ? |pa_nang[2:0] : pa_nan;          // negative control: one partial dropped
+`else
+            p1_nan <= (NS != 0) ? |pa_nang : pa_nan;
+`endif
             for (i = 0; i < 32; i = i + 1) begin
                 pm = pa_xs[i] * pa_ws[i];
                 p1_p[i] <= pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm});

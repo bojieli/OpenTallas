@@ -1,0 +1,3 @@
+LA6 overlay: la6_inputs/{ot_dsrom_su_norm.sv,tb_dsrom_su_norm.sv,dsrom_su_norm.py} -> rtl/hdc/v41x, rtl/test, tools
+tools/dsrom_combined_l20.py + combined/run_plan.sh updated to the SOURCE_COMMIT (only files changed since 500694d21)
+levers/*.json, su_norm/, su_swiglu/, allmeasured tools refreshed from merged main 29f36e8b0 (su_norm, su_swiglu ADOPT)
