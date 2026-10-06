@@ -575,8 +575,62 @@
   },
   "hfd_stn_r13": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 12
+   "status": "closed",
+   "instances": 12,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r13",
+   "lef": "hfd_stn_r13.lef",
+   "lib": {
+    "ss": "hfd_stn_r13_ss.lib",
+    "ff": "hfd_stn_r13_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r13",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src6 master=hfd_stn_r13 top=physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sv DW=64.344 DH=56.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 17.06,
+    "ff_hold_ps": 477.47,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r16": {
    "kind": "stations",
@@ -757,8 +811,62 @@
   },
   "hfd_stn_r19": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 4
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19",
+   "lef": "hfd_stn_r19.lef",
+   "lib": {
+    "ss": "hfd_stn_r19_ss.lib",
+    "ff": "hfd_stn_r19_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r19",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 31.45,
+    "ff_hold_ps": 472.17,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r2": {
    "kind": "stations",
@@ -880,8 +988,62 @@
   },
   "hfd_stn_r21": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 8
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r21",
+   "lef": "hfd_stn_r21.lef",
+   "lib": {
+    "ss": "hfd_stn_r21_ss.lib",
+    "ff": "hfd_stn_r21_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r21",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src6 master=hfd_stn_r21 top=physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sv DW=59.592 DH=66.936 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 21.73,
+    "ff_hold_ps": 478.33,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r22": {
    "kind": "stations",
@@ -1003,18 +1165,180 @@
   },
   "hfd_stn_r26": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 2
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r26",
+   "lef": "hfd_stn_r26.lef",
+   "lib": {
+    "ss": "hfd_stn_r26_ss.lib",
+    "ff": "hfd_stn_r26_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r26",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 40.02,
+    "ff_hold_ps": 445.46,
+    "drc": 2,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r27": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 27
+   "status": "closed",
+   "instances": 27,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
+   "lef": "hfd_stn_r27.lef",
+   "lib": {
+    "ss": "hfd_stn_r27_ss.lib",
+    "ff": "hfd_stn_r27_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r27",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r27 top=physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sv DW=63.48 DH=62.616 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 9.49,
+    "ff_hold_ps": 471.17,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r29": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 2
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r29",
+   "lef": "hfd_stn_r29.lef",
+   "lib": {
+    "ss": "hfd_stn_r29_ss.lib",
+    "ff": "hfd_stn_r29_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r29",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r29 top=physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv DW=60.456 DH=64.776 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 25.1,
+    "ff_hold_ps": 473.64,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r3": {
    "kind": "stations",
@@ -1136,13 +1460,121 @@
   },
   "hfd_stn_r31": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 6
+   "status": "closed",
+   "instances": 6,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
+   "lef": "hfd_stn_r31.lef",
+   "lib": {
+    "ss": "hfd_stn_r31_ss.lib",
+    "ff": "hfd_stn_r31_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r31",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r31 top=physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sv DW=72.984 DH=41.016 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 31.66,
+    "ff_hold_ps": 486.23,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r4": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 20
+   "status": "interim-not-closed",
+   "instances": 20,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r4",
+   "lef": "hfd_stn_r4.lef",
+   "lib": {
+    "ss": "hfd_stn_r4_ss.lib",
+    "ff": "hfd_stn_r4_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r4",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r4 top=physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv DW=120.936 DH=51.816 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 4.78,
+    "ff_hold_ps": 435.52,
+    "drc": 1,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_su": {
    "kind": "su",
@@ -1176,9 +1608,9 @@
   }
  },
  "counts": {
-  "missing": 34,
-  "closed": 15,
+  "missing": 26,
+  "closed": 21,
   "reservation": 2,
-  "interim-not-closed": 1
+  "interim-not-closed": 3
  }
 }
