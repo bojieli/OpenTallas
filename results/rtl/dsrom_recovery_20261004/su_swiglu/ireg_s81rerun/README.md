@@ -34,3 +34,15 @@ polynomial adds get the sum | LZC cut (CUTS bit 2), see `EXP_ASUM` below.
 
 Cost: +6 cycles per lane op on top of IREG (2 lane ops a layer): ~0.6 us a token, < 0.1 % AR.
 Route (ONE variant): `physical/dsrom_su_swiglu_ireg/launch_esum.sh`, EPYC2 `.../s81-rerun/swiglu_esum/route/lane_esum_m770`.
+
+## ESUM margin route `lane_esum_m770` (EPYC3; IREG 1 + ESUM 1, routed 0.770 ns): SETUP CLOSED, hold re-route
+
+Die-context sign-off at 0.833333 ns with `physical/dsrom_su_swiglu_ireg/die_io_833_{ss,ff}.sdc` (IO clock latency =
+the route's measured insertion, 200 ps setup IO budget = 150 ps die clock-arrival + 50 ps wire; 50 ps hold IO
+uncertainty), `route_esum_m770/io_{SS,FF}.log`:
+- SS setup WNS **+67.11 ps** (TNS 0): the exp sum | LZC cut removed the -10.18 ps stage; accept line +40 met.
+- FF hold: internal WNS +7.91 ps (< +15), outputs -44.98 ps (flop-at-pin outputs leave ~60 ps after the earliest
+  receiver could capture under the 50 ps hold IO term).  Hold is a repair item, not an RTL one: ONE re-route
+  `launch_esum_hold.sh` (same RTL, `hold_io_append.sdc` puts the die hold IO constraints on the ideal port clock,
+  hold margin 30 ps).
+Note: `-reference_pin` IO delays crash this OpenROAD build (Sim::findDisabledEdges), hence the virtual IO clocks.
