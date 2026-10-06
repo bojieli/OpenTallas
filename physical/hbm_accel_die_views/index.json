@@ -12,8 +12,54 @@
  "masters": {
   "hfd_attn_tile": {
    "kind": "attn_tile",
-   "status": "missing",
-   "instances": 64
+   "status": "interim-not-closed",
+   "instances": 64,
+   "dir": "physical/hbm_accel_die_views/attn_tile",
+   "lef": "hfd_attn_tile.lef",
+   "lib": {
+    "ss": "hfd_attn_tile_ss.lib",
+    "ff": "hfd_attn_tile_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_above_generator": [
+     "M8",
+     "M9"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M7",
+      "M8"
+     ],
+     "VSS": [
+      "M7",
+      "M8"
+     ]
+    },
+    "gen_pins": 9155,
+    "view_pins": 9155
+   },
+   "source": {
+    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/attn/routes/r2_c4",
+    "host": "ot-epyc1tb",
+    "SOURCE_COMMIT": "b7c8441f83dc4aaafb9b4510112c050f8ed7c3ce",
+    "stage": "post-CTS placement (4_cts.odb + 4_cts.sdc, estimate_parasitics -placement), NOT routed; routes r2_c4 and r1_p3_pd55 continue",
+    "export": "flow/interim_export_{ss,ff}.tcl (raw LEF named hfd_attn_tile.lef in the run) (write_timing_model / write_abstract_lef) then flow/reduce_lef.py (86 MB raw -> 1.6 MB: M7+M8 PG pins, per-layer OBS = outline minus pins)",
+    "sdc": "flow/io_vclk_c1500.sdc: IO 0.2 T against a virtual clock with 1500 ps latency (die CTS balances the tile insertion delay)",
+    "cts_args": "-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100",
+    "ss_worst_setup_ps": -2032.1,
+    "ff_worst_hold_ps": -882.1,
+    "ss_tns_ns": -4246.2,
+    "clock": "29,068 register sinks + 4 quad clk pins; latency 1.53 (quad clk) .. 2.75 ns (u_rl stage 0), setup skew 1.17 ns; 22,230 hold buffers in CTS repair",
+    "cts_variants": "r2_c1..c3 (other CTS_ARGS, incl. -no_obstruction_aware): skew 1.45-1.60 ns, WNS -2.0..-2.2 ns; r1_p3 (default CTS, IO vs core_clk): skew 1.61 ns, latency to 4.05 ns, IO -3.8 ns",
+    "std_cell_um2": 31963.8,
+    "utilization_with_macros": 0.656,
+    "sub_views": [
+     "physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q"
+    ]
+   }
   },
   "hfd_barrier": {
    "kind": "barrier",
@@ -1608,9 +1654,9 @@
   }
  },
  "counts": {
-  "missing": 26,
+  "interim-not-closed": 4,
   "closed": 21,
-  "reservation": 2,
-  "interim-not-closed": 3
+  "missing": 25,
+  "reservation": 2
  }
 }
