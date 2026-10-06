@@ -214,6 +214,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
                                         // 4 = + PQ configuration write stage (shadow file and tag tables; 0 walk cycles),
                                         //     bterm5 kept fp4 copies / per-lane NaN, a word-mux output stage (+1 lane cycle)
+                                        // 5 = + fp4 select per lane, two-stage replay read (+1 replay cycle), second
+                                        //     output register (+1 output cycle), registered fault port
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -452,15 +454,46 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             else begin
                 if (pq_swap) begin rp_run <= 1'b1; rk <= 5'd0; end
                 else if (rp_run) begin rk <= rk + 5'd1; if (rk == 5'(RPW - 1)) rp_run <= 1'b0; end
-                rp_tail <= (rp_run && rk == 5'(RPW - 1)) ? 4'(RT) : (rp_tail != 4'd0 ? rp_tail - 4'd1 : 4'd0);
+                rp_tail <= (rp_run && rk == 5'(RPW - 1)) ? 4'(RT + (QM >= 5 ? 1 : 0)) : (rp_tail != 4'd0 ? rp_tail - 4'd1 : 4'd0);
                 rp_v <= rp_run;
                 for (int c = 0; c < NSEG; c++) rp_cdec[c] <= rp_run && rk == 5'(NSEG + c);
             end
         end
+        if (QM >= 5) begin : g_rp2
+            // QM >= 5 (Z25a post-CTS: rk -> 17:1 read mux -> rp_d -138 ps at 770): the read in two stages -- four
+            // group words (entries 4g .. 4g+3, 4 x 4:1) registered with the group select, then the 4:1 -- so every
+            // replayed word reaches the configuration port one cycle later; `walking` covers the extra stage
+            localparam integer NGR = (RPW + 3) / 4;
+            reg [47:0] rg_d [0:NGR-1];
+            reg [$clog2(NGR)-1:0] rg_s;
+            reg        rg_v;
+            reg [4:0]  rg_a;
+            reg [NSEG-1:0] rg_cdec;
+            always @(posedge clk) begin
+                for (int g = 0; g < NGR; g++) rg_d[g] <= sh_w[(4 * g + rk[1:0]) < RPW ? 4 * g + rk[1:0] : 0];
+                rg_s <= rk[4:2]; rg_a <= rk;
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin rg_v <= 1'b0; rg_cdec <= '0; end
+                else begin
+                    rg_v <= rp_run;
+                    for (int c = 0; c < NSEG; c++) rg_cdec[c] <= rp_run && rk == 5'(NSEG + c);
+                end
+            always @(posedge clk) begin rp_a <= rg_a; rp_d <= rg_d[rg_s]; end
+            reg rp_v2;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rp_v2 <= 1'b0; else rp_v2 <= rg_v;
+            reg [NSEG-1:0] rp_cdec2;
+            always @(posedge clk or negedge rst_n) if (!rst_n) rp_cdec2 <= '0; else rp_cdec2 <= rg_cdec;
+            assign cfg_v = rp_v2; assign cfg_a = rp_a; assign cfg_d = rp_d;
+            assign qy_cdec = (QPIPE != 0) ? rp_cdec2 : '0;
+            assign pq_walking = walk_busy | rp_run | rg_v | rp_v2 | (rp_tail != 4'd0);
+        end else begin : g_rp1
         always @(posedge clk) begin rp_a <= rk; rp_d <= sh_w[rk]; end
         assign cfg_v = rp_v; assign cfg_a = rp_a; assign cfg_d = rp_d;
         assign qy_cdec = (QPIPE != 0) ? rp_cdec : '0;
         assign pq_walking = walk_busy | rp_run | rp_v | (rp_tail != 4'd0);
+        end
         if (QPIPE == 0 || FAST == 0 || MTP == 0) begin : g_pq_bad
             initial begin $display("ot_v41_rom_elem_qx_pq_w10: PQ requires QPIPE = FAST = MTP = 1"); $finish; end
         end
@@ -1170,7 +1203,13 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin ffq <= 1'b0; fq <= 1'b0; end
                 else begin ffq <= ff_d[QK-1]; fq <= ffq | (|qy_bkf); end
-            assign fault = fq | (PQ != 0 ? pq_fault : 1'b0);
+            if (QM >= 5) begin : g_fr
+                reg fq2;                                   // QM >= 5: the fault port from one register (Z24b: -24 ps)
+                always @(posedge clk or negedge rst_n) if (!rst_n) fq2 <= 1'b0; else fq2 <= fq | (PQ != 0 ? pq_fault : 1'b0);
+                assign fault = fq2;
+            end else begin : g_fn
+                assign fault = fq | (PQ != 0 ? pq_fault : 1'b0);
+            end
         end else begin : g_nqyf
             assign fault = ff_d[QK-1] | (|bk_fault) | (PQ != 0 ? pq_fault : 1'b0);
         end
@@ -1817,7 +1856,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
             assign p_we0 = we0; assign p_we1 = we1;
         end
-        ot_v41_bterm5_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
         ot_v41_bterm5_w10 #(.TW(TW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
@@ -2080,9 +2119,20 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         if (PQ != 0) begin o_row <= pq_row[16*mb +: 16]; o_seg <= pq_idx[5*mb +: 5]; o_n <= pq_n[5*mb +: 5]; end
         o_pos <= (MTP != 0) ? t_pos : 3'd0;
     end
+    if (QM >= 5) begin : g_o2
+        // QM >= 5: a second output register (Z25a post-CTS: o_row -> top-edge pins -37 ps at 770): the partial
+        // leaves one cycle later, from a flop the placer can put at the output pins
+        reg q_v, q_err; reg [31:0] q_val; reg [15:0] q_row; reg [4:0] q_seg, q_n; reg [2:0] q_pos;
+        always @(posedge gclk or negedge rst_mt) if (!rst_mt) q_v <= 1'b0; else q_v <= o_v;
+        always @(posedge gclk) begin q_err <= o_err; q_val <= o_val; q_row <= o_row; q_seg <= o_seg; q_n <= o_n; q_pos <= o_pos; end
+        assign pv[mb] = q_v; assign pval[32*mb +: 32] = q_val; assign prow[16*mb +: 16] = q_row;
+        assign pseg[5*mb +: 5] = q_seg; assign pnseg[5*mb +: 5] = q_n; assign perr[mb] = q_err;
+        assign ppos[3*mb +: 3] = q_pos;
+    end else begin : g_o1
     assign pv[mb] = o_v; assign pval[32*mb +: 32] = o_val; assign prow[16*mb +: 16] = o_row;
     assign pseg[5*mb +: 5] = o_seg; assign pnseg[5*mb +: 5] = o_n; assign perr[mb] = o_err;
     assign ppos[3*mb +: 3] = o_pos;
+    end
     assign bk_fault[mb] = c0_fault | c1_fault | c2_fault | c3_fault | t_fault | b_fault;
     if (QY != 0) begin : g_qyb
         reg bkf_r;

@@ -21,7 +21,8 @@
 // LATENCY 17 (ot_v41_bterm4_w10 with P1S = 1: 12): +5 cycles a lane.  The tag rides the same 17 stages.
 // ---------------------------------------------------------------------------
 module ot_v41_bterm5_w10 #(
-    parameter integer TW = 8
+    parameter integer TW = 8,
+    parameter integer FPC = 4         // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -54,8 +55,8 @@ module ot_v41_bterm5_w10 #(
     // -- S0: input capture ------------------------------------------------------------------------------
     // the FP4 select in four kept copies (ot_v41_kreg: never merged with the tag delay line's copy of the same bit,
     // Z24b post-CTS: a merged fp4 flop in the tag line drove all 32 lanes' decode, -190 ps), one per 8 lanes
-    wire [3:0]       m_fp4;
-    for (genvar g = 0; g < 4; g = g + 1) begin : g_f4
+    wire [FPC-1:0]   m_fp4;
+    for (genvar g = 0; g < FPC; g = g + 1) begin : g_f4
         ot_v41_kreg #(.W(1)) u_f (.clk(clk), .arst_n(1'b1), .d(fp4), .q(m_fp4[g]));
     end
     reg [255:0]      m_xq, m_wq;
@@ -74,7 +75,7 @@ module ot_v41_bterm5_w10 #(
         p0_es <= m_xe + m_we;
         for (i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
-            wc = m_fp4[i / 8] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
+            wc = m_fp4[(i * FPC) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
             p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             p0_sg[i] <= xc[7] ^ wc[7];
             p0_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
