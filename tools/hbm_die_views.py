@@ -329,6 +329,57 @@ def real_views(index_path):
     return out
 
 
+def sta_tcl(m, work, index):
+    """die-context STA (owner addendum 2026-10-06: a block counts as closed only after die-context STA with the real
+    abstract): the real-abstract die placement (case real, k = 1) with every indexed view that has SS / FF Liberty,
+    wires from placement (estimate_parasitics -placement, ASAP7 setRC), one ideal clock per die clock net on the lib
+    views' clock pins at 833.333 ps, setup at SS with 60 ps and with 60 + 150 ps (the die clock-arrival difference the
+    owner rule budgets), hold at FF with 25 ps.  Reports every die path between two timed views (tile <-> tile chains,
+    tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
+    and checked inside the station views)."""
+    idx = json.loads(Path(index).read_text())['masters']
+    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'interim-not-closed')}
+    run = (work / 'run.tcl').read_text()
+    head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
+    lib_lines = []
+    for n, v in sorted(libs.items()):
+        d = ROOT / v['dir']
+        (work / f'{n}_ss.lib').write_bytes((d / v['lib']['ss']).read_bytes())
+        (work / f'{n}_ff.lib').write_bytes((d / v['lib']['ff']).read_bytes())
+        lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+    timed = [it for it in m['insts'] if it.master in libs]
+    clk_nets = {'stream': 'n_clk_stream', 'serial': 'n_clk_serial', 'hbm': 'n_clk_hbm', 'link': 'n_clk_link'}
+    head = head.replace('read_verilog /work/die.v', 'define_corners ss ff\n' + '\n'.join(lib_lines) + '\nread_verilog /work/die.v')
+    tcl = head + 'source /work/place.tcl\n' + f"""
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+set timed_insts {{{' '.join(it.name for it in timed)}}}
+foreach {{dom net}} {{{' '.join(f'{k} {v}' for k, v in clk_nets.items())}}} {{
+  set ck {{}}
+  foreach p [get_pins -quiet -of_objects [get_nets -quiet $net]] {{
+    set i [get_name [get_property $p instance]]
+    if {{[lsearch -exact $timed_insts $i] >= 0}} {{ lappend ck $p }}
+  }}
+  if {{[llength $ck]}} {{ create_clock -name clk_$dom -period 0.833333 $ck; puts "OT_STA_CLOCK $dom sinks=[llength $ck]" }}
+}}
+set_propagated_clock [all_clocks]
+set tp {{}}
+foreach i $timed_insts {{ foreach p [get_pins -quiet $i/*] {{ lappend tp $p }} }}
+foreach u {{0.060 0.210}} {{
+  set_clock_uncertainty -setup $u [all_clocks]
+  set_clock_uncertainty -hold 0.025 [all_clocks]
+  puts "OT_STA_SETUP uncertainty=$u wns=[sta::format_time [sta::worst_slack -max] 3] tns=[sta::format_time [sta::total_negative_slack -max] 3]"
+  report_checks -path_delay max -corner ss -group_path_count 5 -format end -digits 3
+}}
+puts "OT_STA_HOLD wns=[sta::format_time [sta::worst_slack -min] 3]"
+report_checks -path_delay min -corner ff -group_path_count 5 -format end -digits 3
+report_checks -path_delay max -corner ss -digits 3 -fields {{slew cap input_pins}}
+report_check_types -unconstrained -max_delay -verbose > /work/unconstrained.rpt
+puts "OT_STA_DONE timed_insts=[llength $timed_insts]"
+"""
+    (work / 'run.tcl').write_text(tcl)
+
+
 def pad_mirror(body, orients, P=48, R=24):
     """a view whose instances are mirrored keeps its on-track pins on track only if the mirrored dimension is
     R mod P nm (the generator convention, ot_macro_track_snap.tcl): pad the outline up to the next such value (< P nm
@@ -436,7 +487,7 @@ def cmd_die(a):
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     gen_text = {}
-    if a.case == 'real':
+    if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF
         el = (work / 'elements.lef').read_text()
@@ -462,6 +513,8 @@ def cmd_die(a):
         run = (work / 'run.tcl').read_text().replace('foreach f {phy.lef serdes.lef ucie.lef elements.lef}',
                                                      'foreach f {phy.lef serdes.lef ucie.lef elements.lef views.lef}')
         (work / 'run.tcl').write_text(run)
+        if a.case == 'sta':
+            sta_tcl(m, work, a.index)
     else:
         cov = dict(H.COV)
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
@@ -516,7 +569,7 @@ def cmd_die(a):
             (work / 'run.tcl').write_text(t_)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
-    if a.case == 'real' and pads:
+    if a.case in ('real', 'sta') and pads:
         man['mirror_pads'] = pads
     if a.case == 'grt':
         man['m8_m9_view_blockages'] = len(regadj)
@@ -856,7 +909,7 @@ def main(argv=None):
     p.set_defaults(fn=cmd_index)
     p = sp.add_parser('die')
     p.add_argument('--work', required=True)
-    p.add_argument('--case', choices=['real', 'grt'], required=True)
+    p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)
