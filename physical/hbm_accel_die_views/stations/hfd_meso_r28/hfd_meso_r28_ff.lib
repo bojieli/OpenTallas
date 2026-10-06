@@ -37198,46 +37198,6 @@ library (hfd_meso_r28_ff) {
     pin("rst[0]") {
       direction : input;
       capacitance : 3.2723;
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : hold_rising;
-        rise_constraint(scalar) {
-          values("111.44947");
-        }
-        fall_constraint(scalar) {
-          values("122.58627");
-        }
-      }
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : setup_rising;
-        rise_constraint(scalar) {
-          values("-97.33737");
-        }
-        fall_constraint(scalar) {
-          values("-101.75233");
-        }
-      }
-      timing() {
-        related_pin : "a[974]";
-        timing_type : hold_falling;
-        rise_constraint(scalar) {
-          values("79.55824");
-        }
-        fall_constraint(scalar) {
-          values("88.53024");
-        }
-      }
-      timing() {
-        related_pin : "a[974]";
-        timing_type : setup_falling;
-        rise_constraint(scalar) {
-          values("-60.46935");
-        }
-        fall_constraint(scalar) {
-          values("-64.71079");
-        }
-      }
     }
     }
   }

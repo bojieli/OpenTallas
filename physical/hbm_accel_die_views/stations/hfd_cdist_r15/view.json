@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_cdist_r15",
  "kind": "stations",
- "status": "closed",
+ "status": "interim-not-closed",
  "lef": "hfd_cdist_r15.lef",
  "lib": {
   "ss": "hfd_cdist_r15_ss.lib",
@@ -58,12 +58,16 @@
    "resignoff_corner_rc=0",
    "resignoff_export_rc=0",
    "resignoff_corner_rc=0",
+   "resignoff_export_rc=0",
+   "resignoff_corner_rc=0",
+   "resignoff_export_rc=0",
+   "resignoff_corner_rc=0",
    "resignoff_export_rc=0"
   ],
   "ss_setup_ps": 42.77,
-  "ff_hold_ps": 21.55,
+  "ff_hold_ps": -28.45,
   "drc": 0,
-  "closes_signoff": true,
+  "closes_signoff": false,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,

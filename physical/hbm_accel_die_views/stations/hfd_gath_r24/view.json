@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_gath_r24",
  "kind": "stations",
- "status": "closed",
+ "status": "interim-not-closed",
  "lef": "hfd_gath_r24.lef",
  "lib": {
   "ss": "hfd_gath_r24_ss.lib",
@@ -48,19 +48,26 @@
    "export_rc=0",
    "check_rc=0",
    "signoff_corner_rc=0",
-   "signoff_export_rc=0"
+   "signoff_export_rc=0",
+   "resignoff_corner_rc=0",
+   "resignoff_export_rc=0",
+   "resignoff_corner_rc=0",
+   "resignoff_export_rc=0"
   ],
   "ss_setup_ps": 102.46,
-  "ff_hold_ps": 26.48,
+  "ff_hold_ps": -42.61,
   "drc": 0,
-  "closes_signoff": true,
+  "closes_signoff": false,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 236,
    "route_sdc": ".views/M2_hfd_gath_r24/route.sdc",
    "signoff_sdc": ".views/M2_hfd_gath_r24/signoff.sdc",
-   "recipe": "bench/stn_margin_sdc.py"
+   "recipe": "bench/stn_margin_sdc.py",
+   "ckins_ff_min_ps": 126,
+   "ckins_ff_max_ps": 152,
+   "resignoff": "corner-true vclk (stn_resignoff.sh)"
   },
   "route_sta": {
    "ss": 39.46,
