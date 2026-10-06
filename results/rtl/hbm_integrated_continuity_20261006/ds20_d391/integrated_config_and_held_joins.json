@@ -1,0 +1,51 @@
+{
+  "scope": "Original Rawls HBM integratedconfig continuity, factual source-selected configurations/heldjoins for this correction",
+  "parent": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+  "parent_sha256": "f0dcfe906acf77fc6768675421bf9cf5eee0d1a49371b4f99ceabcdf3633eed7",
+  "selected_instance": "g_on.g_die[d].g_sm[s].u_sm: ot_ds_hbm_simt_sm20 TW17/PW20",
+  "original_enabled_r3": {
+    "ENABLE": 1,
+    "COMBINED_ENABLE": 1,
+    "W2_RESULT_ENABLE": 1,
+    "W2_SECTOR_ENABLE": 1,
+    "ND": 2,
+    "NSM": 2,
+    "NS": 2,
+    "NPC": 2,
+    "MEM_WORDS": 2097152,
+    "VM_AW": 21
+  },
+  "original_result": "results/rtl/hbm_opt_integrated_20261005/w2_parent_on_elaboration/r3/outcome.json: elaboration ONLY, not runtime/numerical/physical/adopted",
+  "current_child_optins_default_off": [
+    "SU_REGISTERED_OUTPUTS",
+    "SU_REGISTERED_STATUS",
+    "SU_REGISTERED_BOUNDARY",
+    "SU_BALANCED_OWNER_BOUNDARY",
+    "SU_FOUR_COMBINATIONAL_CUTS",
+    "SU_FAST_OWNER_FRONTIER",
+    "W2_PROTECTED_TRANSACTION_PIPELINE"
+  ],
+  "continuity_owner": "Gibbs per owner; original Rawls handle unavailable",
+  "child_owners": {
+    "liveTC_GU_and_consumer": "Franklin",
+    "W2_sink_and_join": "Jason",
+    "CP_and_association": "Harvey",
+    "hierarchical_SM_structure": "Claude",
+    "W2_parent_physical_envelope": "Turing"
+  },
+  "joins": {
+    "Franklin": "Prepared fullreleased PC173/V3 kernel768descriptors/9216rows exists on selected HBM GU_JOIN source. Original SwiGLU frontend live; next corrected liveTC/protectedGU case not started and requires actual originalnumericalPASS/freshguard.",
+    "Jason": "Current original productionparent forwards PROTECTED_TRANSACTION_PIPELINE to real checked sink. Protected caller/sector/CDC boundary in dedicated ot_hbm_w2_protected_parent_context is a separate minimum cut, not installed into productionparent by flag alone.",
+    "Harvey": "Current productionparent forwards all FAST and prerequisite flags to CP and association; whole config has not been enabled-runtime gated with every optin.",
+    "missing_full_GU": "Productionparent DS20 has no gu_join export/descriptor binding. Selected HBMGU exporter launch fields16/16 and full frame73 cannot alias production TW17/PW20 or its actual held lease/frame. Whole-command fullGU descriptor enrollment+transport join is absent; TC FP32sharedwrite is not BF16GU."
+  },
+  "host_smoke": {
+    "pid": 303627,
+    "source": "5f233771499e45752d486896b942f45950f1714f",
+    "unchanged": true,
+    "expected_STEP0": 2815,
+    "no_CPU_progress_claim": true
+  },
+  "fulltoken_admission": false,
+  "physical_admission": false
+}
