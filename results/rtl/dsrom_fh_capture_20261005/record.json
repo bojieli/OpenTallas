@@ -266,7 +266,7 @@
     "C17b": "terminal DPL0033; original failure retained",
     "C18": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
     "C19": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
-    "C20": "sole controller2707850 E2 source dd6d7127b four-edge/native endpoint; map/PDN prerequisite waits fresh unchangedguard48/16 CPUfit"
+    "C20": "ACTUAL loaded fullroute admitted EPYC2 controller212904/OpenROAD218758/containerfd03d66af60d;60pct16CPU48GiB unchangedfreshprepostguard; all13 mapped/PDN objects reused"
   },
   "C18_actual_result": {
     "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
@@ -342,5 +342,32 @@
     "no_current_terminal_consumer": true,
     "original_timing_failures_preserved": true,
     "runtime_deadline": false
+  },
+  "C20_actual_result": {
+    "controller_pid": 212904,
+    "started": 1791267496.3686614,
+    "controller_sha256": "c196e4e8f6c32b8dce5244f1e9fd07599168ee2ef88dad146b74eb0f310f2b0a",
+    "source_commit": "dd6d7127bc812f830a6fbc31f11c156006f1c71a",
+    "source_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/wt-fault-native-r12",
+    "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C20_fault_retire_native",
+    "one_needed_physical_run": true,
+    "place_density": 0.6,
+    "NUM_CORES": 16,
+    "unchanged_admit_peak_GiB": 48,
+    "reuse": "all13 synth/floorplan objects; no synthesis/gold/model replay",
+    "scope": "conditional loaded head64SRAM/native fast capture/checkedreply/argmax, external provider parent-root transport scope retained",
+    "actual_stage": "3_1_place_gp_skip_io iteration100, live",
+    "container": "fd03d66af60d",
+    "OpenROAD_pid": 218758,
+    "qualified": false,
+    "floorplan_only_SS_setup_ps": -32.1735,
+    "floorplan_only_hold_ps": -6.98575,
+    "not_final_timing": true,
+    "mapped_fault_relay_DFF_count": 16,
+    "mapped_local_veto_DFF_count": 69,
+    "mapped_packet_DFF_count": 18040,
+    "mapped_native_endpoint_DFF_count": 7066,
+    "retention_basis": "Actual mapped ASAP7 DFF masters in retained cells.tsv; original sequential flag misses escaped names, corrected report tool for later extraction",
+    "observation_boundary_scope": "Native receiving FF/pin loads internal and real; external parent protected transport/caller/root crossing remains Turing/Copernicus scope, no fullparent claim"
   }
 }
