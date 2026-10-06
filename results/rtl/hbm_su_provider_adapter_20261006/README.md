@@ -1,0 +1,7 @@
+Actual SU provider adapter, assigned by Gibbs
+
+DefaultOFF ot_hbm_integrated_su_provider_adapter extracts the selected full17/20 parent provider/association wiring. The enabled adapter instantiates the existing association once, replacing the parent instance. Requests337 use new_request_permit only on valid/ready; responses273 always pass valid/ready/payload and drain independently of live permission. owner_frame73 is the exact retainedCP {pos20,token17,gen4,job32}, with no additional frame storage. SelectedPC32 and done/fault/originalretired4 are forwarded; grant/reverse release ACK, response tag/class checks and warm reset drainage remain actual external owners.
+
+One configuration passed707 boundary checks, walking every337 request/273 response/73 ownerbit. Actual source association is the golden. Coverage includes accepted association then live veto, read/write payloads, backpressure, defaultOFF, railfault/coldPOR and originalretired3/4. Deliberate response-live-veto and TOKEN17-truncation source mutations both fail the golden as expected. No CP8713/266 replay, wholearray or heavyjob was run.
+
+Unified model0ed6ebb4f precedes RTL: +0FF/+0cycles/+0boundarybits compared with replacement of the same literal parent wires and association. Parent routing/clock/PG qualification and the fullALLON numerical gate are not inferred from this minimum boundary gate. Gibbs owns actual enclosing instantiation; the parent and child structural sources are unchanged.

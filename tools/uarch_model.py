@@ -11791,6 +11791,36 @@ def hbm_integrated_stage_join_model():
         SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25)
 
 
+def hbm_integrated_su_provider_adapter_model():
+    """Extract literal selected CP provider wires; reuse its single association.
+
+    Replace the parent association and bus wiring, never add a second instance.
+    No new state, arithmetic, payload seats, protection authority or cycles.
+    """
+    return dict(schema='opentallas.hbm.integrated.su_provider_adapter.v1',
+        selected_parent='ot_ds_hbm_cluster20_integrated',source_contract='4c59804ae04cf411477b200f87ea03f23b17f3e1',
+        token_bits=17,position_bits=20,job_bits=32,generation_bits=4,
+        owner_frame_bits=73,selected_pc_bits=32,retired_original_ops_bits=4,
+        request_bits=337,response_bits=273,request_payload_bytes=32,response_payload_bytes=32,
+        max_boundary_payload_bytes_per_accepted_edge=32,
+        MACs_per_cycle_delta=0,memory_bytes_per_cycle_delta=0,
+        inherited_association_FF=2,added_FF=0,new_payload_storage_bits=0,
+        replicas_per_selected_CP=1,new_replica_count=0,mux_demux_delta_bits=0,
+        fanout_delta=0,added_boundary_bits=0,tracks_required_delta=0,
+        inherited_boundary_tracks=337+273+73+32+4+2,
+        channel_capacity='same selected parent channel; no new routing admitted',
+        cell_area_delta_um2=0,macro_footprint_delta_um2=0,
+        floorplan='replace same association and permit gates in existing slot; not standalone physical qualification',
+        request_permit_ANDs_reused=2,added_pipeline_edges=0,
+        composed_token_latency_delta_ns=0,
+        response_debt='provider valid/ready and payload drain independently of live permission',
+        protection='existing association complementary rails and real CP-held full73 frame',
+        grant_release='real peer_grants[0]/peer_releases[0] outside adapter',
+        clock='actual selected clk_sm with cold por_n; no new domain/reset',
+        default_ENABLED=0,default_FAST_OWNER_FRONTIER=0,
+        numerical_order_changed=False,physical_admitted=False,adopted=False)
+
+
 def hbm_integrated_gu_wide_launch_model():
     """Integration-only source view; preserve actual selected-SIMT arithmetic."""
     return dict(schema='opentallas.hbm.integrated.gu_wide_launch.v1',
@@ -11815,38 +11845,52 @@ def dsrom_protected_vm_model():
     return model()
 
 
-def dsrom_wfc_protected_caller_adapter_price():
-    """Actual readyless-to-protected service adapter, before its source build."""
-    import json
-    from pathlib import Path
-    root=Path(__file__).resolve().parents[1]
-    provider=json.loads((root/'results/uarch/dsrom_protected_vm_20261006/model.json').read_text())
-    owner=47
-    flags=8
-    state=3
-    ff=2*(owner+flags+state+5)
-    ce_existing_ff_upper=6000
-    nand=2*ce_existing_ff_upper+512
-    buffers=2*(ce_existing_ff_upper//4)+128
-    growth=2*(ff*.37908+nand*.08748+buffers*.10206)
-    return dict(schema='opentallas.wfc.protected_caller_adapter.v1',
-      before_RTL=True, MAXU=866,SOURCE=0,layer=19,MACs_per_cycle=0,replicas=1,
-      default_ENABLE=0,default_STRUCTURAL=0,provider=provider,
-      owner_bits=owner,control_flags=flags,state_bits=state,
-      independently_shadowed_caller_control_FF=ff,read_payload_copy_FF=0,
-      read_source='protected provider held reply remains live until actual receiver capture and consumption',
-      native_VM_bytes=2097152,real_VM_macros=288,prompt_macros=14,book_macros=4,
-      new_memory_ports=0,new_completion_authorities=0,new_codecs=0,
-      request_transport_coded_bits=3240,reply_transport_coded_bits=1440,receipt_coded_bits=144,
-      fast_period_ps=833.333333333,slow_period_ps=1111.111111111,
-      SS_setup_ps=60,FF_hold_ps=25,
-      control_clock_enable_reused_FF_upper=ce_existing_ff_upper,
-      control_mux_NAND2_reservation=nand,control_buffer_reservation=buffers,
-      adapter_and_CE_growth_budget_um2=growth,
-      link_router_stalled=False,controller_pause='clock enables; root clocks unchanged, actual router drains independently',
-      latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
-      mandatory_per_A_read_capture_bubble_edges=1,
-      actual_service_wait_edges=None,actual_token_latency_ns=None,
-      allwriter_contract='bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled',
-      global_VM_geometry_owner='Turing current r8/new-frame binding',
-      provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
+def hbm_vm_publication_parent_model():
+    """Compose existing activation and index providers; price missing caller seats."""
+    ff = 216 + 288 + 72 + 4 * 722 + 360
+    return dict(schema='opentallas.hbm.vm_publication_parent.v1',
+        composition=['memory_control/vm_root_composed_component.json',
+                     'memory_control/index_fp32_adapter_prebuild.json'],
+        default_enabled=False, replicas=1, MACs_per_cycle_delta=0,
+        activation=dict(banks=2, rows=128, payload_bits=2063, owner_bits=192,
+                        real_SRAM_count=22, macro_read_bits=5632,
+                        macro_write_bits=2816, multicast_bits=4*2063),
+        index=dict(real_SRAM_count=10, rows=512, FP32_words=16384,
+                   macro_read_bits=1280, macro_write_bits=1280,
+                   client_bytes_per_accept=128, outstanding=1),
+        added_registers=dict(descriptor_useful=156, descriptor_W6_FF=216,
+            current_context_row_validity_useful=256, row_validity_W6_FF=288,
+            pending_publisher_useful=2, pending_publisher_W6_FF=72,
+            reverse_receipt_seats=4, reverse_receipt_payload=265,
+            reverse_receipt_FF_each=722, release_receipt_FF=360, total_FF=ff),
+        FF_area_floor_um2=ff*.2916,
+        minimum_FF_footprint_at55_um2=ff*.2916/.55,
+        combinational_area='actual mapping required; 2:1 1056-bit publication mux, '
+            'full73-frame comparators, protected validity address selector and codecs; not free',
+        replica_cost=dict(activation_read_taps=4, reverse_ACK_banks=4,
+                          publication_arbiter_inputs=2, index_read_clients=1),
+        boundaries_bits_per_accept=dict(publisher_each=1024+32+73+2,
+            index_request=32+6+8+73+7+2, index_response=1024+8+73+7+2,
+            activation_write=2063+192+8+73+2,
+            activation_tap_each=2063+192+73+2,
+            reverse_ACK_each=192+73+2),
+        routing=dict(new_reverse_ACK_payload_tracks=4*(192+73+1),
+            new_reverse_ACK_root_clock_pins=4,
+            finite_parent_channels_bound=False, route_launch_allowed=False),
+        area_and_slot='existing VM reservation, positive added FF cost above; '
+            'full caller/result channel allocation and actual mapped cell cost remain open',
+        clocks='real clk_sm833.333ps and cold por_n; output clocks directly inherit '
+            'that root, no new oscillator or borrowed propagated latency',
+        latency=dict(provider_write_verified_ACK_edges=4,
+            provider_read_publication_edges=3, reverse_receipt_capture_edges=1,
+            added_publication_arbitration_edges=0,
+            root_release='after all actual branch ACKs; incoming ACK seat adds one '
+                         'capture edge and held release receipt adds one capture edge '
+                         'before actual parent retirement',
+            single_user_composition='existing producer -> verified provider ACK -> '
+                'actual index/activation consumer -> matching receipt -> parent retire; '
+                'CE repair and backpressure extend the same retained transaction'),
+        source_SM_visibility_owner='Claude HBM-SM; no delay-derived ACK',
+        service_CA_calendar_owner='Gibbs/Bacon; this provider join does not duplicate controllers',
+        SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        parent_physical_closed=False, adopted=False)
