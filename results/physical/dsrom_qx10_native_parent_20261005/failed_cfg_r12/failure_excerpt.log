@@ -1,0 +1,35 @@
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (1040.26, 239.76),  Floorplan Area: (2.16, 2.16) (1038.10, 237.60)
+	Number of std cell instances: 248138
+	Area of std cell instances: 32935.78
+	Number of macros: 5
+	Macros to be placed: 5
+	Area of macros: 33917.05
+	Base halo (L, B, R, T): (2.00, 2.00, 2.00, 2.00)
+	Area of macros with halos: 35202.08
+	Area of std cell instances + Area of macros: 66852.83
+	Floorplan area: 243900.77
+	Design Utilization: 0.27
+	Floorplan Utilization: 0.16
+	Manufacturing Grid: 1
+
+[INFO MPL-0500] Runtime: 201.14s
+Took 201 seconds: rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6
+source /work/hooks/post_macro_place_cfg_macros.tcl
+OT_W10_ELEM_PLACE macros=4 fixed_capture_flops=0
+[ERROR ODB-0360] Attempt to change the orientation of LOCKED instance g_cfg_provider.u_provider.g_hard_cfg.u_cfg
+Error: macro_place.tcl, 8 ODB-0360
+Elapsed time: 3:26.37[h:]min:sec. CPU time: user 235.52 sys 27.40 (127%). Peak memory: 1234500KB.
+make[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1
+make: *** [Makefile:456: /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_2_floorplan_macro.odb] Error 2

@@ -1,0 +1,696 @@
+{
+  "schema": "opentallas.wfc.producers.loaded-boundary.v1",
+  "source_commit": "be07cd4e0",
+  "functional_gate": "results/rtl/dsrom_wfc_producers_20261005/record.json",
+  "model_before_RTL": "results/uarch/dsrom_wfc_producers_20261005/model_v2.json",
+  "verdict": "PASS_SYNTHESIS_AND_LITERAL_PIN_LOAD_EXTRACTION",
+  "remote_retained": "/srv/opentallas-scratch2/codex/wfc-producers-20261005/map_r1",
+  "mapped_chip_area_um2": 83237.35138,
+  "macro_body_um2": 81955.46304,
+  "mapped_logic_um2": 1281.8883399999904,
+  "macro_inventory": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 14,
+    "ot_rom_4096x72_m8": 4
+  },
+  "corners": {
+    "SS": {
+      "root_clock_receiver_cap_fF": 576.9745139999969,
+      "root_clock_receiver_count": 960,
+      "mapped_DFFs": 942,
+      "macro_clocks": [
+        {
+          "macro": "u_cfg.g_live.g_bank\\[0\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[10\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[11\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[12\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[13\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[1\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[2\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[3\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[4\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[5\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[6\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[7\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[8\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[9\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[0\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[1\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[2\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[3\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "8.683800",
+          "receivers": ""
+        }
+      ],
+      "boundary_file": "loads_r1/SS_boundary.tsv",
+      "macro_load_file": "loads_r1/SS_macro.tsv",
+      "prompt_request_cap_fF": {
+        "pr_blk[0]": 0.508331,
+        "pr_blk[1]": 0.508331,
+        "pr_blk[2]": 0.508331,
+        "pr_blk[3]": 0.508331,
+        "pr_pos[0]": 0.514506,
+        "pr_pos[10]": 0.5065,
+        "pr_pos[11]": 4.024933,
+        "pr_pos[12]": 4.439571,
+        "pr_pos[13]": 2.329208,
+        "pr_pos[14]": 3.9636620000000002,
+        "pr_pos[15]": 3.002096,
+        "pr_pos[16]": 3.9920750000000003,
+        "pr_pos[17]": 2.329208,
+        "pr_pos[18]": 3.9636620000000002,
+        "pr_pos[19]": 3.155969,
+        "pr_pos[1]": 0.514506,
+        "pr_pos[20]": 3.8382019999999994,
+        "pr_pos[2]": 0.514506,
+        "pr_pos[3]": 1.063685,
+        "pr_pos[4]": 1.4737580000000001,
+        "pr_pos[5]": 2.8557930000000002,
+        "pr_pos[6]": 2.282771,
+        "pr_pos[7]": 3.515666,
+        "pr_pos[8]": 4.20515,
+        "pr_pos[9]": 3.7559259999999997,
+        "pr_re": 1.089899,
+        "pr_user[0]": 1.902704,
+        "pr_user[1]": 2.453713,
+        "pr_user[2]": 2.453713,
+        "pr_user[3]": 3.009307,
+        "pr_user[4]": 4.406852,
+        "pr_user[5]": 3.4120980000000003,
+        "pr_user[6]": 1.552336,
+        "pr_user[7]": 1.552336,
+        "pr_user[8]": 2.573146,
+        "pr_user[9]": 2.453713
+      },
+      "configured_epoch_literal_outputs": [
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[0]",
+          "net": "stage_epoch[0]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17729_ A1 0.508331}",
+          "drivers": "{_10683_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[10]",
+          "net": "stage_epoch[10]",
+          "cap_fF": "1.88221",
+          "receivers": "{_17718_ A1 0.508331} {_11530_ A1 0.978498} {_11438_ B2 0.395381}",
+          "drivers": "{_10693_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[11]",
+          "net": "stage_epoch[11]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17716_ A1 0.508331}",
+          "drivers": "{_10694_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[12]",
+          "net": "stage_epoch[12]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17715_ A1 0.508331}",
+          "drivers": "{_10695_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[13]",
+          "net": "stage_epoch[13]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17714_ A1 0.508331}",
+          "drivers": "{_10696_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[14]",
+          "net": "stage_epoch[14]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17713_ A1 0.508331}",
+          "drivers": "{_10697_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[15]",
+          "net": "stage_epoch[15]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17712_ A1 0.508331}",
+          "drivers": "{_10698_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[1]",
+          "net": "stage_epoch[1]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17727_ A1 0.508331}",
+          "drivers": "{_10684_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[2]",
+          "net": "stage_epoch[2]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17726_ A1 0.508331}",
+          "drivers": "{_10685_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[3]",
+          "net": "stage_epoch[3]",
+          "cap_fF": "1.921148",
+          "receivers": "{_17725_ A1 0.508331} {_11642_ A1 0.434319} {_11459_ A1 0.978498}",
+          "drivers": "{_10686_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[4]",
+          "net": "stage_epoch[4]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17724_ A1 0.508331}",
+          "drivers": "{_10687_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[5]",
+          "net": "stage_epoch[5]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17723_ A1 0.508331}",
+          "drivers": "{_10688_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[6]",
+          "net": "stage_epoch[6]",
+          "cap_fF": "0.508331",
+          "receivers": "{_17722_ A1 0.508331}",
+          "drivers": "{_10689_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[7]",
+          "net": "stage_epoch[7]",
+          "cap_fF": "0.8557459999999999",
+          "receivers": "{_17721_ A1 0.508331} {_11480_ A1 0.347415}",
+          "drivers": "{_10690_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[8]",
+          "net": "stage_epoch[8]",
+          "cap_fF": "0.94265",
+          "receivers": "{_17720_ A1 0.508331} {_11447_ A1 0.434319}",
+          "drivers": "{_10691_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[9]",
+          "net": "stage_epoch[9]",
+          "cap_fF": "0.8781410000000001",
+          "receivers": "{_17719_ A1 0.508331} {_11678_ B1 0.369810}",
+          "drivers": "{_10692_ Y INVx1_ASAP7_75t_R}"
+        }
+      ]
+    },
+    "FF": {
+      "root_clock_receiver_cap_fF": 674.1545580000101,
+      "root_clock_receiver_count": 960,
+      "mapped_DFFs": 942,
+      "macro_clocks": [
+        {
+          "macro": "u_cfg.g_live.g_bank\\[0\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[10\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[11\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[12\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[13\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[1\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[2\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[3\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[4\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[5\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[6\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[7\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[8\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_cfg.g_live.g_bank\\[9\\].u_prompt",
+          "master": "ot_sram_1r1w_512x128_m4_r2c2",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[0\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[1\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[2\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        },
+        {
+          "macro": "u_whole.g_live.g_rank\\[3\\].u_book",
+          "master": "ot_rom_4096x72_m8",
+          "pin": "clk",
+          "net": "clk",
+          "cap_fF": "10.373200",
+          "receivers": ""
+        }
+      ],
+      "boundary_file": "loads_r1/FF_boundary.tsv",
+      "macro_load_file": "loads_r1/FF_macro.tsv",
+      "prompt_request_cap_fF": {
+        "pr_blk[0]": 0.61012,
+        "pr_blk[1]": 0.61012,
+        "pr_blk[2]": 0.61012,
+        "pr_blk[3]": 0.61012,
+        "pr_pos[0]": 0.620008,
+        "pr_pos[10]": 0.577042,
+        "pr_pos[11]": 4.843513,
+        "pr_pos[12]": 5.391552,
+        "pr_pos[13]": 2.810752,
+        "pr_pos[14]": 4.790615,
+        "pr_pos[15]": 3.613385,
+        "pr_pos[16]": 4.826025,
+        "pr_pos[17]": 2.810752,
+        "pr_pos[18]": 4.790615,
+        "pr_pos[19]": 3.774985,
+        "pr_pos[1]": 0.620008,
+        "pr_pos[20]": 4.664425,
+        "pr_pos[2]": 0.620008,
+        "pr_pos[3]": 1.273703,
+        "pr_pos[4]": 1.8147319999999998,
+        "pr_pos[5]": 3.4154210000000003,
+        "pr_pos[6]": 2.747001,
+        "pr_pos[7]": 4.207859000000001,
+        "pr_pos[8]": 5.050271,
+        "pr_pos[9]": 4.5134,
+        "pr_re": 1.296125,
+        "pr_user[0]": 2.26788,
+        "pr_user[1]": 2.935488,
+        "pr_user[2]": 2.935488,
+        "pr_user[3]": 3.5955770000000005,
+        "pr_user[4]": 5.253678000000001,
+        "pr_user[5]": 4.082247,
+        "pr_user[6]": 1.859658,
+        "pr_user[7]": 1.859658,
+        "pr_user[8]": 3.0829379999999995,
+        "pr_user[9]": 2.9354880000000003
+      },
+      "configured_epoch_literal_outputs": [
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[0]",
+          "net": "stage_epoch[0]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17729_ A1 0.610120}",
+          "drivers": "{_10683_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[10]",
+          "net": "stage_epoch[10]",
+          "cap_fF": "2.257539",
+          "receivers": "{_17718_ A1 0.610120} {_11530_ A1 1.181290} {_11438_ B2 0.466129}",
+          "drivers": "{_10693_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[11]",
+          "net": "stage_epoch[11]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17716_ A1 0.610120}",
+          "drivers": "{_10694_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[12]",
+          "net": "stage_epoch[12]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17715_ A1 0.610120}",
+          "drivers": "{_10695_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[13]",
+          "net": "stage_epoch[13]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17714_ A1 0.610120}",
+          "drivers": "{_10696_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[14]",
+          "net": "stage_epoch[14]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17713_ A1 0.610120}",
+          "drivers": "{_10697_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[15]",
+          "net": "stage_epoch[15]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17712_ A1 0.610120}",
+          "drivers": "{_10698_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[1]",
+          "net": "stage_epoch[1]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17727_ A1 0.610120}",
+          "drivers": "{_10684_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[2]",
+          "net": "stage_epoch[2]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17726_ A1 0.610120}",
+          "drivers": "{_10685_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[3]",
+          "net": "stage_epoch[3]",
+          "cap_fF": "2.30829",
+          "receivers": "{_17725_ A1 0.610120} {_11642_ A1 0.516880} {_11459_ A1 1.181290}",
+          "drivers": "{_10686_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[4]",
+          "net": "stage_epoch[4]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17724_ A1 0.610120}",
+          "drivers": "{_10687_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[5]",
+          "net": "stage_epoch[5]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17723_ A1 0.610120}",
+          "drivers": "{_10688_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[6]",
+          "net": "stage_epoch[6]",
+          "cap_fF": "0.61012",
+          "receivers": "{_17722_ A1 0.610120}",
+          "drivers": "{_10689_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[7]",
+          "net": "stage_epoch[7]",
+          "cap_fF": "1.025241",
+          "receivers": "{_17721_ A1 0.610120} {_11480_ A1 0.415121}",
+          "drivers": "{_10690_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[8]",
+          "net": "stage_epoch[8]",
+          "cap_fF": "1.127",
+          "receivers": "{_17720_ A1 0.610120} {_11447_ A1 0.516880}",
+          "drivers": "{_10691_ Y INVx1_ASAP7_75t_R}"
+        },
+        {
+          "direction": "OUTPUT",
+          "port": "stage_epoch[9]",
+          "net": "stage_epoch[9]",
+          "cap_fF": "1.049606",
+          "receivers": "{_17719_ A1 0.610120} {_11678_ B1 0.439486}",
+          "drivers": "{_10692_ Y INVx1_ASAP7_75t_R}"
+        }
+      ]
+    }
+  },
+  "constraints": {
+    "root": "actual joined context clk",
+    "period_ps": 833.333333333,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "qualified_SS_FF": false,
+  "CTS_SPEF_present": false,
+  "missing_input_clocks": true,
+  "open_dependencies": [
+    "Zeno WFC/C8/core/VM downstream loads and exact source-backed visibility/restore/result receipts",
+    "Turing global slot and actual host/input producer launches",
+    "CTS/SPEF and loaded enclosing SS60/FF25 setup+hold"
+  ],
+  "scope": "finite L19 producer context; not DS-COMBINED arithmetic, HEAD argmax or token qualification",
+  "sha256": {
+    "headroom.jsonl": "e39faa46d4a96290f6500e8e101e656a109e65c0169670c27c3201301d4a618e",
+    "loads_r1/FF.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "loads_r1/FF.log": "c60438c33daeeb9e2efb0e959966fd04136d7a475f0ace3db705dbe02297f296",
+    "loads_r1/FF_boundary.tsv": "abb5b533c56958445faa7e8e626f8212c945fefce83272e35dc579f4b55dde60",
+    "loads_r1/FF_clocks.rpt": "42fd1a3267d441cd00bab96f1279562b318444e66400bca3a978805bfd5f7ab0",
+    "loads_r1/FF_command.json": "3fa6273615d7f4e01fc48612b512965bae1e6a94cd91b04d179800e498f72366",
+    "loads_r1/FF_macro.tsv": "74f09eb90651ddd3425e85f0631ad2ff982c0c309e66873c00ea97415f57e5ef",
+    "loads_r1/SS.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "loads_r1/SS.log": "e0012a2a74d7c1ba202b253bcc797d87904e9a3bb11f7bce12c1c2aa9f4956c5",
+    "loads_r1/SS_boundary.tsv": "43f4f902a12263c5223f0dd58c669c3ba50de595a0f3cd60e0856939d0ed05eb",
+    "loads_r1/SS_clocks.rpt": "42fd1a3267d441cd00bab96f1279562b318444e66400bca3a978805bfd5f7ab0",
+    "loads_r1/SS_command.json": "599f75e7e0d379b8e0d34fc6858baa3cd42de54dcea012ad668f97f41863615e",
+    "loads_r1/SS_macro.tsv": "57bc8df85d0866e87ff658f9a58d5babb8d2f31231e026728b71b875f46771fa",
+    "loads_r1/terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "map_r1/command.json": "17cfbdf0d20f219e396f88e76b4351a5d2b4f525d3a8d7552aa4a59b25fb7bcc",
+    "map_r1/config.mk": "a10436668b8a9657aefb5499007bff0112e72f97bbff0fe4f074c12f72c05b69",
+    "map_r1/source_pins.json": "c6c706c3bb9723664ccad0d53cf7fefebd5ded5279d0fda71c07588864dad7e2",
+    "map_r1/synth_stat.txt": "697858c76fae2d333e3b0b79d6e6d7e4bb03ba35e0d2fe695e5107ac906b8437",
+    "map_r1/terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "probe_headroom.jsonl": "8b7266576fd4fca2d2737a8bcfd2839828824101cc06b6854a0926abe8f2c045"
+  }
+}

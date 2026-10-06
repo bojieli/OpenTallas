@@ -1,0 +1,17 @@
+export DESIGN_NICKNAME = copernicus_cfg_provider
+export DESIGN_NAME = ot_v41_pair_cfgrom_context
+export PLATFORM = asap7
+export VERILOG_FILES = /src/physical/dsrom_v9_cfg_context/ot_v41_pair_cfgrom_context.sv /src/physical/dsrom_v9_cfg_context/ot_v41_pair_pq_ld_cfgrom.sv /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+export VERILOG_TOP_PARAMS = HARD_CFG 1 PQ 0
+export SYNTH_HDL_FRONTEND = slang
+export SDC_FILE = /work/constraint.sdc
+export ADDITIONAL_LEFS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib
+export CORNER = WC
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export ADDER_MAP_FILE =
+export NUM_CORES = 1

@@ -1,0 +1,57 @@
+
+24. Printing statistics.
+
+=== ot_dsrom_window_pipeline_context ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+  3745438        - wires
+  3745438        - wire bits
+    87617        - public wires
+    87617        - public wire bits
+    70354        - ports
+    70354        - port bits
+  3703567 5.05E+05 cells
+    16700 1.46E+03   AND2x2_ASAP7_75t_R
+    26770  2341.84   AND3x1_ASAP7_75t_R
+    30704  3133.65   AND4x1_ASAP7_75t_R
+     4161  485.339   AND5x1_ASAP7_75t_R
+        5    1.166   AO211x2_ASAP7_75t_R
+   647963 5.67E+04   AO21x1_ASAP7_75t_R
+     8453 1.23E+03   AO221x1_ASAP7_75t_R
+    10455 1.83E+03   AO222x2_ASAP7_75t_R
+     9103 1.19E+03   AO22x1_ASAP7_75t_R
+        5    1.166   AO31x2_ASAP7_75t_R
+    45445  5.3E+03   AO32x1_ASAP7_75t_R
+       48    8.398   AOI211x1_ASAP7_75t_R
+    36645 4.27E+03   AOI21x1_ASAP7_75t_R
+       32    6.532   AOI221x1_ASAP7_75t_R
+     8396 1.22E+03   AOI22x1_ASAP7_75t_R
+    42213  1.6E+04   DFFASRHQNx1_ASAP7_75t_R
+   749660 2.19E+05   DFFHQNx1_ASAP7_75t_R
+   625200 2.73E+04   INVx1_ASAP7_75t_R
+     1138  149.328   MAJx2_ASAP7_75t_R
+    35708 3.12E+03   NAND2x1_ASAP7_75t_R
+       62    9.944   NAND3x1_ASAP7_75t_R
+   599284 5.24E+04   NOR2x1_ASAP7_75t_R
+       40    6.415   NOR3x1_ASAP7_75t_R
+   133183 1.55E+04   OA211x2_ASAP7_75t_R
+   128638 1.31E+04   OA21x2_ASAP7_75t_R
+        2    0.467   OA221x2_ASAP7_75t_R
+   233974 4.09E+04   OA222x2_ASAP7_75t_R
+   129375 1.89E+04   OA22x2_ASAP7_75t_R
+       19    4.155   OA31x2_ASAP7_75t_R
+    17019  2481.37   OA33x2_ASAP7_75t_R
+    71756  8369.62   OAI21x1_ASAP7_75t_R
+    10555 1.54E+03   OAI22x1_ASAP7_75t_R
+    37029 3.24E+03   OR2x2_ASAP7_75t_R
+    27447  2.4E+03   OR3x1_ASAP7_75t_R
+    10630 1.08E+03   OR4x1_ASAP7_75t_R
+     1198  139.735   OR5x1_ASAP7_75t_R
+     2306  369.836   XNOR2x2_ASAP7_75t_R
+     2246  360.213   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_dsrom_window_pipeline_context': 505293.869518
+     of which used for sequential elements: 234602.960038 (46.43%)
+

@@ -1,0 +1,13 @@
+ENCLOSING_CAPTURE mode=0 job=1 actual_user=865 WFC_to_native_edges=16 request_wait_edges=9
+ENCLOSING_CAPTURE mode=1 job=1 actual_user=865 WFC_to_native_edges=15 request_wait_edges=8
+ENCLOSING_NOMINAL mode=0 MAXU866 fullVM32768x512 user865 request_stall8 restore_stall6 actual_C8_retire1 whole_ACK1 exact_writes41 exact_flits47 PASS
+ENCLOSING_NOMINAL mode=1 MAXU866 fullVM32768x512 user865 request_stall8 restore_stall6 actual_C8_retire1 whole_ACK1 exact_writes41 exact_flits47 PASS
+ENCLOSING_CAPTURE mode=0 job=2 actual_user=865 WFC_to_native_edges=4 request_wait_edges=2
+ENCLOSING_CAPTURE mode=1 job=2 actual_user=865 WFC_to_native_edges=3 request_wait_edges=1
+ENCLOSING_WARM mode=0 second_owned_job_retained=1 quarantine=1 false_ACK=0 fullVM_highword_preserved=1 PASS
+ENCLOSING_WARM mode=1 second_owned_job_retained=1 quarantine=1 false_ACK=0 fullVM_highword_preserved=1 PASS
+ENCLOSING_MINIMUM_MECHANISM PASS no_canonical_producer_or_SSFF_claim
+- /srv/opentallas-scratch2/jobs/zeno-wfc-enclosing-source-r1/rtl/test/dsrom_wavefront/tb_wfc_enclosing_stage.sv:129: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 348ns; walltime 0.005 s; speed 58.483 us/s
+- Verilator: cpu 0.006 s on 1 threads; alloced 1022 MB

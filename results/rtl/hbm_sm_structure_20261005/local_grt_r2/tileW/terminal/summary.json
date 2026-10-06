@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL_GRT",
+  "adopt": false,
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r2/tileW",
+  "source_faithful_checkpoint": true,
+  "evidence_sha256": {
+    "config.mk": "5b8574e542f3f991afa6e700c71ad20c13d4a8ef2356838d05d2a0128554dc4c",
+    "flow.log": "e3cf237e5dff13a02bda5d7dba61a8d49b27690b0191ed9e6e911a25eb9456b9",
+    "source_checkpoint_pin.json": "810748cc4c3d31d8999336032135091b573f26cd4b728522d40c57a3a16ff5a9",
+    "constraint.sdc": "01621be482bf4d2268ec976ba405fee0b64e595f023dcfd2164e728455286e23",
+    "status": "fb4c86401627d1aeddabeeda5744301d803e06776944d85b65b14390f4eaf485",
+    "config.original.mk": "71d8411480fea8688493d2f77b87adda68fe43fe7240a7c3ff181fe788c8e67f",
+    "command.json": "6626d8dbfd667fcfb953e5f3d8a1b50182341e0738e3cc506452669ddffe8ea7",
+    "terminal.json": "1a4fbb0577cb84ac3ea365c04acad01793e320ca04147cbab7ab768eee482ffa",
+    "local_channels.tcl": "1d9e9d19c25fb72558c20807a354dc01a02320d3442d1ebe54028aa230e1b7f9",
+    "admission.json": "e5a91004f27e49579f12644e9f30cc94706794882ecfb8dbe4906d3a0952584d"
+  },
+  "scope": "Retained CTS plus bounded local capacity reservation only; full detailed-route/context SS60 FF25 pending"
+}

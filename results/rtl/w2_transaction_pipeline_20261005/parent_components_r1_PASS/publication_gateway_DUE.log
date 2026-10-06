@@ -1,0 +1,7 @@
+BOUNDARY_DEBUG cycle=20 launch=00 lease=0 grants=100 permit=0 retained=1 boundary_drained=1 fault=0 owner_req=0 stage_req=0 mem_req=0
+BOUNDARY_EMPTY cuts=1111 cdc=1 req=1 rsp=1 reqptr=0000000000000000/0000000000000000 normals=1/1 headphase=00
+BOUNDARY_DEBUG cycle=35 launch=00 lease=0 grants=100 permit=0 retained=1 boundary_drained=0 fault=1 owner_req=0 stage_req=0 mem_req=0
+BOUNDARY_EMPTY cuts=1110 cdc=1 req=1 rsp=1 reqptr=0000000000000000/0000000000000000 normals=1/1 headphase=00
+PASS_GATEWAY_DUE_ACCEPTED_DEBT_RETAINED
+FATAL: /home/ubuntu/wt-w2-publication-bound-20261005/rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_w2_publication_nash.sv:95: EXPECTED_GATEWAY_CONTROL_FAIL_CLOSED
+       Time: 32526 Scope: tb_hbm_integrated_w2_publication_nash.parent_boundary
