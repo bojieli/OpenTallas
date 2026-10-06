@@ -22,3 +22,12 @@ Routes r1/src_* here (src-361c1387a), r1/stg_* on ot-epyc2 /srv/opentallas-scrat
   r7 routes (EPYC1, route 770 ps, signoff 833, SLEW/CAP 20 %, HOLD margin 20): src u50 / u55 / u50 aspect 0.8, stg u45 / u50 / u55. Records report incontext, reg2reg, die150 (IO vs die clock +-150 ps), margin_closed (+60 setup / +15 hold).
   NOT done (protocol change, reported): fully registered element boundary. in_ready is combinational from the inbound type bits, vm_we / out_data from internal state; a registered valid/ready boundary needs a skid/credit link (Turing routers) and a +2 VM read-latency pipeline. die150 shows the cost.
   r6 stopped before CTS (superseded); r5 src (past CTS) left running.
+## 07:55 PT -- LOAD CAP / ONE-VARIANT RULE (OWNER_RULE_LOAD_CAP_20261006.txt, UPDATE 2)
+  Killed (own, docker stop): r5/src_u50sm, r5/src_u55, r5/src_u55sm (pre-margin 833 ps routes, in detailed route); r7/src_u50, r7/src_u50a8 (place), r7/stg_u45, r7/stg_u55 (GRT) -- margin alternates.
+  Kept ONE margin route per block: r7/src_u55 (best routed src history: r2 src_u55 +8.2) and r7/stg_u50 (r4 stg_u50sm closed +12.4). Accept at SS >= +40 / FF >= +15; below +40 -> RTL change, not a re-sweep.
+  Pre-margin harvested: r5/stg_u55sm (54ab6b313) closed at 0-rule +22.6 / FF +8.5 / slew 0.
+## 09:00 PT -- r7 margin routes harvested (c5e4394c9, route 770 / signoff 833)
+  stg r7/stg_u50: MARGIN-CLOSED (accept rule +40/+15): incontext/reg2reg SS +76.5, FF hold +15.4, DRC/ant/DRV 0. die150 FAILS -142 (in_data type -> in_ready feedthrough).
+  src r7/src_u55: NOT closed: incontext/reg2reg SS +36.8 (< +40; worst = SRAM macro rd_out -> m_q capture), FF hold +15.2, 13 SS slew violators, DRC/ant 0. die150 -168.
+  Next (RTL, per UPDATE 2 -- no re-sweep): (1) src: a second macro-read capture stage at the macro pins (engine RD pipeline +1 cycle/event) + kept copies on the slew nets; (2) both: registered link boundary (inbound pin flops + 2-slot skid with registered in_ready; output register stage; routed SDC carrying the +-150 ps die budget so hold is repaired) -- Claude decides/implements default-off per MESSAGING CODEX, REVISED; Turing handoff file is FYI.
+  No live jobs.
