@@ -9489,6 +9489,23 @@ def hbm_w2_publication_model():
         live_GU=live['live_GU'], live_producer_new_protected_parent_gate=False)
     paths += [joined_dir/'terminal.json', joined_dir/'source.json', owner_dir/'source.json',
         root/physical_rel, root/map_rel, root/live_rel]
+    tree_rel='results/rtl/w2_transaction_pipeline_20261005/ce_tree_full37_r2_PASS'
+    tree_gate=json.loads((root/tree_rel/'terminal.json').read_text())
+    tree_source='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv'
+    tree_text=(root/tree_source).read_text()
+    compiled_tree=tree_text.split('\n// Same protected elastic-cut ABI and current positive permission gates.')[0]
+    tree_pins=json.loads((root/tree_rel/'source.json').read_text())
+    if hashlib.sha256(compiled_tree.encode()).hexdigest()!=tree_pins[tree_source]:
+        raise ValueError('Changed station CE-tree bank requires its own changed-source gate')
+    for rel,expected in tree_pins.items():
+        if rel != tree_source and hashlib.sha256((root/rel).read_bytes()).hexdigest()!=expected:
+            raise ValueError('Station CE-tree golden/gate source changed: '+rel)
+    for rel,expected in tree_gate['artifact_sha256'].items():
+        if hashlib.sha256((root/tree_rel/rel).read_bytes()).hexdigest()!=expected:
+            raise ValueError('Station CE-tree terminal pin changed: '+rel)
+    if tree_gate['verdict']!='PASS_FULL37_CE_TREE_BANK_GOLDEN_DEFAULT_OFF':
+        raise ValueError('Station CE-tree exact gate has not passed')
+    paths += [root/tree_source,root/tree_rel/'terminal.json',root/tree_rel/'source.json']
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -9605,6 +9622,29 @@ def hbm_w2_publication_model():
             parent_transport_budget_for_8_provider_transactions_edges=8*finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
             transport_budget_installed_and_minimum_measured=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        station_CE_selector_successor=dict(
+            implementation='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv',
+            parameter='BALANCED_CE_SELECT',default=0,
+            owner_integration='Gauss/Turing station only; no peer worktree changes or existing parent source replacement',
+            actual_bank_scope='native station payload cut2136payload+192owner+1valid=2329bits;37data W6words plus5repair words',
+            packet_bits=2329,data_words=37,repair_words=5,FF_bits=(37+5)*72+2,
+            added_FF_bits=0,added_state_or_memory_ports=0,added_normal_edges=0,added_CE_edges=0,
+            CE_repair_edges=5,readyless_parent_contract_unchanged=True,
+            linear_selector_mux_levels=36,balanced_selector_leaves=64,balanced_selector_mux_levels=6,
+            balanced_selector_node_allowance=63,selector_index_width=16,
+            balanced_selector_cell_upper_um2=63*16*.2+63*.10206,
+            selector_area_bound_is_not_mapped_or_station_fit=True,
+            actual_propagated_clock_or_loaded_fanout=None,
+            failed_source='ac32ed3d6',failed_NO2_setup_ps=-1721.01,failed_NO3_setup_ps=-1735.69,
+            mapped_pair=['_121746_','_118149_'],
+            exact_mapped_register_src='ot_hbm_w2_protected_bank_static.sv:76.2-104.5',
+            mapped_word_bit_identity=None,
+            association_limit='both cells map to the protected bank sequential block; linear CE selection is inferred from the AO21 chain, not recovered word/bit attribution',
+            CURRENT_flags='normal/fault/repairing remain combinational from current code and all5repair words; no registered cached authorization',
+            source_cut='balance only the lowest-index correctable-stripe priority tree before selected snapshot capture; no CE correction/decode/encode waiver',
+            gate_passed=True,gate_terminal=tree_rel+'/terminal.json',
+            current_source_sha256=hashlib.sha256((root/tree_source).read_bytes()).hexdigest(),
+            physical_qualified=False,headline_rate_credit=False),
         additive_parent_protection=parent_protection,
         dedicated_W2_context=dict(
             top='ot_hbm_w2_protected_parent_context', source_preparation_only=False,
@@ -10751,6 +10791,42 @@ def hbm_r5a_external_calendar_context_model():
         gates=dict(syntax=False, exact=False, protection=False, physical=False,
             performance=False, adopted=False))
 
+def hbm_r5a_provider_return_join_model():
+    """Consumer-only identity check on Gibbs's actual service READ hook.
+
+    Reuse the externally held protected full73, not a new owner ledger. The
+    provider's 2448 coded bits are already priced by its existing model.
+    """
+    gate_path=ROOT/'results/rtl/hbm_r5a_provider_join_20261006/r1_PASS/result.json'
+    gate=json.loads(gate_path.read_text()) if gate_path.exists() else {}
+    checker='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv'
+    changed_pass=(gate.get('status')=='PASS' and gate.get('exit')==0 and
+        gate.get('source_sha256',{}).get(checker)==hashlib.sha256((ROOT/checker).read_bytes()).hexdigest()) if (ROOT/checker).exists() else False
+    return dict(item=6,default_OFF=True,PCs=32,MACs_per_cycle=0,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv',
+        caller='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
+        provider_source='rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv',
+        provider_source_step='56d07d0e8',provider_mode='P2_READ_RETURN=1',
+        calendar_instances_added=0,owner_copies_added=0,payload_storage_added=0,
+        sticky_fault_complement_FF=2,minimum_added_FF_area_um2=2*.2916,
+        compare_bits=dict(issue_ordinal=32*16,return_frame=32*73),
+        additional_input_bits=1+73+32*16+32*73,
+        bytes_per_service_edge=32*32,SM_bits_per_stream_edge=8*1024,
+        added_memory_ports=0,added_codec_instances=0,added_pipeline_edges=0,
+        replica_count=1,mux_demux_added=0,full73_fanout=32,
+        routing_tracks_added=1+73+32*16+32*73,channel_capacity=None,
+        parent_slot_fit=False,physical_comparator_buffer_area_pending=True,
+        provider_coded_FF_already_priced=2448,provider_area_double_counted=False,
+        clock_ps=dict(service=1024,stream=2500/3),
+        composed_latency=dict(existing_context_ns=3.334,additional_join_edges=0,
+            loaded_comparator_timing_pending=True,first_access_FAIL_ns=153.757,
+            target_ns=140,full_off_package_FEC='consume actual DS-RACK fullFEC handoff'),
+        held_frame='actual protected accepted CP/source full73, service-stable through consumer drain; no producer/IRS alias',
+        warm='blocks new enrollment upstream; existing issue/return/freed debt drains, no warm POR',
+        measured_join=dict(record=str(gate_path.relative_to(ROOT)),READs=64,
+            PCs=32,scope='actual Gibbs coded return hook plus new consumer checker only; full expert numerical gate not inferred'),
+        gates=dict(changed_join=changed_pass,physical=False,performance=False,adopted=False))
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
@@ -11200,15 +11276,42 @@ def dsrom_window_parent_boundary_model():
             parent_timed_terminal_scalar_pins=69082+101082,
             default_parent_pin_layers={'horizontal':'M4', 'vertical':'M5'},
             default_parent_pin_pitch_um=.048,
-            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.048,
+            default_parent_pin_min_distance_tracks=2,
+            default_parent_effective_pin_spacing_um=.096,
+            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.096,
             historical_attention_placeholder_um=[2400,1700],
-            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.048,
-            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.048),
+            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.096,
+            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.096),
             historical_placeholder_is_not_allocated_WINDOW_slot=True,
             requested_pin_capacity_clock_PG_reserve_fraction=.20,
             requested_pin_capacity_signal_fraction_after_reserve=.60,
-            requested_outer_pin_perimeter_um=(69082+101082)*.048/(.80*.60),
-            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks; gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
+            requested_outer_pin_perimeter_um=(69082+101082)*.096/(.80*.60),
+            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks and measured ORFS default TWO-track IO spacing. Original one-track R3 bound was wrong and is retained as history. Gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
+            leaf_actual_IO_failure=dict(source_pin='81ce7328c',die_um=[1550,1550],
+                perimeter_um=6200, pins=70354, available_pin_positions=64520,
+                PPL_required_minimum_perimeter_um=6753.98,
+                error='PPL-0024', terminal_exit=1, CTS_reached=False,
+                actual_parent_clock_load_proof=False),
+            additional_layer_pin_access=dict(
+                purpose='Minimum full-shape pin-access measurement on retained placed ODB before selecting any repaired route or parent slot',
+                horizontal_layers=['M4','M6','M8'],vertical_layers=['M5','M7','M9'],
+                preferred_pitch_um=[.048,.064,.080], min_distance_tracks=2,
+                gross_positions_per_perimeter_um=sum(1/(2*p) for p in (.048,.064,.080)),
+                retained_leaf_perimeter_um=6200,
+                retained_leaf_gross_positions_upper=6200*sum(1/(2*p) for p in (.048,.064,.080)),
+                actual_PG_blockages_and_legal_positions_required=True,
+                clock_PG_reserve_fraction=.20, signal_fraction_after_reserve=.60,
+                parent_requested_perimeter_um=(69082+101082)/
+                    (sum(1/(2*p) for p in (.048,.064,.080))*.80*.60),
+                parent_diagnostic_frame_um=[4400,4400],
+                parent_diagnostic_raw_positions_upper=17600*sum(1/(2*p) for p in (.048,.064,.080)),
+                parent_diagnostic_signal_budget_upper=17600*sum(1/(2*p) for p in (.048,.064,.080))*.80*.60,
+                parent_diagnostic_frame_is_not_allocated=True,
+                standard_cell_utilization_is_not_pin_or_channel_capacity=True,
+                macro_bodies_and_halos_and_root_CTS_not_priced_free=True,
+                added_FF_bits=0, added_payload_bits=0, added_external_ports=0,
+                added_logical_cycles=0, full_route_ready=False,
+                measured_pin_access=False, parent_slot_fit=False, adoption=False),
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
@@ -12268,4 +12371,24 @@ def dsrom_wfc_common_clock_source_model():
         routing_tracks_needed=dict(root_clock=1, generated_clocks=2, POR=1, fault=1),
         channel_capacity=None, floorplan_slot_fit=False,
         protection='Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.',
+        physical_closed=False, PLL_IP_qualified=False)
+
+
+def dsrom_wfc_clock_ip_boundary_model():
+    """External coherent clock-IP boundary; not a replacement IP area estimate."""
+    return dict(default=0, replica_count=1, MACs_per_cycle=0,
+        memory_port_bytes_per_cycle=0, communication_intensity=0,
+        boundary_bits_per_cycle=dict(clock_inputs=2, clock_outputs=2,
+                                     phase_valid=1, sticky_fault=1, fault_output=1),
+        state_FF_bits=0, replica_mux_demux_cost=0,
+        combinational_gates=dict(INV=1, OR2=1),
+        IP_area_um2=None, IP_power_W=None, IP_startup_latency_ps=None,
+        routing_tracks_needed=dict(clock=2, validity=1, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        added_pipeline_cycles=0,
+        fast_period_ps=2500/3, slow_period_ps=10000/9,
+        generated_clock_edges=dict(fast=[1,4,7], slow=[1,5,9]),
+        latency_contribution='No data-stage change; characterized IP startup, clock insertion/skew, and quarantine latency remain required missing terms.',
+        protection='External IP must hold phase-valid low before acquisition, and latch fault/invalidity until cold POR after any phase loss. Boundary vetoes enrollment, never gates clock outputs; it does not implement or qualify clock stop.',
+        assumption='Explicit external coherent IP, not implemented divider or qualified PLL',
         physical_closed=False, PLL_IP_qualified=False)

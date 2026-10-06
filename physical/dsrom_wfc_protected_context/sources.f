@@ -18,3 +18,5 @@ rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv
 rtl/dft/ot_rom_secded_dec.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
 physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv
+physical/dsrom_wfc_protected_context/ot_dsrom_wfc_protected_clocked_stage.sv

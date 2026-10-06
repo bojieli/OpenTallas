@@ -1,0 +1,6 @@
+PASS_SELECTED_NORM_VM_DIRECT frame=73 writes=64 cycles=201
+PASS_SELECTED_NORM_VM_DRAIN frame=73 RXS=1 SXC=1 FREG=1 held_finish=3 caller_hold=3 warm=1 foreign_token=1 no_numerical_requalification=1
+- /srv/opentallas-scratch/codex/su-selected-norm-vm-boundary-r1/source/rtl/test/hbm_accel/codex_norm_boundary_20261006/tb_selected_norm_vm_drain.sv:124: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 356ns; walltime 0.079 s; speed 4.487 us/s
+- Verilator: cpu 0.079 s on 1 threads; allocated 15 MB

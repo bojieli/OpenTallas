@@ -1,0 +1,27 @@
+{
+  "status": "NATIVE_GPL_FLOW_REPAIR_PASSED_CRASH_POINT_STAGE_TERMINAL_NEXT_RESIZE_LIVE",
+  "source_commit": "19c66ba94",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "docker": "574aed79c217f32d5853af76eba8eb5197d4664cc555dfbfe27f097a6d980bfc",
+  "admission_utc": "2026-10-06T06:44:13Z",
+  "native_variable": {
+    "GPL_TIMING_DRIVEN": 0
+  },
+  "checkpoint_sha256": "bc0e1ae40bb2c245c69f4538182e9ea47800dc4e8d7098f6e61439cb517b2ba1",
+  "checkpoint_name": "3_3_place_gp.odb",
+  "global_placement_iterations": 508,
+  "routability_total_overflow": 0,
+  "routability_weighted_congestion": 0.7352,
+  "stage_peak_memory_KB": 8193240,
+  "stage_elapsed_seconds": 226,
+  "source_mapping_SDC_IO_frame_unchanged": true,
+  "later_timing_repair": true,
+  "synthesis_replayed": false,
+  "golden_replayed": false,
+  "SSFF_final": "NOT_YET_REACHED",
+  "DRC_final": "NOT_YET_REACHED",
+  "physical_closed": false,
+  "parent_qualified": false,
+  "preCTS_timing": "Raw GPL timing includes unbuffered propagated clock, not routed signoff; retained verbatim, no rejection or closure inferred",
+  "remote_root": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/flowrepair-r2"
+}

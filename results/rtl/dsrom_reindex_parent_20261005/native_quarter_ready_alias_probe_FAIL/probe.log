@@ -1,0 +1,28 @@
+[1805000] %Fatal: tb_dsrom_reindex_native_quarter.sv:67: Assertion failed in tb_dsrom_reindex_native_quarter: native score changed under backpressure
+%Error: /srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv:67: Verilog $stop
+Aborting...
+QUARTER_DIAG accepted=4 received=0 checked=0 refused=0 invalid=0 stalled=1
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/diagnostic +HOLD_FIRST_SCORE=1 +verilator+seed+1062026 +FIXTURE=/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/results/rtl/dsrom_reindex_parent_20261005/native_quarter_runtime_prepared"
+	User time (seconds): 2.86
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 123996
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2045
+	Voluntary context switches: 1
+	Involuntary context switches: 9
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

@@ -1,0 +1,40 @@
+Startpoint: $auto$ff.cc:337:slice$251
+            (rising edge-triggered flip-flop clocked by ref)
+Endpoint: $auto$ff.cc:337:slice$357
+          (rising edge-triggered flip-flop clocked by ref')
+Path Group: ref
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ref (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $auto$ff.cc:337:slice$251/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     5    4.335999   33.732552   50.090332   50.090332 v $auto$ff.cc:337:slice$251/QN (DFFASRHQNx1_ASAP7_75t_R)
+                     33.732552    0.000000   50.090332 v $abc$486$auto$blifparse.cc:397:parse_blif$513/B (XNOR2xp5_ASAP7_75t_R)
+     2    1.040454   17.572760   22.737316   72.827644 v $abc$486$auto$blifparse.cc:397:parse_blif$513/Y (XNOR2xp5_ASAP7_75t_R)
+                     17.572760    0.000000   72.827644 v $abc$486$auto$blifparse.cc:397:parse_blif$516/D (OR5x1_ASAP7_75t_R)
+     3    1.557732   16.071512   36.797691  109.625336 v $abc$486$auto$blifparse.cc:397:parse_blif$516/Y (OR5x1_ASAP7_75t_R)
+                     16.071512    0.000000  109.625336 v $abc$486$auto$blifparse.cc:397:parse_blif$518/C (NOR3xp33_ASAP7_75t_R)
+     6    3.870327   74.406746   39.157650  148.782990 ^ $abc$486$auto$blifparse.cc:397:parse_blif$518/Y (NOR3xp33_ASAP7_75t_R)
+                     74.406746    0.000000  148.782990 ^ $abc$486$auto$blifparse.cc:397:parse_blif$519/A (INVx1_ASAP7_75t_R)
+    10    4.537133   37.736004   29.708694  178.491684 v $abc$486$auto$blifparse.cc:397:parse_blif$519/Y (INVx1_ASAP7_75t_R)
+                     37.736004    0.000000  178.491684 v $abc$486$auto$blifparse.cc:397:parse_blif$532/B (NOR2xp33_ASAP7_75t_R)
+     1    0.623429   22.082415   16.992117  195.483795 ^ $abc$486$auto$blifparse.cc:397:parse_blif$532/Y (NOR2xp33_ASAP7_75t_R)
+                     22.082415    0.000000  195.483795 ^ $auto$ff.cc:337:slice$357/D (DFFASRHQNx1_ASAP7_75t_R)
+                                            195.483795   data arrival time
+
+                      0.000000  138.888885  138.888885   clock ref' (rise edge)
+                                  0.000000  138.888885   clock network delay (ideal)
+                                -60.000000   78.888885   clock uncertainty
+                                  0.000000   78.888885   clock reconvergence pessimism
+                                             78.888885 ^ $auto$ff.cc:337:slice$357/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                -16.195976   62.692913   library setup time
+                                             62.692913   data required time
+---------------------------------------------------------------------------------------------
+                                             62.692913   data required time
+                                           -195.483795   data arrival time
+---------------------------------------------------------------------------------------------
+                                           -132.790894   slack (VIOLATED)
+
+

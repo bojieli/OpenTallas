@@ -1,0 +1,57 @@
+{
+  "verdict": "PASS_FULL37_CE_TREE_BANK_GOLDEN_DEFAULT_OFF",
+  "compile_exit": 0,
+  "runtime_exit": 0,
+  "configuration_count": 1,
+  "WORDS": 37,
+  "FF_bits": 3026,
+  "comparisons": 21,
+  "corrected_indices": [
+    0,
+    18,
+    36
+  ],
+  "repair_edges": 15,
+  "repair_edges_per_stripe": 5,
+  "held_load_refused": true,
+  "repair_controller_DUE_refused": true,
+  "normal_fault_repairing_current": true,
+  "normal_latency_delta": 0,
+  "CE_latency_delta": 0,
+  "default_off_preserved": true,
+  "original_bank_bytes_unchanged": true,
+  "original_sequential_block_bytes_unchanged": true,
+  "scope": "Exact actual37word packet bank against original bank, including held correction and current controller DUE refusal. Cut adapter is source-equivalent; no station/warm/CTS/SSFF claim.",
+  "station_qualified": false,
+  "physical_qualified": false,
+  "artifact_sha256": {
+    "runtime.log": "2ca845a23ce0619de2f10cdbe69e67dfaded2a4c7254a82ef8e1890a08732520",
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source.json": "afbe0b7cdf4dc7273b7e964917702a6dbbbb2700d33f08b2b19861fe03908dd6",
+    "cut_elaboration.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "compiled_successor_source": "results/rtl/w2_transaction_pipeline_20261005/ce_tree_full37_r2_PASS/source/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv",
+  "hand_off_contains_untimed_source_equivalent_cut_adapter": true,
+  "current_hand_off_file_sha256": "afe5be0c97c2d0645b8aaa07499e383095055433cb37e64acb6480056213d036",
+  "mapped_association": {
+    "host": "ot-agidock128",
+    "source_work": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r6/work/mapped.v",
+    "mapped_sha256": "0bbf1a5b873256d635fd1bbe23450442c8d73382b2f4aeafb356a05d039e7b5a",
+    "start": {
+      "cell": "_121746_",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "D": "_006836_",
+      "QN": "_004995_"
+    },
+    "end": {
+      "cell": "_118149_",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "D": "_005945_",
+      "QN": "_005886_"
+    },
+    "src": "ot_hbm_w2_protected_bank_static.sv:76.2-104.5",
+    "word_bit_semantics": null,
+    "scope": "Actual cell connections and src attributes read from preserved mapped.v; exact internal word/bit alias unavailable. Long first-CE priority chain classification is inference, not a recovered semantic label."
+  },
+  "cut_adapter_elaboration_exit": 0
+}
