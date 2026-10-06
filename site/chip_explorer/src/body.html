@@ -1,0 +1,112 @@
+
+<div class="bar" role="banner">
+  <div class="bar-in">
+    <div class="brand"><b>OpenTallas</b><span>chip explorer · ASAP7 · 1.2 GHz target</span></div>
+    <div class="seg" role="group" aria-label="Design">
+      <button type="button" id="d-qwen" data-design="qwen" aria-pressed="false">Qwen ROM</button>
+      <button type="button" id="d-ds" data-design="ds" aria-pressed="true">DeepSeek ROM array</button>
+      <button type="button" id="d-hbm" data-design="hbm" aria-pressed="false">HBM accelerator</button>
+    </div>
+    <button type="button" class="btn" id="cmpBtn" aria-pressed="false">Compare all three</button>
+    <button type="button" class="btn" id="provBtn" aria-haspopup="dialog">Data provenance</button>
+  </div>
+  <div class="notice" id="notice"></div>
+</div>
+
+<main class="wrap">
+  <section class="hero" id="hero" aria-live="polite"></section>
+  <div id="cmpStrip"></div>
+
+  <section class="plate" id="array" aria-labelledby="h-array">
+    <div class="plate-head"><span class="no">1</span><h2 id="h-array">The array</h2><p id="arrayLede"></p></div>
+    <div class="bench">
+      <div class="stage">
+        <div class="tools" id="arrayTools"></div>
+        <div class="scroll" id="arrayScroll"><svg id="arraySvg" role="img" aria-label="System view"></svg></div>
+        <div class="legend" id="arrayLegend"></div>
+      </div>
+      <aside class="readout" id="arrayRead" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="plate" id="die" aria-labelledby="h-die">
+    <div class="plate-head"><span class="no">2</span><h2 id="h-die">The die</h2><p id="dieLede"></p></div>
+    <div class="bench">
+      <div class="stage">
+        <div class="tools" id="dieTools"></div>
+        <div class="scroll" id="dieScroll"><canvas id="dieCanvas" aria-label="Die floorplan drawn to scale" role="img"></canvas></div>
+        <div class="legend" id="dieLegend"></div>
+      </div>
+      <aside class="readout" id="dieRead" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="plate" id="token" aria-labelledby="h-token">
+    <div class="plate-head"><span class="no">3</span><h2 id="h-token">One token</h2><p id="tokenLede"></p></div>
+    <div class="bench">
+      <div class="stage">
+        <div class="tools">
+          <div class="transport">
+            <button type="button" class="btn" id="tPlay" aria-pressed="false">Play</button>
+            <button type="button" class="btn small" id="tBack" aria-label="Previous step">&#9664; Step</button>
+            <button type="button" class="btn small" id="tFwd" aria-label="Next step">Step &#9654;</button>
+            <label class="muted" for="tSpeed" style="font-size:12px">Speed</label>
+            <select id="tSpeed" class="btn small"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option><option value="4">4x</option></select>
+            <button type="button" class="btn small" id="tSpec" aria-pressed="false">Speculation</button>
+          </div>
+        </div>
+        <div class="progress" aria-hidden="true"><i id="tProg" style="width:0%"></i></div>
+        <div class="scroll" id="tokScroll"><canvas id="tokCanvas" role="img" aria-label="Token data path animated on the floorplan"></canvas></div>
+        <div class="legend" id="tokLegend"></div>
+      </div>
+      <aside class="readout">
+        <div class="eyebrow">Elapsed in this layer</div>
+        <div class="counter" id="tCount">0</div>
+        <div class="muted" id="tBusy" style="margin-top:6px;font-size:13px"></div>
+        <ol class="steplist" id="tSteps"></ol>
+        <div class="src" id="tSrc"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="plate" id="timing" aria-labelledby="h-timing">
+    <div class="plate-head"><span class="no">4</span><h2 id="h-timing">Timing</h2><p>Where one token's latency goes, which blocks meet 1.2 GHz, and what each optimisation bought.</p></div>
+    <h3>Latency of one token</h3>
+    <p class="muted" id="wfLede" style="margin:4px 0 10px;max-width:75ch"></p>
+    <div class="stage"><div class="scroll"><svg id="wfSvg" role="img" aria-label="Per-token latency waterfall"></svg></div><div class="legend" id="wfLegend"></div></div>
+
+    <h3 style="margin-top:28px">Closure board</h3>
+    <p class="muted" style="margin:4px 0 10px;max-width:75ch">Worst setup slack at the slow-slow corner (60 ps uncertainty) and hold slack at the fast-fast corner (25 ps), against the 833 ps clock. Right of zero closes. Values beyond the axis are clipped with an arrow.</p>
+    <div class="stage">
+      <div class="tools" id="cbTools"></div>
+      <div class="scroll"><svg id="cbSvg" role="img" aria-label="Closure board: setup and hold slack per block"></svg></div>
+      <div class="legend" id="cbLegend"></div>
+    </div>
+
+    <h3 style="margin-top:28px">Lever ladder</h3>
+    <p class="muted" id="lvLede" style="margin:4px 0 10px;max-width:75ch"></p>
+    <div class="stage"><div class="scroll"><svg id="lvSvg" role="img" aria-label="Lever ladder"></svg></div><div class="legend" id="lvLegend"></div></div>
+  </section>
+
+  <section class="plate" id="compare" aria-labelledby="h-compare">
+    <div class="plate-head"><span class="no">5</span><h2 id="h-compare">Compare</h2><p>Per-user decode rate, one user, each machine at its target context. Hatched bars are analytical compositions that still contain priced or unadmitted terms.</p></div>
+    <div class="stage"><div class="scroll"><svg id="cmpSvg" role="img" aria-label="Per-user decode rate of the three machines"></svg></div><div class="legend" id="cmpLegend"></div></div>
+    <div class="grid2" style="margin-top:20px">
+      <div><h3>Speculation pays where the step's cost is shared</h3><div class="scroll" style="margin-top:8px"><table id="specTable"></table></div><p class="src muted" id="specSrc" style="font:11px var(--f-mono);margin-top:6px"></p></div>
+      <div><h3>Fused dependent chains (DeepSeek ROM)</h3><div class="scroll" style="margin-top:8px"><table id="chainTable"></table></div><p class="src muted" id="chainSrc" style="font:11px var(--f-mono);margin-top:6px"></p></div>
+    </div>
+    <h3 style="margin-top:28px">Design principles</h3>
+    <div class="cards" id="principles" style="margin-top:10px"></div>
+  </section>
+</main>
+
+<div class="tip" id="tip" hidden></div>
+<div class="scrim" id="scrim" hidden></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" hidden>
+  <header>
+    <h3 id="drawerTitle" style="margin-right:auto">Data provenance</h3>
+    <div class="chips" id="provFilter"></div>
+    <button type="button" class="btn small" id="drawerClose">Close</button>
+  </header>
+  <div class="body"><p class="muted" style="margin:10px 0" id="provSummary"></p><table id="provTable"></table></div>
+</div>
