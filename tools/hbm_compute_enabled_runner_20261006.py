@@ -115,12 +115,21 @@ def main():
  if not verilator.is_file():raise ValueError('Pinned Verilator 5.050 missing; no old-tool fallback')
  version=subprocess.check_output([str(verilator),'--version'],text=True).strip()
  if 'Verilator 5.050' not in version:raise ValueError('Verilator version mismatch: '+version)
+ top='tb_enabled_sfu_stage' if a.family=='sfu' else 'tb_enabled_quarter'
  cmd=[str(verilator),'--binary','--timing','--hierarchical','-O2',
-      '-Wno-fatal','-Wno-WIDTH','--top-module','tb_enabled_quarter',
+      '-Wno-fatal','-Wno-WIDTH','--top-module',top,
       '-Mdir',str(out/'obj'),'--build-jobs','16','--verilate-jobs','1','--hierarchical-threads','1','--unroll-count','4',str(BASE/'hierarchical.vlt')]
  if a.family=='hc':cmd.append('-DHC_POST')
- cmd+=['-f',str(BASE/'sources.f'),str(BASE/'tb_enabled_quarter.sv')]
- binary=out/'obj/Vtb_enabled_quarter'
+ cmd+=['-f',str(BASE/'sources.f')]
+ if a.family=='sfu':
+  cmd += [str(ROOT/p) for p in [
+    'rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv',
+    'rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv',
+    'rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_c12_stage.sv',
+    'physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_frame1024.sv',
+    'physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter_framed.sv']]
+ cmd.append(str(BASE/(top+'.sv')))
+ binary=out/'obj'/('V'+top)
  if (out/'enable1_elaboration_pass.json').exists():
   prior=json.loads((out/'enable1_elaboration_pass.json').read_text())
   if sha(binary)!=prior['binary_sha256']:
@@ -157,7 +166,7 @@ def main():
    if not passed:
     write(out/'terminal.json',dict(status='FULLSHAPE_GOLDEN_FAIL',returncode=rc));return rc or 1
    write(out/'golden_pass.json',dict(status='PASS',family=name,binary_sha256=sha(binary),
-         seed=20261006,scope='One full-shape parent cohort incl POR cancellation, held response, request/result CE repair and UE refusal'))
+         seed=20261006,scope=('Actual protected stage + full73 owner + finiteframing + realSFU64, one childgold then all8opcodes, framingCE/heldTX/producer-consumerdrain/warm/persistentcompletion/highownerrefusal' if a.family=='sfu' else 'Actual corrected HC64 heldwrapper golden')))
   else:
    passed=rc!=0 and 'NEGATIVE_HELD_CODEWORD_INJECTED' in log and 'HELD_RESPONSE_CHANGED' in log
    write(out/'terminal.json',dict(status='PASS' if passed else 'NEGATIVE_HELD_NOT_CAUGHT',
