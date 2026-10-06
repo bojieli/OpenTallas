@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.wfc.producers.mapped-cost.v1",
+  "analytical_model": "results/uarch/dsrom_wfc_producers_20261005/model_v2.json",
+  "physical_record": "results/physical/dsrom_wfc_producers_20261005/record.json",
+  "logic_mapped_um2": 1281.8883399999904,
+  "logic_budget_um2": 30000,
+  "total_mapped_um2": 83237.35138,
+  "DFFs": 942,
+  "macro_clock_count": 18,
+  "root_clock_cap_fF": {
+    "SS": 576.9745139999969,
+    "FF": 674.1545580000101
+  },
+  "new_engine_stages": 0,
+  "token_credit": 0,
+  "functional_adopted": false,
+  "missing_input_clocks": true,
+  "global_slot_qualified": false
+}
