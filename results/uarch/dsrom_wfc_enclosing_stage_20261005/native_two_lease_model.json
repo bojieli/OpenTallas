@@ -38,5 +38,31 @@
   "exact": "Read old TX row BEFORE held RX write commits; actual native stream writes/reads/pointers each advance once, not two duplicate general steps; both owner receipts protected by unchanged provider. Wrong/missing held write tuple faults, warm pair remains owned.",
   "SS_setup_ps": 60,
   "FF_hold_ps": 25,
-  "adopted": false
+  "adopted": false,
+  "actual_changed_source_measurement": {
+    "source": "1860b98a0",
+    "receipt": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r4_PASS/result.json",
+    "legal_pairs": 41,
+    "first_read_accept_to_write_accept_fast_edges": [
+      23,
+      23
+    ],
+    "controller_read_reply_fast_edges": [
+      12,
+      13
+    ],
+    "controller_write_reply_fast_edges": [
+      20,
+      21
+    ],
+    "consume_to_retire_fast_edges": [
+      6,
+      7
+    ],
+    "nominal_fast_cycles": 18736,
+    "actual_second_native_capture_fast_edges": 3,
+    "latency_composed": "23 actual fastedges read accept->writeaccept; add measured write reply20/21 +two nativecommit/consume stateedges+actualreceipt6/7 before second retirement; preserve consumer stalls, no overlap credit. Fixture/coldinit/preload totals not token latency.",
+    "field_spine_v11_costs": "Not included: standaloneP0. Future binding requires owner-confirmed +1 broadcast/root/rowwrite edges and actualphase into selectedS81 source.",
+    "token_credit": 0
+  }
 }
