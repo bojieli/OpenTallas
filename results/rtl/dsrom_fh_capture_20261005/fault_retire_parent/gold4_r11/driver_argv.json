@@ -1,0 +1,15 @@
+[
+  "python3",
+  "tools/dsrom_fused_draft_head.py",
+  "run",
+  "--capture-cut",
+  "--capture-return-extra",
+  "3",
+  "--fault-retire",
+  "--slices",
+  "/srv/opentallas-scratch/claude/dsrom-fh-close/slices/fused-gold4",
+  "--run-dir",
+  "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/fault-parent-exact-r11/gold4",
+  "--jobs",
+  "16"
+]
