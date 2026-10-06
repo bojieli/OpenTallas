@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // PINREG=1 (pin-captured inputs, flopped busy/fault) == PINREG=0 one cycle later on pv..ppos and two cycles later on
 // busy/fault, cycle for cycle, under random cfg / go / stream traffic (both copies from one stimulus).
-// MUT=1: compare without the offset (must FAIL). MUT=2: the DUT's xb_d bit 0 bypasses its pin flop (must FAIL).
+// MUT=1: compare without the offset (must FAIL). MUT=2: the DUT's xb_d bit 0 arrives one cycle late (must FAIL).
 module tb_s81_bf_native_pinreg;
  parameter integer MUT=0, CYCLES=20000;
  reg clk=0,rst_n=0; always #0.5 clk=~clk;
