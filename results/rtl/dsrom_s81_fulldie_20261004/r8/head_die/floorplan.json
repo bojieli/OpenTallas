@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
  "tool": "tools/dsrom_s81_fulldie.py --gen r8",
- "tool_sha256": "96dd043e089d3ddeb6d6bbdcebed7efe318f89275b27b2c60759ef6422af4a8f",
+ "tool_sha256": "88c6716f20d281cd9dcebaf8c481337c99ffb3a1ce57c3b8b579941ba943c384",
  "sources_sha256": {
   "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
   "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
@@ -67,7 +67,7 @@
   "link": 8,
   "rstg": 256,
   "hend": 44,
-  "stn": 2631
+  "stn": 2633
  },
  "area_mm2_by_kind": {
   "bf": 49.972,
@@ -76,7 +76,7 @@
   "q": 74.891,
   "nvx": 24.683,
   "bf_nv": 33.367,
-  "sstn": 4.186,
+  "sstn": 6.976,
   "node": 21.741,
   "cfifo": 5.171,
   "hub": 34.905,
@@ -87,11 +87,11 @@
   "link": 4.238,
   "rstg": 0.344,
   "hend": 0.327,
-  "stn": 1.856
+  "stn": 1.851
  },
- "placed_footprint_mm2": 395.81,
+ "placed_footprint_mm2": 398.59,
  "utilisation": {
-  "placed_over_die": 0.4613,
+  "placed_over_die": 0.4646,
   "field_frames_mm2": 435.6
  },
  "geometry": {
@@ -137,8 +137,8 @@
   ]
  },
  "forwarded": {
-  "stations": 2631,
-  "ot_fwd_link_stage_instances": 7681,
+  "stations": 2633,
+  "ot_fwd_link_stage_instances": 7604,
   "chains": 62,
   "max_hop_um": 430.3,
   "hops_over_430p56": 0,
@@ -148,11 +148,11 @@
  },
  "field_round_trip_cycles": {
   "farthest_frame": 73,
-  "cycles": 139,
-  "x_trunk_stages": 59,
+  "cycles": 137,
+  "x_trunk_stages": 60,
   "column_slot_stages": 11,
   "root_stages": 2,
-  "return_trunk_stages": 62,
+  "return_trunk_stages": 59,
   "meso_crossings": 2,
   "crossing_cycles_each": 2,
   "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
@@ -223,12 +223,12 @@
    "wires": 27494
   },
   "fclk": {
-   "buses": 6387,
-   "wires": 6387
+   "buses": 6311,
+   "wires": 6311
   },
   "lane": {
-   "buses": 6395,
-   "wires": 1499176
+   "buses": 6319,
+   "wires": 1497566
   },
   "hub": {
    "buses": 12,
@@ -262,17 +262,17 @@
     566
    ],
    "stations": 25,
-   "length_um": 9537.4,
+   "length_um": 9720.4,
    "max_hop_um": 401.8,
-   "last_hop_um": 2.3
+   "last_hop_um": 2.4
   },
   {
    "chain": "xW2",
    "lanes": [
     566
    ],
-   "stations": 33,
-   "length_um": 12852.6,
+   "stations": 32,
+   "length_um": 12724.5,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -281,8 +281,8 @@
    "lanes": [
     566
    ],
-   "stations": 33,
-   "length_um": 12852.6,
+   "stations": 32,
+   "length_um": 12724.5,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -291,8 +291,8 @@
    "lanes": [
     566
    ],
-   "stations": 30,
-   "length_um": 11661.1,
+   "stations": 29,
+   "length_um": 11533.0,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -301,10 +301,10 @@
    "lanes": [
     566
    ],
-   "stations": 17,
-   "length_um": 6584.4,
+   "stations": 18,
+   "length_um": 6715.2,
    "max_hop_um": 401.8,
-   "last_hop_um": 2.3
+   "last_hop_um": 2.4
   },
   {
    "chain": "xW3",
@@ -312,7 +312,7 @@
     566
    ],
    "stations": 33,
-   "length_um": 12852.6,
+   "length_um": 12776.8,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -322,7 +322,7 @@
     566
    ],
    "stations": 33,
-   "length_um": 12852.6,
+   "length_um": 12776.8,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -332,7 +332,7 @@
     566
    ],
    "stations": 30,
-   "length_um": 11661.1,
+   "length_um": 11585.4,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -342,17 +342,17 @@
     566
    ],
    "stations": 30,
-   "length_um": 11762.2,
+   "length_um": 11579.1,
    "max_hop_um": 401.8,
-   "last_hop_um": 2.3
+   "last_hop_um": 2.4
   },
   {
    "chain": "xE2",
    "lanes": [
     566
    ],
-   "stations": 32,
-   "length_um": 12682.3,
+   "stations": 33,
+   "length_um": 12810.6,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -361,8 +361,8 @@
    "lanes": [
     566
    ],
-   "stations": 32,
-   "length_um": 12682.3,
+   "stations": 33,
+   "length_um": 12810.6,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -371,8 +371,8 @@
    "lanes": [
     566
    ],
-   "stations": 29,
-   "length_um": 11490.9,
+   "stations": 30,
+   "length_um": 11619.2,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -381,18 +381,18 @@
    "lanes": [
     566
    ],
-   "stations": 25,
-   "length_um": 9832.7,
+   "stations": 27,
+   "length_um": 10615.7,
    "max_hop_um": 422.3,
-   "last_hop_um": 2.3
+   "last_hop_um": 2.4
   },
   {
    "chain": "xE3",
    "lanes": [
     566
    ],
-   "stations": 32,
-   "length_um": 12682.3,
+   "stations": 33,
+   "length_um": 12758.4,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -401,8 +401,8 @@
    "lanes": [
     566
    ],
-   "stations": 32,
-   "length_um": 12682.3,
+   "stations": 33,
+   "length_um": 12758.4,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -411,8 +411,8 @@
    "lanes": [
     566
    ],
-   "stations": 29,
-   "length_um": 11490.9,
+   "stations": 30,
+   "length_um": 11566.9,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -431,9 +431,9 @@
     70
    ],
    "stations": 46,
-   "length_um": 18608.7,
+   "length_um": 18530.2,
    "max_hop_um": 430.3,
-   "last_hop_um": 287.7
+   "last_hop_um": 208.0
   },
   {
    "chain": "rW1",
@@ -451,9 +451,9 @@
     70
    ],
    "stations": 42,
-   "length_um": 16855.5,
+   "length_um": 16829.4,
    "max_hop_um": 430.3,
-   "last_hop_um": 142.3
+   "last_hop_um": 116.6
   },
   {
    "chain": "rW2",
@@ -471,9 +471,9 @@
     70
    ],
    "stations": 35,
-   "length_um": 13910.9,
+   "length_um": 13937.1,
    "max_hop_um": 430.3,
-   "last_hop_um": 10.0
+   "last_hop_um": 23.2
   },
   {
    "chain": "rW3",
@@ -491,9 +491,9 @@
     70
    ],
    "stations": 34,
-   "length_um": 13449.8,
+   "length_um": 13528.3,
    "max_hop_um": 430.3,
-   "last_hop_um": 0.8
+   "last_hop_um": 88.0
   },
   {
    "chain": "rW4",
@@ -511,9 +511,9 @@
     70
    ],
    "stations": 41,
-   "length_um": 16394.4,
+   "length_um": 16525.2,
    "max_hop_um": 430.3,
-   "last_hop_um": 155.2
+   "last_hop_um": 209.5
   },
   {
    "chain": "rW5",
@@ -529,10 +529,10 @@
     70,
     70
    ],
-   "stations": 45,
-   "length_um": 18147.6,
+   "stations": 46,
+   "length_um": 18330.6,
    "max_hop_um": 430.3,
-   "last_hop_um": 218.6
+   "last_hop_um": 2.0
   },
   {
    "chain": "rE0",
@@ -548,10 +548,10 @@
     70,
     70
    ],
-   "stations": 62,
-   "length_um": 24791.6,
+   "stations": 59,
+   "length_um": 23877.7,
    "max_hop_um": 430.3,
-   "last_hop_um": 67.1
+   "last_hop_um": 354.4
   },
   {
    "chain": "rE1",
@@ -568,10 +568,10 @@
     70,
     70
    ],
-   "stations": 57,
-   "length_um": 22749.6,
+   "stations": 54,
+   "length_um": 21835.4,
    "max_hop_um": 430.3,
-   "last_hop_um": 35.0
+   "last_hop_um": 320.2
   },
   {
    "chain": "rE2",
@@ -588,10 +588,10 @@
     70,
     70
    ],
-   "stations": 49,
-   "length_um": 19516.1,
+   "stations": 46,
+   "length_um": 18601.6,
    "max_hop_um": 430.3,
-   "last_hop_um": 1.0
+   "last_hop_um": 286.1
   },
   {
    "chain": "rE3",
@@ -650,27 +650,27 @@
    "stations": 53,
    "length_um": 21455.3,
    "max_hop_um": 430.3,
-   "last_hop_um": 370.0
+   "last_hop_um": 330.3
   },
   {
    "chain": "qSW",
    "lanes": [
     514
    ],
-   "stations": 31,
-   "length_um": 12402.3,
-   "max_hop_um": 403.9,
-   "last_hop_um": 66.5
+   "stations": 30,
+   "length_um": 12326.2,
+   "max_hop_um": 401.8,
+   "last_hop_um": 324.0
   },
   {
    "chain": "aSW",
    "lanes": [
     1026
    ],
-   "stations": 31,
-   "length_um": 12493.8,
-   "max_hop_um": 401.8,
-   "last_hop_um": 94.2
+   "stations": 30,
+   "length_um": 12182.8,
+   "max_hop_um": 403.9,
+   "last_hop_um": 183.2
   },
   {
    "chain": "ixSW",
@@ -678,9 +678,9 @@
     514
    ],
    "stations": 12,
-   "length_um": 4856.0,
+   "length_um": 4801.0,
    "max_hop_um": 401.8,
-   "last_hop_um": 54.0
+   "last_hop_um": 43.2
   },
   {
    "chain": "coSW",
@@ -698,9 +698,9 @@
     514
    ],
    "stations": 56,
-   "length_um": 22605.2,
-   "max_hop_um": 427.7,
-   "last_hop_um": 204.4
+   "length_um": 22772.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 371.6
   },
   {
    "chain": "aSE",
@@ -708,19 +708,19 @@
     1026
    ],
    "stations": 55,
-   "length_um": 22359.1,
-   "max_hop_um": 429.8,
-   "last_hop_um": 389.9
+   "length_um": 22283.5,
+   "max_hop_um": 430.3,
+   "last_hop_um": 283.4
   },
   {
    "chain": "ixSE",
    "lanes": [
     514
    ],
-   "stations": 27,
-   "length_um": 10956.1,
-   "max_hop_um": 400.5,
-   "last_hop_um": 155.5
+   "stations": 26,
+   "length_um": 10681.1,
+   "max_hop_um": 400.0,
+   "last_hop_um": 280.8
   },
   {
    "chain": "coSE",
@@ -729,7 +729,7 @@
    ],
    "stations": 89,
    "length_um": 35847.3,
-   "max_hop_um": 427.7,
+   "max_hop_um": 401.8,
    "last_hop_um": 248.4
   },
   {
@@ -738,19 +738,19 @@
     514
    ],
    "stations": 31,
-   "length_um": 12680.5,
-   "max_hop_um": 408.2,
-   "last_hop_um": 280.3
+   "length_um": 12604.1,
+   "max_hop_um": 416.9,
+   "last_hop_um": 205.2
   },
   {
    "chain": "aNW",
    "lanes": [
     1026
    ],
-   "stations": 31,
-   "length_um": 12776.8,
-   "max_hop_um": 408.2,
-   "last_hop_um": 363.5
+   "stations": 30,
+   "length_um": 12327.5,
+   "max_hop_um": 425.3,
+   "last_hop_um": 353.8
   },
   {
    "chain": "ixNW",
@@ -768,9 +768,9 @@
     514
    ],
    "stations": 12,
-   "length_um": 4983.1,
+   "length_um": 4928.1,
    "max_hop_um": 401.8,
-   "last_hop_um": 183.6
+   "last_hop_um": 129.6
   },
   {
    "chain": "qNE",
@@ -778,9 +778,9 @@
     514
    ],
    "stations": 57,
-   "length_um": 22952.2,
+   "length_um": 23051.6,
    "max_hop_um": 401.8,
-   "last_hop_um": 153.4
+   "last_hop_um": 252.3
   },
   {
    "chain": "aNE",
@@ -788,9 +788,9 @@
     1026
    ],
    "stations": 56,
-   "length_um": 22646.4,
-   "max_hop_um": 413.1,
-   "last_hop_um": 246.2
+   "length_um": 22566.5,
+   "max_hop_um": 401.8,
+   "last_hop_um": 166.3
   },
   {
    "chain": "ixNE",
@@ -798,9 +798,9 @@
     514
    ],
    "stations": 90,
-   "length_um": 36306.3,
-   "max_hop_um": 401.8,
-   "last_hop_um": 304.6
+   "length_um": 36289.0,
+   "max_hop_um": 428.1,
+   "last_hop_um": 287.3
   },
   {
    "chain": "coNE",
@@ -808,9 +808,9 @@
     514
    ],
    "stations": 26,
-   "length_um": 10483.2,
-   "max_hop_um": 401.8,
-   "last_hop_um": 84.2
+   "length_um": 10648.2,
+   "max_hop_um": 402.1,
+   "last_hop_um": 248.4
   },
   {
    "chain": "sel",
@@ -818,19 +818,19 @@
     514
    ],
    "stations": 28,
-   "length_um": 11487.9,
+   "length_um": 11237.4,
    "max_hop_um": 401.8,
-   "last_hop_um": 287.7
+   "last_hop_um": 41.5
   },
   {
    "chain": "col",
    "lanes": [
     514
    ],
-   "stations": 28,
-   "length_um": 11211.5,
+   "stations": 27,
+   "length_um": 10960.9,
    "max_hop_um": 409.1,
-   "last_hop_um": 41.5
+   "last_hop_um": 160.7
   },
   {
    "chain": "KW0t",
@@ -839,7 +839,7 @@
    ],
    "stations": 48,
    "length_um": 19331.7,
-   "max_hop_um": 408.2,
+   "max_hop_um": 429.8,
    "last_hop_um": 132.5
   },
   {
@@ -859,7 +859,7 @@
    ],
    "stations": 51,
    "length_um": 20713.7,
-   "max_hop_um": 428.1,
+   "max_hop_um": 429.0,
    "last_hop_um": 315.6
   },
   {
@@ -869,8 +869,8 @@
    ],
    "stations": 51,
    "length_um": 20676.5,
-   "max_hop_um": 415.6,
-   "last_hop_um": 277.8
+   "max_hop_um": 429.0,
+   "last_hop_um": 276.0
   },
   {
    "chain": "KW2t",
@@ -888,9 +888,9 @@
     512
    ],
    "stations": 42,
-   "length_um": 16889.2,
-   "max_hop_um": 411.7,
-   "last_hop_um": 88.6
+   "length_um": 16889.9,
+   "max_hop_um": 428.5,
+   "last_hop_um": 123.6
   },
   {
    "chain": "KW3t",
@@ -899,7 +899,7 @@
    ],
    "stations": 48,
    "length_um": 19208.9,
-   "max_hop_um": 416.0,
+   "max_hop_um": 408.7,
    "last_hop_um": 27.9
   },
   {
@@ -910,7 +910,7 @@
    "stations": 47,
    "length_um": 19172.4,
    "max_hop_um": 412.1,
-   "last_hop_um": 383.6
+   "last_hop_um": 385.3
   },
   {
    "chain": "KE0t",
@@ -929,7 +929,7 @@
    ],
    "stations": 53,
    "length_um": 21537.6,
-   "max_hop_um": 426.4,
+   "max_hop_um": 420.8,
    "last_hop_um": 337.0
   },
   {
@@ -939,7 +939,7 @@
    ],
    "stations": 57,
    "length_um": 22955.8,
-   "max_hop_um": 414.7,
+   "max_hop_um": 426.8,
    "last_hop_um": 157.9
   },
   {
@@ -949,7 +949,7 @@
    ],
    "stations": 57,
    "length_um": 22919.0,
-   "max_hop_um": 402.0,
+   "max_hop_um": 404.8,
    "last_hop_um": 118.8
   },
   {
@@ -957,40 +957,40 @@
    "lanes": [
     512
    ],
-   "stations": 48,
-   "length_um": 19253.7,
-   "max_hop_um": 430.3,
-   "last_hop_um": 55.9
+   "stations": 50,
+   "length_um": 20169.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 172.1
   },
   {
    "chain": "KE2r",
    "lanes": [
     512
    ],
-   "stations": 48,
-   "length_um": 19218.3,
-   "max_hop_um": 428.1,
-   "last_hop_um": 44.1
+   "stations": 50,
+   "length_um": 20134.5,
+   "max_hop_um": 402.0,
+   "last_hop_um": 133.9
   },
   {
    "chain": "KE3t",
    "lanes": [
     512
    ],
-   "stations": 53,
-   "length_um": 21501.2,
-   "max_hop_um": 412.6,
-   "last_hop_um": 303.5
+   "stations": 56,
+   "length_um": 22417.5,
+   "max_hop_um": 404.4,
+   "last_hop_um": 28.3
   },
   {
    "chain": "KE3r",
    "lanes": [
     512
    ],
-   "stations": 53,
-   "length_um": 21465.1,
-   "max_hop_um": 402.0,
-   "last_hop_um": 264.4
+   "stations": 55,
+   "length_um": 22381.5,
+   "max_hop_um": 403.9,
+   "last_hop_um": 380.6
   }
  ],
  "scan_die_power": {
@@ -1031,7 +1031,7 @@
   }
  },
  "legality_python": {
-  "instances": 23009,
+  "instances": 23011,
   "overlaps": 0,
   "overlap_examples": [],
   "outside": 0,

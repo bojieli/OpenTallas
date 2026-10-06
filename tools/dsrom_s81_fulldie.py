@@ -2050,11 +2050,12 @@ LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
 SEQ_WH = (34.56, 60.48)
-SSTN_WH = (51.84, 60.48)
+SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spread at 3 tracks (r8 GRT: a 52 um station
+                                    # piled the slot-to-slot stream into one M7 column over the element row)
 CF_WH = (850.176, 47.52)
 RSTG_WH = (38.88, 34.56)
 NVR = RET                           # NV5 draft-head result word back into its lm-head pair
-SEQ_XL, SSTN_X, R_CFGX = 326.16, 480.384, 37.152
+SEQ_XL, SSTN_X, R_CFGX = 326.16, 365.04, 37.152
 CF_X = 328.32                       # column FIFO x in the frame
 GLUE_RTL = 'results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv'
 # Slot parameterisation (owner decision 2026-10-06: taller q-element slot, fewer elements per die, 55-60 % cell
@@ -2492,7 +2493,7 @@ def build_r8(variant=None):
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
     slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
-    corr_c = vm.y + vm.h / 2
+    corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
     lo_av, hi_av = c0 - (band + SPINE_GAP), (H - band - SPINE_GAP) - c1      # HC halves sized to the room each side
     fs = lo_av / (lo_av + hi_av)
@@ -2730,6 +2731,10 @@ def buses_r8(m):
     def hub_block(name, master, kind, w, h, face_x, y_c, side, allowed):
         """end/start block beside a slab face: side 'W' = in the S14 W channel, 'E' = in the VCH"""
         xx = face_x - w - 4.32 if side == 'W' else face_x + 4.32
+        if name.startswith('hr_') and side == 'E':
+            xx = face_x + 0.55 * VCH8           # E-half return ends mid-VCH: keep the VCH west lanes free (r8 GRT)
+        if name.startswith('hr_') and side == 'W':
+            xx = face_x - 0.55 * SPF - w
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -2775,15 +2780,16 @@ def buses_r8(m):
         st = starts[half]
         src_xy = (st.x + st.w / 2, st.y + st.h / 2)
         # path from the start block to the half's S14 channel at the VM's y
-        if half == 'W':
-            p0 = [src_xy, (s14x['W'], src_xy[1])]
-        else:
-            cy_ = corr_y(m, f'x{dirn}')
-            p0 = [src_xy, (src_xy[0], cy_), (s14x['E'], cy_)]
         for dirn, tiers in (('dn', [2, 1, 0]), ('up', [3, 4, 5])):
+            sx_ = s14_x(m, half, f'x{dirn}')
+            if half == 'W':
+                p0 = [src_xy, (sx_, src_xy[1])]
+            else:
+                cy_ = corr_y(m, f'x{dirn}')
+                p0 = [src_xy, (src_xy[0], cy_), (sx_, cy_)]
             ys = [g['ch_y'][t] + rowx + 15.0 for t in tiers]
-            path = _dedup(p0 + [(s14x[half], y_) for y_ in ys])
-            forced = [_poly_len(path[:path.index((s14x[half], y_)) + 1]) for y_ in ys]
+            path = _dedup(p0 + [(sx_, y_) for y_ in ys])
+            forced = [_poly_len(path[:path.index((sx_, y_)) + 1]) for y_ in ys]
             allowed = [cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']] + \
                       [cor[f'ch{t}'] for t in tiers]
             sts = CH8.run(f'x{half}{dirn}', [LSW + 2], path, allowed, src_xy, forced=forced)
@@ -2798,9 +2804,9 @@ def buses_r8(m):
                 y_ = g['ch_y'][t] + rowx + 15.0
                 xs_ = [tap_x(half, c, SSTN_X + SSTN_WH[0] / 2) for c in range(ncol)]
                 far = xs_[-1]
-                hp = [(br[t].x + br[t].w / 2, br[t].y + br[t].h / 2), (s14x[half], y_), (far, y_)]
+                hp = [(br[t].x + br[t].w / 2, br[t].y + br[t].h / 2), (sx_, y_), (far, y_)]
                 hp = _dedup(hp)
-                forced_h = [abs(x_ - s14x[half]) + _mh(hp[0], hp[1]) for x_ in xs_]
+                forced_h = [abs(x_ - sx_) + _mh(hp[0], hp[1]) for x_ in xs_]
                 sts_h = CH8.run(f'x{half}{t}', [LSW + 2], hp, [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E']],
                                 hp[0], forced=forced_h)
                 chain_nets(CH8, f'x{half}{t}', (br[t].name, 'fo0', 'do0'), [it for it, _, _ in sts_h], [LSW + 2])
@@ -2816,13 +2822,14 @@ def buses_r8(m):
             ncol = TIER_COLS8[t]
             y_ = g['ch_y'][t] + rowr + 20.0
             xs_ = [tap_x(half, c, CF_X + CF_WH[0] - 30.0) for c in range(ncol)]
-            path = [(xs_[-1], y_), (s14x[half], y_)]
+            sx_ = s14_x(m, half, f'r{t}')
+            path = [(xs_[-1], y_), (sx_, y_)]
             gy = ga.y + ga.h * (0.15 + 0.7 * t / (TIERS - 1))
             if half == 'W':
-                path += [(s14x['W'], gy)]
+                path += [(sx_, gy)]
             else:
                 cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
-                path += [(s14x['E'], cy_), (vx_, cy_), (vx_, gy)]
+                path += [(sx_, cy_), (vx_, cy_), (vx_, gy)]
             path = _dedup(path)
             forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
             lanes_at = []
@@ -2915,6 +2922,20 @@ def vch_x(m, tag):
         d[tag] = len(d)
     i = d[tag] % LANES_VCH
     return m['x_vch'] + 60.0 + (VCH8 - 120.0) * (i + 0.5) / LANES_VCH
+
+
+LANES_S14 = 8
+
+
+def s14_x(m, half, tag):
+    """per-chain x track inside the half's spine-to-field (S14) channel"""
+    d = m.setdefault('_s14_lane_' + half, {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_S14
+    g = m['geo']
+    x0 = g['x_sp'] - SPF if half == 'W' else g['x_fe']
+    return x0 + 50.0 + (SPF - 100.0) * (i + 0.5) / LANES_S14
 
 
 def corr_y(m, tag):
@@ -3031,7 +3052,8 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         return 'W' if st[1] == 'W' else 'E'
 
     def spine_x(side):
-        return s14W if side == 'W' else vch_x(m, f'svc{side}{len(m.get("_vch_lane", {}))}')
+        return s14_x(m, 'W', f'svc{len(m.get("_s14_lane_W", {}))}') if side == 'W' else \
+            vch_x(m, f'svc{side}{len(m.get("_vch_lane", {}))}')
 
     def face_pt(sv, off):
         """(x, y) on the svc's field-facing edge, `off` from its east end"""
@@ -3039,8 +3061,15 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         y = sv.y + sv.h if sv.orient == 'R0' else sv.y
         return x, y
 
-    def strip_y(sv):
-        return yS if sv.orient == 'R0' else yN
+    def strip_y(sv, tag=''):
+        """per-chain y track in the band strip (spread over its height)"""
+        d = m.setdefault('_strip_lane', {})
+        k_ = (sv.orient, tag)
+        if k_ not in d:
+            d[k_] = sum(1 for o in d if o[0] == sv.orient)
+        i = d[k_] % 6
+        y0 = yS if sv.orient == 'R0' else yN
+        return y0 + (i - 2.5) * 55.0
 
     def single(name, payload, fmt, src, src_xy, path, sink_end):
         """src: (inst, fclk port, data port); sink_end: (end inst) -> lane 0 ports fi0/di0"""
@@ -3069,7 +3098,8 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
     for i, (st, sv) in enumerate(m['svcs'].items()):
         side = vm_side(st)
         sx = spine_x(side)
-        vy = vmy + (-1 if st[0] == 'S' else 1) * (300.0 + 150.0 * (st[1] == 'E'))
+        sgn = -1 if st[0] == 'S' else 1          # end blocks spread over the VM face (r8 GRT: one pile at its centre)
+        vy = vmy + sgn * (350.0 if st[1] == 'E' else 400.0)
         # VM -> svc: query vector (serial VM -> stream lane), entry meso at the service
         nm, w, h = end_spec('l2r', [512], 'vr')
         hs = P.add(_hub_at(P, f'hq_{st}', nm, w, h, vm, side, vy, cor))
@@ -3079,14 +3109,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         he = beside_svc(f'hqe_{st}', nm, w, h, sv, 400.0)
         px, py = face_pt(sv, 400.0)
         single(f'q{st}', 512, 'vr', (hs.name, 'fo', 'od'), (hs.x + hs.w / 2, hs.y + hs.h / 2),
-               [(hs.x + hs.w / 2, hs.y + hs.h / 2), (sx, vy), (sx, strip_y(sv)), (px, strip_y(sv)), (px, he.y + he.h / 2)], he)
+               [(hs.x + hs.w / 2, hs.y + hs.h / 2), (sx, vy), (sx, strip_y(sv, 'q' + st)), (px, strip_y(sv, 'q' + st)), (px, he.y + he.h / 2)], he)
         CH8.bus(f'hqe_{st}_o', 'local', 515, [(he.name, 'o'), (sv.name, 'q')])
         # svc -> VM: attention output + index (1,024 b), ratio CDC at the VM
         nm, w, h = end_spec('r2l', [1024], 'vr')
-        ha = P.add(_hub_at(P, f'ha_{st}', nm, w, h, vm, side, vy + (-1 if st[0] == 'S' else 1) * 120.0, cor))
+        ha = P.add(_hub_at(P, f'ha_{st}', nm, w, h, vm, side, vmy + sgn * (650.0 if st[1] == 'E' else 800.0), cor))
         px, py = face_pt(sv, 600.0)
         single(f'a{st}', 1024, 'vr', (sv.name, 'af', 'ad'), (px, py),
-               [(px, py), (px, strip_y(sv)), (sx, strip_y(sv)), (sx, ha.y + ha.h / 2), (ha.x + ha.w / 2, ha.y + ha.h / 2)], ha)
+               [(px, py), (px, strip_y(sv, 'a' + st)), (sx, strip_y(sv, 'a' + st)), (sx, ha.y + ha.h / 2), (ha.x + ha.w / 2, ha.y + ha.h / 2)], ha)
         CH8.bus(f'ha_{st}_o', 'local', 1027, [(ha.name, 'o'), (vm.name, f'a{st}')])
         # svc -> selector (index scores) and -> collector (attention partials): meso entry beside the band block
         for tag, blk, port, off, pfx in (('ix', sel, 'i', 1200.0, 'x'), ('co', colr, 'c', 1500.0, 'o')):
@@ -3096,17 +3126,17 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             px, py = face_pt(sv, off)
             ex_ = he.x + he.w / 2
             if (blk.y < DIE[1] / 2) == (sv.orient == 'R0'):          # same band
-                path = [(px, py), (px, strip_y(sv)), (ex_, strip_y(sv)), (ex_, he.y + he.h / 2)]
+                path = [(px, py), (px, strip_y(sv, tag + st)), (ex_, strip_y(sv, tag + st)), (ex_, he.y + he.h / 2)]
             else:                                                      # across the die through the VCH
                 yo = yS if blk.y < DIE[1] / 2 else yN
                 vx_ = vch_x(m, f'{tag}{st}')
-                path = [(px, py), (px, strip_y(sv)), (vx_, strip_y(sv)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
+                path = [(px, py), (px, strip_y(sv, tag + st)), (vx_, strip_y(sv, tag + st)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
             single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
             CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
     # selector / collector -> VM (ratio CDC beside the VM, VCH side)
     for name, blk, yo in (('sel', sel, yS), ('col', colr, yN)):
         nm, w, h = end_spec('r2l', [512], 'vr')
-        vy = vmy + (-1 if name == 'sel' else 1) * 700.0
+        vy = vmy + (-1 if name == 'sel' else 1) * 950.0
         he = P.add(_hub_at(P, f'h{name}', nm, w, h, vm, 'E', vy, cor))
         bx = blk.x + blk.w / 2 + 300.0
         by_ = blk.y + blk.h if name == 'sel' else blk.y
@@ -3142,10 +3172,12 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         cx = coll.x if side == 'W' else coll.x + coll.w
         nm = f'K{side}{i}'
         if side == 'W':
-            core = [(cx, yy), (s14['W'], yy), (s14['W'], ry)]
+            sx_ = s14_x(m, 'W', nm)
+            core = [(cx, yy), (sx_, yy), (sx_, ry)]
         else:
             vx_, cy_ = vch_x(m, nm), corr_y(m, nm)
-            core = [(cx, yy), (vx_, yy), (vx_, cy_), (s14['E'], cy_), (s14['E'], ry)]
+            sx_ = s14_x(m, 'E', nm)
+            core = [(cx, yy), (vx_, yy), (vx_, cy_), (sx_, cy_), (sx_, ry)]
         path = _dedup(core + [(edge[side], ry), (edge[side], ly), (lx, ly)])
         nm = f'K{side}{i}'
         # tx: collective -> macro tx (raw 512); the macro's parallel clock is the chain's forwarded clock
@@ -3238,17 +3270,17 @@ def finalize_r8(m):
     return pdir
 
 
-def _lay(M, face, ports, layer, start=None, gap=0.96, length=None):
+def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
     """ports [(name, bits)] laid one after another along a face (pitch 1 track), centred on the face if start is None"""
     p = TRK[layer][1]
     K = _LAY_K[0]
-    sp = lambda b: max(1, math.ceil(b / K)) * p * K
+    sp = lambda b: max(1, math.ceil(b / K)) * p * K * pitch
     gap = max(gap, 0.144, 1.2 * p * K)
     tot = sum(sp(b) for _, b in ports) + gap * (len(ports) - 1)
     L = length if length is not None else (M.h if face in 'EW' else M.w)
     pos = start if start is not None else max(2 * p * K + 0.2, (L - tot) / 2)
     for name, b in ports:
-        M.face(name, b, face, layer, pos + sp(b) / 2, 1)
+        M.face(name, b, face, layer, pos + sp(b) / 2, pitch)
         pos += sp(b) + gap
 
 
@@ -3340,8 +3372,8 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
     elif kind == 'sstn':
-        _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5')
-        _lay(Mx, 'N', P_(['e0', 'c0', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5')
+        _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        _lay(Mx, 'N', P_(['e0', 'c0', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
         _lay(Mx, 'W', P_(['cc', 'ck', 'rs']), 'M4')
         _lay(Mx, 'E', P_(['nf']), 'M4')
     elif kind == 'node':
@@ -3414,8 +3446,17 @@ def _faces_r8(m, Mx, it, ports):
             tot = sum(bwf(ports[p_][1]) for p_ in lst) + 2.0 * len(lst)
             if tot > L - 1.0:
                 raise ValueError(f'{Mx.name} face {f}: {tot:.0f} um of pins > {L:.0f}')
-            # spread the ports along the face at their peers' positions where they fit
-            pos = 0.4
+            # ports in peer order, spread evenly over the whole face (equal gaps): a slab face carries thousands of
+            # die wires, and packing them at the peer positions piled them into one GCell column (r8 GRT, VM E face)
+            if False:
+                gap = (L - 0.8 - sum(bwf(ports[p_][1]) for p_ in lst)) / (len(lst) + 1)
+                pos = 0.4 + gap
+                for p_ in lst:
+                    bw = bwf(ports[p_][1])
+                    Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
+                    pos += bw + gap
+                continue
+            pos = 0.4                     # band blocks / services: at their peers' positions where they fit
             for p_ in lst:
                 bw = bwf(ports[p_][1])
                 want = _peer_pos(m, it, p_, f) - bw / 2
