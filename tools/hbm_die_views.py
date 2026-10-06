@@ -630,7 +630,7 @@ def cmd_die(a):
         man['m8_m9_view_blockages'] = len(regadj)
         man['m8_m9_contract_assumed'] = contract_assumed
         man['real_pin_plan'] = pinrec if a.real_pins else 'generator pins (views MATCH or --real-pins off)'
-    (work / 'manifest.json').write_text(json.dumps(man, indent=1))
+    (work / 'manifest.json').write_text(json.dumps(H._jsonable(man), indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
 
 

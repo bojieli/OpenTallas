@@ -233,7 +233,14 @@ DECISIONS = dict(
 # boundaries on existing wire-stage registers (0 cycles).  The split record (tools/hbm_die_split.py) gives every band its
 # parent ports at unchanged absolute positions plus the cross buses between abutting bands; the generator replaces each
 # parent instance by its bands in the same slot (mirrored with the parent) and rewires (apply_splits).
+# split_lattice (r9 a_real, measured): the band origins of split.json are off the 2.16 um origin lattice, so ot_mts
+# snapped them by -0.48..+0.72 um into 8 overlaps.  Each band is packed bottom-up at its own legal residue (mod 2.16, by
+# orientation class) at or above the band below: the slot grows by <= ~5 um into the channel, parent pins move <= 5 um.
+IDXQ_LAT = {'hfd_index_q_b1:R0': 0.27, 'hfd_index_q_b4:R0': 1.62, 'hfd_index_q_b1:MX': 1.62,
+            **{f'hfd_index_q_b{i}:{c}': 0.0 for i, c in ((0, 'R0'), (2, 'R0'), (3, 'R0'), (5, 'R0'), (0, 'MX'), (2, 'MX'),
+                                                       (3, 'MX'), (4, 'MX'), (5, 'MX'))}}
 R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/index_q/split/split.json'},
+            split_lattice={'hfd_index_q': IDXQ_LAT},
             spine_slots={'su_red': (1399.656, 218.136), 'su_full': (346.008, 347.736)})
 ADOPTED = R16I
 
@@ -244,7 +251,7 @@ def build(variant=None):
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
     Q.PIN_CENTRE.update(variant.get('pin_centre', {}))
-    smw, smh = sm_dims()
+    smw, smh = sm_dims() if 'sm_wh' not in variant else (up(variant['sm_wh'][0], GX) - SHAVE, up(variant['sm_wh'][1], GY) - SHAVE)
     strip_d = variant.get('strip_d', STRIP_D)
     grp_w = 4 * (smw + SHAVE) + 5 * CH
     grp_h = 2 * (smh + SHAVE) + 2 * CH
@@ -493,7 +500,7 @@ def build(variant=None):
         from hbm_die_child_contract import allocations
         m['child_reservations'] = allocations(m)
     if variant.get('split_masters'):
-        apply_splits(m, variant['split_masters'])
+        apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
     return m
 
 
@@ -511,11 +518,24 @@ def _split_spec(ports):
     return out, order
 
 
-def apply_splits(m, specs):
+LAT_Y = 2.16     # macro origin lattice in y: lcm(0.27 um rows, 0.048 um M4/M6 track pitch)
+
+
+def _jsonable(o):
+    """manifest-safe copy: tuple dict keys (r16h pin_centre / corner rule) as 'a|b' strings, sets / tuples as lists."""
+    if isinstance(o, dict):
+        return {('|'.join(map(str, k)) if isinstance(k, tuple) else k): _jsonable(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple, set)):
+        return [_jsonable(v) for v in o]
+    return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
+
+
+def apply_splits(m, specs, lattice=None):
     """r16i: replace each instance of a split parent by its bands (same slot, mirrored with the parent), move every
     parent-port bus end to the band that owns the port, give every band the parent's ck / rst nets, add the cross buses
     between abutting bands, and fix the band masters' pin plans to the split record (m['fixed_ports'])."""
     fixed = m.setdefault('fixed_ports', {})
+    lattice = lattice or {}
     for parent, rel in specs.items():
         sp = json.loads((ROOT / rel).read_text())
         bands = sorted(sp['bands'].items(), key=lambda kv: kv[1]['y0_um'])
@@ -561,9 +581,20 @@ def apply_splits(m, specs):
                 continue
             assert abs(it.h - Hp) < 0.01, (parent, it.h, Hp)
             names = {}
-            for bn, b in bands:
+            mx = it.orient in ('MX', 'R180')
+            lat = lattice.get(parent, {})
+            top = None
+            for bn, b in (bands[::-1] if mx else bands):     # bottom-up in die y
                 y0, h = b['y0_um'], b['h_um']
-                yy = it.y + (Hp - y0 - h if it.orient in ('MX', 'R180') else y0)
+                yy = it.y + (Hp - y0 - h if mx else y0)
+                r_ = lat.get(f'{bn}:{"MX" if mx else "R0"}')
+                if r_ is not None:      # r16i-l: pack on the band's own legal origin lattice (ot_mts rule, measured r9)
+                    lo = yy if top is None else max(yy, top)
+                    k_ = math.ceil(round((lo - r_) / LAT_Y, 6))
+                    yy = round(k_ * LAT_Y + r_, 4)
+                    if top is not None and yy < top - 1e-6:
+                        yy = round(yy + LAT_Y, 4)
+                top = yy + h
                 nm = f'{it.name}_{bn.rsplit("_", 1)[1]}'
                 new_insts.append(Inst(nm, bn, it.x, round(yy, 4), it.w, h, it.orient, kind=it.kind, region=it.region,
                                       domain=it.domain))
@@ -1358,6 +1389,9 @@ def masters(m, k=1):
         M[it.master] = Q.Master(it.master, it.w, it.h, 3 if it.kind in ('waypoint', 'head') else 7, nt)
     sm_fixed = dict(d='S', q='S', x='W', r='E', c='N', ck='N', rst='N')
     sm_span = dict(S=(550.7, 1652.1), W=(518.2, 1554.6), E=(518.2, 1554.6), N=(550.7, 1652.1))
+    if m['variant'].get('sm_faces'):        # r17 probe: the smh element's own face map / pin spans (master frame)
+        sm_fixed = dict(m['variant']['sm_faces'])
+        sm_span = dict(m['variant']['sm_span'])
     items = defaultdict(lambda: defaultdict(list))
     for mname, fn in fixed.items():
         if mname in M:
@@ -1976,7 +2010,7 @@ mem pa
     (work / 'run.tcl').write_text(body)
     man = dict(case='a', instances=len(m['insts']), generated_pins=npins, nets_bits=sum(b[2] for b in m['buses']),
                variant=m['variant'])
-    (work / 'manifest.json').write_text(json.dumps(man, indent=1))
+    (work / 'manifest.json').write_text(json.dumps(_jsonable(man), indent=1))
     return man
 
 
@@ -2035,7 +2069,7 @@ report_wire_length -net * -global_route -file /work/wirelength.csv
                instances=len(m['insts']), bundle_pins=npins,
                bundle_nets=0 if empty else sum(max(1, math.ceil(b[2] / k)) for b in m['buses']),
                wires=0 if empty else sum(b[2] for b in m['buses']), coverage=cov, variant=m['variant'])
-    (work / 'manifest.json').write_text(json.dumps(man, indent=1))
+    (work / 'manifest.json').write_text(json.dumps(_jsonable(man), indent=1))
     return man
 
 
