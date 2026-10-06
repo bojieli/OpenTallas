@@ -438,10 +438,25 @@ module ot_hdc_v41x_vec #(
     wire [AW-1:0] pr_d = (CTL12 >= 2) ? pr2_r[3*AW +: AW] : pl_d + {ph_d, 8'd0};
     wire [AW-1:0] pr_o = (CTL12 >= 2) ? pr2_r[4*AW +: AW] : pl_o + {ph_o, 8'd0};
     wire [AW-1:0] pr_n = (CTL12 >= 2) ? pr2_r[5*AW +: AW] : pl_n + {ph_n, 8'd0};
+    // CTL12 >= 2 (round 5): the five stride equalities t == s + c (mod 2^AW) on the S1 carry-save pair, carry-free
+    // (s + c + ~t + 1 == 0 iff s ^ c ^ ~t == ~(maj(s, c, ~t) << 1)), registered with the sum at sub-step 2
+    function automatic csa_eq(input [AW-1:0] cs, input [AW-1:0] cc, input [AW-1:0] t);
+        reg [AW-1:0] nt, x, m;
+        begin
+            nt = ~t; x = cs ^ cc ^ nt; m = (cs & cc) | (cs & nt) | (cc & nt);
+            csa_eq = &(x ^ {m[AW-2:0], 1'b0});
+        end
+    endfunction
+    reg [4:0] eq_r;                      // a, b, c, d, o
+    always @(posedge clk) if (pst == 2'd1 && sst == 4'd2)
+        eq_r <= {csa_eq(pqs_r[4*AW +: AW], pqc_r[4*AW +: AW], q_oso), csa_eq(pqs_r[3*AW +: AW], pqc_r[3*AW +: AW], q_dso),
+                 csa_eq(pqs_r[2*AW +: AW], pqc_r[2*AW +: AW], q_cso), csa_eq(pqs_r[1*AW +: AW], pqc_r[1*AW +: AW], q_bso),
+                 csa_eq(pqs_r[0*AW +: AW], pqc_r[0*AW +: AW], q_aso)};
+    wire [4:0] eqv = (CTL12 >= 2) ? eq_r : {q_oso == pr_o, q_dso == pr_d, q_cso == pr_c, q_bso == pr_b, q_aso == pr_a};
     wire s1_okp = (q_aind == IND_NONE) && (q_dst != DST_KVT) &&
                   (s1_even || !(q_bhalf || q_qm == QM_ALT_NP || q_qm == QM_ALT_PN)) &&
-                  (q_aso == pr_a) && (q_bso == pr_b) && (q_cpair || q_cso == pr_c) && (q_dso == pr_d) &&
-                  (q_dst == DST_NONE || q_oso == pr_o);
+                  eqv[0] && eqv[1] && (q_cpair || eqv[2]) && eqv[3] &&
+                  (q_dst == DST_NONE || eqv[4]);
     wire s1_okx = (CTL12 != 0) ? s1_okp : s1_ok;
     wire [CW-1:0] s1_nn = (CTL12 != 0) ? pr_n : q_nout * q_nin;
     wire s1_ld = (CTL12 >= 2) ? (pst == 2'd1 && sst == 4'd3) : (CTL12 != 0) ? (pst == 2'd1 && sst == 3'd1) : (pst == 2'd1);
@@ -827,37 +842,48 @@ module ot_hdc_v41x_vec #(
                        promote ? 2'd0 : pst;
     // every candidate of the next marks is subtracted from n_rtot in parallel; the selects (emit / promote state) last
     wire [15:0] n_amark = (!PROM[11] && EMIT[11] && !STRT[11]) ? e_tot : a_mark;
-    wire [15:0] dk0, dm0, de0, dA0, dB0, dk1, dm1, de1, dA1, dB1;
-    wire [4:0]  unused_cc;
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dk (.a(n_rtot), .b(~pv_mark), .cin(1'b1), .s(dk0), .cout(unused_cc[0]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dm (.a(n_rtot), .b(~a_mark), .cin(1'b1), .s(dm0), .cout(unused_cc[1]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_de (.a(n_rtot), .b(~e_tot), .cin(1'b1), .s(de0), .cout(unused_cc[2]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dA (.a(n_rtot), .b(~n_amark), .cin(1'b1), .s(dA0), .cout(unused_cc[3]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_dB (.a(n_rtot), .b(~e_tot_n), .cin(1'b1), .s(dB0), .cout(unused_cc[4]));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dk1 (.a(dk0), .inc(1'b1), .y(dk1));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dm1 (.a(dm0), .inc(1'b1), .y(dm1));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_de1 (.a(de0), .inc(1'b1), .y(de1));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dA1 (.a(dA0), .inc(1'b1), .y(dA1));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_dB1 (.a(dB0), .inc(1'b1), .y(dB1));
+    // round 5: every candidate subtracted from r_tot and from r_tot + 1 (rtot1_r) in parallel, + 1 of the latter;
+    // this cycle's retire (ret_i) is the last select, so it no longer feeds the subtracts (n_rtot - X = ret_i ? x1 : x0)
+    wire [15:0] dk0, dm0, de0, dA0, dB0, dk1, dm1, de1, dA1, dB1, dk2, dm2, de2, dA2, dB2;
+    wire [9:0]  unused_cc;
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dk (.a(r_tot), .b(~pv_mark), .cin(1'b1), .s(dk0), .cout(unused_cc[0]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dm (.a(r_tot), .b(~a_mark), .cin(1'b1), .s(dm0), .cout(unused_cc[1]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_de (.a(r_tot), .b(~e_tot), .cin(1'b1), .s(de0), .cout(unused_cc[2]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dA (.a(r_tot), .b(~n_amark), .cin(1'b1), .s(dA0), .cout(unused_cc[3]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dB (.a(r_tot), .b(~e_tot_n), .cin(1'b1), .s(dB0), .cout(unused_cc[4]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dk1 (.a(rtot1_r), .b(~pv_mark), .cin(1'b1), .s(dk1), .cout(unused_cc[5]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dm1 (.a(rtot1_r), .b(~a_mark), .cin(1'b1), .s(dm1), .cout(unused_cc[6]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_de1 (.a(rtot1_r), .b(~e_tot), .cin(1'b1), .s(de1), .cout(unused_cc[7]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dA1 (.a(rtot1_r), .b(~n_amark), .cin(1'b1), .s(dA1), .cout(unused_cc[8]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dB1 (.a(rtot1_r), .b(~e_tot_n), .cin(1'b1), .s(dB1), .cout(unused_cc[9]));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dk2 (.a(dk1), .inc(1'b1), .y(dk2));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dm2 (.a(dm1), .inc(1'b1), .y(dm2));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_de2 (.a(de1), .inc(1'b1), .y(de2));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dA2 (.a(dA1), .inc(1'b1), .y(dA2));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dB2 (.a(dB1), .inc(1'b1), .y(dB2));
     wire        pv_upd = EMIT[14] && LAST[14];
+    wire [15:0] cp_r0 = pv_upd ? (STRT[14] ? dm0 : de0) : dk0, cp_r1 = pv_upd ? (STRT[14] ? dm1 : de1) : dk1,
+                cp_r2 = pv_upd ? (STRT[14] ? dm2 : de2) : dk2;
+    wire [15:0] ce_r0 = n_st ? dA0 : dB0, ce_r1 = n_st ? dA1 : dB1, ce_r2 = n_st ? dA2 : dB2;
     always @(posedge clk) begin
-        cnt_p0 <= pv_upd ? (STRT[14] ? dm0 : de0) : dk0;        // r_tot - pv_mark, next cycle
-        cnt_p1 <= pv_upd ? (STRT[14] ? dm1 : de1) : dk1;
-        cnt_e0 <= n_st ? dA0 : dB0;                              // r_tot - pvm_e, next cycle
-        cnt_e1 <= n_st ? dA1 : dB1;
+        cnt_p0 <= ret_i ? cp_r1 : cp_r0;                         // r_tot - pv_mark, next cycle
+        cnt_p1 <= ret_i ? cp_r2 : cp_r1;
+        cnt_e0 <= ret_i ? ce_r1 : ce_r0;                         // r_tot - pvm_e, next cycle
+        cnt_e1 <= ret_i ? ce_r2 : ce_r1;
     end
     wire [1:0] cpa_o, cpi_o, cem_o, cho_o;
     genvar gr;
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
         wire [15:0] ce = gr ? cnt_e1 : cnt_e0, cp = gr ? cnt_p1 : cnt_p0;
+        wire [7:0]  gds = (gr && ret_i_last) ? ret_i_seq : i_dseq;        // n_idseq for ret_i = gr
         ot_hdc_v41x_chf #(.K(KK)) u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cnt(ce),
-            .dsq(n_idseq), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
+            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
         ot_hdc_v41x_chf #(.K(KK)) u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
-            .dsq(n_idseq), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpi_o[gr]));
+            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpi_o[gr]));
         ot_hdc_v41x_chf #(.K(KK)) u_cem (.src(a_chsrc), .cseq(a_chseq), .nd(need1_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
-            .dsq(n_idseq), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cem_o[gr]));
+            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cem_o[gr]));
         ot_hdc_v41x_chf #(.K(KK)) u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
-            .dsq(n_idseq), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
+            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
     end endgenerate
     // next ch for each value of this cycle's retire; ret_i selects last, in two kept copies (13 control copies each)
     wire [1:0] n_chr;
