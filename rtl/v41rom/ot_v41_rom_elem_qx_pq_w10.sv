@@ -209,6 +209,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer PQ = 0,           // see the PQ header: 0 = the qx element
     parameter integer RT = 3,           // PQ: settle cycles after the replay
     parameter integer QW = 0,           // 1: lanes decode the weight codes before their P0 register (bterm4 WD)
+    parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
+                                        // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
+                                        // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -623,12 +626,22 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         end
     end
     localparam integer UW = 1 + 3 + 3 + SW + 3;     // {run, q, b, c, j}
-    wire [SW-1:0] c_first;
-    wire          c_first_ok;
-    ot_v41_first_w10 #(.N(NSEG)) u_first (.live(base_go), .c(c_first), .ok(c_first_ok));
-    wire [SW-1:0] c_live;             // first class of the running family (a new MTP position restarts here)
-    wire          c_live_ok;
-    ot_v41_first_w10 #(.N(NSEG)) u_flive (.live(base_live), .c(c_live), .ok(c_live_ok));
+    wire [SW-1:0] c_first_c;
+    wire          c_first_ok_c;
+    ot_v41_first_w10 #(.N(NSEG)) u_first (.live(base_go), .c(c_first_c), .ok(c_first_ok_c));
+    wire [SW-1:0] c_live_c;           // first class of the running family (a new MTP position restarts here)
+    wire          c_live_ok_c;
+    ot_v41_first_w10 #(.N(NSEG)) u_flive (.live(base_live), .c(c_live_c), .ok(c_live_ok_c));
+    // QM >= 3 (margin-first): the go / restart candidates that depend only on the configuration (and the op family)
+    // are registered on the free clock a cycle early (the configuration is static from its load until the walk ends;
+    // QP_CHECK asserts every registered candidate equals its expression at each go / restart)
+    reg  [SW-1:0] c_first_r, c_live_r;
+    reg           c_first_ok_r, c_live_ok_r;
+    always @(posedge clk) begin c_first_r <= c_first_c; c_first_ok_r <= c_first_ok_c; c_live_r <= c_live_c; c_live_ok_r <= c_live_ok_c; end
+    wire [SW-1:0] c_first = (QM >= 3) ? c_first_r : c_first_c;
+    wire          c_first_ok = (QM >= 3) ? c_first_ok_r : c_first_ok_c;
+    wire [SW-1:0] c_live = (QM >= 3) ? c_live_r : c_live_c;
+    wire          c_live_ok = (QM >= 3) ? c_live_ok_r : c_live_ok_c;
 
     // units per sub-block: 8 (shift 3); BF16_PAIR BF16 family 2 (shift 1)
     wire [1:0] sbs = (BP != 0 && fam) ? (BP == 2 ? 2'd0 : 2'd1) : 2'd3;
@@ -651,8 +664,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
         end
     endfunction
-    wire [6*NSEG-1:0] f0_go = sbf(4'd0, sbs_go, nu_p, base_go);
-    wire [6*NSEG-1:0] f1_go = sbf(4'd1, sbs_go, nu_p, base_go);
+    wire [6*NSEG-1:0] f0_go_c = sbf(4'd0, sbs_go, nu_p, base_go);
+    reg  [6*NSEG-1:0] f0_go_r; always @(posedge clk) f0_go_r <= f0_go_c;   // QM >= 3: candidate a cycle early
+    wire [6*NSEG-1:0] f0_go = (QM >= 3) ? f0_go_r : f0_go_c;
+    wire [6*NSEG-1:0] f1_go_c = sbf(4'd1, sbs_go, nu_p, base_go);
+    reg  [6*NSEG-1:0] f1_go_r; always @(posedge clk) f1_go_r <= f1_go_c;   // QM >= 3: candidate a cycle early
+    wire [6*NSEG-1:0] f1_go = (QM >= 3) ? f1_go_r : f1_go_c;
     // QX helpers (one-hot class selects)
     function automatic [NSEG-1:0] qx_low(input [NSEG-1:0] v);     // lowest set bit, one-hot; bit 0 if v == 0
         reg seen;
@@ -676,6 +693,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx, n_nx0;          // n_nx0: the encoded walk2 step; n_nx = n_nx0, or the one-hot step (QX = 3)
     reg [6*NSEG-1:0] nA, nB, wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
+    // QM >= 3 (BP = 0): f(q + 2) for every q in a configuration-only table registered on the free clock, so xQ2 is
+    // an 8:1 select of registers instead of the per-class subtract / compare on the walker's q (Z20c: w_q -> wQ2 +42.7 ps)
+    reg [6*NSEG-1:0] q2_tab [0:7];
+    always @(posedge clk) for (int t = 0; t < 8; t++) q2_tab[t] <= sbf(4'(t + 2), 2'd3, nu_p, base_live);
     if (FAST != 0) begin : g_nw2
         ot_v41_walk2_w10 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .live(nA[NSEG-1:0]),
             .livq1(nB[NSEG-1:0]), .cur(nA[5*NSEG-1:NSEG]), .qlast(qlast), .nx(n_nx0));
@@ -1138,14 +1159,22 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
 
     // an FP8 segment whose first unit lacks the low chunk starts at half 1
-    wire [SW-1:0] s0_first = c_s0[c_first];
+    wire [SW-1:0] s0_first_c = c_s0[c_first];
+    reg  [SW-1:0] s0_first_r; always @(posedge clk) s0_first_r <= s0_first_c;   // QM >= 3: candidate a cycle early
+    wire [SW-1:0] s0_first = (QM >= 3) ? s0_first_r : s0_first_c;
     wire [SW-1:0] s0_nx = (QX != 0) ? qx_s0_nx : c_s0[w_nx_c];
-    wire h_go   = !s_fp4[s0_first] && !s_bf[s0_first] && !s_lo[s0_first];
+    wire  h_go_c = !s_fp4[s0_first] && !s_bf[s0_first] && !s_lo[s0_first];
+    reg   h_go_r; always @(posedge clk) h_go_r <= h_go_c;   // QM >= 3: candidate a cycle early
+    wire  h_go = (QM >= 3) ? h_go_r : h_go_c;
     wire h_next = !s_fp4[s_next] && !s_bf[s_next] && w_firstu && !s_lo[s_next];
     wire nx_first = (FAST != 0) ? (w_nx[UW-2 -: 3] == 3'd0 && w_nx[2:0] == 3'd0) : nx_uabs == 7'd0;
     wire h_nx   = (QX != 0) ? qx_h_nx : !s_fp4[s0_nx] && !s_bf[s0_nx] && nx_first && !s_lo[s0_nx];
-    wire [SW-1:0] s0_live = c_s0[c_live];
-    wire h_live = !s_fp4[s0_live] && !s_bf[s0_live] && !s_lo[s0_live];
+    wire [SW-1:0] s0_live_c = c_s0[c_live];
+    reg  [SW-1:0] s0_live_r; always @(posedge clk) s0_live_r <= s0_live_c;   // QM >= 3: candidate a cycle early
+    wire [SW-1:0] s0_live = (QM >= 3) ? s0_live_r : s0_live_c;
+    wire  h_live_c = !s_fp4[s0_live] && !s_bf[s0_live] && !s_lo[s0_live];
+    reg   h_live_r; always @(posedge clk) h_live_r <= h_live_c;   // QM >= 3: candidate a cycle early
+    wire  h_live = (QM >= 3) ? h_live_r : h_live_c;
     // MTP: a walker that finishes a position's rounds restarts for the next position
     wire n_more = n_pos != plast;
     wire w_more = w_pos != plast;
@@ -1171,8 +1200,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     function automatic lu_f(input [6*NSEG-1:0] fa, input [SW-1:0] fc, input [2:0] fj);
         lu_f = fa[5*NSEG + fc] && ({1'b0, fj} + 4'd1 == fa[NSEG + 4*fc +: 4]);
     endfunction
-    wire lu_go = lu_f(f0_go, c_first, 3'd0);                     // go_e: (c_first, 0, f0_go)
-    wire lu_rs = lu_f(fF0, c_live, 3'd0);                        // MTP restart: (c_live, 0, fF0)
+    wire  lu_go_c = lu_f(f0_go, c_first, 3'd0);                     // go_e: (c_first, 0, f0_go)
+    reg   lu_go_r; always @(posedge clk) lu_go_r <= lu_go_c;   // QM >= 3: candidate a cycle early
+    wire  lu_go = (QM >= 3) ? lu_go_r : lu_go_c;
+    wire  lu_rs_c = lu_f(fF0, c_live, 3'd0);                        // MTP restart: (c_live, 0, fF0)
+    reg   lu_rs_r; always @(posedge clk) lu_rs_r <= lu_rs_c;   // QM >= 3: candidate a cycle early
+    wire  lu_rs = (QM >= 3) ? lu_rs_r : lu_rs_c;
     wire lu_xa = lu_f(wA, w_nx_c, w_nx[2:0]);                    // next (c, j) of the walk, sub-block unchanged
     wire lu_xb = lu_f(wB, w_nx_c, w_nx[2:0]);                    //   ... or advanced (wA <= wB)
     wire lu_nx = (QX != 0) ? qx_lu_nx : (w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q) ? lu_xb : lu_xa;
@@ -1268,9 +1301,15 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
     // walker sub-block registers (FAST): see sbf above
     always @(posedge gclk) begin
-        nQ2 <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
-        wQ2 <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
+        nQ2 <= (QM >= 3 && BP == 0) ? q2_tab[n_q] : sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
+        wQ2 <= (QM >= 3 && BP == 0) ? q2_tab[w_q] : sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
     end
+`ifdef QP_CHECK
+    always @(negedge clk) if (QM >= 3 && BP == 0 && rst_n && (w_run || n_run)
+                              && (q2_tab[w_q] !== sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live)
+                                  || q2_tab[n_q] !== sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live)))
+        begin $display("QP_CHECK FAIL QM3 q+2 table %m %t", $time); $fatal(1); end
+`endif
     wire n_step = hit;
     wire n_rst = n_step && !n_nx[UW-1] && n_more;
     wire w_step = issue && w_seg_last && w_cl;
@@ -1312,7 +1351,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // per class: the flags of its first segment c_s0[k] and whether the write hits it; the go / restart / step
     // candidates are AND-OR selects of these by the one-hot first class of the go / running family or the one-hot
     // next class (Z10e: c_bf -> base_live -> encode -> c_s0[c_live] -> s_x[] -11.9 ps)
-    wire [NSEG-1:0] qx_sf_ohf = qx_low(base_go), qx_sf_ohl = qx_low(base_live);
+    wire [NSEG-1:0] qx_sf_ohf_c = qx_low(base_go);
+    reg  [NSEG-1:0] qx_sf_ohf_r; always @(posedge clk) qx_sf_ohf_r <= qx_sf_ohf_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qx_sf_ohf = (QM >= 3) ? qx_sf_ohf_r : qx_sf_ohf_c;
+    wire [NSEG-1:0] qx_sf_ohl_c = qx_low(base_live);
+    reg  [NSEG-1:0] qx_sf_ohl_r; always @(posedge clk) qx_sf_ohl_r <= qx_sf_ohl_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qx_sf_ohl = (QM >= 3) ? qx_sf_ohl_r : qx_sf_ohl_c;
     reg  [3:0] qx_sf_nx, qx_sf_f, qx_sf_l;
     reg        qx_sw_nx, qx_sw_f, qx_sw_l;                                  // the write hits that class's s0
     always @* begin
@@ -1369,8 +1413,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `endif
     // QX = 3: n_coh / n_cgt / n_ca_r loaded exactly where n_c is (go; on a hit: MTP restart or step), the restart /
     // go values formed from the nA each loads (sbf(0) of the go / running family)
-    wire [6*NSEG-1:0] qn_a_go = sbf(4'd0, 2'd3, nu_p, base_go), qn_a_rs = sbf(4'd0, 2'd3, nu_p, base_live);
-    wire [NSEG-1:0] qn_ohf = qx_low(base_go), qn_ohl = qx_low(base_live);
+    wire [6*NSEG-1:0] qn_a_go_c = sbf(4'd0, 2'd3, nu_p, base_go);
+    reg  [6*NSEG-1:0] qn_a_go_r; always @(posedge clk) qn_a_go_r <= qn_a_go_c;   // QM >= 3: candidate a cycle early
+    wire [6*NSEG-1:0] qn_a_go = (QM >= 3) ? qn_a_go_r : qn_a_go_c;
+    wire [6*NSEG-1:0] qn_a_rs_c = sbf(4'd0, 2'd3, nu_p, base_live);
+    reg  [6*NSEG-1:0] qn_a_rs_r; always @(posedge clk) qn_a_rs_r <= qn_a_rs_c;   // QM >= 3: candidate a cycle early
+    wire [6*NSEG-1:0] qn_a_rs = (QM >= 3) ? qn_a_rs_r : qn_a_rs_c;
+    wire [NSEG-1:0] qn_ohf_c = qx_low(base_go);
+    reg  [NSEG-1:0] qn_ohf_r; always @(posedge clk) qn_ohf_r <= qn_ohf_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qn_ohf = (QM >= 3) ? qn_ohf_r : qn_ohf_c;
+    wire [NSEG-1:0] qn_ohl_c = qx_low(base_live);
+    reg  [NSEG-1:0] qn_ohl_r; always @(posedge clk) qn_ohl_r <= qn_ohl_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qn_ohl = (QM >= 3) ? qn_ohl_r : qn_ohl_c;
     always @(posedge gclk) if (rst_n) begin
         if (go_e) begin n_coh <= qn_ohf; n_cgt <= qx_gt(qn_ohf); n_ca_r <= ca_f(qn_a_go, c_first, 3'd0); end
         else if (hit) begin
@@ -1387,7 +1441,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
 `endif
     // QX: w_coh / w_cgt loaded exactly where w_c is (go, MTP restart, class step)
-    wire [NSEG-1:0] qx_ohf = qx_low(base_go), qx_ohl = qx_low(base_live);   // = ot_v41_first_w10 (bit 0 if none)
+    wire [NSEG-1:0] qx_ohf_c = qx_low(base_go);   // = ot_v41_first_w10 (bit 0 if none)
+    reg  [NSEG-1:0] qx_ohf_r; always @(posedge clk) qx_ohf_r <= qx_ohf_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qx_ohf = (QM >= 3) ? qx_ohf_r : qx_ohf_c;
+    wire [NSEG-1:0] qx_ohl_c = qx_low(base_live);
+    reg  [NSEG-1:0] qx_ohl_r; always @(posedge clk) qx_ohl_r <= qx_ohl_c;   // QM >= 3: candidate a cycle early
+    wire [NSEG-1:0] qx_ohl = (QM >= 3) ? qx_ohl_r : qx_ohl_c;
     always @(posedge gclk) if (rst_n) begin
         if (go_e) begin w_coh <= qx_ohf; w_cgt <= qx_gt(qx_ohf); end
         else if (issue && w_seg_last && w_cl) begin
@@ -1708,7 +1767,13 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire l0_v, l1_v, l0_f, l1_f;
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
-    if (FAST != 0 && QPIPE != 0) begin : g_l3
+    if (FAST != 0 && QPIPE != 0 && QM != 0) begin : g_l3
+        // QM (margin-first, owner rule 2026-10-06): the 17-stage lane ot_v41_bterm5_w10 (+5 cycles, bit-identical)
+        ot_v41_bterm5_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
+            .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
+        ot_v41_bterm5_w10 #(.TW(TW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
+            .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
+    end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
@@ -1920,7 +1985,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [TRW-1:0] t_tree;
     wire [2:0]     t_pos;
     wire [31:0] t_val;
-    if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
+    if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
+    // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
+        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
+        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
+    end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
     ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
@@ -1986,6 +2056,15 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         if ((|bk_fault) && !dbg_bk) $display("QXPQ_DBG %m bk_fault=%b t=%0t", bk_fault, $time);
         if (go_e) $display("QXPQ_DBG %m go_e t=%0t tag=%0d walking=%b", $time, go_tag_e, pq_walking);
         if (pq_swap) $display("QXPQ_DBG %m swap t=%0t", $time);
+    end
+`endif
+`ifdef QP_CHECK
+    // QM >= 3: the registered go / restart candidates equal their expressions where they are used
+    always @(negedge clk) if (QM >= 3 && rst_n) begin
+        if (go_e && (f0_go_r !== f0_go_c || f1_go_r !== f1_go_c || s0_first_r !== s0_first_c || h_go_r !== h_go_c || lu_go_r !== lu_go_c || qx_sf_ohf_r !== qx_sf_ohf_c || qn_a_go_r !== qn_a_go_c || qn_ohf_r !== qn_ohf_c || qx_ohf_r !== qx_ohf_c || c_first_r !== c_first_c || c_first_ok_r !== c_first_ok_c))
+            begin $display("QP_CHECK FAIL QM3 go candidates %m %t", $time); $fatal(1); end
+        if ((w_restart || (qx_n_end && n_more && n_run)) && (s0_live_r !== s0_live_c || h_live_r !== h_live_c || lu_rs_r !== lu_rs_c || qx_sf_ohl_r !== qx_sf_ohl_c || qn_a_rs_r !== qn_a_rs_c || qn_ohl_r !== qn_ohl_c || qx_ohl_r !== qx_ohl_c || c_live_r !== c_live_c || c_live_ok_r !== c_live_ok_c))
+            begin $display("QP_CHECK FAIL QM3 restart candidates %m %t", $time); $fatal(1); end
     end
 `endif
 endmodule

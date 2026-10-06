@@ -407,7 +407,8 @@ def _qelem_swap(cfg, work):
         return
     defs = work / "qelem_defines.sv"
     defs.write_text(f"`define OT_PAIR_PQ_QELEM 1\n`define OT_PAIR_PQ_QXV {cfg['qelem']}\n"
-                    f"`define OT_PAIR_PQ_QW {os.environ.get('OT_PQQ_QW', '0')}\n")
+                    f"`define OT_PAIR_PQ_QW {os.environ.get('OT_PQQ_QW', '0')}\n"
+                    f"`define OT_PAIR_PQ_QM {os.environ.get('OT_PQQ_QM', '0')}\n")
     FS.DIE = [defs] + [SWAP_PAIR if p.name == "ot_v41_pair_pq_w17w10.sv" else p for p in FS.DIE] + list(F1.QRTL)
     FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
 
@@ -430,11 +431,11 @@ def cmd_qelem_lever(a):
         r["config"] = "pq_qelem"          # its own row in tools/dsrom_field_reprice_r8.py (regions/pq_qelem.json.gz)
         rec.write_text(json.dumps(r, indent=1) + "\n")
     AD.FIELD_GEOM = None                  # S81 floorplan wire here; tools/dsrom_field_reprice_r8.py record --levers re-prices
-    note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s, pair FILE SWAP "
+    note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s QM=%s, pair FILE SWAP "
             "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP %d / GUARD %d / GSLACK %d. Replaces "
             "field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq "
             "assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go."
-            % (os.environ.get("OT_PQQ_QW", "0"), cfg["gap"], cfg["guard"], cfg["gslack"]))
+            % (os.environ.get("OT_PQQ_QW", "0"), os.environ.get("OT_PQQ_QM", "0"), cfg["gap"], cfg["guard"], cfg["gslack"]))
     FS.cmd_lever(argparse.Namespace(record=rec, ssff=None, lever="qelem_pq", verdict="PENDING_SSFF", note=note,
                                     lever_out=None))
     return rc
