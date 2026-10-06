@@ -1,0 +1,57 @@
+{
+  "status": "SOURCE_HASH_MATCH",
+  "checks": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "current": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "retained": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "match": true
+    },
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": {
+      "current": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "retained": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "match": true
+    },
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": {
+      "current": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "retained": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "match": true
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+      "current": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "retained": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "match": true
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": {
+      "current": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "retained": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "match": true
+    },
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": {
+      "current": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "retained": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "match": true
+    },
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": {
+      "current": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "retained": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "match": true
+    },
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": {
+      "current": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "retained": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "match": true
+    },
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": {
+      "current": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+      "retained": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+      "match": true
+    },
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv": {
+      "current": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+      "retained": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+      "match": true
+    }
+  },
+  "retained_preparation_sha256": "5f350174db1f480c2d7e8087c6f92bc7d14bd681894b441c370d36ca10fc6441",
+  "generated_hierarchy_ABI_match_still_required": true
+}
