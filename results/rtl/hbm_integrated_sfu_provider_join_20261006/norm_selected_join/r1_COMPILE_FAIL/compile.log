@@ -1,0 +1,519 @@
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_wr_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:13:41: ... Location of port declaration
+   13 |  input wire activation_wr_v,output wire activation_wr_r,
+      |                                         ^~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:17:14: ... Location of port declaration
+   17 |  output wire activation_ACK_v,input wire activation_ACK_r,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:21: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:62: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                                                              ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_rd_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:19:41: ... Location of port declaration
+   19 |  input wire activation_rd_v,output wire activation_rd_r,
+      |                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:22:20: ... Location of port declaration
+   22 |  output wire [3:0] tap_v,input wire [3:0] tap_r,
+      |                    ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_data'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:27: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:60: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                                                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:25: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_source_clk'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:53: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_ACK_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:25:47: ... Location of port declaration
+   25 |  input wire [3:0] tap_ACK_v,output wire [3:0] tap_ACK_r,
+      |                                               ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:27:14: ... Location of port declaration
+   27 |  output wire activation_release,input wire activation_release_r,
+      |              ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:21: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:66: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+make: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj'
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_hbm_die_vm_sfu_publication_root_2__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_dsrom_su_norm_8__hierMkArgs.f
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_dsrom_su_norm_8__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_hbm_die_vm_sfu_publication_root_2__hierMkArgs.f
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_wr_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:13:41: ... Location of port declaration
+   13 |  input wire activation_wr_v,output wire activation_wr_r,
+      |                                         ^~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:17:14: ... Location of port declaration
+   17 |  output wire activation_ACK_v,input wire activation_ACK_r,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:21: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:62: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                                                              ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_rd_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:19:41: ... Location of port declaration
+   19 |  input wire activation_rd_v,output wire activation_rd_r,
+      |                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:22:20: ... Location of port declaration
+   22 |  output wire [3:0] tap_v,input wire [3:0] tap_r,
+      |                    ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_data'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:27: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:60: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                                                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:25: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_wr_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:13:41: ... Location of port declaration
+   13 |  input wire activation_wr_v,output wire activation_wr_r,
+      |                                         ^~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_source_clk'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:53: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_ACK_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:25:47: ... Location of port declaration
+   25 |  input wire [3:0] tap_ACK_v,output wire [3:0] tap_ACK_r,
+      |                                               ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:17:14: ... Location of port declaration
+   17 |  output wire activation_ACK_v,input wire activation_ACK_r,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:27:14: ... Location of port declaration
+   27 |  output wire activation_release,input wire activation_release_r,
+      |              ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:21: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:21: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:62: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                                                              ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:66: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_rd_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:19:41: ... Location of port declaration
+   19 |  input wire activation_rd_v,output wire activation_rd_r,
+      |                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:22:20: ... Location of port declaration
+   22 |  output wire [3:0] tap_v,input wire [3:0] tap_r,
+      |                    ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_data'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:27: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:60: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                                                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:25: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_source_clk'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:53: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_ACK_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:25:47: ... Location of port declaration
+   25 |  input wire [3:0] tap_ACK_v,output wire [3:0] tap_ACK_r,
+      |                                               ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:27:14: ... Location of port declaration
+   27 |  output wire activation_release,input wire activation_release_r,
+      |              ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:21: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:66: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-SELRANGE: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv:23:27: [0:1] Slice range has ascending bit ordering, perhaps you wanted [1:0]
+                                                                                                              : ... note: In instance 'ot_dsrom_su_norm.u_rsq.u_v'
+   23 |         else line <= {line[D-1:1], v};
+      |                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv:23:27: [0:1] Slice range has ascending bit ordering, perhaps you wanted [1:0]
+                                                                                                              : ... note: In instance 'ot_dsrom_su_norm.u_rsq.u_v'
+   23 |         else line <= {line[D-1:1], v};
+      |                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.449 MB sources in 95 modules, into 12.645 MB in 16 C++ files needing 0.090 MB
+- Verilator: Walltime 2.212 s (elab=0.205, cvt=1.739, bld=0.000); cpu 2.212 s on 4 threads; allocated 141.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+make -f Vot_hbm_die_vm_sfu_publication_root_2.mk -C Vot_hbm_die_vm_sfu_publication_root_2 VM_PREFIX=Vot_hbm_die_vm_sfu_publication_root_2
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_hbm_die_vm_sfu_publication_root_2'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -x c++-header Vot_hbm_die_vm_sfu_publication_root_2__pch.h -o Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast.gch
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.449 MB sources in 95 modules, into 12.645 MB in 16 C++ files needing 0.090 MB
+- Verilator: Walltime 2.423 s (elab=0.273, cvt=1.888, bld=0.000); cpu 2.422 s on 4 threads; allocated 141.387 MB
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -x c++-header Vot_hbm_die_vm_sfu_publication_root_2__pch.h -o Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -c -o ot_hbm_die_vm_sfu_publication_root_2.o ot_hbm_die_vm_sfu_publication_root_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__2.cpp
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.g_vn[1].g_add.fire'
+  274 |                 wire fire = nd[2 * n] && nd[2 * n + 1] && !st && !go;
+      |                      ^~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.fire
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:272:30:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.av
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:287:30:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:248:17:      Example path: ot_dsrom_su_norm_8.nd
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:27:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.fire
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.g_vn[1].g_add.fire'
+  274 |                 wire fire = nd[2 * n] && nd[2 * n + 1] && !st && !go;
+      |                      ^~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.fire
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:272:30:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.av
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:287:30:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:248:17:      Example path: ot_dsrom_su_norm_8.nd
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:27:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv:274:22:      Example path: ot_dsrom_su_norm_8.g_vn[1].g_add.fire
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_pw.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_rnd.t
+%Warning-UNOPTFLAT: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_norm_8.u_rsq.g_nr[2].m_y.g_l5.u.u.u_cpa.p
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.fast -c Vot_hbm_die_vm_sfu_publication_root_2___024root__6.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2___024root__4__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_hbm_die_vm_sfu_publication_root_2__pch.h.slow -c Vot_hbm_die_vm_sfu_publication_root_2__Syms__Slow.cpp
+rm libot_hbm_die_vm_sfu_publication_root_2.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_hbm_die_vm_sfu_publication_root_2'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.449 MB sources in 95 modules, into 183.595 MB in 225 C++ files needing 0.394 MB
+- Verilator: Walltime 29.614 s (elab=0.534, cvt=25.262, bld=0.000); cpu 29.599 s on 4 threads; allocated 1337.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+make -f Vot_dsrom_su_norm_8.mk -C Vot_dsrom_su_norm_8 VM_PREFIX=Vot_dsrom_su_norm_8
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_dsrom_su_norm_8'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -x c++-header Vot_dsrom_su_norm_8__pch.h -o Vot_dsrom_su_norm_8__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -x c++-header Vot_dsrom_su_norm_8__pch.h -o Vot_dsrom_su_norm_8__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -c -o ot_dsrom_su_norm_8.o ot_dsrom_su_norm_8.cpp
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.449 MB sources in 95 modules, into 183.595 MB in 225 C++ files needing 0.394 MB
+- Verilator: Walltime 30.869 s (elab=0.496, cvt=26.823, bld=0.000); cpu 30.849 s on 4 threads; allocated 1337.387 MB
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+make[1]: Entering directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vtb_hbm_integrated_norm_native_vm_join__hierMkArgs.f
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_wr_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:13:41: ... Location of port declaration
+   13 |  input wire activation_wr_v,output wire activation_wr_r,
+      |                                         ^~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:17:14: ... Location of port declaration
+   17 |  output wire activation_ACK_v,input wire activation_ACK_r,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:21: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:62: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                                                              ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_rd_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:19:41: ... Location of port declaration
+   19 |  input wire activation_rd_v,output wire activation_rd_r,
+      |                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:22:20: ... Location of port declaration
+   22 |  output wire [3:0] tap_v,input wire [3:0] tap_r,
+      |                    ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_data'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:27: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:60: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                                                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:25: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_source_clk'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:53: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'tap_ACK_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:25:47: ... Location of port declaration
+   25 |  input wire [3:0] tap_ACK_v,output wire [3:0] tap_ACK_r,
+      |                                               ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:27:14: ... Location of port declaration
+   27 |  output wire activation_release,input wire activation_release_r,
+      |              ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:21: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:66: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.fast -c Vot_dsrom_su_norm_8_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.fast -c Vot_dsrom_su_norm_8_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.fast -c Vot_dsrom_su_norm_8_vm_classes_2.cpp
+%Warning-SELRANGE: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv:23:27: [0:1] Slice range has ascending bit ordering, perhaps you wanted [1:0]
+                                                                                                              : ... note: In instance 'tb_hbm_integrated_norm_native_vm_join.dut.g_on.u_norm.u_engine..g_norm.u_engine.u_rsq.u_v'
+   23 |         else line <= {line[D-1:1], v};
+      |                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Error-MODMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv:95:9: Cannot find file containing module: 'ot_dsrom_su_hcpost_wire'
+   95 |         ot_dsrom_su_hcpost_wire #(.W(4*N*32),.D(BCAST)) u_in
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_dsrom_su_hcpost_wire
+                        ot_dsrom_su_hcpost_wire.v
+                        ot_dsrom_su_hcpost_wire.sv
+                        /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/ot_dsrom_su_hcpost_wire
+                        /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/ot_dsrom_su_hcpost_wire.v
+                        /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/ot_dsrom_su_hcpost_wire.sv
+                   ... With current working directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+%Error-MODMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv:114:9: Cannot find file containing module: 'ot_dsrom_su_hcpost_wire'
+  114 |         ot_dsrom_su_hcpost_wire #(.W(N*32+8),.D(RET)) u_y
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv:117:9: Cannot find file containing module: 'ot_dsrom_su_hcpost_wire'
+  117 |         ot_dsrom_su_hcpost_wire #(.W(N*32),.D(RET)) u_ro
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv:119:9: Cannot find file containing module: 'ot_dsrom_su_hcpost_wire'
+  119 |         ot_dsrom_su_hcpost_wire #(.W(N*8+(N/32)*10+N*16+8),.D(RET)) u_q
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 4 error(s)
+make[1]: *** [/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vtb_hbm_integrated_norm_native_vm_join_hier.mk:69: hier_launch_verilator] Error 1
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source'
+make: *** [Vtb_hbm_integrated_norm_native_vm_join_hier.mk:73: Vtb_hbm_integrated_norm_native_vm_join.mk] Error 2
+make: *** Waiting for unfinished jobs....
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.fast -c Vot_dsrom_su_norm_8_vm_classes_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.slow -c Vot_dsrom_su_norm_8_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.slow -c Vot_dsrom_su_norm_8_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.slow -c Vot_dsrom_su_norm_8_vm_classes_Slow_2.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.slow -c Vot_dsrom_su_norm_8_vm_classes_Slow_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC   -include Vot_dsrom_su_norm_8__pch.h.slow -c Vot_dsrom_su_norm_8__Syms__Slow.cpp
+rm libot_dsrom_su_norm_8.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj/Vot_dsrom_su_norm_8'
+make: Leaving directory '/srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj'
+%Error: make -C /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj -f Vtb_hbm_integrated_norm_native_vm_join_hier.mk  -j 4  hier_build exited with 2
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --hierarchical -O1 -Wno-fatal -Wno-WIDTH --top-module tb_hbm_integrated_norm_native_vm_join --build-jobs 4 --verilate-jobs 1 --hierarchical-threads 1 --unroll-count 4 -fno-dfg -Mdir /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/obj /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/r1/hierarchical.vlt /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_sfu.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fpu.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/proto/ot_fp32_add_rne_pipe.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fastfp_lat_f12.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41/ot_hdc_fsqrt.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41/ot_hdc_fdiv.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41/ot_hdc_softplus.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41/ot_hdc_actquant.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_aq12.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_divc.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fp32_f12.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fp32_mul_lat.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/v41x/ot_dsrom_su_norm.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/test/tb_dsrom_su_norm.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hdc/ot_hdc_cg.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_vm.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv /srv/opentallas-scratch2/codex/hbm-norm-native-6ec2b2f8f/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv

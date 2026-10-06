@@ -116,3 +116,10 @@ physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapte
 physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv
 physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv
 physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv
+rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv
+rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_vm.sv
+rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv
+rtl/hdc/v41x/ot_dsrom_aq12.sv
+rtl/hdc/v41x/ot_dsrom_divc.sv
+rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
+rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv
