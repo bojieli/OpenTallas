@@ -55,7 +55,8 @@ module tb_hdc_v41x_vec #(
     parameter integer ROUT = 0,
     parameter integer CTL12 = 0,
     parameter integer RSLICE = 64,
-    parameter integer ROPI = 0
+    parameter integer ROPI = 0,
+    parameter integer RKC = 0
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -137,7 +138,7 @@ module tb_hdc_v41x_vec #(
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT),
                       .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .CAPR(CAPR), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP), .ROUT(ROUT), .CTL12(CTL12),
-                      .RSLICE(RSLICE), .ROPI(ROPI)) dut (
+                      .RSLICE(RSLICE), .ROPI(ROPI), .RKC(RKC)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),
