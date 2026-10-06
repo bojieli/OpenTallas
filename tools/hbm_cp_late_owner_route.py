@@ -12,6 +12,7 @@ def main():
     record=json.loads((ROOT/'results/physical/hbm_cp_control_tail_parent_context_20261006/r1_terminal/prepared.json').read_text())
     argv=record['argv'];argv=[a.replace('SU_CONTROL_TAIL_CUT=1','SU_CONTROL_TAIL_CUT=2') for a in argv]
     for option,value in [('--keep-workdir',str(job/'work')),('--output',str(job/'physical.json')),('--nickname-tag','item5_cp_late_owner')]:argv[argv.index(option)+1]=value
+    argv[argv.index('--place-density')+1]=str(args.density)
     for i,v in enumerate(argv):
         if v.startswith('PLACE_DENSITY='):argv[i]='PLACE_DENSITY='+str(args.density)
     case=job/'work/orfs';case.mkdir(parents=True,exist_ok=True);(case/'tmp').mkdir(exist_ok=True)
