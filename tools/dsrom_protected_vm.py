@@ -47,4 +47,34 @@ def model():
       scope='additive minimum xa/xb canonical WFC+collective port, not whole DS tile/all-caller replacement',
       source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest(),str(parent.relative_to(ROOT)):hashlib.sha256(parent.read_bytes()).hexdigest()},
       adopted=False,missing_input_clocks=True)
+def distributed_model():
+    """Bounded correction of observed 289-sink macro address fanout, before RTL."""
+    d=model()
+    d['schema']='opentallas.ds.protected-vm.distributed-command.v1'
+    d['default_DISTRIBUTED_CMD']=0
+    d['distributed_command']=dict(clusters=12,local_seats=96,
+        cluster_bits=18,local_bits=13,complementary_copies=2,
+        added_flipflops=12*18*2+96*13*2,
+        root_address_capture_sinks=12,cluster_local_capture_sinks=8,
+        local_address_macro_pin_sinks_max=8,
+        immediate_fault_and_warm_reset_veto=True,
+        full_retained_owner47_and_ordinal32_unchanged=True,
+        independent_mapped_register_retention_required=True,
+        macro_data_check_payload_unchanged=True)
+    # Conservative cell/wire allowance; no measured area or signoff credit.
+    d['geometry']['logic_upper_um2']+=6000
+    d['geometry']['distributed_command_allowance_um2']=6000
+    d['geometry']['source_only_fit']='same288macro/s320slot layout, existinglogicupper150000+6000 command allowance; actual mapping/routing still required'
+    d['latency'].update(cold_zero_init_actual_macro_write_edges=512*3,
+        cold_init_added_slow_edges=1024,macro_operation_added_slow_edges=2,
+        per_word_protected_read_slow_edges=6,per_masked_write_slow_edges=17,
+        worst_bundle_backend_slow_edges=2*6+5*17+2,
+        worst_bundle_added_slow_edges=34,
+        worst_bundle_added_nominal_ns=34/0.9,
+        permission_pipeline='cluster capture then local capture then actual macro edge; global fault remains immediate veto',
+        single_user_token_credit=0)
+    d['boundary']['new_external_ports']=0
+    d['scope']='changed opt-in provider address/permission distribution only; not Fermat head CHECK_PIPE or Zeno caller replay'
+    return d
+
 if __name__=='__main__':print(json.dumps(model(),indent=2))

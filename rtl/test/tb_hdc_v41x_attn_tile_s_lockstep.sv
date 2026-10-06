@@ -12,7 +12,8 @@ module tb_hdc_v41x_attn_tile_s_lockstep (input wire clk);
     parameter integer FPL = 7;
     parameter integer FML = 6;
     parameter integer HG = 4;
-    parameter integer F12 = 0;              // tile_s with the f12 adds (tile_l keeps ot_hdc_fp32_add_lat, same function)
+    parameter integer F12 = 0;
+    parameter integer PCOLP = 0;            // tile_s: pre-selected p-mode columns (wiring) instead of the group AND-OR              // tile_s with the f12 adds (tile_l keeps ot_hdc_fp32_add_lat, same function)
     parameter integer NCYC = 20000;
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
@@ -20,14 +21,18 @@ module tb_hdc_v41x_attn_tile_s_lockstep (input wire clk);
     reg [7:0] ld_grp;
     reg [PWORDS*TD*16-1:0] ld_w;
     reg [TD*18-1:0] ib;
-    wire ov_l, ov_s;
-    wire [H*32-1:0] oy_l, oy_s;
-    wire [H-1:0] of_l, of_s;
-    ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_l (
+    // tile_s FML 8 is tile_l FML 6 two cycles later (one dequantiser + one product stage, loads delayed alike)
+    localparam integer FMLL = (FML == 8) ? 6 : FML;
+    localparam integer XD = FML - FMLL;
+    wire ov_l0, ov_l, ov_s;
+    wire [H*32-1:0] oy_l0, oy_l, oy_s;
+    wire [H-1:0] of_l0, of_l, of_s;
+    ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FMLL)) u_l (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
-        .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_l), .oy(oy_l), .oflt(of_l));
+        .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_l0), .oy(oy_l0), .oflt(of_l0));
+    ot_hdc_v41x_dly #(.W(1 + H*32 + H), .D(XD)) u_xd (.clk(clk), .d({ov_l0, oy_l0, of_l0}), .q({ov_l, oy_l, of_l}));
     ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML),
-                              .HG(HG), .F12(F12)) u_s (
+                              .HG(HG), .F12(F12), .PCOLP(PCOLP)) u_s (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     integer cyc = 0, mism = 0, nov = 0, i;
@@ -76,6 +81,8 @@ module tb_hdc_v41x_attn_tile_s_lockstep (input wire clk);
         end
         if (cyc == NCYC) begin
             $display("TILESLOCK cycles=%0d mismatches=%0d ov=%0d", cyc, mism, nov);
+            // nonzero exit on any mismatch, or if no output was ever compared (rule 2026-10-05)
+            if (mism != 0 || nov == 0) $fatal(1, "TILESLOCK FAIL mismatches=%0d ov=%0d", mism, nov);
             $finish;
         end
     end

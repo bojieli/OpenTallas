@@ -1,0 +1,20 @@
+{
+  "pid": 4075640,
+  "start_ticks": "25978340",
+  "boot_id": "61274e16-7745-49f1-9bae-df70e3eb8702",
+  "utc": "2026-10-06T09:11:27.018109+00:00",
+  "argv": [
+    "python3",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r7-pg-restore/physical/dsrom_wfc_protected_context/run.py",
+    "--source",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r7-pg-restore",
+    "--output",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r7-floorplan-resume",
+    "--density",
+    "0.55",
+    "--body-clock-sdc",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r7-pg-restore/physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc",
+    "--resume-from-floorplan",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r2-cdc6480"
+  ]
+}

@@ -4,7 +4,7 @@
 Bacon owns formatter RTL; Gibbs owns parent/config. No source emission, numerical
 fixture, token simulation, implicit retry, synthesis or physical qualification.
 """
-import argparse, hashlib, json, os, re, shutil, socket, subprocess, sys, time, shlex
+import argparse, ctypes, hashlib, json, os, re, shutil, socket, subprocess, sys, time, shlex
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -86,7 +86,7 @@ def observation_top(observation_wrapper,wrapper_pin,parameters):
     return top
 
 def prepare(work,body_pin,partition_reduction=False,native_norm_production=False,
-            observation_wrapper=None,wrapper_pin=None):
+            observation_wrapper=None,wrapper_pin=None,harness_source=None,fixture_preparer=None):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
@@ -97,7 +97,18 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         if str(observation_wrapper) in paths:raise ValueError('Duplicate observation wrapper source')
         paths.append(str(observation_wrapper))
     work.mkdir(parents=True,exist_ok=False)
-    all_files=paths+INCLUDES
+    companions=[]
+    for source in (harness_source,fixture_preparer):
+        if source:
+            if source.is_absolute() or '..' in source.parts:raise ValueError('Committed root-relative harness source required')
+            companions.append(str(source))
+    if harness_source:
+        for name in re.findall(r'^\s*#include\s+"([^"]+)"',(ROOT/harness_source).read_text(),re.M):
+            if name=='V'+top+'.h' or re.fullmatch(r'verilated(?:_\w+)?\.h',name):continue  # Generated/tool headers are pinned by the model build.
+            rel=harness_source.parent/name
+            if '..' in rel.parts:raise ValueError('Unsupported harness include path')
+            companions.append(str(rel))
+    all_files=paths+INCLUDES+companions
     missing=[s for s in all_files if not (ROOT/s).is_file()]
     pins={s:sha(ROOT/s) for s in all_files if (ROOT/s).is_file()}
     errors=[]
@@ -176,6 +187,8 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         native_norm_production=native_norm_production,
         top=top,observation_wrapper=str(observation_wrapper) if observation_wrapper else None,
         observation_wrapper_sha256=wrapper_pin,
+        harness_source=str(harness_source) if harness_source else None,
+        fixture_preparer=str(fixture_preparer) if fixture_preparer else None,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
         sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
@@ -475,10 +488,13 @@ def reuse_component(j,contract,enrollment,out,current_interfaces=None):
         if sha(directory/rel)!=h:raise ValueError('Retained generated model/interface changed '+rel)
     target=Path(j['directory'])
     if target.resolve()!=directory.resolve():
-        if target.exists() and any(target.iterdir()):raise FileExistsError('Do not overwrite existing generated component')
-        target.mkdir(parents=True,exist_ok=True)
-        for rel in old['artifacts']:
-            dst=target/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(directory/rel,dst)
+        if target.exists() and any(target.iterdir()):
+            existing={str(p.relative_to(target)):sha(p) for p in target.rglob('*') if p.is_file()}
+            if existing!=old['artifacts']:raise FileExistsError('Do not overwrite differing generated component')
+        else:
+            target.mkdir(parents=True,exist_ok=True)
+            for rel in old['artifacts']:
+                dst=target/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(directory/rel,dst)
     write(out/(j['prefix']+'.retained.json'),dict(terminal=old['terminal'],
         contract_sha256=old['contract_sha256'],artifacts=old['artifacts'],interfaces=old['interfaces'],
         parse_only_diagnostics=old['parse_only_diagnostics'],numerical=False))
@@ -585,13 +601,96 @@ def compile_plan(a):
           source_sha256=m['source_sha256'],parameters=m['parameters'],numerical=False,physical_qualified=False))
     return rc
 
+def wait_for_terminal(path):
+    """One filesystem event wait; never poll/restart the live compiler."""
+    libc=ctypes.CDLL(None,use_errno=True)
+    fd=libc.inotify_init1(os.O_CLOEXEC)
+    if fd<0:raise OSError(ctypes.get_errno(),'inotify_init1')
+    try:
+        if libc.inotify_add_watch(fd,os.fsencode(path.parent),0x8|0x80)<0:
+            raise OSError(ctypes.get_errno(),'inotify_add_watch')
+        while not path.exists():os.read(fd,65536)
+    finally:os.close(fd)
+
+def continue_parent(a):
+    """React once to the existing controller terminal, then own build/link/run."""
+    if not all((a.live_plan,a.live_models,a.object_helper,a.reuse_archives,a.fixture_root)):
+        raise ValueError('Actual live plan/phase, object helper, archives and fixture required')
+    if socket.gethostname()!=a.epyc2_hostname or min(a.memory_gib,a.cpu_cores,a.disk_reserve_bytes,
+        a.object_workers,a.object_memory_gib,a.runtime_memory_gib)<=0:
+        raise ValueError('Measured E2 identity and actual reservations required')
+    m=verified(a.work.resolve());out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    pins={str(p.resolve()):sha(p) for p in (Path(__file__),a.object_helper,
+        a.live_plan/'prepared.json',a.work/'prepared.json',a.reuse_archives/'terminal.json')}
+    pins.update({str(p.resolve()):sha(p) for p in a.fixture_root.rglob('*') if p.is_file()})
+    write(out/'continuation.json',dict(pid=os.getpid(),waiting_for=str(a.live_models/'terminal.json'),
+        source_commit=m['source_commit'],top=m.get('top',PARENT_TOP),pins=pins))
+    wait_for_terminal(a.live_models/'terminal.json')
+    for path,h in pins.items():
+        if sha(path)!=h:raise ValueError('Pinned continuation input changed '+path)
+    write(out/'prior_terminal.json',json.loads((a.live_models/'terminal.json').read_text()))
+    enrollment=out/'enrollment'
+    enroll_models(argparse.Namespace(work=a.live_plan,retained_models=a.live_models,
+                                    output=enrollment,tool=a.tool))
+    # Admission waiting is part of this sole build controller, not a resource
+    # observer. No reservation/child is acquired before fresh measured fit.
+    while not fits(capacity(out),a):time.sleep(20)
+    phase=argparse.Namespace(**vars(a));phase.output=out/'models'
+    phase.enrollment=enrollment/'models.json';phase.retained_models=None;phase.admitted=False
+    rc=compile_plan(phase)
+    if rc:
+        write(out/'terminal.json',dict(exit=rc,phase='models',linked=False,runtime=False));return rc
+    helper=[sys.executable,str(a.object_helper.resolve()),'--graph',
+        str(a.work/'obj'/('V'+m.get('top',PARENT_TOP)+'.json')),
+        '--terminal',str(phase.output/'terminal.json'),'--output',str(out/'objects'),
+        '--harness',str(a.work/'src'/m['harness_source']),'--reuse-archives',str(a.reuse_archives.resolve()),
+        '--workers',str(a.object_workers),'--memory-gib',str(a.object_memory_gib),
+        '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--host',a.epyc2_hostname]
+    write(out/'object_command.json',helper)
+    rc=subprocess.call(helper)
+    if rc:
+        write(out/'terminal.json',dict(exit=rc,phase='objects_link',runtime=False));return rc
+    # One first norm run. Later Bacon source/testcases are separate pinned work.
+    runtime=out/'runtime';runtime.mkdir()
+    while True:
+        snap=capacity(runtime)
+        if snap['load'][0]<128 and snap['idle_cores']>=1 and snap['available_bytes']>=a.runtime_memory_gib*2**30:break
+        time.sleep(20)
+    binary=out/'objects/integrated_bench'
+    for path,h in pins.items():
+        if sha(path)!=h:raise ValueError('Pinned first norm input changed '+path)
+    post_guard_code=("import importlib.util,pathlib,subprocess,sys,types; "
+        "s=importlib.util.spec_from_file_location('guard_driver',sys.argv[1]); "
+        "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
+        "row=m.capacity(pathlib.Path(sys.argv[2])); m.write(pathlib.Path(sys.argv[2])/'post_guard.json',row); "
+        "a=types.SimpleNamespace(memory_gib=int(sys.argv[3]),cpu_cores=1,disk_reserve_bytes=int(sys.argv[4])); "
+        "sys.exit(75 if not m.fits(row,a) else subprocess.call(sys.argv[5:]))")
+    cmd=[str(Path('/srv/opentallas-scratch/admit.sh')),str(a.runtime_memory_gib),'--',sys.executable,
+         '-c',post_guard_code,str(Path(__file__).resolve()),str(runtime),str(a.runtime_memory_gib),str(a.disk_reserve_bytes),
+         str(binary),'+DIR=gold']
+    write(runtime/'command.json',dict(command=cmd,cwd=str(a.fixture_root),binary_sha256=sha(binary)))
+    with (runtime/'run.log').open('x') as log:
+        rc=subprocess.call(['/usr/bin/time','-v','-o',str(runtime/'resources.log'),*cmd],
+                           cwd=a.fixture_root,stdout=log,stderr=subprocess.STDOUT)
+    passed=rc==0 and 'PARENT_ONE_STAGE_PASS' in (runtime/'run.log').read_text()
+    write(out/'terminal.json',dict(exit=rc or (0 if passed else 2),phase='norm_runtime',
+        linked=True,norm_stage_pass=passed,token_qualified=False,SFU_execution_covered=False,
+        formatter_execution_covered=False,physical_qualified=False))
+    return rc or (0 if passed else 2)
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true');g.add_argument('--enroll-models',action='store_true')
+    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true');g.add_argument('--enroll-models',action='store_true');g.add_argument('--continue-parent',action='store_true')
     p.add_argument('--partition-reduction',action='store_true',help='Opt-in future real reducer partitions after measured peak/convergence justifies them')
     p.add_argument('--native-norm-production',action='store_true',help='Consume literal Gibbs published norm production candidate flags')
     p.add_argument('--observation-wrapper',type=Path,help='Actual Bacon additive full-parent observation wrapper')
     p.add_argument('--wrapper-sha256',help='Published Bacon wrapper source SHA')
+    p.add_argument('--harness-source',type=Path,help='Committed Bacon C++ harness and local includes to pin/copy')
+    p.add_argument('--fixture-preparer',type=Path,help='Committed authentic-input preparation helper to pin/copy')
+    p.add_argument('--live-plan',type=Path);p.add_argument('--live-models',type=Path)
+    p.add_argument('--object-helper',type=Path);p.add_argument('--reuse-archives',type=Path)
+    p.add_argument('--fixture-root',type=Path);p.add_argument('--object-workers',type=int,default=1)
+    p.add_argument('--object-memory-gib',type=int,default=16);p.add_argument('--runtime-memory-gib',type=int,default=16)
     p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
@@ -599,5 +698,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256,a.harness_source,a.fixture_preparer) if a.prepare else (continue_parent(a) if a.continue_parent else enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())

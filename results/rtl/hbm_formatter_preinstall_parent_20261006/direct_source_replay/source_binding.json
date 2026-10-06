@@ -1,0 +1,21 @@
+{
+  "status": "SOURCE_BOUND_RUNTIME_OPEN",
+  "parent": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+  "sha256": "5952eda3bd0d6a2eaeeb682c850ccad89267731f20d6f6d64e32991e3b1844ac",
+  "parameter": "FORMATTER_DIRECT_SOURCE_REPLAY",
+  "default": 0,
+  "scope": "actual published Noether payload replay into checked kind1/2 arena writes",
+  "W15_fullplane_readthrough": false,
+  "normal_W15_participation": false,
+  "source_kind0_bounds_changed": false,
+  "added_FF": 0,
+  "added_ports": 0,
+  "latency_edges_added": 0,
+  "provider_bridge_reused": true,
+  "checked_ACK_destination": "external gather_rsp637",
+  "production_ALLON_qualified": false,
+  "syntax_disabled_branch_rc": 0,
+  "enabled_elaboration": false,
+  "numerical_pass": false,
+  "live_job_changed": false
+}

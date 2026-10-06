@@ -1,0 +1,28 @@
+{
+  "status": "SOURCE_IMPLEMENTED_FULL_COMPONENT_GATE_RUNNING",
+  "enabled_successor_lint_exit": 0,
+  "new_source_lint_warnings": 0,
+  "unchanged_original_bridge_width_warnings": 2,
+  "iverilog_compile_exit": 0,
+  "observed_negative_assertions": [
+    "NEGATIVE partial descriptor refused",
+    "NEGATIVE foreign full73 refused",
+    "NEGATIVE readback mismatch retained/no book",
+    "NEGATIVE protected DUE quarantined"
+  ],
+  "full_component_positive_pass": false,
+  "runtime_pid": 550744,
+  "runtime_root": "/tmp/ot-gauss-formatter-receipt-producer-20261006",
+  "runtime_live_log": "results/physical/hbm_die_abstracts_20261006/memory_control/formatter_preinstall/run_r1.log",
+  "runtime_binary": "/tmp/gauss-preinstall.vvp",
+  "binary_sha256": "ce2660b2868ec75171473f08ef6b3477f099ffd4cda9eade59ba9165abcfa6d7",
+  "debug_note": "SIGINT diagnostic at simulation time35045000 ticks produced VVP Stop prompt; process still running. No source restart or gate PASS inferred. Retain raw log/resources until terminal.",
+  "RAM_observed_KiB": 25968,
+  "CPU_threads": 1,
+  "numerical_pass": false,
+  "parent_connected": false,
+  "physical_closed": false,
+  "source_scope": "only additive preinstall producer/composition/fixture and own model/evidence; Gibbs owns selected parent replacement",
+  "source_mapping": "fixture-only full plane bases0x81000/0xb1000 are not a production installed book; real sourcebook pending Noether/Gibbs. Contiguous full-plane source spans required; fragmented records refused",
+  "synthesis_limit": "observational hierarchical protected row/lease exports lint/elaborate; synthesis portability not qualified; original bridge/borrow files unchanged"
+}

@@ -11,7 +11,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     parameter integer RETURN_EXTRA = 2,
     parameter integer PROTECT_SPLIT = 0,
     parameter integer RETIRE = 0,
-    parameter integer VM_ENDPOINT = 0
+    parameter integer VM_ENDPOINT = 0, VM_GUARD = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -20,6 +20,8 @@ module ot_hdc_v41_fh_macro_ctx #(
     input wire [31:0] native_ordinal,
     input wire [46:0] native_request_owner,
     input wire [1266:0] native_checked_reply,
+    output wire native_request_checked_v,native_reply_checked_v,
+    output wire [3:0] native_permission_capture,
     output wire [2830:0] native_captured_request,native_captured_request_check,
     output wire [1266:0] native_captured_reply,native_captured_reply_check,
     input wire [7:0] commit_ack_id,
@@ -101,7 +103,7 @@ module ot_hdc_v41_fh_macro_ctx #(
         .o_mask(raw_mask),
         .o_data(raw_data));
     wire parent_fault;
-    wire native_ack_v,native_fault,native_bounds_fault;
+    wire native_ack_v,native_fault,native_bounds_fault,native_guard_busy;
     wire [7:0] native_ack_id;
     wire [23:0] native_ack_word;
     wire [15:0] native_ack_mask;
@@ -109,7 +111,7 @@ module ot_hdc_v41_fh_macro_ctx #(
 `ifndef SYNTHESIS
         initial if(!RETIRE) $fatal(1,"Native endpoint context requires retirement enabled");
 `endif
-        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1)) u_native (
+        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD)) u_native (
             .fast_clk(clk),.cold_n(native_cold_n),
             .request_accept((|o_we)&&native_request_ready),.request_warm(commit_warm),
             .checked_reply_capture(native_reply_capture),.published_reply_v(native_reply_v),
@@ -118,12 +120,31 @@ module ot_hdc_v41_fh_macro_ctx #(
             .checked_reply(native_checked_reply),.bounds_fault(native_bounds_fault),.endpoint_fault(native_fault),
             .captured_request(native_captured_request),.captured_request_check(native_captured_request_check),
             .captured_reply(native_captured_reply),.captured_reply_check(native_captured_reply_check),
+            .request_checked_v(native_request_checked_v),.reply_checked_v(native_reply_checked_v),.guard_busy(native_guard_busy),
             .head_ack_v(native_ack_v),.head_ack_id(native_ack_id),.head_ack_word(native_ack_word),.head_ack_mask(native_ack_mask));
     end else begin : g_no_native_load
         assign native_ack_v=0;assign native_ack_id=0;assign native_ack_word=0;assign native_ack_mask=0;
-        assign native_fault=0;assign native_bounds_fault=0;
+        assign native_fault=0;assign native_bounds_fault=0;assign native_guard_busy=0;
+        assign native_request_checked_v=0;assign native_reply_checked_v=0;
         assign native_captured_request=0;assign native_captured_request_check=0;
         assign native_captured_reply=0;assign native_captured_reply_check=0;
+    end endgenerate
+    // Actual clocked grant receiver copies from the fixture/provider boundary.
+    // These load the checked permission paths; observation-port false paths
+    // cannot conceal a slow grant. Existing consumption edge, not new cycles.
+    generate if(VM_GUARD) begin : g_native_grant_receiver
+        (* keep=1,dont_touch=1 *) reg request_v,request_check,reply_v,reply_check;
+        assign native_permission_capture={reply_check,reply_v,request_check,request_v};
+        always @(posedge clk) begin
+            if(!native_cold_n) begin
+                request_v<=0;request_check<=1;reply_v<=0;reply_check<=1;
+            end else begin
+                request_v<=native_request_checked_v;request_check<=~native_request_checked_v;
+                reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
+            end
+        end
+    end else begin : g_no_grant_receiver
+        assign native_permission_capture=0;
     end endgenerate
     assign fault=RETIRE?parent_fault:(child_fault||memory_fault);
 `ifndef SYNTHESIS
@@ -145,7 +166,7 @@ module ot_hdc_v41_fh_macro_ctx #(
             .clk(clk),.rst_n(rst_n),.packet_v(raw_v||child_ov||(|child_we)||child_warm||child_leaf_v),
             .warm(child_warm),.packet(packet),.warm_word(raw_addr[23:0]),.warm_mask(raw_mask[15:0]),
             .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(child_fault||native_fault),
-            .sink_busy(commit_busy),.ack_v(VM_ENDPOINT?native_ack_v:commit_ack_v),.ack_id(VM_ENDPOINT?native_ack_id:commit_ack_id),
+            .sink_busy(commit_busy||native_guard_busy),.ack_v(VM_ENDPOINT?native_ack_v:commit_ack_v),.ack_id(VM_ENDPOINT?native_ack_id:commit_ack_id),
             .ack_word(VM_ENDPOINT?native_ack_word:commit_ack_word),.ack_mask(VM_ENDPOINT?native_ack_mask:commit_ack_mask),
             .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),
             .lane_veto(veto),.write_veto(write_veto),.busy(retire_busy),.warm_ack(retire_warm_ack),

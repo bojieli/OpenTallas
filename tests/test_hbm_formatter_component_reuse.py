@@ -109,6 +109,16 @@ class ComponentReuse(unittest.TestCase):
             path.write_text(text.replace('ot_ds_hbm_cluster20_integrated','easy_leaf'))
             with self.assertRaises(ValueError):R.observation_top(rel,R.sha(path),parameters)
 
+    def test_terminal_event_wait_and_already_completed_controller(self):
+        import threading,time
+        terminal=self.work/'terminal.json';done=[]
+        def write_terminal():
+            time.sleep(.02);terminal.write_text('{"exit":0}');done.append(True)
+        thread=threading.Thread(target=write_terminal);thread.start()
+        R.wait_for_terminal(terminal);thread.join()
+        self.assertTrue(done);self.assertEqual(json.loads(terminal.read_text())['exit'],0)
+        R.wait_for_terminal(terminal)  # Completed controller needs no new watcher/compiler.
+
     def test_generation_time_output_tampering_rejects(self):
         d=self.work/'generated';d.mkdir()
         binary=self.work/'verilator_bin';binary.write_text('compiler')
