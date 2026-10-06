@@ -128,6 +128,20 @@ module ot_hdc_v41_fh_macro_ctx #(
         assign native_captured_request=0;assign native_captured_request_check=0;
         assign native_captured_reply=0;assign native_captured_reply_check=0;
     end endgenerate
+    // Actual clocked grant receiver copies from the fixture/provider boundary.
+    // These load the checked permission paths; observation-port false paths
+    // cannot conceal a slow grant. Existing consumption edge, not new cycles.
+    generate if(VM_GUARD) begin : g_native_grant_receiver
+        (* keep=1,dont_touch=1 *) reg request_v,request_check,reply_v,reply_check;
+        always @(posedge clk) begin
+            if(!native_cold_n) begin
+                request_v<=0;request_check<=1;reply_v<=0;reply_check<=1;
+            end else begin
+                request_v<=native_request_checked_v;request_check<=~native_request_checked_v;
+                reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
+            end
+        end
+    end endgenerate
     assign fault=RETIRE?parent_fault:(child_fault||memory_fault);
 `ifndef SYNTHESIS
     initial if(RETURN_EXTRA!=2+PROTECT_SPLIT) $fatal(1,"Protected SRAM return and head latency mismatch");
