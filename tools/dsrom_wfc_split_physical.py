@@ -69,6 +69,50 @@ set_max_transition 320 [current_design]
 """
 
 
+DRV_TCL = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7
+foreach f [lsort [glob $P/lib/NLDM/*_RVT_$::env(WF_LIB)_*.lib*]] { read_liberty $f }
+if {$::env(WF_XLIB) != ""} { read_liberty $::env(WF_XLIB) }
+read_db $::env(WF_ODB)
+read_sdc $::env(WF_SDC)
+read_spef $::env(WF_SPEF)
+set_propagated_clock [all_clocks]
+puts "DRVBEGIN"
+report_check_types -max_slew -max_capacitance -max_fanout -violators
+puts "DRVEND"
+"""
+
+
+def drv_check(case, macros):
+    """max slew / cap / fanout violators at SS and FF on the routed netlist + RCX parasitics (the routed SDC limits)."""
+    res = next(case.rglob("results/asap7/*/base/6_final.odb")).parent
+    (case / "wf_drv.tcl").write_text(DRV_TCL)
+    rel = lambda q: "/work/" + str(q.relative_to(case))
+    out = {}
+    for lib in ("SS", "FF"):
+        c = ["docker", "run", "--rm", "-v", f"{case}:/work"] + (["-v", f"{ROOT}:/src:ro"] if macros else []) + [
+             "-e", f"WF_LIB={lib}", "-e", f"WF_ODB={rel(res / '6_final.odb')}", "-e", f"WF_SDC={rel(res / '6_final.sdc')}",
+             "-e", f"WF_SPEF={rel(res / '6_final.spef')}",
+             "-e", "WF_XLIB=" + (f"/src/{MACRO}/{MNAME}_{lib.lower()}.lib" if macros else ""),
+             "openroad/orfs:latest", "bash", "-lc",
+             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /work/wf_drv.tcl"]
+        p = subprocess.run(c, capture_output=True, text=True)
+        log = p.stdout + p.stderr
+        (case / f"wf_drv_{lib}.log").write_text(log)
+        body = log.split("DRVBEGIN", 1)[-1].split("DRVEND", 1)[0] if "DRVEND" in log else None
+        cnt = {}
+        if body is not None:
+            sect = None
+            for line in body.splitlines():
+                s = line.strip().lower()
+                if s in ("max slew", "max capacitance", "max fanout"):
+                    sect = s.split()[1]; cnt[sect] = 0
+                elif sect and "(VIOLATED)" in line:
+                    cnt[sect] += 1
+        out[lib] = dict(done=body is not None, violators={k: cnt.get(k, 0) for k in ("slew", "capacitance", "fanout")})
+    return out
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -159,6 +203,10 @@ def cmd_sta(a):
     WF.subprocess.run = run
     nick = next(case.rglob("results/asap7/*/base/6_final.odb")).parent.parent.name
     rec = WF.corner_sta(case, nick, case)
+    WF.subprocess.run = orig
+    drv = drv_check(case, a.macros)
+    (case / "wf_drv.json").write_text(json.dumps(drv, indent=1) + "\n")
+    print(json.dumps(drv))
     print(json.dumps({c: {"insertion_ps": v.get("insertion_ps")} |
                       {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "reg2reg")} |
                       {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "reg2reg")}
@@ -189,6 +237,60 @@ def cmd_check(a):
     print(json.dumps(out, indent=1))
 
 
+def case_record(case: Path):
+    """One routed case: what it is, signoff STA (SS/FF; block / incontext / reg2reg), DRV, DRC/antenna, area."""
+    cj = json.loads((case / "case.json").read_text())
+    sta = json.loads((case / "wf_sta.json").read_text()) if (case / "wf_sta.json").is_file() else {}
+    drv = json.loads((case / "wf_drv.json").read_text()) if (case / "wf_drv.json").is_file() else {}
+    rep = next(case.rglob("logs/asap7/*/base/6_report.json"), None)
+    rte = next(case.rglob("logs/asap7/*/base/5_2_route.json"), None)
+    m = json.loads(rep.read_text()) if rep else {}
+    r = json.loads(rte.read_text()) if rte else {}
+    corners = sta.get("corners", {})
+    ss, ff = corners.get("SS", {}), corners.get("FF", {})
+    def v(c, mode, f):
+        return (c.get(mode) or {}).get(f)
+    def nn(x):
+        return isinstance(x, (int, float)) and x >= 0
+    drc, ant = r.get("detailedroute__route__drc_errors"), r.get("detailedroute__antenna__violating__nets")
+    drv_ok = bool(drv) and all(d.get("done") and not any(d["violators"].values()) for d in drv.values())
+    timing = {mode: dict(ss_setup_ps=v(ss, mode, "setup_wns_ps"), ss_hold_ps=v(ss, mode, "hold_wns_ps"),
+                         ff_setup_ps=v(ff, mode, "setup_wns_ps"), ff_hold_ps=v(ff, mode, "hold_wns_ps"),
+                         ss_failing=[v(ss, mode, "failing_setup"), v(ss, mode, "failing_hold")],
+                         ff_failing=[v(ff, mode, "failing_setup"), v(ff, mode, "failing_hold")],
+                         ss_worst_setup_path=v(ss, mode, "worst_max_path"))
+              for mode in ("block", "incontext", "reg2reg")}
+    closed = (all(nn(timing[mode][f]) for mode in ("incontext", "reg2reg")
+                  for f in ("ss_setup_ps", "ss_hold_ps", "ff_hold_ps"))
+              and drc == 0 and ant == 0 and drv_ok and bool(ss.get("done")) and bool(ff.get("done")))
+    return dict(inst=cj["inst"], util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
+                source_dir=cj["src"], ctrl_sha256=cj["ctrl_sha256"],
+                insertion_ps=dict(SS=ss.get("insertion_ps"), FF=ff.get("insertion_ps")), timing=timing,
+                drv=drv, drc_errors=drc, antenna_violating_nets=ant,
+                stdcell_area_um2=m.get("finish__design__instance__area__stdcell"),
+                macro_area_um2=m.get("finish__design__instance__area__macros"),
+                die_area_um2=m.get("finish__design__die__area"),
+                utilization=m.get("finish__design__instance__utilization"),
+                artifacts_sha256=sta.get("artifacts_sha256"), closed=closed)
+
+
+def cmd_record(a):
+    rec = dict(schema="opentallas.rtl.dsrom_wfc_split_physical.v1",
+               block="ot_rom_pkg_ctrl_wfc as one hardened WFC element (src = SOURCE 1, stg = SOURCE 0), full shape",
+               period_ps=PERIOD_PS, setup_uncertainty_ps=60, hold_uncertainty_ps=25, io_fraction=0.2,
+               closure_rule="SS setup and SS/FF hold >= 0 in incontext (IO at 20 % vs a virtual clock carrying the "
+                            "element's own measured min/max insertion: neighbours on the same die tree) and reg2reg; "
+                            "DRC 0, antenna 0, max slew/cap/fanout violators 0 at SS and FF on RCX parasitics. "
+                            "block (IO vs io_clk at the routed SDC's estimated insertion) is reported, not gating.",
+               cases={str(Path(c).name if Path(c).parent.name == "" else Path(c).parent.name + "/" + Path(c).name):
+                      case_record(Path(c).resolve()) for c in a.case},
+               notes=a.note)
+    a.out.write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps({k: dict(closed=v["closed"], incontext=v["timing"]["incontext"]["ss_setup_ps"],
+                              ff_hold=v["timing"]["incontext"]["ff_hold_ps"], drv=v["drv"])
+                      for k, v in rec["cases"].items()}, indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -210,8 +312,12 @@ def main():
     s.add_argument("--macros", action="store_true")
     c = sub.add_parser("check")
     c.add_argument("--case", type=Path, required=True)
+    r = sub.add_parser("record")
+    r.add_argument("--case", action="append", required=True)
+    r.add_argument("--note", action="append", default=[])
+    r.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    {"prep": cmd_prep, "sta": cmd_sta, "check": cmd_check}[a.cmd](a)
+    {"prep": cmd_prep, "sta": cmd_sta, "check": cmd_check, "record": cmd_record}[a.cmd](a)
 
 
 if __name__ == "__main__":
