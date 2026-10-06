@@ -163,7 +163,7 @@ class Emit:
         w = len(ibits)
         wn = f'm_{u}'
         self.body.append(f'  wire [{w - 1}:0] {wn};')
-        ri = ', .RI(1)' if self.margin else ''
+        ri = ', .RI(1), .RDREG(1)' if self.margin else ''
         self.body.append(f'  ot_hbm_stn_meso #(.W({w}){ri}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
                          f'.ck(ck[0]), .rst_n(rst[0]), .d_o({wn}));')
         self.clk_in.append((ip, iclk))
@@ -448,8 +448,9 @@ def main(argv=None):
     ap.add_argument('--master', action='append')
     ap.add_argument('--margin', action='store_true',
                     help='owner margin rule (2026-10-06): every face pin of a meso crossing registered -- the FIFO input '
-                         'captured at the pin on the write clock (ot_hbm_stn_meso RI=1, +1 cycle) and every ck-domain '
-                         'output it feeds launched from a register of its own per port (+1 cycle)')
+                         'captured at the pin on the write clock (ot_hbm_stn_meso RI=1, +1 cycle), the FIFO readout '
+                         'registered at its select (RDREG=1, +1 cycle) and every ck-domain output it feeds launched '
+                         'from a register of its own per port (+1 cycle)')
     a = ap.parse_args(argv)
     fcm = fc_map()
     pdir = Path(a.ports)
