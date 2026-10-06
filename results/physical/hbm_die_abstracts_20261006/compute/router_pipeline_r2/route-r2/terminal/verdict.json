@@ -1,0 +1,142 @@
+{
+  "status": "ACTUAL_ROUTED_FAILURE_CLASSES_RETAINED",
+  "flow_returncode": 0,
+  "physical_closed": false,
+  "parent_qualified": false,
+  "boundary_scope": "Standalone166.6ps min/max input/output and3.898fF load; externalfull73 producer/receiver/rootclock/reset unqualified",
+  "loaded_boundary_allocation_sha256": "be71650b31f8a3c91f59a6967a48828a0dd4101d038be5fe5e7b341629b49000",
+  "latency": {
+    "tail_cycles": 48,
+    "II_cycles": 24,
+    "total_added_vs23": 25,
+    "increment_vs28": 20,
+    "compose_once": true
+  },
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "metrics_raw": {
+        "OT_CORNER": "ss",
+        "OT_WS": "-1.298829377383015e-10",
+        "OT_TNS": "-4.8404036334659395e-9",
+        "OT_VIOL_D_PINS": "18",
+        "OT_WS_REG_D": "-89.370399",
+        "OT_WS_OUT": "-129.882935",
+        "OT_WS_R2R": "-28.943182",
+        "OT_WS_I2R": "132.221237"
+      },
+      "errors": [],
+      "log_sha256": "f5894454a35c1e7a6ae632373c4c003d3961146ea028e8878553e14147dbf8ae",
+      "tcl_sha256": "927620e0d629380595327d1a1adfe54bcfb88b3c52fd0fcfd503ad0528400776"
+    },
+    "ff": {
+      "returncode": 0,
+      "metrics_raw": {
+        "OT_CORNER": "ff",
+        "OT_WS": "1.6296963778472673e-12",
+        "OT_TNS": "0.0",
+        "OT_VIOL_D_PINS": "0",
+        "OT_WS_REG_D": "1.629696",
+        "OT_WS_OUT": "495.266602",
+        "OT_WS_R2R": "1.629696",
+        "OT_WS_I2R": "46.162601"
+      },
+      "errors": [],
+      "log_sha256": "f385aa812b83f1b5981a4575478e8cafbc470dedff3e1a98bdc1ce8c5025c183",
+      "tcl_sha256": "efb121310b08b6899996a5590c107357f4edc9c0cd6e5fceebc24aa43ccdb185"
+    },
+    "retained_sha256": {
+      "6_final.odb": "abebb2666c0edab6e9610897cf5c65bd1eddd579fc67bdb8247fc59e5b589db0",
+      "6_final.spef": "5cbfcbbcebfaf80a010ea3925c0cf070b0fa3a3e2509d363ed5ac0e0d92fd0f8",
+      "6_final.sdc": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93"
+    },
+    "parent_qualified": false
+  },
+  "actual_final_SDC_boundary": {
+    "period_ps": [
+      833.0
+    ],
+    "uncertainty_ps": {
+      "setup": [
+        60.0
+      ],
+      "hold": [
+        25.0
+      ]
+    },
+    "input_delay_ps": [
+      166.6
+    ],
+    "output_delay_ps": [
+      166.6
+    ],
+    "output_pin_load_fF": [
+      3.898
+    ],
+    "input_delay_statements": 515,
+    "output_delay_statements": 55,
+    "output_pin_load_statements": 55,
+    "timing_exceptions": [],
+    "final_SDC_sha256": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93",
+    "clock_source": "Standalone primary input; native child CTS propagated; externalfull73 root source not characterized",
+    "external_producer_receiver_clock_reset_qualified": false
+  },
+  "native_final_classes": {
+    "finish__timing__setup__tns": -4840.4,
+    "finish__timing__hold__tns": 0,
+    "finish__timing__setup__ws": -129.883,
+    "finish__timing__hold__ws": 1.6297,
+    "finish__timing__fmax__clock:core_clk": 1038550000.0,
+    "finish__timing__fmax": 1038550000.0,
+    "finish__clock__skew__setup": 90.2273,
+    "finish__clock__skew__hold": 78.4335,
+    "finish__timing__drv__max_slew_limit": 0.0395256,
+    "finish__timing__drv__max_slew": 0,
+    "finish__timing__drv__max_cap_limit": 0.287512,
+    "finish__timing__drv__max_cap": 0,
+    "finish__timing__drv__max_fanout_limit": 32,
+    "finish__timing__drv__max_fanout": 0,
+    "finish__timing__drv__setup_violation_count": 73,
+    "finish__timing__drv__hold_violation_count": 0,
+    "finish__design__core__area": 97166.2,
+    "finish__design__instance__area__stdcell": 54882.8,
+    "finish__design__instance__utilization": 0.564834,
+    "finish__design__instance__utilization__stdcell": 0.564834
+  },
+  "native_routed_DRC_antenna": {
+    "detailedroute__route__drc_errors__iter:0": 72248,
+    "detailedroute__route__drc_errors__iter:1": 7068,
+    "detailedroute__route__drc_errors__iter:2": 3898,
+    "detailedroute__route__drc_errors__iter:3": 96,
+    "detailedroute__route__drc_errors__iter:4": 12,
+    "detailedroute__route__drc_errors__iter:5": 12,
+    "detailedroute__route__drc_errors__iter:6": 0,
+    "detailedroute__route__drc_errors": 0,
+    "detailedroute__antenna_diodes_count": 0,
+    "detailedroute__antenna__violating__nets": 0,
+    "detailedroute__antenna__violating__pins": 0
+  },
+  "standalone_contract_checks": {
+    "corner_tools": true,
+    "setup_SS": false,
+    "hold_FF": true,
+    "DRC": true,
+    "antenna": true,
+    "electrical": true,
+    "native_all_setup": false,
+    "native_all_hold": true,
+    "unrelaxed_boundary": true
+  },
+  "standalone_contract_closes": false,
+  "retained_final_sha256": {
+    "6_final.odb": "abebb2666c0edab6e9610897cf5c65bd1eddd579fc67bdb8247fc59e5b589db0",
+    "6_final.spef": "5cbfcbbcebfaf80a010ea3925c0cf070b0fa3a3e2509d363ed5ac0e0d92fd0f8",
+    "6_final.sdc": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93"
+  },
+  "actual_buffered_cell_utilization": 0.564834,
+  "utilization_target": [
+    0.55,
+    0.6
+  ],
+  "reset_scope": "Global/native asynchronous checks retained; explicitRESETN paths in corner logs; no reset exception inferred"
+}
