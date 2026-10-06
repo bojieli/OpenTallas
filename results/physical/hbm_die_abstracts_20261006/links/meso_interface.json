@@ -13,7 +13,15 @@
     124.854
   ],
   "lef_pin_count": 1038,
-  "lef_routing_layers": [],
+  "lef_routing_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+  ],
   "clock_ports": [
     "wclk",
     "rclk"
@@ -1109,5 +1117,14 @@
     "ot_meso_fifo.lef": "b64d3008e38750aefa753e7511e10ebc987fc96d4c06e581104bc8c896d93569",
     "ot_meso_fifo.sdc": "1bb36ee283e8c50bb77a2f284b0c708a1e97d17f9924749c127ce2f39892184f",
     "ot_meso_fifo_ff.lib": "f72f93a973179d61a9da946566e25ffba7ba2e6bb60285cbf72cac7998a2815c"
-  }
+  },
+  "signal_pin_layers": [
+    "M4",
+    "M5"
+  ],
+  "parent_hub_routing_layer_check": "OPEN; exported native signal pins/OBS only, no corrected parent route",
+  "lef_nonrouting_layers": [
+    "RVTN",
+    "RVTP"
+  ]
 }
