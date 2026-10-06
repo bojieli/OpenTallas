@@ -140,7 +140,7 @@ module ot_dsrom_wfc_protected_stage #(
  wire [46:0] whole_stage_identity;
  wire [20:0] whole_stage_token;
  wire [31:0] whole_stage_value;
- wire advance,memory_step,memory_write_quiet,adapter_fault,xa_read_capture;
+ wire advance,memory_step,memory_write_quiet,adapter_fault,xa_read_capture,vm_owner_conflict;
  wire xa_we,xa_re;wire[14:0]xa_waddr,xa_raddr;wire[511:0]xa_wdata;
  wire[9:0]vm_owner_user;wire[20:0]vm_owner_pos;
  wire[46:0]xa_owner={stage_epoch,vm_owner_user,vm_owner_pos};
@@ -154,7 +154,7 @@ module ot_dsrom_wfc_protected_stage #(
  ot_dsrom_wfc_vm_caller_adapter #(.ENABLE(ENABLE)) u_adapter(
   .fast_clk(fast_clk),.cold_n(cold_n),.fast_rst_n(fast_rst_n),.slow_rst_n(slow_rst_n),
   .xa_we(xa_we),.xa_re(xa_re),.xa_waddr(xa_waddr),.xa_raddr(xa_raddr),.xa_wdata(xa_wdata),.xa_owner(xa_owner),
-  .xa_read_capture(xa_read_capture),.advance(advance),.memory_step(memory_step),.write_quiet(memory_write_quiet),
+  .xa_read_capture(xa_read_capture),.xa_owner_conflict(vm_owner_conflict),.advance(advance),.memory_step(memory_step),.write_quiet(memory_write_quiet),
   .xb_v(xb_v),.xb_ready(xb_ready),.xb_owner(xb_owner),.xb_we4(xb_we4),.xb_waddr4(xb_waddr4),.xb_wdata4(xb_wdata4),
   .xb_re(xb_re),.xb_raddr(xb_raddr),.xb_reply_v(xb_reply_v),.xb_reply_owner(xb_reply_owner),.xb_read_data(xb_rq),
   .xb_row_visible(xb_row_visible),.xb_consume_v(xb_consume_v),.xb_consume_owner(xb_consume_owner),.xb_port_retired(xb_port_retired),
@@ -251,7 +251,7 @@ ot_dsrom_wfc_whole_stage #(.ENABLE(ENABLE),.BOOK0(BOOK0),.BOOK1(BOOK1),.BOOK2(BO
   .rst_n(fast_rst_n),
   .advance(advance),.memory_step(memory_step),
   .vm_we(xa_we),.vm_re(xa_re),.vm_waddr(xa_waddr),.vm_raddr(xa_raddr),.vm_wdata(xa_wdata),.vm_rq(provider_read_data[511:0]),
-  .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(xa_read_capture),
+  .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(xa_read_capture),.vm_owner_conflict(vm_owner_conflict),
   .cfg_users(cfg_users),
   .cfg_prompt_len(cfg_prompt_len),
   .cfg_gen_len(cfg_gen_len),

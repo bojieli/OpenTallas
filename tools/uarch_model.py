@@ -11871,7 +11871,7 @@ def dsrom_wfc_protected_caller_adapter_price():
       latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
       mandatory_per_A_read_capture_bubble_edges=1,
       actual_service_wait_edges=None,actual_token_latency_ns=None,
-      allwriter_contract='bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled',
+      allwriter_contract='bundle XA/XB0..3 native order including sameowner simultaneous XAread/write; old reads before all writes; distinct XB owner backpressured and unaccepted; distinct simultaneous XA RX/TX owners explicitly rejected without serialization',
       global_VM_geometry_owner='Turing current r8/new-frame binding',
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 

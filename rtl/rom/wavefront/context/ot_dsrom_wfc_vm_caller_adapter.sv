@@ -5,7 +5,7 @@ module ot_dsrom_wfc_vm_caller_adapter #(parameter ENABLE=0)(
  input wire fast_clk,cold_n,fast_rst_n,slow_rst_n,
  input wire xa_we,xa_re,input wire[14:0]xa_waddr,xa_raddr,
  input wire[511:0]xa_wdata,input wire[46:0]xa_owner,
- input wire xa_read_capture,
+ input wire xa_read_capture,xa_owner_conflict,
  output wire advance,memory_step,write_quiet,
  input wire xb_v,output wire xb_ready,input wire[46:0]xb_owner,
  input wire[3:0]xb_we4,input wire[59:0]xb_waddr4,input wire[2047:0]xb_wdata4,
@@ -34,7 +34,7 @@ module ot_dsrom_wfc_vm_caller_adapter #(parameter ENABLE=0)(
   // An unaccepted different owner stays held outside; never relabel it as XA.
   wire include_b=xb_v&&(!xa_intent||xb_owner==xa_owner);
   wire event_v=xa_intent||include_b;
-  assign request_v=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&state==IDLE&&event_v;
+  assign request_v=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&!xa_owner_conflict&&state==IDLE&&event_v;
   assign request_owner=xa_intent?xa_owner:xb_owner;
   assign read_enable={include_b&&xb_re,xa_re};
   assign read_addr={xb_raddr,xa_raddr};
@@ -43,7 +43,7 @@ module ot_dsrom_wfc_vm_caller_adapter #(parameter ENABLE=0)(
   assign write_mask={{64{include_b}},16'hffff};
   assign xb_ready=request_v&&request_ready&&include_b;
   assign memory_step=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&(state==IDLE||state==ISSUE);
-  assign advance=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&!initializing&&
+  assign advance=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&!xa_owner_conflict&&!initializing&&
     ((state==IDLE&&!event_v&&!pending)||(state==ISSUE&&(flags[RA]||flags[WA]))||(state==CAPTURE&&flags[RA]));
   // Quiet is a real protected visible fact; transport debt still retires later.
   assign write_quiet=!pending||(reply_v&&reply_owner==owner&&row_visible==expected_we);
@@ -62,7 +62,7 @@ module ot_dsrom_wfc_vm_caller_adapter #(parameter ENABLE=0)(
   always @(posedge fast_clk)begin
    if(!cold_n)begin state<=IDLE;state_check<=~IDLE;owner<=0;owner_check<=~47'd0;flags<=0;flags_check<=8'hff;expected_we<=0;expected_we_check<=5'h1f;end
    else if(!fast_rst_n||!slow_rst_n)begin if(state!=IDLE||pending)poison();end
-   else if(bad||provider_fault||invalid_consume||invalid_retired)poison();
+   else if(bad||provider_fault||xa_owner_conflict||invalid_consume||invalid_retired)poison();
    else if(!fault)begin
     if(xb_consume_v)begin
      if(!xb_reply_v||xb_consume_owner!=owner)poison();else flag_set(BDONE,1);

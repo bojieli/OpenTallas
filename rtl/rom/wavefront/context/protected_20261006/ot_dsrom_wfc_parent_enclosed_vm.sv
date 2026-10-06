@@ -101,7 +101,7 @@ module ot_dsrom_wfc_parent_enclosed_vm #(
     output reg                wf_reject,      // a verified token was rejected
     output wire [USER_W-1:0] vm_owner_user,
     output wire [NW-1:0] vm_owner_pos,
-    output wire vm_read_capture,
+    output wire vm_read_capture,vm_owner_conflict,
     output wire core_done_accepted,
     output wire [USER_W-1:0] core_owner_user,
     output reg                wf_squash       // a squashed result was discarded
@@ -207,7 +207,7 @@ module ot_dsrom_wfc_parent_enclosed_vm #(
         .WAVE(WAVE),
         .WIN(WIN)) u_ctrl (
         .clk(clk),.advance(advance),.memory_step(memory_step),
-        .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),
+        .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),.vm_owner_conflict(vm_owner_conflict),
         .rst_n(rn),
         .cfg_users(cfg_users),
         .cfg_prompt_len(cfg_prompt_len),

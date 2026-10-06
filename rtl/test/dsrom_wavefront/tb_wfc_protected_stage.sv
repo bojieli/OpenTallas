@@ -120,7 +120,7 @@ module tb_wfc_protected_stage;
    if(xb_reply_owner!==xb_owner||xb_row_visible!==we||(rd&&xb_rq!==expected))$fatal(1,"actual owned XB protected reply/olddata mismatch row%0d",row);
    repeat(3)begin @(negedge fast_clk);if(!xb_reply_v||!vm_pending||xb_reply_owner!==xb_owner||(rd&&xb_rq!==expected)||xb_port_retired)$fatal(1,"read/visible reply retired before consume");end
    xb_consume_owner=xb_owner;xb_consume_v=1;@(posedge fast_clk);@(negedge fast_clk);xb_consume_v=0;
-   wait(xb_port_retired);@(negedge fast_clk);
+   wait(xb_port_retired);@(posedge fast_clk);@(negedge fast_clk);
   end
  endtask
  initial begin
@@ -189,7 +189,7 @@ module tb_wfc_protected_stage;
   wait(xb_port_retired);wait(flits==47);wait(!vm_pending);repeat(5)@(negedge fast_clk);
   xb_service(0,0,1,0,{16{32'd4444}});
 
-  if(cfg_fault||whole_fault||wfc_fault||busy||producer_pending||writes!=41||commands!=668||retirements!=192||readcaptures!=46||accepts!=port_retires||accepts!=consumes||accepts!=replies)$fatal(1,"joint nominal mechanism failed");
+  if(cfg_fault||whole_fault||wfc_fault||busy||producer_pending||writes!=41||commands!=668||retirements!=192||readcaptures!=46||accepts!=port_retires||accepts!=consumes||accepts!=replies)$fatal(1,"joint nominal mechanism failed cfg%0b whole%0b wfc%0b busy%0b pending%0b writes%0d commands%0d retirements%0d captures%0d accepts%0d retires%0d consumes%0d replies%0d",cfg_fault,whole_fault,wfc_fault,busy,producer_pending,writes,commands,retirements,readcaptures,accepts,port_retires,consumes,replies);
   $display("PROTECTED_JOIN_NOMINAL PASS MAXU866 fullVM32768x512 commands668 retirements192 independentWrites41 independentFlits47 actualACK1 cycles%0d nativeCaptureEdges%0d protectedBundles%0d readCaptures%0d",cycles,capture_edges,accepts,readcaptures);
   // New caller negative under a second real WFC owner: wrong external read
   // consumption cannot authorize a reverse receipt or erase accepted debt.

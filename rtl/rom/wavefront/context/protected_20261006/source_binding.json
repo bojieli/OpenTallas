@@ -6,16 +6,16 @@
     "rtl/rom/wavefront/context/ot_dsrom_wfc_enclosing_stage.sv": "17a310698fdf22991c52b0872a9c87d5086c886831e8db60f633ca1375e39c80"
   },
   "outputs": {
-    "rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv": "1ab97eb94dc754074e2aa8823653ddc1e2fed9b85b5e7c5fa1b2d85e945b47f8",
-    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_parent_enclosed_vm.sv": "898bb22532f8d6036bedf14e0f62a6632728230f4bab8b383e73ce6242dc8bf7",
-    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_enclosing_vm_stage.sv": "d17049a315be9955411c5921585689e599d62c3bae6b710995a5d4cfeb2c47b5"
+    "rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv": "475b9c08bbb4c9ac4a4c499829bd6936a0d0de3590217b7d8f806e8de5084a20",
+    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_parent_enclosed_vm.sv": "741fce080091ef916aedcdb8256180c0aa88fdef2afaa7589a65a79579a42f75",
+    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_enclosing_vm_stage.sv": "4958c4a3f872f20d3fc792a9c16f9fa8359399d4b2a3a67642bbb2efc4b459e9"
   },
   "controller_posedge_CE_sites": 21,
   "changes": [
     "clock-enable all controller/helper state with async reset preserved",
     "router keeps fast root clock, actual controller/router handshake qualified by CE",
     "read capture bubble prevents another memory/RX acceptance",
-    "serialize simultaneous native XA TXread/RXwrite using RX backpressure",
+    "preserve sameowner XA simultaneous read/write; explicitly reject different XA owners",
     "export actual RX/TX memory owner and actual read capture",
     "hold actual core start and whole ACK until caller advances"
   ],
