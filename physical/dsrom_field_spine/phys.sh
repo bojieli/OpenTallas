@@ -6,6 +6,7 @@
 #   v = a (hold target 20 ps, slew margin 30%), b (20 ps, 40%), c (25 ps, 40%), d (22 ps, 45%, routability-off GPL),
 #   e (20 ps, 40%, repair buffer budget raised), f (25 ps, 40%, budget raised), g (22 ps, 45%, budget raised),
 #   p / q (e with place density 0.55 / 0.70: extra placement diversity on EPYC2);
+#   h (e with routability-off GPL), r (g with place density 0.62): v12 PQ R128 diversity;
 #   a trailing k (e.g. c1r128_ck) also keeps ot_dsrom_aq12 as its own synthesis hierarchy: flattened, Yosys merges the
 #   quantiser's input register with the spine's BF16 stage-A register (same x_q bits) and ABC re-ripples its
 #   exponent subtract (v9 flat R128 post-CTS: aq12 m1 / s12_dd at -43..-474 ps); kept, it maps as the standalone
@@ -32,6 +33,8 @@ run() { # tag
              e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");;
              p) H=0.020; S=40; X=("${BC[@]}"); DENS=(--place-density 0.55);;
              q) H=0.020; S=40; X=("${BC[@]}"); DENS=(--place-density 0.70);;
+             h) H=0.020; S=40; X=("${BC[@]}" --orfs-var GPL_ROUTABILITY_DRIVEN=0);;
+             r) H=0.022; S=45; X=("${BC[@]}"); DENS=(--place-density 0.62);;
              *) echo "phys.sh: unknown variant '$v' (tag $t)" >&2; exit 2;; esac
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
