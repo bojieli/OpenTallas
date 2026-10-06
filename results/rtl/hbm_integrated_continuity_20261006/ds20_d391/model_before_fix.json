@@ -1,0 +1,24 @@
+{
+  "scope": "Existing Rawls HBM integrated parent selected control-copy correctness repair; no new architecture or fulltoken gate",
+  "existing_composed_model": "tools/uarch_model.py::v41_hbm_chain and v41_hbm_rows; existing HBM ablation unchanged",
+  "parent": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv::g_on.g_die[d].g_sm[s].u_sm",
+  "engine": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv",
+  "predecessor_sha256": "38365f91579607e5d3096a4ec57de665cacdabd56857538eeccee97869c54c51",
+  "canonical_repair": "d3911f38217c71006fcec266f5ab77f281547c1e",
+  "model_delta": {
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "boundary_bits_per_cycle": 0,
+    "routing_tracks": 0,
+    "replicas": 0,
+    "mux_demux_fanout": 0,
+    "state_bits": 0,
+    "architectural_latency_cycles": 0
+  },
+  "price": "Process-local construction variables only; same registered BD handoff/LSU state, no extra payload, protection, transport or cut",
+  "TW": 17,
+  "PW": 20,
+  "host303627_unchanged": true,
+  "fulltoken_cause_unproven": true,
+  "physical_adopted": false
+}
