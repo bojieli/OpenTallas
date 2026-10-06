@@ -346,12 +346,18 @@ def _build(spine_w, tree_mode):
             insts.append(ctrls[st])
             if CDC is not None:
                 n = CDC['per_stack']
-                pitch = dn(span / n, GY)
-                if pitch < CDC['h'] + SHAVE - 1e-6:
-                    raise SystemExit(f'CDC: {n} frames of {CDC["h"]} um do not fit the {span:.1f} um stack span')
+                # each CDC frame sits level with the row-engine slot it feeds (PC p -> row engine p*6//n, slot j of
+                # 6 on that engine's face), so the controller -> CDC -> row-engine hops are straight M4 runs (r17p:
+                # frames at an even stack pitch made every core-side word jog vertically over the column, M7-M9
+                # windows 1.08-1.19 at the shoreline)
+                if RE_H / 6 < CDC['h'] + SHAVE - 1e-6:
+                    raise SystemExit(f'CDC: frame height {CDC["h"]} um exceeds a row-engine slot ({RE_H / 6:.1f} um)')
                 cdcs[st] = []
                 for p in range(n):
-                    cy = sy0 + p * pitch + dn((pitch - CDC['h'] - SHAVE) / 2, GY)
+                    k = p * 6 // n
+                    j = p - min(q for q in range(n) if q * 6 // n == k)
+                    y_re = sy0 + k * RE_H + (FIFO[1] if k >= 3 else 0)
+                    cy = dn(y_re + (j + 0.5) * (RE_H - SHAVE) / 6 - CDC['h'] / 2, GY)
                     it = Inst(f'cdc_{st}_{p}', 'qfd_cdc', x_cdc + (cdc_w - CDC['w'] - SHAVE) / 2 if side == 'E' else
                               x_cdc + cdc_w - CDC['w'] - SHAVE - (cdc_w - CDC['w'] - SHAVE) / 2, cy, CDC['w'], CDC['h'],
                               orient, kind='cdc', region='strip')

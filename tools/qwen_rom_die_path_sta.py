@@ -66,7 +66,21 @@ def _index(wl):
     return idx
 
 
-def record(v, m, wl_path):
+SS_PS_PER_UM = 1.135      # W15 SS routed repeated span slope (tools/uarch_model.py SS_REACH_UM basis)
+STAGE_SLACK_PS = 11.9      # corridor gate D_tile_r2 at 430.56 um
+
+
+def skew_pitch(skew_ps):
+    """the longest registered span that still closes SS setup when the two stage flops see `skew_ps` of adverse
+    clock skew beyond the measured vehicle's own tree: the measured 430.56 um span's +11.9 ps, less the skew, at the
+    measured SS slope of a repeated span"""
+    return PITCH_UM + min(0.0, STAGE_SLACK_PS - skew_ps) / SS_PS_PER_UM
+
+
+def record(v, m, wl_path, pitch=None):
+    global PITCH_UM
+    if pitch:
+        PITCH_UM = pitch
     wl = wirelength(wl_path)
     mx = _index(wl)
     by = {i.name: i for i in m['insts']}
@@ -166,12 +180,15 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--wirelength', type=Path, required=True)
     ap.add_argument('--out', type=Path)
+    ap.add_argument('--skew-ps', type=float, default=0.0,
+                    help='adverse clock skew between die stage flops beyond the measured stage vehicle (region CTS)')
     ap.add_argument('--slab-group-h', type=float, default=0.0)
     ap.add_argument('--cdc', default='')
     a = ap.parse_args(argv)
     v, m = B.selected(True, b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True,
                       bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc))
-    rec = record(v, m, a.wirelength)
+    rec = record(v, m, a.wirelength, pitch=skew_pitch(a.skew_ps) if a.skew_ps else None)
+    rec['skew_ps'] = a.skew_ps
     rec['floorplan'] = dict(slab_group_h=a.slab_group_h, cdc=a.cdc, die=m['die'])
     if a.out:
         a.out.write_text(json.dumps(rec, indent=1) + '\n')

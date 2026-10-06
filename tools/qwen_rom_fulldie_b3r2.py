@@ -729,11 +729,23 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                 M.area(port, nb, 50.0 + 60.0 * j, centre, 1)
                 continue
             vert = ns_faces and abs(ot.cy - me.cy) > abs(ot.cx - me.cx)
+            if getattr(v, 'SLAB_GROUP_H', 0.0) and port.startswith(('cf', 'cw')):
+                # r17: fragment result words leave on the channel faces; a fragment's N/S face abuts its stacked
+                # neighbour (band 3 f3 under f2, band 2 f3 on the sequencer), which buries N/S pins
+                vert = False
             face = ('N' if ot.cy >= me.cy else 'S') if vert else ('E' if ot.cx >= me.cx else 'W')
             layer = 'M5' if vert else 'M4'
             step = 0.048 * k
             span = max(1, math.ceil(nb / k)) * step if k > 1 else nb * 0.048
             along = M.w if vert else M.h
+            if getattr(v, 'SLAB_GROUP_H', 0.0) and port.startswith(('cf', 'cw')) and not vert and ot.cy < me.cy:
+                # r17: a fragment result word whose other end lies below enters at the bottom of the face (from the
+                # top it ran the whole slab height down the channel edge: r17p M6 1.04 at the band-3 primary)
+                c = cursor.get((mst, face, 'lo'), 4.0)
+                centre = c + span / 2 + 1.0
+                cursor[(mst, face, 'lo')] = centre + span / 2 + 1.0
+                M.face(port, nb, face, layer, centre, 1)
+                continue
             c = cursor.get((mst, face), along - 4.0)
             centre = c - span / 2 - 1.0
             cursor[(mst, face)] = centre - span / 2 - 1.0
