@@ -107,8 +107,7 @@ def capacity(work):
         load=list(os.getloadavg()),idle_cores=os.cpu_count()*d[3]/sum(d),
         available_bytes=mem,disk_free=shutil.disk_usage(work).free)
 def fits(m,a):
-    load_limit=128 if a.host_kind=='epyc2' else os.cpu_count()
-    return m['load'][0]<load_limit and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
+    return m['load'][0]<128 and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
 
 def run(a):
     work=a.work.resolve();m=verified(work)
@@ -116,11 +115,8 @@ def run(a):
     # these are admission reservations, never AS/CPU/file/wall-time limits.
     if min(a.memory_gib,a.cpu_cores,a.disk_reserve_bytes)<=0:raise ValueError('Actual CPU/RAM/disk reservation required')
     guard=Path('/srv/opentallas-scratch/admit.sh')
-    prefix='/srv/opentallas-scratch2/' if a.host_kind=='epyc2' else '/srv/opentallas-scratch/'
-    if a.host_kind=='agi' and a.memory_gib>16:
-        raise ValueError('AGI job exceeds binding 16 GiB maximum')
-    if not guard.is_file() or not str(work).startswith(prefix):
-        raise ValueError('Compile requires selected host scratch through unchanged guard')
+    if not guard.is_file() or not str(work).startswith('/srv/opentallas-scratch2/'):
+        raise ValueError('Full-parent compile only on E2 NVMe through unchanged guard')
     if socket.gethostname()!=a.epyc2_hostname:raise ValueError('Execution host differs from measured E2 identity')
     if not a.tool.is_file():raise FileNotFoundError('Actual Verilator tool missing')
     if (work/'frontend.exit').exists() or (work/'elaboration.log').exists():
@@ -128,13 +124,25 @@ def run(a):
     receipt=work/('post_guard.json' if a.admitted else 'pre_guard.json')
     if receipt.exists() or (not a.admitted and (work/'guard_command.json').exists()):
         raise FileExistsError('Existing admission/attempt preserved; no duplicate queued consumer')
-    snap=capacity(work);write(receipt,snap)
+    if not a.admitted:
+        with (work/'supervisor.json').open('x') as claim:
+            json.dump(dict(pid=os.getpid(),host=socket.gethostname(),memory_gib=a.memory_gib,
+                           cpu_cores=a.cpu_cores,disk_reserve_bytes=a.disk_reserve_bytes),claim)
+    snap=capacity(work)
+    # The sole queued supervisor is light; do not enter the unchanged memory
+    # admission guard or launch the compiler while fresh CPU/disk/RAM fails.
+    if a.wait_for_capacity and not a.admitted:
+        with (work/'capacity_wait.jsonl').open('x') as log:
+            while not fits(snap,a):
+                log.write(json.dumps(snap)+'\n');log.flush()
+                time.sleep(30);snap=capacity(work)
+    write(receipt,snap)
     if not fits(snap,a):print('CAPACITY_REFUSAL no compiler: '+json.dumps(snap));return 75
     if not a.admitted:
         cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--run',
             '--work',str(work),'--tool',str(a.tool.resolve()),'--memory-gib',str(a.memory_gib),
             '--cpu-cores',str(a.cpu_cores),'--disk-reserve-bytes',str(a.disk_reserve_bytes),
-            '--epyc2-hostname',a.epyc2_hostname,'--host-kind',a.host_kind,'--admitted']
+            '--epyc2-hostname',a.epyc2_hostname,'--admitted']
         write(work/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
     tmp=work/'tmp';tmp.mkdir();obj=work/'obj'
@@ -144,7 +152,8 @@ def run(a):
     write(work/'command.json',cmd)
     env=dict(os.environ,TMPDIR=str(tmp))
     with (work/'elaboration.log').open('w') as log:
-        rc=subprocess.run(cmd,cwd=work/'src',env=env,stdout=log,stderr=subprocess.STDOUT).returncode
+        rc=subprocess.run(['/usr/bin/time','-v','-o',str(work/'resources.log'),*cmd],
+                          cwd=work/'src',env=env,stdout=log,stderr=subprocess.STDOUT).returncode
     (work/'frontend.exit').write_text(str(rc)+'\n')
     log=(work/'elaboration.log').read_text()
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
@@ -161,7 +170,7 @@ def main():
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
-    p.add_argument('--host-kind',choices=['epyc2','agi'],default='epyc2')
+    p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
     return prepare(a.work.resolve(),a.body_sha256) if a.prepare else run(a)
