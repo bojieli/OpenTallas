@@ -1,0 +1,13 @@
+{
+  "source": "5d0232bf4",
+  "pinned_route_source": "0477bd6d9",
+  "route_supervisor": 21759,
+  "post_worker": 29892,
+  "audit_supervisor": 2179104,
+  "checkpoint": "4_cts.odb",
+  "qualification": false,
+  "energy_credit": false,
+  "raw_archive_remote": "ot-epyc2:/srv/opentallas-scratch2/codex/w5-context-20261005/cts-audit-r1/output.tgz",
+  "raw_archive_sha256": "9f7c6fa1dff0c7ce168cd3c7948065000c9c56c114509eeb9707d7c98a85a870",
+  "normalization": "Library remains ns; multiply native values by1000. Exclude clock-only graph nodes; deduplicate native endpoints. Original audit.json retained unchanged. Remaining missing paths include SETN/RESETN, tie-cell Y and macro-unused bits; fanin count alone is not evidence of functional unconstrained data."
+}

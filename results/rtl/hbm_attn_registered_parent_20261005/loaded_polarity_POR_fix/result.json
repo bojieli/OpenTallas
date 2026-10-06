@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "scope": "minimum full16 parent-boundary mechanism; arithmetic surrogate unchanged",
+  "cycles": 2415,
+  "checked_beats": 2376,
+  "heads": 16,
+  "input_bits_per_head": 1618,
+  "output_bits": 529,
+  "alignment_positive_edges": 3,
+  "default_OFF": true,
+  "midstream_POR_flushes": 2,
+  "added_FF": 16,
+  "added_cycles": 0,
+  "required_next_recursive_mapped_FF": 36174,
+  "mapped_retention_verified_for_new_source": false,
+  "SS_FF_qualified": false,
+  "source_ready_for_full_route": false,
+  "remaining": "root/row/producer reset launch contract, actual per-head CTS association and bank/receiver mapping, production alignment nativePG/access check",
+  "source_sha256": {
+    "rtl/hbm_accel/ot_attn_tile_registered_parent.sv": "2b7f630f6442896d4e239abb5a8fffaa4c1458bd7a9d32ac6f6c26bbc9b389b9",
+    "rtl/test/tb_h16_registered_parent.sv": "2b0802d4a8fb7130294ceac3aa0462655276f767bcfc5fedefdffe8439bf5319",
+    "tools/uarch_model.py": "93fb037ee69b965cc152a03f542a9747c67735b1be75c4c82beba2f73db56276",
+    "results/uarch/hbm_attn_registered_parent_20261005/model.json": "e6063b0c8abd091044fcd851be66939c5738cb5ec1c08bc638db80cc14898ccd"
+  }
+}

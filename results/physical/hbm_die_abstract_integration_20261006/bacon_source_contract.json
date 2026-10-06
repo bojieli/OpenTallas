@@ -1,0 +1,1264 @@
+{
+ "scope": "Source-bound HBM abstract owner handoff, not placement or full parent qualification",
+ "baseline_inventory_kinds": 23,
+ "baseline_copies": 348,
+ "waypoint_copies": 208,
+ "waypoint_slice_count_per_copy": 1,
+ "waypoint_size_variants_approximately": 11,
+ "not_27_hardened_tops_or208_masters": true,
+ "generator_owner": "Claude HBM-DIE-FIX",
+ "die_placement": "HOLD pending corrected regenerated endpoints/clocks/reset/orientation/sourceABI",
+ "old_r14_clock_pose_corridor_inheritance_valid": false,
+ "old_JSON_port_faces_widths_scope": "historical only; reconcile exactcurrent RTL plus correctedgenerator, not new contract authority",
+ "SS_setup_ps": 60,
+ "FF_hold_ps": 25,
+ "stream_period_ps": 833.3333333333334,
+ "serial_period_ps": 1111.111111111111,
+ "HBM_period_ps": 1024,
+ "source_phase_ps": 0,
+ "parent_clock_insertion_skew_RC_loads_not_measured": true,
+ "utilization_target": [
+  0.55,
+  0.6
+ ],
+ "separate_CTS_PG_routing_reserves_required": true,
+ "macro_loads_are_source_local_before_parent_wire_CTS": true,
+ "one_seed_passing_source_not_replayed": true,
+ "golden_and_meaningful_negative_controls_retained": true,
+ "preserve_attributes_before_intermediate_resynthesis": true,
+ "explicit_corner_SPEF_required": true,
+ "slabs_are_blockages_not_hardened_logic": true,
+ "source_ownership": {
+  "SM_structural": "Claude HBM-SM",
+  "attention_parent": "Claude HBM-SU/ATTN",
+  "CP_child": "Harvey",
+  "W2_child": "Jason",
+  "outer_generator": "Claude HBM-DIE-FIX",
+  "physical_placement_integration": "Turing"
+ },
+ "return_needed": "Own source/top/parameters and real view paths with hashes, actual LEF ports/layers/orientations/obstructions, SS/FF LIB time-cap units+internalclock latency+pin loads, corner source/ODB/SPEF verdict and residual boundaries; missing parents actualRTL before views, no placeholderclosed status",
+ "pending_corrected_generator": {
+  "path": "/home/ubuntu/wt-hbm-die-fix/tools/hbm_accel_die_fp.py",
+  "sha256": "d991625c1e3bc15f7287b012ecca347f6325aa2e890dbe907bfda2a4aa553bfe",
+  "scope": "READ_ONLY r15source deltas; not correctedregeneratedall-endpoint validation receipt"
+ },
+ "pending_r15_deltas": {
+  "SM_weight_bits": 1099,
+  "SM_request_bits": 44,
+  "SM_descriptor_bits": 58,
+  "SM_control_leaf_bits": 103,
+  "attention_ld_bits": 1038,
+  "attention_query_bits": 580,
+  "attention_result_bits": 529,
+  "TU_quarter_inject_bits": 1024,
+  "TU_quarter_delivery_plus_idx_rd_bits": 580,
+  "TU_cmd_rank_pf_go_bits": 25,
+  "TU_status_fault_stall_bits": 33,
+  "SerDes_each_direction_bits_per_macro": 487,
+  "SerDes_full_TX_RX_bits": 974,
+  "host_TX_bits": 256,
+  "host_RX_bits": 256,
+  "clock_reset": "One realnet per root domain reachesall clockedblocks; forwardedstations useactualfclk_i/o and localreset; meso hasactualwclk/rclk, no shared3-bitckfiction"
+ },
+ "owner": "Bacon",
+ "owner_id": "01a10f3a-f2cc-7c32-bddf-c2e24abaaf7f",
+ "write_scope": "physical/hbm_die_abstracts_20261006/memory_control",
+ "work": "Actual streamservice/VMtops+existingcontrolviews/parameterwrappers; Claude SMstructural and attentionparent remainseparatelyowned",
+ "historical_port_requests": [
+  {
+   "family": "hfd_attn_tile",
+   "masters": 1,
+   "instances": 64,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_attn_tile_registered_parent / leaf ot_attn_hgrp_m6h1b7p (HBM-ATTN, leaf closed)",
+   "ledger": [
+    0.5,
+    "estimate",
+    "attention tile ~0.5 mm2 x 64 (hbm_accel_fmax_inventory_20261004/attn/closure.json blocker field; ledger 16.69 mm2 for the engine is smaller, the estimate is kept conservative)"
+   ],
+   "size_um": [
+    [
+     707.16,
+     708.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "k": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "i": {
+     "bits": 512,
+     "face": "W"
+    },
+    "o": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ku": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "kd": {
+     "bits": 1024,
+     "face": "S"
+    }
+   },
+   "kind": "attn_tile"
+  },
+  {
+   "family": "hfd_barrier",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel barrier_k32 (routed)",
+   "ledger": [
+    0.05,
+    "measured-routed",
+    "ot_hbm_accel barrier_k32 routed (ctl_takeover_20261005, +384.3 / +39.39 ps), slot"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     28.056
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "ck": {
+     "bits": 3,
+     "face": "S"
+    },
+    "t_cmdproc": {
+     "bits": 64,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_cmdproc",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_ds_hbm_cmdproc20 + pipelined issue (no area record)",
+   "ledger": [
+    0.6,
+    "estimate",
+    "ot_ds_hbm_cmdproc20 static program store + pipelined issue sequencer (no area record)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     1403.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "cSW": {
+     "bits": 360,
+     "face": "W"
+    },
+    "t_su_SW": {
+     "bits": 64,
+     "face": "W"
+    },
+    "cNW": {
+     "bits": 360,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 64,
+     "face": "W"
+    },
+    "cSE": {
+     "bits": 360,
+     "face": "E"
+    },
+    "t_su_SE": {
+     "bits": 64,
+     "face": "E"
+    },
+    "cNE": {
+     "bits": 360,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 64,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    },
+    "f_barrier": {
+     "bits": 64,
+     "face": "N"
+    },
+    "t_coll": {
+     "bits": 64,
+     "face": "N"
+    },
+    "f_loader": {
+     "bits": 341,
+     "face": "S"
+    },
+    "f_router": {
+     "bits": 64,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_coll",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_tu_endpoint (rtl/hbm_accel/tu)",
+   "ledger": [
+    1.1,
+    "estimate",
+    "TU endpoint 1.1 mm2 at 70 % utilisation (hbm_accel_ha2_ar_20261004/measured_composition.json G-area); routed endpoint context noc_tw_coll_ctx_f12x 0.2916 mm2 (noc/routes/collctx_f12x_r6)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     1403.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_cmdproc": {
+     "bits": 64,
+     "face": "S"
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "N"
+    },
+    "f_su_SW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_su_SW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "llk_S0": {
+     "bits": 971,
+     "face": "W"
+    },
+    "llk_S1": {
+     "bits": 971,
+     "face": "W"
+    },
+    "llk_S2": {
+     "bits": 971,
+     "face": "W"
+    },
+    "pll": {
+     "bits": 3,
+     "face": "W"
+    },
+    "llk_N0": {
+     "bits": 971,
+     "face": "W"
+    },
+    "llk_N1": {
+     "bits": 971,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "f_su_SE": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_SE": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "llk_S3": {
+     "bits": 971,
+     "face": "E"
+    },
+    "llk_S4": {
+     "bits": 971,
+     "face": "E"
+    },
+    "llk_N2": {
+     "bits": 971,
+     "face": "E"
+    },
+    "llk_N3": {
+     "bits": 971,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 1024,
+     "face": "E"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_index_q",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_index_path (rtl/hbm_accel/index)",
+   "ledger": null,
+   "size_um": [
+    [
+     1669.656,
+     3080.136
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "k": {
+     "bits": 1024,
+     "face": "S"
+    },
+    "a0": {
+     "bits": 512,
+     "face": "W"
+    },
+    "a1": {
+     "bits": 512,
+     "face": "W"
+    },
+    "a2": {
+     "bits": 512,
+     "face": "W"
+    },
+    "a3": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "E"
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_loader",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_loader_host (rtl/hbm_accel/loader)",
+   "ledger": [
+    0.3321,
+    "measured-slot",
+    "ot_hbm_accel_loader_host slot 576.288^2 um (tapeout_hbm_loader_20261004; host SS -3,672 ps, not adopted)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     183.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    },
+    "t_cmdproc": {
+     "bits": 341,
+     "face": "N"
+    },
+    "h": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_router",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_gpu_router_topk_f topk_f3 (routed) + expert workgroup (not built)",
+   "ledger": [
+    0.1861,
+    "measured-routed",
+    "ot_gpu_router_topk_f topk_f3 86,102 um2 (ctl_takeover_20261005) + expert workgroup steering/descriptor logic est 0.1 mm2 (lever L1, not built)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     103.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "eSW": {
+     "bits": 128,
+     "face": "W"
+    },
+    "eNW": {
+     "bits": 128,
+     "face": "W"
+    },
+    "f_su_SW": {
+     "bits": 256,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 256,
+     "face": "W"
+    },
+    "eSE": {
+     "bits": 128,
+     "face": "E"
+    },
+    "eNE": {
+     "bits": 128,
+     "face": "E"
+    },
+    "f_su_SE": {
+     "bits": 256,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 256,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "N"
+    },
+    "t_cmdproc": {
+     "bits": 64,
+     "face": "N"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_sm",
+   "masters": 1,
+   "instances": 32,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_sm_v (rtl/hbm_accel/sm)",
+   "ledger": [
+    4.56587548272,
+    "measured-placed",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp/floorplan.json die (2202.768 x 2072.79 um, 202 macros; element route OPEN, hbm_accel_fmax_inventory_20261004/sm/closure.json)"
+   ],
+   "size_um": [
+    [
+     2202.744,
+     2073.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "d": {
+     "bits": 1100,
+     "face": "S"
+    },
+    "q": {
+     "bits": 48,
+     "face": "S"
+    },
+    "x": {
+     "bits": 2063,
+     "face": "W"
+    },
+    "r": {
+     "bits": 270,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    },
+    "c": {
+     "bits": 45,
+     "face": "N"
+    }
+   },
+   "kind": "sm"
+  },
+  {
+   "family": "hfd_svc_*",
+   "masters": 4,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "stream service: 32 x ot_hbm_accel_stream_pc_wb + ot_hbm_accel_cdc_fifo + expert fetch",
+   "ledger": null,
+   "size_um": [
+    [
+     8500.032,
+     259.176
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "kv": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "lsm4": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "lsm0": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "qsm0": {
+     "bits": 48,
+     "face": "N"
+    },
+    "qsm4": {
+     "bits": 48,
+     "face": "N"
+    },
+    "lsm5": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "ik": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "lsm1": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "qsm1": {
+     "bits": 48,
+     "face": "N"
+    },
+    "qsm5": {
+     "bits": 48,
+     "face": "N"
+    },
+    "lsm6": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "e": {
+     "bits": 128,
+     "face": "N"
+    },
+    "lsm2": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "qsm2": {
+     "bits": 48,
+     "face": "N"
+    },
+    "qsm6": {
+     "bits": 48,
+     "face": "N"
+    },
+    "lsm7": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "lsm3": {
+     "bits": 1100,
+     "face": "N"
+    },
+    "qsm3": {
+     "bits": 48,
+     "face": "N"
+    },
+    "qsm7": {
+     "bits": 48,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    },
+    "phy": {
+     "bits": 22238,
+     "face": "xy"
+    }
+   },
+   "kind": "svc"
+  },
+  {
+   "family": "hfd_vm",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "VM / activation-multicast root (no RTL top)",
+   "ledger": [
+    1.5,
+    "estimate",
+    "VM / activation-multicast root: x staging 2 x 2,048 b x 128 deep + result publication buffers (S81 VM slab 0.892 mm2 x 1.7)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     1403.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_su_SW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "iSW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_SW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "xSW": {
+     "bits": 2063,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "iNW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "xNW": {
+     "bits": 2063,
+     "face": "W"
+    },
+    "f_su_SE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "iSE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_SE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "xSE": {
+     "bits": 2063,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "iNE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "xNE": {
+     "bits": 2063,
+     "face": "E"
+    },
+    "t_quant": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "S"
+    },
+    "t_coll": {
+     "bits": 512,
+     "face": "S"
+    },
+    "t_router": {
+     "bits": 512,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  }
+ ],
+ "source_interfaces": [
+  {
+   "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+   "module_interface_source": "module ot_hbm_accel_sm_v #(\n    parameter integer ENABLE = 0,\n    parameter integer SUB  = 4,\n    parameter integer LBS  = 2,\n    parameter integer LSB  = 16,\n    parameter integer NC   = 8,\n    parameter integer IL   = 8,\n    parameter integer RMAX = 4096,\n    parameter integer LEV  = 4,\n    parameter integer XD   = 128,\n    parameter integer MAX_OUT = 512,\n    parameter integer TCK  = 1,         // ENABLE = 1: BF16 column with the bubble gate off the multiplier's first\n                                        // stage (ot_hbm_accel_tc16, bit-identical, 0 cycles);"
+  },
+  {
+   "path": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+   "sha256": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+   "module_interface_source": "module ot_hbm_accel_tu_endpoint #(\n    parameter integer ENABLE = 0,\n    parameter integer NC     = 8,\n    parameter integer NOG    = 8,\n    parameter integer PFMAX  = 64,\n    parameter integer LANES  = 16,\n    parameter integer BF16   = 1,\n    parameter integer NPT    = 8,\n    parameter integer INJ    = 2,\n    parameter integer DEL    = 4,\n    parameter integer HUBW   = 35,\n    parameter integer WSTG   = 14,\n    parameter integer BITS_X100 = 72000,\n    parameter integer PWB    = 545,\n    parameter integer RXAW   = 8,\n    parameter integer QAW    = 6,\n    parameter integer TXAW   = 6,\n    parameter integer SWCRED = 256,\n    parameter integer LAT    = 7,\n    parameter integer FW     = 32 * LANES,\n    parameter integer PWT    = FW + 33\n) (\n    input  wire                 clk,\n    input  wire                 rst_n,\n    input  wire                 pclk,            // this die's PHY (serializer) clock\n    input  wire                 prst_n,\n    input  wire [7:0]           rank,\n    input  wire [15:0]          pf,              // flits per contributor this collective (runtime)\n    input  wire                 go,\n    output wire [INJ*16-1:0]    inj_idx,\n    output wire [INJ-1:0]       inj_rd,\n    input  wire [INJ*FW-1:0]    inj_data,\n    // switch side, PHY clock: one flit a pclk at most per port, after the serializer\n    output wire [NPT-1:0]       ph_tx_v,\n    output wire [NPT*PWT-1:0]   ph_tx_flit,\n    input  wire [NPT-1:0]       sw_cr_ret,       // switch ingress credit return (core clock)\n    input  wire [NPT-1:0]       ph_rx_v,         // from the switch egress (PHY clock)\n    input  wire [NPT*PWT-1:0]   ph_rx_flit,\n    output wire [NPT-1:0]       rx_credit,       // receive-buffer pop (core clock) -> switch egress credit\n    output wire [DEL-1:0]       del_valid,\n    output wire [DEL*PWT-1:0]   del_flit,\n    output wire                 fault,\n    output wire [31:0]          stat_credit_stall\n);"
+  },
+  {
+   "path": "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv",
+   "sha256": "f57291bf99101e430274d8a4bb9885880fa2b76e1745fe1f1db24d939be4f8ed",
+   "module_interface_source": "module ot_hbm_accel_pcwb_service_stack #(\n parameter integer ENABLE=0,CMD_MATCH_CUT=0,STACK=0,CRED=64,WQ=8\n)(\n input wire service_clk,core_clk,por_n,\n input wire owner_v,output wire owner_r,\n input wire [63:0] producer,input wire [31:0] transport,irs_serial,\n input wire [6:0] rank,input wire [1:0] stack,\n output wire owner_held,output wire [63:0] held_producer,\n output wire [31:0] held_transport,held_irs_serial,\n output wire [6:0] held_rank,output wire [1:0] held_stack,\n input wire [6:0] die,input wire [19:0] pos,\n input wire row_v,output wire row_r,input wire [1:0] row_kind,\n input wire [5:0] row_slot,input wire row_r2,input wire [4351:0] row_data,\n input wire sh_v,output wire sh_r,input wire [2:0] sh_slot,input wire [4351:0] sh_data,\n input wire [31:0] desc_v,output wire [31:0] desc_r,\n input wire [607:0] desc_row,input wire [351:0] desc_n,\n input wire [31:0] go,next_posted,notice,\n input wire [15:0] ca_ready,output wire [15:0] ca_valid,ca_pc_lsb,\n output wire [47:0] ca_op,output wire [79:0] ca_bank,output wire [303:0] ca_row,\n output wire [31:0] phy_col_v,input wire [31:0] phy_col_r,\n output wire [31:0] phy_we,output wire [159:0] phy_bank,phy_col,\n output wire [607:0] phy_row,output wire [8191:0] phy_data,\n output wire [6367:0] phy_receipt,\n input wire [31:0] visible_v,output wire [31:0] visible_r,input wire [6367:0] visible_receipt,\n input wire [31:0] rd_return_v,output wire [31:0] rd_return_r,input wire [8191:0] rd_return_data,\n output wire [31:0] read_v,input wire [31:0] read_r,output wire [8191:0] read_data,\n output wire [31:0] pc_busy,output wire [15:0] issued,acked,\n output wire fence_ok,output wire fault\n);"
+  },
+  {
+   "path": "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv",
+   "sha256": "db20bcb84304b9e2141d972bfa58a98ae81c6adc73b7f241dea5b0b6fd8ada04",
+   "module_interface_source": "module ot_attn_hgrp_m6h1 (\n    input  wire          clk,\n    input  wire          rst_n,\n    input  wire [7:0]    gid,\n    input  wire          ld_v,\n    input  wire          ld_mode,\n    input  wire [2:0]    ld_bank,\n    input  wire [7:0]    ld_grp,\n    input  wire [1023:0] ld_w,\n    input  wire          ld_w2v,\n    input  wire          iv,\n    input  wire [2:0]    ibank,\n    input  wire [575:0]  ib,\n    output wire          ov,\n    output wire [31:0]   oy,\n    output wire [0:0]    oflt\n);"
+  },
+  {
+   "path": "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+   "sha256": "2659ca75beecd5311e796873722d54ed8710aa84f014677d6dc2be066b34c58b",
+   "module_interface_source": "module ot_hbm_w2_protected_parent_context #(\n parameter integer ENABLE=0, PROTECTED_TRANSACTION_PIPELINE=0, PROTECTED_PARENT_BOUNDARY=0\n)(\n input wire clk_sm,rst_sm_n,clk_mem,rst_mem_n,\n input wire cp_reset_req,cp_idle,cp_cpl_v,cp_cpl_rdy,\n output wire cp_reset_n,cp_reset_ack,cp_reset_wait,all_routes_drained,\n output wire qualified_cpl_v,qualified_cpl_rdy,\n input wire installed,weights_installed,reserve_v,\n output wire reserve_r,source_permit,retained,done,\n input wire pair_op,input wire [1:0] rows_a,rows_b,\n input wire [31:0] op_a,op_b,base_a,limit_a,base_b,limit_b,\n input wire [15:0] provider_tag,input wire [72:0] frame,\n // D-side cuts at actual PQ result/valid output registers, not oracle inputs.\n input wire producer_cv,producer_fault,\n input wire [7:0] producer_crow,input wire [255:0] producer_cy,\n input wire producer_busy,producer_arrive,producer_released,\n input wire caller_start,caller_sm_ready,caller_pair,caller_bound,\n input wire [8:0] caller_rows,input wire [31:0] caller_op_a,caller_op_b,\n output wire caller_ctx_ready,caller_busy,caller_arrive,caller_released,\n input wire native_done,\n // Actual enclosing W2 lease/release and other active borrower/native cuts.\n input wire lease_v,release_v,input wire [72:0] release_frame,\n output wire lease_granted,release_r,\n input wire [1:0] other_lease_v,other_quiet,other_release_v,\n input wire [63:0] other_lease_job,other_release_job,\n input wire [7:0] other_lease_gen,other_release_gen,\n input wire [33:0] other_lease_token,other_release_token,\n input wire [39:0] other_lease_pos,other_release_pos,\n output wire [1:0] other_grants,other_releases,\n input wire native_clients_drained,cdc_drained,other_routes_drained,w2_quiet,\n input wire [3:0] observe_req,observe_rsp,observe_req_we,observe_rsp_we,return_offer,\n input wire [63:0] observe_req_tag,observe_rsp_tag,\n input wire [31:0] native_job,input wire [3:0] native_gen,\n input wire [16:0] native_token,input wire [19:0] native_pos,\n output wire [3:0] response_authorized,\n input wire [2:0] other_req_v,other_req_we,other_rsp_rdy,\n input wire [95:0] other_req_addr,other_req_wstrb,\n input wire [767:0] other_req_wdata,input wire [47:0] other_req_tag,\n output wire [2:0] other_req_rdy,other_rsp_v,other_rsp_we,\n output wire [47:0] other_rsp_tag,output wire [767:0] other_rsp_data,\n input wire native_req_v,output wire native_req_r,\n input wire [31:0] native_req_addr,input wire [9:0] native_req_tag,\n input wire map_valid,input wire [72:0] map_frame,\n input wire [31:0] map_native_addr,input wire [2:0] map_sm,\n input wire [15:0] map_compact_offset,input wire [3:0] map_lanes,\n input wire [2:0] map_count,input wire [191:0] map_byte_addresses,\n input wire [95:0] map_tags,map_cfg,input wire native_delivery_permit,\n output wire native_rsp_pending,native_rsp_v,\n output wire [9:0] native_rsp_tag,output wire [1087:0] native_rsp_data,\n output wire m_req_v,input wire m_req_rdy,output wire m_req_we,\n output wire [31:0] m_req_addr,m_req_wstrb,output wire [255:0] m_req_wdata,\n output wire [15:0] m_req_tag,\n input wire m_rsp_v,output wire m_rsp_rdy,input wire m_rsp_we,\n input wire [15:0] m_rsp_tag,input wire [255:0] m_rsp_data,\n output wire fault\n);"
+  }
+ ],
+ "primitive_views": [
+  {
+   "macro": "ot_hbm_accel_bd_col",
+   "count_per_SM_or_attentiontile": 32,
+   "LEF": {
+    "path": "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col/ot_hbm_accel_bd_col.lef",
+    "sha256": "07b92c2d0311fdeef94bd8a6b93eedfe43aacea3e65820f76ec9eb3c5d468189"
+   },
+   "size_um": [
+    128.317,
+    128.317
+   ],
+   "LIB": {
+    "SS": {
+     "path": "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col/ot_hbm_accel_bd_col_ss.lib",
+     "sha256": "e7d7690d2a6c64d127b3d22b8247e2c1afc53e583ff543c3a9760de69fc7baea",
+     "clock_pin_fF": 13.8961,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    },
+    "FF": {
+     "path": "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col/ot_hbm_accel_bd_col_ff.lib",
+     "sha256": "1997cbdb6750de71645caa075065321b74df1dd5fae32d8b0c2db0ff9bf14e97",
+     "clock_pin_fF": 14.3178,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_hbm_accel_tc16",
+   "count_per_SM_or_attentiontile": 32,
+   "LEF": {
+    "path": "physical/hbm_accel_sm_views/ot_hbm_accel_tc16/ot_hbm_accel_tc16.lef",
+    "sha256": "2ceb9584eb679c364c6d032cdb0bc7417e434f92edd9acb45212d690114f914d"
+   },
+   "size_um": [
+    196.588,
+    196.588
+   ],
+   "LIB": {
+    "SS": {
+     "path": "physical/hbm_accel_sm_views/ot_hbm_accel_tc16/ot_hbm_accel_tc16_ss.lib",
+     "sha256": "d1b838dff4bf0b3678575abb3424e4a0fbda8c035ae937c25d688ceeff2ee46a",
+     "clock_pin_fF": 20.3948,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    },
+    "FF": {
+     "path": "physical/hbm_accel_sm_views/ot_hbm_accel_tc16/ot_hbm_accel_tc16_ff.lib",
+     "sha256": "45c9fb9d792dcdd930a4393c50497b8c54c86e269db7910c46cfa8156e745c2f",
+     "clock_pin_fF": 20.8165,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_sram_1r1w_512x256_m1_r2c2",
+   "count_per_SM_or_attentiontile": 10,
+   "LEF": {
+    "path": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.lef",
+    "sha256": "6762ba9ac612990803670c949413ddeabd589e9fab87fa9c2352d6d387911a3a"
+   },
+   "size_um": [
+    96.552,
+    69.66
+   ],
+   "LIB": {
+    "SS": {
+     "path": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_ss.lib",
+     "sha256": "885454ab0aa5ba6aced3f8a3331cd51870d8d2cd06060b1bae5186ad9147a667",
+     "clock_pin_fF": 8.6838,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    },
+    "FF": {
+     "path": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_ff.lib",
+     "sha256": "2d8eb97369a36fb043077b0bd51bb78aefa3f04d52c76db0e9931f4048e94d6b",
+     "clock_pin_fF": 10.3732,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "count_per_SM_or_attentiontile": 128,
+   "LEF": {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+    "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+   },
+   "size_um": [
+    94.824,
+    41.04
+   ],
+   "LIB": {
+    "SS": {
+     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+     "sha256": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+     "clock_pin_fF": 8.6838,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    },
+    "FF": {
+     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+     "sha256": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+     "clock_pin_fF": 10.3732,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_attn_hgrp_m6h1",
+   "count_per_SM_or_attentiontile": 16,
+   "LEF": {
+    "path": "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef",
+    "sha256": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb"
+   },
+   "size_um": [
+    294.782,
+    294.782
+   ],
+   "LIB": {
+    "SS": {
+     "path": "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib",
+     "sha256": "710a7b69676e9e088d6f87661def6a4584732dfd199da0774caa1c128d52c2b5",
+     "clock_pin_fF": 16.3802,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    },
+    "FF": {
+     "path": "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib",
+     "sha256": "484934cafcc02bde4d1041c98ddd828784f45c5ee463048d3a523fb589e90df6",
+     "clock_pin_fF": 16.8015,
+     "units": "fF/ps in actualLIB; useactualchildinternalclock arcs",
+     "parent_wire_CTS_included": false
+    }
+   }
+  }
+ ],
+ "CP_allocation": {
+  "schema": "hbm.cp.fast.finite-parent-allocation.v1",
+  "source_commit": "e0e05a19ea611b2a889ec7a61f60199215e9028e",
+  "source_main": "ec8738dabbc8b714723457e7cf650300b2e256a3",
+  "default_off": true,
+  "replicas": 1,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "cycles_added": 0,
+  "source_FF_added": 0,
+  "clock": "clk_sm phase0 period833.333ps SS60/FF25 unchanged",
+  "external_pins": 236,
+  "boundary_bits": 12,
+  "boundary_delta_bits": 11,
+  "parent_outer_service_um": [
+   0,
+   0,
+   1814.376,
+   1403.976
+  ],
+  "old_parent_gross_um": [
+   583.2,
+   25.92,
+   660.96,
+   103.68
+  ],
+  "parent_gross_um": [
+   583.2,
+   25.92,
+   665.28,
+   108.0
+  ],
+  "parent_core_um": [
+   600.48,
+   43.2,
+   648.0,
+   90.72
+  ],
+  "local_die_um": [
+   0,
+   0,
+   82.08,
+   82.08
+  ],
+  "local_core_um": [
+   17.28,
+   17.28,
+   64.8,
+   64.8
+  ],
+  "association_um": [
+   17.28,
+   56.16,
+   22.464,
+   60.48
+  ],
+  "body_union_um": [
+   [
+    17.28,
+    17.28,
+    60.48,
+    56.16
+   ],
+   [
+    22.464,
+    56.16,
+    60.48,
+    60.48
+   ],
+   [
+    60.48,
+    17.28,
+    64.8,
+    64.8
+   ],
+   [
+    17.28,
+    60.48,
+    60.48,
+    64.8
+   ]
+  ],
+  "body_outline_um2": 2235.75552,
+  "placement_utilisation_ceiling": 0.5,
+  "cell_budget_um2": 1117.87776,
+  "prior_actual_body_um2": 868.85136,
+  "positive_source_growth_um2": 177.61232,
+  "charged_fixed_physical_um2": 11.69316,
+  "additional_future_CTS_repair_IO_allowance_um2": 40,
+  "charged_body_total_um2": 1098.15684,
+  "residual_cell_budget_um2": 19.72092,
+  "prior_measured_clock_dummy_cells": 74,
+  "prior_measured_clock_dummy_um2": 16.00884,
+  "clock_cost_already_inside_prior_body": true,
+  "association_prior_cells": 5,
+  "association_prior_area_um2": 0.83106,
+  "association_cell_budget_um2": 11.19744,
+  "association_growth_charged_to_body": false,
+  "association_successor_requirement": "Actual14 final nodes+9 bypass gates must remain <=11.19744um2 after map; excess is terminal allocation failure",
+  "PG": {
+   "native_hook": "physical/hbm_cp_parent_context_20261005/pdn.tcl",
+   "rails": "actual source-owned M1/M2 followpin; M3/M4/M7 thenM8/M9 actualvia chain",
+   "upper_pitch_um": 2.7669,
+   "halo_um": 17.28,
+   "new_core_pitch_periods": 11,
+   "existing_PG_not_released": true,
+   "new_PDN_validation_required": true,
+   "upper_width_um": 0.48
+  },
+  "M7": {
+   "boundary_y_um": 56.16,
+   "boundary_x_um": [
+    17.28,
+    22.464
+   ],
+   "checkpoint_sha256": "24ebc0757ffb28470eec488ce04b7b5148ee67cc66a413d956a727e9cd082766",
+   "native_candidates_after_PG_and_all_existing_guides": 25,
+   "reserved_factor_track_X_DBU": [
+    19664,
+    19728,
+    19792,
+    19856,
+    19920,
+    19984,
+    20048,
+    20112,
+    20176,
+    20240,
+    20304,
+    20368
+   ],
+   "DBU_per_um": 1000,
+   "net": "su_owned_frontier_terms[0:11]",
+   "port": "qualified_owned_terms[11:0]",
+   "owner_fanout_max": 12,
+   "heldbit_XOR_fanout": 1,
+   "residual_track_candidates": 13,
+   "reservation_scope": "native grid + actual PG + all crossing GRT guides; new detailed route must validate, no measured load credit",
+   "PG_escape_DBU": 128,
+   "old_signal_removal_credit": 0
+  },
+  "wire_cost": {
+   "extension_each_axis_um": 4.32,
+   "incremental_Manhattan_bound_um": 8.64,
+   "actual_RC_and_receiver_load": "consume new mapped/CTS/SPEF; not substituted with estimates"
+  },
+  "qualified": {
+   "retained43p2_native_DPL": true,
+   "zero_containment": true,
+   "zero_ungrouped_movable": true,
+   "FAST_new_source_route": false,
+   "FAST_new_PDN": false,
+   "SS_FF": false,
+   "IR": false
+  },
+  "hooks_sha256": {
+   "physical/hbm_cp_parent_context_20261005/fast_frontier_regions.tcl": "4b4ac49af7ab876b0c4fa234b5e50a43122891772186d2fa68922d0e3d0a4842"
+  },
+  "loaded_IR_policy": {
+   "source": "tools/hbm_accel_die_fp.py:1312",
+   "source_sha256": "351db816c5daa7c3efef57f89384df520830899e433ad6ff0867f0806c371da9",
+   "parent_rail_to_rail_budget_mV": 35.0,
+   "child_local_plus_parent_supply_drop_must_not_exceed_mV": 35.0,
+   "child_local_budget_rule": "35mV minus actual parent VDDdrop+VSSrise at child feeds, per corner and loadedwindow; cannot treat ideal child feed as entire budget",
+   "parent_feed_drop_not_measured": true,
+   "loaded_child_drops_required": true,
+   "no_IR_qualification_until_parent_supply_included": true
+  }
+ },
+ "W2_parent_contract": {
+  "source_top": "ot_hbm_w2_protected_parent_context",
+  "parameters": {
+   "ENABLE": 1,
+   "PROTECTED_TRANSACTION_PIPELINE": 1,
+   "PROTECTED_PARENT_BOUNDARY": 1
+  },
+  "clock": {
+   "clk_sm_period_ps": 833.3333333333334,
+   "clk_mem_period_ps": 1024,
+   "clk_mem_source": "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc:clk_hbm",
+   "fixture_1000ps_not_selected": true,
+   "SS_setup_uncertainty_ps": 60,
+   "FF_hold_uncertainty_ps": 25,
+   "source_phase_ps": 0,
+   "actual_propagated_insertion_ps": null,
+   "actual_skew_ps": null,
+   "external_cut_budget": {
+    "SM_max_ps": 166.666666667,
+    "mem_max_ps": 204.8,
+    "min_ps": 0,
+    "external_output_load_ff": 3.898,
+    "measurement": false,
+    "false_IO_paths": false,
+    "async_first_stage_exceptions_pending_real_pin_binding": true
+   }
+  },
+  "latency": {
+   "added_architectural_stages_against_current_joined_source": 0,
+   "inherited_added_domain_edges_per_transaction": {
+    "clk_sm": 6,
+    "clk_mem": 2
+   },
+   "inherited_added_nominal_ns": 7.048,
+   "wire_stage_need_pending_actual_context": true
+  },
+  "communication": {
+   "MACs_per_cycle_delta": 0,
+   "memory_ports_delta": 0,
+   "boundary_bits_per_cycle_delta": 0,
+   "actual_W2_boundary_bits": 1213,
+   "provider614_result302_metadata297": true,
+   "replicas_per_die": 1,
+   "codec_words": 332,
+   "mux_bits": 18791,
+   "physical_loads_measured": false,
+   "finite_tracks": [
+    {
+     "group": "provider",
+     "layer": "M6",
+     "raw_tracks": 1350,
+     "inherited_via_escape_reserved": 68,
+     "inherited_clock_reserved": 64,
+     "new_local_PG_and_landing_track_reserve": 0,
+     "available_signal_tracks": 1218,
+     "demand": 614,
+     "residual": 604,
+     "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+    },
+    {
+     "group": "result",
+     "layer": "M7",
+     "raw_tracks": 1351,
+     "inherited_via_escape_reserved": 68,
+     "inherited_clock_reserved": 64,
+     "new_local_PG_and_landing_track_reserve": 141,
+     "available_signal_tracks": 1078,
+     "demand": 302,
+     "residual": 776,
+     "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+    },
+    {
+     "group": "metadata",
+     "layer": "M7",
+     "raw_tracks": 1351,
+     "inherited_via_escape_reserved": 68,
+     "inherited_clock_reserved": 64,
+     "new_local_PG_and_landing_track_reserve": 141,
+     "available_signal_tracks": 1078,
+     "demand": 297,
+     "residual": 781,
+     "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+    }
+   ]
+  },
+  "PG": {
+   "M1_M2_followpin_width_um": 0.018,
+   "pitch_um": 0.54,
+   "M3_width_um": 0.09,
+   "M4_width_um": 0.12,
+   "M7_width_um": 0.16,
+   "local_pitch_um": 4.32,
+   "M8_M9_width_um": 0.474,
+   "upper_pitch_um": 5.4,
+   "upper_fraction": 0.17555555555555555,
+   "local_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M7",
+    "M8",
+    "M9"
+   ],
+   "native_vias": true,
+   "M6_PG_stripes": 0,
+   "existing_W2_M6_M7_signal_reservations_preserved": true
+  },
+  "qualified": false
+ },
+ "attention_existing_shape_and_scope": {
+  "schema": "opentallas.hbm-attn-m6h1-replication.v1",
+  "selected": false,
+  "leaf_evidence_origin": "b32d59700 results/rtl/hbm_accel_fmax_inventory_20261004/attn/routes/claude_r1_m6h1_u30",
+  "existing_composition": "DEDICATED.attention; tools/hbm_accel_die_fp.py BLOCKS.attn_tile",
+  "source_configuration": "ot_attn_hgrp_m6h1 H16/HG1/TD32/NBANK5/PWORDS2/FPL6/FML8/F121",
+  "replicas": {
+   "head_groups_per_tile": 16,
+   "engine_tiles": 64,
+   "engine_groups": 1024,
+   "products_per_cycle_per_group": 32,
+   "products_per_cycle_per_tile": 512
+  },
+  "boundaries": {
+   "input_bits": 1618,
+   "input_replica_fanout": 16,
+   "leaf_input_branches": 25888,
+   "output_bits": 529,
+   "load_word_bytes_per_cycle": 128,
+   "packed_ib_bytes_per_cycle": 72,
+   "wrapper_mux_bits": 0,
+   "wrapper_ff_bits": 0,
+   "wrapper_added_cycles": 0,
+   "physical_buffer_area_um2": null,
+   "routing_capacity_tracks": null
+  },
+  "latency": {
+   "core_cycles": 62,
+   "core_cycles_m4": 42,
+   "delta_cycles_vs_m4": 20,
+   "wrapper_delta_cycles": 0,
+   "serial_job_composition": "existing ot_hdc_v41x_attn_s FPL6/FML8 depth model",
+   "full_job_cycles": null,
+   "full_engine_closed": false
+  },
+  "floorplan": {
+   "existing_slot_mm2": 0.5,
+   "leaf_core_area_um2": 84448.9,
+   "leaf_cell_area_um2": 28000.2,
+   "tile_core_area_lower_bound_mm2": 1.3511824,
+   "measured_macro_size_um": [
+    294.782,
+    294.782
+   ],
+   "halo_um": [
+    5,
+    5
+   ],
+   "tile_macro_halo_area_lower_bound_mm2": 1.4862730803839996,
+   "tile_cell_area_mm2": 0.4480032,
+   "required_over_slot_lower_bound": 2.9725461607679993,
+   "engine_core_area_lower_bound_mm2": 86.4756736,
+   "existing_engine_slot_mm2": 32.0,
+   "halo_and_wiring_area_mm2": null,
+   "slot_fit": false
+  },
+  "leaf_signoff": {
+   "SS_setup_ps": 18.91,
+   "FF_hold_ps": 1.55,
+   "closes_signoff": true,
+   "false_path_io": true,
+   "period_ps": 833,
+   "setup_uncertainty_ps": 60,
+   "hold_uncertainty_ps": 25
+  },
+  "contextual_pnr_admitted": false,
+  "blocker": "Measured macro and existing halo exceed composed tile slot",
+  "adopted": false,
+  "gain_claim": null,
+  "source_sha256": {
+   "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/physical.json": "da88d59d668fb46a5c2475306d8576cc7e91fd522ec02c49f09d4d757c1fa4a9",
+   "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/corner_sta.json": "159516ce38f6d402d87fd9ebbb9ba6e4fed89a375e1351affed550776924a896",
+   "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/die_inventory.py": "1ca96bbd8f9d26947ebcd650761a50c731b33ea31db849639078340735f6397f",
+   "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb"
+  },
+  "existing_die_allocation": {
+   "revision": "service-attn-r1",
+   "record": "results/rtl/hbm_child_contract_20261005/model.json",
+   "DS_head_macros": 1024,
+   "Qwen_head_macros": 0,
+   "tile_usable_outline_um": [
+    1349.112,
+    1349.976
+   ],
+   "die_mm2": 607.03,
+   "replica_footprint_fits": true,
+   "route_qualified": false,
+   "input_hold_qualified": false,
+   "contextual_PNR_admitted": false,
+   "note": "Historical0.5mm2 slot_fit=false preserved; actual reservations now exist in same enlarged DS hub."
+  }
+ },
+ "dependency_notes": [
+  "Old0.5mm2/707squareattention estimates invalid: fullH16source/clock/sizedview comesClaude; real16head294.782square withhalos needsactual>=1.35mmcore, oldR0gridhooknotblindMYinheritance.",
+  "SMselectedhardleavesfixedLB2/IL8/TAGW16 andTC16 matching source; additiveparamwrappermustbind actualphysicalport widths, no pretending differentparameter hardmacro. H17needsactualbranch elaboration.",
+  "Streamservice sourceexists ot_hbm_accel_pcwb_service_stack, but selectedstackinterface/mutableprotection/CDC/newexpertfetchfootprint mustbe bound; old8500x259.2 estimate not hardenedtop.",
+  "TUcore/pclk/prst/rank/pf/credit state areactualRTL, no four1024responsebanks or VM512phantomport. HCoutput/barrierarrive mustactualconnected.",
+  "No sharedCP/W2top or flowwriter; collectHarvey/Jason source-exactviews, parentpropagatedload/insertion stillnotmeasured."
+ ]
+}

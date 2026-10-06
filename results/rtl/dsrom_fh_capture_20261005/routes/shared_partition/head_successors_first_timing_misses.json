@@ -1,0 +1,59 @@
+{
+  "observed_utc": "2026-10-06T03:23:00.399252+00:00",
+  "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+  "exact_retained": {
+    "full_G4W16_cycles": 62878,
+    "added_cycles": 25,
+    "same_source_replayed": false
+  },
+  "clock_ps": 833.333,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "real_protected_SRAM_count": 64,
+  "qualification": false,
+  "first_timing_misses": [
+    {
+      "run": "C18",
+      "physical_source": "3c45a456a9f2cf52d04940a5d35347f369127286",
+      "shared_partition": "comb",
+      "supervisor": 2546022,
+      "preCTS_first_timing_driven_slack_ps": -2384.7242,
+      "initial_repair_violations": {
+        "slew": 8975,
+        "fanout": 2361,
+        "capacitance": 120,
+        "long_wires": 4026
+      },
+      "terminal": false,
+      "SS_FF_extracted_result": false,
+      "scope": "GPL timing-driven placement estimate with real macro context; no propagated CTS or extracted sign-off claim",
+      "evidence": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/C18_first_timing_miss.log"
+    },
+    {
+      "run": "C19",
+      "physical_source": "3c45a456a9f2cf52d04940a5d35347f369127286",
+      "shared_partition": "receivers",
+      "supervisor": 2562095,
+      "preCTS_first_timing_driven_slack_ps": -2401.0150000000003,
+      "initial_repair_violations": {
+        "slew": 9151,
+        "fanout": 2361,
+        "capacitance": 97,
+        "long_wires": 4130
+      },
+      "terminal": false,
+      "SS_FF_extracted_result": false,
+      "scope": "GPL timing-driven placement estimate with real macro context; no propagated CTS or extracted sign-off claim",
+      "evidence": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/C19_first_timing_miss.log"
+    }
+  ],
+  "prior_terminal_miss": {
+    "run": "C16",
+    "preCTS_SS_setup_ps": -2568.27,
+    "preCTS_hold_ps": -6.23,
+    "resized_SS_setup_ps": -2234.8,
+    "first_terminal_error": "DPL0033",
+    "evidence": "results/rtl/dsrom_fh_capture_20261005/routes/C16_rect_strips/terminal.json",
+    "original_failure_preserved": true
+  }
+}

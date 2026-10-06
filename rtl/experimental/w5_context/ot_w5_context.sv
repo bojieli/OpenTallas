@@ -2,7 +2,7 @@
 // Minimum W5 source-owned producer/consumer context. No native parent change.
 // The only integration opt-in is ENABLE=0. Full NB2/PP1 element and real first
 // return node; port arrival timing never substitutes for these launch flops.
-module ot_w5_context #(parameter integer ENABLE=0)(
+module ot_w5_context #(parameter integer ENABLE=0,parameter integer HARD_CFG=0)(
  input wire clk,por_n,
  input wire cfg_go,input wire [5:0] cfg_ph,input wire [2:0] cfg_np,
  input wire [47:0] cm_q,input wire go,
@@ -27,8 +27,17 @@ module ot_w5_context #(parameter integer ENABLE=0)(
  wire b_go=go_q[2];
  wire context_fault=(ENABLE!=0)&&(settings_bad|go_bad|ld_fault);
  wire [4:0] c_a;wire [47:0] c_d;
+ wire [11:0] cfg_read_a;wire cfg_read_ce;wire [47:0] cfg_payload;
+ generate if(HARD_CFG!=0)begin:g_hard_cfg
+   wire [71:0] cfg_word;
+   (* keep, dont_touch *) ot_rom_4096x72_m8 u_cfg(.clk(clk),.ce_in(cfg_read_ce),
+     .addr_in(cfg_read_a),.rd_out(cfg_word));
+   assign cfg_payload=cfg_word[47:0];
+ end else begin:g_io_cfg
+   assign cfg_payload=cm_q;
+ end endgenerate
  ot_w5_loader_checked #(.ENABLE(ENABLE)) u_ld(.clk(clk),.por_n(por_n),
- .cfg_go(cfg_go),.cfg_ph(cfg_ph),.cfg_np(cfg_np),.go(b_go),.cm_a(cm_a),.cm_q(cm_q),
+ .cfg_go(cfg_go),.cfg_ph(cfg_ph),.cfg_np(cfg_np),.go(b_go),.cm_a(cm_a),.cm_read_a(cfg_read_a),.cm_read_ce(cfg_read_ce),.cm_q(cfg_payload),
  .c_v(c_v),.c_a(c_a),.c_d(c_d),.go_e(go_e),.ld_busy(ld_busy),.fault(ld_fault));
  // Real root launch register for settings and ring tail samples. Real path
  // from these Q pins through scheduler/controller to the gated domain.

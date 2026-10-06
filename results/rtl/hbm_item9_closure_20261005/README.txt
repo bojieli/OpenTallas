@@ -115,3 +115,33 @@ Flatcentral32mux commonwest upper-layercut:69824tracks required vs50594upper
 beforeOTHERclaims (19230deficit on allocatedM6-M9 basis). Real distributed
 masked reduction before sharedspine plus priced physical transport required;
 262144localvectorbits are not oneperimeter bank/free sharedchannel allowance.
+
+Concrete changed TREE actual32 SS synthesis terminal PASS0checkproblems:
+1279853cells/304836FF/176005.750499um2; versusprevious178333.520399um2
+removes31558cells/2327.7699um2 whileexact32gate789cycles/0extra. No routed
+physical gain/adoption inferred. ExistingfourclockSTA liveactualarrival search
+verified read-only anddetached; no jobrestart. Actualraw response QNloads and
+rootclock connectedpinloads extracted separately; sharedbuffer tree mustbe
+traced torealcaller receiver gates, rawregisterload is not32receiverload.
+
+Actual changed TREE SS/FF pin-load binding fromcompletedmappedJSON, source
+sha pinned:4096responsebits EACH trace6realBUF/INVtree nodes to33actualleaf
+inputpins (32caller receiver gates plusretainedendpointfeedback). SS totalleaf
+pinload29.944183fF/bit, FF34.942481fF/bit. RawQN firstload only0.5065fF SS;
+never substituteitforactualreceiverload. Realclk_sm293768connectedCLKpins
+carry130.927786pF SS/152.932374pF FF beforephysicalwireRC/CTS. Clock-load
+artifact retains source/mapped/library/JSONhashes; allbulkobjects stayE2.
+Existingprofile showscurrentSTA remainsininputDelayTag/findTag arrival search;
+no hangingdriverkill, constraints unchanged, no repeatedpassedgoldengate.
+
+GEO defaultOFF successor (model6afe377fc beforeRTL5177b9ade): actual32
+caller gate PASS32completions/128TX/256RX/789cycles/0added; mux golden
+PASS209grants/2048cycles/0mismatch/0added. Geographic Boolean leaf grouping
+[0..7,16..23,8..15,24..31], explicit keep on OR intermediates and mask
+equalities, no arithmetic/rounding/priority/credit/state change. Prior TREE
+mapped assignment actually fails WEST97789 vsoptimistic50594 beforeother
+claims (47195deficit); all assignment failures retained. This is a source
+structural fix, not density-only tuning; new SS synthesis queued onE2 only
+for16thread headroom, unchanged24GiBguard/NVMe. No full32physical pass,
+source waiver, installed transport, propagatedclock credit or adoption.
+Allpriorroute/STA/HA2livehandles and completed objects preserved.

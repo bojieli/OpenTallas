@@ -174,5 +174,36 @@
     "bind actual CDC first-stage/capture pin identities without IO exceptions",
     "continue same mapped checkpoint through CTS/route with frozen upstream targets",
     "extract actual WC/BC clocks, caps and explicit-corner SPEF for Jason"
-  ]
+  ],
+  "frontend_terminal_r1": {
+    "source": "3f9a0c4684733cdf89cfd66dcf289548761155e5",
+    "native_map_exit": 1,
+    "cause": "ActualSlangunroll4000exhausted W6 SECDEDencode loops, not failedRTLnumeric/protection",
+    "diagnostic_remote": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/frontend_diagnosis_r1/native.log",
+    "source_changes": 0
+  },
+  "source_sized_frontend_unroll": {
+    "native_flag": "SYNTH_SLANG_ARGS=--unroll-limit 549460",
+    "priced_non_sink_codec_words": 332,
+    "each_encode_loop_iterations": 575,
+    "each_decode_loop_iterations": 575,
+    "each_check72_loop_iterations": 504,
+    "outer_iteration_per_word": 1,
+    "formula": "332*(575+575+504+1)=549460",
+    "scope": "synthesisfrontendfiniteiterationbound only; noCPU/RAM/timecap; default4000actualterminal requireslargerfullshape bound",
+    "native_flow_API": "synth_preamble.tcl userargs lappend SYNTH_SLANG_ARGS verifiedactual26Q3-1510"
+  },
+  "native_map_r2": {
+    "mapped_netlist_sha256": "4cc2d817f9343ed5806b0cbc8794539c28206dd6c5d7c9a34cd8a55b1e526159",
+    "mapped_cells": 327725,
+    "mapped_DFF_bits": 27675,
+    "mapped_cell_area_um2": 42770.82366,
+    "mapped_sequential_area_um2": 10005.35004,
+    "native_peak_RAM_MB": 9053.4,
+    "driver_exit": 1,
+    "terminal_cause": "OpenSTA read_sdc invalid command remove_input_delay before 1_synth.odb",
+    "physical_qualification": false,
+    "region_fit_qualified": false,
+    "record": "results/physical/hbm_w2_parent_physical_20261006/mapped_r2/terminal.json"
+  }
 }

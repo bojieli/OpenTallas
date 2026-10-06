@@ -1,0 +1,41 @@
+{
+  "phase": "source input selection",
+  "cause": "fixed 192-span grouping assumption failed; actual descriptors are interleaved by die/SM",
+  "planned_spans": [
+    0,
+    192,
+    384,
+    576
+  ],
+  "actual_descriptors": [
+    [
+      41,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      41,
+      0,
+      576,
+      0,
+      24
+    ],
+    [
+      41,
+      0,
+      1152,
+      0,
+      48
+    ],
+    [
+      41,
+      0,
+      1728,
+      0,
+      72
+    ]
+  ],
+  "numerical_run": false
+}

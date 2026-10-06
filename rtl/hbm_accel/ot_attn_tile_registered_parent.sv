@@ -8,11 +8,20 @@ endmodule
 
 (* keep_hierarchy="true" *)
 module ot_attn_parent_head_bank(input wire clk,input wire por_n,
-    input wire [1617:0] d,output reg [1617:0] q,output reg local_por_n);
+    input wire [1617:0] d,output wire [1617:0] q,output reg local_por_n);
+    // The native FF has QN. Keep the complement in state so the macro
+    // receives the exact packet directly from QN rather than a loaded INV.
+    reg [1617:0] q_n;
+    reg data_por_n;
+    // Release falling-edge data FFs from the opposite clock phase. Macro
+    // and positive-edge output receivers retain their falling-edge release.
+    always @(posedge clk or negedge por_n)
+        if(!por_n) data_por_n<=0;else data_por_n<=1;
     always @(negedge clk or negedge por_n)
         if(!por_n) local_por_n<=0;else local_por_n<=1;
-    always @(negedge clk or negedge local_por_n)
-        if(!local_por_n) q<=0;else q<=d;
+    always @(negedge clk or negedge data_por_n)
+        if(!data_por_n) q_n<={1618{1'b1}};else q_n<=~d;
+    assign q=~q_n;
 endmodule
 
 // Mandatory parent endpoint repair; canonical hardened head remains unchanged.
