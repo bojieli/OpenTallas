@@ -45,7 +45,7 @@ module cpr_env #(parameter integer MARGIN = 0, parameter integer SEED = 1, param
     endfunction
     integer i, k, cyc, nlaunch;
     // SM model: per launch n, a schedule relative to the launch cycle
-    reg [NSM-1:0] l_mask [0:4095]; integer l_t [0:4095]; integer pend_lo = 0;
+    reg [NSM-1:0] l_mask [0:4095]; integer l_t [0:4095]; integer pend_lo = 0; integer si, sk;   // the SM model's own loop variables (the driver owns i / k)
     always @(posedge clk) begin
         sm_done <= 0; sm_fault <= 0; res_v <= 0;
         if (rst_n) begin
@@ -54,16 +54,16 @@ module cpr_env #(parameter integer MARGIN = 0, parameter integer SEED = 1, param
                 lhash <= (lhash ^ {launch_v, launch_pc, 16'(launch_token)}) * 64'h100000001B3 + {44'd0, launch_pos};
                 nl <= nl + 1;
             end
-            for (i = pend_lo; i < nlaunch; i = i + 1) begin
+            for (si = pend_lo; si < nlaunch; si = si + 1) begin
                 // r < f < d (relative cycles), all >= 1
-                if (cyc == l_t[i % 4096] + 1 + (h(i, 101) % 6) && h(i, 102) % 3 != 0) begin
-                    res_v <= 1 << (h(i, 103) % NSM);
-                    for (k = 0; k < NSM; k = k + 1) res_data[k*32 +: 32] <= (h(i, 104) % 4 == 0) ? h(i, 105 + k) : (h(i, 105 + k) % 131072);
+                if (cyc == l_t[si % 4096] + 1 + (h(si, 101) % 6) && h(si, 102) % 3 != 0) begin
+                    res_v <= 1 << (h(si, 103) % NSM);
+                    for (sk = 0; sk < NSM; sk = sk + 1) res_data[sk*32 +: 32] <= (h(si, 104) % 4 == 0) ? h(si, 105 + sk) : (h(si, 105 + sk) % 131072);
                 end
                 // a faulting launch: one launched SM faults and no SM of it signals done
-                if (cyc == l_t[i % 4096] + 8 + (h(i, 106) % 4) && h(i, 107) % 97 == 0)
-                    sm_fault <= l_mask[i % 4096] & (~l_mask[i % 4096] + 1'b1);
-                if (cyc == l_t[i % 4096] + 13 + (h(i, 108) % 40) && h(i, 107) % 97 != 0) sm_done <= l_mask[i % 4096];
+                if (cyc == l_t[si % 4096] + 8 + (h(si, 106) % 4) && h(si, 107) % 97 == 0)
+                    sm_fault <= l_mask[si % 4096] & (~l_mask[si % 4096] + 1'b1);
+                if (cyc == l_t[si % 4096] + 13 + (h(si, 108) % 40) && h(si, 107) % 97 != 0) sm_done <= l_mask[si % 4096];
             end
             while (pend_lo < nlaunch && cyc > l_t[pend_lo % 4096] + 64) pend_lo = pend_lo + 1;
         end
