@@ -431,7 +431,7 @@ def cmd_qelem_lever(a):
         r["config"] = "pq_qelem"          # its own row in tools/dsrom_field_reprice_r8.py (regions/pq_qelem.json.gz)
         rec.write_text(json.dumps(r, indent=1) + "\n")
     AD.FIELD_GEOM = None                  # S81 floorplan wire here; tools/dsrom_field_reprice_r8.py record --levers re-prices
-    note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s, pair FILE SWAP "
+    note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s QM=" + os.environ.get("OT_PQQ_QM", "0") + ", pair FILE SWAP "
             "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP %d / GUARD %d / GSLACK %d. Replaces "
             "field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq "
             "assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go."
