@@ -7,8 +7,11 @@ from the matched DS composition, Qwen 8K stage crossings), on a committed GRT wi
 wire_stages.json basis), and reports the delta against the same record priced without the adders.
 
 Cycle ledger (per fork report, 2026-10-06; edit LEDGER when a fork records a measured change):
-  meso crossing        +2 station stages + 1 meso FIFO readout  -> MESO_CYC 2 -> 5 on every meso-crossing path
-  gather (a2)          +1 on the SM -> SU result gather path
+  meso crossing        +3 per meso / mcast / cdist downstream FIFO crossing (pin capture, readout, pin launch; stations
+                       src16 f833ed394, FIFO campaign 307e2da66) -> MESO_CYC 2 -> 5 on every meso-crossing path
+  gather (a2)          +2 on the SM -> SU result gather path (once per barrier)
+  cdist b launch       +2 on the control-distribution launch (release / issue direction, once per barrier)
+  forward / launch stations: 0
   spine face_stages 3  pin flop + 2 stages on every spine view face = +2 per face traversal:
                          barrier: arrive in + release out          +4 per barrier       (measured: bm2_pd45 record)
                          collective endpoint: SU -> coll, coll -> SU +4 per collective
@@ -36,7 +39,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hbm_accel_die_fp as F  # noqa: E402
 import hbm_accel_die_price as PR  # noqa: E402
 
-LEDGER = dict(meso_extra=3, gather=1, barrier=4, coll=4, serdes=4, vm=4, router=4, cmdproc=2, quant=13,
+LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=4, serdes=4, vm=4, router=4, cmdproc=2, quant=13,
               quant_points_bound=161, quant_points_gate=0)
 
 
@@ -70,6 +73,7 @@ def main(argv=None):
         extra = dict(
             meso_paths_us=round(g['added_us'] - b['added_us'], 3),
             gather=n.get('barrier', 0) * LEDGER['gather'],
+            cdist=n.get('barrier', 0) * LEDGER['cdist'],
             barrier=n.get('barrier', 0) * LEDGER['barrier'],
             coll=n.get('coll_terms', 0) * LEDGER['coll'],
             serdes=n.get('coll_crossings', 0) * LEDGER['serdes'],

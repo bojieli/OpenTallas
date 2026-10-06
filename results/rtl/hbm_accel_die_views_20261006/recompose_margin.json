@@ -2,7 +2,8 @@
  "schema": "opentallas.hbm_die_views_recompose.v1",
  "ledger": {
   "meso_extra": 3,
-  "gather": 1,
+  "gather": 2,
+  "cdist": 2,
   "barrier": 4,
   "coll": 4,
   "serdes": 4,
@@ -30,7 +31,8 @@
    },
    "extra_cycles": {
     "meso_paths_us": 4.41,
-    "gather": 343,
+    "gather": 686,
+    "cdist": 686,
     "barrier": 1372,
     "coll": 1060,
     "serdes": 1220,
@@ -47,22 +49,22 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 9.414,
-     "AR_us": 542.491,
-     "AR_delta_pct": 1.77,
-     "AR_tok_s": 1843.3,
-     "MTP_step_us": 1118.321,
-     "MTP_delta_pct": 0.85,
-     "MTP_tok_s": 3719.0
+     "added_us": 10.272,
+     "AR_us": 543.349,
+     "AR_delta_pct": 1.93,
+     "AR_tok_s": 1840.4,
+     "MTP_step_us": 1119.179,
+     "MTP_delta_pct": 0.93,
+     "MTP_tok_s": 3716.1
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 11.158,
-     "AR_us": 544.235,
-     "AR_delta_pct": 2.09,
-     "AR_tok_s": 1837.4,
-     "MTP_step_us": 1120.065,
-     "MTP_delta_pct": 1.01,
-     "MTP_tok_s": 3713.2
+     "added_us": 12.016,
+     "AR_us": 545.093,
+     "AR_delta_pct": 2.25,
+     "AR_tok_s": 1834.5,
+     "MTP_step_us": 1120.923,
+     "MTP_delta_pct": 1.08,
+     "MTP_tok_s": 3710.3
     }
    },
    "qwen_8k": {
@@ -99,7 +101,8 @@
    },
    "extra_cycles": {
     "meso_paths_us": 4.409,
-    "gather": 343,
+    "gather": 686,
+    "cdist": 686,
     "barrier": 1372,
     "coll": 1060,
     "serdes": 1220,
@@ -116,22 +119,22 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 9.413,
-     "AR_us": 535.204,
-     "AR_delta_pct": 1.79,
-     "AR_tok_s": 1868.4,
-     "MTP_step_us": 1111.034,
-     "MTP_delta_pct": 0.85,
-     "MTP_tok_s": 3743.4
+     "added_us": 10.271,
+     "AR_us": 536.062,
+     "AR_delta_pct": 1.95,
+     "AR_tok_s": 1865.5,
+     "MTP_step_us": 1111.892,
+     "MTP_delta_pct": 0.93,
+     "MTP_tok_s": 3740.5
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 11.157,
-     "AR_us": 536.948,
-     "AR_delta_pct": 2.12,
-     "AR_tok_s": 1862.4,
-     "MTP_step_us": 1112.778,
-     "MTP_delta_pct": 1.01,
-     "MTP_tok_s": 3737.5
+     "added_us": 12.015,
+     "AR_us": 537.806,
+     "AR_delta_pct": 2.29,
+     "AR_tok_s": 1859.4,
+     "MTP_step_us": 1113.636,
+     "MTP_delta_pct": 1.09,
+     "MTP_tok_s": 3734.6
     }
    },
    "qwen_8k": {
@@ -168,7 +171,8 @@
    },
    "extra_cycles": {
     "meso_paths_us": 4.409,
-    "gather": 343,
+    "gather": 686,
+    "cdist": 686,
     "barrier": 1372,
     "coll": 1060,
     "serdes": 1220,
@@ -185,22 +189,22 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 9.413,
-     "AR_us": 522.138,
-     "AR_delta_pct": 1.84,
-     "AR_tok_s": 1915.2,
-     "MTP_step_us": 1097.968,
-     "MTP_delta_pct": 0.86,
-     "MTP_tok_s": 3787.9
+     "added_us": 10.271,
+     "AR_us": 522.996,
+     "AR_delta_pct": 2.0,
+     "AR_tok_s": 1912.1,
+     "MTP_step_us": 1098.826,
+     "MTP_delta_pct": 0.94,
+     "MTP_tok_s": 3784.9
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 11.157,
-     "AR_us": 523.882,
-     "AR_delta_pct": 2.18,
-     "AR_tok_s": 1908.8,
-     "MTP_step_us": 1099.712,
-     "MTP_delta_pct": 1.02,
-     "MTP_tok_s": 3781.9
+     "added_us": 12.015,
+     "AR_us": 524.74,
+     "AR_delta_pct": 2.34,
+     "AR_tok_s": 1905.7,
+     "MTP_step_us": 1100.57,
+     "MTP_delta_pct": 1.1,
+     "MTP_tok_s": 3779.0
     }
    },
    "qwen_8k": {
