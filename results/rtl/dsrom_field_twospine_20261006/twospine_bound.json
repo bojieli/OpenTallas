@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.dsrom-field-twospine.v1",
- "verdict": "NO-GO pending owner confirmation",
+ "verdict": "REJECT",
  "reason": "x leaves the hub VM and every row returns to it, so the round trip is >= 2 x Manhattan(VM, frame) + fixed stages for any spine count; a second spine cannot halve it. Even the literal claim (every round trip halved + 3 merge cycles) stays below the >= 5% AR gate.",
  "gate": "ADOPT only if >= 5% AR, exact, routes (owner rule for optional levers)",
  "farthest_frames": {
@@ -2381,6 +2381,7 @@
   "tools/dsrom_s81_fulldie.py": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20"
  },
  "tool_sha256": {
-  "tools/dsrom_field_twospine_bound.py": "43be6806ed3b743ad4f417504c6325acde2216ee51f1a33597c43a1f9902a1fe"
- }
+  "tools/dsrom_field_twospine_bound.py": "897199e43cb92a81042f3e96b1e2e7935eaf231859940e39f3d9b1ab67e14a50"
+ },
+ "verdict_note": "OWNER 2026-10-06: NO-GO on two spines. REJECT: gain at the Manhattan floor +0.68% AR headline / +0.30% conditional, below the 5% gate."
 }

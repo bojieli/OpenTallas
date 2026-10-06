@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DS-ROM two-spine field study (CLAUDE TWO-SPINE, 2026-10-06): geometry bound, no RTL.
+"""DS-ROM two-spine field study (CLAUDE TWO-SPINE, 2026-10-06): geometry bound, no RTL. OWNER 2026-10-06: REJECT (NO-GO on two spines).
 
 Proposal: two field spines a layer die, each serving half the field, to halve the far frame's round trip (139/140
 stages on the wired r8 die).  x starts at the hub VM and every row returns to the hub VM (SU / HC read it there), so
@@ -147,7 +147,7 @@ def main():
                                                          "manhattan_stages_one_way", "floor_rt", "excess")}}
                      for k, v in fl.items() if v["excess"] > 0), key=lambda e: (-e["rt"], e["frame"]))
     rec = dict(schema="opentallas.dsrom-field-twospine.v1",
-               verdict="NO-GO pending owner confirmation",
+               verdict="REJECT",
                reason=("x leaves the hub VM and every row returns to it, so the round trip is >= 2 x Manhattan(VM, "
                        "frame) + fixed stages for any spine count; a second spine cannot halve it. Even the literal "
                        "claim (every round trip halved + 3 merge cycles) stays below the >= 5% AR gate."),
