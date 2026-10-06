@@ -4,7 +4,8 @@
 // drain through a warm pause; accepted pipeline/cache records are never reset.
 module ot_qwen_s4_protected_pc #(
     parameter integer PC_ID=0,TAGW=9,LD=64,WB=16,AD=64,SYNC=2,MEM_WORDS=3*131072,
-    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0,LANDING_RSEL=0,RAW_SECTOR_LANES=0
+    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0,LANDING_RSEL=0,RAW_SECTOR_LANES=0,
+    parameter integer KV_MAP=0 // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh); default off
 )(
     input wire clk,hclk,por_n,warm_rst_n,
     output wire l_v,output wire [16:0] l_sec,output wire [7:0] l_row,
@@ -24,8 +25,13 @@ module ot_qwen_s4_protected_pc #(
     ot_reset_sync u_warm0(.clk(clk),.async_rst_n(warm_rst_n),.sync_rst_n(warm0));
     ot_reset_sync u_warm1(.clk(clk),.async_rst_n(warm_rst_n),.sync_rst_n(warm1));
     wire warm_ok=warm0&&warm1;
-    wire write_identity_ok=({w_sec[1:0],w_sec[15],w_sec[5:2]}==7'(PC_ID))&&(w_sec<MEM_WORDS);
-    wire landing_identity_ok=({h_lsec[1:0],h_lsec[15],h_lsec[5:2]}==7'(PC_ID))&&(h_lrow<MEM_WORDS/131072);
+`include "ot_qwen_kv_map_m.svh"
+    // Sector -> owning PC (stack*32 + q). Base map: stack = lsec[1:0]; option M: m_l2port.
+    function automatic [6:0] sec_pc(input [16:0] l);
+        sec_pc = (KV_MAP != 0) ? 7'(m_l2port(l)) : {l[1:0],l[15],l[5:2]};
+    endfunction
+    wire write_identity_ok=(sec_pc(w_sec[16:0])==7'(PC_ID))&&(w_sec<MEM_WORDS);
+    wire landing_identity_ok=(sec_pc(h_lsec)==7'(PC_ID))&&(h_lrow<MEM_WORDS/131072);
     wire lwr,awr,wwr,lv,av,wvalid,lwb,lrb,awb,arb,wwb,wrb;
     wire [280:0] ld;wire [TAGW-1:0] ad;wire [WW-1:0] wd;
     wire [LP-1:0] locc,lowner,lret;
