@@ -1,0 +1,391 @@
+{
+  "records": [
+    {
+      "top": "ot_hbm_die_stream_service",
+      "path": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_stream_service.sv",
+      "source_sha256": "6ce388676188d0fed0a0b587b73f3a6b0d335cf7e3a73c2712290e5fe049156a",
+      "literal_ports": {
+        "service_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "core_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "por_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "owner_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "owner_r": {
+          "direction": "output",
+          "bits": 1
+        },
+        "producer": {
+          "direction": "input",
+          "bits": 64
+        },
+        "transport": {
+          "direction": "input",
+          "bits": 32
+        },
+        "irs_serial": {
+          "direction": "input",
+          "bits": 32
+        },
+        "rank": {
+          "direction": "input",
+          "bits": 7
+        },
+        "stack": {
+          "direction": "input",
+          "bits": 2
+        },
+        "owner_held": {
+          "direction": "output",
+          "bits": 1
+        },
+        "held_producer": {
+          "direction": "output",
+          "bits": 64
+        },
+        "held_transport": {
+          "direction": "output",
+          "bits": 32
+        },
+        "held_irs_serial": {
+          "direction": "output",
+          "bits": 32
+        },
+        "held_rank": {
+          "direction": "output",
+          "bits": 7
+        },
+        "held_stack": {
+          "direction": "output",
+          "bits": 2
+        },
+        "die": {
+          "direction": "input",
+          "bits": 7
+        },
+        "pos": {
+          "direction": "input",
+          "bits": 20
+        },
+        "row_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "row_r": {
+          "direction": "output",
+          "bits": 1
+        },
+        "row_kind": {
+          "direction": "input",
+          "bits": 2
+        },
+        "row_slot": {
+          "direction": "input",
+          "bits": 6
+        },
+        "row_r2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "row_data": {
+          "direction": "input",
+          "bits": 4352
+        },
+        "sh_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sh_r": {
+          "direction": "output",
+          "bits": 1
+        },
+        "sh_slot": {
+          "direction": "input",
+          "bits": 3
+        },
+        "sh_data": {
+          "direction": "input",
+          "bits": 4352
+        },
+        "desc_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "desc_r": {
+          "direction": "output",
+          "bits": 32
+        },
+        "desc_row": {
+          "direction": "input",
+          "bits": 608
+        },
+        "desc_n": {
+          "direction": "input",
+          "bits": 352
+        },
+        "go": {
+          "direction": "input",
+          "bits": 32
+        },
+        "next_posted": {
+          "direction": "input",
+          "bits": 32
+        },
+        "notice": {
+          "direction": "input",
+          "bits": 32
+        },
+        "ca_ready": {
+          "direction": "input",
+          "bits": 16
+        },
+        "ca_valid": {
+          "direction": "output",
+          "bits": 16
+        },
+        "ca_pc_lsb": {
+          "direction": "output",
+          "bits": 16
+        },
+        "ca_op": {
+          "direction": "output",
+          "bits": 48
+        },
+        "ca_bank": {
+          "direction": "output",
+          "bits": 80
+        },
+        "ca_row": {
+          "direction": "output",
+          "bits": 304
+        },
+        "phy_col_v": {
+          "direction": "output",
+          "bits": 32
+        },
+        "phy_col_r": {
+          "direction": "input",
+          "bits": 32
+        },
+        "phy_we": {
+          "direction": "output",
+          "bits": 32
+        },
+        "phy_bank": {
+          "direction": "output",
+          "bits": 160
+        },
+        "phy_col": {
+          "direction": "output",
+          "bits": 160
+        },
+        "phy_row": {
+          "direction": "output",
+          "bits": 608
+        },
+        "phy_data": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "phy_receipt": {
+          "direction": "output",
+          "bits": 6368
+        },
+        "visible_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "visible_r": {
+          "direction": "output",
+          "bits": 32
+        },
+        "visible_receipt": {
+          "direction": "input",
+          "bits": 6368
+        },
+        "rd_return_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "rd_return_r": {
+          "direction": "output",
+          "bits": 32
+        },
+        "rd_return_data": {
+          "direction": "input",
+          "bits": 8192
+        },
+        "read_v": {
+          "direction": "output",
+          "bits": 32
+        },
+        "read_r": {
+          "direction": "input",
+          "bits": 32
+        },
+        "read_data": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "pc_busy": {
+          "direction": "output",
+          "bits": 32
+        },
+        "issued": {
+          "direction": "output",
+          "bits": 16
+        },
+        "acked": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fence_ok": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "real_clock_inputs": [
+        "service_clk",
+        "core_clk"
+      ],
+      "cold_reset_inputs": [
+        "por_n"
+      ],
+      "warm_reset_contract": "not installed; caller drains all owned debt before cold reset",
+      "source_clk_to_Q": "real macro SS455.3205489475797ps for VM storage; parent/receiver closure OPEN",
+      "physical_closed": false,
+      "die_ports_bound": false
+    },
+    {
+      "top": "ot_hbm_die_vm_multicast_root",
+      "path": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv",
+      "source_sha256": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "literal_ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "por_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wr_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wr_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wr_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wr_addr": {
+          "direction": "input",
+          "bits": 7
+        },
+        "wr_data": {
+          "direction": "input",
+          "bits": 2063
+        },
+        "wr_owner": {
+          "direction": "input",
+          "bits": 192
+        },
+        "wr_ACK_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wr_ACK_ready": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wr_ACK_owner": {
+          "direction": "output",
+          "bits": 192
+        },
+        "rd_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rd_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rd_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rd_addr": {
+          "direction": "input",
+          "bits": 7
+        },
+        "rd_owner": {
+          "direction": "input",
+          "bits": 192
+        },
+        "tap_v": {
+          "direction": "output",
+          "bits": 4
+        },
+        "tap_ready": {
+          "direction": "input",
+          "bits": 4
+        },
+        "tap_data": {
+          "direction": "output",
+          "bits": 8252
+        },
+        "tap_owner": {
+          "direction": "output",
+          "bits": 768
+        },
+        "tap_ACK_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "tap_ACK_owner": {
+          "direction": "input",
+          "bits": 768
+        },
+        "native_release": {
+          "direction": "output",
+          "bits": 1
+        },
+        "drained": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "real_clock_inputs": [
+        "clk"
+      ],
+      "cold_reset_inputs": [
+        "por_n"
+      ],
+      "warm_reset_contract": "not installed; caller drains all owned debt before cold reset",
+      "source_clk_to_Q": "real macro SS455.3205489475797ps for VM storage; parent/receiver closure OPEN",
+      "physical_closed": false,
+      "die_ports_bound": false
+    }
+  ]
+}

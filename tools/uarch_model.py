@@ -129,6 +129,49 @@ def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
         adoption=False, physical_closed=False, measured_cycles=None)
 
 
+def dsrom_fh_fault_retire_model():
+    """C17 source-owned four-edge fault/transaction retirement cut, before RTL.
+
+    This is a component proposal, not an adopted core or a rate measurement.
+    The producer must retain its warm-index/commit debt until retirement.
+    """
+    packet_bits = 64*49 + (2048+64+4*24+4) + 160+1+1
+    ff = dict(transaction_packet=4*packet_bits, packet_valid=4,
+              local_eight_bank_fault=8, two_row_fault=4,
+              kept_global_relays=16, lane_veto_copies=64,
+              write_veto_copies=4, status_copy=1)
+    return dict(parameter='FAULT_RETIRE', default=0, G=4, W=16,
+        stages=4, MACs_per_cycle=0, FP32_adds_per_cycle=0,
+        new_memory_ports=0, memory_payload_bytes_per_cycle=256,
+        boundary_bits_per_cycle=dict(transaction=packet_bits, valid=1,
+                                    poison=64, address_fault=4, arithmetic_fault=1),
+        packet_fields=dict(leaf_valid_key_row=64*49,
+            result_data_mask_addr_write_enable=2048+64+4*24+4,
+            result_tag=160, result_valid=1, warm_index_marker=1),
+        FF_bits=ff, FF_total=sum(ff.values()), FF_area_proxy_um2=sum(ff.values())*DFF_UM2,
+        fault_tree=dict(local_banks_per_row=8, rows_per_quadrant=2,
+            quadrant_sources_per_relay=4, relay_replicas=16,
+            max_quadrant_logical_fanout=16, max_relay_logical_fanout=6,
+            max_lane_veto_external_loads=2,
+            retention='kept hierarchy on each OR4/register relay and final register copy'),
+        latency=dict(output_retirement_extra_cycles=4,
+            index_write_retirement_extra_cycles=4,
+            conservative_added_cycles_per_fused_chain=8,
+            five_chain_added_cycles=40,
+            predicted_five_chain_cycles=62878+40,
+            predicted_five_chain_added_ns=40*0.833333,
+            measured_cycles=None,
+            requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
+        protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
+        flow_control='4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains',
+        floorplan=dict(existing_width_um=2000,existing_height_um=660,
+            macro_count=64,macro_moves=0,actual_new_cell_area_um2=None,
+            routing_tracks_and_loaded_clock_PG_repair_margin=None,
+            ready_for_route=False),
+        scope='Own head component. Requires real parent retirement/debt integration; no standalone cut qualifies parent hold or whole-die timing.',
+        adoption=False, physical_closed=False)
+
+
 def dsrom_field_spine_route_price(r=16, pq=0):
     """Immutable a721 spine, physical-only hold/slew repair budget.
 
@@ -10802,6 +10845,9 @@ def dsrom_window_parent_boundary_model():
     """
     import re
     leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
+    ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/ss_synthesis_inventory.json'
+    if ss_inventory_path.is_file():
+        leaf_inventory_path = ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
@@ -11611,3 +11657,48 @@ def hbm_swiglu_w2_private_join_model():
         result['latency']['measured_join_edges'] = None  # stage edges were not logged
         result['adopted'] = False
     return result
+
+
+def hbm_integrated_stage_join_model():
+    """Missing enclosing CP-to-stage descriptor seat; no new child arithmetic."""
+    return dict(schema='opentallas.hbm.integrated.stage_join.v1',
+        existing_composition='hbm_accel_rows; released SU c12 model and child calendars retained',
+        metadata=dict(frame=73, pc=32, op=32, source_instance=16,
+                      expert=9, matrix=1, row=12, count=9, phase=2,
+                      warm_quarantine=1, fault=1),
+        useful_bits=188, W6_rows=3, coded_FF_bits=216, padding_bits=4,
+        raw_authoritative_shadow_bits=0, payload_duplicate_bits=0,
+        MACs_per_cycle_delta=0, memory_bytes_per_cycle_delta=0,
+        replica_count=1, encoder_count=3, decoder_count=3,
+        metadata_read_bits=216, metadata_write_bits=216,
+        boundary_descriptor_bits=184, boundary_control_bits=8,
+        tracks_required=192, channel_capacity=None, slot_fit=None,
+        mux='one 188-bit coded next-state selector, no payload mux or arithmetic',
+        FF_area_floor_um2=216*.2916, clock_pins=216,
+        FF_clock_capacitance_ff=216*.433982,
+        normal_minimum_join_edges=3,
+        latency='one capture, one accepted start, one held drain/completion edge; actual stalls and CP calendar measured separately',
+        CE_scrub_minimum_edges=1, DUE='held debt until root POR',
+        protection='existing W6 correction/scrub; full frame live-owner veto; warm request drains retained work',
+        workload_positions=dict(DS1M=1048575,Qwen8K=8191),
+        child_source_edits=False, default_enabled=False,
+        physical_admitted=False, full_token_gate=False, adopted=False,
+        SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25)
+
+
+def hbm_integrated_gu_wide_launch_model():
+    """Integration-only source view; preserve actual selected-SIMT arithmetic."""
+    return dict(schema='opentallas.hbm.integrated.gu_wide_launch.v1',
+        base='hbm_simt_gu_coded_retention_model, full73 frame already retained',
+        source_view='selected SIMT launch TOKEN17/POS20 and full launch/frame comparator',
+        hierarchical_SM_source_changed=False, default_GU_JOIN=0,
+        added_input_bits=5, added_frame_comparator_bits=5,
+        existing_uniform_registers='UR0/UR1 remain32 bits each, preserve original payload protection owner',
+        logical_register_bits_added=0, mapped_FF_delta_upper_bound=5,
+        mapped_FF_delta_note='Constant upper launch bits may have been eliminated; count actual mapping before physical admission',
+        reused_coded_metadata_FF_bits=216, new_payload_copy_bits=0,
+        memory_bytes_per_cycle_delta=0, MACs_per_cycle_delta=0,
+        added_pipeline_cycles=0, replicas_per_selected_SM=1,
+        tracks_required_delta=5,channel_capacity=None,parent_slot_fit=None,
+        fullGU_service='existing Franklin768 source descriptors and9216 rows, actual TC/CVT/drain unchanged',
+        whole_token=False,physical_admitted=False,adopted=False)
