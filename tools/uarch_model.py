@@ -11158,7 +11158,7 @@ def dsrom_wfc_enclosing_stage_price():
     whole-stage producer and C8 accept the same job, not completion authority.
     """
     request_bits = 16+10+21+21+14
-    request_control_bits = 3
+    request_control_bits = 5
     c8_bits = 2*request_bits + (1+21+21+10+14+47+1+47+1+1+1+1+2+1+1)
     core_capture_bits = 21+21+14
     boundary_ff = request_bits+request_control_bits+c8_bits+core_capture_bits
@@ -11198,6 +11198,7 @@ def dsrom_wfc_enclosing_stage_price():
       additional_owned_request_capture_edges=1,
       existing_C8_offer_to_native_core_capture_edges=2,
       exposed_start_to_core_capture_minimum_edges=3,
+      default_OFF_old_user_publication_capture_additional_edges=1,
       enclosing_vs_same_C8_direct_offer_added_edges=1,
       composed_source_job_added_edges=3, composed_received_job_added_edges=4,
       composed_reset_release_added_edges=1,
