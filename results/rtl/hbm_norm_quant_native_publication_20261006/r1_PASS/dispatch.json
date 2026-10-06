@@ -1,0 +1,19 @@
+{
+  "pid": 3619199,
+  "command": [
+    "python3",
+    "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/run_gate.py",
+    "--source",
+    "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/src-6bb9b0cf2",
+    "--gold",
+    "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/gold",
+    "--reuse",
+    "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/root-cache",
+    "--out",
+    "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/r1"
+  ],
+  "bench_source": "6bb9b0cf2",
+  "runner_source": "a82664298",
+  "runtime_owner": "Gibbs",
+  "fixture_owner": "Gauss"
+}

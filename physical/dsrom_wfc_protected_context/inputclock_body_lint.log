@@ -1,0 +1,686 @@
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv:2:9: ... Location of module with timescale
+    2 | package ot_dsrom_vm_pkg;
+      |         ^~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:21:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   21 |  generate if(ENABLE) begin:g_live
+      |           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:32:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_whole'
+   32 |  generate if(ENABLE)begin:g_live
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_parent_enclosed_vm.sv:153:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'QUEUE_SHIFT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary'
+  153 |     generate if (QUEUE_SHIFT) begin : g_queue_shift_router
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:112:13: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SHIFT_HEAD' generates 32 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  112 |             if (SHIFT_HEAD) begin : g_shift_head
+      |             ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:219:22: Operator VAR 'SIDE_D' expects 8 bits on the Initial value, but Initial value's VARREF 'SIDE_DEST' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  219 |     localparam [7:0] SIDE_D = SIDE_DEST, SLEN = SIDE_WORDS;
+      |                      ^~~~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:219:42: Operator VAR 'SLEN' expects 8 bits on the Initial value, but Initial value's VARREF 'SIDE_WORDS' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  219 |     localparam [7:0] SIDE_D = SIDE_DEST, SLEN = SIDE_WORDS;
+      |                                          ^~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:220:23: Operator VAR 'SIDE_A' expects 16 bits on the Initial value, but Initial value's VARREF 'SIDE_RXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  220 |     localparam [15:0] SIDE_A = SIDE_RXB;
+      |                       ^~~~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:233:22: Operator VAR 'SRC_ID' expects 8 bits on the Initial value, but Initial value's VARREF 'PKG_ID' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  233 |     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
+      |                      ^~~~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:233:39: Operator VAR 'HID_D' expects 8 bits on the Initial value, but Initial value's VARREF 'HID_DEST' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  233 |     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
+      |                                       ^~~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:233:57: Operator VAR 'RES_D' expects 8 bits on the Initial value, but Initial value's VARREF 'RES_DEST' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  233 |     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
+      |                                                         ^~~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:233:75: Operator VAR 'XLEN' expects 8 bits on the Initial value, but Initial value's VARREF 'XWORDS' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  233 |     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
+      |                                                                           ^~~~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:275:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'HEADER_LOCAL' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  275 |     generate if (HEADER_LOCAL) begin : g_header_local_release
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:296:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CONTROL_PIPE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  296 |     generate if (CONTROL_PIPE) begin : g_control_launch
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:337:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SEND_SIDE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  337 |     localparam [2:0] T_AFTER_HID = SEND_SIDE ? T_SHDR : (SEND_RESULT ? T_RHDR : T_IDLE);
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:337:70: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SEND_RESULT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  337 |     localparam [2:0] T_AFTER_HID = SEND_SIDE ? T_SHDR : (SEND_RESULT ? T_RHDR : T_IDLE);
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:359:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CONTROL_PIPE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  359 |     generate if (CONTROL_PIPE) begin : g_control_completion
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:405:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PREFIX_INC' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  405 |     generate if (PREFIX_INC) begin : g_position_prefix
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:451:34: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  451 |     localparam integer WF = WAVE && SOURCE;
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:451:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  451 |     localparam integer WF = WAVE && SOURCE;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:451:24: Operator VAR 'WF' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  451 |     localparam integer WF = WAVE && SOURCE;
+      |                        ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:797:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'WF' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  797 |     generate if (WF) begin : g_wf
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:831:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LOCAL_CONTROL' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[26].ug'
+  831 |     generate if (LOCAL_CONTROL) begin : g_local_read_control
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:844:58: Bit extraction of var[1:0] requires 1 bit index, not 5 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  844 |         if (!rq) uval <= 0; else if (wr && lo_r < N) uval[lo_r] <= 1'b1;    
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:844:49: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'lo_r' generates 5 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  844 |         if (!rq) uval <= 0; else if (wr && lo_r < N) uval[lo_r] <= 1'b1;    
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:845:33: Bit extraction of array[1:0] requires 1 bit index, not 5 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  845 |         if (wr && lo_r < N) upos[lo_r] <= wdata;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:845:24: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'lo_r' generates 5 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  845 |         if (wr && lo_r < N) upos[lo_r] <= wdata;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:846:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'lo_r' generates 5 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  846 |         if (rd_local) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:846:48: Bit extraction of var[1:0] requires 1 bit index, not 5 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  846 |         if (rd_local) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:846:62: Bit extraction of array[1:0] requires 1 bit index, not 5 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug'
+  846 |         if (rd_local) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:228:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'SIDE_RXB' generates 32 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  228 |         if (SIDE_IN != 0 && (64'(MAXU-1) << SIDE_USH) + SIDE_RXB + SIDE_WORDS > (64'd1 << VWA))
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:228:66: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'SIDE_WORDS' generates 32 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  228 |         if (SIDE_IN != 0 && (64'(MAXU-1) << SIDE_USH) + SIDE_RXB + SIDE_WORDS > (64'd1 << VWA))
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:246:57: Operator ASSIGN expects 2 bits on the Assign RHS, but Assign RHS's SHIFTR generates 10 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  246 |             if (USER_W > 8) header[HDR_USER_HI +: UHIW] = user >> 8;
+      |                                                         ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:328:38: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  328 |     assign core_done_accepted = WAVE && job_done;
+      |                                      ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:350:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QUEUE_SHIFT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  350 |     assign out_data  = txq_d[QUEUE_SHIFT ? 0 : txq_r];
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:351:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QUEUE_SHIFT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  351 |     assign out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:353:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'txq_n' generates 3 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  353 |     wire tx_space = (txq_n + rd_inflight) < TXQ;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:355:110: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'txq_n' generates 3 bits.
+                                                                                                             : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  355 |     wire completion_qual = running && core_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
+      |                                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:381:45: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'core_next_token' generates 21 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  381 |     wire [NW-1:0] own_idx = core_next_token + ROW0;
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:381:27: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  381 |     wire [NW-1:0] own_idx = core_next_token + ROW0;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:382:40: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'COMBINE_IN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  382 |     wire          keep_pa = COMBINE_IN && !better(own_idx, core_next_val, cur_pa_idx, cur_pa_val);
+      |                                        ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:386:64: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  386 |     wire           tx_reading = (tx_st == T_DATA) || (job_done && SEND_HIDDEN);
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:387:49: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tx_k' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  387 |     wire [VWA-1:0] tx_lo = job_done ? TXB : TXB + tx_k;
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:387:26: Operator ASSIGNW expects 15 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  387 |     wire [VWA-1:0] tx_lo = job_done ? TXB : TXB + tx_k;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:418:60: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rx_word' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  418 |     wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:418:76: Operator LT expects 16 bits on the LHS, but LHS's VARREF 'rx_word' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  418 |     wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:418:94: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rx_word' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  418 |     wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
+      |                                                                                              ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:421:57: Operator LT expects 16 bits on the LHS, but LHS's VARREF 'rx_word' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  421 |     wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < txh || rx_word >= TXB + XWORDS;
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:421:74: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rx_word' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  421 |     wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < txh || rx_word >= TXB + XWORDS;
+      |                                                                          ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:422:84: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rx_j' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  422 |     wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
+      |                                                                                    ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:452:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  452 |     initial if (!WAVE) $fatal(1, "ot_rom_pkg_ctrl_wfc: WAVE = 0 is ot_rom_pkg_ctrl_wf (unchanged)");
+      |                 ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:453:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'WF' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  453 |     initial if (WF && (WIN > 7 || WIN < 1 || RESULT_PARTS != 1))
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:468:9: Logical operator IF expects 1 bit on the If, but If's VARREF 'WF' generates 32 bits.
+                                                                                                          : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  468 |         if (WF) begin
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:475:23: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  475 |         fb_v = SOURCE && res_v && (red_n == RESULT_PARTS);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:475:42: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'red_n' generates 4 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  475 |         fb_v = SOURCE && res_v && (red_n == RESULT_PARTS);
+      |                                          ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:513:31: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'hdr_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  513 |                    ((hdr_user < MAXU) && (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN));
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:513:70: Operator GTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  513 |                    ((hdr_user < MAXU) && (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN));
+      |                                                                      ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:532:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'WF' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  532 |                 in_ready = !(WF && e_rfull); rx_res = in_valid && in_ready;    
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:536:43: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'side_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  536 |             vm_we = in_valid && side_user < MAXU;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:542:60: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rx_j' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  542 |         rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
+      |                                                            ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:543:61: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'side_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  543 |         rx_side_last = side_payload && in_last && side_user < MAXU;
+      |                                                             ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:544:27: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  544 |         vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:545:56: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'txs' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  545 |         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:545:56: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  545 |         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:545:18: Operator ASSIGN expects 15 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  545 |         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
+      |                  ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:555:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTROL_PIPE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  555 |         st_rx = ((CONTROL_PIPE ? 1'b0 : rx_last_word_i) || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:555:115: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'hdr_user' generates 10 bits.
+                                                                                                             : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  555 |         st_rx = ((CONTROL_PIPE ? 1'b0 : rx_last_word_i) || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
+      |                                                                                                                   ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:558:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'WF' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  558 |             st_new = !WF && nu_ok && next_u < MAXU;
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:558:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'next_u' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  558 |             st_new = !WF && nu_ok && next_u < MAXU;
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:559:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  559 |             st_q   = !WAVE && !nu_ok && jq_n != 0;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:560:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  560 |             st_fb  = !WAVE && !nu_ok && jq_n == 0 && fb_v && fb_cont;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:562:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'WF' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  562 |             st_wk  = WF && e_go;       
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:557:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  557 |         if (SOURCE && !running && !tx_hold_i && !pend && rx_st == R_IDLE) begin
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:565:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FWD_TOKEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  565 |         start_tok_i = FWD_TOKEN ? hdr_tok : {NW{1'b0}}; start_pos_i = hdr_pos; st_user = hdr_user;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:582:46: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  582 |     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
+      |                                              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:582:46: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SEND_RESULT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  582 |     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
+      |                                              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:593:17: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's VARREF 'RXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  593 |             rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:593:39: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's VARREF 'TXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  593 |             rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
+      |                                       ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:593:51: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's VARREF 'SIDE_TXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  593 |             rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
+      |                                                   ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:615:36: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  615 |                     tx_k <= 1; txh <= TXB + 1; txs <= SIDE_TXB + 1;
+      |                                    ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:615:52: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  615 |                     tx_k <= 1; txh <= TXB + 1; txs <= SIDE_TXB + 1;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:614:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  614 |                 if (SEND_HIDDEN) begin
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:627:27: Operator ASSIGNDLY expects 30 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  627 |                 kv_base_i <= st_user * KVW;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:638:40: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'in_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  638 |                 if (in_last || in_user >= MAXU) proto_fault <= 1'b1;
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:641:46: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'in_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  641 |                 uchk <= !(in_last || in_user >= MAXU);
+      |                                              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:642:32: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's VARREF 'RXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  642 |                 rx_j <= 0; rxw <= RXB; rx_st <= R_DATA;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:645:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rx_j' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  645 |                 if (in_last != (rx_j == RXW - 1)) proto_fault <= 1'b1;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:651:56: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'in_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  651 |                 if (SIDE_IN == 0 || in_last || in_user >= MAXU) proto_fault <= 1'b1;
+      |                                                        ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:654:32: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's VARREF 'RXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  654 |                 rx_j <= 0; rxw <= RXB; rx_st <= R_SIDE;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:672:52: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pos_c' generates 21 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  672 |             if (uchk4 && (pos_c > upos_hr || pos_c + WIN < upos_hr)) proto_fault <= 1'b1;
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:675:21: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  675 |                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:675:76: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'in_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  675 |                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
+      |                                                                            ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:676:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  676 |                 res_v <= SOURCE && in_type == MT_RESULT && in_user < MAXU;
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:676:68: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'in_user' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  676 |                 res_v <= SOURCE && in_type == MT_RESULT && in_user < MAXU;
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:683:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  683 |             if (SOURCE && WAVE) begin
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:683:24: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WAVE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  683 |             if (SOURCE && WAVE) begin
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:691:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SOURCE' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  691 |             if (SOURCE && cfg_users > MAXU) proto_fault <= 1'b1;
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:691:37: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cfg_users' generates 10 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  691 |             if (SOURCE && cfg_users > MAXU) proto_fault <= 1'b1;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:696:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tx_k' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  696 |                 if (tx_st == T_DATA && tx_k == XWORDS - 1) tx_st <= T_AFTER_HID;
+      |                                             ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:697:86: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SEND_RESULT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  697 |                 if (tx_st == T_SDATA && tx_k == SIDE_WORDS - 1) tx_st <= SEND_RESULT ? T_RHDR : T_IDLE;
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:697:46: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tx_k' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  697 |                 if (tx_st == T_SDATA && tx_k == SIDE_WORDS - 1) tx_st <= SEND_RESULT ? T_RHDR : T_IDLE;
+      |                                              ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:700:65: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's VARREF 'TXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  700 |             if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; txh <= TXB; txs <= SIDE_TXB; end
+      |                                                                 ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:700:77: Operator ASSIGNDLY expects 15 bits on the Assign RHS, but Assign RHS's VARREF 'SIDE_TXB' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  700 |             if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; txh <= TXB; txs <= SIDE_TXB; end
+      |                                                                             ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:703:61: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tx_k' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  703 |                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
+      |                                                             ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:703:88: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tx_k' generates 15 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  703 |                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
+      |                                                                                        ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:718:30: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  718 |                         txq_d[txq_n-tx_pop] <= header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val,
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:719:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FWD_TOKEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  719 |                                       FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:720:30: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  720 |                         txq_l[txq_n-tx_pop] <= 1'b0;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:722:30: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  722 |                         txq_d[txq_n-tx_pop] <= header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val,
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:724:30: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  724 |                         txq_l[txq_n-tx_pop] <= 1'b1;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:717:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  717 |                     if (SEND_HIDDEN) begin
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:727:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  727 |                     txq_d[txq_n-tx_pop] <= header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val,
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:729:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  729 |                     txq_l[txq_n-tx_pop] <= 1'b1;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:731:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  731 |                     txq_d[txq_n-tx_pop] <= header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0,
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:733:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  733 |                     txq_l[txq_n-tx_pop] <= 1'b0;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:735:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  735 |                     txq_d[txq_n-tx_pop] <= vm_rq;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:736:26: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  736 |                     txq_l[txq_n-tx_pop] <= rd_last;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:744:66: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FWD_TOKEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  744 |                                                        FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:742:29: Logical operator IF expects 1 bit on the If, but If's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  742 |                             if (SEND_HIDDEN) begin
+      |                             ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:769:58: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FWD_TOKEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  769 |                                                FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+      |                                                          ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:767:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'SEND_HIDDEN' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  767 |                     if (SEND_HIDDEN) begin
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:738:22: Logical operator IF expects 1 bit on the If, but If's VARREF 'LOCAL_CONTROL' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  738 |             end else if (LOCAL_CONTROL) begin
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:707:13: Logical operator IF expects 1 bit on the If, but If's VARREF 'QUEUE_SHIFT' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  707 |             if (QUEUE_SHIFT) begin
+      |             ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:789:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LOCAL_CONTROL' generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  789 |             if (LOCAL_CONTROL && q_push)
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:791:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'txq_w' generates 2 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  791 |             if (q_push) txq_w <= (txq_w == TXQ - 1) ? {QB{1'b0}} : txq_w + 1'b1;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:792:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'txq_r' generates 2 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  792 |             if (tx_pop) txq_r <= (txq_r == TXQ - 1) ? {QB{1'b0}} : txq_r + 1'b1;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:793:38: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  793 |             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:793:38: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  793 |             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:793:63: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  793 |             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:793:63: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                            : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  793 |             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:82:18: Bit extraction of array[63:0] requires 6 bit index, not 8 bits.
+                                                                               : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+   82 |             route[cfg_dest] <= cfg_mask;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:81:41: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cfg_dest' generates 8 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+   81 |         end else if (cfg_we && cfg_dest < DESTS) begin
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:104:39: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 3 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  104 |             wire          full = (cnt == BUF);
+      |                                       ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:108:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHIFT_HEAD' generates 32 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  108 |             assign h_data[i*FW +: FW] = b_data[SHIFT_HEAD ? 0 : rp];
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:109:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHIFT_HEAD' generates 32 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  109 |             assign h_last[i]          = b_last[SHIFT_HEAD ? 0 : rp];
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:110:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHIFT_HEAD' generates 32 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  110 |             assign h_mask[i*NP +: NP] = b_mask[SHIFT_HEAD ? 0 : rp];
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:123:31: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  123 |                         b_data[cnt-fire[i]] <= din;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:124:31: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  124 |                         b_last[cnt-fire[i]] <= in_last[i];
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:125:31: Bit extraction of array[3:0] requires 2 bit index, not 3 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  125 |                         b_mask[cnt-fire[i]] <= (dest < DESTS) ? route[dest] : {NP{1'b0}};
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:125:54: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'dest' generates 8 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  125 |                         b_mask[cnt-fire[i]] <= (dest < DESTS) ? route[dest] : {NP{1'b0}};
+      |                                                      ^
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:125:70: Bit extraction of array[63:0] requires 6 bit index, not 8 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  125 |                         b_mask[cnt-fire[i]] <= (dest < DESTS) ? route[dest] : {NP{1'b0}};
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:139:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 2 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  139 |                     if (push) wp <= (wp == BUF - 1) ? {BW{1'b0}} : wp + 1'b1;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:140:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 2 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  140 |                     if (fire[i]) rp <= (rp == BUF - 1) ? {BW{1'b0}} : rp + 1'b1;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:141:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  141 |                     cnt <= cnt + (push ? 1'b1 : 1'b0) - (fire[i] ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:141:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  141 |                     cnt <= cnt + (push ? 1'b1 : 1'b0) - (fire[i] ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:141:66: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  141 |                     cnt <= cnt + (push ? 1'b1 : 1'b0) - (fire[i] ? 1'b1 : 1'b0);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:141:66: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  141 |                     cnt <= cnt + (push ? 1'b1 : 1'b0) - (fire[i] ? 1'b1 : 1'b0);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:163:27: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'ptr' generates 2 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  163 |                       ((a == ptr) || ((h_mask[a*NP +: NP] & pmask) == 0));
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:167:21: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ptr' generates 2 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  167 |             j = ptr + k;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:238:55: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ptr' generates 2 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  238 |             if (!cand[ptr] || grant[ptr]) ptr <= (ptr == NP - 1) ? {PW{1'b0}} : ptr + 1'b1;
+      |                                                       ^~
+%Warning-WIDTHTRUNC: rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:239:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'INPUT_READY_VALID' generates 32 bits.
+                                                                                : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.g_queue_shift_router.u_rtr'
+  239 |             if (!INPUT_READY_VALID && (in_valid & ~in_ready) != 0) overflow <= 1'b1;
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:67:267: Operator GTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 12 bits.
+                                                                                    : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_whole'
+   67 |       if(!command_ready[rank]||command_identity[47*rank+:47]!=identity||command_token[21*rank+:21]!=request_token_q||command_home[7*rank+:7]!=q[6:0]||command_entry[14*rank+:14]!=q[20:7]||command_pc[14*rank+:14]!=q[34:21]||command_unit[4*rank+:4]!=q[38:35]||ptr[rank]>=BOOK_WORDS)rank_fault[rank]<=1;
+      |                                                                                                                                                                                                                                                                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:77:20: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 12 bits.
+                                                                                   : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_whole'
+   77 |        if(ptr[rank]==BOOK_WORDS&&retired_groups[rank]==GROUPS-1)finished[rank]<=1;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:77:54: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 8 bits.
+                                                                                   : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_whole'
+   77 |        if(ptr[rank]==BOOK_WORDS&&retired_groups[rank]==GROUPS-1)finished[rank]<=1;
+      |                                                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:33:56: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   33 |   wire write_prompt=take&&cmd_op==0&&!running&&cmd_user<MAXU&&cmd_pos<PREFIX;
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:33:70: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   33 |   wire write_prompt=take&&cmd_op==0&&!running&&cmd_user<MAXU&&cmd_pos<PREFIX;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:34:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   34 |   wire write_draft=take&&cmd_op==1&&cmd_user<MAXU&&(!running||cmd_epoch==stage_epoch);
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:36:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   36 |   wire [15:0] write_index=16'(cmd_user)*(PREFIX+POSITIONS)+16'(write_prompt?cmd_pos:21'(PREFIX)+21'(cmd_pos[2:0]));
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:36:26: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   36 |   wire [15:0] write_index=16'(cmd_user)*(PREFIX+POSITIONS)+16'(write_prompt?cmd_pos:21'(PREFIX)+21'(cmd_pos[2:0]));
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:43:46: Logical operator IF expects 1 bit on the If, but If's AND generates 32 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   43 |      if((p&(p-1))!=0)begin for(k=0;k<6;k=k+1)if((p>>k)&1)parity[k]=parity[k]^d[n];n=n+1;end
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:56:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   56 |   wire [15:0] read_index=16'(read_user)*(PREFIX+POSITIONS)+16'(is_prompt?read_pos:21'(PREFIX)+21'(read_pos[2:0]));
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:56:25: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   56 |   wire [15:0] read_index=16'(read_user)*(PREFIX+POSITIONS)+16'(is_prompt?read_pos:21'(PREFIX)+21'(read_pos[2:0]));
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:78:18: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'clear_row' generates 13 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   78 |      if(clear_row==ROWS-1)begin ready_mem<=1;clear_row<=0;clear_check<=13'h1fff;end
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:84:66: Operator EQ expects 32 or 21 bits on the LHS, but LHS's VARREF 'scan_pos' generates 4 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   84 |      read_last<=scan_issue&&scan_user==pending_q[9:0]-1&&scan_pos==pending_q[30:10]-1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:87:17: Operator EQ expects 32 or 21 bits on the LHS, but LHS's VARREF 'scan_pos' generates 4 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+   87 |      if(scan_pos==pending_q[30:10]-1)begin scan_pos<=0;scan_pos_check<=4'hf;if(scan_user==pending_q[9:0]-1)scan_sent_all<=1;else begin scan_user<=scan_user+1;scan_user_check<=~(scan_user+10'd1);end end
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:41: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                   : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>=22'h200000)poison<=1;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:67: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                   : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_cfg'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>=22'h200000)poison<=1;
+      |                                                                   ^
+%Warning-UNSIGNED: rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:418:60: Comparison is constant due to unsigned arithmetic
+                                                                                                         : ... note: In instance 'ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl'
+  418 |     wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
+      |                                                            ^
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.082 MB sources in 27 modules, into 4.815 MB in 9 C++ files needing 0.000 MB
+- Verilator: Walltime 2.734 s (elab=0.082, cvt=2.579, bld=0.000); cpu 2.732 s on 1 threads; allocated 121.152 MB
+wall=2.77 peak_KiB=115456

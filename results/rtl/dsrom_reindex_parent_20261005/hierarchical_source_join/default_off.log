@@ -1,0 +1,53 @@
+
+-- Running command `read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+hierarchy -check -top ot_dsrom_reindex_hierarchical_parent
+proc
+opt_clean
+check -assert
+write_json /tmp/codex-kc8-hierarchical-source-r5/default_off.json' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+Parsing SystemVerilog input from `/home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_reindex_hierarchical_parent'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_dsrom_reindex_hierarchical_parent
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_dsrom_reindex_hierarchical_parent
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_reindex_hierarchical_parent..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~12 debug messages>
+
+5. Executing CHECK pass (checking for obvious problems).
+checking module ot_dsrom_reindex_hierarchical_parent..
+found and reported 0 problems.
+
+6. Executing JSON backend.

@@ -1,0 +1,18 @@
+GPL_TIMING_DRIVEN:
+  description: |
+    Specifies whether the placer should use timing driven placement.
+  stages:
+    - place
+  default: 1
+GPL_ROUTABILITY_DRIVEN:
+  description: |
+    Specifies whether the placer should use routability driven placement.
+  stages:
+    - place
+  default: 1
+GPL_KEEP_OVERFLOW:
+  description: >
+    Passed as -keep_resize_below_overflow to global_placement.
+    Only used when GPL_TIMING_DRIVEN is enabled.
+  stages:
+    - place

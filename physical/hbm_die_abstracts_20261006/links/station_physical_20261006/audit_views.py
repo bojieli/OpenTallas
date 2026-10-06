@@ -2,8 +2,8 @@
 """Read real timing models; report actual units, root caps and routed clockQ."""
 import argparse,json,re,hashlib,sys
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--views',required=True,type=Path);a=p.parse_args()
-root=Path(__file__).resolve().parents[4];sys.path.insert(0,str(root/'tools'))
+p=argparse.ArgumentParser();p.add_argument('--views',required=True,type=Path);p.add_argument('--src',type=Path);a=p.parse_args()
+root=a.src.resolve() if a.src else Path(__file__).resolve().parents[4];sys.path.insert(0,str(root/'tools'))
 from chip_assembly.etm import _groups,_NUM
 v=a.views;manifest=json.loads((v/'export.json').read_text());result={'name':manifest['name'],'status':'ACTUAL_ETM_AUDIT_PARENT_OPEN','parent_closed':False,'corners':{}}
 for corner in ('ss','ff'):
@@ -17,11 +17,15 @@ for corner in ('ss','ff'):
  for k,n,b,e in _groups(lib):
   if k!='cell':continue
   cell=lib[b:e]
-  groups=list(_groups(cell))
-  for pk,pn,pb,pe in groups:
-   if pk!='pin':continue
-   pin=cell[pb:pe]
-   if re.search(r'direction\s*:\s*input',pin):
+  pins=[]
+  for pk,pn,pb,pe in _groups(cell):
+   if pk=='pin':pins.append((pn,cell[pb:pe],''))
+   elif pk=='bus':
+    bus=cell[pb:pe]
+    for bk,bn,bb,be in _groups(bus):
+     if bk=='pin':pins.append((bn,bus[bb:be],bus))
+  for pn,pin,parent in pins:
+   if re.search(r'direction\s*:\s*input',pin) or (not re.search(r'direction\s*:',pin) and re.search(r'direction\s*:\s*input',parent)):
     cm=re.search(r'(?<!_)\bcapacitance\s*:\s*([0-9.eE+-]+)',pin);assert cm and float(cm[1])>0,pn
     caps[pn]=float(cm[1])*capscale
    for tk,tn,tb,te in _groups(pin):
