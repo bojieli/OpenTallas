@@ -17,8 +17,55 @@
   },
   "hfd_barrier": {
    "kind": "barrier",
-   "status": "missing",
-   "instances": 1
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/barrier",
+   "lef": "hfd_barrier.lef",
+   "lib": {
+    "ss": "hfd_barrier_ss.lib",
+    "ff": "hfd_barrier_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_above_generator": [
+     "M8",
+     "M9"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M8",
+      "M9"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M8",
+      "M9"
+     ]
+    },
+    "gen_pins": 130,
+    "view_pins": 130
+   },
+   "source": {
+    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55",
+    "host": "ot-epyc1tb",
+    "SOURCE_COMMIT": "8c5590c3e9a9669d4b2542ef7fb1401d2666ce18",
+    "ss_setup_ps": 283.48,
+    "ff_hold_ps": 8.54,
+    "closes_signoff_SS60_FF25": true,
+    "clock_period_ns": 0.833,
+    "status": "pass",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 160.278,
+    "seq_um2": 21.3597,
+    "core_um2": 49504.8,
+    "macro_um2": 0
+   }
   },
   "hfd_cdist_r14": {
    "kind": "stations",
@@ -373,7 +420,8 @@
   }
  },
  "counts": {
-  "missing": 49,
+  "missing": 48,
+  "closed": 1,
   "reservation": 2,
   "interim-not-closed": 1
  }

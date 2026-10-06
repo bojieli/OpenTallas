@@ -324,6 +324,35 @@ def real_views(index_path):
     return out
 
 
+def pad_mirror(body, orients, P=48, R=24):
+    """a view whose instances are mirrored keeps its on-track pins on track only if the mirrored dimension is
+    R mod P nm (the generator convention, ot_macro_track_snap.tcl): pad the outline up to the next such value (< P nm
+    of empty edge) and extend the pin shapes that touch the moved edge to it.  Returns (body, pad record or None)."""
+    mm = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', body)
+    w, h = (round(float(v) * 1000) for v in mm.groups())
+    nw = w + (R - w) % P if orients & {'MY', 'R180'} else w
+    nh = h + (R - h) % P if orients & {'MX', 'R180'} else h
+    if (nw, nh) == (w, h):
+        return body, None
+    body = body.replace(mm.group(0), f'SIZE {nw / 1000:.3f} BY {nh / 1000:.3f}', 1)
+    head, sep, rest = body.partition('\n  OBS')  # pins precede OBS in every exported view
+    moved = 0
+
+    def fix(r):
+        nonlocal moved
+        x0, y0, x1, y1 = (float(v) for v in r.groups())
+        X1 = nw / 1000 if nw != w and abs(x1 * 1000 - w) < 1 else x1
+        Y1 = nh / 1000 if nh != h and abs(y1 * 1000 - h) < 1 else y1
+        if (X1, Y1) == (x1, y1):
+            return r.group(0)
+        moved += 1
+        return (f'RECT  {r.group(1)} {r.group(2)} {r.group(3) if X1 == x1 else f"{X1:.3f}"} '
+                f'{r.group(4) if Y1 == y1 else f"{Y1:.3f}"}')
+    head = re.sub(r'RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', fix, head)
+    return head + sep + rest, dict(size_nm=[w, h], padded_nm=[nw, nh], edge_pin_shapes_extended=moved,
+                                   orients=sorted(orients))
+
+
 def cmd_die(a):
     m, pw, M, real = model()
     views = real_views(a.index)
@@ -340,10 +369,16 @@ def cmd_die(a):
             assert k == 1, (n, k)
             gen_text[n] = lef
         (work / 'elements.lef').write_text(el)
-        lefs = []
+        lefs, pads = [], {}
+        orients = defaultdict(set)
+        for it in m['insts']:
+            orients[it.master].add(it.orient)
         for n, lef in views.items():
             t = parse_lef(lef)['text']
             body = re.search(r'(MACRO .*?END ' + re.escape(n) + r')', t, re.S).group(1)
+            body, pad = pad_mirror(body, orients[n])
+            if pad:
+                pads[n] = pad
             lefs.append(body)
         (work / 'views.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(lefs)
                                         + '\nEND LIBRARY\n')
@@ -374,6 +409,8 @@ def cmd_die(a):
         (work / 'elements.lef').write_text(el)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
+    if a.case == 'real' and pads:
+        man['mirror_pads'] = pads
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
 
