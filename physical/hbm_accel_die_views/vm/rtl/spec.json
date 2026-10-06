@@ -129,5 +129,57 @@
  "share_tree": {
   "min": 3,
   "fanout": 4
+ },
+ "port_stages": {
+  "f_su_SW": 5,
+  "iSW": 4,
+  "t_su_SW": 4,
+  "qSW": 3,
+  "xSW": 3,
+  "qNW": 3,
+  "xNW": 3,
+  "f_su_NW": 4,
+  "iNW": 4,
+  "t_su_NW": 5,
+  "f_su_SE": 5,
+  "iSE": 4,
+  "t_su_SE": 4,
+  "qSE": 3,
+  "xSE": 3,
+  "qNE": 3,
+  "xNE": 3,
+  "f_su_NE": 4,
+  "iNE": 4,
+  "t_su_NE": 5,
+  "t_quant": 3,
+  "t_router": 4
+ },
+ "port_stages_basis": {
+  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
+  "d_um": {
+   "f_su_SW": 1581,
+   "iSW": 1364,
+   "t_su_SW": 1221,
+   "qSW": 1004,
+   "xSW": 858,
+   "qNW": 787,
+   "xNW": 1004,
+   "f_su_NW": 1221,
+   "iNW": 1364,
+   "t_su_NW": 1581,
+   "f_su_SE": 1581,
+   "iSE": 1364,
+   "t_su_SE": 1221,
+   "qSE": 1004,
+   "xSE": 858,
+   "qNE": 787,
+   "xNE": 1004,
+   "f_su_NE": 1221,
+   "iNE": 1364,
+   "t_su_NE": 1581,
+   "t_quant": 1098,
+   "t_router": 1374
+  },
+  "source": "pin -> view centre Manhattan, max over the port bits (no placed core yet)"
  }
 }

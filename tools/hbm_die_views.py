@@ -109,7 +109,18 @@ def segs(arr):
     return out
 
 
+def derived_record(name):
+    """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
+    committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
+        return json.loads(f.read_text())
+    return None
+
+
 def master_record(name):
+    d = derived_record(name)
+    if d is not None:
+        return d
     m, pw, M, real = model()
     mst = M[name]
     wmap = {p: pw.get((name, p), 0) for p in mst.order}
@@ -158,7 +169,7 @@ def cmd_ports(a):
     out = Path(a.out)
     summary = {}
     for n in names:
-        if n not in M:
+        if n not in M and derived_record(n) is None:
             raise SystemExit(f'no generator master {n}')
         rec = master_record(n)
         d = out / n

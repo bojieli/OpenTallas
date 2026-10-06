@@ -4437,74 +4437,50 @@ module tb_hfd_coll;
     always @* refclk = clk;
     reg [24:0] d0_f_cmdproc; always @(posedge clk) d0_f_cmdproc <= f_cmdproc;
     reg [24:0] d1_f_cmdproc; always @(posedge clk) d1_f_cmdproc <= d0_f_cmdproc;
-    reg [24:0] d2_f_cmdproc; always @(posedge clk) d2_f_cmdproc <= d1_f_cmdproc;
-    reg [24:0] d3_f_cmdproc; always @(posedge clk) d3_f_cmdproc <= d2_f_cmdproc;
-    reg [24:0] d_f_cmdproc; always @(posedge clk) d_f_cmdproc <= d3_f_cmdproc;
+    reg [24:0] d_f_cmdproc; always @(posedge clk) d_f_cmdproc <= d1_f_cmdproc;
     reg [1023:0] d0_f_su_NE; always @(posedge clk) d0_f_su_NE <= f_su_NE;
     reg [1023:0] d1_f_su_NE; always @(posedge clk) d1_f_su_NE <= d0_f_su_NE;
     reg [1023:0] d2_f_su_NE; always @(posedge clk) d2_f_su_NE <= d1_f_su_NE;
-    reg [1023:0] d3_f_su_NE; always @(posedge clk) d3_f_su_NE <= d2_f_su_NE;
-    reg [1023:0] d_f_su_NE; always @(posedge clk) d_f_su_NE <= d3_f_su_NE;
+    reg [1023:0] d_f_su_NE; always @(posedge clk) d_f_su_NE <= d2_f_su_NE;
     reg [1023:0] d0_f_su_NW; always @(posedge clk) d0_f_su_NW <= f_su_NW;
     reg [1023:0] d1_f_su_NW; always @(posedge clk) d1_f_su_NW <= d0_f_su_NW;
     reg [1023:0] d2_f_su_NW; always @(posedge clk) d2_f_su_NW <= d1_f_su_NW;
-    reg [1023:0] d3_f_su_NW; always @(posedge clk) d3_f_su_NW <= d2_f_su_NW;
-    reg [1023:0] d_f_su_NW; always @(posedge clk) d_f_su_NW <= d3_f_su_NW;
+    reg [1023:0] d_f_su_NW; always @(posedge clk) d_f_su_NW <= d2_f_su_NW;
     reg [1023:0] d0_f_su_SE; always @(posedge clk) d0_f_su_SE <= f_su_SE;
     reg [1023:0] d1_f_su_SE; always @(posedge clk) d1_f_su_SE <= d0_f_su_SE;
     reg [1023:0] d2_f_su_SE; always @(posedge clk) d2_f_su_SE <= d1_f_su_SE;
-    reg [1023:0] d3_f_su_SE; always @(posedge clk) d3_f_su_SE <= d2_f_su_SE;
-    reg [1023:0] d_f_su_SE; always @(posedge clk) d_f_su_SE <= d3_f_su_SE;
+    reg [1023:0] d_f_su_SE; always @(posedge clk) d_f_su_SE <= d2_f_su_SE;
     reg [1023:0] d0_f_su_SW; always @(posedge clk) d0_f_su_SW <= f_su_SW;
     reg [1023:0] d1_f_su_SW; always @(posedge clk) d1_f_su_SW <= d0_f_su_SW;
     reg [1023:0] d2_f_su_SW; always @(posedge clk) d2_f_su_SW <= d1_f_su_SW;
-    reg [1023:0] d3_f_su_SW; always @(posedge clk) d3_f_su_SW <= d2_f_su_SW;
-    reg [1023:0] d_f_su_SW; always @(posedge clk) d_f_su_SW <= d3_f_su_SW;
+    reg [1023:0] d_f_su_SW; always @(posedge clk) d_f_su_SW <= d2_f_su_SW;
     reg [975:0] d0_llk_N0; always @(posedge clk) d0_llk_N0 <= drv_llk_N0;
     reg [975:0] d1_llk_N0; always @(posedge clk) d1_llk_N0 <= d0_llk_N0;
-    reg [975:0] d2_llk_N0; always @(posedge clk) d2_llk_N0 <= d1_llk_N0;
-    reg [975:0] d3_llk_N0; always @(posedge clk) d3_llk_N0 <= d2_llk_N0;
-    reg [975:0] d_llk_N0; always @(posedge clk) d_llk_N0 <= d3_llk_N0;
+    reg [975:0] d_llk_N0; always @(posedge clk) d_llk_N0 <= d1_llk_N0;
     reg [975:0] d0_llk_N1; always @(posedge clk) d0_llk_N1 <= drv_llk_N1;
     reg [975:0] d1_llk_N1; always @(posedge clk) d1_llk_N1 <= d0_llk_N1;
-    reg [975:0] d2_llk_N1; always @(posedge clk) d2_llk_N1 <= d1_llk_N1;
-    reg [975:0] d3_llk_N1; always @(posedge clk) d3_llk_N1 <= d2_llk_N1;
-    reg [975:0] d_llk_N1; always @(posedge clk) d_llk_N1 <= d3_llk_N1;
+    reg [975:0] d_llk_N1; always @(posedge clk) d_llk_N1 <= d1_llk_N1;
     reg [975:0] d0_llk_N2; always @(posedge clk) d0_llk_N2 <= drv_llk_N2;
     reg [975:0] d1_llk_N2; always @(posedge clk) d1_llk_N2 <= d0_llk_N2;
-    reg [975:0] d2_llk_N2; always @(posedge clk) d2_llk_N2 <= d1_llk_N2;
-    reg [975:0] d3_llk_N2; always @(posedge clk) d3_llk_N2 <= d2_llk_N2;
-    reg [975:0] d_llk_N2; always @(posedge clk) d_llk_N2 <= d3_llk_N2;
+    reg [975:0] d_llk_N2; always @(posedge clk) d_llk_N2 <= d1_llk_N2;
     reg [975:0] d0_llk_N3; always @(posedge clk) d0_llk_N3 <= drv_llk_N3;
     reg [975:0] d1_llk_N3; always @(posedge clk) d1_llk_N3 <= d0_llk_N3;
-    reg [975:0] d2_llk_N3; always @(posedge clk) d2_llk_N3 <= d1_llk_N3;
-    reg [975:0] d3_llk_N3; always @(posedge clk) d3_llk_N3 <= d2_llk_N3;
-    reg [975:0] d_llk_N3; always @(posedge clk) d_llk_N3 <= d3_llk_N3;
+    reg [975:0] d_llk_N3; always @(posedge clk) d_llk_N3 <= d1_llk_N3;
     reg [975:0] d0_llk_S0; always @(posedge clk) d0_llk_S0 <= drv_llk_S0;
     reg [975:0] d1_llk_S0; always @(posedge clk) d1_llk_S0 <= d0_llk_S0;
-    reg [975:0] d2_llk_S0; always @(posedge clk) d2_llk_S0 <= d1_llk_S0;
-    reg [975:0] d3_llk_S0; always @(posedge clk) d3_llk_S0 <= d2_llk_S0;
-    reg [975:0] d_llk_S0; always @(posedge clk) d_llk_S0 <= d3_llk_S0;
+    reg [975:0] d_llk_S0; always @(posedge clk) d_llk_S0 <= d1_llk_S0;
     reg [975:0] d0_llk_S1; always @(posedge clk) d0_llk_S1 <= drv_llk_S1;
     reg [975:0] d1_llk_S1; always @(posedge clk) d1_llk_S1 <= d0_llk_S1;
-    reg [975:0] d2_llk_S1; always @(posedge clk) d2_llk_S1 <= d1_llk_S1;
-    reg [975:0] d3_llk_S1; always @(posedge clk) d3_llk_S1 <= d2_llk_S1;
-    reg [975:0] d_llk_S1; always @(posedge clk) d_llk_S1 <= d3_llk_S1;
+    reg [975:0] d_llk_S1; always @(posedge clk) d_llk_S1 <= d1_llk_S1;
     reg [975:0] d0_llk_S2; always @(posedge clk) d0_llk_S2 <= drv_llk_S2;
     reg [975:0] d1_llk_S2; always @(posedge clk) d1_llk_S2 <= d0_llk_S2;
-    reg [975:0] d2_llk_S2; always @(posedge clk) d2_llk_S2 <= d1_llk_S2;
-    reg [975:0] d3_llk_S2; always @(posedge clk) d3_llk_S2 <= d2_llk_S2;
-    reg [975:0] d_llk_S2; always @(posedge clk) d_llk_S2 <= d3_llk_S2;
+    reg [975:0] d_llk_S2; always @(posedge clk) d_llk_S2 <= d1_llk_S2;
     reg [975:0] d0_llk_S3; always @(posedge clk) d0_llk_S3 <= drv_llk_S3;
     reg [975:0] d1_llk_S3; always @(posedge clk) d1_llk_S3 <= d0_llk_S3;
-    reg [975:0] d2_llk_S3; always @(posedge clk) d2_llk_S3 <= d1_llk_S3;
-    reg [975:0] d3_llk_S3; always @(posedge clk) d3_llk_S3 <= d2_llk_S3;
-    reg [975:0] d_llk_S3; always @(posedge clk) d_llk_S3 <= d3_llk_S3;
+    reg [975:0] d_llk_S3; always @(posedge clk) d_llk_S3 <= d1_llk_S3;
     reg [975:0] d0_llk_S4; always @(posedge clk) d0_llk_S4 <= drv_llk_S4;
     reg [975:0] d1_llk_S4; always @(posedge clk) d1_llk_S4 <= d0_llk_S4;
-    reg [975:0] d2_llk_S4; always @(posedge clk) d2_llk_S4 <= d1_llk_S4;
-    reg [975:0] d3_llk_S4; always @(posedge clk) d3_llk_S4 <= d2_llk_S4;
-    reg [975:0] d_llk_S4; always @(posedge clk) d_llk_S4 <= d3_llk_S4;
+    reg [975:0] d_llk_S4; always @(posedge clk) d_llk_S4 <= d1_llk_S4;
     wire [0:0] r_ep_clk;
     assign r_ep_clk = dut.w_ep_clk;
     wire [0:0] r_ep_rst_n;
@@ -4520,31 +4496,31 @@ module tb_hfd_coll;
     wire [0:0] r_ep_go;
     assign r_ep_go = {d_f_cmdproc[24:24]};
     wire [31:0] r_ep_inj_idx;
-    reg [31:0] q0_ep_inj_idx; always @(posedge clk) q0_ep_inj_idx <= r_ep_inj_idx;
-    reg [31:0] q1_ep_inj_idx; always @(posedge clk) q1_ep_inj_idx <= q0_ep_inj_idx;
+    reg [31:0] q1_ep_inj_idx; always @(posedge clk) q1_ep_inj_idx <= r_ep_inj_idx;
     reg [31:0] q2_ep_inj_idx; always @(posedge clk) q2_ep_inj_idx <= q1_ep_inj_idx;
     reg [31:0] q3_ep_inj_idx; always @(posedge clk) q3_ep_inj_idx <= q2_ep_inj_idx;
-    reg [31:0] q_ep_inj_idx; always @(posedge clk) q_ep_inj_idx <= q3_ep_inj_idx;
+    reg [31:0] q4_ep_inj_idx; always @(posedge clk) q4_ep_inj_idx <= q3_ep_inj_idx;
+    reg [31:0] q5_ep_inj_idx; always @(posedge clk) q5_ep_inj_idx <= q4_ep_inj_idx;
     wire [1:0] r_ep_inj_rd;
-    reg [1:0] q0_ep_inj_rd; always @(posedge clk) q0_ep_inj_rd <= r_ep_inj_rd;
-    reg [1:0] q1_ep_inj_rd; always @(posedge clk) q1_ep_inj_rd <= q0_ep_inj_rd;
+    reg [1:0] q1_ep_inj_rd; always @(posedge clk) q1_ep_inj_rd <= r_ep_inj_rd;
     reg [1:0] q2_ep_inj_rd; always @(posedge clk) q2_ep_inj_rd <= q1_ep_inj_rd;
     reg [1:0] q3_ep_inj_rd; always @(posedge clk) q3_ep_inj_rd <= q2_ep_inj_rd;
-    reg [1:0] q_ep_inj_rd; always @(posedge clk) q_ep_inj_rd <= q3_ep_inj_rd;
+    reg [1:0] q4_ep_inj_rd; always @(posedge clk) q4_ep_inj_rd <= q3_ep_inj_rd;
+    reg [1:0] q5_ep_inj_rd; always @(posedge clk) q5_ep_inj_rd <= q4_ep_inj_rd;
     wire [1023:0] r_ep_inj_data;
     assign r_ep_inj_data = {d_f_su_SW[1023:0]};
     wire [7:0] r_ep_ph_tx_v;
-    reg [7:0] q0_ep_ph_tx_v; always @(posedge clk) q0_ep_ph_tx_v <= r_ep_ph_tx_v;
-    reg [7:0] q1_ep_ph_tx_v; always @(posedge clk) q1_ep_ph_tx_v <= q0_ep_ph_tx_v;
+    reg [7:0] q1_ep_ph_tx_v; always @(posedge clk) q1_ep_ph_tx_v <= r_ep_ph_tx_v;
     reg [7:0] q2_ep_ph_tx_v; always @(posedge clk) q2_ep_ph_tx_v <= q1_ep_ph_tx_v;
     reg [7:0] q3_ep_ph_tx_v; always @(posedge clk) q3_ep_ph_tx_v <= q2_ep_ph_tx_v;
-    reg [7:0] q_ep_ph_tx_v; always @(posedge clk) q_ep_ph_tx_v <= q3_ep_ph_tx_v;
+    reg [7:0] q4_ep_ph_tx_v; always @(posedge clk) q4_ep_ph_tx_v <= q3_ep_ph_tx_v;
+    reg [7:0] q5_ep_ph_tx_v; always @(posedge clk) q5_ep_ph_tx_v <= q4_ep_ph_tx_v;
     wire [4359:0] r_ep_ph_tx_flit;
-    reg [4359:0] q0_ep_ph_tx_flit; always @(posedge clk) q0_ep_ph_tx_flit <= r_ep_ph_tx_flit;
-    reg [4359:0] q1_ep_ph_tx_flit; always @(posedge clk) q1_ep_ph_tx_flit <= q0_ep_ph_tx_flit;
+    reg [4359:0] q1_ep_ph_tx_flit; always @(posedge clk) q1_ep_ph_tx_flit <= r_ep_ph_tx_flit;
     reg [4359:0] q2_ep_ph_tx_flit; always @(posedge clk) q2_ep_ph_tx_flit <= q1_ep_ph_tx_flit;
     reg [4359:0] q3_ep_ph_tx_flit; always @(posedge clk) q3_ep_ph_tx_flit <= q2_ep_ph_tx_flit;
-    reg [4359:0] q_ep_ph_tx_flit; always @(posedge clk) q_ep_ph_tx_flit <= q3_ep_ph_tx_flit;
+    reg [4359:0] q4_ep_ph_tx_flit; always @(posedge clk) q4_ep_ph_tx_flit <= q3_ep_ph_tx_flit;
+    reg [4359:0] q5_ep_ph_tx_flit; always @(posedge clk) q5_ep_ph_tx_flit <= q4_ep_ph_tx_flit;
     wire [7:0] r_ep_sw_cr_ret;
     assign r_ep_sw_cr_ret = {d_llk_N3[966:959]};
     wire [7:0] r_ep_ph_rx_v;
@@ -4552,35 +4528,35 @@ module tb_hfd_coll;
     wire [4359:0] r_ep_ph_rx_flit;
     assign r_ep_ph_rx_flit = {d_llk_N3[958:487], d_llk_N2[973:487], d_llk_N1[973:487], d_llk_N0[973:487], d_llk_S4[973:487], d_llk_S3[973:487], d_llk_S2[973:487], d_llk_S1[973:487], d_llk_S0[973:495]};
     wire [7:0] r_ep_rx_credit;
-    reg [7:0] q0_ep_rx_credit; always @(posedge clk) q0_ep_rx_credit <= r_ep_rx_credit;
-    reg [7:0] q1_ep_rx_credit; always @(posedge clk) q1_ep_rx_credit <= q0_ep_rx_credit;
+    reg [7:0] q1_ep_rx_credit; always @(posedge clk) q1_ep_rx_credit <= r_ep_rx_credit;
     reg [7:0] q2_ep_rx_credit; always @(posedge clk) q2_ep_rx_credit <= q1_ep_rx_credit;
     reg [7:0] q3_ep_rx_credit; always @(posedge clk) q3_ep_rx_credit <= q2_ep_rx_credit;
-    reg [7:0] q_ep_rx_credit; always @(posedge clk) q_ep_rx_credit <= q3_ep_rx_credit;
+    reg [7:0] q4_ep_rx_credit; always @(posedge clk) q4_ep_rx_credit <= q3_ep_rx_credit;
+    reg [7:0] q5_ep_rx_credit; always @(posedge clk) q5_ep_rx_credit <= q4_ep_rx_credit;
     wire [3:0] r_ep_del_valid;
-    reg [3:0] q0_ep_del_valid; always @(posedge clk) q0_ep_del_valid <= r_ep_del_valid;
-    reg [3:0] q1_ep_del_valid; always @(posedge clk) q1_ep_del_valid <= q0_ep_del_valid;
+    reg [3:0] q1_ep_del_valid; always @(posedge clk) q1_ep_del_valid <= r_ep_del_valid;
     reg [3:0] q2_ep_del_valid; always @(posedge clk) q2_ep_del_valid <= q1_ep_del_valid;
     reg [3:0] q3_ep_del_valid; always @(posedge clk) q3_ep_del_valid <= q2_ep_del_valid;
-    reg [3:0] q_ep_del_valid; always @(posedge clk) q_ep_del_valid <= q3_ep_del_valid;
+    reg [3:0] q4_ep_del_valid; always @(posedge clk) q4_ep_del_valid <= q3_ep_del_valid;
+    reg [3:0] q5_ep_del_valid; always @(posedge clk) q5_ep_del_valid <= q4_ep_del_valid;
     wire [2179:0] r_ep_del_flit;
-    reg [2179:0] q0_ep_del_flit; always @(posedge clk) q0_ep_del_flit <= r_ep_del_flit;
-    reg [2179:0] q1_ep_del_flit; always @(posedge clk) q1_ep_del_flit <= q0_ep_del_flit;
+    reg [2179:0] q1_ep_del_flit; always @(posedge clk) q1_ep_del_flit <= r_ep_del_flit;
     reg [2179:0] q2_ep_del_flit; always @(posedge clk) q2_ep_del_flit <= q1_ep_del_flit;
     reg [2179:0] q3_ep_del_flit; always @(posedge clk) q3_ep_del_flit <= q2_ep_del_flit;
-    reg [2179:0] q_ep_del_flit; always @(posedge clk) q_ep_del_flit <= q3_ep_del_flit;
+    reg [2179:0] q4_ep_del_flit; always @(posedge clk) q4_ep_del_flit <= q3_ep_del_flit;
+    reg [2179:0] q5_ep_del_flit; always @(posedge clk) q5_ep_del_flit <= q4_ep_del_flit;
     wire [0:0] r_ep_fault;
-    reg [0:0] q0_ep_fault; always @(posedge clk) q0_ep_fault <= r_ep_fault;
-    reg [0:0] q1_ep_fault; always @(posedge clk) q1_ep_fault <= q0_ep_fault;
+    reg [0:0] q1_ep_fault; always @(posedge clk) q1_ep_fault <= r_ep_fault;
     reg [0:0] q2_ep_fault; always @(posedge clk) q2_ep_fault <= q1_ep_fault;
     reg [0:0] q3_ep_fault; always @(posedge clk) q3_ep_fault <= q2_ep_fault;
-    reg [0:0] q_ep_fault; always @(posedge clk) q_ep_fault <= q3_ep_fault;
+    reg [0:0] q4_ep_fault; always @(posedge clk) q4_ep_fault <= q3_ep_fault;
+    reg [0:0] q5_ep_fault; always @(posedge clk) q5_ep_fault <= q4_ep_fault;
     wire [31:0] r_ep_stat_credit_stall;
-    reg [31:0] q0_ep_stat_credit_stall; always @(posedge clk) q0_ep_stat_credit_stall <= r_ep_stat_credit_stall;
-    reg [31:0] q1_ep_stat_credit_stall; always @(posedge clk) q1_ep_stat_credit_stall <= q0_ep_stat_credit_stall;
+    reg [31:0] q1_ep_stat_credit_stall; always @(posedge clk) q1_ep_stat_credit_stall <= r_ep_stat_credit_stall;
     reg [31:0] q2_ep_stat_credit_stall; always @(posedge clk) q2_ep_stat_credit_stall <= q1_ep_stat_credit_stall;
     reg [31:0] q3_ep_stat_credit_stall; always @(posedge clk) q3_ep_stat_credit_stall <= q2_ep_stat_credit_stall;
-    reg [31:0] q_ep_stat_credit_stall; always @(posedge clk) q_ep_stat_credit_stall <= q3_ep_stat_credit_stall;
+    reg [31:0] q4_ep_stat_credit_stall; always @(posedge clk) q4_ep_stat_credit_stall <= q3_ep_stat_credit_stall;
+    reg [31:0] q5_ep_stat_credit_stall; always @(posedge clk) q5_ep_stat_credit_stall <= q4_ep_stat_credit_stall;
     ot_hbm_accel_tu_endpoint #(.ENABLE(1), .RXAW(4), .QAW(4), .TXAW(4)) ref_ep (.clk(r_ep_clk), .rst_n(r_ep_rst_n), .pclk(r_ep_pclk), .prst_n(r_ep_prst_n), .rank(r_ep_rank), .pf(r_ep_pf), .go(r_ep_go), .inj_idx(r_ep_inj_idx), .inj_rd(r_ep_inj_rd), .inj_data(r_ep_inj_data), .ph_tx_v(r_ep_ph_tx_v), .ph_tx_flit(r_ep_ph_tx_flit), .sw_cr_ret(r_ep_sw_cr_ret), .ph_rx_v(r_ep_ph_rx_v), .ph_rx_flit(r_ep_ph_rx_flit), .rx_credit(r_ep_rx_credit), .del_valid(r_ep_del_valid), .del_flit(r_ep_del_flit), .fault(r_ep_fault), .stat_credit_stall(r_ep_stat_credit_stall));
     integer err = 0, nchk = 0, cyc;
     integer seed = 20261006;
@@ -5001,35 +4977,35 @@ module tb_hfd_coll;
         #0.05 por = 0;
         for (cyc = 0; cyc < 400; cyc = cyc + 1) begin
             @(negedge clk);
-            nchk = nchk + 1; if (t_su_SW[577:546] !== q_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[577:546] %h ref %h cyc %0d", t_su_SW[577:546], q_ep_inj_idx[31:0], cyc); end
-            nchk = nchk + 1; if (t_su_NW[577:546] !== q_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[577:546] %h ref %h cyc %0d", t_su_NW[577:546], q_ep_inj_idx[31:0], cyc); end
-            nchk = nchk + 1; if (t_su_SE[577:546] !== q_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[577:546] %h ref %h cyc %0d", t_su_SE[577:546], q_ep_inj_idx[31:0], cyc); end
-            nchk = nchk + 1; if (t_su_NE[577:546] !== q_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[577:546] %h ref %h cyc %0d", t_su_NE[577:546], q_ep_inj_idx[31:0], cyc); end
-            nchk = nchk + 1; if (t_su_SW[579:578] !== q_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[579:578] %h ref %h cyc %0d", t_su_SW[579:578], q_ep_inj_rd[1:0], cyc); end
-            nchk = nchk + 1; if (t_su_NW[579:578] !== q_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[579:578] %h ref %h cyc %0d", t_su_NW[579:578], q_ep_inj_rd[1:0], cyc); end
-            nchk = nchk + 1; if (t_su_SE[579:578] !== q_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[579:578] %h ref %h cyc %0d", t_su_SE[579:578], q_ep_inj_rd[1:0], cyc); end
-            nchk = nchk + 1; if (t_su_NE[579:578] !== q_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[579:578] %h ref %h cyc %0d", t_su_NE[579:578], q_ep_inj_rd[1:0], cyc); end
-            nchk = nchk + 1; if (llk_S0[7:0] !== q_ep_ph_tx_v[7:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S0[7:0] %h ref %h cyc %0d", llk_S0[7:0], q_ep_ph_tx_v[7:0], cyc); end
-            nchk = nchk + 1; if (llk_S0[486:8] !== q_ep_ph_tx_flit[478:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S0[486:8] %h ref %h cyc %0d", llk_S0[486:8], q_ep_ph_tx_flit[478:0], cyc); end
-            nchk = nchk + 1; if (llk_S1[486:0] !== q_ep_ph_tx_flit[965:479]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S1[486:0] %h ref %h cyc %0d", llk_S1[486:0], q_ep_ph_tx_flit[965:479], cyc); end
-            nchk = nchk + 1; if (llk_S2[486:0] !== q_ep_ph_tx_flit[1452:966]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S2[486:0] %h ref %h cyc %0d", llk_S2[486:0], q_ep_ph_tx_flit[1452:966], cyc); end
-            nchk = nchk + 1; if (llk_S3[486:0] !== q_ep_ph_tx_flit[1939:1453]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S3[486:0] %h ref %h cyc %0d", llk_S3[486:0], q_ep_ph_tx_flit[1939:1453], cyc); end
-            nchk = nchk + 1; if (llk_S4[486:0] !== q_ep_ph_tx_flit[2426:1940]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S4[486:0] %h ref %h cyc %0d", llk_S4[486:0], q_ep_ph_tx_flit[2426:1940], cyc); end
-            nchk = nchk + 1; if (llk_N0[486:0] !== q_ep_ph_tx_flit[2913:2427]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N0[486:0] %h ref %h cyc %0d", llk_N0[486:0], q_ep_ph_tx_flit[2913:2427], cyc); end
-            nchk = nchk + 1; if (llk_N1[486:0] !== q_ep_ph_tx_flit[3400:2914]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N1[486:0] %h ref %h cyc %0d", llk_N1[486:0], q_ep_ph_tx_flit[3400:2914], cyc); end
-            nchk = nchk + 1; if (llk_N2[486:0] !== q_ep_ph_tx_flit[3887:3401]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N2[486:0] %h ref %h cyc %0d", llk_N2[486:0], q_ep_ph_tx_flit[3887:3401], cyc); end
-            nchk = nchk + 1; if (llk_N3[471:0] !== q_ep_ph_tx_flit[4359:3888]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N3[471:0] %h ref %h cyc %0d", llk_N3[471:0], q_ep_ph_tx_flit[4359:3888], cyc); end
-            nchk = nchk + 1; if (llk_N3[479:472] !== q_ep_rx_credit[7:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N3[479:472] %h ref %h cyc %0d", llk_N3[479:472], q_ep_rx_credit[7:0], cyc); end
-            nchk = nchk + 1; if (t_su_SW[545:545] !== q_ep_del_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[545:545] %h ref %h cyc %0d", t_su_SW[545:545], q_ep_del_valid[0:0], cyc); end
-            nchk = nchk + 1; if (t_su_NW[545:545] !== q_ep_del_valid[1:1]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[545:545] %h ref %h cyc %0d", t_su_NW[545:545], q_ep_del_valid[1:1], cyc); end
-            nchk = nchk + 1; if (t_su_SE[545:545] !== q_ep_del_valid[2:2]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[545:545] %h ref %h cyc %0d", t_su_SE[545:545], q_ep_del_valid[2:2], cyc); end
-            nchk = nchk + 1; if (t_su_NE[545:545] !== q_ep_del_valid[3:3]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[545:545] %h ref %h cyc %0d", t_su_NE[545:545], q_ep_del_valid[3:3], cyc); end
-            nchk = nchk + 1; if (t_su_SW[544:0] !== q_ep_del_flit[544:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[544:0] %h ref %h cyc %0d", t_su_SW[544:0], q_ep_del_flit[544:0], cyc); end
-            nchk = nchk + 1; if (t_su_NW[544:0] !== q_ep_del_flit[1089:545]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[544:0] %h ref %h cyc %0d", t_su_NW[544:0], q_ep_del_flit[1089:545], cyc); end
-            nchk = nchk + 1; if (t_su_SE[544:0] !== q_ep_del_flit[1634:1090]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[544:0] %h ref %h cyc %0d", t_su_SE[544:0], q_ep_del_flit[1634:1090], cyc); end
-            nchk = nchk + 1; if (t_su_NE[544:0] !== q_ep_del_flit[2179:1635]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[544:0] %h ref %h cyc %0d", t_su_NE[544:0], q_ep_del_flit[2179:1635], cyc); end
-            nchk = nchk + 1; if (t_cmdproc[0:0] !== q_ep_fault[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[0:0] %h ref %h cyc %0d", t_cmdproc[0:0], q_ep_fault[0:0], cyc); end
-            nchk = nchk + 1; if (t_cmdproc[32:1] !== q_ep_stat_credit_stall[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[32:1] %h ref %h cyc %0d", t_cmdproc[32:1], q_ep_stat_credit_stall[31:0], cyc); end
+            nchk = nchk + 1; if (t_su_SW[577:546] !== q4_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[577:546] %h ref %h cyc %0d", t_su_SW[577:546], q4_ep_inj_idx[31:0], cyc); end
+            nchk = nchk + 1; if (t_su_NW[577:546] !== q4_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[577:546] %h ref %h cyc %0d", t_su_NW[577:546], q4_ep_inj_idx[31:0], cyc); end
+            nchk = nchk + 1; if (t_su_SE[577:546] !== q4_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[577:546] %h ref %h cyc %0d", t_su_SE[577:546], q4_ep_inj_idx[31:0], cyc); end
+            nchk = nchk + 1; if (t_su_NE[577:546] !== q4_ep_inj_idx[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[577:546] %h ref %h cyc %0d", t_su_NE[577:546], q4_ep_inj_idx[31:0], cyc); end
+            nchk = nchk + 1; if (t_su_SW[579:578] !== q4_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[579:578] %h ref %h cyc %0d", t_su_SW[579:578], q4_ep_inj_rd[1:0], cyc); end
+            nchk = nchk + 1; if (t_su_NW[579:578] !== q4_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[579:578] %h ref %h cyc %0d", t_su_NW[579:578], q4_ep_inj_rd[1:0], cyc); end
+            nchk = nchk + 1; if (t_su_SE[579:578] !== q4_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[579:578] %h ref %h cyc %0d", t_su_SE[579:578], q4_ep_inj_rd[1:0], cyc); end
+            nchk = nchk + 1; if (t_su_NE[579:578] !== q4_ep_inj_rd[1:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[579:578] %h ref %h cyc %0d", t_su_NE[579:578], q4_ep_inj_rd[1:0], cyc); end
+            nchk = nchk + 1; if (llk_S0[7:0] !== q3_ep_ph_tx_v[7:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S0[7:0] %h ref %h cyc %0d", llk_S0[7:0], q3_ep_ph_tx_v[7:0], cyc); end
+            nchk = nchk + 1; if (llk_S0[486:8] !== q3_ep_ph_tx_flit[478:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S0[486:8] %h ref %h cyc %0d", llk_S0[486:8], q3_ep_ph_tx_flit[478:0], cyc); end
+            nchk = nchk + 1; if (llk_S1[486:0] !== q3_ep_ph_tx_flit[965:479]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S1[486:0] %h ref %h cyc %0d", llk_S1[486:0], q3_ep_ph_tx_flit[965:479], cyc); end
+            nchk = nchk + 1; if (llk_S2[486:0] !== q3_ep_ph_tx_flit[1452:966]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S2[486:0] %h ref %h cyc %0d", llk_S2[486:0], q3_ep_ph_tx_flit[1452:966], cyc); end
+            nchk = nchk + 1; if (llk_S3[486:0] !== q3_ep_ph_tx_flit[1939:1453]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S3[486:0] %h ref %h cyc %0d", llk_S3[486:0], q3_ep_ph_tx_flit[1939:1453], cyc); end
+            nchk = nchk + 1; if (llk_S4[486:0] !== q3_ep_ph_tx_flit[2426:1940]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_S4[486:0] %h ref %h cyc %0d", llk_S4[486:0], q3_ep_ph_tx_flit[2426:1940], cyc); end
+            nchk = nchk + 1; if (llk_N0[486:0] !== q3_ep_ph_tx_flit[2913:2427]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N0[486:0] %h ref %h cyc %0d", llk_N0[486:0], q3_ep_ph_tx_flit[2913:2427], cyc); end
+            nchk = nchk + 1; if (llk_N1[486:0] !== q3_ep_ph_tx_flit[3400:2914]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N1[486:0] %h ref %h cyc %0d", llk_N1[486:0], q3_ep_ph_tx_flit[3400:2914], cyc); end
+            nchk = nchk + 1; if (llk_N2[486:0] !== q3_ep_ph_tx_flit[3887:3401]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N2[486:0] %h ref %h cyc %0d", llk_N2[486:0], q3_ep_ph_tx_flit[3887:3401], cyc); end
+            nchk = nchk + 1; if (llk_N3[471:0] !== q3_ep_ph_tx_flit[4359:3888]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N3[471:0] %h ref %h cyc %0d", llk_N3[471:0], q3_ep_ph_tx_flit[4359:3888], cyc); end
+            nchk = nchk + 1; if (llk_N3[479:472] !== q3_ep_rx_credit[7:0]) begin err = err + 1; if (err < 10) $display("MISMATCH llk_N3[479:472] %h ref %h cyc %0d", llk_N3[479:472], q3_ep_rx_credit[7:0], cyc); end
+            nchk = nchk + 1; if (t_su_SW[545:545] !== q4_ep_del_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[545:545] %h ref %h cyc %0d", t_su_SW[545:545], q4_ep_del_valid[0:0], cyc); end
+            nchk = nchk + 1; if (t_su_NW[545:545] !== q4_ep_del_valid[1:1]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[545:545] %h ref %h cyc %0d", t_su_NW[545:545], q4_ep_del_valid[1:1], cyc); end
+            nchk = nchk + 1; if (t_su_SE[545:545] !== q4_ep_del_valid[2:2]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[545:545] %h ref %h cyc %0d", t_su_SE[545:545], q4_ep_del_valid[2:2], cyc); end
+            nchk = nchk + 1; if (t_su_NE[545:545] !== q4_ep_del_valid[3:3]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[545:545] %h ref %h cyc %0d", t_su_NE[545:545], q4_ep_del_valid[3:3], cyc); end
+            nchk = nchk + 1; if (t_su_SW[544:0] !== q4_ep_del_flit[544:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[544:0] %h ref %h cyc %0d", t_su_SW[544:0], q4_ep_del_flit[544:0], cyc); end
+            nchk = nchk + 1; if (t_su_NW[544:0] !== q4_ep_del_flit[1089:545]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[544:0] %h ref %h cyc %0d", t_su_NW[544:0], q4_ep_del_flit[1089:545], cyc); end
+            nchk = nchk + 1; if (t_su_SE[544:0] !== q4_ep_del_flit[1634:1090]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[544:0] %h ref %h cyc %0d", t_su_SE[544:0], q4_ep_del_flit[1634:1090], cyc); end
+            nchk = nchk + 1; if (t_su_NE[544:0] !== q4_ep_del_flit[2179:1635]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[544:0] %h ref %h cyc %0d", t_su_NE[544:0], q4_ep_del_flit[2179:1635], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[0:0] !== q3_ep_fault[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[0:0] %h ref %h cyc %0d", t_cmdproc[0:0], q3_ep_fault[0:0], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[32:1] !== q3_ep_stat_credit_stall[31:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[32:1] %h ref %h cyc %0d", t_cmdproc[32:1], q3_ep_stat_credit_stall[31:0], cyc); end
             randomize_inputs;
         end
         $display("TB_hfd_coll checks=%0d mismatches=%0d", nchk, err);

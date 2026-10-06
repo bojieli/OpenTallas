@@ -33,7 +33,11 @@ L = V.L
 
 
 def fclk_bits(master):
-    """die port -> {bit: 'out'|'in'} forwarded-clock bits of this master (r16g fwd map)."""
+    """die port -> {bit: 'out'|'in'} forwarded-clock bits of this master (r16g fwd map; a derived split master
+    carries its share of the parent's map in its ports.json 'fclk')."""
+    d = V.derived_record(master)
+    if d is not None:
+        return {p: {int(b): v for b, v in m.items()} for p, m in d.get('fclk', {}).items()}
     m, pw, M, real = V.model()
     by = {it.name: it for it in m['insts']}
     out = {}
@@ -51,6 +55,17 @@ def fclk_bits(master):
             for b in range(base + nd, base + nd + nu):
                 d[b] = 'in' if j == 0 else 'out'
     return out
+
+
+def port_in_stages(spec, p):
+    """input-chain depth of die port p: spec 'port_in_stages' overrides port_stages for the input bits of a port"""
+    return int(spec.get('port_in_stages', {}).get(p, port_stages(spec, p)))
+
+
+def port_stages(spec, p):
+    """face stages of die port p: spec 'port_stages' {port: N} (owner cost rule 2026-10-06: sized per face from the
+    in-view core <-> pin wire, ~one stage per 380-400 um, 2..5), else face_stages."""
+    return int(spec.get('port_stages', {}).get(p, spec.get('face_stages', 1)))
 
 
 def parse_rng(s):
@@ -96,7 +111,7 @@ def gen(spec):
         if p in ('ck',) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
             continue
         if any(d == 'in' for d in dirs[p]):
-            fs = spec.get('face_stages', 1)
+            fs = port_in_stages(spec, p)
             if fs == 1:
                 L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {p};')
             else:   # face_stages: the pin flop plus fs - 1 further stages toward the consumers
@@ -217,7 +232,7 @@ def gen(spec):
     # stages to the pin.  Every chain still has face_stages flops: cycle-exact, same die latency.
     tree_leaf, tree_lines, tree_stats = {}, [], dict(sources=0, chains=0, nodes=0)
     st = spec.get('share_tree')
-    fs = spec.get('face_stages', 1)
+    fs = max([port_stages(spec, q) for q in ports] + [spec.get('face_stages', 1)])
     if st and spec.get('kept_out_regs') and fs > 1:
         import re
         src = {}
@@ -251,9 +266,10 @@ def gen(spec):
 
         def build(ch, level, drv):
             for grp in split(ch, level):
-                if len(grp) == 1 or level == fs - 1:
+                n = port_stages(spec, grp[0][0])   # level-0 groups are per port, so a group has one depth
+                if len(grp) == 1 or level == n - 1:
                     for c in grp:
-                        tree_leaf[c] = (fs - level, drv)
+                        tree_leaf[c] = (n - level, drv, level == 0)
                     continue
                 k = nid[0]; nid[0] += 1
                 tree_lines.append(f'    wire n_st{k}; (* keep *) ot_hfd_oreg1 u_st{k} (.clk(clk), .d({drv}), .q(n_st{k}));')
@@ -266,7 +282,7 @@ def gen(spec):
             tree_stats['sources'] += 1
             tree_stats['chains'] += len(ch)
             build(ch, 0, f'{key[0]}[{key[1]}]')
-        tree_leaf = {c: v for c, v in tree_leaf.items() if v[0] != fs}   # an unshared chain stays a plain chain
+        tree_leaf = {c: v[:2] for c, v in tree_leaf.items() if not v[2]}   # an unshared chain stays a plain chain
         tree_stats['nodes'] = nid[0]
         if tree_lines:
             L_.append(f'    // shared-source chain trees: {tree_stats["sources"]} source bits, {tree_stats["chains"]} chains, '
@@ -298,7 +314,7 @@ def gen(spec):
                 while j < v['bits'] and (p, j) not in tree_leaf:
                     j += 1
                 L_.append(f'    for (genvar k = {k}; k < {j}; k = k + 1) begin : g_o_{p}_{k}')
-                L_.append(f'        ot_hfd_oreg{fs} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+                L_.append(f'        ot_hfd_oreg{port_stages(spec, p)} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
                 L_.append('    end')
                 k = j
         elif spec.get('kept_out_regs'):
@@ -316,7 +332,7 @@ def gen(spec):
             L_.append(f'    wire [{v["bits"] - 1}:0] od_{p} = {{{", ".join(segs_d[::-1])}}};')
             L_.append(f'    wire [{v["bits"] - 1}:0] o_{p};')
             L_.append(f'    for (genvar k = 0; k < {v["bits"]}; k = k + 1) begin : g_o_{p}')
-            L_.append(f'        ot_hfd_oreg{spec.get("face_stages", 1)} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+            L_.append(f'        ot_hfd_oreg{port_stages(spec, p)} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
             L_.append('    end')
         else:
             L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
@@ -369,6 +385,12 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     (out / f'{spec["master"]}.sv').write_text(sv)
     (out / f'{spec["master"]}_wrap.json').write_text(json.dumps(st, indent=1) + '\n')
+    if spec.get('port_stages'):
+        # per-port chain depth for face_chain_place.tcl (route_view.sh FCF)
+        (out / f'{spec["master"]}_face_stages.tcl').write_text(
+            '# generated by tools/hbm_die_wrap.py from spec port_stages: die port -> face chain depth\n'
+            + ''.join(f'set fc_ps({p}) {n}\n' for p, n in sorted(spec['port_stages'].items()))
+            + ''.join(f'set fc_psi({p}) {n}\n' for p, n in sorted(spec.get('port_in_stages', {}).items())))
     print(json.dumps({k: v for k, v in st.items() if k != 'cfg_inputs'}))
 
 
@@ -414,7 +436,7 @@ def gen_tb(spec, cycles=400, seed=20261006):
     for p, v in sorted(ports.items()):
         if v['direction'] != 'output':
             src = f'drv_{p}' if v['direction'] == 'inout' else p
-            for k in range(spec.get('face_stages', 1) - 1):
+            for k in range(port_in_stages(spec, p) - 1):
                 T.append(f'    reg [{v["bits"] - 1}:0] d{k}_{p}; always @(posedge clk) d{k}_{p} <= {src};')
                 src = f'd{k}_{p}'
             T.append(f'    reg [{v["bits"] - 1}:0] d_{p}; always @(posedge clk) d_{p} <= {src};')
@@ -449,13 +471,13 @@ def gen_tb(spec, cycles=400, seed=20261006):
                     for part in b1[4:].split('+'):
                         port, lo, hi = parse_rng(part)
                         n = min(hi - lo, rw - off)
-                        checks.append((f'{port}[{lo + n - 1}:{lo}]', f'q_{inst["name"]}_{rp}[{off + n - 1}:{off}]'))
+                        checks.append((f'{port}[{lo + n - 1}:{lo}]', f'q{port_stages(spec, port)}_{inst["name"]}_{rp}[{off + n - 1}:{off}]'))
                         off += n
+                # reference output delayed 1..max port stages (each die port checked at its own depth)
                 src = w
-                for k in range(spec.get('face_stages', 1) - 1):
+                for k in range(1, max([port_stages(spec, q) for q in ports] + [1]) + 1):
                     T.append(f'    reg [{rw - 1}:0] q{k}_{inst["name"]}_{rp}; always @(posedge clk) q{k}_{inst["name"]}_{rp} <= {src};')
                     src = f'q{k}_{inst["name"]}_{rp}'
-                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {src};')
         prm = ', '.join(f'.{k}({v})' for k, v in inst.get('params', {}).items())
         T.append(f'    {inst["module"]} {"#(" + prm + ") " if prm else ""}ref_{inst["name"]} ({", ".join(conns)});')
     T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',

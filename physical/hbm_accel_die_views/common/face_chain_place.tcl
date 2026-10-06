@@ -12,7 +12,18 @@
 #     loads of the last stage (the core consumers).  When a single-load walk runs on into an output pin (a wrapper
 #     pass-through, input chain + output chain), all its flops are spread evenly from P to that pin instead.
 # Inputs are handled first so that an output chain fed by an input chain starts from the moved input stage.
+# ORFS sources step hooks inside a proc: link every name the procs below use to a global first
+global fc_n fc_ps fc_psi fc_dbu fc_x0 fc_y0 fc_x1 fc_y1 fc_dist
 set fc_n [expr {[info exists ::env(OT_FC_STAGES)] ? $::env(OT_FC_STAGES) : 5}]
+# per-port depth (hbm_die_wrap port_stages): OT_FC_FILE = <master>_face_stages.tcl (array fc_ps), else OT_FC_STAGES
+array set fc_ps {}; array set fc_psi {}
+if {[info exists ::env(OT_FC_FILE)] && $::env(OT_FC_FILE) ne ""} { source $::env(OT_FC_FILE) }
+proc fc_np {bt} {
+  global fc_ps fc_psi fc_n
+  set port [regsub {\[.*} [$bt getName] {}]
+  if {[$bt getIoType] eq "INPUT" && [info exists fc_psi($port)]} { return $fc_psi($port) }
+  return [expr {[info exists fc_ps($port)] ? $fc_ps($port) : $fc_n}]
+}
 set fc_blk [ord::get_db_block]
 set fc_dbu [$fc_blk getDbUnitsPerMicron]
 set fc_core [$fc_blk getCoreArea]
@@ -64,8 +75,15 @@ proc fc_cent {pts} {
 proc fc_lerp {a b f} {
   return [list [expr {[lindex $a 0]+$f*([lindex $b 0]-[lindex $a 0])}] [expr {[lindex $a 1]+$f*([lindex $b 1]-[lindex $a 1])}]]
 }
+array set fc_dist {}
+proc fc_rec {bt a b} {
+  global fc_dist fc_dbu
+  set port [regsub {\[.*} [$bt getName] {}]
+  lappend fc_dist($port) [expr {(abs([lindex $a 0]-[lindex $b 0])+abs([lindex $a 1]-[lindex $b 1]))/$fc_dbu}]
+}
 proc fc_move {inst p} {
   global fc_x0 fc_y0 fc_x1 fc_y1
+  if {[info exists ::env(OT_FC_REPORT)]} return
   set m [$inst getMaster]; set w [$m getWidth]; set h [$m getHeight]
   set x [expr {round(max($fc_x0, min($fc_x1-$w, [lindex $p 0]-$w/2.0)))}]
   set y [expr {round(max($fc_y0, min($fc_y1-$h, [lindex $p 1]-$h/2.0)))}]
@@ -80,6 +98,7 @@ foreach bt [$fc_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
+  set fc_n0 $fc_n; set fc_n [fc_np $bt]
   set chain {}; set cur $net; set thru ""
   while {1} {
     set ld [fc_loads $cur]
@@ -93,8 +112,9 @@ foreach bt [$fc_blk getBTerms] {
     set cur [fc_out_net $i]
     if {$cur eq "NULL"} break
     set nf 0; foreach c $chain { incr nf [lindex $c 1] }
-    if {$thru eq "" && $nf >= 2 * $fc_n} break
+    if {$thru eq "" && $nf >= 10} break
   }
+  set fc_n $fc_n0
   set flops {}; foreach c $chain { if {[lindex $c 1]} { lappend flops [lindex $c 0] } }
   if {![llength $flops]} continue
   if {$thru ne ""} {
@@ -117,7 +137,7 @@ foreach bt [$fc_blk getBTerms] {
   set k 0; set grp {}; set last ""; set moves {}
   foreach c $chain {
     lassign $c i sq
-    if {$k >= $fc_n} break
+    if {$k >= [fc_np $bt]} break
     lappend grp $i
     if {$sq} { lappend moves [list $k $grp]; set grp {}; set last $i; incr k }
   }
@@ -126,21 +146,24 @@ foreach bt [$fc_blk getBTerms] {
   if {![llength $ld]} continue
   set pts {}; foreach i $ld { lappend pts [fc_center $i] }
   set B [fc_cent $pts]
+  fc_rec $bt $P $B
+  set nn [fc_np $bt]
   foreach mv $moves {
     lassign $mv kk grp
-    set p [fc_lerp $P $B [expr {double($kk)/$fc_n}]]
+    set p [fc_lerp $P $B [expr {double($kk)/$nn}]]
     foreach g $grp { fc_move $g $p; set fc_done([$g getName]) 1; incr n_moved }
   }
   incr n_in
 }
 # ---- outputs: walk back N flops from every pin, gather pins per flop (shared group copies serve several pins)
-array set fc_stage {}; array set fc_pins {}; array set fc_a {}; array set fc_inst {}; array set fc_hang {}
+array set fc_nn {}; array set fc_stage {}; array set fc_pins {}; array set fc_a {}; array set fc_inst {}; array set fc_hang {}
 foreach bt [$fc_blk getBTerms] {
   if {[$bt getIoType] ne "OUTPUT"} continue
   if {[info exists fc_done(pin:[$bt getName])]} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
-  set k [expr {$fc_n - 1}]; set cur $net; set pend {}; set walked {}
+  set nn [fc_np $bt]
+  set k [expr {$nn - 1}]; set cur $net; set pend {}; set walked {}
   while {$k >= 0} {
     set d [fc_driver $cur]
     if {$d eq "NULL"} break
@@ -165,11 +188,12 @@ foreach bt [$fc_blk getBTerms] {
     set d [fc_driver [[lindex $ins 0] getNet]]
   }
   if {$A eq ""} continue
+  fc_rec $bt $A $P
   # the cells collected after a flop (pend) were walked before reaching the next flop upstream: they belong to it
   for {set q 0} {$q < [llength $walked]} {incr q} {
     lassign [lindex $walked $q] f kk pd
     set nm [$f getName]
-    set fc_stage($nm) $kk; set fc_inst($nm) $f; lappend fc_pins($nm) $P
+    set fc_stage($nm) $kk; set fc_inst($nm) $f; lappend fc_pins($nm) $P; set fc_nn($nm) $nn
     if {![info exists fc_a($nm)]} { set fc_a($nm) $A }
     # pd = single-input cells between this flop and the flop downstream of it
     foreach c $pd { set fc_hang([$c getName]) [list $c $nm] }
@@ -178,12 +202,16 @@ foreach bt [$fc_blk getBTerms] {
 }
 foreach nm [array names fc_stage] {
   set B [fc_cent $fc_pins($nm)]
-  set p [fc_lerp $fc_a($nm) $B [expr {double($fc_stage($nm)+1)/$fc_n}]]
+  set p [fc_lerp $fc_a($nm) $B [expr {double($fc_stage($nm)+1)/$fc_nn($nm)}]]
   fc_move $fc_inst($nm) $p; incr n_moved
   set fc_pos($nm) $p
 }
 foreach c [array names fc_hang] {
   lassign $fc_hang($c) i nm
   if {[info exists fc_pos($nm)]} { fc_move $i $fc_pos($nm); incr n_moved }
+}
+foreach port [lsort [array names fc_dist]] {
+  set l [lsort -real $fc_dist($port)]; set n [llength $l]; set sm 0.0; foreach v $l { set sm [expr {$sm+$v}] }
+  puts [format "OT_FC_DIST %s n %d mean %.0f p90 %.0f max %.0f um" $port $n [expr {$sm/$n}] [lindex $l [expr {int(0.9*($n-1))}]] [lindex $l end]]
 }
 puts "OT_FC: face chains N=$fc_n: $n_in input, $n_out output, $n_thru pass-through; $n_moved cells moved ([array size fc_stage] output-chain flops)"
