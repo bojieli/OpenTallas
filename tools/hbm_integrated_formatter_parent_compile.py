@@ -43,10 +43,34 @@ def prepare(work,body_pin):
         if not body_pin:errors.append('Bacon published body SHA required')
         elif pins[BODY]!=body_pin:errors.append('Formatter body differs from owner pin')
     parent=(ROOT/PARENT).read_text()
-    if '.release_token17(gather_release_frame[d*73+36+:17])' not in parent:
+    if not re.search(r'\.release_token(?:17)?\(gather_release_frame\[d\*73\+36\+:17\]\)',parent):
         errors.append('Actual full TOKEN17 release connection missing')
-    if '.owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame)' not in parent:
+    if not (('.owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame)' in parent) or
+            ('.gather_granted(fmt_lease_valid),.gather_frame73(fmt_lease_frame)' in parent)):
         errors.append('Actual retained lease/full73 owner connection missing')
+    # Source-only check of the actual named instance against Bacon's real body.
+    # Report discrepancies to the respective writers; never synthesize a stub.
+    declarations={}
+    for path in paths:
+        if path in missing:continue
+        text=(ROOT/path).read_text()
+        for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
+            if name in declarations:errors.append('Duplicate module '+name+': '+declarations[name]+' / '+path)
+            declarations[name]=path
+    if BODY in pins:
+        text=(ROOT/BODY).read_text()
+        header=text[text.index(')(\n')+3:text.index('\n);')]
+        declared=set()
+        # ANSI declarations can share a direction/type across comma-separated
+        # names, or introduce a new direction on that same line.
+        for port in header.split(','):
+            name=re.search(r'(\w+)\s*$',port)
+            if name:declared.add(name.group(1))
+        start=parent.index(' u_formatter_provider(')
+        instance=parent[start:parent.index(');',start)]
+        connected=set(re.findall(r'\.(\w+)\s*\(',instance))
+        for name in sorted(connected-declared):errors.append('Parent formatter port absent in Bacon body: '+name)
+        for name in sorted(declared-connected):errors.append('Bacon formatter port unconnected by parent: '+name)
     for s in all_files:
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
