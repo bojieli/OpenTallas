@@ -14,6 +14,9 @@ if [ -n "${MARGIN:-}" ]; then
   python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V ${CKINS:-0} route > $S/.views/$lab/route.sdc
   python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V ${CKINS:-0} signoff > $S/.views/$lab/signoff.sdc
   SDCARG="--orfs-var SDC_FILE=/src/.views/$lab/route.sdc"
+  mkdir -p $O/$lab
+  echo "{\"margin\": true, \"ckins_ps\": ${CKINS:-0}, \"route_sdc\": \".views/$lab/route.sdc\", \"signoff_sdc\": \".views/$lab/signoff.sdc\", \"recipe\": \"bench/stn_margin_sdc.py\"}" > $O/$lab/margin.json
+  cp $S/.views/$lab/route.sdc $S/.views/$lab/signoff.sdc $O/$lab/
 fi
 SRC=$S OUT=$O PD=$pd CORES=${CORES:-6} NEED=${NEED:-12} \
 SRCS="rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv" \
