@@ -6,20 +6,20 @@ def model():
     p=ROOT/'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json'
     m=json.loads(p.read_text());parent=ROOT/'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json'
     # One native edge bundle: two reads and five ordered masked writers.
-    request_bits=47+2+30+5+75+2560+80
-    response_bits=1+47+2+1024+5+75+80+1
+    request_bits=32+47+2+30+5+75+2560+80
+    response_bits=1+32+47+2+1024+5+75+80+1
     codec=lambda n:math.ceil(n/64)*72
-    streams=[codec(request_bits),codec(response_bits),72]
+    streams=[codec(request_bits),codec(response_bits),144]
     return dict(schema='opentallas.ds.protected-vm.v1',before_RTL=True,default_ENABLE=0,
       native_minimum=dict(scalar_address_bits=19,word_address_bits=15,word_bits=512,words=32768,capacity_bytes=2097152,
         reads=['xa','xb'],writers_in_native_priority_order=['xa','xb0','xb1','xb2','xb3'],
         masked_write_bits_per_writer=16,read_before_any_same_bundle_write=True,
-        all_native_core_ports_integrated=False,identity_bits=47,identity_fields='epoch16/user10/pos21'),
+        all_native_core_ports_integrated=False,identity_bits=47,identity_fields='epoch16/user10/pos21',accepted_transaction_ordinal_bits=32),
       memory=dict(MACs_per_cycle=0,payload_macros=256,check_macros=32,real_total=288,
         primitive=p.parent.name,view_family='aligned-v2',SRAM_SECDED='existing encode64/decode64, eight check bits per64 payload',ROM_ECC=False,
         payload_read_ports=1,payload_write_ports=1,physical_payload_bytes_per_access=64,physical_check_bytes_per_access=8,
         bank_mux_groups=64,columns_per_group=4,check_bank_mux=32,replicas=1),
-      boundary=dict(request_bits=request_bits,response_bits=response_bits,receipt_bits=48,encoded_stream_widths=streams,
+      boundary=dict(request_bits=request_bits,response_bits=response_bits,receipt_bits=80,encoded_stream_widths=streams,
         request_bundle_capacity=1,visible_rows_per_bundle=5,C8_retirement_authority=False,
         mutable_packet_and_identity_protection='SECDED transport plus complementary retained state/data',
         pipeline_fifo_storage_bits=4*sum(streams),tracks_needed=sum(streams),
