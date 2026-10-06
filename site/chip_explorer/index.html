@@ -226,37 +226,8 @@ td .pill{vertical-align:1px}
   <section class="hero" id="hero" aria-live="polite"></section>
   <div id="cmpStrip"></div>
 
-  <section class="plate" id="array" aria-labelledby="h-array">
-    <div class="plate-head"><span class="no">1</span><h2 id="h-array">The array</h2><p id="arrayLede"></p></div>
-    <div class="bench">
-      <div class="stage">
-        <div class="tools" id="arrayTools"></div>
-        <div class="scroll" id="arrayScroll"><svg id="arraySvg" role="img" aria-label="System view"></svg></div>
-        <div class="legend" id="arrayLegend"></div>
-      </div>
-      <aside class="readout" id="arrayRead" aria-live="polite"></aside>
-    </div>
-  </section>
-
-  <section class="plate" id="rack" aria-labelledby="h-rack">
-    <div class="plate-head"><span class="no">2</span><h2 id="h-rack">The rack</h2><p id="rackLede"></p></div>
-    <div class="rk-kpis" id="rackKpis"></div>
-    <div class="bench">
-      <div class="stage">
-        <div class="tools" id="rackTools"></div>
-        <div class="scroll" id="rackScroll"><svg id="rackSvg" role="group" aria-label="Rack elevation and deployment"></svg></div>
-        <div class="legend" id="rackLegend"></div>
-      </div>
-      <aside class="readout" id="rackRead" aria-live="polite"></aside>
-    </div>
-    <div class="grid2" style="margin-top:20px">
-      <div><h3>Per-rack totals</h3><div class="scroll" style="margin-top:8px"><table id="rackTable"></table></div><p class="src muted" id="rackSrc" style="font:11px var(--f-mono);margin-top:6px;overflow-wrap:anywhere"></p></div>
-      <div><h3>Link classes by distance</h3><div class="scroll" style="margin-top:8px"><table id="linkTable"></table></div><p class="muted" id="linkNote" style="font-size:13px;margin-top:6px;overflow-wrap:anywhere"></p></div>
-    </div>
-  </section>
-
   <section class="plate" id="die" aria-labelledby="h-die">
-    <div class="plate-head"><span class="no">3</span><h2 id="h-die">The die</h2><p id="dieLede"></p></div>
+    <div class="plate-head"><span class="no">1</span><h2 id="h-die">The die</h2><p id="dieLede"></p></div>
     <div class="bench">
       <div class="stage">
         <div class="tools" id="dieTools"></div>
@@ -268,7 +239,7 @@ td .pill{vertical-align:1px}
   </section>
 
   <section class="plate" id="token" aria-labelledby="h-token">
-    <div class="plate-head"><span class="no">4</span><h2 id="h-token">One token</h2><p id="tokenLede"></p></div>
+    <div class="plate-head"><span class="no">2</span><h2 id="h-token">One token</h2><p id="tokenLede"></p></div>
     <div class="bench">
       <div class="stage">
         <div class="tools">
@@ -296,7 +267,7 @@ td .pill{vertical-align:1px}
   </section>
 
   <section class="plate" id="timing" aria-labelledby="h-timing">
-    <div class="plate-head"><span class="no">5</span><h2 id="h-timing">Timing</h2><p>Where one token's latency goes, which blocks meet 1.2 GHz, and what each optimisation bought.</p></div>
+    <div class="plate-head"><span class="no">3</span><h2 id="h-timing">Timing</h2><p>Where one token's latency goes, which blocks meet 1.2 GHz, and what each optimisation bought.</p></div>
     <h3>Latency of one token</h3>
     <p class="muted" id="wfLede" style="margin:4px 0 10px;max-width:75ch"></p>
     <div class="stage"><div class="scroll"><svg id="wfSvg" role="img" aria-label="Per-token latency waterfall"></svg></div><div class="legend" id="wfLegend"></div></div>
@@ -312,6 +283,35 @@ td .pill{vertical-align:1px}
     <h3 style="margin-top:28px">Lever ladder</h3>
     <p class="muted" id="lvLede" style="margin:4px 0 10px;max-width:75ch"></p>
     <div class="stage"><div class="scroll"><svg id="lvSvg" role="img" aria-label="Lever ladder"></svg></div><div class="legend" id="lvLegend"></div></div>
+  </section>
+
+  <section class="plate" id="array" aria-labelledby="h-array">
+    <div class="plate-head"><span class="no">4</span><h2 id="h-array">The array</h2><p id="arrayLede"></p></div>
+    <div class="bench">
+      <div class="stage">
+        <div class="tools" id="arrayTools"></div>
+        <div class="scroll" id="arrayScroll"><svg id="arraySvg" role="img" aria-label="System view"></svg></div>
+        <div class="legend" id="arrayLegend"></div>
+      </div>
+      <aside class="readout" id="arrayRead" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="plate" id="rack" aria-labelledby="h-rack">
+    <div class="plate-head"><span class="no">5</span><h2 id="h-rack">The rack</h2><p id="rackLede"></p></div>
+    <div class="rk-kpis" id="rackKpis"></div>
+    <div class="bench">
+      <div class="stage">
+        <div class="tools" id="rackTools"></div>
+        <div class="scroll" id="rackScroll"><svg id="rackSvg" role="group" aria-label="Rack elevation and deployment"></svg></div>
+        <div class="legend" id="rackLegend"></div>
+      </div>
+      <aside class="readout" id="rackRead" aria-live="polite"></aside>
+    </div>
+    <div class="grid2" style="margin-top:20px">
+      <div><h3>Per-rack totals</h3><div class="scroll" style="margin-top:8px"><table id="rackTable"></table></div><p class="src muted" id="rackSrc" style="font:11px var(--f-mono);margin-top:6px;overflow-wrap:anywhere"></p></div>
+      <div><h3>Link classes by distance</h3><div class="scroll" style="margin-top:8px"><table id="linkTable"></table></div><p class="muted" id="linkNote" style="font-size:13px;margin-top:6px;overflow-wrap:anywhere"></p></div>
+    </div>
   </section>
 
   <section class="plate" id="compare" aria-labelledby="h-compare">

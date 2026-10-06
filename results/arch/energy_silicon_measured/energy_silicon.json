@@ -9,7 +9,7 @@
  "supersedes": "results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM rate, ASSUMED 10% power-gating residual)",
  "inputs": {
   "scoreboard": "results/arch/measured_scoreboard/scoreboard.json",
-  "scoreboard_commit": "278a274e7",
+  "scoreboard_commit": "c6ef9d59d",
   "element_power": "results/rtl/rom_stage_power_gating_20261004/verdict.json",
   "spine": "results/rtl/rom_stage_spine_gate_20261004/verdict.json",
   "registry": "results/external/registry.json",
