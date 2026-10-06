@@ -20,10 +20,10 @@ p = argparse.ArgumentParser()
 p.add_argument('--run', type=Path, required=True)
 p.add_argument('--reuse-map', type=Path,
                help='Completed map from the same pinned source; never synthesize it twice')
-p.add_argument('--core-width', type=float, default=382.644)
-p.add_argument('--core-height', type=float, default=95.31)
+p.add_argument('--core-width', type=float, default=440.0)
+p.add_argument('--core-height', type=float, default=110.0)
 p.add_argument('--place-density', type=float, default=0.60)
-p.add_argument('--tag', default='Descartes_CHECK_NO2_H55')
+p.add_argument('--tag', default='item6_W2_balanced')
 a = p.parse_args()
 assert a.core_width > 0 and a.core_height > 0
 assert 0 < a.place_density <= 0.60
@@ -154,7 +154,7 @@ def synth(*args, **kwargs):
     (run/'mapped_inventory.json').write_text(json.dumps(result['record'], indent=2)+'\n')
     loads = run / 'receiver'
     subprocess.run(['python3', str(base/'measure_receiver.py'), '--mapped', str(mapped),
-                    '--out', str(loads), '--src', str(ROOT)], check=True, cwd=ROOT)
+                    '--out', str(loads), '--src', str(ROOT), '--image', image], check=True, cwd=ROOT)
     subprocess.run(['python3', str(base/'make_component_sdc.py'), '--loads', str(loads),
                     '--NO', '2', '--out', str(sdc)], check=True, cwd=ROOT)
     return result
