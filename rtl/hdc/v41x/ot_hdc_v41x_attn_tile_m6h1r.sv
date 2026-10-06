@@ -217,7 +217,8 @@ endmodule
 // delayed RIN = 1 cycle.  The H16 tile is four quads, GB = 0, 2, 8, 10, fed the same packet (ot_attn_tile_m6h1x).
 // ---------------------------------------------------------------------------
 module ot_attn_tile_m6h1q #(
-    parameter integer GB = 0
+    parameter integer GB = 0,
+    parameter integer QH = 2               // HC copies: 1 (one bank for the quad) or 2 (one per column, beside its two leaves)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -236,14 +237,11 @@ module ot_attn_tile_m6h1q #(
 );
     localparam integer PW = 1 + 1618;
     wire [PW-1:0] pk = {rst_n, ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv, ibank, ib};
-    wire [PW-1:0] hc_q;
-    (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(pk), .q(hc_q));
-    wire          l_rst_n, l_ld_v, l_ld_mode, l_ld_w2v, l_iv;
-    wire [2:0]    l_ld_bank, l_ibank;
-    wire [7:0]    l_ld_grp;
-    wire [1023:0] l_ld_w;
-    wire [575:0]  l_ib;
-    assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} = hc_q;
+    wire [QH*PW-1:0] hc_q;
+    genvar gq;
+    generate for (gq = 0; gq < QH; gq = gq + 1) begin : g_hc
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(pk), .q(hc_q[gq*PW +: PW]));
+    end endgenerate
     genvar s, r;
     generate
         for (r = 0; r < 2; r = r + 1) begin : g_r
@@ -253,6 +251,13 @@ module ot_attn_tile_m6h1q #(
                 wire [31:0] hy;
                 wire [0:0]  hf;
                 wire        hv;
+                wire          l_rst_n, l_ld_v, l_ld_mode, l_ld_w2v, l_iv;
+                wire [2:0]    l_ld_bank, l_ibank;
+                wire [7:0]    l_ld_grp;
+                wire [1023:0] l_ld_w;
+                wire [575:0]  l_ib;
+                assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} =
+                    hc_q[((QH > 1) ? s : 0)*PW +: PW];
                 ot_attn_hgrp_m6h1 u_g (
                     .clk(clk), .rst_n(l_rst_n), .gid(G[7:0]), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
                     .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
