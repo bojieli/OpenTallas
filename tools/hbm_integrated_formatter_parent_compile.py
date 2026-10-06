@@ -488,10 +488,13 @@ def reuse_component(j,contract,enrollment,out,current_interfaces=None):
         if sha(directory/rel)!=h:raise ValueError('Retained generated model/interface changed '+rel)
     target=Path(j['directory'])
     if target.resolve()!=directory.resolve():
-        if target.exists() and any(target.iterdir()):raise FileExistsError('Do not overwrite existing generated component')
-        target.mkdir(parents=True,exist_ok=True)
-        for rel in old['artifacts']:
-            dst=target/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(directory/rel,dst)
+        if target.exists() and any(target.iterdir()):
+            existing={str(p.relative_to(target)):sha(p) for p in target.rglob('*') if p.is_file()}
+            if existing!=old['artifacts']:raise FileExistsError('Do not overwrite differing generated component')
+        else:
+            target.mkdir(parents=True,exist_ok=True)
+            for rel in old['artifacts']:
+                dst=target/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(directory/rel,dst)
     write(out/(j['prefix']+'.retained.json'),dict(terminal=old['terminal'],
         contract_sha256=old['contract_sha256'],artifacts=old['artifacts'],interfaces=old['interfaces'],
         parse_only_diagnostics=old['parse_only_diagnostics'],numerical=False))
