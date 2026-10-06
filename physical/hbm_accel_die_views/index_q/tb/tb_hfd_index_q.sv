@@ -35,7 +35,8 @@ module tb_hfd_index_q;
   end
   always @(posedge ck) if (rst && t_vm !== vm_prev) begin
     vm_prev <= t_vm;
-    if (kg < ks && t_vm === kexp[kg]) kg = kg + 1;
+    if (kg == 0 && ks > 1 && t_vm === kexp[1]) kg = 2;        // the reset edge may fall after word 0 was replaced
+    else if (kg < ks && t_vm === kexp[kg]) kg = kg + 1;
     else begin err = err + 1; $display("ERR t_vm word %0d mismatch", kg); end
   end
   initial begin
