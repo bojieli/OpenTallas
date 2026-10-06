@@ -484,12 +484,13 @@ def bundle_real_pins(macro_text, view, k):
         along = w if f in 'NS' else h
         lo, hi = math.ceil((2 * p - off) / p), math.floor((along - 2 * p - off) / p)
         used = set()
+        dense = len(grp) > (hi - lo) // 2      # more bundles than 2-track slots: 1-track spacing (the generator's)
         for c, nm in sorted(grp):
             t = min(max(round((c - off) / p), lo), hi)
             d = 0
             while True:      # nearest free track (2-track pitch keeps bundled pins spaced like the generator's)
                 cand = [t + d, t - d] if d else [t]
-                ok = [q for q in cand if lo <= q <= hi and q not in used and q - 1 not in used and q + 1 not in used]
+                ok = [q for q in cand if lo <= q <= hi and q not in used and (dense or (q - 1 not in used and q + 1 not in used))]
                 if ok:
                     t = ok[0]
                     break
