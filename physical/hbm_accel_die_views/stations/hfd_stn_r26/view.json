@@ -106,5 +106,18 @@
   "hfd_stn_r26_ss.lib": "2ba870fb545a018190a5edb152709368394aa91115da6a82006e4729139c58bb",
   "hfd_stn_r26_ff.lib": "efc6bdc24b0b84c62a8b7bc2a9a5d4e98004278e1abfff3ad0ccb392e1b84a6c"
  },
- "defects": []
+ "defects": [],
+ "pin_access_check": {
+  "tool": "physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh",
+  "verdict": "DONE",
+  "drt0073": 0,
+  "macroNoAp": 0,
+  "orients": [
+   "R0",
+   "MX",
+   "MY",
+   "R180"
+  ],
+  "negative_control": "pre-rule hfd_stn_r23 M1 LEF: FAIL, DRT-0073 x5 on a[580] (reproduces die r8)"
+ }
 }
