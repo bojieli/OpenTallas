@@ -875,16 +875,19 @@ module ot_hdc_v41x_vec #(
     end
     wire [1:0] cpa_o, cpi_o, cem_o, cho_o;
     genvar gr;
+    // round 8: each credit function's count compare (cnt >= nd, cnt[15] clear) is REGISTERED one cycle ahead from the
+    // next-cycle operands (ot_hdc_v41x_cok: one subtract and one carry-save compare in parallel), so the next-ch path
+    // is a boolean of registered bits and short sequence compares.  ok*[gr]: the compare for this cycle's retire = gr.
+    reg [1:0] okA, okI, okE, okH;        // cpa (pvm_e count, chain lead), cpi / cem / cho (pv_mark count; lead, need1, need0)
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
-        wire [15:0] ce = gr ? cnt_e1 : cnt_e0, cp = gr ? cnt_p1 : cnt_p0;
         wire [7:0]  gds = (gr && ret_i_last) ? ret_i_seq : i_dseq;        // n_idseq for ret_i = gr
-        ot_hdc_v41x_chf #(.K(KK)) u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cnt(ce),
+        ot_hdc_v41x_chf2 u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cok(okA[gr]),
             .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
-        ot_hdc_v41x_chf #(.K(KK)) u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+        ot_hdc_v41x_chf2 u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cok(okI[gr]),
             .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpi_o[gr]));
-        ot_hdc_v41x_chf #(.K(KK)) u_cem (.src(a_chsrc), .cseq(a_chseq), .nd(need1_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+        ot_hdc_v41x_chf2 u_cem (.src(a_chsrc), .cseq(a_chseq), .nd(need1_r), .pvv(pv_v), .pvs(pv_seq), .cok(okE[gr]),
             .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cem_o[gr]));
-        ot_hdc_v41x_chf #(.K(KK)) u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+        ot_hdc_v41x_chf2 u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cok(okH[gr]),
             .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
     end endgenerate
     // next ch for each value of this cycle's retire; ret_i selects last, in two kept copies (13 control copies each)
@@ -1026,6 +1029,36 @@ module ot_hdc_v41x_vec #(
     ot_hdc_kadd #(.W(24), .K(KK)) u_acc2 (.a(acc2_r), .b({8'd0, a_chmul}), .cin(1'b0), .s(acc2_n), .cout(unused_lc[5]));
     ot_hdc_kadd #(.W(16), .K(KK)) u_nd1 (.a(a_chlead), .b(acc2_r[23:8]), .cin(1'b0), .s(need1_n), .cout(unused_lc[6]));
     wire [23:0] acc_n = (CTL12 >= 2) ? acc1_r : a_acc + {8'd0, a_chmul};
+    // round 8: the next-cycle operands of the registered count compares
+    reg  [15:0] need2_r;                 // == need1_n (a_chlead + acc2_r[23:8]), kept one cycle ahead
+    wire [15:0] a_chlead_nx = PROM[10] ? q_chlead : a_chlead;
+    wire [23:0] acc2_nx = PROM[11] ? {7'd0, q_chmul, 1'b0} : EMIT[11] ? acc2_n : acc2_r;
+    wire [15:0] need2_n;
+    wire        unused_n2;
+    ot_hdc_kadd #(.W(16), .K(KK)) u_nd2 (.a(a_chlead_nx), .b(acc2_nx[23:8]), .cin(1'b0), .s(need2_n), .cout(unused_n2));
+    always @(posedge clk) need2_r <= need2_n;
+    wire [15:0] qlead_nx = ACC[24] ? i_ch_lead : q_chlead;
+    wire [15:0] need1_nx = PROM[11] ? r2_need1 : EMIT[11] ? need2_r : need1_r;
+    wire [15:0] need0_nx = PROM[11] ? q_chlead : EMIT[11] ? need1_r : need0_r;
+    wire [15:0] xp_nx = pv_upd ? (STRT[14] ? a_mark : e_tot) : pv_mark;              // pv_mark next
+    wire [15:0] xe_nx = nst_k ? (am_e ? e_tot : a_mark) : e_tot;                     // pvm_e next (less ce_c)
+    wire        ce_c = !nst_k && EMIT[14];                                            // e_tot_n = e_tot + 1
+    wire [15:0] rr [0:2];
+    assign rr[0] = r_tot; assign rr[1] = rtot1_r; assign rr[2] = rtot2_r;
+    wire [2:0] fA, fI, fE, fH;
+    genvar gj;
+    generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_cok
+        ot_hdc_v41x_cok #(.K(KK)) u_a (.r(rr[gj]), .x(xe_nx), .c(ce_c), .nd(qlead_nx), .ok(fA[gj]));
+        ot_hdc_v41x_cok #(.K(KK)) u_i (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(qlead_nx), .ok(fI[gj]));
+        ot_hdc_v41x_cok #(.K(KK)) u_e (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(need1_nx), .ok(fE[gj]));
+        ot_hdc_v41x_cok #(.K(KK)) u_h (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(need0_nx), .ok(fH[gj]));
+    end endgenerate
+    always @(posedge clk) begin
+        okA <= ret_i ? fA[2:1] : fA[1:0];
+        okI <= ret_i ? fI[2:1] : fI[1:0];
+        okE <= ret_i ? fE[2:1] : fE[1:0];
+        okH <= ret_i ? fH[2:1] : fH[1:0];
+    end
     // group 1: the position
     always @(posedge clk) begin
         if (PROM[1]) begin a_no <= p_no; a_ni <= p_ni; o_v <= 0; i_v <= 0; end
@@ -1563,4 +1596,45 @@ module ot_hdc_v41x_ckreg #(parameter integer W = 1, parameter integer R = 0) (
     end else begin : g_n
         always @(posedge clk) q <= d;
     end endgenerate
+endmodule
+
+// round 8: ok = (cnt[15] clear) && cnt >= nd for cnt = (r - x - c) mod 2^16, without a subtract-then-compare chain:
+// cnt and its no-borrow bit nn from one adder, V = r - x - c - nd (19-bit signed) from a carry-save sum and a second
+// adder in parallel; cnt - nd = V (nn) or V + 2^16 (borrow).
+module ot_hdc_v41x_cok #(parameter integer K = 1) (
+    input  wire [15:0] r, x, nd,
+    input  wire        c,
+    output wire        ok
+);
+    wire [15:0] cnt;
+    wire        nn;
+    ot_hdc_kadd #(.W(16), .K(K)) u_a (.a(r), .b(~x), .cin(!c), .s(cnt), .cout(nn));
+    wire [18:0] A = {3'b000, r}, B = {3'b111, ~x}, C = {3'b111, ~nd};
+    wire [18:0] cs = A ^ B ^ C;
+    wire [18:0] mj = (A & B) | (A & C) | (B & C);
+    wire [18:0] V;
+    wire        unused_v;
+    ot_hdc_kadd #(.W(19), .K(K)) u_v (.a(cs), .b({mj[17:0], !c}), .cin(1'b1), .s(V), .cout(unused_v));
+    assign ok = !cnt[15] && (nn ? !V[18] : (!V[18] || V[18:16] == 3'b111));
+endmodule
+
+// the credit function of ot_hdc_v41x_chf with its count compare registered (cok)
+module ot_hdc_v41x_chf2 (
+    input  wire [1:0]  src,
+    input  wire [7:0]  cseq,
+    input  wire [15:0] nd,
+    input  wire        pvv,
+    input  wire [7:0]  pvs,
+    input  wire        cok,
+    input  wire [7:0]  dsq, rsq,
+    input  wire [7:0]  x_dseq, x_seq,
+    input  wire [15:0] x_cnt,
+    output wire        ok
+);
+    localparam [1:0] CH_NONE = 0, CH_SELF = 1, CH_RES = 2;
+    wire [7:0] d_s = dsq - cseq, d_r = rsq - cseq, d_x = x_dseq - cseq;
+    assign ok = (src == CH_NONE) ? 1'b1 :
+                (src == CH_SELF) ? (!d_s[7] || (pvv && pvs == cseq && cok)) :
+                (src == CH_RES)  ? !d_r[7] :
+                (!d_x[7] || (x_seq == cseq && x_cnt >= nd));
 endmodule
