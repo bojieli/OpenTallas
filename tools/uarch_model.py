@@ -10751,6 +10751,42 @@ def hbm_r5a_external_calendar_context_model():
         gates=dict(syntax=False, exact=False, protection=False, physical=False,
             performance=False, adopted=False))
 
+def hbm_r5a_provider_return_join_model():
+    """Consumer-only identity check on Gibbs's actual service READ hook.
+
+    Reuse the externally held protected full73, not a new owner ledger. The
+    provider's 2448 coded bits are already priced by its existing model.
+    """
+    gate_path=ROOT/'results/rtl/hbm_r5a_provider_join_20261006/r1_PASS/result.json'
+    gate=json.loads(gate_path.read_text()) if gate_path.exists() else {}
+    checker='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv'
+    changed_pass=(gate.get('status')=='PASS' and gate.get('exit')==0 and
+        gate.get('source_sha256',{}).get(checker)==hashlib.sha256((ROOT/checker).read_bytes()).hexdigest()) if (ROOT/checker).exists() else False
+    return dict(item=6,default_OFF=True,PCs=32,MACs_per_cycle=0,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv',
+        caller='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
+        provider_source='rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv',
+        provider_source_step='56d07d0e8',provider_mode='P2_READ_RETURN=1',
+        calendar_instances_added=0,owner_copies_added=0,payload_storage_added=0,
+        sticky_fault_complement_FF=2,minimum_added_FF_area_um2=2*.2916,
+        compare_bits=dict(issue_ordinal=32*16,return_frame=32*73),
+        additional_input_bits=1+73+32*16+32*73,
+        bytes_per_service_edge=32*32,SM_bits_per_stream_edge=8*1024,
+        added_memory_ports=0,added_codec_instances=0,added_pipeline_edges=0,
+        replica_count=1,mux_demux_added=0,full73_fanout=32,
+        routing_tracks_added=1+73+32*16+32*73,channel_capacity=None,
+        parent_slot_fit=False,physical_comparator_buffer_area_pending=True,
+        provider_coded_FF_already_priced=2448,provider_area_double_counted=False,
+        clock_ps=dict(service=1024,stream=2500/3),
+        composed_latency=dict(existing_context_ns=3.334,additional_join_edges=0,
+            loaded_comparator_timing_pending=True,first_access_FAIL_ns=153.757,
+            target_ns=140,full_off_package_FEC='consume actual DS-RACK fullFEC handoff'),
+        held_frame='actual protected accepted CP/source full73, service-stable through consumer drain; no producer/IRS alias',
+        warm='blocks new enrollment upstream; existing issue/return/freed debt drains, no warm POR',
+        measured_join=dict(record=str(gate_path.relative_to(ROOT)),READs=64,
+            PCs=32,scope='actual Gibbs coded return hook plus new consumer checker only; full expert numerical gate not inferred'),
+        gates=dict(changed_join=changed_pass,physical=False,performance=False,adopted=False))
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
