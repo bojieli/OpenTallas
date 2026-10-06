@@ -7,7 +7,8 @@
 #      SRCS (extra --source files, space separated), MACROS (space separated NAME=DIR macro views),
 #      MAXL (top signal routing layer, default M7), PDN (PDN tcl, default common/pdn_view.tcl), HM (hold margin ns),
 #      SDCA (extra --sdc-append file), STEPS (extra --step-tcl args), CTSA (CTS_ARGS),
-#      WSF (wire-stage fence density: common/wire_stage_fence.tcl POST_FLOORPLAN, regions per ot_svc_vpipe stage)
+#      PER (route clock period ns, default 0.833; margin rule: route at 0.770, sign off at 0.833), IOF (io delay
+#      fraction, default 0.2), WSF (wire-stage fence density: common/wire_stage_fence.tcl POST_FLOORPLAN, regions per ot_svc_vpipe stage)
 set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 W=$OUT/$lab; mkdir -p $W; cd $SRC
@@ -17,12 +18,12 @@ read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
-echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
+echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} PER=${PER:-0.833} IOF=${IOF:-0.2} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs \
   ${MACROS:+--macro-place-halo 5 5} \
-  --clock-port ck --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
-  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 ${SDCA:+--sdc-append $SDCA} --stages pnr \
+  --clock-port ck --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
+  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction ${IOF:-0.2} ${SDCA:+--sdc-append $SDCA} --stages pnr \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/hbm_accel_die_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
