@@ -18,8 +18,8 @@ foreach inst [$block getInsts] {
 if {[llength $cells]!=68} {error "WINDOW full shape requires 68 columns, found [llength $cells]"}
 foreach cell $cells {
     lassign $cell inst b k
-    set x [expr {100.0+($b%2)*900.0+($k%4)*($maxw+16.0)}]
-    set y [expr {100.0+int($b/2)*900.0+int($k/4)*($maxh+16.0)}]
+    set x [expr {100.0+($b%2)*900.0+($k%4)*($maxw+32.0)}]
+    set y [expr {100.0+int($b/2)*900.0+int($k/4)*($maxh+32.0)}]
     ot_mts::place $inst $x $y R0 LOCKED
 }
 ot_mts::assert_on_track -label window_full128_columns
