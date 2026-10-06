@@ -138,6 +138,26 @@
   "added_per_read_dependent_op_cycles": 9,
   "note": "every unit's VM read gains 9 cycles of pipeline fill (fixed latency, once per op pipeline, not per element); writes are posted (no latency visible to the issuer, RAW order preserved). QD = 2 gives L = 8 (+7) at a tighter per-bank burst bound. Bank-conflict cost: unit-stride row streams spread over 32 interleaved banks conflict-free; scattered element writes (capture) and gathers (vi) may exceed QD per bank -> the sequencer must pace them (program-level)"
  },
- "route": null,
- "state": "RTL + exact bench PASS; margin route launched (see route)"
+ "route": {
+  "m1": "EPYC2 src_44913e193: FAILED 3_3 place_gp RSZ-3006 (dont_touch macro pin r_ce_in)",
+  "m2": "EPYC2 src_1560ef30b: killed in synthesis (owner load rebalance, EPYC2 1.76x)",
+  "m3": "EPYC3 /srv/opentallas-scratch2/scratch/claude/s81-ph/vm/routes/m3 src_140167ec4 (same VM RTL as 1560ef30b): RUNNING"
+ },
+ "state": "RTL + exact bench PASS (r2); margin route m3 running",
+ "view_scope": {
+  "decision": "the routed VM view is the hub's MEMORY SUBSYSTEM ot_s81ph_vm_mem only (128 x ot_sram_1r1w_512x128 macros + bank queues + fixed-latency return), a hard sub-macro of the dsfd_sp_vm slab; it is not the whole dsfd_sp_vm hub",
+  "not_covered": [
+   "instruction sequencer / DYN-predicate-wait-mask issue (ot_hdc_core_v41x FSM, existing RTL: hardened later as its own sub-block of the slab)",
+   "spine x loader / broadcast (ot_v41_spine_w17w10 LOAD/STREAM, FIELD-SPINE owned)",
+   "query sender to the four scan services and the per-die-bus pin registers / port assignment (static per-op schedule onto NP = 8 row ports)"
+  ],
+  "why": "the macros are the slab's area and timing driver (0.66 of 2.66 mm2 in macros) and the only part with no existing closed view; the sequencer is the existing core FSM, kept unchanged",
+  "clock": "serial 0.9 GHz domain: routed at 1.1111 ns with the margin SDC (setup uncertainty 123 ps = 60 sign-off + 63 margin), signed off at 1.1111 ns / 60 ps; accept SS >= +40, FF >= +15"
+ },
+ "bench_r2": {
+  "commit": "1560ef30b",
+  "change": "macro read enable from its own flop s_re; macros keep but not dont_touch (m1 failed RSZ-3006 at place_gp)",
+  "result": "gold/nb8/nb8q2 x seeds 1-3 x 100k PASS, OVF PASS, MUT_ORDER/J0/MASK FAIL",
+  "log": "results/rtl/s81_ph_20261006/vm/bench_r2.log"
+ }
 }
