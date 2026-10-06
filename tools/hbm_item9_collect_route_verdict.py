@@ -65,7 +65,7 @@ def main():
         mounts = item['Mounts']
         matches = any(Path(m['Source']) == root or root in Path(m['Source']).parents for m in mounts)
         identities.append(dict(id=item['Id'], running=item['State']['Running'],
-                               pid=item['State']['Pid'], source_bound_to_route_root=matches,
+                               pid=item['State']['Pid'], image=item['Image'], source_bound_to_route_root=matches,
                                mounts=[dict(source=m['Source'], destination=m['Destination']) for m in mounts]))
     useful_live = any(x.get('running') and x.get('source_bound_to_route_root') for x in identities)
     unresolved = any(x.get('identity_unresolved') or not x.get('source_bound_to_route_root', False)
@@ -77,6 +77,7 @@ def main():
     report_files = sorted(set(root.glob('work/orfs/reports/asap7/*/base/*.rpt')) |
                           set(root.glob('work/orfs/logs/asap7/*/base/5_1_grt*.log')) |
                           set(root.glob('work/orfs/routed_*.log')) |
+                          set(root.glob('work/orfs/w18_sta_*.log')) |
                           set(root.glob('*sta_ss.log')) | set(root.glob('*sta_ff.log')) |
                           set(root.glob('corner*.log')))
     reports = []
@@ -111,8 +112,11 @@ def main():
     elif unresolved or not actual_final:
         if minimum_terminal and not unresolved:
             by_corner = {r['corner']: r['metrics'] for r in minimum_corners}
-            ss = float(by_corner['SS']['SETUP'])
-            ff = float(by_corner['FF']['HOLD'])
+            # sta::worst_slack_cmd returns seconds, independently of the ps
+            # report formatting selected by ASAP7. Native table slacks and
+            # corner_sta.json have already been converted: do not rescale them.
+            ss = float(by_corner['SS']['SETUP']) * 1e12
+            ff = float(by_corner['FF']['HOLD']) * 1e12
             verdict = ('MIN32_ROUTED_TIMING_PASS_PARENT_OPEN' if ss >= 0 and ff >= 0
                        else 'MIN32_ROUTED_TIMING_FAIL_PARENT_OPEN')
         else:
@@ -130,8 +134,9 @@ def main():
                   parent_context_qualified=False, caller_loaded_context_obligation_retained=True,
                   adopted=False, no_tool_or_gate_rerun=True, no_live_job_changed=True)
     if minimum_terminal:
-        record['SS_setup_ps'] = float(next(r for r in minimum_corners if r['corner'] == 'SS')['metrics']['SETUP'])
-        record['FF_hold_ps'] = float(next(r for r in minimum_corners if r['corner'] == 'FF')['metrics']['HOLD'])
+        record['SS_setup_ps'] = float(next(r for r in minimum_corners if r['corner'] == 'SS')['metrics']['SETUP']) * 1e12
+        record['FF_hold_ps'] = float(next(r for r in minimum_corners if r['corner'] == 'FF')['metrics']['HOLD']) * 1e12
+        record['minimum_raw_slack_metric_unit'] = 'seconds'
         record['minimum_IO_budget_is_not_measured_parent_delay'] = True
     (a.output / 'verdict.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps(dict(verdict=verdict, useful_source_bound_live=useful_live,
