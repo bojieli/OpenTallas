@@ -1,0 +1,86 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+SIGNOFF corner.name=SS
+unannotated 19361
+SIGNOFF power.total.internal_w=0.0011363885132595897
+SIGNOFF power.total.switching_w=0.0004963994142599404
+SIGNOFF power.total.leakage_w=1.1521914530021604e-5
+SIGNOFF power.total.total_w=0.0016443098429590464
+SIGNOFF power.sequential.internal_w=0.00048783281818032265
+SIGNOFF power.sequential.switching_w=0.0
+SIGNOFF power.sequential.leakage_w=1.5123778212000616e-6
+SIGNOFF power.sequential.total_w=0.0004893451696261764
+SIGNOFF power.combinational.internal_w=0.0002194186090491712
+SIGNOFF power.combinational.switching_w=0.00022122549125924706
+SIGNOFF power.combinational.leakage_w=9.535112440062221e-6
+SIGNOFF power.combinational.total_w=0.0004501792136579752
+SIGNOFF power.clock.internal_w=0.00042913391371257603
+SIGNOFF power.clock.switching_w=0.0002751749416347593
+SIGNOFF power.clock.leakage_w=4.743183126265649e-7
+SIGNOFF power.clock.total_w=0.0007047831895761192
+SIGNOFF power.macro.internal_w=0.0
+SIGNOFF power.macro.switching_w=0.0
+SIGNOFF power.macro.leakage_w=0.0
+SIGNOFF power.macro.total_w=0.0
+SIGNOFF power.pad.internal_w=0.0
+SIGNOFF power.pad.switching_w=0.0
+SIGNOFF power.pad.leakage_w=0.0
+SIGNOFF power.pad.total_w=0.0
+SIGNOFF hier.__other__.internal_w=0.0011363856588719303
+SIGNOFF hier.__other__.switching_w=0.0004964002109827904
+SIGNOFF hier.__other__.leakage_w=1.152186471490332e-5
+SIGNOFF hier.__other__.total_w=0.0016443077185991362
+SIGNOFF hier.__other__.instances=17677
+IRSOURCE PINS
+SIGNOFF ir.die_um=82.08x82.08
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 1.64e-03 W
+Supply voltage   : 6.30e-01 V
+Worstcase voltage: 6.28e-01 V
+Average voltage  : 6.29e-01 V
+Average IR drop  : 7.31e-04 V
+Worstcase IR drop: 2.22e-03 V
+Percentage drop  : 0.35 %
+######################################
+########## EM analysis ###############
+Net                : VDD
+Corner             : default
+Maximum current    : 5.40e-05 A
+Average current    : 8.80e-07 A
+Number of resistors: 77423
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : default
+Total power      : 1.64e-03 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 2.03e-03 V
+Average voltage  : 6.40e-04 V
+Average IR drop  : 6.40e-04 V
+Worstcase IR drop: 2.03e-03 V
+Percentage drop  : 0.32 %
+######################################
+########## EM analysis ###############
+Net                : VSS
+Corner             : default
+Maximum current    : 4.61e-05 A
+Average current    : 8.09e-07 A
+Number of resistors: 78439
+######################################
