@@ -14,6 +14,7 @@ module tb_dsrom_su_fdiv_f12_eq;
     ot_dsrom_su_fdiv_f12 #(.NR(NR)) u1 (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y1), .vo(vo1), .fault(f1));
     reg [32:0] q0 [0:63];
     integer n, N, seed, mism, w0, r0, k;
+    reg [31:0] ta;
     function automatic [31:0] pick(input integer s);
         reg [31:0] r;
         integer c;
@@ -42,10 +43,18 @@ module tb_dsrom_su_fdiv_f12_eq;
             @(posedge clk);
             if (n < N) begin
                 v <= 1'b1;
-                a <= pick(0);
-                k = $urandom % 4;
-                if (k == 0) b <= {$urandom} ; else if (k == 1) b <= {a[31] ^ 1'b0, a[30:23] - 8'd1 + ($urandom % 3), a[22:0] ^ ($urandom % 4)};
-                else b <= pick(1);
+                k = $urandom % 5;
+                if (k == 4) begin
+                    // directed: a near the subnormal edge over a power of two, so the quotient denormalises and
+                    // often lands exactly halfway (remainder zero, the round-to-even tie that reads the sticky)
+                    ta = $urandom;
+                    a <= {ta[31], 8'd1 + {4'd0, ta[26:23] & 4'd7}, ta[22:0]};
+                    b <= {ta[30], 8'd128 + ($urandom % 26), 23'd0};
+                end else begin
+                    a <= pick(0);
+                    if (k == 0) b <= {$urandom} ; else if (k == 1) b <= {a[31] ^ 1'b0, a[30:23] - 8'd1 + ($urandom % 3), a[22:0] ^ ($urandom % 4)};
+                    else b <= pick(1);
+                end
             end else v <= 1'b0;
         end
         $display("FDIVEQ n=%0d mismatches=%0d", N, mism);
