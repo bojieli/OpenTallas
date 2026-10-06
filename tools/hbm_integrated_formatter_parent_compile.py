@@ -290,6 +290,10 @@ def compile_plan(a):
         j=ready[0];remaining.remove(j)
         leaf=out/j['prefix'];leaf.mkdir(exist_ok=False)
         cmd=[str(a.tool.resolve()),'--Mdir',j['directory'],'-f',j['verilator_args'],*j['sources']]
+        # JSON fragments carry the encoded child top, while the parent graph
+        # carries its top separately. Preserve the compiler's actual selection.
+        if '--top-module-encoded' not in Path(j['verilator_args']).read_text():
+            cmd+=['--top-module',j['top'],'--prefix',j['prefix']]
         write(leaf/'command.json',cmd)
         write(out/'progress.json',dict(completed=completed,current=j['prefix'],started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
         with (leaf/'frontend.log').open('x') as log:
