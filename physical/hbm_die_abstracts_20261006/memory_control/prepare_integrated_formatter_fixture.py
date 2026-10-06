@@ -66,14 +66,32 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
         # become a production installer publication merely by existing on disk.
         artifacts = None
     producer = load(producer_path)
+    if artifacts is not None:
+        # The emitted producer must be the exact producer enrolled in the book,
+        # with canonical installer-relative paths. An absolute emitter scratch
+        # path must not bypass the installer's source_artifacts authority.
+        installed_producer = book['index_producer']
+        for name in ('source_path', 'source_phase_path'):
+            key = producer[name]
+            if not isinstance(key, str):
+                raise ValueError('producer source path must be a string')
+            path = Path(key)
+            if (path.is_absolute()
+                    or not path.parts or '..' in path.parts
+                    or path.as_posix() != key):
+                raise ValueError('producer source path must be installer-root normalized: ' + str(key))
+            if installed_producer.get(name) != key:
+                raise ValueError('emitted producer differs from installed book source: ' + key)
+            try:
+                (root / path).resolve().relative_to(root.resolve())
+            except ValueError:
+                raise ValueError('producer source resolves outside installer root: ' + key)
+            if key not in artifacts or sha(root / path) != artifacts[key]:
+                raise ValueError('actual emitted producer/phase not installed and pinned: ' + key)
     phase_path = Path(producer['source_phase_path'])
     if not phase_path.is_absolute():
         phase_path = root / phase_path
     phase = load(phase_path)
-    for name in ('source_path', 'source_phase_path'):
-        p = producer[name]
-        if artifacts is not None and (p not in artifacts or sha(root / p) != artifacts[p]):
-            raise ValueError('actual emitted producer/phase not installed and pinned: ' + p)
     if producer['source_path'] != 'tools/hbm_index_tp96_producer.py':
         raise ValueError('selected actual TP96 producer required')
     if any(producer.get(k) != v for k, v in {
@@ -191,9 +209,12 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
         source_pins=source_pins,
         files={p.name: sha(p) for p in output.iterdir()},
         independent_gold_usage='sink_gold.mem comparison only; never offered to DUT',
+        installed_producer_paths_checked=artifacts is not None,
+        installed_producer_source_artifacts={producer[k]: artifacts[producer[k]]
+            for k in ('source_path', 'source_phase_path')} if artifacts is not None else None,
         native_external_stage_recipe=book_path is not None,
         normal_SM_entry_enrolled=book_path is None,
-        producer_source_sha256=sha(ROOT / producer['source_path']),
+        producer_source_sha256=sha((root if artifacts is not None else ROOT) / producer['source_path']),
         production_installation_complete=False,
         hardware_reservation_granted=False, numerical_runtime_qualified=False,
         full_token_qualified=False, physical_qualified=False)

@@ -1,0 +1,44 @@
+{
+  "status": "IMPLEMENTED_SOURCE_BINDING_AWAITING_OWNER_PARALLEL_LEAF",
+  "top": "ot_qwen_p0_parallel_transport_context",
+  "bank": "ot_qwen_p0_parallel_bank",
+  "flags": {
+    "PARALLEL_TRANSPORT": 1,
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1,
+    "HBM_PULLIN": 0
+  },
+  "root_PC_slots": 128,
+  "independent_PCs_per_stack": 32,
+  "shared_return_arbiter": false,
+  "controller": "existing ot_hbm_r14_stream_stack",
+  "control": "existing ot_qwen_s4_protected_control + actual HCLK consumption callback ring",
+  "backing": "existing ot_qwen_s4_numeric_memory all36/144history source; untouched",
+  "model": "model_before_rtl.json",
+  "bench": "tb_qwen_p0_parallel_bank",
+  "bench_scope": "releasedL0/rank0 K/V sector boundary stimulus only, no PHY/controller/fulltoken claim",
+  "required_owner_leaf": "rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv",
+  "required_actual_leaf_instance": "ot_qwen_stream4_cdc_pc RSEL1 plus per-sector mutable protection",
+  "required_leaf_outputs": [
+    "c_quiet",
+    "h_quiet"
+  ],
+  "leaf_owner": "Descartes",
+  "leaf_negative_gate_replay": false,
+  "planned_component_checks": [
+    "all32 actualPC row acceptance oneedge",
+    "releasedK/V128goldenrows",
+    "independent held outputs",
+    "32 writecaptures",
+    "real matchedheld32ACK/credits",
+    "warm admissionpause accepteddebt drain"
+  ],
+  "bench_executed": false,
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "physical_owner": "Claude QWEN-PHYS",
+  "physical_contract": "fullwidth perPC protected coded data/identity/backpressure to tiles12MiB/rank; old1056track frame rejected",
+  "existing_runtime_preserved": 2318397,
+  "new_heavy_build": false
+}

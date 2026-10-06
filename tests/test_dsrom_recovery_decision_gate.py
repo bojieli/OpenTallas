@@ -48,10 +48,10 @@ def test_clock_kind_is_explicit_and_does_not_change_the_lever_record():
 
 
 def test_no_zero_rate_for_missing_SU_and_no_preliminary_adoption():
-    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/model.json").read_text())
-    assert d["scenarios"]["baseline"]["conditional_cost"]["AR_us"] == 597.449
-    assert d["scenarios"]["baseline"]["conditional_cost"]["MTP"]["MTP_tok_s"] == 4900.4
-    assert d["scenarios"]["field_only"]["conditional_cost"]["AR_us"] == 492.009
+    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/full_fec_current.json").read_text())
+    assert d["scenarios"]["baseline"]["conditional_cost"]["AR_us"] == 592.466
+    assert d["scenarios"]["baseline"]["conditional_cost"]["MTP"]["MTP_tok_s"] == 4922.6
+    assert d["scenarios"]["field_only"]["conditional_cost"]["AR_us"] == 457.317
     for name in ("SU_only","both"):
         assert d["scenarios"][name]["conditional_cost"] is None
         assert d["scenarios"][name]["composition_complete"] is False
@@ -62,13 +62,15 @@ def test_no_zero_rate_for_missing_SU_and_no_preliminary_adoption():
 
 def test_matched_snapshot_pins_and_HBM_gap_are_consistent():
     import hashlib
-    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/model.json").read_text())
+    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/full_fec_current.json").read_text())
     for path, expected in d["inputs"].items():
         assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest() == expected, path
     c=d["comparison"]
     hbm=json.loads((ROOT/"results/rtl/dshbm_1m_allmeasured_20261004/composition.json").read_text())
     contract=d["composition_contract"]
-    canonical=json.loads((ROOT/contract["canonical_source"]).read_text())
+    canonical_path=ROOT/contract["canonical_source"]
+    canonical=json.loads(canonical_path.read_text())
+    assert d["composition_sha256"] == hashlib.sha256(canonical_path.read_bytes()).hexdigest()
     assert (d["context"], d["position"]) == (1048576, 1048575)
     assert (d["context"], d["position"]) == (hbm["context"], hbm["position"])
     assert (d["context"], d["position"]) == (canonical["context"], canonical["position"])
@@ -88,7 +90,7 @@ def test_matched_snapshot_pins_and_HBM_gap_are_consistent():
     assert c["AR_equal_rate_target_us"] == pytest.approx(target)
     assert c["baseline_extra_exposed_us"] == pytest.approx(base["AR_us"]-target)
     assert c["after_preliminary_field_additional_exposed_us"] == pytest.approx(field["AR_us"]-target)
-    assert c["after_preliminary_field_additional_exposed_us"] == pytest.approx(31.963915581727008)
+    assert c["after_preliminary_field_additional_exposed_us"] == pytest.approx(-2.7280844182729993)
     fetch=[r for r in hbm["path"] if r["node"].startswith("hbm:expert_fetch")]
     assert len(fetch) == 40
     assert c["HBM_exposed_expert_weight_fetch_us"] == pytest.approx(sum(r["us"] for r in fetch))
@@ -98,7 +100,7 @@ def test_matched_snapshot_pins_and_HBM_gap_are_consistent():
 
 
 def test_cold_norm_boundaries_are_not_warmed_or_all_layer_credit():
-    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/model.json").read_text())
+    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/full_fec_current.json").read_text())
     n=d["measured_norm_subset"]
     assert n["gain_cycles"] == [6,7,8,9,10]
     assert (n["go_cycle"], n["final_registered_landing_cycle"]) == (16,294)
@@ -111,7 +113,7 @@ def test_cold_norm_boundaries_are_not_warmed_or_all_layer_credit():
 
 
 def test_selected_HCPOST_reject_not_alternative_lane_transfer():
-    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/model.json").read_text())
+    d=json.loads((ROOT/"results/rtl/dsrom_recovery_20261004/decision_gate/full_fec_current.json").read_text())
     p=d["selected_SU_physical"]
     assert p["verdict"] == "REJECT_SS"
     assert p["SS_setup_ps"] == -52.47
