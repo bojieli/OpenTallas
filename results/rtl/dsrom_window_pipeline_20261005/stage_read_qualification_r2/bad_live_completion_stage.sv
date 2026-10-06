@@ -215,7 +215,7 @@ module ot_dsrom_window_stage_pipeline #(
         end
         wire ok0 = wanted0 < (POS_W+1)'(MAX_CONTEXT) &&
                    wanted0 >= {1'b0, owner_first0} && wanted0 < owner_end0 &&
-                   user0 == owner_user0 && complete_group0[wanted0[6:5]];
+                   user0 == owner_user0 && slot_done[wanted0[6:0]];
         for (genvar k = 0; k < PITCH; k = k + 1) begin : g_col
             localparam integer CWID = (k < 16) ? 256 : 128;
             reg [CWID-1:0] mem [0:31];

@@ -10351,15 +10351,25 @@ def dsrom_window_full_block_pipeline_model():
     write_enable = banks*cols*depth
     ack = npc*(256+13+4+12+1)
     read_extra = banks*4*rowb  # four new eight-entry read registers; original final q remains
+    # Stage r2: snapshot accepted read's range/user and four eight-slot
+    # completion groups alongside payload; compare at the existing next edge.
+    read_wanted_snapshot = banks*22
+    read_owner_snapshot = 21+22+10
+    read_completion_snapshot = banks*4
+    read_qualification_extra = (read_wanted_snapshot + read_owner_snapshot +
+                                read_completion_snapshot - banks)
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
-             read_extra + writer_control_upper + job_control_upper)
+             read_extra + read_qualification_extra + writer_control_upper + job_control_upper)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
     ff_area = added*DFF_UM2
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
-    cell_budget = baseline+ff_area+mux_area_upper
+    # Positive allowance for the captured end adder and four end comparisons;
+    # do not credit removal of the old relative-row subtraction/comparisons.
+    read_qualification_logic = (22*12 + banks*22*6)*.08748
+    cell_budget = baseline+ff_area+mux_area_upper+read_qualification_logic
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10380,23 +10390,33 @@ def dsrom_window_full_block_pipeline_model():
             winner_FF_bits=winner, column_payload_FF_bits=column_payload,
             row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
             extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            read_wanted_snapshot_FF_bits=read_wanted_snapshot,
+            read_owner_range_user_snapshot_FF_bits=read_owner_snapshot,
+            read_completion_group_snapshot_FF_bits=read_completion_snapshot,
+            removed_direct_bank_ok_FF_bits=banks,
+            read_qualification_added_FF_bits=read_qualification_extra,
+            read_qualification='fresh accepted-request operands and preedge completion captured with payload; qualification at existing second read edge, not reused permission',
             job_control_upper_bits=job_control_upper, added_FF_upper_bits=added,
             qualified_ready='current elastic occupancy and downstream transfer; never permission cached across mutation',
             acceptance_debt='retain accepted original beat identities through actual memory write and stream engine drain'),
         communication=dict(response_boundary_bits_per_cycle=npc*(256+13+4+2),
             landing_data_bits_per_cycle=column_payload,
             read_boundary_bits_per_cycle=banks*rowb,
+            read_control_snapshot_internal_bits_per_cycle=read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot,
+            read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
             track_demand_lower_bound=npc*(256+13+4+2)+banks*rowb,
             actual_parent_channel_capacity=None, parent_channel_fit=False),
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
+            read_qualification_logic_allowance_um2=read_qualification_logic,
+            read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
-            read_added_cycles=1, existing_stream_validation_tail_cycles_upper=8,
+            read_added_cycles=1, read_qualification_added_cycles=0, existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
             added_layer_cycles_upper=4+7+32+128+8,
