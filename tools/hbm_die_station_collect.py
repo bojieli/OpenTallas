@@ -36,8 +36,19 @@ def main():
     ap.add_argument('--route', required=True, help='HOST:ROUTE_DIR (the route_view.sh label dir)')
     ap.add_argument('--master', required=True)
     ap.add_argument('--bench', default='', help='bench check summary (pos/neg) for the record')
+    ap.add_argument('--bench-dir', default='', help='HOST:DIR of run_bench.sh output for this master (pos/neg check.json)')
     a = ap.parse_args()
     host, rd = a.route.split(':', 1)
+    bench = a.bench
+    if a.bench_dir:
+        bh, bd = a.bench_dir.split(':', 1)
+        pos = json.loads(sh(bh, f'cat {bd}/pos/check.json') or '{}')
+        neg = json.loads(sh(bh, f'cat {bd}/neg/check.json') or '{}')
+        bench = dict(dir=a.bench_dir, simulator='verilator (tools/hbm_die_station_bench.py)',
+                     positive=dict(verdict=pos.get('verdict'), checked_bits=pos.get('checked_bits'),
+                                   mismatches=pos.get('mismatches'),
+                                   latency_periods={k: v.get('latency_periods') for k, v in pos.get('domains', {}).items()}),
+                     mutant=dict(verdict=neg.get('verdict'), mismatches=neg.get('mismatches')))
     m = a.master
     d = VIEWS / m
     ex = sh(host, f'cat {rd}/exit')
@@ -72,7 +83,7 @@ def main():
                             rtl=f'physical/hbm_accel_die_views/stations/{m}/{m}.sv',
                             sdc=f'physical/hbm_accel_die_views/stations/{m}/{m}.sdc',
                             generator='tools/hbm_die_station_gen.py'),
-                bench=a.bench, size_um=ck.get('size_view'), packing=PACKING,
+                bench=bench, size_um=ck.get('size_view'), packing=PACKING,
                 sha256={f: sha(d / f) for f in (f'{m}.lef', f'{m}_ss.lib', f'{m}_ff.lib')}, defects=[])
     old = d / 'view.json'
     if old.exists():
