@@ -1,0 +1,246 @@
+{
+  "source_read_main": "e0514e468",
+  "authority": {
+    "path": "results/rtl/die_top_lint_20261006/hbm_die_abstract_list.json",
+    "sha256": "78934f31e63d413b6786967b90def71f378eb9838575cfc289e46475df0172e6",
+    "kinds": 23,
+    "copies": 348,
+    "snapshot_round": "r14b",
+    "meaning": "authoritative family count; old r14b dimensions/ports are historical, corrected r16b emitted endpoint binding separately pinned below"
+  },
+  "build_order": "Bacon owns actual streamservice + VM multicast source tops before abstracts; Gibbs caller/calendar, Gauss stations/forwarded clocks; Turing parent integration only",
+  "physical_binding": {
+    "source": "442556f88703b441c48d323607d4a2acad0e320b",
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-die-fix/cases/r16b/a_real",
+    "die_verilog_sha256": "d72c400458021e23c06cc9282654b2a15df8f94b4f443e52cff6619fd2678277",
+    "qualification": "emitted physical diagnostic with placeholders, not actual service/VM full-top route"
+  },
+  "source_hashes": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb.sv": "8189205b557273359d494350209a868b987232763b17f8f3712ab93c28c3a4a2",
+    "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv": "baeca01c84a454ab5c819d2c5612877a3bf257cb38c398a54059243059733009",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv": "fba1bf191a8c5c056f1384f2252ca9ff630a7ceaad91fe756d264d3af357f4ad",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv": "002f06d542dc9d3df0b02fb8a5d9ecc370d445f569de429ad27571110762d66e",
+    "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv": "f57291bf99101e430274d8a4bb9885880fa2b76e1745fe1f1db24d939be4f8ed",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_stream_service.sv": "6ce388676188d0fed0a0b587b73f3a6b0d335cf7e3a73c2712290e5fe049156a",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack.sv": "abf43b8461e0bbe162eecc6d61391e84908ec9dbcee769a5fee57475b5aac850",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_service.sv": "e86d428e357e5c1c294bf5c16634871a67124c0672ea98a5cb15f61efe403d86",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "8a8cae3449e8216073d4d5fc4c38da32ff9e2486bf0bf1eda83d82d47425b836"
+  },
+  "existing_source_receipts_match": true,
+  "streamservice": {
+    "top": "ot_hbm_die_stream_service",
+    "enclosing_body": "u_stack ot_hbm_accel_pcwb_service_stack",
+    "parameters": {
+      "ENABLE_default": 0,
+      "CMD_MATCH_CUT_default": 0,
+      "STACK_per_copy": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "CRED": 64,
+      "WQ": 8
+    },
+    "actual_instances": {
+      "PC_WB": 32,
+      "CDC_landing": 32,
+      "CDC_W": 256,
+      "CDC_AW": 6,
+      "CA_channels": 16,
+      "prepaid_columns": 32,
+      "expert_fetch_in_current_wrapper": 0
+    },
+    "source_protection": "W6 checked retained frame140bits and perPC read state33bits; real 72 prepaid column seats/PC, finite credits64/WQ8; actual writes visible only after matching199bit PHY receipt; cold por only, whole provider debt drain before reset",
+    "physical_root": "hb_coll/pll_hbm -> n_clk_hbm -> svc_*/ck; por_hbm -> n_rst_hbm -> svc_*/rst; wrapper service_clk must bind this; core_clk must bind hb_coll/pll_stream/n_clk_stream (not currently an explicit svc core_clk pin in physical stub)",
+    "svc_SW_actual_ports": {
+      "phy": [
+        "n_dfi_SW",
+        22238
+      ],
+      "lsm0": [
+        "n_wl_sm0",
+        1099
+      ],
+      "qsm0": [
+        "n_rq_sm0",
+        44
+      ],
+      "lsm4": [
+        "n_wl_sm4_0",
+        1102
+      ],
+      "qsm4": [
+        "n_rq_sm4_e",
+        45
+      ],
+      "e": [
+        "n_ef_SW_e",
+        129
+      ],
+      "kv": [
+        "n_kv_SW_0",
+        1041
+      ],
+      "ik": [
+        "n_ik_SW_0",
+        1026
+      ]
+    },
+    "binding_scope": "raw placeholder buses above are not codec/identity/ready/receipt port mappings. Complete actual wrapper ABI in real_parent_ports.json; cannot truncate frames into them.",
+    "expert_join_required": "Reuse fetch client and owned task/sector/return contracts, select one row/REFpb controller owner before issue. Current expert_service has separate32 stream_pc controllers/row state; never directly wire both grants to same PHY. Actual expert req/physical_tag12/beat5 + full192owner must survive return; PCWB naked perPC256-bit read_data is insufficient for out-of-order expert tagged returns without a real receipt/identity seat. Gibbs selects source calendar/owner; Bacon builds additive source join.",
+    "receipt_join": {
+      "write": "phy_col_v/phy_col_r accepted command199bit receipt -> visible_v/visible_r same receipt -> wr_visible_v internally -> ack_n -> true write fence",
+      "read": "rd_return_v/rd_return_r perPC accepted256beat -> real CDC -> read_v/read_r; cred_ret derived actual read consume, no tied ready",
+      "owner_retirement": "owner_r requires all-column/WR/WQ/read/landing/PC drained, currentframe fence; producer64/transport32/irs32/rank7/stack2 retained",
+      "evidence": "results/rtl/hbm_pcwb_parent_implementation_20261005/result.json: onePC prepaid exact mechanism PASS, whole32PC+expert runtime/physical not qualified"
+    }
+  },
+  "VM": {
+    "top": "ot_hbm_die_vm_multicast_root",
+    "ENABLE_default": 0,
+    "ledger_shape": {
+      "banks": 2,
+      "payload_bits": 2048,
+      "depth": 128,
+      "payload_capacity_bits": 524288
+    },
+    "actual_shape": {
+      "banks": 2,
+      "depth": 128,
+      "data_plus_lane_metadata_bits": 2063,
+      "owner_bits": 192,
+      "coded_row_bits": 2592,
+      "physical_row_bits": 2816,
+      "macro_instances": 22,
+      "primitive": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "real_receipt": "results/physical/hbm_die_abstracts_20261006/memory_control/vm_root_receipt.json, same source: seed1,32compares, noinit, writeACK4edges/readpublication3edges, wrongowner+2bit actualSRAM negatives retained",
+    "clock": "hb_coll/pll_stream -> n_clk_stream -> hb_vm/ck,833ps; por_stream -> n_rst_stream -> hb_vm/rst; no native fclk port on this root: use actual local clk then Gauss source-bound output fclk through kept forwarding cells",
+    "integration_selected_tap_order": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+    ],
+    "tap_order_status": "selected composition binding for Bacon/Gauss, not yet installed die RTL",
+    "quarters": {
+      "SW": {
+        "activation_port": "hb_vm/xSW",
+        "activation_wire": "n_xt_SW_0",
+        "activation_physical_bits": 2068,
+        "activation_payload_bits": 2063,
+        "added_forward_clock_bits": 5,
+        "attention_query_port": "hb_vm/qSW",
+        "attention_query_wire": "n_qa_SW_0",
+        "query_physical_bits": 582,
+        "query_payload_bits": 580,
+        "query_added_forward_clock_bits": 2,
+        "index_publication_port": "hb_vm/iSW",
+        "index_wire": "n_iv_SW",
+        "index_placeholder_bits": 512,
+        "SU_to_VM": "n_hb_su_SW_vm",
+        "VM_to_SU": "n_hb_vm_su_SW",
+        "SU_placeholder_bits": 2048
+      },
+      "SE": {
+        "activation_port": "hb_vm/xSE",
+        "activation_wire": "n_xt_SE_0",
+        "activation_physical_bits": 2068,
+        "activation_payload_bits": 2063,
+        "added_forward_clock_bits": 5,
+        "attention_query_port": "hb_vm/qSE",
+        "attention_query_wire": "n_qa_SE_0",
+        "query_physical_bits": 582,
+        "query_payload_bits": 580,
+        "query_added_forward_clock_bits": 2,
+        "index_publication_port": "hb_vm/iSE",
+        "index_wire": "n_iv_SE",
+        "index_placeholder_bits": 512,
+        "SU_to_VM": "n_hb_su_SE_vm",
+        "VM_to_SU": "n_hb_vm_su_SE",
+        "SU_placeholder_bits": 2048
+      },
+      "NW": {
+        "activation_port": "hb_vm/xNW",
+        "activation_wire": "n_xt_NW_0",
+        "activation_physical_bits": 2068,
+        "activation_payload_bits": 2063,
+        "added_forward_clock_bits": 5,
+        "attention_query_port": "hb_vm/qNW",
+        "attention_query_wire": "n_qa_NW_0",
+        "query_physical_bits": 582,
+        "query_payload_bits": 580,
+        "query_added_forward_clock_bits": 2,
+        "index_publication_port": "hb_vm/iNW",
+        "index_wire": "n_iv_NW",
+        "index_placeholder_bits": 512,
+        "SU_to_VM": "n_hb_su_NW_vm",
+        "VM_to_SU": "n_hb_vm_su_NW",
+        "SU_placeholder_bits": 2048
+      },
+      "NE": {
+        "activation_port": "hb_vm/xNE",
+        "activation_wire": "n_xt_NE_0",
+        "activation_physical_bits": 2068,
+        "activation_payload_bits": 2063,
+        "added_forward_clock_bits": 5,
+        "attention_query_port": "hb_vm/qNE",
+        "attention_query_wire": "n_qa_NE_0",
+        "query_physical_bits": 582,
+        "query_payload_bits": 580,
+        "query_added_forward_clock_bits": 2,
+        "index_publication_port": "hb_vm/iNE",
+        "index_wire": "n_iv_NE",
+        "index_placeholder_bits": 512,
+        "SU_to_VM": "n_hb_su_NE_vm",
+        "VM_to_SU": "n_hb_vm_su_NE",
+        "SU_placeholder_bits": 2048
+      }
+    },
+    "attention_query_payload": "actual generator ATTN_Q=iv1+ibank3+ib576, distinct from2063 activation. Lagrange/Claude owns parent query source/accepted clocks; do not repurpose activation root as query reader.",
+    "native_ACK_hooks": {
+      "write": "wr_v&wr_ready(bank1,addr7,data2063,owner192) -> real SRAM verify -> held wr_ACK_v/owner192 until wr_ACK_ready",
+      "read": "rd_v&rd_ready with bank/address/owner -> held fourtap data2063+owner192; fourtap_v/tap_ready sends; exactly one later matching tap_ACK_v/owner192 each; native_release after all4ACK, not acceptance",
+      "station": "Gauss ot_hbm_native_station MODE1/W2063/IW2063/NI1 supports actual NO1..4 held taps and reserved reverseACK seats. Each root branch requires its selected real fanout; do not instantiate NO4 on all4 branches without actual source/count/area. Root tap_ACK must come from matching complete child source_release/owner after every actual child ACK. Root has no ACK_ready, so receipt is prepaid and retained through repair.",
+      "visibility_boundary": "native_release is activation multicast retirement; root wr_ACK is SRAM verified write. Neither substitutes for SU/result provider publication ACK. Index129reads/32words/tag8 and full job/gen/pos/rank join remain source-owned adapter.",
+      "physical_boundary": "current hb_vm stub does not expose wr_ACK/tap_ready/tap_ACK/192bit owners; old44/45bit qsm reverse buses cannot substitute for full ACK. Add source ports/corridor budget before route; no existing ACK reservation qualification."
+    },
+    "result_publication_SU_index_body_installed": false,
+    "parent_qualified": false
+  },
+  "retained_verdicts": {
+    "barrier_k32": {
+      "SS_setup_ps": 330.53,
+      "FF_hold_ps": 39.39,
+      "scope": "routed K32 leaf; parentOPEN; export staged not run"
+    },
+    "routertopk_f3": {
+      "SS_setup_ps": -369.79,
+      "status": "OPEN"
+    },
+    "loader": {
+      "SS_setup_ps": -3672.04,
+      "status": "OPEN"
+    },
+    "m6h1": {
+      "root": "physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1",
+      "pins": 1664,
+      "real_clock_output_arcs_ss": 34,
+      "real_clock_output_arcs_ff": 34,
+      "clk_caps_fF": [
+        16.3802,
+        16.8015
+      ],
+      "scope": "closed one-head leaf; H16/64tile/serviceparentOPEN"
+    },
+    "H17": "additive compatibility replacements prepared; retained native leaf only, no wholeSM qualification"
+  },
+  "heavy_execution": false,
+  "generator_edits": false,
+  "SS_FF_parent_qualified": false
+}

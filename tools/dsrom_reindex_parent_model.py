@@ -2,6 +2,28 @@
 import hashlib,json,math
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def native_quarter_join_model():
+    """Wiring to the existing W11 scorer; no new engine or calendar stage."""
+    source=ROOT/'rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv'
+    return dict(default_enabled=False,source=str(source.relative_to(ROOT)),source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+        shape=dict(NS=4,NK=4,NB=4,IH=32,IW=20,MD=64,FPL=7,FML=5,QL=5),
+        existing_MACs_per_cycle=16*32*128,new_MACs_per_cycle=0,
+        key_bytes_per_cycle=16*544//8,query_bytes_per_load=(512+32+16)//8,
+        key_boundary_bits=1+4+16+16+16+320+8704,key_ready_return_bits=1,
+        score_boundary_bits=1+4+16+16+256+320+1,score_ready_return_bits=1,
+        first_capture_replicas_per_key_bit=4,query_capture_replicas=16,
+        mapped_merge_and_connected_fanout_required=True,
+        incremental_FF=0,incremental_muxes=0,incremental_demuxes=0,
+        existing_engine_latency_cycles=100,existing_query_settle_cycles=3,
+        added_adapter_cycles=0,added_token_latency_us=0,
+        composition='Existing streaming scorer term in dsrom_1m_allmeasured retained; do not add 100 cycles again to the 739 gather term.',
+        arithmetic='Existing native array unchanged; key order, every full global ID and golden mdrop order retained.',
+        capture_clock='Literal parent clk on native rkey/rql and credit/metadata state; no QX gated-clock alias.',
+        area='Existing modeled NS16/NK4 W11 scorer, one NS4 quarter; no scorer placed in R9 control/list fence and no borrowed HBM slot fit.',
+        routing='8704 key bits plus full metadata must use actual connected source/receiver channels; required added tracks unknown until enclosing floorplan binding.',
+        R9_scope='R9 control/list/request/drain-header only; this join does not expand that pinned physical proof.',
+        exact_qualified=False,mapping_qualified=False,clock_load_qualified=False,parent_qualified=False,
+        build_rule='Port join only; no new scorer synthesis/P&R until its actual enclosing slot/channel and clock/calendar binding exists.')
 def model():
     name='ot_sram_1r1w_512x128_m4_r2c2'
     path=ROOT/'physical/asap7_memory_macros'/name
@@ -21,7 +43,7 @@ def model():
         all(hashlib.sha256((ROOT/f).read_bytes()).hexdigest()==h for f,h in measured['source_sha256'].items() if f.endswith(('.sv','.v'))))
     actual_cycles=measured['worst_rank']['cycles'] if source_matched else None
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
-        MACs_per_cycle=0,rounding_and_reduction_changes=0,
+        MACs_per_cycle=0,rounding_and_reduction_changes=0,native_quarter_port_join=native_quarter_join_model(),
         list_memory=dict(macro=name,macros_per_stack=banks,macro_json_sha256=hashlib.sha256((path/(name+'.json')).read_bytes()).hexdigest(),logical_bits=slots*entries*lbw,physical_bits=banks*512*128,
             code='SECDED35 per payload14+full logical entry address14; two independently masked64-bit fields per128-bit macro word',
             write_entries_per_cycle=1,write_logical_bytes_per_cycle=1.75,write_physical_bytes_per_cycle=8,read_entries_per_cycle=2,read_logical_bytes_per_cycle=3.5,read_physical_bytes_per_cycle=16,

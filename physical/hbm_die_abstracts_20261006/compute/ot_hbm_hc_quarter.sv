@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // Canonical finite HC quarter, first real operation = golden HC_POST.
 // Full 1280-MAC quarter shape = 64 groups of four outputs (20 muls/group). The source-pinned
-// m6a5 lane closes; protected parent/clock/ports require new full-shape gates.
+// Historical m6a5 timing closes but this arithmetic source has exactness FAILs.
+// Corrected source-owner pin + one-group golden required before enabled build.
 // HC_PRE/projection/Sinkhorn remain explicit dependencies, not invented stubs.
 module ot_hbm_hc_quarter #(parameter integer ENABLE=0,NG=64)(
  input wire clk,rst_n,

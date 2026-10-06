@@ -49,12 +49,38 @@ def run(cmd,out,stem):
  return rc,(out/(stem+'.log')).read_text()
 
 
+HC_SOURCE='rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
+HC_PARAMS=dict(WIN=0,WOUT=0,ML=6,AL=5)
+
+
+def hc_corrected_release():
+ release=json.loads((RESULT/'hc_source_release.json').read_text())
+ actual=sha(ROOT/HC_SOURCE)
+ if actual in release['rejected_sha256'] or not release.get('owner_commit') or actual!=release.get('corrected_source_sha256') or release.get('parameters')!=HC_PARAMS:
+  raise ValueError('HC_ARITHMETIC_SOURCE_BLOCKED: owner-corrected m4/data/valid/error source pin required before admission or compilation')
+ return release
+
+
+def hc_minimum_receipt(path):
+ hc_corrected_release()
+ if path is None:raise ValueError('HC_MINIMUM_GROUP_GATE_REQUIRED before full64 wrapper compilation')
+ receipt=json.loads(path.read_text())
+ if receipt.get('status')!='PASS' or receipt.get('parameters')!=HC_PARAMS or receipt.get('tool_version','').split()[:2]!=['Verilator','5.050']:
+  raise ValueError('HC minimum actual-group receipt status/params/tool mismatch')
+ for p,h in receipt['source_files'].items():
+  if sha(ROOT/p)!=h:raise ValueError('HC minimum corrected source changed: '+p)
+ if receipt['source_files'].get(HC_SOURCE)!=sha(ROOT/HC_SOURCE):raise ValueError('HC arithmetic absent from minimum receipt')
+ return receipt
+
+
 def main():
  ap=argparse.ArgumentParser(description=__doc__)
  ap.add_argument('--family',choices=['sfu','hc'],required=True)
  ap.add_argument('--out',type=Path,required=True)
  ap.add_argument('--admitted',action='store_true')
+ ap.add_argument('--hc-minimum-receipt',type=Path)
  a=ap.parse_args()
+ if a.family=='hc':hc_minimum_receipt(a.hc_minimum_receipt) # fail before guard/compiler
  if socket.gethostname()!='climbing-locust' or not Path('/srv/opentallas-scratch/admit.sh').exists():
   ap.error('EPYC2 climbing-locust only; no local/other-host fallback')
  out=a.out.resolve()
@@ -73,6 +99,7 @@ def main():
    write(out/'not_started.json',dict(reason='RAM_PLUS_UNCHANGED_RESERVE_BLOCKED',capacity=receipt));return 75
   cmd=['/srv/opentallas-scratch/admit.sh',str(inv['declared_peak_gib']),'--',sys.executable,str(Path(__file__).resolve()),
        '--family',a.family,'--out',str(out),'--admitted']
+  if a.family=='hc':cmd+=['--hc-minimum-receipt',str(a.hc_minimum_receipt.resolve())]
   return subprocess.call(cmd)
  source=json.loads((BASE/'enabled_sources.json').read_text())
  for p,h in source['files'].items():

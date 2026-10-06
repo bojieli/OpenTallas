@@ -1,0 +1,19 @@
+{
+  "scope": "Child context preparation, no launch or qualification",
+  "source_sha256": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_ctx.sv": "4369000f471569228a1a0fb8ad9cdce1a68ce0e2d42b53cd9b27300e6e80697f",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv": "91f5e872dbdf7944b9048b156b75030c20772cc1f383209085b98999458c23a4",
+    "physical/dsrom_fh_capture/run.sh": "e5f69bfc5ec50868dff760fac854d8b7c75157b214eb6907ac6150b58fe20274"
+  },
+  "correction": "Context complete tuple uses own registered leaf-valid tv[0] and result-valid ov, not earlier stand-in tv_in/ov1_in; no new FF, real existing SRAM clock/protection unchanged. RETIRE remains defaultOFF.",
+  "next_numerical": {
+    "controller_pid": 2457561,
+    "source_commit": "5130dca3ead2ca11eb410d744667cd03ae20c531",
+    "source_ready": true,
+    "heavy_admitted": false,
+    "route_ready": false,
+    "reason": "CPU overload; parent actual protected VM commit load/capture mapping still owned by Copernicus; no new falsepaths"
+  },
+  "retention": "retention.json: parent actual replicated22240FF +producer/commit metadata341=22581 predicted; quadrants16 fanout, relaymax6; no wireload/ASAP7 proof",
+  "physical_source_changed_but_numerical_source_unchanged": true
+}

@@ -23,10 +23,14 @@ module ot_hdc_v41_fh_ctx #(
     parameter integer NW = 16,
     parameter integer ALAT = 0,
     parameter integer CAPTURE = 0,
-    parameter integer RETURN_EXTRA = 0
+    parameter integer RETURN_EXTRA = 0,
+    parameter integer RETIRE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire retire_busy,retire_warm_ack,
+    output reg warm_emit,
+    output wire leaf_valid, result_valid,
     input  wire              s3_v_in,          // the S3 valid that enters the engine's result valid line
     input  wire [1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1-1:0] a_tag_p_in,
     input  wire [G*W*32-1:0] res_in,
@@ -71,6 +75,8 @@ module ot_hdc_v41_fh_ctx #(
     reg [NW-1:0]     row_q, am_idx;
     reg [LV:0]       tv;
     reg              ov1, ov;
+    assign leaf_valid=tv[0];
+    assign result_valid=ov;
     always @(posedge clk) begin
         a_tag_p <= a_tag_p_in; res_u <= res_in; o_addr1 <= o_addr1_in; o_mask1 <= o_mask1_in;
         mask_q <= leaf_mask_in; row_q <= leaf_row_in; am_idx <= am_idx_in;
@@ -136,20 +142,23 @@ module ot_hdc_v41_fh_ctx #(
     reg  [G*W*32-1:0] o_data1;
     always @(posedge clk) o_data1 <= res;
     reg iw_pend;
+    reg iw_issued;
     reg iw_go;
     reg iw_go2;
     wire iw_write_go=CAPTURE?iw_go2:iw_go;
     always @(posedge clk or negedge rst_n)
         if(!rst_n) iw_go2<=0; else iw_go2<=iw_go;
     reg [AW-1:0] iaddr_r;
-    wire drained_nx = !(|busy_q) && !s3_v && !(|vline) && !(|tv[LV-1:0]) && !ov1 && !ov && !(|fline);
-    wire iw_go_n = iw_pend && !iw_go && !(CAPTURE && iw_go2) && drained_nx;
+    wire drained_nx = (!RETIRE || !retire_busy) && !(|busy_q) && !s3_v && !(|vline) && !(|tv[LV-1:0]) && !ov1 && !ov && !(|fline);
+    wire iw_go_n = iw_pend && !iw_go && !(CAPTURE && iw_go2) && drained_nx && (!RETIRE || !iw_issued);
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin iw_pend <= 1'b0; iaddr_r <= 0; iw_go <= 1'b0; end
+        if (!rst_n) begin iw_pend <= 1'b0; iw_issued<=0; warm_emit<=0; iaddr_r <= 0; iw_go <= 1'b0; end
         else begin
-            iw_go <= iw_go_n;
-            if (go_fus) begin iw_pend <= 1'b1; iaddr_r <= i_iaddr; end
-            else if (iw_write_go) iw_pend <= 1'b0;
+            iw_go <= iw_go_n;warm_emit<=iw_write_go;
+            if (go_fus && (!RETIRE || (!iw_pend&&!retire_busy))) begin
+                iw_pend <= 1'b1;iw_issued<=0;iaddr_r <= i_iaddr;
+            end else if(RETIRE&&iw_write_go) iw_issued<=1;
+            else if(RETIRE?retire_warm_ack:iw_write_go) begin iw_pend<=0;iw_issued<=0;end
         end
     end
     wire [AW-1:0] iw_e = iaddr_r + MPI;
