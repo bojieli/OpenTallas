@@ -7,9 +7,9 @@ module hfd_index_q_b0 (
     input wire [528:0] a0, input wire [0:0] ck, input wire [1025:0] k, input wire [0:0] rst,
     output wire [512:0] kout, output wire [528:0] a0o);
   wire c = ck[0];
-  reg rs1, rs2;
-  always @(posedge c or negedge rst[0]) if (!rst[0]) {rs2, rs1} <= 2'b00; else {rs2, rs1} <= {rs1, 1'b1};
-  wire rn = rs2;
+  reg [1:0] rst_s;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+  wire rn = rst_s[1];
   // forwarded keys: capture on the forwarded clock's falling edge at the pin, two-clock FIFOs (8 deep), kf
   wire [511:0] kh [0:1]; wire [1:0] ke;
   genvar g;
@@ -22,9 +22,11 @@ module hfd_index_q_b0 (
       .wdata(kc), .full(full_), .rd_freed(fr_), .rclk(c), .rrst_n(rn), .re(1'b1), .rdata(kh[g]),
       .empty(ke[g]));
   end endgenerate
-  reg kv; reg [511:0] kf;
-  always @(posedge c or negedge rn) if (!rn) kv <= 1'b0; else kv <= !ke[0] && !ke[1];
-  always @(posedge c) kf <= kh[0] ^ kh[1];
+  // FIFO readouts registered at each FIFO before the XOR (margin rule; s2_b0: 8:1 read mux + XOR across the two
+  // FIFOs -118 ps at 770): +1 key cycle
+  reg kv0, kv; reg [511:0] kr0, kr1, kf;
+  always @(posedge c or negedge rn) if (!rn) begin kv0 <= 1'b0; kv <= 1'b0; end else begin kv0 <= !ke[0] && !ke[1]; kv <= kv0; end
+  always @(posedge c) begin kr0 <= kh[0]; kr1 <= kh[1]; kf <= kr0 ^ kr1; end
   wire kpv; wire [511:0] kpq;
   ot_svc_vpipe #(.W(512), .N(5)) u_kp (.ck(c), .rst_n(rn), .v(kv), .d(kf), .qv(kpv), .q(kpq));
   assign kout = {kpq, kpv};
