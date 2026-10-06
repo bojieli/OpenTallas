@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0);
+module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0,PARALLEL_PHASE_VALIDATION_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;reg[1:0] launch_v=0;reg[31:0] launch_pc=0,cp_job=0;
  reg[3:0] cp_gen=0;reg[16:0] launch_token=0;reg[19:0] launch_pos=0;
@@ -19,8 +19,21 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  end else begin:prior_entry_probe
   ot_hbm_cp_four_entry entry_probe_dut(.pc(entry_probe_pc),.entry(entry_probe));
  end
+ reg [17:0] phase_probe=0;wire phase_probe_valid;
+ integer phase_truth_checks=0;
+ ot_hbm_cp_parallel_phase phase_probe_dut(.q(phase_probe[8:0]),.n(phase_probe[17:9]),.valid(phase_probe_valid));
  task check_four_cut_oracles;
  begin
+  if(PARALLEL_PHASE_VALIDATION_TEST)begin
+   for(integer bits=0;bits<262144;bits=bits+1)begin
+    phase_probe=bits;#1;
+    if(phase_probe_valid!==((phase_probe[17:9]==~phase_probe[8:0]) &&
+       (phase_probe[8:0]!=0) && ((phase_probe[8:0]&(phase_probe[8:0]-9'd1))==0)))
+     $fatal(1,"complete protected18bit phase oracle %h",phase_probe);
+    phase_truth_checks=phase_truth_checks+1;
+   end
+   $display("PASS parallel_phase complete_words=%0d",phase_truth_checks);
+  end
   if(FOUR_COMBINATIONAL_CUTS_TEST)begin
    // Zero+allones+64 basis vectors establish the unchanged linear72bit codec.
    for(integer k=0;k<66;k=k+1)begin
@@ -73,9 +86,9 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  cp_cpl_count=cp_cpl_count+1;
  end
  end
- ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST)) dut(.*);
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST)) dut(.*);
  wire[1:0] off_native;wire off_done,off_fault;
- ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST)) baseline(
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST)) baseline(
  .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(launch_pc),.cp_job(cp_job),.cp_gen(cp_gen),
  .launch_token(launch_token),.launch_pos(launch_pos),.lease_granted(lease_granted),
  .release_r(release_r),.exec_done(exec_done),.exec_fault(exec_fault),
