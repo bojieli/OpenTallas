@@ -12371,10 +12371,10 @@ def dsrom_wfc_protected_caller_adapter_price():
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
 
-def dsrom_protected_vm_model():
-    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
-    from dsrom_protected_vm import model
-    return model()
+def dsrom_protected_vm_model(distributed_cmd=False):
+    """Finite protected xa/xb VM; optional registered macro command service."""
+    from dsrom_protected_vm import model, distributed_model
+    return distributed_model() if distributed_cmd else model()
 
 
 def hbm_vm_publication_parent_model():
