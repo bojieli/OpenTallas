@@ -5,7 +5,7 @@
 // is a separate required source-bound input, never inferred from this top.
 module ot_dsrom_window_pipeline_context #(
     parameter integer NPC=32, AW=30, TAGW=16, STAGW=17, LENW=4, BEATW=4, DW=256, WTAGW=13,
-    parameter integer SEC_W=30, HAW=30, POS_W=21, USER_W=10, SPLIT_COLUMNS=0
+    parameter integer SEC_W=30, HAW=30, POS_W=21, USER_W=10, SPLIT_COLUMNS=0, STAGE_MARGIN=0
 ) (
     input wire clk, rst_n,
     input wire retain_qk, retain_pv, retain_complete, retain_invalidate,
@@ -76,7 +76,7 @@ module ot_dsrom_window_pipeline_context #(
     wire [NPC-1:0] wl_req_v, wl_req_rdy, wl_rsp_v, wl_rsp_rdy;
     wire [NPC*AW-1:0] wl_req_addr; wire [NPC*LENW-1:0] wl_req_len; wire [NPC*WTAGW-1:0] wl_req_tag, wl_rsp_tag;
     wire [NPC*BEATW-1:0] wl_rsp_beat; wire [NPC*DW-1:0] wl_rsp_data;
-    ot_dsrom_window_attn_source_la #(.SPLIT_COLUMNS(SPLIT_COLUMNS), .STREAM_LA(1), .WINDOW_PIPELINE(1), .LA_ISSUE_PC(1), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10), .SEC_W(AW),
+    ot_dsrom_window_attn_source_la #(.SPLIT_COLUMNS(SPLIT_COLUMNS), .STAGE_MARGIN(STAGE_MARGIN), .STREAM_LA(1), .WINDOW_PIPELINE(1), .LA_ISSUE_PC(1), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10), .SEC_W(AW),
         .HAW(AW), .TAGW(TAGW), .WIN_STACK(0), .STREAM_II1(0), .REFILL_CREDITS(8)) u_src (
         .clk(clk), .rst_n(rst_n),
         .retain_qk(1'b0), .retain_pv(1'b0), .retain_complete(1'b0), .retain_invalidate(1'b0),

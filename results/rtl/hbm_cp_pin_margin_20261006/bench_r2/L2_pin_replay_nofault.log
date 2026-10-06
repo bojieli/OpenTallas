@@ -1,0 +1,6 @@
+LOOP PIN=1 REPLAY=1 FAULTS=0 tx=3000 done=3000 bad_frame=0 cp_fault=0 arb_fault_cycles=0 assoc_fault_cycles=0 timeouts=0 w2_leases=812 req=4586 rsp=4586 release_r_low_while_v=932 max_tx_cycles=107 sum_tx_cycles=185397 injected=0 detected=0 late=0 done_after_fault=0
+PASS
+- rtl/test/hbm_accel/cp_pin_margin_20261006/tb_cp_pin_margin_loop.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2ms; walltime 14.312 s; speed 141.241 us/s
+- Verilator: cpu 14.312 s on 1 threads; alloced 1018 MB

@@ -1,0 +1,6 @@
+LOOP HANG tx=9 done=8
+FAIL
+- rtl/test/hbm_accel/cp_pin_margin_20261006/tb_cp_pin_margin_loop.sv:166: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 50ms; walltime 455.967 s; speed 109.800 us/s
+- Verilator: cpu 455.372 s on 1 threads; alloced 1018 MB
