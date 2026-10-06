@@ -293,6 +293,14 @@ def cmd_reservation(a):
     print(json.dumps(view))
 
 
+def _slacks(v):
+    """(SS setup, FF hold) block slack in ps from a view record (the forks' field spellings)."""
+    t = json.dumps(v)
+    ss = re.findall(r'"(?:ss_setup_ps|ss_worst_setup_ps|setup_ss_ps)": (-?[\d.]+)', t)
+    ff = re.findall(r'"(?:ff_hold_ps|ff_worst_hold_ps|ff_worst_hold_slack_ps|hold_ff_ps)": (-?[\d.]+)', t)
+    return (float(ss[0]) if ss else None, float(ff[0]) if ff else None)
+
+
 def cmd_index(a):
     base = ROOT / VIEWS
     m, pw, M, real = model()
@@ -306,13 +314,21 @@ def cmd_index(a):
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
     idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=H.FINAL_ROUND,
                generator_sha256=sha(ROOT / 'tools/hbm_accel_die_fp.py'),
-               status_values=['closed', 'interim-not-closed', 'reservation', 'missing'],
+               status_values=['closed', 'closed-below-margin', 'interim-not-closed', 'reservation', 'missing'],
                masters={}, counts=defaultdict(int))
     for n in need:
         v = rows.get(n)
         st = v['status'] if v else 'missing'
+        margin = None
+        if st == 'closed':      # owner UPDATE 2 (2026-10-06): closed only at SS >= +40 ps and FF >= +15 ps
+            ss_, ff_ = _slacks(v)
+            margin = dict(ss_setup_ps=ss_, ff_hold_ps=ff_, rule='SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)')
+            if ss_ is None or ff_ is None or ss_ < 40.0 or ff_ < 15.0:
+                st = 'closed-below-margin'
         idx['masters'][n] = dict(kind=kind_of(n), status=st, instances=sum(it.master == n for it in m['insts']),
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source') if k in v} if v else {}))
+        if margin:
+            idx['masters'][n]['margin'] = margin
         idx['counts'][st] += 1
     idx['counts'] = dict(idx['counts'])
     (base / 'index.json').write_text(json.dumps(idx, indent=1) + '\n')
@@ -324,7 +340,7 @@ def real_views(index_path):
     idx = json.loads(Path(index_path).read_text())
     out = {}
     for n, v in idx['masters'].items():
-        if v['status'] in ('closed', 'interim-not-closed', 'reservation') and v.get('lef'):
+        if v['status'] in ('closed', 'closed-below-margin', 'interim-not-closed', 'reservation') and v.get('lef'):
             out[n] = ROOT / v['dir'] / v['lef']
     return out
 
@@ -338,7 +354,8 @@ def sta_tcl(m, work, index):
     tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
     and checked inside the station views)."""
     idx = json.loads(Path(index).read_text())['masters']
-    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'interim-not-closed')}
+    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
+                                                                            'interim-not-closed')}
     run = (work / 'run.tcl').read_text()
     head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
     lib_lines = []
@@ -352,14 +369,18 @@ def sta_tcl(m, work, index):
     head = head.replace('read_verilog /work/die.v', 'define_corners ss ff\n' + '\n'.join(lib_lines) + '\nread_verilog /work/die.v')
     tcl = head + 'source /work/place.tcl\n' + f"""
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+set_wire_rc -signal -layer M7
+set_wire_rc -clock -layer M7
 estimate_parasitics -placement
+set_cmd_units -time ns -capacitance fF
 set timed_insts {{{' '.join(it.name for it in timed)}}}
 foreach {{dom net}} {{{' '.join(f'{k} {v}' for k, v in clk_nets.items())}}} {{
   set ck {{}}
-  foreach p [get_pins -quiet -of_objects [get_nets -quiet $net]] {{
-    set i [get_name [get_property $p instance]]
+  foreach p [get_pins -quiet -of_objects [get_nets -quiet "$net $net\\[0\\]"]] {{
+    set i [lindex [split [get_full_name $p] /] 0]
     if {{[lsearch -exact $timed_insts $i] >= 0}} {{ lappend ck $p }}
   }}
+  puts "OT_STA_CLKNET $dom pins=[llength [get_pins -quiet -of_objects [get_nets -quiet \"$net $net\\[0\\]\"]]] timed=[llength $ck]"
   if {{[llength $ck]}} {{ create_clock -name clk_$dom -period 0.833333 $ck; puts "OT_STA_CLOCK $dom sinks=[llength $ck]" }}
 }}
 set_propagated_clock [all_clocks]
@@ -374,7 +395,14 @@ foreach u {{0.060 0.210}} {{
 puts "OT_STA_HOLD wns=[sta::format_time [sta::worst_slack -min] 3]"
 report_checks -path_delay min -corner ff -group_path_count 5 -format end -digits 3
 report_checks -path_delay max -corner ss -digits 3 -fields {{slew cap input_pins}}
-report_check_types -unconstrained -max_delay -verbose > /work/unconstrained.rpt
+set ti [get_pins -quiet at_*/*]
+if {{[llength $ti]}} {{
+  set_clock_uncertainty -setup 0.210 [all_clocks]
+  puts "OT_STA_ATTN_SETUP_U210 [sta::format_time [sta::worst_slack -max] 3]"
+  report_checks -path_delay max -corner ss -through $ti -group_path_count 10 -format end -digits 3
+  report_checks -path_delay max -corner ss -through $ti -digits 3 -fields {{slew cap input_pins}}
+  report_checks -path_delay min -corner ff -through $ti -group_path_count 10 -format end -digits 3
+}}
 puts "OT_STA_DONE timed_insts=[llength $timed_insts]"
 """
     (work / 'run.tcl').write_text(tcl)
@@ -661,6 +689,37 @@ def _cut(iv, holes):
     return [(a, b) for a, b in out if b - a > 1.0]
 
 
+QUAD_LEF = 'physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q/ot_attn_tile_m6h1q.lef'
+QW = 514.89
+QUAD_PLACE = ((70.014, 40.032, 'MY'), (765.504, 40.032, 'R0'), (70.014, 763.632, 'MY'), (765.504, 763.632, 'R0'))
+_QPG = {}
+
+
+def QUAD_PG():
+    """the closed quad's PG: M9 straps (its PG pins) and M8 PG strap segments (its 0.474 um M8 OBS shapes on the y
+    tracks of its M8 PG edge stubs, per net), quad-local.  Placement: attn_tile/flow/macro_placement.tcl."""
+    if not _QPG:
+        r = parse_lef(ROOT / QUAD_LEF)
+        t = r['text']
+        o = t[t.index('\n  OBS'):]
+        cur, m8 = None, []
+        for ln in o.split('\n'):
+            mm = re.match(r'\s*LAYER (\S+)', ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mr = re.match(r'\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', ln)
+            if mr and cur == 'M8':
+                b = tuple(float(v) for v in mr.groups())
+                if abs(b[3] - b[1] - 0.474) < 1e-3:
+                    m8.append(b)
+        for net in ('VDD', 'VSS'):
+            ys = {round((b[1] + b[3]) / 2, 3) for ly, b in r['pg'][net]['rects'] if ly == 'M8'}
+            _QPG[net] = dict(M9=[b for ly, b in r['pg'][net]['rects'] if ly == 'M9'],
+                             M8=[b for b in m8 if round((b[1] + b[3]) / 2, 3) in ys])
+    return _QPG
+
+
 def cmd_ir_attn(a):
     """IR window with the OWNER PDN EXCEPTION for hfd_attn_tile (2026-10-06): the die's M9 straps land on the tile's
     M8 PG pins (the tile consumes M8 everywhere and M9 over its four closed quads); M9 is blocked over the quads, no
@@ -704,6 +763,19 @@ def cmd_ir_attn(a):
                 x0_, x1_ = max(x0_, 0.0), min(x1_, Wn)
                 if x1_ - x0_ > 1.0 and 0.5 < (y0_ + y1_) / 2 < Hn - 0.5:
                     tstraps[net].append((x0_, y0_, x1_, y1_))
+    qpg = {'M9': {'VDD': [], 'VSS': []}, 'M8': {'VDD': [], 'VSS': []}}
+    if a.quad_pg:
+        for it in tiles:
+            for qx, qy, qo in QUAD_PLACE:
+                for net in ('VDD', 'VSS'):
+                    for ly, rs in QUAD_PG()[net].items():
+                        for r_ in rs:
+                            x0q, x1q = (QW - r_[2], QW - r_[0]) if qo == 'MY' else (r_[0], r_[2])
+                            rr = loc(_xf((qx + x0q, qy + r_[1], qx + x1q, qy + r_[3]), it, vw, vh))
+                            c0, c1 = max(rr[0], 0.0), min(rr[2], Wn)
+                            d0, d1 = max(rr[1], 0.0), min(rr[3], Hn)
+                            if (ly == 'M9' and d1 - d0 > 1.0 and c1 > c0) or (ly == 'M8' and c1 - c0 > 0.5 and d1 > d0):
+                                qpg[ly][net].append((c0, d0, c1, d1) if ly == 'M8' else (rr[0], d0, rr[2], d1))
     inq = lambda x, y: any(q[0] <= x <= q[2] and q[1] <= y <= q[3] for _, q in quads)  # noqa: E731
     intile = lambda x, y: any(t[0] <= x <= t[2] and t[1] <= y <= t[3] for t in trects)  # noqa: E731
     # ---- die grid from the method-c DEF
@@ -739,9 +811,25 @@ def cmd_ir_attn(a):
                 if x0_ + 0.25 <= x <= x1_ - 0.25 and a_ <= yc <= b_ and not inq(x, yc):
                     nv.append((net, x, yc))
                     added += 1
+    qvias = 0
+    if a.quad_pg:       # quad M8 PG segments x quad M9 PG straps (the quad's own internal vias)
+        for net in ('VDD', 'VSS'):
+            m9s = sorted(qpg['M9'][net])
+            xs = [(r_[0] + r_[2]) / 2 for r_ in m9s]
+            import bisect
+            for x0_, y0_, x1_, y1_ in qpg['M8'][net]:
+                yc = (y0_ + y1_) / 2
+                for k_ in range(bisect.bisect_left(xs, x0_ + 0.25), bisect.bisect_right(xs, x1_ - 0.25)):
+                    if m9s[k_][1] <= yc <= m9s[k_][3]:
+                        nv.append((net, round(xs[k_], 3), round(yc, 3)))
+                        qvias += 1
     L = ['SPECIALNETS 2 ;']
     for net in ('VDD', 'VSS'):
         seg = []
+        for x0_, y0_, x1_, y1_ in qpg['M9'][net]:
+            seg.append(f'M9 474 + SHAPE STRIPE ( {round((x0_ + x1_) / 2 * 1e3)} {round(y0_ * 1e3)} ) ( * {round(y1_ * 1e3)} )')
+        for x0_, y0_, x1_, y1_ in qpg['M8'][net]:
+            seg.append(f'M8 474 + SHAPE STRIPE ( {round(x0_ * 1e3)} {round((y0_ + y1_) / 2 * 1e3)} ) ( {round(x1_ * 1e3)} * )')
         for nn, x, y0_, y1_ in n9:
             if nn == net:
                 seg.append(f'M9 480 + SHAPE STRIPE ( {round(x * 1e3)} {round(y0_ * 1e3)} ) ( * {round(y1_ * 1e3)} )')
@@ -765,7 +853,7 @@ def cmd_ir_attn(a):
     kinds = json.loads((work / 'kinds.json').read_text())
     lefs = (work / 'loads.lef').read_text()
     cell = meta['cell_um']
-    keep, newc, pool, tile_open_moved = [], [], defaultdict(float), 0
+    keep, newc, pool, tile_open_moved, quad_cells = [], [], defaultdict(float), 0, 0
     srt = {net: sorted(rs, key=lambda r: (r[1] + r[3]) / 2) for net, rs in tstraps.items()}
 
     def strap_in(net, cx0, cy0):
@@ -785,6 +873,32 @@ def cmd_ir_attn(a):
             continue
         p_ = power.pop(n, 0.0)
         kinds.pop(n, None)
+        if inq(cx, cy) and a.quad_pg:
+            pins = {}
+            for net in ('VDD', 'VSS'):
+                cand = [((r_[0] + r_[2]) / 2) for r_ in qpg['M9'][net] if cx0 + 0.6 <= (r_[0] + r_[2]) / 2 <= cx0 + cell - 0.6
+                        and r_[1] <= cy0 + 0.6 and r_[3] >= cy0 + cell - 0.6]
+                pins[net] = min(cand, key=lambda x: abs(x - cx)) if cand else None
+            if pins['VDD'] is not None and pins['VSS'] is not None:
+                key = (round(pins['VDD'] - cx0, 3), round(pins['VSS'] - cx0, 3))
+                mn = f'qir_q9_{int(key[0] * 1000)}_{int(key[1] * 1000)}'
+                if mn not in newm:
+                    newm[mn] = '\n'.join([f'MACRO {mn}', '  CLASS BLOCK ;', f'  FOREIGN {mn} 0 0 ;', '  SYMMETRY X Y ;',
+                                          f'  SIZE {cell:.3f} BY {cell:.3f} ;', '  PIN VDD', '    DIRECTION INOUT ;',
+                                          '    USE POWER ;', '    PORT', '      LAYER M9 ;',
+                                          f'        RECT {key[0] - 0.237:.3f} 0.600 {key[0] + 0.237:.3f} {cell - 0.6:.3f} ;',
+                                          '    END', '  END VDD', '  PIN VSS', '    DIRECTION INOUT ;', '    USE GROUND ;',
+                                          '    PORT', '      LAYER M9 ;',
+                                          f'        RECT {key[1] - 0.237:.3f} 0.600 {key[1] + 0.237:.3f} {cell - 0.6:.3f} ;',
+                                          '    END', '  END VSS', '  OBS'] +
+                                         [f'    LAYER M{q} ;\n      RECT 0 0 {cell:.3f} {cell:.3f} ;' for q in range(2, 8)] +
+                                         ['  END', f'END {mn}', ''])
+                nn = n + '_q'
+                newc.append((nn, mn, cx0, cy0))
+                power[nn] = p_
+                kinds[nn] = 'attn_quad'
+                quad_cells += 1
+                continue
         if inq(cx, cy):
             qn = min(quads, key=lambda q: max(q[1][0] - cx, 0, cx - q[1][2]) + max(q[1][1] - cy, 0, cy - q[1][3]))
             pool[qn[0] + '|' + str(qn[1])] += p_
@@ -871,14 +985,19 @@ def cmd_ir_attn(a):
     for net in ('VDD', 'VSS'):
         f = work / f'vsrc_{net}.loc'
         rows = [r for r in f.read_text().splitlines() if r.strip()]
-        ok = [r for r in rows if not inq(float(r.split(',')[0]), float(r.split(',')[1]))]
+        ok = rows if a.quad_pg else [r for r in rows if not inq(float(r.split(',')[0]), float(r.split(',')[1]))]
         nb[net] = len(rows) - len(ok)
         f.write_text('\n'.join(ok) + '\n')
-    meta.update(method='c + attn-tile PDN exception (owner 2026-10-06): die M9 -> tile M8 PG pins, M9 blocked over '
-                       'the quads, no die M8 in a tile, quad power on its M8 edge stubs, no bump over a quad',
+    meta.update(method=('c + attn-tile PDN exception (owner 2026-10-06): die M9 -> tile M8 PG pins, M9 blocked over '
+                        'the quads, no die M8 in a tile' + (', the quads\' own M9 PG straps exposed (bump-landable) with '
+                        'their M8 PG segments and M8-M9 vias, quad power on its M9 straps, bumps kept over the quads'
+                        if a.quad_pg else ', quad power on its M8 edge stubs, no bump over a quad')),
                 tiles=len(tiles), quads=len(quads), tile_m8_straps={k: len(v) for k, v in tstraps.items()},
                 m9_to_tile_m8_vias=added, tile_open_cells=tile_open_moved, quad_stub_loads=len(stubs),
                 quad_power_w=round(sum(pool.values()), 4), bumps_removed_over_quads=nb,
+                quad_pg=bool(a.quad_pg), quad_m9_straps={k: len(v) for k, v in qpg['M9'].items()},
+                quad_m8_segments={k: len(v) for k, v in qpg['M8'].items()}, quad_m8_m9_vias=qvias,
+                quad_load_cells_on_m9=quad_cells,
                 quad_power_without_in_window_stubs_w=round(sum(orphan.values()), 4),
                 power_w=round(sum(power.values()), 4), view_lef_sha256=sha(ROOT / VIEWS / 'attn_tile' / f'{ATTN}.lef'))
     (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
@@ -920,6 +1039,8 @@ def main(argv=None):
     p = sp.add_parser('ir-attn')
     p.add_argument('--work', required=True)
     p.add_argument('--window', required=True)
+    p.add_argument('--quad-pg', action='store_true', help='expose the quads\' own M9 PG grid (bump-landable), keep '
+                   'the bumps over the quads (owner approval 2026-10-06)')
     p.set_defaults(fn=cmd_ir_attn)
     p = sp.add_parser('die-record')
     p.add_argument('--round', required=True)

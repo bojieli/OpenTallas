@@ -101,6 +101,12 @@ foreach i [$ot_blk getInsts] {
     foreach p $pins { lappend ot_outs($ot_grp([$i getName])) $p }
     continue
   }
+  # OT_FENCE_ABSORB=0 (margin views): a terminal register is a face-pin register of its own; it stays at its pins
+  if {[info exists ::env(OT_FENCE_ABSORB)] && !$::env(OT_FENCE_ABSORB)} {
+    set g [ot_back $i $ot_depth]
+    if {$g ne ""} { foreach p $pins { lappend ot_outs($g) $p } }
+    continue
+  }
   set g [ot_back $i $ot_depth]
   if {$g ne ""} { lappend ot_mem($g) $i; foreach p $pins { lappend ot_outs($g) $p } }
 }
