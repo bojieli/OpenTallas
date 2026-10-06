@@ -138,5 +138,23 @@
     "clock_pipeline_insertion_not_borrowed": true,
     "PLL_IP_jitter_slew_insertion_uncharacterized": true,
     "scope": "actual divider plus unchanged R4 live context; target-period pathfinding before PLL contract qualification"
+  },
+  "active_body_clock_boundary": {
+    "prepared_before_RTL_UTC": "2026-10-06T06:44:10.031610+00:00",
+    "top": "ot_dsrom_wfc_protected_inputclock_stage",
+    "fast_input": "fast_clk",
+    "slow_input": "slow_clk",
+    "fault_input": "clock_source_fault",
+    "fast_target_ps": 833.3333333333334,
+    "slow_target_ps": 1111.111111111111,
+    "phase_duty_minmaxlatency_slew": "Literal external producer clock-input SDC required from Turing; no default arrival/transition/insertion assumed",
+    "failed_generator_in_body": false,
+    "failed_generator_result": "410492892 source76158 SS-385.320435 FFhold+17.273228; no repeat",
+    "added_FF": 0,
+    "retained_fault_gate_allowance_um2": 20,
+    "new_data_cycles": 0,
+    "memory_geometry_and_ports_unchanged": true,
+    "root_source_qualification": "Turing repair or explicit actual external provider; body result never qualifies source/PLL",
+    "one_route_density": 0.55
   }
 }

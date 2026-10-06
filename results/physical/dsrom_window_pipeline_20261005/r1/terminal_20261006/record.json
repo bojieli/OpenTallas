@@ -1,0 +1,51 @@
+{
+  "status": "TERMINAL_FAIL_IO_PIN_CAPACITY_BEFORE_CTS",
+  "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "terminal_exit": 1,
+  "host": "ot-epyc2",
+  "job_root": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1",
+  "completed_at": "2026-10-06T06:38:08.124452+00:00",
+  "supervisor_and_driver_verified_gone": true,
+  "container_verified_gone": true,
+  "IO_pins": 70354,
+  "available_positions": 64520,
+  "spacing_tracks": 2,
+  "pin_layers": {
+    "horizontal": "M4",
+    "vertical": "M5"
+  },
+  "die_um": [
+    1550,
+    1550
+  ],
+  "PPL_minimum_perimeter_um": 6753.98,
+  "preliminary_GP_divergence_warning": true,
+  "preliminary_GP_revert_iteration": 786,
+  "preliminary_GP_revert_overflow": 0.12,
+  "preliminary_GP_seconds": 1488,
+  "core_area_um2": 2371264.285,
+  "floorplan_stdcell_area_um2": 550751,
+  "floorplan_stdcell_utilization": 0.23226,
+  "initial_GPL_padded_movable_area_um2": 631192.572,
+  "initial_GPL_padded_utilization": 0.26679,
+  "SS_preplacement_WNS_ps": -483.039,
+  "BC_preplacement_hold_ps": 5.83481,
+  "CTS_reached": false,
+  "routing_reached": false,
+  "SPEF_available": false,
+  "routed_SS_FF": false,
+  "parent_context_qualified": false,
+  "default_OFF": true,
+  "performance_budget_ns": 140,
+  "retained_mean_ns": 154.7125,
+  "performance_verdict": "FAIL_NO_ADOPTION",
+  "adoption": false,
+  "bulk_netlist_and_ODB_retained_on_NVMe": true,
+  "files": {
+    "physical.json": "777e49adbccabe982209bf532d696a9d5bbd143a4e2cc5ceebd4b02d8cd77294",
+    "3_1_place_gp_skip_io.log": "6e83e913da39cd467d8109259f6b969afbe76821fb3b19d4d79ab6b842888f76",
+    "2_1_floorplan.json": "57c2b410fc6534f031f8b297a4aca88b3681a2d861fff0c3320d3e0d68b25c87",
+    "3_2_place_iop.log": "56b38f5d4dd10b8418abc7554a54ccec3ae2fb8211f4a950fe3dd92d3a0b0bd0",
+    "2_floorplan_final.rpt": "3b08c10677a2c1016867573a908e47861e6b23b8d9dd8860e759228dc90ec701"
+  }
+}
