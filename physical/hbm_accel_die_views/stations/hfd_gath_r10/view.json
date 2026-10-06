@@ -24,13 +24,13 @@
    "RVTP"
   ],
   "pg_pins": {
-   "VSS": [
+   "VDD": [
     "M1",
     "M2",
     "M6",
     "M7"
    ],
-   "VDD": [
+   "VSS": [
     "M1",
     "M2",
     "M6",
@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/N3_hfd_gath_r10",
-  "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
-  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_gath_r10 top=physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv DW=166.728 DH=315.336 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_gath_r10/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_gath_r10",
+  "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_gath_r10 top=physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_gath_r10/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -50,21 +50,21 @@
    "signoff_corner_rc=0",
    "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 59.54,
-  "ff_hold_ps": 9.41,
+  "ss_setup_ps": 44.41,
+  "ff_hold_ps": 11.98,
   "drc": 0,
   "closes_signoff": true,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 458,
-   "route_sdc": ".views/N3_hfd_gath_r10/route.sdc",
-   "signoff_sdc": ".views/N3_hfd_gath_r10/signoff.sdc",
+   "route_sdc": ".views/Q1_hfd_gath_r10/route.sdc",
+   "signoff_sdc": ".views/Q1_hfd_gath_r10/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
-   "ss": -3.46,
-   "ff": 9.41
+   "ss": -18.59,
+   "ff": 11.98
   },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sdc",
@@ -88,7 +88,7 @@
   }
  },
  "bench": {
-  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench21/hfd_gath_r10",
+  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench23/hfd_gath_r10",
   "simulator": "verilator (tools/hbm_die_station_bench.py)",
   "positive": {
    "verdict": "PASS",
@@ -116,9 +116,15 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_gath_r10.lef": "e4ded4d3944376508e5397770aeef1c8947465560717026fb70e5181722c5f45",
-  "hfd_gath_r10_ss.lib": "c9386ddd800d973c978a07d1cb5f96f8a566a699c2ae2a1d641917469156a3a4",
-  "hfd_gath_r10_ff.lib": "9af4bb248f14da75c9fc5b6d7a7ef82745c185870e949061b7b8ca085be47396"
+  "hfd_gath_r10.lef": "e10d64bfd43dda3869e662f41b1ea864138a7a21b225fcb54ad4b42c15354da6",
+  "hfd_gath_r10_ss.lib": "c84ed588f75c52c8c82bab483d93ff95689686aeccdd363f50d3ca3a6c14666a",
+  "hfd_gath_r10_ff.lib": "d7f02636dc2db57f8597c8216ee9a710edf2ee9197997140a120a199645b11c5"
  },
- "defects": []
+ "defects": [],
+ "pin_access_check": {
+  "tool": "physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh",
+  "verdict": "FAIL",
+  "drt0073_instances": 4,
+  "detail": "a2[588] in all 4 orientations; Q2 re-route (HM 0.060, PD 0.40) on EPYC2 routes/Q2_hfd_gath_r10"
+ }
 }
