@@ -238,7 +238,7 @@ def _bw_waypoints(v, m, every):
             if y < row_y[r] + 2.16:
                 raise ValueError(f'bw waypoints: corridor {cc} row {r} below its station is full ({n + 1})')
             name = f'bwp_{b}_{k}'
-            insts.append(v.Inst(name, 'qfd_bwp', col_x(cc) + v.TILE_BODY_W, y, v.CORR - v.SHAVE, BWP_H - v.SHAVE,
+            insts.append(v.Inst(name, 'qfd_bwp_e' if west else 'qfd_bwp_w', col_x(cc) + v.TILE_BODY_W, y, v.CORR - v.SHAVE, BWP_H - v.SHAVE,
                                 kind='waypoint', region='corridor'))
             out.append((bid if k == 0 else f'bwseg_{b}_{k}', cl, bits, [prev, (name, 'w' if west else 'e')]))
             prev = (name, 'e' if west else 'w')
@@ -251,11 +251,12 @@ def _bw_waypoints(v, m, every):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        w = v.Master('qfd_bwp', v.CORR - v.SHAVE, BWP_H - v.SHAVE, 3, 'block-word waypoint: one registered 512-b '
-                     'tree-word hop (512 flops) in a corridor, standard cells M1-M3, die routing above')
-        w.face('w', v.TREE_BITS, 'W', 'M4', w.h / 2, 2)
-        w.face('e', v.TREE_BITS, 'E', 'M4', w.h / 2, 2)
-        o['qfd_bwp'] = w
+        for mn, flow in (('qfd_bwp_e', 'eastbound: in w, out e'), ('qfd_bwp_w', 'westbound: in e, out w')):
+            w = v.Master(mn, v.CORR - v.SHAVE, BWP_H - v.SHAVE, 3, 'block-word waypoint: one registered 512-b '
+                         f'tree-word hop (512 flops) in a corridor, standard cells M1-M3, die routing above ({flow})')
+            w.face('w', v.TREE_BITS, 'W', 'M4', w.h / 2, 2)
+            w.face('e', v.TREE_BITS, 'E', 'M4', w.h / 2, 2)
+            o[mn] = w
         return o
     v.masters = masters
 

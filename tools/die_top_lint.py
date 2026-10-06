@@ -95,6 +95,9 @@ QWEN_R17B = dict(b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True,
 # r18 recipe (claude/qwen-die-rebuild-20261005): r17b + r18=True (findings Q1-Q14 of the first lint, main 694e21a6e)
 QWEN_R18 = dict(QWEN_R17B, r18=True)
 QWEN_R19 = dict(QWEN_R17B, r19=True)     # r18 + full tiles with KV slices + per-row landing fabric
+QWEN_R20C = dict(QWEN_R19, tree_interleave=True)          # r19 + interleaved tree pins (both tile masters)
+QWEN_R20F1 = dict(QWEN_R20C, bw_wp=1)                     # r20c + a block-word waypoint in every corridor crossed
+QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -147,7 +150,7 @@ def load_qwen():
     sys.path.insert(0, str(Path(src['root']) / 'tools'))
     try:
         B = importlib.import_module('qwen_rom_fulldie_b3r2')
-        r = dict({'r18': QWEN_R18, 'r19': QWEN_R19}.get(QWEN_RECIPE, QWEN_R17B))
+        r = dict(QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B))
         cdc = r.pop('cdc')
         v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
     finally:
@@ -288,7 +291,7 @@ def real_blocks(die):
                                    binding=dict(dfi=[pn for pn, _ in v.phy_pins()]))
         prm = dict(TAGW=9)
         bind = dict(CDC_LAYOUT)
-        if QWEN_RECIPE in ('r18', 'r19'):
+        if QWEN_RECIPE in QWEN_RECIPES:
             # r18: the closed element's four pin faces (route r11a): HCLK outputs / inputs, landing / write side
             h, c = CDC_LAYOUT['h'], CDC_LAYOUT['c']
             ho = [p for p in h if p.split('[')[0] in ('h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag',
@@ -1590,7 +1593,7 @@ def rom_abstracts(die):
     return dict(
         schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool, gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe={'r18': QWEN_R18, 'r19': QWEN_R19}.get(QWEN_RECIPE, QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
+        qwen_recipe=QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
         die_um=[round(m['die']['w'], 3), round(m['die']['h'], 3)] if isinstance(m.get('die'), dict) else
         [round(max(i_.x + i_.w for i_ in m['insts']), 3), round(max(i_.y + i_.h for i_ in m['insts']), 3)],
         status_codes=STATUS_ORDER,
@@ -1674,7 +1677,7 @@ def run_lint(die, out, top_fix=False):
         schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool,
         generator_sha256=sha_gen(die, tool), generator_tag=gen_tag(tool, gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe={'r18': QWEN_R18, 'r19': QWEN_R19}.get(QWEN_RECIPE, QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
+        qwen_recipe=QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
         lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
@@ -1707,7 +1710,7 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
