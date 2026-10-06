@@ -5,7 +5,7 @@
 # Boundary: io_ref_skew.sdc (OT_IO_SKEW 150 ps adverse die clock-arrival difference, owner addendum 2026-10-06).
 # In-context route of the Qwen ROM decode core (final DEC_LA + optional issue fallbacks), controller cut.
 # usage: run_variant.sh NAME FALLBACK BOUNDARY(plain|ref) UTIL DENSITY [extra run_abi3_physical args...]
-#   FALLBACK: N (DEC_LA_ISSUE_FB), suffix b = DEC_LA_BOUND, suffix a = DEC_LA_AMQ (e.g. 2ba)
+#   FALLBACK: N (DEC_LA_ISSUE_FB), suffixes in order b = BOUND, a = AMQ, n = NXREG, m = MEIF, s = SUIF, u = SU inside (e.g. 3banms)
 set -euo pipefail
 B=${QCC_B:-/srv/opentallas-scratch2/scratch/claude/qwen-core-ctx}   # host root: src/, runs/
 NAME=$1; FB=$2; BND=$3; UTIL=$4; DENS=$5; shift 5
@@ -13,7 +13,7 @@ R=$B/runs/$NAME; S=$B/src
 Y=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
 mkdir -p $R; cd $S
 echo "$(date -Is) start $NAME fb=$FB boundary=$BND util=$UTIL dens=$DENS extra=$* src=$(cat $S/SOURCE_COMMIT)" >> $R/STATUS.md
-BOPT=; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
+BOPT=; case $FB in *u) BOPT="$BOPT --su-in"; FB=${FB%u};; esac; case $FB in *s) BOPT="$BOPT --suif"; FB=${FB%s};; esac; case $FB in *m) BOPT="$BOPT --meif"; FB=${FB%m};; esac; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
 python3 tools/qwen_rom_core_ctx_claude.py --out $R/prep --fallback $FB $BOPT
 $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1
 python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json

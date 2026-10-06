@@ -25,7 +25,7 @@ OLDROOT = "/srv/opentallas-scratch/claude/qwen-core-decode/src/"
 
 
 def core_text(fallback: int, vpos: int, bound: bool = False, amq: bool = False, nxreg: bool = False,
-              meif: bool = False) -> str:
+              meif: bool = False, suif: bool = False) -> str:
     s = E.emit(E.V.E.CORE.read_text())
     if bound:   # Codex DEC_LA_BOUND: E2 remainder table width ODD*2^H-1 (exact; tools/qwen_rom_core_dec_bound_emit_w12.py)
         import qwen_rom_core_dec_bound_emit_w12 as BD
@@ -39,6 +39,8 @@ def core_text(fallback: int, vpos: int, bound: bool = False, amq: bool = False, 
         s = FB.apply_nxreg(s)
     if meif:
         s = FB.apply_meif(s)
+    if suif:
+        s = FB.apply_suif(s)
     # Yosys 0.68 workarounds of the retained screen copy (logic identical).
     s = s.replace("    generate if (VPOS != 0) begin : g_vpos_tiles\n        genvar vpt;\n",
                   "    genvar vpt;\n    generate if (VPOS != 0) begin : g_vpos_tiles\n")
@@ -81,13 +83,14 @@ def main() -> None:
     ap.add_argument("--amq", action="store_true", help="also DEC_LA_AMQ (argmax boundary register, +1 cycle per END)")
     ap.add_argument("--nxreg", action="store_true", help="also DEC_LA_NXREG (NEXT fields registered at the boundary)")
     ap.add_argument("--meif", action="store_true", help="also DEC_LA_MEIF (registered ME-spine handshake)")
+    ap.add_argument("--suif", action="store_true", help="also DEC_LA_SUIF (registered vector-stream handshake)")
     ap.add_argument("--su-in", action="store_true", help="re-cut (coordinator 2026-10-06): the vector stream unit "
                     "(ot_hdc_vstream_rt) is routed INSIDE the core block (not black-boxed), so the issue loop and the "
                     "SU ready / progress handshakes are block-internal")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     (a.out / "gen").mkdir()
-    core = core_text(a.fallback, a.vpos, a.bound, a.amq, a.nxreg, a.meif)
+    core = core_text(a.fallback, a.vpos, a.bound, a.amq, a.nxreg, a.meif, a.suif)
     (a.out / "core.sv").write_text(core)
     (a.out / "gen/ot_hdc_vstream_rt.sv").write_text(E.E.emit_vstream(E.E.VSTREAM.read_text()))
     lines = []
@@ -121,6 +124,8 @@ def main() -> None:
                 line += " -chparam DEC_LA_NXREG 1"
             if a.meif:
                 line += " -chparam DEC_LA_MEIF 1"
+            if a.suif:
+                line += " -chparam DEC_LA_SUIF 1"
             lines.append(line)
         else:
             lines.append(line)
@@ -133,7 +138,7 @@ def main() -> None:
     lines += ["proc", f"write_json {a.out}/original.json"]
     (a.out / "prepare.ys").write_text("\n".join(lines) + "\n")
     (a.out / "inputs.json").write_text(json.dumps(dict(
-        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, bound=a.bound, amq=a.amq, nxreg=a.nxreg, meif=a.meif, su_in=a.su_in, vpos=a.vpos, dec_la=1,
+        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, bound=a.bound, amq=a.amq, nxreg=a.nxreg, meif=a.meif, suif=a.suif, su_in=a.su_in, vpos=a.vpos, dec_la=1,
         parameter_source="results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys (P8191 plain-AR set)",
         clock_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25), indent=2) + "\n")
 
