@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Recompile one measured hot native C++ TU; retain every RTL/model/leaf source.
 
+An optional separately emitted native source uses an adopted archive and its
+completed prefix as baseline. It never transforms the retained source in place.
+
 No Verilator, model regeneration, all-object rebuild or live archive mutation.
 The candidate uses the previous passing PATCH prefix as its exact baseline;
 only the changed compiler vehicle executes, once, under the existing guard.
@@ -13,9 +16,21 @@ from run_full import fresh,observe,stage
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def plan(parent,out):
+def plan(parent,out,native_source=None,qualified_baseline=None):
+    if (native_source is None)!=(qualified_baseline is None):
+        raise ValueError('changed native source requires its qualified baseline')
+    if qualified_baseline is not None:
+        accepted=json.loads((qualified_baseline/'comparison.json').read_text())
+        if not accepted['adopted'] or not accepted['status'].startswith('PASS_'):
+            raise ValueError('baseline was not adopted')
+        if sha(qualified_baseline/'Vdie__ALL.a')!=accepted['new_archive_sha256']:
+            raise ValueError('qualified baseline archive changed')
+        if sha(qualified_baseline/'candidate/events.txt')!=accepted['traces_sha256'][-1]:
+            raise ValueError('qualified baseline trace changed')
     out.mkdir();(out/'src').mkdir()
     die=parent/'die';src=die/'Vdie___024root__220.cpp';old=die/'Vdie__ALL.a'
+    retained=src
+    archive_input=qualified_baseline/'Vdie__ALL.a' if qualified_baseline else old
     commands=[shlex.split(l) for l in (parent/'compile.log').read_text().splitlines()
               if l.startswith('g++-15 ') and l.endswith('-c '+src.name)]
     if len(commands)!=1:raise ValueError('exact actual hot TU compile command missing')
@@ -26,16 +41,21 @@ def plan(parent,out):
     # Existing size-optimized PCH cannot be consumed as a speed-optimized PCH.
     # Parse the identical generated header; no PCH/model is regenerated.
     after[after.index('Vdie__pch.h.fast')]='Vdie__pch.h'
+    if native_source is not None:
+        src=out/'src'/retained.name
+        shutil.copyfile(native_source,src)
     after[after.index('-c')+1]=str(src)
     obj=out/(src.stem+'.o');after+=['-fno-fast-math','-ffp-contract=off','-o',str(obj)]
     gate=parent/'native_gate_02b0256ee'
     link=json.loads((gate/'commands.json').read_text())
     link['link']=[str(out/'Vdie__ALL.a') if x==str(old) else str(out/'gate_test') if x==str(gate/'gate_test') else x for x in link['link']]
     link['binary']=str(out/'gate_test')
-    record=dict(status='PREPARED_NOT_COMPILED',parent=str(parent),old_archive=str(old),old_archive_sha256=sha(old),
+    record=dict(status='PREPARED_NOT_COMPILED',parent=str(parent),old_archive=str(archive_input),old_archive_sha256=sha(archive_input),
         hot_source=str(src),hot_source_sha256=sha(src),hot_source_bytes=src.stat().st_size,
         original_command=before,candidate_command=after,cwd=str(die),object=str(obj),archive=str(out/'Vdie__ALL.a'),
-        baseline_gate=str(gate),commands=link,source_identical=True,model_regenerated=False,leaf_archives_rebuilt=False,
+        baseline_gate=str(gate),baseline_trace=str(qualified_baseline/'candidate/events.txt' if qualified_baseline else gate/'patch/events.txt'),
+        baseline_log=str(qualified_baseline/'candidate.log' if qualified_baseline else gate/'patch.log'),
+        retained_source_sha256=sha(retained),commands=link,source_identical=native_source is None,model_regenerated=False,leaf_archives_rebuilt=False,
         estimated_compile_GiB=16,estimate_not_AS_cap=True,required_compile_CPUs=1,required_runtime_CPUs=16,
         compiler_peak='measure actual runner/descendant RSS; no priorpeak claim or guessed perprocess cap',
         adopted=False,full_token_pass=False,physical_qualified=False)
@@ -75,13 +95,14 @@ def child(a):
             (out/'candidate.exit').write_text(str(rc)+'\n')
             if rc:raise RuntimeError('changed compiler prefix failed')
             baseline=Path(r['baseline_gate'])
-            old=(baseline/'patch/events.txt').read_bytes();new=(out/'candidate/events.txt').read_bytes()
-            lines=[re.findall(r'P0_NATIVE_GATE terminal .*',x)[-1] for x in [(baseline/'patch.log').read_text(),(out/'candidate.log').read_text()]]
+            old=Path(r.get('baseline_trace',str(baseline/'patch/events.txt'))).read_bytes();new=(out/'candidate/events.txt').read_bytes()
+            lines=[re.findall(r'P0_NATIVE_GATE terminal .*',x)[-1] for x in [Path(r.get('baseline_log',str(baseline/'patch.log'))).read_text(),(out/'candidate.log').read_text()]]
             kv=[re.search('kv_hash=(\\w+)',l).group(1) for l in lines]
             walls=[float(re.search(r'wall=([\d.]+)',l).group(1)) for l in lines]
             exact=old==new and kv[0]==kv[1]
-            result=dict(status='PASS_COMPILER_EQUIVALENCE' if exact else 'FAIL_COMPILER_EQUIVALENCE',
-                baseline_reused_not_replayed=True,source_sha256=r['hot_source_sha256'],old_archive_sha256=r['old_archive_sha256'],new_archive_sha256=sha(r['archive']),
+            kind='COMPILER' if r['source_identical'] else 'NATIVE_SOURCE'
+            result=dict(status=('PASS_' if exact else 'FAIL_')+kind+'_EQUIVALENCE',
+                baseline_reused_not_replayed=True,source_identical=r['source_identical'],source_sha256=r['hot_source_sha256'],old_archive_sha256=r['old_archive_sha256'],new_archive_sha256=sha(r['archive']),
                 traces_sha256=[hashlib.sha256(x).hexdigest() for x in [old,new]],kv_hash=kv,terminal=lines,wall_seconds=walls,
                 measured_speedup=walls[0]/walls[1],adopted=exact and walls[1]<walls[0],full_token_pass=False,physical_qualified=False)
             (out/'comparison.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -101,8 +122,9 @@ def dispatch(a):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--parent',type=Path);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--native-source',type=Path);p.add_argument('--qualified-baseline',type=Path)
     p.add_argument('--phase',choices=['prepare','dispatch','compile','gate'],required=True);a=p.parse_args()
-    if a.phase=='prepare':plan(a.parent,a.output)
+    if a.phase=='prepare':plan(a.parent,a.output,a.native_source,a.qualified_baseline)
     else:
         try:dispatch(a) if a.phase=='dispatch' else child(a)
         except Exception as e:
