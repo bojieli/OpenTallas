@@ -184,9 +184,11 @@ def main(argv=None):
                     help='adverse clock skew between die stage flops beyond the measured stage vehicle (region CTS)')
     ap.add_argument('--slab-group-h', type=float, default=0.0)
     ap.add_argument('--cdc', default='')
+    ap.add_argument('--r18', action='store_true')
     a = ap.parse_args(argv)
     v, m = B.selected(True, b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True,
-                      bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc))
+                      bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc),
+                      r18=a.r18)
     rec = record(v, m, a.wirelength, pitch=skew_pitch(a.skew_ps) if a.skew_ps else None)
     rec['skew_ps'] = a.skew_ps
     rec['floorplan'] = dict(slab_group_h=a.slab_group_h, cdc=a.cdc, die=m['die'])

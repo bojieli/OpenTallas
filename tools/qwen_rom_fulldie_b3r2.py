@@ -1331,10 +1331,14 @@ def clock_regions(v, m):
             # r18: no row engines; the strip third = the CDC frames of that third of the stack (+ the concentrator)
             cds = m['cdcs'][st]
             n = len(cds)
+            kv = m['lfifos'][st]
             for k in range(3):
-                parts = cds[k * n // 3:(k + 1) * n // 3] + ([m['lfifos'][st]] if k == 1 else [])
-                R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min(i.x for i in parts),
-                         min(i.y for i in parts), max(i.x + i.w for i in parts), max(i.y + i.h for i in parts)]))
+                # the third's CDC frames and the same y-slice of the stack-tall KV concentrator (a 12 mm element:
+                # it is three regions inside, meso FIFOs between its slices, AREA in its frame)
+                parts = cds[k * n // 3:(k + 1) * n // 3]
+                y0_, y1_ = min(i.y for i in parts), max(i.y + i.h for i in parts)
+                R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min([i.x for i in parts] + [kv.x]), y0_,
+                         max([i.x + i.w for i in parts] + [kv.x + kv.w]), y1_]))
             continue
         for k in range(3):
             parts = res[2 * k:2 * k + 2] + ([m['lfifos'][st]] if k == 1 else [])

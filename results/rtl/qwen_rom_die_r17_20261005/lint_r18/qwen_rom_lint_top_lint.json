@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "cc1e2c011ceb82403cc38756c0b01a10fc8fc2d7169a533e871a71f7893c6ef3",
+ "generator_sha256": "8337b225c5e7c77e3b9eb89f93e365c011c800c6b512d05060a7e44ba78fd26c",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "cc1e2c011ceb82403cc38756c0b01a10fc8fc2d7169a533e871a71f7893c6ef3",
-  "tree_head": "b28c163da473050b244e8948f2e9ea4fd82ac46c",
-  "file_commit": "10337e43fb40597f6d8fec3f89a94cb717400980"
+  "sha256": "8337b225c5e7c77e3b9eb89f93e365c011c800c6b512d05060a7e44ba78fd26c",
+  "tree_head": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d",
+  "file_commit": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "b28c163da473050b244e8948f2e9ea4fd82ac46c",
+  "commit": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -35,8 +35,8 @@
  "variant": null,
  "census": {
   "instances": 3334,
-  "buses": 6611,
-  "net_bits": 2795402,
+  "buses": 6615,
+  "net_bits": 2795406,
   "masters": 41,
   "real_instances": 132,
   "placeholder_instances": 3202
@@ -329,13 +329,17 @@
    "pll_r101",
    "pll_r102",
    "pll_r103",
+   "pll_r104",
    "pll_r105",
    "pll_r106",
+   "pll_r107",
    "pll_r108",
    "pll_r109",
    "pll_r11",
+   "pll_r110",
    "pll_r111",
    "pll_r112",
+   "pll_r113",
    "pll_r116",
    "pll_r12",
    "pll_r120",
@@ -905,8 +909,8 @@
     "bits": 78464
    },
    "cdc_core|domain": {
-    "buses": 40,
-    "bits": 23400
+    "buses": 84,
+    "bits": 49140
    },
    "phy_dfi|region": {
     "buses": 4,
