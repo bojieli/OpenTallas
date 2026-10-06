@@ -67,6 +67,12 @@ module tb_dsrom_protected_vm;
    write_enable=1;write_addr=0;write_data=2560'(payload(1));write_mask=80'hffff;start();
    consume_owner=request_owner;consume_v=1;allcopies_fenced=1;@(negedge fast_clk);consume_v=0;expect_quarantine();
   end
+  if(mode==7||mode==8)begin
+   write_enable=1;write_addr=0;write_data=2560'(payload(1));write_mask=80'hffff;start();
+   if(mode==7)dut.g_live.serial_check=dut.g_live.serial_check^32'd1;
+   else dut.g_live.u_request.wp_check=dut.g_live.u_request.wp_check^2'd1;
+   expect_quarantine();
+  end
   if(mode==5||mode==6)begin
    write_enable=1;write_addr=0;write_data=2560'(payload(1));write_mask=80'hffff;start();
    wait(dut.g_live.u_backend.debt);@(negedge fast_clk);
