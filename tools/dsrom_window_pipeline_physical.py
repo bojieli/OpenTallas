@@ -15,7 +15,7 @@ ROOT=Path(__file__).resolve().parents[1]
 SOURCES=[
  'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv',
  'rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv',
- *[f'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_{n}_pipeline.sv' for n in ('source','stage','writer')],
+ *[f'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_{n}_pipeline.sv' for n in ('source','stage','writer','row_merge')],
  'rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv',
  'rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv',
  'rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv',
