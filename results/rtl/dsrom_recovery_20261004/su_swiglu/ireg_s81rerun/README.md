@@ -14,3 +14,13 @@ registers the fault OR at its pin, so the boundary is register-to-register (owne
 Cost: +1 cycle (0.833 ns) per lane operation (ffn.swiglu, ffn.shared_swiglu each layer); about 0.1 us a token
 (< 0.02 % AR).  Route: `physical/dsrom_su_swiglu_ireg/launch.sh` (IO timed, 0.770 ns, 200 ps IO budget), EPYC2
 `/srv/opentallas-scratch2/scratch/claude/s81-rerun/swiglu_ireg/route/lane_ireg_m770`.
+
+## Margin route `lane_ireg_m770` (IREG = 1, routed at 0.770 ns, IO budget 200 ps): NOT ACCEPTED
+
+Flow (WC = SS, routed at 0.770 ns): WNS -73.5 ps, 42 endpoints, DRC 0, antenna 0, DRV 0; area 17,495.5 um2.
+Re-timed at the 0.833333 ns sign-off (same routed odb + SPEF, SS libs, `route_m770/summary_raw.txt`):
+WNS -10.18 ps; every endpoint under +40 ps is one adder stage -- `u_exp.g_h[2].u_a` (`ot_hdc_fp32_add_f12_l4`,
+cut 1 -> cut 3: the sum carry chain AND the leading-zero OR tree in one stage) -- plus the flop-at-pin outputs `vo`
+(+34.6) / `fault` (+38.0), whose slack is the 200 ps IO budget against ~400 ps of internal clock insertion.
+The pin registers did their job (no boundary path is critical).  Below +40 -> RTL change, not a re-route: the exp
+polynomial adds get the sum | LZC cut (CUTS bit 2), see `EXP_ASUM` below.
