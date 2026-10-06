@@ -306,7 +306,7 @@ module ot_attn_tile_m6h1x (
         localparam integer GB = (q / 2) * 8 + (q % 2) * 2;     // 0, 2, 8, 10
         wire [3:0]   qv, qf;
         wire [127:0] qy;
-        ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
             .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer G = GB + 4 * (l / 2) + (l % 2);
@@ -357,7 +357,7 @@ module ot_attn_tile_m6h1p (
             localparam integer GB = 8 * y + 2 * x;
             wire [3:0]   qv, qf;
             wire [127:0] qy;
-            ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv), .oy(qy), .oflt(qf));
             for (l = 0; l < 4; l = l + 1) begin : g_l
