@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 
-def model(root):
+def model(root, boundary_hold=False):
     parent_path = root/'results/uarch/dsrom_v9_parent_context_20261005/model.json'
     boundary_path = root/'results/uarch/dsrom_v9_field_boundary_20261005/model.json'
     parent = json.loads(parent_path.read_text())
@@ -20,9 +20,12 @@ def model(root):
     box = parent['reserved_QX_bbox_um']
     engine_available = (box[2]-box[0])*(box[3]-box[1])-macro_area
     parent_upper = parent['area']['cell_upper_um2']
+    # Mandatory baseline hold repair: one positive buffer on each of the three
+    # source-matched Z18d data sinks. No clock load or sequential stage is added.
+    hold_area = 3 * .0729 if boundary_hold else 0.
     # Conservative sum: the parent projection's redundant engine boundary
     # registers remain in this bound, although the join instantiates them once.
-    fits = logic <= .6*engine_available and parent_upper <= .5*parent['parent_available_um2']
+    fits = logic + hold_area <= .6*engine_available and parent_upper <= .5*parent['parent_available_um2']
     return dict(schema='opentallas.dsrom.qx10.native_parent.v1',
         source=dict(engine='0032b735573af2d24416eee1cf5911c0ac99ff5d',
                     engine_sha256='88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6',
@@ -39,12 +42,20 @@ def model(root):
         mux_demux_fanout='unchanged QX10 ping-pong capture mux, QZ_NS8/QZ_NE4 copies, class-valid admission and protected return identity',
         floorplan=dict(slot_um=parent['full_slot_um'], engine_frame_um=parent['reserved_QX_frame_um'],
                        engine_bbox_um=box, parent_bbox_um=parent['parent_cell_bbox_um']),
-        area=dict(Z18a_total_um2=total, ROM_um2=macro_area, engine_logic_um2=logic,
+        area=dict(Z18a_total_um2=total, ROM_um2=macro_area, engine_logic_um2=logic+hold_area,
                   engine_stdcell_available_um2=engine_available, engine_density=.6,
                   parent_conservative_cell_upper_um2=parent_upper, parent_density=.5,
-                  sum_conservative_body_um2=total+parent_upper, analytical_slot_fit=fits,
+                  sum_conservative_body_um2=total+parent_upper+hold_area, analytical_slot_fit=fits,
                   routed_slot_fit=False),
-        routing=dict(local_boundary_tracks=809,
+        boundary_hold=dict(selected=boundary_hold, default=False,
+                           mandatory_baseline_repair=True, buffers=3 if boundary_hold else 0,
+                           cell='BUFx2_ASAP7_75t_R', added_area_um2=hold_area,
+                           added_clock_load_fF=0, added_register_stages=0,
+                           added_MACs=0, added_memory_bytes_per_cycle=0,
+                           added_boundary_bits_per_cycle=0,
+                           SS60_FF25_loaded_context_required=True,
+                           buffer_area_source='results/physical/dsrom_qx10_boundary_hold_20261005/buffer_library.json'),
+        routing=dict(local_boundary_tracks=809+(3 if boundary_hold else 0),
                      conservative_channel_height_um=parent['parent_cell_bbox_um'][3]-parent['parent_cell_bbox_um'][1],
                      channel_capacity_source='existing M4/M6 48/64nm track estimates in uarch_model; 50% clock/PG reserve',
                      estimated_channel_capacity_tracks=int((235.44/.048+235.44/.064)*.5),
