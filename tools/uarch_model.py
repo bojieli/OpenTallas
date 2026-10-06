@@ -11377,8 +11377,11 @@ def dsrom_window_parent_boundary_model():
     import re
     leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
     ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/ss_synthesis_inventory.json'
+    changed_ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/ssmap_r5/ss_synthesis_inventory.json'
     if ss_inventory_path.is_file():
         leaf_inventory_path = ss_inventory_path
+    if changed_ss_inventory_path.is_file():
+        leaf_inventory_path = changed_ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
