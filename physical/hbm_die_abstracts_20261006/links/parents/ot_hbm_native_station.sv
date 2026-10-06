@@ -59,7 +59,8 @@ module ot_hbm_native_station #(
   wire join_present=&cv;
   wire release_all;
   wire illegal;
-  wire [NO-1:0] ack_valid,ack_ready,ack_fault;
+  wire [NO-1:0] ack_valid,ack_ready,ack_fault,ack_empty;
+  wire receipt_capacity=(MODE!=1)||(&ack_ready);
   wire [NO*192-1:0] ack_seats;
   wire ack_consume=normal&&join_present&&active&&!(|cf);
   // Actual reverse receipt seats: no ACK_ready exists in the VM-root ABI.
@@ -71,22 +72,23 @@ module ot_hbm_native_station #(
     ot_hbm_w2_protected_cut #(.W(192)) u_ack(
      .clk(fclk_i),.por_n(rst_n[0]),.in_v(ACK_v[a]&&!fault),.in_r(ack_ready[a]),
      .in_d(ACK_owner[a*192+:192]),.out_v(ack_valid[a]),
-     .out_r(ack_consume),.out_d(ack_seats[a*192+:192]),.empty(),.fault(ack_fault[a]));
+     .out_r(ack_consume),.out_d(ack_seats[a*192+:192]),.empty(ack_empty[a]),.fault(ack_fault[a]));
    end else begin:unused
-    assign ack_valid[a]=0;assign ack_ready[a]=0;assign ack_fault[a]=0;assign ack_seats[a*192+:192]=0;
+    assign ack_valid[a]=0;assign ack_ready[a]=0;assign ack_fault[a]=0;assign ack_empty[a]=1;assign ack_seats[a*192+:192]=0;
    end
   end
   assign fault=(|cf)||ctl_fault||(|ack_fault)||illegal;
-  assign paused=repairing || (!(|cf)&&!(&ce)&&!join_present);
-  assign drained=(&ce)&&normal&&!active&&!fault;
+  assign paused=repairing || (!(|cf)&&!(&ce)&&!join_present) ||
+   ((MODE==1)&&!(|ack_fault)&&(|(~ack_empty&~ack_valid)));
+  assign drained=(&ce)&&(&ack_empty)&&normal&&!active&&!fault;
   assign source_release=release_all&&!fault;
   for(genvar k=0;k<NI;k=k+1)begin:inputs
    // Existing cut, including its actual five-word repair seat and valid bit.
    ot_hbm_w2_protected_cut #(.W(PW)) u_cut(
-    .clk(fclk_i),.por_n(rst_n[0]),.in_v(in_v[k]&&!quiesce&&!fault),.in_r(ready_i[k]),
+    .clk(fclk_i),.por_n(rst_n[0]),.in_v(in_v[k]&&!quiesce&&!fault&&receipt_capacity),.in_r(ready_i[k]),
     .in_d({in_owner[k*192+:192],in_data[k*IW+:IW]}),
     .out_v(cv[k]),.out_r(release_all&&!fault),.out_d(seats[k*PW+:PW]),.empty(ce[k]),.fault(cf[k]));
-   assign in_r[k]=ready_i[k]&&!quiesce&&!fault;
+   assign in_r[k]=ready_i[k]&&!quiesce&&!fault&&receipt_capacity;
   end
   wire [191:0] owner0=seats[IW+:192];
   reg cohort_bad;
