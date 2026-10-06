@@ -1,5 +1,6 @@
 #!/bin/bash
 # Z22* (2026-10-06, OWNER DECISION frame height 192.24 um): same launcher, FH=192.24, QW from the environment (bterm4 WD).
+# PD (2026-10-06): GPL target density from the environment (default 0.6): the 192.24 frame spreads the lanes at 0.6 (Z22a/b post-CTS -102 / -356 ps on lane wires).
 # DSROM q-element routes Z21* (2026-10-06): the PQ q-element ot_v41_rom_elem_q_qxpq_w10 (PQ = 1: banked output tags,
 # op tree parity, configuration shadow by replay; QX = 10 body unchanged) on the Z20c taller-frame recipe, after the
 # coordinator's PQ x q-element finding (results/rtl/dsrom_recovery_20261004/combined) and S81-DIE's request: xs_q1 / xs_e1
@@ -90,7 +91,7 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --persistent-workdir $J/work --launch-receipt $J/receipt.json \
  --view asap7 --top ot_v41_rom_elem_q_qxpq_w10 $SRCS \
  --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --io-delay-fraction 0.2 --stages pnr \
- --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density 0.6 --macro-place-halo 2 2 \
+ --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density ${PD:-0.6} --macro-place-halo 2 2 \
  --pin-region "^(p|busy|fault|walking|bank_free|sh_free).*=top:136.08-374.76" --pin-region "^(clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
  --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=physical/abi3/dsrom_q_pin_keepout2.tcl \
