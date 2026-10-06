@@ -34,7 +34,8 @@ module ot_dsrom_window_attn_source_la #(
     parameter bit RETAIN_L0 = 0,
     parameter integer WIN_STACK = 0, STREAM_II1 = 0, REFILL_CREDITS = 1,
     parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8, LA_ISSUE_PC = 0,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter integer CTL_LEAF = 0          // WINDOW_PIPELINE only: see ot_dsrom_window_source_pipeline
 ) (
     input wire clk, rst_n,
     input wire retain_qk, retain_pv, retain_complete, retain_invalidate,
@@ -96,7 +97,7 @@ module ot_dsrom_window_attn_source_la #(
     output wire [31:0] la_load_cycles
 );
     generate if (STREAM_LA && WINDOW_PIPELINE) begin : g_pipeline
-        ot_dsrom_window_source_pipeline #(.SPLIT_COLUMNS(SPLIT_COLUMNS), .STREAM_LA(1), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE),
+        ot_dsrom_window_source_pipeline #(.SPLIT_COLUMNS(SPLIT_COLUMNS), .CTL_LEAF(CTL_LEAF), .STREAM_LA(1), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE),
             .POS_W(POS_W), .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .RETAIN_L0(RETAIN_L0),
             .WIN_STACK(WIN_STACK), .STREAM_II1(STREAM_II1), .REFILL_CREDITS(REFILL_CREDITS),
             .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),

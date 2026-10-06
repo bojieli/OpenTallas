@@ -28,7 +28,10 @@ module ot_dsrom_window_source_pipeline #(
     parameter integer WIN_STACK = 0, STREAM_II1 = 0, REFILL_CREDITS = 1,
     parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8, LA_ISSUE_PC = 0,
     parameter integer MAX_CONTEXT = 1048576,
-    parameter integer SPLIT_COLUMNS = 0
+    parameter integer SPLIT_COLUMNS = 0,
+    // 0: original body.  1/2: control leaf ot_dsrom_window_source_ctl (MARGIN 0/1) beside the staging
+    // array and the row merge (takeover-ds 2026-10-06, default off).
+    parameter integer CTL_LEAF = 0
 ) (
     input wire clk, rst_n,
     input wire retain_qk, retain_pv, retain_complete, retain_invalidate,
@@ -111,7 +114,7 @@ module ot_dsrom_window_source_pipeline #(
             .s_v(s_v), .s_rdy(s_rdy), .s_tag(s_tag), .s_beat(s_beat), .s_data(s_data));
         assign wl_req_v = '0; assign wl_req_addr = '0; assign wl_req_len = '0; assign wl_req_tag = '0;
         assign wl_rsp_rdy = '0; assign la_load_cycles = 32'd0;
-    end else begin : g_la
+    end else if (CTL_LEAF == 0) begin : g_la
 `ifndef SYNTHESIS
         initial if (RETAIN_L0 || NPC != 32 || WTAGW < 10 || HAW < SEC_W)
             $fatal(1, "ot_dsrom_window_source_pipeline: STREAM_LA needs RETAIN_L0=0, NPC=32, WTAGW>=10");
@@ -318,5 +321,74 @@ module ot_dsrom_window_source_pipeline #(
         assign sectors_read = 32'(landed);
         assign rows_fetched = 32'(st == IDLE || st == ISSUE || st == RUN ? j_count : 8'd0);
         assign rows_refilled = j_count;
+    end else begin : g_ctl
+`ifndef SYNTHESIS
+        initial if (RETAIN_L0 || STREAM_II1 || NPC != 32 || WTAGW < 10 || HAW < SEC_W)
+            $fatal(1, "ot_dsrom_window_source_pipeline: CTL_LEAF needs STREAM_LA, RETAIN_L0=0, STREAM_II1=0");
+`endif
+        wire [NPC-1:0] st_acc_v; wire [NPC*WTAGW-1:0] st_acc_tag; wire [NPC*BEATW-1:0] st_acc_beat;
+        wire [NPC*256-1:0] st_acc_data;
+        wire all_rows, stage_fault, stage_job; wire [11:0] landed;
+        wire [USER_W-1:0] sj_user, mg_user; wire [POS_W-1:0] sj_first, mg_first; wire [7:0] sj_count, mg_count;
+        wire merge_start_v, merge_start_ready, merge_done, merge_fault;
+        ot_dsrom_window_source_ctl #(.MARGIN(CTL_LEAF == 2), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
+            .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
+            .REFILL_CREDITS(REFILL_CREDITS), .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),
+            .LA_ISSUE_PC(LA_ISSUE_PC), .MAX_CONTEXT(MAX_CONTEXT)) u_ctl (
+            .clk(clk), .rst_n(rst_n),
+            .region_base_sector(region_base_sector), .region_sector_count(region_sector_count),
+            .prime_v(prime_v), .prime_ready(prime_ready), .prime_user(prime_user), .prime_row(prime_row),
+            .blk_v(blk_v), .blk_ready(blk_ready), .blk_user(blk_user), .blk_row(blk_row), .blk_idx(blk_idx),
+            .blk_codes(blk_codes), .blk_scale(blk_scale),
+            .start_v(start_v), .start_ready(start_ready), .start_user(start_user), .start_first(start_first),
+            .start_count(start_count), .staged_v(staged_v), .stream_go(stream_go),
+            .busy(busy), .done(done), .fault(fault), .fault_code(fault_code),
+            .refill_cycles(refill_cycles), .sectors_read(sectors_read), .rows_fetched(rows_fetched),
+            .blocks_written(blocks_written), .sectors_written(sectors_written), .rows_refilled(rows_refilled),
+            .m_v(m_v), .m_rdy(m_rdy), .m_addr(m_addr), .m_len(m_len), .m_tag(m_tag), .m_we(m_we),
+            .m_wdata(m_wdata), .m_wstrb(m_wstrb), .m_wr_done(m_wr_done),
+            .s_v(s_v), .s_rdy(s_rdy), .s_tag(s_tag), .s_beat(s_beat), .s_data(s_data),
+            .wl_req_v(wl_req_v), .wl_req_rdy(wl_req_rdy), .wl_req_addr(wl_req_addr), .wl_req_len(wl_req_len),
+            .wl_req_tag(wl_req_tag),
+            .acc_v(st_acc_v), .acc_tag(st_acc_tag), .acc_beat(st_acc_beat), .acc_data(st_acc_data),
+            .stage_job_v(stage_job), .stage_job_user(sj_user), .stage_job_first(sj_first), .stage_job_count(sj_count),
+            .stage_all_rows(all_rows), .stage_landed(landed), .stage_fault(stage_fault),
+            .merge_start_v(merge_start_v), .merge_start_ready(merge_start_ready), .merge_user(mg_user),
+            .merge_first(mg_first), .merge_count(mg_count), .merge_done(merge_done), .merge_fault(merge_fault),
+            .la_load_cycles(la_load_cycles));
+        wire wb_req_v, wb_req_ready, wb_rsp_v, wb_rsp_fault;
+        wire [USER_W-1:0] wb_req_user, wb_rsp_user;
+        wire [POS_W-1:0] wb_req_first, wb_rsp_first;
+        wire [3:0] wb_req_m, wb_rsp_m, wb_rsp_lane_valid;
+        wire [4*4224-1:0] wb_rsp_rows;
+        ot_dsrom_window_stage_pipeline #(.POS_W(POS_W), .USER_W(USER_W), .NPC(NPC), .WTAGW(WTAGW), .BEATW(BEATW),
+            .MAX_CONTEXT(MAX_CONTEXT), .SPLIT_COLUMNS(SPLIT_COLUMNS)) u_stage (
+            .clk(clk), .rst_n(rst_n), .job_v(stage_job), .job_user(sj_user), .job_first(sj_first),
+            .job_count(sj_count), .all_rows(all_rows), .sectors_landed(landed), .fault(stage_fault),
+            .in_v(wl_rsp_v), .in_rdy(wl_rsp_rdy), .in_tag(wl_rsp_tag), .in_beat(wl_rsp_beat), .in_data(wl_rsp_data),
+            .acc_v(st_acc_v), .acc_tag(st_acc_tag), .acc_beat(st_acc_beat), .acc_data(st_acc_data),
+            .req_v(wb_req_v), .req_ready(wb_req_ready), .req_user(wb_req_user), .req_first_row(wb_req_first),
+            .req_mask(wb_req_m), .rsp_v(wb_rsp_v), .rsp_user(wb_rsp_user), .rsp_first_row(wb_rsp_first),
+            .rsp_mask(wb_rsp_m), .rsp_valid_mask(wb_rsp_lane_valid), .rsp_rows(wb_rsp_rows),
+            .rsp_fault(wb_rsp_fault));
+        ot_dsrom_window_row_merge_pipeline #(.POS_W(POS_W), .USER_W(USER_W)) u_merge (
+            .clk(clk), .rst_n(rst_n), .start_v(merge_start_v), .start_ready(merge_start_ready),
+            .start_user(mg_user), .window_start_pos(mg_first), .window_count(mg_count),
+            .selected_count(10'd0), .published_source_count(POS_W'(0)),
+            .win_need(), .win_user(), .win_rrow(),
+            .win_packed_valid(1'b0), .win_packed_row(4224'd0), .win_fault(1'b0),
+            .wb_req_v(wb_req_v), .wb_req_ready(wb_req_ready), .wb_req_user(wb_req_user),
+            .wb_req_first(wb_req_first), .wb_req_m(wb_req_m), .wb_rsp_v(wb_rsp_v), .wb_rsp_user(wb_rsp_user),
+            .wb_rsp_first(wb_rsp_first), .wb_rsp_m(wb_rsp_m), .wb_rsp_lane_valid(wb_rsp_lane_valid),
+            .wb_rsp_rows(wb_rsp_rows), .wb_rsp_fault(wb_rsp_fault),
+            .selected_id_valid(1'b0), .selected_id_ready(), .selected_source_id(POS_W'(0)),
+            .ckv_fetch_v(), .ckv_fetch_ready(1'b0), .ckv_fetch_local_row(), .ckv_fetch_source_id(),
+            .ckv_packed_valid(1'b0), .ckv_packed_row(2304'd0), .ckv_packed_local_row(10'd0),
+            .ckv_packed_source_id(POS_W'(0)), .ckv_fault(1'b0), .ckv_remote_needed(1'b0),
+            .ckv_remote_die(2'd0), .remote_req_v(), .remote_req_ready(1'b0), .remote_req_die(),
+            .remote_req_local_row(), .remote_req_source_id(), .remote_rsp_v(1'b0), .remote_rsp_die(2'd0),
+            .remote_rsp_local_row(10'd0), .remote_rsp_source_id(POS_W'(0)), .remote_rsp_row(2304'd0),
+            .remote_fault(1'b0), .kv_v(kv_v), .kv_ready(kv_ready), .kv_m(kv_m), .kv_w(kv_w),
+            .done(merge_done), .fault(merge_fault));
     end endgenerate
 endmodule
