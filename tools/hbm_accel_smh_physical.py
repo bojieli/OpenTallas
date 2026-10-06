@@ -335,11 +335,102 @@ proc ::ot_place {re xlo xhi ylo yhi} {
     if {$k < $n} { error "ot_place $re: placed $k of $n in ($xlo $xhi $ylo $yhi)" }
     puts "ot_place $re: $n flops"
 }
-# (round 9) hub mid-front: line skid data and s1 in the ring block's central channel (x 151 .. 273) at y ~ 480-620;
-# the hop copies H above (row 0) and below (row 1) the ring block on their side; the far row's x-write A / M / O
-# stages along the edge; the response chain stages spread from the south pins to the ring block
-ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 154 270 470 520
-ot_place {^s1_(w|cv|ct)} 154 270 525 570
+proc ::ot_port_y {inst} {
+    set net "NULL"
+    foreach it [$inst getITerms] { if {[$it isOutputSignal]} { set net [$it getNet]; break } }
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} {
+            set bb [[lindex $bts 0] getBBox]
+            return [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            if {[$it isOutputSignal]} { continue }
+            set m [[$it getInst] getMaster]
+            if {[regexp {^(BUF|INV|HB)} [$m getName]]} {
+                foreach o [[$it getInst] getITerms] { if {[$o isOutputSignal]} { set nx [$o getNet] } }
+                break
+            }
+        }
+        set net $nx
+    }
+    return ""
+}
+# flops matching re, each at the row nearest its port pin, FIRM, in a strip xw wide xoff from the side's edge
+proc ::ot_pin_place {re side xoff xw} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set dw [[$::ot_blk getDieArea] xMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set xoff [expr {round($xoff / 0.054) * 0.054}]; set xw [expr {round($xw / 0.054) * 0.054}]
+    if {$side eq "W"} {
+        set lo [expr {$m0 + int(round($xoff * $dbu))}]; set hi [expr {$lo + int(round($xw * $dbu))}]
+    } else {
+        set hi [expr {$dw - $m0 - int(round($xoff * $dbu))}]; set lo [expr {$hi - int(round($xw * $dbu))}]
+    }
+    set fl {}
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set y [::ot_port_y $i]
+        if {$y eq ""} { error "ot_pin_place $re: no port for [$i getName]" }
+        lappend fl [list $y $i]
+    }
+    set fl [lsort -integer -index 0 $fl]
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set cur [lrepeat $nr [expr {$side eq "W" ? $lo : $hi}]]
+    set k 0
+    foreach e $fl {
+        lassign $e py inst
+        set w [[$inst getMaster] getWidth]
+        set w2 [expr {$w + 12 * $sw}]
+        set h [[$inst getMaster] getHeight]
+        # nearest row (row centre to pin y)
+        set best 0; set bd 1e18
+        for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+            set m [expr {($a + $b) / 2}]
+            if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+        }
+        set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+        set done 0
+        for {set s 0} {$s < $nr && !$done} {incr s} {
+            foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                if {$r < 0 || $r >= $nr} { continue }
+                set c [lindex $cur $r]
+                if {$side eq "W"} {
+                    if {$c + $w2 > $hi} { continue }
+                    set x $c; lset cur $r [expr {$c + $w2}]
+                } else {
+                    if {$c - $w2 < $lo} { continue }
+                    set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                }
+                set rr [lindex $rows $r]
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                set done 1; incr k; break
+            }
+        }
+        if {!$done} { error "ot_pin_place $re: no room for [$inst getName]" }
+    }
+    puts "ot_pin_place $re: $k flops ($side strip [expr {double($lo)/$dbu}] .. [expr {double($hi)/$dbu}])"
+}
+# (round 10) r9b post-CTS -623 ps: the issue (234 um2, 628 flops) was spread over 300 x 400 um (u_issue.oh at x 23,
+# its consumers at x 267), the bulk copy's request half sat at the south pins 450 um from its ring half (hf_c -> used
+# -230), and the far-row x-write O stage packed into y 230-265 against pins spanning y 242-440 (-584).
+# Every row / x-write output flop now sits at its own pin's row (the bundle leaves through a 14 um edge strip); the
+# issue with the start channel's sink and the bulk copy's control are FIRM, compact, in the central channel next to
+# the line skid and s1 they talk to every cycle.
+ot_pin_place {^g_side\[0\]\.g_rs\[\d\]\.(u_o\.|g_bo\.u_bo[dv])} W 0 14
+ot_pin_place {^g_side\[1\]\.g_rs\[\d\]\.(u_o\.|g_bo\.u_bo[dv])} E 0 14
+# central channel (x 148.4 .. 276.5 between the ring columns), bottom to top: line skid, s1, issue, bulk-copy control
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 470 500
+ot_place {^s1_(w|cv|ct)} 152 272 502 520
+ot_place {^(u_issue\.|u_sch\.(?!u_)|pop_r|fmt_q|xb_q|g_f1\[)} 152 272 522 541
+ot_place {^u_bc\.(outstanding|g_lookahead\.((?!g_sram)|g_sram\.(oq_n|oq_wp|oq_rp|res|rd_v|u_rok_c)))} 152 272 543 575
 ot_place {^g_h\[0\]\.} 60 200 770 800
 ot_place {^g_h\[2\]\.} 232 372 770 800
 ot_place {^g_h\[1\]\.} 60 200 330 360
@@ -348,13 +439,11 @@ ot_place {^g_h\[3\]\.} 232 372 330 360
 ot_place {^u_sv\.g_s\[0\]} 170 210 180 200
 ot_place {^u_sv\.g_s\[1\]} 170 210 320 340
 ot_place {^u_sv\.g_s\[2\]} 170 210 450 465
-# x-write bundle of the far row (row 1): A above the ring block, M beside it, O beside its pins
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 805 870
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 805 870
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 3 47 470 660
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 378 430 470 660
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bo[dv]} 3 60 230 440
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bo[dv]} 372 430 230 440
+# x-write bundle of the far row (row 1): A above the ring block, M beside it (inside the edge strip)
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 18 200 805 870
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 414 805 870
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 18 62 470 660
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 370 414 470 660
 # response chain (south pins -> ring block): four stages
 ot_place {^u_prd\.g_s\[0\]} 100 330 20 50
 ot_place {^u_prd\.g_s\[1\]} 100 330 110 140
