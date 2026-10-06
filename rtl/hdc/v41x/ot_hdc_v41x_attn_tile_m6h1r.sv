@@ -123,3 +123,88 @@ module ot_attn_tile_m6h1r #(
     end
     // synthesis translate_on
 endmodule
+
+// ---------------------------------------------------------------------------
+// Half tile (one register strip, H8): eight one-head leaves, rows 0 (R0) and 1 (MX) facing one strip; ROOT at the
+// strip centre -> HC (2 copies, one per half strip, each driving the 4 leaves of its half) -> leaves.  Heads
+// GB .. GB + 7 of the H16 tile (gid GB + 4 * row + column); ot_attn_tile_m6h1r's function on those heads with every
+// input, rst_n included, delayed RIN = 2 cycles and the outputs taken straight from the leaves.  The H16 tile is two
+// of these (GB 0 and 8) fed the same packet (ot_attn_tile_m6h1h).
+// ---------------------------------------------------------------------------
+module ot_attn_tile_m6h1s #(
+    parameter integer GB = 0
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire [7:0]    gov,
+    output wire [255:0]  oy,
+    output wire [7:0]    oflt
+);
+    localparam integer PW = 1 + 1618;
+    wire [PW-1:0] pk = {rst_n, ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv, ibank, ib};
+    wire [PW-1:0] root_q;
+    (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_root (.clk(clk), .d(pk), .q(root_q));
+    genvar h, s, r;
+    generate
+        for (h = 0; h < 2; h = h + 1) begin : g_h                   // half strip h: columns 2h, 2h+1
+            wire [PW-1:0] hc_q;
+            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(root_q), .q(hc_q));
+            wire          l_rst_n, l_ld_v, l_ld_mode, l_ld_w2v, l_iv;
+            wire [2:0]    l_ld_bank, l_ibank;
+            wire [7:0]    l_ld_grp;
+            wire [1023:0] l_ld_w;
+            wire [575:0]  l_ib;
+            assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} = hc_q;
+            for (r = 0; r < 2; r = r + 1) begin : g_r               // 0: the row below the strip (R0), 1: above (MX)
+                for (s = 0; s < 2; s = s + 1) begin : g_s
+                    localparam integer L = r * 4 + 2 * h + s;       // local head (oy slot)
+                    localparam integer G = GB + L;
+                    wire [31:0] hy;
+                    wire [0:0]  hf;
+                    wire        hv;
+                    ot_attn_hgrp_m6h1 u_g (
+                        .clk(clk), .rst_n(l_rst_n), .gid(G[7:0]), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
+                        .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
+                        .ibank(l_ibank), .ib(l_ib), .ov(hv), .oy(hy), .oflt(hf));
+                    assign {gov[L], oflt[L], oy[L*32 +: 32]} = {hv, hf, hy};
+                end
+            end
+        end
+    endgenerate
+endmodule
+
+// The H16 tile as two half tiles (simulation / function; each half is the hardened element)
+module ot_attn_tile_m6h1h (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [511:0]  oy,
+    output wire [15:0]   oflt
+);
+    wire [7:0] gov0, gov1;
+    ot_attn_tile_m6h1s #(.GB(0)) u_s0 (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(gov0), .oy(oy[0 +: 256]),
+        .oflt(oflt[0 +: 8]));
+    ot_attn_tile_m6h1s #(.GB(8)) u_s1 (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(gov1), .oy(oy[256 +: 256]),
+        .oflt(oflt[8 +: 8]));
+    assign ov = gov0[0];
+endmodule

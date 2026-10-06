@@ -29,6 +29,7 @@ def main():
     ap.add_argument("--mid", type=float, default=40.0)
     ap.add_argument("--gap", type=float, default=12.0)
     ap.add_argument("--margin", type=float, default=10.0)
+    ap.add_argument("--half", action="store_true", help="the half tile ot_attn_tile_m6h1s: one strip, rows 0 / 1")
     a = ap.parse_args()
     lef = a.lef.read_text()
     w, h = (round(float(x) * 1000) for x in re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef).groups())
@@ -41,16 +42,19 @@ def main():
     ys.append(up(ys[1] + h + M))                    # row 2
     ys.append(up(ys[2] + h + S))                    # row 3 (MX)
     dw = math.ceil((xs[3] + w + E) / 54) * 54
-    dh = math.ceil((ys[3] + h + E) / 270) * 270
+    if a.half:
+        ys = ys[:2]
+    dh = math.ceil((ys[-1] + h + E) / 270) * 270
     L = [f"# H16 registered tile, two-strip floorplan (tools/hbm_attn_strip_place.py): leaf {w/1000} x {h/1000} um,",
          f"# strips {S/1000} um (rows 0|1 and 2|3), middle gap {M/1000} um, column gaps {G/1000} um, margins {E/1000} um;",
          f"# die {dw/1000} x {dh/1000} um"]
-    for p in range(2):
+    for p in range(1 if a.half else 2):
         for hh in range(2):
             for r in range(2):
                 for s in range(2):
                     row, col = 2 * p + r, 2 * hh + s
-                    n = f"g_p\\[{p}\\].g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g"
+                    n = (f"g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g" if a.half else
+                         f"g_p\\[{p}\\].g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g")
                     L.append(f"place_macro -macro_name {{{n}}} -location {{{xs[col]/1000:.3f} {ys[row]/1000:.3f}}} "
                              f"-orientation {'R0' if r == 0 else 'MX'} -exact")
     L += ["set ot_b [ord::get_db_block]",
@@ -71,9 +75,21 @@ def main():
           "  }",
           "  incr ot_n",
           "}",
-          "if {$ot_n != 16} {error \"expected 16 leaves, placed $ot_n\"}",
+          f"if {{$ot_n != {8 if a.half else 16}}} {{error \"expected {8 if a.half else 16} leaves, placed $ot_n\"}}",
           "puts OT_H16S_MACROS_PLACED_ON_GRID"]
     a.out.write_text("\n".join(L) + "\n")
+    if a.half:
+        xc = dw / 2000
+        a.io.write_text(f"""# H8 half tile: every input port on the bottom edge centre (x {xc:.1f} um); the ROOT sits in the strip above.
+set ot_ins {{}}
+foreach ot_p [get_ports *] {{
+  if {{[get_property $ot_p direction] eq "input"}} {{ lappend ot_ins [get_full_name $ot_p] }}
+}}
+puts "OT_IO_BOTTOM_CENTRE inputs=[llength $ot_ins]"
+set_io_pin_constraint -pin_names $ot_ins -region bottom:{xc - 170:.1f}-{xc + 170:.1f}
+""")
+        print(f"die {dw/1000} {dh/1000} xs {xs} ys {ys}")
+        return
     ymid = (ys[1] + h + ys[2]) / 2000
     a.io.write_text(f"""# H16 two-strip tile: every input port (the packet, rst_n, clk) on the left edge around the middle gap (y {ymid:.1f} um),
 # beside the ROOT bank; the outputs (straight from the leaves) are left to the pin placer.
