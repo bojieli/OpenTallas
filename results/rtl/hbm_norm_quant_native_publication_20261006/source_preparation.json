@@ -51,7 +51,7 @@
     "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
     "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
     "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
-    "physical/hbm_die_abstracts_20261006/memory_control/tb_norm_quant_native_publication.sv": "6e3578c0300e32217a6413584145626f1cc07d6c5eadc9ca419664986b6cce1e"
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_norm_quant_native_publication.sv": "51508f0539bc5bc405be33f52283f42cbd6b613a778c4c8ecf839aee3f8db5f8"
   },
   "sources": [
     "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
@@ -121,5 +121,6 @@
   ],
   "fault_negative": "Actual root SRAM checked finalROW16352 ACK held7edges, only incomingTOKENbit52 flipped; 400rootACK events /239correctquantACKs /5120checkedFP32, retained owner/root debt/warm refusal required",
   "verification": "All result12800WORDs, padding included, actual SRAM index readback under full73 identity; no numerical gold regeneration/no arithmeticbaseline replay",
-  "capacity_and_central_refresh_owner": "Kant"
+  "capacity_and_central_refresh_owner": "Kant",
+  "scale_encoding": "Retained eqe16 must equal signextension of low10; literal q_exp={scale1[9:0],scale0[9:0]}, scales row high1004 zero"
 }
