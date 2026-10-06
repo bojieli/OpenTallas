@@ -89,6 +89,7 @@ module tb_dsrom_protected_vm;
   end
   read_enable=1;read_addr=0;write_enable=0;write_mask=0;write_data=0;start();
   if(mode==3)begin wait(fault);expect_quarantine();end
+  else begin
   finish_transaction(mode==1);
   if(mode==1)begin $display("PASS PROTECTED_DSVM actualSRAM CE corrected golden and positive receipt");$finish;end
   // Both reads observe olddata; all five writes to one row use native lastwriter priority and masked lanes.
@@ -101,5 +102,6 @@ module tb_dsrom_protected_vm;
   read_enable=3;read_addr={15'd32767,15'd0};write_enable=0;write_mask=80'bx;write_addr=75'bx;write_data=2560'bx;start();finish_transaction(0);
   if(fault||pending)$fatal(1,"final protection/owner state");
   $display("PASS PROTECTED_DSVM full2MiB 256data+32check 3:4 transactions=%0d reads=%0d visiblewrites=%0d cycles=%0d",transactions,reads,visible_writes,cycles);$finish;
+  end // UE negative terminal excludes the normal-success continuation.
  end
 endmodule
