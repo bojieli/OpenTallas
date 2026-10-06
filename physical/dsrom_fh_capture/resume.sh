@@ -29,6 +29,13 @@ if os.environ.get('OT_FH_PLACE_DENSITY'):
     text+=f'export PLACE_DENSITY = {density}\n'
 assert os.environ.get('OT_FH_SHARED_PARTITION', 'none') == p['physical_parameters'].get('shared_partition', 'none')
 assert (os.environ.get('OT_FH_VERTICAL_SEAMS') == '1') == p['physical_parameters'].get('vertical_seams', False)
+assert (os.environ.get('OT_FH_DIAMOND_LEGALIZER') == '1') == p['physical_parameters'].get('diamond_legalizer', False)
+if os.environ.get('OT_FH_DIAMOND_LEGALIZER') == '1':
+    # C17 negotiation recovery leaves edge/padding violations; optional
+    # DPO then introduces site-alignment/overlap errors. Use the installed
+    # diamond legalizer and keep every original placement check/padding.
+    text='\n'.join(l for l in text.splitlines() if not l.startswith(('export ENABLE_DPO =','export DETAIL_PLACEMENT_ARGS =')))+'\n'
+    text+='export ENABLE_DPO = 0\nexport DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer\n'
 cfg.write_text(text)
 print('SOURCE_PIN/reused objects verified',p['commit'],flush=True)
 PY
