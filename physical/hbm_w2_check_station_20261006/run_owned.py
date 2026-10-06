@@ -20,7 +20,14 @@ p = argparse.ArgumentParser()
 p.add_argument('--run', type=Path, required=True)
 p.add_argument('--reuse-map', type=Path,
                help='Completed map from the same pinned source; never synthesize it twice')
+p.add_argument('--core-width', type=float, default=382.644)
+p.add_argument('--core-height', type=float, default=95.31)
+p.add_argument('--place-density', type=float, default=0.60)
+p.add_argument('--tag', default='Descartes_CHECK_NO2_H55')
 a = p.parse_args()
+assert a.core_width > 0 and a.core_height > 0
+assert 0 < a.place_density <= 0.60
+core_area = a.core_width * a.core_height
 run = a.run.resolve()
 run.mkdir(parents=True, exist_ok=False)
 image = os.environ.get('OPENTALLAS_ORFS_IMAGE', 'openroad/orfs:asap7lock')
@@ -132,10 +139,10 @@ def synth(*args, **kwargs):
     (run/'mapped_slot_budget.json').write_text(json.dumps(dict(
         actual_map_area_um2=result['record']['chip_area_um2'],
         actual_map_FF=result['record']['sequential_cell_count'],
-        inherited_core_area_um2=36469.79964,
-        bare_map_utilization_percent=100*result['record']['chip_area_um2']/36469.79964,
+        requested_core_area_um2=core_area,
+        bare_map_utilization_percent=100*result['record']['chip_area_um2']/core_area,
         target_buffered_utilization_percent=[55,60],
-        max_cell_area_at_60pct_um2=36469.79964*.60,
+        max_cell_area_at_60pct_um2=core_area*.60,
         mapped_body_is_not_buffered_fit=True,physical_qualified=False),indent=2)+'\n')
     mapped = result['netlist']
     text = mapped.read_text()
@@ -180,8 +187,9 @@ argv += ['--source','rtl/common/ot_fwd_link_stage.sv',
          '--clock-port','clk_sm','--clock-period-ns','0.833333333',
          '--clock-uncertainty-ns','0.06','--clock-uncertainty-hold-ns','0.025',
          '--orfs-corner','WC','--hold-corners','WC,BC','--hold-margin-ns','0.01',
-         '--die-area','0','0','386.709','99.677',
-         '--core-area','2.052','2.16','384.696','97.47','--place-density','0.60',
+         '--die-area','0','0',str(a.core_width+4.104),str(a.core_height+4.32),
+         '--core-area','2.052','2.16',str(a.core_width+2.052),str(a.core_height+2.16),
+         '--place-density',str(a.place_density),
          '--stages','synth,pnr','--keep-heavy-artifacts',
          '--orfs-var','NUM_CORES=16','--orfs-var','ADDER_MAP_FILE=',
          '--orfs-var','PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks',
@@ -191,7 +199,7 @@ argv += ['--source','rtl/common/ot_fwd_link_stage.sv',
          '--step-tcl','PRE_CTS='+rel+'/forwarded_subtree.tcl',
          '--pin-region','^(clk_sm|por_n|in_.*|release_.*)$=bottom',
          '--pin-region','^(fclk_o|out_.*|ACK_.*)$=top',
-         '--purpose','signoff_target','--nickname-tag','Descartes_CHECK_NO2_H55',
+         '--purpose','signoff_target','--nickname-tag',a.tag,
          '--output',str(run/'physical.json')]
 (run/'argv.json').write_text(json.dumps(argv, indent=2)+'\n')
 try:

@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_attn_tile",
+ "kind": "attn_tile",
+ "status": "interim-not-closed",
+ "lef": "hfd_attn_tile.lef",
+ "lib": {
+  "ss": "hfd_attn_tile_ss.lib",
+  "ff": "hfd_attn_tile_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_attn_tile.lef": "a35a72f61fb7c7e330b3b9dbab977e060afb41f99f5c955609317c8327e1de83",
+  "hfd_attn_tile_ss.lib": "7cdaa1fad11156bae66caa9f3d71a918eba9ae3bd0ef7a807d8b5ea3f43ae29d",
+  "hfd_attn_tile_ff.lib": "a91595d4928707d60deb1aab5e51eb83ea83f6eb86a7ea25dd289b8d879cafd5"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "positions": "exact",
+  "problems": [],
+  "obs_above_generator": [
+   "M8",
+   "M9"
+  ],
+  "pg_pins": {
+   "VDD": [
+    "M7",
+    "M8"
+   ],
+   "VSS": [
+    "M7",
+    "M8"
+   ]
+  },
+  "gen_pins": 9155,
+  "view_pins": 9155
+ },
+ "size_um": [
+  1349.112,
+  1349.976
+ ],
+ "instances": 64,
+ "source": {
+  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/attn/routes/r2_c4",
+  "host": "ot-epyc1tb",
+  "SOURCE_COMMIT": "b7c8441f83dc4aaafb9b4510112c050f8ed7c3ce",
+  "stage": "post-CTS placement (4_cts.odb + 4_cts.sdc, estimate_parasitics -placement), NOT routed; routes r2_c4 and r1_p3_pd55 continue",
+  "export": "flow/interim_export_{ss,ff}.tcl (raw LEF named hfd_attn_tile.lef in the run) (write_timing_model / write_abstract_lef) then flow/reduce_lef.py (86 MB raw -> 1.6 MB: M7+M8 PG pins, per-layer OBS = outline minus pins)",
+  "sdc": "flow/io_vclk_c1500.sdc: IO 0.2 T against a virtual clock with 1500 ps latency (die CTS balances the tile insertion delay)",
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100",
+  "ss_worst_setup_ps": -2032.1,
+  "ff_worst_hold_ps": -882.1,
+  "ss_tns_ns": -4246.2,
+  "clock": "29,068 register sinks + 4 quad clk pins; latency 1.53 (quad clk) .. 2.75 ns (u_rl stage 0), setup skew 1.17 ns; 22,230 hold buffers in CTS repair",
+  "cts_variants": "r2_c1..c3 (other CTS_ARGS, incl. -no_obstruction_aware): skew 1.45-1.60 ns, WNS -2.0..-2.2 ns; r1_p3 (default CTS, IO vs core_clk): skew 1.61 ns, latency to 4.05 ns, IO -3.8 ns",
+  "std_cell_um2": 31963.8,
+  "utilization_with_macros": 0.656,
+  "sub_views": [
+   "physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q"
+  ]
+ },
+ "bench": "physical/hbm_accel_die_views/attn_tile/tb/tb_hfd_attn_tile.sv (Verilator 5.050, src f133fb52 = same RTL sha as the route): ROLE 0/1/2/3 (corner k+q / column ci / row ri / chain i) 6000 cycles each, 0 mismatches (ov 4497/4440/4440/1981); NEG=1 (one oy bit flipped) fails",
+ "pdn_contract": {
+  "contract": "die owns M8/M9; block exposes M7 PG stripes 0.288 um @ 10.8 um (VDD x=1.0, VSS x=6.4)",
+  "view_pg_layers": {
+   "VDD": [
+    "M7",
+    "M8"
+   ],
+   "VSS": [
+    "M7",
+    "M8"
+   ]
+  },
+  "breaks_contract": true,
+  "detail": "P3 (flow/pdn_p3.tcl): the contract M1/M2/M5/M6/M7 grid plus M8 straps 0.474 um on the quads' 5.4 um PG lattice (VSS y = 4.272 mod 5.4); flow/bridge_quad_m8.tcl bridges all 1,664 quad M8 PG edge stubs (max gap 9.95 um) to them; check_power_grid VDD PASS / VSS PASS on the floorplan odb. The closed quad ot_attn_tile_m6h1q carries its own M8/M9 PG, so the tile consumes M8 everywhere (exposed as PG pins, 1,331 merged straps) and M9 over the four quad footprints (OBS); the die reaches the tile by M9 -> tile M8 pins, not by M8 -> M7."
+ },
+ "pin_mapping": "exact r16g die port names/widths/faces (tools/hbm_die_views.py ports); check MATCH, positions exact, 9,155/9,155 pins",
+ "defects": [
+  "NOT CLOSED: post-CTS SS setup -2,032 ps / FF hold -882 ps. Cause is structural, not a CTS knob: register sinks span the whole 1.35 mm tile around four 515 x 563 um macros (pin registers on all four faces, ck pin at the top-right corner), and the quads' result pins (oy) sit on their outer edges and top/bottom, so stage registers land across macros with unbufferable over-macro wires (pre-CTS 3.5 ns arrival quad oy -> u_rl stage 0). Needs explicit channel placement of the pipeline banks (or the owner's two-strip tile, wt-hbm-attn) before a route can close.",
+  "IO timing assumes the die CTS balances a 1,500 ps tile insertion delay (virtual clock); the die flow must give the tile ck pin that early arrival",
+  "interim contract (RTL header): k/q forwarded clocks k[1040:1038], q[581:580] end on a capture flop (no credit return on die nets); the result chain is a valid-priority merge that drops a same-cycle arriving word (owner merge input ot_attn_tile_registered_parent not built)",
+  "tile hop latency 6 cycles (pin reg + NS 2 + ROOT + NF 1 + pin reg); the generator prices 1",
+  "PDN: tile consumes M8 (and M9 over the quads) - see pdn_contract"
+ ],
+ "owner": "timing closure of the attention tile: Claude HBM SU/attn (wt-hbm-attn, claude/hbm-attn-close-20261005; STATUS ot-epyc2 /srv/opentallas-scratch2/scratch/claude/hbm-attn/STATUS.md)",
+ "die_pdn_exception": {
+  "decision": "OWNER 2026-10-06 (fastest closure): keep the closed quads; die M9 straps land on the tile M8 PG pins, die M9 blocked over the quads; every other block keeps the M8->M7 contract",
+  "generator": "tools/hbm_die_views.py: GRT = tile M8 + quad M9 as region blockages (die case grt); IR = ir-attn case",
+  "ir_record": "results/rtl/hbm_accel_die_views_20261006/ir_attn_exception_ira1.json",
+  "ir_verdict": "FAIL 241.64 mV interior rail-to-rail (budget 35) with no bump over a quad; needs the quad M9 PG exposed as bump-landing PG pins",
+  "grt_record": "die round r7 (EPYC1 /srv/opentallas/scratch-overflow/claude/hbm-abstracts/die/r7): i5 overflow 386 with tile M8 + quad M9 blocked",
+  "abstract_quad_m9_pg": "owner-approved 2026-10-06 (no re-hardening): export-only change; the four quads' own M9 PG straps (ot_attn_tile_m6h1q PG pins, 95 VDD + 98 VSS each, 0.474 um, 5.4 um lattice, placed per flow/macro_placement.tcl) added as tile M9 PG pins (380 VDD + 392 VSS rects) so bumps land on the quad grid; M9 OBS over the quads = footprint minus the straps (+0.1 um), 772 rects; signal pins unchanged (check MATCH). Generated by tools/hbm_die_views.py QUAD_PG / QUAD_PLACE.",
+  "ir_quad_pg_round": "ira2 (tools/hbm_die_views.py ir-attn --quad-pg), AGIdock /srv/opentallas-scratch/claude/hbm-abstracts/ir/ira2",
+  "option_a_ir": "FAIL: results/rtl/hbm_accel_die_views_20261006/ir_attn_option_a_quadpg.json (quad cells median ~250 mV, worst ~2.2 V per rail vs 35 mV)",
+  "decision_next": "option B: quads re-hardened with PG <= M7 (die owns M8/M9), coordinated with wt-hbm-attn (2026-10-06 10:25 PT, CLAUDE HBM-ABSTRACTS)"
+ }
+}

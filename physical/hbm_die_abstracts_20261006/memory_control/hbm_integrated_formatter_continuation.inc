@@ -33,7 +33,7 @@ template<class D> static void check_formatter_edge(const D& d,const FormatterFix
            "formatter accepted actual source pair differs");
   }
  }
- if((d.gather_rsp_v&1)&&(d.gather_rsp_r&1)&&bits(d.gather_rsp,1,3)==4){
+ if((d.gather_rsp_v&1)&&d.fixture_formatter_sink_rsp_r&&bits(d.gather_rsp,1,3)==4){
   require(bits(d.gather_rsp,0,1),"actual selected sink response unchecked");
   require(bits(d.gather_rsp,564,32)==0x9234abcf&&bits(d.gather_rsp,596,4)==11&&
    bits(d.gather_rsp,600,17)==0x10003&&bits(d.gather_rsp,617,20)==0xfffff,"actual sink checked full73 differs");
@@ -53,13 +53,18 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
   require(bits(d.fixture_formatter_descriptor,64*i+32*k,32)==f.descriptor[i][k],"compiled helper geometry differs from actual installed recipe");
  s.preedge_observer=[&]{
   check_formatter_edge(d,f);
-  if((d.gather_rsp_v&1)&&(d.gather_rsp_r&1)&&bits(d.gather_rsp,1,3)==4){
+  if((d.gather_rsp_v&1)&&d.fixture_formatter_sink_rsp_r&&bits(d.gather_rsp,1,3)==4){
    unsigned row=(bits(d.gather_rsp,20,32)-f.descriptor[3][0])/64;
    require(row<32&&!sink_seen[row],"duplicate actual sink publication");sink_seen[row]=true;++sink_checked;
   }
  };
  constexpr uint32_t FJ=0x9234abcf,FG=11,FT=0x10003,FP=0xfffff;
- auto F=[](auto& p,bool foreign=false){put(p,0,32,FJ);put(p,32,4,FG);put(p,36,17,FT^(foreign?0x10000:0));put(p,53,20,FP);};
+ // Offers copy observed CP/protected retained identity; constants below only
+ // launch the actual CP session and independently check its accepted identity.
+ auto copy73=[](auto& dst,const auto& src,unsigned offset=0){
+  put(dst,offset,32,bits(src,0,32));put(dst,offset+32,4,bits(src,32,4));
+  put(dst,offset+36,17,bits(src,36,17));put(dst,offset+53,20,bits(src,53,20));
+ };
  auto O=[](const auto& p){return bits(p,0,32)==FJ&&bits(p,32,4)==FG&&bits(p,36,17)==FT&&bits(p,53,20)==FP;};
  s.neg();d.cp_reset_req=0;s.phase="formatter next actual CP reset release";
  s.wait([&]{return (d.db_rdy&1)!=0;});
@@ -70,6 +75,9 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
  put(d.db_token,0,17,FT);put(d.db_pos,0,20,FP);put(d.db_job,0,32,FJ);put(d.db_generation,0,4,FG);
  d.db_v=1;s.phase="formatter distinct real CP context";
  s.wait([&]{return d.fixture_db_accepts==old_db+1;});s.neg();d.db_v=0;
+ s.phase="formatter observed actual accepted CP frame";
+ s.wait([&]{return O(d.fixture_formatter_actual_cp_frame);});
+ Row accepted_cp_frame{};copy73(accepted_cp_frame,d.fixture_formatter_actual_cp_frame);
  for(unsigned index=0;index<8;++index){
   s.neg();put(d.gather_desc_index,0,3,index);put(d.gather_desc_data,0,32,f.descriptor[index][0]);
   put(d.gather_desc_data,32,32,f.descriptor[index][1]);d.gather_desc_v=1;
@@ -83,24 +91,28 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
  put(d.preinstall_layer,0,5,20);put(d.preinstall_candidate_source_layer,0,5,20);d.preinstall_candidate_masked=0;
  // One integration negative: the incoming high TOKEN17 cannot acquire the
  // actual current CP borrower or publish a book under a foreign frame.
- s.neg();F(d.preinstall_begin_frame,true);d.preinstall_begin_v=1;s.settle();
+ s.neg();copy73(d.preinstall_begin_frame,accepted_cp_frame);
+ put(d.preinstall_begin_frame,36,17,bits(accepted_cp_frame,36,17)^0x10000);
+ d.preinstall_begin_v=1;s.settle();
  for(unsigned i=0;i<3;++i){require(!(d.preinstall_begin_r&1),"foreign formatter preinstall ready");s.sm();s.healthy();
   require(!(d.preinstall_retained&1)&&d.fixture_formatter_reservations==0&&d.fixture_formatter_source_accepts==0,"foreign preinstall acquired/published owner");}
- s.neg();F(d.preinstall_begin_frame);s.phase="formatter actual full73 preinstall admission";
+ s.neg();copy73(d.preinstall_begin_frame,accepted_cp_frame);s.phase="formatter actual full73 preinstall admission";
  const auto old_begin=d.fixture_formatter_begin_accepts;
  s.wait([&]{return d.fixture_formatter_begin_accepts==old_begin+1;});s.neg();d.preinstall_begin_v=0;
  require((d.preinstall_retained&1)&&O(d.preinstall_frame),"accepted formatter owner not retained");
- F(d.preinstall_record_frame);
+ Row retained_source_frame{};copy73(retained_source_frame,d.preinstall_frame);
+ copy73(d.preinstall_record_frame,retained_source_frame);
  for(const auto& record:f.records){s.neg();put(d.preinstall_record_kind,0,2,record[0]);
   put(d.preinstall_record_rank,0,7,record[1]);put(d.preinstall_record_base,0,32,record[2]);put(d.preinstall_record_end,0,32,record[3]);
   d.preinstall_record_v=1;s.phase="formatter actual installed span census";
   const auto old=d.fixture_formatter_record_accepts;
   s.wait([&]{return d.fixture_formatter_record_accepts==old+1;});s.neg();d.preinstall_record_v=0;
  }
- F(d.preinstall_source_frame);
+ copy73(d.preinstall_source_frame,retained_source_frame);
  for(unsigned plane=0;plane<2;++plane)for(unsigned word=0;word<32;++word)for(unsigned rank=0;rank<96;++rank){
   unsigned ordinal=plane*3072+word*96+rank;
   s.neg();put(d.preinstall_source_plane,0,1,plane);put(d.preinstall_source_word,0,5,word);put(d.preinstall_source_rank,0,7,rank);
+  // File line32*rank+word; lane0 is the least-significant U32.
   for(unsigned k=0;k<16;++k)put(d.preinstall_source_data,32*k,32,f.plane[plane][rank*32+word][k]);
   d.preinstall_source_v=1;s.phase="formatter Noether accepted source word="+std::to_string(ordinal);
   s.wait([&]{return d.fixture_formatter_source_accepts==ordinal+1;});s.neg();d.preinstall_source_v=0;
@@ -129,7 +141,7 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
   uint32_t tag=plane*3072+word*96+rank;
   put(d.gather_req,3,32,addr);put(d.gather_req,35,16,tag);put(d.gather_req,51,7,rank);put(d.gather_req,58,6,word);
   for(unsigned k=0;k<16;++k)put(d.gather_req,64+32*k,32,f.plane[plane][rank*32+word][k]);
-  put(d.gather_req,576,32,FJ);put(d.gather_req,608,4,FG);put(d.gather_req,612,17,FT);put(d.gather_req,629,20,FP);
+  copy73(d.gather_req,retained_source_frame,576);
   auto accepted=d.fixture_formatter_mem_requests;d.gather_req_v=1;s.phase="formatter actual arena store";
   s.wait([&]{return d.fixture_formatter_mem_requests==accepted+1;});s.neg();d.gather_req_v=0;
   s.wait([&]{return (d.gather_rsp_v&1)!=0;});
@@ -141,11 +153,11 @@ static void run_formatter_source_next(Sim& s,const FormatterFixture& f){
   s.wait([&]{return d.fixture_formatter_mem_returns==returned+1;});s.neg();d.gather_rsp_r=0;
  }
  require((d.gather_arena_visible&1)&&d.fixture_formatter_mem_returns==6144,"actual complete arena not published");
- // Gauss is sole numerical child/writer. Its literal header is required before
- // this wait can complete. No CPP pair query, ready tie, kind4 payload, source
- // reverse or release offer stands in for that child.
+ // Gauss actual numerical child/writer is wired in the wrapper. No CPP
+ // pair query, ready tie, kind4 payload, reverse or release offer replaces it.
  s.phase="Gauss actual6144 consumer returns,32 checked sink stores and reverse drain";
  s.wait([&]{return d.fixture_formatter_pairs==6144&&(d.gather_sink_visible&1)&&d.fixture_formatter_reverses==1;});
+ require(d.fixture_formatter_checked_sink_words==32&&d.fixture_formatter_captured_words==32,"actual numeric landing/sink census differs");
  require(sink_checked==32,"all actual checked golden sink returns required before retirement");
  s.phase="actual formatter/gather/shared borrower retirement";
  s.wait([&]{return !(d.fixture_formatter_retained&1)&&!(d.gather_retained&1)&&!(d.preinstall_retained&1);});

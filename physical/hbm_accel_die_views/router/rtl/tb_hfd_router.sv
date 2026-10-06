@@ -62,17 +62,17 @@ module tb_hfd_router;
     wire [0:0] r_rt_in_last;
     assign r_rt_in_last = {d_f_su_SW[1:1]};
     wire [0:0] r_rt_out_valid;
-    reg [0:0] q0_rt_out_valid; always @(posedge clk) q0_rt_out_valid <= r_rt_out_valid;
-    reg [0:0] q1_rt_out_valid; always @(posedge clk) q1_rt_out_valid <= q0_rt_out_valid;
+    reg [0:0] q1_rt_out_valid; always @(posedge clk) q1_rt_out_valid <= r_rt_out_valid;
     reg [0:0] q2_rt_out_valid; always @(posedge clk) q2_rt_out_valid <= q1_rt_out_valid;
     reg [0:0] q3_rt_out_valid; always @(posedge clk) q3_rt_out_valid <= q2_rt_out_valid;
-    reg [0:0] q_rt_out_valid; always @(posedge clk) q_rt_out_valid <= q3_rt_out_valid;
+    reg [0:0] q4_rt_out_valid; always @(posedge clk) q4_rt_out_valid <= q3_rt_out_valid;
+    reg [0:0] q5_rt_out_valid; always @(posedge clk) q5_rt_out_valid <= q4_rt_out_valid;
     wire [53:0] r_rt_out_ids;
-    reg [53:0] q0_rt_out_ids; always @(posedge clk) q0_rt_out_ids <= r_rt_out_ids;
-    reg [53:0] q1_rt_out_ids; always @(posedge clk) q1_rt_out_ids <= q0_rt_out_ids;
+    reg [53:0] q1_rt_out_ids; always @(posedge clk) q1_rt_out_ids <= r_rt_out_ids;
     reg [53:0] q2_rt_out_ids; always @(posedge clk) q2_rt_out_ids <= q1_rt_out_ids;
     reg [53:0] q3_rt_out_ids; always @(posedge clk) q3_rt_out_ids <= q2_rt_out_ids;
-    reg [53:0] q_rt_out_ids; always @(posedge clk) q_rt_out_ids <= q3_rt_out_ids;
+    reg [53:0] q4_rt_out_ids; always @(posedge clk) q4_rt_out_ids <= q3_rt_out_ids;
+    reg [53:0] q5_rt_out_ids; always @(posedge clk) q5_rt_out_ids <= q4_rt_out_ids;
     ot_gpu_router_topk_ps #(.N(384), .P(16), .K(6), .IW(9), .PIPESEL(1)) ref_rt (.clk(r_rt_clk), .rst_n(r_rt_rst_n), .in_valid(r_rt_in_valid), .in_vals(r_rt_in_vals), .in_last(r_rt_in_last), .out_valid(r_rt_out_valid), .out_ids(r_rt_out_ids));
     integer err = 0, nchk = 0, cyc;
     integer seed = 20261006;
@@ -133,16 +133,16 @@ module tb_hfd_router;
         #0.05 rst = 0;
         for (cyc = 0; cyc < 4000; cyc = cyc + 1) begin
             @(negedge clk);
-            nchk = nchk + 1; if (t_cmdproc[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[54:54] %h ref %h cyc %0d", t_cmdproc[54:54], q_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eSW[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[54:54] %h ref %h cyc %0d", eSW[54:54], q_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eNW[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[54:54] %h ref %h cyc %0d", eNW[54:54], q_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eSE[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[54:54] %h ref %h cyc %0d", eSE[54:54], q_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eNE[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[54:54] %h ref %h cyc %0d", eNE[54:54], q_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (t_cmdproc[53:0] !== q_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[53:0] %h ref %h cyc %0d", t_cmdproc[53:0], q_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eSW[53:0] !== q_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[53:0] %h ref %h cyc %0d", eSW[53:0], q_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eNW[53:0] !== q_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[53:0] %h ref %h cyc %0d", eNW[53:0], q_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eSE[53:0] !== q_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[53:0] %h ref %h cyc %0d", eSE[53:0], q_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eNE[53:0] !== q_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[53:0] %h ref %h cyc %0d", eNE[53:0], q_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[54:54] %h ref %h cyc %0d", t_cmdproc[54:54], q5_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eSW[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[54:54] %h ref %h cyc %0d", eSW[54:54], q5_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eNW[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[54:54] %h ref %h cyc %0d", eNW[54:54], q5_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eSE[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[54:54] %h ref %h cyc %0d", eSE[54:54], q5_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eNE[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[54:54] %h ref %h cyc %0d", eNE[54:54], q5_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[53:0] %h ref %h cyc %0d", t_cmdproc[53:0], q5_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eSW[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[53:0] %h ref %h cyc %0d", eSW[53:0], q5_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eNW[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[53:0] %h ref %h cyc %0d", eNW[53:0], q5_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eSE[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[53:0] %h ref %h cyc %0d", eSE[53:0], q5_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eNE[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[53:0] %h ref %h cyc %0d", eNE[53:0], q5_rt_out_ids[53:0], cyc); end
             randomize_inputs;
         end
         $display("TB_hfd_router checks=%0d mismatches=%0d", nchk, err);

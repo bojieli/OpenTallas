@@ -1,38 +1,40 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55/work/orfs",
- "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_barrier\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\nset_inpu",
+ "orfs_dir": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_barrier\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreate_",
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
-  "worst_slack_ps": 283.48,
+  "worst_slack_ps": 197.0,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 392.645782,
-  "worst_reg_to_reg_slack_ps": 675.59,
-  "worst_input_to_reg_slack_ps": 552.17,
-  "worst_output_port_slack_ps": 283.478394,
+  "worst_register_d_slack_ps": 212.892319,
+  "worst_reg_to_reg_slack_ps": 1458.4,
+  "worst_input_to_reg_slack_ps": 212.89,
+  "worst_output_port_slack_ps": 197.001251,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "38d14448ea8e6fef8bf7d77e11c4ad650cd9cdf75be1b211217a4a463f4015b1",
-  "spef_sha256": "a7a1864520b89dbe065ac76147c5aae86ae942c32876317e1570413b2619d140",
-  "sdc_sha256": "da111599b0393f6e783402c0d4ef86b70aac2347e434f8fc8f5b742a9899f5ac"
+  "odb_sha256": "4ca68eec8dee444fce213e879bb9aeac4fa2435746191ff5390faa4905100abb",
+  "spef_sha256": "13b9c808ec7fe6154ec610eee8a8cc4632ab3b5a06e07a2445142f680da8eb45",
+  "sdc_sha256": "dedc08225711050b07931ba42225c04cbe8455d868d90f6ab52a00d7f5a0cc6c"
  },
  "hold_ff": {
   "corner": "ff",
   "check": "hold",
-  "worst_slack_ps": 8.54,
+  "worst_slack_ps": 20.82,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 8.540682,
-  "worst_reg_to_reg_slack_ps": 9.93,
-  "worst_input_to_reg_slack_ps": 79.75,
-  "worst_output_port_slack_ps": 291.588257,
+  "worst_register_d_slack_ps": 35.355843,
+  "worst_reg_to_reg_slack_ps": 31.68,
+  "worst_input_to_reg_slack_ps": 60.96,
+  "worst_output_port_slack_ps": 20.822733,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "38d14448ea8e6fef8bf7d77e11c4ad650cd9cdf75be1b211217a4a463f4015b1",
-  "spef_sha256": "a7a1864520b89dbe065ac76147c5aae86ae942c32876317e1570413b2619d140",
-  "sdc_sha256": "da111599b0393f6e783402c0d4ef86b70aac2347e434f8fc8f5b742a9899f5ac"
+  "odb_sha256": "4ca68eec8dee444fce213e879bb9aeac4fa2435746191ff5390faa4905100abb",
+  "spef_sha256": "13b9c808ec7fe6154ec610eee8a8cc4632ab3b5a06e07a2445142f680da8eb45",
+  "sdc_sha256": "dedc08225711050b07931ba42225c04cbe8455d868d90f6ab52a00d7f5a0cc6c"
  },
- "post_sdc": {},
+ "post_sdc": {
+  "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f"
+ },
  "libraries": {
   "ss": [
    "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",

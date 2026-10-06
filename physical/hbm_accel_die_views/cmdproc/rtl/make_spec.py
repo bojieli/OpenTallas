@@ -8,7 +8,8 @@ from pathlib import Path
 
 W = 103
 spec = dict(master='hfd_cmdproc', note=(
-    'INTERIM: two unchanged ot_ds_hbm_cmdproc20 (ENABLE 1, NSM 16) on the die ports; not routed before, not closed. '
+    'Two ot_hfd_cmdproc20_m (ENABLE 1, NSM 16): ot_ds_hbm_cmdproc20 with its 256 x 64 command memory in an '
+    'ot_sram_2rw_512x64_m4_r2c2 macro (make_cmdproc_m.py; cycle-exact, tb_cmdproc_m_equiv.sv), on the die ports. '
     'Program store and doorbell are loaded through the loader bus f_loader (cmd_we/addr/wdata 73 b + db_v/token/pos/'
     'job/generation 74 b); launch_v[n] drives SM n start and d_valid, launch_pc the op fields (40 b) and d_base, '
     'launch_pos d_lines; SM arrive -> t_barrier, barrier release f_barrier -> release_in, SM released -> sm_done. '
@@ -47,8 +48,8 @@ for h, (qa, qb) in halves.items():
     b['res_v'] = 'cfg'
     b['res_data'] = 'cfg'
     b['cpl_rdy'] = 'const:1'
-    spec['instances'].append(dict(name=f'cp{h}', module='ot_ds_hbm_cmdproc20',
-                                  file='rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv',
+    spec['instances'].append(dict(name=f'cp{h}', module='ot_hfd_cmdproc20_m',
+                                  file='physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv',
                                   params=dict(TW=17, PW=20, CONTEXT_POSITIONS=1048576, ENABLE=1, NSM=16, NCMD=256), bind=b))
 # SM arrive (slot bit 43) -> barrier arrive senses; barrier release -> release_in (slot bit 41): wrapper wiring
 ex, eo = [], []
@@ -59,5 +60,5 @@ for qi, q in enumerate(('SW', 'SE', 'NW', 'NE')):
         eo.append((f'c{q}', s * W + 41, s * W + 42, f'i_f_barrier[{n}]'))
 spec['extra_out'] = eo
 spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
-spec['face_stages'] = 3  # owner margin-first rule 2026-10-06: pin flop + 2 stages each face (1.4 mm views)
+spec['face_stages'] = 5  # owner margin-first rule 2026-10-06: pin flop + 4 stages each face (1.4 mm views; 3 left -198 ps on qm_pd55)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')

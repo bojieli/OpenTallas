@@ -1,0 +1,97 @@
+{
+  "schema": "hbm.cp.loaded-context.decision.v1",
+  "disposition": "REPAIR_MANDATORY_BASELINE",
+  "checks": {
+    "ss": false,
+    "ff": false,
+    "DRC": true,
+    "nonzero_loaded_IR": true
+  },
+  "terminal_SS_FF": {},
+  "DRC": 0,
+  "loaded_IR": {
+    "SS": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0016443098429590464,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00164,
+          "supply_v": 0.63,
+          "worst_voltage_v": 0.628,
+          "average_voltage_v": 0.629,
+          "average_ir_drop_v": 0.000731,
+          "worst_ir_drop_v": 0.00222,
+          "worst_drop_percent": 0.35,
+          "em_max_current_a": 5.4e-05,
+          "em_average_current_a": 8.8e-07,
+          "resistors": 77423
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00164,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00203,
+          "average_voltage_v": 0.00064,
+          "average_ir_drop_v": 0.00064,
+          "worst_ir_drop_v": 0.00203,
+          "worst_drop_percent": 0.32,
+          "em_max_current_a": 4.61e-05,
+          "em_average_current_a": 8.09e-07,
+          "resistors": 78439
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-control-tail-parent-context-r1/loaded_ir/SS.log"
+    },
+    "FF": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.00277752080000937,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00278,
+          "supply_v": 0.77,
+          "worst_voltage_v": 0.767,
+          "average_voltage_v": 0.769,
+          "average_ir_drop_v": 0.00101,
+          "worst_ir_drop_v": 0.00314,
+          "worst_drop_percent": 0.41,
+          "em_max_current_a": 7.66e-05,
+          "em_average_current_a": 1.23e-06,
+          "resistors": 77423
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00278,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00285,
+          "average_voltage_v": 0.000885,
+          "average_ir_drop_v": 0.000885,
+          "worst_ir_drop_v": 0.00285,
+          "worst_drop_percent": 0.37,
+          "em_max_current_a": 6.51e-05,
+          "em_average_current_a": 1.13e-06,
+          "resistors": 78439
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-control-tail-parent-context-r1/loaded_ir/FF.log"
+    }
+  },
+  "IR_drop_budget": null,
+  "workload_peak_qualified": false,
+  "adopted": false,
+  "required_next_actions": [
+    "CP source owner: use actual terminal path classes to qualify the prepared exact control/quiet/entry/parity source cut; register its bounded unified-model entry before RTL. Keep full same-edge owner checks and accepted-debt drain.",
+    "CP source owner: classify actual data hold separately from asynchronous reset/removal; preserve 25ps uncertainty and current source phase.",
+    "Turing: bind the actual permissible child rail-drop budget and workload activity before any IR/adoption claim; current vectorless input0.1/ideal boundary supply remains conditional and excludes parent-grid drop."
+  ],
+  "clock_relaxation": false,
+  "region_waiver": false,
+  "source_job_restart": false
+}

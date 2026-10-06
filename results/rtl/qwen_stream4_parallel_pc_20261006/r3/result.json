@@ -1,0 +1,51 @@
+{
+  "verdict": "PASS_PARALLEL_PC_SEAM_ONLY",
+  "full_system": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "sources": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv": "60c209c729d899e399f01239a8b67f936ef82c9778bdb35f85e5ae4bf7908fba",
+    "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv": "648ade1ac91713f0852074d67099e3f377b52852aee5610bdf2184e0e7c37df5",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "7e8d22e94e4fc9180b1765863ca1a5b03dd752d31275fffafe3ccd428d3f4048",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "28bc994d05bd07e737dc9fb62c070f9862c64320953ff128f38a3cf3965edfac",
+    "rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv": "576a3ae63fdc5745913a09a05c4c3ea37265dcad6e2a500c65be32201fd51427",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_parallel_protected_pc.sv": "5f5b770bf67fbe75b856f3eaa763fcfe43328ee10bcba5ea0ae4105264e34369"
+  },
+  "flags": {
+    "ENABLE": 1,
+    "LANDING_RSEL": 1,
+    "LOCAL_WIRE_SPANS": 14,
+    "MEM_WORDS": 4718592,
+    "LD": 64,
+    "WB": 16,
+    "AD": 64,
+    "TAGW": 9,
+    "SYNC": 2
+  },
+  "API": "ot_qwen_s4_parallel_protected_pc; consumer_join ports unchanged plus c_quiet,h_quiet",
+  "clock": {
+    "CLK_ps": 833.333,
+    "HCLK_ps": 1024
+  },
+  "tested": "two simultaneous504bit coded halves CE, row35, warm-held, WR data/tag, late/refused wrongACK, UE quarantine; single stimulus",
+  "prior_failures": {
+    "r1": "localiverilog11 vsremotevvp12 artifact incompatible; no RTL run",
+    "r2": "bench initial quiet sampled before inherited14HCLK wire/credit initialization; no quiet relaxed, wait32HCLK then observe"
+  },
+  "physical": "Raw leaf timing not reused; additional loads/control, fullwidth geometry and clock boundary require actual qualification",
+  "root_ACK_identity": "consumer validates generation/PC/tag before asserting wd_accept; refusal retains actual AD owner/debt",
+  "source_deps": [
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+    "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv",
+    "rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv"
+  ],
+  "raw_source_unchanged": true
+}

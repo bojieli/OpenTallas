@@ -24,7 +24,8 @@
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_hcpost_lane #(
     parameter integer ML = 5,           // multiplier latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, input-side cut)
-    parameter integer AL = 4            // adder latency: 4 (ot_hdc_fp32_add_f12_l4) or 5 (_l5x, decode cut)
+    parameter integer AL = 4            // adder latency: 4 (ot_hdc_fp32_add_f12_l4), 5 (_l5x, decode cut) or 6 (_l6x,
+                                        // + compare/align cut; CLAUDE HBM-ABSTRACTS hub margin, 2026-10-06)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -60,25 +61,37 @@ module ot_dsrom_su_hcpost_lane #(
         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
     end endgenerate
     ot_hdc_fp32_mul_f12_l5 u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
-    generate if (AL == 5) begin : g_u_a1
+    // m4 (LAT 5) is aligned to m0..m3 (LAT ML) by ML - 5 extra cycles on its delay line and on its error: without them
+    // ML 6 brought y*p to the last add one cycle early (the historical m6a5 exactness FAIL).  ML 5: unchanged.
+    wire [1:0] e4a;
+    ot_hdc_delay #(.W(2), .D(ML - 5)) u_e4 (.clk(clk), .rst_n(rst_n), .d(e4), .q(e4a));
+    generate if (AL == 6) begin : g_u_a16
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
+    end else if (AL == 5) begin : g_u_a1
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
     end else begin : g_u_a14
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
     end endgenerate
     ot_hdc_delay #(.W(32), .D(AL))  u_d2 (.clk(clk), .rst_n(rst_n), .d(m2), .q(m2d));
-    generate if (AL == 5) begin : g_u_a2
+    generate if (AL == 6) begin : g_u_a26
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
+    end else if (AL == 5) begin : g_u_a2
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
     end else begin : g_u_a24
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
     end endgenerate
     ot_hdc_delay #(.W(32), .D(2*AL))  u_d3 (.clk(clk), .rst_n(rst_n), .d(m3), .q(m3d));
-    generate if (AL == 5) begin : g_u_a3
+    generate if (AL == 6) begin : g_u_a36
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
+    end else if (AL == 5) begin : g_u_a3
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
     end else begin : g_u_a34
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
     end endgenerate
-    ot_hdc_delay #(.W(32), .D(3*AL)) u_d4 (.clk(clk), .rst_n(rst_n), .d(m4), .q(m4d));
-    generate if (AL == 5) begin : g_u_a4
+    ot_hdc_delay #(.W(32), .D(3*AL + ML - 5)) u_d4 (.clk(clk), .rst_n(rst_n), .d(m4), .q(m4d));
+    generate if (AL == 6) begin : g_u_a46
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
+    end else if (AL == 5) begin : g_u_a4
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
     end else begin : g_u_a44
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
@@ -92,7 +105,7 @@ module ot_dsrom_su_hcpost_lane #(
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; fm <= 0; end
         else begin
             vo <= va4;
-            fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4) != 2'd0)};
+            fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4a) != 2'd0)};
             fault <= fault | fm[0] | (va1 && ea1 != 2'd0) | (va2 && ea2 != 2'd0) | (va3 && ea3 != 2'd0) |
                      (va4 && ea4 != 2'd0);
         end

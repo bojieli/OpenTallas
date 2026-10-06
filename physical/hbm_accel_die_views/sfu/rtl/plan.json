@@ -1,0 +1,22 @@
+{
+ "master": "hfd_sfu",
+ "lane": "ot_su12_sfu",
+ "lane_source": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+ "lane_params": {},
+ "lanes": 32,
+ "chains": 2,
+ "groups_per_chain": 8,
+ "lanes_per_column_group": 1,
+ "WI": 2048,
+ "WO": 2048,
+ "lane_broadcast_bits": 1742,
+ "lane_per_lane_bits": 192,
+ "lane_out_bits": 315,
+ "acc_bits_per_chain": 1024,
+ "flops": {
+  "boundary": 8194,
+  "broadcast": 27888,
+  "accumulate": 16384,
+  "lane_output_stage": 10080
+ }
+}
