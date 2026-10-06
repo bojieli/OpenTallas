@@ -53,6 +53,10 @@
 // replica groups of RG = 8 regions; RPT = 1 registered repeater stage on the broadcast out, the root inputs and the
 // row-write outputs (+1 cycle each, measured in the vehicle).
 //
+// v10 (2026-10-05, R = 128 quantiser classes of the v9 routes): the quantiser instance is ot_dsrom_aq12f (same
+// function and latency as ot_dsrom_aq12; four kept copies of the S11 exponent broadcast, Kogge-Stone max compares,
+// the nonfinite OR split at S1).  No cycle changes.
+//
 // The broadcast wire to the regions and the return wire from them are NOT in this module: they are the S81 floorplan's
 // registered wire stages at the measured SS reach of 504 um a stage (results/rtl/dsrom_s81_fulldie_20261004/
 // floorplan.json trunk_stages.stages_at_504, field_one_way 41), charged once per node by the field composition.
@@ -250,13 +254,15 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [19:0]  aq_e;
     // v9: the FP8 quantiser is ot_dsrom_aq12 (rtl/hdc/v41x/ot_dsrom_aq12.sv: the FP8 path of the pinned
     // ot_hdc_actquant bit for bit, re-staged for 0.833 ns at SS; LATENCY 18 instead of 13).  The spine passes fp4 = 0
-    // to the pinned module, so the function is the same.
+    // to the pinned module, so the function is the same.  v10: ot_dsrom_aq12f (rtl/hdc/v41x/ot_dsrom_aq12f.sv), the same
+    // function and LATENCY with the v9 R = 128 quantiser classes fixed (kept s11 copies, prefix compares, split
+    // nonfinite OR); lockstep-equivalent to ot_dsrom_aq12 on every output every cycle.
     localparam integer AQL = 18;
     genvar gq;
     generate for (gq = 0; gq < 2; gq = gq + 1) begin : g_aq
         wire [511:0] unused_y;
         wire signed [9:0] e1;
-        ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam),
+        ot_dsrom_aq12f u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam),
             .x(x_q[1024*gq +: 1024]), .vo(aq_vo[gq]), .q(aq_q[256*gq +: 256]), .e(e1), .y(unused_y),
             .fault(aq_f[gq]));
         assign aq_e[10*gq +: 10] = e1;

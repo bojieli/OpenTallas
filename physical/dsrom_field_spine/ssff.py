@@ -37,7 +37,7 @@ def main():
     rec = dict(schema="opentallas.dsrom.field_spine.v9_ssff.v1", source_commit=a.source_commit, note=a.note,
                screens=rows, verdicts=closed, pending=missing,
                rtl_source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (
-                   ROOT / "rtl/v41die/ot_v41_spine_pqc_w17w10.sv", ROOT / "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+                   ROOT / "rtl/v41die/ot_v41_spine_pqc_w17w10.sv", ROOT / "rtl/hdc/v41x/ot_dsrom_aq12f.sv",
                    ROOT / "physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv",
                    ROOT / "physical/dsrom_field_spine/phys.sh")})
     rec["all_pass"] = bool(rows) and not missing and all(v == "PASS" for v in closed.values())
