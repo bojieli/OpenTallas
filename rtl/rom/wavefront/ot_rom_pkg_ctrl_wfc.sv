@@ -117,6 +117,12 @@
 `ifndef OT_WFC_UPOS_LWR
 `define OT_WFC_UPOS_LWR 0
 `endif
+`ifndef OT_WFC_CFG_Q
+`define OT_WFC_CFG_Q 0
+`endif
+`ifndef OT_WFC_PRECOMP
+`define OT_WFC_PRECOMP 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -126,6 +132,13 @@ module ot_rom_pkg_ctrl_wfc #(
     parameter integer LOCAL_CONTROL = `OT_WFC_LOCAL_CONTROL, // opt-in same-edge control locality
     parameter integer REC_SRAM = `OT_WFC_REC_SRAM,   // SOURCE engine: per-user record + issued-token ring in 1R1W SRAM macros (0 cycles)
     parameter integer UPOS_LWR = `OT_WFC_UPOS_LWR,   // upos groups: registered local write strobe / data copies (0 cycles)
+    // CFG_Q: the run configuration (static while users are in flight; stable >= 1 edge before rst_n
+    // releases) is registered at the boundary, and the SOURCE engine's steps / steps - 1 are a
+    // 2-edge log-depth pipeline from it (0 cycles: every one of those registers settles during reset)
+    parameter integer CFG_Q = `OT_WFC_CFG_Q,
+    // PRECOMP: compares / increments of values that are stable for >= 1 cycle before use are taken
+    // from registers loaded one edge earlier, and the remaining counters use log-depth increments (0 cycles)
+    parameter integer PRECOMP = `OT_WFC_PRECOMP,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -232,6 +245,18 @@ module ot_rom_pkg_ctrl_wfc #(
     end
     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
 
+    // run configuration as used inside (CFG_Q: boundary registers, no reset)
+    wire [UCW-1:0] cfg_users_i;
+    wire [NW-1:0]  cfg_plen_i, cfg_glen_i;
+    generate if (CFG_Q) begin : g_cfg_q
+        reg [UCW-1:0] users_q;
+        reg [NW-1:0]  plen_q, glen_q;
+        always @(posedge clk) begin users_q <= cfg_users; plen_q <= cfg_prompt_len; glen_q <= cfg_gen_len; end
+        assign cfg_users_i = users_q; assign cfg_plen_i = plen_q; assign cfg_glen_i = glen_q;
+    end else begin : g_cfg_direct
+        assign cfg_users_i = cfg_users; assign cfg_plen_i = cfg_prompt_len; assign cfg_glen_i = cfg_gen_len;
+    end endgenerate
+
     function automatic [FLIT-1:0] header(input [7:0] dest, input [3:0] typ, input [7:0] len,
                                          input [USER_W-1:0] user, input [NW-1:0] pos,
                                          input [NW-1:0] idx, input [31:0] val,
@@ -287,6 +312,9 @@ module ot_rom_pkg_ctrl_wfc #(
     // when RXW >= 2.
     reg          uchk, uchk2, uchk3, uchk4;
     reg [NW-1:0] upos_hr, hdr_pos1, pos_c;
+    reg [NW:0]   pos_cw;                 // PRECOMP: pos_c + WIN (no wrap, as the 32-bit original)
+    wire [NW:0]  pos_cw_d;
+    wire         pos_bad;                // pos_c > upos_hr || pos_c + WIN < upos_hr
 
     // -- core -------------------------------------------------------------------------
     reg start_i;
@@ -404,6 +432,16 @@ module ot_rom_pkg_ctrl_wfc #(
     end else begin : g_position_original
         assign hdr_pos_increment = hdr_pos + 1'b1;
     end endgenerate
+    // PRECOMP: the upos write data / hdr_pos1 (used on the uchk3 edge, t+3) from a register loaded
+    // every edge from hdr_pos; hdr_pos changes only on a header edge, the next >= t+RXW+1 >= t+3
+    wire [NW-1:0] hdr_pos_inc_w;
+    generate if (PRECOMP) begin : g_pre_hdr
+        reg [NW-1:0] inc_q;
+        always @(posedge clk) inc_q <= hdr_pos_increment;
+        assign hdr_pos_inc_w = inc_q;
+    end else begin : g_hdr_direct
+        assign hdr_pos_inc_w = hdr_pos_increment;
+    end endgenerate
 
     reg          pend;                   // a received job waits for the outbound reads
     // (closed) registered mirrors of the word addresses: rxw = RXB + rx_j, sww = the SIDE staging word,
@@ -418,6 +456,27 @@ module ot_rom_pkg_ctrl_wfc #(
     wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < txh || rx_word >= TXB + XWORDS;
     wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
     wire core_free = !running || job_done;
+    // counter increments (PRECOMP: log-depth) and the position check compares
+    wire [VWA:0]   txh_p1;
+    wire [VWA-1:0] txs_p1, tx_k_p1, rxw_p1, rx_j_p1, sww_p1;
+    generate if (PRECOMP) begin : g_pre_cnt
+        wire c_w, lt_a, lt_b;
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA+1)) u_txh(.a(txh), .y(txh_p1));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA)) u_txs(.a(txs), .y(txs_p1));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA)) u_txk(.a(tx_k), .y(tx_k_p1));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA)) u_rxw(.a(rxw), .y(rxw_p1));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA)) u_rxj(.a(rx_j), .y(rx_j_p1));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(VWA)) u_sww(.a(sww), .y(sww_p1));
+        ot_rom_pkg_ctrl_wfc_ks #(.W(NW+1)) u_cw(.a({1'b0, hdr_pos}), .b((NW+1)'(WIN)), .cin(1'b0), .s(pos_cw_d), .cout(c_w));
+        ot_rom_pkg_ctrl_wfc_lt #(.W(NW)) u_gt(.a(upos_hr), .b(pos_c), .lt(lt_a));
+        ot_rom_pkg_ctrl_wfc_lt #(.W(NW+1)) u_lw(.a(pos_cw), .b({1'b0, upos_hr}), .lt(lt_b));
+        assign pos_bad = lt_a || lt_b;
+    end else begin : g_cnt_direct
+        assign txh_p1 = txh + 1'b1; assign txs_p1 = txs + 1'b1; assign tx_k_p1 = tx_k + 1'b1;
+        assign rxw_p1 = rxw + 1'b1; assign rx_j_p1 = rx_j + 1'b1; assign sww_p1 = sww + 1'b1;
+        assign pos_cw_d = {(NW+1){1'b0}};
+        assign pos_bad = pos_c > upos_hr || pos_c + WIN < upos_hr;
+    end endgenerate
     assign vm_wdata = in_data;
 
     // -- SOURCE: step scheduling and argmax reduction ------------------------------------
@@ -470,8 +529,8 @@ module ot_rom_pkg_ctrl_wfc #(
             fb_idx = rbi[res_u[UB-1:0]]; fb_val = rbv[res_u[UB-1:0]];
         end
         fb_v = SOURCE && res_v && (red_n == RESULT_PARTS);
-        fb_cont = (res_p + 1'b1) < (cfg_prompt_len + cfg_gen_len - 1'b1);
-        fb_tok = ((res_p + 1'b1) < cfg_prompt_len) ? ptok[res_u[UB-1:0]] : fb_idx;
+        fb_cont = (res_p + 1'b1) < (cfg_plen_i + cfg_glen_i - 1'b1);
+        fb_tok = ((res_p + 1'b1) < cfg_plen_i) ? ptok[res_u[UB-1:0]] : fb_idx;
     end
 
     // upos groups
@@ -485,7 +544,7 @@ module ot_rom_pkg_ctrl_wfc #(
         ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
             .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2), .rd_early(uchk),
             .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .wr_early(uchk3 && gsel_oh[ugi]),
-            .wdata_early(hdr_pos_increment), .part(ug_part[ugi]));
+            .wdata_early(hdr_pos_inc_w), .part(ug_part[ugi]));
     end endgenerate
     reg [NW-1:0] upos_sel;
     integer usg;
@@ -622,7 +681,7 @@ module ot_rom_pkg_ctrl_wfc #(
             end
             if (rx_st == R_DATA && vm_we) begin
                 if (in_last != (rx_j == RXW - 1)) proto_fault <= 1'b1;
-                rx_j <= rx_j + 1'b1; rxw <= rxw + 1'b1;
+                rx_j <= rx_j_p1; rxw <= rxw_p1;
                 if (rx_last_word) rx_st <= R_IDLE;
             end
             // ---- SIDE: header, then the payload into the user's staging slot
@@ -633,7 +692,7 @@ module ot_rom_pkg_ctrl_wfc #(
                 rx_j <= 0; rxw <= RXB; rx_st <= R_SIDE;
             end
             if (side_payload) begin
-                rx_j <= rx_j + 1'b1; rxw <= rxw + 1'b1; sww <= sww + 1'b1;
+                rx_j <= rx_j_p1; rxw <= rxw_p1; sww <= sww_p1;
                 if (in_last) rx_st <= R_IDLE;
             end
             if (rx_side_last && st_rx && side_user == hdr_user) begin
@@ -647,8 +706,8 @@ module ot_rom_pkg_ctrl_wfc #(
             if (uchk) uchk <= 1'b0;
             uchk2 <= uchk; uchk3 <= uchk2; uchk4 <= uchk3;
             gsel_oh <= {{(UNG-1){1'b0}}, 1'b1} << (hdr_user >> 5);
-            if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos_increment; pos_c <= hdr_pos; gw_oh <= gsel_oh; end
-            if (uchk4 && (pos_c > upos_hr || pos_c + WIN < upos_hr)) proto_fault <= 1'b1;
+            if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos_inc_w; pos_c <= hdr_pos; pos_cw <= pos_cw_d; gw_oh <= gsel_oh; end
+            if (uchk4 && pos_bad) proto_fault <= 1'b1;
             res_v <= 1'b0;
             if (rx_res) begin
                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
@@ -667,11 +726,11 @@ module ot_rom_pkg_ctrl_wfc #(
                 if (e_done) users_done <= users_done + 1'b1;
                 if (e_fault) proto_fault <= 1'b1;
             end
-            if (SOURCE && cfg_users > MAXU) proto_fault <= 1'b1;
+            if (SOURCE && cfg_users_i > MAXU) proto_fault <= 1'b1;
 
             // ---- outbound framing
             if (vm_re && !job_done) begin
-                tx_k <= tx_k + 1'b1; txh <= txh + 1'b1; txs <= txs + 1'b1;
+                tx_k <= tx_k_p1; txh <= txh_p1; txs <= txs_p1;
                 if (tx_st == T_DATA && tx_k == XWORDS - 1) tx_st <= T_AFTER_HID;
                 if (tx_st == T_SDATA && tx_k == SIDE_WORDS - 1) tx_st <= SEND_RESULT ? T_RHDR : T_IDLE;
             end
@@ -774,9 +833,9 @@ module ot_rom_pkg_ctrl_wfc #(
     end
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
-            .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len),
-            .cfg_gen_len(cfg_gen_len), .core_free(src_free),
+        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+            .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users_i), .cfg_prompt_len(cfg_plen_i),
+            .cfg_gen_len(cfg_glen_i), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
             .pr_q(pr_q), .pr_qk(pr_qk),
             .go(e_go), .tok(e_tok), .pos(e_pos), .user(e_user),
@@ -871,6 +930,8 @@ endmodule
 module ot_rom_pkg_ctrl_wfc_src #(
     parameter integer DECODED_READ = 0,
     parameter integer REC_SRAM = 0,
+    parameter integer STEPS_PIPE = 0,   // CFG_Q: steps / steps_m1 from a 2-edge log-depth pipeline
+    parameter integer PRECOMP = 0,      // EX-stage compares / increments from registers one edge earlier
     parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
     parameter integer MAXU = 16, parameter integer WIN = 6
 ) (
@@ -905,10 +966,23 @@ module ot_rom_pkg_ctrl_wfc_src #(
 
     // run configuration (held while users are in flight)
     reg [NW-1:0] steps, steps_m1, plen;
-    always @(posedge clk) begin
-        steps <= cfg_prompt_len + cfg_gen_len - 1'b1; steps_m1 <= cfg_prompt_len + cfg_gen_len - 2'd2;
-        plen <= cfg_prompt_len;
-    end
+    generate if (STEPS_PIPE) begin : g_steps_pipe
+        // the configuration is static and stable >= 1 edge before rst_n releases: these settle in reset
+        reg  [NW-1:0] sum_q;
+        wire [NW-1:0] sum_d, s1_d, s2_d;
+        wire          c0, c1, c2;
+        ot_rom_pkg_ctrl_wfc_ks #(.W(NW)) u_sum(.a(cfg_prompt_len), .b(cfg_gen_len), .cin(1'b0), .s(sum_d), .cout(c0));
+        ot_rom_pkg_ctrl_wfc_ks #(.W(NW)) u_m1(.a(sum_q), .b({NW{1'b1}}), .cin(1'b0), .s(s1_d), .cout(c1));
+        ot_rom_pkg_ctrl_wfc_ks #(.W(NW)) u_m2(.a(sum_q), .b({{(NW-1){1'b1}}, 1'b0}), .cin(1'b0), .s(s2_d), .cout(c2));
+        always @(posedge clk) begin
+            sum_q <= sum_d; steps <= s1_d; steps_m1 <= s2_d; plen <= cfg_prompt_len;
+        end
+    end else begin : g_steps_direct
+        always @(posedge clk) begin
+            steps <= cfg_prompt_len + cfg_gen_len - 1'b1; steps_m1 <= cfg_prompt_len + cfg_gen_len - 2'd2;
+            plen <= cfg_prompt_len;
+        end
+    end endgenerate
 
     // ---- RESULT queue
     reg [USER_W-1:0] rq_u [0:3];
@@ -1042,9 +1116,55 @@ module ot_rom_pkg_ctrl_wfc_src #(
     endfunction
 
     reg [2:0] settle;
+    // PRECOMP.  o_p / o_i load on the IDLE -> RD0 edge and hold to EX (>= 3 edges later): o_p + 1
+    // is registered at RD0's edge, its compares / o_p + 1 - 8 at RD1's.  The record terms are
+    // registered on the RD2 edge with rec (same rec_d / ring_d), so at EX they equal the EX forms.
+    wire [NW-1:0] p_op1, p_wnp1, p_er, p_wnp1_d, p_op1_d, p_ophi_m1_d;
+    wire          p_cont, p_gepl, p_wnp_last, p_wnp_eq_op, p_ring_ne_oi, p_wkt_ne_oi, p_er_ne_op;
+    generate if (PRECOMP) begin : g_pre
+        reg [NW-1:0] op1_q, wnp1_q; reg [NW-4:0] ophi_m1_q;
+        reg cont_q, gepl_q, wnp_last_q, wnp_eq_op_q, ring_ne_oi_q, wkt_ne_oi_q, er_ne_op_q;
+        wire lt_cont, lt_pl, c_hi;
+        wire [NW-1:0] rd_wnp = rec_d[O_WNP +: NW], rd_wkt = rec_d[O_WKT +: NW], rd_er = rec_d[O_ER +: NW];
+        ot_rom_pkg_ctrl_wfc_inc #(.W(NW)) u_op1(.a(o_p), .y(p_op1_d));
+        ot_rom_pkg_ctrl_wfc_inc #(.W(NW)) u_wnp1(.a(rd_wnp), .y(p_wnp1_d));
+        ot_rom_pkg_ctrl_wfc_lt #(.W(NW)) u_cont(.a(op1_q), .b(steps), .lt(lt_cont));
+        ot_rom_pkg_ctrl_wfc_lt #(.W(NW)) u_pl(.a(op1_q), .b(plen), .lt(lt_pl));
+        ot_rom_pkg_ctrl_wfc_ks #(.W(NW-3)) u_hi(.a(op1_q[NW-1:3]), .b({(NW-3){1'b1}}), .cin(1'b0), .s(p_ophi_m1_d), .cout(c_hi));
+        always @(posedge clk) begin
+            op1_q <= p_op1_d; cont_q <= lt_cont; gepl_q <= !lt_pl; ophi_m1_q <= p_ophi_m1_d;
+            wnp1_q <= p_wnp1_d; wnp_last_q <= rd_wnp == steps_m1; wnp_eq_op_q <= rd_wnp == o_p;
+            ring_ne_oi_q <= ring_d != o_i; wkt_ne_oi_q <= rd_wkt != o_i; er_ne_op_q <= rd_er != o_p;
+        end
+        // o_p + 1 - k (k = k0 when wsq == 1): the low 3 bits with a borrow into the precomputed high part
+        wire [2:0] k = (r_wsq == 3'd1) ? r_k0 : 3'd0;
+        wire [3:0] lo = {1'b0, op1_q[2:0]} - {1'b0, k};
+        assign p_er = {lo[3] ? ophi_m1_q : op1_q[NW-1:3], lo[2:0]};
+        assign p_op1 = op1_q; assign p_wnp1 = wnp1_q; assign p_cont = cont_q; assign p_gepl = gepl_q;
+        assign p_wnp_last = wnp_last_q; assign p_wnp_eq_op = wnp_eq_op_q; assign p_ring_ne_oi = ring_ne_oi_q;
+        assign p_wkt_ne_oi = wkt_ne_oi_q; assign p_er_ne_op = er_ne_op_q;
+    end else begin : g_nopre
+        assign p_op1 = o_p + 1'b1; assign p_wnp1 = r_wnp + 1'b1;
+        assign p_er = o_p + 1'b1 - ((r_wsq == 3'd1) ? NW'(r_k0) : {NW{1'b0}});
+        assign p_cont = (o_p + 1'b1) < steps; assign p_gepl = (o_p + 1'b1) >= plen;
+        assign p_wnp_last = r_wnp == steps_m1; assign p_wnp_eq_op = r_wnp == o_p;
+        assign p_ring_ne_oi = ring != o_i; assign p_wkt_ne_oi = r_wkt != o_i; assign p_er_ne_op = o_p != r_er;
+        assign p_wnp1_d = 0; assign p_op1_d = 0; assign p_ophi_m1_d = 0;
+    end endgenerate
     // ---- decisions
     wire nu_start = nu_ok && next_u < MAXU && core_free;           // a new user's first position
-    wire fetch = !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU;
+    // PRECOMP: next_u < cfg_users from registers: next_u changes only by + 1 on an idle_new edge
+    wire nu_lt;
+    generate if (PRECOMP) begin : g_pre_fetch
+        reg lt0_q, lt1_q, inc_q;
+        wire [UCW-1:0] nu1 = next_u + 1'b1;
+        always @(posedge clk) begin lt0_q <= next_u < cfg_users; lt1_q <= nu1 < cfg_users; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) inc_q <= 1'b0; else inc_q <= idle_new;
+        assign nu_lt = inc_q ? lt1_q : lt0_q;
+    end else begin : g_fetch_direct
+        assign nu_lt = next_u < cfg_users;
+    end endgenerate
+    wire fetch = !nu_ok && !nu_pend && nu_lt && next_u < MAXU;
     assign idle_new = st == S_IDLE && rq_n == 0 && pq_n == 0 && nu_start;
     wire ex = st == S_EX;
     wire ex_iss = ex && kind == K_ISS && core_free && r_stv && r_wkv && r_wnf < WIN && r_lt;
@@ -1060,15 +1180,15 @@ module ot_rom_pkg_ctrl_wfc_src #(
     assign pr_blk = ex_rd ? r_wblk : 4'd0;
     // RESULT (EX): the reference's verify / reject / squash on the user's record
     wire          x_res = ex && kind == K_RES;
-    wire          x_cont = (o_p + 1'b1) < steps;
-    wire          x_gepl = (o_p + 1'b1) >= plen;
+    wire          x_cont = p_cont;
+    wire          x_gepl = p_gepl;
     wire          x_sq = r_wsq != 0;
-    wire          x_rew = !x_sq && x_cont && r_wnf >= 3'd2 && x_gepl && ring != o_i;
+    wire          x_rew = !x_sq && x_cont && r_wnf >= 3'd2 && x_gepl && p_ring_ne_oi;
     wire          x_blk = !x_sq && x_cont && r_wnf < 3'd2 && x_gepl;
-    wire          x_rejb = x_blk && r_wkv && r_wkt != o_i;
+    wire          x_rejb = x_blk && r_wkv && p_wkt_ne_oi;
     assign tok_v = x_res && !x_sq; assign tok_u = ou; assign tok_p = o_p; assign tok_i = o_i;
     assign done = x_res && !x_sq && !x_cont;
-    assign fault = x_res && o_p != r_er;
+    assign fault = x_res && p_er_ne_op;
     assign wfi = ex_iss; assign rej = x_res && (x_rew || x_rejb); assign sq = x_res && x_sq;
 
     always @(*) begin
@@ -1078,24 +1198,24 @@ module ot_rom_pkg_ctrl_wfc_src #(
             w_rec = pack(1'b1, steps > 1, 1'b0, 1'b0, 1'b0, 3'd1, 3'd0, 3'd0, 4'd0, 1, {NW{1'b0}}, {NW{1'b0}});
         end else if (ex_iss) begin
             w_en = 1'b1; w_ren = 1'b1;
-            w_rec = pack(1'b1, r_wnp != steps_m1, 1'b0, r_wkp, 1'b0, r_wnf + 3'd1, r_wsq, r_k0, r_wblk,
-                         r_wnp + 1'b1, r_wkt, r_er);
+            w_rec = pack(1'b1, !p_wnp_last, 1'b0, r_wkp, 1'b0, r_wnf + 3'd1, r_wsq, r_k0, r_wblk,
+                         p_wnp1, r_wkt, r_er);
         end else if (ex_rd) begin
             w_en = 1'b1; w_rec[3] = 1'b1;
         end else if (ex && kind == K_PRET) begin
             w_en = 1'b1; w_rec[3] = 1'b0;
-            if (r_wnp == o_p && r_wblk == o_b && !r_wkv) begin
+            if (p_wnp_eq_op && r_wblk == o_b && !r_wkv) begin
                 if (o_k) begin w_rec[2] = 1'b1; w_rec[O_WKT +: NW] = o_q; end
                 else w_rec[4] = 1'b1;
             end
         end else if (x_res) begin
             w_en = 1'b1;
             w_rec[7:5] = r_wnf - 3'd1;
-            w_rec[O_ER +: NW] = o_p + 1'b1 - ((r_wsq == 3'd1) ? NW'(r_k0) : {NW{1'b0}});
+            w_rec[O_ER +: NW] = p_er;
             if (x_sq) w_rec[10:8] = r_wsq - 3'd1;
             else if (x_rew) begin
                 w_rec[10:8] = r_wnf - 3'd1; w_rec[13:11] = r_wnf - 3'd1;
-                w_rec[O_WNP +: NW] = o_p + 1'b1; w_rec[17:14] = r_wblk + 1'b1; w_rec[1] = 1'b1;
+                w_rec[O_WNP +: NW] = p_op1; w_rec[17:14] = r_wblk + 1'b1; w_rec[1] = 1'b1;
                 w_rec[2] = 1'b1; w_rec[O_WKT +: NW] = o_i; w_rec[4] = 1'b0;
             end else if (x_blk) begin
                 if (x_rejb) w_rec[17:14] = r_wblk + 1'b1;
@@ -1269,4 +1389,67 @@ module ot_dsrom_wfc_position_inc #(parameter integer W=21)(
    end
    assign inc[b]=v[b]^tree[L][0];
  end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------
+// Log-depth arithmetic for the PRECOMP / CFG_Q forms (copies of rtl/hdc/ot_hdc_prefix.sv's
+// Kogge-Stone add and increment, each prefix level a (* keep *) net so synthesis keeps log2(W)
+// levels instead of re-rippling them).  ks: s = a + b + cin; inc: y = a + 1; lt: a < b (unsigned).
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_ks #(parameter integer W = 16) (
+    input  wire [W-1:0] a, b,
+    input  wire         cin,
+    output wire [W-1:0] s,
+    output wire         cout
+);
+    localparam integer L = $clog2(W + 1);
+    (* keep *) wire [W:0] g [0:L];
+    (* keep *) wire [W:0] p [0:L];
+    assign g[0] = {a & b, cin};
+    assign p[0] = {a ^ b, 1'b0};
+    genvar l, i;
+    generate for (l = 0; l < L; l = l + 1) begin : g_lv
+        for (i = 0; i <= W; i = i + 1) begin : g_b
+            if (i >= (1 << l)) begin : g_c
+                assign g[l + 1][i] = g[l][i] | (p[l][i] & g[l][i - (1 << l)]);
+                assign p[l + 1][i] = p[l][i] & p[l][i - (1 << l)];
+            end else begin : g_p
+                assign g[l + 1][i] = g[l][i];
+                assign p[l + 1][i] = p[l][i];
+            end
+        end
+    end endgenerate
+    assign s = (a ^ b) ^ g[L][W-1:0];
+    assign cout = g[L][W];
+endmodule
+
+module ot_rom_pkg_ctrl_wfc_inc #(parameter integer W = 16) (
+    input  wire [W-1:0] a,
+    output wire [W-1:0] y
+);
+    localparam integer L = $clog2(W + 1);
+    (* keep *) wire [W:0] t [0:L];
+    assign t[0] = {a, 1'b1};
+    genvar l, i;
+    generate for (l = 0; l < L; l = l + 1) begin : g_lv
+        for (i = 0; i <= W; i = i + 1) begin : g_b
+            if (i >= (1 << l)) begin : g_c
+                assign t[l + 1][i] = t[l][i] & t[l][i - (1 << l)];
+            end else begin : g_p
+                assign t[l + 1][i] = t[l][i];
+            end
+        end
+    end endgenerate
+    assign y = a ^ t[L][W-1:0];
+endmodule
+
+// a < b  <=>  a + ~b + 1 carries nothing out of the top bit
+module ot_rom_pkg_ctrl_wfc_lt #(parameter integer W = 16) (
+    input  wire [W-1:0] a, b,
+    output wire         lt
+);
+    wire [W-1:0] s_unused;
+    wire         c;
+    ot_rom_pkg_ctrl_wfc_ks #(.W(W)) u_ks(.a(a), .b(~b), .cin(1'b1), .s(s_unused), .cout(c));
+    assign lt = !c;
 endmodule

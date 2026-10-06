@@ -33,17 +33,37 @@ CTRL = "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 MACRO = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
 MNAME = "ot_sram_1r1w_512x128_m4_r2c2"
 PERIOD_PS = 833
-KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1),
-                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1)}
+KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1),
+                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1)}
+# Estimated die-tree insertion delay [min, max] ps at the element's clock pins (r1 routes: src 505..588,
+# stg 312..401).  The routed SDC times IO against io_clk carrying it as SOURCE latency (kept after CTS
+# propagates the clocks), i.e. the neighbours' registers hang off the same tree -- the same model as
+# the signoff "incontext" mode, which re-times the IO against the block's own measured min/max.
+# Without it every input is hold-padded by ~insertion - 20 % (r1: 300-500 ps of BUFx2 chains on
+# cfg/in_data/in_valid/vm_rq), which then fails setup in context.
+IO_LAT = {"src": (480, 600), "stg": (290, 410)}
 
 SDC = """# CLAUDE WFC element: 1.2 GHz, SS 60 ps setup / FF 25 ps hold uncertainty, IO at 20 % of the period
 create_clock -name core_clk -period {p} [get_ports clk]
 set_clock_uncertainty -setup 60 [get_clocks core_clk]
 set_clock_uncertainty -hold 25 [get_clocks core_clk]
 set ins [lsearch -all -inline -not [all_inputs] [get_ports clk]]
-set_input_delay {io} -clock core_clk $ins
+""" + """{io_clk}"""
+SDC_IDEAL_IO = """set_input_delay {io} -clock core_clk $ins
 set_output_delay {io} -clock core_clk [all_outputs]
-set_load 2.0 [all_outputs]
+"""
+SDC_IO_CLK = """# neighbours on the same die tree: IO against io_clk with the estimated insertion as source latency;
+# core_clk carries the mid estimate as ideal network latency until CTS replaces it with the real tree
+set_clock_latency {lmid} [get_clocks core_clk]
+create_clock -name io_clk -period {p}
+set_clock_latency -source -min {lmin} [get_clocks io_clk]
+set_clock_latency -source -max {lmax} [get_clocks io_clk]
+set_clock_uncertainty -setup 60 [get_clocks io_clk]
+set_clock_uncertainty -hold 25 [get_clocks io_clk]
+set_input_delay {io} -clock io_clk $ins
+set_output_delay {io} -clock io_clk [all_outputs]
+"""
+SDC_TAIL = """set_load 2.0 [all_outputs]
 set_max_fanout 32 [current_design]
 set_max_transition 320 [current_design]
 """
@@ -85,7 +105,13 @@ def cmd_prep(a):
         k, v = kv.split("=", 1)
         lines.append(f"export {k} = {v}")
     (case / "config.mk").write_text("\n".join(lines) + "\n")
-    (case / "constraint.sdc").write_text(SDC.format(p=PERIOD_PS, io=round(0.2 * PERIOD_PS, 1)))
+    io = round(0.2 * PERIOD_PS, 1)
+    if a.ideal_io:
+        ioc = SDC_IDEAL_IO.format(io=io)
+    else:
+        lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
+        ioc = SDC_IO_CLK.format(p=PERIOD_PS, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
+    (case / "constraint.sdc").write_text(SDC.format(p=PERIOD_PS, io_clk=ioc) + SDC_TAIL)
     src = a.src.resolve()
     run = f"""#!/bin/bash
 # CLAUDE WFC {a.inst} {case.name}: ORFS route, then signoff STA.  /src = pinned source {src}
@@ -112,7 +138,12 @@ echo "end $(date -Is)" >> $W/status
 
 def cmd_sta(a):
     case = a.case.resolve()
-    tcl = WF.STA_TCL
+    tcl = WF.STA_TCL.replace("set ck [get_clocks]", "set ck [get_clocks core_clk]")
+    # incontext / reg2reg re-time the IO against the measured insertion: drop the routed SDC's io_clk IO first
+    tcl = tcl.replace("unset_input_delay $ins\n",
+                      "catch {unset_input_delay -clock [get_clocks io_clk] $ins}\n"
+                      "catch {unset_output_delay -clock [get_clocks io_clk] [all_outputs]}\nunset_input_delay $ins\n")
+    assert "io_clk" in tcl
     if a.macros:
         tcl = tcl.replace("read_db $::env(WF_ODB)",
                           f"read_liberty /src/{MACRO}/{MNAME}_[string tolower $::env(WF_LIB)].lib\n"
@@ -171,6 +202,8 @@ def main():
     p.add_argument("--orfs-var", action="append", default=[])
     p.add_argument("--cores", type=int, default=12)
     p.add_argument("--need", type=int, default=24)
+    p.add_argument("--io-lat", default=None, help="MIN,MAX ps io_clk source latency (default per inst)")
+    p.add_argument("--ideal-io", action="store_true", help="r1 SDC: IO against the ideal core_clk")
     s = sub.add_parser("sta")
     s.add_argument("--case", type=Path, required=True)
     s.add_argument("--macros", action="store_true")
