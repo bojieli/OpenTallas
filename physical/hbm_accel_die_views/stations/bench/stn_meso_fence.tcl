@@ -21,8 +21,10 @@ set ot_dbu [$ot_blk getDbUnitsPerMicron]
 set ot_core [$ot_blk getCoreArea]
 set cx0 [$ot_core xMin]; set cy0 [$ot_core yMin]; set cx1 [$ot_core xMax]; set cy1 [$ot_core yMax]
 array set ot_pin {}
-if {[info exists ::env(IO_CONSTRAINTS)] && [file exists $::env(IO_CONSTRAINTS)]} {
-  set fh [open $::env(IO_CONSTRAINTS)]; set txt [read $fh]; close $fh
+# (ORFS erases IO_CONSTRAINTS in the floorplan stage, so stn_route.sh passes the same file as OT_IO_FILE)
+set ot_iof [expr {[info exists ::env(OT_IO_FILE)] ? $::env(OT_IO_FILE) : ([info exists ::env(IO_CONSTRAINTS)] ? $::env(IO_CONSTRAINTS) : "")}]
+if {$ot_iof ne "" && [file exists $ot_iof]} {
+  set fh [open $ot_iof]; set txt [read $fh]; close $fh
   foreach {m nm x y} [regexp -all -inline {place_pin -pin_name \{([^\}]+)\} -layer \S+ -location \{(\S+) (\S+)\}} $txt] {
     set ot_pin($nm) [list [expr {round($x*$ot_dbu)}] [expr {round($y*$ot_dbu)}]]
   }
@@ -107,6 +109,7 @@ proc ot_cent {l} {
   foreach p $l { set sx [expr {$sx+[lindex $p 0]}]; set sy [expr {$sy+[lindex $p 1]}] }
   return [list [expr {$sx/[llength $l]}] [expr {$sy/[llength $l]}]]
 }
+if {![array size ot_pin]} { error "OT_STN fence: no terminal positions (OT_IO_FILE '$ot_iof')" }
 foreach g [lsort [array names ot_mem]] {
   set ins [expr {[info exists ot_ins($g)] ? $ot_ins($g) : {}}]
   set outs [expr {[info exists ot_outs($g)] ? $ot_outs($g) : {}}]
