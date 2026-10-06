@@ -56,6 +56,12 @@ WINDOW = ROOT / "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load
 WAVE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"
 DRAFT_REC = ROOT / "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json"
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-recovery levers (baseline "recovery")
+# Default QELEM (owner go 2026-10-06): the S81 die's FP8/FP4 pairs are the closed DS q-element QX 10 (Z20c, FH 177.12,
+# SS +3.54 / FF +0.61 ps, results/rtl/dsrom_qz_20261004/Z20/Z20c/verdict.json), so the headline ROM field is the
+# as-built field measured with that element (tools/dsrom_1m_field.py --qelem 10) at its element frame f183.60 (r8 re-price,
+# 11 slots, +16 layer dies / +4 stage hops).  Applies when the composition reads the default REC directory.
+QELEM_DEFAULT = True
+QELEM_FIELD = ROOT / "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json"
 WAVE_PHYSICAL = ROOT / "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
 FULL_FEC_LINKS = REC / "links_full_fec.json"                  # OWNER 2026-10-06 full-FEC baseline (RTL)
 FULL_FEC_RACK = ROOT / "results/arch/dsrom_s81_rack_20261006/rack.json"   # hop classes (cable flight beyond 0.3 m)
@@ -584,6 +590,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         a.out = (a.rec if a.baseline == "asbuilt" else a.recovery) / "composition.json"
     ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select", "engram", "embed",
                                              "su_cdc", "su_qdq_wired", "draft_blocks")}
+    if QELEM_DEFAULT and Path(a.rec).resolve() == REC.resolve():
+        ins["field"] = QELEM_FIELD
     recs = {k: json.loads(p.read_text()) for k, p in ins.items() if p.exists()}
     g0, g, base_patches = base_graph()
     P = Patcher(g)

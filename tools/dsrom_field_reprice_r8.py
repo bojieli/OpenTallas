@@ -523,6 +523,7 @@ def cmd_compose(a):
     joint_levers = tm["conditional_all"]["levers"]
     rp = json.loads((OUT / "reprice.json").read_text())
     rows = {}
+    geom0 = AD.FIELD_GEOM
     try:
         for gk in ["old80"] + list(GEOMS):
             AD.FIELD_GEOM = None if gk == "old80" else gk
@@ -542,7 +543,7 @@ def cmd_compose(a):
             print(gk, "AR", base["AR_tok_s"], "MTP", base["MTP_tok_s"], "| cond AR", joint["AR_tok_s"], "MTP",
                   joint["MTP_tok_s"], flush=True)
     finally:
-        AD.FIELD_GEOM = "f157.68"
+        AD.FIELD_GEOM = geom0
     ref = rows["old80"]
     for gk, r in rows.items():
         for k in ("headline", "conditional_all"):
