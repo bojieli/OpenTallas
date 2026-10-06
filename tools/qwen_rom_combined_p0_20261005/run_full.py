@@ -12,7 +12,38 @@ import os
 import re
 from pathlib import Path
 import subprocess
+import threading
 import time
+
+
+def observe(output, phase, stop):
+    peak = 0
+    with (output/(phase+'_resources.jsonl')).open('x') as log:
+        while not stop.is_set():
+            processes = {}
+            for p in Path('/proc').glob('[0-9]*'):
+                try:
+                    fields = (p/'stat').read_text().rsplit(')', 1)[1].split()
+                    processes[int(p.name)] = (int(fields[1]), int(fields[21])*os.sysconf('SC_PAGE_SIZE'))
+                except (OSError, ValueError, IndexError):
+                    continue
+            owned = {os.getpid()}
+            while True:
+                more = {pid for pid, (parent, rss) in processes.items() if parent in owned}-owned
+                if not more:
+                    break
+                owned |= more
+            rss = sum(processes.get(pid, (0, 0))[1] for pid in owned)
+            peak = max(peak, rss)
+            disk = os.statvfs(output)
+            log.write(json.dumps(dict(time=time.time(), aggregate_RSS_bytes=rss,
+                peak_aggregate_RSS_bytes=peak, descendants=len(owned),
+                available_disk_bytes=disk.f_bavail*disk.f_frsize, load=os.getloadavg()[0]))+'\n')
+            log.flush()
+            stop.wait(5)
+    (output/(phase+'_observed_peak.json')).write_text(json.dumps(dict(
+        sampled_aggregate_RSS_bytes=peak, interval_seconds=5,
+        scope='Observed runner and actual descendant RSS; estimate is not an address-space cap'))+'\n')
 
 
 def fresh(output, stage, cpus):
@@ -104,4 +135,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    out = Path(sys.argv[sys.argv.index('--output')+1])
+    phase = sys.argv[sys.argv.index('--stage')+1]
+    stop = threading.Event()
+    observer = threading.Thread(target=observe, args=(out, phase, stop))
+    observer.start()
+    try:
+        main()
+    finally:
+        stop.set(); observer.join()
