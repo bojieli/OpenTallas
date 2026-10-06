@@ -1,0 +1,34 @@
+{
+  "reason": "Current owner requires one actual R9 path/area verdict before selecting a corrective variant; obsolete blind CTS auto-launches retired",
+  "owner": "Codex:DSROM-reindex-parent",
+  "time": 1791268214.3995848,
+  "primary_preserved": [
+    3559535,
+    3586440
+  ],
+  "probe_preserved": 57002,
+  "controllers": [
+    {
+      "pid": 2491017,
+      "variant": "compact",
+      "argv": "/srv/opentallas/tools/python310/bin/python3 /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/variant_src/tools/dsrom_reindex_parent_fanout.py --scratch /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005 --variant compact ",
+      "children": "",
+      "admitted": false
+    },
+    {
+      "pid": 2491018,
+      "variant": "medium",
+      "argv": "/srv/opentallas/tools/python310/bin/python3 /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/variant_src/tools/dsrom_reindex_parent_fanout.py --scratch /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005 --variant medium ",
+      "children": "",
+      "admitted": false
+    },
+    {
+      "pid": 2491019,
+      "variant": "wide",
+      "argv": "/srv/opentallas/tools/python310/bin/python3 /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/variant_src/tools/dsrom_reindex_parent_fanout.py --scratch /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005 --variant wide ",
+      "children": "",
+      "admitted": false
+    }
+  ],
+  "source_and_scratch_preserved": true
+}

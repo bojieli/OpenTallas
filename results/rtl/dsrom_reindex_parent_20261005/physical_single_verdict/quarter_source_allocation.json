@@ -1,0 +1,201 @@
+{
+  "checked_at": "2026-10-06T06:35:01.008177+00:00",
+  "current_main_in_own_tree": "8de912429ee37658235dc49379be2a0cb9b03f0e",
+  "source_sha256": {
+    "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv": "18e61f566cf15c32314e7011c57557fc9d0b5f1b73c6a4738e53e32f44fa3c99",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv": "40d83065ae01b0019ae2abc98ff3b5935a8aa14d5be8add774d6245bffe64b88",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv": "1ca1dff79e7ee4375e8a422d8c5b916b86644a3a3231810653636556db29b279",
+    "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json": "df26a498738d5bc4d008642adc08aef7543ad1e1ae40f2c3c6a9c4f4202b4766",
+    "results/rtl/dsrom_reindex_parent_20261005/native_quarter_r2_PASS/record.json": "32aed7e3deeb1ca19cb31f71f3158e51065ec754d17e67ee5fd39f95edffee1f"
+  },
+  "quarter_shape": {
+    "NS": 4,
+    "NK": 4,
+    "NB": 4,
+    "IH": 32,
+    "IW": 20,
+    "MD": 64,
+    "FPL": 7,
+    "FML": 5,
+    "QL": 5
+  },
+  "replication": [
+    {
+      "quarter": 0,
+      "native_slices": [
+        0,
+        3
+      ],
+      "global_lane_slots": [
+        0,
+        15
+      ],
+      "key_bits": 8704,
+      "global_ID_bits": 320,
+      "score_bits": 256
+    },
+    {
+      "quarter": 1,
+      "native_slices": [
+        4,
+        7
+      ],
+      "global_lane_slots": [
+        16,
+        31
+      ],
+      "key_bits": 8704,
+      "global_ID_bits": 320,
+      "score_bits": 256
+    },
+    {
+      "quarter": 2,
+      "native_slices": [
+        8,
+        11
+      ],
+      "global_lane_slots": [
+        32,
+        47
+      ],
+      "key_bits": 8704,
+      "global_ID_bits": 320,
+      "score_bits": 256
+    },
+    {
+      "quarter": 3,
+      "native_slices": [
+        12,
+        15
+      ],
+      "global_lane_slots": [
+        48,
+        63
+      ],
+      "key_bits": 8704,
+      "global_ID_bits": 320,
+      "score_bits": 256
+    }
+  ],
+  "DSROM_source_relations": {
+    "parent": "ot_dsrom_reindex_chain.g_stack[q].u_kg",
+    "native": "ot_dsrom_reindex_native_quarter.enabled.u_score.g_slice[s].u.engine.g_ch[c].u_c",
+    "capture_clock": "literal root clk; never QX GCLK",
+    "key_accept": "ks_valid[q] && ks_ready[q]",
+    "score_accept": "sc_valid[q] && sc_ready[q] && run",
+    "quarter_debt": "ks_out[q] == sc_in[q] && !empty_due[q] && !g_busy[q]",
+    "IDs": "j_qb[q] + (g_blk << 3) + lane%8; retain all20bits",
+    "keep": "native i_keep=ks_lv; causal full-ID mask AFTER score in existing mdrop",
+    "empty_quarter": "actual empty_due produces empty last beat, not a fake clear/credit"
+  },
+  "HBM_source_relations": {
+    "parent": "ot_hbm_accel_index_path.u_index_scores NS16 NK4",
+    "input_accept": "one global take=i_valid && AND(all16 slice ready)",
+    "query_accept": "AND(all16 ql_ready)",
+    "output_accept": "AND(all16 valid) && sr; sr=active&&!fault&&AND(select_ready)&&AND(cand_ready)&&candidate_r",
+    "quarter_cut_requirement": "If the physical owner splits this source, all4 quarter input/query/output accepts must preserve original atomic transfer. Direct independent quarter-valid wiring changes source behavior.",
+    "keep": "k_keep is actual HBM native input; do not substitute DSROM ks_lv keep behavior"
+  },
+  "current_diagnostic_HBM_geometry": {
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-die-fix/cases/r16b/a_real",
+    "source": "442556f88703b441c48d323607d4a2acad0e320b",
+    "def_sha256": "9d4f0275310595a85927451b7ed2646a71937a715a514e56cfee1b0c02b4091e",
+    "index_master": "hfd_index_q",
+    "size_um": [
+      930.072,
+      5529.576
+    ],
+    "pins": 4714,
+    "instances": {
+      "SW": {
+        "origin_um": [
+          6480.432,
+          6607.44
+        ],
+        "DEF_orientation": "N"
+      },
+      "SE": {
+        "origin_um": [
+          16127.424,
+          6607.44
+        ],
+        "DEF_orientation": "FN"
+      },
+      "NW": {
+        "origin_um": [
+          6480.432,
+          12484.8
+        ],
+        "DEF_orientation": "FS"
+      },
+      "NE": {
+        "origin_um": [
+          16127.424,
+          12484.8
+        ],
+        "DEF_orientation": "S"
+      }
+    },
+    "VM_master": "hfd_vm",
+    "VM_size_um": [
+      1814.376,
+      1403.976
+    ],
+    "VM_origin_um": [
+      10861.776,
+      13562.64
+    ],
+    "is_placeholder": true,
+    "is_real_index_macro": false,
+    "credit": "diagnostic geometry only"
+  },
+  "existing_model_deficit": {
+    "r7_total_index_reservation_mm2": 20.57,
+    "r7_source_grade": "model",
+    "r7_reservation_per_quarter_mm2": 5.1425,
+    "current_scorer_and_join_CELL_estimate_mm2": 23.67273884544,
+    "current_cell_per_quarter_mm2": 5.91818471136,
+    "cell_deficit_against_entire_reservation_mm2": 3.102738845440001,
+    "cell_area_excludes": [
+      "selector/quantiser complete mapped bodies",
+      "protected selector macros/codec/receiver",
+      "loaded clock and boundary nets",
+      "any final ordered gather adapter"
+    ],
+    "minimum_footprint_at_explicit_50pct_utilization_mm2": 47.34547769088,
+    "minimum_per_quarter_at_50pct_mm2": 11.83636942272,
+    "footprint_deficit_at_50pct_mm2": 26.775477690880003,
+    "model_cell_estimate_is_not_mapped_area": true,
+    "slot_fit": false
+  },
+  "HBM_clock_binding": "Actual r16b emitted die.v: hb_coll/pll_stream -> n_clk_stream -> hb_index_{SW,SE,NW,NE}/ck and hb_vm/ck; hb_coll/por_stream -> n_rst_stream -> same rst pins. SDC stream833ps; hb_coll/pll_serial -> n_clk_serial1111ps; hb_coll/pll_hbm -> n_clk_hbm1024ps. Actual propagated parent CTS/skew/wire/load not qualified. Related3:4 must not inherit generator asynchronous waiver.",
+  "DSROM_enclosing_scorer_allocation": "No source-bound quarter outline/channel/root CTS binding supplied in current native_quarter_join_prebuild; HBM placeholder is a separate design and cannot fill this gap.",
+  "selected_physical_action": "Keep one live R9 control/list route and its real-macro SS/FF probe. Request enclosing physical-owner allocation for four literal source quarters; no new scorer P&R against the current NOFIT placeholder.",
+  "R9": {
+    "source": "13c87eea0; RTL2a51dec7f",
+    "driver": 3559535,
+    "yosys": 3586440,
+    "probe": 57002,
+    "phase": "SHARE SAT resource sharing; no mapped checkpoint or terminal at observation",
+    "scope": "control/list/request/drain-header, sixteen actual512x128 SRAMs; no scorer in its fence",
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "ready_SS_reserve_ps": 166.666,
+    "stdcell_cap_um2": 37452.2,
+    "required_terminal": [
+      "SS setup",
+      "FF hold",
+      "ready reserve",
+      "functional+CTS area",
+      "all16 macro SS/FF clkQ/read/write/check access",
+      "slew/fanout/load",
+      "source retention and corrector/control timing"
+    ]
+  },
+  "numerical_gate": "Accepted916/c2e:61 golden checks, latency100..102; no replay; gather739 vs738+1 retained once",
+  "new_jobs": 0,
+  "parent_qualified": false,
+  "adopted": false
+}
