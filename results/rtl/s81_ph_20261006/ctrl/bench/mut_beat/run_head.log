@@ -1,15 +1,15 @@
-ERR (b) pc 12: rd tag 06000 beat 2 != PHY tag 06000 beat 1
-ERR (b) pc 14: rd tag 07000 beat 2 != PHY tag 07000 beat 1
-ERR (b) pc 19: rd tag 09800 beat 2 != PHY tag 09800 beat 1
-ERR (b) pc 12: rd tag 06000 beat 4 != PHY tag 06000 beat 2
+ERR (b) pc 6: rd tag 03000 beat 2 != PHY tag 03000 beat 1
+ERR (b) pc 24: rd tag 0c001 beat 2 != PHY tag 0c001 beat 1
+ERR (b) pc 15: rd tag 07802 beat 2 != PHY tag 07802 beat 1
 ERR (b) pc 20: rd tag 0a000 beat 2 != PHY tag 0a000 beat 1
 ERR (b) pc 25: rd tag 0c800 beat 2 != PHY tag 0c800 beat 1
-ERR (b) pc 12: rd tag 06001 beat 2 != PHY tag 06001 beat 1
-ERR (b) pc 14: rd tag 07000 beat 4 != PHY tag 07000 beat 2
 ERR (b) pc 2: rd tag 01000 beat 2 != PHY tag 01000 beat 1
-ERR (b) pc 6: rd tag 03000 beat 2 != PHY tag 03000 beat 1
+ERR (b) pc 6: rd tag 03000 beat 4 != PHY tag 03000 beat 2
+ERR (b) pc 14: rd tag 07000 beat 2 != PHY tag 07000 beat 1
+ERR (b) pc 6: rd tag 03001 beat 2 != PHY tag 03001 beat 1
+ERR (b) pc 20: rd tag 0a000 beat 4 != PHY tag 0a000 beat 2
 phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 3523 ref 2521
-phase 1: 1536 requests (493 writes, 2635 read beats) on 32 PCs; responses dut 3709 ref 2635
+phase 1: 1536 requests (495 writes, 2627 read beats) on 32 PCs; responses dut 3698 ref 2627
 latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
-latency: request rq issue -> PHY accept mean 18.58 max 148.71 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
-TB_DSFD_CTRL FAIL errors=3407
+latency: request rq issue -> PHY accept mean 18.59 max 148.48 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=3402
