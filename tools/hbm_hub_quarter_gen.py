@@ -305,14 +305,16 @@ def _offs(lst):
 GX, GY = 0.432, 0.54          # macro origin grid: lcm(site 0.054, M4/M5 0.048) in x, two rows in y (rail parity)
 
 
-def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0):
+def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False):
     """ORFS MACRO_PLACEMENT_TCL of the quarter's lanes (w x h each) and the floorplan record.
 
     x: edge strip | pair 0: column s=0 (MY, pins on its right edge) | channel | column s=1 (R0, pins on its left edge) |
        gap | pair 1 ... | edge strip.  y: each column is south half (chain k = 2 pair) + port band + north half
        (chain k = 2 pair + 1); group g = 0 is the one at the band, lane slot i stacks outward; lanes of a column sit on
        a pitch of h + 0.54 (one free row pair between abutting lanes).  The edge strips keep every die pin's M4 / M5
-       access free of lane obstructions; r2 lanes leave M6 / M7 open, so pins outside the band reach it over the lanes."""
+       access free of lane obstructions; r2 lanes leave M6 / M7 open, so pins outside the band reach it over the lanes.
+    two_sided (lanes with pins on both edges, su/io_lr.tcl): every column R0 between two channels, 2 C2 + 1 channels
+       of equal width (the two edge channels replace the edge strips)."""
     dn = lambda v, g: math.floor(v / g + 1e-9) * g
     up_ = lambda v, g: math.ceil(v / g - 1e-9) * g
     C2 = P.C2
@@ -327,9 +329,17 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0):
     blo = up_(edge + n * py, GY)
     bhi = dn(blo + band, GY)
     xs = []
-    for pr in range(C2):
-        x0 = e + pr * (2 * w + c + gp)
-        xs.append((x0, x0 + w + c))
+    if two_sided:
+        c = dn((Wq - 2 * C2 * w) / (2 * C2 + 1), GX)
+        assert c >= 30.0 - 1e-6, ('channel narrower than 30 um', c)
+        e = gp = c
+        for pr in range(C2):
+            x0 = c + pr * 2 * (w + c)
+            xs.append((x0, x0 + w + c))
+    else:
+        for pr in range(C2):
+            x0 = e + pr * (2 * w + c + gp)
+            xs.append((x0, x0 + w + c))
     L_ = [f'# tools/hbm_hub_quarter_gen.py --quarter: {P.q["master"]} lane placement ({P.N} x {P.q["lane"]} {w} x {h})']
     rec = []
     for j, k, g, s, i in P.lanes():
@@ -338,11 +348,11 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0):
         x = xs[pr][s]
         y = blo - (r + 1) * py if half == 0 else bhi + GY + r * py
         y = round(dn(y, GY) if half == 0 else up_(y, GY), 3)
-        o = 'MY' if s == 0 else 'R0'
+        o = 'MY' if s == 0 and not two_sided else 'R0'
         assert 0 <= x and x + w <= Wq + 1e-6 and 0 <= y and y + h <= Hq + 1e-6, (j, x, y)
         L_.append(f'place_macro -macro_name {{u_lane_{j}}} -location {{{x:.3f} {y:.3f}}} -orientation {o}')
         rec.append([j, round(x, 3), y, o])
-    fp = dict(lane_w=w, lane_h=h, quarter=[Wq, Hq], edge=e, gap=gp, channel=round(c, 3), band=[round(blo, 3), round(bhi, 3)],
+    fp = dict(lane_w=w, lane_h=h, two_sided=two_sided, quarter=[Wq, Hq], edge=e, gap=gp, channel=round(c, 3), band=[round(blo, 3), round(bhi, 3)],
               column_x=[[round(a, 3), round(b, 3)] for a, b in xs], lanes=rec)
     return '\n'.join(L_) + '\n', fp
 
@@ -356,6 +366,7 @@ def main():
     ap.add_argument('--seed', type=int, default=20261006)
     ap.add_argument('--lane-size', nargs=2, type=float, metavar=('W', 'H'),
                     help='also write macro_place.tcl / floorplan.json for lanes of this footprint')
+    ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
@@ -373,7 +384,7 @@ def main():
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     if a.lane_size:
         pj = json.loads(Path(a.ports).read_text())
-        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'])
+        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided)
         (out / 'macro_place.tcl').write_text(tcl)
         (out / 'floorplan.json').write_text(json.dumps({k: v for k, v in fp.items() if k != 'lanes'}, indent=1) + '\n')
     print(json.dumps(info))
