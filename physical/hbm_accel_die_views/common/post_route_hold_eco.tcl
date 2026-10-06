@@ -43,7 +43,11 @@ set_routing_layers -clock [envd OT_MINCLKL M4]-$hi
 set_routing_layers -signal $lo-$hi
 global_route -allow_congestion
 global_route -start_incremental
+# RCX of the detailed route, annotated on BOTH scenes (extract_parasitics alone annotates one: the first test read
+# SS setup +86 / hold -2.7 against corner_sta's +41 / +5.2 on the same odb)
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
+write_spef $::env(OT_OUT)/pre_eco.spef
+foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/pre_eco.spef }
 rep pre
 set n0 [llength [get_cells *]]
 if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 10] -verbose} err]} {
@@ -53,12 +57,13 @@ puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
 detailed_placement
 check_placement -verbose
 global_route -end_incremental -allow_congestion
-detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -bottom_routing_layer $lo -top_routing_layer $hi -verbose 1
+detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
+write_spef $::env(OT_OUT)/6_final.spef
+foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
 write_db $::env(OT_OUT)/6_final.odb
-write_spef $::env(OT_OUT)/6_final.spef
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"
