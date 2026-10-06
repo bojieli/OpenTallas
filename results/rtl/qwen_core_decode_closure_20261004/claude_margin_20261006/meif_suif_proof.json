@@ -55,5 +55,13 @@
   "k_D0r": 0.639
  },
  "suif_over_meif_sum_pct": 0.26,
- "decision": "SUIF adopted (registered SU interface; SU stays its own element on the 1.2 GHz core clock, r20g): its token cost is <= 0.5% on every bench except the drafter layer (+0.64% over MEIF but -0.69% vs base); AR layer +0.11%, verify layer +0.10%, heads +0.20%; MEIF+SUIF vs base: AR +0.18%, verify +0.93%. Core margin route m2_f3banms = NXREG+MEIF+SUIF."
+ "decision": "SUIF adopted (registered SU interface; SU stays its own element on the 1.2 GHz core clock, r20g): its token cost is <= 0.5% on every bench except the drafter layer (+0.64% over MEIF but -0.69% vs base); AR layer +0.11%, verify layer +0.10%, heads +0.20%; MEIF+SUIF vs base: AR +0.18%, verify +0.93%. Core margin route m2_f3banms = NXREG+MEIF+SUIF.",
+ "negative_control": {
+  "variant": "DEC_LA_MEIF 2 + DEC_LA_SUIF 2 (stale status unmasked)",
+  "bench": "c_H1",
+  "status": "fail",
+  "accept_ok": false,
+  "total_cycles": 7420,
+  "note": "the core passes waits on stale ready/idle/progress and finishes early with a wrong accept record: the hold mask is load-bearing"
+ }
 }
