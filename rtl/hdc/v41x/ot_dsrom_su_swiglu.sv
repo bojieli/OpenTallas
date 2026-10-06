@@ -24,6 +24,8 @@
 // scale 2^e, staged for 1.2 GHz), one instance per 32 lanes, fixed latency 18.
 //
 // ot_dsrom_su_qbank: NB ot_dsrom_actquant_f12 instances (NB blocks a beat) for the quantiser-only nodes, with the same
+// NIN / NOUT traverse; ROPE = 1 adds the index-q RoPE front, its re/im adds on the 6-cut f12 adder (ot_dsrom_add_f12_l6:
+// routed, the LAT-4/LAT-5 adders' compare->align stage missed 0.833 ns by 35-75 ps in all four rope route variants)
 // NIN / NOUT traverse; ROPE = 1 adds the index-q RoPE front: each beat is NB/4 rows of 128 (head dim), the last
 // 64 elements of a row rotated as adjacent pairs (golden rope_tail: re = a*c - b*s, im = a*s + b*c, BF16), the
 // first 64 delayed to match; then FP4 (E2M1, E8M0 scale) QDQ of all four blocks of the row.
@@ -210,7 +212,7 @@ module ot_dsrom_su_qbank #(
     wire               frope;
     genvar k, b;
     generate if (ROPE != 0) begin : g_rope
-        localparam integer DR = LM + LA;   // a*c (|| b*s) then the add
+        localparam integer DR = LM + 6;    // a*c (|| b*s) then the add on the 6-cut f12 adder
         wire [N-1:0] fm, fa;
         for (k = 0; k < N; k = k + 1) begin : g_e
             localparam integer col = k % 128;
@@ -230,7 +232,7 @@ module ot_dsrom_su_qbank #(
                 ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, vin[NIN], mate, {s[31] ^ !odd, s[30:0]}, p2, f2);
                 wire [LM:0] vm;
                 ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(vin[NIN]), .vd(vm));
-                ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, vm[LM], p1, p2, xr[32*k +: 32], fa[k]);
+                ot_dsrom_add_f12_l6 u_a (clk, rst_n, vm[LM], p1, p2, xr[32*k +: 32], fa[k]);
                 assign fm[k] = f1 | f2;
             end
         end
