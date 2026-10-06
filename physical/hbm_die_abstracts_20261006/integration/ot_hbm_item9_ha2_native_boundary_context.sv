@@ -4,7 +4,7 @@
 // are real; omitted TX/CDC/PHY/release logic stays explicit external inputs.
 // Cached child map is renamed mechanically to ot_hbm_item9_ha2_cached_map.
 // Conditional internal timing vehicle, NOT a whole-TU functional replacement.
-module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0)(
+module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0,CALLER_ONLY=0)(
  input wire clk,rst_n,go,endpoint_rearm_ready,
  input wire [7:0] rank,input wire [15:0] pf,
  input wire [63:0] context_operation,input wire [31:0] context_phase,
@@ -17,7 +17,13 @@ module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0)(
  output wire dupe,issue_o,owner_quiet,context_fault_o,
  output wire [2179:0] delivery_words,output wire [3:0] delivery_v,
  output wire [4359:0] qr_heads,output wire [7:0] qr_empty,qr_ovf,
- output wire [55:0] qr_counts
+ output wire [55:0] qr_counts,
+ output wire [1:0] caller_h_v,output wire [1087:0] caller_h_d,
+ output wire [7:0] caller_p_v,output wire [4359:0] caller_p_flit,
+ output wire caller_active,caller_arm,output wire [7:0] caller_rank,
+ output wire [15:0] caller_pf,
+ input wire adapter_r_v,input wire [15:0] adapter_r_m,
+ input wire [511:0] adapter_r_d,input wire adapter_dupe,adapter_issue,adapter_quiet
 );
  generate if(!ENABLE)begin:off
   assign inj_rd=0;assign inj_idx=0;assign rb_pop=0;assign dq_own_pop=0;
@@ -25,6 +31,8 @@ module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0)(
   assign owner_quiet=0;assign context_fault_o=0;
   assign delivery_words=0;assign delivery_v=0;
   assign qr_heads=0;assign qr_empty=0;assign qr_ovf=0;assign qr_counts=0;
+  assign caller_h_v=0;assign caller_h_d=0;assign caller_p_v=0;assign caller_p_flit=0;
+  assign caller_active=0;assign caller_arm=0;assign caller_rank=0;assign caller_pf=0;
  end else begin:g_on
   localparam integer NC=8,NOG=8,PFMAX=384,FW=512,PWT=545,INJ=2,NPT=8,DEL=4;
   reg context_bound,context_fault;
@@ -81,10 +89,21 @@ module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0)(
    assign partial_flit[p*545+:545]=rb_head[p];
   end
   assign invalid_partial=|invalid_partial_port;
+  assign caller_h_v=h_v;assign caller_h_d=h_d;
+  assign caller_p_v=partial_v;assign caller_p_flit=partial_flit;
+  assign caller_active=context_bound&&CONTRIB&&!context_fault;
+  assign caller_arm=arm;assign caller_rank=RANK[7:0];assign caller_pf=PF[15:0];
+  if(CALLER_ONLY)begin:measurement_cut
+   // Literal real child result boundary exposed for caller-only mapping.
+   // No register, queue or scalar load substitutes for the child.
+   assign r_v=adapter_r_v;assign r_m=adapter_r_m;assign r_d=adapter_r_d;
+   assign dupe=adapter_dupe;assign issue_o=adapter_issue;assign owner_quiet=adapter_quiet;
+  end else begin:linked_child
   ot_hbm_item9_ha2_cached_map u_owner(.clk(clk),.rst_n(rst_n),
    .active(context_bound&&CONTRIB&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
    .h_v(h_v),.h_d(h_d),.p_v(partial_v),.p_flit(partial_flit),
    .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(issue_o),.quiet(owner_quiet));
+  end
   wire [15:0] my_gi=16'((OG*NC+J)*ROF+{16'b0,r_m});
   wire [544:0] res_flit={1'b1,8'hFF,8'(OG),my_gi,r_d};
   wire dq_own_empty,dq_own_ovf;wire [544:0] dq_own_head;
