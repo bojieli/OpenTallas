@@ -8,9 +8,9 @@
  },
  "su_records": {
   "c12_v2": "results/rtl/hbm_su_c12_20261005/su_runs/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_v2_ildr.json",
-  "c12_v2_sha256": "34412b6788d4b7ded1560087210efa32d547465a03838ee8afa96d04ee9878b8",
+  "c12_v2_sha256": "400e3a7addb1d1406b08e1b2031bf29de5df879b67eda5ef3b5345cbd405a518",
   "c12_p6": "results/rtl/hbm_su_c12_20261005/su_runs/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_p6om_ildr.json",
-  "c12_p6_sha256": "c00bd009fd821b7948f10966b481b21e86ec696144196751f9dfb64e0507bc1f"
+  "c12_p6_sha256": "a185aa97048235d33fd007edb9556af349e48e4fb74a6dfe0cd5355a2ae8518c"
  },
  "c12_params": {
   "mlat": 6,
@@ -24,7 +24,8 @@
   "rsl": 2,
   "rtap": 1,
   "rout": 1,
-  "rslice": 64
+  "rslice": 64,
+  "ctl12": 1
  },
  "rows": {
   "corrected+wg+su12:m6a5": {
@@ -40,41 +41,41 @@
    "MTP_tok_s": 3958.5
   },
   "corrected+wg+su12:c12": {
-   "AR_us": 539.729,
-   "AR_tok_s": 1852.8,
-   "MTP_step_us": 1061.335,
-   "MTP_tok_s": 3918.6
+   "AR_us": 541.641,
+   "AR_tok_s": 1846.2,
+   "MTP_step_us": 1070.748,
+   "MTP_tok_s": 3884.2
   },
   "matched:c12": {
-   "AR_us": 480.762,
-   "AR_tok_s": 2080.0,
-   "MTP_step_us": 1061.335,
-   "MTP_tok_s": 3918.6
+   "AR_us": 481.67,
+   "AR_tok_s": 2076.1,
+   "MTP_step_us": 1070.748,
+   "MTP_tok_s": 3884.2
   }
  },
  "effect_c12_vs_m6a5": {
   "corrected+wg+su12": {
-   "AR_us_delta": 11.864,
-   "AR_rate_pct": -2.198,
-   "MTP_step_us_delta": 10.697,
-   "MTP_rate_pct": -1.008
+   "AR_us_delta": 13.776,
+   "AR_rate_pct": -2.543,
+   "MTP_step_us_delta": 20.11,
+   "MTP_rate_pct": -1.877
   },
   "matched": {
-   "AR_us_delta": 4.584,
-   "AR_rate_pct": -0.953,
-   "MTP_step_us_delta": 10.697,
-   "MTP_rate_pct": -1.008
+   "AR_us_delta": 5.492,
+   "AR_rate_pct": -1.14,
+   "MTP_step_us_delta": 20.11,
+   "MTP_rate_pct": -1.877
   }
  },
  "c12_chain_spans_P1": {
-  "L0.hc_pre_norm.attn": 479,
-  "L0.q_norm_kv_row": 416,
-  "L0.q_rope": 61,
-  "L0.attend": 544,
+  "L0.hc_pre_norm.attn": 482,
+  "L0.q_norm_kv_row": 422,
+  "L0.q_rope": 64,
+  "L0.attend": 550,
   "L0.hc_post.attn": 222,
-  "L0.hc_pre_norm.ffn": 479,
+  "L0.hc_pre_norm.ffn": 482,
   "L0.router_act": 335,
-  "L0.route": 247,
+  "L0.route": 253,
   "L0.swiglu.s0": 177,
   "L0.swiglu.s1": 177,
   "L0.swiglu.s2": 177,
@@ -84,14 +85,14 @@
   "L0.swiglu.s6": 177,
   "L0.moe_sum": 111,
   "L0.hc_post.ffn": 222,
-  "L2.hc_pre_norm.attn": 479,
-  "L2.q_norm_kv_row": 416,
-  "L2.q_rope": 61,
-  "L2.attend": 582,
+  "L2.hc_pre_norm.attn": 482,
+  "L2.q_norm_kv_row": 422,
+  "L2.q_rope": 64,
+  "L2.attend": 588,
   "L2.hc_post.attn": 222,
-  "L2.hc_pre_norm.ffn": 479,
+  "L2.hc_pre_norm.ffn": 482,
   "L2.router_act": 335,
-  "L2.route": 247,
+  "L2.route": 253,
   "L2.swiglu.s0": 177,
   "L2.swiglu.s1": 177,
   "L2.swiglu.s2": 177,
@@ -101,7 +102,7 @@
   "L2.swiglu.s6": 177,
   "L2.moe_sum": 111,
   "L2.hc_post.ffn": 222,
-  "head.final_norm": 479,
+  "head.final_norm": 482,
   "head.argmax_local": 160,
   "L0.attend_tail": 121,
   "L2.attend_tail": 121
