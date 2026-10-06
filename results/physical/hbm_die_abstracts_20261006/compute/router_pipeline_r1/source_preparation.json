@@ -1,0 +1,29 @@
+{
+  "status": "REAL_DEFAULT_OFF_PIPELINE_RTL_ENABLED_SYNTAX_ONLY",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv": "fc05d7df80af5d8f668261e2e087f80a1eb723d53ce746fae6668e48e743231d",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/retained_final.sdc": "1ce35f39423e56ccad763261f78817a51b4eb8571e28b25d3b4491454600c849",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/constraint.sdc": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv": "a438d922b44c8af7fe3eca8cdc6513059b18653885fa3b402913d3d1b8e002e4",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027"
+  },
+  "ownership": "Carson additive single writer under owner directive; Turing no router ownership; original/shared Sagan Peirce RTL and jobs untouched",
+  "model_before_RTL": "before_rtl.json",
+  "ENABLE_default": 0,
+  "N": 384,
+  "P": 16,
+  "K": 6,
+  "IW": 9,
+  "syntax_ENABLED_returncode": 0,
+  "functional_gate": "NOT_RUN",
+  "physical_gate": "NOT_RUN",
+  "parent_qualified": false,
+  "fresh_path_repair": "registered compare and payload mux; two banks retain II1 input; each bank recurrence two clocks",
+  "reset_repair": "only lane validity and pipeline control reset; invalid payload canonicalized at leaf boundary; unchanged actual rst_n recovery/removal constraint",
+  "IO_contract": "Retained assigned166.6ps input/output and3.898fF loads, not measured parent context",
+  "negative_controls": [
+    "actual bank phase force",
+    "actual held-reset stale-valid FF force"
+  ]
+}
