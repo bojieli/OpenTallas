@@ -150,6 +150,17 @@ def dsrom_fh_fault_retire_model(integrated_parent=False):
             parent_warm_debt_sent_and_protocol_fault=3,
             producer_issued_and_warm_marker=2, producer_raw_leaf_valid=1,
             protected_SRAM_commit_identity_pipeline=2*(4*24+64+8+1))
+    measured=None
+    measured_path=ROOT/'results/rtl/dsrom_fh_capture_20261005/fault_retire_parent/gold4_r11/result.json'
+    if integrated_parent and measured_path.exists():
+        gate=json.loads(measured_path.read_text())
+        names=('ot_hdc_core_v41.sv','ot_hdc_v41_matvec.sv','ot_hdc_v41_fh_fault_retire.sv',
+               'ot_hdc_v41_fh_retire_parent.sv','tb_hdc_core_v41_mtp_slice_capture.sv')
+        pins=gate['input_sha256']
+        same=all(pins.get('rtl/hdc/v41/dspark_fused_head/capture_candidate/'+n)==
+            hashlib.sha256((ROOT/'rtl/hdc/v41/dspark_fused_head/capture_candidate'/n).read_bytes()).hexdigest() for n in names)
+        if same and gate['all_pass'] and len(gate['slices'])==1:
+            measured=gate['slices'][0]['cycles']
     return dict(parameter='FAULT_RETIRE', default=0, G=4, W=16,
         stages=4, MACs_per_cycle=0, FP32_adds_per_cycle=0,
         new_memory_ports=0, memory_payload_bytes_per_cycle=256,
@@ -169,11 +180,16 @@ def dsrom_fh_fault_retire_model(integrated_parent=False):
             retention='kept hierarchy on each OR4/register relay and final register copy'),
         latency=dict(output_retirement_extra_cycles=4,
             index_write_retirement_extra_cycles=4,
-            conservative_added_cycles_per_fused_chain=8,
-            five_chain_added_cycles=40,
+            candidate_added_cycles_per_fused_chain=8,
+            candidate_five_chain_added_cycles=40,
+            five_chain_added_cycles=40 if measured is None else measured-62878,
             predicted_five_chain_cycles=62878+40,
             predicted_five_chain_added_ns=40*0.833333,
-            measured_cycles=None,
+            measured_cycles=measured,
+            measured_added_cycles=None if measured is None else measured-62878,
+            measured_added_ns_at_model_clock=None if measured is None else (measured-62878)/1.2,
+            measured_record=None if measured is None else str(measured_path.relative_to(ROOT)),
+            measurement_scope='ENABLEON fullG4W16 originalgold4 with actual two-edge fixture memory-write ACK; native protected VM backend/crossing qualification is separate',
             requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
         protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
         flow_control='4-slot valid pipeline; warm-index debt clears only on matched fault-free actual memory commit ACK; retain debt and refuse reuse through missing/bad receipts or quarantine',
@@ -185,6 +201,29 @@ def dsrom_fh_fault_retire_model(integrated_parent=False):
             ready_for_route=False),
         scope='Own head component. Requires real parent retirement/debt integration; no standalone cut qualifies parent hold or whole-die timing.',
         adoption=False, physical_closed=False)
+
+
+def dsrom_fh_native_vm_endpoint_model():
+    """Existing protected-VM fast capture endpoints in the minimum head child."""
+    req,rep=2831,1267
+    return dict(default=0,scope='Conditional head child; source-native fast endpoint copies, no backend duplication',
+        MACs_per_cycle=0,compute_intensity=0,memory_port_bytes_per_cycle=0,
+        boundary_bits_per_cycle=dict(head_write_payload=2048,head_mask=64,head_word=96,
+            native_request=req,protected_reply=rep),replicas=1,
+        capture_FF_bits=2*(req+rep),head_warm_once_fault_metadata_FF_bits=22,
+        FF_total=2*(req+rep)+22,architectural_added_cycles=0,
+        clock=dict(fast_period_ps=833.3333333333334,backend_period_ps=1111.111111111111,
+            related_dividers=[3,4],SS_uncertainty_ps=60,FF_uncertainty_ps=25),
+        native_ports=dict(head_groups_to_write_ports=[1,2,3,4],xa_write_disabled=True,
+            checked_address_bits=15,head_address_bits=24,no_enabled_address_truncation=True),
+        floorplan=dict(existing_head_um=[2000,660],macro_count=64,
+            FF_area_proxy_um2=(2*(req+rep)+22)*DFF_UM2,
+            actual_mapped_receiver_caps_and_routing_tracks_required=True,
+            clock_PG_repair_margin_required=True,ready_for_route=False),
+        fanout='Per enabled lane native accepted_input normalization -> actual source_packet/source_check capture pair; genuine held_reply owner/ordinal/word/mask validation and once-only warm callback.',
+        protection='Existing native SECDED/dual-rail parent remains owner; checked readback visibility is distinct from later port_retired/C8. Mirror warm/sent/fault local callback state.',
+        latency='Existing fast endpoint stages, not extra producer cycles; real native backend/readback/3:4 crossings already priced by parent model. Head +40 remains unmeasured.',
+        adoption=False,physical_closed=False)
 
 
 def dsrom_field_spine_route_price(r=16, pq=0):
