@@ -433,6 +433,9 @@ def parse_case_log(t):
         a, b, u, h, v, o = tot[-1]
         r.update(grt_capacity=int(a), grt_demand=int(b), grt_usage_pct=float(u), overflow_h=int(h), overflow_v=int(v),
                  overflow=int(o))
+    err = re.search(r'^Error: .*$', t, re.M)
+    if err:
+        r['error'] = err.group(0)
     for k in ('place_s', 'pa_s', 'grt_s'):
         mm = re.search(r'OT_TIME ' + k + r'=(\d+)', t)
         if mm:
