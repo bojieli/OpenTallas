@@ -1,0 +1,174 @@
+{
+ "schema": "opentallas.hbm_spine_face_stages.v1",
+ "date": "2026-10-06",
+ "rule": "owner cost rule 2026-10-06: face stages per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); every boundary still reg-to-reg (pin flop); face chains spaced evenly by face_chain_place.tcl",
+ "baseline": "face_stages 5 on every face (s17..s19): in-view latency of a core path = 5 in + 5 out, pass-through 10",
+ "views": {
+  "hfd_quant": {
+   "port_stages": {
+    "f_vm": 2,
+    "t_su_SW": 4,
+    "t_su_NW": 4,
+    "t_su_SE": 3,
+    "t_su_NE": 3
+   },
+   "d_um": {
+    "f_vm": 378,
+    "t_su_SW": 1198,
+    "t_su_NW": 1152,
+    "t_su_SE": 1140,
+    "t_su_NE": 1123
+   },
+   "latency": "f_vm in 2 -> actquant_m -> t_su out 3 (NE/SE) / 4 (NW/SW): in-view 5-6 vs 10 (-4 / -5 cycles on the VM -> quant -> SU path)"
+  },
+  "hfd_loader": {
+   "port_stages": {
+    "t_cmdproc": 2,
+    "h": 2
+   },
+   "d_um": {
+    "t_cmdproc": 522,
+    "h": 385
+   },
+   "latency": "h in 2, t_cmdproc out 2: 4 vs 10 (-6)"
+  },
+  "hfd_coll": {
+   "port_stages": {
+    "f_cmdproc": 3,
+    "t_cmdproc": 3,
+    "f_su_SW": 4,
+    "t_su_SW": 4,
+    "llk_S0": 3,
+    "llk_S1": 3,
+    "llk_S2": 3,
+    "por_stream": 3,
+    "llk_N0": 3,
+    "llk_N1": 3,
+    "f_su_NW": 4,
+    "t_su_NW": 4,
+    "f_su_SE": 4,
+    "t_su_SE": 4,
+    "por_link": 3,
+    "llk_S3": 3,
+    "llk_S4": 3,
+    "llk_N2": 3,
+    "llk_N3": 3,
+    "f_su_NE": 4,
+    "t_su_NE": 4,
+    "por_serial": 3,
+    "por_hbm": 3
+   },
+   "d_um": {
+    "f_cmdproc": 939,
+    "t_cmdproc": 939,
+    "f_su_SW": 1317,
+    "t_su_SW": 1183,
+    "llk_S0": 1071,
+    "llk_S1": 939,
+    "llk_S2": 808,
+    "por_stream": 808,
+    "llk_N0": 939,
+    "llk_N1": 1071,
+    "f_su_NW": 1204,
+    "t_su_NW": 1317,
+    "f_su_SE": 1336,
+    "t_su_SE": 1172,
+    "por_link": 1051,
+    "llk_S3": 920,
+    "llk_S4": 761,
+    "llk_N2": 892,
+    "llk_N3": 1051,
+    "f_su_NE": 1215,
+    "t_su_NE": 1336,
+    "por_serial": 842,
+    "por_hbm": 1121
+   },
+   "latency": "f_su in 4, t_su out 4, llk 2-3, cmdproc 3: core paths 6-8 vs 10"
+  },
+  "hfd_vm": {
+   "port_stages": {
+    "f_su_SW": 5,
+    "iSW": 4,
+    "t_su_SW": 4,
+    "qSW": 3,
+    "xSW": 3,
+    "qNW": 3,
+    "xNW": 3,
+    "f_su_NW": 4,
+    "iNW": 4,
+    "t_su_NW": 5,
+    "f_su_SE": 5,
+    "iSE": 4,
+    "t_su_SE": 4,
+    "qSE": 3,
+    "xSE": 3,
+    "qNE": 3,
+    "xNE": 3,
+    "f_su_NE": 4,
+    "iNE": 4,
+    "t_su_NE": 5,
+    "t_quant": 3,
+    "t_router": 4
+   },
+   "d_um": {
+    "f_su_SW": 1581,
+    "iSW": 1364,
+    "t_su_SW": 1221,
+    "qSW": 1004,
+    "xSW": 858,
+    "qNW": 787,
+    "xNW": 1004,
+    "f_su_NW": 1221,
+    "iNW": 1364,
+    "t_su_NW": 1581,
+    "f_su_SE": 1581,
+    "iSE": 1364,
+    "t_su_SE": 1221,
+    "qSE": 1004,
+    "xSE": 858,
+    "qNE": 787,
+    "xNE": 1004,
+    "f_su_NE": 1221,
+    "iNE": 1364,
+    "t_su_NE": 1581,
+    "t_quant": 1098,
+    "t_router": 1374
+   },
+   "latency": "f_su in 4 (NE/NW) / 5 (SE/SW), i* in 4; outputs t_quant 3, t_router 4, q* 3, x* 3, t_su 4-5: f_su_NE -> t_quant 7 vs 10 (-3)"
+  },
+  "hfd_cmdproc_s": {
+   "port_stages": {
+    "cSE": 3,
+    "cSW": 3,
+    "t_su_SE": 3,
+    "t_su_SW": 3,
+    "f_loader": 3,
+    "f_router": 2,
+    "xl": 2,
+    "xb": 2,
+    "xt": 2
+   },
+   "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
+  },
+  "hfd_cmdproc_n": {
+   "port_stages": {
+    "cNE": 3,
+    "cNW": 3,
+    "t_su_NE": 3,
+    "t_su_NW": 3,
+    "f_barrier": 2,
+    "f_coll": 2,
+    "t_barrier": 3,
+    "t_coll": 2,
+    "xl": 1,
+    "xt": 1,
+    "xb": 2
+   },
+   "port_in_stages": {
+    "cNE": 4,
+    "cNW": 4
+   },
+   "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
+  }
+ }
+}
