@@ -39,7 +39,7 @@ def command(a):
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True)
- p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=float,default=55)
+ p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55');p.add_argument('--print',action='store_true')
  a=p.parse_args()
  cmd=command(a)
