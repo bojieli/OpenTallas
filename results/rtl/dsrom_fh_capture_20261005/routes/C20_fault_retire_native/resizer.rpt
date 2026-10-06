@@ -1,0 +1,706 @@
+
+==========================================================================
+resizer report_tns
+--------------------------------------------------------------------------
+tns max -8589238.00
+
+==========================================================================
+resizer report_wns
+--------------------------------------------------------------------------
+wns max -1831.70
+
+==========================================================================
+resizer report_worst_slack
+--------------------------------------------------------------------------
+worst slack max -1831.70
+
+==========================================================================
+resizer report_clock_min_period
+--------------------------------------------------------------------------
+core_clk period_min = 2665.03 fmax = 375.23
+
+==========================================================================
+resizer report_checks -path_delay min
+--------------------------------------------------------------------------
+Startpoint: u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_memory.g_bank[28].u_lane/u_sram
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: BC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.55   11.52   29.83   29.83 v u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         u_memory.g_bank[28].u_lane/_0237_ (net)
+                 11.52    0.02   29.85 v u_memory.g_bank[28].u_lane/_1071_/A (INVx1_ASAP7_75t_R)
+     1    0.70    7.68    6.86   36.71 ^ u_memory.g_bank[28].u_lane/_1071_/Y (INVx1_ASAP7_75t_R)
+                                         u_memory.g_bank[28].u_lane/encoded_r[10] (net)
+                  7.68    0.02   36.73 ^ u_memory.g_bank[28].u_lane/u_sram/wd_in[10] (ot_sram_1r1w_512x128_m4_r2c2)
+                                 36.73   data arrival time
+
+                  0.00    0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ u_memory.g_bank[28].u_lane/u_sram/clk (ot_sram_1r1w_512x128_m4_r2c2)
+                         18.50   43.50   library hold time
+                                 43.50   data required time
+-----------------------------------------------------------------------------
+                                 43.50   data required time
+                                -36.73   data arrival time
+-----------------------------------------------------------------------------
+                                 -6.78   slack (VIOLATED)
+
+
+
+==========================================================================
+resizer report_checks -path_delay max
+--------------------------------------------------------------------------
+Startpoint: g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2    1.90   45.54   79.56   79.56 v g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_04075_ (net)
+                 45.54    0.10   79.66 v g_actual_native_load.u_native/_36983_/B (XOR2x2_ASAP7_75t_R)
+     1    4.04   38.90   71.02  150.68 ^ g_actual_native_load.u_native/_36983_/Y (XOR2x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16365_ (net)
+                 39.04    1.27  151.95 ^ g_actual_native_load.u_native/place201527/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   54.18   44.97  196.92 ^ g_actual_native_load.u_native/place201527/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197846 (net)
+                100.09   26.96  223.88 ^ g_actual_native_load.u_native/place201526/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.67   58.51  282.38 ^ g_actual_native_load.u_native/place201526/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197845 (net)
+                101.07   26.97  309.36 ^ g_actual_native_load.u_native/place201525/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68  368.03 ^ g_actual_native_load.u_native/place201525/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197844 (net)
+                101.08   26.97  395.01 ^ g_actual_native_load.u_native/place201524/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68  453.68 ^ g_actual_native_load.u_native/place201524/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197843 (net)
+                101.08   26.97  480.66 ^ g_actual_native_load.u_native/place201523/A (BUFx6f_ASAP7_75t_R)
+     1   19.83   54.96   58.74  539.39 ^ g_actual_native_load.u_native/place201523/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197842 (net)
+                 99.22   26.41  565.81 ^ g_actual_native_load.u_native/_36984_/D (AND4x2_ASAP7_75t_R)
+     1    3.39   42.36   76.34  642.14 ^ g_actual_native_load.u_native/_36984_/Y (AND4x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16366_ (net)
+                 42.43    0.88  643.02 ^ g_actual_native_load.u_native/place189682/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   54.03   45.81  688.83 ^ g_actual_native_load.u_native/place189682/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net186001 (net)
+                 99.17   26.65  715.48 ^ g_actual_native_load.u_native/place189681/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.42   58.28  773.76 ^ g_actual_native_load.u_native/place189681/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net186000 (net)
+                100.09   26.66  800.42 ^ g_actual_native_load.u_native/place189680/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.44   58.44  858.86 ^ g_actual_native_load.u_native/place189680/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185999 (net)
+                100.11   26.66  885.53 ^ g_actual_native_load.u_native/place189679/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.44   58.44  943.97 ^ g_actual_native_load.u_native/place189679/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185998 (net)
+                100.11   26.66  970.63 ^ g_actual_native_load.u_native/place189678/A (BUFx6f_ASAP7_75t_R)
+     1   20.07   55.58   58.58 1029.21 ^ g_actual_native_load.u_native/place189678/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185997 (net)
+                101.14   27.01 1056.22 ^ g_actual_native_load.u_native/_36989_/A (AND5x2_ASAP7_75t_R)
+     1   13.57  118.06  106.19 1162.41 ^ g_actual_native_load.u_native/_36989_/Y (AND5x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16371_ (net)
+                124.20   14.39 1176.80 ^ g_actual_native_load.u_native/place188299/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   56.21   62.69 1239.49 ^ g_actual_native_load.u_native/place188299/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184618 (net)
+                101.43   26.98 1266.47 ^ g_actual_native_load.u_native/place188298/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.70   58.74 1325.21 ^ g_actual_native_load.u_native/place188298/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184617 (net)
+                101.09   26.97 1352.18 ^ g_actual_native_load.u_native/place188297/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68 1410.86 ^ g_actual_native_load.u_native/place188297/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184616 (net)
+                101.09   26.97 1437.84 ^ g_actual_native_load.u_native/place188296/A (BUFx6f_ASAP7_75t_R)
+     1   20.25   55.71   59.00 1496.84 ^ g_actual_native_load.u_native/place188296/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184615 (net)
+                102.47   27.47 1524.30 ^ g_actual_native_load.u_native/_37010_/B (AND4x1_ASAP7_75t_R)
+     2    3.42   62.70   82.54 1606.85 ^ g_actual_native_load.u_native/_37010_/Y (AND4x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16392_ (net)
+                 62.73    0.76 1607.61 ^ g_actual_native_load.u_native/_46834_/B (NAND2x1_ASAP7_75t_R)
+     1    0.96   24.99   22.41 1630.01 v g_actual_native_load.u_native/_46834_/Y (NAND2x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19166_ (net)
+                 24.99    0.08 1630.09 v g_actual_native_load.u_native/_46854_/B (OR5x1_ASAP7_75t_R)
+     1    3.93   61.74   91.40 1721.49 v g_actual_native_load.u_native/_46854_/Y (OR5x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19186_ (net)
+                 61.82    1.27 1722.76 v g_actual_native_load.u_native/_46855_/D (OR4x1_ASAP7_75t_R)
+     2    4.13   59.41   89.11 1811.87 v g_actual_native_load.u_native/_46855_/Y (OR4x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19187_ (net)
+                 59.50    1.32 1813.19 v g_actual_native_load.u_native/_46874_/B (OR3x4_ASAP7_75t_R)
+     3   12.61   63.24  105.19 1918.38 v g_actual_native_load.u_native/_46874_/Y (OR3x4_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19206_ (net)
+                 68.99    9.91 1928.29 v g_actual_native_load.u_native/place185087/A (BUFx6f_ASAP7_75t_R)
+     2   20.01   41.64   53.44 1981.73 v g_actual_native_load.u_native/place185087/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181406 (net)
+                 92.49   26.10 2007.83 v g_actual_native_load.u_native/place185086/A (BUFx6f_ASAP7_75t_R)
+     2   21.40   47.80   59.18 2067.01 v g_actual_native_load.u_native/place185086/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181405 (net)
+                 98.16   27.60 2094.61 v g_actual_native_load.u_native/place185085/A (BUFx6f_ASAP7_75t_R)
+     2   19.93   43.14   59.65 2154.25 v g_actual_native_load.u_native/place185085/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181404 (net)
+                 92.74   25.94 2180.20 v g_actual_native_load.u_native/place185084/A (BUFx6f_ASAP7_75t_R)
+     4   23.54   50.07   58.27 2238.47 v g_actual_native_load.u_native/place185084/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181403 (net)
+                117.26   34.03 2272.50 v g_actual_native_load.u_native/place185083/A (BUFx6f_ASAP7_75t_R)
+     8   25.58   60.82   62.81 2335.31 v g_actual_native_load.u_native/place185083/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181402 (net)
+                 61.44    3.55 2338.87 v g_actual_native_load.u_native/place185006/A (BUFx6f_ASAP7_75t_R)
+    13   14.46   36.86   50.06 2388.93 v g_actual_native_load.u_native/place185006/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181325 (net)
+                 41.56    6.88 2395.80 v g_actual_native_load.u_native/place185002/A (BUFx3_ASAP7_75t_R)
+     3    5.17   26.36   44.83 2440.63 v g_actual_native_load.u_native/place185002/Y (BUFx3_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181321 (net)
+                 26.43    0.75 2441.38 v g_actual_native_load.u_native/fanout240974/A (BUFx2_ASAP7_75t_R)
+    16   14.24   82.03   68.11 2509.49 v g_actual_native_load.u_native/fanout240974/Y (BUFx2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net237293 (net)
+                 82.05    0.85 2510.34 v g_actual_native_load.u_native/place185000/A (BUFx3_ASAP7_75t_R)
+     1    1.36   15.34   47.77 2558.11 v g_actual_native_load.u_native/place185000/Y (BUFx3_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181319 (net)
+                 15.34    0.10 2558.20 v g_actual_native_load.u_native/_68592_/A1 (AOI21x1_ASAP7_75t_R)
+     1    0.69   21.54   16.79 2574.99 ^ g_actual_native_load.u_native/_68592_/Y (AOI21x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_13738_ (net)
+                 21.54    0.03 2575.03 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/D (DFFHQNx1_ASAP7_75t_R)
+                               2575.03   data arrival time
+
+                  0.00  833.33  833.33   clock core_clk (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -30.01  743.33   library setup time
+                                743.33   data required time
+-----------------------------------------------------------------------------
+                                743.33   data required time
+                               -2575.03   data arrival time
+-----------------------------------------------------------------------------
+                               -1831.70   slack (VIOLATED)
+
+
+
+==========================================================================
+resizer report_checks -unconstrained
+--------------------------------------------------------------------------
+Startpoint: g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2    1.90   45.54   79.56   79.56 v g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_04075_ (net)
+                 45.54    0.10   79.66 v g_actual_native_load.u_native/_36983_/B (XOR2x2_ASAP7_75t_R)
+     1    4.04   38.90   71.02  150.68 ^ g_actual_native_load.u_native/_36983_/Y (XOR2x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16365_ (net)
+                 39.04    1.27  151.95 ^ g_actual_native_load.u_native/place201527/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   54.18   44.97  196.92 ^ g_actual_native_load.u_native/place201527/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197846 (net)
+                100.09   26.96  223.88 ^ g_actual_native_load.u_native/place201526/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.67   58.51  282.38 ^ g_actual_native_load.u_native/place201526/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197845 (net)
+                101.07   26.97  309.36 ^ g_actual_native_load.u_native/place201525/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68  368.03 ^ g_actual_native_load.u_native/place201525/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197844 (net)
+                101.08   26.97  395.01 ^ g_actual_native_load.u_native/place201524/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68  453.68 ^ g_actual_native_load.u_native/place201524/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197843 (net)
+                101.08   26.97  480.66 ^ g_actual_native_load.u_native/place201523/A (BUFx6f_ASAP7_75t_R)
+     1   19.83   54.96   58.74  539.39 ^ g_actual_native_load.u_native/place201523/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net197842 (net)
+                 99.22   26.41  565.81 ^ g_actual_native_load.u_native/_36984_/D (AND4x2_ASAP7_75t_R)
+     1    3.39   42.36   76.34  642.14 ^ g_actual_native_load.u_native/_36984_/Y (AND4x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16366_ (net)
+                 42.43    0.88  643.02 ^ g_actual_native_load.u_native/place189682/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   54.03   45.81  688.83 ^ g_actual_native_load.u_native/place189682/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net186001 (net)
+                 99.17   26.65  715.48 ^ g_actual_native_load.u_native/place189681/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.42   58.28  773.76 ^ g_actual_native_load.u_native/place189681/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net186000 (net)
+                100.09   26.66  800.42 ^ g_actual_native_load.u_native/place189680/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.44   58.44  858.86 ^ g_actual_native_load.u_native/place189680/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185999 (net)
+                100.11   26.66  885.53 ^ g_actual_native_load.u_native/place189679/A (BUFx6f_ASAP7_75t_R)
+     1   19.94   55.44   58.44  943.97 ^ g_actual_native_load.u_native/place189679/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185998 (net)
+                100.11   26.66  970.63 ^ g_actual_native_load.u_native/place189678/A (BUFx6f_ASAP7_75t_R)
+     1   20.07   55.58   58.58 1029.21 ^ g_actual_native_load.u_native/place189678/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net185997 (net)
+                101.14   27.01 1056.22 ^ g_actual_native_load.u_native/_36989_/A (AND5x2_ASAP7_75t_R)
+     1   13.57  118.06  106.19 1162.41 ^ g_actual_native_load.u_native/_36989_/Y (AND5x2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16371_ (net)
+                124.20   14.39 1176.80 ^ g_actual_native_load.u_native/place188299/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   56.21   62.69 1239.49 ^ g_actual_native_load.u_native/place188299/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184618 (net)
+                101.43   26.98 1266.47 ^ g_actual_native_load.u_native/place188298/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.70   58.74 1325.21 ^ g_actual_native_load.u_native/place188298/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184617 (net)
+                101.09   26.97 1352.18 ^ g_actual_native_load.u_native/place188297/A (BUFx6f_ASAP7_75t_R)
+     1   20.06   55.69   58.68 1410.86 ^ g_actual_native_load.u_native/place188297/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184616 (net)
+                101.09   26.97 1437.84 ^ g_actual_native_load.u_native/place188296/A (BUFx6f_ASAP7_75t_R)
+     1   20.25   55.71   59.00 1496.84 ^ g_actual_native_load.u_native/place188296/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net184615 (net)
+                102.47   27.47 1524.30 ^ g_actual_native_load.u_native/_37010_/B (AND4x1_ASAP7_75t_R)
+     2    3.42   62.70   82.54 1606.85 ^ g_actual_native_load.u_native/_37010_/Y (AND4x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_16392_ (net)
+                 62.73    0.76 1607.61 ^ g_actual_native_load.u_native/_46834_/B (NAND2x1_ASAP7_75t_R)
+     1    0.96   24.99   22.41 1630.01 v g_actual_native_load.u_native/_46834_/Y (NAND2x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19166_ (net)
+                 24.99    0.08 1630.09 v g_actual_native_load.u_native/_46854_/B (OR5x1_ASAP7_75t_R)
+     1    3.93   61.74   91.40 1721.49 v g_actual_native_load.u_native/_46854_/Y (OR5x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19186_ (net)
+                 61.82    1.27 1722.76 v g_actual_native_load.u_native/_46855_/D (OR4x1_ASAP7_75t_R)
+     2    4.13   59.41   89.11 1811.87 v g_actual_native_load.u_native/_46855_/Y (OR4x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19187_ (net)
+                 59.50    1.32 1813.19 v g_actual_native_load.u_native/_46874_/B (OR3x4_ASAP7_75t_R)
+     3   12.61   63.24  105.19 1918.38 v g_actual_native_load.u_native/_46874_/Y (OR3x4_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_19206_ (net)
+                 68.99    9.91 1928.29 v g_actual_native_load.u_native/place185087/A (BUFx6f_ASAP7_75t_R)
+     2   20.01   41.64   53.44 1981.73 v g_actual_native_load.u_native/place185087/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181406 (net)
+                 92.49   26.10 2007.83 v g_actual_native_load.u_native/place185086/A (BUFx6f_ASAP7_75t_R)
+     2   21.40   47.80   59.18 2067.01 v g_actual_native_load.u_native/place185086/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181405 (net)
+                 98.16   27.60 2094.61 v g_actual_native_load.u_native/place185085/A (BUFx6f_ASAP7_75t_R)
+     2   19.93   43.14   59.65 2154.25 v g_actual_native_load.u_native/place185085/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181404 (net)
+                 92.74   25.94 2180.20 v g_actual_native_load.u_native/place185084/A (BUFx6f_ASAP7_75t_R)
+     4   23.54   50.07   58.27 2238.47 v g_actual_native_load.u_native/place185084/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181403 (net)
+                117.26   34.03 2272.50 v g_actual_native_load.u_native/place185083/A (BUFx6f_ASAP7_75t_R)
+     8   25.58   60.82   62.81 2335.31 v g_actual_native_load.u_native/place185083/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181402 (net)
+                 61.44    3.55 2338.87 v g_actual_native_load.u_native/place185006/A (BUFx6f_ASAP7_75t_R)
+    13   14.46   36.86   50.06 2388.93 v g_actual_native_load.u_native/place185006/Y (BUFx6f_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181325 (net)
+                 41.56    6.88 2395.80 v g_actual_native_load.u_native/place185002/A (BUFx3_ASAP7_75t_R)
+     3    5.17   26.36   44.83 2440.63 v g_actual_native_load.u_native/place185002/Y (BUFx3_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181321 (net)
+                 26.43    0.75 2441.38 v g_actual_native_load.u_native/fanout240974/A (BUFx2_ASAP7_75t_R)
+    16   14.24   82.03   68.11 2509.49 v g_actual_native_load.u_native/fanout240974/Y (BUFx2_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net237293 (net)
+                 82.05    0.85 2510.34 v g_actual_native_load.u_native/place185000/A (BUFx3_ASAP7_75t_R)
+     1    1.36   15.34   47.77 2558.11 v g_actual_native_load.u_native/place185000/Y (BUFx3_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/net181319 (net)
+                 15.34    0.10 2558.20 v g_actual_native_load.u_native/_68592_/A1 (AOI21x1_ASAP7_75t_R)
+     1    0.69   21.54   16.79 2574.99 ^ g_actual_native_load.u_native/_68592_/Y (AOI21x1_ASAP7_75t_R)
+                                         g_actual_native_load.u_native/_13738_ (net)
+                 21.54    0.03 2575.03 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/D (DFFHQNx1_ASAP7_75t_R)
+                               2575.03   data arrival time
+
+                  0.00  833.33  833.33   clock core_clk (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -30.01  743.33   library setup time
+                                743.33   data required time
+-----------------------------------------------------------------------------
+                                743.33   data required time
+                               -2575.03   data arrival time
+-----------------------------------------------------------------------------
+                               -1831.70   slack (VIOLATED)
+
+
+
+==========================================================================
+resizer report_check_types -max_slew -max_cap -max_fanout -violators
+--------------------------------------------------------------------------
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+argmax_level1[1513]                   250.00  288.32  -38.32 (VIOLATED)
+native_captured_request_check[2536]   250.00  287.83  -37.83 (VIOLATED)
+result_capture[467]                   250.00  287.33  -37.33 (VIOLATED)
+native_captured_request_check[2702]   250.00  287.27  -37.27 (VIOLATED)
+native_captured_request_check[2373]   250.00  286.17  -36.17 (VIOLATED)
+native_captured_request_check[2162]   250.00  284.97  -34.97 (VIOLATED)
+result_capture[463]                   250.00  284.53  -34.53 (VIOLATED)
+native_captured_request[2417]         250.00  283.04  -33.04 (VIOLATED)
+o_data[1635]                          250.00  282.96  -32.96 (VIOLATED)
+result_capture[495]                   250.00  282.71  -32.71 (VIOLATED)
+result_capture[133]                   250.00  282.26  -32.26 (VIOLATED)
+o_data[834]                           250.00  280.96  -30.96 (VIOLATED)
+argmax_level1[1443]                   250.00  280.72  -30.72 (VIOLATED)
+native_captured_request_check[2719]   250.00  280.69  -30.69 (VIOLATED)
+argmax_level1[1342]                   250.00  280.57  -30.57 (VIOLATED)
+o_data[928]                           250.00  278.06  -28.06 (VIOLATED)
+native_captured_request_check[49]     250.00  277.47  -27.47 (VIOLATED)
+o_data[1096]                          250.00  277.37  -27.37 (VIOLATED)
+native_captured_request_check[2440]   250.00  276.64  -26.64 (VIOLATED)
+o_data[1104]                          250.00  275.56  -25.56 (VIOLATED)
+o_mask[29]                            250.00  274.13  -24.13 (VIOLATED)
+result_capture[497]                   250.00  274.10  -24.10 (VIOLATED)
+native_captured_request[2688]         250.00  273.66  -23.66 (VIOLATED)
+native_captured_request_check[2786]   250.00  273.49  -23.49 (VIOLATED)
+result_capture[408]                   250.00  272.75  -22.75 (VIOLATED)
+native_captured_request_check[2428]   250.00  272.11  -22.11 (VIOLATED)
+native_captured_request[1627]         250.00  271.46  -21.46 (VIOLATED)
+o_addr[89]                            250.00  271.41  -21.41 (VIOLATED)
+o_data[1686]                          250.00  271.18  -21.18 (VIOLATED)
+o_data[1659]                          250.00  271.02  -21.02 (VIOLATED)
+argmax_level1[1490]                   250.00  269.56  -19.56 (VIOLATED)
+native_captured_request[1663]         250.00  269.27  -19.27 (VIOLATED)
+result_capture[278]                   250.00  268.99  -18.99 (VIOLATED)
+native_captured_request[2091]         250.00  268.51  -18.51 (VIOLATED)
+result_capture[26]                    250.00  268.35  -18.35 (VIOLATED)
+native_captured_request_check[1644]   250.00  268.35  -18.35 (VIOLATED)
+result_capture[564]                   250.00  268.33  -18.33 (VIOLATED)
+o_data[1108]                          250.00  268.28  -18.28 (VIOLATED)
+native_captured_request_check[1822]   250.00  268.13  -18.13 (VIOLATED)
+o_data[1679]                          250.00  267.92  -17.92 (VIOLATED)
+o_data[1119]                          250.00  267.61  -17.61 (VIOLATED)
+native_captured_request_check[2451]   250.00  267.09  -17.09 (VIOLATED)
+argmax_level1[1349]                   250.00  266.69  -16.69 (VIOLATED)
+o_data[1681]                          250.00  265.72  -15.72 (VIOLATED)
+native_captured_request[1431]         250.00  265.63  -15.63 (VIOLATED)
+native_captured_request[2778]         250.00  265.48  -15.48 (VIOLATED)
+result_capture[66]                    250.00  265.46  -15.46 (VIOLATED)
+result_capture[209]                   250.00  265.36  -15.36 (VIOLATED)
+result_capture[165]                   250.00  265.35  -15.35 (VIOLATED)
+result_capture[34]                    250.00  265.17  -15.17 (VIOLATED)
+native_captured_request_check[1529]   250.00  265.15  -15.15 (VIOLATED)
+result_capture[420]                   250.00  265.13  -15.13 (VIOLATED)
+ra_addr[56]                           250.00  264.79  -14.79 (VIOLATED)
+result_capture[212]                   250.00  264.73  -14.73 (VIOLATED)
+leaf[1735]                            250.00  264.33  -14.33 (VIOLATED)
+native_captured_request[1708]         250.00  264.25  -14.25 (VIOLATED)
+native_captured_request[2367]         250.00  264.18  -14.18 (VIOLATED)
+leaf[1567]                            250.00  263.80  -13.80 (VIOLATED)
+result_capture[251]                   250.00  263.76  -13.76 (VIOLATED)
+native_captured_request[2779]         250.00  263.73  -13.73 (VIOLATED)
+o_data[1189]                          250.00  263.61  -13.61 (VIOLATED)
+leaf[2672]                            250.00  263.36  -13.36 (VIOLATED)
+leaf[2673]                            250.00  263.09  -13.09 (VIOLATED)
+o_data[1205]                          250.00  263.09  -13.09 (VIOLATED)
+result_capture[152]                   250.00  262.99  -12.99 (VIOLATED)
+native_captured_request_check[1861]   250.00  262.89  -12.89 (VIOLATED)
+o_data[1169]                          250.00  262.78  -12.78 (VIOLATED)
+leaf[2092]                            250.00  262.64  -12.64 (VIOLATED)
+native_captured_request[1693]         250.00  262.57  -12.57 (VIOLATED)
+native_captured_request[1763]         250.00  262.46  -12.46 (VIOLATED)
+native_captured_request_check[1719]   250.00  262.09  -12.09 (VIOLATED)
+result_capture[415]                   250.00  262.02  -12.02 (VIOLATED)
+native_captured_request_check[2055]   250.00  261.93  -11.93 (VIOLATED)
+result_capture[465]                   250.00  261.67  -11.67 (VIOLATED)
+result_capture[810]                   250.00  261.38  -11.38 (VIOLATED)
+result_capture[649]                   250.00  261.25  -11.25 (VIOLATED)
+result_capture[201]                   250.00  261.23  -11.23 (VIOLATED)
+native_captured_request_check[1879]   250.00  261.11  -11.11 (VIOLATED)
+result_capture[235]                   250.00  260.92  -10.92 (VIOLATED)
+result_capture[560]                   250.00  260.88  -10.88 (VIOLATED)
+result_capture[1020]                  250.00  260.79  -10.79 (VIOLATED)
+result_capture[416]                   250.00  260.52  -10.52 (VIOLATED)
+leaf[2722]                            250.00  260.28  -10.28 (VIOLATED)
+result_capture[1740]                  250.00  260.22  -10.22 (VIOLATED)
+native_captured_request_check[1427]   250.00  260.11  -10.11 (VIOLATED)
+native_captured_request_check[2413]   250.00  259.95   -9.95 (VIOLATED)
+result_capture[1830]                  250.00  259.88   -9.88 (VIOLATED)
+o_data[1105]                          250.00  259.85   -9.85 (VIOLATED)
+o_data[1122]                          250.00  259.82   -9.82 (VIOLATED)
+o_data[1468]                          250.00  259.81   -9.81 (VIOLATED)
+result_capture[232]                   250.00  259.25   -9.25 (VIOLATED)
+native_captured_request_check[2465]   250.00  259.02   -9.02 (VIOLATED)
+native_captured_request_check[1442]   250.00  258.83   -8.83 (VIOLATED)
+result_capture[237]                   250.00  258.69   -8.69 (VIOLATED)
+native_captured_request_check[2179]   250.00  258.48   -8.48 (VIOLATED)
+result_capture[388]                   250.00  258.36   -8.36 (VIOLATED)
+native_captured_request[1891]         250.00  258.31   -8.31 (VIOLATED)
+o_data[1115]                          250.00  258.29   -8.29 (VIOLATED)
+native_captured_request[2758]         250.00  257.87   -7.87 (VIOLATED)
+native_captured_request_check[2824]   250.00  257.85   -7.85 (VIOLATED)
+native_captured_request[2789]         250.00  257.63   -7.63 (VIOLATED)
+result_capture[704]                   250.00  257.00   -7.00 (VIOLATED)
+o_data[1645]                          250.00  256.94   -6.94 (VIOLATED)
+result_capture[550]                   250.00  256.34   -6.34 (VIOLATED)
+argmax_level1[1246]                   250.00  256.07   -6.07 (VIOLATED)
+native_captured_request_check[1919]   250.00  255.99   -5.99 (VIOLATED)
+native_captured_request_check[2222]   250.00  255.85   -5.85 (VIOLATED)
+native_captured_request[1715]         250.00  255.74   -5.74 (VIOLATED)
+o_data[1113]                          250.00  255.65   -5.65 (VIOLATED)
+result_capture[14]                    250.00  255.56   -5.56 (VIOLATED)
+o_data[1894]                          250.00  255.55   -5.55 (VIOLATED)
+result_capture[171]                   250.00  255.53   -5.53 (VIOLATED)
+o_data[1466]                          250.00  255.43   -5.43 (VIOLATED)
+result_capture[140]                   250.00  255.42   -5.42 (VIOLATED)
+o_data[1636]                          250.00  254.90   -4.90 (VIOLATED)
+result_capture[414]                   250.00  254.52   -4.52 (VIOLATED)
+leaf[2671]                            250.00  254.50   -4.50 (VIOLATED)
+o_data[1443]                          250.00  254.49   -4.49 (VIOLATED)
+o_data[1091]                          250.00  254.25   -4.25 (VIOLATED)
+native_captured_request_check[2427]   250.00  254.02   -4.02 (VIOLATED)
+native_captured_request_check[1830]   250.00  253.79   -3.79 (VIOLATED)
+result_capture[1795]                  250.00  253.68   -3.68 (VIOLATED)
+result_capture[1549]                  250.00  253.58   -3.58 (VIOLATED)
+o_data[1126]                          250.00  253.56   -3.56 (VIOLATED)
+o_data[1192]                          250.00  253.54   -3.54 (VIOLATED)
+o_data[1109]                          250.00  253.40   -3.40 (VIOLATED)
+o_data[1098]                          250.00  253.22   -3.22 (VIOLATED)
+native_captured_request_check[1915]   250.00  253.13   -3.13 (VIOLATED)
+native_captured_request_check[2426]   250.00  253.11   -3.11 (VIOLATED)
+result_capture[248]                   250.00  253.09   -3.09 (VIOLATED)
+native_captured_request_check[1351]   250.00  252.69   -2.69 (VIOLATED)
+o_data[1132]                          250.00  252.61   -2.61 (VIOLATED)
+o_data[1898]                          250.00  252.59   -2.59 (VIOLATED)
+result_capture[131]                   250.00  251.73   -1.73 (VIOLATED)
+o_data[1196]                          250.00  251.30   -1.30 (VIOLATED)
+o_data[544]                           250.00  251.22   -1.22 (VIOLATED)
+native_captured_request_check[1877]   250.00  251.22   -1.22 (VIOLATED)
+native_captured_request_check[1805]   250.00  250.82   -0.82 (VIOLATED)
+native_captured_request[2075]         250.00  250.73   -0.73 (VIOLATED)
+result_capture[183]                   250.00  250.64   -0.64 (VIOLATED)
+result_capture[160]                   250.00  250.57   -0.57 (VIOLATED)
+o_data[575]                           250.00  250.39   -0.39 (VIOLATED)
+native_captured_request[1805]         250.00  250.32   -0.32 (VIOLATED)
+
+
+==========================================================================
+resizer max_slew_check_slack
+--------------------------------------------------------------------------
+-38.322208404541016
+
+==========================================================================
+resizer max_slew_check_limit
+--------------------------------------------------------------------------
+250.0
+
+==========================================================================
+resizer max_slew_check_slack_limit
+--------------------------------------------------------------------------
+-0.1533
+
+==========================================================================
+resizer max_fanout_check_slack
+--------------------------------------------------------------------------
+0.0
+
+==========================================================================
+resizer max_fanout_check_limit
+--------------------------------------------------------------------------
+16.0
+
+==========================================================================
+resizer max_fanout_check_slack_limit
+--------------------------------------------------------------------------
+0.0000
+
+==========================================================================
+resizer max_capacitance_check_slack
+--------------------------------------------------------------------------
+8.520737648010254
+
+==========================================================================
+resizer max_capacitance_check_limit
+--------------------------------------------------------------------------
+23.040000915527344
+
+==========================================================================
+resizer max_capacitance_check_slack_limit
+--------------------------------------------------------------------------
+0.3698
+
+==========================================================================
+resizer max_slew_violation_count
+--------------------------------------------------------------------------
+max slew violation count 143
+
+==========================================================================
+resizer max_fanout_violation_count
+--------------------------------------------------------------------------
+max fanout violation count 0
+
+==========================================================================
+resizer max_cap_violation_count
+--------------------------------------------------------------------------
+max cap violation count 0
+
+==========================================================================
+resizer setup_violation_count
+--------------------------------------------------------------------------
+setup violation count 8625
+
+==========================================================================
+resizer hold_violation_count
+--------------------------------------------------------------------------
+hold violation count 320
+
+==========================================================================
+resizer report_checks -path_delay max reg to reg
+--------------------------------------------------------------------------
+Startpoint: g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  79.56   79.56 v g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_/QN (DFFHQNx1_ASAP7_75t_R)
+  71.12  150.68 ^ g_actual_native_load.u_native/_36983_/Y (XOR2x2_ASAP7_75t_R)
+  46.24  196.92 ^ g_actual_native_load.u_native/place201527/Y (BUFx6f_ASAP7_75t_R)
+  85.47  282.38 ^ g_actual_native_load.u_native/place201526/Y (BUFx6f_ASAP7_75t_R)
+  85.65  368.03 ^ g_actual_native_load.u_native/place201525/Y (BUFx6f_ASAP7_75t_R)
+  85.65  453.68 ^ g_actual_native_load.u_native/place201524/Y (BUFx6f_ASAP7_75t_R)
+  85.71  539.39 ^ g_actual_native_load.u_native/place201523/Y (BUFx6f_ASAP7_75t_R)
+ 102.75  642.14 ^ g_actual_native_load.u_native/_36984_/Y (AND4x2_ASAP7_75t_R)
+  46.69  688.83 ^ g_actual_native_load.u_native/place189682/Y (BUFx6f_ASAP7_75t_R)
+  84.93  773.76 ^ g_actual_native_load.u_native/place189681/Y (BUFx6f_ASAP7_75t_R)
+  85.10  858.86 ^ g_actual_native_load.u_native/place189680/Y (BUFx6f_ASAP7_75t_R)
+  85.10  943.97 ^ g_actual_native_load.u_native/place189679/Y (BUFx6f_ASAP7_75t_R)
+  85.24 1029.21 ^ g_actual_native_load.u_native/place189678/Y (BUFx6f_ASAP7_75t_R)
+ 133.20 1162.41 ^ g_actual_native_load.u_native/_36989_/Y (AND5x2_ASAP7_75t_R)
+  77.08 1239.49 ^ g_actual_native_load.u_native/place188299/Y (BUFx6f_ASAP7_75t_R)
+  85.72 1325.21 ^ g_actual_native_load.u_native/place188298/Y (BUFx6f_ASAP7_75t_R)
+  85.65 1410.86 ^ g_actual_native_load.u_native/place188297/Y (BUFx6f_ASAP7_75t_R)
+  85.97 1496.84 ^ g_actual_native_load.u_native/place188296/Y (BUFx6f_ASAP7_75t_R)
+ 110.01 1606.85 ^ g_actual_native_load.u_native/_37010_/Y (AND4x1_ASAP7_75t_R)
+  23.17 1630.01 v g_actual_native_load.u_native/_46834_/Y (NAND2x1_ASAP7_75t_R)
+  91.48 1721.49 v g_actual_native_load.u_native/_46854_/Y (OR5x1_ASAP7_75t_R)
+  90.38 1811.87 v g_actual_native_load.u_native/_46855_/Y (OR4x1_ASAP7_75t_R)
+ 106.51 1918.38 v g_actual_native_load.u_native/_46874_/Y (OR3x4_ASAP7_75t_R)
+  63.36 1981.73 v g_actual_native_load.u_native/place185087/Y (BUFx6f_ASAP7_75t_R)
+  85.28 2067.01 v g_actual_native_load.u_native/place185086/Y (BUFx6f_ASAP7_75t_R)
+  87.24 2154.25 v g_actual_native_load.u_native/place185085/Y (BUFx6f_ASAP7_75t_R)
+  84.21 2238.47 v g_actual_native_load.u_native/place185084/Y (BUFx6f_ASAP7_75t_R)
+  96.85 2335.31 v g_actual_native_load.u_native/place185083/Y (BUFx6f_ASAP7_75t_R)
+  53.61 2388.93 v g_actual_native_load.u_native/place185006/Y (BUFx6f_ASAP7_75t_R)
+  51.71 2440.63 v g_actual_native_load.u_native/place185002/Y (BUFx3_ASAP7_75t_R)
+  68.86 2509.49 v g_actual_native_load.u_native/fanout240974/Y (BUFx2_ASAP7_75t_R)
+  48.61 2558.11 v g_actual_native_load.u_native/place185000/Y (BUFx3_ASAP7_75t_R)
+  16.88 2574.99 ^ g_actual_native_load.u_native/_68592_/Y (AOI21x1_ASAP7_75t_R)
+   0.03 2575.03 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/D (DFFHQNx1_ASAP7_75t_R)
+        2575.03   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+         773.33 ^ g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -30.01  743.33   library setup time
+         743.33   data required time
+---------------------------------------------------------
+         743.33   data required time
+        -2575.03   data arrival time
+---------------------------------------------------------
+        -1831.70   slack (VIOLATED)
+
+
+
+==========================================================================
+resizer report_checks -path_delay min reg to reg
+--------------------------------------------------------------------------
+Startpoint: u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_memory.g_bank[28].u_lane/u_sram
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: BC
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  29.83   29.83 v u_memory.g_bank[28].u_lane/encoded_r[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.87   36.71 ^ u_memory.g_bank[28].u_lane/_1071_/Y (INVx1_ASAP7_75t_R)
+   0.02   36.73 ^ u_memory.g_bank[28].u_lane/u_sram/wd_in[10] (ot_sram_1r1w_512x128_m4_r2c2)
+          36.73   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_memory.g_bank[28].u_lane/u_sram/clk (ot_sram_1r1w_512x128_m4_r2c2)
+  18.50   43.50   library hold time
+          43.50   data required time
+---------------------------------------------------------
+          43.50   data required time
+         -36.73   data arrival time
+---------------------------------------------------------
+          -6.78   slack (VIOLATED)
+
+
+
+==========================================================================
+resizer critical path target clock latency max path
+--------------------------------------------------------------------------
+0.0000
+
+==========================================================================
+resizer critical path target clock latency min path
+--------------------------------------------------------------------------
+0.0000
+
+==========================================================================
+resizer critical path source clock latency min path
+--------------------------------------------------------------------------
+0.0000
+
+==========================================================================
+resizer critical path delay
+--------------------------------------------------------------------------
+2575.0264
+
+==========================================================================
+resizer critical path slack
+--------------------------------------------------------------------------
+-1831.7003
+
+==========================================================================
+resizer slack div critical path delay
+--------------------------------------------------------------------------
+-71.133263
+
+==========================================================================
+resizer report_power
+--------------------------------------------------------------------------
+Corner: WC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             1.25e-01   8.88e-03   3.18e-04   1.34e-01  58.9%
+Combinational          2.06e-02   4.12e-02   5.00e-04   6.22e-02  27.4%
+Clock                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Macro                  2.96e-02   0.00e+00   1.65e-03   3.13e-02  13.8%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  1.75e-01   5.01e-02   2.47e-03   2.27e-01 100.0%
+                          76.9%      22.0%       1.1%
+Corner: BC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             2.02e-01   1.43e-02   1.53e-05   2.16e-01  60.6%
+Combinational          3.56e-02   6.47e-02   2.75e-05   1.00e-01  28.1%
+Clock                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Macro                  3.87e-02   0.00e+00   1.65e-03   4.03e-02  11.3%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  2.76e-01   7.90e-02   1.70e-03   3.57e-01 100.0%
+                          77.4%      22.2%       0.5%

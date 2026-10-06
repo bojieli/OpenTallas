@@ -1,0 +1,29 @@
+{
+  "cell_count": 193912,
+  "cell_area_um2": 27812.239,
+  "chip_area_um2": 13914.37926,
+  "sequential_cell_count": 8870,
+  "sequential_area_um2": 3362.44,
+  "combinational_cell_count": 88082,
+  "macro_count": 96960,
+  "unmapped_cell_types": [
+    "ot_fwd_clk_inv",
+    "ot_hbm_native_frame_station",
+    "submodules"
+  ],
+  "cell_types_used": 38,
+  "abc_delay_target_ps": 833.333333,
+  "dont_use_cell_count": 81,
+  "netlist_normalization": {
+    "signed_declarations_stripped": 0,
+    "raw_netlist_sha256": "078e0dc3c6bfabaefde9c32c7f9d856e583acdd03162d84eb28d300c714fc5cf",
+    "normalized_netlist_sha256": "078e0dc3c6bfabaefde9c32c7f9d856e583acdd03162d84eb28d300c714fc5cf"
+  },
+  "reused_completed_map": {
+    "directory": "/srv/opentallas-scratch/codex/w2-current-station-2cbe31b99/route-r1/work",
+    "mapped_sha256": "078e0dc3c6bfabaefde9c32c7f9d856e583acdd03162d84eb28d300c714fc5cf",
+    "original_synth_script_sha256": "8547c8c121b2cde0469d925c00051c49666ad340a2dbd382168639e009566e75",
+    "original_tool_log_sha256": "fc5ea8bfbd6044a5daff2a3e3447ca2024face4684a6b1c513cd0b5f656659b7",
+    "yosys_or_ABC_relaunched": false
+  }
+}

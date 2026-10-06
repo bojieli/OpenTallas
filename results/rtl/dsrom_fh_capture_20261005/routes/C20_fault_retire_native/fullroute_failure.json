@@ -1,0 +1,61 @@
+{
+  "observed_utc": "2026-10-06T08:55:40.863473+00:00",
+  "terminal_utc": "2026-10-06T08:27:18.896488+00:00",
+  "source_commit": "dd6d7127bc812f830a6fbc31f11c156006f1c71a",
+  "actual_make_exit": 2,
+  "first_error": "DPL-0033 detailed placement checks failed",
+  "first_error_source_log_line": 62479,
+  "original_DPL_log_sha256": "831c90b527128b65649771c7611d1e8a4985a0766f965e194add3ae846e0511f",
+  "old_controller_212904_live": false,
+  "old_OpenROAD_218758_live": false,
+  "old_container_fd03d66af60d_live": false,
+  "latest_completed_stage": "3_4_place_resized",
+  "failed_stage": "3_5_place_dp",
+  "CTS_or_route_completed": false,
+  "extracted_SS_FF_available": false,
+  "route_DRC_available": false,
+  "global_place_SS_setup_ps": -1825.68,
+  "resized_SS_setup_ps": -1831.7,
+  "BC_hold_ps": -6.77567,
+  "resized_slew_violations": 143,
+  "resized_internal_electrical_violations_in_report": 0,
+  "resized_fanout_violations": 0,
+  "electrical_scope": "preCTS report; slew entries observation outputs, not closure of postCTS/extracted internal classes",
+  "detailedplace_metrics": {
+    "negotiation_final_illegal_cells": 29632,
+    "design_violations": 27075,
+    "site_alignment_problems": 28262,
+    "adjacent_overlaps": 20305,
+    "padding_check_failed": 405,
+    "region_placement_check_failed": 2401
+  },
+  "critical_path": {
+    "start": "g_actual_native_load.u_native/captured_request[1053]$_SDFFE_PN0P_",
+    "end": "g_actual_native_load.u_native/captured_request_check[884]$_SDFFE_PN1P_",
+    "corner": "WC",
+    "launch_capture_clock": "core_clk ideal833.333ps, SS60",
+    "arrival_ps": 2575.03,
+    "required_ps": 743.33,
+    "clkQ_ps": 79.56,
+    "buffer_inverter_ps": 1302.36,
+    "buffer_inverter_arcs": 23,
+    "wire_ps": 532.09,
+    "logic_ps": 661.02,
+    "logic_arcs": 11,
+    "source_class": "native request/check complement comparison -> wide reduction bad/endpoint_fault -> protected capture permission -> check-flop D/hold mux; not former head global64poison veto or skew"
+  },
+  "retained_checkpoint_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C20_fault_retire_native/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C20_fault_retire_native/base",
+  "retained_checkpoints": [
+    "1_synth.odb",
+    "2_4_floorplan_pdn.odb",
+    "3_3_place_gp.odb",
+    "3_4_place_resized.odb",
+    "3_5_place_dp-failed.odb"
+  ],
+  "preserved_numerical": "ENABLEON62963 +85/+70.833ns source1465; no replay",
+  "next_changed_step": {
+    "timing": "Coordinate Copernicus actual provider contract: distributed local complement checks and bounded checked-permission pipeline with held capture/visibility/ACK/debt until check complete; bind actual fast root and price added cycles before RTL. Do not introduce delayed fault permission without quarantine. Old head arithmetic/golden unchanged. Own child copies actual provider change only after source-owned handoff.",
+    "placement": "Retained mapped/floorplan/resized objects; use existing site-aligned macro-free single-boundary strip API, allmembers guard5 capacity, disable ENABLE_DPO and use installed diamond legalizer. Fix region/macro obstruction alignment, no macro shuffle or density/clock waiver. This alone does not fix timing; no placement-only relaunch.",
+    "launch": "NONE; current source failed, no restart based on missing process, no duplicate/golden/model replay"
+  }
+}
