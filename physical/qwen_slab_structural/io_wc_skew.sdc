@@ -2,6 +2,8 @@
 # measured insertion is budgeted on every boundary delay, adversely: input launch later (setup) / earlier (hold),
 # output capture earlier (setup) / later (hold).  Otherwise identical to the file named in the next line.
 set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 150}]
+# hold side (coordinator decision 2026-10-06): a 50 ps die-clock IO hold allowance (OT_IO_HOLD_SKEW), not the setup skew
+set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
 # from io_wc.sdc
 # S1 die context for the multi-corner (WC setup + WC/BC hold) ORFS stages, post-CTS only.
 # io_ref.sdc (-reference_pin) is NOT usable: OpenSTA 26Q3 drops every input-port path under it (report_checks -from
@@ -38,6 +40,6 @@ unset_output_delay [all_outputs]
 set qss_in  [get_ports {rst_n p_* res_in*}]
 set qss_out [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
 set_input_delay  [expr {166.667 + $qss_late + $ot_sk}] -max -clock clk $qss_in
-set_input_delay  [expr {$qss_early - $qss_hx - $ot_sk}] -min -clock clk $qss_in
+set_input_delay  [expr {$qss_early - $qss_hx - $ot_hk}] -min -clock clk $qss_in
 set_output_delay [expr {166.667 - $qss_early + $ot_sk}] -max -clock clk $qss_out
-set_output_delay [expr {-$qss_late_bc - $qss_hx - $ot_sk}] -min -clock clk $qss_out
+set_output_delay [expr {-$qss_late_bc - $qss_hx - $ot_hk}] -min -clock clk $qss_out

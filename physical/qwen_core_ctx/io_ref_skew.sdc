@@ -2,6 +2,8 @@
 # measured insertion is budgeted on every boundary delay, adversely: input launch later (setup) / earlier (hold),
 # output capture earlier (setup) / later (hold).  Otherwise identical to the file named in the next line.
 set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 150}]
+# hold side (coordinator decision 2026-10-06): a 50 ps die-clock IO hold allowance (OT_IO_HOLD_SKEW), not the setup skew
+set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
 # from io_ref.sdc
 # Die context (post-CTS only), as physical/qwen_slab_structural/io_ref.sdc: the register on the other side of every
 # core port is a unit boundary register (ME spine / vector stream / stream, or the memory port register) in the same
@@ -28,6 +30,6 @@ set qcc_lmax [get_property $qcc_ref arrival_max_rise]
 set qcc_lmin [get_property $qcc_ref arrival_min_rise]
 puts "QCC reference pin [get_full_name $qcc_ref] clock arrival max $qcc_lmax min $qcc_lmin"
 set_input_delay [expr 166.6 + $qcc_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
-set_input_delay [expr 0 + $qcc_lmin - $ot_sk] -min -clock core_clk [all_inputs -no_clocks]
+set_input_delay [expr 0 + $qcc_lmin - $ot_hk] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr 166.6 - $qcc_lmax + $ot_sk] -max -clock core_clk $qcc_outs
-set_output_delay [expr 0 - $qcc_lmin - $ot_sk] -min -clock core_clk $qcc_outs
+set_output_delay [expr 0 - $qcc_lmin - $ot_hk] -min -clock core_clk $qcc_outs

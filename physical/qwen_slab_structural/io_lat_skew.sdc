@@ -2,6 +2,8 @@
 # measured insertion is budgeted on every boundary delay, adversely: input launch later (setup) / earlier (hold),
 # output capture earlier (setup) / later (hold).  Otherwise identical to the file named in the next line.
 set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 150}]
+# hold side (coordinator decision 2026-10-06): a 50 ps die-clock IO hold allowance (OT_IO_HOLD_SKEW), not the setup skew
+set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
 # from io_lat.sdc
 # S1 die context, crash-free form of io_ref.sdc (post-CTS only).  OpenROAD 26Q3 segfaults in sta::Sim::findDisabledEdges
 # when global routing evaluates slack with a -reference_pin boundary (qssr_570_* 5_1_grt, signal 11), so the same
@@ -23,6 +25,6 @@ unset_output_delay [all_outputs]
 set qss_in  [get_ports {rst_n p_* res_in*}]
 set qss_out [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
 set_input_delay  [expr {166.667 + $qss_amax + $ot_sk}] -max -clock clk $qss_in
-set_input_delay  [expr {$qss_amin - $ot_sk}]         -min -clock clk $qss_in
+set_input_delay  [expr {$qss_amin - $ot_hk}]         -min -clock clk $qss_in
 set_output_delay [expr {166.667 - $qss_amin + $ot_sk}] -max -clock clk $qss_out
-set_output_delay [expr {-$qss_amax - $ot_sk}]        -min -clock clk $qss_out
+set_output_delay [expr {-$qss_amax - $ot_hk}]        -min -clock clk $qss_out
