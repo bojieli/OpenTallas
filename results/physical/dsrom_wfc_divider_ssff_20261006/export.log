@@ -1,0 +1,23 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/export.ys' --
+
+1. Executing JSON frontend.
+Importing module ot_dsrom_wfc_common_clock_source from JSON tree.
+
+2. Executing Verilog backend.
+
+2.1. Executing BMUXMAP pass.
+
+2.2. Executing DEMUXMAP pass.
+Dumping module `\ot_dsrom_wfc_common_clock_source'.
+
+End of script. Logfile hash: 3ebdcee467, time: 0.00s, user: 0.01s, system: 0.00s, MEM: 61.45 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 65% 2x read_json (0 sec), 21% 2x write_verilog (0 sec), ...
