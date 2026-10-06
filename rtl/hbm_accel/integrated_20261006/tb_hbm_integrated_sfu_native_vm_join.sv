@@ -122,11 +122,11 @@ module tb_hbm_integrated_sfu_native_vm_join;
   for(j=0;j<2;j=j+1)begin
    negstep();ir_addr=64+j*32;ir_tag=8'(j);ir_v=1;
    #1; // Settle address/tag/valid BEFORE the acceptance edge.
-   if(!ir_r)$fatal(1,"READ_NOT_READY block=%0d cycles=%0d indexstate=%0d fault=%b",j,cycles,vm.u_vm.u_index.on.state,vm_fault);
+   if(!ir_r)$fatal(1,"READ_NOT_READY block=%0d cycles=%0d response_v=%b fault=%b",j,cycles,ir_rsp_v,vm_fault);
    tick();negstep();ir_v=0;
    // Accepted IDLE->READ, then READ->CAPTURE->CHECK->RESP: three edges.
    repeat(3)tick();
-   if(!ir_rsp_v)$fatal(1,"READ_RESPONSE_MISSING block=%0d cycles=%0d indexstate=%0d fault=%b",j,cycles,vm.u_vm.u_index.on.state,vm_fault);
+   if(!ir_rsp_v)$fatal(1,"READ_RESPONSE_MISSING block=%0d cycles=%0d response_v=%b fault=%b",j,cycles,ir_rsp_v,vm_fault);
    negstep();
    if(ir_frame!==frame||ir_rsp_tag!==8'(j)||ir_rank!==41||ir_data!==expected[0][j*1024+:1024])
     $fatal(1,"FIRST_NATIVE_SRAM_NUMERICAL_MISMATCH block=%0d",j);
@@ -139,7 +139,7 @@ module tb_hbm_integrated_sfu_native_vm_join;
   if(retained||grant||acks!=1||nv_complete_v)$fatal(1,"NONJOINT_RETIRE");
   negstep();retire_v=1;#1;
   // Both response ACKs and joint stage/publisher completion have drained.
-  if(!retire_r)$fatal(1,"ROOT_RETIRE_NOT_READY cycles=%0d indexstate=%0d stageRetained=%b VMfault=%b",cycles,vm.u_vm.u_index.on.state,retained,vm_fault);
+  if(!retire_r)$fatal(1,"ROOT_RETIRE_NOT_READY cycles=%0d readReady=%b response_v=%b stageRetained=%b VMfault=%b",cycles,ir_r,ir_rsp_v,retained,vm_fault);
   tick();negstep();retire_v=0;repeat(4)tick();
   if(!warm_ack||!vm_warm_ack||vm_retained)$fatal(1,"ROOT_WARM_DRAIN");
   // Caller high TOKEN17 refusal retains stage AND publisher completion.
