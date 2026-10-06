@@ -10587,6 +10587,27 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             measured_full32_tree_DFF=304836, measured_full32_tree_cell_delta_um2=-2327.7699,
             measured_full32_cycles=789, measured_new_cycles=0,
             exact_gate=True, physical_gain_measured=False, adopted=False),
+        geographic_request_tree=dict(
+            optin_parameter='GEO default0 in new item9_geo successor',
+            motivation='mapped balanced tree has 97789 west-cut nets versus 50594 track upper; assignment-only receiver correction did not solve it',
+            actual_failed_binding='loaded32_tree_physical_binding_r3/summary.json',
+            geometry_leaf_order_32=[*range(8), *range(16,24), *range(8,16), *range(24,32)],
+            real_west_callers=[*range(8), *range(16,24)],
+            implementation='same masked Boolean select; preserve each OR-tree intermediate through ABC; geographic halves before spine',
+            arithmetic_reordering=False, Boolean_OR_rounding_points=0,
+            padded_leaves=1 << (nsm-1).bit_length(),
+            AND_bit_equivalents=nsm*width, OR_bit_equivalents=(nsm-1)*width,
+            select_equalities=nsm*copies,
+            conservative_gate_area_um2=(nsm*width+(nsm-1)*width+nsm*copies*sb)*.2,
+            added_FF_bits=0, added_memory_ports=0, added_boundary_bits=0,
+            new_cycles_per_collective=0, new_cycles_per_record=0, composed_token_delta_ns=0,
+            logical_west_cut_payload_upper_bits=2*width,
+            control_and_CTS_tracks_must_be_measured=True,
+            measured_full32_grants=209, measured_mux_cycles=2048,
+            measured_completed_callers=32, measured_TX_records=128, measured_RX_records=256,
+            measured_context_cycles=789, measured_new_cycles=0, exact_gate_passed=True,
+            source_ready_before_changed_exact_and_synthesis=False,
+            channel_and_clock_qualified=False, adopted=False),
         actual_32SM_caller_context=dict(
             lineage='ot_gpu_simt_sm O_COLL c_data/c_mode/c_count and B_COLL_REQ/B_COLL_RSP; original item9 baseline',
             selected_DS_smv_TU_equivalence=False,
@@ -11326,3 +11347,56 @@ def hbm_r14_real_leaf_placement_defect_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/uarch/hbm_r14_real_leaf_defect_hunt_20261006/model.json').read_text())
+
+
+def hbm_smh_macro_band_price(macros, cells=0):
+    """Native directional SRAM OBS bands; same composed SM, zero new hardware.
+
+    Default OFF. The one measured GCell is a reservation, not physical tracks.
+    PG and true endpoint pins stay in the immutable CTS database. Unlike the
+    rejected all-layer rectangles, M5/M6 remain available for pin escape.
+    """
+    if cells not in (0, 1) or len(macros) != 8:
+        raise ValueError('Only measured eight-macro tile and one-GCell repair')
+    base = hbm_smh_local_grt_price([], reservation=0.25)
+    pitch = dict(M2=.039, M3=.036, M4=.048)
+    gcell = .57
+    bands = {layer: [] for layer in pitch}
+    edges = {layer: 0 for layer in pitch}
+    for m in macros:
+        x1,y1,x2,y2 = m['bbox']
+        if abs(x2-x1-94.824)>1e-6 or abs(y2-y1-41.04)>1e-6:
+            raise ValueError('Different SRAM geometry must be composed first')
+        for layer in pitch:
+            if layer == 'M3':
+                spans = [[x1-cells*gcell,y1,x1,y2],[x2,y1,x2+cells*gcell,y2]]
+                length = y2-y1
+            else:
+                # Conservative full macro width, including the M4 pin margin.
+                spans = [[x1,y1-cells*gcell,x2,y1],[x1,y2,x2,y2+cells*gcell]]
+                length = x2-x1
+            if cells:
+                bands[layer].extend(spans)
+                # Up to two quantized GCells per face; bound phase rounding.
+                edges[layer] += 2*2*math.ceil(length/gcell)*math.ceil(gcell/pitch[layer])
+    base.update(schema='opentallas.hbm.smh.native_macro_band.price.v1',
+        actual_macros=macros,macro_band_cells=cells,macro_extension_um=cells*gcell,
+        reservation_bands_um=bands,track_edge_slots_withheld_upper_bound=edges,
+        physical_tracks_added=0,PG_tracks_released=0,capacity_above_original=False,
+        original_resource_ceiling=dict(M2=3722977,M3=4603239,M4=3525788,M5=3721461,M6=2821839),
+        original_overflow=83,rejected_all_layer_overflow=2850,
+        rejected_zero_capacity_overflow=2815,
+        actual_PG='Retained M1/M2 followpins,M3 via enclosures,M5/M6 stripes; no PG ripup/reduction/relocation',
+        pin_escape='Original physical M4 SRAM pins; M5/M6 unmasked; no fictitious endpoint or access point',
+        replicas=8,new_mux_bits=0,new_demux_bits=0,new_clock_pins=0,
+        peak_memory_bytes_per_cycle_delta=0,MACs_per_cycle_delta=0,
+        boundary_bits_per_cycle_delta=0,added_pipeline_edges=0,added_register_bits=0,
+        density=.60,layers=["M2","M3","M4"],available_signal_layers=["M2","M3","M4","M5","M6"],
+        tile_density_parameter=.60,original_routing_usage_fraction=.4013,
+        slot_fit='Original tile allocation and every cell/macro coordinate unchanged',
+        source='GlobalRouter.cpp findInstancesObstructions extends perpendicular to preferred direction; native pin/PG accounting retained',
+        engine_RTL_changed=False,area_delta_um2=0,
+        latency_delta_cycles=0,routed_wire_buffer_and_clock_delta='Actual route/extraction required; no free physical latency claim',
+        macro_clk_to_q='Original SS SRAM library retained; full SS setup/FF hold required',
+        all_class_closure=False,parent_context_closed=False,adopted=False)
+    return base

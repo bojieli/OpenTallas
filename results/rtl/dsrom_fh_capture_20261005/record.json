@@ -199,7 +199,7 @@
     "source_RTL_unchanged": true
   },
   "C16_actual_result": {
-    "stage": "LIVE3_3; incomplete timing-driven placement, not propagated CTS/extracted qualification",
+    "stage": "TERMINAL actualmakeexit2 DPL0033; failedODB retained, not propagated CTS/extracted qualification",
     "qualified": false,
     "source_recipe": "41d7f6cb0",
     "source_RTL_unchanged": true,
@@ -230,7 +230,10 @@
     "reports": [
       "routes/C16_rect_strips/global_place.rpt",
       "routes/C16_rect_strips/resized.rpt"
-    ]
+    ],
+    "terminal_exit": 2,
+    "first_tool_error": "DPL0033 detailed placement checks failed",
+    "terminal_record": "results/rtl/dsrom_fh_capture_20261005/routes/C16_rect_strips/terminal.json"
   },
   "shared_partition_successors": {
     "comb": "C18_shared_comb",
@@ -263,5 +266,41 @@
     "C17b": "live EPYC1 preserved; no new E1 jobs",
     "C18": "live E2 comb shared partition supervisor2546022 source3c45 all105regions verified",
     "C19": "live E2 receiver partition supervisor2562095 source3c45 all105regions verified"
+  },
+  "C18_actual_result": {
+    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "first_timing_driven_setup_estimate_ps": -2384.7242,
+    "qualified": false,
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "host": "ot-epyc2",
+    "supervisor_pid": 2546022,
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb",
+    "shared_partition": "comb",
+    "serialized_lane_regions_verified": 64,
+    "serialized_nonempty_shared_regions_verified": 41,
+    "added_cycles": 0,
+    "head_slot_mm2": 1.32,
+    "exact_replayed": false,
+    "exact_retained_cycles": 62878,
+    "negative_controls_retained": true
+  },
+  "C19_actual_result": {
+    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "first_timing_driven_setup_estimate_ps": -2401.015,
+    "qualified": false,
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "host": "ot-epyc2",
+    "supervisor_pid": 2562095,
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers",
+    "shared_partition": "receivers",
+    "serialized_lane_regions_verified": 64,
+    "serialized_nonempty_shared_regions_verified": 41,
+    "added_cycles": 0,
+    "head_slot_mm2": 1.32,
+    "exact_replayed": false,
+    "exact_retained_cycles": 62878,
+    "negative_controls_retained": true
   }
 }
