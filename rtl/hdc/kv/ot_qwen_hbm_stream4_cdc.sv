@@ -30,7 +30,8 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer SYNC      = 2,
     parameter integer RSEL      = 0,       // ot_qwen_stream4_cdc_pc landing read select: 1 = r9 (closed route r9a)
     parameter integer RNG       = 10,
-    parameter integer KV_MAP    = 0        // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh)
+    parameter integer KV_MAP    = 0,       // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh)
+    parameter integer KV_MAP_PC = -1       // protected PC identity map (-1: = KV_MAP); a differing value is a negative control only
 ) (
     input  wire                 clk,
     input  wire                 rst_n, // cold POR only
@@ -136,7 +137,8 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC-1:0] h_wcon = col_v & col_we;
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
         if(PROTECTED)begin:protected_path
-        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC),
+            .KV_MAP(KV_MAP_PC < 0 ? KV_MAP : KV_MAP_PC)) u_cdc (
             .clk(clk), .por_n(rst_n), .warm_rst_n(warm_rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
