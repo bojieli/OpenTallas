@@ -35,20 +35,48 @@ module hfd_coll (
     wire clk = refclk;
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], por};
     wire rst_n = ~rst_s[1];
-    reg [24:0] i_f_cmdproc; always @(posedge clk) i_f_cmdproc <= f_cmdproc;
-    reg [1023:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= f_su_NE;
-    reg [1023:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= f_su_NW;
-    reg [1023:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= f_su_SE;
-    reg [1023:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= f_su_SW;
-    reg [975:0] i_llk_N0; always @(posedge clk) i_llk_N0 <= llk_N0;
-    reg [975:0] i_llk_N1; always @(posedge clk) i_llk_N1 <= llk_N1;
-    reg [975:0] i_llk_N2; always @(posedge clk) i_llk_N2 <= llk_N2;
-    reg [975:0] i_llk_N3; always @(posedge clk) i_llk_N3 <= llk_N3;
-    reg [975:0] i_llk_S0; always @(posedge clk) i_llk_S0 <= llk_S0;
-    reg [975:0] i_llk_S1; always @(posedge clk) i_llk_S1 <= llk_S1;
-    reg [975:0] i_llk_S2; always @(posedge clk) i_llk_S2 <= llk_S2;
-    reg [975:0] i_llk_S3; always @(posedge clk) i_llk_S3 <= llk_S3;
-    reg [975:0] i_llk_S4; always @(posedge clk) i_llk_S4 <= llk_S4;
+    reg [24:0] i0_f_cmdproc; always @(posedge clk) i0_f_cmdproc <= f_cmdproc;
+    reg [24:0] i1_f_cmdproc; always @(posedge clk) i1_f_cmdproc <= i0_f_cmdproc;
+    reg [24:0] i_f_cmdproc; always @(posedge clk) i_f_cmdproc <= i1_f_cmdproc;
+    reg [1023:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= f_su_NE;
+    reg [1023:0] i1_f_su_NE; always @(posedge clk) i1_f_su_NE <= i0_f_su_NE;
+    reg [1023:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i1_f_su_NE;
+    reg [1023:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= f_su_NW;
+    reg [1023:0] i1_f_su_NW; always @(posedge clk) i1_f_su_NW <= i0_f_su_NW;
+    reg [1023:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i1_f_su_NW;
+    reg [1023:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= f_su_SE;
+    reg [1023:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= i0_f_su_SE;
+    reg [1023:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
+    reg [1023:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= f_su_SW;
+    reg [1023:0] i1_f_su_SW; always @(posedge clk) i1_f_su_SW <= i0_f_su_SW;
+    reg [1023:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i1_f_su_SW;
+    reg [975:0] i0_llk_N0; always @(posedge clk) i0_llk_N0 <= llk_N0;
+    reg [975:0] i1_llk_N0; always @(posedge clk) i1_llk_N0 <= i0_llk_N0;
+    reg [975:0] i_llk_N0; always @(posedge clk) i_llk_N0 <= i1_llk_N0;
+    reg [975:0] i0_llk_N1; always @(posedge clk) i0_llk_N1 <= llk_N1;
+    reg [975:0] i1_llk_N1; always @(posedge clk) i1_llk_N1 <= i0_llk_N1;
+    reg [975:0] i_llk_N1; always @(posedge clk) i_llk_N1 <= i1_llk_N1;
+    reg [975:0] i0_llk_N2; always @(posedge clk) i0_llk_N2 <= llk_N2;
+    reg [975:0] i1_llk_N2; always @(posedge clk) i1_llk_N2 <= i0_llk_N2;
+    reg [975:0] i_llk_N2; always @(posedge clk) i_llk_N2 <= i1_llk_N2;
+    reg [975:0] i0_llk_N3; always @(posedge clk) i0_llk_N3 <= llk_N3;
+    reg [975:0] i1_llk_N3; always @(posedge clk) i1_llk_N3 <= i0_llk_N3;
+    reg [975:0] i_llk_N3; always @(posedge clk) i_llk_N3 <= i1_llk_N3;
+    reg [975:0] i0_llk_S0; always @(posedge clk) i0_llk_S0 <= llk_S0;
+    reg [975:0] i1_llk_S0; always @(posedge clk) i1_llk_S0 <= i0_llk_S0;
+    reg [975:0] i_llk_S0; always @(posedge clk) i_llk_S0 <= i1_llk_S0;
+    reg [975:0] i0_llk_S1; always @(posedge clk) i0_llk_S1 <= llk_S1;
+    reg [975:0] i1_llk_S1; always @(posedge clk) i1_llk_S1 <= i0_llk_S1;
+    reg [975:0] i_llk_S1; always @(posedge clk) i_llk_S1 <= i1_llk_S1;
+    reg [975:0] i0_llk_S2; always @(posedge clk) i0_llk_S2 <= llk_S2;
+    reg [975:0] i1_llk_S2; always @(posedge clk) i1_llk_S2 <= i0_llk_S2;
+    reg [975:0] i_llk_S2; always @(posedge clk) i_llk_S2 <= i1_llk_S2;
+    reg [975:0] i0_llk_S3; always @(posedge clk) i0_llk_S3 <= llk_S3;
+    reg [975:0] i1_llk_S3; always @(posedge clk) i1_llk_S3 <= i0_llk_S3;
+    reg [975:0] i_llk_S3; always @(posedge clk) i_llk_S3 <= i1_llk_S3;
+    reg [975:0] i0_llk_S4; always @(posedge clk) i0_llk_S4 <= llk_S4;
+    reg [975:0] i1_llk_S4; always @(posedge clk) i1_llk_S4 <= i0_llk_S4;
+    reg [975:0] i_llk_S4; always @(posedge clk) i_llk_S4 <= i1_llk_S4;
     wire [0:0] w_ep_clk;
     wire [0:0] w_ep_rst_n;
     wire [0:0] w_ep_pclk;
@@ -94,156 +122,145 @@ module hfd_coll (
     wire fclk_10; ot_fwd_clk_inv u_fclk_10 (.a(clk), .y(fclk_10));
     wire fclk_11; ot_fwd_clk_inv u_fclk_11 (.a(clk), .y(fclk_11));
     wire fclk_12; ot_fwd_clk_inv u_fclk_12 (.a(clk), .y(fclk_12));
-    reg [975:0] o_llk_N0;
-    always @(posedge clk) begin
-        o_llk_N0 <= 976'd0;
-        o_llk_N0[486:0] <= w_ep_ph_tx_flit[2913:2427];
+    wire [975:0] od_llk_N0 = {489'd0, w_ep_ph_tx_flit[2913:2427]};
+    wire [975:0] o_llk_N0;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_N0
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_N0[k]), .q(o_llk_N0[k]));
     end
     assign llk_N0[486:0] = o_llk_N0[486:0];
     assign llk_N0[974] = fclk_0;
-    reg [975:0] o_llk_N1;
-    always @(posedge clk) begin
-        o_llk_N1 <= 976'd0;
-        o_llk_N1[486:0] <= w_ep_ph_tx_flit[3400:2914];
+    wire [975:0] od_llk_N1 = {489'd0, w_ep_ph_tx_flit[3400:2914]};
+    wire [975:0] o_llk_N1;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_N1
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_N1[k]), .q(o_llk_N1[k]));
     end
     assign llk_N1[486:0] = o_llk_N1[486:0];
     assign llk_N1[974] = fclk_1;
-    reg [975:0] o_llk_N2;
-    always @(posedge clk) begin
-        o_llk_N2 <= 976'd0;
-        o_llk_N2[486:0] <= w_ep_ph_tx_flit[3887:3401];
+    wire [975:0] od_llk_N2 = {489'd0, w_ep_ph_tx_flit[3887:3401]};
+    wire [975:0] o_llk_N2;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_N2
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_N2[k]), .q(o_llk_N2[k]));
     end
     assign llk_N2[486:0] = o_llk_N2[486:0];
     assign llk_N2[974] = fclk_2;
-    reg [975:0] o_llk_N3;
-    always @(posedge clk) begin
-        o_llk_N3 <= 976'd0;
-        o_llk_N3[471:0] <= w_ep_ph_tx_flit[4359:3888];
-        o_llk_N3[479:472] <= w_ep_rx_credit[7:0];
+    wire [975:0] od_llk_N3 = {496'd0, w_ep_rx_credit[7:0], w_ep_ph_tx_flit[4359:3888]};
+    wire [975:0] o_llk_N3;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_N3
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_N3[k]), .q(o_llk_N3[k]));
     end
     assign llk_N3[486:0] = o_llk_N3[486:0];
     assign llk_N3[974] = fclk_3;
-    reg [975:0] o_llk_S0;
-    always @(posedge clk) begin
-        o_llk_S0 <= 976'd0;
-        o_llk_S0[7:0] <= w_ep_ph_tx_v[7:0];
-        o_llk_S0[486:8] <= w_ep_ph_tx_flit[478:0];
+    wire [975:0] od_llk_S0 = {489'd0, w_ep_ph_tx_flit[478:0], w_ep_ph_tx_v[7:0]};
+    wire [975:0] o_llk_S0;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_S0
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_S0[k]), .q(o_llk_S0[k]));
     end
     assign llk_S0[486:0] = o_llk_S0[486:0];
     assign llk_S0[974] = fclk_4;
-    reg [975:0] o_llk_S1;
-    always @(posedge clk) begin
-        o_llk_S1 <= 976'd0;
-        o_llk_S1[486:0] <= w_ep_ph_tx_flit[965:479];
+    wire [975:0] od_llk_S1 = {489'd0, w_ep_ph_tx_flit[965:479]};
+    wire [975:0] o_llk_S1;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_S1
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_S1[k]), .q(o_llk_S1[k]));
     end
     assign llk_S1[486:0] = o_llk_S1[486:0];
     assign llk_S1[974] = fclk_5;
-    reg [975:0] o_llk_S2;
-    always @(posedge clk) begin
-        o_llk_S2 <= 976'd0;
-        o_llk_S2[486:0] <= w_ep_ph_tx_flit[1452:966];
+    wire [975:0] od_llk_S2 = {489'd0, w_ep_ph_tx_flit[1452:966]};
+    wire [975:0] o_llk_S2;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_S2
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_S2[k]), .q(o_llk_S2[k]));
     end
     assign llk_S2[486:0] = o_llk_S2[486:0];
     assign llk_S2[974] = fclk_6;
-    reg [975:0] o_llk_S3;
-    always @(posedge clk) begin
-        o_llk_S3 <= 976'd0;
-        o_llk_S3[486:0] <= w_ep_ph_tx_flit[1939:1453];
+    wire [975:0] od_llk_S3 = {489'd0, w_ep_ph_tx_flit[1939:1453]};
+    wire [975:0] o_llk_S3;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_S3
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_S3[k]), .q(o_llk_S3[k]));
     end
     assign llk_S3[486:0] = o_llk_S3[486:0];
     assign llk_S3[974] = fclk_7;
-    reg [975:0] o_llk_S4;
-    always @(posedge clk) begin
-        o_llk_S4 <= 976'd0;
-        o_llk_S4[486:0] <= w_ep_ph_tx_flit[2426:1940];
+    wire [975:0] od_llk_S4 = {489'd0, w_ep_ph_tx_flit[2426:1940]};
+    wire [975:0] o_llk_S4;
+    for (genvar k = 0; k < 976; k = k + 1) begin : g_o_llk_S4
+        ot_hfd_oreg3 u (.clk(clk), .d(od_llk_S4[k]), .q(o_llk_S4[k]));
     end
     assign llk_S4[486:0] = o_llk_S4[486:0];
     assign llk_S4[974] = fclk_8;
-    reg [0:0] o_pll_hbm;
-    always @(posedge clk) begin
-        o_pll_hbm <= 1'd0;
+    wire [0:0] od_pll_hbm = {1'd0};
+    wire [0:0] o_pll_hbm;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_hbm
+        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_hbm[k]), .q(o_pll_hbm[k]));
     end
     assign pll_hbm[0] = fclk_9;
-    reg [0:0] o_pll_link;
-    always @(posedge clk) begin
-        o_pll_link <= 1'd0;
+    wire [0:0] od_pll_link = {1'd0};
+    wire [0:0] o_pll_link;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_link
+        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_link[k]), .q(o_pll_link[k]));
     end
     assign pll_link[0] = fclk_10;
-    reg [0:0] o_pll_serial;
-    always @(posedge clk) begin
-        o_pll_serial <= 1'd0;
+    wire [0:0] od_pll_serial = {1'd0};
+    wire [0:0] o_pll_serial;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_serial
+        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_serial[k]), .q(o_pll_serial[k]));
     end
     assign pll_serial[0] = fclk_11;
-    reg [0:0] o_pll_stream;
-    always @(posedge clk) begin
-        o_pll_stream <= 1'd0;
+    wire [0:0] od_pll_stream = {1'd0};
+    wire [0:0] o_pll_stream;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_stream
+        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_stream[k]), .q(o_pll_stream[k]));
     end
     assign pll_stream[0] = fclk_12;
-    reg [0:0] o_por_hbm;
-    always @(posedge clk) begin
-        o_por_hbm <= 1'd0;
-        o_por_hbm[0:0] <= rst_s[1];
+    wire [0:0] od_por_hbm = {rst_s[1]};
+    wire [0:0] o_por_hbm;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_por_hbm
+        ot_hfd_oreg3 u (.clk(clk), .d(od_por_hbm[k]), .q(o_por_hbm[k]));
     end
     assign por_hbm[0:0] = o_por_hbm[0:0];
-    reg [0:0] o_por_link;
-    always @(posedge clk) begin
-        o_por_link <= 1'd0;
-        o_por_link[0:0] <= rst_s[1];
+    wire [0:0] od_por_link = {rst_s[1]};
+    wire [0:0] o_por_link;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_por_link
+        ot_hfd_oreg3 u (.clk(clk), .d(od_por_link[k]), .q(o_por_link[k]));
     end
     assign por_link[0:0] = o_por_link[0:0];
-    reg [0:0] o_por_serial;
-    always @(posedge clk) begin
-        o_por_serial <= 1'd0;
-        o_por_serial[0:0] <= rst_s[1];
+    wire [0:0] od_por_serial = {rst_s[1]};
+    wire [0:0] o_por_serial;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_por_serial
+        ot_hfd_oreg3 u (.clk(clk), .d(od_por_serial[k]), .q(o_por_serial[k]));
     end
     assign por_serial[0:0] = o_por_serial[0:0];
-    reg [0:0] o_por_stream;
-    always @(posedge clk) begin
-        o_por_stream <= 1'd0;
-        o_por_stream[0:0] <= rst_s[1];
+    wire [0:0] od_por_stream = {rst_s[1]};
+    wire [0:0] o_por_stream;
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_o_por_stream
+        ot_hfd_oreg3 u (.clk(clk), .d(od_por_stream[k]), .q(o_por_stream[k]));
     end
     assign por_stream[0:0] = o_por_stream[0:0];
-    reg [32:0] o_t_cmdproc;
-    always @(posedge clk) begin
-        o_t_cmdproc <= 33'd0;
-        o_t_cmdproc[0:0] <= w_ep_fault[0:0];
-        o_t_cmdproc[32:1] <= w_ep_stat_credit_stall[31:0];
+    wire [32:0] od_t_cmdproc = {w_ep_stat_credit_stall[31:0], w_ep_fault[0:0]};
+    wire [32:0] o_t_cmdproc;
+    for (genvar k = 0; k < 33; k = k + 1) begin : g_o_t_cmdproc
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
     end
     assign t_cmdproc[32:0] = o_t_cmdproc[32:0];
-    reg [579:0] o_t_su_NE;
-    always @(posedge clk) begin
-        o_t_su_NE <= 580'd0;
-        o_t_su_NE[577:546] <= w_ep_inj_idx[31:0];
-        o_t_su_NE[579:578] <= w_ep_inj_rd[1:0];
-        o_t_su_NE[545:545] <= w_ep_del_valid[3:3];
-        o_t_su_NE[544:0] <= w_ep_del_flit[2179:1635];
+    wire [579:0] od_t_su_NE = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[3:3], w_ep_del_flit[2179:1635]};
+    wire [579:0] o_t_su_NE;
+    for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_NE
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[579:0] = o_t_su_NE[579:0];
-    reg [579:0] o_t_su_NW;
-    always @(posedge clk) begin
-        o_t_su_NW <= 580'd0;
-        o_t_su_NW[577:546] <= w_ep_inj_idx[31:0];
-        o_t_su_NW[579:578] <= w_ep_inj_rd[1:0];
-        o_t_su_NW[545:545] <= w_ep_del_valid[1:1];
-        o_t_su_NW[544:0] <= w_ep_del_flit[1089:545];
+    wire [579:0] od_t_su_NW = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[1:1], w_ep_del_flit[1089:545]};
+    wire [579:0] o_t_su_NW;
+    for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_NW
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[579:0] = o_t_su_NW[579:0];
-    reg [579:0] o_t_su_SE;
-    always @(posedge clk) begin
-        o_t_su_SE <= 580'd0;
-        o_t_su_SE[577:546] <= w_ep_inj_idx[31:0];
-        o_t_su_SE[579:578] <= w_ep_inj_rd[1:0];
-        o_t_su_SE[545:545] <= w_ep_del_valid[2:2];
-        o_t_su_SE[544:0] <= w_ep_del_flit[1634:1090];
+    wire [579:0] od_t_su_SE = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[2:2], w_ep_del_flit[1634:1090]};
+    wire [579:0] o_t_su_SE;
+    for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_SE
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[579:0] = o_t_su_SE[579:0];
-    reg [579:0] o_t_su_SW;
-    always @(posedge clk) begin
-        o_t_su_SW <= 580'd0;
-        o_t_su_SW[577:546] <= w_ep_inj_idx[31:0];
-        o_t_su_SW[579:578] <= w_ep_inj_rd[1:0];
-        o_t_su_SW[545:545] <= w_ep_del_valid[0:0];
-        o_t_su_SW[544:0] <= w_ep_del_flit[544:0];
+    wire [579:0] od_t_su_SW = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[0:0], w_ep_del_flit[544:0]};
+    wire [579:0] o_t_su_SW;
+    for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_SW
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[579:0] = o_t_su_SW[579:0];
 endmodule

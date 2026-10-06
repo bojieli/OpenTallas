@@ -58,4 +58,6 @@ for qi, q in enumerate(('SW', 'SE', 'NW', 'NE')):
         eo.append((f't_barrier', n, n + 1, f'i_c{q}[{s * W + 43}]'))
         eo.append((f'c{q}', s * W + 41, s * W + 42, f'i_f_barrier[{n}]'))
 spec['extra_out'] = eo
+spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
+spec['face_stages'] = 3  # owner margin-first rule 2026-10-06: pin flop + 2 stages each face (1.4 mm views)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')

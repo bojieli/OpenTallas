@@ -1,8 +1,40 @@
-{"master": "hfd_barrier",
+{
+ "master": "hfd_barrier",
  "note": "Two K32 root nodes of the closed ot_gpu_barrier_node (barrier_k32: SS +330.53 / FF +39.39 ps): node n (n = 0, 1) takes the 32 SM arrive senses f_cmdproc[32n +: 32] from the cmdproc and returns the release fan-out t_cmdproc[32n +: 32]; each root ties rel_in to its own up.",
  "instances": [
-  {"name": "n0", "module": "ot_gpu_barrier_node", "file": "rtl/gpu/ot_gpu_barrier_node.sv", "params": {"K": 32},
-   "bind": {"clk": "clk", "rst_n": "rst_n", "arr": "die:f_cmdproc[0:32]", "rel_in": "expr:w_n0_up", "up": "open", "rel": "die:t_cmdproc[0:32]"}},
-  {"name": "n1", "module": "ot_gpu_barrier_node", "file": "rtl/gpu/ot_gpu_barrier_node.sv", "params": {"K": 32},
-   "bind": {"clk": "clk", "rst_n": "rst_n", "arr": "die:f_cmdproc[32:64]", "rel_in": "expr:w_n1_up", "up": "open", "rel": "die:t_cmdproc[32:64]"}}
- ]}
+  {
+   "name": "n0",
+   "module": "ot_gpu_barrier_node",
+   "file": "rtl/gpu/ot_gpu_barrier_node.sv",
+   "params": {
+    "K": 32
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "arr": "die:f_cmdproc[0:32]",
+    "rel_in": "expr:w_n0_up",
+    "up": "open",
+    "rel": "die:t_cmdproc[0:32]"
+   }
+  },
+  {
+   "name": "n1",
+   "module": "ot_gpu_barrier_node",
+   "file": "rtl/gpu/ot_gpu_barrier_node.sv",
+   "params": {
+    "K": 32
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "arr": "die:f_cmdproc[32:64]",
+    "rel_in": "expr:w_n1_up",
+    "up": "open",
+    "rel": "die:t_cmdproc[32:64]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}

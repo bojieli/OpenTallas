@@ -96,7 +96,15 @@ def gen(spec):
         if p in ('ck',) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
             continue
         if any(d == 'in' for d in dirs[p]):
-            L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {p};')
+            fs = spec.get('face_stages', 1)
+            if fs == 1:
+                L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {p};')
+            else:   # face_stages: the pin flop plus fs - 1 further stages toward the consumers
+                prev = p
+                for k in range(fs - 1):
+                    L_.append(f'    reg [{v["bits"] - 1}:0] i{k}_{p}; always @(posedge clk) i{k}_{p} <= {prev};')
+                    prev = f'i{k}_{p}'
+                L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {prev};')
     sigs, outs, ncfg, folds = [], {}, 0, []
     cfg_bits = []
     body = []
@@ -177,7 +185,15 @@ def gen(spec):
     L_ += body
     # fold
     fold_assign = []
-    if folds:
+    if folds and spec.get('kept_out_regs'):
+        # RTL outputs the die interface does not carry: each bit ends in a kept local sink flop (ot_hfd_sink1) beside
+        # its producer, so the logic stays live without the cross-block XOR fold paths
+        for f, w in folds:
+            L_.append(f'    for (genvar k = 0; k < {w}; k = k + 1) begin : g_sink_{f}')
+            L_.append(f'        (* keep *) ot_hfd_sink1 u (.clk(clk), .d({f}[k]), .q());')
+            L_.append('    end')
+        folds_sunk = True
+    elif folds:
         tot = sum(w for _, w in folds)
         allbits = ' ,'.join(f for f, _ in folds[::-1])
         L_.append(f'    wire [{tot - 1}:0] fold_all = {{{allbits}}};')
@@ -198,12 +214,30 @@ def gen(spec):
     for p, v in sorted(ports.items()):
         if not any(d == 'out' for d in dirs[p]):
             continue
-        L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
-        L_.append(f'    always @(posedge clk) begin')
-        L_.append(f"        o_{p} <= {v['bits']}'d0;")
-        for lo, hi, e in outs.get(p, []):
-            L_.append(f'        o_{p}[{hi - 1}:{lo}] <= {e};')
-        L_.append('    end')
+        if spec.get('kept_out_regs'):
+            # one kept 1-bit flop per die output bit (ot_hfd_oreg1, SYNTH_KEEP_MODULES): yosys would otherwise merge
+            # equal-D output flops (a bit broadcast to several quarter ports, or the constant spare bits) into one
+            # driver of many far-apart ports
+            segs_d, cur = [], 0
+            for lo, hi, e in sorted(outs.get(p, []), key=lambda t: t[0]):
+                if lo > cur:
+                    segs_d.append(f"{lo - cur}'d0")
+                segs_d.append(f'{e}')
+                cur = hi
+            if cur < v['bits']:
+                segs_d.append(f"{v['bits'] - cur}'d0")
+            L_.append(f'    wire [{v["bits"] - 1}:0] od_{p} = {{{", ".join(segs_d[::-1])}}};')
+            L_.append(f'    wire [{v["bits"] - 1}:0] o_{p};')
+            L_.append(f'    for (genvar k = 0; k < {v["bits"]}; k = k + 1) begin : g_o_{p}')
+            L_.append(f'        ot_hfd_oreg{spec.get("face_stages", 1)} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+            L_.append('    end')
+        else:
+            L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
+            L_.append(f'    always @(posedge clk) begin')
+            L_.append(f"        o_{p} <= {v['bits']}'d0;")
+            for lo, hi, e in outs.get(p, []):
+                L_.append(f'        o_{p}[{hi - 1}:{lo}] <= {e};')
+            L_.append('    end')
         segs = []
         i = 0
         arr = dirs[p]
@@ -291,6 +325,9 @@ def gen_tb(spec, cycles=400, seed=20261006):
     for p, v in sorted(ports.items()):
         if v['direction'] != 'output':
             src = f'drv_{p}' if v['direction'] == 'inout' else p
+            for k in range(spec.get('face_stages', 1) - 1):
+                T.append(f'    reg [{v["bits"] - 1}:0] d{k}_{p}; always @(posedge clk) d{k}_{p} <= {src};')
+                src = f'd{k}_{p}'
             T.append(f'    reg [{v["bits"] - 1}:0] d_{p}; always @(posedge clk) d_{p} <= {src};')
     checks = []
     for inst in spec['instances']:
@@ -325,7 +362,11 @@ def gen_tb(spec, cycles=400, seed=20261006):
                         n = min(hi - lo, rw - off)
                         checks.append((f'{port}[{lo + n - 1}:{lo}]', f'q_{inst["name"]}_{rp}[{off + n - 1}:{off}]'))
                         off += n
-                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {w};')
+                src = w
+                for k in range(spec.get('face_stages', 1) - 1):
+                    T.append(f'    reg [{rw - 1}:0] q{k}_{inst["name"]}_{rp}; always @(posedge clk) q{k}_{inst["name"]}_{rp} <= {src};')
+                    src = f'q{k}_{inst["name"]}_{rp}'
+                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {src};')
         prm = ', '.join(f'.{k}({v})' for k, v in inst.get('params', {}).items())
         T.append(f'    {inst["module"]} {"#(" + prm + ") " if prm else ""}ref_{inst["name"]} ({", ".join(conns)});')
     T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',

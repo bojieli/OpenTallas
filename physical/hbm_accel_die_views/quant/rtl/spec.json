@@ -1,9 +1,36 @@
-{"master": "hfd_quant",
- "note": "INTERIM: ot_hdc_actquant (unchanged; routed at 0.9 GHz only, results/physical_abi3/asap7/hdc/v41/ot_hdc_actquant) behind the die ports: x = f_vm[1023:0] (32 FP32 a block); the dequantised BF16 block y[511:0] is broadcast to the four SU quarters (t_su_*). The die interface carries no valid / format bit (v is tied 1: one block a cycle, II = 1) and fp4 alternates from a wrapper toggle so both formats stay live; q / e / vo / fault have no die net (generator-side width defect).",
- "extra": ["    reg tgl; always @(posedge clk) tgl <= rst_n ? ~tgl : 1'b0;"],
+{
+ "master": "hfd_quant",
+ "note": "Quant view: ot_hfd_actquant_m (make_actquant_m.py: margin-first port of the 1.2 GHz ot_dsrom_actquant_f12, lever su_swiglu 1d4ea2dc2; exact vs ot_hdc_actquant and f12 on 87,475 blocks, tb_aq_equiv.sv; LATENCY 22 = original 13 + 9, f12 + 4) behind the die ports: x = f_vm[1023:0] (32 FP32 a block); the dequantised BF16 block y[511:0] is broadcast to the four SU quarters (t_su_*). The die interface carries no valid / format bit (v tied 1, II = 1) and fp4 alternates from a wrapper toggle so both formats stay live; q / e / vo / fault have no die net (generator-side width defect): they end in kept sink flops.",
+ "extra": [
+  "    reg tgl; always @(posedge clk) tgl <= rst_n ? ~tgl : 1'b0;"
+ ],
  "instances": [
-  {"name": "aq", "module": "ot_hdc_actquant", "file": "rtl/hdc/v41/ot_hdc_actquant.sv",
-   "bind": {"clk": "clk", "rst_n": "rst_n", "v": "const:1", "fp4": "expr:tgl", "x": "die:f_vm[0:1024]",
-            "y": ["die:t_su_SW[0:512]", "die:t_su_NW[0:512]", "die:t_su_SE[0:512]", "die:t_su_NE[0:512]"],
-            "vo": "open", "q": "open", "e": "open", "fault": "open"}}
- ]}
+  {
+   "name": "aq",
+   "module": "ot_hfd_actquant_m",
+   "file": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "v": "const:1",
+    "fp4": "expr:tgl",
+    "x": "die:f_vm[0:1024]",
+    "y": [
+     "die:t_su_SW[0:512]",
+     "die:t_su_NW[0:512]",
+     "die:t_su_SE[0:512]",
+     "die:t_su_NE[0:512]"
+    ],
+    "vo": "fold",
+    "q": "fold",
+    "e": "fold",
+    "fault": "fold"
+   },
+   "params": {
+    "MLAT": 5
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}

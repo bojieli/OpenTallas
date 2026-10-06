@@ -18,11 +18,21 @@ module hfd_router (
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
-    reg [255:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= f_su_NE;
-    reg [255:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= f_su_NW;
-    reg [255:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= f_su_SE;
-    reg [255:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= f_su_SW;
-    reg [511:0] i_f_vm; always @(posedge clk) i_f_vm <= f_vm;
+    reg [255:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= f_su_NE;
+    reg [255:0] i1_f_su_NE; always @(posedge clk) i1_f_su_NE <= i0_f_su_NE;
+    reg [255:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i1_f_su_NE;
+    reg [255:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= f_su_NW;
+    reg [255:0] i1_f_su_NW; always @(posedge clk) i1_f_su_NW <= i0_f_su_NW;
+    reg [255:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i1_f_su_NW;
+    reg [255:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= f_su_SE;
+    reg [255:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= i0_f_su_SE;
+    reg [255:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
+    reg [255:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= f_su_SW;
+    reg [255:0] i1_f_su_SW; always @(posedge clk) i1_f_su_SW <= i0_f_su_SW;
+    reg [255:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i1_f_su_SW;
+    reg [511:0] i0_f_vm; always @(posedge clk) i0_f_vm <= f_vm;
+    reg [511:0] i1_f_vm; always @(posedge clk) i1_f_vm <= i0_f_vm;
+    reg [511:0] i_f_vm; always @(posedge clk) i_f_vm <= i1_f_vm;
     wire [0:0] w_rt_clk;
     wire [0:0] w_rt_rst_n;
     wire [0:0] w_rt_in_valid;
@@ -40,11 +50,10 @@ module hfd_router (
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
     wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));
     wire fclk_3; ot_fwd_clk_inv u_fclk_3 (.a(clk), .y(fclk_3));
-    reg [128:0] o_eNE;
-    always @(posedge clk) begin
-        o_eNE <= 129'd0;
-        o_eNE[54:54] <= w_rt_out_valid[0:0];
-        o_eNE[53:0] <= w_rt_out_ids[53:0];
+    wire [128:0] od_eNE = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
+    wire [128:0] o_eNE;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eNE
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eNE[k]), .q(o_eNE[k]));
     end
     assign eNE[0] = o_eNE[0];
     assign eNE[1] = o_eNE[1];
@@ -175,11 +184,10 @@ module hfd_router (
     assign eNE[126] = o_eNE[126];
     assign eNE[127] = o_eNE[127];
     assign eNE[128] = fclk_0;
-    reg [128:0] o_eNW;
-    always @(posedge clk) begin
-        o_eNW <= 129'd0;
-        o_eNW[54:54] <= w_rt_out_valid[0:0];
-        o_eNW[53:0] <= w_rt_out_ids[53:0];
+    wire [128:0] od_eNW = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
+    wire [128:0] o_eNW;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eNW
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eNW[k]), .q(o_eNW[k]));
     end
     assign eNW[0] = o_eNW[0];
     assign eNW[1] = o_eNW[1];
@@ -310,11 +318,10 @@ module hfd_router (
     assign eNW[126] = o_eNW[126];
     assign eNW[127] = o_eNW[127];
     assign eNW[128] = fclk_1;
-    reg [128:0] o_eSE;
-    always @(posedge clk) begin
-        o_eSE <= 129'd0;
-        o_eSE[54:54] <= w_rt_out_valid[0:0];
-        o_eSE[53:0] <= w_rt_out_ids[53:0];
+    wire [128:0] od_eSE = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
+    wire [128:0] o_eSE;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eSE
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eSE[k]), .q(o_eSE[k]));
     end
     assign eSE[0] = o_eSE[0];
     assign eSE[1] = o_eSE[1];
@@ -445,11 +452,10 @@ module hfd_router (
     assign eSE[126] = o_eSE[126];
     assign eSE[127] = o_eSE[127];
     assign eSE[128] = fclk_2;
-    reg [128:0] o_eSW;
-    always @(posedge clk) begin
-        o_eSW <= 129'd0;
-        o_eSW[54:54] <= w_rt_out_valid[0:0];
-        o_eSW[53:0] <= w_rt_out_ids[53:0];
+    wire [128:0] od_eSW = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
+    wire [128:0] o_eSW;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eSW
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eSW[k]), .q(o_eSW[k]));
     end
     assign eSW[0] = o_eSW[0];
     assign eSW[1] = o_eSW[1];
@@ -580,11 +586,10 @@ module hfd_router (
     assign eSW[126] = o_eSW[126];
     assign eSW[127] = o_eSW[127];
     assign eSW[128] = fclk_3;
-    reg [63:0] o_t_cmdproc;
-    always @(posedge clk) begin
-        o_t_cmdproc <= 64'd0;
-        o_t_cmdproc[54:54] <= w_rt_out_valid[0:0];
-        o_t_cmdproc[53:0] <= w_rt_out_ids[53:0];
+    wire [63:0] od_t_cmdproc = {9'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
+    wire [63:0] o_t_cmdproc;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_cmdproc
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
     end
     assign t_cmdproc[63:0] = o_t_cmdproc[63:0];
 endmodule

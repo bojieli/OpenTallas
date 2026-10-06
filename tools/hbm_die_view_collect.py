@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--defect', action='append', default=[])
     ap.add_argument('--note', default='')
     ap.add_argument('--bench', default='')
+    ap.add_argument('--margin', action='store_true', help='require SS >= +60 / FF >= +15 ps (owner rule 2026-10-06)')
     a = ap.parse_args()
     out = ROOT / 'physical/hbm_accel_die_views' / a.kind
     out.mkdir(parents=True, exist_ok=True)
@@ -51,7 +52,8 @@ def main():
     (out / 'args').unlink()
     (out / f'route_args_{Path(r).name}.txt').write_text(args + '\n')
     ss, ff = cs['setup_ss']['worst_slack_ps'], cs['hold_ff']['worst_slack_ps']
-    closes = bool(cs.get('closes_signoff')) and met.get('drc') == 0
+    # owner margin-first rule 2026-10-06: a new block view closes at SS setup >= +60 ps and FF hold >= +15 ps
+    closes = bool(cs.get('closes_signoff')) and met.get('drc') == 0 and (not a.margin or (ss >= 60 and ff >= 15))
     if a.status == 'closed' and not closes:
         sys.exit(f'refusing status closed: SS {ss} FF {ff} drc {met.get("drc")}')
     wrap = ROOT / 'physical/hbm_accel_die_views' / a.kind / 'rtl' / f'{m}_wrap.json'
