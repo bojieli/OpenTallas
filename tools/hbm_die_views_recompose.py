@@ -39,11 +39,16 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hbm_accel_die_fp as F  # noqa: E402
 import hbm_accel_die_price as PR  # noqa: E402
 
+# stations OBYP (bf58f1b81): meso / mcast / cdist crossing +2 (FIFO readout merged with the pin-launch flop), gather
+# a2 +1, cdist b launch +1..+2 (priced +2).
+# HBM CP SU_PIN_MARGIN (833cb68de, closed SS +76.14 / FF +15.97): +15 cycles per SU CP transaction, +3 edges per native
+# launch.  Mix from the matched DS composition: a cmdproc issue (x load of an SM group) whose producer is an SU chain
+# (sufused:* / su:*) is an SU CP transaction, every other issue (tree-reduce tail, SM, attention, DU) is native.
 # spine faces sized per face (physical/hbm_accel_die_views/spine_face_stages.json, 6d290c8b3: N = clamp(ceil(d/380 um),
 # 2, 5), added cycles per face = N - 1 over the pre-margin pin flop): collective SU faces 4/4 -> +3 +3, endpoint <->
 # SerDes llk 3 -> +2 +2, VM f_su 5 (SE/SW, bound) -> +4 and x faces 3 -> +2, cmdproc issue faces c* 3 -> +2; router keeps
 # face_stages 5 (+4 +4) until the hbm-router view records its faces; barrier view face_stages 3 (+4 round trip, measured)
-LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=6, serdes=4, vm=6, router=8, cmdproc=2, quant=17,
+LEDGER = dict(meso_extra=2, gather=1, cdist=2, cp_su=15, cp_native=3, barrier=4, coll=6, serdes=4, vm=6, router=8, cmdproc=2, quant=17,
               quant_points_bound=161, quant_points_gate=0)
 
 
@@ -51,6 +56,23 @@ LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=6, serdes=4, vm=6
 # wire_stages_r3_smpins.json minus wire_stages_r1_sm.json, same views / generator pins otherwise); 0 once the SM ports
 # land on the floorplan faces
 SM_FACES = {'stages_430': 2.475, 'stages_430_median_bundle': 2.583, 'stages_430_manhattan': 0.0}
+
+
+def cp_mix(path):
+    """(SU CP transactions, native launches) per token: each SM-group x load is one cmdproc issue; its producer is
+    the last node before it that is not a barrier."""
+    su = nat = 0
+    for i, t in enumerate(path):
+        if not t['node'].startswith('xload'):
+            continue
+        j = i - 1
+        while j >= 0 and path[j]['node'].startswith('barrier'):
+            j -= 1
+        if j >= 0 and path[j]['node'].split(':')[0] in ('su', 'sufused'):
+            su += 1
+        else:
+            nat += 1
+    return su, nat
 
 
 def priced(m, grt_work, meso):
@@ -90,6 +112,9 @@ def main(argv=None):
             vm=n.get('x_first_load', 0) * LEDGER['vm'],
             router=n.get('expert_fetch', 0) * LEDGER['router'],
             cmdproc=n.get('barrier', 0) * LEDGER['cmdproc'])
+        su_tx, nat = cp_mix(json.loads((ROOT / F.MATCHED).read_text())['path'])
+        extra['cp_su_tx'] = su_tx * LEDGER['cp_su']
+        extra['cp_native'] = nat * LEDGER['cp_native']
         cyc = sum(v for k, v in extra.items() if k != 'meso_paths_us')
         us_gate = round(extra['meso_paths_us'] + cyc / hz * 1e6, 3)
         us_bound = round(us_gate + LEDGER['quant'] * LEDGER['quant_points_bound'] / hz * 1e6, 3)
@@ -112,7 +137,8 @@ def main(argv=None):
                              delta_pct=round(100 * add / d0['priced_cycles'], 2),
                              ar_tok_s=d0['ar_tok_s_priced'], ar_tok_s_margin=round(hz / (d0['priced_cycles'] + add), 1))
         cus = lambda c: round(c / hz * 1e6, 3)  # noqa: E731
-        groups = dict(stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
+        cpmix = dict(su_transactions=su_tx, native_launches=nat)
+        groups = dict(cp_us=cus(extra['cp_su_tx'] + extra['cp_native']), stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
                       barrier_us=cus(extra['barrier']),
                       spine_faces_us=cus(extra['coll'] + extra['serdes'] + extra['vm'] + extra['router'] + extra['cmdproc']),
                       quant_us_gate=0.0,
@@ -120,7 +146,10 @@ def main(argv=None):
         sm = SM_FACES.get(key)
         if sm is not None:
             groups['sm_faces_interim_us'] = sm
-        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + (sm or 0.0)
+        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + groups['cp_us'] + (sm or 0.0)
+        groups['cp_mix'] = cpmix
+        groups['total_sm_fixed_us'] = round(tot - (sm or 0.0), 3)
+        groups['total_sm_fixed_AR_pct'] = round(100 * (tot - (sm or 0.0)) / ar0, 2)
         groups['total_with_sm_interim_us'] = round(tot, 3)
         groups['total_with_sm_interim_AR_pct'] = round(100 * tot / ar0, 2)
         rec['bases'][key] = dict(counts=n, extra_cycles=extra, breakdown=groups, ds_wire_priced=dict(AR_us=ar0, MTP_step_us=mtp0, tau=tau,
