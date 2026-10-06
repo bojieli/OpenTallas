@@ -75,6 +75,8 @@ set_output_delay {io} -clock io_clk [all_outputs]
 # the POST_CTS hook (SKIP_CTS_REPAIR_TIMING = 1) with the die model; the GRT repair between the GRT hooks.
 SPREAD_PS = 60
 HOOK_APPLY = """# CLAUDE WFC die IO model (propagated clocks): IO vs core_clk at a boundary register, +-{skew} +- {spread} ps
+# only inside the POST_CTS repair (the GRT stage crashed OpenSTA with it: Sim::findDisabledEdges)
+if {{![info exists wfc_in_cts]}} {{ puts "WFC_IO_MODEL skip"; return }}
 set_propagated_clock [all_clocks]
 set wfc_ins [lsearch -all -inline -not [all_inputs] [get_ports clk]]
 catch {{unset_input_delay -clock [get_clocks io_clk] $wfc_ins}}
@@ -87,15 +89,23 @@ set_input_delay -min {imin} -clock core_clk -reference_pin $wfc_refp $wfc_ins
 set_output_delay -max {imax} -clock core_clk -reference_pin $wfc_refp [all_outputs]
 set_output_delay -min {imin} -clock core_clk -reference_pin $wfc_refp [all_outputs]
 """
-HOOK_RESTORE = """# CLAUDE WFC: back to the io_clk form before the stage writes its SDC
+HOOK_RESTORE = """# CLAUDE WFC: back to the io_clk form before the stage writes its SDC.  The later repairs (GRT) keep the
+# setup-direction die model (io_clk latency widened by the skew) but a HOLD-LAX IO minimum: the IO hold was repaired
+# in the POST_CTS hook against the per-corner die model; an absolute io_clk latency would re-pad BC output hold
+# by the SS-BC insertion difference
+if {{![info exists wfc_in_cts]}} {{ puts "WFC_IO_MODEL skip"; return }}
 set wfc_ins [lsearch -all -inline -not [all_inputs] [get_ports clk]]
 unset_input_delay -clock [get_clocks core_clk] $wfc_ins
 unset_output_delay -clock [get_clocks core_clk] [all_outputs]
-set_input_delay {io} -clock io_clk $wfc_ins
-set_output_delay {io} -clock io_clk [all_outputs]
-puts "WFC_IO_MODEL restore"
+set_input_delay -max {io} -clock io_clk $wfc_ins
+set_input_delay -min {io} -clock io_clk $wfc_ins
+set_output_delay -max {io} -clock io_clk [all_outputs]
+set_output_delay -min {olax} -clock io_clk [all_outputs]
+unset wfc_in_cts
+puts "WFC_IO_MODEL restore (hold-lax IO)"
 """
-HOOK_POST_CTS = """source /work/wfc_io_apply.tcl
+HOOK_POST_CTS = """set wfc_in_cts 1
+source /work/wfc_io_apply.tcl
 repair_timing_helper
 set result [catch {{ log_cmd detailed_placement }} msg]
 if {{ $result != 0 }} {{ error "Detailed placement failed in CTS: $msg" }}
@@ -189,12 +199,11 @@ def cmd_prep(a):
         k, v = kv.split("=", 1)
         lines.append(f"export {k} = {v}")
     if a.die_skew:
-        lines += ["export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/wfc_post_cts.tcl",
-                  "export PRE_GLOBAL_ROUTE_TCL = /work/wfc_io_apply.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/wfc_io_restore.tcl"]
+        lines += ["export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/wfc_post_cts.tcl"]
         io0 = round(0.2 * PERIOD_PS, 1)
         (case / "wfc_io_apply.tcl").write_text(HOOK_APPLY.format(skew=a.die_skew, spread=SPREAD_PS,
                                                imax=round(io0 + a.die_skew + SPREAD_PS, 1), imin=round(io0 - a.die_skew - SPREAD_PS, 1)))
-        (case / "wfc_io_restore.tcl").write_text(HOOK_RESTORE.format(io=io0))
+        (case / "wfc_io_restore.tcl").write_text(HOOK_RESTORE.format(io=io0, olax=round(io0 + 400, 1)))
         (case / "wfc_post_cts.tcl").write_text(HOOK_POST_CTS.format())
     (case / "config.mk").write_text("\n".join(lines) + "\n")
     io = round(0.2 * PERIOD_PS, 1)
