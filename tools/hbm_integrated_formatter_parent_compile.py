@@ -612,6 +612,23 @@ def wait_for_terminal(path):
         while not path.exists():os.read(fd,65536)
     finally:os.close(fd)
 
+def measured_model_reservation(directory,minimum_gib):
+    """Price the next sequential frontend from real completed time-v profiles.
+
+    Retain the measured 48 GiB graph/planner envelope as context headroom;
+    this is admission capacity, never an address-space/process memory limit.
+    """
+    profiles={};peak=0
+    for path in directory.rglob('resources.log'):
+        match=re.search(r'Maximum resident set size \(kbytes\):\s*(\d+)',path.read_text())
+        if not match:raise ValueError('Missing actual terminal compiler RSS '+str(path))
+        rss=int(match[1]);peak=max(peak,rss)
+        profiles[str(path)]=dict(maximum_rss_kib=rss,sha256=sha(path))
+    if not profiles or not peak:raise ValueError('No measured completed compiler footprint')
+    return dict(memory_gib=max(minimum_gib,(peak+2**20-1)//2**20+48),
+                measured_maximum_rss_kib=peak,planner_context_headroom_gib=48,
+                protective_process_limit=False,profiles=profiles)
+
 def continue_parent(a):
     """React once to the existing controller terminal, then own build/link/run."""
     if not all((a.live_plan,a.live_models,a.object_helper,a.reuse_archives,a.fixture_root)):
@@ -632,6 +649,9 @@ def continue_parent(a):
     enrollment=out/'enrollment'
     enroll_models(argparse.Namespace(work=a.live_plan,retained_models=a.live_models,
                                     output=enrollment,tool=a.tool))
+    reservation=measured_model_reservation(a.live_models,a.memory_gib)
+    a.memory_gib=reservation['memory_gib']
+    write(out/'measured_model_reservation.json',reservation)
     # Admission waiting is part of this sole build controller, not a resource
     # observer. No reservation/child is acquired before fresh measured fit.
     while not fits(capacity(out),a):time.sleep(20)

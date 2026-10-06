@@ -1,0 +1,39 @@
+{
+  "verdict": "TERMINAL source-specific context retention failure; not SSFF/DRC qualification",
+  "returncode": 1,
+  "finished_UTC": "2026-10-06T09:58:55.720942+00:00",
+  "source_commit": "919b30adfda19174dfd1d43c5d8b4b2621ccb5c0",
+  "actual_final_OpenROAD_pid": 1760094,
+  "actual_final_container": "7776d8e35c4c",
+  "historical_synth_container": "97ea57529269",
+  "containers_and_controller_checked_absent": true,
+  "stop_reason": "Owned source-aware SIGTERM after ODB audit: 0 of4 required checked-grant receiver FFs survived OpenROAD linking. Preserve objects; no current terminal consumer.",
+  "completed_stages": [
+    "new guard mapping",
+    "floorplan",
+    "fixed64macro placement",
+    "tapcell",
+    "PDN"
+  ],
+  "stopped_stage": "3_1_place_gp_skip_io",
+  "routed_SSFF_or_DRC": null,
+  "floorplan_only": {
+    "SS_WC_setup_ps": -86.9901,
+    "FF_BC_hold_ps": -6.98575,
+    "ideal_clock": true,
+    "start": "g_actual_native_load.u_native/g_distributed_check.u_guard.g_reply_bank[29].u_bank/check[26]",
+    "end": "u_head.iw_issued",
+    "data_arrival_ps": 846.31,
+    "required_ps": 759.32,
+    "path_class": "live reply mirror check -> raw native ACK -> head matching/debt release",
+    "qualified": false,
+    "same_stage_as_C20_placed_miss": false
+  },
+  "actual_guard_FFs": 8554,
+  "actual_banks": 129,
+  "real_SRAM_macros": 64,
+  "source_correction": "d0488d023 exposes four existing receiver output nets, so OpenROAD must retain actual clocked permission loads. C22 reuses mapped cells verbatim; only top port declaration/concat added. No synth/arithmetic/exact replay.",
+  "successor_status": "PREPARED NOT STARTED; C21 is not restarted",
+  "all_failed_logs_objects_sources_preserved": true,
+  "old_numerical_PASS": "r15 63028; unchanged +65 over62963 retained+85, nine negativesPASS"
+}
