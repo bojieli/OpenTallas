@@ -4307,6 +4307,83 @@
    "note": "1,536 tile elements sized from the measured routed W12 tile core + real SRAM macros; spine/IO from the Qwen ROM die ledgers; see block_ledger grades"
   },
   {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_tt",
+   "label": "Qwen HBM tile die power, P8191 TP4 decode token average (TT; cooling budget 474.6 W/die)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_avg_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "tiles measured (routed tile_tp4_t4 SPEF + exact decode register activity, ME_IDLE_GATE duty 0.267); die wire composed from routed lengths x measured port activity; HBM PHY published 0.8 pJ/b; stream services + spine 73.2 W floorplan-assumed"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_power_avg_w_tt",
+   "label": "Qwen HBM tile die: 1,536 tiles + SRAM macros, token average (TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_avg_w",
+   "unit": "W",
+   "status": "composed_from_measured",
+   "note": "combinational share is an OpenSTA-propagation upper bound (halved: 157.8 W)"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_clocked_w_per_mm2_tt",
+   "label": "Qwen HBM tile power density while the fabric is clocked (in phase, TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_clocked_w_per_mm2",
+   "unit": "W/mm2",
+   "status": "measured",
+   "note": "floorplan assumed 1.05 W/mm2"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_inphase_bound_w_tt",
+   "label": "Qwen HBM tile die in-phase peak bound (every term at its own worst window, TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_peak_window_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "lasts at most one stage (head: 2.7 us clocked); the cooling budget is time-averaged"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_ff",
+   "label": "Qwen HBM tile die power, token average (FF 0.77 V)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.FF.token.die_avg_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "SS 267.3 W"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "max_fabric_duty_at_budget_tt",
+   "label": "Qwen HBM tile die: fabric duty the 474.6 W budget allows (batched fill cap; single user 0.267)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.max_fabric_duty_at_budget",
+   "unit": "fraction",
+   "status": "partial",
+   "note": "FF 0.38"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_J_per_token_tt",
+   "label": "Qwen HBM tile die energy per AR token per die (TT, 4 dies per token at TP4)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_J_per_token",
+   "unit": "J/token/die",
+   "status": "partial",
+   "note": ""
+  },
+  {
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_composed",
