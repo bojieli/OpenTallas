@@ -358,6 +358,16 @@ def cmd_die(a):
             r = parse_lef(lef)
             om = re.search(r'\n(\s*OBS\n.*?\n\s*END)\n', r['text'], re.S)
             obs = om.group(1) if om else '  OBS\n  END'
+            # bundled tech LEF (k > 1) defines the metal layers only: keep the view's metal obstructions
+            keep, cur = [], True
+            for ln in obs.split('\n'):
+                mm = re.match(r'\s*LAYER (\S+)', ln)
+                if mm:
+                    cur = bool(re.fullmatch(r'M[1-9]', mm.group(1)))
+                if cur or not ln.strip().startswith(('LAYER', 'RECT', 'POLYGON')):
+                    if cur or not mm:
+                        keep.append(ln)
+            obs = '\n'.join(keep)
             pat = r'(MACRO ' + re.escape(n) + r'\n.*?)\n  OBS\n.*?\n  END\n(END ' + re.escape(n) + r'\n)'
             el, k = re.subn(pat, lambda mm: mm.group(1) + '\n' + obs + '\n' + mm.group(2), el, flags=re.S)
             assert k == 1, (n, k)
