@@ -1,0 +1,15 @@
+[
+  "docker",
+  "run",
+  "--rm",
+  "-v",
+  "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r3/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base:/checkpoint:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-outer-revision-20261005:/contract:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-outer-revision-20261005/cp_r3_hook_native:/output",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "bash",
+  "-lc",
+  "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -threads 1 /contract/cp_r3_reallocation_hook.tcl"
+]

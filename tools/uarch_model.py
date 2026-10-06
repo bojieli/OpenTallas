@@ -11117,3 +11117,11 @@ def hbm_attn_registered_parent_model():
         minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
         engine_source_anchor_qualified=False,
         route_ready=False, gain_credit=None)
+
+
+def hbm_existing_cp_fast_parent_allocation_model():
+    """Finite native M7 reservation and explicitly resized FAST CP cell budget."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json').read_text())
