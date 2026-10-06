@@ -15,6 +15,9 @@ Structure (one generator for the three quarters, parameters in QUARTERS):
     gather bus, but every lane output bit stays observable at the die output: an OR of ~57 bits per slot saturated
     the SU envelope's outputs to all ones and its negative control could not fail);
   * the chains' heads meet at the die-port band; dout = the heads' accumulators.
+  * MARGIN (owner rule 2026-10-06, every macro output staged up front): each lane's outputs are captured in a (* keep *)
+    register (lq_<j>) before the result chain's XOR, so no lane clock-to-Q path reaches combinational logic; the lanes'
+    inputs are driven straight from the group bank, a register in the channel the lane pins face.
 
 This is a PHYSICAL ENVELOPE of the quarter: real closed lanes, real register boundary, real wire stages and wiring
 volume.  It is NOT the SU / SFU / HC function: the SU controller (CTL12) and the die-port protocol of these blocks are
@@ -191,6 +194,7 @@ def emit_rtl(P, neg=False):
         if q['params']:
             prm = '#(' + ', '.join(f'.{a}({v})' for a, v in q['params'].items()) + ') '
         L_.append(f'    {q["lane"]} {prm}u_lane_{j} (' + ', '.join(conns) + ');')
+        L_.append(f'    (* keep *) reg [{P.LO - 1}:0] lq_{j};  always @(posedge clk) lq_{j} <= {lo};')
         outs_by_lane[j] = (k, g)
     # accumulators: group G-1 is the far end; head g = 0 at the boundary
     for k in range(P.K):
@@ -203,7 +207,7 @@ def emit_rtl(P, neg=False):
                     x = P.slot(j, t)
                     if neg and j == 1 and t < 8:
                         x = (x + 1) % P.WC          # negative control: lane 1's first 8 result bits one slot off
-                    terms.setdefault(x, []).append(f'lo_{j}[{t}]')
+                    terms.setdefault(x, []).append(f'lq_{j}[{t}]')
             prev = f'acc_{k}_{g + 1}' if g + 1 < P.G else None
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
@@ -258,7 +262,7 @@ def emit_tb(P, nvec, seed, out):
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
     q = P.q
     m = q['master']
-    hold = 2 * P.G + 2 * P.PIPE + 12
+    hold = 2 * P.G + 2 * P.PIPE + 14
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
     return f"""`timescale 1ns/1ps
@@ -380,7 +384,8 @@ def main():
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
-                flops=dict(boundary=(P.WI + P.WO) * (1 + P.PIPE) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC))
+                flops=dict(boundary=(P.WI + P.WO) * (1 + P.PIPE) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
+                                                                     lane_output_stage=P.N * P.LO))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     if a.lane_size:
         pj = json.loads(Path(a.ports).read_text())

@@ -35,13 +35,17 @@ def sha(p):
 
 def route_facts(host, d):
     exitf = dict(l.split('=') for l in sh(host, f'cat {d}/exit').split() if '=' in l)
-    cs = json.loads(sh(host, f'cat {d}/corner_sta.json') or '{}')
+    cs_route = json.loads(sh(host, f'cat {d}/corner_sta.json') or '{}')
+    cs833 = json.loads(sh(host, f'cat {d}/corner_sta_833.json 2>/dev/null') or '{}')
+    cs = cs833 if cs833.get('setup_ss') else cs_route      # sign-off at 833 when the route was over-constrained
     phys = json.loads(sh(host, f'cat {d}/physical.json') or '{}')
     chk = [c for c in ((phys.get('acceptance') or {}).get('checks') or []) if c.get('stage') == 'place_and_route']
     c0 = chk[0] if chk else {}
     ss = (cs.get('setup_ss') or {}).get('worst_slack_ps')
     ff = (cs.get('hold_ff') or {}).get('worst_slack_ps')
-    return dict(exit=exitf, ss_worst_slack_ps=ss, ff_worst_hold_slack_ps=ff,
+    rs = (cs_route.get('setup_ss') or {}).get('worst_slack_ps')
+    return dict(exit=exitf, signoff='833 ps re-time (corner_sta_833.json)' if cs is cs833 else 'route SDC (corner_sta.json)',
+                route_clock_ss_worst_slack_ps=rs, ss_worst_slack_ps=ss, ff_worst_hold_slack_ps=ff,
                 ss_violating_d_pins=(cs.get('setup_ss') or {}).get('violating_d_pins'),
                 ff_violating_d_pins=(cs.get('hold_ff') or {}).get('violating_d_pins'),
                 drc_violations=None if c0.get('drc_errors') is None else int(c0['drc_errors']),
@@ -49,6 +53,11 @@ def route_facts(host, d):
                 max_slew_cap_fanout=[c0.get('max_slew_violations'), c0.get('max_cap_violations'), c0.get('max_fanout_violations')],
                 source_commit=sh(host, f'cat {d}/SOURCE_COMMIT').strip(), args=sh(host, f'cat {d}/args').strip()[:400],
                 acceptance=(phys.get('acceptance') or {}).get('status'))
+
+
+def margin_ok(f):
+    """owner margin rule 2026-10-06: SS >= +60 ps, FF >= +15 ps at 833."""
+    return closed(f) and f['ss_worst_slack_ps'] >= 60 and f['ff_worst_hold_slack_ps'] >= 15
 
 
 def closed(f):
@@ -83,7 +92,7 @@ def main():
         for s in ('.lef', '_ss.lib', '_ff.lib'):
             fetch(a.host, f'{d}/view/{n}{s}', out / f'{n}{s}')
         oc = sh(a.host, f'tail -3 {d}/outcheck.txt').strip()
-        rec = dict(schema='opentallas.hbm_hub_lane_view.v1', lane=n, route=f'{a.host}:{d}', closed=closed(f),
+        rec = dict(schema='opentallas.hbm_hub_lane_view.v1', lane=n, route=f'{a.host}:{d}', closed=closed(f), margin_ok=margin_ok(f),
                    recipe='r2/r3: signals M2-M5, pins M4 left edge every track, PDN top M6 (su/route_lane.sh)',
                    interface_sdc='physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc (Carson real SU view)',
                    outcheck=oc, layers=lef_layers(out / f'{n}.lef'), **f,
@@ -105,6 +114,10 @@ def main():
                        f"/ DRC {f['drc_violations']}")
     if any(l in ('M8', 'M9') for l in lay['pg']['VDD'] + lay['pg']['VSS'] + lay['obs']):
         defects.append('PDN contract: M8/M9 used inside the quarter')
+    if closed(f) and not margin_ok(f):
+        defects.append(f"MARGIN: SS {f['ss_worst_slack_ps']} / FF {f['ff_worst_hold_slack_ps']} ps under the +60 / +15 owner target")
+    if not lane.get('margin_ok'):
+        defects.append('lane view under the +60 / +15 owner margin target (see source.lane)')
     defects.append('ENVELOPE: SU/SFU/HC function (controller, die-port protocol) not built; die bits map onto lane pins '
                    'by the generator rule (tools/hbm_hub_quarter_gen.py)')
     view = dict(schema='opentallas.hbm_die_view.v1', master=m, kind=a.quarter, status='interim-not-closed',
@@ -114,7 +127,7 @@ def main():
                             lane=dict(name=LANE[a.quarter], closed=lane['closed'], route=lane['route'],
                                       ss=lane['ss_worst_slack_ps'], ff=lane['ff_worst_hold_slack_ps'],
                                       size=lane['layers']['size']),
-                            closed_route=closed(f), **f),
+                            closed_route=closed(f), margin_ok=margin_ok(f), **f),
                 pdn_contract=dict(view_pg_layers=lay['pg'], view_obs_layers=lay['obs'],
                                   breaks_contract=any(l in ('M8', 'M9') for l in lay['pg']['VDD'] + lay['obs'])),
                 defects=defects, sha256={p: sha(base / p) for p in (f'{m}.lef', f'{m}_ss.lib', f'{m}_ff.lib')})
