@@ -1,0 +1,24 @@
+{
+ "master": "hfd_vm",
+ "cfg_bits": 772,
+ "cfg_inputs": [
+  [
+   "mr",
+   "tap_ACK_v",
+   4
+  ],
+  [
+   "mr",
+   "tap_ACK_owner",
+   768
+  ]
+ ],
+ "folded_output_bits": 0,
+ "folded_outputs": [],
+ "forwarded_clock_outputs": 28,
+ "forwarded_clock_inputs": 0,
+ "die_input_bits": 10242,
+ "die_input_bits_used": 2466,
+ "die_output_bits": 20328,
+ "die_output_bits_driven": 20328
+}

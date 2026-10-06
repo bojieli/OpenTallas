@@ -1,0 +1,127 @@
+{
+ "master": "hfd_vm",
+ "note": "Thin registered VM top (no VM RTL exists): the x staging / multicast root ot_hbm_die_vm_multicast_root (22 SRAM macros, Codex component, sim receipt) on the four x trunks; the SU publication, tile query, quantiser and router feeds are ONE placeholder register stage each (no VM function behind them).",
+ "instances": [
+  {
+   "name": "mr",
+   "module": "ot_hbm_die_vm_multicast_root",
+   "file": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv",
+   "params": {
+    "ENABLE": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "por_n": "rst_n",
+    "wr_data": "die:f_su_SW[0:2048]+f_su_NW[0:15]",
+    "wr_v": "die:f_su_NW[15:16]",
+    "wr_bank": "die:f_su_NW[16:17]",
+    "wr_addr": "die:f_su_NW[17:24]",
+    "wr_owner": "die:f_su_NW[24:216]",
+    "wr_ACK_ready": "die:f_su_NW[216:217]",
+    "rd_v": "die:f_su_SE[0:1]",
+    "rd_bank": "die:f_su_SE[1:2]",
+    "rd_addr": "die:f_su_SE[2:9]",
+    "rd_owner": "die:f_su_SE[9:201]",
+    "tap_ready": "const:15",
+    "tap_ACK_v": "cfg",
+    "tap_ACK_owner": "cfg",
+    "tap_data": "die:xSW[0:2063]+xNW[0:2063]+xSE[0:2063]+xNE[0:2063]",
+    "wr_ready": "die:t_su_SW[0:1]",
+    "wr_ACK_v": "die:t_su_SW[1:2]",
+    "rd_ready": "die:t_su_SW[2:3]",
+    "native_release": "die:t_su_SW[3:4]",
+    "drained": "die:t_su_SW[4:5]",
+    "fault": "die:t_su_SW[5:6]",
+    "tap_v": "die:t_su_SW[6:10]",
+    "wr_ACK_owner": "die:t_su_SW[10:202]",
+    "tap_owner": "die:t_su_SW[202:970]"
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "t_su_SE",
+   0,
+   2048,
+   "i_f_su_SW[2047:0]"
+  ],
+  [
+   "qSE",
+   0,
+   512,
+   "i_iSE[511:0]"
+  ],
+  [
+   "qSE",
+   512,
+   580,
+   "i_f_su_SE[2047:1980]"
+  ],
+  [
+   "t_su_SW",
+   970,
+   2048,
+   "i_f_su_SE[1077:0]"
+  ],
+  [
+   "qSW",
+   0,
+   512,
+   "i_iSW[511:0]"
+  ],
+  [
+   "qSW",
+   512,
+   580,
+   "i_f_su_SW[2047:1980]"
+  ],
+  [
+   "t_su_NE",
+   0,
+   2048,
+   "i_f_su_NW[2047:0]"
+  ],
+  [
+   "qNE",
+   0,
+   512,
+   "i_iNE[511:0]"
+  ],
+  [
+   "qNE",
+   512,
+   580,
+   "i_f_su_NE[2047:1980]"
+  ],
+  [
+   "t_su_NW",
+   0,
+   2048,
+   "i_f_su_NE[2047:0]"
+  ],
+  [
+   "qNW",
+   0,
+   512,
+   "i_iNW[511:0]"
+  ],
+  [
+   "qNW",
+   512,
+   580,
+   "i_f_su_NW[2047:1980]"
+  ],
+  [
+   "t_quant",
+   0,
+   1024,
+   "i_f_su_NE[1023:0]"
+  ],
+  [
+   "t_router",
+   0,
+   512,
+   "i_f_su_NE[1535:1024]"
+  ]
+ ]
+}
