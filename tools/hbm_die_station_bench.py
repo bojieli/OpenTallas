@@ -48,6 +48,7 @@ def cmd_tb(a):
     L = ['`timescale 1ns/1ps', f'module tb_{a.master};']
     for p, (dr, w) in ports.items():
         L.append(f'  wire [{w - 1}:0] {p};')
+    L.append(f'  {a.master} dut (' + ', '.join(f'.{p}({p})' for p in ports) + ');')
     has_ck = 'ck' in ports
     L.append('  reg ck_r = 0; reg rst_r = 0;')
     if has_ck:
