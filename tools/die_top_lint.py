@@ -356,9 +356,16 @@ def real_blocks_r8(die):
     m = R8[die]
     rp = S.real_ports_r8()
     out = {}
-    files = {S.real_lef(S.Q_LEF)['name']: ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv', 'routed RTL (NB=2 receipt params)',
-                                            dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1,
-                                                 QP_CAP=0, QP_P1=1, QP_CSAM=10)),
+    qn = S.real_lef(S.Q_LEF)['name']
+    qf = {'ot_v41_rom_elem_q_qx_w10': ('rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv', 'routed RTL (QELEM Z20c receipt params)',
+                                       dict(MTP=1, EARLY=1, NB=2, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1, QP_CAP=0,
+                                            QP_P1=1, QP_CSAM=10, QZ=1, QZ_NS=8, QZ_NE=4, QY=1, QX=10)),
+          'ot_v41_rom_elem_q_qxpq_w10': ('rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv', 'routed RTL (QELEM PQ, NB=2)',
+                                         dict(NB=2))}.get(qn, ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv',
+                                                               'routed RTL (NB=2 receipt params)',
+                                                               dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, QTIMING_FIX=1,
+                                                                    QPIPE=1, QP_XS=1, QP_CAP=0, QP_P1=1, QP_CSAM=10)))
+    files = {qn: qf,
              'ot_rom_4096x72_m8': ('physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v',
                                    'hard macro black box', {}),
              'ot_hbm3e_phy_v41x_aw30_e8p5': ('physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/'
@@ -380,7 +387,7 @@ def real_blocks_r8(die):
                             params=prm, ports=pm['ports'], binding=rp[mst])
     for mst in sorted(used):
         if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
-            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL
+            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL.replace('/r8/', f'/{S.REV}/')
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})

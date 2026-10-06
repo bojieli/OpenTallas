@@ -1108,7 +1108,7 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
-    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'hend', 'hb_elem', 'hbglue'):
+    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
         return POWER8[it.kind][0]
@@ -2556,6 +2556,11 @@ def build_r8(variant=None):
             yy = sy + CFG_DY if s not in nvslots else sy + CFG_DY + up(NVX_UM2 / 1002.888, GY) + 4.32
             insts.append(Inst(f't{r}_{s}', 'dsfd_sstn', x0 + SSTN_X, yy, SSTN_WH[0] - SHAVE, SSTN_WH[1] - SHAVE,
                               kind='sstn', region=f'frame_{r}'))
+        if REV == 'r9':
+            for p, kind, s, ln in elems:
+                if kind == 'q':
+                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + s * SLOT_H + ELEM_DY, rq,
+                                      f'frame_{r}')
         nodes, root = return_tree(2 * len(pairs))
         frames[r]['tree'] = (nodes, root)
         rank = _inorder_rank(nodes, root)
@@ -2876,6 +2881,9 @@ def buses_r8(m):
         f['ret_stages'] = nst
         bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
+    if REV == 'r9':
+        _bank_nets(m)
+        _col_relays(m, P)
     by = {it.name: it for it in m['insts']}
     # ---------------- hub glue blocks next to the slabs
     vm, ga, coll = hub['vm'], hub['gather'], hub['collective']
@@ -2993,7 +3001,11 @@ def buses_r8(m):
             endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
                              [cor['s14W'] if half == 'W' else cor['vch']])
             _multi_nets(m, CH8, f'r{half}{t}', sts, ncol, [_frame_of(m, half, t, c) for c in range(ncol)], endb)
-            bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
+            if REV == 'r9':
+                _local_chain(m, CH8, [cor['s14W'] if half == 'W' else cor['vch']], endb, 'o', ga, f'r{half}{t}',
+                             ncol * (CRET + 1) + 2, f'hr_{half}{t}_o', 'stream_1p2')
+            else:
+                bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
     # ---------------- scan services <-> VM, band links, selector / collector -> VM
     _svc_chains(m, CH8, P, cor, end_spec, hub_block)
     # ---------------- links: collective <-> link macros
@@ -3071,6 +3083,205 @@ def buses_r8(m):
 
 
 LANES_VCH, LANES_CORR = 26, 16
+
+# ---------------------------------------------------------------- r9: q-element boundary banks and column relays
+# The q element (QELEM Z20c ETM, write_timing_model on the routed odb/spef) has a ~650 ps (SS) internal clock
+# insertion: input hold +122..+291 ps and outputs valid up to 1,046 ps after its clk pin.  It meets only neighbours that
+# share that insertion and sit next to its pins.  r9 puts a register bank against each pin face (inputs x0 / x1 / cfg /
+# go into the element, outputs r0 / r1 / busy-fault out of it; CTS balances the banks with the element's
+# max_clock_tree_path), so every other column path is glue to glue.  +1 cycle on the way in, +1 on the way out.
+BANK_H = 6.48
+BANK_RULE_UM = 430.0           # common-clock glue reach used for relays (the 430.56 um stage less pin spread)
+QBANK_IN = ('x0', 'x1', 'cfg', 'go')
+QBANK_OUT = ('r0', 'r1', 'st')
+BANK_PORTS = {}
+RLY_FACES = {}
+
+
+def _q_port_face(rq, port):
+    """'S' or 'N': face of a q element port group (from the LEF pin y)"""
+    nm = real_ports_r8()[rq['name']][port][0]
+    return 'S' if rq['pins'][nm][1][1] < rq['h'] / 2 else 'N'
+
+
+def _q_port_xc(rq, port):
+    nms = real_ports_r8()[rq['name']][port]
+    xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
+    return sum(xs) / len(xs)
+
+
+def _q_banks(p, ex, ey, rq, region):
+    out = []
+    for face in 'SN':
+        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
+        if not ports:
+            continue
+        xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        w = 60.48
+        x = dn(ex + xc - w / 2, GX)
+        y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
+        out.append(Inst(f'b{face.lower()}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+                        region=region, power_w=0.0))
+        BANK_PORTS[out[-1].name] = (face, ports)
+    return out
+
+
+def _bank_nets(m):
+    """route every banked q-element port through its bank: die side <-> bank (i_/d_ ports), bank <-> element (o_/e_)"""
+    by = {it.name: it for it in m['insts']}
+    bank = {}
+    for it in m['insts']:
+        if it.kind == 'qbank':
+            p = it.name[2:]
+            for q_ in BANK_PORTS[it.name][1]:
+                bank[(f'e{p}', q_)] = it
+    B = m['buses']
+    new = []
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        eps2 = list(eps)
+        for j, (inst, port) in enumerate(eps):
+            bk = bank.get((inst, port))
+            if bk is None:
+                continue
+            if port in QBANK_OUT:
+                assert j == 0, (bid, eps)
+                eps2[0] = (bk.name, f'd_{port}')
+                new.append((f'{bid}_eb', cls, bits, [(inst, port), (bk.name, f'e_{port}')]))
+            else:
+                eps2[j] = (bk.name, f'i_{port}')
+                new.append((f'{bid}_{inst}_eb', cls, bits, [(bk.name, f'o_{port}'), (inst, port)]))
+        B[i] = (bid, cls, bits, eps2)
+    B.extend(new)
+    # clocks / resets: banks on their column root (the element's clk / rst_n nets)
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        if cls in ('col_clock', 'col_reset'):
+            add = []
+            for inst, port in eps:
+                if inst.startswith('e') and inst in by and by[inst].kind == 'q':
+                    for f_ in 'sn':
+                        if f'b{f_}{inst[1:]}' in by:
+                            add.append((f'b{f_}{inst[1:]}', 'ck' if cls == 'col_clock' else 'rs'))
+            B[i] = (bid, cls, bits, eps + add)
+
+
+def _col_relays(m, P):
+    """common-clock column nets whose driver -> load centre distance exceeds BANK_RULE_UM get relay registers
+    (one cycle each) at equal spacing on an L path, inside the frame.  Records per frame the relays on the worst x
+    path and on the worst leaf -> root path."""
+    by = {it.name: it for it in m['insts']}
+    cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+    RCLS = ('ret_leaf', 'ret_tree', 'x_lane', 'x_ctl', 'stat', 'cfg', 'go', 'col_ret')
+    B = m['buses']
+    out, added = [], defaultdict(int)       # (bus id) -> relays
+    ck_add = defaultdict(list)
+    for bid, cls, bits, eps in list(B):
+        if cls not in RCLS or bid.endswith('_eb'):
+            out.append((bid, cls, bits, eps))
+            continue
+        d0 = by.get(eps[0][0])
+        if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
+            out.append((bid, cls, bits, eps))
+            continue
+        r = int(d0.region.split('_')[1])
+        f = m['frames'][r]
+        fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + SLOTS8 * SLOT_H8)
+        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+        if far is None:
+            out.append((bid, cls, bits, eps))
+            continue
+        L = _mh(cen(d0), cen(far))
+        n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
+        if n <= 0:
+            out.append((bid, cls, bits, eps))
+            continue
+        a, b = cen(d0), cen(far)
+        path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
+        prev, cur = eps[0], a
+        chain = [a]
+        Lp = _poly_len(path)
+        w_, h_ = stn_dims([bits], True)
+        for k in range(n):
+            (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
+            pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20)
+            if pl is None:
+                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
+            assert pl, (bid, k)
+            it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
+                            region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
+            out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
+            prev, cur = (it.name, 'o'), cen(it)
+            ck_add[r].append(it.name)
+            chain.append(it)
+        chain.append(b)
+        for k in range(1, len(chain) - 1):
+            it = chain[k]
+            pa = chain[k - 1] if isinstance(chain[k - 1], tuple) else cen(chain[k - 1])
+            pb = chain[k + 1] if isinstance(chain[k + 1], tuple) else cen(chain[k + 1])
+            def fc(q):
+                dx, dy = q[0] - (it.x + it.w / 2), q[1] - (it.y + it.h / 2)
+                return ('E' if dx > 0 else 'W') if abs(dx) * it.h > abs(dy) * it.w else ('N' if dy > 0 else 'S')
+            fi, fo = fc(pa), fc(pb)
+            if fo == fi:
+                fo = dict(N='S', S='N', E='W', W='E')[fi]
+            it.master = f'dsfd_rly_{bits}_{fi}{fo}'
+            RLY_FACES[it.master] = (fi, fo)
+        out.append((bid, cls, bits, [prev] + list(eps[1:])))
+        added[bid] = n
+    B[:] = out
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        if cls in ('col_clock', 'col_reset') and bid.rsplit('_', 1)[-1].isdigit():
+            r = int(bid.rsplit('_', 1)[-1])
+            if r in ck_add:
+                B[i] = (bid, cls, bits, eps + [(nm, 'ck' if cls == 'col_clock' else 'rs') for nm in ck_add[r]])
+    # per frame: bank stages (2 if any q element) + the worst relay count on an x path and on a leaf -> root path
+    for r, f in m['frames'].items():
+        if f.get('bundles'):
+            continue
+        nodes, root = f['tree']
+        ids = {n_[0]: j for j, n_ in enumerate(nodes)}
+        parent = {}
+        for nid, a_, b_ in nodes:
+            for side, c in (('a', a_), ('b', b_)):
+                parent[c] = (nid, side)
+        def up_relays(c):
+            t_ = 0
+            while c in parent:
+                nid, side = parent[c]
+                t_ += added.get(f'rt_{r}_{ids[nid]}{side}', 0)
+                c = nid
+            return t_
+        leaves = [c for c in parent if not c.startswith('N')]
+        f['relay_ret'] = max((up_relays(c) for c in leaves), default=0) + \
+            sum(v for k_, v in added.items() if k_.startswith(f'rr_{r}_'))
+        f['relay_x'] = max((v for k_, v in added.items() if k_.startswith((f'xa_{r}_', f'xb_{r}_', f'qt_{r}_', f'cc_{r}_'))),
+                           default=0)
+        f['bank_stages'] = 2 if any(k == 'q' for _, k, _, _ in f['elems']) else 0
+    m['col_relays'] = dict(nets=len(added), relays=sum(added.values()),
+                           by_class={c: sum(v for k_, v in added.items() if k_.startswith(c)) for c in
+                                     ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
+
+
+def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
+    """r9: a local block-to-block bus (end block -> slab) staged by common-clock stations when it exceeds one hop"""
+    a = (A.x + A.w / 2, A.y + A.h / 2)
+    fx = Bk.x + Bk.w if a[0] > Bk.x + Bk.w else (Bk.x if a[0] < Bk.x else a[0])
+    b = (fx, min(max(a[1], Bk.y + 6.0), Bk.y + Bk.h - 6.0))
+    path = _dedup([a, (b[0], a[1]), b])
+    L = _poly_len(path)
+    if L <= LINK_STAGE_UM - 60.0:
+        CH8.bus(name, 'local', bits, [(A.name, pa), (Bk.name, pb)])
+        m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0, floor_added=0)
+        return
+    sts = CH8.run(name, [bits], path, allowed, a)
+    prev = (A.name, pa)
+    for k, (it, s_, hop) in enumerate(sts):
+        it.kind, it.domain = 'hstn', dom
+        it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
+        CH8.bus(f'{name}_d{k}', 'local', bits, [prev, (it.name, 'di')])
+        prev = (it.name, 'do')
+    CH8.bus(f'{name}_d{len(sts)}', 'local', bits, [prev, (Bk.name, pb)])
+    m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=len(sts),
+                                                  floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
 def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
@@ -3421,7 +3632,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
 
 
 # ---------------------------------------------------------------------------------------- r8 ports / masters
-GLUE_PREFIX = ('dsfd_stn', 'dsfd_hstn', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+GLUE_PREFIX = ('dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
 
 
 def is_glue(master):
@@ -3591,6 +3802,20 @@ def _faces_r8(m, Mx, it, ports):
         outs = [x for j in range(n) for x in ((f'fo{j}', 1), (f'do{j}', ports[f'do{j}'][1]))]
         _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+    elif kind == 'qbank':
+        ef = 'N' if mst.endswith('_S') else 'S'
+        df = 'S' if ef == 'N' else 'N'
+        el = [p_ for p_ in sorted(ports, key=_pnum) if p_[:2] in ('o_', 'e_')]
+        dl = [p_ for p_ in sorted(ports, key=_pnum) if p_[:2] in ('i_', 'd_')]
+        _lay(Mx, ef, P_(el), 'M5', gap=0.0)
+        _lay(Mx, df, P_(dl), 'M5', gap=0.0)
+        _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
+    elif kind == 'rly':
+        fi, fo = RLY_FACES[mst]
+        _lay(Mx, fi, P_(['i']), 'M4' if fi in 'EW' else 'M5', gap=0.0)
+        _lay(Mx, fo, P_(['o']), 'M4' if fo in 'EW' else 'M5', gap=0.0)
+        cf_ = [f_ for f_ in 'NSEW' if f_ not in (fi, fo)][0]
+        _lay(Mx, cf_, P_(['ck', 'rs']), 'M4' if cf_ in 'EW' else 'M5')
     elif kind == 'hstn':
         horiz = mst.startswith('dsfd_hstnh')
         _lay(Mx, 'W' if horiz else 'S', P_(['di']), 'M4' if horiz else 'M5', gap=0.0)
@@ -3753,6 +3978,19 @@ def glue_rtl(m):
                     body.append(f'    ot_fwd_link_stage #(.W({hi - lo}), .ENABLE(1\'b1)) u_{j}_{s} (.fclk_i(fi{j}[0]), '
                                 f'.rst_n(1\'b1), .i_v(1\'b1), .i_d(di{j}[{hi - 1}:{lo}]), .fclk_o({fo}), .o_v(), '
                                 f'.o_d(do{j}[{hi - 1}:{lo}]));')
+        elif mst.startswith('dsfd_qbank'):
+            for p_ in sorted(ports, key=_pnum):
+                if p_[:2] in ('i_', 'e_'):
+                    q_ = ('o_' if p_[:2] == 'i_' else 'd_') + p_[2:]
+                    w = ports[p_][1]
+                    body.append(f'    reg [{w - 1}:0] r_{p_[2:]};')
+                    body.append(f'    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r_{p_[2:]} <= {w}\'d0; '
+                                f'else r_{p_[2:]} <= {p_};')
+                    body.append(f'    assign {q_} = r_{p_[2:]};')
+        elif mst.startswith('dsfd_rly'):
+            w = ports['i'][1]
+            body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
+            body.append('    assign o = r;')
         elif mst.startswith('dsfd_hstn'):
             w = ports['di'][1]
             body.append('    wire fck;   // common clock: the stage captures on negedge fclk_i = posedge ck')
@@ -3867,7 +4105,7 @@ def plan_record_r8(m):
     fr = m['frames']
     xs, rs = m.get('x_stages', {}), m.get('r_stages', {})
     rt = {r: xs.get(r, 0) + 2 + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + 2
-          for r, f in fr.items()}
+          + f.get('bank_stages', 0) + f.get('relay_x', 0) + f.get('relay_ret', 0) for r, f in fr.items()}
     far = max(rt, key=rt.get)
     stn = [it for it in m['insts'] if it.kind == 'stn']
     slices = sum(math.ceil(w / 512) for it in stn for w in _stn_lanes(m, it))
@@ -3896,10 +4134,14 @@ def plan_record_r8(m):
         field_round_trip_cycles=dict(farthest_frame=far, cycles=rt[far], x_trunk_stages=xs.get(far),
                                      column_slot_stages=fr[far]['last_slot'] + 1, root_stages=fr[far].get('ret_stages'),
                                      return_trunk_stages=rs.get(far), meso_crossings=2, crossing_cycles_each=2,
+                                     q_bank_stages=fr[far].get('bank_stages', 0),
+                                     column_relays_x=fr[far].get('relay_x', 0),
+                                     column_relays_return=fr[far].get('relay_ret', 0),
                                      basis='per frame: x trunk stations to its tap + entry meso 2 + slot stations '
                                            '+ return-tree root stages + return trunk stations + hub meso 2 (the tree '
                                            'levels and the element pipeline excluded)'),
         bus_classes=dict(cls), chains=ch, scan_die_power=scan_die_power(), rev=REV,
+        column_relays=m.get('col_relays', {}),
         hub_stations=m.get('hub_stations', {}),
         power_model={k: dict(w=round(v[0], 6), basis=v[1]) for k, v in POWER8.items()})
 
@@ -3912,7 +4154,7 @@ def write_glue(elem_h=None, pairs=None):
         configure(die, 'r8')
         if elem_h:
             slot_geometry(elem_h)
-        if pairs and die == 'layer':
+        if pairs and die in ('layer', 'layer1'):
             set_pairs(pairs)
         mm = build()
         finalize_r8(mm)

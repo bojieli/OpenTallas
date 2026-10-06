@@ -56,6 +56,11 @@ GEOMS = {
                     label="Z20c FH 177.12 (QX=10 CLOSED, 11 slots)"),
     "f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, q_lef=None, label="Z20b FH 192.24 (10 slots)"),
     "f216.00": dict(elem_h=216.00, fh=209.52, pairs=1798, q_lef=None, label="Z20a FH 209.52 (9 slots)"),
+    # CLAUDE S81-RERUN (item 10): the owner's 192.24 um frame on the r9 die (hub-bus stations, q-element boundary
+    # banks, column relays, 425 um station step); q abstract Z20c until QELEM posts the 192.24 um (Z22) abstract
+    "r9f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9",
+                      q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                      label="S81-RERUN r9 die, FH 192.24 (10 slots; hub stations + q banks + column relays)"),
 }
 LAYER_PAIRS_TOTAL = 81 * 4 * 2417          # 783,108 layer-field pairs (S81 decision)
 TP = 4
@@ -88,6 +93,8 @@ def cmd_geometry(a):
         os.environ["OT_S81_Q_LEF"] = g["q_lef"]
     import dsrom_s81_fulldie as S
     import die_top_lint as L
+    S.REV = g.get("rev", "r8")
+    S.Q_LEF = os.environ.get("OT_S81_Q_LEF", S.Q_LEF)
     S.configure(a.die, "r8")
     S.slot_geometry(g["elem_h"])
     if a.die == "layer":
@@ -101,6 +108,9 @@ def cmd_geometry(a):
     for r, f in fr.items():
         comp = dict(x_trunk=xs.get(r, 0), entry_meso=2, slot_stations=f["last_slot"] + 1, column_return_reg=1,
                     root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=2)
+        if f.get("bank_stages") is not None:          # r9: q-element boundary banks and column relays
+            comp.update(q_banks=f.get("bank_stages", 0), column_relays_x=f.get("relay_x", 0),
+                        column_relays_return=f.get("relay_ret", 0))
         frames[int(r)] = dict(rt=sum(comp.values()), half=f.get("half"), tier=f.get("tier"), col=f.get("col"), **comp)
     rec_fp = S.plan_record_r8(m)
     far = rec_fp["field_round_trip_cycles"]
@@ -144,9 +154,10 @@ def cmd_geometry(a):
                           max_bit_um=round(best, 1), centroid_um=round(cen, 1), stages_430=stages(best),
                           stages_430_centroid=stages(cen))
     hub = {k: dict(x=round(it.x, 2), y=round(it.y, 2), w=round(it.w, 2), h=round(it.h, 2)) for k, it in m["hub"].items()}
+    extra = dict(hub_stations=m["hub_stations"], column_relays=m.get("col_relays")) if m.get("hub_stations") else {}
     out = dict(schema="opentallas.dsrom-field-reprice-r8.geometry.v1", die=a.die, geom=a.geom, **g,
                q_lef_used=S.Q_LEF, slot=rec_fp["slot"], forwarded=rec_fp["forwarded"],
-               field_round_trip_farthest=far, frames=frames, hub_slabs=hub, hub_buses=buses,
+               field_round_trip_farthest=far, frames=frames, hub_slabs=hub, hub_buses=buses, **extra,
                stage_um=STAGE_UM, generator=dict(tool="tools/dsrom_s81_fulldie.py --gen r8",
                                                  sha256=sha(ROOT / "tools/dsrom_s81_fulldie.py")))
     a.out.parent.mkdir(parents=True, exist_ok=True)
@@ -358,19 +369,29 @@ def hub_terms(geo):
     out = {}
     for d, g in geo.items():
         B = g["hub_buses"]
+        hs = g.get("hub_stations")
+        lb = (lambda k: hs[k]["path_um"]) if hs else (lambda k: B[k]["max_bit_um"])
         hr = {k[3:5]: added(v["max_bit_um"]) for k, v in B.items() if k.startswith("hr_")}
         su = {}
         for half, sl, path_out in (("s", "su_s", ("hb_su_s_hc_s", "hb_hc_s_hc_n", "hb_hc_n_vm")),
                                    ("n", "su_n", ("hb_su_n_hc_n", "hb_hc_n_vm"))):
             slab = g["hub_slabs"][sl]
             span = slab["h"] / 2 + slab["w"]           # face-centre entry -> farthest lane corner
-            l_in = B[f"hb_vm_{sl}"]["max_bit_um"] + span
-            l_out = span + sum(B[b]["max_bit_um"] for b in path_out)
+            l_in = lb(f"hb_vm_{sl}") + span
+            l_out = span + sum(lb(b) for b in path_out)
             need_in, need_out = math.ceil(l_in / STAGE_UM) / 1.2, math.ceil(l_out / STAGE_UM) / 1.2   # ns
             su[sl] = dict(in_um=round(l_in, 1), out_um=round(l_out, 1), need_in_ns=round(need_in, 3),
                           need_out_ns=round(need_out, 3), out_path=list(path_out),
                           excess_ns={k: round(max(0.0, need_in - c["inp"]) + max(0.0, need_out - c["out"]), 3)
                                      for k, c in SU_CHARGED_NS.items()})
+        if hs:                      # r9: the stations the generator actually placed (hub buses and end block -> gather)
+            hr = {k[3:5]: v["stations"] for k, v in hs.items() if k.startswith("hr_")}
+            out[d] = dict(hr_added_by_tier_half=hr, gather_capture_added=hs["hb_gather_capture"]["stations"],
+                          capture_vm_added=hs["hb_capture_vm"]["stations"],
+                          collective_vm_added=hs["hb_collective_vm"]["stations"], su=su,
+                          buses={k: dict(um=v["path_um"], added=v["stations"]) for k, v in hs.items()},
+                          basis="r9 generator stations (hub_stations)")
+            continue
         out[d] = dict(hr_added_by_tier_half=hr,
                       gather_capture_added=added(B["hb_gather_capture"]["max_bit_um"]),
                       capture_vm_added=added(B["hb_capture_vm"]["max_bit_um"]),
