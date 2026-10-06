@@ -32,6 +32,7 @@ PREFIX_WORDS = 77824
 APPENDS = 2044
 FINAL_WORDS = 79872
 HELPER_SHA256 = 'd5ded32979d550ffcd00dc12131a805999d8529ad6c45f2ae8b16b343d017f89'
+TYPES_SHA256 = 'fa362d371573a489e199eb2ba90775c2e6a03e08e92f9f484ca48ccd55d3299e'
 
 
 def sha(data):
@@ -41,9 +42,10 @@ def sha(data):
 def prepare(text, enable=False):
     """Return (source, schema). OFF returns input byte-for-byte via emit()."""
     before = sha(text.encode('utf-8'))
-    record = dict(schema='qwen-native-die-linear-pack-v1', enabled=bool(enable),
+    record = dict(schema='qwen-native-die-linear-pack-v2', enabled=bool(enable),
                   input_sha256=before, function=FUNCTION,
                   verilator_version='5.050', verilated_funcs_sha256=HELPER_SHA256,
+                  verilated_types_sha256=TYPES_SHA256,
                   compiled=False, equivalence_gate_pending=True,
                   speed_gate_pending=True, physical_qualified=False)
     if not enable:
@@ -65,7 +67,11 @@ def prepare(text, enable=False):
     if len(calls) != APPENDS:
         raise ValueError('expected exactly 2044 appends')
     cursor = capture.end()
-    statements = [capture.group().replace('__Vtemp_31,', '&__Vtemp_30[2048U],', 1)]
+    # Canonical 5.050 uses opaque handles: raw EData* cannot construct
+    # WDataOutP outside its private implementation. The public VlWide&
+    # constructor plus operator+(int) selects the same upper words.
+    statements = [capture.group().replace(
+        '__Vtemp_31,', '(WDataOutP{__Vtemp_30} + 2048),', 1)]
     for j, call in enumerate(calls):
         obits, lbits, dest, left, rhs = call.groups()
         if (call.start() != cursor or int(lbits) != 32 * (PREFIX_WORDS + j)
@@ -121,7 +127,7 @@ def prepare(text, enable=False):
     record.update(changed=True, output_sha256=sha(output.encode('utf-8')),
                   prefix_words=PREFIX_WORDS, append_count=APPENDS,
                   final_words=FINAL_WORDS, retained_temporary='__Vtemp_30',
-                  capture_destination='&__Vtemp_30[2048U]',
+                  capture_destination='(WDataOutP{__Vtemp_30} + 2048)',
                   append_destination='__Vtemp_30[2047-j] for j=0..2043',
                   final_four_destination='__Vtemp_30[0..3]',
                   removed_temporary_count=2046, removed_temporary_words=removed_words,
