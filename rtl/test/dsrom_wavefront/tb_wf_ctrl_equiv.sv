@@ -320,6 +320,11 @@ module tb_wf_ctrl_equiv;
         if (mism < 4) $display("EQUIV FAIL lockstep cyc %0d: outputs differ (xor %h)", cyc, o0 ^ o1);
     end
 
+    localparam integer QUIET = 256;
+    integer quiet = 0;
+    always @(posedge clk)
+        quiet <= (sent_n[0] >= NJOBS && sent_n[1] >= NJOBS && !g[0].in_valid && !g[1].in_valid
+                  && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid && !g[1].link_busy) ? quiet + 1 : 0;
     integer fault_cyc [0:1];
     integer fault_flit [0:1];
     initial begin fault_cyc[0] = 0; fault_cyc[1] = 0; fault_flit[0] = 0; fault_flit[1] = 0; end
@@ -336,9 +341,9 @@ module tb_wf_ctrl_equiv;
 
     initial begin
         wait (rst_n);
-        while (cyc < MAXCYC && !(SOURCE ? (fin_cyc[0] != 0 && fin_cyc[1] != 0)
-                                        : (sent_n[0] >= NJOBS && sent_n[1] >= NJOBS && !g[0].in_valid && !g[1].in_valid
-                                           && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid && !g[1].link_busy)))
+        // SOURCE = 0: quiescent (nothing to send, no core busy, no outbound flit) for QUIET consecutive cycles --
+        // a received job between its last flit and its core start is not busy yet
+        while (cyc < MAXCYC && !(SOURCE ? (fin_cyc[0] != 0 && fin_cyc[1] != 0) : (quiet >= QUIET)))
             @(posedge clk);
         repeat (50) @(posedge clk);
         if (STREAM)
