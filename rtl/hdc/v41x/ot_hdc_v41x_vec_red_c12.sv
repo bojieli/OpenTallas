@@ -40,6 +40,7 @@ module ot_hdc_v41x_vec_red #(
     parameter integer RSL = 0,
     parameter integer RTAP = 0,
     parameter integer ROUT = 0,
+    parameter integer ROGS = 4,         // ROUT bundle copies: one per ROGS slots (1, 2 or 4; ROUT >= 1 only)
     parameter integer SL = 64           // lanes a slice (capped at N), a power of two >= 8
 ) (
     input  wire            clk,
@@ -81,7 +82,7 @@ module ot_hdc_v41x_vec_red #(
             .lv_o(lv[SW*s +: SW]), .fault_o(sf[s]));
     end endgenerate
     ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                           .RTAP(RTAP), .ROUT(ROUT), .SL(S)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
+                           .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
         .span_in(span_in), .l_in(l_in), .last_in(last_in), .nres_in(nres_in), .rnd_in(rnd_in), .rbase_in(rbase_in),
         .rsh_in(rsh_in), .meta_in(meta_in), .lv_in(lv), .sfault_in(sf), .o_we(o_we), .o_addr(o_addr), .o_data(o_data),
         .o_meta(o_meta), .o_ev(o_ev), .busy(busy), .fault(fault));
@@ -237,6 +238,7 @@ module ot_hdc_v41x_vred_top #(
     parameter integer RSL = 0,
     parameter integer RTAP = 0,
     parameter integer ROUT = 0,
+    parameter integer ROGS = 4,
     parameter integer SL = 64
 ) (
     input  wire            clk,
@@ -473,8 +475,9 @@ module ot_hdc_v41x_vred_top #(
 
     // -- OUT (as the original).  ROUT = 1: the OUT stage's inputs (the packed tap and the TIME result) are
     // registered first, the per-slot fields as kept copies, one per GS slots, so neither the TIME result nor the
-    // tag fans out to every slot from one register (+1 on every result)
-    localparam integer GS = 4;
+    // tag fans out to every slot from one register (+1 on every result); ROGS slots share a copy (default 4; 2 halves
+    // the select fanout of each copy -- same function, more kept registers)
+    localparam integer GS = ROGS;
     localparam integer NG = (NC + GS - 1) / GS;
     localparam integer BW = 1 + TAG + 1 + 32 + TAG;          // {pk_v, tap_t, tr_v, tr_x, tr_t}
     wire [NC*32-1:0] ox;                                      // the tap words OUT reads
