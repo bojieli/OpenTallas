@@ -28,7 +28,12 @@
 // the all-zero W6 codeword, then CHECK/VERIFY/EVAL as for any load.
 // STAGE=1 samples encoded_d at the deciding edge (combinational sources);
 // STAGE=0 commits encoded_d itself and requires it stable until COMMIT ends.
-module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DIST=0)(
+// RED=1 (margin; the default for WORDS>8) splits the bank-wide S2 reduction:
+// an extra registered edge SM reduces each group of 8 words and S2 combines
+// the groups. The presented data takes the same extra edge (q = code three
+// edges ago), so every verdict is still about exactly the presented bits; the
+// reduced Boolean is unchanged (AND/OR are associative).
+module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DIST=0, RED=(WORDS>8))(
  input wire clk,por_n,load,load_sel,fatal,
  input wire [WORDS*72-1:0] encoded_d,
  output wire [WORDS*64-1:0] q,
@@ -59,6 +64,10 @@ function automatic [7:0] check72(input [71:0] c);
  reg [WORDS-1:0] s_same,s_bad,s_cbad,s_ce,s_ue,s_clean;
  reg [2:0] s_ph;reg s_ctlbad;
  reg [2:0] ph2;reg f2,n2,same2,ce2;
+ // SM level: group reductions (RED=1) or the S1 registers themselves (RED=0).
+ localparam integer NG=RED?(WORDS+7)/8:WORDS;
+ wire [NG-1:0] m_same,m_bad,m_cbad,m_ce,m_ue,m_clean;wire [2:0] m_ph;wire m_ctlbad;
+ wire [63:0] q_m[0:WORDS-1];
  wire [63:0] phase_raw=raw64(phase_code);
  wire [2:0] phase=phase_raw[2:0];
  // raw[3] is the protected commit select (data vs zero codeword).
@@ -90,6 +99,30 @@ function automatic [7:0] check72(input [71:0] c);
    .d({go_commit,go_repair,go_check|com_q[g]|rep_q[g],chk_q[g],go_sel}),
    .q({com_q[g],rep_q[g],chk_q[g],ver_q[g],sel_q[g]}));
  end
+ generate if(RED)begin:sm
+  reg [NG-1:0] r_same,r_bad,r_cbad,r_ce,r_ue,r_clean;reg [2:0] r_ph;reg r_ctlbad;
+  reg [63:0] r_q[0:WORDS-1];
+  wire [NG-1:0] g_same,g_bad,g_cbad,g_ce,g_ue,g_clean;
+  for(genvar j=0;j<NG;j=j+1)begin:grp
+   localparam integer LO=8*j,N=(WORDS-LO<8)?WORDS-LO:8;
+   assign g_same[j]=&s_same[LO+:N];assign g_bad[j]=|s_bad[LO+:N];assign g_cbad[j]=|s_cbad[LO+:N];
+   assign g_ce[j]=|s_ce[LO+:N];assign g_ue[j]=|s_ue[LO+:N];assign g_clean[j]=&s_clean[LO+:N];
+  end
+  always @(posedge clk or negedge por_n)
+   if(!por_n)begin r_same<=0;r_bad<=0;r_cbad<=0;r_ce<=0;r_ue<=0;r_clean<=0;r_ph<=P_COMMIT;r_ctlbad<=0;end
+   else begin
+    r_same<=g_same;r_bad<=g_bad;r_cbad<=g_cbad;r_ce<=g_ce;r_ue<=g_ue;r_clean<=g_clean;
+    r_ph<=s_ph;r_ctlbad<=s_ctlbad;
+   end
+  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=q_d1[w];
+  assign m_same=r_same;assign m_bad=r_bad;assign m_cbad=r_cbad;assign m_ce=r_ce;assign m_ue=r_ue;
+  assign m_clean=r_clean;assign m_ph=r_ph;assign m_ctlbad=r_ctlbad;
+  for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=r_q[w];end
+ end else begin:nosm
+  assign m_same=s_same;assign m_bad=s_bad;assign m_cbad=s_cbad;assign m_ce=s_ce;assign m_ue=s_ue;
+  assign m_clean=s_clean;assign m_ph=s_ph;assign m_ctlbad=s_ctlbad;
+  for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=q_d1[w];end
+ end endgenerate
  wire freeze=failed || failed==failed_n || f2 || fatal;
  assign fault=failed || failed==failed_n || f2;
  assign normal=n2 && phase==P_EVAL && !failed && failed_n && !fatal;
@@ -132,11 +165,11 @@ function automatic [7:0] check72(input [71:0] c);
   end else begin
    s_same<=same;s_bad<=bad;s_cbad<=cbad;s_ce<=ce;s_ue<=ue;s_clean<=clean;
    s_ph<=phase;s_ctlbad<=control_bad;
-   ph2<=s_ph;same2<=&s_same;ce2<=|s_ce;
-   f2<=s_ctlbad || (|s_cbad) || ((s_ph==P_EVAL||s_ph==P_REPAIR) && (|s_bad)) ||
-       (s_ph==P_EVAL && (&s_same) && (|s_ue)) || (s_ph==P_REPAIR && !(&s_same));
-   n2<=!(s_ctlbad || (|s_cbad) || (s_ph==P_EVAL && (|s_bad)) || (s_ph==P_EVAL && (&s_same) && (|s_ue))) &&
-       s_ph==P_EVAL && (&s_same) && (&s_clean);
+   ph2<=m_ph;same2<=&m_same;ce2<=|m_ce;
+   f2<=m_ctlbad || (|m_cbad) || ((m_ph==P_EVAL||m_ph==P_REPAIR) && (|m_bad)) ||
+       (m_ph==P_EVAL && (&m_same) && (|m_ue)) || (m_ph==P_REPAIR && !(&m_same));
+   n2<=!(m_ctlbad || (|m_cbad) || (m_ph==P_EVAL && (|m_bad)) || (m_ph==P_EVAL && (&m_same) && (|m_ue))) &&
+       m_ph==P_EVAL && (&m_same) && (&m_clean);
    if(freeze)begin failed<=1;failed_n<=0;end
    else phase_code<=encode64({60'b0,sel_next,phase_next});
   end
@@ -145,7 +178,7 @@ function automatic [7:0] check72(input [71:0] c);
  // kept per-word copies only, so no bank-wide enable crosses the block.
  always @(posedge clk)begin
   for(i=0;i<WORDS;i=i+1)begin
-   q_d1[i]<=raw64(code[i]);q_d2[i]<=q_d1[i];
+   q_d1[i]<=raw64(code[i]);q_d2[i]<=q_m[i];
    if(STAGE && phase==P_EVAL)staged[i]<=encoded_d[i*72+:72];
    if(com_q[i])code[i]<=sel_q[i]?(STAGE?staged[i]:encoded_d[i*72+:72]):72'b0;
    else if(rep_q[i]&&ce[i])code[i]<=snap[i]^(72'b1<<(syn[i][6:0]==0?7'd71:syn[i][6:0]-1'b1));

@@ -48,16 +48,19 @@ BENCH_EDITS = [
 ]
 BANK_MUTANTS = {
  'B1_live_q_no_alignment': (BANK, '  assign q[g*64+:64]=q_d2[g];', '  assign q[g*64+:64]=raw64(code[g]);'),
- 'B2_copy_check_removed': (BANK, '   f2<=s_ctlbad || (|s_cbad) ||', '   f2<=s_ctlbad || 1\'b0 ||'),
- 'B3_controller_check_removed': (BANK, '   f2<=s_ctlbad ||', '   f2<=1\'b0 ||'),
+ 'B2_copy_check_removed': (BANK, '   f2<=m_ctlbad || (|m_cbad) ||', '   f2<=m_ctlbad || 1\'b0 ||'),
+ 'B3_controller_check_removed': (BANK, '   f2<=m_ctlbad ||', '   f2<=1\'b0 ||'),
+ 'B4_red_data_not_delayed': (BANK, '  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=q_d1[w];', '  always @*for(integer w=0;w<WORDS;w=w+1)r_q[w]=q_d1[w];'),
 }
 CHAIN_MUTANTS = {
  'S1_sm_duplicate_mask_removed': (CHAIN, '   assign sm_v[I]=ov[t]&&!fault&&!smj[I];assign ready[t]=sm_r[I]&&!fault&&!smj[I];',
                                   '   assign sm_v[I]=ov[t]&&!fault;assign ready[t]=sm_r[I]&&!fault;'),
  'S2_parent_ack_mask_removed': (CHAIN, ' assign tap_ACK_v=rv[0]&&!fault&&!tj;assign rr[0]=tap_ACK_r&&!fault&&!tj;',
                                 ' assign tap_ACK_v=rv[0]&&!fault;assign rr[0]=tap_ACK_r&&!fault;'),
- 'S3_frame_check_removed': (STATION, '   assign frame_bad[t]=ackv_p[t]&&(ackf_p[t*73+:73]!=frame0);', '   assign frame_bad[t]=1\'b0;'),
+ 'S3_frame_check_removed': (STATION, '   assign frame_bad[t]=ackv_q[t]&&fne_q[t];', '   assign frame_bad[t]=1\'b0;'),
  'S4_held_release_ignored': (STATION, '&&(held_p||!rv);', '&&(!rv);'),
+ 'S6_cross_bank_veto_removed': (STATION, '  assign fault_any=fault_x;', '  assign fault_any=1\'b0;'),
+ 'S7_ack_frame_stage_skipped': (STATION, '   ackv_q<=ackv_p;acko_q<=acko_p;', '   ackv_q<=ACK_v;acko_q<=ACK_owner;'),
  'S5_learned_send_not_recorded': (STATION, '    if(learned[t]||pend[t])ns[t]=1;', '    if(1\'b0)ns[t]=1;'),
 }
 
@@ -83,11 +86,11 @@ def mutate(out, name, files):
     return [str(m) if f == str(ROOT/path) else f for f in files]
 
 
-def bank_bench(out, tag, stage, dist, mutant=None):
+def bank_bench(out, tag, stage, dist, mutant=None, red=1):
     files = [str(ROOT/p) for p in PKG+[BANK, BANK_TB]]
     files = mutate(out, mutant, files)
     vvp = out/f'{tag}.vvp'
-    rc = run(['iverilog', '-g2012', f'-DVETO_STAGE={stage}', f'-DVETO_DIST={dist}', '-s', 'tb_w2_bank_veto_top', '-o', str(vvp), *files], out/f'{tag}.compile.log')
+    rc = run(['iverilog', '-g2012', f'-DVETO_STAGE={stage}', f'-DVETO_DIST={dist}', f'-DVETO_RED={red}', '-s', 'tb_w2_bank_veto_top', '-o', str(vvp), *files], out/f'{tag}.compile.log')
     if rc:
         return dict(compile_exit=rc, passed=False)
     rc = run(['vvp', str(vvp)], out/f'{tag}.run.log')
@@ -134,6 +137,8 @@ def main():
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)
     res['bank']['small_STAGE1_DIST0'] = bank_bench(out, 'bank_s1d0', 1, 0)
+    res['bank']['small_STAGE1_DIST0_RED0'] = bank_bench(out, 'bank_s1d0_red0', 1, 0, red=0)
+    res['bank']['payload_STAGE0_DIST1_RED0'] = bank_bench(out, 'bank_s0d1_red0', 0, 1, red=0)
     res['quarter']['rb'] = quarter_bench(out, 'quarter_rb', True)
     res['quarter']['legacy_same_bench'] = quarter_bench(out, 'quarter_legacy', False)
     for name in BANK_MUTANTS:
