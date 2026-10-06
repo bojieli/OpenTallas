@@ -774,7 +774,9 @@ def cmd_ir_attn(a):
                             rr = loc(_xf((qx + x0q, qy + r_[1], qx + x1q, qy + r_[3]), it, vw, vh))
                             c0, c1 = max(rr[0], 0.0), min(rr[2], Wn)
                             d0, d1 = max(rr[1], 0.0), min(rr[3], Hn)
-                            if (ly == 'M9' and d1 - d0 > 1.0 and c1 > c0) or (ly == 'M8' and c1 - c0 > 0.5 and d1 > d0):
+                            xc_, yc_ = (rr[0] + rr[2]) / 2, (rr[1] + rr[3]) / 2
+                            if (ly == 'M9' and d1 - d0 > 1.0 and 0.5 < xc_ < Wn - 0.5) or \
+                                    (ly == 'M8' and c1 - c0 > 0.5 and 0.5 < yc_ < Hn - 0.5):
                                 qpg[ly][net].append((c0, d0, c1, d1) if ly == 'M8' else (rr[0], d0, rr[2], d1))
     inq = lambda x, y: any(q[0] <= x <= q[2] and q[1] <= y <= q[3] for _, q in quads)  # noqa: E731
     intile = lambda x, y: any(t[0] <= x <= t[2] and t[1] <= y <= t[3] for t in trects)  # noqa: E731
@@ -806,23 +808,33 @@ def cmd_ir_attn(a):
     added = 0
     for net, rs in tstraps.items():
         for x0_, y0_, x1_, y1_ in rs:
-            yc = round((y0_ + y1_) / 2, 3)
+            yc = round((y0_ + y1_) / 2 * 1e3) / 1e3     # the DEF stripe centre, to the nm
             for x, a_, b_ in m9x[net]:
                 if x0_ + 0.25 <= x <= x1_ - 0.25 and a_ <= yc <= b_ and not inq(x, yc):
                     nv.append((net, x, yc))
                     added += 1
-    qvias = 0
+    qvias, qdrop = 0, {}
     if a.quad_pg:       # quad M8 PG segments x quad M9 PG straps (the quad's own internal vias)
         for net in ('VDD', 'VSS'):
             m9s = sorted(qpg['M9'][net])
-            xs = [(r_[0] + r_[2]) / 2 for r_ in m9s]
+            xs = [round((r_[0] + r_[2]) / 2 * 1e3) / 1e3 for r_ in m9s]   # the DEF stripe centre, to the nm
             import bisect
+            used9, keep8 = set(), []
             for x0_, y0_, x1_, y1_ in qpg['M8'][net]:
                 yc = (y0_ + y1_) / 2
+                hit = 0
                 for k_ in range(bisect.bisect_left(xs, x0_ + 0.25), bisect.bisect_right(xs, x1_ - 0.25)):
                     if m9s[k_][1] <= yc <= m9s[k_][3]:
-                        nv.append((net, round(xs[k_], 3), round(yc, 3)))
+                        nv.append((net, xs[k_], round(yc * 1e3) / 1e3))
                         qvias += 1
+                        hit += 1
+                        used9.add(k_)
+                if hit:
+                    keep8.append((x0_, y0_, x1_, y1_))
+            # a shape with no via is an isolated PSM node (IRSolver::checkOpen connections_map.at -> map::at)
+            qdrop[net] = (len(qpg['M8'][net]) - len(keep8), len(m9s) - len(used9))
+            qpg['M8'][net] = keep8
+            qpg['M9'][net] = [m9s[k_] for k_ in sorted(used9)]
     L = ['SPECIALNETS 2 ;']
     for net in ('VDD', 'VSS'):
         seg = []
@@ -985,7 +997,18 @@ def cmd_ir_attn(a):
     for net in ('VDD', 'VSS'):
         f = work / f'vsrc_{net}.loc'
         rows = [r for r in f.read_text().splitlines() if r.strip()]
-        ok = rows if a.quad_pg else [r for r in rows if not inq(float(r.split(',')[0]), float(r.split(',')[1]))]
+        if a.quad_pg:     # a bump over a quad lands on the quad's own M9 PG: its centre on the nearest same-net strap
+            xs_ = sorted((r_[0] + r_[2]) / 2 for r_ in qpg['M9'][net])
+            ok = []
+            for r in rows:
+                fs = r.split(',')
+                x, y = float(fs[0]), float(fs[1])
+                if inq(x, y) and xs_:
+                    x = min(xs_, key=lambda v: abs(v - x))
+                    fs[0] = f'{x:.3f}'
+                ok.append(','.join(fs))
+        else:
+            ok = [r for r in rows if not inq(float(r.split(',')[0]), float(r.split(',')[1]))]
         nb[net] = len(rows) - len(ok)
         f.write_text('\n'.join(ok) + '\n')
     meta.update(method=('c + attn-tile PDN exception (owner 2026-10-06): die M9 -> tile M8 PG pins, M9 blocked over '
@@ -996,7 +1019,7 @@ def cmd_ir_attn(a):
                 m9_to_tile_m8_vias=added, tile_open_cells=tile_open_moved, quad_stub_loads=len(stubs),
                 quad_power_w=round(sum(pool.values()), 4), bumps_removed_over_quads=nb,
                 quad_pg=bool(a.quad_pg), quad_m9_straps={k: len(v) for k, v in qpg['M9'].items()},
-                quad_m8_segments={k: len(v) for k, v in qpg['M8'].items()}, quad_m8_m9_vias=qvias,
+                quad_m8_segments={k: len(v) for k, v in qpg['M8'].items()}, quad_m8_m9_vias=qvias, quad_isolated_dropped_m8_m9=qdrop,
                 quad_load_cells_on_m9=quad_cells,
                 quad_power_without_in_window_stubs_w=round(sum(orphan.values()), 4),
                 power_w=round(sum(power.values()), 4), view_lef_sha256=sha(ROOT / VIEWS / 'attn_tile' / f'{ATTN}.lef'))
