@@ -1010,7 +1010,7 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     tops = [b for b in m['buses'] if b[1] == 'top_in']        # r8: die top input ports (refclk, por_n)
     V = [f'// tools/dsrom_s81_fulldie.py: die-level nets only (k = {k})',
          f'module {top} (' + ', '.join(b[0] for b in tops) + ');']
-    V += [f'  input wire [0:0] {b[0]};' for b in tops]
+    V += [f'  input {b[0]};' for b in tops]
     for bid, cls, bits, eps in m['buses']:
         if cls in skip:
             continue
@@ -1256,13 +1256,14 @@ def trunk_stages(m):
     return out
 
 
-def top_pins(m):
+def top_pins(m, k=1):
     """r8: die top input ports (refclk, por_n) on the W die edge at the collective's (PLL) height"""
     tops = [b[0] for b in m['buses'] if b[1] == 'top_in']
     if not tops:
         return ''
     y0 = dn(m['hub']['collective'].y + m['hub']['collective'].h / 2, GY)
-    return '\n'.join(f'place_pin -pin_name {p} -layer M4 -location {{0.5 {y0 + 4.32 * i:.3f}}} -pin_size {{1.0 0.072}} '
+    return '\n'.join(f'place_pin -pin_name {p} -layer M4 -location {{0.5 {y0 + 4.32 * i:.3f}}} '
+                     f'-pin_size {{{1.0 * k:.3f} {max(0.072, 0.024 * k):.3f}}} '
                      f'-force_to_die_boundary' for i, p in enumerate(tops))
 
 
@@ -1396,7 +1397,7 @@ read_verilog /work/die.v
 link_design dsfd_die
 initialize_floorplan -die_area {{0 0 {W:.3f} {H:.3f}}} -core_area {{0 0 {W:.3f} {H:.3f}}} -site bsite
 {chr(10).join(tracks)}
-{top_pins(m)}
+{top_pins(mm, k)}
 {chr(10).join(place)}
 mem placed
 {chr(10).join(adj)}
@@ -2040,7 +2041,9 @@ SPF = 259.2                         # spine <-> field column 0 channel (S14)
 RSC_W = 47.52                       # return-stage sub-column of the node strip
 COL_W8 = 2 * LANE_W + NS_W + RSC_W  # 1,182.816
 COL_PITCH8 = COL_W8 + 8.64
-HC_CORR = 604.8                     # HC split: E-half crossing corridor at the VM's y
+HC_CORR = 1209.6                    # HC split: E-half crossing corridor at the VM's y (604.8: GRT overflow, see r8 README)
+VCH8 = 1209.6                       # r8 VCH (604.8 in r7; the r8 forwarded chains + hub CDC blocks overflowed it)
+SPINE_W8 = SPINE_W + VCH8 - VCH
 X0B, X1B, CCB = 283, 266, 15        # lane stream: x0 (q0 e0 + 17 ctl) | x1 (q1 e1) | cc (go cfg_go cfg_ph cfg_np)
 LSW = X0B + X1B + CCB               # 564
 LEAF, NODEB, STB = 63, 66, 2
@@ -2356,11 +2359,11 @@ def build_r8(variant=None):
     bounds, bfs, nvs = region_bounds(), bf_sites(), nv_sites()
     COLS8 = max(TIER_COLS8)
     x_lw = up(EDGE, GX)
-    slack = W - 2 * x_lw - 2 * LINK_COL - 2 * COLS8 * COL_PITCH8 - SPINE_W - 2 * SPF
+    slack = W - 2 * x_lw - 2 * LINK_COL - 2 * COLS8 * COL_PITCH8 - SPINE_W8 - 2 * SPF
     assert slack >= 0, slack
     x_fw = up(x_lw + LINK_COL + 0.5 * slack, GX)
     x_sp = up(x_fw + COLS8 * COL_PITCH8 - 8.64 + SPF, GX)       # spine W edge
-    x_fe = up(x_sp + SPINE_W, GX)                                # spine E edge
+    x_fe = up(x_sp + SPINE_W8, GX)                                # spine E edge
     x_le = dn(W - EDGE - LINK_COL, GX)
     assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
@@ -2374,7 +2377,7 @@ def build_r8(variant=None):
     def col_x(half, c):
         return dn(x_sp - SPF - (c + 1) * COL_PITCH8 + 8.64, GX) if half == 'W' else up(x_fe + SPF + c * COL_PITCH8, GX)
     geo = dict(slot_h=SLOT_H, slots=SLOTS, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
-               band_depth=band, field_h=field_h, spine_cx=x_sp + SPINE_W / 2, col_x=col_x, col_pitch=COL_PITCH8,
+               band_depth=band, field_h=field_h, spine_cx=x_sp + SPINE_W8 / 2, col_x=col_x, col_pitch=COL_PITCH8,
                col_w=COL_W8, spf=SPF, tier_cols=list(TIER_COLS8))
     rq, rc = real_lef(Q_LEF), real_lef(CFG_LEF)
     frames, slot_of = {}, {}
@@ -2454,11 +2457,11 @@ def build_r8(variant=None):
         insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
     # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
-    x_vch = x_sp + dn((SPINE_W - VCH) / 2, GX)
-    cw = dn((SPINE_W - VCH) / 2, GX)
-    x_spe = x_vch + VCH
+    x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
+    cw = dn((SPINE_W8 - VCH8) / 2, GX)
+    x_spe = x_vch + VCH8
     regions.append(dict(name='spine', kind='hub', rect=[x_sp, y_f, x_fe, y_top]))
-    regions.append(dict(name='vch', kind='channel', rect=[x_vch, y_f, x_vch + VCH, y_top]))
+    regions.append(dict(name='vch', kind='channel', rect=[x_vch, y_f, x_vch + VCH8, y_top]))
     mid = (y_f + y_top) / 2
     hub = {}
 
@@ -2490,17 +2493,16 @@ def build_r8(variant=None):
     slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
     corr_c = vm.y + vm.h / 2
-    hh = up(HUB_MM2['hc'] / 2 * 1e6 / cw, GY)
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
-    slab('hc_s', HUB_MM2['hc'] / 2, x_spe, c0 - hh, cw, dom='serial_0p9')
-    slab('hc_n', HUB_MM2['hc'] / 2, x_spe, c1, cw, dom='serial_0p9')
+    lo_av, hi_av = c0 - (band + SPINE_GAP), (H - band - SPINE_GAP) - c1      # HC halves sized to the room each side
+    fs = lo_av / (lo_av + hi_av)
+    hs_ = up(HUB_MM2['hc'] * fs * 1e6 / cw, GY)
+    slab('hc_s', HUB_MM2['hc'] * fs, x_spe, dn(c0 - hs_, GY), cw, dom='serial_0p9')
+    slab('hc_n', HUB_MM2['hc'] * (1 - fs), x_spe, c1, cw, dom='serial_0p9')
     regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
     for it in insts:
         if it.region == 'spine':
-            if DIE_KIND == 'layer':
-                assert it.y >= band + SPINE_GAP and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
-            else:
-                assert it.y >= y_f - 1e-6 and it.y + it.h <= y_top + 1e-6, (it.name, it.y, it.y + it.h, y_f, y_top)
+            assert it.y >= band + SPINE_GAP and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
     # ---- bands (as r7)
     rp = real_lef(PHY_LEF)
     phys, ctrls, svcs = {}, {}, {}
@@ -2586,7 +2588,7 @@ def _corridors(m):
     cor = dict(
         s14W=(g['x_sp'] - SPF + 4.32, b0, g['x_sp'] - 4.32, b1),
         s14E=(g['x_fe'] + 4.32, b0, g['x_fe'] + SPF - 4.32, b1),
-        vch=(m['x_vch'] + 4.32, b0, m['x_vch'] + VCH - 4.32, b1),
+        vch=(m['x_vch'] + 4.32, b0, m['x_vch'] + VCH8 - 4.32, b1),
         hcc=(m['x_spe'] - 4.32, m['corridor'][0] + 4.32, g['x_fe'] + 4.32, m['corridor'][1] - 4.32),
         edgeW=(g['x_lw'] + LINK_COL + 4.32, g['y_f'], g['x_fw'] - 4.32, g['y_top']),
         edgeE=(g['x_le'] - (g['x_fw'] - g['x_lw'] - LINK_COL) + 4.32, g['y_f'], g['x_le'] - 4.32, g['y_top']),
@@ -2818,7 +2820,7 @@ def buses_r8(m):
             if half == 'W':
                 path += [(s14x['W'], gy)]
             else:
-                path += [(s14x['E'], corr_c(m)), (x_vch + VCH / 2, corr_c(m)), (x_vch + VCH / 2, gy)]
+                path += [(s14x['E'], corr_c(m)), (x_vch + VCH8 / 2, corr_c(m)), (x_vch + VCH8 / 2, gy)]
             path = _dedup(path)
             forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
             lanes_at = []
@@ -2998,7 +3000,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
     yS = (g['band_depth'] + g['y_f']) / 2
     yN = (g['y_top'] + H - g['band_depth']) / 2
     s14W = g['x_sp'] - SPF / 2
-    vchx = m['x_vch'] + VCH / 2
+    vchx = m['x_vch'] + VCH8 / 2
     vmy = vm.y + vm.h / 2
 
     def vm_side(st):
@@ -3101,7 +3103,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
     coll = hub['collective']
     allc = list(cor.values())
     s14 = {'W': g['x_sp'] - SPF / 2, 'E': g['x_fe'] + SPF / 2}
-    vchx = m['x_vch'] + VCH / 2
+    vchx = m['x_vch'] + VCH8 / 2
     edge = {'W': (cor['edgeW'][0] + cor['edgeW'][2]) / 2, 'E': (cor['edgeE'][0] + cor['edgeE'][2]) / 2}
     cy = coll.y + coll.h / 2
     for lk in m['links']:

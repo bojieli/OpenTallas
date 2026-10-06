@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
  "tool": "tools/dsrom_s81_fulldie.py --gen r8",
- "tool_sha256": "b70579e314b6e10441b53c5f28591ba182ec18929834dcef9fd9ea74770e03be",
+ "tool_sha256": "6dd1ea1835ed28d77e7d252c76e355e179cdcf003eb7627546ebb6e60887b0dd",
  "sources_sha256": {
   "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
   "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
@@ -65,7 +65,7 @@
   "link": 8,
   "rstg": 497,
   "hend": 44,
-  "stn": 2677
+  "stn": 2694
  },
  "area_mm2_by_kind": {
   "bf": 82.074,
@@ -75,7 +75,7 @@
   "sstn": 4.769,
   "node": 31.617,
   "cfifo": 5.171,
-  "hub": 36.673,
+  "hub": 36.675,
   "phy": 40.026,
   "ctrl": 8.446,
   "svc": 53.612,
@@ -83,9 +83,9 @@
   "link": 4.238,
   "rstg": 0.668,
   "hend": 0.327,
-  "stn": 1.879
+  "stn": 1.892
  },
- "placed_footprint_mm2": 444.47,
+ "placed_footprint_mm2": 444.48,
  "utilisation": {
   "placed_over_die": 0.518,
   "field_frames_mm2": 435.6
@@ -94,9 +94,9 @@
   "slot_h": 239.76,
   "slots": 12,
   "x_lw": 20.304,
-  "x_fw": 625.968,
-  "x_sp": 15174.0,
-  "x_fe": 17809.2,
+  "x_fw": 323.568,
+  "x_sp": 14871.6,
+  "x_fe": 18111.6,
   "x_le": 32718.384,
   "y_f": 3462.48,
   "y_top": 22539.6,
@@ -133,8 +133,8 @@
   ]
  },
  "forwarded": {
-  "stations": 2677,
-  "ot_fwd_link_stage_instances": 7695,
+  "stations": 2694,
+  "ot_fwd_link_stage_instances": 7767,
   "chains": 62,
   "max_hop_um": 430.3,
   "hops_over_430p56": 0,
@@ -144,8 +144,8 @@
  },
  "field_round_trip_cycles": {
   "farthest_frame": 72,
-  "cycles": 135,
-  "x_trunk_stages": 54,
+  "cycles": 136,
+  "x_trunk_stages": 55,
   "column_slot_stages": 12,
   "root_stages": 4,
   "return_trunk_stages": 60,
@@ -211,12 +211,12 @@
    "wires": 27494
   },
   "fclk": {
-   "buses": 6414,
-   "wires": 6414
+   "buses": 6470,
+   "wires": 6470
   },
   "lane": {
-   "buses": 6422,
-   "wires": 1519916
+   "buses": 6478,
+   "wires": 1531248
   },
   "hub": {
    "buses": 12,
@@ -329,8 +329,8 @@
    "lanes": [
     566
    ],
-   "stations": 28,
-   "length_um": 10716.8,
+   "stations": 29,
+   "length_um": 11321.6,
    "max_hop_um": 401.8,
    "last_hop_um": 2.3
   },
@@ -369,9 +369,9 @@
    "lanes": [
     566
    ],
-   "stations": 22,
-   "length_um": 8385.9,
-   "max_hop_um": 424.7,
+   "stations": 23,
+   "length_um": 8990.7,
+   "max_hop_um": 419.9,
    "last_hop_um": 2.3
   },
   {
@@ -536,9 +536,9 @@
     70
    ],
    "stations": 60,
-   "length_um": 23961.2,
+   "length_um": 24263.6,
    "max_hop_um": 430.3,
-   "last_hop_um": 27.9
+   "last_hop_um": 330.3
   },
   {
    "chain": "rE1",
@@ -555,10 +555,10 @@
     70,
     70
    ],
-   "stations": 57,
-   "length_um": 23016.1,
+   "stations": 58,
+   "length_um": 23318.5,
    "max_hop_um": 430.3,
-   "last_hop_um": 300.5
+   "last_hop_um": 203.3
   },
   {
    "chain": "rE2",
@@ -576,10 +576,10 @@
     70,
     70
    ],
-   "stations": 52,
-   "length_um": 20879.5,
+   "stations": 53,
+   "length_um": 21181.9,
    "max_hop_um": 430.3,
-   "last_hop_um": 171.7
+   "last_hop_um": 74.5
   },
   {
    "chain": "rE3",
@@ -598,9 +598,9 @@
     70
    ],
    "stations": 46,
-   "length_um": 18254.6,
+   "length_um": 18557.0,
    "max_hop_um": 430.3,
-   "last_hop_um": 1.0
+   "last_hop_um": 301.8
   },
   {
    "chain": "rE4",
@@ -617,10 +617,10 @@
     70,
     70
    ],
-   "stations": 50,
-   "length_um": 20007.7,
+   "stations": 51,
+   "length_um": 20310.1,
    "max_hop_um": 430.3,
-   "last_hop_um": 167.7
+   "last_hop_um": 75.5
   },
   {
    "chain": "rE5",
@@ -635,10 +635,10 @@
     70,
     70
    ],
-   "stations": 51,
-   "length_um": 20569.4,
+   "stations": 52,
+   "length_um": 20871.8,
    "max_hop_um": 430.3,
-   "last_hop_um": 235.7
+   "last_hop_um": 138.5
   },
   {
    "chain": "qSW",
@@ -666,39 +666,39 @@
     514
    ],
    "stations": 12,
-   "length_um": 4862.5,
+   "length_um": 5089.3,
    "max_hop_um": 401.8,
-   "last_hop_um": 60.5
+   "last_hop_um": 287.3
   },
   {
    "chain": "coSW",
    "lanes": [
     514
    ],
-   "stations": 73,
-   "length_um": 29300.1,
+   "stations": 74,
+   "length_um": 29678.1,
    "max_hop_um": 430.3,
-   "last_hop_um": 101.5
+   "last_hop_um": 79.9
   },
   {
    "chain": "qSE",
    "lanes": [
     514
    ],
-   "stations": 54,
-   "length_um": 21907.5,
-   "max_hop_um": 430.3,
-   "last_hop_um": 306.8
+   "stations": 55,
+   "length_um": 22361.1,
+   "max_hop_um": 401.8,
+   "last_hop_um": 360.3
   },
   {
    "chain": "aSE",
    "lanes": [
     1026
    ],
-   "stations": 53,
-   "length_um": 21598.8,
-   "max_hop_um": 430.3,
-   "last_hop_um": 400.2
+   "stations": 55,
+   "length_um": 22052.4,
+   "max_hop_um": 401.8,
+   "last_hop_um": 65.2
   },
   {
    "chain": "ixSE",
@@ -706,19 +706,19 @@
     514
    ],
    "stations": 27,
-   "length_um": 10962.1,
-   "max_hop_um": 400.0,
-   "last_hop_um": 162.0
+   "length_um": 11188.9,
+   "max_hop_um": 416.6,
+   "last_hop_um": 388.8
   },
   {
    "chain": "coSE",
    "lanes": [
     514
    ],
-   "stations": 87,
-   "length_um": 35161.7,
-   "max_hop_um": 430.3,
-   "last_hop_um": 362.9
+   "stations": 88,
+   "length_um": 35237.3,
+   "max_hop_um": 401.8,
+   "last_hop_um": 43.2
   },
   {
    "chain": "qNW",
@@ -727,7 +727,7 @@
    ],
    "stations": 33,
    "length_um": 13457.6,
-   "max_hop_um": 401.8,
+   "max_hop_um": 413.0,
    "last_hop_um": 257.4
   },
   {
@@ -745,40 +745,40 @@
    "lanes": [
     514
    ],
-   "stations": 73,
-   "length_um": 29393.2,
+   "stations": 74,
+   "length_um": 29771.2,
    "max_hop_um": 430.3,
-   "last_hop_um": 241.9
+   "last_hop_um": 179.3
   },
   {
    "chain": "coNW",
    "lanes": [
     514
    ],
-   "stations": 12,
-   "length_um": 4989.6,
-   "max_hop_um": 401.8,
-   "last_hop_um": 190.1
+   "stations": 13,
+   "length_um": 5216.4,
+   "max_hop_um": 406.9,
+   "last_hop_um": 43.2
   },
   {
    "chain": "qNE",
    "lanes": [
     514
    ],
-   "stations": 57,
-   "length_um": 22809.6,
-   "max_hop_um": 406.9,
-   "last_hop_um": 45.4
+   "stations": 58,
+   "length_um": 23263.2,
+   "max_hop_um": 401.8,
+   "last_hop_um": 64.8
   },
   {
    "chain": "aNE",
    "lanes": [
     1026
    ],
-   "stations": 56,
-   "length_um": 22503.8,
+   "stations": 57,
+   "length_um": 22957.4,
    "max_hop_um": 401.8,
-   "last_hop_um": 103.7
+   "last_hop_um": 157.2
   },
   {
    "chain": "ixNE",
@@ -786,9 +786,9 @@
     514
    ],
    "stations": 89,
-   "length_um": 35867.8,
-   "max_hop_um": 430.3,
-   "last_hop_um": 265.7
+   "length_um": 35930.4,
+   "max_hop_um": 401.8,
+   "last_hop_um": 328.3
   },
   {
    "chain": "coNE",
@@ -796,39 +796,39 @@
     514
    ],
    "stations": 26,
-   "length_um": 10489.2,
-   "max_hop_um": 400.4,
-   "last_hop_um": 90.7
+   "length_um": 10716.0,
+   "max_hop_um": 408.2,
+   "last_hop_um": 308.9
   },
   {
    "chain": "sel",
    "lanes": [
     514
    ],
-   "stations": 26,
-   "length_um": 10717.3,
-   "max_hop_um": 413.0,
-   "last_hop_um": 319.2
+   "stations": 27,
+   "length_um": 10944.1,
+   "max_hop_um": 428.1,
+   "last_hop_um": 208.7
   },
   {
    "chain": "col",
    "lanes": [
     514
    ],
-   "stations": 27,
-   "length_um": 11062.9,
-   "max_hop_um": 402.0,
-   "last_hop_um": 262.7
+   "stations": 28,
+   "length_um": 11289.7,
+   "max_hop_um": 417.3,
+   "last_hop_um": 89.4
   },
   {
    "chain": "KW0t",
    "lanes": [
     512
    ],
-   "stations": 52,
-   "length_um": 20815.6,
+   "stations": 51,
+   "length_um": 20513.2,
    "max_hop_um": 429.0,
-   "last_hop_um": 16.3
+   "last_hop_um": 110.9
   },
   {
    "chain": "KW0r",
@@ -836,39 +836,39 @@
     512
    ],
    "stations": 51,
-   "length_um": 20779.1,
+   "length_um": 20476.7,
    "max_hop_um": 429.0,
-   "last_hop_um": 381.5
+   "last_hop_um": 76.0
   },
   {
    "chain": "KW1t",
    "lanes": [
     512
    ],
-   "stations": 55,
-   "length_um": 22197.7,
+   "stations": 54,
+   "length_um": 21895.3,
    "max_hop_um": 426.8,
-   "last_hop_um": 198.1
+   "last_hop_um": 295.3
   },
   {
    "chain": "KW1r",
    "lanes": [
     512
    ],
-   "stations": 55,
-   "length_um": 22160.4,
-   "max_hop_um": 426.8,
-   "last_hop_um": 161.1
+   "stations": 54,
+   "length_um": 21858.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 258.3
   },
   {
    "chain": "KW2t",
    "lanes": [
     512
    ],
-   "stations": 46,
-   "length_um": 18408.9,
-   "max_hop_um": 401.8,
-   "last_hop_um": 27.9
+   "stations": 45,
+   "length_um": 18106.5,
+   "max_hop_um": 405.7,
+   "last_hop_um": 107.4
   },
   {
    "chain": "KW2r",
@@ -876,29 +876,29 @@
     512
    ],
    "stations": 45,
-   "length_um": 18373.1,
-   "max_hop_um": 428.1,
-   "last_hop_um": 383.6
+   "length_um": 18070.7,
+   "max_hop_um": 430.3,
+   "last_hop_um": 52.3
   },
   {
    "chain": "KW3t",
    "lanes": [
     512
    ],
-   "stations": 51,
-   "length_um": 20692.9,
-   "max_hop_um": 426.8,
-   "last_hop_um": 293.1
+   "stations": 50,
+   "length_um": 20390.5,
+   "max_hop_um": 427.9,
+   "last_hop_um": 390.3
   },
   {
    "chain": "KW3r",
    "lanes": [
     512
    ],
-   "stations": 51,
-   "length_um": 20656.3,
+   "stations": 50,
+   "length_um": 20353.9,
    "max_hop_um": 429.8,
-   "last_hop_um": 260.5
+   "last_hop_um": 336.1
   },
   {
    "chain": "KE0t",
@@ -906,9 +906,9 @@
     512
    ],
    "stations": 56,
-   "length_um": 22452.8,
-   "max_hop_um": 412.6,
-   "last_hop_um": 54.3
+   "length_um": 22755.2,
+   "max_hop_um": 430.3,
+   "last_hop_um": 353.1
   },
   {
    "chain": "KE0r",
@@ -916,69 +916,69 @@
     512
    ],
    "stations": 56,
-   "length_um": 22416.7,
-   "max_hop_um": 401.8,
-   "last_hop_um": 42.3
+   "length_um": 22719.1,
+   "max_hop_um": 427.2,
+   "last_hop_um": 322.7
   },
   {
    "chain": "KE1t",
    "lanes": [
     512
    ],
-   "stations": 59,
-   "length_um": 23834.9,
-   "max_hop_um": 426.8,
-   "last_hop_um": 235.6
+   "stations": 60,
+   "length_um": 24137.3,
+   "max_hop_um": 408.2,
+   "last_hop_um": 138.4
   },
   {
    "chain": "KE1r",
    "lanes": [
     512
    ],
-   "stations": 59,
-   "length_um": 23798.1,
-   "max_hop_um": 417.7,
-   "last_hop_um": 197.4
+   "stations": 60,
+   "length_um": 24100.5,
+   "max_hop_um": 408.2,
+   "last_hop_um": 100.2
   },
   {
    "chain": "KE2t",
    "lanes": [
     512
    ],
-   "stations": 52,
-   "length_um": 20959.6,
-   "max_hop_um": 426.4,
-   "last_hop_um": 161.8
+   "stations": 53,
+   "length_um": 21262.0,
+   "max_hop_um": 430.3,
+   "last_hop_um": 62.8
   },
   {
    "chain": "KE2r",
    "lanes": [
     512
    ],
-   "stations": 52,
-   "length_um": 20924.2,
-   "max_hop_um": 430.3,
-   "last_hop_um": 123.1
+   "stations": 53,
+   "length_um": 21226.6,
+   "max_hop_um": 402.0,
+   "last_hop_um": 43.6
   },
   {
    "chain": "KE3t",
    "lanes": [
     512
    ],
-   "stations": 58,
-   "length_um": 23343.5,
-   "max_hop_um": 420.8,
-   "last_hop_um": 145.8
+   "stations": 59,
+   "length_um": 23645.9,
+   "max_hop_um": 426.4,
+   "last_hop_um": 47.7
   },
   {
    "chain": "KE3r",
    "lanes": [
     512
    ],
-   "stations": 58,
-   "length_um": 23307.4,
-   "max_hop_um": 413.4,
-   "last_hop_um": 106.7
+   "stations": 59,
+   "length_um": 23609.8,
+   "max_hop_um": 402.0,
+   "last_hop_um": 44.1
   }
  ],
  "scan_die_power": {
@@ -1019,7 +1019,7 @@
   }
  },
  "legality_python": {
-  "instances": 31356,
+  "instances": 31373,
   "overlaps": 0,
   "overlap_examples": [],
   "outside": 0,
@@ -1028,27 +1028,27 @@
  "generated_pin_clashes": 0,
  "windows_um": {
   "field": [
-   7474.704,
+   7172.304,
    9635.12,
-   11649.072,
+   11346.672,
    12694.32
   ],
   "field_bf": [
-   7966.16,
+   7663.76,
    3421.68,
-   11148.976,
+   10846.576,
    6321.68
   ],
   "spine": [
-   14774.0,
+   14471.6,
    11601.04,
-   18209.2,
+   18511.6,
    14401.04
   ],
   "band_s": [
-   6149.968,
+   5847.568,
    0.0,
-   9149.968,
+   8847.568,
    3941.28
   ]
  },
@@ -1065,15 +1065,15 @@
    "source_parent": "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv:u_ctrl",
    "source_VM": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv:u_tile.vm",
    "selected_WFC_gross_um": [
-    15174.0,
+    14871.6,
     14031.36,
-    16189.2,
+    15886.800000000001,
     14480.640000000001
    ],
    "selected_WFC_core_um": [
-    15191.28,
+    14888.880000000001,
     14048.640000000001,
-    16171.92,
+    15869.52,
     14463.36
    ],
    "halo_um": 17.28,
@@ -1257,7 +1257,24 @@
     414.71999999999935
    ],
    "composed_producer_plus_controller_plus_macro_cell_charge_um2": 187511.61916,
-   "2pct_area_margin_shortfall_mm2": 0.6226742720000722
+   "2pct_area_margin_shortfall_mm2": 0.6226742720000722,
+   "owner_taller_slot_direction": {
+    "frame_owner": "Claude QELEM",
+    "generator_owner": "Claude S81-DIE",
+    "target_utilization": [
+     0.55,
+     0.6
+    ],
+    "old_dense76_to78pct_slot_fit_credit": false,
+    "prior_geometry_scope": "historicalS81 only; successorparent rebinds shape/ports/clocks/CTS-PG-route reserves",
+    "current_successor_binding_qualified": false,
+    "owned_WFC_cell_cap_kept_at50pct": true,
+    "positive_CTS_PG_IO_repair_cell_reserve_um2": 40000,
+    "if_packing_requires78pct": "Reject oldpacking; priceactualadditionaldies andtokenlatency withS81-DIE/COMPOSE",
+    "new_element_count_assumed": false,
+    "new_qelement_timing_runs": false,
+    "support_facts_record": "results/uarch/dsrom_s81_wfc_parent_allocation_20261006/taller_slot_support_facts_20261006.json"
+   }
   }
  }
 }

@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
  "tool": "tools/dsrom_s81_fulldie.py --gen r8",
- "tool_sha256": "b70579e314b6e10441b53c5f28591ba182ec18929834dcef9fd9ea74770e03be",
+ "tool_sha256": "6dd1ea1835ed28d77e7d252c76e355e179cdcf003eb7627546ebb6e60887b0dd",
  "sources_sha256": {
   "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
   "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
@@ -39,13 +39,13 @@
    "slot_h_um": 239.76,
    "slots_per_column": 12,
    "columns": 128,
-   "max_pairs_per_layer_die": 2432,
+   "max_pairs_per_layer_die": 1920,
    "pairs_per_layer_die_now": 2417,
    "layer_field_pairs_total": 783108,
    "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
    "layer_dies_now": 324,
-   "layer_dies_at_max": 323,
-   "extra_layer_dies": -1,
+   "layer_dies_at_max": 408,
+   "extra_layer_dies": 84,
    "inventory_compiled_pairs_TP4": 783264
   }
  },
@@ -67,7 +67,7 @@
   "link": 8,
   "rstg": 256,
   "hend": 44,
-  "stn": 2606
+  "stn": 2625
  },
  "area_mm2_by_kind": {
   "bf": 49.972,
@@ -87,9 +87,9 @@
   "link": 4.238,
   "rstg": 0.344,
   "hend": 0.327,
-  "stn": 1.833
+  "stn": 1.848
  },
- "placed_footprint_mm2": 395.79,
+ "placed_footprint_mm2": 395.8,
  "utilisation": {
   "placed_over_die": 0.4613,
   "field_frames_mm2": 435.6
@@ -98,9 +98,9 @@
   "slot_h": 239.76,
   "slots": 12,
   "x_lw": 20.304,
-  "x_fw": 625.968,
-  "x_sp": 15174.0,
-  "x_fe": 17809.2,
+  "x_fw": 323.568,
+  "x_sp": 14871.6,
+  "x_fe": 18111.6,
   "x_le": 32718.384,
   "y_f": 3462.48,
   "y_top": 22539.6,
@@ -137,8 +137,8 @@
   ]
  },
  "forwarded": {
-  "stations": 2606,
-  "ot_fwd_link_stage_instances": 7489,
+  "stations": 2625,
+  "ot_fwd_link_stage_instances": 7570,
   "chains": 62,
   "max_hop_um": 430.3,
   "hops_over_430p56": 0,
@@ -148,11 +148,11 @@
  },
  "field_round_trip_cycles": {
   "farthest_frame": 72,
-  "cycles": 129,
-  "x_trunk_stages": 54,
+  "cycles": 132,
+  "x_trunk_stages": 56,
   "column_slot_stages": 10,
   "root_stages": 2,
-  "return_trunk_stages": 58,
+  "return_trunk_stages": 59,
   "meso_crossings": 2,
   "crossing_cycles_each": 2,
   "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
@@ -223,12 +223,12 @@
    "wires": 27494
   },
   "fclk": {
-   "buses": 6208,
-   "wires": 6208
+   "buses": 6274,
+   "wires": 6274
   },
   "lane": {
-   "buses": 6216,
-   "wires": 1480708
+   "buses": 6282,
+   "wires": 1492722
   },
   "hub": {
    "buses": 12,
@@ -341,8 +341,8 @@
    "lanes": [
     566
    ],
-   "stations": 28,
-   "length_um": 11027.8,
+   "stations": 30,
+   "length_um": 11632.6,
    "max_hop_um": 401.8,
    "last_hop_um": 2.3
   },
@@ -381,9 +381,9 @@
    "lanes": [
     566
    ],
-   "stations": 21,
-   "length_um": 8074.8,
-   "max_hop_um": 401.8,
+   "stations": 22,
+   "length_um": 8679.6,
+   "max_hop_um": 419.9,
    "last_hop_um": 2.3
   },
   {
@@ -392,7 +392,7 @@
     566
    ],
    "stations": 35,
-   "length_um": 13744.2,
+   "length_um": 13750.7,
    "max_hop_um": 400.0,
    "last_hop_um": 1.0
   },
@@ -547,10 +547,10 @@
     70,
     70
    ],
-   "stations": 58,
-   "length_um": 23401.8,
+   "stations": 59,
+   "length_um": 23704.2,
    "max_hop_um": 430.3,
-   "last_hop_um": 269.8
+   "last_hop_um": 170.4
   },
   {
    "chain": "rE1",
@@ -567,10 +567,10 @@
     70,
     70
    ],
-   "stations": 56,
-   "length_um": 22456.6,
+   "stations": 57,
+   "length_um": 22759.0,
    "max_hop_um": 430.3,
-   "last_hop_um": 140.7
+   "last_hop_um": 43.5
   },
   {
    "chain": "rE2",
@@ -589,9 +589,9 @@
     70
    ],
    "stations": 51,
-   "length_um": 20320.1,
+   "length_um": 20622.5,
    "max_hop_um": 430.3,
-   "last_hop_um": 14.0
+   "last_hop_um": 316.4
   },
   {
    "chain": "rE3",
@@ -609,10 +609,10 @@
     70,
     70
    ],
-   "stations": 42,
-   "length_um": 17073.1,
+   "stations": 43,
+   "length_um": 17375.5,
    "max_hop_um": 430.3,
-   "last_hop_um": 366.6
+   "last_hop_um": 351.0
   },
   {
    "chain": "rE4",
@@ -629,10 +629,10 @@
     70,
     70
    ],
-   "stations": 47,
-   "length_um": 18826.2,
+   "stations": 48,
+   "length_um": 19128.6,
    "max_hop_um": 430.3,
-   "last_hop_um": 109.9
+   "last_hop_um": 12.7
   },
   {
    "chain": "rE5",
@@ -647,10 +647,10 @@
     70,
     70
    ],
-   "stations": 48,
-   "length_um": 19387.9,
+   "stations": 49,
+   "length_um": 19690.3,
    "max_hop_um": 430.3,
-   "last_hop_um": 259.4
+   "last_hop_um": 162.2
   },
   {
    "chain": "qSW",
@@ -678,39 +678,39 @@
     514
    ],
    "stations": 12,
-   "length_um": 4862.5,
+   "length_um": 5089.3,
    "max_hop_um": 401.8,
-   "last_hop_um": 60.5
+   "last_hop_um": 287.3
   },
   {
    "chain": "coSW",
    "lanes": [
     514
    ],
-   "stations": 73,
-   "length_um": 29300.1,
+   "stations": 74,
+   "length_um": 29678.1,
    "max_hop_um": 413.0,
-   "last_hop_um": 101.5
+   "last_hop_um": 79.9
   },
   {
    "chain": "qSE",
    "lanes": [
     514
    ],
-   "stations": 55,
-   "length_um": 22218.5,
+   "stations": 56,
+   "length_um": 22672.1,
    "max_hop_um": 413.4,
-   "last_hop_um": 217.8
+   "last_hop_um": 271.3
   },
   {
    "chain": "aSE",
    "lanes": [
     1026
    ],
-   "stations": 54,
-   "length_um": 21909.8,
-   "max_hop_um": 416.9,
-   "last_hop_um": 333.3
+   "stations": 55,
+   "length_um": 22363.4,
+   "max_hop_um": 408.2,
+   "last_hop_um": 363.3
   },
   {
    "chain": "ixSE",
@@ -718,19 +718,19 @@
     514
    ],
    "stations": 27,
-   "length_um": 10962.1,
+   "length_um": 11188.9,
    "max_hop_um": 400.0,
-   "last_hop_um": 162.0
+   "last_hop_um": 388.8
   },
   {
    "chain": "coSE",
    "lanes": [
     514
    ],
-   "stations": 87,
-   "length_um": 35161.7,
-   "max_hop_um": 403.9,
-   "last_hop_um": 362.9
+   "stations": 88,
+   "length_um": 35237.3,
+   "max_hop_um": 421.2,
+   "last_hop_um": 43.2
   },
   {
    "chain": "qNW",
@@ -757,40 +757,40 @@
    "lanes": [
     514
    ],
-   "stations": 73,
-   "length_um": 29393.2,
-   "max_hop_um": 416.0,
-   "last_hop_um": 192.2
+   "stations": 74,
+   "length_um": 29771.2,
+   "max_hop_um": 404.4,
+   "last_hop_um": 179.3
   },
   {
    "chain": "coNW",
    "lanes": [
     514
    ],
-   "stations": 12,
-   "length_um": 4989.6,
-   "max_hop_um": 401.8,
-   "last_hop_um": 190.1
+   "stations": 13,
+   "length_um": 5216.4,
+   "max_hop_um": 406.9,
+   "last_hop_um": 43.2
   },
   {
    "chain": "qNE",
    "lanes": [
     514
    ],
-   "stations": 56,
-   "length_um": 22498.6,
+   "stations": 57,
+   "length_um": 22952.2,
    "max_hop_um": 401.8,
-   "last_hop_um": 99.4
+   "last_hop_um": 153.4
   },
   {
    "chain": "aNE",
    "lanes": [
     1026
    ],
-   "stations": 55,
-   "length_um": 22192.8,
-   "max_hop_um": 401.8,
-   "last_hop_um": 192.7
+   "stations": 56,
+   "length_um": 22646.4,
+   "max_hop_um": 413.1,
+   "last_hop_um": 246.2
   },
   {
    "chain": "ixNE",
@@ -798,9 +798,9 @@
     514
    ],
    "stations": 89,
-   "length_um": 35867.8,
-   "max_hop_um": 427.2,
-   "last_hop_um": 265.7
+   "length_um": 35930.4,
+   "max_hop_um": 429.4,
+   "last_hop_um": 328.3
   },
   {
    "chain": "coNE",
@@ -808,39 +808,39 @@
     514
    ],
    "stations": 26,
-   "length_um": 10489.2,
-   "max_hop_um": 400.4,
-   "last_hop_um": 90.7
+   "length_um": 10716.0,
+   "max_hop_um": 408.2,
+   "last_hop_um": 308.9
   },
   {
    "chain": "sel",
    "lanes": [
     514
    ],
-   "stations": 27,
-   "length_um": 11028.3,
-   "max_hop_um": 406.5,
-   "last_hop_um": 223.8
+   "stations": 28,
+   "length_um": 11255.1,
+   "max_hop_um": 412.6,
+   "last_hop_um": 54.9
   },
   {
    "chain": "col",
    "lanes": [
     514
    ],
-   "stations": 26,
-   "length_um": 10751.8,
-   "max_hop_um": 402.0,
-   "last_hop_um": 351.6
+   "stations": 27,
+   "length_um": 10978.6,
+   "max_hop_um": 404.4,
+   "last_hop_um": 178.4
   },
   {
    "chain": "KW0t",
    "lanes": [
     512
    ],
-   "stations": 49,
-   "length_um": 19634.1,
+   "stations": 48,
+   "length_um": 19331.7,
    "max_hop_um": 429.0,
-   "last_hop_um": 34.9
+   "last_hop_um": 130.3
   },
   {
    "chain": "KW0r",
@@ -848,39 +848,39 @@
     512
    ],
    "stations": 48,
-   "length_um": 19597.5,
+   "length_um": 19295.1,
    "max_hop_um": 426.8,
-   "last_hop_um": 396.6
+   "last_hop_um": 94.2
   },
   {
    "chain": "KW1t",
    "lanes": [
     512
    ],
-   "stations": 52,
-   "length_um": 21016.1,
+   "stations": 51,
+   "length_um": 20713.7,
    "max_hop_um": 429.8,
-   "last_hop_um": 217.5
+   "last_hop_um": 314.7
   },
   {
    "chain": "KW1r",
    "lanes": [
     512
    ],
-   "stations": 52,
-   "length_um": 20978.9,
-   "max_hop_um": 425.5,
-   "last_hop_um": 178.4
+   "stations": 51,
+   "length_um": 20676.5,
+   "max_hop_um": 426.8,
+   "last_hop_um": 277.8
   },
   {
    "chain": "KW2t",
    "lanes": [
     512
    ],
-   "stations": 43,
-   "length_um": 17227.4,
-   "max_hop_um": 402.2,
-   "last_hop_um": 29.2
+   "stations": 42,
+   "length_um": 16925.0,
+   "max_hop_um": 419.5,
+   "last_hop_um": 126.8
   },
   {
    "chain": "KW2r",
@@ -888,9 +888,9 @@
     512
    ],
    "stations": 42,
-   "length_um": 17191.6,
-   "max_hop_um": 405.2,
-   "last_hop_um": 390.1
+   "length_um": 16889.2,
+   "max_hop_um": 430.3,
+   "last_hop_um": 87.7
   },
   {
    "chain": "KW3t",
@@ -898,19 +898,19 @@
     512
    ],
    "stations": 48,
-   "length_um": 19511.3,
-   "max_hop_um": 429.8,
-   "last_hop_um": 312.6
+   "length_um": 19208.9,
+   "max_hop_um": 416.0,
+   "last_hop_um": 27.9
   },
   {
    "chain": "KW3r",
    "lanes": [
     512
    ],
-   "stations": 48,
-   "length_um": 19474.8,
-   "max_hop_um": 412.6,
-   "last_hop_um": 273.5
+   "stations": 47,
+   "length_um": 19172.4,
+   "max_hop_um": 426.4,
+   "last_hop_um": 339.6
   },
   {
    "chain": "KE0t",
@@ -918,9 +918,9 @@
     512
    ],
    "stations": 53,
-   "length_um": 21271.2,
-   "max_hop_um": 428.5,
-   "last_hop_um": 72.4
+   "length_um": 21573.6,
+   "max_hop_um": 430.3,
+   "last_hop_um": 371.7
   },
   {
    "chain": "KE0r",
@@ -928,69 +928,69 @@
     512
    ],
    "stations": 53,
-   "length_um": 21235.2,
-   "max_hop_um": 408.7,
-   "last_hop_um": 43.6
+   "length_um": 21537.6,
+   "max_hop_um": 426.4,
+   "last_hop_um": 340.8
   },
   {
    "chain": "KE1t",
    "lanes": [
     512
    ],
-   "stations": 56,
-   "length_um": 22653.4,
-   "max_hop_um": 413.0,
-   "last_hop_um": 255.1
+   "stations": 57,
+   "length_um": 22955.8,
+   "max_hop_um": 409.1,
+   "last_hop_um": 157.9
   },
   {
    "chain": "KE1r",
    "lanes": [
     512
    ],
-   "stations": 56,
-   "length_um": 22616.6,
-   "max_hop_um": 428.1,
-   "last_hop_um": 216.0
+   "stations": 57,
+   "length_um": 22919.0,
+   "max_hop_um": 421.6,
+   "last_hop_um": 118.8
   },
   {
    "chain": "KE2t",
    "lanes": [
     512
    ],
-   "stations": 47,
-   "length_um": 19156.0,
-   "max_hop_um": 428.2,
-   "last_hop_um": 356.6
+   "stations": 48,
+   "length_um": 19458.4,
+   "max_hop_um": 418.6,
+   "last_hop_um": 259.4
   },
   {
    "chain": "KE2r",
    "lanes": [
     512
    ],
-   "stations": 47,
-   "length_um": 19120.6,
-   "max_hop_um": 430.3,
-   "last_hop_um": 321.4
+   "stations": 48,
+   "length_um": 19423.0,
+   "max_hop_um": 428.5,
+   "last_hop_um": 222.0
   },
   {
    "chain": "KE3t",
    "lanes": [
     512
    ],
-   "stations": 53,
-   "length_um": 21539.9,
-   "max_hop_um": 416.9,
-   "last_hop_um": 341.5
+   "stations": 54,
+   "length_um": 21842.3,
+   "max_hop_um": 426.4,
+   "last_hop_um": 244.3
   },
   {
    "chain": "KE3r",
    "lanes": [
     512
    ],
-   "stations": 53,
-   "length_um": 21503.8,
-   "max_hop_um": 428.5,
-   "last_hop_um": 306.3
+   "stations": 54,
+   "length_um": 21806.2,
+   "max_hop_um": 417.3,
+   "last_hop_um": 205.6
   }
  ],
  "scan_die_power": {
@@ -1031,7 +1031,7 @@
   }
  },
  "legality_python": {
-  "instances": 22984,
+  "instances": 23003,
   "overlaps": 0,
   "overlap_examples": [],
   "outside": 0,
@@ -1040,33 +1040,33 @@
  "generated_pin_clashes": 0,
  "windows_um": {
   "field": [
-   7474.704,
+   7172.304,
    9635.12,
-   11649.072,
+   11346.672,
    12694.32
   ],
   "field_bf": [
-   12731.984,
+   12429.584,
    3421.68,
-   15914.8,
+   15612.4,
    6321.68
   ],
   "spine": [
-   14774.0,
+   14471.6,
    11601.04,
-   18209.2,
+   18511.6,
    14401.04
   ],
   "band_s": [
-   6149.968,
+   5847.568,
    0.0,
-   9149.968,
+   8847.568,
    3941.28
   ],
   "field_nv": [
-   12731.984,
+   12429.584,
    3421.68,
-   15914.8,
+   15612.4,
    6321.68
   ]
  },
