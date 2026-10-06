@@ -224,7 +224,7 @@ module ot_dsrom_window_source_pipeline #(
                 .rsp_fault(wb_rsp_fault),
                 .kv_v(kv_v), .kv_ready(kv_ready), .kv_m(kv_m), .kv_w(kv_w), .done(merge_done), .fault(merge_fault));
         end else begin : g_compat
-            ot_chip_v41x_attn_row_merge #(.POS_W(POS_W), .USER_W(USER_W)) u_merge (
+            ot_dsrom_window_row_merge_pipeline #(.POS_W(POS_W), .USER_W(USER_W)) u_merge (
                 .clk(clk), .rst_n(rst_n), .start_v(issue_v && issue_ready), .start_ready(merge_start_ready),
                 .start_user(j_user), .window_start_pos(j_first), .window_count(j_count),
                 .selected_count(10'd0), .published_source_count(POS_W'(0)),

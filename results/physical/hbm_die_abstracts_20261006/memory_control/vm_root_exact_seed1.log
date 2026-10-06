@@ -1,0 +1,4 @@
+EXACT seed=1 fullshape banks=2 depth=128 macros=22 rows=0,127 comparisons=32 write_ACK_edges=4 read_publication_edges=3
+NEGATIVE actual reverse ACK wrong-owner quarantined no release
+NEGATIVE actual SRAM double-bit error refuses publication
+PASS VM ROOT COMPONENT (whole VM parent and physical clock OPEN)

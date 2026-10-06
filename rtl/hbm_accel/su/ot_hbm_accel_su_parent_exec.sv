@@ -4,11 +4,13 @@
 // Minimum binding: one complete four-op HCpost group. Partial fragments refuse.
 // Both unchanged engines use this SAME finite provider and publication calendar.
 module ot_hbm_accel_su_parent_exec #(
- parameter integer ENABLE=0,N=1024,M=256,D=5120,IMW=14
+ parameter integer ENABLE=0,PROTECTED_FRAME_BIND=0,N=1024,M=256,D=5120,IMW=14
 )(
  input wire clk,rst_n,owned,config_idle,loader_we,
  input wire [IMW-1:0] loader_addr,input wire [63:0] loader_data,
  input wire [31:0] selected_pc,job_id,
+ // Decoded enclosing W6 CP context; no second raw/coded owner seat.
+ input wire [72:0] protected_frame,
  output wire req_v,input wire req_rdy,output wire [336:0] req,
  input wire rsp_v,output wire rsp_rdy,input wire [272:0] rsp,
  output wire done,fault,
@@ -113,6 +115,10 @@ module ot_hbm_accel_su_parent_exec #(
   .clk(engine_clk),.rst_n(engine_rst_n),.cmd_valid(candidate && pc==0),
   .source_ready(owned && started && !bad),.landing_reserved(owned && started && !bad),
   .cmd_ready(f_ready),.busy(f_busy),.done(f_done),.fault(f_fault),.job_id(jid),
+  .held_frame(PROTECTED_FRAME_BIND?protected_frame:73'd0),
+  // This exact KIND4/PUBLISH_QUANT0 branch has q_valid=0/q_frame=0.
+  // Intentionally no quant consumer; future quant requires its own real binding.
+  .q_frame(),
   .xbase(program_words[0][F_ABASE+:24]),.ubase(program_words[3][F_ABASE+:24]),
   .wbase(24'd0),.ybase(program_words[0][F_OBASE+:24]),.gain_base(24'd0),
   .comb(comb),.post_pre(post),.n_f(32'd0),.eps(32'd0),.lim(32'd0),.cos_t(32'd0),.sin_t(32'd0),

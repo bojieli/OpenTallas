@@ -1,0 +1,65 @@
+{
+  "status": "ACTUAL_FULL73_PUBLICATION_PARENT_QUARTER_JOIN_COMPONENT_PASS",
+  "base": "77800dc91",
+  "source_hashes": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f"
+  },
+  "seed": 1062026,
+  "fanouts": [
+    3,
+    3,
+    3,
+    2
+  ],
+  "SM_taps": 8,
+  "provider_macros": 32,
+  "extra_provider_macros": 0,
+  "station_implementation_count": 1,
+  "new_hardened_variants": 0,
+  "stdout": "results/physical/hbm_die_abstracts_20261006/links/native_quarter/join_r5.log",
+  "stdout_sha256": "0a3c2624818cd462629419fbdcd28bbe4bd5105101bb73c0cd04eebaf5872dab",
+  "compile_log": "results/physical/hbm_die_abstracts_20261006/links/native_quarter/compile_r5.log",
+  "checks": [
+    "all eight actual full2063+owner192+frame73 taps exactly once",
+    "capture alone and partial ACK do not release",
+    "empty reverse receipt CE retains native retirement via opt-in handshake",
+    "held reverse receipt CE survives warm/backpressure",
+    "actual parent source release full73/full192 held until consume",
+    "wrong full73 token16 ACK fails closed with ownership/debt retained"
+  ],
+  "preserved_failures": [
+    "r2 lost empty-seat release log/source",
+    "r4 wrong-ACK combinational feedback source snapshots/diagnosis",
+    "Verilator4.038 unsupported timing/leaf-top/reset-loop attempts"
+  ],
+  "lint": "OPEN: installed Verilator4.038 BLKLOOPINIT on unchanged reused protected-bank reset loop, no lint PASS claimed",
+  "physical_clock_GHz": 1.2,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "closed": false,
+  "placed": false,
+  "physical_qualified": false,
+  "fullsystem_qualified": false,
+  "heavy_jobs_launched": 0,
+  "unchanged_leaf_PASS_replayed": false,
+  "source_owner_open": [
+    "production Gibbs/SM issuer192 + actual held cohort",
+    "native SM destination visibility ACK/full73 actual event",
+    "4096-row capture24macros and publication128KiB vs provider64KiB segmentation",
+    "actual parent receiver clock/reset/delay/caps/slot SSFF context"
+  ],
+  "FEC": "internal/onpackage binding; FULL offpackage, actual Claude handoff pending; no130ns inheritance"
+}

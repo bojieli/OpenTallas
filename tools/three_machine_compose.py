@@ -8,6 +8,9 @@
   Qwen ROM Qwen3-8B 8K (P8191): the measured STREAM4 full36+HEAD token (terminal.json, 193,955 cycles) plus the
            adopted in-context core closure's added cycles (claude_context_20261005/verdict.json, +112/token).
            MTP mode = AR (DSpark verdict AR_MODE: below AR on STREAM4).
+  LINKS    OWNER 2026-10-06: FULL RS(544,514) FEC on every off-package link of both machines (DS ROM: RTL-measured
+           full-KP4 hops / collectives, links_full_fec.json, + cable flight per hop class from the S81 rack record;
+           HBM: the SUE endpoint PHY at the full-KP4 channel on every switch crossing).  Light FEC = superseded row.
   HBM      DS HBM accelerator 1M: the matched reference gate (dshbm_matched_reference_20261005) + the exact HBM
            levers (joint PQ+XMAP, paired W2 PACK; tools/dshbm_hbm_opt_compose.py output joint_r2) + the die
            wire stages priced at floor / median / bound (hbm_accel_die_floorplan_20261005/wire_stages.json).
@@ -49,6 +52,12 @@ WIRE = ROOT / "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
 OUT = ROOT / "results/arch/three_machine_compose"
 WIRE_BASES = (("floor", "stages_430_manhattan"), ("median", "stages_430_median_bundle"), ("bound", "stages_430"))
 LEVER_SCHEMA = "opentallas.dsrom-recovery.lever.v1"
+# OWNER 2026-10-06: full RS(544,514) FEC on every off-package link of BOTH machines.  HBM accelerator: the SUE RM104
+# crossing's endpoint "Ethernet link + PHY Tx+Rx < 100 ns" (dshbm_1m_coll.TU_PHY_NS) becomes the full-KP4 channel the
+# ROM hop is measured with (technology.json links.rom_board_serdes full_kp4_fec_s: 200 ns channel incl. ~0.3 m = 2 ns
+# of board flight; the HBM cable is priced separately in TU_CABLE_NS) = 198 ns.  The switch's 250 ns already
+# "includes its PHY/FEC" (RM104).  The DS ROM side is measured in RTL (links_full_fec.json).
+HBM_FULL_FEC_PHY_NS = 200.0 - 2.0
 KNOWN_VERDICTS = {"ADOPT", "REJECT", "PENDING_SSFF"}
 
 
@@ -113,10 +122,10 @@ def guard_applied(levers: dict, applied: list, what: str):
         raise Refused("; ".join(errs))
 
 
-def _args(recovery: Path):
+def _args(recovery: Path, hop_tier=None):
     import dsrom_1m_allmeasured as D
     return argparse.Namespace(rec=D.REC, out=Path("/dev/null"), baseline="recovery", recovery=recovery,
-                              window="s81", hop_tier="light_fec")
+                              window="s81", hop_tier=hop_tier or D.DEFAULT_HOP_TIER)
 
 
 def _row(rec):
@@ -167,8 +176,15 @@ def ds_rom(recovery: Path, levers: dict, deltas=True):
     else:
         joint, cond, dropped = None, [], {}
     m = base["MTP"]
+    light = _row(D.compose(_args(recovery, "light_fec"), write_output=False))
+    link_fec = dict(hop_tier=base["info"]["hop_tier"], full_fec=base["info"].get("full_fec"),
+                    draft_full_fec=base["info"].get("draft_blocks", {}).get("full_fec"),
+                    light_fec_superseded=light, delta_vs_light_fec=_delta(b, light),
+                    rule="OWNER 2026-10-06: full RS(544,514) on every off-package link (stage hops, token return, TP4 "
+                         "collectives, embed and draft links, all re-measured in RTL) + cable flight per hop class "
+                         "(results/arch/dsrom_s81_rack_20261006/rack.json); light FEC kept only as the superseded row")
     return base, dict(
-        tool="tools/dsrom_1m_allmeasured.py compose() (recovery baseline)",
+        tool="tools/dsrom_1m_allmeasured.py compose() (recovery baseline)", link_fec=link_fec,
         **b, tau=m["tau"], tau_source=m["tau_source"], tau_sensitivity=m["tau_sensitivity"],
         MTP_physical_qualified=m.get("physical_qualified"), MTP_qualified_headline_rate=m.get("qualified_headline_rate"),
         still_modelled_total_us=base["still_modelled_total_us"],
@@ -269,12 +285,30 @@ def hbm_ds():
     ar0, st0 = gate["AR_us"], gate["MTP_step_us"]
     ar1 = ar0 + sum(v["AR_us"] for v in levers.values())
     st1 = st0 + sum(v["MTP_step_us"] for v in levers.values())
+    # full FEC: switch crossings on the AR path (the P6 verify walks the same ops, so the same crossings)
+    import dshbm_1m_coll as DC
+    tu = sum(n.get("budget_us", 0.0) for n in mref["path"] if n["cls"] == "measured_tu_budget")
+    n_x = round(tu / (DC.BUDGET_NS / 1e3))
+    assert abs(n_x * DC.BUDGET_NS / 1e3 - tu) < 1e-6, (tu, n_x)
+    d_x = HBM_FULL_FEC_PHY_NS - DC.TU_PHY_NS
+    fec_us = n_x * d_x / 1e3
+    full_fec = dict(crossings_AR=n_x, crossings_MTP_verify=n_x, per_crossing_ns=round(d_x, 3), AR_us=round(fec_us, 3),
+                    MTP_step_us=round(fec_us, 3), endpoint_phy_ns=dict(was=DC.TU_PHY_NS, now=HBM_FULL_FEC_PHY_NS),
+                    basis="OWNER 2026-10-06 full FEC on every off-package link: SUE endpoint link+PHY 100 ns -> full-KP4 "
+                          "channel 198 ns (configs/hardware/technology.json links.rom_board_serdes full_kp4_fec_s 200 ns "
+                          "less 2 ns of board flight); crossings counted from " + rel(HBM_MATCHED) + " path "
+                          "(measured_tu_budget rows / 377.6 ns); switch 250 ns unchanged (RM104: includes its PHY/FEC)",
+                    not_charged="the HBM DSpark draft (45.28 us, W19 estimate) carries no crossing count: not re-priced "
+                                "(HBM-favourable)")
+    ar_lev, st_lev = ar1, st1
+    ar1 += fec_us
+    st1 += fec_us
     pub = TP.sensitivity_ds_v41()["published"]["tau"]
     rows = {}
     for name, key in WIRE_BASES:
         add = wire["bases"][key]["ds_matched_added_us"]
         ar, st = ar1 + add, st1 + add
-        rows[name] = dict(wire_basis=key, wire_added_us=add, AR_us=round(ar, 3), AR_tok_s=round(1e6 / ar, 1),
+        rows[name] = dict(wire_basis=key, wire_added_us=add, full_fec_added_us=round(fec_us, 3), AR_us=round(ar, 3), AR_tok_s=round(1e6 / ar, 1),
                           MTP_step_us=round(st, 3), MTP_tok_s=round(tau * 1e6 / st, 1),
                           MTP_tok_s_tau_published=round(pub * 1e6 / st, 1))
     # cross-check: the wire record's own gate-row pricing at each basis reproduces gate + wire
@@ -287,12 +321,14 @@ def hbm_ds():
                         delta=dict(AR_us=round(v["AR_us"], 3), MTP_step_us=round(v["MTP_step_us"], 3)), scope=v["scope"],
                         note=v["note"]) for k, v in levers.items()},
         not_credited=excluded,
-        levers_AR_us=round(ar1, 3), levers_MTP_step_us=round(st1, 3),
-        rows=rows, headline_row="median",
+        levers_AR_us=round(ar_lev, 3), levers_MTP_step_us=round(st_lev, 3),
+        full_fec_AR_us=round(ar1, 3), full_fec_MTP_step_us=round(st1, 3),
+        rows=rows, headline_row="median", full_fec=full_fec,
         unvalidated=["wire stages priced on the matched-reference walk's crossing counts; the PQ levers merge some "
                      "barriers / x loads, so the barrier and x-broadcast wire terms are an upper charge on the lever row",
                      "HBM levers are exact on minimum components; SS60/FF25 not admitted (comparator credit)",
-                     "inherited vendor terms (Tomahawk-Ultra PHY + switch + cable) as in the matched reference"],
+                     "inherited vendor terms (Tomahawk-Ultra PHY + switch + cable) as in the matched reference, with "
+                     "the endpoint PHY raised to the full-KP4 channel (full_fec)"],
         inputs={rel(p): sha(p) for p in (HBM_MATCHED, HBM_OPT, WIRE)})
 
 
@@ -300,7 +336,8 @@ def hbm_ds():
 def table(rec):
     d, q, h = rec["ds_rom"], rec["qwen_rom"], rec["hbm_ds"]
     L = ["THREE-MACHINE COMPOSITION (per user, target context)", "",
-         f"{'machine':34s} {'AR tok/s':>10s} {'MTP tok/s':>10s} {'MTP@3.8879':>11s}  note"]
+         f"{'machine':34s} {'AR tok/s':>10s} {'MTP tok/s':>10s} {'MTP@3.8879':>11s}  note",
+         "(links: FULL RS(544,514) FEC on every off-package link, owner 2026-10-06)"]
     L.append(f"{'DS ROM 1M (adopted levers)':34s} {d['AR_tok_s']:>10,.1f} {d['MTP_tok_s']:>10,.1f} "
              f"{d['MTP_tok_s_tau_published']:>11,.1f}  tau {d['tau']:g}; MTP physical_qualified={d['MTP_physical_qualified']}")
     cj = d["conditional_all"]["composed"]
@@ -312,6 +349,10 @@ def table(rec):
     for name, r in h["rows"].items():
         L.append(f"{('HBM accel DS 1M, wire ' + name):34s} {r['AR_tok_s']:>10,.1f} {r['MTP_tok_s']:>10,.1f} "
                  f"{r['MTP_tok_s_tau_published']:>11,.1f}  +{r['wire_added_us']} us wire")
+    lf = d["link_fec"]["delta_vs_light_fec"]
+    L.append(f"{'full FEC vs light FEC (superseded)':34s} DS ROM dAR {lf['AR_tok_s']:+,.1f} tok/s ({lf['AR_us']:+.3f} us), "
+             f"dMTP {lf['MTP_tok_s']:+,.1f} tok/s ({lf['MTP_step_us']:+.3f} us step); HBM +{h['full_fec']['AR_us']} us AR "
+             f"and MTP step ({h['full_fec']['crossings_AR']} crossings x {h['full_fec']['per_crossing_ns']} ns)")
     L += ["", f"DS ROM / HBM (wire median): AR {rec['ratios']['ds_rom_over_hbm_ar']:.4f}x  "
               f"MTP {rec['ratios']['ds_rom_over_hbm_mtp']:.4f}x", "",
           "PER-LEVER DELTAS (adopted: headline minus headline-without; conditional: if-adopted minus headline)",

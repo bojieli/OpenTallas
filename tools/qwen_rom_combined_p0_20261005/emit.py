@@ -22,6 +22,27 @@ def replace_once(text, old, new):
     return text.replace(old, new)
 
 
+def emit_layer(full_host, layer_host):
+    """One full-shape TP4 cold L0, reusing the final model and real backing.
+
+    Validate/preload the complete released manifest first. Only the executed
+    stage list is shortened; no clocks, arithmetic, transport or fault checks
+    are bypassed. No next-layer overlap or full-token claim is made.
+    """
+    text = Path(full_host).read_text()
+    if 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE' not in text or '!die[d]->transport_quiet' not in text:
+        raise ValueError('actual full protected host with genuine drain required')
+    marker = '    if (stages.back().name != "head") fatal("P0 fullhead missing");'
+    text = replace_once(text, marker, marker + '\n'
+        '    stages.resize(1); // full manifest/backing validated above; execute L0 only\n'
+        '    for (int d=0; d<D; ++d) die[d]->rm_next_layer=uint8_t(-1);\n'
+        '    printf("P0_MINIMUM_SCOPE L0 TP4 P8191 cold no_next_prefetch full_token=0\\n");')
+    text = replace_once(text, 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE',
+                        'QWEN_ROM_COMBINED_P0_FULLSHAPE_LAYER DONE')
+    with Path(layer_host).open('x') as out:
+        out.write(text)
+
+
 def emit(host, output, top=TOP, transport_quiet=False):
     raw = Path(host).read_bytes()
     if hashlib.sha256(raw).hexdigest() != HOST_SHA:
@@ -98,6 +119,23 @@ def emit(host, output, top=TOP, transport_quiet=False):
                         '        }, [&] { settle(live_all); });')
     text = text.replace('QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE',
                         'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE')
+    # Existing service counters distinguish a progressing history fill from
+    # clock-only activity. This changes the next host TU, never a live run.
+    heartbeat = '        if (tick % progress_every == 0) {'
+    text = replace_once(text, heartbeat, heartbeat + '\n'
+        '            for (int d=0; d<D; ++d) {\n'
+        '                unsigned debt=__builtin_popcountll(rm_write_ack_owners(die[d]->rootp));\n'
+        '                if(debt>die[d]->st_wr_sectors) fatal("ACK owner conservation", d, debt);\n'
+        '                printf("P0_FLOW tick=%ld rank=%d layer=%u fill=%u writes=%u "\n'
+        '                       "wrack_retired=%u wrack_debt=%u "\n'
+        '                       "stall_kv=%u stall_mem=%u stall_bridge=%u stall_retire=%u "\n'
+        '                       "rsp_stall=%u kv_fault=%04x\\n", tick, d, die[d]->rm_layer,\n'
+        '                       die[d]->st_fill_sectors, die[d]->st_wr_sectors,\n'
+        '                       die[d]->st_wr_sectors-debt, debt,\n'
+        '                       die[d]->st_stall_kv, die[d]->st_stall_mem,\n'
+        '                       die[d]->st_stall_bridge, die[d]->st_stall_retire,\n'
+        '                       die[d]->st_rsp_stall, die[d]->kv_fault_code);\n'
+        '            }')
     text = replace_once(text, '                    printf("QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE',
                         '                    printf("P0_CLOCK controller_rises=%llu elapsed_fs=%llu\\n",\n'
                         '                        (unsigned long long)clocks.controller_rises(),\n'

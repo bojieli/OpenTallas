@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hbm.links.routed_export.v1",
+  "name": "ot_meso_fifo",
+  "parameters": {
+    "W": 512,
+    "DEPTH": 4,
+    "OFFSET": 2,
+    "CREDITS": 8,
+    "ENABLE": 1
+  },
+  "route_source_commit": "aec121692cc6c16931d4972501cdceda65459dc7",
+  "source_sha256": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+  "evidence_sha256": "2ba302cc6cdb83ac6355adccbfeeae4085793eb60084aa73f1246cc1e04e35f0",
+  "input_hashes": {
+    "6_final.odb": "9ba4a580ad980fbe4a88e7f34aa7e010a7d2f29706e5ac61069b86be1ed0f2d3",
+    "6_final.spef": "e0ae91fb8f04a3dc0f6e58f57c6497bba03bbc0228c6eb647c018765692ceca0",
+    "6_final.sdc": "1bb36ee283e8c50bb77a2f284b0c708a1e97d17f9924749c127ce2f39892184f",
+    "6_final.v": "bdb9ed4adf8dbe50c48b22c4941a029c1604e3cf5410116393dc73dc0193be0f"
+  },
+  "threads": 1,
+  "tool_sha256": "1e902bda136436fd8e118201e2c72778f52223b3ddba275eff20a9d52b35e8ad",
+  "extraction_is_new_signoff": false,
+  "parent_closed": false,
+  "orientation": "original routed pin placement; not a rotated/rerouted variant",
+  "corners": {
+    "ss": {
+      "library_hashes": {
+        "/tmp/ot-links-readonly-inputs/lib/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5",
+        "/tmp/ot-links-readonly-inputs/lib/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+        "/tmp/ot-links-readonly-inputs/lib/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27",
+        "/tmp/ot-links-readonly-inputs/lib/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+        "/tmp/ot-links-readonly-inputs/lib/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+      },
+      "returncode": 127,
+      "done": false
+    }
+  }
+}

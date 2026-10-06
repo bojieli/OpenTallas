@@ -1,0 +1,68 @@
+{
+  "status": "PRICED_BEFORE_MINIMUM_PIN_PROBE_NOT_ROUTE_OR_ALLOCATION",
+  "model": {
+    "purpose": "Minimum full-shape pin-access measurement on retained placed ODB before selecting any repaired route or parent slot",
+    "horizontal_layers": [
+      "M4",
+      "M6",
+      "M8"
+    ],
+    "vertical_layers": [
+      "M5",
+      "M7",
+      "M9"
+    ],
+    "preferred_pitch_um": [
+      0.048,
+      0.064,
+      0.08
+    ],
+    "min_distance_tracks": 2,
+    "gross_positions_per_perimeter_um": 24.479166666666664,
+    "retained_leaf_perimeter_um": 6200,
+    "retained_leaf_gross_positions_upper": 151770.8333333333,
+    "actual_PG_blockages_and_legal_positions_required": true,
+    "clock_PG_reserve_fraction": 0.2,
+    "signal_fraction_after_reserve": 0.6,
+    "parent_requested_perimeter_um": 14482.042553191492,
+    "parent_diagnostic_frame_um": [
+      4400,
+      4400
+    ],
+    "parent_diagnostic_raw_positions_upper": 430833.3333333333,
+    "parent_diagnostic_signal_budget_upper": 206800.0,
+    "parent_diagnostic_frame_is_not_allocated": true,
+    "standard_cell_utilization_is_not_pin_or_channel_capacity": true,
+    "macro_bodies_and_halos_and_root_CTS_not_priced_free": true,
+    "added_FF_bits": 0,
+    "added_payload_bits": 0,
+    "added_external_ports": 0,
+    "added_logical_cycles": 0,
+    "full_route_ready": false,
+    "measured_pin_access": false,
+    "parent_slot_fit": false,
+    "adoption": false
+  },
+  "retained_SS_source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "retained_ODB": "run/work/orfs/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/3_1_place_gp_skip_io.odb",
+  "retained_shape": {
+    "NPC": 32,
+    "rows": 128,
+    "IO": 70354,
+    "FF_cells": 791878
+  },
+  "actual_parent_source_prepared_pin": "614bc5cb898f2d7c9647808dc0761de33614c23c",
+  "macro_consumer_count": 68,
+  "macro_body_area_um2": 482236.416,
+  "clock_period_ps": 833.3333333333333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "IO_waiver": false,
+  "reset_waiver": false,
+  "minimum_IO_spacing_tracks_unchanged": 2,
+  "source_changed": false,
+  "numerical_gate_repeated": false,
+  "full_PNR_launched": false,
+  "actual_parent_allocation_required": true,
+  "adoption": false
+}

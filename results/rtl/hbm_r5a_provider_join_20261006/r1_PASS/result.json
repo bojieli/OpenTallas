@@ -1,0 +1,31 @@
+{
+  "source_commit": "7db1cbc9566a875cca196df3eb07ee9afbfeb225",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_p2_return_bind.sv": "dd1e9deab4af2d6cea240cb6a3662041bc134de2db1450b819547721587af239",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv": "148a8a0d179be503ba98dbbb36ff3e9406bdb0e4e2887ea39b2e2feba49ccf0b",
+    "rtl/test/hbm_accel/tb_hbm_r5a_provider_join_p2.sv": "f11a421ca75b9532f0021d8f5da862bbe266f4828fdce4bafd127771549c53e1"
+  },
+  "exit": 0,
+  "status": "PASS",
+  "scope": "sole changed full32 provider-to-consumer seam; no calendar/golden88 replay",
+  "pre": {
+    "UTC": "2026-10-06T05:46:59.723949+00:00",
+    "load": 64.97265625,
+    "idle_CPU": 76.02939796716184,
+    "MemAvailable_GiB": 299.16390228271484,
+    "disk_GiB": 1776.316650390625
+  },
+  "post": {
+    "UTC": "2026-10-06T05:47:00.759786+00:00",
+    "load": 63.7734375,
+    "idle_CPU": 75.32234632508006,
+    "MemAvailable_GiB": 299.61530685424805,
+    "disk_GiB": 1776.3165435791016
+  },
+  "compile_peak_RSS_KiB": "117964",
+  "run_peak_RSS_KiB": "40004",
+  "full_P2_numeric": false,
+  "SSFF_qualified": false
+}

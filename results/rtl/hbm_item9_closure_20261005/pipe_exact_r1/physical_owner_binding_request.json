@@ -1,0 +1,95 @@
+{
+  "owner": "Codex/Dirac ITEM9 -> Turing/Kant",
+  "top": "ot_gpu_coll_item9_pipe_slice",
+  "fullwidth_source": "rtl/gpu_sys/ot_gpu_coll_item9_context32_pipe.sv",
+  "slice_source": "rtl/gpu_sys/ot_gpu_coll_item9_pipe_slice.sv",
+  "mux_source": "rtl/gpu_sys/ot_gpu_coll_mux_item9_pipe.sv",
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv": "c27b8f4b91b09253b224dd3478fcdf4244de24e29a9d349b41190a072f885749",
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_pipe.sv": "ca2c3e0ebb1aac8a16c9fa82f16cbe6500372318f210410f1273deaf05794dcc",
+    "rtl/gpu_sys/ot_gpu_coll_item9_pipe_slice.sv": "65da3e08fb875648298e945fa18fb4ba6c9415f06708fa956327030efbcb4f89"
+  },
+  "caller_count": 32,
+  "payload_slice_bits": 64,
+  "fullwidth_exact_gate": "results/rtl/hbm_item9_closure_20261005/pipe_exact_r1/result.json",
+  "measured_cycles": 853,
+  "baseline_cycles": 789,
+  "added_cycles_per_collective": 2,
+  "clocks": {
+    "roots": [
+      "clk_sm",
+      "clk_link",
+      "clk_mem",
+      "clk_host"
+    ],
+    "period_ps": 833,
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25,
+    "source_phases_ps": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "candidate_pin_tuple": {
+    "caller_sources": "g_on.g_sm_caller[s].c_data[0:63]",
+    "mux_banks": "g_on.u_mux.g_on.bank_data[b][0:63] (b0..7)",
+    "mux_root": "g_on.u_mux.g_on.held_data[0:63]",
+    "caller_receivers": "g_on.g_sm_caller[s].vr[0:63]",
+    "endpoint_ports": [
+      "endpoint_req_v",
+      "endpoint_req_rdy",
+      "endpoint_mode",
+      "endpoint_count[7:0]",
+      "endpoint_data[63:0]",
+      "endpoint_rsp_v",
+      "endpoint_rsp_rdy",
+      "endpoint_rsp_data[63:0]"
+    ],
+    "actual_endpoint_destination": "g_on.u_ep.g_on.dat[0:63] in full context32_pipe",
+    "actual_reset": "unchanged ot_gpu_reset_ctrl outputs"
+  },
+  "required_binding_fields": [
+    "producer_tuples: actual source hierarchy/pin+clock+min/max arrivals",
+    "receiver_tuples: actual endpoint/caller pins and SS/FF installed load",
+    "clock_pin_tuples: physical root pin/coords and sink/source insertion association; no inherited unclocked28",
+    "corridor_segments: bank-to-root 8x64 payloadbits plus descriptor/control; PG/CTS/reset and other claims removed",
+    "SDC path/SHA: literal actual arrivals/loads and four833/60/25clocks; no generic20percent budget",
+    "pins_Tcl path/SHA: finite legal32caller/bank/root pin positions",
+    "die_bbox_um/core_bbox_um: finite available rows/macros/halo/repair margin; no r14 allocation"
+  ],
+  "floorplan_standardcell_utilization": [
+    55,
+    60
+  ],
+  "canonical_r14_geometry_used": false,
+  "PG_and_clock_tracks_excluded_from_capacity": true,
+  "preparation_driver": "tools/hbm_item9_pipe_slice_physical.py",
+  "candidate_clock_load_requires_mapped_actual_cells": true,
+  "old_ingress_hold": {
+    "report": "route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts_final.rpt",
+    "start": "i_data[3803]",
+    "end": "data[3803]$_DFF_P_",
+    "path_type": "min",
+    "corner": "WC",
+    "slack_ps": -803.83,
+    "clock_capture_insertion_ps": 999.4,
+    "input_min_ps": 166.6,
+    "required_ps": 1046.24,
+    "arrival_ps": 242.4,
+    "GRT1180same_capture_class_endpoint": "data[6562]",
+    "GRT1180_WNS_ps": -715.284,
+    "hold_not_setup": true,
+    "pipeline_not_claimed_to_fix_first_IO_edge": true
+  },
+  "old_route_preserved": true,
+  "adopted": false,
+  "parent_closure_open": true,
+  "full_FEC_off_package": true,
+  "light_FEC_130ns_dropped": true
+}

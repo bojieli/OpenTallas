@@ -26,10 +26,6 @@ module ot_dsrom_window_parent_context #(
     output wire [31:0] refill_cycles, sectors_read,
     output wire [31:0] rows_fetched, blocks_written, sectors_written,
     output wire [7:0] rows_refilled,
-    output wire kv_v,
-    output wire kv_ready,
-    output wire [3:0] kv_m,
-    output wire [4*16*265-1:0] kv_w,
     output wire [3:0] m_v,
     input wire [3:0] m_rdy,
     output wire [4*HAW-1:0] m_addr,
@@ -101,6 +97,11 @@ module ot_dsrom_window_parent_context #(
     output wire [70655:0] r0_captures,
     output wire [35:0] e_tags
 );
+    // These nets terminate in the actual descriptor/consumer inside this cut.
+    // Keep their real macro/capture loads without extra observation terminals.
+    wire kv_v, kv_ready;
+    wire [3:0] kv_m;
+    wire [4*16*265-1:0] kv_w;
     wire blk_v;
     wire [USER_W-1:0] blk_user;
     wire [POS_W-1:0] blk_row;

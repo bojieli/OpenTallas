@@ -1,0 +1,8 @@
+{
+  "build_rc": 0,
+  "runtime_rc": 1,
+  "first_failure": "enclosing descriptor not accepted",
+  "time_ps": 15429,
+  "cause": "bench passed consumer_drained=accepted, false in empty consumer before first descriptor; no outstanding transaction existed",
+  "source_numerical_mismatch": false
+}

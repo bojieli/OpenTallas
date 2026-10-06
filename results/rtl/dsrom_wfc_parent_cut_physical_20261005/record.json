@@ -25,10 +25,18 @@
         "6_final.spef": "74a645676a42c737ac5bf8a5bddeabafea43af527f7221994668562faf261d4c",
         "6_final.sdc": "f5414cc2cca39f9444bbfe800f055e361f7143ffc7fd82d4d7e5f2273c1b69d1"
       }
+    },
+    "s1": {
+      "verdict": "INCOMPLETE_ROUTE_NO_SIGNOFF",
+      "corners": null,
+      "route_exit": 1,
+      "source_unchanged": true,
+      "artifacts_sha256": null
     }
   },
   "completed_cuts": [
-    "s0"
+    "s0",
+    "s1"
   ],
   "actual_parent_context_qualified": false,
   "adopted": false,

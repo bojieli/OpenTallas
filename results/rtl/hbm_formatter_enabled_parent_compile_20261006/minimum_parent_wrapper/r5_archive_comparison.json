@@ -1,0 +1,38 @@
+{
+  "R5_component_replayed": false,
+  "parent_qualified": false,
+  "comparison_graph": "minimum-parent-wrapper-source-33e31834a/obj/Vtb_hbm_integrated_minimum_parent.json",
+  "new_SFU_continuation_graph_emitted": false,
+  "candidates": [
+    {
+      "prefix": "Vot_hbm_selected_c12___05Fot_hbm_sfu_result_c12",
+      "archive": "/srv/opentallas-scratch/codex/hbm-native-sfu-16edbfae1/child-cache/obj/Vot_hbm_selected_c12___05Fot_hbm_sfu_result_c12/libot_hbm_selected_c12___05Fot_hbm_sfu_result_c12.a",
+      "archive_sha256": "65b39a3f7c79f063cee68b8c850d0d16261f50186f639edbe4a1a5de7676322b",
+      "archive_hash_verified": true,
+      "objects": 76,
+      "generated_header_sha256": "7ec195bc229ab44f46a0aa23286342cc88a91ac8d1629817c15af446fc628e8d",
+      "generated_sv_sha256": "d934e80cd2eac686682aa3537a37dabce8d1508ef2c1ae12459b5562842a5f1b",
+      "eligible": false,
+      "reason": "Current graph cuts rsqrt_a, softplus_a, exp_1 as three dependencies; cached R5 SFU contains inline exp/div/sqrt. Original generator additionally uses -O2 --unroll-count4, current graph has different exact generation options. Current generated SFU header/interface not yet emitted; no ABI equality claim."
+    },
+    {
+      "prefix": "Vot_hbm_die_vm_sfu_publication_root_2",
+      "archive": "/srv/opentallas-scratch/codex/hbm-norm-quant-6bb9b0cf2/root-cache/obj/Vot_hbm_die_vm_sfu_publication_root_2/libot_hbm_die_vm_sfu_publication_root_2.a",
+      "archive_sha256": "4f2d216d80ed22ca195292872405cd6c386d2a2de3fde937d21ba1a6bb2ebafe",
+      "archive_hash_verified": true,
+      "objects": 17,
+      "generated_header_sha256": "066db2059050b69a07b68b185439e9e4428066063cee124a42c1e571dd4a386c",
+      "generated_sv_sha256": "c1807320fdcddb74b921cf82770efa38996e4f3dadcd56cdce8504612dc90695",
+      "eligible": false,
+      "reason": "No separate publication-root child in selected current 26-job graph; actual root in parent elaboration. No forced cut or alias."
+    }
+  ],
+  "eligible_R5_archives": [],
+  "existing_current_exact_child_archives": 10,
+  "existing_current_exact_child_objects": 181,
+  "firstnorm_snapshot_changed": false,
+  "firstnorm_terminal_present": false,
+  "controller": 282183,
+  "active_child": 606413,
+  "continuation": 1642341
+}

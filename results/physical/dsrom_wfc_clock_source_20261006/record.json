@@ -1,0 +1,28 @@
+{
+  "source_sha256": {
+    "physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv": "efde53cd44c63fcef68439283da31ff4a1d5bc795fdf52a81f3c50b3ffd06eb7",
+    "physical/dsrom_wfc_clock_source_20261006/tb_common_clock_source.sv": "b0b83de5ef6372af2a53475b20d0d57974f57ecc95684466bffd9bdf45fc6257"
+  },
+  "commands": [
+    [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_common_clock_source",
+      "-o",
+      "/tmp/turing-wfc-common-clock.vvp",
+      "physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv",
+      "physical/dsrom_wfc_clock_source_20261006/tb_common_clock_source.sv"
+    ],
+    [
+      "vvp",
+      "/tmp/turing-wfc-common-clock.vvp"
+    ]
+  ],
+  "verdict": "PASS_SOURCE_EDGES_DUTY_AND_COUNTER_FAULT",
+  "physical_closed": false,
+  "PLLcharacterization": false,
+  "externalIO_delays_supplied": false,
+  "measured_slew_insertion_supplied": false,
+  "FF_state_count": 16
+}

@@ -1,0 +1,306 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T06:38:08.124452+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 505549.174,
+    "block": "ot_dsrom_window_pipeline_context",
+    "cells": 3703567,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv",
+        "sha256": "775c27e5f60c50f040701fefe4b801faac6bcf438a7dd7e849e8c670396f8704",
+        "size_bytes": 6997
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv",
+        "sha256": "e6ba1bf40c82e49b1d7bb6df1cf4e2c54fd14ec30ffe278f5b764fcba4dfcfe6",
+        "size_bytes": 19973
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv",
+        "sha256": "6e8d4dc616dd634894b4501395e922bbcd0387b983a4971734c6ef9e60bc390f",
+        "size_bytes": 20811
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+        "sha256": "f097e58ea7e7ea5f3ccc247dca1794f88808dcf2faf47ba186ccc238427c5e37",
+        "size_bytes": 14935
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv",
+        "sha256": "4c1ea3945cffb1862e09a6a036b927d50dbaf3f3c87999ec3afc720d196f25ea",
+        "size_bytes": 21880
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv",
+        "sha256": "acb0239e7efe013a8b7de891abcf200963a83d8d997fa4cf950a521fb94d378f",
+        "size_bytes": 11218
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv",
+        "sha256": "d5635cc7b5cda58bdaca68b9a5c16691c809fb8f9e3eb3384f583d4ec665be2d",
+        "size_bytes": 10034
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv",
+        "sha256": "8cd6fd564279a672d3648b8444387adf951a909c38173d3719432bbb23871ce0",
+        "size_bytes": 10557
+      },
+      {
+        "path": "rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv",
+        "sha256": "45efc7372715e87308e9abdb5fb391354375c3b45323e56a2a7c239f9dfbd4f8",
+        "size_bytes": 11970
+      },
+      {
+        "path": "rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
+        "sha256": "649110ca45ce9ccc303ddbc3dddcc55815e0d794d1280ea0b665df2931311f5e",
+        "size_bytes": 22117
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+        "sha256": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+        "size_bytes": 3949
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_window_retention.sv",
+        "sha256": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+        "size_bytes": 2433
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+        "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+        "size_bytes": 4184
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_window_stage4.sv",
+        "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+        "size_bytes": 5239
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_window_stream.sv",
+        "sha256": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89",
+        "size_bytes": 2600
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+        "sha256": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+        "size_bytes": 10989
+      }
+    ],
+    "top": "ot_dsrom_window_pipeline_context"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n  +2.12% |  5.04e-04 |      \n      860 |   0.1115 |  1.060963e+08 |  +10.19% |  3.63e-04 |      \n[WARNING GPL-0323] Divergence detected between consecutive iterations\nDivergence occured in 1 regions.\n[WARNING GPL-0998] Divergence detected, reverting to snapshot with min hpwl.\n[WARNING GPL-0999] Revert to iter:  786 overflow: 0.120 HPWL: 93385857609\n[INFO GPL-1014] Final placement area: 631192.57 (+0.00%)\nTook 1488 seconds: global_placement -skip_io -density 0.31650001019239427 -pad_left 0 -pad_right 0\nDesign area 556157 um^2 23% utilization.\nwrite_db /work/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/3_1_place_gp_skip_io.odb\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n3_1_place_gp_skip_io      .odb         1532          15211 0ece0a8ba1248219d3a8\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement\nRunning io_placement.tcl, stage 3_2_place_iop\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/3_1_place_gp_skip_io.odb\nTook 11 seconds: read_db /work/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/3_1_place_gp_skip_io.odb\nread_sdc /work/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/2_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nplace_pins -hor_layers M4 -ver_layers M5\nFound 0 macro blocks.\nUsing 2 tracks default min distance between IO pins.\n[ERROR PPL-0024] Number of IO pins (70354) exceeds maximum number of available positions (64520). Increase the die perimeter from 6200.00um to 6753.98um.\nError: io_placement.tcl, 21 PPL-0024\n\nElapsed time: 2:23.03[h:]min:sec. CPU time: user 138.30 sys 4.39 (99%). Peak memory: 9743084KB.\nElapsed time: 2:30:22.26[h:]min:sec. CPU time: user 9434.50 sys 55.78 (105%). Peak memory: 20731716KB.\nElapsed time: 0:17.17[h:]min:sec. CPU time: user 14.91 sys 2.26 (99%). Peak memory: 6711704KB.\nElapsed time: 0:12.33[h:]min:sec. CPU time: user 10.64 sys 1.69 (99%). Peak memory: 4437260KB.\nElapsed time: 1:00.17[h:]min:sec. CPU time: user 57.52 sys 2.65 (99%). Peak memory: 7461320KB.\nElapsed time: 25:32.83[h:]min:sec. CPU time: user 4721.39 sys 9.33 (308%). Peak memory: 15576488KB.\nElapsed time: 0:23.67[h:]min:sec. CPU time: user 20.92 sys 2.75 (99%). Peak memory: 7463536KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/3_2_place_iop.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T22:10:24.053085+00:00",
+  "git": {
+    "commit": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_window_pipeline_context",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv",
+      "--source",
+      "rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv",
+      "--source",
+      "rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_window_retention.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_window_stage4.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_window_stream.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+      "--clock-period-ns",
+      "0.8333333333333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1550",
+      "1550",
+      "--core-area",
+      "5",
+      "5",
+      "1545",
+      "1545",
+      "--place-density",
+      "0.5",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "window_full_pipeline_r1",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/run/work",
+      "--output",
+      "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/run/physical.json"
+    ],
+    "driver": {
+      "commit": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.3333333333333,
+    "cell_area_um2": 505549.174,
+    "cell_count": 3703567,
+    "cell_types_used": 38,
+    "chip_area_um2": 505293.869518,
+    "combinational_cell_count": 2911694,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "2e9e4354d1eab6db4e9b040fbbaffa129f84bbb78c5d6ac4ca17c224c79ff796",
+      "raw_netlist_sha256": "2e9e4354d1eab6db4e9b040fbbaffa129f84bbb78c5d6ac4ca17c224c79ff796",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 235000.0,
+    "sequential_cell_count": 791873,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.8333333333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

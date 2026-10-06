@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.links.shared_rom_meso_preparation.v1",
+  "source_owner": "CLAUDE S81-DIE",
+  "source_commit": "165ec7d3e894a0cebe47168a602c4d2ff4c2ed4d",
+  "generator_sha256": "30f29d560ba418757b322a02ad96c1012163f8148e9e1773f9672a483d851a7b",
+  "primitive": "rtl/common/ot_meso_fifo.sv",
+  "primitive_sha256": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+  "preview_top": "physical/hbm_die_abstracts_20261006/links/parents/ot_meso_w564_preview.sv",
+  "status": "SHARED_PRIMITIVE_PREPARED_ONLY_W564_NOT_CLOSED",
+  "parent": "dsfd_cfifo",
+  "owner_copy_count_per_region": 128,
+  "width": 564,
+  "packing": {
+    "x0_bits": [
+      282,
+      0
+    ],
+    "x1_bits": [
+      548,
+      283
+    ],
+    "control_bits": [
+      563,
+      549
+    ]
+  },
+  "parent_input": {
+    "xf": "forwarded writer clock",
+    "xd": "[565:2] payload564; [1] valid; [0] writer reset"
+  },
+  "parent_clock_reset": {
+    "reader_root": "ck[0]",
+    "reader_reset": "rsync from rst[0], two-flop synchronize",
+    "column_root_output": "co = ck; source-owned region tree",
+    "return_clock": "rf = ck"
+  },
+  "return_payload": {
+    "root_bits": 66,
+    "status_bits": 2,
+    "stored_word_bits": 68,
+    "framed_lane_bits": 70,
+    "framing": "{status2,root66,root_valid1,rsync1}"
+  },
+  "slot_station": {
+    "primitive": "dsfd_sstn source-generated registers",
+    "cycles_per_slot": 1,
+    "not_HBM_four_capture_wrapper": true
+  },
+  "owner_latency": {
+    "farthest_roundtrip_cycles_excluding_tree": 135,
+    "measured_route_context": "PENDING"
+  },
+  "parameters": {
+    "DEPTH": 4,
+    "OFFSET": 2,
+    "GUARD_LO": 0,
+    "GUARD_HI": 4,
+    "CREDITS": 8,
+    "HOLD": 8,
+    "SETTLE": 8
+  },
+  "clock_contract": "Two equal-frequency regions from one reference, static phase plus priced wander; actual region root/insertion/reset context required",
+  "W512_view_compatible": false,
+  "area_um2": null,
+  "SS_setup_ps": null,
+  "FF_hold_ps": null,
+  "pin_caps": null,
+  "LIB": null,
+  "LEF": null,
+  "physical_closed": false,
+  "heavy_launched": false,
+  "required_owner_binding": [
+    "actual region clock root/insertion and forwarded source/reset path",
+    "actual credit reservation: r8 connects reader ready1 and captures writer overrun fault, not producer-ready flow control",
+    "status/fault return clock crossing and reset qualification",
+    "actual outline/pin sides and minimum protected payload policy",
+    "route and extracted SS/FF caps for W564 itself"
+  ],
+  "reusable": "shared ot_meso_fifo source only, existing W512 timing policy/method as reference, no width-dependent evidence reuse"
+}

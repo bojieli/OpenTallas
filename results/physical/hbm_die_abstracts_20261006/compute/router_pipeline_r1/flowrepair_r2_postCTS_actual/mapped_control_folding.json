@@ -1,0 +1,32 @@
+{
+  "mapped_file": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/flowrepair-r2/orfs/results/asap7/carson_router_pipeline_r1/base/1_2_yosys.v",
+  "mapped_sha256": "10f6fc6591b2653c270eca3280fbe12b81a87fe6996fd95cc92f5d5b4255ef9f",
+  "source_lane_count": 32,
+  "actual_x_first_register_count": 2,
+  "instances": [
+    "\\g_on.g_lane[15].u_lane.x_first$_DFF_PN0_",
+    "\\g_on.g_lane[31].u_lane.x_first$_DFF_PN0_"
+  ],
+  "mapped_lines": [
+    "  (* hdlname = \"g_on.g_lane[0].u_lane x_first\" *)",
+    "  wire \\g_on.g_lane[0].u_lane.x_first ;",
+    "  (* hdlname = \"g_on.g_lane[16].u_lane x_first\" *)",
+    "  wire \\g_on.g_lane[16].u_lane.x_first ;",
+    "    .Y(\\g_on.g_lane[0].u_lane.x_first )",
+    "    .Y(\\g_on.g_lane[16].u_lane.x_first )",
+    "    .B(\\g_on.g_lane[16].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[16].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[16].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[16].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[0].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[0].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[0].u_lane.x_first ),",
+    "    .B(\\g_on.g_lane[0].u_lane.x_first ),",
+    "    .D(\\g_on.g_lane[0].u_lane.x_first ),",
+    "  DFFASRHQNx1_ASAP7_75t_R \\g_on.g_lane[15].u_lane.x_first$_DFF_PN0_  (",
+    "    .D(\\g_on.g_lane[16].u_lane.x_first ),",
+    "  DFFASRHQNx1_ASAP7_75t_R \\g_on.g_lane[31].u_lane.x_first$_DFF_PN0_  ("
+  ],
+  "physical_claim": false,
+  "parent_qualified": false
+}

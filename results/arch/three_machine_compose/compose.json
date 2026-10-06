@@ -3,29 +3,70 @@
  "rule": "ADOPT + exact levers only in headlines; PENDING_SSFF reported as conditional; refuses otherwise",
  "ds_rom": {
   "tool": "tools/dsrom_1m_allmeasured.py compose() (recovery baseline)",
-  "AR_us": 592.926,
-  "AR_tok_s": 1686.5,
-  "MTP_step_us": 840.758,
-  "MTP_tok_s": 4946.7,
-  "MTP_tok_s_tau_published": 4624.3,
-  "II_us": 25.081,
-  "measured_share": 0.9999,
+  "link_fec": {
+   "hop_tier": "full_fec",
+   "full_fec": {
+    "rack": "results/arch/dsrom_s81_rack_20261006/rack.json",
+    "links": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+    "cable_flight_us": 0.1433,
+    "stage_hops_by_class": {
+     "in-tray": 40,
+     "in-rack": 39,
+     "rack-to-rack": 1
+    },
+    "head_hop": "rack-to-rack",
+    "token_return": "in-rack",
+    "ii_hop_cable_us": 0.0058
+   },
+   "draft_full_fec": {
+    "us": 3.5775,
+    "cycles": 4293,
+    "board_hops": 7,
+    "collective_issues": 36,
+    "hop_delta_cycles": 99,
+    "collective_delta_cycles": 100,
+    "record": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
+   },
+   "light_fec_superseded": {
+    "AR_us": 570.417,
+    "AR_tok_s": 1753.1,
+    "MTP_step_us": 816.318,
+    "MTP_tok_s": 5094.8,
+    "MTP_tok_s_tau_published": 4762.7,
+    "II_us": 24.695,
+    "measured_share": 1.0
+   },
+   "delta_vs_light_fec": {
+    "AR_us": 22.049,
+    "AR_tok_s": -65.2,
+    "MTP_step_us": 28.561,
+    "MTP_tok_s": -172.2
+   },
+   "rule": "OWNER 2026-10-06: full RS(544,514) on every off-package link (stage hops, token return, TP4 collectives, embed and draft links, all re-measured in RTL) + cable flight per hop class (results/arch/dsrom_s81_rack_20261006/rack.json); light FEC kept only as the superseded row"
+  },
+  "AR_us": 592.466,
+  "AR_tok_s": 1687.9,
+  "MTP_step_us": 844.879,
+  "MTP_tok_s": 4922.6,
+  "MTP_tok_s_tau_published": 4601.7,
+  "II_us": 25.282,
+  "measured_share": 1.0001,
   "tau": 4.159,
   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
   "tau_sensitivity": {
    "published": {
     "tau": 3.8879,
-    "MTP_tok_s": 4624.3,
+    "MTP_tok_s": 4601.7,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
    },
    "published_low": {
     "tau": 3.43,
-    "MTP_tok_s": 4079.7,
+    "MTP_tok_s": 4059.8,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
    },
    "published_high": {
     "tau": 4.31748,
-    "MTP_tok_s": 5135.2,
+    "MTP_tok_s": 5110.2,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
   },
@@ -40,8 +81,8 @@
     "delta": {
      "AR_us": 0.0,
      "AR_tok_s": 0.0,
-     "MTP_step_us": -31.123,
-     "MTP_tok_s": 176.6
+     "MTP_step_us": -27.546,
+     "MTP_tok_s": 155.4
     }
    },
    "head": {
@@ -50,9 +91,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
     "delta": {
      "AR_us": -102.043,
-     "AR_tok_s": 247.6,
-     "MTP_step_us": -689.095,
-     "MTP_tok_s": 2228.1
+     "AR_tok_s": 248.0,
+     "MTP_step_us": -687.601,
+     "MTP_tok_s": 2208.7
     }
    },
    "router": {
@@ -60,10 +101,10 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
     "delta": {
-     "AR_us": -11.967,
-     "AR_tok_s": 33.3,
-     "MTP_step_us": -13.468,
-     "MTP_tok_s": 78.0
+     "AR_us": -12.1,
+     "AR_tok_s": 33.8,
+     "MTP_step_us": -13.619,
+     "MTP_tok_s": 78.1
     }
    },
    "su_hcpost": {
@@ -71,10 +112,21 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json",
     "delta": {
-     "AR_us": -15.73,
-     "AR_tok_s": 43.5,
-     "MTP_step_us": -17.702,
-     "MTP_tok_s": 102.0
+     "AR_us": -16.133,
+     "AR_tok_s": 44.8,
+     "MTP_step_us": -18.158,
+     "MTP_tok_s": 103.6
+    }
+   },
+   "su_norm": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
+    "delta": {
+     "AR_us": -43.074,
+     "AR_tok_s": 114.4,
+     "MTP_step_us": -48.344,
+     "MTP_tok_s": 266.4
     }
    },
    "su_routeract": {
@@ -82,10 +134,21 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json",
     "delta": {
-     "AR_us": -11.422,
-     "AR_tok_s": 31.8,
-     "MTP_step_us": -12.855,
-     "MTP_tok_s": 74.5
+     "AR_us": -11.555,
+     "AR_tok_s": 32.3,
+     "MTP_step_us": -13.006,
+     "MTP_tok_s": 74.6
+    }
+   },
+   "su_swiglu": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
+    "delta": {
+     "AR_us": -18.013,
+     "AR_tok_s": 49.8,
+     "MTP_step_us": -21.175,
+     "MTP_tok_s": 120.4
     }
    },
    "field_spine": {
@@ -96,16 +159,16 @@
      "AR_us": -8.414,
      "AR_tok_s": 24.3,
      "MTP_step_us": -9.937,
-     "MTP_tok_s": 59.2
+     "MTP_tok_s": 58.6
     },
     "if_adopted": {
-     "AR_us": 584.512,
-     "AR_tok_s": 1710.8,
-     "MTP_step_us": 830.821,
-     "MTP_tok_s": 5005.9,
-     "MTP_tok_s_tau_published": 4679.6,
-     "II_us": 24.776,
-     "measured_share": 0.9998
+     "AR_us": 584.052,
+     "AR_tok_s": 1712.2,
+     "MTP_step_us": 834.942,
+     "MTP_tok_s": 4981.2,
+     "MTP_tok_s_tau_published": 4656.5,
+     "II_us": 24.977,
+     "measured_share": 1.0001
     }
    },
    "field_spine_pq": {
@@ -113,38 +176,18 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json",
     "delta": {
-     "AR_us": -106.62,
-     "AR_tok_s": 369.8,
-     "MTP_step_us": -126.442,
-     "MTP_tok_s": 875.7
+     "AR_us": -129.023,
+     "AR_tok_s": 469.9,
+     "MTP_step_us": -153.133,
+     "MTP_tok_s": 1089.7
     },
     "if_adopted": {
-     "AR_us": 486.306,
-     "AR_tok_s": 2056.3,
-     "MTP_step_us": 714.316,
-     "MTP_tok_s": 5822.4,
-     "MTP_tok_s_tau_published": 5442.8,
-     "II_us": 21.116,
-     "measured_share": 0.9998
-    }
-   },
-   "su_norm": {
-    "cls": "conditional",
-    "verdict": "PENDING_SSFF",
-    "record": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
-    "delta": {
-     "AR_us": -41.656,
-     "AR_tok_s": 127.5,
-     "MTP_step_us": -46.747,
-     "MTP_tok_s": 291.3
-    },
-    "if_adopted": {
-     "AR_us": 551.27,
-     "AR_tok_s": 1814.0,
-     "MTP_step_us": 794.011,
-     "MTP_tok_s": 5238.0,
-     "MTP_tok_s_tau_published": 4896.5,
-     "II_us": 24.063,
+     "AR_us": 463.443,
+     "AR_tok_s": 2157.8,
+     "MTP_step_us": 691.746,
+     "MTP_tok_s": 6012.3,
+     "MTP_tok_s_tau_published": 5620.4,
+     "II_us": 20.46,
      "measured_share": 1.0001
     }
    },
@@ -153,39 +196,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json",
     "delta": {
-     "AR_us": -12.518,
-     "AR_tok_s": 36.4,
-     "MTP_step_us": -14.071,
-     "MTP_tok_s": 84.2
+     "AR_us": -12.951,
+     "AR_tok_s": 37.7,
+     "MTP_step_us": -14.558,
+     "MTP_tok_s": 86.3
     },
     "if_adopted": {
-     "AR_us": 580.408,
-     "AR_tok_s": 1722.9,
-     "MTP_step_us": 826.687,
-     "MTP_tok_s": 5030.9,
-     "MTP_tok_s_tau_published": 4703.0,
-     "II_us": 24.77,
-     "measured_share": 0.9999
-    }
-   },
-   "su_swiglu": {
-    "cls": "conditional",
-    "verdict": "PENDING_SSFF",
-    "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
-    "delta": {
-     "AR_us": -15.751,
-     "AR_tok_s": 46.1,
-     "MTP_step_us": -17.729,
-     "MTP_tok_s": 106.6
-    },
-    "if_adopted": {
-     "AR_us": 577.175,
-     "AR_tok_s": 1732.6,
-     "MTP_step_us": 823.029,
-     "MTP_tok_s": 5053.3,
-     "MTP_tok_s_tau_published": 4723.9,
-     "II_us": 24.685,
-     "measured_share": 0.9998
+     "AR_us": 579.515,
+     "AR_tok_s": 1725.6,
+     "MTP_step_us": 830.321,
+     "MTP_tok_s": 5008.9,
+     "MTP_tok_s_tau_published": 4682.4,
+     "II_us": 24.96,
+     "measured_share": 1.0001
     }
    },
    "field": {
@@ -206,21 +229,19 @@
   "conditional_all": {
    "levers": [
     "field_spine_pq",
-    "su_norm",
-    "su_softmax",
-    "su_swiglu"
+    "su_softmax"
    ],
    "alternatives_not_stacked": {
     "field_spine": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
    },
    "composed": {
-    "AR_us": 416.38,
-    "AR_tok_s": 2401.7,
-    "MTP_step_us": 635.769,
-    "MTP_tok_s": 6541.7,
-    "MTP_tok_s_tau_published": 6115.3,
-    "II_us": 19.392,
-    "measured_share": 1.0
+    "AR_us": 450.492,
+    "AR_tok_s": 2219.8,
+    "MTP_step_us": 677.188,
+    "MTP_tok_s": 6141.6,
+    "MTP_tok_s_tau_published": 5741.2,
+    "II_us": 20.138,
+    "measured_share": 1.0001
    },
    "note": "all PENDING_SSFF levers (alternatives resolved) flipped to ADOPT together; not a headline"
   }
@@ -234,20 +255,20 @@
     "cls": "adopted",
     "verdict": "ADOPT (closed SS60/FF25, exact 5/5)",
     "record": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
-    "variant": "r5b_f3ba",
-    "ss_ps": 0.87,
-    "ff_ps": 7.12,
+    "variant": "r5_f2ba",
+    "ss_ps": 6.27,
+    "ff_ps": 6.92,
     "delta": {
-     "cycles": 112,
-     "AR_tok_s": -3.571
+     "cycles": 0,
+     "AR_tok_s": 0.0
     }
    }
   },
-  "token_cycles": 194067,
-  "AR_us": 161.722,
-  "AR_tok_s": 6183.4,
+  "token_cycles": 193955,
+  "AR_us": 161.629,
+  "AR_tok_s": 6187.0,
   "MTP_mode": "AR (DSpark OFF)",
-  "MTP_tok_s": 6183.4,
+  "MTP_tok_s": 6187.0,
   "dspark_reference": {
    "tok_s": 4346.2,
    "speedup_vs_ar": 0.704,
@@ -258,7 +279,7 @@
   "physical_qualified_full_system": false,
   "inputs": {
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
-   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "3f8cfd196f4c6e2809cb4373ccc64359b9de7473124731f1f8d51735746fa01d",
+   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
    "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0"
   }
  },
@@ -304,63 +325,81 @@
   },
   "levers_AR_us": 432.259,
   "levers_MTP_step_us": 973.582,
+  "full_fec_AR_us": 462.149,
+  "full_fec_MTP_step_us": 1003.472,
   "rows": {
    "floor": {
     "wire_basis": "stages_430_manhattan",
-    "wire_added_us": 25.914,
-    "AR_us": 458.173,
-    "AR_tok_s": 2182.6,
-    "MTP_step_us": 999.496,
-    "MTP_tok_s": 4161.1,
-    "MTP_tok_s_tau_published": 3889.9
+    "wire_added_us": 37.917,
+    "full_fec_added_us": 29.89,
+    "AR_us": 500.066,
+    "AR_tok_s": 1999.7,
+    "MTP_step_us": 1041.389,
+    "MTP_tok_s": 3993.7,
+    "MTP_tok_s_tau_published": 3733.4
    },
    "median": {
     "wire_basis": "stages_430_median_bundle",
-    "wire_added_us": 36.783,
-    "AR_us": 469.042,
-    "AR_tok_s": 2132.0,
-    "MTP_step_us": 1010.365,
-    "MTP_tok_s": 4116.3,
-    "MTP_tok_s_tau_published": 3848.0
+    "wire_added_us": 50.983,
+    "full_fec_added_us": 29.89,
+    "AR_us": 513.132,
+    "AR_tok_s": 1948.8,
+    "MTP_step_us": 1054.455,
+    "MTP_tok_s": 3944.2,
+    "MTP_tok_s_tau_published": 3687.1
    },
    "bound": {
     "wire_basis": "stages_430",
-    "wire_added_us": 43.126,
-    "AR_us": 475.385,
-    "AR_tok_s": 2103.6,
-    "MTP_step_us": 1016.708,
-    "MTP_tok_s": 4090.7,
-    "MTP_tok_s_tau_published": 3824.0
+    "wire_added_us": 58.269,
+    "full_fec_added_us": 29.89,
+    "AR_us": 520.418,
+    "AR_tok_s": 1921.5,
+    "MTP_step_us": 1061.741,
+    "MTP_tok_s": 3917.2,
+    "MTP_tok_s_tau_published": 3661.8
    }
   },
   "headline_row": "median",
+  "full_fec": {
+   "crossings_AR": 305,
+   "crossings_MTP_verify": 305,
+   "per_crossing_ns": 98.0,
+   "AR_us": 29.89,
+   "MTP_step_us": 29.89,
+   "endpoint_phy_ns": {
+    "was": 100.0,
+    "now": 198.0
+   },
+   "basis": "OWNER 2026-10-06 full FEC on every off-package link: SUE endpoint link+PHY 100 ns -> full-KP4 channel 198 ns (configs/hardware/technology.json links.rom_board_serdes full_kp4_fec_s 200 ns less 2 ns of board flight); crossings counted from results/rtl/dshbm_matched_reference_20261005/composition.json path (measured_tu_budget rows / 377.6 ns); switch 250 ns unchanged (RM104: includes its PHY/FEC)",
+   "not_charged": "the HBM DSpark draft (45.28 us, W19 estimate) carries no crossing count: not re-priced (HBM-favourable)"
+  },
   "unvalidated": [
    "wire stages priced on the matched-reference walk's crossing counts; the PQ levers merge some barriers / x loads, so the barrier and x-broadcast wire terms are an upper charge on the lever row",
    "HBM levers are exact on minimum components; SS60/FF25 not admitted (comparator credit)",
-   "inherited vendor terms (Tomahawk-Ultra PHY + switch + cable) as in the matched reference"
+   "inherited vendor terms (Tomahawk-Ultra PHY + switch + cable) as in the matched reference, with the endpoint PHY raised to the full-KP4 channel (full_fec)"
   ],
   "inputs": {
    "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
    "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
-   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
   }
  },
  "ratios": {
-  "ds_rom_over_hbm_ar": 0.791,
-  "ds_rom_over_hbm_mtp": 1.2017,
+  "ds_rom_over_hbm_ar": 0.8661,
+  "ds_rom_over_hbm_mtp": 1.2481,
   "hbm_row": "median",
   "by_wire_basis": {
    "floor": {
-    "ar": 0.7727,
-    "mtp": 1.1888
+    "ar": 0.8441,
+    "mtp": 1.2326
    },
    "median": {
-    "ar": 0.791,
-    "mtp": 1.2017
+    "ar": 0.8661,
+    "mtp": 1.2481
    },
    "bound": {
-    "ar": 0.8017,
-    "mtp": 1.2093
+    "ar": 0.8784,
+    "mtp": 1.2567
    }
   }
  },
@@ -370,14 +409,14 @@
    "head",
    "router",
    "su_hcpost",
-   "su_routeract"
+   "su_norm",
+   "su_routeract",
+   "su_swiglu"
   ],
   "ds_rom_conditional": [
    "field_spine",
    "field_spine_pq",
-   "su_norm",
-   "su_softmax",
-   "su_swiglu"
+   "su_softmax"
   ],
   "ds_rom_excluded": [
    "field",
@@ -395,28 +434,28 @@
   "levers": {
    "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
    "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "0d785a9bc3172fd2bd921d90546804ab8213a29e674a3ce3185120feee754608",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "d87125723eaf70b4a8157bbba60841ebeed1787ba3094441901621c9f9550d96",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "4ae2036774202fdbf5dded2521c3bd20da3d03f9b5d2002365ffe9fb951c0b3d",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "17f21cbb2894c5805e1fb8301477d18cf018d64df003cf23e92e1832241182ad",
    "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
    "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
    "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
    "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
-   "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "c9c46013ae2545e1a5a2f227e63ea350087b4cac8b9fb8bf87993e3fbdd99090",
+   "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "d93d1ea4fc1eb4ad2b4e36f5e8fe8d3962998d9e6d5a60c1c45b97349af6b9ba",
    "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
    "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json": "264666bbf72fec3983c1535416983faead2e41c016d8933cb4bae8497db30731",
-   "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "fb6e7c3420b6b935253d9d517ae5b104ceb0ffd4650f87507181b0e1d3da5903"
+   "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "48b20fb7033275a09559b912d839658fd4ef14f10161160ad492c02fc455c7e2"
   },
   "ds_rom_composition": {
-   "results/rtl/dsrom_recovery_20261004/composition.json": "fd58e007453ddf271a7a7a52e74a3ac620da708a6afdcadee7ef20b3c8a305fc"
+   "results/rtl/dsrom_recovery_20261004/composition.json": "9a7fb27eadc525f636308692ff6feac16691e378a494a7bb93515b3fce83c660"
   },
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
-  "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "3f8cfd196f4c6e2809cb4373ccc64359b9de7473124731f1f8d51735746fa01d",
+  "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
-  "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+  "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "aac57cb04e732d68f3860823f2b346fde1a5daf6aadcc568bebb36aafe9ffbc4"
+  "tools/three_machine_compose.py": "bbdbc64250c8fe52132eda48baae7fd0a396a73733749fff6465edf1f11380b3"
  }
 }

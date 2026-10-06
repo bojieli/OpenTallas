@@ -1,0 +1,198 @@
+{
+  "before_physical_build": true,
+  "source_RTL": "1860b98a0",
+  "functional_receipt": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r4_PASS/result.json",
+  "top": "ot_dsrom_wfc_protected_stage",
+  "parameters": {
+    "ENABLE": 1,
+    "STRUCTURAL": 1
+  },
+  "MAXU": 866,
+  "SOURCE": 0,
+  "replicas": 1,
+  "MACs_per_cycle": 0,
+  "native_VM_bytes_per_word": 64,
+  "protected_request_bits": 2831,
+  "protected_reply_bits": 1267,
+  "protected_receipt_bits": 80,
+  "coded_tracks": 4824,
+  "adjacent_channel_capacity": 7200,
+  "channel_gap_um": 172.82400000000052,
+  "area_um2_upper": {
+    "VM_macro_body": 1491158.10816,
+    "VM_logic": 150000,
+    "WFC_prior_source": 30385.50492,
+    "producer_mapped_logic": 1281.88834,
+    "caller_224FF_delta_and_control_in_existing_budget": 2923.11504,
+    "positive_CTS_PG_IO_repair": 40000
+  },
+  "VM_macros": 288,
+  "prompt_macros": 14,
+  "book_ROMs": 4,
+  "total_hardmacros": 306,
+  "placement": {
+    "source": "results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json",
+    "source_origin_um": [
+      15182.64,
+      11238.48
+    ],
+    "selected_VM_rect_um": [
+      15182.64,
+      11238.48,
+      16197.815999999999,
+      13858.536
+    ],
+    "selected_WFC_gross_um": [
+      15182.64,
+      14031.36,
+      16197.84,
+      14480.640000000001
+    ],
+    "selected_WFC_core_um": [
+      15199.92,
+      14048.640000000001,
+      16180.56,
+      14463.36
+    ],
+    "translated_standalone_die_um": [
+      0,
+      0,
+      1015.2000000000007,
+      3242.1600000000017
+    ],
+    "VM_reserved_slots": 320,
+    "actual_VM_instances": 288,
+    "remaining_empty_slots": 32,
+    "other_S81_instances_not_instantiated": true,
+    "parent_embedding_not_qualified": true
+  },
+  "clocks": {
+    "fast_period_ps": 833.333333333,
+    "slow_period_ps": 1111.111111111,
+    "related_ratio": "3:4 samePLL phase0 from Turing",
+    "SS_setup_ps": 60,
+    "FF_hold_ps": 25,
+    "macro_SS_clkQ_at20ps_2p88fF_ps": 528.6025,
+    "macro_FF_clkQ_at20ps_2p88fF_ps": 349.7289,
+    "VM_SS_clock_load_fF": 2500.92288,
+    "VM_FF_clock_load_fF": 2987.4816,
+    "propagated_local_CTS_required": true,
+    "parent_clock_insertion_not_borrowed": true
+  },
+  "latency": {
+    "actual_two_lease_pairs": 41,
+    "read_accept_to_write_accept_fast_edges": 23,
+    "read_reply_fast_edges": [
+      12,
+      13
+    ],
+    "write_reply_fast_edges": [
+      20,
+      21
+    ],
+    "consume_to_retire_fast_edges": [
+      6,
+      7
+    ],
+    "actual_native_C8_capture_fast_edges": 3,
+    "field_v11": "Future parent-selected3e3bb1c32 +1 broadcast/root/rowwrite must be priced by owner; not instantiated in this standaloneR4 block; no zeroedge or inheritedparentclock credit",
+    "token_credit": 0
+  },
+  "route_settings": {
+    "density_variants": [
+      0.55,
+      0.6
+    ],
+    "threads": 16,
+    "reservation_GiB": 64,
+    "host": "ot-epyc2",
+    "NVMe": "/srv/opentallas-scratch2",
+    "admission": "fresh CPUload<128 and idle>=16 plus RAM/disk before and after unchangedguard; no queued RAM-only launcher",
+    "reservation_basis": "Real306hardmacros/302SRAM clock and signal pin inventory plus150000um2 VM logic upper; prior full866 real route has20threads.64GiB scheduling reservation for synthesis/ABC/STA/route objects, no perprocess/time/file cap"
+  },
+  "qualified": false,
+  "adopted": false,
+  "clock_source_integration": {
+    "prepared_before_RTL_UTC": "2026-10-06T05:46:07.065342+00:00",
+    "source": "76158a8b3/main0261cd395",
+    "model": "dsrom_wfc_common_clock_source_model()",
+    "root_period_ps": 277.77777777777777,
+    "root_duty": 0.5,
+    "fast_edges": [
+      1,
+      4,
+      7
+    ],
+    "slow_edges": [
+      1,
+      5,
+      9
+    ],
+    "root_FF": 16,
+    "root_FF_area_floor_um2": 4.6656,
+    "fast_OR": 1,
+    "enrollment_ready_fault_and_quarantine_gate_allowance_um2": 20,
+    "actual_mapped_area_and_root_load_required": true,
+    "added_data_cycles": 0,
+    "new_payload_copies": 0,
+    "clock_pipeline_insertion_not_borrowed": true,
+    "PLL_IP_jitter_slew_insertion_uncharacterized": true,
+    "scope": "actual divider plus unchanged R4 live context; target-period pathfinding before PLL contract qualification"
+  },
+  "active_body_clock_boundary": {
+    "prepared_before_RTL_UTC": "2026-10-06T06:44:10.031610+00:00",
+    "top": "ot_dsrom_wfc_protected_inputclock_stage",
+    "fast_input": "fast_clk",
+    "slow_input": "slow_clk",
+    "fault_input": "clock_source_fault",
+    "fast_target_ps": 833.3333333333334,
+    "slow_target_ps": 1111.111111111111,
+    "phase_duty_minmaxlatency_slew": "Literal external producer clock-input SDC required from Turing; no default arrival/transition/insertion assumed",
+    "failed_generator_in_body": false,
+    "failed_generator_result": "410492892 source76158 SS-385.320435 FFhold+17.273228; no repeat",
+    "added_FF": 0,
+    "retained_fault_gate_allowance_um2": 20,
+    "new_data_cycles": 0,
+    "memory_geometry_and_ports_unchanged": true,
+    "root_source_qualification": "Turing repair or explicit actual external provider; body result never qualifies source/PLL",
+    "one_route_density": 0.55,
+    "mode": "IDEAL_EXTERNAL_INPUT_DIAGNOSTIC",
+    "assumption": "Owner-authorized ideal clock SOURCE at external fast_clk/slow_clk inputs; sameepoch0/50%duty/3:4. No characterized insertion/slew/jitter values invented.",
+    "source": "4262a69ba/compatibility0ce837edc",
+    "clock_source_qualified": false,
+    "full_parent_qualified": false,
+    "headline_allowed": false,
+    "body_network": "actual propagated CTS and named WC/BC SPEF required",
+    "finite_IO_source_bound": false,
+    "IO_blocker": "retained R4 external engine command/retirement/restore fixture and link/XB/C8 external source endpoints still need actual finite implementation hooks",
+    "source_budget_interpretation": "reg2reg slack AFTER60/25 is available combinedsourcevariation budget; negative has no positive allowance"
+  },
+  "actual_synthesis_memory_inventory": {
+    "source": "body_ideal_u55_r1 retained mem.json",
+    "largest_instance_bits": 6480,
+    "request_mem": {
+      "width": 3189,
+      "depth": 2,
+      "bits": 6378
+    },
+    "request_read_shadow": {
+      "width": 3240,
+      "depth": 2,
+      "bits": 6480
+    },
+    "implementation": "existing protected control CDC registers, no new SRAM or RTL/cycles; actual mapped cost pending",
+    "recipe_instance_limit_bits": 6480,
+    "prior_ORFS_limit_bits": 4096,
+    "classification": "Existing mutable protected request CDC FF storage, not SRAM or payload VM replacement",
+    "RTL_kind": "ot_dsrom_vm_ratio_fifo W3240 DEPTH2: mem written on fast w_fire; sh[0:1] sampled in full on every slow clock",
+    "optimized_request_mem_bits": 6378,
+    "unoptimized_read_shadow_bits": 6480,
+    "existing_provider_model": "results/uarch/dsrom_protected_vm_20261006/model.json protection.pipeline_fifo_storage_bits=19296 =4*(3240+1440+144)",
+    "existing_transport_FF_area_floor_um2": 5626.713600000001,
+    "existing_logic_upper_um2": 150000,
+    "new_RTL_state_bits": 0,
+    "new_cycles": 0,
+    "blackbox_inventory_unchanged": "288 actual VM SRAM +14 canonical prompt SRAM +4 book ROM",
+    "physical_qualification": "Mapped area/CTS/SS60FF25 still pending; array guard override provides no timing credit"
+  }
+}

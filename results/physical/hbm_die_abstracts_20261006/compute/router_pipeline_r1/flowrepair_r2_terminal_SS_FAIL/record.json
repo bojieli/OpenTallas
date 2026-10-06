@@ -1,0 +1,68 @@
+{
+  "status": "ACTUAL_ROUTED_EXTRACTED_SS_FAIL_RETAINED_FF_PASS",
+  "source_commit": "19c66ba94",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv": "a438d922b44c8af7fe3eca8cdc6513059b18653885fa3b402913d3d1b8e002e4"
+  },
+  "native_flow_returncode": 0,
+  "optional_GPL_flow_repair_succeeded": true,
+  "physical_closed": false,
+  "parent_qualified": false,
+  "adopted": false,
+  "export_allowed": false,
+  "root_period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "input_min_max_ps": 166.6,
+  "output_min_max_ps": 166.6,
+  "output_load_fF": 3.898,
+  "SS": {
+    "global_setup_ps": -220.15544942632914,
+    "tns_ps": -439439.0487050259,
+    "register_data_setup_ps": -220.155457,
+    "register_data_violations": 12513,
+    "native_all_endpoint_setup_violations": 12548,
+    "output_setup_ps": -56.033512,
+    "input_to_register_ps": 275.576019,
+    "explicit_RESETN_recovery_ps": 275.58
+  },
+  "FF": {
+    "global_hold_ps": 3.86379817030047,
+    "register_data_hold_ps": 3.863798,
+    "register_data_violations": 0,
+    "output_hold_ps": 478.370911,
+    "input_to_register_ps": 44.257736,
+    "explicit_RESETN_removal_ps": 44.26
+  },
+  "electrical_violations": {
+    "slew": 0,
+    "capacitance": 0,
+    "fanout": 0
+  },
+  "DRC": 0,
+  "antenna_nets": 0,
+  "antenna_pins": 0,
+  "actual_cell_area_um2": 35028.6,
+  "actual_buffered_cell_utilization": 0.418671,
+  "retained_final_sha256": {
+    "6_final.odb": "a3f6cac914104fb48a4f407551b3253aa1a43c8da54489a5441e28ee177553de",
+    "6_final.spef": "2763dc827980d87be7bf9354c7dbd49a0bb2f048f02436de3c600f90a04f0711",
+    "6_final.sdc": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+  },
+  "worst_SS_path": {
+    "start": "g_on.g_lane[31].u_lane.x_first$_DFF_PN0_/QN",
+    "end": "g_on.g_lane[31].u_lane.ge_q[4]$_DFF_P_/D"
+  },
+  "worst_FF_path": {
+    "start": "g_on.g_node[28].m.s0[174]$_DFF_P_/QN",
+    "end": "g_on.g_node[28].m.c1.q[174]$_DFF_P_/D"
+  },
+  "output_endpoint_name": "NOT_EMITTED by existing per-output minimum metric; output failure directly measured, no endpoint guessed",
+  "reset_report_scope": "explicit standaloneRESETN report; global/native checks include full design; no new SETN-specific path list or reset exception inferred",
+  "original_SIG11_failure_preserved": true,
+  "unchanged_RTL_variant_relaunch_allowed": false,
+  "successor": "actual03e/c410 enabled384K6 PASS +native32lanecontrol retention; route/context stillpending",
+  "remote_root": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/flowrepair-r2"
+}

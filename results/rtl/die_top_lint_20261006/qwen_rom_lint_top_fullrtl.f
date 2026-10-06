@@ -1,0 +1,4 @@
+physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v
+rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv
+qwen_rom_lint_top_stubs.sv
+qwen_rom_lint_top.sv

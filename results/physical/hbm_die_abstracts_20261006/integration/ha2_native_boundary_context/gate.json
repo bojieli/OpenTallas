@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS_NEW_NATIVE_CALLER_BOUNDARY_CONES",
+  "evidence_class": "CONDITIONAL_NATIVE_CALLER_CONTEXT",
+  "arithmetic_exercised": false,
+  "arithmetic_PASS_replayed": false,
+  "new_edges": 0,
+  "source_sha256": {
+    "tools/uarch_model.py": "aae0c770e01bbb2dfd1892850f908843a376975bda4202624869fbba12dff9fa",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_item9_ha2_native_boundary_context.sv": "d1980fa6086b45f3908fc3088ac541f93114f1689f421033fe81149a2d987246",
+    "physical/hbm_die_abstracts_20261006/integration/tb_ha2_native_boundary_context.sv": "b2dd576adcd1ece9c8580d5b17d9842d3f5e3301fd14da25c0c0f39819e9a61c",
+    "physical/hbm_die_abstracts_20261006/integration/ha2_native_boundary_internal.sdc": "3f865f26f18f9599097ba8a436dc47de53643810e9a0a64066e5137065343798",
+    "physical/hbm_die_abstracts_20261006/integration/ha2_native_boundary_pins.tcl": "87e8ef9daeab5db07de62595df74fc0198d974928ac2d06b2818f6e68cbb4ca4",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv": "3d17d115b2c250b768e4a8200413b21341552e9451e3d0f2d4924311749df16b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b"
+  },
+  "tested": [
+    "eight full545-bit RX heads and real partial dispatch",
+    "actual full545-bit u_dqo and qr0 input write/selector",
+    "own delivery dispatch",
+    "foreign destination prevented pop and latched fault"
+  ],
+  "not_tested": [
+    "whole TU credit/CDC/fabric release",
+    "full protected parent exactness",
+    "routed SS/FF timing"
+  ],
+  "enabled_elaboration_exit": 0,
+  "physical_signoff": false,
+  "source_clock_qualified": false,
+  "route_launched": false,
+  "adopted": false,
+  "existing_child_map": "9c4a51db2 / ABC1839171 preserved; no child replay",
+  "optional_register_cut": "unselected drafts preserved /tmp/claude-review-20261003/turing_ha2_register_cut_unselected"
+}

@@ -1,0 +1,83 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== ot_dsrom_window_pipeline_context ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+  3748199        -  3748199        - wires
+  3818456        -  3818456        - wire bits
+    17463        -    17463        - public wires
+    87720        -    87720        - public wire bits
+       97        -       97        - ports
+    70354        -    70354        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+  3795412 5.36E+05  3795412 5.36E+05 cells
+   111411 9.75E+03   111411 9.75E+03   AND2x2_ASAP7_75t_R
+    45049 3.94E+03    45049 3.94E+03   AND3x1_ASAP7_75t_R
+    69882 7.13E+03    69882 7.13E+03   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+    27424  3.2E+03    27424  3.2E+03   AND5x1_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        3      0.7        3      0.7   AO211x2_ASAP7_75t_R
+    96410 8.43E+03    96410 8.43E+03   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+    13887 2.02E+03    13887 2.02E+03   AO221x1_ASAP7_75t_R
+     6743 1.18E+03     6743 1.18E+03   AO222x2_ASAP7_75t_R
+     2467   323.72     2467   323.72   AO22x1_ASAP7_75t_R
+        8    1.866        8    1.866   AO31x2_ASAP7_75t_R
+    12519 1.46E+03    12519 1.46E+03   AO32x1_ASAP7_75t_R
+        4    0.583        4    0.583   AO33x2_ASAP7_75t_R
+       18    3.149       18    3.149   AOI211x1_ASAP7_75t_R
+   142932 1.67E+04   142932 1.67E+04   AOI21x1_ASAP7_75t_R
+       14    2.858       14    2.858   AOI221x1_ASAP7_75t_R
+      397   57.883      397   57.883   AOI22x1_ASAP7_75t_R
+   479494  3.5E+04   479494  3.5E+04   BUFx2_ASAP7_75t_R
+     1017   88.967     1017   88.967   BUFx3_ASAP7_75t_R
+       23    2.347       23    2.347   BUFx4_ASAP7_75t_R
+       42    4.899       42    4.899   BUFx4f_ASAP7_75t_R
+        2    0.233        2    0.233   BUFx5_ASAP7_75t_R
+        5    0.729        5    0.729   BUFx6f_ASAP7_75t_R
+    42171  1.6E+04    42171  1.6E+04   DFFASRHQNx1_ASAP7_75t_R
+   749832 2.19E+05   749832 2.19E+05   DFFHQNx1_ASAP7_75t_R
+   111816 4.89E+03   111816 4.89E+03   INVx1_ASAP7_75t_R
+      107     6.24      107     6.24   INVx2_ASAP7_75t_R
+     2058  270.051     2058  270.051   MAJx2_ASAP7_75t_R
+   608327 5.32E+04   608327 5.32E+04   NAND2x1_ASAP7_75t_R
+       74   11.868       74   11.868   NAND3x1_ASAP7_75t_R
+    16815 1.47E+03    16815 1.47E+03   NOR2x1_ASAP7_75t_R
+        4    0.583        4    0.583   NOR2x2_ASAP7_75t_R
+       12    1.925       12    1.925   NOR3x1_ASAP7_75t_R
+   122982 1.43E+04   122982 1.43E+04   OA211x2_ASAP7_75t_R
+   613033 6.26E+04   613033 6.26E+04   OA21x2_ASAP7_75t_R
+       17    3.966       17    3.966   OA221x2_ASAP7_75t_R
+    99717 1.74E+04    99717 1.74E+04   OA222x2_ASAP7_75t_R
+   253015 3.69E+04   253015 3.69E+04   OA22x2_ASAP7_75t_R
+        9    1.968        9    1.968   OA31x2_ASAP7_75t_R
+    25829 3.77E+03    25829 3.77E+03   OA33x2_ASAP7_75t_R
+    11854 1.38E+03    11854 1.38E+03   OAI21x1_ASAP7_75t_R
+    65672 9.57E+03    65672 9.57E+03   OAI22x1_ASAP7_75t_R
+     8839  773.236     8839  773.236   OR2x2_ASAP7_75t_R
+    20674 1.81E+03    20674 1.81E+03   OR3x1_ASAP7_75t_R
+    15742 1.61E+03    15742 1.61E+03   OR4x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR4x2_ASAP7_75t_R
+     8728 1.02E+03     8728 1.02E+03   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        3    0.525        3    0.525   XNOR2x1_ASAP7_75t_R
+     6660 1.07E+03     6660 1.07E+03   XNOR2x2_ASAP7_75t_R
+        3    0.525        3    0.525   XOR2x1_ASAP7_75t_R
+     1662  266.552     1662  266.552   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_dsrom_window_pipeline_context': 536256.584453
+     of which used for sequential elements: 234637.193879 (43.75%)
+

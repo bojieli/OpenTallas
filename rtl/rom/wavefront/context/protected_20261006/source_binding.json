@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.wfc.protected_caller.projection.v1",
+  "source": {
+    "rtl/rom/wavefront/context/enclosing_20261005/ot_rom_pkg_ctrl_wfc_enclosed.sv": "7aaaee09349ed7b802957a2554beee337f317aeed6b0ed4652df13569645c517",
+    "rtl/rom/wavefront/context/enclosing_20261005/ot_dsrom_wfc_parent_enclosed.sv": "a9614a81313cfd864ce2daf29fbf25e6e7ebbe35c4f75fda210554341236953b",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_enclosing_stage.sv": "17a310698fdf22991c52b0872a9c87d5086c886831e8db60f633ca1375e39c80"
+  },
+  "outputs": {
+    "rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv": "bcb87a68811984b7234cb1c7de587e52a8ce10720629784165e7cefe775d49b5",
+    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_parent_enclosed_vm.sv": "71630742cb1298ec99355e7ca3bfb990d10f1d0c7e124208298f0067f07264d9",
+    "rtl/rom/wavefront/context/protected_20261006/ot_dsrom_wfc_enclosing_vm_stage.sv": "03f2baa0ac049e53fc0f2b27e9421ec78bf753bba17e5fc567e6835000187cdc"
+  },
+  "controller_posedge_CE_sites": 21,
+  "changes": [
+    "clock-enable all controller/helper state with async reset preserved",
+    "router keeps fast root clock, actual controller/router handshake qualified by CE",
+    "read capture bubble prevents another memory/RX acceptance",
+    "preserve sameowner XA simultaneous read/write; two truthful serial leases for different XA owners with TX-only then RX-only native steps",
+    "export actual RX/TX memory owner and actual read capture",
+    "hold actual core start and whole ACK until caller advances"
+  ],
+  "qualified": false
+}

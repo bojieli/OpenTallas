@@ -1,0 +1,37 @@
+{
+  "owner": "Codex:Fermat:head",
+  "controller": 1135340,
+  "host": "ot-epyc2",
+  "source_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/wt-checked-native-r16",
+  "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C21_checked_permission_native",
+  "source_commit": "919b30adf + explicit source-pinned ENABLE_DPO=0 flowdelta8d816367d",
+  "gate": "fullG4W16 CHECK_PIPE warm numericPASS63028 plus65 cycles,9 negative PASS; ordinary provider conditional",
+  "argv": [
+    "bash",
+    "physical/dsrom_fh_capture/run.sh",
+    "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C21_checked_permission_native"
+  ],
+  "fresh_pre": {
+    "load": 64.50048828125,
+    "idle_cores": 79.60597295,
+    "RAM_available_GiB": 698.0959549,
+    "disk_free_GiB": 1559.9487
+  },
+  "fresh_post": {
+    "load": 64.50048828125,
+    "idle_cores": 79.0756,
+    "RAM_available_GiB": 697.7869835
+  },
+  "resources": "16CPU48GiB unchangedadmit",
+  "corners": "SS60 FF25 833.333ps all64realSRAM/actualclkQ loads +grantreceiver",
+  "structural_corrections": "Local32bit checked capture, registered protected error/identity permission; macro-free site-aligned fences guard5; fixed macros/pins; mandatorycheckplacement preserved DPO disabled after C20actualfailure",
+  "no_duplicate": true,
+  "status": "ADMITTED source synthesis active",
+  "container": "97ea57529269",
+  "yosys_pid": 1136685,
+  "physical_qualified": false,
+  "retained_mapped_objects_reuse": "Arithmetic source unchanged; new native guard logic requires one honest new mapping. Existing C20 ODBs retained as immutable failure history.",
+  "attribute_audit": "PNR-only helper path bypasses host synth write_verilog -noattr line700. Actual Slang canonicalize intermediate .rtlil preserves keep/dont_touch; mapped independent guard state counts still required.",
+  "source_model": "results/uarch/dsrom_fh_capture_20261005/checked_permission/measured.json",
+  "result_collection": "Source-bound logs and reports, not previous C20 physical.json. No current SSFF verdict."
+}

@@ -1,0 +1,232 @@
+{
+ "schema": "opentallas.hbm-accel-die.r16-attribution.v1",
+ "prefix": "CLAUDE HBM-DIE-FIX",
+ "date": "2026-10-06",
+ "basis": "DS 1M matched-reference gate (AR 474.808 us); priced with tools/hbm_accel_die_price.py on each round's GRT k16 i50 (wire_stages basis keys: stages_430 = bound, median / mean bundle, manhattan = floor)",
+ "note": "r14b figures were measured with the 16 south SMs mirrored about x (generator flip compared with None); r15d re-measures r14b with only that corrected",
+ "rounds": {
+  "r14b": {
+   "variant": "r14b",
+   "what": "previous adopted round: 0.5 mm2 tile slots, 16 S SMs mirrored (generator bug)",
+   "die_mm2": 481.27,
+   "grt_k16_i5_overflow": 33,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 43.126,
+    "stages_430_median_bundle": 36.783,
+    "stages_430_mean_bundle": 37.308,
+    "stages_430_manhattan": 25.914
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 64,
+    "control": 47,
+    "result": 55,
+    "weight": 21,
+    "expert_req": 48,
+    "kv": 22,
+    "ik": 24,
+    "link": 22,
+    "su_coll": 4,
+    "coll_su": 6,
+    "attn_out": 17
+   }
+  },
+  "r15d": {
+   "variant": "{\"base\":\"r14b\",\"orient_fix\":true}",
+   "what": "r14b + orient_fix only (attribution of the S-SM mirror)",
+   "die_mm2": 481.27,
+   "grt_k16_i5_overflow": 25,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 43.531,
+    "stages_430_median_bundle": 36.583,
+    "stages_430_mean_bundle": 37.074,
+    "stages_430_manhattan": 25.914
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 64,
+    "control": 48,
+    "result": 52,
+    "weight": 16,
+    "expert_req": 48,
+    "kv": 22,
+    "ik": 24,
+    "link": 22,
+    "su_coll": 5,
+    "coll_su": 5,
+    "attn_out": 17
+   }
+  },
+  "r16a": {
+   "variant": "r15",
+   "what": "r14b geometry + every lint fix (FIX15)",
+   "die_mm2": 481.27,
+   "grt_k16_i5_overflow": 144,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 50.698,
+    "stages_430_median_bundle": 40.132,
+    "stages_430_mean_bundle": 41.579,
+    "stages_430_manhattan": 28.172
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 67,
+    "control": 51,
+    "result": 54,
+    "weight": 17,
+    "expert_req": 52,
+    "kv": 32,
+    "ik": 25,
+    "link": 27,
+    "su_coll": 6,
+    "coll_su": 4,
+    "attn_out": 23,
+    "attn_q": 42
+   }
+  },
+  "r16b": {
+   "variant": "{\"base\":\"r15m\",\"hub_h\":12100}",
+   "what": "FIX15 + measured attention tiles (1,349 x 1,350 um), hub band 12.1 mm",
+   "die_mm2": 600.81,
+   "grt_k16_i5_overflow": 268,
+   "grt_k16_i50_overflow": 121,
+   "ds_matched_added_us": null,
+   "note": "GRT i50 overflow 121 (not converged): not priced"
+  },
+  "r16c": {
+   "variant": "{\"base\":\"r15m\",\"hub_h\":12100,\"spine_h\":6508.08}",
+   "what": "r16b + spine column on a centred 6.5 mm span",
+   "die_mm2": 600.81,
+   "grt_k16_i5_overflow": 127,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 62.146,
+    "stages_430_median_bundle": 49.713,
+    "stages_430_mean_bundle": 50.668,
+    "stages_430_manhattan": 36.794
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 74,
+    "control": 62,
+    "result": 61,
+    "weight": 17,
+    "expert_req": 58,
+    "kv": 38,
+    "ik": 30,
+    "link": 31,
+    "su_coll": 6,
+    "coll_su": 8,
+    "attn_out": 26,
+    "attn_q": 41
+   }
+  },
+  "r16d": {
+   "variant": "{\"base\":\"r15m\",\"hub_h\":12355.2,\"spine_h\":6508.08}",
+   "what": "r16c with hub band 12.36 mm",
+   "die_mm2": 607.03,
+   "grt_k16_i5_overflow": 93,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 64.982,
+    "stages_430_median_bundle": 51.078,
+    "stages_430_mean_bundle": 51.362,
+    "stages_430_manhattan": 37.279
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 79,
+    "control": 64,
+    "result": 57,
+    "weight": 17,
+    "expert_req": 58,
+    "kv": 36,
+    "ik": 30,
+    "link": 31,
+    "su_coll": 6,
+    "coll_su": 11,
+    "attn_out": 23,
+    "attn_q": 41
+   }
+  },
+  "r16e": {
+   "variant": "r16e",
+   "what": "r16b + spine on a 7.5 mm span, 1,400 um spine, 1,244 um side channels, 2,000 um VM face",
+   "die_mm2": 600.81,
+   "grt_k16_i5_overflow": 48,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 58.943,
+    "stages_430_median_bundle": 51.265,
+    "stages_430_mean_bundle": 51.339,
+    "stages_430_manhattan": 37.917
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 73,
+    "control": 57,
+    "result": 58,
+    "weight": 17,
+    "expert_req": 59,
+    "kv": 39,
+    "ik": 30,
+    "link": 31,
+    "su_coll": 6,
+    "coll_su": 6,
+    "attn_out": 23,
+    "attn_q": 52
+   }
+  },
+  "r16f": {
+   "variant": "{\"base\":\"r15m\",\"hub_h\":12100,\"spine_h\":7500,\"face_vm\":2000}",
+   "what": "r16b + spine 7.5 mm span + 2,000 um VM face",
+   "die_mm2": 600.81,
+   "grt_k16_i5_overflow": 102,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 66.955,
+    "stages_430_median_bundle": 51.529,
+    "stages_430_mean_bundle": 51.858,
+    "stages_430_manhattan": 37.312
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 77,
+    "control": 65,
+    "result": 57,
+    "weight": 17,
+    "expert_req": 59,
+    "kv": 37,
+    "ik": 30,
+    "link": 34,
+    "su_coll": 9,
+    "coll_su": 9,
+    "attn_out": 23,
+    "attn_q": 43
+   }
+  },
+  "r16g": {
+   "variant": "r16g",
+   "what": "r16e + role ports of shared tile / SU masters on fixed faces (ADOPTED)",
+   "die_mm2": 600.81,
+   "grt_k16_i5_overflow": 10,
+   "grt_k16_i50_overflow": 0,
+   "ds_matched_added_us": {
+    "stages_430": 58.269,
+    "stages_430_median_bundle": 50.983,
+    "stages_430_mean_bundle": 51.34,
+    "stages_430_manhattan": 37.917
+   },
+   "one_way_cycles_bound": {
+    "xbcast": 71,
+    "control": 58,
+    "result": 54,
+    "weight": 18,
+    "expert_req": 59,
+    "kv": 31,
+    "ik": 30,
+    "link": 31,
+    "su_coll": 6,
+    "coll_su": 6,
+    "attn_out": 21,
+    "attn_q": 40
+   }
+  }
+ }
+}
