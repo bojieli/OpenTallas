@@ -12,13 +12,16 @@
 #     loads of the last stage (the core consumers).  When a single-load walk runs on into an output pin (a wrapper
 #     pass-through, input chain + output chain), all its flops are spread evenly from P to that pin instead.
 # Inputs are handled first so that an output chain fed by an input chain starts from the moved input stage.
+# ORFS sources step hooks inside a proc: link every name the procs below use to a global first
+global fc_n fc_ps fc_psi fc_dbu fc_x0 fc_y0 fc_x1 fc_y1 fc_dist
 set fc_n [expr {[info exists ::env(OT_FC_STAGES)] ? $::env(OT_FC_STAGES) : 5}]
 # per-port depth (hbm_die_wrap port_stages): OT_FC_FILE = <master>_face_stages.tcl (array fc_ps), else OT_FC_STAGES
-array set fc_ps {}
+array set fc_ps {}; array set fc_psi {}
 if {[info exists ::env(OT_FC_FILE)] && $::env(OT_FC_FILE) ne ""} { source $::env(OT_FC_FILE) }
 proc fc_np {bt} {
-  global fc_ps fc_n
+  global fc_ps fc_psi fc_n
   set port [regsub {\[.*} [$bt getName] {}]
+  if {[$bt getIoType] eq "INPUT" && [info exists fc_psi($port)]} { return $fc_psi($port) }
   return [expr {[info exists fc_ps($port)] ? $fc_ps($port) : $fc_n}]
 }
 set fc_blk [ord::get_db_block]
