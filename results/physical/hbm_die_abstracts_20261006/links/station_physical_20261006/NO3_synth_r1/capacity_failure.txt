@@ -1,0 +1,7 @@
+Tue Oct  6 05:31:48 UTC 2026
+    PID %CPU   RSS     ELAPSED COMMAND
+3580371  100 18902848    30:29 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/work/synth.ys
+               total        used        free      shared  buff/cache   available
+Mem:     134974394368 119336566784  5826179072 27195674624 38256472064 15637827584
+Swap:              0           0           0
+ACTUAL_RAM_FAILURE: procedural-function AST expansion exceeded owner AGI16GiB max and declared8GiB, MemAvailable below unchanged18.8557GiB reserve. Stop only own new Yosys3580371; preserve all peer fleet jobs and immutable source/diagnostics. No timeout or guessed address-space cap.

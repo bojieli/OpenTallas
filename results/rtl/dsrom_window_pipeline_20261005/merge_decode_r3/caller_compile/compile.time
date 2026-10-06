@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -t null -s ot_dsrom_window_pipeline_context rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_row_merge_pipeline.sv rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv rtl/chip/ot_chip_v41x_window_refill_schedule.sv rtl/chip/ot_chip_v41x_window_retention.sv rtl/chip/ot_chip_v41x_window_row_codec.sv rtl/chip/ot_chip_v41x_window_stage4.sv rtl/chip/ot_chip_v41x_window_stream.sv rtl/chip/ot_chip_v41x_attn_row_merge.sv"
+	User time (seconds): 17.44
+	System time (seconds): 0.25
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:17.69
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 910648
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 228185
+	Voluntary context switches: 67
+	Involuntary context switches: 79
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 32
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
