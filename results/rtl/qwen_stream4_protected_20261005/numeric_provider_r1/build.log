@@ -1,0 +1,126 @@
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:51: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                   ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:60: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'base' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'P' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:114:69: Operator MODDIVS expects 64 bits on the LHS, but LHS's VARREF 'q' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  114 |                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+      |                                                                     ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:130:24: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                   : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  130 |                     mem[wc_addr[q]] = h_cdata[q*256 +: 256];
+      |                        ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:132:68: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  132 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:132:79: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  132 |                     aq_due[q][gg] = (wc_now[q] + CWL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:127:103: Operator GTES expects 64 bits on the RHS, but RHS's VARREF 'MEM_WORDS' generates 32 bits.
+                                                                     : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  127 |                 if (!h_cv[q] || h_csec[q*24 +: 24] != 24'(wc_addr[q]) || wc_addr[q] < 0 || wc_addr[q] >= MEM_WORDS || aq_w[q]-aq_r[q] >= LR) begin
+      |                                                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:46: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:71: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:140:95: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 19 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  140 |                     automatic int op = row_op[q*3 +: 3], bk = row_bank[q*5 +: 5], rw = row_row[q*19 +: 19], g = bk & 3;
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:184:66: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'PULLIN' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  184 |                                 if (now < p_ref0[q] + (p_nref[q] - PULLIN) * 118 * CYC - 2 * CYC) v("REFpb pulled in too far", q, bk);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:195:48: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  195 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:195:72: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  195 |                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:197:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'ls' generates 17 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  197 |                     automatic longint a = longint'(b_row[q][bk]) * 131072 + ls;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:209:40: Operator GTES expects 64 bits on the RHS, but RHS's VARREF 'MEM_WORDS' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  209 |                         if (a < 0 || a >= MEM_WORDS || rq_w[q]-rq_r[q] >= LR)
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:212:64: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  212 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:212:75: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'CYC' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  212 |                         rq_due[q][k] = (now + CL + BURST + RSP + CYC - 1) / CYC;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:213:43: Bit extraction of array[4718591:0] requires 23 bit index, not 64 bits.
+                                                                   : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  213 |                         rq_dat[q][k] = mem[a];
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv:234:34: Operator GTS expects 64 bits on the RHS, but RHS's VARREF 'CRED' generates 32 bits.
+                                                                    : ... note: In instance 'tb_qwen_s4_numeric_memory.dut'
+  234 |                     if (lpend[q] > CRED) v("finite landing credit overflow",q,0);
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:33:35: Operator LTS expects 64 bits on the RHS, but RHS's VARREF 'n' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_qwen_s4_numeric_memory'
+   33 |  do @(negedge hclk);while(dut.hcyc<n);
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:41:46: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'BASE' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_s4_numeric_memory'
+   41 |  @(negedge hclk);cv=0;we=0;hcv[0]=1;sec[23:0]=BASE;dat[255:0]=WRDATA;tag[8:0]=9'h183;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:46:10: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARXREF 'viol' generates 64 bits.
+                                                                                         : ... note: In instance 'tb_qwen_s4_numeric_memory'
+   46 |  if(fault||dut.viol||ack!=1||landing!=2||dut.mem[LAST]!=LASTDATA)$fatal(1,"provider timed terminal mismatch fault=%b code=%h ack=%0d land=%0d",fault,code,ack,landing);
+      |          ^~
+%Warning-WIDTHTRUNC: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:48:17: Logical operator LOGOR expects 1 bit on the LHS, but LHS's ARRAYSEL generates 64 bits.
+                                                                                         : ... note: In instance 'tb_qwen_s4_numeric_memory'
+   48 |  if(dut.lpend[0]||dut.lpend[127]||fault)$fatal(1,"actual finite credit return mismatch");
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:48:17: Logical operator LOGOR expects 1 bit on the RHS, but RHS's ARRAYSEL generates 64 bits.
+                                                                                         : ... note: In instance 'tb_qwen_s4_numeric_memory'
+   48 |  if(dut.lpend[0]||dut.lpend[127]||fault)$fatal(1,"actual finite credit return mismatch");
+      |                 ^~
+make: Entering directory '/tmp/qwen_numeric_provider_r1_obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_dpi.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qwen_s4_numeric_memory__pch.h -o Vtb_qwen_s4_numeric_memory__pch.h.fast.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.fast -c Vtb_qwen_s4_numeric_memory.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.fast -c Vtb_qwen_s4_numeric_memory___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.fast -c Vtb_qwen_s4_numeric_memory___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.fast -c Vtb_qwen_s4_numeric_memory__main.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.fast -c Vtb_qwen_s4_numeric_memory__Dpi.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qwen_s4_numeric_memory__pch.h -o Vtb_qwen_s4_numeric_memory__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.slow -c Vtb_qwen_s4_numeric_memory__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.slow -c Vtb_qwen_s4_numeric_memory___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.slow -c Vtb_qwen_s4_numeric_memory___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_s4_numeric_memory__pch.h.slow -c Vtb_qwen_s4_numeric_memory__Syms__Slow.cpp
+g++    verilated.o verilated_dpi.o verilated_timing.o verilated_threads.o Vtb_qwen_s4_numeric_memory__ALL.a    -pthread -lpthread -latomic   -o Vtb_qwen_s4_numeric_memory
+rm Vtb_qwen_s4_numeric_memory__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/qwen_numeric_provider_r1_obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.099 MB sources in 4 modules, into 0.858 MB in 9 C++ files needing 0.005 MB
+- Verilator: Walltime 8.878 s (elab=0.006, cvt=0.052, bld=8.810); cpu 0.068 s on 1 threads; allocated 49.188 MB
