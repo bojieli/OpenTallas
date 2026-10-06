@@ -7,7 +7,7 @@ channel capacity. Bulk per-cell bindings stay on the compute host.
 import hashlib,json,re,sys
 from collections import Counter,deque
 from pathlib import Path
-loads,allocation,out=map(Path,sys.argv[1:]);assert not out.exists()
+loads,allocation,out=map(Path,sys.argv[1:4]);payload_only='--payload-affinity' in sys.argv[4:];assert not out.exists()
 s=json.loads((loads/'summary.json').read_text());a=json.loads(allocation.read_text())
 assert s['actual_library_pin_loads'] and not s['physical_qualified']
 raw=loads/'mapped.json';assert hashlib.sha256(raw.read_bytes()).hexdigest()==s['artifacts']['mapped.json']['sha256']
@@ -25,7 +25,8 @@ for name,c in net['cells'].items():
  assert outs,(name,typ)
  m=re.match(r'g_on\.g_sm_caller\[(\d+)\]\.',name)
  if typ.startswith('DFF'):
-  mask=1<<int(m[1]) if m else 0
+  payload=bool(m and re.match(r'g_on\.g_sm_caller\[\d+\]\.(?:c_data|vr)\[',name))
+  mask=1<<int(m[1]) if m and (not payload_only or payload) else 0
   for bit in outs:seed[bit]=mask
   ff.append((name,mask,typ));continue
  idx=len(comb);comb.append((name,ins,outs,typ))
@@ -33,7 +34,7 @@ for name,c in net['cells'].items():
 # Actual primary caller-side cut inputs also retain their source-local affinity.
 for name,p in net['ports'].items():
  if p['direction']!='input':continue
- stride={'issue_va':4096,'issue_count':8,'issue':1,'issue_mode':1}.get(name)
+ stride=({'issue_va':4096} if payload_only else {'issue_va':4096,'issue_count':8,'issue':1,'issue_mode':1}).get(name)
  for j,bit in enumerate(p['bits']):
   if isinstance(bit,int):seed[bit]=(1<<(j//stride)) if stride else 0
 fanout=[[] for _ in comb];remaining=[]
@@ -63,7 +64,10 @@ def place_group(mask):
  return 'caller_'+str(s)
 with (out/'actual_cell_affinity.jsonl').open('w') as f:
  for name,mask,typ in ff+[(c[0],masks[i],c[3]) for i,c in enumerate(comb)]:
-  group=place_group(mask);counts[group]+=1;masters.setdefault(group,Counter())[typ]+=1
+  group=place_group(mask)
+  local=re.match(r'g_on\.g_sm_caller\[(\d+)\]\.',name)
+  if payload_only and mask==0 and local:group='caller_'+local[1]
+  counts[group]+=1;masters.setdefault(group,Counter())[typ]+=1
   groups.setdefault(str(mask),Counter())[group]+=1
   f.write(json.dumps(dict(instance=name,master=typ,source_caller_mask=mask,allocation=group))+'\n')
 summary=dict(source_mapped_sha256=s['mapped_sha256'],mapped_JSON_sha256=s['artifacts']['mapped.json']['sha256'],allocation_sha256=hashlib.sha256(allocation.read_bytes()).hexdigest(),
@@ -71,7 +75,8 @@ summary=dict(source_mapped_sha256=s['mapped_sha256'],mapped_JSON_sha256=s['artif
  region_cell_counts=counts,region_master_counts=masters,actual_source_mask_affinities={k:dict(v) for k,v in groups.items()},
  local_allocations=regions,endpoint_allocation=a['baseline_endpoint_mux']['proposed_child_bbox_um'],
  primary_caller_inputs_are_source_local=True,distributed_request_bits=131072,shared_response_bits=4096,shared_response_real_receivers=32,
- actual_intermediate_gate_affinities=True,allocated_free_corridor_tracks=0,physical_pin_and_other_claim_route_binding=False,
+ actual_intermediate_gate_affinities=True,payload_affinity_separate_from_shared_control=payload_only,
+ allocated_free_corridor_tracks=0,physical_pin_and_other_claim_route_binding=False,
  source_new_cycles=0,propagated_CLK_and_wire_RC_measured=False,physical_qualified=False,adopted=False,
  bulk_binding=str(out/'actual_cell_affinity.jsonl'),bulk_binding_sha256=hashlib.sha256((out/'actual_cell_affinity.jsonl').read_bytes()).hexdigest())
 (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
