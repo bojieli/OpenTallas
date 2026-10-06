@@ -10943,6 +10943,41 @@ def hbm_existing_cp_cts_allocation_model():
 
 
 
+def hbm_item9_ha2_native_boundary_context_model():
+    """Original hub/RX dispatch/result-load cones, not the full TU queue array."""
+    rx_bits=8*256*545
+    hub_bits=2*(35*544+35+32)
+    result_bits=(1+8)*64*545  # u_dqo and the eight actual qr destinations
+    # wp/rp/ovf per FIFO, dc/rcnt/drot and actual bound transaction tuple.
+    pointer_control_bits=8*(2*9+1)+9*(2*7+1)+32*3+122+1
+    ff=rx_bits+hub_bits+result_bits+pointer_control_bits
+    outer=[11069.136,11607.84,12468.792,13011.816]
+    return dict(evidence_class='CONDITIONAL_NATIVE_CALLER_CONTEXT',
+        top='ot_hbm_item9_ha2_native_boundary_context',default_ENABLE=0,
+        arithmetic_changed=False,reducer_copies=1,MACs_per_cycle=0,
+        hub=dict(copies=2,W=544,D=35,read_mux_entries=35),
+        peer=dict(copies=8,W=545,AW=8,read_mux_entries=256),
+        receiver=dict(dqo_copies=1,qr_copies=8,W=545,AW=6),
+        bytes_per_cycle=dict(hub=136,peer=545,result=64),
+        boundary_bits=dict(hub=1090,peer=4368,result=532),
+        routing_tracks_needed=1090+4368+532,
+        actual_unreserved_tracks=None,channel_fit=False,
+        storage_FF_bits=ff,storage_FF_floor_um2=ff*DFF_UM2,
+        producer_and_receiver_decode_mux_area_um2=None,
+        actual_current_adapter_area_um2=None,
+        retained_previous_adapter_area_um2=490159.0422,
+        retained_previous_adapter_is_current=False,
+        selected_outer_r16g_bbox_um=outer,
+        outer_area_um2=(outer[2]-outer[0])*(outer[3]-outer[1]),
+        maximum_final_utilization=.55,
+        full_TU_TX_partial_queues_and_CDC_included=False,
+        new_register_edges=0,new_token_ns=0,
+        clock=dict(root='clk',period_ps=833,SS_setup_ps=60,FF_hold_ps=25,
+                   source_characterized=False),
+        external_rearm_credit_release_and_upstream_IO_bound=False,
+        route_ready=False,contextual_SS_FF=False,adopted=False)
+
+
 def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
     """Mandatory baseline closure: local owner replication, priced before RTL.
 
