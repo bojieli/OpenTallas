@@ -1,0 +1,84 @@
+{
+  "scope": "One unchanged native NS4/NK4/IW20 quarter, not fullparent",
+  "seed": 1062026,
+  "workers": 16,
+  "expected_peak_GiB": 96,
+  "source_sha256": {
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv": "40d83065ae01b0019ae2abc98ff3b5935a8aa14d5be8add774d6245bffe64b88",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv": "69dc768210701e22b1411f3fb48994f564873ee66509d8a3a1b80c08fbbd31b8",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+  },
+  "fixture_sha256": {
+    "query.mem": "ef229f96d226dc5e551ced22a23cf46ca3472f1c5304e48ce24b2fc7a80d7c12",
+    "keys.mem": "e9fc155c3d20599575551be04e4370d7e61f02b07e6b5e7154d96fcb3e9359b3",
+    "expected.mem": "e81031802cd3ff218f29c5ca1ea5236d51d50faab184e3207b1c674056e801c5"
+  },
+  "parent_qualified": false,
+  "physical_qualified": false,
+  "runs": [
+    {
+      "name": "golden",
+      "argv": [
+        "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/run/obj/Vtb_dsrom_reindex_native_quarter",
+        "+verilator+seed+1062026",
+        "+FIXTURE=/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/results/rtl/dsrom_reindex_parent_20261005/native_quarter_runtime_prepared"
+      ],
+      "exit_code": 1,
+      "pass_": false
+    }
+  ],
+  "post_admission_capacity": {
+    "load1": 84.42822265625,
+    "cores": 128,
+    "idle_cores": 36.93550308845201,
+    "available_RAM_GiB": 673.4159965515137,
+    "available_disk_GiB": 544.187385559082,
+    "epoch": 1791266318.546374
+  },
+  "build_argv": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "16",
+    "-O2",
+    "--output-split",
+    "20000",
+    "--output-split-cfuncs",
+    "500",
+    "--x-assign",
+    "unique",
+    "--x-initial",
+    "unique",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_dsrom_reindex_native_quarter",
+    "--Mdir",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/run/obj",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/proto/ot_fp32_add_rne_pipe.sv"
+  ],
+  "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_exit": 0,
+  "executable_sha256": "fed834af7060b39ac294e600aa84b90ec9fccbbc696ac1675e564fe8aae0fde7",
+  "verdict": "NATIVE_QUARTER_FAIL_PRESERVED"
+}
