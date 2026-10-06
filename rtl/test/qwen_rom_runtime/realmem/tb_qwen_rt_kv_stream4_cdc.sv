@@ -23,7 +23,9 @@ module tb_qwen_rt_kv_stream4 #(
     parameter integer PROTECTED = 0,
     parameter integer SYNC = 2,
     parameter integer RSEL = 0,
-    parameter integer RNG = 10
+    parameter integer RNG = 10,
+    parameter integer KV_MAP = 0,          // option-M stripe (service and HBM)
+    parameter integer KV_MAP_HBM = -1      // negative control: HBM map differing from the service's (-1: = KV_MAP)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -56,7 +58,7 @@ module tb_qwen_rt_kv_stream4 #(
     wire [NPC*17-1:0] hl_sec; wire [NPC*8-1:0] hl_row; wire [NPC*256-1:0] hl_data, hw_data;
     wire [NPC*24-1:0] hw_sec; wire [NPC*9-1:0] hw_tag, hwd_tag;
     wire svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
-    ot_qwen_rt_kv_stream4_service #(.NSTK(NSTK), .NPC(NPC), .KV_IDEAL(KV_IDEAL), .WBW(WBW)) u_svc (
+    ot_qwen_rt_kv_stream4_service #(.NSTK(NSTK), .NPC(NPC), .KV_IDEAL(KV_IDEAL), .WBW(WBW), .KV_MAP(KV_MAP)) u_svc (
         .clk(clk), .rst_n(rst_n), .start(start), .ideal_in(1'b0), .pos(pos), .layer(layer),
         .nx_layer(nx_layer), .pos_hint(pos_hint),
         .kv_free(kv_free), .early_go_in(early_go), .posted_wb_in(posted_wb), .wb_busy(wb_busy),
@@ -70,7 +72,7 @@ module tb_qwen_rt_kv_stream4 #(
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
     ot_qwen_hbm_stream4_cdc #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN),
-        .PROTECTED(PROTECTED), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_hbm (
+        .PROTECTED(PROTECTED), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG), .KV_MAP(KV_MAP_HBM < 0 ? KV_MAP : KV_MAP_HBM)) u_hbm (
         .clk(clk), .rst_n(rst_n), .warm_rst_n(1'b1), .hclk(hclk), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),
