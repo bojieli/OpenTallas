@@ -9843,60 +9843,7 @@ def hbm_existing_attention_source_cut_model():
         measured_port_loads=False, contextual_setup_hold_qualified=False,
         Qwen=allocation['Qwen'])
 
-def hbm_cp_validate_allocated_sources(root, cp, fourcut=False):
-    """Bind unchanged CP wiring across the two explicit default-off Jason W2 hooks."""
-    import hashlib
-    checked={}
-    parent='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv'
-    hooks=[',W2_PROTECTED_TRANSACTION_PIPELINE=0',
-           ',.PROTECTED_TRANSACTION_PIPELINE(W2_PROTECTED_TRANSACTION_PIPELINE)']
-    if fourcut:
-        import json
-        model=json.loads((root/'results/uarch/hbm_cp_fourcut_20261005/model.json').read_text())
-        exact=json.loads((root/model['exact_measurement']).read_text())
-        if exact['verdict']!='PASS_EXACT_CONNECTED' or exact['checks']!=8713 or exact['parent_checks']!=266:
-            raise ValueError('Four-cut CP source requires its exact connected gate')
-        hooks += [',SU_FOUR_COMBINATIONAL_CUTS=0',
-                  ',.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS)']
-    for path, expected in cp['association_join']['source_sha256'].items():
-        if path.startswith('rtl/test/'):
-            continue
-        raw=(root/path).read_bytes(); actual=hashlib.sha256(raw).hexdigest()
-        normalized=raw
-        applied=[]
-        if fourcut and path=='rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv':
-            if actual!=exact['source_sha256'][path]:
-                raise ValueError('Four-cut source differs from measured exact gate')
-            checked[path]=dict(actual_sha256=actual,allocation_sha256=expected,
-                unchanged_CP_ports=True,qualified_combinational_successor=True,
-                added_FF=0,added_cycles=0)
-            continue
-        if fourcut and path==parent:
-            for hook in hooks[-2:]:
-                token=hook.encode()
-                if normalized.count(token)!=1:
-                    raise ValueError('Missing/ambiguous CP forwarding hook: '+hook)
-                normalized=normalized.replace(token,b'',1);applied.append(hook)
-            if hashlib.sha256(normalized).hexdigest()!=model['parent_reference_sha256']:
-                raise ValueError('Selected parent differs beyond the two measured CP forwarding hooks')
-            if actual!=exact['source_sha256'][path]:
-                raise ValueError('Selected parent differs from connected-gate source pin')
-            checked[path]=dict(actual_sha256=actual,allocation_sha256=expected,
-                parent_reference_commit=model['parent_reference_commit'],
-                parent_reference_sha256=model['parent_reference_sha256'],
-                unchanged_CP_ports=True,unchanged_W2_wiring=True,joined_CP_hooks=applied)
-            continue
-        if actual!=expected and path==parent:
-            for hook in hooks:
-                token=hook.encode()
-                if normalized.count(token)!=1:
-                    raise ValueError('Missing/ambiguous selected W2 forwarding hook: '+hook)
-                normalized=normalized.replace(token,b'',1);applied.append(hook)
-        if hashlib.sha256(normalized).hexdigest()!=expected:
-            raise ValueError('CP allocated source or parent wiring changed: '+path)
-        checked[path]=dict(actual_sha256=actual, allocation_sha256=expected,
-                           unchanged_CP_wiring=True, joined_W2_hooks=applied)
-    return checked
+from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
 
 
 def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None,parent_context=None):
@@ -10980,3 +10927,85 @@ def dsrom_wfc_header_cut_price(nw=21):
       latency_composition='reset admission +1 per release, source job +2, received job +3 from control pipeline; no per-job position increment edge',
       target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
       parent_slot_fit=False, SS_FF_closed=False, P_and_R_ready=False, adopted=False)
+
+
+def hbm_attn_registered_parent_model():
+    """Mandatory loaded H16 launch/capture fix, priced before its RTL.
+
+    Canonical NB5 macro ETMs and the selected finite slot remain the source.
+    Absolute insertion is propagated through real parent registers; no zero
+    external-network assumption or new 20% IO budget qualifies these paths.
+    """
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    old = json.loads((root/'results/uarch/hbm_attn_h16_context_20261005/model.json').read_text())
+    w = 1618
+    ff = w*(1+4+16) + 16*34 + 2 + 16
+    source_fixture_ff = w + 16
+    ff_body = ff*.37908
+    buffer_reserve = 2048*.4374
+    return dict(schema='opentallas.h16.registered-parent.v1',
+        default_parameter=dict(REGISTER_PARENT=0), adopted=False,
+        cause='deaaf2865 all-endpoint baseline: ideal external reference versus real SS2.00455ns/FF1.41003ns macro port clock',
+        canonical_macro='ot_attn_hgrp_m6h1 NBANK5, PCOLP0; original LEF and real SS/FF ETMs byte-identical',
+        shape=dict(H=16,D=512,TD=32,NBANK=5,tiles=64,heads=1024),
+        MACs_per_cycle=32768,memory_input_bytes_per_cycle=200,
+        input_payload_bits=w, head_payload_branch_bits=16*w,
+        output_payload_bits=529, output_receiver_register_bits=16*34,
+        added_memory_ports=0, added_CDCs=0,
+        phase_windows=dict(root_to_row_ps=833.333333, row_to_local_launch_ps=416.666667,
+            local_launch_to_macro_ps=416.666667, macro_to_receiver_ps=833.333333,
+            qualification='real propagated insertion/CRPR and SS/FF ETM setup/hold, none yet qualified'),
+        branch_load=dict(ib348_macro_pin_SS_fF=13.243, old_shared_16head_fF=211.888,
+            head_clock_pin_SS_fF=16.3802, head_clock_pins_total_SS_fF=262.0832,
+            receiver='one actual mapped FF D per macro output, keep all16 valid captures'),
+        dataflow='real positive-edge launch bank ->4 positive-edge row banks ->16 falling-edge local macro launch banks ->real positive-edge receivers',
+        input_extra_positive_edges=2,output_extra_positive_edges=1,
+        total_extra_positive_edges=3,initiation_interval_edges=1,
+        half_cycle_last_launch_window_ps=833.333333/2,
+        source_and_capture_clock='all real clk_sm branches from the same source; actual propagated WC/BC insertion and CPPR, no ideal latency substitution',
+        macro_clock_accounting='ETM617ps SS clkQ retains child internal CTS; parent port insertion added exactly once',
+        source_receiver_association='literal per-head gid/LD/IB/control beat, per-head34bit output register; concatenate oy/oflt, ov=head0',
+        root_reset='POR asynchronous assertion, 2-edge synchronous release then local falling-edge release; CP warm reset does not clear accepted beats',
+        extra_startup_positive_edges=2,
+        added_FF_bits=ff, FF_body_upper_um2=ff_body,
+        clock_buffer_reserve=2048,clock_buffer_area_upper_um2=buffer_reserve,
+        added_clock_pin_capacitance_upper_fF=ff*.433982,
+        register_and_clock_area_upper_um2=ff_body+buffer_reserve,
+        placement_area_at_half_utilization_um2=2*(ff_body+buffer_reserve),
+        retained_outline_um=old['replicas']['chosen_tile_outline_um'],
+        macro_replicas=16, new_macro_replicas=0,
+        finite_cell_space=dict(core_um=[1349.082,1349.730], macro_with_halo_um=304.782,
+            free_area_um2=1349.082*1349.730-16*304.782**2,
+            half_utilization_cell_capacity_um2=(1349.082*1349.730-16*304.782**2)*.5,
+            required_cell_area_upper_um2=ff_body+buffer_reserve+source_fixture_ff*.37908,
+            fit_is_analytical_only=True),
+        qualified_PG_hook=dict(commit='d1775001d',sha256='5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786',
+            VDD_connected=True,VSS_connected=True,IR_qualified=False,added_M2_M3_area_um2=.2268,
+            added_M6_M9_tracks=0,added_FF=0,added_cycles=0),
+        row_capacity_tracks=old['routing_capacity']['row_capacity_tracks_after_PG_vias_and_clock_reserve'],
+        row_demand_tracks=old['routing_capacity']['row_demand_tracks'],
+        whole_tile_capacity_tracks=old['routing_capacity']['whole_tile_capacity_tracks'],
+        clock_tracks_per_row=64,
+        body_clock_layers=['M8','M9'], local_LEF_pin_escape_layers=['M1','M2','M3','M4','M5','M6','M7'],
+        local_clock_body_and_phase_inverter_fit_qualified=False,
+        physical_only_source_fixture=dict(register_bits=source_fixture_ff,
+            body_upper_um2=source_fixture_ff*.37908,
+            feedback_logic_gate_reservation=2,feedback_logic_area_upper_um2=2*.2916,
+            actual_source_ready=False,
+            role='actual registered producer endpoint for minimum parent physical vehicle, not production engine or full die proof'),
+        composed=dict(existing=old['existing_composed_model'],
+            attention_steps_per_matched_token=40,
+            increment_us=40*3/1.2e3,
+            total_increment_over_old_m4_upper_us=old['latency_projection']['total_increment_upper_bound_us']+40*3/1.2e3,
+            no_overlap_or_old_uninstalled_wire_stage_credit=True,
+            startup_not_per_token=True),
+        input_IO_policy='minimum registered parent paths have actual launch FFs; no external ideal-clock arrival credited',
+        output_IO_policy='receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction',
+        baseline_failures_preserved=True, finite_PG_owner='Turing',
+        exact_gate=True, SS_FF_qualified=False, parent_die_qualified=False,
+        minimum_endpoint_context_route_ready=True,
+        minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
+        engine_source_anchor_qualified=False,
+        route_ready=False, gain_credit=None)

@@ -33,6 +33,10 @@ module ot_qwen_s4_transport_context #(
     output wire [128*5-1:0] row_bank, col_bank, col_col,
     output wire [128*19-1:0] row_row,
     // The actual WR capture follows the column command by one HCLK edge.
+    // Actual HCLK credit retirement and descriptor/GO consumption observations.
+    output wire [128*3-1:0] h_cred_ret,
+    output wire [3:0] h_desc_commit, h_go_commit,
+    output wire [11:0] h_desc_ordinal, h_go_ordinal,
     output wire [127:0] h_cv,
     output wire [128*24-1:0] h_csec,
     output wire [128*256-1:0] h_cdata,
@@ -191,6 +195,11 @@ module ot_qwen_s4_transport_context #(
         wire [18:0] row;wire [10:0] n;
         wire desc_commit,go_commit;wire [2:0] desc_ordinal,go_ordinal;
         wire cbv,cbready,cbwf,cbrf;wire [3:0] cb;
+        assign h_cred_ret[sk*96+:96]=credits;
+        assign h_desc_commit[sk]=desc_commit;
+        assign h_go_commit[sk]=go_commit;
+        assign h_desc_ordinal[sk*3+:3]=desc_ordinal;
+        assign h_go_ordinal[sk*3+:3]=go_ordinal;
         ot_qwen_s4_stack_transport #(.ENABLE(1),.STACK(sk),.MEM_ROWS(MEM_WORDS/131072),.WIRE_SPANS(41)) u_link(
             .clk(clk),.cold_por_n(rst_n),.warm_rst_n(warm_rst_n),
             .d_v(d_v),.go(go),.d_row(d_row),.d_n(d_n),.d_ready(ready[sk]),
@@ -241,6 +250,7 @@ module ot_qwen_s4_transport_context #(
     end else begin:off
         assign {d_rdy,fault,quiet,l_v,l_sec,l_row,l_data,w_room,wd_v,wd_tag,
             row_v,col_v,col_we,busy,row_op,row_bank,col_bank,col_col,row_row,
+            h_cred_ret,h_desc_commit,h_go_commit,h_desc_ordinal,h_go_ordinal,
             h_cv,h_csec,h_cdata,h_ctag}='0;
     end endgenerate
 endmodule

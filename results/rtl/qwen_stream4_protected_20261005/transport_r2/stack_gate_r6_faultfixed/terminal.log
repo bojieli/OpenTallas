@@ -1,0 +1,4 @@
+START stack32 arbiter with actual R14/2PC14span CLK833.333 H1024
+PASS stack32 actual desc/GO consumeACK OOO-WR2 orderedpool warmgrant/heldpairedrow/quiet CLK833.333 H1024
+PASS stack32 rejected actual WR ACK preserves source ticket/return debt across warm
+PASS stack32 backend checked report-sent upset reaches source and retains WR owner

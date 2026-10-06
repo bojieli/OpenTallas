@@ -153,7 +153,7 @@ generate if(ENABLE)begin:active
                 if(return_ACK)begin rt_valid=wr_match[return_pc];rt_frame={return_pc,2'b01,272'b0,b_wd_tag[return_pc*9+:9]};end
                 else rt_frame={return_pc,2'b00,b_l_sec[return_pc*17+:17],b_l_row[return_pc*8+:8],b_l_data[return_pc*256+:256]};
             end
-        end else if(!bs[14]&&!rt_fault)begin
+        end else if((!bs[14]||bs_bad)&&!rt_fault)begin
             // Fault report owns its reserved control seat. It never carries
             // a descriptor/GO or WR retirement authority.
             rt_valid=1;rt_frame={5'b0,2'b11,272'b0,9'b000001000};

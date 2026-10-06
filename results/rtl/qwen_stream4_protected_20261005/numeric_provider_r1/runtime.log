@@ -1,0 +1,6 @@
+HBM_STREAM VIOLATION t=63488 ps pc=0 bank=0 WR does not match the oldest queued write
+PASS canonical full36 numeric provider layer35 PC0/127 capturedWR timedACK RD lastword finitecredit and boundsfault; simulation only
+- rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 71ns; walltime 0.000 s; speed 334.356 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 151 MB
