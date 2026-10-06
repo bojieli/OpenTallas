@@ -44,9 +44,14 @@ module ot_hdc_v41_fh_fault_retire #(
             if(!rst_n) begin valid_pipe<=0;row_fault<=0;quadrant_fault<=0;end
             else begin
                 valid_pipe<={valid_pipe[2:0],packet_v};
+                // Each eight-bank capture is a 2-row x4-column cluster,
+                // not a full-width row. Both halves share the same original
+                // W16 address-fault source. No bank or protection bit drops.
                 for(r=0;r<8;r=r+1)
-                    row_fault[r]<=(|poison[8*r+:8])||address_fault[r/2]||arithmetic_fault;
-                for(r=0;r<4;r=r+1) quadrant_fault[r]<=|row_fault[2*r+:2];
+                    row_fault[r]<=(|poison[(r/2)*16+(r%2)*4+:4])||
+                        (|poison[(r/2)*16+8+(r%2)*4+:4])||address_fault[r/2]||arithmetic_fault;
+                for(r=0;r<4;r=r+1)
+                    quadrant_fault[r]<=row_fault[(r/2)*4+r%2]||row_fault[(r/2)*4+r%2+2];
             end
         // Put the OR inside each kept module. Identical relays must survive
         // synthesis/ABC; a single merged OR/register restores the long veto.
