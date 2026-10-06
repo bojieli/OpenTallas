@@ -1,0 +1,35 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/phy.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/serdes.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/ucie.lef, created 1 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0221] 2000000 lines parsed!
+[INFO ODB-0221] 3000000 lines parsed!
+[INFO ODB-0221] 4000000 lines parsed!
+[INFO ODB-0221] 5000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/elements.lef, created 227 library cells
+[INFO ODB-0227] LEF file: /work/ot_hbm_accel_bd_col.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/ot_hbm_accel_tc16.lef, created 1 library cells
+[INFO ODB-0127] Reading DEF file: /work/floorplan_placed.def
+[INFO ODB-0128] Design: hfd_die
+[INFO ODB-0097] 		Created 100000 Nets
+[INFO ODB-0097] 		Created 200000 Nets
+[INFO ODB-0097] 		Created 300000 Nets
+[INFO ODB-0097] 		Created 400000 Nets
+[INFO ODB-0097] 		Created 500000 Nets
+[INFO ODB-0131]     Created 348 components and 1232248 component-terminals.
+[INFO ODB-0133]     Created 564412 nets and 1124606 connections.
+[INFO ODB-0134] Finished DEF file: /work/floorplan_placed.def
+OT_REAL_LEAF_OVERLAY_DONE
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+{'scope': 'NATIVE_PLACEMENT_GRID_DIAGNOSTIC_ONLY', 'DBU': 1000, 'real_macro_counts': {'ot_hbm_accel_bd_col': 1024, 'ot_hbm_accel_tc16': 1024}, 'instances': 2364, 'overlap_count': 0, 'overlap_examples': [], 'outside': [], 'real_leaf_signal_pins': 1760256, 'pins_without_native_track': 532480, 'wire_RC_included': False, 'propagated_CTS': False, 'SSFF_signoff': False, 'IR_signoff': False, 'functional_leaf_connectivity': False}

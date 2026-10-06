@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL_PROGRESS",
+  "runtime_rc": 1,
+  "cycle": 2001,
+  "writes": 0,
+  "reads": 0,
+  "source_bank_sha256": "0a25cf59f2260d2ecb7b5eb22822eda3f6110304f6bb74dbcbd2e762521e6e11",
+  "cause": "Invalid elastic stage capture encoded uninitialized payload instead of canonical zero; unknown syndrome inhibited cold empty proof",
+  "scope": "Changed parent boundary on existing four-row component gate; source failure preserved"
+}

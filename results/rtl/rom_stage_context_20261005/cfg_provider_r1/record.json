@@ -1,0 +1,41 @@
+{
+  "source": "d1676840a",
+  "model_before_rtl_source": "c2a2d1668",
+  "owner": "Codex W5 context integration",
+  "pinned_clean_remote": "ot-epyc2:/srv/opentallas-scratch2/codex/w5-context-20261005/wt-d1676840a",
+  "supervisor": 2286173,
+  "verdict": "PASS",
+  "configuration": {
+    "HARD_CFG": 1,
+    "ENABLE": 1,
+    "NB": 2,
+    "PP": 1,
+    "RD": 64,
+    "RST": 1,
+    "BYPASS": 1
+  },
+  "stimulus_configurations": 1,
+  "cfg_captures": 25,
+  "rows": 42,
+  "nonzero_rows": 36,
+  "beats": 168,
+  "cycles": 36327,
+  "added_loader_edges": 0,
+  "negative_control": "one deliberately wrong macro payload; golden comparison FAIL at cycle7",
+  "changed_source": true,
+  "repeated_passing_source": false,
+  "macro": "ot_rom_4096x72_m8",
+  "macro_count_delta": 1,
+  "default_off": true,
+  "physical_qualification": false,
+  "residual_power_w": null,
+  "energy_credit": false,
+  "fullshape_context_source_pins": {
+    "rtl/experimental/w5_context/ot_w5_context.sv": "13d1b3e01a40ecf2eb7e87c6c5012cd574d8520c281b2f4499816afb04b4c730",
+    "rtl/experimental/w5_context/ot_w5_loader.sv": "c16812c85149c7240f4dff809de8e22bc300334d1e285fef305da29d8999038e",
+    "rtl/experimental/w5_context/tb_w5_cfg_context.sv": "bd61c427c7d6a42627b47b06c28cd982a99c30fa2ad4b2adcb12855b61565036"
+  },
+  "source_owned_lookahead_pin": "08183afc4fd4778b33842a83d8bb67c20b59a1195ad12429529fb8b1b03a0291",
+  "remaining": "Real XS producer and final capture source binding, five-macro floorplan/track fit, balanced actual qualifier/control ICG trees, return metadata/adder closure. Native DSqelement internal structural failure sent to Claude; no edits.",
+  "prepare_failure": "First launcher reached checkout before source tree populated; no compilation/simulation occurred; retained prepare_failure.log. Retry only after clean exact source verified."
+}

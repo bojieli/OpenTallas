@@ -1,0 +1,15 @@
+{
+  "canonical_sha256": {
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "4032da3c9b4baa4f4639b836379d8f5eba3b365c68b708edbaeb185784dbcc62",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_parent_cut.sv": "99633a9aef71dc2c226cbdb4a9a5279d87067c8ea003e703bdfce169e6f953af"
+  },
+  "derived_sha256": {
+    "ot_rom_pkg_ctrl_wfc_enclosed.sv": "7aaaee09349ed7b802957a2554beee337f317aeed6b0ed4652df13569645c517",
+    "ot_dsrom_wfc_parent_enclosed.sv": "a9614a81313cfd864ce2daf29fbf25e6e7ebbe35c4f75fda210554341236953b"
+  },
+  "changes": "module names, two existing observation ports/assignments and exact parent forwarding only",
+  "producer": "core_owner_user=literal cur_user, core_done_accepted=WAVE&&literal job_done",
+  "controller_state_or_calendar_changed": false,
+  "whole_stage_authority_created": false,
+  "retained_full866_gate": "results/rtl/dsrom_wfc_decoded_read_20261005/structural_full/record.json"
+}

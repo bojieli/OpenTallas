@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS_PIPE_ACTUAL32_GATHER",
+  "completed_callers": 32,
+  "TX_records": 128,
+  "RX_records": 256,
+  "cycles": 853,
+  "new_cycles": 64,
+  "clocks_period_ps": 833,
+  "baseline_reused": "context32_exact_r1/result.json",
+  "unchanged_baseline_rerun": false,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_pipe.sv": "ca2c3e0ebb1aac8a16c9fa82f16cbe6500372318f210410f1273deaf05794dcc",
+    "rtl/gpu_sys/ot_gpu_coll_item9_context32_pipe.sv": "62729c2d36acb4b84849c997a0f04312c51b591369ace9229206c604439ec9c7",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_pipe_held.sv": "fd43d75404fed45f6a3e0fc00c48685308f9257f08e003b76f92a82be837ec93",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_context32_pipe.sv": "dd48ddeea735640798a036b758c866f89da7bf6186c93b062835dcc50dbb83ff"
+  },
+  "contextual_SS_FF": false,
+  "adopted": false,
+  "baseline_source_not_rerun": true,
+  "held_boundary_gate": "PASS PIPE held32 grants=32 completions=32 maskedX/withdraw/stray/blocked/reset",
+  "hold_breaking_mutant_rejected": true,
+  "masked_undriven_four_state": true,
+  "upstream_credit_at_bank_capture": true,
+  "downstream_request_held_until_accept": true,
+  "reset_drops_validity": true,
+  "physical_signoff": false
+}

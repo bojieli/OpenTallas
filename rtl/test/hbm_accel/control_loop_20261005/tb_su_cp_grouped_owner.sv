@@ -1,14 +1,56 @@
 `timescale 1ns/1ps
-module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0);
+module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0,PARALLEL_PHASE_VALIDATION_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;reg[1:0] launch_v=0;reg[31:0] launch_pc=0,cp_job=0;
  reg[3:0] cp_gen=0;reg[16:0] launch_token=0;reg[19:0] launch_pos=0;
  reg lease_granted=0,release_r=0,exec_done=0,exec_fault=0,shared_fault=0;
  reg[3:0] retired_original_ops=0;
+ wire [11:0] owned_frontier_terms;
  wire[1:0] native_launch;wire lease_v,release_v,owned,pending,quiet,selected,done,fault;
  wire[31:0] selected_pc,held_job;wire[3:0] held_gen;
  wire[16:0] held_token;wire[19:0] held_pos;
  integer checks=0;
+ reg [63:0] codec_probe_data=0;wire [71:0] codec_probe_code;
+ reg [31:0] entry_probe_pc=0;wire entry_probe;
+ integer codec_basis_checks=0,entry_basis_checks=0;
+ ot_hbm_cp_four_encode codec_probe(.data(codec_probe_data),.code(codec_probe_code));
+ if(FAST_OWNER_FRONTIER_TEST)begin:fast_entry_probe
+  ot_hbm_cp_frontier_entry entry_probe_dut(.pc(entry_probe_pc),.entry(entry_probe));
+ end else begin:prior_entry_probe
+  ot_hbm_cp_four_entry entry_probe_dut(.pc(entry_probe_pc),.entry(entry_probe));
+ end
+ reg [17:0] phase_probe=0;wire phase_probe_valid;
+ integer phase_truth_checks=0;
+ ot_hbm_cp_parallel_phase phase_probe_dut(.q(phase_probe[8:0]),.n(phase_probe[17:9]),.valid(phase_probe_valid));
+ task check_four_cut_oracles;
+ begin
+  if(PARALLEL_PHASE_VALIDATION_TEST)begin
+   for(integer bits=0;bits<262144;bits=bits+1)begin
+    phase_probe=bits;#1;
+    if(phase_probe_valid!==((phase_probe[17:9]==~phase_probe[8:0]) &&
+       (phase_probe[8:0]!=0) && ((phase_probe[8:0]&(phase_probe[8:0]-9'd1))==0)))
+     $fatal(1,"complete protected18bit phase oracle %h",phase_probe);
+    phase_truth_checks=phase_truth_checks+1;
+   end
+   $display("PASS parallel_phase complete_words=%0d",phase_truth_checks);
+  end
+  if(FOUR_COMBINATIONAL_CUTS_TEST)begin
+   // Zero+allones+64 basis vectors establish the unchanged linear72bit codec.
+   for(integer k=0;k<66;k=k+1)begin
+    codec_probe_data=(k==64)?64'd0:(k==65)?~64'd0:(64'd1<<k);#1;
+    if(codec_probe_code!==ot_gpu_w6_secded_pkg::encode64(codec_probe_data))$fatal(1,"exact72bit SECDED encoder basis%0d",k);
+    codec_basis_checks=codec_basis_checks+1;
+   end
+   for(integer mode=0;mode<2;mode=mode+1)begin
+    for(integer k=0;k<33;k=k+1)begin
+     entry_probe_pc=(mode?32'hc0000004:32'h80000004)^((k==32)?32'd0:(32'd1<<k));#1;
+     if(entry_probe!==((entry_probe_pc==32'h80000004)||(entry_probe_pc==32'hc0000004)))$fatal(1,"exact entry PC mode%0d bit%0d",mode,k);
+     entry_basis_checks=entry_basis_checks+1;
+    end
+   end
+  end
+ end endtask
+
  integer inject_word=-1,inject_bit=0,cp_cpl_count=0,accepted_release_count=0;
  reg [6:0] saved_q,saved_n;
  reg [8:0] saved_phase_q,saved_phase_n;
@@ -44,9 +86,9 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  cp_cpl_count=cp_cpl_count+1;
  end
  end
- ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST)) dut(.*);
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST)) dut(.*);
  wire[1:0] off_native;wire off_done,off_fault;
- ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST)) baseline(
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST)) baseline(
  .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(launch_pc),.cp_job(cp_job),.cp_gen(cp_gen),
  .launch_token(launch_token),.launch_pos(launch_pos),.lease_granted(lease_granted),
  .release_r(release_r),.exec_done(exec_done),.exec_fault(exec_fault),
@@ -133,6 +175,7 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
   tick();ck(quiet&&!selected&&!done&&!pending&&!fault,"extra registered drain edge rearms source");
  end endtask
  initial begin
+  check_four_cut_oracles();
   good_case(32'h80000004);good_case(32'hc0000004);
   reset();drive();launch_pc=12;launch_v=2;#1;
   ck(native_launch==2&&off_native==2,"ordinary CP launch retained");
@@ -234,6 +277,7 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
    "held reset ACK preserves root domain");
   repeat(3)begin tick();ck(cp_reset_ack&&cp_cpl_count==1,"reset request cannot repeat CPL");end
   drive();cp_reset_req=0;tick();ck(!cp_reset_ack&&!cp_block_new,"local reset rearms");
+  $display("PASS_FOURCUT_ORACLES codec_basis=%0d entry_basis=%0d",codec_basis_checks,entry_basis_checks);
   $display("PASS su_cp_grouped_owner checks=%0d CPL=%0d phase_cases=%0d mismatch=%0d zero=%0d multiple=%0d prelease_edges=5 grant_edges=1 rearm_edges=1",checks,cp_cpl_count,phase_cases,phase_mismatch,phase_zero,phase_multiple);$finish;
  end
  initial begin #1000000;$fatal(1,"TIMEOUT su_cp_release");end

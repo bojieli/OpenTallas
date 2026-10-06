@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.hbm.memory-control-real-views.v1",
+  "attention": {
+    "macro": "ot_attn_hgrp_m6h1",
+    "path": "physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1",
+    "files": {
+      "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+      "ot_attn_hgrp_m6h1_ss.lib": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b",
+      "ot_attn_hgrp_m6h1_ff.lib": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8"
+    },
+    "signal_and_power_pins": 1664,
+    "size_um": [
+      294.782,
+      294.782
+    ],
+    "leaf_closed": true,
+    "parent_closed": false,
+    "timing_arcs": {
+      "ss": {
+        "rising_edge_count": 34,
+        "setup_rising_count": 1627,
+        "hold_rising_count": 1627
+      },
+      "ff": {
+        "rising_edge_count": 34,
+        "setup_rising_count": 1627,
+        "hold_rising_count": 1627
+      }
+    }
+  },
+  "sm_compat": [
+    {
+      "macro": "ot_hbm_accel_bd_col",
+      "supported_parameters": {
+        "LB": 2,
+        "IL": 8,
+        "TAGW": 16
+      },
+      "original_declaration": "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col/ot_hbm_accel_bd_col_bb.v",
+      "original_sha256": "7661f36e6f3f6b446efc1f672e199ce1fd9a6ccf696e72620b311bb2a05ffddf",
+      "compat_sha256": "14b26f253cb6f07111f95f25b5af615fc7f4058879e02aa17885dabdc45aeac9",
+      "replacement_only": true,
+      "port_widths_fixed": true,
+      "parent_closed": false
+    },
+    {
+      "macro": "ot_hbm_accel_tc16",
+      "supported_parameters": {
+        "IL": 8,
+        "TAGW": 16
+      },
+      "original_declaration": "physical/hbm_accel_sm_views/ot_hbm_accel_tc16/ot_hbm_accel_tc16_bb.v",
+      "original_sha256": "ac5aa8fc264dc0c42ca8b520b20dfba3fb0327ec01189351299f5b871f50fd45",
+      "compat_sha256": "859730ff2c7511ae4cd005961d47be0acf1dd7dfd84485cd71a66ea693bfda41",
+      "replacement_only": true,
+      "port_widths_fixed": true,
+      "parent_closed": false
+    }
+  ],
+  "retained_signoff_sha256": "95958aacfe6c6bb34dd46aae9716f9945594f2dc2cd5ea29938188c79e882584",
+  "jobs_rebuilt": 0,
+  "passing_gates_repeated": 0,
+  "whole_sm_closed": false,
+  "attention_tile_parent_closed": false
+}

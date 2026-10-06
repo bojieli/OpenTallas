@@ -1,0 +1,41 @@
+{
+  "owner": "Codex/Dirac item9; Claude ACK scope unchanged",
+  "kind": "changed-source full32 SS synthesis, not full P&R yet",
+  "source_commit": "c8d375045",
+  "repo": "/srv/opentallas/repos/codex-item9-geo-min-20261005",
+  "root": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-geo-synth-r1",
+  "source_new_cycles": 0,
+  "changed_mux_exact": "209 grants/2048 cycles/0 mismatch",
+  "changed_actual32_exact": "32 completed/128TX/256RX/789 cycles/0 extra",
+  "admission_GiB": 24,
+  "NUM_CORES": 16,
+  "NVMe_scratch": true,
+  "guard_unchanged": true,
+  "additional_owner_CPU_fit_check": "wait for fresh load+16 <=128 before guard; no deadline",
+  "prelaunch_sample": {
+    "load": 126.82,
+    "available_GiB": 516,
+    "scratch_free": "2.1TiB",
+    "idle_percent": 12.62
+  },
+  "old_live_jobs_preserved": true,
+  "PnR_ready_after": "changed mapped source pin/clock/receiver/finite channel binding; prior TREE mapped cut FAILED97,789>50,594",
+  "physical_qualified": false,
+  "adopted": false,
+  "source_remote_commit": "00a59ad44ab4a17e8259906c30d011402e2f6256",
+  "source_waiter_PID": 1800825,
+  "binding_waiter_PID": 3707095,
+  "waiter_identity_audit": "own commands/root/source; live useful dependency; no admitted child yet; ppid1 is not abandonment",
+  "latest_sample": {
+    "load": 150.79,
+    "available_GiB": 477
+  },
+  "binding_chain": "after successful SS only: actual loads+keep retention -> actual payload/receiver gate affinities -> exact four-clock/cell/cut count; distinct own analysis source root",
+  "own_analysis_repo": "/srv/opentallas/repos/codex-item9-geo-analysis-20261005",
+  "main_milestone": "8f00acf59",
+  "central_scoreboard_preserved": true,
+  "parent_geometry_hold": "outer_allocation_invalidation_r1.json",
+  "old_outer_qualified": false,
+  "queued_source_and_intrinsic_load_analysis_preserved": true,
+  "geometry_dependent_chain_held": true
+}

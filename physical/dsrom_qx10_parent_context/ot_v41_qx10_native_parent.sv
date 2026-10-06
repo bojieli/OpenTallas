@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Minimum native parent: one complete element, never an engine projection.
 // QX remains opt-in. Physical characterization selects QX=10 explicitly.
-module ot_v41_qx10_native_parent #(parameter integer QX=0) (
+module ot_v41_qx10_native_parent #(parameter integer QX=0, parameter integer HARD_CFG=0, parameter string CFG_VIAMAP="") (
     input wire clk, rst_n,
     input wire [1629:0] broadcast_source,
     input wire [47:0] cfg_rom_q,
@@ -39,12 +39,23 @@ module ot_v41_qx10_native_parent #(parameter integer QX=0) (
     wire c_v,go_load,ld_busy,ld_fault;
     wire [4:0] c_a;
     wire [47:0] c_d;
-    // Copernicus's r3 lowering fix makes the existing reset-only hold explicit;
-    // no new fault mode, constant-fault substitution or pipeline edge.
-    ot_v41_pair_pq_ld_frontend #(.PHW(6),.PQ(0)) u_ld
-        (.clk(clk),.rst_n(rst_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),.cfg_np(cfg_np),.go(go),
-         .e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(cfg_rom_a),.cm_q(cfg_rom_q),
-         .c_v(c_v),.c_a(c_a),.c_d(c_d),.go_e(go_load),.ld_busy(ld_busy),.fault(ld_fault));
+    // Additive finite PHW6 provider: actual free-root macro and original
+    // 48-bit loader capture. Exact6070 PQ0/PQ1 gate, zero new loader cycles.
+    // HARD_CFG stays off by default; the external historical cut is retained.
+    if (HARD_CFG != 0) begin : g_cfg_provider
+        ot_v41_pair_cfgrom_context #(.HARD_CFG(1),.PQ(0),.VIAMAP(CFG_VIAMAP)) u_provider
+            (.clk(clk),.rst_n(rst_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),.cfg_np(cfg_np),.go(go),
+             .e_sh_free(1'b1),.e_bank_free(1'b1),.external_cfg_q(cfg_rom_q),
+             .cfg_rom_a(cfg_rom_a),.cfg_rom_read_a(),.cfg_rom_read_ce(),
+             .c_v(c_v),.c_a(c_a),.c_d(c_d),.go_e(go_load),.ld_busy(ld_busy),.fault(ld_fault));
+    end else begin : g_external_cfg
+        // Copernicus's r3 lowering fix makes the existing reset-only hold explicit;
+        // no new fault mode, constant-fault substitution or pipeline edge.
+        ot_v41_pair_pq_ld_frontend #(.PHW(6),.PQ(0)) u_ld
+            (.clk(clk),.rst_n(rst_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),.cfg_np(cfg_np),.go(go),
+             .e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(cfg_rom_a),.cm_q(cfg_rom_q),
+             .c_v(c_v),.c_a(c_a),.c_d(c_d),.go_e(go_load),.ld_busy(ld_busy),.fault(ld_fault));
+    end
     wire [1:0] pv,perr;
     wire [63:0] pval;
     wire [31:0] prow;

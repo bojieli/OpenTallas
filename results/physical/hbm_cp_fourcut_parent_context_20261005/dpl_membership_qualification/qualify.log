@@ -1,0 +1,41 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=858 shared=2
+[INFO DPL-0006] Core area: 1866.24 um^2
+[INFO DPL-0007] Movable instances area: 807.09 um^2
+[INFO DPL-0008] Fixed instances area within core: 11.69 um^2
+[INFO DPL-0009] Utilization: 43.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 6728 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       4777 |      1135 |      3312
+        1 |       2866 |       644 |      2032
+        2 |       1495 |       295 |      1159
+        3 |        476 |        80 |       396
+        4 |        137 |        27 |       110
+        5 |         63 |        15 |        48
+        6 |         35 |         5 |        30
+        7 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 7.
+[INFO DPL-0500] Runtime: 0.26s
+Placement Analysis
+---------------------------------
+total displacement       4983.7 u
+average displacement        0.7 u
+max displacement           35.2 u
+original HPWL           40854.9 u
+legalized HPWL          39096.3 u
+delta HPWL                   -4 %
+
+OT_CP_PRE_DPL_MEMBERSHIP_PASS

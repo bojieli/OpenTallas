@@ -1,0 +1,23 @@
+{
+  "scope": "wire-only consumer ACK/row/write-capture adapter, existing protectedPC only",
+  "composed_model": "existing qwen_stream4_protected_model",
+  "model_source": "tools/qwen_stream4_protected_model.py + tools/qwen_stream4_transport_model.py",
+  "PCs": 128,
+  "per_PC": {
+    "LD": 64,
+    "WB": 16,
+    "AD": 64,
+    "TAGW": 9,
+    "SYNC": 2,
+    "landing_payload_bits": 281,
+    "write_payload_bits": 289,
+    "write_ACK_payload_bits": 9
+  },
+  "added_FF": 0,
+  "added_cycles": 0,
+  "added_codec_ports": 0,
+  "mutable_storage_reused": "ot_qwen_s4_protected_pc, existing checked cache/owners/rings",
+  "physical_qualification": false,
+  "owner_raw_r8": "46ea03109 is not the protected endpoint: no warm_rst_n/wd_ready",
+  "source_binding_blocker": "Claude must hand off actual selected protected endpoint containing qualified owner CDC; raw closure does not qualify protectedPC"
+}

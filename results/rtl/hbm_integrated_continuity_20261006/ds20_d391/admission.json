@@ -1,0 +1,30 @@
+{
+  "pre": {
+    "load": [
+      46.4609375,
+      45.99658203125,
+      52.9521484375
+    ],
+    "idle_cores": 82.64177727748854,
+    "MemAvailable": 711239569408,
+    "disk_free": 2246178766848
+  },
+  "post": {
+    "load": [
+      46.423828125,
+      45.9970703125,
+      52.91455078125
+    ],
+    "idle_cores": 81.36971214017522,
+    "MemAvailable": 710289125376,
+    "disk_free": 2246178553856
+  },
+  "reservation_GiB": 32,
+  "build_workers": 16,
+  "sim_threads": 8,
+  "execution_caps": null,
+  "UTC": "2026-10-06T01:00:03Z",
+  "prior_samefixture_inventory_bytes": 256121421,
+  "disk_headroom_requirement_bytes": 512333024,
+  "basis": "Existing selected d391 fixture reservation reused, actual componentcopy only; frontend/compiler headroom counted, no wholearray"
+}

@@ -72,7 +72,8 @@ def main():
          '--core-area','19.44','19.44','1980.72','1980.72',
          '--sdc-append',clock_file,'--sdc-append',str(a.parent_sdc.resolve()),
          '--step-tcl','POST_MACRO_PLACE=physical/hbm_accel/r5a_p2_macro_local.tcl',
-         '--orfs-var','SYNTH_HDL_FRONTEND=slang','--orfs-var','NUM_CORES='+str(a.cores),
+         '--orfs-var','SYNTH_HDL_FRONTEND=slang',
+         '--orfs-var','SYNTH_SLANG_ARGS=--unroll-limit 65536','--orfs-var','NUM_CORES='+str(a.cores),
          '--synth-timeout-seconds','unlimited','--flow-timeout-seconds','unlimited',
          '--nickname-tag','r5a_p2','--keep-heavy-artifacts','--keep-workdir',str(work/'flow'),
          '--output',str(work/'physical.json'),'--purpose','signoff_target']

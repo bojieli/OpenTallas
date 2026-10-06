@@ -28,7 +28,13 @@ module ot_qwen_stream4_cdc_pc #(
     parameter integer LD   = 64,            // landing depth, power of two
     parameter integer WB   = 16,            // write-queue depth, power of two
     parameter integer AD   = 64,            // write-done depth, power of two
-    parameter integer SYNC = 2              // synchronizer flops per crossing
+    parameter integer SYNC = 2,             // synchronizer flops per crossing
+    // r8 (default 0 = r6/r7 structure): RSEL 1 = every landing read column group owns a one-hot select
+    // register in its own kept hierarchy (ot_hdc_v41x_kreg), loaded with decode(next read index): the
+    // r7 routes showed yosys merging the r3 (* keep *) index copies back into lr_bin (one driver, a
+    // 9/14/30/31 buffer tree into the 64:1 mux, SS -1.1..-49.9 ps).  RNG = column groups when RSEL = 1.
+    parameter integer RSEL = 0,
+    parameter integer RNG  = 10
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
@@ -141,18 +147,43 @@ module ot_qwen_stream4_cdc_pc #(
     // A group's output register loads whenever the presented word is free (!l_v || l_pop): when the FIFO
     // is empty it loads the unwritten slot at the read index, which l_v (= 0) marks invalid.  Identical
     // l_v / l_* sequence on every valid cycle; zero added cycles.
-    localparam integer NG = 5, GW = (281 + NG - 1) / NG;
+    localparam integer NG = (RSEL != 0) ? RNG : 5, GW = (281 + NG - 1) / NG;
     wire [NG*GW-1:0] l_word;
     reg  [NG*GW-1:0] l_q;
+    wire [LD-1:0] lr_hot_n = {{(LD-1){1'b0}}, 1'b1} << lr_bin_n[LA-1:0];
     for (genvar gi = 0; gi < NG; gi = gi + 1) begin : lgrp
         localparam integer LO = gi * GW, HI = (LO + GW > 281) ? 281 : LO + GW;
-        (* keep *) reg [LA-1:0] ix;
-        (* keep *) reg          vg;
-        always @(posedge clk or negedge c_rl)
-            if (!c_rl) begin ix <= 0; vg <= 1'b0; end
-            else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
-        wire [280:0] row = lmem[ix];
-        always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
+        if (RSEL != 0) begin : g_hot
+            // one-hot select of this group, a separate physical register (kept hierarchy); reset = slot 0
+            wire [LD-1:0] hot;
+            ot_hdc_v41x_kreg #(.W(LD), .R(0)) u_sel (.clk(clk), .rst_n(1'b1),
+                .d(c_rl ? lr_hot_n : {{(LD-1){1'b0}}, 1'b1}), .q(hot));
+            // AND-OR mux as continuous assigns (an always @(*) loop over the storage array is not re-evaluated
+            // on storage writes by every simulator: r8 bench CHAIN ph137000 timed out with it)
+            wire [HI-LO-1:0] acc [0:LD];
+            assign acc[0] = {(HI-LO){1'b0}};
+            for (genvar e = 0; e < LD; e = e + 1) begin : g_or
+                assign acc[e+1] = acc[e] | ({(HI-LO){hot[e]}} & lmem[e][HI-1:LO]);
+            end
+            // the group loads only when the presented word is free (!l_v || l_pop), as r5: an unconditional
+            // load (r6) re-reads the slot AFTER the presented one while l_v is held, and the writer may refill
+            // the presented slot once the read pointer passed it.  The enable uses this group's own kept copy
+            // of l_v, so each enable cone drives one group (~29 flops), not the whole 281-bit word.
+            wire vg;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_vg (.clk(clk), .rst_n(c_rl),
+                .d(l_ren ? 1'b1 : (l_pop ? 1'b0 : vg)), .q(vg));
+            always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= acc[LD];
+        end else begin : g_ix
+            // RSEL = 0: the r5 structure (main), unchanged (r6's unconditional load is withdrawn: it presented the
+            // slot after the held word)
+            (* keep *) reg [LA-1:0] ix;
+            (* keep *) reg          vg;
+            always @(posedge clk or negedge c_rl)
+                if (!c_rl) begin ix <= 0; vg <= 1'b0; end
+                else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
+            wire [280:0] row = lmem[ix];
+            always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
+        end
     end
     always @(*) {l_sec, l_row, l_data} = l_q[280:0];
 

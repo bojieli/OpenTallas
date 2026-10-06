@@ -20,38 +20,48 @@ RTL += [f'{BASE}/selected_0032/{n}.sv' for n in (
 RTL += [f'rtl/hdc/{n}.sv' for n in ('ot_hdc_fpu','ot_hdc_fp32_mul_pipe','ot_hdc_delay','ot_hdc_cg')]
 RTL += ['rtl/proto/ot_fp32_add_rne_pipe.sv','rtl/common/ot_prefix.sv',
         f'{BASE}/parent_loader/ot_v41_pair_pq_ld_frontend.sv',
-        'rtl/v41die/ot_v41_retn_w17w10.sv','rtl/v41rom/ot_v41_ret.sv',
+        'rtl/v41rom/ot_v41_ret.sv','rtl/v41die/ot_v41_retn_w17w10.sv',
         f'{BASE}/ot_v41_qx10_native_parent.sv']
 ROM=[f'physical/asap7_memory_macros/{n}/{n}_bb.v' for n in ('ot_rom_8192x274_m8','ot_rom_4096x274_m8')]
 
 
-def command(out):
+def command(out, boundary_hold=False, hard_cfg=False):
     args=[sys.executable,'tools/run_abi3_physical_persistent.py',
           '--persistent-workdir',str(out/'work'),'--launch-receipt',str(out/'receipt.json'),
           '--view','asap7','--top','ot_v41_qx10_native_parent']
-    for src in RTL+ROM:args += ['--source',src]
+    for src in RTL+ROM+([
+        'physical/dsrom_v9_cfg_context/ot_v41_pair_pq_ld_cfgrom.sv',
+        'physical/dsrom_v9_cfg_context/ot_v41_pair_cfgrom_context.sv',
+        'physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v'] if hard_cfg else []):args += ['--source',src]
     args += ['--param','QX=10','--clock-period-ns','0.833333333333',
              '--clock-uncertainty-ns','.060','--clock-uncertainty-hold-ns','.025',
              '--core-input-delay-min-ns','.360','--core-input-delay-max-ns','.727',
              '--output-delay-min-ns','.360','--output-delay-max-ns','.727',
-             '--sdc-append',f'{BASE}/boundary.sdc','--stages','pnr',
+             '--sdc-append',f'{BASE}/'+('cfg_boundary.sdc' if hard_cfg else 'boundary.sdc'),'--stages','pnr',
              '--die-area','0','0','1040.256','239.76',
              '--core-area','2.16','2.16','1038.096','237.60',
              '--place-density','.6','--macro-place-halo','2','2',
              '--macro-view','ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8',
              '--max-transition-ns','.32','--slew-margin-percent','40','--hold-margin-ns','.025',
              '--orfs-corner','WC','--hold-corners','WC,BC','--pnr-stop-after','finish',
+             '--orfs-var','SYNTH_HDL_FRONTEND=slang',
              '--orfs-var','PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl',
              '--orfs-var','FASTROUTE_TCL=/src/physical/dsrom_v9_parent_context/fastroute.tcl',
              '--orfs-var','ROUTING_LAYER_ADJUSTMENT=0.22','--orfs-var','SETUP_SLACK_MARGIN=15',
              '--orfs-var','CTS_CLUSTER_SIZE=30','--orfs-var','CTS_CLUSTER_DIAMETER=50',
              '--orfs-var','CTS_BUF_DISTANCE=60','--routing-layers','M2','M8',
-             '--step-tcl',f'POST_PDN={BASE}/regions.tcl',
-             '--step-tcl',f'POST_MACRO_PLACE={BASE}/macros.tcl',
+             '--step-tcl',f'POST_PDN={BASE}/'+('cfg_regions.tcl' if hard_cfg else 'regions.tcl'),
+             '--step-tcl',f'POST_MACRO_PLACE={BASE}/'+('cfg_macros.tcl' if hard_cfg else 'macros.tcl'),
              '--step-tcl','POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl',
              '--step-tcl',f'PRE_CTS={BASE}/clock.tcl','--step-tcl',f'POST_CTS={BASE}/clock.tcl',
              '--step-tcl',f'PRE_GLOBAL_ROUTE={BASE}/replay_checks.tcl',
              '--keep-heavy-artifacts','--output',str(out/'physical.json')]
+    if hard_cfg:
+        args += ['--param','HARD_CFG=1',
+            '--macro-view','ot_rom_4096x72_m8=physical/asap7_memory_macros/ot_rom_4096x72_m8',
+            '--orfs-var','PLACE_DENSITY_LB_ADDON=']
+    if boundary_hold:
+        args += ['--step-tcl',f'POST_DETAIL_PLACE={BASE}/hold_boundary.tcl']
     return args
 
 
@@ -61,13 +71,17 @@ if __name__=='__main__':
     ap.add_argument('--print',action='store_true')
     ap.add_argument('--lint-only',action='store_true')
     ap.add_argument('--phase',choices=('all','smoke','physical'),default='all')
+    ap.add_argument('--boundary-hold',action='store_true')
+    ap.add_argument('--hard-cfg',action='store_true')
     a=ap.parse_args();out=a.out.resolve()
-    model=json.loads((ROOT/'results/uarch/dsrom_qx10_parent_context_20261005/model.json').read_text())
+    if a.hard_cfg and a.boundary_hold: raise SystemExit('one necessary source mechanism at a time')
+    model_name='hard_cfg_model.json' if a.hard_cfg else ('boundary_hold_model.json' if a.boundary_hold else 'model.json')
+    model=json.loads((ROOT/'results/uarch/dsrom_qx10_parent_context_20261005'/model_name).read_text())
     if not model['full_context_build_ready']:raise SystemExit('existing model vetoes joined context')
     actual=hashlib.sha256((ROOT/f'{BASE}/selected_0032/ot_v41_rom_elem_qx_w10.sv').read_bytes()).hexdigest()
     if actual!=model['source']['engine_sha256']:raise SystemExit('selected 0032 engine changed')
     if a.print:
-        print(json.dumps(command(out),indent=2));raise SystemExit(0)
+        print(json.dumps(command(out,a.boundary_hold,a.hard_cfg),indent=2));raise SystemExit(0)
     if a.lint_only:
         verilator=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
         raise SystemExit(subprocess.run([str(verilator),'--lint-only','-Wno-fatal','-Wno-lint','-Wno-style',
@@ -86,6 +100,8 @@ if __name__=='__main__':
     smoke=[str(verilator),'--binary','--timing','-Wno-fatal','-Wno-lint','-Wno-style',
            '--top-module','tb_native_parent','--Mdir',str(out/'smoke_objects'),'-j','1','-CFLAGS','-O1',
            *RTL,*[p.replace('_bb.v','.v') for p in ROM],f'{BASE}/tb_native_parent.sv']
+    if a.hard_cfg and a.phase!='physical':
+        raise SystemExit('reuse native and cfg6070 component gates; do not repeat old64 smoke')
     if a.phase!='physical':
         if (out/'smoke.rc').exists():raise SystemExit('smoke has an actual terminal; preserve it')
         (out/'smoke.command.json').write_text(json.dumps(smoke)+'\n')
@@ -99,7 +115,11 @@ if __name__=='__main__':
         (out/'smoke.rc').write_text(str(rc)+'\n')
         if rc:raise SystemExit(rc)
         if a.phase=='smoke':raise SystemExit(0)
+    if a.hard_cfg:
+        cfg_gate=json.loads((ROOT/'results/rtl/dsrom_v9_cfg_context_20261005/record.json').read_text())
+        if cfg_gate['functional_gate']['verdict']!='PASS' or cfg_gate['functional_gate']['added_loader_cycles']!=0:
+            raise SystemExit('actual cfg6070 zero-cycle gate required')
     if not (out/'smoke.rc').exists() or (out/'smoke.rc').read_text().strip()!='0':
         raise SystemExit('minimum native parent semantic gate is not PASS')
     os.environ['OT_ORFS_NUM_CORES']='4'
-    raise SystemExit(subprocess.run(command(out),cwd=ROOT).returncode)
+    raise SystemExit(subprocess.run(command(out,a.boundary_hold,a.hard_cfg),cwd=ROOT).returncode)

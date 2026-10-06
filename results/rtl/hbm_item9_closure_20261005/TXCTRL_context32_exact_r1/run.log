@@ -1,0 +1,5 @@
+PASS TXCTRL actual32 caller NL128 exact completed=32 TXrecords=128 RXrecords=256 cycles=789 added_cycles=0
+- results/rtl/hbm_item9_closure_20261005/tb_item9_context32_txctrl.sv:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 658ns; walltime 0.013 s; speed 52.400 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 9 MB

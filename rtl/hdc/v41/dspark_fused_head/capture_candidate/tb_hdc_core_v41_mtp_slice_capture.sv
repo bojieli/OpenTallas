@@ -105,7 +105,49 @@ module tb_hdc_core_v41_mtp_slice #(
 `else
     localparam integer WHBM = 0;
 `endif
-    ot_hdc_core_v41 #(.SW(SW), .HS(HS), .PAW(PAW), .NSLOT(NSLOT), .MP(MP), .W_HBM(WHBM)) dut (
+`ifdef OT_FH_FAULT_RETIRE
+    localparam integer FH_RETIRE=1;
+`else
+    localparam integer FH_RETIRE=0;
+`endif
+    wire fh_write_warm,fh_warm_debt;
+    wire [7:0] fh_write_id;
+    reg fh_ack_v=0;
+    reg [7:0] fh_ack_id=0;
+    reg [23:0] fh_ack_word=0;
+    reg [15:0] fh_ack_mask=0;
+    reg [MP*G-1:0] commit_we[0:1];
+    reg [MP*G*AW-1:0] commit_addr[0:1];
+    reg [MP*G*W-1:0] commit_mask[0:1];
+    reg [MP*G*W*32-1:0] commit_data[0:1];
+    reg [1:0] commit_warm;
+    reg [7:0] commit_id[0:1];
+    wire [MP*G-1:0] sink_me_we=FH_RETIRE?commit_we[1]:vw_me_we;
+    wire [MP*G*AW-1:0] sink_me_addr=FH_RETIRE?commit_addr[1]:vw_me_addr;
+    wire [MP*G*W-1:0] sink_me_mask=FH_RETIRE?commit_mask[1]:vw_me_mask;
+    wire [MP*G*W*32-1:0] sink_me_data=FH_RETIRE?commit_data[1]:vw_me_data;
+    wire fh_sink_busy=FH_RETIRE&&((|commit_we[0])||(|commit_we[1]));
+    // These two write edges mirror the existing protected SRAM payload and
+    // codeword stages. A warm receipt is emitted ON the actual VM write edge,
+    // with the same id/address/mask, never on producer emission.
+    always @(posedge clk) begin
+        commit_addr[0]<=vw_me_addr;commit_addr[1]<=commit_addr[0];
+        commit_mask[0]<=vw_me_mask;commit_mask[1]<=commit_mask[0];
+        commit_data[0]<=vw_me_data;commit_data[1]<=commit_data[0];
+        commit_id[0]<=fh_write_id;commit_id[1]<=commit_id[0];
+    end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin commit_we[0]<=0;commit_we[1]<=0;commit_warm<=0;fh_ack_v<=0;end
+        else begin
+            commit_we[0]<=vw_me_we;commit_we[1]<=commit_we[0];
+            commit_warm<={commit_warm[0],fh_write_warm};
+            fh_ack_v<=FH_RETIRE&&commit_warm[1]&&sink_me_we[0]&&(|sink_me_mask[15:0]);
+            fh_ack_id<=commit_id[1];fh_ack_word<=sink_me_addr[23:0];fh_ack_mask<=sink_me_mask[15:0];
+        end
+    ot_hdc_core_v41 #(.SW(SW), .HS(HS), .PAW(PAW), .NSLOT(NSLOT), .MP(MP), .W_HBM(WHBM),.FH_RETIRE(FH_RETIRE)) dut (
+        .fh_sink_busy(fh_sink_busy),.fh_ack_v(fh_ack_v),.fh_ack_id(fh_ack_id),
+        .fh_ack_word(fh_ack_word),.fh_ack_mask(fh_ack_mask),.fh_mem_poison(64'b0),.fh_mem_address_fault(4'b0),
+        .fh_write_warm(fh_write_warm),.fh_write_id(fh_write_id),.fh_warm_debt(fh_warm_debt),
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry), .acc_n(acc_n),
         .acc_tok(acc_tok),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
@@ -236,9 +278,9 @@ module tb_hdc_core_v41_mtp_slice #(
         for (q = 0; q < MP*SW; q = q + 1)
             if (kv_we[q]) kv[kv_waddr[q*AW+4 +: 15]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
         for (q = 0; q < MP*G; q = q + 1)
-            if (vw_me_we[q])
+            if (sink_me_we[q])
                 for (l = 0; l < W; l = l + 1)
-                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: VA-4], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
+                    if (sink_me_mask[q*W + l]) vm[{sink_me_addr[q*AW +: VA-4], 4'b0} + l] <= sink_me_data[32*(q*W + l) +: 32];
         for (q = 0; q < MP*SW; q = q + 1) if (vw_su_we[q]) vm[vw_su_addr[q*AW +: VA]] <= vw_su_data[32*q +: 32];
         for (q = 0; q < MP*SW; q = q + 1) if (vw_rd_we[q]) vm[vw_rd_addr[q*AW +: VA]] <= vw_rd_data[32*q +: 32];
         if (vw_xe_we) vm[vw_xe_addr[VA-1:0]] <= vw_xe_data;

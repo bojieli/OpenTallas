@@ -1,0 +1,28 @@
+{
+  "top": "ot_dsrom_wfc_protected_stage",
+  "source": "1860b98a006d25c5009961adedf8b0fb24e18e9a",
+  "internal_real": [
+    "u_cfg:14SRAM",
+    "u_whole:4ROM",
+    "u_vm:288SRAM protected",
+    "native WFC/controller",
+    "C8/core capture",
+    "two-held-lease caller"
+  ],
+  "external_missing": {
+    "Copernicus/ClaudeDS-INTEGRATION": [
+      "command_v/identity/token/home/entry/pc/unit mapped producer launch timing",
+      "retire_v/identity/home/entry/visibility/quiet/capture_drained/fault engine endpoints",
+      "fence_v/identity/visibility and result_v/identity/token/value",
+      "context_restored/native_idle/native_fragment_done/c8_write_quiet/quarantine/fault/coll_busy real engine source pins"
+    ],
+    "Turing": [
+      "host cmd_*, cold/fast/slow reset roots actual insertion/slew",
+      "in_*/out_*, bl_rx_*/bl_tx_*, rcfg_* finite router/link endpoints and min/max arrival/load",
+      "xb_v/owner/we4/waddr4/wdata4/re/raddr/consume* actual writer/read/consumer endpoint timing and load",
+      "current WFC/VM commonPLL parent root insertion/slew; standalone local propagated CTS is not parent CTS"
+    ]
+  },
+  "qualification": "INTERNAL_REAL_SOURCE_ONLY_PENDING_EXTERNAL_ENDPOINT_TIMING",
+  "whole_parent_closed": false
+}

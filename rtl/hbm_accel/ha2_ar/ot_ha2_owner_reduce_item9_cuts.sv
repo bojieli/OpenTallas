@@ -52,6 +52,8 @@ end else begin:g_cuts
     localparam integer OFMX = PFMAX / NC;
     localparam integer PCW = $clog2(OFMX+1);
     reg [PCW-1:0] pending;
+    reg [PCW-1:0] rptr;
+    wire issue;
     wire config_ok = PF > 0 && PF <= PFMAX && PF % NC == 0 && (!BF16 || !(OF & 1));
     assign quiet = pending == 0 && (!active || rptr >= OF);
     always @(posedge clk or negedge rst_n)
@@ -62,11 +64,10 @@ end else begin:g_cuts
 
     reg [FW-1:0] opd [0:NC-1][0:OFMX-1];
     reg [OFMX-1:0] pres [0:NC-1];
-    reg [PCW-1:0] rptr;
     reg  [NC-1:0] col;
     always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (rptr < OF) ? pres[c][rptr] : 1'b0;
     wire all_here = &col;
-    wire issue = active && config_ok && !dupe && all_here && !arm;
+    assign issue = active && config_ok && !dupe && all_here && !arm;
     assign issue_o = issue;
 
     // level-0 operands

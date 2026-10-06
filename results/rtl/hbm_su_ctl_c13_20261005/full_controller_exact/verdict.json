@@ -1,0 +1,50 @@
+{
+  "status": "MINIMUM_FULL_CONTROLLER_EXACT_PASS_PHYSICAL_PENDING",
+  "source_commit": "1659b138d762436f207a481562aaba50ed1b25d6",
+  "shape": {
+    "N": 64,
+    "M": 16,
+    "BCAST": 7,
+    "RET": 8,
+    "MLAT": 6,
+    "ALAT": 6,
+    "build_s": 24.2,
+    "fp": "dpi_beh",
+    "fp_note": "as dpi, and the keep-prefix integer adders (rtl/hdc/ot_hdc_prefix.sv) are the behavioural `+` (rtl/test/sim_hdc_prefix_beh.sv, combinational, same function); equivalence: su-equiv at N 64."
+  },
+  "admissible_chains": 33,
+  "excluded_chains": [
+    "L0.hc_pre_norm.attn",
+    "L0.hc_pre_norm.ffn",
+    "L2.hc_pre_norm.attn",
+    "L2.hc_pre_norm.ffn",
+    "head.final_norm"
+  ],
+  "ops": 77,
+  "output_checks": 39,
+  "directed_whole_unflattened_cases": 18,
+  "whole_gate_pass": true,
+  "clock_qualified": false,
+  "full_SU_parent_fit_qualified": false,
+  "default_enabled": false,
+  "adopted": false,
+  "arithmetic_note": "unchanged prequalified F12 DPI/behavioral prefix stand-ins; real controller and pipeline/identity RTL; no repeated leaf arithmetic gate or full-shape performance credit",
+  "whole_gate_launcher_failure_preserved": true,
+  "case_pickle_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
+  "bulk_host": "ot-epyc2",
+  "bulk_root": "/srv/opentallas-scratch2/codex/hbm-su-ctl13-exact-20261005",
+  "evidence_sha256": {
+    "run_exact.py": "0b250a36eaef8d50bf37a3b5a3537470d53661cfad24ebeda6d5fbc3e5438651",
+    "whole_unflattened_gate_recovered.json": "baf1fab45780a1fa23af7db0e1408029380b51a999c86c9d1447fb107b30046e",
+    "whole_gate.exit": "91d957f8f2748a950526d4d21e0d5cd3bf5518e6c60b1beb470a13be1f978b1d",
+    "su_N64_M16_b7r8m6a6_dpi_beh_su_cases_v2_ildr.json": "b1d8d0d20abeea43cefe9c5585776c4925303769c241952bb0065dee371fac5f",
+    "before_guard_capacity.json": "060e34c5b9a29c68fd3198142575f7f7eec29b87ecab3ab35be8785e95a0d82e",
+    "native.started": "4e6f7dd99f2534bc2c9914f30259a28d800449094982872745bf0bdd009b74e3",
+    "whole_gate.py": "25a89c31e287b0a5c6d5721d1fd16614264637e15158698fbbf5e94dd4022d5d",
+    "exit": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+    "whole_gate.log": "1769fc3bcf362ea2d953a9dde99c5294781bb82f149cb7e1eae82e6898f16baa",
+    "run.log": "6f00e435b5dc1c3b473957afaab303cdbedb319cd082ed1f7257d1dd275bc997",
+    "argv.json": "17409cbd26ac89b11427c05a07a615baa11c5205fb5099f47076ffed26424b01",
+    "fresh_capacity.json": "ff64b52184b5e274dec2a0710b8f7932d3a8fc2c96daeb12874f626516d5125b"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "verdict": "FAIL",
+  "source": "f8b87ca58",
+  "scope": "N64/M16 controller fixture, no fullSU parent qualification",
+  "SS_setup_ps": -634.352,
+  "aggregate_hold_ps": -2.79332,
+  "setup_violations": 1966,
+  "hold_violations": 3,
+  "max_slew_violations": 7,
+  "DRC": 0,
+  "antenna": 0,
+  "clock_ns": 0.833,
+  "setup_uncertainty_ns": 0.06,
+  "hold_uncertainty_ns": 0.025,
+  "native_aggregate_hold_corner_requires_report_binding": false,
+  "source_logic_unchanged": true,
+  "adopted": false,
+  "SS_FF_qualified": false,
+  "actual_qualified_rate_comparison": null,
+  "FF_hold_ps": -2.79332,
+  "native_report_corner_binding": {
+    "setup": "WC",
+    "hold": "BC",
+    "report": "6_finish.rpt",
+    "setup_start": "u.g_rt.rt_v[0]$_DFF_PN0_",
+    "setup_endpoint": "u.ctl_promote_bank[0]$_DFF_PN0_",
+    "hold_start": "u.g_lane[35].u_lane.u.r[374]$_DFF_P_",
+    "hold_endpoint": "u.g_lane[35].u_lane.u.q[74]$_DFF_P_"
+  }
+}

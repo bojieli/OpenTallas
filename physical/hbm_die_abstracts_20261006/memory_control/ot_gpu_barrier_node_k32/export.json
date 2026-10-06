@@ -1,0 +1,130 @@
+{
+  "name": "ot_gpu_barrier_node",
+  "orfs_dir": "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/input/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--cpus",
+        "1",
+        "-e",
+        "OMP_NUM_THREADS=1",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/input/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/export-agi-r1:/out",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/export-agi-r1/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-threads",
+        "1",
+        "-exit",
+        "/out/export_ss.tcl"
+      ],
+      "parasitic_corner": "ss",
+      "units": {
+        "time": "1ps",
+        "capacitance": "1,fF"
+      },
+      "rising_output_arcs": 33,
+      "internal_CTS_included": true
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--cpus",
+        "1",
+        "-e",
+        "OMP_NUM_THREADS=1",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/input/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/export-agi-r1:/out",
+        "-v",
+        "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/export-agi-r1/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-threads",
+        "1",
+        "-exit",
+        "/out/export_ff.tcl"
+      ],
+      "parasitic_corner": "ff",
+      "units": {
+        "time": "1ps",
+        "capacitance": "1,fF"
+      },
+      "rising_output_arcs": 33,
+      "internal_CTS_included": true
+    }
+  },
+  "source_signoff_reused": true,
+  "parent_qualified": false,
+  "interface_scope": "actual K32 node only; enclosing SM arrive/release network open",
+  "parameters": {
+    "K": 32
+  },
+  "source_owner": "Sagan",
+  "input_sha256": {
+    "odb": "0a876018c8a9cdc8231d7206892b32af6da55db740428ea1e1bc9975400343b2",
+    "spef": "f8ced04e846f0bedbf2454a7391e576632cf5bd413b9a900d6a57a160502dc1d",
+    "sdc": "dc105653e03b921eb8a6b589c88f8e46c00d0e9759b7b6dd0db6299a68524475"
+  },
+  "requested_CPU": 1,
+  "input_signoff_ps": {
+    "SS_setup": 330.53,
+    "FF_hold": 39.39
+  },
+  "constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "parent_receiver_loads": null,
+  "parent_clock_skew": null,
+  "fixture_output_load_fF": 3.898,
+  "jobs_rebuilt": 0,
+  "routes_replayed": 0,
+  "files": {
+    "ot_gpu_barrier_node.lef": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+    "ot_gpu_barrier_node_ff.lib": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+    "ot_gpu_barrier_node_ss.lib": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7"
+  },
+  "ok": true,
+  "macro_size_um": [
+    8.66,
+    8.66
+  ],
+  "status": "EXPORTED_REAL_RETAINED_LEAF",
+  "source": {
+    "path": "rtl/gpu/ot_gpu_barrier_node.sv",
+    "retained_source_commit": "b4866515f4d9eaea300820a816d280b4c05c0c4c",
+    "retained_sha256": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "current_source_matches_retained": true
+  },
+  "LEF_PIN_count": 70,
+  "power_ground_pins": [
+    "VDD",
+    "VSS"
+  ],
+  "pin_geometry": "pins.json",
+  "clock_contract": "clock_contract.json",
+  "OBS_present": true,
+  "orientation_qualification": "LEF symmetry not declared; no generated die rotation/orientation credit",
+  "actual_pin_to_die_mapping": null
+}

@@ -1,0 +1,69 @@
+{
+  "timestamp_UTC": "2026-10-06T04:04:20.522426+00:00",
+  "source_commit": "1a72b716d",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "695aabf92cfe0c42fa8650e22f98e309b93c9d22c70ce260980d4d6410e47d5f",
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/hdc/kv/ot_qwen_s4_transport_context.sv": "2ed16265a143131ee59543d61e0947f1e4ce3ccca8d238c23cbd1f5326c56ecd",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f",
+    "tools/qwen_stream4_transport_model.py": "b5511047070726eb5f6a332cbe9231536ac850e0dd18a03c84526161416b3e08",
+    "tools/qwen_rom_fulldie.py": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118"
+  },
+  "mechanism": {
+    "stacks_per_rank": 4,
+    "PCs_per_stack": 32,
+    "return_arbiters_per_stack": 1,
+    "records_per_stack_CLK_edge": 1,
+    "reverse_frame_bits": 288,
+    "row_data_bits": 256,
+    "reverse_coded_wire_bits": 504,
+    "one_hot_b_l_pop": true,
+    "root_interface_PC_width": 128,
+    "root_interface_is_not_128_deliveries_per_edge": true,
+    "priority": "descriptor/GO completion before ACK before landing; all share one return frame",
+    "consumer": "all128 PC landing entries scanned, per-tile quarter merge/held-half ordering; no global4 cap in consumer"
+  },
+  "physical_capacity_scope": {
+    "selected_duplex_tracks_per_stack": 1056,
+    "selected_coded_duplex_bits": 1008,
+    "nominal_track_margin": 0,
+    "scope": "existing b3r12 analytical/top link inventory, not protected loaded r18 physical qualification",
+    "strip_return_bits_each_2176": "FIFO storage, not parallel response wire width"
+  },
+  "verdict": "Explicit 32:1 return aggregation in selected shared-stack transport imposes four rows/core/rank. It is not a formatter bubble or repair stall. It is not an intrinsic HBM128-PC service floor. Four-request/128-response endpoint width does not establish corresponding physical response bandwidth.",
+  "functional_floor": {
+    "rows_per_layer_per_rank": 131072,
+    "CLK_edges_per_layer": 32768,
+    "layers": 36,
+    "payload_CLK_edges_for_36_fills": 1179648,
+    "nominal_CLK_fs": 833333,
+    "nominal_36_fill_us": 983.039606784,
+    "per_layer_refill": true,
+    "overlap": "subtract only measured independent GO-to-KV-demand windows per layer; control frames and stalls additional"
+  },
+  "measured_baseline": {
+    "simulator_pid": 1959093,
+    "preserved": true,
+    "observation_source": "SOCRATES_TO_COMPOSE_PROTECTED_STREAM4_BANDWIDTH_20261006.txt",
+    "rank0_delta_rows": 320,
+    "rank0_delta_core_edges": 80,
+    "other_ranks_measured": false,
+    "runtime_modified": false
+  },
+  "fix_assessment": {
+    "inadvertent_serialization_proven": false,
+    "within_current_wire_shape_4_to_128_fix": null,
+    "reason": "An arbiter-only edit cannot carry multiple independent 256-bit rows through one sealed504-bit full-record lane per edge. Existing FIFO depth is not spare wires. Bypassing ownership or tying credits/ACKs would violate finite protected semantics.",
+    "source_edit": "none justified by this diagnosis",
+    "required_owner_binding": "Claude QWEN-PHYS confirm actual charged return-lane/pin contract for current parent; if existing independently charged response lanes are supplied, bind each lane to independent protected return seats and remove the single global return selection without changing controller/golden order. No free lanes inferred."
+  },
+  "CDC_dependency": {
+    "raw_RSEL1_r8_not_protected_parent": true,
+    "protected_read_leaf_and_held_D0_enable_timing_still_required": true,
+    "wider_response_bandwidth_not_created_by_selector_reuse": true
+  },
+  "new_jobs": 0,
+  "passing_source_replays": 0,
+  "adopted": false,
+  "physical_qualified": false
+}

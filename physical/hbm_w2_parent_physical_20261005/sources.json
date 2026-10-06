@@ -1,0 +1,20 @@
+[
+  "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+  "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+  "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+  "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+  "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+  "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+  "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+  "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+  "rtl/link/ot_link_afifo.sv"
+]

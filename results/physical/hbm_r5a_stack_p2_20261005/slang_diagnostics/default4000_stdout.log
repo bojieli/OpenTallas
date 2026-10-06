@@ -1,0 +1,800 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/diag/read.ys' --
+
+1. Executing Liberty frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+Imported 1 cell types from liberty file.
+
+2. Executing SLANG frontend.
+Top level design units:
+    ot_hbm_accel_expert_stack_p2
+
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:10:9: error: unroll limit of 4000 exhausted [--unroll-limit=]
+        for (p=1;p<=71;p=p+1)
+        ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv:57:6: note: loop contributes to unroll tally
+     for(integer w=0;w<100;w++)layout[w]<=encode64(layout_raw[w*64+:64]);end
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:9:7: note: loop contributes to unroll tally
+      for (k=0;k<7;k=k+1)
+      ^~~~~~~~~~~~~~~~~~~
+../src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:7:7: note: loop contributes to unroll tally
+      for (p=1;p<=71;p=p+1)
+      ^~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[0].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[1].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[2].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[3].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[4].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[5].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[6].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[0].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[0].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[0].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[0].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[1].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[1].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[1].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[1].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[2].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[2].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[2].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[2].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[3].finaldata'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[3].$19.$2.d'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[3].$19.$2.x'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:53: warning: asynchronous load value missing for variable '\on.bankwrite[7].q[3].$19.$2.err'
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv:177:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin sel<=0;sel_n<='1;begin hv<=0;hv_n<=~(0);end begin herr<=0;herr_n<=~(0);end begin fv<=0;fv_n<=~(0);end begin fe<=0;fe_n<=~(0);end finalix<=0;finalix_n<='1;end
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Build failed: 1 error, 128 warnings
+<suppressed ~49256 debug messages>

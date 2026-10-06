@@ -1,0 +1,34 @@
+{
+  "verdict": "PASS_DIRECTED_STACK_ARBITER_AND_REAL_CALLBACKS",
+  "exit_code": 0,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "a6129b02eb347a0b2063d2b3ce7292d69c8996207add8271ff3dc4d18224866a",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "a3d9ea57412314505d0f6255b44845a52abe125f15f7a330420b20ab2fb3c4a3",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5af1f271972a17082430c9c2f53765967478c30566d36540ab3a006b2e58dc8e",
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "b40ea45dbebac2c4187df1adf81ef200c02c8f914640e9533d0a88c215cb5771",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv": "fcfd83374455b72a3d950c26cc1ecc0de3b79519842b0cdc2c1bdd67a3aedc27"
+  },
+  "compile_command": "iverilog -g2012 -s tb_qwen_s4_stack_transport -o /tmp/tb_qwen_s4_stack_transport_r3.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv rtl/lib/ot_reset_sync.sv rtl/hdc/kv/ot_qwen_s4_checked_state.sv rtl/hdc/kv/ot_qwen_s4_protected_ring.sv rtl/hdc/kv/ot_qwen_s4_protected_pc.sv rtl/hdc/kv/ot_qwen_s4_protected_control.sv rtl/hdc/kv/ot_qwen_s4_packet_link.sv rtl/hdc/kv/ot_qwen_s4_stack_transport.sv rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv",
+  "run_command": "stdbuf -oL vvp /tmp/tb_qwen_s4_stack_transport_r3.vvp",
+  "arbitration_PCs": 32,
+  "actual_R14_PCs": 32,
+  "actual_protected_PC_endpoints": 2,
+  "local_spans": 14,
+  "trunk_spans": 41,
+  "actual_WR_callbacks": 130,
+  "clock_ps": {
+    "free_CLK": 833.333,
+    "independent_HCLK": 1024
+  },
+  "gate": "actual HCLK desc/GO consume ACK; PC31 WR before PC0; ordered pool wrap; retained two-stage grant across warm; paired held landing pops; rejected WR ACK retains checked ticket/return-pool credit",
+  "physical_qualified": false,
+  "producer32_exact_replayed": false,
+  "numerical_fulltoken_claim": false
+}

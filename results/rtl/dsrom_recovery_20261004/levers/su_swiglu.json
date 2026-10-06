@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.dsrom-recovery.lever.v1",
  "lever": "su_swiglu",
- "verdict": "PENDING_SSFF",
+ "verdict": "ADOPT",
  "exact": true,
  "ss_ff": {
   "period_ps": 833.0,
-  "closes": false,
+  "closes": true,
   "basis": "routed ORFS asap7 0.833 ns, IO false-pathed (registered boundaries), tools/w18/corner_sta.py SS setup 60 ps / FF hold 25 ps",
   "lane": {
    "top": "ot_dsrom_su_swiglu_lane (ROUTED 1, LM5/LA4, exp range-reduction adds on the 6-cut f12 adder)",
@@ -40,13 +40,38 @@
    "note": "standard-cell area of the routed minimum components x replication; slot, corridor and hub storage not priced (die count is not scarce: owner)"
   },
   "component_timing_measured": true,
-  "incomplete_routes": {
+  "rope_slice": {
+   "top": "ot_dsrom_su_rope_slice P 4 LM 5 (8 ot_dsrom_su_rope_el: 2 f12 mul L5 + six-cut f12 add each; operands, cos/sin table words and the quantiser's input register (BF16 round) registered inside), the replicated element of the idx.q RoPE front",
+   "ss_setup_wns_ps": 7.99,
+   "ff_hold_wns_ps": 6.99,
+   "reg_to_reg_ss_ps": 7.99,
+   "reg_to_reg_ff_ps": 6.99,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "cell_area_um2": 15595.7,
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r8/route_sl8_k40_corner_sta.json",
+   "physical": "results/rtl/dsrom_recovery_20261004/su_swiglu/r8/route_sl8_k40_physical.json",
+   "split_basis": "owner closure procedure 2026-10-05 item 5: the whole-qbank NB4 RoPE route is 1.29M cells and was still in floorplan after 1 h; the front is 64 identical elements a 128-row, so the routed element is the slice and the qbank replicates it between registered boundaries"
+  },
+  "superseded_routes": {
    "rope_m6a5": {
     "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_m6a5_observation.json",
     "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
     "reason": "Driver observation timed out; actual OpenROAD PID2604449 remains in GRT repair. No timing verdict."
-   }
-  }
+   },
+   "rope_d65": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_d65_d45h_observation.json",
+    "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+    "reason": "Driver observation expired; underlying route remains in GRT hold repair. No timing verdict."
+   },
+   "rope_d45h": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_d65_d45h_observation.json",
+    "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+    "reason": "Driver observation expired; underlying route remains in GRT hold repair. No timing verdict."
+   },
+   "note": "whole-qbank RoPE routes on the LAT-4/5 adder (rope_m6a5, rope_d65, rope_d45h) and on the six-cut adder (rope7_*) stopped 2026-10-05 19:15-20:40 PT without a timing verdict: superseded by the routed slice (r8); rope6_* left running as a cross-check"
+  },
+  "boundaries": "every routed piece has registered boundaries: lane ROUTED 1, quantiser S0 input register + registered outputs, RoPE slice registers its operands and ends at the quantiser's input register; the parent's paths between them are the hub traverse's wire stages (33 in / 23 out, 504 um a stage), charged in every node's cycles"
  },
  "nodes": {
   "*.ffn.swiglu": {
@@ -72,6 +97,12 @@
    "source": "ot_dsrom_su_qbank NB32 QLAT5 (2 beats): 76 cyc at 1.2 GHz, exact L0/L3/L20/L24 + stress",
    "cls": "measured",
    "kind": "fused_fast"
+  },
+  "*.attn.idx.q": {
+   "us": 0.07417,
+   "source": "ot_dsrom_su_qbank NB32 ROPE 1 QLAT5 (index-q RoPE front on ot_dsrom_su_rope_el, then FP4 QDQ): 89 cyc at 1.2 GHz incl. the 33 / 23 hub traverse, exact L20/L24 golden + random (dpi_beh NB32 full shape, bit-level RTL NB8)",
+   "cls": "measured",
+   "kind": "fused_fast"
   }
  },
  "measurement": {
@@ -79,11 +110,13 @@
    "ffn.swiglu": 0.2155,
    "ffn.route_w": 0.0922,
    "ffn.quant2": 0.1756,
-   "attn.z_quant": 0.1322
+   "attn.z_quant": 0.1322,
+   "attn.idx.q": 0.291
   },
   "after_us": {
    "swiglu+route_w+quant2": 0.15833,
-   "z_quant": 0.06333
+   "z_quant": 0.06333,
+   "idx_q": 0.07417
   },
   "floor_cycles": {
    "swiglu": 178,
@@ -95,11 +128,13 @@
    "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
    "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_dpi_beh_NB32_m5a4q5_z_quant_idx_q.json",
    "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json",
-   "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB8_m5a4q5_idx_q.json"
+   "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB8_m5a4q5_idx_q.json",
+   "results/rtl/dsrom_recovery_20261004/su_swiglu/r6/run_dpi_beh_NB32_m5a4q5_idx_q_el.json",
+   "results/rtl/dsrom_recovery_20261004/su_swiglu/r6/run_rtl_NB8_m5a4q5_idx_q_el.json"
   ],
-  "idx_q": "exact (87 cyc = 0.0725 us vs 0.291 us); NOT adopted until its RoPE front routes (runs open)"
+  "idx_q": "exact 89 cyc = 0.07417 us vs 0.291 us (RoPE adds on the six-cut adder +2 cyc vs 87); RoPE slice routed SS 7.99 / FF 6.99 ps"
  },
  "default": "opt-in: applied only in the recovery baseline; new files only, nothing existing swapped",
  "binding_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/quantiser_source_difference.json",
- "note": "Quantiser top-source binding characterized: containing files have real changes in unused exp/lane modules, quantiser module and supporting source pins byte-identical. Current numerical gate source pins match; no replay. Active adoption remains PENDING_SSFF for parent boundary setup/hold and actual integration; historical ADOPT preserved. idx_q remains excluded pending RoPE routes."
+ "note": "ADOPT 2026-10-05 (Claude SU-fusion): lane, quantiser and the idx.q RoPE slice all routed SS60/FF25 at 0.833 ns; quantiser source binding as characterized (results/rtl/dsrom_recovery_20261004/su_fusion_takeover/quantiser_source_difference.json); previous PENDING_SSFF note: Quantiser top-source binding characterized: containing files have real changes in unused exp/lane modules, quantiser module and supporting source pins byte-identical. Current numerical gate source pins match; no replay. Active adoption remains PENDING_SSFF for parent boundary setup/hold and actual integration; historical ADOPT preserved. idx_q remains excluded pending RoPE routes."
 }

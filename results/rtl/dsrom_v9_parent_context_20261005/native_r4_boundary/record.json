@@ -1,0 +1,34 @@
+{
+  "source_commit": "6512685dd",
+  "engine_source_sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+  "loader_source_sha256": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+  "netlist_sha256": "3b5b8fc95fb5b84b292f3a4bc598ce94baa050f29c7b228ee38bfb4640bd7a51",
+  "verdict": "PASS_NATIVE_MAPPED_PROTECTIVE_RETENTION_AND_GO_BINDING",
+  "source_job": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r4-20261005",
+  "extraction_root": "/srv/opentallas-scratch/codex/fspine-v9-takeover-20261005/native_r4_boundary",
+  "retained_rails": [
+    "u_qx.u_e.fault$_DFF_PN0_",
+    "u_qx.u_e.g_mac[0].g_qyb.bkf_r$_DFF_PN0_",
+    "u_qx.u_e.g_mac[1].g_qyb.bkf_r$_DFF_PN0_",
+    "u_qx.u_e.g_qo.ff_d[0]$_DFF_PN0_",
+    "u_qx.u_e.g_qo.g_qyf.ffq$_DFF_PN0_"
+  ],
+  "fq_alias": "u_qx.u_e.fault$_DFF_PN0_",
+  "scope": "Completed technology-mapped native connectivity; no physical-clock arrival, sensitization, external receiver load or full-field qualification.",
+  "clock_topology": "clk -> actual ICG CLK/GCLK; registered gate enable same clk; XS/FOUR ROMs gated; protection outputs free",
+  "go_launch_startpoints": [
+    "u_ld.act$_DFFE_PN0P_/QN",
+    "u_sp.g_bst.u_bst.g_line.line[4878]$_DFF_PN0_/QN",
+    "u_sp.g_bst.u_bst.g_line.line[4879]$_DFF_PN0_/QN"
+  ],
+  "cfg_address_receivers": 0,
+  "cfg_receiver_load_qualified": false,
+  "cfg_read_capture_relation_qualified": false,
+  "CTS": false,
+  "SPEF": false,
+  "SSFF": false,
+  "missing_input_clocks": true,
+  "original_R2_smoke_repeated": false,
+  "new_physical_launched": false,
+  "ODB_pin_resolution": false
+}
