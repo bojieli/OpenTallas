@@ -1,0 +1,53 @@
+{
+  "FP32_words": 32,
+  "artifact_sha256": {
+    "CORRUPT_SHARED_OWNER.log": "0229706a6e9b987d996fb1258b0f49a935b8e599d91b788eabfb9d4eb48a8d42",
+    "CORRUPT_SINK_CONTROL.log": "02c8c911162d774701002e3dd438323555a9c0dea78263c7bf6016e023fc2457",
+    "compile.log": "915b2b782f2807efc9336f029d9e2b92a5e931ac1cef5a0b3a0683290e474d76",
+    "corrupt.log": "9f8524cd780513c4c4627e41677f02f3f900da1437dc103940e682432f20758c",
+    "normal.log": "04bbbd63dffd1cb9a9feea9349f0e0b8cbe45c068a7e0769cc79f0e7273e4b4d",
+    "payload_ce.log": "09aeeba90d57e0d35b97f134ed629b9029690ada57475e4339d29ead7f0f1d52",
+    "run.log": "d7dcd516ff6f0557701cc35f5721f63e57c73621e0324d1e192d62393d8a8081",
+    "runtime.rc": "8d6c81a2117607d9abacfdfdd4cb38794314e8113925d763eea2fafe4b775486",
+    "source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
+    "toolchain.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  },
+  "authority_negative_observation_edges": 12,
+  "clock_is_functional_not_signoff": true,
+  "command": "PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH NASH_W2_TRANSACTION_PIPELINE=1 NASH_W2_PROTECTION_CASES=1 bash src/tools/nash_w2_publication_gate.sh JOB",
+  "default_enabled": false,
+  "delivery_stall_edges": 7,
+  "delta_edges_vs_original_162": 34,
+  "delta_edges_vs_rejected_registered_181": 15,
+  "fixture_clock_ns": 10,
+  "full_readbacks": 4,
+  "last_verified_edge": 191,
+  "mode": "PROTECTED_TRANSACTION_PIPELINE=1",
+  "negative_cases": [
+    "CORRUPT_READBACK",
+    "CORRUPT_SINK_CONTROL",
+    "CORRUPT_SHARED_OWNER"
+  ],
+  "parent_condition": "real CP reset/quarantine must keep root POR high and preserve sink, borrower and CDC accepted debt until matched consumption",
+  "parent_warm_reset_tested": false,
+  "payload_CE": {
+    "added_release_edges": 0,
+    "held_owner_debt": true,
+    "injected_codeword": 8,
+    "protected_recheck": true,
+    "release_edge": 196,
+    "scope": "reserved ingress payload with provider accepted debt; not a selected-stage injection",
+    "service_can_overlap_other_reserved_row": true
+  },
+  "physical_admission": false,
+  "physical_binding_complete": false,
+  "release_edge": 196,
+  "request_stall_edges": 2,
+  "route_launched": false,
+  "rows": 4,
+  "shared_releases": 1,
+  "source_commit": "91714b0525e69d6eadb677fdcc3481e61bb3e3c0",
+  "verdict": "PASS_COMPONENT_EXACT",
+  "whole_token": false,
+  "writes": 4
+}

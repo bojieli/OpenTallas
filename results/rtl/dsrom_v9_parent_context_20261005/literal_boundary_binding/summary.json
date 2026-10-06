@@ -1,0 +1,132 @@
+{
+  "schema": "opentallas.dsrom_v9.parent.literal_mapped_pin_bindings.v1",
+  "projection_source": "a2beef00ca0319615b8c6020e2f82dd9e3a4d8db",
+  "engine_reference": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "scope": "Minimum source-faithful parent register projection; arithmetic/four real macros excluded. Full D64 return queues retained. Structural connectivity is not timing sensitization or a full-engine clock qualification.",
+  "database_stage": "1_synth.odb",
+  "qualified_CTS": false,
+  "qualified_SPEF": false,
+  "qualified_SSFF": false,
+  "missing_input_clocks": true,
+  "uncertainty_ps": {
+    "SS_setup": 60,
+    "FF_hold": 25
+  },
+  "period_ps": 833.333333333,
+  "raw_source_sha256": "b221b54855eaee824962d1a68ae0044eb6148d0f50d68463493537e3e5fb2fe6  /srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_synth.odb\n5803fa85324883e51b61836cc28ebb683a58a5067ee66239e35d5bb340693c95  /srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_synth.sdc\n",
+  "raw_connectivity_sha256": "0b4e67a696d9fe08a815be5a3d5612485bd489c8116a3acd75f48cbda7746349",
+  "family_counts": {
+    "busy_fault_free_capture": 2,
+    "go_free_capture": 4,
+    "reset_free_launch": 8,
+    "result_gated_launch": 126,
+    "config_go_free_capture": 55,
+    "XS_gated_capture": 549,
+    "gate_enable_free": 1,
+    "root_free_capture": 134,
+    "loader": 64,
+    "return64_free_capture": 9076,
+    "broadcast_D3_final": 1630
+  },
+  "structural_startpoint_counts": {
+    "busy_fault_free_capture:D": 2,
+    "busy_fault_free_capture:RESETN": 2,
+    "busy_fault_free_capture:SETN": 2,
+    "go_free_capture:D": 4,
+    "go_free_capture:RESETN": 4,
+    "go_free_capture:SETN": 4,
+    "reset_free_launch:D": 8,
+    "reset_free_launch:RESETN": 8,
+    "reset_free_launch:SETN": 8,
+    "result_gated_launch:D": 128,
+    "result_gated_launch:RESETN": 2,
+    "result_gated_launch:SETN": 2,
+    "config_go_free_capture:D": 57,
+    "config_go_free_capture:RESETN": 2,
+    "config_go_free_capture:SETN": 2,
+    "XS_gated_capture:D": 549,
+    "XS_gated_capture:RESETN": 1,
+    "XS_gated_capture:SETN": 1,
+    "gate_enable_free:D": 10,
+    "gate_enable_free:RESETN": 1,
+    "gate_enable_free:SETN": 1,
+    "root_free_capture:D": 134,
+    "root_free_capture:RESETN": 2,
+    "root_free_capture:SETN": 2,
+    "loader:D": 218,
+    "loader:RESETN": 8,
+    "loader:SETN": 8,
+    "return64_free_capture:D": 20122,
+    "return64_free_capture:RESETN": 426,
+    "return64_free_capture:SETN": 426,
+    "broadcast_D3_final:RESETN": 1630,
+    "broadcast_D3_final:SETN": 1630
+  },
+  "go_launch_startpoints": [
+    "u_ld.act$_DFFE_PN0P_/QN",
+    "u_sp.g_bst.u_bst.g_line.line\\[4878\\]$_DFF_PN0_/QN",
+    "u_sp.g_bst.u_bst.g_line.line\\[4879\\]$_DFF_PN0_/QN"
+  ],
+  "gate": {
+    "instance": "g_qx.g_cg.u_cg.u_icg",
+    "master": "ICGx1_ASAP7_75t_R",
+    "pins": {
+      "ENA": "g_qx.g_cg.u_cg.en",
+      "GCLK": "engine_clk",
+      "SE": "_055993_",
+      "CLK": "clk"
+    },
+    "ENA_startpoints": [
+      "g_qx.g_qz_cg.u_z/q$_DFF_PN1_/QN"
+    ],
+    "ENA_driver_chain": [
+      {
+        "pin": "g_qx.g_qz_cg.u_z/_2_/Y",
+        "net": "g_qx.g_cg.u_cg.en",
+        "master": "INVx3_ASAP7_75t_R"
+      },
+      {
+        "pin": "g_qx.g_qz_cg.u_z/q$_DFF_PN1_/QN",
+        "net": "g_qx.g_qz_cg.u_z/_0_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      }
+    ]
+  },
+  "unresolved_fault_binding": {
+    "canonicalized_PQ0_loader_fault": "connect fault 1'x",
+    "canonicalized_source": "map_r2/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_1_yosys_canonicalize.rtlil:24535",
+    "mapped_fault_D": "fault$_DFF_PN0_/D",
+    "mapped_fault_D_driver": "_103413_/H TIEHIx1_ASAP7_75t_R",
+    "absent_source_register_families": [
+      "g_qx.g_qo.ff_d",
+      "g_qx.g_qo.ffq",
+      "g_qx.g_qo.fq",
+      "g_qx.g_mac[*].bkf_r"
+    ],
+    "qualification": "NO fault timing coverage; source PQ0 reset-only fault collapsed to X at Slang canonicalization. No current-route mutation or full-engine claim."
+  },
+  "artifact_sha256": {
+    "PQ0_loader_canonicalized.rtlil": "a168066831456ca7ba665238d2fc2b3d2ccb91b37954556b0c7870ea149628b4",
+    "additional_source.sha256": "c1ea05988a8919e6009c749c109b7211db9f49cef6c95616134b8a93fb482652",
+    "cell_pins.tsv.gz": "ef3bfd014a2de45818192b8873d5b0bf8c8c8620c9b5e1dd957ba81731dec421",
+    "headroom.json": "9869b2852c80569c3cef2ffd060ed2ed6d3547724eecae5d93ba28813075a4af",
+    "literal_boundary_pins.tcl": "01d21662ae5bed179cee139a483e209df11874f8864b3a594361b406ec12a68d",
+    "literal_pin_bindings.json.gz": "cfb6bd1581d997db680b47c02d6fb5cf4f0714998e6298b7d73a7409a1494343",
+    "ports.tsv": "27f41129550bb88bf860a7a2c018382f4a955214d3f2fa91164ed8f65875b691",
+    "probe.log": "db12bcce35e86f6f4163bcab355bc83728f500fa9fe6ec797e2679478e85c7ee",
+    "source.sha256": "061e135e45b450dbe0a064b70515c80492c11e2c0ac6b1dda78612bbecfe02b8",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "validation_headroom.json": "414baf4e7e664af386a3470b04624bdb0109d340da035447d7e76d47ce512e89",
+    "validation_probe.log": "b49581eceb813c9fd227e12aeae97493869e57021bb753c03b25620106f2db35",
+    "validation_probe.tcl": "4bfa2c68ebc1ce71853a749266771651029845b6f6291472418a4970d13f2fc0",
+    "validation_source.sha256": "061e135e45b450dbe0a064b70515c80492c11e2c0ac6b1dda78612bbecfe02b8",
+    "validation_terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "validation": {
+    "result": "OT_PARENT_LITERAL_BOUNDARY_PINS_PASS",
+    "source_database_immutable": true,
+    "pin_queries": "Every listed literal pin resolves exactly once in pinned completed-stage ODB/SDC.",
+    "tool_log": "validation_probe.log",
+    "pre_CTS": true
+  }
+}

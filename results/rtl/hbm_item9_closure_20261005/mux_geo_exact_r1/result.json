@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS_GEO_FULL32_LOCKSTEP",
+  "NSM": 32,
+  "NL": 128,
+  "cycles": 2048,
+  "grants": 209,
+  "new_cycles": 0,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_geo.sv": "485b6e665599ca4e919d0fff3a2cfebf6123d2c78bc3b5dc5285721831af2596",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_mux32_geo_ls.sv": "a13426d0a44a6d1c0960196b991a51390903c2899969af1003cd2310963c61e6"
+  },
+  "adopted": false
+}

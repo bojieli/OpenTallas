@@ -1,0 +1,62 @@
+{
+  "scope": "conditional G4W16 child boundary; not parent closure",
+  "route": "/srv/opentallas-scratch2/scratch/claude/dsrom-fh-close/runs/C9u35/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ctx_asap7_C9u35/base",
+  "original_sha256": {
+    "6_final.odb": "9086b3aae0c2d58d7e9489c757a3efe1ecb155c2dab9e7e903ed409d1eed1774",
+    "6_final.sdc": "295d4bd6fdb4224365e9013356c80225c7c8ee3211405cef370bd4f7dd7f4c53",
+    "6_final.spef": "7b975b5342440684aa103cdbe34224e06549bd297909227ec02fc5d4c0f491f7",
+    "6_final.v": "bd3c490e2eaf73d67e1ec1dabb4a26f302d833a86cc458164c836c704614987c"
+  },
+  "original_context_sdc_sha256": "79543b65716645b6a9624645645226b46ad39ab173c87fbb678f2cc859c2ea13",
+  "tool_sha256": {
+    "tools/dsrom_fh_boundary_sta.py": "ed5956459e36ea50b5be23df6c02323a34d648a5264bfe73a4065c077516b659",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "model_macro": "ot_sram_1r1w_512x128_m4_r2c2",
+  "physical_closed": false,
+  "adopted": false,
+  "corners": {
+    "ss": {
+      "exit": 0,
+      "paths_slack_ps": {
+        "input_setup": -121.093468,
+        "input_hold": 410.319824,
+        "address_setup": 465.103516,
+        "address_hold": 74.681816
+      },
+      "valid": true,
+      "boundary_met": false,
+      "macro_lib_sha256": "ca6192f9a802f2d4aba9d1f8790fb702cabda02cae6617746b5754fade16e173",
+      "macro_nominal_clkq_ps": 524.0724742442052,
+      "address_and_ce_load_ff": 2.315064,
+      "unrouted_macro_clock_load_ff": 138.94016,
+      "capture_relation": "same local reference leaf, zero additional SRAM clock skew; unresolved parent CTS",
+      "macro_output_driver": "corner macro nominal clkQ and intrinsic slew; optimistic unloaded source",
+      "unresolved_macro_output_load": "Macro output resistance/load delay is absent; a passing screen cannot qualify this boundary",
+      "macro_constraint_reference": "nominal macro setup/hold; parent input/clock slew tables remain unresolved"
+    },
+    "ff": {
+      "exit": 0,
+      "paths_slack_ps": {
+        "input_setup": 249.298691,
+        "input_hold": 257.133148,
+        "address_setup": 617.449402,
+        "address_hold": 19.057449
+      },
+      "valid": true,
+      "boundary_met": true,
+      "macro_lib_sha256": "18a3127431ea348a3e87052ac5160fc2b46d748f9e70aef454da217102ea7864",
+      "macro_nominal_clkq_ps": 346.0436643943168,
+      "address_and_ce_load_ff": 2.734864,
+      "unrouted_macro_clock_load_ff": 165.9712,
+      "capture_relation": "same local reference leaf, zero additional SRAM clock skew; unresolved parent CTS",
+      "macro_output_driver": "corner macro nominal clkQ and intrinsic slew; optimistic unloaded source",
+      "unresolved_macro_output_load": "Macro output resistance/load delay is absent; a passing screen cannot qualify this boundary",
+      "macro_constraint_reference": "nominal macro setup/hold; parent input/clock slew tables remain unresolved"
+    }
+  },
+  "valid": true,
+  "verdict": "BOUNDARY_NOT_CLOSED",
+  "original_unchanged": true
+}

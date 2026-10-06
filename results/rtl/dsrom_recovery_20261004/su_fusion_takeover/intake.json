@@ -1,0 +1,164 @@
+{
+ "schema": "opentallas.dsrom-su-fusion.takeover.v1",
+ "generated_utc": "2026-10-05T20:27:33.813365+00:00",
+ "owner": "Codex:su-fusion (from Claude)",
+ "branches": {
+  "claude/dsrom-su-norm-20261004": "9e7e79b5811469d484c7cb19af0951c158d175ea",
+  "claude/dsrom-su-swiglu-r2-20261005": "91c5bb8f7bf7b96249f6365a11dd1ce2d5b8e9b9",
+  "claude/dsrom-su-softmax-20261004": "ae1a241dc8e167cad79e705a7e56001996f836de"
+ },
+ "model": "tools/dsrom_1m_allmeasured.py with existing su_chains/takeover/physical_admission.json and measured full-shape chain records; no new RTL variant or route launched",
+ "checks": [
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_kv_dpi_N512_la6.json",
+   "sha256": "a9dfe08f9592bbc5f5679a52d46c7eecc160464f376bb412b0d23b0282d898ad",
+   "exact": true,
+   "pinned_files": 24,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_hc_rtl_N64_la6.json",
+   "sha256": "f823faebf372c32ba4de5d837f9ba4777f661d12938d4633bb88d0e7a1d8d53a",
+   "exact": true,
+   "pinned_files": 21,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_q_rtl_N64_la6.json",
+   "sha256": "24c50ce2dbb77814b892c4ad19dae7e8bafc484e6942fcc2294fe2e1b38e8e74",
+   "exact": true,
+   "pinned_files": 21,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_kv_rtl_N64_la6.json",
+   "sha256": "36ae196d584eee508c28591f253a59f819c4312a0f25fabc236b8d5a5f6ca022",
+   "exact": true,
+   "pinned_files": 21,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_q_dpi_N256_la6.json",
+   "sha256": "57edbe3bbdc29745e3df21de8bbe388e1c108c26c3d96df189916338921ed3b1",
+   "exact": true,
+   "pinned_files": 24,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_norm/run_hc_dpi_N1024_la6.json",
+   "sha256": "76ec7a19b940e978e2e4cb7767fa814e3b846a4871e6d9661a3e254d100ce464",
+   "exact": true,
+   "pinned_files": 24,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB8_m5a4q5_idx_q.json",
+   "sha256": "3788b155d8f2263b63490846ed6484f7da36731e509c0c0503267c24f4660120",
+   "exact": true,
+   "pinned_files": 19,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json",
+   "sha256": "f3810266cd3c55cc72c25f366cf5367e55d73d5070d8008783696021fb0f0fa6",
+   "exact": true,
+   "pinned_files": 19,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
+   "sha256": "ae37684297e75b1fe44aec0d0bf8723d65079a8ffe7e18dfc01072419dc0ab4b",
+   "exact": true,
+   "pinned_files": 19,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_dpi_beh_NB32_m5a4q5_z_quant_idx_q.json",
+   "sha256": "e067914a337370d176326c12d7025620f9448b9c239e8e1c07f1c3cb670f42ef",
+   "exact": true,
+   "pinned_files": 19,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_dpi_beh_W1024_NB32_m5a4q5_swiglu.json",
+   "sha256": "d433f6034c13e9ed9ab6a1c7fd4798640e3093a79df497c520b1c26bdfd79ad2",
+   "exact": true,
+   "pinned_files": 19,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json",
+   "sha256": "8bb29f8018ac0ff2c4412207e05e060f9eb099456fb6e3de6d6e21fae81f8aef",
+   "exact": true,
+   "pinned_files": 16,
+   "mismatches": []
+  },
+  {
+   "record": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16m65.json",
+   "sha256": "4a22e61273832d778fe427c349c54612089fbe613938ff241a935e27fda0a952",
+   "exact": true,
+   "pinned_files": 16,
+   "mismatches": []
+  }
+ ],
+ "shared_primitives": "Existing f12 files copied byte-identically from preserved branch; no modifications to HBM SU or common arithmetic sources.",
+ "parent_requirements": {
+  "norm": "Input hold excluded by su_norm_unit.sdc; parent clock-balance proof still required. Only mix LA6 closes; core16 LA6 routes running.",
+  "swiglu": "False-path-io component closure only; parent registered-neighbour setup/hold and hub routing-layer checks remain required. Quantiser two full-file source pins differ from current RTL.",
+  "softmax": "False-path-io routes are component-only; parent boundary setup/hold and hub routing-layer checks remain required."
+ },
+ "active_results": {
+  "norm": {
+   "host": "ot-epyc1tb",
+   "paths": [
+    "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_6a",
+    "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_6b",
+    "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_6c"
+   ]
+  },
+  "softmax": {
+   "ot-epyc1tb": [
+    "r2u30d4",
+    "r2u35h"
+   ],
+   "ot-epyc2": [
+    "r2u40"
+   ],
+   "ot-pve1": [
+    "r2u30"
+   ],
+   "ot-agidock128": [
+    "r2u25"
+   ]
+  },
+  "swiglu_rope": {
+   "ot-epyc1tb": [
+    "rope_d65",
+    "rope_m6a5"
+   ],
+   "ot-agidock128": [
+    "rope_d45h"
+   ]
+  }
+ },
+ "adoption": "This takeover makes no new adoption. Main retained concurrent SwiGLU ADOPT. Norm and softmax remain pending; legacy main norm source is not qualified by the LA6 exact records.",
+ "launches": 0,
+ "exact_bench_replays": 0,
+ "claude_worktrees_and_live_jobs_preserved": true,
+ "integration": {
+  "main_merge": "d044b6d45",
+  "policy": "Main conflicting hunks preserved with -X ours",
+  "main_norm_differs_from_la6_records": [
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/test/tb_dsrom_su_norm.sv",
+   "tools/dsrom_su_norm.py"
+  ],
+  "la6_snapshot": {
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/ot_dsrom_su_norm.sv": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/tb_dsrom_su_norm.sv": "fcdb57ca72faf67c0a4831c585f65dfd1bc09e42a47a7c40416efefc30d02272",
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/dsrom_su_norm.py": "f6f024aa6977d6707a3ad06b85ace40c8cd551073075a39fba91864bf362e6d0"
+  },
+  "main_swiglu_verdict": "ADOPT retained from concurrent main integration; source-binding concern in this receipt is unresolved, not an adoption decision",
+  "current_exactness_scope": "Checks above bind isolated preserved branch sources, not the conflicting main norm variant. Live norm routes still use the byte-identical LA6 source on EPYC1."
+ }
+}

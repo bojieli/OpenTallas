@@ -1,0 +1,18 @@
+{
+  "status": "PASS_DRIVER_TU_ONLY",
+  "exits": {
+    "compile": 0,
+    "link": 0,
+    "ABI_probe": 0
+  },
+  "new_frontend_launched": false,
+  "linked_runtime_exercised": false,
+  "full_token_exercised": false,
+  "physical_qualified": false,
+  "existing_compiled_seam_exports": {
+    "warm_rst_n": false,
+    "hold_rows": false,
+    "bad_ack_tag": false,
+    "join_debt": false
+  }
+}

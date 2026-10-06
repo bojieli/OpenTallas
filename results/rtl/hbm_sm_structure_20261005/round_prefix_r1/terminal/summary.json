@@ -1,0 +1,22 @@
+{
+  "verdict": "EXACT_FULL_NC8_PASS_PHYSICAL_PENDING",
+  "adopt": false,
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-prefix-7380daa57",
+  "source_faithful_checkpoint": true,
+  "evidence_sha256": {
+    "build_admission.json": "357bfd99dab736a9b1729ae170fbbfd9d1806dd07f0f20cabc68d2c4d6b73020",
+    "ar_l20.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "stress.json": "acc770fdf7966d4e694161d43e4875232d3c9fd4e3eaca12eab665819b8e8835",
+    "p6_l20.json": "c6995e6afab385d89066d411d4332809dbb000570a61f6e591ba475fea3514a7",
+    "ar_l20.json": "4dff34bc88402a9bff92f265e76f80e4a56506b5ceb4593bcf04fe34e1b9e307",
+    "status": "3a6166db96478d9e1185dc6af421bb97fe9115db4a8a4953515de8cb5b046803",
+    "stress.log": "f3acdc5d1c938dae3a155f6e9d545c2175454be60fe777a27fabf74a085f04dd",
+    "cycle_comparison.json": "8b510658e43b737b120d397affd53a82608d41f49309ea835e73683329baaeb6",
+    "ar_l20.log": "c2c9051042fdbacc27b5a088a72ca87e7111656932fec1543f07361fa4933bae",
+    "p6_l20.log": "8dc8c055ca14c5592055d279d10120718049326839bc4e712bee3af891eb80b0",
+    "stress.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "p6_l20.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "scope": "Existing fullNC8 stress/AR/P6 exact fixture; nominal1ns clock only; source7380daa57; SSFF/gain/adoption pending"
+}

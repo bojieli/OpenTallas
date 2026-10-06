@@ -1,0 +1,98 @@
+kind	instance	pin	net	cap_fF	receivers
+macro_input	g_hard_cfg.u_cfg	clk	clk	10.373200	
+macro_input	g_hard_cfg.u_cfg	ce_in	cfg_rom_read_ce	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[0]	cfg_rom_read_a[0]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[1]	cfg_rom_read_a[1]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[2]	cfg_rom_read_a[2]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[3]	cfg_rom_read_a[3]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[4]	cfg_rom_read_a[4]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[5]	cfg_rom_read_a[5]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[6]	cfg_rom_read_a[6]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[7]	cfg_rom_read_a[7]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[8]	cfg_rom_read_a[8]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[9]	cfg_rom_read_a[9]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[10]	cfg_rom_read_a[10]	0.683700	
+macro_input	g_hard_cfg.u_cfg	addr_in[11]	cfg_rom_read_a[11]	0.683700	
+macro_output	g_hard_cfg.u_cfg	rd_out[0]	g_hard_cfg.q\[0\]	0.634173	{_656_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[1]	g_hard_cfg.q\[1\]	0.634173	{_654_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[2]	g_hard_cfg.q\[2\]	0.634173	{_652_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[3]	g_hard_cfg.q\[3\]	0.626818	{_648_ B v=0.626818}
+macro_output	g_hard_cfg.u_cfg	rd_out[4]	g_hard_cfg.q\[4\]	0.626818	{_644_ B v=0.626818}
+macro_output	g_hard_cfg.u_cfg	rd_out[5]	g_hard_cfg.q\[5\]	0.626818	{_640_ B v=0.626818}
+macro_output	g_hard_cfg.u_cfg	rd_out[6]	g_hard_cfg.q\[6\]	0.634173	{_637_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[7]	g_hard_cfg.q\[7\]	0.634173	{_635_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[8]	g_hard_cfg.q\[8\]	0.634173	{_631_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[9]	g_hard_cfg.q\[9\]	0.634173	{_629_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[10]	g_hard_cfg.q\[10\]	0.634173	{_627_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[11]	g_hard_cfg.q\[11\]	0.634173	{_625_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[12]	g_hard_cfg.q\[12\]	0.634173	{_623_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[13]	g_hard_cfg.q\[13\]	0.634173	{_621_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[14]	g_hard_cfg.q\[14\]	0.634173	{_619_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[15]	g_hard_cfg.q\[15\]	0.634173	{_617_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[16]	g_hard_cfg.q\[16\]	0.634173	{_615_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[17]	g_hard_cfg.q\[17\]	0.634173	{_613_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[18]	g_hard_cfg.q\[18\]	0.634173	{_609_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[19]	g_hard_cfg.q\[19\]	0.634173	{_607_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[20]	g_hard_cfg.q\[20\]	0.634173	{_605_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[21]	g_hard_cfg.q\[21\]	0.634173	{_603_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[22]	g_hard_cfg.q\[22\]	0.634173	{_601_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[23]	g_hard_cfg.q\[23\]	0.634173	{_599_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[24]	g_hard_cfg.q\[24\]	0.634173	{_597_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[25]	g_hard_cfg.q\[25\]	0.634173	{_595_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[26]	g_hard_cfg.q\[26\]	0.634173	{_593_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[27]	g_hard_cfg.q\[27\]	0.634173	{_591_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[28]	g_hard_cfg.q\[28\]	0.634173	{_587_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[29]	g_hard_cfg.q\[29\]	0.634173	{_585_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[30]	g_hard_cfg.q\[30\]	0.634173	{_583_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[31]	g_hard_cfg.q\[31\]	0.634173	{_581_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[32]	g_hard_cfg.q\[32\]	0.634173	{_579_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[33]	g_hard_cfg.q\[33\]	0.634173	{_577_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[34]	g_hard_cfg.q\[34\]	0.634173	{_575_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[35]	g_hard_cfg.q\[35\]	0.634173	{_573_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[36]	g_hard_cfg.q\[36\]	0.634173	{_571_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[37]	g_hard_cfg.q\[37\]	0.634173	{_569_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[38]	g_hard_cfg.q\[38\]	0.634173	{_565_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[39]	g_hard_cfg.q\[39\]	0.634173	{_563_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[40]	g_hard_cfg.q\[40\]	0.634173	{_561_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[41]	g_hard_cfg.q\[41\]	0.634173	{_559_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[42]	g_hard_cfg.q\[42\]	0.634173	{_557_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[43]	g_hard_cfg.q\[43\]	0.634173	{_555_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[44]	g_hard_cfg.q\[44\]	0.634173	{_553_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[45]	g_hard_cfg.q\[45\]	0.634173	{_551_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[46]	g_hard_cfg.q\[46\]	0.634173	{_549_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[47]	g_hard_cfg.q\[47\]	0.634173	{_714_ A2 v=0.634173}
+macro_output	g_hard_cfg.u_cfg	rd_out[48]	g_hard_cfg.q\[48\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[49]	g_hard_cfg.q\[49\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[50]	g_hard_cfg.q\[50\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[51]	g_hard_cfg.q\[51\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[52]	g_hard_cfg.q\[52\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[53]	g_hard_cfg.q\[53\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[54]	g_hard_cfg.q\[54\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[55]	g_hard_cfg.q\[55\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[56]	g_hard_cfg.q\[56\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[57]	g_hard_cfg.q\[57\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[58]	g_hard_cfg.q\[58\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[59]	g_hard_cfg.q\[59\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[60]	g_hard_cfg.q\[60\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[61]	g_hard_cfg.q\[61\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[62]	g_hard_cfg.q\[62\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[63]	g_hard_cfg.q\[63\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[64]	g_hard_cfg.q\[64\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[65]	g_hard_cfg.q\[65\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[66]	g_hard_cfg.q\[66\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[67]	g_hard_cfg.q\[67\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[68]	g_hard_cfg.q\[68\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[69]	g_hard_cfg.q\[69\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[70]	g_hard_cfg.q\[70\]	0.	
+macro_output	g_hard_cfg.u_cfg	rd_out[71]	g_hard_cfg.q\[71\]	0.	
+loader_address_port		cfg_rom_a[0]	cfg_rom_a[0]	1.230128	{_701_ A1 v=0.610120} {_535_ A1 v=0.620008}
+loader_address_port		cfg_rom_a[10]	cfg_rom_a[10]	0.551033	{_723_ A1 v=0.551033}
+loader_address_port		cfg_rom_a[1]	cfg_rom_a[1]	1.254181	{_699_ A1 v=0.620008} {_535_ A2 v=0.634173}
+loader_address_port		cfg_rom_a[2]	cfg_rom_a[2]	0.626818	{_535_ B v=0.626818}
+loader_address_port		cfg_rom_a[3]	cfg_rom_a[3]	0.	
+loader_address_port		cfg_rom_a[4]	cfg_rom_a[4]	0.	
+loader_address_port		cfg_rom_a[5]	cfg_rom_a[5]	0.626818	{_689_ B v=0.626818}
+loader_address_port		cfg_rom_a[6]	cfg_rom_a[6]	0.	
+loader_address_port		cfg_rom_a[7]	cfg_rom_a[7]	2.2496400000000003	{_679_ A1 v=0.516880} {_677_ A v=0.656930} {_481_ A v=1.075830}
+loader_address_port		cfg_rom_a[8]	cfg_rom_a[8]	0.536639	{_673_ A1 v=0.536639}
+loader_address_port		cfg_rom_a[9]	cfg_rom_a[9]	1.07583	{_450_ A v=1.075830}

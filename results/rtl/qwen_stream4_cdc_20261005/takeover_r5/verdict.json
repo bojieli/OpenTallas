@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.qwen.stream4.cdc.r5.actual-terminal.v1",
+  "source_commit": "6fc28b155c419ee79da72f1eb084aae2141f1f64",
+  "mode": "NEAR_HBM=0; DSpark=OFF; external HCLK1024ps, core CLK833.333ps; candidate only",
+  "scope": "One full-size per-PC CDC element with landing64x281/write16x289/write-done64x9; system replication128 not routed here",
+  "policy": {
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "setup_corner": "SS",
+    "hold_corner": "FF",
+    "adopted": false,
+    "headline_credit": false
+  },
+  "routes": [
+    {
+      "case": "r5_s2_u30",
+      "host": "ot-epyc1tb",
+      "source_sha256": "a97f5b3fd85862509c09f48b43e3b27eec48baac6739e67c71952f5e0b1e9f3a",
+      "driver_exit": 0,
+      "corner_exit": 0,
+      "SS_setup_ps": 12.19,
+      "FF_hold_ps": 11.45,
+      "max_slew_violations": 12,
+      "drc": 0,
+      "antenna": 0,
+      "timing_pass": true,
+      "physical_pass": false,
+      "verdict": "REJECT_PHYSICAL_MAX_SLEW",
+      "source_snapshot_only_not_selected": true
+    },
+    {
+      "case": "r5_s2_u50",
+      "host": "ot-epyc1tb",
+      "source_sha256": "a97f5b3fd85862509c09f48b43e3b27eec48baac6739e67c71952f5e0b1e9f3a",
+      "driver_exit": 0,
+      "corner_exit": 0,
+      "SS_setup_ps": 16.56,
+      "FF_hold_ps": 8.45,
+      "max_slew_violations": 34,
+      "drc": 0,
+      "antenna": 0,
+      "timing_pass": true,
+      "physical_pass": false,
+      "verdict": "REJECT_PHYSICAL_MAX_SLEW",
+      "source_snapshot_only_not_selected": true
+    }
+  ],
+  "slew_u30": {
+    "limit_ps": 320,
+    "worst_ps": 337.55,
+    "worst_pin": "_209478_/B",
+    "driver": "place17915 BUFx5, fed through place17916/place17917 from _209387_ AND3 decoded landing write enable",
+    "actual_sink": "lmem[37][240]$_DFFE_PP_",
+    "group_index_synthesis_alias": "lwg[0].wi low bits merged with lw_bin; kept source declarations alone are not proof of replicated physical drivers"
+  },
+  "model": {
+    "existing": "model/selected_P0_clock_boundary_r5.json and model/unified_registration.json",
+    "no_new_model_or_hardware": true,
+    "protected_periodic_provider_qualification": "Separate existing priced requirement; raw candidate does not implement the protected rings/control. No adoption/clock/protection waiver."
+  },
+  "exact_gate": {
+    "state": "RUNNING_EXISTING_R5_JOB",
+    "host": "ot-epyc2",
+    "supervisor": 1970686,
+    "bench_root": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc/bench",
+    "resumed_guard": {
+      "pid": 1970691,
+      "start_ticks": "5547646",
+      "load_1min": 88.9921875,
+      "mem_available_GiB": 673.081600189209,
+      "disk_available_GiB": 2338.7898025512695
+    },
+    "existing_queued_command": "build.sh src5 cdc 2 b_r5; r5_ALL phases0/511000; r5_CHAIN phases137000/901000",
+    "rebuilt_or_relaunched": false,
+    "claim": "No r5 bench terminal claimed in this physical terminal record"
+  }
+}

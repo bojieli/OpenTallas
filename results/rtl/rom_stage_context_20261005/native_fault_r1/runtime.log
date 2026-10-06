@@ -1,0 +1,11 @@
+FAULT_PASS family=0 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=1 retained_valid=0ffffff retained_dirty=1fffffe
+FAULT_PASS family=2 retained_valid=1ffffff retained_dirty=0fffffe
+FAULT_PASS family=3 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=4 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=5 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=6 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=7 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=8 retained_valid=1ffffff retained_dirty=1fffffe
+FATAL: ../native-fault-r1/tb_w5_ao_protection.sv:48: fault failed exclusion f=9
+       Time: 824010  Scope: tb_w5_ao_protection

@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.hbm.attention.actual_h16_cts_failure.v1",
+  "source_commit": "d42ab03089f6da7a0f747f5bb4bbbc2a2debbb38",
+  "physical_shape": "fullH16/NBANK5/F121/FPL6/FML8; sixteen original measured heads in selected1349.112x1349.976um slot",
+  "clock_period_ps": 833.3333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "IO_false_paths": false,
+  "hold_repair_margin_ps": 10,
+  "native_error": "RSZ-0060",
+  "inserted_hold_buffers": 28221,
+  "resized_instances": 3559,
+  "CTS_hold_WNS_ps": -2398.385,
+  "worst_endpoint": "g_g[4].u_g/ib[27]",
+  "native_peak_KiB": 7129108,
+  "power_connectivity": {
+    "VDD": "PASS",
+    "VSS": "FAIL_PSM0069_boundary_tap_instances"
+  },
+  "completed_synthesis_placement_PDN_retained": true,
+  "SS_FF_context_qualified": false,
+  "adopted": false,
+  "gain_claim": null,
+  "next_action": "Classify actual macro-input hold clock relations on retained CTS precursor; source-faithful register cut and power-boundary repair must be priced and exact before one necessary continuation. No density/hold-margin retry."
+}

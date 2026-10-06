@@ -1,0 +1,8 @@
+PHASE PASS pf=64 results=4 first_issue=10 first_result=33 last_result=39 first_latency_cycles=23 period_ps=833.333334
+PHASE PASS pf=384 results=24 first_issue=62 first_result=85 last_result=131 first_latency_cycles=23 period_ps=833.333334
+DESTINATION PASS no slot write
+PASS changedHA2 CUTS1 LANES16 PF384 28 packed512b words host FP32-tree/BF16 golden; first_latency23 unchanged; runtime rearm and header validation
+- results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_cuts_fullshape.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 128ns; walltime 0.016 s; speed 7.914 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 12 MB

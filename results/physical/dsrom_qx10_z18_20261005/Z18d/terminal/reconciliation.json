@@ -1,0 +1,451 @@
+{
+  "schema": "opentallas.dsrom-qx10-z18d.terminal-source-reconciliation.v1",
+  "verdict": "REJECT_FF_HOLD_NO_QUALIFIED_HANDOFF",
+  "source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "clean_source_at_launch": true,
+  "geometry_um": [
+    510.84,
+    151.2
+  ],
+  "real_ROM_instances": 4,
+  "route_source_rows": [
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+      "sha256": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+      "sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain3.sv",
+      "sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain4.sv",
+      "sha256": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd2.sv",
+      "sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm3_w10.sv",
+      "sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm4_w10.sv",
+      "sha256": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree3.sv",
+      "sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree4.sv",
+      "sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree5.sv",
+      "sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    }
+  ],
+  "source_match_count": 27,
+  "owner_receipt_matches_original_logs": true,
+  "flow_completed": true,
+  "flow_acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 35.0,
+        "hold_wns_ns": -0.00778602,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.00366762,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "final_context": {
+    "SS_setup_wns_ps": 3.667621776504298,
+    "SS_setup_tns_ps": 0,
+    "FF_hold_wns_ps": -10.835526963457616,
+    "FF_hold_tns_ps": -14.699103104591249,
+    "FF_hold_violating_endpoints": 3,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "DRC": 0,
+    "max_fanout_violations": 0,
+    "combined_corner_hold_violations": 35,
+    "combined_corner_hold_wns_ps": -7.78602,
+    "combined_corner_summary_is_not_separate_FF_report": true,
+    "all_reported_classes": [
+      {
+        "report": "cls_FF.all.paths",
+        "worst_ps": -10.8,
+        "reported_paths": 300,
+        "negative_reported_paths": 3
+      },
+      {
+        "report": "cls_FF.async.paths",
+        "worst_ps": 32.1,
+        "reported_paths": 300,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "cls_FF.icg.paths",
+        "worst_ps": 292.5,
+        "reported_paths": 1,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "cls_FF.reg.paths",
+        "worst_ps": -10.8,
+        "reported_paths": 300,
+        "negative_reported_paths": 3
+      },
+      {
+        "report": "cls_SS.all.paths",
+        "worst_ps": 3.7,
+        "reported_paths": 300,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "cls_SS.async.paths",
+        "worst_ps": 133.9,
+        "reported_paths": 300,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "cls_SS.icg.paths",
+        "worst_ps": 107.6,
+        "reported_paths": 1,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "cls_SS.reg.paths",
+        "worst_ps": 3.7,
+        "reported_paths": 300,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "final_FF.paths",
+        "worst_ps": -10.8,
+        "reported_paths": 40,
+        "negative_reported_paths": 3
+      },
+      {
+        "report": "final_SS.paths",
+        "worst_ps": 3.7,
+        "reported_paths": 40,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_FF.in_max.paths",
+        "worst_ps": 111.0,
+        "reported_paths": 6,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_FF.in_min.paths",
+        "worst_ps": 116.4,
+        "reported_paths": 6,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_FF.out_max.paths",
+        "worst_ps": 546.1,
+        "reported_paths": 3,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_FF.out_min.paths",
+        "worst_ps": 8.7,
+        "reported_paths": 3,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_SS.in_max.paths",
+        "worst_ps": 86.4,
+        "reported_paths": 6,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_SS.in_min.paths",
+        "worst_ps": 39.5,
+        "reported_paths": 6,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_SS.out_max.paths",
+        "worst_ps": 197.7,
+        "reported_paths": 3,
+        "negative_reported_paths": 0
+      },
+      {
+        "report": "io_SS.out_min.paths",
+        "worst_ps": 284.8,
+        "reported_paths": 3,
+        "negative_reported_paths": 0
+      }
+    ],
+    "FF_hold_violators": [
+      {
+        "startpoint": "u_e.i2x_q0[174]$_DFF_P_",
+        "endpoint": "u_e.g_mac[0].g_mz.u_x/q[450]$_DFF_P_",
+        "slack_ps": -10.8
+      },
+      {
+        "startpoint": "u_e.i1_q1[133]$_DFF_P_",
+        "endpoint": "u_e.i2x_q0[133]$_DFF_P_",
+        "slack_ps": -2.9
+      },
+      {
+        "startpoint": "u_e.g_ir.r_xs_q0[199]$_DFF_P_",
+        "endpoint": "u_e.fw_q0[199]$_DFF_P_",
+        "slack_ps": -0.9
+      }
+    ]
+  },
+  "exact": {
+    "source_match": true,
+    "scope": "Retained QX10 seed1 NRAND400+24 real-drain cases with7801 matched partials and neg_tree caught; minimum full-K field28 rows. Not whole-campaign exact qualification.",
+    "whole_campaign_qualified": false
+  },
+  "latency_reconciliation": {
+    "analytical_added_pipeline_stages": 0,
+    "measured_extra_last_and_idle_cycles_vs_QX9": 0,
+    "measured_phases": [
+      {
+        "phase": "L20.a_proj.fp8",
+        "region": 0,
+        "rows": 6,
+        "last": 409,
+        "idle": 410,
+        "additional_cycles": 0
+      },
+      {
+        "phase": "L20.exp158.gu",
+        "region": 0,
+        "rows": 12,
+        "last": 398,
+        "idle": 399,
+        "additional_cycles": 0
+      },
+      {
+        "phase": "L20.exp158.w2",
+        "region": 0,
+        "rows": 10,
+        "last": 285,
+        "idle": 286,
+        "additional_cycles": 0
+      }
+    ],
+    "composed_phase_region_cycles_with_existing_wire": [
+      489,
+      478,
+      365
+    ],
+    "consistent": true,
+    "basis": "Selected QX10 parallel chain4/fadd2 candidate step0 and registered flag/prefix candidates retain the existing CUT/LAT and pipeline stage count. All27 route RTL hashes match the exact/field vehicles. Scoped actual last/idle cycle deltas are zero. Z18d setup closure does not waive its FF hold failure or add a latency cycle.",
+    "physical_rejection_prevents_adoption": true,
+    "whole_token_rate_repriced": false
+  },
+  "handoff": {
+    "qualified": false,
+    "blocked_by": [
+      "Three final FF25 hold violations, worst i2x_q0[174] to bank0 g_mz.u_x/q[450]",
+      "Existing source-matched exact evidence is limited to its recorded minimum coverage"
+    ],
+    "whole_field_missing_input_clocks": true
+  },
+  "preservation": {
+    "original_Z18c_failure_unchanged": true,
+    "recipes_changed": false,
+    "relaunches": 0,
+    "remote_sources_and_objects_retained": true
+  },
+  "linked_inputs": {
+    "results/rtl/dsrom_qx_exact_restart_failure_20261005/final_minimum/source.json": "2c7742fbe3e5c5b4bed79b15872a72d8ee109e2fd9f136edbb0b0f94c927de17",
+    "results/rtl/dsrom_qx10_field_min_20261005/noether-qx10-field-source-manifest.json": "99617cea93483487c08f00f6cb2da6a242891a57e705548794fc7d4d1a04506d",
+    "results/uarch/dsrom_qx10_parent_context_20261005/model.json": "8599b07cfb382167fe700ed21d05b501f0587eb001c1bc50e5e1f9a90bf0c805",
+    "results/rtl/dsrom_qx10_field_min_20261005/record.json": "fb97499ca22c421a7b6ab692157cf8140f4fbf07c1a2adb6ad45e9fda946a2d5",
+    "results/rtl/dsrom_qx10_field_min_20261005/minimum_composition.json": "7a8ff9daf14b7b2c783a88f12a062260d620d0e1c6710cdba8044b43965e406d"
+  },
+  "files": {
+    "config.mk": "d086df8791e54a369d9e11e003ca7cc2723b1a9c249ce497883ea2fff2b42ba9",
+    "final_FF.paths": "9d8b3d1973b5d9b0cb075fca48e18c782737c7f48ce2ce03272a35fe3bf435a4",
+    "io_SS.in_min.paths": "60207fcb8a700a8fbf3363ffa22bc41a722895a5a59b837ddaea3b5125a7ce58",
+    "final_SS.log": "69631f60beb44d3224933616e2652047f4ed153808dfb9186b44a1ddb747851f",
+    "post.done": "d117fa006ba9208500b2930ce69cbde436c647afa917cb7396a9bc9111a46dd2",
+    "final_FF.log": "78be35293d1329e93cba1652eedde34a60fa53d480db96a58e1b1aa78003c4c4",
+    "cls_FF.icg.paths": "d9bdc7553b39686aefca0c381c995aca9e6e1e4dab9aefc278c91c69da4c1d7d",
+    "io_FF.out_max.paths": "97adbb8eddf2dfa28bf6c534bc9fffa5c7feebb0fb07da94f96315b77ab6b0db",
+    "macro_gate.json": "25b8de58869f661e288cea476f040d23bb347edbcb5fd3c8eb2916acd549e5e2",
+    "io_FF.out_min.paths": "e3c0793eb4710ed6eb082c7c117fd13767205c86eb3b9001af662b5385322f51",
+    "final_FF.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "physical.json": "8a47c2a6402a79c50e62136def1b00f8788976e102c4bb7a740e5c7223af11e7",
+    "cls_FF.async.paths": "708685bf10f89205584fa5d4a00bb6542cc0f6ccec140f943f461335457ecb94",
+    "constraint.sdc": "d3bffafc2b420f07d5e236cfba5cd16b2bc4677608578f579d3b79d380cca01f",
+    "cls_SS.reg.paths": "b46f2485ead5533299cdf4eb9fe1b2f7c94e3250bb221a1de8233dec8504910d",
+    "6_final.sdc": "3b8b7464bbfc2d824cc1cc61f0f8561cdcbf8b6556d37d5c529dfdb3a7de92a7",
+    "cls_FF.reg.paths": "a99f6c270cff5629e01a2e09ba3e4aaecc1a5ffeca0d7789f322edce5030e6d9",
+    "final_SS.ends": "ae34f6619ab4c23ce86c531a65083abfa239a816ae9adf7ea74a2111510565df",
+    "io_SS.out_min.paths": "913fc12203a34115a048cdc1e05298d27f89ba5173d4ecc3014ef6714dfd374c",
+    "metadata.json": "e4cbd922fb3abac9ed13b8398eb08be0ff0de13e4c898dcdb75ca971d1be060c",
+    "6_finish.rpt": "1e87cb57f52d21beb9cf902b209f8605d25d2d43ddaab7e5c3e0f0e26528eda1",
+    "receipt.json": "465b8466de6544b1548f6fb89fbedb470169e0b45e252a186c676987d5c6fe37",
+    "cls_FF.all.paths": "82bb60d30ee4cbd9119d6aa6c5cbb626deb6bc676ab521fd1e6b93ca4ffb5e8e",
+    "io_FF.in_max.paths": "4a032ad938b40fa5f95ed20d08ce8fe6c71d09375eddad3c2cf4793711fbfaea",
+    "retained_objects.sha256": "222d9be6b4ea82aaf0dc9418f4e3d0008e03117130900026210b63f5505a0c22",
+    "cls_SS.async.paths": "7c13267fc4d6b0decd3dce48410eae9340ec0c92d92b1692801eb7cbe93e7fdc",
+    "sta_corner.tcl": "4cea96f66b951c512168914d1ef999cfb51a95798fecbe69f09ff1a1b981e1f4",
+    "io_SS.in_max.paths": "a2a1043a1003be0c218bfea7ff6243c5694027bb0c090c39d0eb61fb03e229c5",
+    "io_SS.out_max.paths": "51056af5ba6874c2abc97ce7ad833bada40c12d5d800a63e0fae435190cb74d2",
+    "cls_SS.icg.paths": "bc40264924ce9bcf087c678a11786ef40b493de78d3fbdc8c281ea7ae52e9170",
+    "cls_SS.all.paths": "b46f2485ead5533299cdf4eb9fe1b2f7c94e3250bb221a1de8233dec8504910d",
+    "launch.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "owner_terminal_receipt.json": "f18148e88ef6e86d9ff9915f29567b67db0e606bcd5479fc28163ccd54e45c1a",
+    "final_SS.paths": "fdda26a117e7736ae803cfd1a04193d354096222a3a45be975748fc946f6bcf8",
+    "final_SS.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post_sta_qz.sh": "aa07ab0fc57c43cccc7f62d30e41262ce1703833745cd4e2e129640143cd4180",
+    "final_FF.ends": "db6f5cb756579ae96361f683ef6966f8a684d86241823e5cb1f9b6158bd326a3",
+    "io_FF.in_min.paths": "3db831a859c12135ac58a6228a0107fca526e004db663a628ba3bb066daf91cf"
+  }
+}

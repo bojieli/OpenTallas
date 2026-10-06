@@ -1,0 +1,13 @@
+STARTUP cp_idle=1 all_drained=1 fault=0 caller_quiet=1 transport=1 native_credit=1 shared_idle=1 adapter=1 reset=1
+REAL_CP_LAUNCH cycle=7
+REAL_PARENT_GRANT cycle=10
+REAL_PARENT_RESERVATION cycle=12
+PARENT_PROVIDER_ACCEPT cycle=27 we=0 address=071a4000 tag=8000
+PARENT_WARM_REQUEST cycle=28 accepted=1 consumed=0
+PARENT_PROVIDER_ACCEPT cycle=59 we=0 address=071a4020 tag=8001
+PARENT_PROVIDER_ACCEPT cycle=92 we=0 address=071a4040 tag=8002
+PARENT_PROVIDER_ACCEPT cycle=127 we=0 address=071a4060 tag=8003
+PARENT_PROVIDER_ACCEPT cycle=158 we=0 address=071a4080 tag=8004
+PARENT_PROVIDER_ACCEPT cycle=197 we=0 address=071a4080 tag=8006
+FATAL: rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_parent_min.sv:194: owned additive context fault cycle=226
+       Time: 191403 Scope: tb_hbm_w2_protected_parent_min

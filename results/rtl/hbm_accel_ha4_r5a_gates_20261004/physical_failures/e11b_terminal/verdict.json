@@ -1,0 +1,304 @@
+{
+  "rung": "R5a",
+  "variant": "e11b_30x20",
+  "source_commit": "3f3945cc284fec684c48485369b3450cb2967580",
+  "rtl_commit": "4aa3ad968043ad249e23dff8882c601f328b7d3d",
+  "terminal_exit": 1,
+  "stage": "4_1_cts",
+  "adopted": false,
+  "physical_verdict": "REJECT e11b: terminal CTS failure",
+  "exact": {
+    "verdict": "PASS",
+    "cases": 88,
+    "backpressure_cases": 24,
+    "sectors_checked_per_case": 9408
+  },
+  "negative_controls": [
+    {
+      "case": "neg_corrupt_sector",
+      "verdict": "FAIL",
+      "bad": 1,
+      "viol": 0
+    },
+    {
+      "case": "neg_trcd_check_plus_1ns",
+      "verdict": "FAIL",
+      "bad": 0,
+      "viol": 685
+    }
+  ],
+  "retained_gain_us": 13.343,
+  "exactness_replayed": false,
+  "extra_cycles_added": 0,
+  "clocks_ps": {
+    "clk": 833,
+    "hclk": 1024
+  },
+  "uncertainty_ps": {
+    "SS_setup": 60,
+    "FF_hold": 25
+  },
+  "placement": {
+    "legality_violations": 0,
+    "die_area_um2": 1592070.0,
+    "core_area_um2": 1581440.0,
+    "standard_cells_um2": 255414,
+    "macro_count": 64,
+    "macro_area_um2": 331368,
+    "instance_area_um2": 586782,
+    "SS_setup_WNS_ps": -1749.05,
+    "setup_path": {
+      "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+      "endpoint": "on.wb[3].q[1].a_r[2]$_DFF_P_",
+      "domain": "core_clk",
+      "corner": "WC"
+    },
+    "basis": "placement-estimated RC; ideal clocks, not signoff"
+  },
+  "cts_failure": {
+    "error": "RSZ-0060 Max buffer count reached",
+    "hold_buffers": 388653,
+    "hold_repair_WNS_ps": -1736.558,
+    "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_/D",
+    "basis": "original failure log; launch/capture path not logged; not FF signoff"
+  },
+  "routed_area_um2": null,
+  "route_DRC": null,
+  "SS_setup_signoff_ps": null,
+  "FF_hold_signoff_ps": null,
+  "parent_context_qualified": false,
+  "fits_selected_parent_slot": null,
+  "parent_fit_basis": "1.59207mm2 child placement footprint already exceeds estimated1.40mm2 per-stack service reservation; no parent suballocation/clock/load proof",
+  "source_protection_contract": "unchanged legacy4aa evidence; no protection waiver or parent adoption",
+  "diagnostic_job": "hbm-r5a-ctsdiag-39cf60-ot-epyc2",
+  "inputs_sha256": {
+    "physical_FAIL.json": "beedcb07023aa4d2b2c6a57708d8ff9098492900c79607a77d8c256ffeaa3832",
+    "launch.json": "6c51ca63c438a5186ea52dd5d7ea100516648a38daae5fac726a775d008e4d05",
+    "cts_FAIL.log": "1c55652025cc85d5e1820ca1a6984271ce2ffae724d4c61ac349fa754a9f1959",
+    "expert_first_access_retained.json": "6485701c92547bcd7d8b204448df6da9a83a01f7d8f52449e37be2e3a7aa04e9",
+    "detailed_place.json": "0e854576fb9c1bbca43eb996c7a1903147d79aee663b913c3257f4e8c6bef7a4",
+    "detailed_place.rpt": "0730bbdb887989e9bf4325ea38f949c174b3b54ee70256321fc7fa2a396085f5",
+    "cts_diagnostic/r5a_WC_min.rpt": "9a772c94fc9ccbb96f71809e3f4a34941a1d1f0bf8f4ba6659e308c88840f165",
+    "cts_diagnostic/r5a_ids_BC_max.rpt": "f03015588371fc1e0410a2ac582b3361946e8c2e7134834dbcfdd6bcdfee4786",
+    "cts_diagnostic/receipt.json": "cbf19ae0f9aa5dacf20e334b64b7f90fee015d02c04eca804836fda007910777",
+    "cts_diagnostic/r5a_WC_max.rpt": "d4b7d29517263063e159dd97d9b0edfad3e946e25e3dac9182f38e722ca3a0dd",
+    "cts_diagnostic/r5a_BC_max.rpt": "656de04884b105b8120bb4cd70b5f6762e760303e10656a4084b281aa3323f6d",
+    "cts_diagnostic/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "cts_diagnostic/r5a_ids_WC_max.rpt": "9285d75c95deae901703d4c7dd319333f3bb90a658e2179d7a2c1506303dec24",
+    "cts_diagnostic/r5a_BC_min.rpt": "b942b9550608c2513ec2ecfbca94087d68eb5ab97a579219a39c682c45ba5a7d",
+    "cts_diagnostic/run.log": "6a669613e6a1b5da54ba1e177e30427364533c81c97ae282fb58dcdad4869129",
+    "cts_diagnostic/r5a_ids_BC_min.rpt": "145f4a7c6e1c9096c86db7e9840b5784bdc32b2c9ffda1f5c8b8b44831d238b9",
+    "cts_diagnostic/r5a_ids_WC_min.rpt": "2829036b5294c4f3db06e375e4e67cc9f2a30e6e7797325412ab924f7827dd39",
+    "internal_paths/ff.log": "6bc3e0597486fa1c4c6ee232b3bb0d0fc0e597f877f7cb03935b521ac6a15cd2",
+    "internal_paths/ff.tcl": "926b8f93876f2457fa766ea2427afb8c7c0526798411007248ae780ba1452980",
+    "internal_paths/receipt.json": "0a41cf28a00712258cc28ba3e2b19c8afd78b712339017832276c3328506df7a",
+    "internal_paths/ss.tcl": "6e48332f7cd0968346d58964f82caf39cb501b4d6e20ebaf4e5119ac863340ae",
+    "internal_paths/ss.log": "007f5f39e307cec14c238ed4213b50aac48ecc2e1e6fe12abaabf7430bd240cb"
+  },
+  "exceeds_existing_service_estimate": true,
+  "cts_diagnostic": {
+    "source_commit": "39cf60c225faed7ac730101c120d0a32c685b2cf",
+    "exit": 0,
+    "basis": "real reconstructed CTS tree, unchanged WC/BC libraries/SDC; placement-estimated RC before repair",
+    "capture_placement_legal": true,
+    "reports": {
+      "r5a_BC_max.rpt": {
+        "startpoint": "on.sm[2].bank[3].half[0].u_ram",
+        "endpoint": "s_data[2934] (output port clocked by core_clk)",
+        "worst_reported_slack_ps": -1299.0355,
+        "sha256": "656de04884b105b8120bb4cd70b5f6762e760303e10656a4084b281aa3323f6d"
+      },
+      "r5a_BC_min.rpt": {
+        "startpoint": "e_id[3] (input port clocked by core_clk)",
+        "endpoint": "on.u_ids.mem[5][3]$_DFFE_PP_",
+        "worst_reported_slack_ps": -1151.3379,
+        "sha256": "b942b9550608c2513ec2ecfbca94087d68eb5ab97a579219a39c682c45ba5a7d"
+      },
+      "r5a_WC_max.rpt": {
+        "startpoint": "on.sm[4].vq$_DFF_PN0_",
+        "endpoint": "s_valid[4] (output port clocked by core_clk)",
+        "worst_reported_slack_ps": -2302.7207,
+        "sha256": "d4b7d29517263063e159dd97d9b0edfad3e946e25e3dac9182f38e722ca3a0dd"
+      },
+      "r5a_WC_min.rpt": {
+        "startpoint": "e_id[3] (input port clocked by core_clk)",
+        "endpoint": "on.u_ids.mem[5][3]$_DFFE_PP_",
+        "worst_reported_slack_ps": -1776.7991,
+        "sha256": "9a772c94fc9ccbb96f71809e3f4a34941a1d1f0bf8f4ba6659e308c88840f165"
+      },
+      "r5a_ids_BC_max.rpt": {
+        "startpoint": "on.u_ids.wgray[2]$_DFF_PN0_",
+        "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_",
+        "worst_reported_slack_ps": 575.9319,
+        "sha256": "f03015588371fc1e0410a2ac582b3361946e8c2e7134834dbcfdd6bcdfee4786"
+      },
+      "r5a_ids_BC_min.rpt": {
+        "startpoint": "e_valid (input port clocked by core_clk)",
+        "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_",
+        "worst_reported_slack_ps": -1123.5614,
+        "sha256": "145f4a7c6e1c9096c86db7e9840b5784bdc32b2c9ffda1f5c8b8b44831d238b9"
+      },
+      "r5a_ids_WC_max.rpt": {
+        "startpoint": "on.u_ids.wgray[2]$_DFF_PN0_",
+        "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_",
+        "worst_reported_slack_ps": 377.435,
+        "sha256": "9285d75c95deae901703d4c7dd319333f3bb90a658e2179d7a2c1506303dec24"
+      },
+      "r5a_ids_WC_min.rpt": {
+        "startpoint": "e_valid (input port clocked by core_clk)",
+        "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_",
+        "worst_reported_slack_ps": -1736.5577,
+        "sha256": "2829036b5294c4f3db06e375e4e67cc9f2a30e6e7797325412ab924f7827dd39"
+      }
+    },
+    "snapshot_root": "ot-epyc2:/srv/opentallas-scratch2/codex/r5a-ctsdiag-39cf60/capture/orfs/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11b/base",
+    "odb_sha256": "28774e4fec8f26596fbc8a27cd0760c10817b52a39211608af5576f5badba764",
+    "sdc_sha256": "63092bfec37835da8c4ace9ef6e9d231e6787f8743af011151ed996700e61720",
+    "hold_failure_cause": "e_valid primary-input arrival vs propagated core_clk capture insertion; WC min-1736.5577 exactly matches original failed hold repair; no unsynchronised cross-domain path inferred",
+    "parent_requirement": "Actual producer launch/insertion and sink capture clock/load relations, including SRAM clkQ at each corner. Do not falsepath or shift IO delays to claim qualification."
+  },
+  "internal_diagnostic": {
+    "source_commit": "5c17fac5d2677545ae2205466520606279798d64",
+    "basis": "same real saved pre-repair CTS tree; single SS or FF corner libraries including real SRAM arcs, propagated clocks and placement-estimated RC; not routed signoff",
+    "receipt": "internal_paths/receipt.json",
+    "exit_ss": 0,
+    "exit_ff": 0,
+    "paths": {
+      "ss": [
+        {
+          "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+          "endpoint": "on.wb[2].q[1].a_r[3]$_DFF_P_",
+          "domain": "core_clk",
+          "slack_ps": -1434.674
+        },
+        {
+          "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+          "endpoint": "on.wb[2].q[1].a_r[2]$_DFF_P_",
+          "domain": "core_clk",
+          "slack_ps": -1431.973
+        },
+        {
+          "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+          "endpoint": "on.wb[2].q[1].a_r[4]$_DFF_P_",
+          "domain": "core_clk",
+          "slack_ps": -1431.5322
+        },
+        {
+          "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+          "endpoint": "on.wb[2].q[1].a_r[7]$_DFF_P_",
+          "domain": "core_clk",
+          "slack_ps": -1429.3022
+        },
+        {
+          "startpoint": "on.loc[25].csm[1]$_DFFE_PN0P_",
+          "endpoint": "on.wb[2].q[1].a_r[6]$_DFF_P_",
+          "domain": "core_clk",
+          "slack_ps": -1429.1862
+        },
+        {
+          "startpoint": "on.ptr[28][2]$_DFFE_PN0P_",
+          "endpoint": "on.pc[28].u.on.row[8]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -1800.6085
+        },
+        {
+          "startpoint": "on.cnt[1]$_DFFE_PN0P_",
+          "endpoint": "on.pc[14].u.on.row[6]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -1456.9659
+        },
+        {
+          "startpoint": "on.cnt[1]$_DFFE_PN0P_",
+          "endpoint": "on.pc[14].u.on.row[3]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -1455.8455
+        },
+        {
+          "startpoint": "on.cnt[1]$_DFFE_PN0P_",
+          "endpoint": "on.pc[14].u.on.row[2]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -1454.1862
+        },
+        {
+          "startpoint": "on.cnt[1]$_DFFE_PN0P_",
+          "endpoint": "on.pc[14].u.on.row[0]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -1453.782
+        }
+      ],
+      "ff": [
+        {
+          "startpoint": "on.sm[3].cs[3]$_DFF_PN0_",
+          "endpoint": "on.sm[3].bank[0].half[0].u_ram",
+          "domain": "core_clk",
+          "slack_ps": -94.8098
+        },
+        {
+          "startpoint": "on.sm[3].cs[7]$_DFF_PN0_",
+          "endpoint": "on.sm[3].bank[0].half[0].u_ram",
+          "domain": "core_clk",
+          "slack_ps": -93.7886
+        },
+        {
+          "startpoint": "on.sm[3].cs[2]$_DFF_PN0_",
+          "endpoint": "on.sm[3].bank[0].half[0].u_ram",
+          "domain": "core_clk",
+          "slack_ps": -92.4062
+        },
+        {
+          "startpoint": "on.sm[3].cs[1]$_DFF_PN0_",
+          "endpoint": "on.sm[3].bank[0].half[0].u_ram",
+          "domain": "core_clk",
+          "slack_ps": -91.9858
+        },
+        {
+          "startpoint": "on.sm[1].cs[0]$_DFF_PN0_",
+          "endpoint": "on.sm[1].bank[3].half[1].u_ram",
+          "domain": "core_clk",
+          "slack_ps": -88.6354
+        },
+        {
+          "startpoint": "on.tab[0][6]$_DFFE_PP_",
+          "endpoint": "on.pc[8].u.on.row[6]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -93.613
+        },
+        {
+          "startpoint": "on.tab[0][1]$_DFFE_PP_",
+          "endpoint": "on.pc[26].u.on.row[1]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -88.3071
+        },
+        {
+          "startpoint": "on.ptr[22][0]$_DFFE_PN0P_",
+          "endpoint": "on.pc[22].u.on.row[0]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -79.5307
+        },
+        {
+          "startpoint": "on.ptr[26][2]$_DFFE_PN0P_",
+          "endpoint": "on.pc[26].u.on.row[0]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -76.7727
+        },
+        {
+          "startpoint": "on.tab[0][6]$_DFFE_PP_",
+          "endpoint": "on.pc[31].u.on.row[6]$_DFFE_PN0P_",
+          "domain": "h_clk",
+          "slack_ps": -74.7096
+        }
+      ]
+    },
+    "worst_by_domain_ps": {
+      "ss": {
+        "core_clk": -1434.674,
+        "h_clk": -1800.6085
+      },
+      "ff": {
+        "core_clk": -94.8098,
+        "h_clk": -93.613
+      }
+    }
+  },
+  "next_source_requirement": "A model-sized full-shape successor must address measured internal location/grant address and descriptor/row setup cones, real SRAM address-capture hold and controller hold, plus actual parent producer/capture timing. e11b rejected; no geometry-only restart, clock relaxation, protection waiver, or invented IO exception."
+}

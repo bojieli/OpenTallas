@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_FULLSIZE_PC_AND_SHARED_CONTROL_COMPONENT",
+  "CLK_ps": 833.333,
+  "HCLK_ps": 1024,
+  "warm_policy": "fresh admission inhibited; accepted rings/cache/pipelines/controller-facing descriptorGO retain debt and can drain",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "33c1eb1b3b5dd65cc5b5f3e16c91ab3285119bf6377527b06dbd5173a55242df",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "fbfa813d057a9bc3cdc205799da9a96addcd43f0a96ae897e3730a94f3e2acf2",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5d77bb9aeac2bbec8784d92798e30bee7f2a5a91752199abf06a11b12c79a098",
+    "rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv": "a1fc786a9a289dc73d65c0b807b2a1b0730af7427e40afc6d5b6c8d510934fa8",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ports.sv": "4cd3acdb2fe9836d285d791b26e0bad11fa25989c21a109e97304fe2fa494b98",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_kv_stream4_cdc.sv": "07a78167eda8d028e35c9797e585a2621d48aca5555a56e525ec10b2526ea541",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_kv_stream4_cdc.cpp": "47d60f5db5ad4a0bf7b4bd3bd48c5e56df76a5fa2886b16e7ddde25a3cad3841",
+    "results/rtl/qwen_stream4_protected_20261005/prebuild_model.json": "6dae4b6fb3c82f47e6ebe7c8c8d57772673ba943a3d1693f06ce19c8ce3768b4",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "whole_interface_exact32": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "corner_tool_parent": "dc3085b40"
+}

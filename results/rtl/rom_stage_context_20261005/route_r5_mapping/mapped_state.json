@@ -1,0 +1,425 @@
+{
+  "source_commit": "0477bd6d95ae2d627003654b07f9aae69b9f3cc6",
+  "scope": "actual synthesis ODB physical register instances and output net IDs; routed SSFF, loaded clock and residual power pending",
+  "counts": {
+    "ao_primary": 885,
+    "ao_secondary": 885,
+    "loader_primary": 75,
+    "loader_secondary": 75
+  },
+  "separate_primary_secondary_instance_and_Qnet_ids": true,
+  "threshold_drivers": {
+    "ao_primary": [
+      {
+        "instance_id": 240179,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[0]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241196,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0000_"
+      },
+      {
+        "instance_id": 240180,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[10]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241197,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0001_"
+      },
+      {
+        "instance_id": 240181,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[11]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241198,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0002_"
+      },
+      {
+        "instance_id": 240182,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[12]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241199,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0003_"
+      },
+      {
+        "instance_id": 240183,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[13]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241200,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0004_"
+      },
+      {
+        "instance_id": 240184,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[14]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241201,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0005_"
+      },
+      {
+        "instance_id": 240185,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[15]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241202,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0006_"
+      },
+      {
+        "instance_id": 240186,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[16]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241203,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0007_"
+      },
+      {
+        "instance_id": 240187,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[17]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241204,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0008_"
+      },
+      {
+        "instance_id": 240188,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[18]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241205,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0009_"
+      },
+      {
+        "instance_id": 240189,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[19]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241206,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0010_"
+      },
+      {
+        "instance_id": 240190,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[1]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241207,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0011_"
+      },
+      {
+        "instance_id": 240191,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[20]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241208,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0012_"
+      },
+      {
+        "instance_id": 240192,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[21]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241209,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0013_"
+      },
+      {
+        "instance_id": 240193,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[22]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241210,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0014_"
+      },
+      {
+        "instance_id": 240194,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[23]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241211,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0015_"
+      },
+      {
+        "instance_id": 240195,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[24]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241212,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0016_"
+      },
+      {
+        "instance_id": 240196,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[2]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241213,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0017_"
+      },
+      {
+        "instance_id": 240197,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[3]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241214,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0018_"
+      },
+      {
+        "instance_id": 240198,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[4]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241215,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0019_"
+      },
+      {
+        "instance_id": 240199,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[5]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241216,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0020_"
+      },
+      {
+        "instance_id": 240200,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[6]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241217,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0021_"
+      },
+      {
+        "instance_id": 240201,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[7]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241218,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0022_"
+      },
+      {
+        "instance_id": 240202,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[8]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241219,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0023_"
+      },
+      {
+        "instance_id": 240203,
+        "driver": "u_stage.u_ao.u_p.u_ctl.u_sched/th[9]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 241220,
+        "net": "u_stage.u_ao.u_p.u_ctl.u_sched/_0024_"
+      }
+    ],
+    "ao_secondary": [
+      {
+        "instance_id": 238411,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[0]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240328,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0000_"
+      },
+      {
+        "instance_id": 238412,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[10]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240329,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0001_"
+      },
+      {
+        "instance_id": 238413,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[11]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240330,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0002_"
+      },
+      {
+        "instance_id": 238414,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[12]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240331,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0003_"
+      },
+      {
+        "instance_id": 238415,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[13]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240332,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0004_"
+      },
+      {
+        "instance_id": 238416,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[14]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240333,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0005_"
+      },
+      {
+        "instance_id": 238417,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[15]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240334,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0006_"
+      },
+      {
+        "instance_id": 238418,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[16]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240335,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0007_"
+      },
+      {
+        "instance_id": 238419,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[17]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240336,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0008_"
+      },
+      {
+        "instance_id": 238420,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[18]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240337,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0009_"
+      },
+      {
+        "instance_id": 238421,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[19]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240338,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0010_"
+      },
+      {
+        "instance_id": 238422,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[1]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240339,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0011_"
+      },
+      {
+        "instance_id": 238423,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[20]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240340,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0012_"
+      },
+      {
+        "instance_id": 238424,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[21]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240341,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0013_"
+      },
+      {
+        "instance_id": 238425,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[22]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240342,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0014_"
+      },
+      {
+        "instance_id": 238426,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[23]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240343,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0015_"
+      },
+      {
+        "instance_id": 238427,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[24]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240344,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0016_"
+      },
+      {
+        "instance_id": 238428,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[2]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240345,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0017_"
+      },
+      {
+        "instance_id": 238429,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[3]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240346,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0018_"
+      },
+      {
+        "instance_id": 238430,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[4]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240347,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0019_"
+      },
+      {
+        "instance_id": 238431,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[5]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240348,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0020_"
+      },
+      {
+        "instance_id": 238432,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[6]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240349,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0021_"
+      },
+      {
+        "instance_id": 238433,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[7]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240350,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0022_"
+      },
+      {
+        "instance_id": 238434,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[8]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240351,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0023_"
+      },
+      {
+        "instance_id": 238435,
+        "driver": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/th[9]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net_id": 240352,
+        "net": "u_stage.u_ao.g_checked.u_r.u_ctl.u_sched/_0024_"
+      }
+    ]
+  },
+  "loader_class_drivers": {
+    "loader_primary": [
+      {
+        "instance_id": 197266,
+        "driver": "u_ld.u_p/ld_np[0]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238749,
+        "net": "u_ld.u_p/_071_"
+      },
+      {
+        "instance_id": 197267,
+        "driver": "u_ld.u_p/ld_np[1]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238750,
+        "net": "u_ld.u_p/_072_"
+      },
+      {
+        "instance_id": 197268,
+        "driver": "u_ld.u_p/ld_np[2]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238688,
+        "net": "u_ld.u_p/_010_"
+      }
+    ],
+    "loader_secondary": [
+      {
+        "instance_id": 196716,
+        "driver": "u_ld.g_protected.u_r/ld_np[0]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238356,
+        "net": "u_ld.g_protected.u_r/_071_"
+      },
+      {
+        "instance_id": 196717,
+        "driver": "u_ld.g_protected.u_r/ld_np[1]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238357,
+        "net": "u_ld.g_protected.u_r/_072_"
+      },
+      {
+        "instance_id": 196718,
+        "driver": "u_ld.g_protected.u_r/ld_np[2]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "net_id": 238295,
+        "net": "u_ld.g_protected.u_r/_010_"
+      }
+    ]
+  },
+  "query_sha256": "f98bc3ac430e73de63681221c5f85868650c742691e30eab0f0cd07bf2cdbcd1",
+  "full_driver_log_sha256": "69af0592302b896621f80f5bd0ab9861d56981edca370f797734ba4f127a4416",
+  "energy_credit": false,
+  "physical_qualification": false,
+  "odb_sha256": "398f101ae5b3db5df61101d2dde416e9faed4566cd98fe8eb5301316791b1a1d",
+  "netlist_sha256": "bf4acb447db35bfa200ecf24403a4a540ce458c99ce454bd77a2831ef0e6db22",
+  "current_physical_helper_pins": {
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  }
+}

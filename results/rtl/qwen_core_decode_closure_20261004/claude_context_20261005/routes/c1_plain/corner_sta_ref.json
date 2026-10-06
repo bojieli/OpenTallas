@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/qwen-core-ctx/runs/c1_plain/work/orfs",
+ "extra_sdc": "# Die context (post-CTS only), as physical/qwen_slab_structural/io_ref.sdc: the register on the other side of every\n# core port is a unit boundary register (ME spine / vector stream / stream, or the memory port register) in the same\n# core clock region, balanced to the same insertion, so each boundary delay is referenced to the PROPAGATED clock of a\n# register of this block's tree.  Setup keeps the 0.2 T outside budget (166.6 ps); hold credits nothing outside (0).\n# OpenROAD 26Q3 crashes on -reference_pin (load_design; GRT layer assignment slack update), so the same reference is\n# applied numerically: L = the propagated clock arrival at the reference register's CLK (measured here, after CTS),\n# late arrival for launch / early for capture on setup, and the reverse on hold (pessimistic both ways).\nunset_input_delay [all_inputs]\nunset_output_delay [all_outputs]\n# the gated engine clock (ICG output to the ME spine) is a clock, not a boundary data port\nset qcc_outs {}\nforeach p [all_outputs] { if {[get_full_name $p] ne \"u_me.clk\"} { lappend qcc_outs $p } }\nset qcc_cells [get_cells {nx_v*}]\nif {[llength $qcc_cells] == 0} { set qcc_cells [get_cells {pend1*}] }\nset qcc_ref [get_pins \"[get_full_name [lindex $qcc_cells 0]]/CLK\"]\nset qcc_w [sta::worst_slack_cmd max]\nset qcc_lmax [get_property $qcc_ref arrival_max_rise]\nset qcc_lmin [get_property $qcc_ref arrival_min_rise]\nputs \"QCC reference pin [get_full_name $qcc_ref] clock arrival max $qcc_lmax min $qcc_lmin\"\nset_input_delay [expr 166.6 + $qcc_lmax] -max -clock core_clk [all_inputs -no_clocks]\nset_input_delay [expr 0 + $qcc_lmin] -min -clock core_clk [all_inputs -no_clocks]\nset_output_delay [expr 166.6 - $qcc_lmin] -max -clock core_clk $qcc_outs\nset_output_delay [expr 0 - $qcc_lmax] -min -clock core_clk $qcc_outs\n",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -399.52,
+  "tns_ps": -168976.1,
+  "worst_register_d_slack_ps": -399.518188,
+  "worst_reg_to_reg_slack_ps": -329.86,
+  "worst_input_to_reg_slack_ps": 150.69,
+  "worst_output_port_slack_ps": -222.089233,
+  "violating_d_pins": 980,
+  "errors": [],
+  "odb_sha256": "2930fb23fd3a13003ff966137404578f87d1d2e60dd4d760afa41d73db327abd",
+  "spef_sha256": "01d7cf34faa52d01267e4c25cd3c627d241681aeb6d889521b3e9046aa426e1b",
+  "sdc_sha256": "17fd598d4e93088635f3b87c1def1a8d1187460a43b7d502212c77664ed3a9c2"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -33.56,
+  "tns_ps": -374.8,
+  "worst_register_d_slack_ps": 7.180256,
+  "worst_reg_to_reg_slack_ps": 7.18,
+  "worst_input_to_reg_slack_ps": 64.41,
+  "worst_output_port_slack_ps": -33.56229,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "2930fb23fd3a13003ff966137404578f87d1d2e60dd4d760afa41d73db327abd",
+  "spef_sha256": "01d7cf34faa52d01267e4c25cd3c627d241681aeb6d889521b3e9046aa426e1b",
+  "sdc_sha256": "17fd598d4e93088635f3b87c1def1a8d1187460a43b7d502212c77664ed3a9c2"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false
+}

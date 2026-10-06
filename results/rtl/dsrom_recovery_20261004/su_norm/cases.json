@@ -1,0 +1,267 @@
+{
+ "cases": [
+  {
+   "case": "L20.attn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L20",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L20.ffn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L20",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L20.attn.q_norm",
+   "kind": "q",
+   "layer": "L20",
+   "D": 1280,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.q_norm out"
+  },
+  {
+   "case": "L20.attn.kv_norm_rope",
+   "kind": "kv",
+   "layer": "L20",
+   "D": 512,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.kv_norm out"
+  },
+  {
+   "case": "L0.attn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L0",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L0.ffn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L0",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L0.attn.q_norm",
+   "kind": "q",
+   "layer": "L0",
+   "D": 1280,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.q_norm out"
+  },
+  {
+   "case": "L0.attn.kv_norm_rope",
+   "kind": "kv",
+   "layer": "L0",
+   "D": 512,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.kv_norm out"
+  },
+  {
+   "case": "L3.attn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L3",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L3.ffn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L3",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L3.attn.q_norm",
+   "kind": "q",
+   "layer": "L3",
+   "D": 1280,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.q_norm out"
+  },
+  {
+   "case": "L3.attn.kv_norm_rope",
+   "kind": "kv",
+   "layer": "L3",
+   "D": 512,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.kv_norm out"
+  },
+  {
+   "case": "L24.attn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L24",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L24.ffn.hc_pre_norm",
+   "kind": "hc",
+   "layer": "L24",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "L24.attn.q_norm",
+   "kind": "q",
+   "layer": "L24",
+   "D": 1280,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.q_norm out"
+  },
+  {
+   "case": "L24.attn.kv_norm_rope",
+   "kind": "kv",
+   "layer": "L24",
+   "D": 512,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "attn.kv_norm out"
+  },
+  {
+   "case": "head.hc_pre_norm",
+   "kind": "hc",
+   "layer": "head",
+   "D": 5120,
+   "source": "golden 1M (su_cases.pkl)",
+   "check_label": "x (normed)"
+  },
+  {
+   "case": "stress.hc.0",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 0 scale 1.0"
+  },
+  {
+   "case": "stress.hc.1",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 1 scale 0.001"
+  },
+  {
+   "case": "stress.hc.2",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 2 scale 37.0"
+  },
+  {
+   "case": "stress.hc.3",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 3 scale 1e-20"
+  },
+  {
+   "case": "stress.hc.4",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 4 scale 3000.0"
+  },
+  {
+   "case": "stress.hc.5",
+   "kind": "hc",
+   "layer": "stress",
+   "D": 5120,
+   "source": "random seed 20261004 row 5 scale 0.5"
+  },
+  {
+   "case": "stress.q.0",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 0 scale 1.0"
+  },
+  {
+   "case": "stress.q.1",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 1 scale 0.001"
+  },
+  {
+   "case": "stress.q.2",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 2 scale 37.0"
+  },
+  {
+   "case": "stress.q.3",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 3 scale 1e-20"
+  },
+  {
+   "case": "stress.q.4",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 4 scale 3000.0"
+  },
+  {
+   "case": "stress.q.5",
+   "kind": "q",
+   "layer": "stress",
+   "D": 1280,
+   "source": "random seed 20261004 row 5 scale 0.5"
+  },
+  {
+   "case": "stress.kv.0",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 0 scale 1.0"
+  },
+  {
+   "case": "stress.kv.1",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 1 scale 0.001"
+  },
+  {
+   "case": "stress.kv.2",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 2 scale 37.0"
+  },
+  {
+   "case": "stress.kv.3",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 3 scale 1e-20"
+  },
+  {
+   "case": "stress.kv.4",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 4 scale 3000.0"
+  },
+  {
+   "case": "stress.kv.5",
+   "kind": "kv",
+   "layer": "stress",
+   "D": 512,
+   "source": "random seed 20261004 row 5 scale 0.5"
+  }
+ ],
+ "cases_pkl_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851"
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "family": "FF:u_su_association.on.associated_n$_DFFE_PN1P_/D",
+    "slack_ps": -71.225418,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_association.on.associated_n$_DFFE_PN1P_",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "FF:u_su_association.on.associated_q$_DFFE_PN0P_/D",
+    "slack_ps": -103.658417,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_association.on.associated_q$_DFFE_PN0P_",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "FF:u_su_cp.on.frame_hi[*]$_DFFE_PN0P_/D",
+    "slack_ps": -39.686478,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.frame_hi[0]$_DFFE_PN0P_",
+    "violating_endpoints": 14
+  },
+  {
+    "family": "FF:u_su_cp.on.frame_lo[*]$_DFFE_PN0P_/D",
+    "slack_ps": -47.354565,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.frame_lo[31]$_DFFE_PN0P_",
+    "violating_endpoints": 72
+  },
+  {
+    "family": "FF:u_su_cp.on.pc_code[*]$_DFFE_PN0P_/D",
+    "slack_ps": -46.00481,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.pc_code[23]$_DFFE_PN0P_",
+    "violating_endpoints": 35
+  },
+  {
+    "family": "FF:u_su_cp.on.phase_n[*]$_DFF_PN1_/D",
+    "slack_ps": -92.991501,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.phase_n[4]$_DFF_PN1_",
+    "violating_endpoints": 2
+  },
+  {
+    "family": "FF:u_su_cp.on.phase_q[*]$_DFF_PN0_/D",
+    "slack_ps": -79.107056,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.phase_q[4]$_DFF_PN0_",
+    "violating_endpoints": 3
+  },
+  {
+    "family": "FF:u_su_cp.on.registered_status.status_n[*]$_DFF_PN1_/D",
+    "slack_ps": -1.925016,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.registered_status.status_n[4]$_DFF_PN1_",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "FF:u_su_cp.on.registered_status.status_q[*]$_DFF_PN0_/D",
+    "slack_ps": -36.40377,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "u_su_cp.on.registered_status.status_q[4]$_DFF_PN0_",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:done",
+    "slack_ps": -267.216705,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "done (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:exec_owned",
+    "slack_ps": -336.86908,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "exec_owned (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:fault",
+    "slack_ps": -218.847168,
+    "launch": "u_su_cp.on.phase_n[4]$_DFF_PN1_",
+    "endpoint": "fault (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:lease_v",
+    "slack_ps": -262.090454,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "lease_v (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:native_launch[*]",
+    "slack_ps": -59.824478,
+    "launch": "launch_pc[1] (input port clocked by core_clk)",
+    "endpoint": "native_launch[1] (output port clocked by core_clk)",
+    "violating_endpoints": 2
+  },
+  {
+    "family": "OUTPUT:new_request_permit",
+    "slack_ps": -331.883759,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "new_request_permit (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:owned",
+    "slack_ps": -325.957581,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "owned (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:pending",
+    "slack_ps": -272.936951,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "pending (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:quiet",
+    "slack_ps": -255.671875,
+    "launch": "u_su_cp.on.registered_header.decoder.data_q[7]$_DFFE_PN0P_",
+    "endpoint": "quiet (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:release_v",
+    "slack_ps": -261.55545,
+    "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+    "endpoint": "release_v (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  },
+  {
+    "family": "OUTPUT:selected",
+    "slack_ps": -67.094162,
+    "launch": "launch_pc[1] (input port clocked by core_clk)",
+    "endpoint": "selected (output port clocked by core_clk)",
+    "violating_endpoints": 1
+  }
+]

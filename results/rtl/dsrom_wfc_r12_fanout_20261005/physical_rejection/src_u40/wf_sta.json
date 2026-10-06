@@ -1,0 +1,139 @@
+{
+ "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+ "artifacts_sha256": {
+  "6_final.odb": "260046d0426767b2d1a9b094502f69b16ab76c2e82a8b9354ac2d686632725bd",
+  "6_final.sdc": "d349cccf7cf1e02df798d01db04969593ba4b26bb8c73207e0aa59fed8e0eb29",
+  "6_final.spef": "7d9a788b1f0358ae8cd175c5152aa09ab16d28be24f3bb580cdc03cd40c3d2ec"
+ },
+ "corners": {
+  "SS": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    925.4,
+    1016.3
+   ],
+   "block": {
+    "setup_wns_ps": -1002.1,
+    "hold_wns_ps": -774.3,
+    "failing_setup": 222055,
+    "failing_hold": 2161,
+    "worst_max_path": [
+     "running$_DFFE_PN0P_",
+     "core_token[7]"
+    ],
+    "worst_max_path_slack_ps": -1002.1,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "core_done",
+     "tx_st[0]$_DFF_PN1_"
+    ],
+    "worst_min_path_slack_ps": -774.3,
+    "worst_min_path_group": "core_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": -1439.9,
+    "hold_wns_ps": 33.8,
+    "failing_setup": 222837,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "cfg_prompt_len[7]",
+     "g_wf.eng.steps_m1[15]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": -1439.9,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.p0[12]$_DFF_PN0_",
+     "g_wf.eng.p1[12]$_DFF_PN0_"
+    ],
+    "worst_min_path_slack_ps": 33.8,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": -668.0,
+    "hold_wns_ps": 33.8,
+    "failing_setup": 221276,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_wf.eng.g[12].grp/lo_r[0]$_DFF_P_",
+     "g_wf.eng.g[12].grp/rec_q[54]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": -668.0,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.p0[12]$_DFF_PN0_",
+     "g_wf.eng.p1[12]$_DFF_PN0_"
+    ],
+    "worst_min_path_slack_ps": 33.8,
+    "worst_min_path_group": "core_clk"
+   }
+  },
+  "FF": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    585.2,
+    653.7
+   ],
+   "block": {
+    "setup_wns_ps": -333.0,
+    "hold_wns_ps": -452.9,
+    "failing_setup": 714,
+    "failing_hold": 2173,
+    "worst_max_path": [
+     "running$_DFFE_PN0P_",
+     "core_token[7]"
+    ],
+    "worst_max_path_slack_ps": -333.0,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "core_done",
+     "tx_st[0]$_DFF_PN1_"
+    ],
+    "worst_min_path_slack_ps": -452.9,
+    "worst_min_path_group": "core_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": -367.7,
+    "hold_wns_ps": -0.1,
+    "failing_setup": 436,
+    "failing_hold": 3,
+    "worst_max_path": [
+     "cfg_prompt_len[7]",
+     "g_wf.eng.steps_m1[17]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": -367.7,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.u0[3]$_DFF_PN0_",
+     "g_wf.eng.u1[3]$_DFF_PN0_"
+    ],
+    "worst_min_path_slack_ps": -0.1,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": 59.3,
+    "hold_wns_ps": -0.1,
+    "failing_setup": 0,
+    "failing_hold": 3,
+    "worst_max_path": [
+     "g_wf.eng.b_lo[0]$_DFF_P_",
+     "g_wf.eng.g[19].grp/ringm[109][16]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": 59.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.u0[3]$_DFF_PN0_",
+     "g_wf.eng.u1[3]$_DFF_PN0_"
+    ],
+    "worst_min_path_slack_ps": -0.1,
+    "worst_min_path_group": "core_clk"
+   }
+  }
+ },
+ "signoff": {
+  "block": false,
+  "incontext": false,
+  "reg2reg": false
+ }
+}

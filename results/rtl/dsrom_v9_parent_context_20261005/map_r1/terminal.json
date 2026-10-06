@@ -1,0 +1,18 @@
+{
+  "status": "FAIL_SYNTH_FRONTEND",
+  "source_commit": "124a024a08df8c9c119889560b061901b305a92c",
+  "host": "EPYC2",
+  "run_root": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r1",
+  "error": "rtl/v41rom/ot_v41_ret.sv:75 syntax error unexpected TOK_IMPORT",
+  "physical_started": true,
+  "CTS_completed": false,
+  "SPEF_available": false,
+  "engine_RTL_changed": false,
+  "successor": "same RTL/model/full geometry/SS60FF25; existing pinned ORFS SYNTH_HDL_FRONTEND=slang to parse standard package imports",
+  "hashes": {
+    "actual_headroom.json": "a0058e16aa281328e6b95e496859831dd267cd19c7808025b5ad34e9bb79d310",
+    "flow.log": "46c256ca91a8830288265a20defe3cb28f80ccd9331019e5159d37819d0bc7f9",
+    "launch.json": "e7ba20bb6c052d1781a7e695fc17e6eafb229b1243823ec5e8499c98932a7095",
+    "physical.json": "4ffb1cdfd24ff6c77e758511d052caae9e8b0956ba9820f651ad1381e77cfe9f"
+  }
+}

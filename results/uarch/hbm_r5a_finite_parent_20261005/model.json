@@ -1,0 +1,640 @@
+{
+  "schema": "opentallas.existing-hbm-r5a-finite-allocation.v1",
+  "baseline_outline_um": [
+    24401.52,
+    24876.72
+  ],
+  "outline_um": [
+    29637.36,
+    24876.72
+  ],
+  "actual_source": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv",
+  "actual_source_sha256": "ceafbaf442f2b128cba9766907325e8fe807b0d55df3bb78c11e2fc82594ee53",
+  "actual_fullshape_port_bits": {
+    "clk": 1,
+    "hclk": 1,
+    "rst_n": 1,
+    "hrst_n": 1,
+    "cfg_lines": 128,
+    "cfg_lut": 6272,
+    "e_valid": 1,
+    "e_code": 72,
+    "e_ready": 1,
+    "notice": 1,
+    "row_v": 32,
+    "col_v": 32,
+    "row_op": 96,
+    "row_bank": 160,
+    "col_bank": 160,
+    "col_col": 160,
+    "row_row": 608,
+    "rd_v": 32,
+    "rd_code": 11520,
+    "s_valid": 8,
+    "s_ready": 8,
+    "s_data": 8192,
+    "fault": 1
+  },
+  "actual_boundary_pin_tracks": 27488,
+  "earlier_600p48_channel_rejected_for_actual_configuration_and_command_ports": true,
+  "baseline_area_mm2": 607.0297806144,
+  "area_mm2": 737.2803062592001,
+  "extra_die_area_mm2": 130.2505256448,
+  "reticle_margin_mm2": 120.71969374079993,
+  "old_logic_translation_x_um": 2617.92,
+  "existing_east_boundary_blocks_relocated": [
+    "lk_host",
+    "hs_slab"
+  ],
+  "existing_claims_released": 0,
+  "allocations": [
+    {
+      "name": "r5a_SW",
+      "core_bbox_um": [
+        25.92,
+        1207.44,
+        2026.0800000000002,
+        3207.6000000000004
+      ],
+      "local_channel_bbox_um": [
+        2026.0800000000002,
+        1207.44,
+        2643.84,
+        3207.6000000000004
+      ],
+      "element_count": 1,
+      "macro_count": 96,
+      "body_cell_ceiling_um2": 492392.9696,
+      "SRAM_body_um2": 497052.0,
+      "channel_layers": [
+        {
+          "layer": "M6",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M7",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M8",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        },
+        {
+          "layer": "M9",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        }
+      ],
+      "channel_demand": 27488,
+      "available_tracks": 27688,
+      "residual_tracks": 200,
+      "competing_reserved_local_signal_tracks": 0,
+      "exclusive_new_sideband_reservation": true,
+      "source_to_existing_endpoint_envelopes": {
+        "phy_SW": {
+          "rectilinear_envelope_um": 15447.480000000001,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "svc_SW": {
+          "rectilinear_envelope_um": 14261.616,
+          "wire_stage_bound": 34,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm0": {
+          "rectilinear_envelope_um": 7882.224,
+          "wire_stage_bound": 19,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm1": {
+          "rectilinear_envelope_um": 10344.192000000001,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm2": {
+          "rectilinear_envelope_um": 12806.16,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm3": {
+          "rectilinear_envelope_um": 15268.128,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm4": {
+          "rectilinear_envelope_um": 10474.224,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm5": {
+          "rectilinear_envelope_um": 12936.192000000001,
+          "wire_stage_bound": 31,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm6": {
+          "rectilinear_envelope_um": 15398.16,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm7": {
+          "rectilinear_envelope_um": 17860.128,
+          "wire_stage_bound": 42,
+          "source_receiver_pin_load_measured": false
+        }
+      },
+      "signal_pin_names_and_actual_loads_ready": false
+    },
+    {
+      "name": "r5a_SE",
+      "core_bbox_um": [
+        26753.2,
+        1207.44,
+        28753.36,
+        3207.6000000000004
+      ],
+      "local_channel_bbox_um": [
+        26135.440000000002,
+        1207.44,
+        26753.2,
+        3207.6000000000004
+      ],
+      "element_count": 1,
+      "macro_count": 96,
+      "body_cell_ceiling_um2": 492392.9696,
+      "SRAM_body_um2": 497052.0,
+      "channel_layers": [
+        {
+          "layer": "M6",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M7",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M8",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        },
+        {
+          "layer": "M9",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        }
+      ],
+      "channel_demand": 27488,
+      "available_tracks": 27688,
+      "residual_tracks": 200,
+      "competing_reserved_local_signal_tracks": 0,
+      "exclusive_new_sideband_reservation": true,
+      "source_to_existing_endpoint_envelopes": {
+        "phy_SE": {
+          "rectilinear_envelope_um": 15452.944000000003,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "svc_SE": {
+          "rectilinear_envelope_um": 14267.104000000003,
+          "wire_stage_bound": 34,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm8": {
+          "rectilinear_envelope_um": 15273.640000000001,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm9": {
+          "rectilinear_envelope_um": 12811.672000000002,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm10": {
+          "rectilinear_envelope_um": 10349.704000000002,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm11": {
+          "rectilinear_envelope_um": 7887.736000000001,
+          "wire_stage_bound": 19,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm12": {
+          "rectilinear_envelope_um": 17865.64,
+          "wire_stage_bound": 42,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm13": {
+          "rectilinear_envelope_um": 15403.672000000002,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm14": {
+          "rectilinear_envelope_um": 12941.704000000002,
+          "wire_stage_bound": 31,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm15": {
+          "rectilinear_envelope_um": 10479.736,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        }
+      },
+      "signal_pin_names_and_actual_loads_ready": false
+    },
+    {
+      "name": "r5a_NW",
+      "core_bbox_um": [
+        25.92,
+        21669.120000000003,
+        2026.0800000000002,
+        23669.280000000002
+      ],
+      "local_channel_bbox_um": [
+        2026.0800000000002,
+        21669.120000000003,
+        2643.84,
+        23669.280000000002
+      ],
+      "element_count": 1,
+      "macro_count": 96,
+      "body_cell_ceiling_um2": 492392.9696,
+      "SRAM_body_um2": 497052.0,
+      "channel_layers": [
+        {
+          "layer": "M6",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M7",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M8",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        },
+        {
+          "layer": "M9",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        }
+      ],
+      "channel_demand": 27488,
+      "available_tracks": 27688,
+      "residual_tracks": 200,
+      "competing_reserved_local_signal_tracks": 0,
+      "exclusive_new_sideband_reservation": true,
+      "source_to_existing_endpoint_envelopes": {
+        "phy_NW": {
+          "rectilinear_envelope_um": 15447.479999999998,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "svc_NW": {
+          "rectilinear_envelope_um": 14261.591999999999,
+          "wire_stage_bound": 34,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm16": {
+          "rectilinear_envelope_um": 7882.248000000001,
+          "wire_stage_bound": 19,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm17": {
+          "rectilinear_envelope_um": 10344.216000000002,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm18": {
+          "rectilinear_envelope_um": 12806.184000000001,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm19": {
+          "rectilinear_envelope_um": 15268.152000000002,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm20": {
+          "rectilinear_envelope_um": 10215.048,
+          "wire_stage_bound": 24,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm21": {
+          "rectilinear_envelope_um": 12677.016000000001,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm22": {
+          "rectilinear_envelope_um": 15138.984,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm23": {
+          "rectilinear_envelope_um": 17600.952,
+          "wire_stage_bound": 41,
+          "source_receiver_pin_load_measured": false
+        }
+      },
+      "signal_pin_names_and_actual_loads_ready": false
+    },
+    {
+      "name": "r5a_NE",
+      "core_bbox_um": [
+        26753.2,
+        21669.120000000003,
+        28753.36,
+        23669.280000000002
+      ],
+      "local_channel_bbox_um": [
+        26135.440000000002,
+        21669.120000000003,
+        26753.2,
+        23669.280000000002
+      ],
+      "element_count": 1,
+      "macro_count": 96,
+      "body_cell_ceiling_um2": 492392.9696,
+      "SRAM_body_um2": 497052.0,
+      "channel_layers": [
+        {
+          "layer": "M6",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M7",
+          "pitch_um": 0.064,
+          "raw_tracks": 9652,
+          "retained_PG_tracks": 0,
+          "via_tracks": 483,
+          "clock_other_tracks": 64,
+          "available_tracks": 9105
+        },
+        {
+          "layer": "M8",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        },
+        {
+          "layer": "M9",
+          "pitch_um": 0.08,
+          "raw_tracks": 7722,
+          "retained_PG_tracks": 2532,
+          "via_tracks": 387,
+          "clock_other_tracks": 64,
+          "available_tracks": 4739
+        }
+      ],
+      "channel_demand": 27488,
+      "available_tracks": 27688,
+      "residual_tracks": 200,
+      "competing_reserved_local_signal_tracks": 0,
+      "exclusive_new_sideband_reservation": true,
+      "source_to_existing_endpoint_envelopes": {
+        "phy_NE": {
+          "rectilinear_envelope_um": 15452.944,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "svc_NE": {
+          "rectilinear_envelope_um": 14267.080000000002,
+          "wire_stage_bound": 34,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm24": {
+          "rectilinear_envelope_um": 15273.664000000002,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm25": {
+          "rectilinear_envelope_um": 12811.696000000004,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm26": {
+          "rectilinear_envelope_um": 10349.728000000003,
+          "wire_stage_bound": 25,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm27": {
+          "rectilinear_envelope_um": 7887.760000000002,
+          "wire_stage_bound": 19,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm28": {
+          "rectilinear_envelope_um": 17606.464,
+          "wire_stage_bound": 41,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm29": {
+          "rectilinear_envelope_um": 15144.496000000003,
+          "wire_stage_bound": 36,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm30": {
+          "rectilinear_envelope_um": 12682.528000000002,
+          "wire_stage_bound": 30,
+          "source_receiver_pin_load_measured": false
+        },
+        "sm31": {
+          "rectilinear_envelope_um": 10220.560000000001,
+          "wire_stage_bound": 24,
+          "source_receiver_pin_load_measured": false
+        }
+      },
+      "signal_pin_names_and_actual_loads_ready": false
+    }
+  ],
+  "SRAM_macro_replicas_per_die": 384,
+  "replicas_per_die": 4,
+  "request": "results/uarch/hbm_r5a_protected_successor_20261005/model.json",
+  "request_sha256": "b9907ef7cbbf5c184122001d58db5cd44476dea482dff6169c6b88582bf76509",
+  "child_successor_latency": {
+    "added_clk_edges_upper": 7,
+    "added_hclk_edges_upper": 2,
+    "first_access_added_ns_upper": 7.881333333333334,
+    "DS_routed_fetches": 40,
+    "DS_token_added_us_upper": 0.31525333333333333,
+    "old_measured_gain_us": 13.343,
+    "remaining_gain_us_lower": 13.027746666666667,
+    "golden_sector_sequence_unchanged": true,
+    "steady_PC_sectors_per_hclk": 1,
+    "bounds_analytical_until_changed_source_bench": true
+  },
+  "conservative_parent_roundtrip_wire_cycles": 84,
+  "conservative_DS40_fetch_wire_us": 2.8,
+  "transport_registers_installed": false,
+  "clk_sm_period_ps": 833.333333333,
+  "hclk_period_ps": 1024,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "actual_clock_source_phase_insertion_and_IO_loads_ready": false,
+  "ready_hardened_abstract": false,
+  "physical_admitted": false,
+  "adopted": false,
+  "previous_e11b_failure_preserved": true,
+  "retained_bus_geometry_reprice": {
+    "baseline": {
+      "die_mm2": 607.03,
+      "one_way_cycles": {
+        "xbcast": 51,
+        "control": 45,
+        "result": 40,
+        "weight": 11,
+        "expert_req": 50,
+        "kv": 18,
+        "ik": 24,
+        "link": 20,
+        "su_coll": 4,
+        "coll_su": 4,
+        "attn_out": 7
+      },
+      "ds_added_us": 36.609,
+      "terms_us": {
+        "x_broadcast": 12.367,
+        "barrier_wire_delta": 9.147,
+        "result_gather": 0.0,
+        "su_coll_endpoint": 1.767,
+        "endpoint_serdes": 10.167,
+        "expert_fetch_wire": 2.033,
+        "kv_rows_wire": 0.735,
+        "index_keys_wire": 0.16,
+        "attn_out_wire": 0.233
+      },
+      "ds_gate_AR_tok_s": 1955.4,
+      "ds_gate_MTP_tok_s": 3825.3,
+      "qwen_tp4": 2138.2,
+      "qwen_tp2": 1029.1,
+      "worst": {
+        "weight": "weight_sm4",
+        "xbcast": "xbcast_sm4",
+        "result": "result_sm8",
+        "control": "control_sm24",
+        "expert_req": "expert_req_NE",
+        "kv": "kv_NW",
+        "ik": "ik_SW",
+        "attn_out": "attn_out_SW",
+        "link": "link_lk_S2",
+        "host": "host"
+      }
+    },
+    "revised": {
+      "die_mm2": 737.28,
+      "one_way_cycles": {
+        "xbcast": 51,
+        "control": 45,
+        "result": 40,
+        "weight": 11,
+        "expert_req": 50,
+        "kv": 18,
+        "ik": 24,
+        "link": 20,
+        "su_coll": 4,
+        "coll_su": 4,
+        "attn_out": 7
+      },
+      "ds_added_us": 36.609,
+      "terms_us": {
+        "x_broadcast": 12.367,
+        "barrier_wire_delta": 9.147,
+        "result_gather": 0.0,
+        "su_coll_endpoint": 1.767,
+        "endpoint_serdes": 10.167,
+        "expert_fetch_wire": 2.033,
+        "kv_rows_wire": 0.735,
+        "index_keys_wire": 0.16,
+        "attn_out_wire": 0.233
+      },
+      "ds_gate_AR_tok_s": 1955.4,
+      "ds_gate_MTP_tok_s": 3825.3,
+      "qwen_tp4": 2138.2,
+      "qwen_tp2": 1029.1,
+      "worst": {
+        "weight": "weight_sm4",
+        "xbcast": "xbcast_sm4",
+        "result": "result_sm8",
+        "control": "control_sm24",
+        "expert_req": "expert_req_NE",
+        "kv": "kv_NW",
+        "ik": "ik_SW",
+        "attn_out": "attn_out_SW",
+        "link": "link_lk_S2",
+        "host": "host"
+      }
+    },
+    "DS_existing_bus_delta_us": 0.0,
+    "basis": "Analytical minimum Manhattan path stages; not actual route or inserted RTL"
+  },
+  "remaining_old_measured_gain_us_after_conservative_parent_and_child_charge": 10.227746666666667,
+  "analytical_existing_instance_legality": {
+    "instances": 382,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+  }
+}

@@ -1,0 +1,7 @@
+ENCLOSING_CAPTURE mode=1 job=1 actual_user=865 WFC_to_native_edges=15 request_wait_edges=8
+ENCLOSING_WRONG_OWNER full866 after_actual_completion_capture false_ACK=0 owned_job_retained=1 quarantine=1 PASS
+ENCLOSING_WRONG_OWNER_ALL PASS
+- /srv/opentallas-scratch2/jobs/zeno-wfc-enclosing-source-r2/rtl/test/dsrom_wavefront/tb_wfc_enclosing_stage.sv:145: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 182ns; walltime 0.003 s; speed 60.526 us/s
+- Verilator: cpu 0.003 s on 1 threads; alloced 1019 MB

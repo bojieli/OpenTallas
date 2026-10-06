@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.hbm-suattn.takeover-terminal.v1",
+  "source_branch": "claude/hbm-su-attn-close-20261005",
+  "source_commit": "2986b2c94",
+  "attention_source_commit": "b32d59700",
+  "selected": false,
+  "adopted": false,
+  "attention_verify6": {
+    "status": "PASS",
+    "cases": 18,
+    "F12": 1,
+    "FPL": 6,
+    "FML": 8,
+    "FPLX": 5,
+    "NBANKP": [
+      0,
+      6,
+      7
+    ],
+    "vehicle": {
+      "H": 16,
+      "D": 64,
+      "TD": 32,
+      "NL": 4,
+      "TROWS": 640
+    },
+    "head_group_size": 4,
+    "physical_scope": "one-head m6h1 closure remains separate; no contextual tile or full-engine closure"
+  },
+  "reducer_eq6": {
+    "status": "PASS_ACTIVE_OUTPUT_EQUIVALENCE",
+    "full_shape": {
+      "N": 1024,
+      "SL": 64,
+      "cycles": 4000,
+      "events": 962,
+      "mismatches": 0
+    },
+    "other_cases": [
+      "N64 SL16 MLAT6 ALAT6 all cuts off",
+      "N64 SL16 MLAT3 ALAT3 all cuts on",
+      "N64 SL16 MLAT6 ALAT6 all cuts on"
+    ],
+    "negative_control_exit": 1,
+    "inactive_outputs": "not compared when o_we/o_ev are false",
+    "fault_timing": "fault counts differ; no fault-cycle equivalence claimed",
+    "source_sha256": {
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "22989347db13ea685abc666e66453554f7fe6d43ea937a3008bcf90bf4681d18",
+      "rtl/hdc/v41x/phys/ot_hdc_v41x_vec_red_c12_phys.sv": "698f6b6a36397cf77486a419940f858f97562a90eb55d1235f4dd7669e767432",
+      "rtl/test/tb_hdc_v41x_vec_red_c12.cpp": "08afbdb8a8282059e23336eda6415ab856652a7409667dbca4a625b49b98208b",
+      "rtl/test/tb_hdc_v41x_vec_red_c12.sv": "20acffad14b4866b5629846c27a3b20218a3c8e413fd26bc9038057796734457"
+    }
+  },
+  "campaign_r5": {
+    "status": "PASS",
+    "source_variant": "r4 reducer d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
+    "historical_source": "su/reducer_campaign_measured.sv",
+    "current_r6_full_unit_campaign_qualified": false
+  },
+  "latest_c12_su_chains": {
+    "status": "PASS",
+    "P1_chains": 38,
+    "P6_chains": 38,
+    "full_shape": "N1024/M256, broadcast7/return8",
+    "implementation": "dpi_beh; cycle evidence, numerical RTL gates are separate",
+    "composition": "su/composition.json",
+    "adoption_verdict": "REJECT_GAIN: matched AR -1.140%, MTP -1.877% vs measured m6a5"
+  },
+  "live_jobs": "Preserved existing r3 attention and r6 reducer routes, SU full/SFU/side/controller jobs; no relaunch or primitive edits",
+  "artifact_sha256": {
+    "attn/verify6_68.json": "ff8ac4860a31acf55b0f91996e2f1dcf56605a6e0171149f2927ba6d50db8184",
+    "attn/verify6_68_b6.json": "c45173e67dcce23cf61af836053161f746135a81ee9d2c1dbf3c719c1d14cfb2",
+    "attn/verify6_68_b7.json": "15393b8a5bd626e775424ad6523a1caad1c0c015aaada584f2194f362bc4c6df",
+    "su/campaign_r5.json": "fa4c6a15520896c787318f12968f9c4f9d5ca976d6683a5be14dabe17763926a",
+    "su/campaign_r5.log": "311de9f2f962341d277e4af784a8006dec834af1f61c58fa7f467d49507fde71",
+    "su/composition.json": "17676b49e95195774b753494f1b7d8420a55ae843c6ba7445a6a88bb721d9d0c",
+    "su/reducer_campaign_measured.sv": "d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
+    "su/reducer_eq6/a/rc": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+    "su/reducer_eq6/a/run.log": "07ff5f023d52156c424900b840e80207f95e1e64c374fc7adf726572828038d3",
+    "su/reducer_eq6/d/rc": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+    "su/reducer_eq6/d/run.log": "a22d2eaf7572af71993555b182c69bab86413870268478cd10067cb22d744b51",
+    "su/reducer_eq6/e/rc": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+    "su/reducer_eq6/e/run.log": "e7f538f5f0705e9e12c455e593d2968fd6d356dc634f9ee3e8feb56da949dbbc",
+    "su/reducer_eq6/g/rc": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+    "su/reducer_eq6/g/run.log": "5ac9c66b5dd5c53de27a86818cc3835ec73cf24c4cf0222f2c811e92626f63f7",
+    "su/reducer_eq6/neg/rc": "91d957f8f2748a950526d4d21e0d5cd3bf5518e6c60b1beb470a13be1f978b1d",
+    "su/reducer_eq6/neg/run.log": "d4ea215630ff958f785ddb7139a1ee48233e7fdfbd810c277ea8915da7c0e84a",
+    "su/reducer_eq6/ot_ref_vec_red.sv": "c21491e6e28d7b0b017824dc2a67b135971f23a0b6717dfbc0ab22ead202744a",
+    "su/reducer_eq6/red_eq6.sh": "d79775e3b3445c25f14acd68998fd00b041904dde259898af8ad118a7da7a0cc",
+    "su/reducer_eq6/red_eq6n.sh": "3efc13bb6facb07591bfb40e62f8a61d97e6f0a08e7357e00fc464ad31594ee1",
+    "su/reducer_eq6/source/ot_hdc_v41x_vec_red_c12.sv": "22989347db13ea685abc666e66453554f7fe6d43ea937a3008bcf90bf4681d18",
+    "su/reducer_eq6/source/ot_hdc_v41x_vec_red_c12_phys.sv": "698f6b6a36397cf77486a419940f858f97562a90eb55d1235f4dd7669e767432",
+    "su/reducer_eq6/source/tb_hdc_v41x_vec_red_c12.cpp": "08afbdb8a8282059e23336eda6415ab856652a7409667dbca4a625b49b98208b",
+    "su/reducer_eq6/source/tb_hdc_v41x_vec_red_c12.sv": "20acffad14b4866b5629846c27a3b20218a3c8e413fd26bc9038057796734457",
+    "su/reducer_eq6/tb_neg6.sv": "30ec31503586803c5056b555279ceaf610b973e5451982713198a1f6efb3f198",
+    "su/reducer_route_r5.sv": "8669b969e9f0a7420b2101bd77deaaecfa373831416f76227292ed4ea68ca7f8",
+    "su/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_p6om_ildr.json": "a185aa97048235d33fd007edb9556af349e48e4fb74a6dfe0cd5355a2ae8518c",
+    "su/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_v2_ildr.json": "400e3a7addb1d1406b08e1b2031bf29de5df879b67eda5ef3b5345cbd405a518"
+  }
+}
