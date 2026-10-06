@@ -25,6 +25,7 @@ if __name__=='__main__':
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--baseline',type=Path,required=True)
     ap.add_argument('--boundary-hold',action='store_true')
+    ap.add_argument('--cores',type=int,default=4,choices=range(1,25))
     ap.add_argument('--mapped-cfg',action='store_true',help='Reuse actual cfg-parent mapped Verilog and repair only the consumed-bit SDC assertion')
     ap.add_argument('--region-only',action='store_true',help='Resume PDN with canonical initial-place empty-core removal; omit broken automatic-density prequery')
     a=ap.parse_args();out=a.out.resolve();baseline=a.baseline.resolve()
@@ -88,7 +89,7 @@ if __name__=='__main__':
             raise SystemExit('region-only continuation requires unchanged modeled density0.6')
     receipt=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                  image_id=image,baseline=str(baseline),reused_checkpoint_sha256=reused,
-                 checkpoint=checkpoint,region_only=a.region_only,mapped_cfg=a.mapped_cfg,place_density=0.6,
+                 checkpoint=checkpoint,cores=a.cores,region_only=a.region_only,mapped_cfg=a.mapped_cfg,place_density=0.6,
                  automatic_density_prequery_disabled=a.region_only,tool_binary_changed=False,
                  identical_RTL_macro_and_clock_sources=identical,smoke_replayed=False,
                  added_pipeline_cycles=0,mandatory_boundary_buffers=3 if a.boundary_hold else 0,started_ns=time.time_ns(),
@@ -99,7 +100,7 @@ if __name__=='__main__':
     # Subsequent PDN/placement/CTS/route stages execute for this physical variant.
     shell=('source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && '
-           'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=4 '
+           f'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES={a.cores} '
            +('POST_DETAIL_PLACE_TCL=/work/hooks/post_detail_place_hold_boundary.tcl ' if a.boundary_hold else '')+
            ('PLACE_DENSITY_LB_ADDON= PRE_GLOBAL_PLACE_SKIP_IO_TCL=/work/hooks/region_only.tcl '
             'POST_GLOBAL_PLACE_SKIP_IO_TCL=/work/hooks/region_only.tcl ' if a.region_only else '')+
