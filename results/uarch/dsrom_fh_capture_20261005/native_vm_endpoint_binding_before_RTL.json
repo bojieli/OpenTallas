@@ -1,0 +1,57 @@
+{
+  "default": 0,
+  "scope": "Conditional head child; source-native fast endpoint copies, no backend duplication",
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_port_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": {
+    "head_write_payload": 2048,
+    "head_mask": 64,
+    "head_word": 96,
+    "native_request": 2831,
+    "protected_reply": 1267
+  },
+  "replicas": 1,
+  "capture_FF_bits": 8196,
+  "head_warm_once_fault_metadata_FF_bits": 6,
+  "FF_total": 8202,
+  "architectural_added_cycles": 0,
+  "clock": {
+    "fast_period_ps": 833.3333333333334,
+    "backend_period_ps": 1111.111111111111,
+    "related_dividers": [
+      3,
+      4
+    ],
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25
+  },
+  "native_ports": {
+    "head_groups_to_write_ports": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "xa_write_disabled": true,
+    "checked_address_bits": 15,
+    "head_address_bits": 24,
+    "no_enabled_address_truncation": true
+  },
+  "floorplan": {
+    "existing_head_um": [
+      2000,
+      660
+    ],
+    "macro_count": 64,
+    "FF_area_proxy_um2": 2391.7032000000004,
+    "actual_mapped_receiver_caps_and_routing_tracks_required": true,
+    "clock_PG_repair_margin_required": true,
+    "ready_for_route": false
+  },
+  "fanout": "Per enabled lane native accepted_input normalization -> actual source_packet/source_check capture pair; genuine held_reply owner/ordinal/word/mask validation and once-only warm callback.",
+  "protection": "Existing native SECDED/dual-rail parent remains owner; checked readback visibility is distinct from later port_retired/C8. Mirror warm/sent/fault local callback state.",
+  "latency": "Existing fast endpoint stages, not extra producer cycles; real native backend/readback/3:4 crossings already priced by parent model. Head +40 remains unmeasured.",
+  "adoption": false,
+  "physical_closed": false
+}
