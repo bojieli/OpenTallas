@@ -6,7 +6,7 @@ import hashlib,json
 from pathlib import Path
 import uarch_model as U
 ROOT=Path(__file__).resolve().parents[1]
-P=U.PRESETS['proposal']; SF=P['sfu_lanes']//4; HC=5120//4; NG=HC//4
+P=U.PRESETS['proposal']; SF=P['sfu_lanes']//4; HC_MACS=5120//4; NG=HC_MACS//20; HC=NG*4
 # Actual canonical port widths follow source engine semantics, not historical
 # input-only die stubs. A wire framing adapter must be owned/bound separately.
 def bank(bits):
@@ -35,7 +35,7 @@ r=dict(schema='opentallas.hbm.compute.quarter_size.v1',
           composed_cycles='request capture + dispatch + existing opcode pipeline + protected result capture; engine completion drives retirement, no invented zero latency',
           expected_engine_depth=dict(exp=94,sigm=121,silu=121,rsqrt=77,sqrt=35,softplus_sqrt=276,egate=158),
           held=held(sfu_i,sfu_o)),
- hc=dict(top='ot_hbm_hc_quarter',output_lanes=HC,groups=NG,replicas=4,operation='HC_POST',
+ hc=dict(top='ot_hbm_hc_quarter',output_lanes=HC,groups=NG,replicas=4,fp32_mac_budget=HC_MACS,operation='HC_POST',
          coverage='HC_POST only. HC_PRE/projection/Sinkhorn/selection remain source-owner dependencies, no whole mHC claim',
          port_bits=dict(request=hc_i,response=hc_o),port_bytes=dict(request=hc_i/8,response=hc_o/8),
          ML=6,AL=5,WIN=0,WOUT=0,
