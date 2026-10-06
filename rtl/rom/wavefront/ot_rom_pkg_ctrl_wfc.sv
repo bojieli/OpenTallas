@@ -1226,6 +1226,9 @@ module ot_rom_pkg_ctrl_wfc_src #(
 `ifdef OT_WFC_NEG_ROW
                     if (w_u == 3) rc[RW-1] <= ~w_ring[0];
 `endif
+`ifdef OT_WFC_NEG_ROW2
+                    if (w_u == 3 && w_rec[0]) rc[O_WNP-1] <= ~w_rec[O_WNP];
+`endif
                 end
                 assign row_bk = rc; assign u_bk = uc;
             end else begin : g_wshared
@@ -1266,6 +1269,9 @@ module ot_rom_pkg_ctrl_wfc_src #(
         b_u <= w_u; b_row <= {w_ring, w_rec[RW-1:1]};
 `ifdef OT_WFC_NEG_ROW
         if (w_u == 3) b_row[RW-1] <= ~w_ring[0];   // negative control: corrupt user 3's ring slot 0 bit 0
+`endif
+`ifdef OT_WFC_NEG_ROW2
+        if (w_u == 3 && w_rec[0]) b_row[O_WNP-1] <= ~w_rec[O_WNP];   // negative control: user 3's next position bit 0
 `endif
         b_en <= w_en; b_ren <= w_ren; b_oh <= {{(NG-1){1'b0}}, 1'b1} << (w_u >> 5); b_lo <= w_u[4:0];
         b_rec <= w_rec; b_slot <= w_slot; b_data <= w_data;
