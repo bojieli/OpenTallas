@@ -182,6 +182,17 @@
     },
     "implementation": "existing protected control CDC registers, no new SRAM or RTL/cycles; actual mapped cost pending",
     "recipe_instance_limit_bits": 6480,
-    "prior_ORFS_limit_bits": 4096
+    "prior_ORFS_limit_bits": 4096,
+    "classification": "Existing mutable protected request CDC FF storage, not SRAM or payload VM replacement",
+    "RTL_kind": "ot_dsrom_vm_ratio_fifo W3240 DEPTH2: mem written on fast w_fire; sh[0:1] sampled in full on every slow clock",
+    "optimized_request_mem_bits": 6378,
+    "unoptimized_read_shadow_bits": 6480,
+    "existing_provider_model": "results/uarch/dsrom_protected_vm_20261006/model.json protection.pipeline_fifo_storage_bits=19296 =4*(3240+1440+144)",
+    "existing_transport_FF_area_floor_um2": 5626.713600000001,
+    "existing_logic_upper_um2": 150000,
+    "new_RTL_state_bits": 0,
+    "new_cycles": 0,
+    "blackbox_inventory_unchanged": "288 actual VM SRAM +14 canonical prompt SRAM +4 book ROM",
+    "physical_qualification": "Mapped area/CTS/SS60FF25 still pending; array guard override provides no timing credit"
   }
 }
