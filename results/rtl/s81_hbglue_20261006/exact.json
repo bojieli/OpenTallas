@@ -1,0 +1,31 @@
+{
+  "pass": true,
+  "scope": "native glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only",
+  "cycles": 1200,
+  "seed": 12345,
+  "added_cycles": 0,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+    "rtl/s81/ot_dsrom_head_bundle_glue.sv": "1e621f3f301f8e6585a0f7441df63f746f41bb6913a480910dbc3c4db6e5ac56",
+    "rtl/test/s81/tb_head_bundle_glue.sv": "23326e2171c9bebaec5855e3e027daf057c1324e984119e3708a97681b5c847c"
+  },
+  "cases": {
+    "baseline": {
+      "returncode": 0,
+      "output": "PASS glue lockstep 1200 cycles results=590"
+    },
+    "demux": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:18: lockstep cycle 5\n       Time: 9000 Scope: tb"
+    },
+    "tie": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:18: lockstep cycle 8\n       Time: 12000 Scope: tb"
+    },
+    "skew": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:18: lockstep cycle 0\n       Time: 4000 Scope: tb"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+ "master": "hfd_barrier",
+ "lef": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55/view/hfd_barrier.lef",
+ "macro": "hfd_barrier",
+ "size_view": [
+  1399.66,
+  36.696
+ ],
+ "size_gen": [
+  1399.656,
+  36.696
+ ],
+ "gen_pins": 130,
+ "view_pins": 130,
+ "missing": 0,
+ "extra": 0,
+ "moved": 0,
+ "wrong_layer": 0,
+ "wrong_face": 0,
+ "wrong_face_examples": [],
+ "missing_examples": [],
+ "extra_examples": [],
+ "moved_examples": [],
+ "wrong_layer_examples": [],
+ "pg_pins": {
+  "VDD": [
+   "M1",
+   "M2",
+   "M8",
+   "M9"
+  ],
+  "VSS": [
+   "M1",
+   "M2",
+   "M8",
+   "M9"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "M8",
+  "M9",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [
+  "M8",
+  "M9"
+ ],
+ "positions": "exact",
+ "problems": [],
+ "verdict": "MATCH"
+}

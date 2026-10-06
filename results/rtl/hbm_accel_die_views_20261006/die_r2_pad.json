@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.hbm_die_views_round.v1",
+ "round": "r2_pad",
+ "cases": {
+  "a_real": {
+   "instances": 439,
+   "overlaps": 0,
+   "outside": 0,
+   "on_track": "PASS",
+   "pin_access": "DONE",
+   "pa_errors": 0,
+   "macro_no_access": 0,
+   "place_s": 13,
+   "pa_s": 218,
+   "exit": "0",
+   "real_views": [
+    "hfd_barrier",
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": null,
+   "iterations": null
+  }
+ },
+ "source_commit": "f6d859f4eda070a44b6d5ec91f1fbcce34dc6469"
+}
+

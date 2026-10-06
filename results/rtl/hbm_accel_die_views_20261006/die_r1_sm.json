@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hbm_die_views_round.v1",
+ "round": "r1_sm",
+ "cases": {
+  "a_real": {
+   "error": "Error: run.tcl, 14 ot_mts: sm0 x: site grid (0 + k*54) never meets the legal residues mod 48",
+   "exit": "1",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": null,
+   "iterations": null
+  },
+  "b_k16_i5": {
+   "grt_capacity": 110285908,
+   "grt_demand": 6093831,
+   "grt_usage_pct": 5.53,
+   "overflow_h": 1,
+   "overflow_v": 1,
+   "overflow": 4,
+   "grt_s": 172,
+   "exit": "0",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": 16,
+   "iterations": 5
+  },
+  "b_k16_i50": {
+   "grt_capacity": 110285908,
+   "grt_demand": 6092212,
+   "grt_usage_pct": 5.52,
+   "overflow_h": 0,
+   "overflow_v": 0,
+   "overflow": 0,
+   "grt_s": 347,
+   "exit": "0",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": 16,
+   "iterations": 50
+  }
+ },
+ "source_commit": "b0bf15ebad2f458313026680d0b65105a90009e1"
+}
+

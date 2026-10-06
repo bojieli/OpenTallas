@@ -12,6 +12,7 @@ from collections import Counter
 import copy
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -319,7 +320,8 @@ def build(su_path=None, field_path=None):
         inputs[str(Path(su_path).resolve().relative_to(ROOT))] = sha(su_path)
     fetch = [e for e in hbm["path"] if e["node"].startswith("hbm:expert_fetch")]
     return dict(schema="opentallas.dsrom-recovery.matched-decision-gate.v1", inputs=inputs,
-        source_snapshot="c87183adc; current adopted levers, WINDOW=s81, hop full_fec",
+        source_snapshot=f"{subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()}; current adopted levers, WINDOW=s81, hop full_fec",
+        composition_sha256=sha(canonical_path),
         context=base["context"], position=base["position"],
         composition_contract=dict(canonical_source=str(canonical_path.relative_to(ROOT)),
             hop_tier=base["info"]["hop_tier"], window=base["info"]["window"]["mode"],

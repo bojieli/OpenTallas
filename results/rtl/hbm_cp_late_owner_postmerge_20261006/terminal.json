@@ -1,0 +1,21 @@
+{
+  "pass_exact": true,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "33139b41aba5761bd1dfa1e38440945200b00b6d87af958c1695e7833c4e89a5",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv": "812fddf9f259dc767ce00bb3b7b7cea769d931c78a87c98766ff80eea1ceeb23",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "f462e964bd427756bc0633cd6d2af882621f89f3683a8d6aa1a7aa21d539280a",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv": "e2dcb93588f168ceced1d584f80df7416690e527ac1d71946680ed0682701939",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "1e44a0555ec175d442d32ef9205df58fa47d627b25b856eb640c98640b178a63"
+  },
+  "CONTROL_TAIL_CUT": 2,
+  "added_cycles": 0,
+  "added_registers": 0,
+  "physical_qualified": false,
+  "adopted": false
+}

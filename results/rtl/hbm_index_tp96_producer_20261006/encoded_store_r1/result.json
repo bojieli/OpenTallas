@@ -1,0 +1,53 @@
+{
+  "status": "PASS_ALL_HISTORICAL_ENCODED_KEY_BITS_MATCH_RETAINED_STORE",
+  "keys": 1048575,
+  "values": 134217600,
+  "store_sha256": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+  "shards": [
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r0/ikhbm_region.hex",
+      "sha256": "a8c2255fae6bb45ff177e216ccc4ba26b336668fb0a993f7b1a3f1d6b2271d4d",
+      "global_range": [
+        0,
+        262144
+      ],
+      "sectors": 557056,
+      "decoded_float32_sha256": "512db1c9e005992b1fd8cdcdd576fe9904a4221936baa4a0dec8aa3d3d9490f4"
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r1/ikhbm_region.hex",
+      "sha256": "6e72abe9e46351e86a371d92a81f5bc47a147745f6ee48168cbf761514b39cae",
+      "global_range": [
+        262144,
+        524288
+      ],
+      "sectors": 557056,
+      "decoded_float32_sha256": "8de0726d68189923b71de299c2312b9c8289fc3806608818f3b50be5725ef810"
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r2/ikhbm_region.hex",
+      "sha256": "557bca6fd6e96af46298faf8af88da8e338dcef8393b81ca09c5e9b6b68ab0de",
+      "global_range": [
+        524288,
+        786432
+      ],
+      "sectors": 557056,
+      "decoded_float32_sha256": "b7506e5165f93d2300e896a4be9c20c5193230679121243fdb7b04ea3c0abd39"
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r3/ikhbm_region.hex",
+      "sha256": "bd07cb0be7d6157d6570d327c9edfa3e8fb0c346f8bb90e504cdfc55053bcb2f",
+      "global_range": [
+        786432,
+        1048575
+      ],
+      "sectors": 557054,
+      "decoded_float32_sha256": "5a8ff646f16856fceb7bbf71a6839e5f4b8a57ef38e568bbffd3f8fac768daaf"
+    }
+  ],
+  "current_row_excluded": true,
+  "score_computation": false,
+  "DUT_execution": false,
+  "TP96_replication": false,
+  "audit_source_sha256": "570f8d4e2219d7dbea75813d4b400380248b1e160df3c69d2acde91add7ee85f"
+}
