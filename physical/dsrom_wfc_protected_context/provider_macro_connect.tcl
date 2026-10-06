@@ -34,7 +34,7 @@ proc ds_vm_connect {prefix serial_clock} {
     set pin_pattern [string map [list {[} {\[} {]} {\]}] "$logical_name/clk"]
     set pins [get_pins -quiet $pin_pattern]
     if {![llength $pins]} {
-      set raw_pattern [string map [list {\} {\\} {[} {\[} {]} {\]}] "$name/clk"]
+      set raw_pattern [string map [list "\\" "\\\\" {[} {\[} {]} {\]}] "$name/clk"]
       set pins [get_pins -quiet $raw_pattern]
     }
     if {[llength $pins] != 1} {error "Missing literal STA macro clock pin $name/clk"}
