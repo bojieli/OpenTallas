@@ -20,9 +20,20 @@
       "host cmd_*, cold/fast/slow reset roots actual insertion/slew",
       "in_*/out_*, bl_rx_*/bl_tx_*, rcfg_* finite router/link endpoints and min/max arrival/load",
       "xb_v/owner/we4/waddr4/wdata4/re/raddr/consume* actual writer/read/consumer endpoint timing and load",
-      "current WFC/VM commonPLL parent root insertion/slew; standalone local propagated CTS is not parent CTS"
+      "current WFC/VM commonPLL parent root insertion/slew; standalone local propagated CTS is not parent CTS",
+      "literal commonPLL/divider producer module/instance and fast_clk/slow_clk source pins with actual 3:4 phase; generated-clock SDC is currently a documented assumption, not instantiated producer proof"
     ]
   },
   "qualification": "INTERNAL_REAL_SOURCE_ONLY_PENDING_EXTERNAL_ENDPOINT_TIMING",
-  "whole_parent_closed": false
+  "whole_parent_closed": false,
+  "provider_binding": {
+    "status": "SOURCE_AND_PIN_ABI_READY_HOOK_CONSUMED_NOT_MAPPED_EXECUTED",
+    "hook": "provider_macro_connect.tcl",
+    "sha256": "e3b247457a40e08d8cc3ac1dd2b52408c3879433b98e74cbfc43568d886f55c6",
+    "source_owner": "Copernicus",
+    "source_hierarchy": "u_memory.g_live.u_backend.g_data[0..63].g_column[0..3].u_data; g_checks[0..31].u_check",
+    "actual_data_word_split": "group=word[14:9], row=word[8:0]; checkgroup=word[14:10], half=word[9]",
+    "PG": "VDD/VSS actual LEF pins; source hook fails missing signal/clock/PG connection",
+    "RTL_ABI_incompatibility_found": false
+  }
 }

@@ -11,14 +11,16 @@ ROOT=Path(__file__).resolve().parents[1]
 LIST='physical/hbm_die_abstracts_20261006/memory_control/formatter_provider.files.f'
 BODY='physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv'
 PARENT='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv'
+SELECTED='results/rtl/hbm_integrated_sfu_provider_join_20261006/selected_parameters.json'
 # Literal selected Gibbs parameters; standalone snapshot runner has no imports
 # from another worktree. Original ALAT5 executor is not rewritten as c12ALAT6.
 PARAMS=dict(ENABLE=1,COMBINED_ENABLE=1,W2_RESULT_ENABLE=1,W2_SECTOR_ENABLE=1,
     SU_ENABLE=1,SU_PROVIDER_ADAPTER=1,SU_REGISTERED_OUTPUTS=1,SU_REGISTERED_STATUS=1,
     SU_REGISTERED_BOUNDARY=1,SU_BALANCED_OWNER_BOUNDARY=1,SU_FOUR_COMBINATIONAL_CUTS=1,
     SU_FAST_OWNER_FRONTIER=1,ND=2,NSM=2,NS=2,NPC=2,MEM_WORDS=2097152,VM_AW=21,
-    FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,TW=17,PW=20,IMW=14)
-INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh']
+    FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,TW=17,PW=20,IMW=14,
+    SFU_C12_ENABLE=1)
+INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
@@ -34,6 +36,8 @@ def files():
     return paths
 
 def prepare(work,body_pin):
+    if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
+        raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
     work.mkdir(parents=True,exist_ok=False)
     paths=files();all_files=paths+INCLUDES
     missing=[s for s in all_files if not (ROOT/s).is_file()]
@@ -59,7 +63,7 @@ def prepare(work,body_pin):
             declarations[name]=path
     if BODY in pins:
         text=(ROOT/BODY).read_text()
-        header=text[text.index(')(\n')+3:text.index('\n);')]
+        header=re.sub(r'//[^\n]*|/\*.*?\*/','',text[text.index(')(\n')+3:text.index('\n);')],flags=re.S)
         declared=set()
         # ANSI declarations can share a direction/type across comma-separated
         # names, or introduce a new direction on that same line.
@@ -71,6 +75,19 @@ def prepare(work,body_pin):
         connected=set(re.findall(r'\.(\w+)\s*\(',instance))
         for name in sorted(connected-declared):errors.append('Parent formatter port absent in Bacon body: '+name)
         for name in sorted(declared-connected):errors.append('Bacon formatter port unconnected by parent: '+name)
+    sfu='rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv'
+    if sfu not in pins:
+        errors.append('Actual selected SFUc12 provider join missing')
+    elif ' u_sfu_c12(' not in parent or '#(.ENABLE(SFU_C12_ENABLE)) u_sfu_c12(' not in parent:
+        errors.append('Actual parent SFUc12 instance/enable connection missing')
+    else:
+        text=(ROOT/sfu).read_text()
+        header=re.sub(r'//[^\n]*|/\*.*?\*/','',text[text.index(')(\n')+3:text.index('\n);')],flags=re.S)
+        declared={re.search(r'(\w+)\s*$',p).group(1) for p in header.split(',')}
+        start=parent.index(' u_sfu_c12(')
+        connected=set(re.findall(r'\.(\w+)\s*\(',parent[start:parent.index(');',start)]))
+        for name in sorted(connected-declared):errors.append('Parent SFUc12 port absent in Gibbs body: '+name)
+        for name in sorted(declared-connected):errors.append('Gibbs SFUc12 port unconnected by parent: '+name)
     for s in all_files:
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
