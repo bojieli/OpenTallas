@@ -17,6 +17,7 @@ module tb_hbm_integrated_minimum_parent #(
  input wire fixture_formatter_enable,fixture_formatter_go,
  output wire fixture_formatter_go_r,fixture_formatter_pair_r,
  output wire fixture_formatter_configuration_valid,output wire [511:0] fixture_formatter_descriptor,
+ output wire [72:0] fixture_formatter_actual_cp_frame,
  output wire fixture_formatter_consumer_v,input wire fixture_formatter_consumer_r,
  output wire [598:0] fixture_formatter_consumer_pairs,
  output wire [72:0] fixture_formatter_consumer_frame,
@@ -300,6 +301,7 @@ module tb_hbm_integrated_minimum_parent #(
  wire [72:0] f_release_frame;
  wire [72:0] f_cp_frame={dut.g_on.g_die[0].launch_pos,dut.g_on.g_die[0].launch_token,
   dut.g_on.g_die[0].cpl_generation,dut.g_on.g_die[0].cpl_job};
+ assign fixture_formatter_actual_cp_frame=f_cp_frame;
  wire [72:0] f_gather_frame=dut.g_on.g_die[0].fmt_lease_frame;
  assign gather_desc_r=fixture_formatter_enable?{fixture_parent_desc_r[ND-1:1],f_desc_caller_r}:fixture_parent_desc_r;
  ot_hbm_formatter_install_consumer #(.ENABLE(1),.ENTRY_PC(FORMATTER_ENTRY_PC),
