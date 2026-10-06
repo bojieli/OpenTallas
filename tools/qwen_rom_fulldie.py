@@ -60,6 +60,7 @@ SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.02
 COLS, ROWS = 64, 24
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
+CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
 TILE_BODY_W = TILE_SLOT[0] - CORR
 HCH, VCH = 97.2, 174.096       # link channels: r2 96.768 rounded UP to the 2.16 um row lattice (45 x 2.16); spine 174.096
 SPINE_W_R2 = 1214.784
@@ -188,7 +189,8 @@ def build(spine_w=None, tree_mode='central'):
 def _build(spine_w, tree_mode):
     m = r2()
     fp = m['floorplan']
-    assert (R19 or fp['tile_slot_um'] == list(TILE_SLOT)) and abs(fp['tile_corridor_um'] - CORR) < 1e-9
+    assert (R19 or CORR != CORR_R2 or fp['tile_slot_um'] == list(TILE_SLOT)) and \
+        (CORR != CORR_R2 or abs(fp['tile_corridor_um'] - CORR) < 1e-9)
     notes = []
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
