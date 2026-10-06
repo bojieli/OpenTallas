@@ -422,7 +422,7 @@ def cmd_lever(a):
     base = ROOT / "results/rtl/dsrom_recovery_20261004"
     m = json.loads((base / "su_norm/measure.json").read_text())
     assert m.get("add_latency") == 6, "lever uses the LA6 (ot_dsrom_fp32_add_f12_l6) measurement"
-    assert (m.get("rxs"), m.get("sxc")) == (1, 1), "lever uses the LA6X (RXS 1, SXC 1) measurement"
+    assert (m.get("rxs"), m.get("sxc"), m.get("freg")) == (1, 1, 1), "lever uses the LA6X + FREG measurement"
     V = m["variants"]
     us = lambda c: round(c / FAST * 1e6, 5)                                             # noqa: E731
     src = ("ot_dsrom_su_norm {v} (N {N}, D {D}): {what} {c} cycles at 1.2 GHz from the vector-memory read to the last "
