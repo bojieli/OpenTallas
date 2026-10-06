@@ -28,7 +28,7 @@ module tb_wfc_producers;
  .fence_v(fence_v),.fence_identity(fence_identity),.fence_visibility(fence_visibility),
  .result_v(result_v),.result_identity(id),.result_token(21'd77889),.result_value(32'h3f810203),.whole_stage_accepted(accepted),
  .whole_stage_v(stage_v),.whole_stage_identity(out_id),.whole_stage_next_token(out_token),.whole_stage_value(out_value),.token_result_valid(token_valid),.stage_handoff(handoff),.pending(pending),.fault(sfault));
- reg [71:0] books[0:3][0:166];integer cycles=0,commands=0,retires=0,reads=0,mode=0;
+ reg [71:0] books[0:3][0:166];reg [71:0] load0[0:166],load1[0:166],load2[0:166],load3[0:166];integer cycles=0,commands=0,retires=0,reads=0,mode=0;
  task tick;begin #0.416667;clk=1;#0.416667;clk=0;cycles=cycles+1;end endtask
  task write_token(input integer op,u,pos,tok,blk);begin
   if(!cmd_ready)$fatal(1,"real command admission unavailable");
@@ -41,10 +41,11 @@ module tb_wfc_producers;
  end endtask
  initial begin
   if(!$value$plusargs("MODE=%d",mode))mode=0;
-  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank0.hex",books[0]);
-  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank1.hex",books[1]);
-  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank2.hex",books[2]);
-  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank3.hex",books[3]);
+  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank0.hex",load0);
+  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank1.hex",load1);
+  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank2.hex",load2);
+  $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank3.hex",load3);
+  for(integer i=0;i<167;i=i+1)begin books[0][i]=load0[i];books[1][i]=load1[i];books[2][i]=load2[i];books[3][i]=load3[i];end
   tick();rst_n=0;tick();rst_n=1;
   if(mode==1||mode==2||mode==3)begin
    request_v=1;tick();request_v=0;tick();
@@ -62,7 +63,7 @@ module tb_wfc_producers;
   if(pfault||users!=866||plen!=3||glen!=30||epoch!=5||entry!=12)$fatal(1,"full866 config/prompt admission failed");
   read_token(0,0,0,100,1);read_token(865,2,15,2697,1);
   write_token(1,865,31,77881,4);read_token(865,31,4,77881,1);read_token(865,31,5,0,0);
-  write_token(1,865,31,77882,5);read_token(865,31,4,0,0);read_token(865,31,5,77882,1);
+  write_token(1,865,31,77882,5);read_token(865,31,4,0,0);read_token(865,31,5,77882,1);read_token(865,39,5,0,0);write_token(1,865,21'h1fffff,123456,7);read_token(865,21'h1fffff,7,123456,1);read_token(865,31,5,0,0);
   if(mode==4)begin
    // Physical array columns bit*4+address%4; actual SRAM codeword fault.
    p.g_live.g_bank[0].u_prompt.arr[0][0]=~p.g_live.g_bank[0].u_prompt.arr[0][0];
@@ -95,6 +96,6 @@ module tb_wfc_producers;
   if(!stage_v||!handoff||token_valid||out_id!=id||out_token!=77889||out_value!=32'h3f810203)$fatal(1,"actual retained handoff result missing");
   repeat(9)begin tick();if(!stage_v||out_id!=id||out_token!=77889||out_value!=32'h3f810203)$fatal(1,"stalled result changed");end
   accepted=1;tick();accepted=0;if(stage_v||pending||sfault)$fatal(1,"real whole-stage ACK failed");
-  $display("PASS WFC producers full866/15realSRAM cfg=%0d/%0d/%0d promptreads=%0d literalcommands=%0d retirements=%0d layer19wholehandoff cycles=%0d",users,plen,glen,reads,commands,retires,cycles);$finish;
+  $display("PASS WFC producers full866/14realSRAM cfg=%0d/%0d/%0d promptreads=%0d literalcommands=%0d retirements=%0d layer19wholehandoff cycles=%0d",users,plen,glen,reads,commands,retires,cycles);$finish;
  end
 endmodule
