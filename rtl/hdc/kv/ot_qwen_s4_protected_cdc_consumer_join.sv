@@ -2,11 +2,12 @@
 // Additive per-PC consumer port join. No new FIFO/controller/protection state.
 // Explicit ENABLE=0: actual warm pause, checked row+sector+tag and accepted
 // WR ACK are provided by the existing fully sized protected endpoint.
-// This source is not Claude's r8 RSEL CDC. Its physical binding remains OPEN;
+// Owner r9 c8ba43664 read selection is opt-in on the full sealed landing
+// word, retaining existing protected held D0. Physical binding remains OPEN;
 // never qualify this endpoint using the bare ot_qwen_stream4_cdc_pc route.
 module ot_qwen_s4_protected_cdc_consumer_join #(
     parameter integer ENABLE=0,PC_ID=0,TAGW=9,LD=64,WB=16,AD=64,SYNC=2,MEM_WORDS=36*131072,
-    parameter integer LOCAL_WIRE_SPANS=0
+    parameter integer LOCAL_WIRE_SPANS=0,LANDING_RSEL=0
 )(
     input wire clk,hclk,por_n,warm_rst_n,
     output wire l_v,output wire [16:0] l_sec,output wire [7:0] l_row,
@@ -25,7 +26,7 @@ module ot_qwen_s4_protected_cdc_consumer_join #(
         // owner). Never map bare CDC pulse ACK to an unconditional retire.
         ot_qwen_s4_protected_pc #(.PC_ID(PC_ID),.TAGW(TAGW),.LD(LD),.WB(WB),.AD(AD),
             .SYNC(SYNC),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(LOCAL_WIRE_SPANS),
-            .ACK_BACKPRESSURE(1)) u_endpoint(
+            .ACK_BACKPRESSURE(1),.LANDING_RSEL(LANDING_RSEL)) u_endpoint(
             .clk(clk),.hclk(hclk),.por_n(por_n),.warm_rst_n(warm_rst_n),
             .l_v(l_v),.l_sec(l_sec),.l_row(l_row),.l_data(l_data),.l_pop(l_pop),
             .w_v(w_v),.w_sec(w_sec),.w_data(w_data),.w_tag(w_tag),.w_room(w_room),
