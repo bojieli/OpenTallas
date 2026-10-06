@@ -3,14 +3,16 @@
   "files": {
     "physical/hbm_die_abstracts_20261006/compute/hierarchical.vlt": "57fc1a3320c4c76ce009de635667b11b7dbeba87704633ee80afa6e0db55582f",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv": "9dc13b406faf8fb4f68c514664e2266aad5a02239e7613cba9d806000d102714",
-    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "11c7b1f3773af137f9a2cf5070223ed692532f391c548f550f7b594b0df4c5f8",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "f23d31cec2a67943f2c7d067a6240aa8c03e8b437b88a795aa0a631fbeaf1be2",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv": "fce12e60081ecad5d72ce344a63b861ddc9f58d470fae6b00336811befdfcdc3",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_side_result_c12.sv": "7b60ea8e66981e40d6b7f4de93dee8d9be7f01b5199fbac8b07b5936953a52fd",
     "physical/hbm_die_abstracts_20261006/compute/sources.f": "03ae4e8eb9ea29b02325d63e0eab262d3c5d8fdd090155368eae16445691d756",
-    "physical/hbm_die_abstracts_20261006/compute/sources.json": "d51a3ae0629f63ec9eef908c66ae87a812ae5181bc2197cbef7d4f2c4f93e626",
+    "physical/hbm_die_abstracts_20261006/compute/sources.json": "73b992e64063840d895bf69a1039d3a5a7392096ec9a96b559ec9756fd728883",
     "physical/hbm_die_abstracts_20261006/compute/tb_enabled_quarter.sv": "5c7e1675b5b009410ad6152574dc405e6ebbeaa65d3c4a91ddd1303cdf1575c8",
+    "physical/hbm_die_abstracts_20261006/compute/tb_hc_corrected_group.sv": "4cf3184ad48e2d9912283b0e3b10c90cb0260729e3b11dad03a6b44cfa54e5b1",
     "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/admission_inventory.json": "18b4f079e39f683f3c2693d59554284e7fe7212ad37a60209cf043cfbc50f886",
-    "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/source_audit.json": "c231dabf4d8f40dc6c2e9a6bfd7ac1f963a5e6f670ffa3d420139d26bcfbe53c",
+    "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/hc_source_release.json": "15b72435383137e36a05afbcb4115425c9b44e89a99f43e54ec0b4a19ebb2634",
+    "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/source_audit.json": "9bbc42b678623afece0b4feca1b6d734933b9aaf6e68595e0f711dca4d1eb542",
     "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors/hc_exp.mem": "7d4303c201aa3ad2c25597aefebd23e9a439b084802018b8d976bd4ac2d6d269",
     "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors/hc_req.mem": "249f0f2731a260d936955d5c7ad616755982971dd5a074b722537623e9c77a47",
     "results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors/sfu_exp.mem": "6bdb97af9088f04dd8b1db1bd56d6c39d6c9a747f7153aea3ab83cf2d3f1172b",
@@ -29,8 +31,9 @@
     "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "61c22f6180c13408549ee52020cd3150860243c91393b268eddcc308eb46fc24",
     "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": "16132b073fa54389782f6081f5c26b6f7be53c4941f87932c6b5c82bd3122411",
     "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
-    "tools/hbm_compute_enabled_runner_20261006.py": "b280ef6d4c500de0e2770589939e9b9faa561e6af8cb583bf76c0f04ebdf2702",
-    "tools/hbm_compute_enabled_vectors_20261006.py": "e2405fd68be58c7d7b61d9d2f239b8ae0ea4ff45fe05d652b762858c389019c2"
+    "tools/hbm_compute_enabled_runner_20261006.py": "d785ef876d4e3c512fa9b21f1199a47be7c7b5976a25810d00918bddb0a43bc8",
+    "tools/hbm_compute_enabled_vectors_20261006.py": "e2405fd68be58c7d7b61d9d2f239b8ae0ea4ff45fe05d652b762858c389019c2",
+    "tools/hbm_compute_hc_minimum_20261006.py": "48bef1339b210da2f9b01e8f78937f2b73780149e124e4187d0c34125d60e33a"
   },
   "seed": 20261006,
   "families": {
@@ -53,5 +56,6 @@
   "enabled_status": "READY_NOT_STARTED_CPU_BOUND",
   "parent_physical": false,
   "HC_complete": false,
-  "hierarchy": "SFU result_c12 own hierarchy config; HC group WIN0/WOUT0/ML6/AL5 and lane ML6/AL5 existing hier_block attributes preserved. Serial hierarchy scheduling;16 build jobs. Generated makefiles/plans retained for actual master-count audit."
+  "hierarchy": "SFU result_c12 own hierarchy config; HC group WIN0/WOUT0/ML6/AL5 and lane ML6/AL5 existing hier_block attributes preserved. Serial hierarchy scheduling;16 build jobs. Generated makefiles/plans retained for actual master-count audit.",
+  "HC_prerequisite": "BLOCKED: no corrected arithmetic pin exists. First adopt owner-corrected source and repin packet, then standalone actualonegroup streamedgold PASS. Full64 compilation requires exactsource/parameter/tool minimum receipt. No knownwrong build."
 }
