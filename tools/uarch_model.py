@@ -10865,7 +10865,7 @@ def hbm_cp_fourcut_model():
         'results/uarch/hbm_cp_fourcut_20261005/model.json').read_text())
 
 
-def dsrom_wfc_control_pipeline_price(nw=21, maxu=866, user_w=10):
+def dsrom_wfc_control_pipeline_price(nw=21, maxu=866, user_w=10, aw=30):
     """Mandatory repair of actual S0 r1 paths, before candidate RTL.
 
     Capture the qualified completion and its exact argmax, retaining current
@@ -10874,7 +10874,7 @@ def dsrom_wfc_control_pipeline_price(nw=21, maxu=866, user_w=10):
     of a multi-class structural repair, not a ready-to-route variant.
     """
     completion_bits = nw + 32 + 1
-    launch_bits = 2*nw + 1
+    launch_bits = 2*nw + user_w + aw + 1
     ff = completion_bits + launch_bits
     payload = ff - 2
     nand2 = payload*4 + 128
@@ -10946,12 +10946,12 @@ def dsrom_wfc_queue_head_price(flit=512, txq=4, np=3, buf=4):
       cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
       routing_track_demand_delta=shift_bits,
       existing_track_capacity=16041, existing_track_demand=4972,
-      combined_control_pipeline_tracks=258,
-      combined_tracks_fit=4972+258+shift_bits<=16041,
+      combined_control_pipeline_tracks=338,
+      combined_tracks_fit=4972+338+shift_bits<=16041,
       baseline_measured_area_um2=23536.2,
-      combined_local_area_budget_um2=23536.2+218.2626+2*gross,
+      combined_local_area_budget_um2=23536.2+294.0786+2*gross,
       characterization_core_area_um2=94864,
-      combined_local_area_fit=23536.2+218.2626+2*gross<=94864*0.4,
+      combined_local_area_fit=23536.2+294.0786+2*gross<=94864*0.4,
       selected_parent_slot_fit=False, measured_routed_fit=False,
       mechanism='constant head slot; shift accepted entries on pop, simultaneous append indexes exact post-pop count; routing metadata remains sampled at input acceptance',
       P_and_R_ready=False, SS_FF_closed=False, adopted=False)
