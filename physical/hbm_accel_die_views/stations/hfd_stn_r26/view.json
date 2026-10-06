@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_stn_r26",
  "kind": "stations",
- "status": "interim-not-closed",
+ "status": "closed",
  "lef": "hfd_stn_r26.lef",
  "lib": {
   "ss": "hfd_stn_r26_ss.lib",
@@ -39,18 +39,18 @@
   }
  },
  "source": {
-  "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r26",
+  "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r5d55_hfd_stn_r26",
   "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
-  "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+  "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
   "exit": [
    "rc=0",
    "corner_rc=0",
    "export_rc=0",
    "check_rc=0"
   ],
-  "ss_setup_ps": 40.02,
-  "ff_hold_ps": 445.46,
-  "drc": 2,
+  "ss_setup_ps": 27.47,
+  "ff_hold_ps": 440.12,
+  "drc": 0,
   "closes_signoff": true,
   "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc",
@@ -82,9 +82,9 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_stn_r26.lef": "321fd2c5cca3dcf9bc0b082026c90d18e0f46434acc1e0386778bd5aa39e589a",
-  "hfd_stn_r26_ss.lib": "f41fff2cd593ebced7ef49a47fa05aa3c3f699d1ee50bfb7d73233e997308bff",
-  "hfd_stn_r26_ff.lib": "4d1e0fcc98b448bda108d7d7f3947b4e2fe30d71cccdd291b4d0b38aaec02f79"
+  "hfd_stn_r26.lef": "0347eeb2ebf8f44cb4c174a89758c83261e46b14245dbc27a5fb0d0e7768309f",
+  "hfd_stn_r26_ss.lib": "eba020029ca567648d8e93d71136b164dc4051b22e5033c328bd2e930bdbe0bc",
+  "hfd_stn_r26_ff.lib": "f0a67f8b9f5c3895c694e07b3c47d1094e331ab0ba6652bbd1b95fdfd700c001"
  },
  "defects": []
 }
