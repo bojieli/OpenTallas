@@ -1,0 +1,17 @@
+{
+  "NO": 2,
+  "source_local": true,
+  "installed_die_context": false,
+  "clock_source": "actual clk_sm/por_n selected publication-parent quarter; outgoing 4inverters retained, not a borrowed leaf clock",
+  "IO_envelope_max_ps": 166.666667,
+  "IO_envelope_min_ps": 0,
+  "IO_envelope_is_measured_parent": false,
+  "clock_root_load": "measured actual adjacent selected station clock sink sum before CTS; conservative source-local load, not zero/free cut",
+  "data_outputs": "same source-local selected native-station packet input, not a claim of installed SM receiver caps",
+  "status_outputs": "source-local in_v load envelope; actual enclosing die controller remains OPEN",
+  "receiver_manifest_sha256": "44f4bd89e056283937b1c258365f14d4fb583fb42ac9bd85800d91fd99ced611",
+  "sdc_sha256": "c1076925779db8f4d3cb67a0af5b76991a585d810a38aeed94cd26c34d0b5e51",
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "parent_closed": false
+}

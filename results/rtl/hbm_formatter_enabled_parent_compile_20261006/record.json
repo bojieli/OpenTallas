@@ -1,6 +1,6 @@
 {
   "scope": "Only files.f and enabled fullparent compile runner; no RTL body/parent writes",
-  "status": "ENABLED_R7_RUNNING",
+  "status": "HIERARCHICAL_REAL_MODEL_COMPILE_RUNNING_R7_GLOBAL_OOM",
   "source_commit": "4bcde3334eee74fc9923fc26875e575a7020f276",
   "source_files": 87,
   "source_bytes": 976623,
@@ -23,7 +23,7 @@
     "source_error_seen": false
   },
   "source_compile_started": true,
-  "first_source_error": null,
+  "first_source_error": "PINMISSING held_frame/q_frame ot_hbm_accel_su_parent_exec.sv:112, direct Gibbs/Carson; r7 LATCH element fused_vm.sv:49 remains fatal",
   "full_parent_elaborated": false,
   "numerical": false,
   "physical_qualified": false,
@@ -97,5 +97,30 @@
     "numerical_gate_owner": "Gibbs",
     "existing_gate": "E2 hbm-native-sfu-selected-5cf293aa6/r3, supervisor4134163/4134176 frontend4134194/4137660; preserve/no replay",
     "memory_basis": "Use actual r7 terminal maxRSS (current observed ~425GiB) plus changed native/SFU hierarchy inventory; never reuse64GiB estimate"
+  },
+  "E2_r7_terminal": {
+    "exit": 137,
+    "cause": "kernel global OOM, CONSTRAINT_NONE",
+    "kernel_utc": "2026-10-06T06:07:43Z",
+    "pid": 3243007,
+    "max_RSS_KiB": 758860348,
+    "elapsed": "48:24.43",
+    "evidence": "e2_r7/kernel_oom.txt"
+  },
+  "E2_hierarchy_continuation": {
+    "source_commit": "c297cf6b1",
+    "driver_commit": "6832e1a0c",
+    "source_files": 122,
+    "plan_jobs": 26,
+    "plan_exit": 0,
+    "plan_max_RSS_KiB": 36736220,
+    "plan_elapsed_seconds": 86.48,
+    "supervisor_pid": 282183,
+    "work": "/srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/r8-models-cont",
+    "retained_real_exp_model": true,
+    "reservation_GiB": 128,
+    "CPU": 1,
+    "full_parent_elaborated": false,
+    "mode": "Real parameter-derived hierarchy C++ model generation; no binary/runtime; sequential dependencies; retained model; source diagnostics remain blockers"
   }
 }
