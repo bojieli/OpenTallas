@@ -12153,3 +12153,28 @@ def hbm_integrated_sfu_c12_stage_model():
         composed_latency='existing stage enrollment/start +3acceptedRX+actualc12child+3acceptedTX+drainedfinish+persistentcompletion; no new join edge',
         clock_binding='caller serial1111ps vs child833ps OPEN; same clk port does not confer qualified clock',
         production_source_binding=False, numerical_qualified=False, token_rate_credit=0)
+
+
+def hbm_integrated_sfu_provider_join_model():
+    """One actual SFU operation reuses the selected SU borrower/provider seat."""
+    return dict(default_OFF=True, replicas=1, existing_stage_wrapper_FF=8936,
+        new_raw_state_bits=1260, new_W6_rows=20, new_coded_FF=1440,
+        payload_seats=1, payload_bits=1024, payload_FF_included=True,
+        descriptor_owner='existing stage216 codedFF/full73, no second frame owner',
+        provider='existing CAP1 SU337/273 borrower, mutually exclusive with original SU executor',
+        provider_replicas_added=0, new_MACs_per_cycle=0, arithmetic='actual SFU64 c12',
+        provider_bytes_per_accept=32, provider_request_bits=337, provider_response_bits=273,
+        reads_per_operation=8, writes_per_operation=8, checked_readbacks_per_operation=8,
+        frame_RX_beats=3, frame_TX_beats=3,
+        routing_tracks_added=337+273+2*1024, channel_capacity=None,
+        new_FF_area_floor_um2=1440*.2916, floorplan_slot_fit=False,
+        latency='enroll/grant +8 CAP1 source reads +3RX +actual c12 arithmetic '
+                '+3TX +8 writes +8 matching readbacks +finish/held publication/reverse release ACK',
+        minimum_adapter_handshake_edges=24*2+6,
+        receiver_load_and_clkQ='unqualified; no inherited child or parent closure',
+        retirement='one explicit external operation; does not forge legacy four-op retirement',
+        cold_reset='POR cancels; warm blocks enrollment and drains accepted operation',
+        CE='all mutable payload/address/control W6 scrub before permission',
+        DUE='sticky no request/publication/release; retain owner',
+        clocks='real clk_sm;833/1111 parent context remains OPEN',
+        adopted=False, numerical_qualified=False, physical_closed=False, token_rate_credit=0)
