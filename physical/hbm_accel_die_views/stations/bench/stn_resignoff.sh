@@ -5,7 +5,7 @@
 S=$1; W=$2; m=$3; L=$4; LF=$5; LX=$6
 cd $S; V=physical/hbm_accel_die_views/stations/$m/$m.sdc
 B=$(ls -d $W/work/orfs/results/asap7/*/base); rel=${B#$W/work/orfs/}
-python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V $L signoff > $W/signoff.sdc
+python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V $L signoff $LF $LX > $W/signoff.sdc
 python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V $L signoff $LF $LX > $W/signoff_ff.sdc
 mkdir -p $W/signoff_ff/$rel
 for f in 6_final.odb 6_final.spef; do ln -f $W/signoff/$rel/$f $W/signoff_ff/$rel/$f 2>/dev/null || cp $W/signoff/$rel/$f $W/signoff_ff/$rel/$f; done
