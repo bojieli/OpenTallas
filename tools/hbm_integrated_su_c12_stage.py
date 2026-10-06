@@ -4,7 +4,7 @@
 Existing compiled-program fixtures and golden snapshots are inputs; this tool
 does not generate a numerical producer or repeat a source-only c12 campaign.
 --prepare performs no build. --run refuses capacity misses before any compiler.
-Kant dispatches on E2 with the unchanged guard and measured inventory reservation.
+Dispatch uses the unchanged host guard and measured inventory reservation.
 """
 import argparse, hashlib, json, os, shutil, subprocess, time
 from pathlib import Path
@@ -108,7 +108,11 @@ def run(work,reservation,inventory,threads,activity,phase='all'):
   # One meaningful foreign-owner negative in the SAME changed binary.
   negative=[x for x in base if not x.startswith('+ACTIVITY=')]+['+JOIN_NEGATIVE=1']
   with (d/'foreign_owner.log').open('w') as f:nrc=subprocess.run(negative,stdout=f,stderr=subprocess.STDOUT).returncode
-  if nrc or 'PASS_INTEGRATED_STAGE_REJECT' not in (d/'foreign_owner.log').read_text():return 1
+  rows[-1]['foreign_owner_rejected']=nrc==0 and 'PASS_INTEGRATED_STAGE_REJECT' in (d/'foreign_owner.log').read_text()
+  (work/'result.json').write_text(json.dumps(dict(source=r,rows=rows,binary_sha256=sha(exe),
+      pass_stage=len(rows)==2 and all(x['numerical_exact'] and x.get('foreign_owner_rejected',False) for x in rows),
+      physical_qualified=False,all_levers_whole_token=False),indent=2)+'\n')
+  if not rows[-1]['foreign_owner_rejected']:return 1
  return 0
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',type=Path);p.add_argument('--work',type=Path,required=True)
