@@ -29,6 +29,7 @@ def command(a):
  '--flow-timeout-seconds','unlimited','--core-utilization',str(a.util),
  '--place-density','.60','--max-transition-ns','.25',
  '--orfs-var','NUM_CORES=16','--orfs-var','ADDER_MAP_FILE=',
+ '--orfs-var','SYNTH_SCRIPT=/src/physical/s81_native_bf/synth.tcl',
  '--macro-view',MACRO+'='+VIEW,'--macro-place-halo','5.4','5.4',
  '--step-tcl','POST_MACRO_PLACE=physical/s81_native_bf/place.tcl',
  '--orfs-var','PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
