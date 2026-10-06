@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 
@@ -13,11 +14,13 @@ def main():
     p.add_argument('--width', type=int, choices=(128, 256), required=True)
     p.add_argument('--util', type=int, choices=(55, 60), default=55)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--slew-margin', type=int, default=0)
+    p.add_argument('--mapped-route', type=Path)
     a = p.parse_args()
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
     cmd = ['python3', 'tools/run_abi3_physical.py', '--view', 'asap7',
-           '--top', 'ot_dsrom_window_column', '--param', f'WIDTH={a.width}',
+           '--top', 'ot_dsrom_window_column',
            '--source', 'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv',
            '--clock-period-ns', '0.8333333333333333',
            '--clock-uncertainty-ns', '0.060', '--clock-uncertainty-hold-ns', '0.025',
@@ -25,11 +28,20 @@ def main():
            '--io-delay-fraction', '0.2', '--stages', 'pnr',
            '--core-utilization', str(a.util), '--place-density', '0.65',
            '--max-fanout', '32', '--max-transition-ns', '0.15',
-           '--hold-margin-ns', '0.008', '--orfs-var', 'ADDER_MAP_FILE=',
+           '--hold-margin-ns', '0.008', '--slew-margin-percent', str(a.slew_margin),
+           '--orfs-var', 'ADDER_MAP_FILE=',
            '--routing-layers', 'M2', 'M9',
            '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
            '--purpose', 'characterization', '--nickname-tag', f'window_column_w{a.width}_u{a.util}',
            '--keep-workdir', str(out/'work'), '--output', str(out/'physical.json')]
+    if a.mapped_route:
+        base=next((a.mapped_route/'work/orfs/results/asap7').glob('*/base'))
+        target=out/'work/orfs/column_mapped.v'
+        target.parent.mkdir(parents=True)
+        shutil.copy2(base/'1_2_yosys.v',target)
+        cmd+=['--orfs-var','SYNTH_NETLIST_FILES=/work/column_mapped.v']
+    else:
+        cmd+=['--param',f'WIDTH={a.width}']
     (out/'command.json').write_text(json.dumps(cmd, indent=2)+'\n')
     rc = subprocess.run(cmd, cwd=ROOT, env=dict(os.environ, OT_ORFS_NUM_CORES='16')).returncode
     (out/'terminal.exit').write_text(str(rc)+'\n')
