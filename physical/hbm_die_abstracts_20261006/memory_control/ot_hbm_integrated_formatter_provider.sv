@@ -4,8 +4,9 @@
 // the exclusive arena, provider, write/readback publication and two sectors.
 // No backing RAM, invented ECC receipt, or independent provider/calendar.
 // model-before-build: formatter_join_prebuild.json + existing plane-major model.
-// New required caller hooks: pair_token and release_token. Leaving either
-// unbound does not qualify the old cluster instance as a connected parent.
+// Full73 ownership arrives on the actual grant/frame export. The inherited
+// pair85 has no token field: its request is authorized inside that lease.
+// Release carries the actual explicit release_token17 from the caller.
 module ot_hbm_integrated_formatter_provider #(
  parameter integer ENABLE=0,VM_AW=0
 )(
@@ -14,7 +15,7 @@ module ot_hbm_integrated_formatter_provider #(
  input wire [31:0] arena_base,arena_limit,input wire gather_retained,arena_visible,
  input wire owner_valid,input wire [72:0] owner_frame,
  input wire pair_v,output wire pair_r,
- input wire [31:0] pair_job,input wire [3:0] pair_gen,input wire [16:0] pair_token,
+ input wire [31:0] pair_job,input wire [3:0] pair_gen,
  input wire [19:0] pair_pos,input wire [6:0] pair_rank,input wire [5:0] pair_word,input wire [15:0] pair_tag,
  output wire pairs_v,input wire pairs_r,output wire [511:0] pairs,
  output wire [31:0] pairs_job,output wire [3:0] pairs_gen,output wire [19:0] pairs_pos,
@@ -24,7 +25,7 @@ module ot_hbm_integrated_formatter_provider #(
  output wire bridge_req_v,input wire bridge_req_r,output wire [648:0] bridge_req,
  input wire bridge_rsp_v,output wire bridge_rsp_r,input wire [636:0] bridge_rsp,
  input wire release_v,output wire release_r,
- input wire [31:0] release_job,input wire [3:0] release_gen,input wire [16:0] release_token,
+ input wire [31:0] release_job,input wire [3:0] release_gen,input wire [16:0] release_token17,
  input wire [19:0] release_pos,input wire publication_done,source_reverse_done
 );
  import ot_gpu_w6_secded_pkg::*;
@@ -52,8 +53,8 @@ module ot_hbm_integrated_formatter_provider #(
    end_byte<=(33'd1<<(VM_AW+6));
  wire lease_match=owner_valid&&owner_frame==frame;
  wire start_owner=owner_valid&&owner_frame=={pos,token,gen,job};
- wire pair_match={pair_pos,pair_token,pair_gen,pair_job}==frame;
- wire release_match={release_pos,release_token,release_gen,release_job}==frame;
+ wire pair_match=pair_job==frame[31:0]&&pair_gen==frame[35:32]&&pair_pos==frame[72:53];
+ wire release_match={release_pos,release_token17,release_gen,release_job}==frame;
  wire response_match=bridge_rsp[636:564]==frame&&bridge_rsp[51:20]==32'(read_byte)&&
    bridge_rsp[19:4]==read_tag&&bridge_rsp[3:1]==3'd3;
  wire address_ok=33'(read_byte)+33'd64<=(33'd1<<32);
