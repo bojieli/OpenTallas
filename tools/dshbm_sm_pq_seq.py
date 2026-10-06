@@ -209,7 +209,7 @@ def main(argv=None):
     ap.add_argument("--serial", action="store_true")
     ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
-    ap.add_argument("--neg-flip", action="store_true", help="--smh negative control: one weight bit flipped (+define+OT_SMH_NEG_FLIP)")
+    ap.add_argument("--neg-flip", action="store_true", help="negative control: bit 3 of every returned line flipped at the response port (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)

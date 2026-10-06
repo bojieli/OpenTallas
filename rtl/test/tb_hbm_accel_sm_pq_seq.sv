@@ -47,10 +47,6 @@ module tb_hbm_accel_sm_pq_seq;
         .release_in(release_in), .released(released));
 `define OT_DP dut.g_fp.u_front   // the bench configuration (RMAX 256) instantiates the parameterised pieces
 `define OT_DCROW dut.g_fp.u_front.al[RW-1:0]
-`ifdef OT_SMH_NEG_FLIP
-    // negative control: one bit of the front's s1 line stuck at 1 -> the golden compare must fail
-    initial force dut.g_fp.u_front.s1_w[3] = 1'b1;
-`endif
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
@@ -64,6 +60,13 @@ module tb_hbm_accel_sm_pq_seq;
 `define OT_DCROW dut.crow[RW-1:0]
 `endif
     reg [1087:0] lines [0:131071];
+    // negative control (+define+OT_SMH_NEG_FLIP): bit 3 of every line the bench returns is flipped at the DUT's
+    // response port, so the golden compare must fail (a hierarchical force on s1_w was not honoured by Verilator)
+`ifdef OT_SMH_NEG_FLIP
+    localparam [1087:0] NEGM = 1088'd8;
+`else
+    localparam [1087:0] NEGM = 1088'd0;
+`endif
     reg [FRAGW+2047:0] xwords [0:MAXOPS*XDEPTH-1];
     reg [31:0] seq [0:MAXOPS*NW-1];
     integer base_of [0:MAXOPS-1];
@@ -89,7 +92,7 @@ module tb_hbm_accel_sm_pq_seq;
             for (i = 0; i < 512; i = i + 1)
                 if (p_use[i] && p_rdy[i] <= cyc && (pick < 0 || p_rdy[i] < p_rdy[pick])) pick = i;
             if (pick >= 0) begin
-                rsp_v <= 1'b1; rsp_tag <= p_tag[pick]; rsp_data <= lines[p_addr[pick]];
+                rsp_v <= 1'b1; rsp_tag <= p_tag[pick]; rsp_data <= lines[p_addr[pick]] ^ NEGM;
                 p_use[pick] = 0;
             end
         end
