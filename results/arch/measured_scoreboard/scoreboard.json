@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "3e14c9887",
+ "generated_from_commit": "d1260b05c",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1269,7 +1269,7 @@
    "value": 1737.9,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1314,7 +1314,7 @@
    "value": 5071.1,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
    "target": "ds_rom",
@@ -1329,7 +1329,7 @@
    "value": 4740.5,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
    "target": "ds_rom",
@@ -1344,7 +1344,7 @@
    "value": 4182.2,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
    "target": "ds_rom",
@@ -1359,7 +1359,7 @@
    "value": 5264.3,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1434,7 +1434,7 @@
    "value": 575.4,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1464,7 +1464,7 @@
    "value": 697.713,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1493,7 +1493,7 @@
    "value": 24.463,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -1713,7 +1713,7 @@
    "value": 4.159,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
    "target": "ds_rom",
@@ -4602,7 +4602,7 @@
    "value": 0.9998,
    "resolved": true,
    "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
-   "last_commit": "8a1780118 2026-10-05"
+   "last_commit": "d76433e15 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
