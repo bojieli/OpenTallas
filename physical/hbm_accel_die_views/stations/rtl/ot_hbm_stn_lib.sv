@@ -79,8 +79,10 @@ endmodule
 // NOBP=1 (--margin): a station never back-pressures (r_rdy = 1), so the FIFO's receive buffer and its W-wide output
 // select (a 512-load control net: M1_hfd_meso_r1 SS +38.1 ps) go; same latency.  The no-backpressure invariant
 // is enforced here: the FIFO's r_rdy is tied 1'b1 below (ot_meso_fifo NOBP comment has the argument).  CRDREG=1
-// (--margin): the credit-ring readout is registered too (N1_hfd_meso_r32: credit crossing SS +35.0 ps).
-module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0) (
+// (--margin): the credit-ring readout is registered too (N1_hfd_meso_r32: credit crossing SS +35.0 ps).  OBYP=1
+// (--margin): the readout flop is the FIFO's last register; the station's per-face pin-launch flop follows it
+// directly (the FIFO output register o_d goes): downstream crossing +2 cycles instead of +3.
+module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0, parameter integer OBYP = 0, parameter integer WCHK = 0) (
     input wire fclk_i, input wire [W-1:0] d_i, input wire ck, input wire rst_n, output wire [W-1:0] d_o);
     wire wclk;
     ot_fwd_clk_inv u_winv (.a(fclk_i), .y(wclk));
@@ -96,7 +98,7 @@ module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, pa
     always @(posedge wclk) wrs <= {wrs[0], rst_n};
     always @(posedge ck) rrs <= {rrs[0], rst_n};
     wire w_rdy, r_v, w_live, r_live, w_fault, r_fault;
-    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG)) u_fifo (
+    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG), .OBYP(OBYP), .WCHK(WCHK)) u_fifo (
         .wclk(wclk), .wrst_n(wrs[1]), .w_v(1'b1), .w_rdy(w_rdy), .w_d(w_d),
         .rclk(ck), .rrst_n(rrs[1]), .r_v(r_v), .r_rdy(1'b1), .r_d(d_o),
         .w_live(w_live), .r_live(r_live), .w_fault(w_fault), .r_fault(r_fault));

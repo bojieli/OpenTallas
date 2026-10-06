@@ -101,7 +101,7 @@
    "iterations": 5
   },
   "b_k16_i50": {
-   "exit": null,
+   "exit": "0",
    "real_views": [
     "hfd_attn_tile",
     "hfd_barrier",
@@ -139,7 +139,14 @@
     "hfd_stn_r4"
    ],
    "bundle_k": 16,
-   "iterations": 50
+   "iterations": 50,
+   "grt_capacity": 108663637,
+   "grt_demand": 6145711,
+   "grt_usage_pct": 5.66,
+   "overflow_h": 8,
+   "overflow_v": 11,
+   "overflow": 407,
+   "grt_s": 4335
   },
   "s_sta": {
    "exit": "0",
