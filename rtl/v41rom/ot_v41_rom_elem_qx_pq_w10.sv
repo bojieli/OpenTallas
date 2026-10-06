@@ -432,7 +432,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
             always @(posedge clk) for (int k = 0; k < RPW; k++)
 `ifdef QM4_MUTANT_SH
-                if (sh_en[k] && k != 3) sh_w[k] <= sh_d[(4 * k) / RPW];        // negative control: entry 3 never written
+                if (sh_en[k] && k != 0) sh_w[k] <= sh_d[(4 * k) / RPW];        // negative control: entry 0 never written
 `else
                 if (sh_en[k]) sh_w[k] <= sh_d[(4 * k) / RPW];
 `endif
