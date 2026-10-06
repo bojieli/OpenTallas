@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.hbm_hub_lane_attempts.v1",
+ "rule": "owner 2026-10-06: route at <= 770 ps, sign off at 833 (su/signoff833_clk.sdc), accept SS >= +40 / FF >= +15; failed verdicts kept",
+ "m6sfu_a_note": "corner_sta_833 not yet written when collected: SS at 833 ~ route-clock SS + 63 ps",
+ "rows": [
+  {
+   "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/l2hc_a",
+   "config": "hc ML5 AL5 85.32x115.02 CP .833 (adopted pre-margin view)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": 8.04,
+   "ss_worst_slack_ps": 8.04,
+   "ff_worst_hold_slack_ps": 3.86,
+   "drc_violations": 0,
+   "source_commit": "266d1b808a933a8400849ebe6ac9e607a096b4f6"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/l4m24_a",
+   "config": "light 75.6x162 CP .833 M2+M4 pins (adopted pre-margin view)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": 13.38,
+   "ss_worst_slack_ps": 13.38,
+   "ff_worst_hold_slack_ps": 2.64,
+   "drc_violations": 0,
+   "source_commit": "f2e962c20112d9ecb9171ce9dc1a68d8ed1417ae"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/l4lr_b",
+   "config": "light 79.92x162 CP .833 two-sided pins",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": 16.09,
+   "ss_worst_slack_ps": 16.09,
+   "ff_worst_hold_slack_ps": 3.85,
+   "drc_violations": 0,
+   "source_commit": "f2e962c20112d9ecb9171ce9dc1a68d8ed1417ae"
+  },
+  {
+   "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/l2sfu_a",
+   "config": "sfu 164.16x320.76 CP .833",
+   "closed_833": false,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": -11.83,
+   "ss_worst_slack_ps": -11.83,
+   "ff_worst_hold_slack_ps": 0.18,
+   "drc_violations": 0,
+   "source_commit": "266d1b808a933a8400849ebe6ac9e607a096b4f6"
+  },
+  {
+   "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/l2sfu_b",
+   "config": "sfu 159.84x330.48 CP .833",
+   "closed_833": false,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": 17.22,
+   "ss_worst_slack_ps": 17.22,
+   "ff_worst_hold_slack_ps": -1.55,
+   "drc_violations": 0,
+   "source_commit": "266d1b808a933a8400849ebe6ac9e607a096b4f6"
+  },
+  {
+   "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/l2sfu_c",
+   "config": "sfu 168.48x313.2 CP .833",
+   "closed_833": false,
+   "accept_40_15": false,
+   "signoff": "route SDC (corner_sta.json)",
+   "route_clock_ss_worst_slack_ps": -13.5,
+   "ss_worst_slack_ps": -13.5,
+   "ff_worst_hold_slack_ps": 0.72,
+   "drc_violations": 0,
+   "source_commit": "266d1b808a933a8400849ebe6ac9e607a096b4f6"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/m6light_b",
+   "config": "light 79.92x162 CP .77 HM .02 (margin)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 ps re-time (corner_sta_833.json)",
+   "route_clock_ss_worst_slack_ps": -21.96,
+   "ss_worst_slack_ps": 41.03,
+   "ff_worst_hold_slack_ps": 5.22,
+   "drc_violations": 0,
+   "source_commit": "0725dd4bf60d050a38062c1b768423f29954bc94"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/m6sfu_a",
+   "config": "sfu 159.84x330.48 CP .77 HM .02 (margin)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 ps re-time (corner_sta_833.json)",
+   "route_clock_ss_worst_slack_ps": -11.4,
+   "ss_worst_slack_ps": 51.6,
+   "ff_worst_hold_slack_ps": 4.73,
+   "drc_violations": 0,
+   "source_commit": "0725dd4bf60d050a38062c1b768423f29954bc94"
+  },
+  {
+   "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m6hc_b",
+   "config": "hc ML5 AL5 CP .77 HM .02 (margin)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 ps re-time (corner_sta_833.json)",
+   "route_clock_ss_worst_slack_ps": -45.74,
+   "ss_worst_slack_ps": 17.26,
+   "ff_worst_hold_slack_ps": 9.05,
+   "drc_violations": 0,
+   "source_commit": "0725dd4bf60d050a38062c1b768423f29954bc94"
+  },
+  {
+   "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m8hc",
+   "config": "hc ML6 AL6 (d118d672a) CP .77 HM .05 (margin, RTL fix)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 ps re-time (corner_sta_833.json)",
+   "route_clock_ss_worst_slack_ps": -59.23,
+   "ss_worst_slack_ps": 3.77,
+   "ff_worst_hold_slack_ps": 32.7,
+   "drc_violations": 0,
+   "source_commit": "d118d672a41b274990210e627d2e31fdaecfe669"
+  },
+  {
+   "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m9light",
+   "config": "light 79.92x162 CP .77 HM .03 PD .55 (margin, hold retry)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 ps re-time (corner_sta_833.json)",
+   "route_clock_ss_worst_slack_ps": -43.16,
+   "ss_worst_slack_ps": 19.84,
+   "ff_worst_hold_slack_ps": 12.27,
+   "drc_violations": 0,
+   "source_commit": "d118d672a41b274990210e627d2e31fdaecfe669"
+  }
+ ]
+}
