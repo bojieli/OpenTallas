@@ -19,7 +19,7 @@ PARAMS=dict(ENABLE=1,COMBINED_ENABLE=1,W2_RESULT_ENABLE=1,W2_SECTOR_ENABLE=1,
     SU_REGISTERED_BOUNDARY=1,SU_BALANCED_OWNER_BOUNDARY=1,SU_FOUR_COMBINATIONAL_CUTS=1,
     SU_FAST_OWNER_FRONTIER=1,ND=2,NSM=2,NS=2,NPC=2,MEM_WORDS=2097152,VM_AW=21,
     FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,TW=17,PW=20,IMW=14,
-    SFU_C12_ENABLE=1)
+    SFU_C12_ENABLE=1,SFU_NATIVE_VM_ENABLE=1)
 INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -31,7 +31,9 @@ def files():
     for s in paths:
         if Path(s).is_absolute() or '..' in Path(s).parts:raise ValueError('Source paths must be root-relative')
     for s in [BODY,PARENT,'rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv',
-              'rtl/chip/ot_w15_coll_dma.sv','rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv']:
+              'rtl/chip/ot_w15_coll_dma.sv','rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv',
+              'rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv',
+              'physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv']:
         if s not in paths:raise ValueError('Missing actual selected source '+s)
     return paths
 
@@ -78,7 +80,7 @@ def prepare(work,body_pin):
     sfu='rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv'
     if sfu not in pins:
         errors.append('Actual selected SFUc12 provider join missing')
-    elif ' u_sfu_c12(' not in parent or '#(.ENABLE(SFU_C12_ENABLE)) u_sfu_c12(' not in parent:
+    elif ' u_sfu_c12(' not in parent or '.ENABLE(SFU_C12_ENABLE)' not in parent or '.NATIVE_VM_PUBLICATION(SFU_NATIVE_VM_ENABLE)' not in parent:
         errors.append('Actual parent SFUc12 instance/enable connection missing')
     else:
         text=(ROOT/sfu).read_text()
@@ -88,6 +90,17 @@ def prepare(work,body_pin):
         connected=set(re.findall(r'\.(\w+)\s*\(',parent[start:parent.index(');',start)]))
         for name in sorted(connected-declared):errors.append('Parent SFUc12 port absent in Gibbs body: '+name)
         for name in sorted(declared-connected):errors.append('Gibbs SFUc12 port unconnected by parent: '+name)
+    native='physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv'
+    if native not in pins or 'if(SFU_NATIVE_VM_ENABLE)begin:g_sfu_native_vm' not in parent:
+        errors.append('Actual selected native VM instance missing')
+    else:
+        text=(ROOT/native).read_text()
+        header=re.sub(r'//[^\n]*|/\*.*?\*/','',text[text.index(')(\n')+3:text.index('\n);')],flags=re.S)
+        declared={re.search(r'(\w+)\s*$',p).group(1) for p in header.split(',')}
+        start=parent.index(' u_vm(')
+        connected=set(re.findall(r'\.(\w+)\s*\(',parent[start:parent.index(');',start)]))
+        for name in sorted(connected-declared):errors.append('Parent native VM port absent in Bacon body: '+name)
+        for name in sorted(declared-connected):errors.append('Bacon native VM port unconnected by parent: '+name)
     for s in all_files:
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)

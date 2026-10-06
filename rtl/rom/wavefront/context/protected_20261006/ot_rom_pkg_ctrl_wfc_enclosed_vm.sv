@@ -270,12 +270,12 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
     // (closed) internal reset: asserted asynchronously, released one cycle after rst_n on the clock
     // (a registered root for the reset tree; every flop below sees release one cycle later)
     (* keep *) reg rst_q;
-    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else if (advance) rst_q <= 1'b1;
     wire rx_enable;
     generate if (HEADER_LOCAL) begin : g_header_local_release
         reg enable_q;
-        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
-            if (!rst_q) enable_q <= 1'b0; else enable_q <= 1'b1;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) enable_q <= 1'b0; else if (advance) enable_q <= 1'b1;
         assign rx_enable = enable_q;
     end else begin : g_header_original_release
         assign rx_enable = rst_q;
@@ -298,8 +298,8 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
         reg [NW-1:0] token_q, pos_q;
         reg [USER_W-1:0] user_q;
         reg [AW-1:0] kv_q;
-        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
-            if (!rst_q) v <= 1'b0; else v <= start_i;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) v <= 1'b0; else if (advance) v <= start_i;
         always @(posedge clk) if (advance) if (start_i) begin
             token_q <= start_tok_i; pos_q <= start_pos_i;
             // Preserve the exact tuple the original receiver sampled before
@@ -363,9 +363,9 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
         // Qualification reserves the current running owner. Until consume,
         // no new core start is possible and no VM overwrite is advertised.
         // Capture the exact argmax on the qualified edge, not a later sample.
-        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+        always @(posedge clk or negedge rst_q)
             if (!rst_q) v <= 1'b0;
-            else v <= completion_qual && !v;
+            else if (advance) v <= completion_qual && !v;
         always @(posedge clk) if (advance) if (completion_qual && !v) begin
             idx_q <= rep_idx_raw; val_q <= rep_val_raw;
         end
@@ -581,7 +581,7 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
     wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
     integer u, qbank;
-    always @(posedge clk or negedge rst_q) if (advance || !rst_q) begin
+    always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin
             running <= 1'b0; cur_user <= 0; cur_pos <= 0; cur_pa_idx <= 0; cur_pa_val <= 0; kv_base_i <= 0;
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
@@ -603,7 +603,7 @@ module ot_rom_pkg_ctrl_wfc_enclosed_vm #(
             end
             pr_blk <= 0;
             wf_issue <= 1'b0; wf_reject <= 1'b0; wf_squash <= 1'b0;
-        end else begin
+        end else if (advance) begin
             tok_valid <= 1'b0;
             pr_re <= 1'b0;
 
@@ -829,13 +829,13 @@ module ot_rom_pkg_ctrl_wfc_upos_vm #(parameter integer LOCAL_CONTROL = 0, parame
     // It is fed from uchk, not uchk2, so it adds no read/check/write edge.
     (* keep *) reg rd_local;
     generate if (LOCAL_CONTROL) begin : g_local_read_control
-        always @(posedge clk or negedge rst_n) if (advance || !rst_n)
-            if (!rst_n) rd_local <= 1'b0; else rd_local <= rd_early;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rd_local <= 1'b0; else if (advance) rd_local <= rd_early;
     end else begin : g_original_read_control
         always @(*) rd_local = rd;
     end endgenerate
     reg          rq;
-    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else if (advance) rq <= 1'b1;
     reg [4:0]    lo_r;                  // local copy of the user's low bits (one cycle later)
     reg [NW-1:0] upos [0:N-1];
     reg [N-1:0]  uval;
@@ -1050,13 +1050,13 @@ module ot_rom_pkg_ctrl_wfc_src_vm #(
         end
     end
 
-    always @(posedge clk or negedge rst_n) if (advance || !rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; kind <= K_RES; ou <= 0; oslot <= 0; o_p <= 0; o_i <= 0; o_q <= 0; o_b <= 0; o_k <= 1'b0;
             rq_w <= 0; rq_r <= 0; rq_n <= 0; pq_w <= 0; pq_r <= 0; pq_n <= 0;
             t0 <= 0; t1 <= 0; u0 <= 0; u1 <= 0; p0 <= 0; p1 <= 0; b0 <= 0; b1 <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0; settle <= 0;
-        end else begin
+        end else if (advance) begin
             settle <= (w_en || b_en) ? 3'd0 : (settle == 3'd3 ? 3'd3 : settle + 1'b1);
             // RESULT queue
             if (res_v) begin rq_u[rq_w] <= res_u; rq_p[rq_w] <= res_p; rq_i[rq_w] <= res_i; rq_w <= rq_w + 1'b1; end
@@ -1122,7 +1122,7 @@ module ot_rom_pkg_ctrl_wfc_grp_vm #(parameter integer DECODED_READ = 0, paramete
     output reg  [4:0]    k_lo, f_lo
 );
     reg          rq;
-    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else if (advance) rq <= 1'b1;
     reg [4:0]    lo_r; reg [2:0] slot_r;   // local copies of the read address (one cycle later)
     reg [RW-1:1] recm [0:N-1];
     reg [NW-1:0] ringm [0:N*8-1];
