@@ -1,0 +1,3 @@
+rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
+rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv
+physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv

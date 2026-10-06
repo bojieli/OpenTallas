@@ -1,0 +1,485 @@
+{
+  "schema": "opentallas.hbm.vm_publication_parent.source_gate.v1",
+  "default_enabled": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+    "physical/hbm_die_abstracts_20261006/integration/tb_vm_publication_parent.sv": "97c7b99dd02c534dfb613a5188710508490567adbedb6d5d64ab06648367a08f"
+  },
+  "functional_verdict": "PASS",
+  "pass_marker": "PASS_VM_PUBLICATION_PARENT comparisons=25 sends=4 reverseACK=4 pubACK=2 full73=1 CEarrival=1 warmdebt=1 staleactivation_refused=1 token16_refused=1 position19_refused=1 DUE_refused=1",
+  "lint": {
+    "enabled": true,
+    "exit_code": 0,
+    "combinational_loop_warnings": 0,
+    "latch_warnings": 0,
+    "inherited_width_warnings_retained": true
+  },
+  "default_OFF_elaboration": "PASS",
+  "one_stimulus_configuration": true,
+  "real_behavioral_SRAMs": 32,
+  "macros": {
+    "activation_128x256": 22,
+    "index_512x128": 10
+  },
+  "frame": {
+    "job": "31:0",
+    "gen": "35:32",
+    "token": "52:36",
+    "pos": "72:53"
+  },
+  "clocks": {
+    "root": "clk_sm",
+    "cold_reset": "por_n",
+    "target_period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "propagated_insertion_ps": null,
+    "wire_loads_fF": null,
+    "source_phase_not_changed": true
+  },
+  "measured": {
+    "enabled_lint_seconds": 2.451,
+    "compile_seconds": 0.108,
+    "runtime_seconds": 1.627
+  },
+  "ports": [
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "clk_sm"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "bind_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "bind_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "bind_frame"
+    },
+    {
+      "direction": "input",
+      "width": "[6:0]",
+      "name": "bind_rank"
+    },
+    {
+      "direction": "input",
+      "width": "[31:0]",
+      "name": "bind_base"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "retire_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "retire_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "retire_frame"
+    },
+    {
+      "direction": "output",
+      "width": "[72:0]",
+      "name": "held_frame"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "retained"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_wr_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "activation_wr_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "activation_wr_frame"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_wr_bank"
+    },
+    {
+      "direction": "input",
+      "width": "[6:0]",
+      "name": "activation_wr_addr"
+    },
+    {
+      "direction": "input",
+      "width": "[2062:0]",
+      "name": "activation_wr_data"
+    },
+    {
+      "direction": "input",
+      "width": "[191:0]",
+      "name": "activation_wr_owner"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "activation_ACK_v"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_ACK_r"
+    },
+    {
+      "direction": "output",
+      "width": "[72:0]",
+      "name": "activation_ACK_frame"
+    },
+    {
+      "direction": "output",
+      "width": "[191:0]",
+      "name": "activation_ACK_owner"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_rd_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "activation_rd_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "activation_rd_frame"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_rd_bank"
+    },
+    {
+      "direction": "input",
+      "width": "[6:0]",
+      "name": "activation_rd_addr"
+    },
+    {
+      "direction": "input",
+      "width": "[191:0]",
+      "name": "activation_rd_owner"
+    },
+    {
+      "direction": "output",
+      "width": "[3:0]",
+      "name": "tap_v"
+    },
+    {
+      "direction": "input",
+      "width": "[3:0]",
+      "name": "tap_r"
+    },
+    {
+      "direction": "output",
+      "width": "[4*2063-1:0]",
+      "name": "tap_data"
+    },
+    {
+      "direction": "output",
+      "width": "[4*192-1:0]",
+      "name": "tap_owner"
+    },
+    {
+      "direction": "output",
+      "width": "[4*73-1:0]",
+      "name": "tap_frame"
+    },
+    {
+      "direction": "output",
+      "width": "[3:0]",
+      "name": "tap_source_clk"
+    },
+    {
+      "direction": "input",
+      "width": "[3:0]",
+      "name": "tap_ACK_v"
+    },
+    {
+      "direction": "output",
+      "width": "[3:0]",
+      "name": "tap_ACK_r"
+    },
+    {
+      "direction": "input",
+      "width": "[4*192-1:0]",
+      "name": "tap_ACK_owner"
+    },
+    {
+      "direction": "input",
+      "width": "[4*73-1:0]",
+      "name": "tap_ACK_frame"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "activation_release"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "activation_release_r"
+    },
+    {
+      "direction": "output",
+      "width": "[72:0]",
+      "name": "activation_release_frame"
+    },
+    {
+      "direction": "output",
+      "width": "[191:0]",
+      "name": "activation_release_owner"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "su_pub_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "su_pub_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "su_pub_frame"
+    },
+    {
+      "direction": "input",
+      "width": "[31:0]",
+      "name": "su_pub_addr"
+    },
+    {
+      "direction": "input",
+      "width": "[1023:0]",
+      "name": "su_pub_data"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "su_ACK_v"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "su_ACK_r"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "result_pub_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "result_pub_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "result_pub_frame"
+    },
+    {
+      "direction": "input",
+      "width": "[31:0]",
+      "name": "result_pub_addr"
+    },
+    {
+      "direction": "input",
+      "width": "[1023:0]",
+      "name": "result_pub_data"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "result_ACK_v"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "result_ACK_r"
+    },
+    {
+      "direction": "output",
+      "width": "[31:0]",
+      "name": "publication_ACK_addr"
+    },
+    {
+      "direction": "output",
+      "width": "[72:0]",
+      "name": "publication_ACK_frame"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "index_read_v"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "index_read_r"
+    },
+    {
+      "direction": "input",
+      "width": "[72:0]",
+      "name": "index_read_frame"
+    },
+    {
+      "direction": "input",
+      "width": "[6:0]",
+      "name": "index_read_rank"
+    },
+    {
+      "direction": "input",
+      "width": "[31:0]",
+      "name": "index_read_addr"
+    },
+    {
+      "direction": "input",
+      "width": "[5:0]",
+      "name": "index_read_words"
+    },
+    {
+      "direction": "input",
+      "width": "[7:0]",
+      "name": "index_read_tag"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "index_rsp_v"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "index_rsp_r"
+    },
+    {
+      "direction": "output",
+      "width": "[1023:0]",
+      "name": "index_rsp_data"
+    },
+    {
+      "direction": "output",
+      "width": "[7:0]",
+      "name": "index_rsp_tag"
+    },
+    {
+      "direction": "output",
+      "width": "[72:0]",
+      "name": "index_rsp_frame"
+    },
+    {
+      "direction": "output",
+      "width": "[6:0]",
+      "name": "index_rsp_rank"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "por_n"
+    },
+    {
+      "direction": "input",
+      "width": "1",
+      "name": "warm_req"
+    },
+    {
+      "direction": "input",
+      "width": "[31:0]",
+      "name": "bind_span"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "warm_ack"
+    },
+    {
+      "direction": "output",
+      "width": "1",
+      "name": "fault"
+    }
+  ],
+  "log_sha256": {
+    "enabled_lint_package_timescale_FAIL.log": "3670988a67f719ecb7549ec75cfd3854d048878a7be4949c218d8b94b819bc32",
+    "compile_r2.log": "f98b6f8ce5600d43a7b143cf98cea9cd1139fe33cc37119cd30524c4fdc7bf40",
+    "compile_attempt0_FAIL.log": "691763023bd9cb3f859069a61175e147e4672e156ad669d6d1f1f2ef731504f1",
+    "enabled_lint.log": "5b69c1d22c17845b733d49687b937a7b4907ec8279d27b0c850b23943ed396e1",
+    "compile.log": "d847f0c0b0d2a0f0dfc7e4d361be37c5743ad002cf9738fecb4f2214853d8623",
+    "enabled_lint_ready_cycle_FAIL.log": "5b69c1d22c17845b733d49687b937a7b4907ec8279d27b0c850b23943ed396e1",
+    "default_off_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime_r1.log": "d24e8e512f0880e8960023da7e126f3969fb65018807560f5348fb8b01cd33d4",
+    "enabled_lint_r2.log": "5b463d490be0efdd49afe2aa8a671ef9ff3a39a79b79146471c4ba37cc9c7499",
+    "enabled_lint_tool_option_FAIL.log": "b68d348980aa505e86bd26e4399900b469992d8b2e41cdd5e2733cac309f6470",
+    "runtime_r2.log": "f8a4afafe0d4a5ef781d1a81397cf2207cd25f8298431fc30e4517eff1466cf0"
+  },
+  "physical_qualified": false,
+  "route_admitted": false,
+  "remaining_dependencies": [
+    "actual mapped codec/mux/cell/clock cost plus finite reserved channel geometry; model charges 3824 protected FF, not measured area",
+    "Claude SM true destination visibility ACK; no delay-derived event",
+    "Gibbs/Bacon single service CA calendar and actual expert ordinal/receipt binding",
+    "Gauss forwarded station join: literal root clocks here are not measured receiver insertion"
+  ],
+  "clock_cost_note": "Four reverse-seat root clock ports feed 2888 FF; total new protected FF 3824. Port count is not a CTS/load measurement.",
+  "scope": "minimum activation+dedicated FP32 caller/provider parent only; no SM, service calendar, serial-domain CDC or die generator source edits",
+  "child_failure_preserved": {
+    "owner": "Bacon",
+    "source_commit": "894ab1292",
+    "root": "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/exact-agi-r1",
+    "verdict": "FAIL",
+    "message": "held protected provider response changed",
+    "time": 1721663912,
+    "reported_by": "Kant 2026-10-06T04:15:37Z",
+    "qualification_effect": "Parent two-row gate is bounded evidence; full index-source campaign remains failed until source-owner diagnosis. No route/adoption from this gate."
+  },
+  "off_package_FEC_policy": "Full FEC mandatory for every board/in-rack/rack-to-rack link; this local root join adds no off-package link and inherits no 130ns light-FEC latency.",
+  "child_failure_resolution": {
+    "source_commit": "aa52fdb03",
+    "record": "results/physical/hbm_die_abstracts_20261006/memory_control/index_fp32_exact-agi-r2_PASS/terminal.json",
+    "sha256": "0f13157baaadc692a02c9748fa39fc83817eabc072f91ceb3cedda96c3913a6c",
+    "verdict": "PASS",
+    "RTL_unchanged": true,
+    "fixture_only_fix": "negedge sampling after publication edge",
+    "actual_counts": {
+      "writes": 257,
+      "checked_ACKs": 257,
+      "reads": 129,
+      "blocks": 128,
+      "FP32_comparisons": 4128
+    },
+    "SRAM_2bit_UE_negative": "PASS",
+    "qualification": "leaf source only; no parent SSFF"
+  }
+}

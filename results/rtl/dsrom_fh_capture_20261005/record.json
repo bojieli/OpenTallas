@@ -263,12 +263,13 @@
     "restart": false
   },
   "current_physical_successors": {
-    "C17b": "live EPYC1 preserved; no new E1 jobs",
-    "C18": "live E2 comb shared partition supervisor2546022 source3c45 all105regions verified",
-    "C19": "live E2 receiver partition supervisor2562095 source3c45 all105regions verified"
+    "C17b": "terminal DPL0033; original failure retained",
+    "C18": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
+    "C19": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
+    "C20": "sole controller2707850 E2 source dd6d7127b four-edge/native endpoint; map/PDN prerequisite waits fresh unchangedguard48/16 CPUfit"
   },
   "C18_actual_result": {
-    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
     "first_timing_driven_setup_estimate_ps": -2384.7242,
     "qualified": false,
     "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
@@ -283,10 +284,11 @@
     "head_slot_mm2": 1.32,
     "exact_replayed": false,
     "exact_retained_cycles": 62878,
-    "negative_controls_retained": true
+    "negative_controls_retained": true,
+    "retirement_record": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/superseded_source_retirement.json"
   },
   "C19_actual_result": {
-    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
     "first_timing_driven_setup_estimate_ps": -2401.015,
     "qualified": false,
     "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
@@ -301,6 +303,44 @@
     "head_slot_mm2": 1.32,
     "exact_replayed": false,
     "exact_retained_cycles": 62878,
-    "negative_controls_retained": true
+    "negative_controls_retained": true,
+    "retirement_record": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/superseded_source_retirement.json"
+  },
+  "C17_actual_result": {
+    "observed_utc": "2026-10-06T03:24:48.756076+00:00",
+    "terminal": true,
+    "supervisor_absent": 882029,
+    "actual_make_exit": 2,
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "physical_source": "e91af64c3",
+    "first_error": "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+    "first_error_line": 153,
+    "log_sha256": "7eeb4ce6a238d73a3f2c2674ed5b3dd2011e86bc80fb971e31dbbdef323f68b0",
+    "preserved_failed_checkpoint": "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/routes/C17_region_replace/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+    "cells_in_wrong_regions": 0,
+    "post_improvement_site_alignment_problems": 15,
+    "post_improvement_overlaps": 9,
+    "post_improvement_edge_spacing_violations": 1,
+    "post_improvement_padding_violations": 0,
+    "initial_legalization_edge_spacing_violations": 13,
+    "initial_legalization_padding_violations": 3,
+    "preCTS_SS_setup_ps": -2194.75,
+    "resized_SS_setup_ps": -2041.81,
+    "preCTS_hold_ps": 2.69,
+    "worst_path": {
+      "start": "u_memory.g_bank[56].u_lane/poison_q",
+      "end": "g_argmax_consumer[12].c[22]",
+      "cone": "global protected-SRAM fault veto feeding receiver"
+    },
+    "qualification": false,
+    "diagnosis": "Single-boundary grouping removes region violations. Initial legalizer leaves edge/padding violations; DPO then introduces site alignment/overlap problems. Need real legalized geometry, not a density waiver or fake cells.",
+    "restart": false
+  },
+  "superseded_source_retirement": {
+    "reason": "OWNER superseded-source retirement: fd25 geometry affinity vehicles do not include current four-edge retirement/native endpoint dd6; no current terminal consumer found. Reclaim capacity for existing C20, not arbitrary runtime cutoff.",
+    "rss_reclaimed_GiB": 21.21615219116211,
+    "no_current_terminal_consumer": true,
+    "original_timing_failures_preserved": true,
+    "runtime_deadline": false
   }
 }

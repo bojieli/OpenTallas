@@ -1,0 +1,132 @@
+{
+  "mapping": {
+    "ot_hdc_qmul_lat": "ot_hbm_selected_c12__ot_hdc_qmul_lat",
+    "ot_hdc_qadd_lat": "ot_hbm_selected_c12__ot_hdc_qadd_lat",
+    "ot_hdc_kadd": "ot_hbm_selected_c12__ot_hdc_kadd",
+    "ot_hdc_kge": "ot_hbm_selected_c12__ot_hdc_kge",
+    "ot_hdc_kinc": "ot_hbm_selected_c12__ot_hdc_kinc",
+    "ot_hdc_f12_cut": "ot_hbm_selected_c12__ot_hdc_f12_cut",
+    "ot_hdc_fp32_add_f12": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12",
+    "ot_hdc_fp32_mul_f12": "ot_hbm_selected_c12__ot_hdc_fp32_mul_f12",
+    "ot_hdc_fp32_add_f12_l4": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l4",
+    "ot_hdc_fp32_add_f12_l5": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l5",
+    "ot_hdc_fp32_mul_f12_l5": "ot_hbm_selected_c12__ot_hdc_fp32_mul_f12_l5",
+    "ot_hdc_fp32_mul_f12_l6": "ot_hbm_selected_c12__ot_hdc_fp32_mul_f12_l6",
+    "ot_hdc_fp32_add_f12_l5x": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l5x",
+    "ot_hdc_f12_inreg": "ot_hbm_selected_c12__ot_hdc_f12_inreg",
+    "ot_hdc_fp32_add_f12_l5i": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l5i",
+    "ot_hdc_fp32_mul_f12_l6i": "ot_hbm_selected_c12__ot_hdc_fp32_mul_f12_l6i",
+    "ot_hdc_ksadd_k": "ot_hbm_selected_c12__ot_hdc_ksadd_k",
+    "ot_hdc_inc_k": "ot_hbm_selected_c12__ot_hdc_inc_k",
+    "ot_hdc_fp32_add_f12_l6x": "ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l6x",
+    "ot_dsrom_exp_f12": "ot_hbm_selected_c12__ot_dsrom_exp_f12",
+    "ot_dsrom_fdiv_f12": "ot_hbm_selected_c12__ot_dsrom_fdiv_f12",
+    "ot_dsrom_add_f12_l6": "ot_hbm_selected_c12__ot_dsrom_add_f12_l6",
+    "ot_dsrom_actquant_f12": "ot_hbm_selected_c12__ot_dsrom_actquant_f12",
+    "ot_hdc_fsqrt_c12": "ot_hbm_selected_c12__ot_hdc_fsqrt_c12",
+    "ot_hdc_v41x_exp": "ot_hbm_selected_c12__ot_hdc_v41x_exp",
+    "ot_hdc_v41x_rsqrt": "ot_hbm_selected_c12__ot_hdc_v41x_rsqrt",
+    "ot_hdc_v41x_fdiv": "ot_hbm_selected_c12__ot_hdc_v41x_fdiv",
+    "ot_hdc_v41x_softplus": "ot_hbm_selected_c12__ot_hdc_v41x_softplus",
+    "ot_hdc_v41x_ins": "ot_hbm_selected_c12__ot_hdc_v41x_ins",
+    "ot_hdc_cg": "ot_hbm_selected_c12__ot_hdc_cg",
+    "ot_hdc_delay": "ot_hbm_selected_c12__ot_hdc_delay",
+    "ot_hdc_vline": "ot_hbm_selected_c12__ot_hdc_vline",
+    "ot_hdc_exp": "ot_hbm_selected_c12__ot_hdc_exp",
+    "ot_hdc_recip": "ot_hbm_selected_c12__ot_hdc_recip",
+    "ot_hdc_rsqrt": "ot_hbm_selected_c12__ot_hdc_rsqrt",
+    "ot_hbm_compute_held_exec": "ot_hbm_selected_c12__ot_hbm_compute_held_exec",
+    "ot_hbm_sfu_quarter": "ot_hbm_selected_c12__ot_hbm_sfu_quarter",
+    "ot_hbm_sfu_result_c12": "ot_hbm_selected_c12__ot_hbm_sfu_result_c12",
+    "ot_hbm_sfu_side_result_c12": "ot_hbm_selected_c12__ot_hbm_sfu_side_result_c12"
+  },
+  "files": {
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv": {
+      "canonical": "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+      "canonical_sha256": "870020b95d623ed481ec8caebda69cb80f57e43dd824ece5fa31c381ebd4c5ac",
+      "exported_sha256": "cc5c159362eb96c4ec551918c196c6c7fcf10b2eeb90bfaa338909bc5072b9c9",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv": {
+      "canonical": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "canonical_sha256": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+      "exported_sha256": "279d6daea1e9a27db335dd14191ca6abf4d0bbea056780d0e9358c6b95909261",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv": {
+      "canonical": "rtl/hdc/ot_hdc_prefix.sv",
+      "canonical_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "exported_sha256": "8cf1c6b38a21fb026f5c74ce3fc20d9d5ae3ec63cae7a98d49c2415bda21321e",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv": {
+      "canonical": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+      "canonical_sha256": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+      "exported_sha256": "a1c047b941c09337677209d1bc4e67e0d4615700c06d2e2ab005499676312177",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv": {
+      "canonical": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+      "canonical_sha256": "61c22f6180c13408549ee52020cd3150860243c91393b268eddcc308eb46fc24",
+      "exported_sha256": "91bbe3be9541484be88ba30268dca12d5ccb57f4b3c7ef7bde190e2a09ff871e",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv": {
+      "canonical": "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+      "canonical_sha256": "5d09b4df12d1d4da73aa331b3b21cc5af540e289bbf3f45c0773754b489c5584",
+      "exported_sha256": "3993456426d9dd12a862be36eb091a42717df47e6b9e5d14138ca7d41d4703a6",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv": {
+      "canonical": "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+      "canonical_sha256": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
+      "exported_sha256": "bd741f73860ed6be21ecb55a7cef87e80501549f01463f92cf48250070c11094",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/07_ot_hdc_cg.sv": {
+      "canonical": "rtl/hdc/ot_hdc_cg.sv",
+      "canonical_sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "exported_sha256": "24df5bff25dd8e726003f3b26ad658318243d93fc3f1ff9f1ee6c9969c5148c3",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv": {
+      "canonical": "rtl/hdc/ot_hdc_delay.sv",
+      "canonical_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "exported_sha256": "904b16a8065ec0c2d37414e709d756e200304c300ea5b60edf41452a55a19adc",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv": {
+      "canonical": "rtl/hdc/ot_hdc_sfu.sv",
+      "canonical_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "exported_sha256": "7a47dd6ab7fb9592ff2ed7c5a9970eddd00733ad7f6718dd38ed97c77537f0fe",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/10_ot_hbm_compute_held_exec.sv": {
+      "canonical": "physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv",
+      "canonical_sha256": "9dc13b406faf8fb4f68c514664e2266aad5a02239e7613cba9d806000d102714",
+      "exported_sha256": "6de531368387f8b821b00b5df7a070a6b8f7e231bfefd124743df52f7ef73380",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/11_ot_hbm_sfu_quarter.sv": {
+      "canonical": "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv",
+      "canonical_sha256": "fce12e60081ecad5d72ce344a63b861ddc9f58d470fae6b00336811befdfcdc3",
+      "exported_sha256": "ba155ca1dfa2a8042d967528a890804a54ff3e431be185ba4c5bc83051d31819",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/12_ot_hbm_sfu_side_result_c12.sv": {
+      "canonical": "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_side_result_c12.sv",
+      "canonical_sha256": "7b60ea8e66981e40d6b7f4de93dee8d9be7f01b5199fbac8b07b5936953a52fd",
+      "exported_sha256": "c3f4061b464949da87b362bd707c117a103a2647c0c4aa1569d9f106b021aeb3",
+      "transformation": "module identifier alpha-renaming only"
+    },
+    "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/13_ot_hbm_sfu_quarter_framed.sv": {
+      "canonical": "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter_framed.sv",
+      "canonical_sha256": "838728588768e7e75e812a57529df7136278ec8aad7b276560b0645180425a3e",
+      "exported_sha256": "64793ffdae175050efce9ddd0014cfb161e61bc3b9565893b1cbd1c05e17b5b6",
+      "transformation": "module identifier alpha-renaming only"
+    }
+  },
+  "arithmetic_changes": 0,
+  "new_module_instances": 0,
+  "canonical_files_edited": false
+}

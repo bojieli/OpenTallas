@@ -75,10 +75,18 @@ module ot_hdc_v41_matvec #(
     parameter integer IL = 8,
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer MP = 1            // lane multiplier: positions per weight read
+    parameter integer MP = 1,           // lane multiplier: positions per weight read
+    parameter integer FAULT_RETIRE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire fh_retire_busy,fh_warm_ack,fh_ov_retired,
+    input wire fh_leaf_v_retired,
+    input wire [MP*G*W*(1+32+NW)-1:0] fh_leaf_retired,
+    output wire [MP*G*W*(1+32+NW)-1:0] fh_leaf,
+    output wire [5+2+2*AW+3*(NW+1)+2+AW+3+AW+1-1:0] fh_tag,
+    output wire fh_tag_v,
+    output reg fh_leaf_v,fh_warm_emit,
     // instruction
     input  wire              go,
     output wire              ready,
@@ -174,6 +182,7 @@ module ot_hdc_v41_matvec #(
     reg              oacc_r, iwe_r;
     reg [AW-1:0]     iaddr_r;
     reg              iw_pend;
+    reg              iw_issued;
     wire             drained;
     reg              iw_go;
     reg              iw_go2;
@@ -182,7 +191,7 @@ module ot_hdc_v41_matvec #(
         if (!rst_n) iw_go2 <= 1'b0;
         else iw_go2 <= iw_go;
     wire             iw_go_n;
-    assign ready = !active && !fus_busy;
+    assign ready = !active && !fus_busy && (!FAULT_RETIRE || !fh_retire_busy);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -190,7 +199,7 @@ module ot_hdc_v41_matvec #(
             wrom_re <= 1'b0; kv_re <= 1'b0; x_re <= 0;
         end else if (!active) begin
             wrom_re <= 1'b0; kv_re <= 1'b0; x_re <= 0;
-            if (go) begin
+            if (go && (!FAULT_RETIRE || ready)) begin
                 active <= 1'b1;
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax; oacc_r <= i_oacc;
@@ -370,6 +379,8 @@ module ot_hdc_v41_matvec #(
     ot_hdc_vline #(.D(DF)) u_fv (.clk(clk), .rst_n(rst_n), .v(t_v && u_fus), .vd(fline));
     wire          f_v = fline[DF];
     reg  [TW-1:0] r_tag;
+    assign fh_tag=r_tag;
+    assign fh_tag_v=r_v;
     reg           r_v;
     always @(posedge clk) r_tag <= fline[DF - 1] ? f_tag_p : a_tag_p;
     always @(posedge clk or negedge rst_n) begin
@@ -398,8 +409,12 @@ module ot_hdc_v41_matvec #(
     reg  [LV:0] tv;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
+        else if(FAULT_RETIRE) tv <= {tv[LV-1:1],fh_leaf_v_retired,1'b0};
         else tv <= {tv[LV-1:0], r_v && r_last && r_amax};
     end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin fh_leaf_v<=0;fh_warm_emit<=0;end
+        else begin fh_leaf_v<=r_v&&r_last&&r_amax;fh_warm_emit<=iw_write_go;end
     reg ov1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) ov1 <= 1'b0;
@@ -595,7 +610,8 @@ module ot_hdc_v41_matvec #(
             wire [NW-1:0] row = r_nb[NW-1:0] + EQ * (W * IL) + EL;
             always @(posedge clk)
                 c <= {r_mask[e], okey(res[32*e +: 32]), row};
-            assign alv[0][CW*e +: CW] = c;
+            assign fh_leaf[mp*CW*NL+CW*e+:CW]=c;
+            assign alv[0][CW*e+:CW]=FAULT_RETIRE?fh_leaf_retired[mp*CW*NL+CW*e+:CW]:c;
         end
         for (lv = 1; lv <= LV; lv = lv + 1) begin : g_alvl
             for (e = 0; e < (NL >> lv); e = e + 1) begin : g_node
@@ -645,7 +661,7 @@ module ot_hdc_v41_matvec #(
             n_last_issued <= 0; n_ov <= 0; ov_mark <= 0; progress <= 0;
         end else begin
             n_last_issued <= n_last_issued + ((active && k_last) ? 16'd1 : 16'd0);
-            n_ov <= n_ov + (ov ? 16'd1 : 16'd0);
+            n_ov <= n_ov + ((FAULT_RETIRE?fh_ov_retired:ov) ? 16'd1 : 16'd0);
             if (go && ready) begin
                 ov_mark <= n_last_issued; progress <= 0;
             end else begin
@@ -657,25 +673,27 @@ module ot_hdc_v41_matvec #(
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
     assign drained = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov &&
-                   !(|fline);
+                   !(|fline) && (!FAULT_RETIRE || !fh_retire_busy);
     // FUSED: hold the engine while a fused op drains; then write its argmax index (i_iwe)
     //: iw_go is iw_pend && drained, registered: while a fused op is pending no op is accepted, so every
     //: in-flight bit is a shift of a bit that is in flight now, and the argmax valid tv[LV] (the last to clear)
     //: is tv[LV-1] a cycle earlier: drained next cycle == drained_nx now (the as-built OR without tv[LV])
     wire drained_nx = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv[LV-1:0]) &&
-                      !ov1 && !ov && !(|fline);
-    assign iw_go_n = iw_pend && !iw_go && !(FH_CAPTURE && iw_go2) && drained_nx;
+                      !ov1 && !ov && !(|fline) && (!FAULT_RETIRE || !fh_retire_busy);
+    assign iw_go_n = iw_pend && !iw_go && !(FH_CAPTURE && iw_go2) && drained_nx && (!FAULT_RETIRE || !iw_issued);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) iw_go <= 1'b0;
         else iw_go <= iw_go_n;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            fus_busy <= 1'b0; iw_pend <= 1'b0; iwe_r <= 1'b0; iaddr_r <= 0;
+            fus_busy <= 1'b0; iw_pend <= 1'b0; iw_issued<=0; iwe_r <= 1'b0; iaddr_r <= 0;
         end else if (go && ready) begin
-            fus_busy <= i_oacc; iw_pend <= i_oacc && i_iwe; iwe_r <= i_iwe; iaddr_r <= i_iaddr;
-        end else if (iw_write_go) begin
-            iw_pend <= 1'b0;
+            fus_busy <= i_oacc; iw_pend <= i_oacc && i_iwe; iw_issued<=0; iwe_r <= i_iwe; iaddr_r <= i_iaddr;
+        end else if (FAULT_RETIRE && iw_write_go) begin
+            iw_issued<=1;
+        end else if (FAULT_RETIRE ? fh_warm_ack : iw_write_go) begin
+            iw_pend <= 1'b0; iw_issued<=0;
         end else if (fus_busy && drained && !iw_pend && !(|o_we)) begin
             fus_busy <= 1'b0;
         end

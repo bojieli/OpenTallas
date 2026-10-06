@@ -1,0 +1,8 @@
+rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
+physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv
+rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv
+rtl/common/ot_fwd_link_stage.sv
+physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv
+physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv
+physical/hbm_die_abstracts_20261006/links/root_join/ot_hbm_activation_station_join.sv

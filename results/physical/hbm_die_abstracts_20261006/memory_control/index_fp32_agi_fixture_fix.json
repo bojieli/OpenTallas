@@ -1,0 +1,15 @@
+{
+  "failure": "exact-agi-r1/held protected provider response changed at time1721663912fs",
+  "cause": "wait(rsp_v) resumes during publishing NBA/combinational decoder settling; snapshot precedes valid payload settling",
+  "changed_only": "testbench samples at nextnegedge before3edge hold check",
+  "RTL_SHA256_unchanged": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+  "failed_source_commit": "894ab1292",
+  "fixed_source_commit": "aa52fdb03",
+  "normal_and_actual_SRAM_UE_PASS": true,
+  "passing_gates_repeated": 0,
+  "full_parent_qualified": false,
+  "local_OpenROAD_STA_runs": 0,
+  "guard_implementation_unchanged": true,
+  "guard_RESERVE_formula": "min(100GiB,15percentactualtotalRAM)",
+  "actualAGIreserve_bytes": 20246159155
+}

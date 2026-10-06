@@ -19,9 +19,18 @@ here per bus class (DIRECTION MODEL below), from the generator's own comments an
 uses its RTL direction; a placeholder peer of a real endpoint takes the complement.
 
 Modes:
-  lint  --die {s81_layer,s81_head,hbm} [--top-fix] --out DIR   python graph + physical lint, findings JSON,
-                                                              Verilog die top + stubs + file list for Verilator
-  abstracts --out DIR                                          HBM die: hardened abstracts the real placement needs
+  lint  --die {s81_layer,s81_head,hbm,qwen_rom} [--top-fix] --out DIR
+                                                     python graph + physical lint, findings JSON,
+                                                     Verilog die top + stubs + file list for Verilator
+  abstracts [--die hbm] --out DIR                    HBM die: hardened abstracts the real placement needs
+  abstracts --die rom --out DIR                      ROM dies (s81_layer, s81_head, qwen_rom): block-family inventory
+                                                     (*_abstract_list.json) + README.md summary tables; one command,
+                                                     rerun after a generator change
+
+Qwen ROM die (qwen_rom): tools/qwen_rom_fulldie_b3r2.py selected() with the r17b recipe (QWEN_R17B, the recipe of
+tools/qwen_rom_die_path_sta.py on claude/qwen-die-rebuild-20261005 @ f76c3603b).  While that branch is not on main,
+--qwen-ref REF overlays the generator files REF changed since its merge base with HEAD (tools/ only) on this tree, in
+build/dielint_qsrc_<sha12>/ (relative symlinks: rsync-able; reused when present, no git needed then).
 """
 from __future__ import annotations
 
@@ -40,13 +49,115 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 import hbm_accel_die_fp as H  # noqa: E402
-import qwen_rom_fulldie as Q  # noqa: E402
+
+Q = S.Q          # main's qwen_rom_fulldie (esc, pin_rects); the Qwen DIE generator is loaded separately (load_qwen)
 
 OUT = 'results/rtl/die_top_lint_20261006'
 
 
 def sha(rel):
     return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
+
+
+def gen_root(die):
+    return Path(qwen_src()['root']) if die == 'qwen_rom' else ROOT
+
+
+def sha_gen(die, tool):
+    return hashlib.sha256((gen_root(die) / tool).read_bytes()).hexdigest()
+
+
+def git(*a, cwd=ROOT):
+    import subprocess
+    try:
+        return subprocess.run(['git', *a], cwd=cwd, capture_output=True, text=True, check=True).stdout.strip()
+    except Exception:  # noqa: BLE001  no git (rsync'd tree): callers fall back to recorded state
+        return None
+
+
+def gen_tag(rel, root=ROOT):
+    """generator identity: sha256 of the file + the last commit that touched it + the tree HEAD (git, when present)."""
+    p = Path(root) / rel
+    tag = dict(file=rel, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+    head = git('rev-parse', 'HEAD')
+    sc = Path(root) / 'SOURCE_COMMIT'
+    tag['tree_head'] = head or (sc.read_text().strip() if sc.exists() else None)
+    tag['file_commit'] = git('log', '-1', '--format=%H', '--', rel)
+    return tag
+
+
+# ------------------------------------------------------------------------------------------------ Qwen ROM die source
+# r17b recipe: tools/qwen_rom_die_path_sta.py main() @ f76c3603b with --slab-group-h 455.76 --cdc 183.048,183.048
+# (path_sta/r17b_i5_skew*.json 'floorplan'); its write_netlist(k=1) is byte-identical to the r17b_real case die.v
+# (sha256 86a9e54b..., EPYC1 /srv/opentallas/scratch-overflow/claude/qwen-die-r17/cases/r17b_real/die.v).
+QWEN_R17B = dict(b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True, bw_edge_inner=True,
+                 bw_sp=200, m6_strip=40, slab_group_h=455.76, cdc='183.048,183.048')
+# r18 recipe (claude/qwen-die-rebuild-20261005): r17b + r18=True (findings Q1-Q14 of the first lint, main 694e21a6e)
+QWEN_R18 = dict(QWEN_R17B, r18=True)
+QWEN_RECIPE = 'r17b'     # --qwen-recipe
+QWEN_REF = None          # --qwen-ref
+QSRC = None              # dict(root, ref, commit, overlay)
+
+
+def qwen_src():
+    """root of the tree the Qwen die generator is imported from (ROOT, or the --qwen-ref overlay)."""
+    global QSRC
+    if QSRC is not None:
+        return QSRC
+    if QWEN_REF is None:
+        QSRC = dict(root=ROOT, ref=None, commit=git('rev-parse', 'HEAD'), overlay=[])
+        return QSRC
+    commit = git('rev-parse', QWEN_REF + '^{commit}')
+    tag = (commit or QWEN_REF)[:12]
+    od = ROOT / 'build' / f'dielint_qsrc_{tag}'
+    if (od / 'OVERLAY.json').exists():
+        QSRC = dict(json.loads((od / 'OVERLAY.json').read_text()), root=od)
+        return QSRC
+    if commit is None:
+        raise SystemExit(f'--qwen-ref {QWEN_REF}: no git here and no prepared overlay {od}')
+    base = git('merge-base', 'HEAD', commit)
+    files = [f for f in git('diff', '--name-only', base, commit, '--', 'tools').split('\n') if f.endswith('.py')]
+    (od / 'tools').mkdir(parents=True, exist_ok=True)
+    for e in ROOT.iterdir():
+        if e.name not in ('tools', 'build', '.git'):
+            (od / e.name).symlink_to(Path('..') / '..' / e.name)
+    for f in (ROOT / 'tools').iterdir():
+        if f.is_file() and f'tools/{f.name}' not in files:
+            (od / 'tools' / f.name).symlink_to(Path('..') / '..' / '..' / 'tools' / f.name)
+    for f in files:
+        (od / f).write_text(git('show', f'{commit}:{f}') + '\n')
+    rec = dict(ref=QWEN_REF, commit=commit, merge_base=base, overlay=files)
+    (od / 'OVERLAY.json').write_text(json.dumps(rec, indent=1) + '\n')
+    QSRC = dict(rec, root=od)
+    return QSRC
+
+
+_QW = {}
+
+
+def load_qwen():
+    """(v, m) of the r17b Qwen die: the generator imported from qwen_src() under private module names (the main
+    tree's qwen_rom_fulldie stays bound to S.Q)."""
+    if 'vm' in _QW:
+        return _QW['vm']
+    import importlib
+    src = qwen_src()
+    saved = {k: sys.modules.pop(k) for k in list(sys.modules) if k.startswith('qwen_rom_fulldie')}
+    sys.path.insert(0, str(Path(src['root']) / 'tools'))
+    try:
+        B = importlib.import_module('qwen_rom_fulldie_b3r2')
+        r = dict(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B)
+        cdc = r.pop('cdc')
+        v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
+    finally:
+        sys.path.pop(0)
+        for k in [k for k in sys.modules if k.startswith('qwen_rom_fulldie')]:
+            sys.modules['_dielint_' + k] = sys.modules.pop(k)
+        sys.modules.update(saved)
+    # the PHY endpoint is '*dfi' (generator netlist convention for the real PHY's named pins): plain port name here
+    m['buses'] = [(bid, cls, bits, [(i, p.lstrip('*')) for i, p in eps]) for bid, cls, bits, eps in m['buses']]
+    _QW['vm'] = (v, m, B)
+    return _QW['vm']
 
 
 # ------------------------------------------------------------------------------------------------ RTL port parser
@@ -153,12 +264,37 @@ SM_LAYOUT = dict(
       + ['release_in', 'busy', 'arrive', 'released'],                                     # W_CTL 45
     ck=['clk', 'rst_n', None])
 RETN_LAYOUT = {p: [f'{p}_v'] + _bus(f'{p}_t', 32) + _bus(f'{p}_d', 32) + [f'{p}_e'] for p in 'abo'}
+# Qwen die: STREAM4 per-PC CDC bundles in the generator's documented order (qwen_rom_fulldie_b3r2._cdc_arg, TAGW 9)
+QPHY_BB = 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v'
+QPHY_LEF = 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef'
+QCDC_RTL = 'rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv'
+CDC_LAYOUT = dict(
+    h=['h_lv'] + _bus('h_lsec', 17) + _bus('h_lrow', 8) + _bus('h_ldata', 256) + _bus('h_cred', 3) + ['h_wv']
+      + _bus('h_wsec', 24) + ['h_hand', 'h_wcon', 'h_cv'] + _bus('h_csec', 24) + _bus('h_cdata', 256) + _bus('h_ctag', 9)
+      + ['h_av'] + _bus('h_atag', 9) + ['h_fault'],                                           # 613
+    c=['l_v'] + _bus('l_sec', 17) + _bus('l_row', 8) + _bus('l_data', 256) + ['l_pop', 'w_v'] + _bus('w_sec', 24)
+      + _bus('w_data', 256) + _bus('w_tag', 9) + ['w_room', 'wd_v'] + _bus('wd_tag', 9) + ['c_fault'])   # 585
+assert len(CDC_LAYOUT['h']) == 613 and len(CDC_LAYOUT['c']) == 585
 
 
 def real_blocks(die, m=None):
     """master -> dict(module, file, params, ports, binding{die port: [rtl pin names or None]}, kind)."""
     out = {}
     V = (m or {}).get('variant') or {}
+    if die == 'qwen_rom':
+        v, m, B = load_qwen()
+        out['ot_hbm3e_phy'] = dict(module='ot_hbm3e_phy', file=QPHY_BB, kind='hard macro black box (v2 E/W PHY)', params={},
+                                   ports=parse_module(QPHY_BB, 'ot_hbm3e_phy')['ports'],
+                                   binding=dict(dfi=[pn for pn, _ in v.phy_pins()]))
+        prm = dict(TAGW=9)
+        bind = dict(CDC_LAYOUT)
+        if QWEN_RECIPE == 'r18':
+            bind.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
+            out['ot_hbm3e_phy']['binding'].update(clk=['clk'], rst_n=['rst_n'])
+        out['qfd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL,
+                              kind='RTL (routed per-PC CDC element; the die master qfd_cdc is its frame)', params=prm,
+                              ports=parse_module(QCDC_RTL, 'ot_qwen_stream4_cdc_pc', prm)['ports'], binding=bind)
+        return out
     if die.startswith('s81'):
         rp = S.real_ports()
         files = {S.real_lef(S.Q_LEF)['name']: ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv', 'routed RTL (NB=2 receipt params)',
@@ -232,6 +368,7 @@ COUNTERPARTS = {
         'hfd_attn_tile': ('rtl/hbm_accel/ot_attn_tile_registered_parent.sv', 'ot_attn_tile_registered_parent'),
     },
     's81': {},
+    'qwen': {},
 }
 FWD_STAGE = ('rtl/common/ot_fwd_link_stage.sv', 'ot_fwd_link_stage')
 MESO = ('rtl/common/ot_meso_fifo.sv', 'ot_meso_fifo')
@@ -309,6 +446,11 @@ def fix_hbm_links(m):
 def build(die, top_fix=False):
     global TOP_FIX
     TOP_FIX = top_fix
+    if die == 'qwen_rom':
+        if top_fix:
+            raise SystemExit('qwen_rom: no top fixes defined')
+        v, m, B = load_qwen()
+        return m, v.port_widths(m, 1), v.masters(m, 1), 'tools/qwen_rom_fulldie_b3r2.py'
     if die.startswith('s81'):
         S.configure('layer' if die == 's81_layer' else 'head')
         m = S.build()
@@ -374,6 +516,34 @@ def dirs_s81(bid, cls, bits, eps, j, port):
     if cls == 'phy_dfi':
         return 'complement'
     raise KeyError(f'no direction rule for S81 class {cls} ({bid})')
+
+
+QLINK = 1056          # qwen_rom_fulldie LINK_TRACKS: 512 each way + 32 control (16 each way)
+
+
+def dirs_qwen(bid, cls, bits, eps, j, port):
+    """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
+    if cls in ('corridor', 'head_chain', 'tap'):
+        return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
+    bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
+    if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset'):
+        return [(0, bits, 'out' if j == 0 else 'in')]
+    if cls == 'io':
+        if bid in ('ucie_tx', 'serdes_tx', 'ucie_rx', 'serdes_rx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx
+            return flow(j, bits, bits // 2)
+        return [(0, bits, 'out' if j == 0 else 'in')]
+    if cls in ('link_spine', 'link_channel', 'strip_fan'):   # hub side upstream; per link: 528 down, 528 back
+        seg = []
+        for k in range(bits // QLINK):
+            seg += [(a + k * QLINK, b + k * QLINK, d) for a, b, d in flow(j, QLINK, QLINK // 2)]
+        return seg
+    if cls == 'sequencer':
+        if bid in ('seq_ib', 'seq_su', 'seq_coll'):   # word + valid/go down, ready / done back
+            return flow(j, bits, bits - 1)
+        return [(0, bits, 'out' if j == 0 else 'in')]
+    if cls in ('hbm_cdc', 'cdc_core', 'phy_dfi'):
+        return 'complement'
+    raise KeyError(f'no direction rule for Qwen class {cls} ({bid})')
 
 
 def dirs_hbm(bid, cls, bits, eps, j, port):
@@ -448,7 +618,7 @@ def endpoint_dirs(die, real, by, bus, j):
             else:
                 seg.append((i, i + 1, {'input': 'in', 'output': 'out', 'inout': 'io'}[d]))
         return seg, pins
-    rule = (dirs_s81 if die.startswith('s81') else dirs_hbm)(bid, cls, bits, eps, j, port)
+    rule = (dirs_s81 if die.startswith('s81') else dirs_qwen if die == 'qwen_rom' else dirs_hbm)(bid, cls, bits, eps, j, port)
     if rule == 'complement':
         others = [k for k in range(len(eps)) if k != j and by[eps[k][0]].master in real]
         assert len(others) == 1, (bid, j)
@@ -556,6 +726,7 @@ def clock_reset(die, m, real):
     rst_ports = defaultdict(set)
     fwd_insts = set()
     fcl = m.get('fclk', {})
+    bundle_ck = set()        # Qwen: the tile field's clock / reset ride as bits of the corridor / tap / head chain words
     for bid, cls, bits, eps in m['buses']:
         for inst, port in eps:
             if cls == 'clock_trunk':
@@ -564,6 +735,8 @@ def clock_reset(die, m, real):
                 rst_ports[inst].add(port)
             if bid in fcl:
                 fwd_insts.add(inst)
+            if die == 'qwen_rom' and cls in ('corridor', 'tap', 'head_chain'):
+                bundle_ck.add(inst)
     rows = Counter()
     rst = Counter()
     for it in m['insts']:
@@ -578,6 +751,8 @@ def clock_reset(die, m, real):
                 ck = 'clock_trunk'
             elif it.kind == 'waypoint' and it.name in fwd_insts:
                 ck = 'forwarded_clock'          # r15 fwd: fclk bits of its segments (ot_fwd_link_stage)
+            elif it.name in bundle_ck:
+                ck = 'clock_bits_in_data_bundle'
             elif it.kind in ('serdes_slab', 'host_slab'):
                 ck = 'no_logic (reservation slab)'
             else:
@@ -618,11 +793,23 @@ def face_of(it, x, y, w, h):
 NORMAL = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
 
 
+PIN_FIT_ERRORS = {}
+
+
+def real_lefs(die):
+    return (QPHY_LEF,) if die == 'qwen_rom' else (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF)
+
+
 def pin_table(die, m, M, ports_w, real):
     """(master, port) -> [(x, y)] master-frame pin centres in net-bit order."""
     tab = {}
+    prects = load_qwen()[0].pin_rects if die == 'qwen_rom' else S.pin_rects
     for name, mst in M.items():
-        rects = S.pin_rects(mst, 1, {p: ports_w.get((name, p), 0) for p in mst.order})
+        try:
+            rects = prects(mst, 1, {p: ports_w.get((name, p), 0) for p in mst.order})
+        except ValueError as e:          # pins do not fit the face: no pins for this master (missing_pins)
+            PIN_FIT_ERRORS[name] = str(e)
+            continue
         g = defaultdict(dict)
         for nm, ly, (a, b, c, d) in rects:
             base, i = _pin_base(nm)
@@ -630,8 +817,7 @@ def pin_table(die, m, M, ports_w, real):
         for base, dd in g.items():
             tab[(name, base)] = [dd[i] for i in sorted(dd)]
     # real LEF macros
-    lefs = (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF)
-    for rel in lefs:
+    for rel in real_lefs(die):
         r = S.real_lef(rel)
         if r['name'] not in real:
             continue
@@ -653,7 +839,7 @@ def physical(die, m, M, ports_w, real):
     dims = {}
     for it in m['insts']:
         dims[it.master] = (it.w, it.h)
-    for rel in (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF):
+    for rel in real_lefs(die):
         r = S.real_lef(rel)
         dims[r['name']] = (r['w'], r['h'])
     missing = defaultdict(lambda: dict(endpoints=0, bits=0, examples=[]))
@@ -683,7 +869,7 @@ def physical(die, m, M, ports_w, real):
             along = [y for _, y in D] if face in 'EW' else [x for x, _ in D]
             ep_geo[(bid, inst, port)] = (cx, cy, face, max(along) - min(along), it)
     for bid, cls, bits, eps in m['buses']:
-        if len(eps) < 2 or cls in ('clock_trunk', 'reset_tree'):   # clock / reset nets are tree-built from the roots
+        if len(eps) < 2 or cls in ('clock_trunk', 'reset', 'reset_tree'):   # clock / reset nets are buffered trees
             continue
         for inst, port in eps:
             g = ep_geo.get((bid, inst, port))
@@ -699,7 +885,8 @@ def physical(die, m, M, ports_w, real):
             # away: the peer lies behind the face by more than half the block depth along the normal
             depth = it.w if face in 'EW' else it.h
             behind = -((px - cx) * nx + (py - cy) * ny)
-            if behind > 0.5 * depth and it.kind not in ('waypoint',):
+            area = it.master in M and M[it.master].ports.get(port, ('',))[0] == 'area'   # M8 over-the-top pins
+            if behind > 0.5 * depth and it.kind not in ('waypoint', 'link_station') and not area:
                 k = (it.master, re.sub(r'\d+$', '*', port), it.orient)
                 away[k]['endpoints'] += 1
                 away[k]['bits'] += bits
@@ -716,9 +903,13 @@ def abut(die, m):
     if die.startswith('s81'):
         comp = {'q', 'bf', 'bf_nv', 'nvx', 'cfg', 'node'}
         hubk = {'hub', 'band_blk', 'svc', 'ctrl'}
+    elif die == 'qwen_rom':
+        comp = {'tile', 'row_engine'}
+        hubk = {'hub_element', 'spine_block', 'ctrl', 'io'}
     else:
         comp = {'sm'}
         hubk = {'hub', 'spine', 'attn_tile', 'svc'}
+    chan = load_qwen()[0].HCH if die == 'qwen_rom' else S.CH       # Qwen: one link channel (97.2 um)
     C = [it for it in m['insts'] if it.kind in comp]
     Hh = [it for it in m['insts'] if it.kind in hubk]
     res = defaultdict(lambda: dict(pairs=0, min_gap_um=1e9, examples=[]))
@@ -734,7 +925,7 @@ def abut(die, m):
                 gap = max(cx0 - hx1, hx0 - cx1)
             else:
                 continue
-            if gap < S.CH - 1e-6:
+            if gap < chan - 1e-6:
                 k = (c.kind, h.kind, h.name if die == 'hbm' else re.sub(r'_[SN][WE]$', '', h.name))
                 r = res[k]
                 r['pairs'] += 1
@@ -749,35 +940,75 @@ def gap(die, m, ports_w):
     st = Counter()
     bits_stage = 0
     n_fwd = 0
+    wpk = ('waypoint', 'link_station')
     for it in m['insts']:
-        if it.kind == 'waypoint':
+        if it.kind in wpk:
             st[re.sub(r'_\d+$', '', it.master)] += 1
     by = {it.name: it for it in m['insts']}
     # every waypoint = 4 forwarded stages of its widest bus (generator docstrings); ot_fwd_link_stage W=512 slices
     wp_bits = {}
     for bid, cls, bits, eps in m['buses']:
         for inst, port in eps:
-            if by[inst].kind == 'waypoint':
+            if by[inst].kind in wpk:
                 wp_bits[inst] = max(wp_bits.get(inst, 0), bits)
     for inst, b in wp_bits.items():
         n_fwd += 4 * math.ceil(b / 512)
         bits_stage += 4 * b
-    fifo = Counter(it.master for it in m['insts'] if it.kind in ('fifo_blk', 'hub_fifo'))
+    fifo = Counter(it.master for it in m['insts'] if it.kind in ('fifo_blk', 'hub_fifo', 'link_fifo'))
     meso = m.get('meso', [])
     fcl = m.get('fclk', {})
-    return dict(waypoint_masters=dict(st), waypoints=len(wp_bits), forwarded_stage_bits=bits_stage,
-                ot_fwd_link_stage_W512_needed=n_fwd, fifo_placeholders=dict(fifo),
-                station_masters=len({it.master for it in m['insts'] if it.kind == 'waypoint'}),
-                forwarded_segments_with_fclk=len(fcl), forwarded_clock_wires=sum(a + b for _, a, b in fcl.values()),
-                meso_fifo_W512_slices=dict(total=sum(x['slices'] for x in meso),
+    out = dict(waypoint_masters=dict(st), waypoints=len(wp_bits), forwarded_stage_bits=bits_stage,
+               ot_fwd_link_stage_W512_needed=n_fwd, fifo_placeholders=dict(fifo))
+    if m.get('fclk') or m.get('meso'):          # HBM r15+ (fwd): forwarded clocks and the meso-FIFO census
+        out.update(
+            station_masters=len({it.master for it in m['insts'] if it.kind == 'waypoint'}),
+            forwarded_segments_with_fclk=len(fcl), forwarded_clock_wires=sum(a + b for _, a, b in fcl.values()),
+            meso_fifo_W512_slices=dict(total=sum(x['slices'] for x in meso),
                                            in_stations=sum(x['slices'] for x in meso if x['where'] == 'station'),
                                            in_receiving_blocks=sum(x['slices'] for x in meso if x['where'] != 'station'),
-                                           station_instances=sorted({x['inst'] for x in meso if x['where'] == 'station'}).__len__()))
+                                           station_instances=len({x["inst"] for x in meso if x["where"] == "station"})))
+    if die == 'qwen_rom':
+        v, _, B = load_qwen()
+        fa = B.fifo_accounting(v, m)
+        out['decision_C_fifo_slots'] = dict(
+            tile_tap=dict(fa['tile_tap'], instantiated=0), block_word=dict(fa['block_word'], instantiated=0),
+            strip_return=dict(fa['strip_return'], instantiated=0),
+            stream4_cdc=dict(count=sum(it.kind == 'cdc' for it in m['insts']), slot='qfd_cdc frames',
+                             instantiated='as RTL-bound frames (qfd_cdc = ot_qwen_stream4_cdc_pc)'),
+            note='tile-tap / block-word / strip-return FIFO slots are AREA inside placeholder frames (station frame '
+                 'height, port slab area, strip FIFO frame); no FIFO instance or FIFO port exists in the die netlist')
+        stn = sum(it.kind == 'station' for it in m['insts'])
+        out['corridor_stations'] = dict(count=stn, heads=sum(it.kind == 'head' for it in m['insts']),
+                                        note='one registered corridor station per tile (placeholder qfd_cst)')
+    return out
+
+
+def domain_crossings(m):
+    """every non-clock bus whose endpoints sit in different clock DOMAINS (independent of region): each needs a
+    ratio / async FIFO or a CDC element at one end."""
+    by = {it.name: it for it in m['insts']}
+    out = defaultdict(lambda: dict(buses=0, bits=0, examples=[]))
+    for bid, cls, nb, eps in m['buses']:
+        if cls in ('clock_trunk', 'reset'):
+            continue
+        if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
+            continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
+        ds = [by[i].domain for i, _ in eps]
+        if len(set(ds)) > 1:
+            r = out[f'{cls}|{"->".join(ds)}']
+            r['buses'] += 1
+            r['bits'] += nb
+            if len(r['examples']) < 3:
+                r['examples'].append(bid)
+    return dict(out)
 
 
 def region_crossings(die, m):
     """buses whose endpoints sit in different clock regions (each needs a meso / ratio / async FIFO)."""
-    if die.startswith('s81'):
+    if die == 'qwen_rom':
+        regs = [(r['name'], r['rect']) for r in m['clock_regions']]
+        dom = lambda it: it.domain  # noqa: E731
+    elif die.startswith('s81'):
         regs = [(r['name'], r['rect']) for r in m['cregions']]
         dom = lambda it: it.domain  # noqa: E731
     else:
@@ -1128,7 +1359,7 @@ def block_shape(die, m, real):
             continue
         for j, (inst, port) in enumerate(eps):
             mst = by[inst].master
-            if mst in real or by[inst].kind == 'waypoint':
+            if mst in real or by[inst].kind in ('waypoint', 'link_station'):
                 continue
             seg, _ = endpoint_dirs(die, real, by, bus, j)
             for a, b, d in seg or []:
@@ -1136,20 +1367,35 @@ def block_shape(die, m, real):
                     io[mst][0] += b - a
                 if d in ('out', 'io'):
                     io[mst][1] += b - a
-    allm = {it.master for it in m['insts'] if it.master not in real and it.kind != 'waypoint'}
+    allm = {it.master for it in m['insts'] if it.master not in real and it.kind not in ('waypoint', 'link_station')}
     out = {}
     for mst in sorted(allm):
         i, o = io.get(mst, [0, 0])
         if i == 0 or o == 0:
             out[mst] = dict(in_bits=i, out_bits=o, shape='no die nets' if i == o == 0 else
                             ('sink: no output net' if o == 0 else 'source: no input net'))
+        elif o * 100 < i and o <= 8:
+            out[mst] = dict(in_bits=i, out_bits=o, shape='data sink: only a status / done output')
     return out
+
+
+def ports_without_net(m, M, ports_w):
+    """abstract ports a master declares that no die net binds (dead pins / missing net)."""
+    used = {it.master for it in m['insts']}
+    out = defaultdict(list)
+    for name, mst in M.items():
+        if name not in used:
+            continue
+        for p in mst.order:
+            if not ports_w.get((name, p)):
+                out[name].append(p)
+    return dict(out)
 
 
 def counterparts(die, m, ports_w):
     """placeholder abstract port bits against the RTL top that implements the block (bit totals; no binding)."""
     out = {}
-    for mst, (f, mod) in COUNTERPARTS['hbm' if die == 'hbm' else 's81'].items():
+    for mst, (f, mod) in COUNTERPARTS['hbm' if die == 'hbm' else 'qwen' if die == 'qwen_rom' else 's81'].items():
         tot = sum(w for (ms, p), w in ports_w.items() if ms == mst and p != 'ck')
         try:
             pm = parse_module(f, mod)['ports']
@@ -1191,6 +1437,336 @@ def vlsum(log, top):
                 counts={k: dict(v) for k, v in sorted(agg.items())}, examples=dict(ex))
 
 
+# ------------------------------------------------------------------------------------------------ abstract list (ROM dies)
+# Status of every block family placed on the ROM dies (research 2026-10-05 PT on main 4f7fe01f3 + the owners' branches).
+# Status codes (one per family; the family is as weak as its weakest part):
+#   REAL_VIEW            a hardened view (LEF, + LIB where noted) is in the repo and the block it abstracts is final
+#   REAL_VIEW_NOT_CLOSED a LEF exists but it was extracted from a route that is NOT closed (or is a pin-only shell)
+#   RTL_CLOSED           RTL closed at its clock (SS 60 ps setup >= 0, FF 25 ps hold >= 0, 0.833 ns unless noted),
+#                        no hardened view written
+#   RTL_OPEN             RTL exists; routed but failing, or never routed
+#   NO_RTL_TOP           logic needed but no RTL top (model ledger / generator rectangle only)
+#   RESERVATION_ONLY     area reservation with no logic of its own
+STATUS_ORDER = ['REAL_VIEW', 'REAL_VIEW_NOT_CLOSED', 'RTL_CLOSED', 'RTL_OPEN', 'NO_RTL_TOP', 'RESERVATION_ONLY']
+
+S81_FAMILIES = {
+    'ot_v41_rom_elem_q_qp_w10': dict(
+        rtl='ot_v41_rom_elem_q_qp_w10 (rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv); successor QX10 ot_v41_rom_elem_q_qx_w10',
+        status='REAL_VIEW_NOT_CLOSED', owner='CLAUDE QELEM',
+        view=['results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz (no LIB)'],
+        closure='R_cap0 (the routed DB the LEF was read back from): SS -236.4 / FF -215.0 ps, not_met '
+                '(results/rtl/dsrom_qz_20261004/r_cap0_classification.json); QX10 Z18c SS -3.90 / FF +7.01, Z18d SS +3.67 / '
+                'FF -10.84 (results/physical/dsrom_qx10_z18_20261005); owner 20:30 PT: frame-D chase stopped, taller '
+                'frames Z20a/b/c routing (510.84 x 209.52 / 192.24 / 177.12)',
+        note='the die abstract is a readback of a failing route; the adopted element will be a taller frame (S81-DIE slot '
+             'change). Lint S2: xs_q1 is an RTL input used as the x forward'),
+    'ot_rom_4096x72_m8': dict(
+        rtl='compiler ROM macro (functional model physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v)',
+        status='REAL_VIEW', owner='CLAUDE S81-DIE',
+        view=['results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef (= v1 physical/asap7_memory_macros/ot_rom_4096x72_m8/'
+              'ot_rom_4096x72_m8.lef, 38.016 x 62.910, + _ss/_tt/_ff.lib)',
+              'v2 aligned view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ (38.040 x 62.952, LEF + 3 LIB) NOT used'],
+        closure='macro (SS clk->q in results/uarch/v41_rom_depth_study.json)',
+        note='generator uses the v1 (unaligned) view; v2 is the mirror-legal one. Lint S3: clk/ce/addr undriven, 7-way '
+             'multi-driven cfg nets (no cfg sequencer RTL)'),
+    'ot_hbm3e_phy_v41x_aw30_e8p5': dict(
+        rtl='black box only (behavioural rtl/chip/ot_chip_v41x_hbm3e_phy.sv)', status='REAL_VIEW', owner='-',
+        view=['physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ (LEF + ss/tt/ff LIB + _bb.v)'],
+        closure='generated macro (tools/mem_compiler/hbm_phy_gen.py), assumed boundary timing',
+        note='"PHY + controller abstract, controller-side pins": overlaps dsfd_ctrl in function (uncertain)'),
+    'ot_pdie_*': dict(
+        rtl='none (placeholder pin macro, tools/chip_assembly/macros.py)', status='REAL_VIEW_NOT_CLOSED', owner='CODEX',
+        view=['physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ (LEF, _tt.lib, _bb.v)',
+              'physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ (LEF, _tt.lib, _bb.v)'],
+        closure='n/a: pin-only shell (512 tx + 512 rx), TT LIB only',
+        note='real SerDes / UCIe hard IP abstract still needed (SS/FF LIB)'),
+    'dsfd_bf': dict(
+        rtl='BF-capable pair: ot_v41_rom_elem_w10 BF16=1 XF=8 WAKE_REG=1 '
+            '(results/uarch/dsrom_noECC_complete_element_20261002/physical_source_manifest.json)',
+        status='RTL_OPEN', owner='CODEX',
+        closure='never routed in the 1002.89 x 157.68 outline (inputs/wake.json: BF_SS_FF_closed false, '
+                'fullframe_routed_fit false); old 0.92 ns TT routes errored',
+        note='outline = mapped area; pairs with the q element (same pin order per lane)'),
+    'dsfd_nvx': dict(
+        rtl='ot_v41_rom_elem_nv_w10 NV=5 (rtl/v41rom/ot_v41_rom_elem_nv_w10.sv)', status='RTL_OPEN', owner='CLAUDE S81-DIE',
+        closure='route_r4 NV5/XS8 SS -709.75 / FF -3.39 ps, REJECT (results/physical_abi3/asap7/chip/'
+                'dsrom_l2_head_20261004/route_r4/verdict.json)',
+        note='SUPERSEDED: recovery lever head.json (ADOPT) replaces head-die bf + nvx + cfg by ot_dsrom_head_elem, CLOSED '
+             'r4_A SS +24.4 / FF +8.5 with LEFs results/rtl/dsrom_recovery_20261004/physcost/abstracts/'
+             'ot_dsrom_head_elem_{A,B}.lef.gz -- the generator has not adopted it'),
+    'dsfd_node': dict(
+        rtl='ot_v41_retn_w17w10 (rtl/v41die/ot_v41_retn_w17w10.sv)', status='RTL_OPEN', owner='CODEX',
+        closure='RTL only, never routed standalone', note='abstract has no clock/reset pin (lint S4b); leaf 63 b -> node 66 b'),
+    'dsfd_fifo': dict(
+        rtl='no block top; slot = ot_meso_fifo (rtl/common/ot_meso_fifo.sv) x3 + region fan-out', status='NO_RTL_TOP',
+        owner='CLAUDE S81-DIE',
+        closure='slot meso_d4_v7 CLOSED SS +10.13 / FF +9.44, 4,842 um2 (results/uarch/meso_fifo_20261004/verdict.json); '
+                'the 3-slot + fan-out block is not built',
+        note='generator area constant still names meso_d4_v3 (not closed); no wclk/rclk pins (lint S12a)'),
+    'dsfd_mfifo': dict(
+        rtl='no block top; slot = ot_meso_fifo (rtl/common/ot_meso_fifo.sv)', status='NO_RTL_TOP', owner='CLAUDE S81-DIE',
+        closure='slot meso_d4_v7 CLOSED (as dsfd_fifo); the hub-side block is not built', note='hub-side meso / async slot'),
+    'dsfd_stn_*': dict(
+        rtl='no block top; stage = ot_fwd_link_stage (rtl/common/ot_fwd_link_stage.sv) x4 per waypoint x ceil(W/512)',
+        status='NO_RTL_TOP', owner='CLAUDE S81-DIE',
+        closure='fwd_hop2_v11 hop reg-to-reg SS +373.97 / FF +246.18; fixture port boundary not_met (-426.15 ps) '
+                '(results/uarch/meso_fifo_20261004/verdict.json)',
+        note='parameterised waypoint family (h: 1536 b + 836 tap, l: 1024 b, v: 1536 b); 2,304 W512 stage slices needed, '
+             '0 instantiated, no forwarded-clock pin (lint S12b)'),
+    'dsfd_svc': dict(
+        rtl='no service top; parts ot_hdc_v41x_attn_tile_s / ot_attn_hgrp_m6h1 + ot_hdc_v41x_idx_*', status='NO_RTL_TOP',
+        owner='CODEX',
+        view=['leaf only: physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ (LEF + ss/ff LIB; HBM-die leaf, contextual tile not closed)'],
+        closure='no block closure; WINDOW screen SS -1175.2 pre-layout (results/rtl/dsrom_window_full_block_screen_20261005)',
+        note='16 attention tiles + pooled indexer ring reader per stack'),
+    'dsfd_ctrl': dict(rtl='none (only the behavioural PHY model)', status='NO_RTL_TOP', owner='CODEX',
+                      closure='none', note='streaming HBM3E controller + async FIFOs; no clock port (lint S7). The Qwen '
+                      'ROM stream controller (qwen_hbm_sustained_bw ck2 r6, closed at 1.024 ns) is the nearest RTL'),
+    'dsfd_sp_vm': dict(rtl='no slab top (behavioural ot_chip_v41x_tile u_tile.vm; SRAM ot_sram_1r1w_512x128_m4_r2c2)',
+                       status='NO_RTL_TOP', owner='CODEX',
+                       closure='none (old 0.92 ns TT slices only)', note='WFC child allocated beside it (codex ds-wfc)'),
+    'dsfd_sp_su_*': dict(rtl='no slab top; lanes rtl/hdc/v41x/ot_dsrom_su_*.sv', status='NO_RTL_TOP', owner='CLAUDE SU-FUSION',
+                         closure='lanes only: su_routeract SS +17.0 / FF +3.74 at 1.111 ns; su_hcpost +0.23 / +1.69; '
+                                 'norm / swiglu / softmax components closed, levers PENDING_SSFF',
+                         note='serial 0.9 GHz domain; su_n / su_s halves'),
+    'dsfd_sp_hc': dict(rtl='no slab top; ot_hdc_sinkhorn (rtl/hdc/v41/ot_hdc_sinkhorn.sv) / ot_a3_hc_sinkhorn20_rne_pipe',
+                       status='NO_RTL_TOP', owner='CODEX',
+                       closure='ot_hdc_sinkhorn TT 4 ns setup -2.58 ns; a3 pipe closes at TT 3.7 / 4.0 ns only',
+                       note='no output net (lint S9)'),
+    'dsfd_sp_gather': dict(rtl='none (field spine ot_v41_spine_pqc_w17w10 may cover it: unconfirmed)', status='NO_RTL_TOP',
+                           owner='CLAUDE FIELD-SPINE', closure='none (spine c0r16_h20 PASS_SCREEN_ONLY, not adopted)',
+                           note='return gather of the 12 tier roots'),
+    'dsfd_sp_capture': dict(rtl='none', status='NO_RTL_TOP', owner='CLAUDE FIELD-SPINE', closure='none', note=''),
+    'dsfd_sp_collective': dict(rtl='ot_dsrom_link_rt (rtl/dsrom_sys/ot_dsrom_link_rt.sv)', status='RTL_OPEN', owner='CODEX',
+                               closure='context_r1 SS -176.57 / FF -44.74, FAIL_CONTEXT_CLOCK (results/rtl/'
+                                       'dsrom_baseline_link_clock_20261004/context_r1_FAIL/verdict.json)',
+                               note='duplicate pll binding (lint S1)'),
+    'dsfd_bk_selector': dict(rtl='none', status='NO_RTL_TOP', owner='CODEX', closure='none', note='band block'),
+    'dsfd_bk_collector': dict(rtl='none', status='NO_RTL_TOP', owner='CODEX', closure='none',
+                              note='band block; only its SRAM body has a retained macro abstract'),
+}
+
+QWEN_FAMILIES = {
+    'ot_hbm3e_phy': dict(
+        rtl='black box physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v', status='REAL_VIEW', owner='-',
+        view=['physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef + _ss/_tt/_ff.lib'],
+        closure='generated macro (tools/mem_compiler/hbm_phy_gen.py), assumed boundary timing',
+        note='"PHY + controller abstract": its clk / rst_n are bits of the dfi bundle from qfd_ctrl'),
+    'qfd_cdc': dict(
+        rtl='ot_qwen_stream4_cdc_pc (rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv; r7 RTL claude/qwen-stream4-cdc-20261005 @ '
+            'ae2227660)', status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+        closure='core 0.833 / HBM 1.024 ns: r5 timing met but 12/34 slew pins REJECT (results/rtl/qwen_stream4_cdc_20261005/'
+                'takeover_r5/verdict.json); r7c_u50 SS -1.06 (1 endpoint) / FF +10.14, slew 0 (EPYC1, uncommitted)',
+        note='bound to its RTL ports here: clk / hclk / c_arst_n / h_arst_n have no die net'),
+    'qfd_tile': dict(
+        rtl='ot_qwen_rom_tile_w12 / logic ot_qwen_rom_tile_logic_w12 (rtl/hdc/ot_qwen_rom_tile_w12.sv) + 10 x '
+            'ot_rom_4096x266_m8', status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+        view=['sub-view only: physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ (ROM macro LEF)'],
+        closure='logic-only tile routes tp4_t4 SS -18.9 / FF -1.64 (6 slew), tp2_t4 SS -83.8 / FF +0.93 '
+                '(results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/tile_failures_r1.json); full tile i605 failed',
+        note='the re-framed die tile (centred tap row, M8 tree pins) was never routed'),
+    'qfd_cst': dict(
+        rtl='no station module; corridor-gate vehicle qcg_tile_column (rtl/chip/physical/qcg/qcg_tile_column.v)',
+        status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+        closure='corridor segment D_tile_r2 (430.56 um, 637 signals) SS +11.85 / FF +29.7 but 20 max-slew pins, '
+                'driver not_met (results/rtl/qwen_corridor_gate_20261003/D_tile_r2_released.json)',
+        note='measures a corridor span, not the station frame (388-bit F2 station + tap FIFO slot)'),
+    'qfd_chead': dict(rtl='none (column head = head-chain station + corridor split)', status='NO_RTL_TOP',
+                      owner='CLAUDE QWEN-PHYS', closure='none', note='shares the station frame'),
+    'qfd_reng': dict(
+        rtl='ot_qwen_nearhbm_row_engine{,_p,_vp} (rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack*.sv)', status='RTL_OPEN',
+        owner='OWNER DECISION (near-HBM attention DROPPED)',
+        closure='DROPPED: r6 placement SS -2,700 ps; r8 retry never reached CTS (results/uarch/qwen_nearhbm_attn_rtl_20261003/'
+                'pnr/retry_20261004/verdict.json, verdict DROP, c8d7ab368)',
+        note='the die still places 24 row-engine frames (r1 328.32 x 1,998) of a dropped block'),
+    'qfd_hub': dict(
+        rtl='ot_qwen_nearhbm_attn_hub{,_p} (rtl/hdc/nearhbm/) + 4 link endpoints + X3 staging', status='RTL_OPEN',
+        owner='OWNER DECISION (near-HBM attention DROPPED)',
+        closure='hub_r7 SS -1,036.9 / FF -16.4, 2,473 slew; hub_r9 post-CTS -88.95 stopped, DROP (same verdict.json)',
+        note='near-HBM combine of a dropped block; also the die clock root (ck_root -> ck_* trunks)'),
+    'qfd_lfifo': dict(rtl='ot_meso_fifo (rtl/common/ot_meso_fifo.sv), probable', status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+                      closure='slot meso_d4_v7 closed (DS record results/uarch/meso_fifo_20261004); this 1,056-b strip-end '
+                              'endpoint never routed',
+                      note='strip-end mesochronous link endpoint, depth 8 + KV-new write'),
+    'qfd_ctrl': dict(
+        rtl='ot_hbm_r14_stream_stack (rtl/model_ready_hbm_r14/) + per-PC KV service rtl/hdc/kv/ot_qwen_rt_kv_stream*_service.sv',
+        status='RTL_OPEN', owner='CODEX',
+        closure='controller ck2 r6 CLOSED at 1.024 ns SS +19.0 / FF +2.94 (results/uarch/qwen_hbm_sustained_bw_20261003/'
+                'physical-ss-ck2-r6-PASS.json); merge_r8 +25.57 / +3.86; the per-PC KV service (11.878 mm2/die) never routed',
+        note='HBM 976.6 MHz domain; no clock net on the die (NO_CLOCK)'),
+    'qfd_lst_*': dict(
+        rtl='link span vehicle qcg_link_span430 (rtl/chip/physical/qcg/qcg_link_span430.v); station = 4 registered stages',
+        status='RTL_CLOSED', owner='CLAUDE QWEN-PHYS',
+        closure='E_tile_r2 SS +63.8 / FF +172.6, E_strip_r2 SS +69.3 / FF +141.4, slew 0 (results/rtl/qwen_corridor_gate_20261003/'
+                'item7_E_*_r2_terminal)',
+        note='parameterised link-station family (v: 2 x 1056, c: corner split, h: 1056, v_split / c_split: one link); '
+             'the station master is not hardened'),
+    'qfd_sp_vector_memory': dict(rtl='ot_qwen_rom_w1_frame_leaf (rtl/rom/qwen_vm_active_frame_20261005/)', status='RTL_OPEN',
+                                 owner='CODEX', closure='exact bench PASS, no physical claim '
+                                 '(results/rtl/qwen_rom_w1_frame_leaf_20261005/README.md)', note='serial 0.9 GHz; x root'),
+    'qfd_sp_su64_sfu': dict(rtl='ot_hdc_vstream_rt SW64 (generated) + ot_hdc_sfu', status='RTL_OPEN', owner='CODEX',
+                            closure='never measured (vstream_sw64 screen never committed)', note='serial 0.9 GHz'),
+    'qfd_sp_tree_top': dict(rtl='ot_qwen_me_sptree_w12 (rtl/hdc/ot_qwen_me_spine_h_w12.sv)', status='RTL_OPEN',
+                            owner='CLAUDE QWEN-PHYS', closure='sptree_tp2_t3 timed out: partial SS -8.76 / FF +1.88; ME spine '
+                            'never synthesised (24 h yosys timeout)', note='ME result compaction'),
+    'qfd_sp_constants_sequencer': dict(
+        rtl='ot_qwen_rom_core (rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv) + VP sequencer '
+            'ot_qwen_tp_seq_w12_vp (rtl/rom/) + constant ROM', status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+        closure='core CLOSED r5b_f3ba SS +0.87 / FF +7.12 in die context (results/rtl/qwen_core_decode_closure_20261004/'
+                'claude_context_20261005/verdict.json, main c694570d6); sequencer CLOSED SS +4.56 / FF +14.32 '
+                '(results/rtl/qwen_dspark_closure_20261004/routes/seqvp_la*_0833); constant ROM not routed',
+        note='core + sequencer closed (no hardened view); the slab is open only on its constant ROM'),
+    'qfd_port_tiles_*': dict(
+        rtl='8 x ot_qwen_slab_port_group (rtl/physical/ot_qwen_slab_port_group.sv) per slab + 8 block-word meso FIFOs '
+            '(meso_d4_v7) + scale ROM', status='RTL_OPEN', owner='CLAUDE QWEN-PHYS',
+        closure='456 variant r6d_456_lead2 SS +6.64 / FF +8.21 but 120 slew pins, FAIL_ROUTED_COMPONENT '
+                '(results/rtl/qwen_slab_share_20261005/takeover_r6/physical/terminal.json); r10a-f routing (EPYC1)',
+        note='parameterised band-slab family: 6 primaries + 10 fragments (_f1/_f2/_f3); the die netlist has one master per '
+             'slab, not 96 port-group instances'),
+    'qfd_io_collective': dict(rtl='ot_rom_oneshot_die (rtl/rom/ot_rom_oneshot_allreduce.sv) + rtl/rom/collectives/',
+                              status='RTL_OPEN', owner='CODEX',
+                              closure='screen only: -1,208 ps reg-to-reg (~490 MHz) (results/rtl/risk_clock_loops_20261003/'
+                              'screens/qwen/oneshot_die_d32_833.json)', note='serial 0.9 GHz; die PLL / clock root'),
+    'qfd_io_embedding_rom': dict(rtl='ot_qwen_rt_embed_rom (rtl/hdc/ot_qwen_rt_embed_rom.sv)', status='RTL_OPEN',
+                                 owner='CODEX', closure='never routed', note='no address input net on the die'),
+    'qfd_io_ucie': dict(rtl='none', status='NO_RTL_TOP', owner='CODEX', closure='n/a',
+                        note='UCIe PHY reservation (10 mm2): hard IP abstract needed (the S81 die uses ot_pdie_ucie)'),
+    'qfd_io_serdes': dict(rtl='none', status='NO_RTL_TOP', owner='CODEX', closure='n/a',
+                          note='SerDes PHY reservation (4 mm2): hard IP abstract needed (the S81 die uses ot_pdie_serdes)'),
+}
+
+
+def family_of(die, mst):
+    if die.startswith('s81'):
+        if mst.startswith('ot_pdie_'):
+            return 'ot_pdie_*'
+        if re.match(r'dsfd_stn_[hlv]$', mst):
+            return 'dsfd_stn_*'
+        if re.match(r'dsfd_sp_su_[ns]$', mst):
+            return 'dsfd_sp_su_*'
+        return mst
+    if mst.startswith('qfd_lst_'):
+        return 'qfd_lst_*'
+    if mst.startswith('qfd_port_tiles_'):
+        return 'qfd_port_tiles_*'
+    return mst
+
+
+def rom_abstracts(die):
+    """block-family inventory of one ROM die: what each family needs to become a real hardened abstract."""
+    m, pw, M, tool = build(die)
+    table = QWEN_FAMILIES if die == 'qwen_rom' else S81_FAMILIES
+    real = real_blocks(die)
+    cnt = Counter(it.master for it in m['insts'])
+    fam = defaultdict(list)
+    for mst, n in cnt.items():
+        fam[family_of(die, mst)].append((mst, n))
+    rows = []
+    for f, lst in sorted(fam.items()):
+        ms_ = sorted(x for x, _ in lst)
+        insts = [i_ for i_ in m['insts'] if i_.master in ms_]
+        sizes = sorted({(round(i_.w, 3), round(i_.h, 3)) for i_ in insts})
+        ports = {}
+        for mst in ms_:
+            if mst in M:
+                mm = M[mst]
+                for p in mm.order:
+                    sp = mm.ports[p]
+                    face = sp[2] if sp[0] in ('face', 'phy') else sp[0]
+                    b = pw.get((mst, p), 0) or 0
+                    e = ports.setdefault(p, dict(bits=0, face=set(), masters=0))
+                    e['bits'] = max(e['bits'], b)
+                    e['face'].add(face)
+                    e['masters'] += 1
+            else:                                    # real LEF macro: ports = its die bundles (bound pin names)
+                for p, names in (real.get(mst, {}).get('binding') or {}).items():
+                    b = max((pw.get((mst, p), 0) or 0), 0)
+                    ports.setdefault(p, dict(bits=b, face={'LEF'}, masters=1))
+        for e in ports.values():
+            e['face'] = '/'.join(sorted(e['face']))
+            if e['masters'] == len(ms_):
+                e.pop('masters')
+        meta = table.get(f)
+        if meta is None:
+            meta = dict(rtl='UNKNOWN (new master: add it to the family table)', status='NO_RTL_TOP', owner='?',
+                        closure='', note='')
+        notes = sorted({M[x].note for x in ms_ if x in M})
+        rows.append(dict(
+            family=f, kind=insts[0].kind, domain=sorted({i_.domain for i_ in insts}), masters=ms_,
+            distinct_masters=len(ms_), instances=sum(n for _, n in lst),
+            per_master={x: n for x, n in sorted(lst)} if len(lst) > 1 else None,
+            placeholder_size_um=sizes[:6], distinct_sizes=len(sizes),
+            die_view='real LEF macro' if all(x not in M for x in ms_) else 'generated placeholder abstract'
+            + (' (bound to its RTL ports in the lint)' if any(x in real for x in ms_) else ''),
+            ports=ports, rtl_top=meta['rtl'], status=meta['status'], hardened_view=meta.get('view'),
+            closure=meta['closure'], owner=meta['owner'], note=meta['note'], generator_note=notes[:2]))
+    summ = Counter(r['status'] for r in rows)
+    inst = Counter()
+    for r in rows:
+        inst[r['status']] += r['instances']
+    return dict(
+        schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool, gen_root(die)),
+        qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
+        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
+        die_um=[round(m['die']['w'], 3), round(m['die']['h'], 3)] if isinstance(m.get('die'), dict) else
+        [round(max(i_.x + i_.w for i_ in m['insts']), 3), round(max(i_.y + i_.h for i_ in m['insts']), 3)],
+        status_codes=STATUS_ORDER,
+        summary=dict(kinds=len(rows), copies=sum(r['instances'] for r in rows),
+                     families_by_status={s: summ.get(s, 0) for s in STATUS_ORDER},
+                     instances_by_status={s: inst.get(s, 0) for s in STATUS_ORDER}),
+        families=rows)
+
+
+DIE_TITLE = dict(s81_layer='DeepSeek-V4.1 ROM S81 layer die', s81_head='DeepSeek-V4.1 ROM S81 head die',
+                 qwen_rom='Qwen3-8B ROM die r17b')
+
+
+def rom_readme(recs, out):
+    L = ['# ROM-die block-family (hardened-abstract) inventory', '',
+         'Generated by `python3 tools/die_top_lint.py abstracts --die rom --qwen-ref f76c3603b` (CLAUDE DIE-LINT, '
+         '2026-10-06). Rerun the same command after a generator change (S81-DIE r8, QWEN-PHYS merge: then drop '
+         '`--qwen-ref`). Status of each family is the research table in `tools/die_top_lint.py` '
+         '(S81_FAMILIES / QWEN_FAMILIES); a new master shows up as UNKNOWN.', '',
+         'Status codes: REAL_VIEW = LEF (+LIB) of a final block; REAL_VIEW_NOT_CLOSED = LEF of a failing route or a '
+         'pin-only shell; RTL_CLOSED = closed at SS60/FF25, no view written; RTL_OPEN = RTL routed-but-failing or never '
+         'routed; NO_RTL_TOP = logic with no RTL top; RESERVATION_ONLY = area, no logic.', '',
+         'The HBM die list is `hbm_die_abstract_list.json` (round 1).', '']
+    for die, rec in recs.items():
+        s = rec['summary']
+        g = rec['generator_tag']
+        L += [f'## {DIE_TITLE[die]}', '',
+              f'Generator `{rec["generator"]}` sha256 `{g["sha256"][:16]}`, file commit `{(g.get("file_commit") or "?")[:12]}`'
+              + (f', from ref `{rec["qwen_source"]["commit"][:12]}` (overlay on main)' if rec.get('qwen_source') and
+                 rec['qwen_source'].get('ref') not in (None, 'None') else '')
+              + f'; tree `{(g.get("tree_head") or "?")[:12]}`. Die (or instance extent) {rec["die_um"][0]:.0f} x {rec["die_um"][1]:.0f} um.', '',
+              '| kinds | copies | real view | real view, not closed / pin-only | RTL closed, no view | RTL open | '
+              'no RTL top | reservation only |', '|---|---|---|---|---|---|---|---|',
+              f'| {s["kinds"]} | {s["copies"]:,} | ' + ' | '.join(
+                  f'{s["families_by_status"][k]} ({s["instances_by_status"][k]:,})' for k in STATUS_ORDER) + ' |', '',
+              '(families, with instances in brackets)', '',
+              '| family | masters | copies | size um (first) | status | owner |', '|---|---|---|---|---|---|']
+        for r in sorted(rec['families'], key=lambda r: (STATUS_ORDER.index(r['status']), -r['instances'])):
+            sz = r['placeholder_size_um'][0] if r['placeholder_size_um'] else ['-', '-']
+            L.append(f'| `{r["family"]}` | {r["distinct_masters"]} | {r["instances"]:,} | {sz[0]} x {sz[1]}'
+                     + (f' (+{r["distinct_sizes"] - 1})' if r['distinct_sizes'] > 1 else '')
+                     + f' | {r["status"]} | {r["owner"]} |')
+        L.append('')
+    qf = out / 'qwen_rom_findings.json'
+    if qf.exists():
+        q = json.loads(qf.read_text())
+        v = q['result']['verilator']
+        L += ['## Qwen3-8B ROM die r17b: interface / connectivity lint (first lint of this die)', '',
+              f'`qwen_rom_findings.json` (+ `qwen_rom_lint_top_lint.json`, Verilog top / stubs / shells). Census '
+              f'{q["census"]["instances"]:,} instances, {q["census"]["buses"]:,} buses, {q["census"]["net_bits"]:,} net bits. '
+              f'The top ELABORATES as generated (Verilator shell top rc={v["shell_top"]["rc"]}, full RTL '
+              f'rc={v["full_rtl"]["rc"]}); {q["result"]["connectivity"]}.', '',
+              '| id | severity | class | block |', '|---|---|---|---|']
+        for f in q['findings']:
+            L.append(f'| {f["id"]} | {f["severity"]} | {f["cls"]} | {f["block"]} |')
+        L.append('')
+    (out / 'README.md').write_text('\n'.join(L) + '\n')
+
+
 # ------------------------------------------------------------------------------------------------ main
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
@@ -1214,7 +1790,10 @@ def run_lint(die, out, top_fix=False, tag=''):
     write_shells(real, out / f'{top}_real_shells.sv')
     (out / f'{top}.f').write_text('\n'.join(bb + [f'{top}_real_shells.sv', f'{top}_stubs.sv', f'{top}.sv']) + '\n')
     rec = dict(
-        schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool, generator_sha256=sha(tool),
+        schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool,
+        generator_sha256=sha_gen(die, tool), generator_tag=gen_tag(tool, gen_root(die)),
+        qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
+        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
         lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
@@ -1235,8 +1814,9 @@ def run_lint(die, out, top_fix=False, tag=''):
                       pin_spread=sorted(spread, key=lambda r: -r['span_um'])[:60],
                       pin_spread_count=len(spread),
                       abut_without_channel=[dict(compute=k[0], hub_kind=k[1], hub=k[2], **v) for k, v in sorted(ab.items())]),
-        meso_forwarded_gap=dict(gp, clock_region_crossings=xr),
+        meso_forwarded_gap=dict(gp, clock_region_crossings=xr, clock_domain_crossings=domain_crossings(m)),
         block_shape=block_shape(die, m, real), counterparts=counterparts(die, m, pw),
+        abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
     (out / f'{top}_lint.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
@@ -1247,14 +1827,19 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
-    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm'])
+    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
+    ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--tag', default='', help='output name tag (e.g. _r15)')
-    ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r15)')
+    ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r16g)')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
     a = ap.parse_args(argv)
     global VARIANT
     VARIANT = a.variant
+    global QWEN_REF, QWEN_RECIPE
+    QWEN_REF = a.qwen_ref
+    QWEN_RECIPE = a.qwen_recipe
     if a.mode == 'vlsum':
         s = vlsum(a.out / f'{a.top}.verilator.log', a.top)
         (a.out / f'{a.top}_verilator_summary.json').write_text(json.dumps(s, indent=1) + '\n')
@@ -1263,6 +1848,15 @@ def main(argv=None):
     if a.mode == 'lint':
         rec = run_lint(a.die, a.out, a.top_fix, a.tag)
         print(json.dumps(rec['census']))
+    elif a.die == 'rom' or (a.die and a.die != 'hbm'):
+        a.out.mkdir(parents=True, exist_ok=True)
+        recs = {}
+        for die in (('s81_layer', 's81_head', 'qwen_rom') if a.die == 'rom' else (a.die,)):
+            recs[die] = rom_abstracts(die)
+            (a.out / f'{die}_abstract_list.json').write_text(json.dumps(recs[die], indent=1, default=str) + '\n')
+            print(die, json.dumps(recs[die]['summary']))
+        if a.die == 'rom':
+            rom_readme(recs, a.out)
     else:
         rows, m = hbm_abstracts()
         a.out.mkdir(parents=True, exist_ok=True)

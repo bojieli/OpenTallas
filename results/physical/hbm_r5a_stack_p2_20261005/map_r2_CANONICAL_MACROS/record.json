@@ -1,0 +1,603 @@
+{
+  "source_commit": "f6fd8e306749eaa66aecadb7938a6625bb58bdce",
+  "stage": "actual canonical elaboration, before final ABC mapping",
+  "canonical_sha256": "b83dfe1d7221077f3c0148f135cad8040ffa950be97e7fb53ed003d92a0028ba",
+  "macros": [
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[0].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[1].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[2].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[3].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[7].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[4].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[5].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[3].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[3].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[3].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[2].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[2].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[2].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[1].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[1].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[1].half[0].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[0].ecc_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[0].half[1].u_ram",
+      "clock_connection": "\\clk"
+    },
+    {
+      "module": "\\ot_hbm_accel_expert_fetch_p2$ot_hbm_accel_expert_stack_p2.on.fetch",
+      "master": "\\ot_sram_1r1w_512x128_m4_r2c2",
+      "instance": "\\on.sm[6].bank[0].half[0].u_ram",
+      "clock_connection": "\\clk"
+    }
+  ],
+  "macro_count": 96,
+  "macro_clock": "fetch.clk -> parent stream_clk",
+  "pin_cap_fF": {
+    "ss": 8.6838,
+    "ff": 10.3732
+  },
+  "total_macro_pin_cap_fF": {
+    "ss": 833.6448,
+    "ff": 995.8272000000001
+  },
+  "liberty_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
+  },
+  "standard_cell_clock_sinks": null,
+  "routed_wire_cap": null,
+  "CTS_insertion": null,
+  "physical_qualification": false,
+  "map_terminal": null,
+  "performance": "retained FAIL153.757ns>140ns/noadoption"
+}

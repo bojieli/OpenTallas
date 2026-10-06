@@ -1,0 +1,298 @@
+{
+  "schema": "opentallas.hbm.links.function_prebuild.v1",
+  "source_hashes": {
+    "tools/uarch_model.py": "caf0d5b67a790700538177bb0fdaaff6ed3dac5a521cf6505531ce6438215b33",
+    "tools/hbm_accel_die_fp.py": "23e3fde66bf20e70a3f0ee0cd8baf2b515b8476a4f09a0ab867c4cdaaa8f2604",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f"
+  },
+  "rows": [
+    {
+      "function": "multicast",
+      "payload_bits": 2063,
+      "input_count": 1,
+      "output_count": 3,
+      "input_width": 2063,
+      "capture_words_each": 36,
+      "protected_input_FF": 2954,
+      "protected_controller_FF": 434,
+      "protected_ACK_receipt_FF": 1950,
+      "total_FF": 5338,
+      "coded_payload_bits_per_capture": 2592,
+      "input_bits_per_accept": 2257,
+      "output_bits_per_accept": 6771,
+      "reverse_ack_bits": 579,
+      "MACs_per_cycle": 0,
+      "memory_ports": "existing checked FF banks; one local capture/stream per edge, one controller load",
+      "transport_replica_cost": {
+        "checked_banks": 5,
+        "encoder64_count": 49,
+        "checker72_count": 74,
+        "owner_comparators": 3
+      },
+      "FF_area_um2": 1556.5608000000002,
+      "FF_placement_um2_at55": 2830.1105454545454,
+      "legacy_raw_FF_reserved": 8252,
+      "clock": "1.2GHz positive root for held function; actual even four-inverter forwarded root. Related receiver insertion/hold still OPEN.",
+      "composed_latency_edges": {
+        "input_capture": 1,
+        "publication_arm": 1,
+        "join": "wait all actual input permissions",
+        "retire": "all actual branch acceptances + matching reverse ACK, never acceptance-only"
+      },
+      "routing": {
+        "pitch_um": 0.048,
+        "branch_bits_with_owner_ack": 2451,
+        "tracks_1layer_required": 2451,
+        "mcast_leaf_face_um": 120.936,
+        "mcast_leaf_guarded_capacity_tracks": 2019,
+        "mcast_leaf_needs_growth": true
+      },
+      "default_off": true,
+      "actual_gold_required": true,
+      "physical_closed": false,
+      "model_gain_credit": false,
+      "parent_COMPOSITION_open": [
+        "actual per-input expected ownership/cohort map",
+        "bit order from corrected die source owner",
+        "actual reset/drain/related clock insertion",
+        "rate price in unified model after measured component latency",
+        "actual channel/pin dimensions including new owner/ACK pins"
+      ]
+    },
+    {
+      "function": "multicast_root",
+      "payload_bits": 2063,
+      "input_count": 1,
+      "output_count": 4,
+      "input_width": 2063,
+      "capture_words_each": 36,
+      "protected_input_FF": 2954,
+      "protected_controller_FF": 434,
+      "protected_ACK_receipt_FF": 2600,
+      "total_FF": 5988,
+      "coded_payload_bits_per_capture": 2592,
+      "input_bits_per_accept": 2257,
+      "output_bits_per_accept": 9028,
+      "reverse_ack_bits": 772,
+      "MACs_per_cycle": 0,
+      "memory_ports": "existing checked FF banks; one local capture/stream per edge, one controller load",
+      "transport_replica_cost": {
+        "checked_banks": 6,
+        "encoder64_count": 53,
+        "checker72_count": 83,
+        "owner_comparators": 4
+      },
+      "FF_area_um2": 1746.1008000000002,
+      "FF_placement_um2_at55": 3174.728727272727,
+      "legacy_raw_FF_reserved": 8252,
+      "clock": "1.2GHz positive root for held function; actual even four-inverter forwarded root. Related receiver insertion/hold still OPEN.",
+      "composed_latency_edges": {
+        "input_capture": 1,
+        "publication_arm": 1,
+        "join": "wait all actual input permissions",
+        "retire": "all actual branch acceptances + matching reverse ACK, never acceptance-only"
+      },
+      "routing": {
+        "pitch_um": 0.048,
+        "branch_bits_with_owner_ack": 2451,
+        "tracks_1layer_required": 2451,
+        "mcast_leaf_face_um": 120.936,
+        "mcast_leaf_guarded_capacity_tracks": 2019,
+        "mcast_leaf_needs_growth": true
+      },
+      "default_off": true,
+      "actual_gold_required": true,
+      "physical_closed": false,
+      "model_gain_credit": false,
+      "parent_COMPOSITION_open": [
+        "actual per-input expected ownership/cohort map",
+        "bit order from corrected die source owner",
+        "actual reset/drain/related clock insertion",
+        "rate price in unified model after measured component latency",
+        "actual channel/pin dimensions including new owner/ACK pins"
+      ]
+    },
+    {
+      "function": "gather2",
+      "payload_bits": 540,
+      "input_count": 2,
+      "output_count": 1,
+      "input_width": 270,
+      "capture_words_each": 8,
+      "protected_input_FF": 1876,
+      "protected_controller_FF": 434,
+      "protected_ACK_receipt_FF": 0,
+      "total_FF": 2310,
+      "coded_payload_bits_per_capture": 1152,
+      "input_bits_per_accept": 928,
+      "output_bits_per_accept": 734,
+      "reverse_ack_bits": 0,
+      "MACs_per_cycle": 0,
+      "memory_ports": "existing checked FF banks; one local capture/stream per edge, one controller load",
+      "transport_replica_cost": {
+        "checked_banks": 3,
+        "encoder64_count": 17,
+        "checker72_count": 32,
+        "owner_comparators": 1
+      },
+      "FF_area_um2": 673.596,
+      "FF_placement_um2_at55": 1224.7199999999998,
+      "legacy_raw_FF_reserved": 2160,
+      "clock": "1.2GHz positive root for held function; actual even four-inverter forwarded root. Related receiver insertion/hold still OPEN.",
+      "composed_latency_edges": {
+        "input_capture": 1,
+        "publication_arm": 1,
+        "join": "wait all actual input permissions",
+        "retire": "one atomic output acceptance retires all input seats"
+      },
+      "routing": {
+        "pitch_um": 0.048,
+        "branch_bits_with_owner_ack": 734,
+        "tracks_1layer_required": 734,
+        "mcast_leaf_face_um": 120.936,
+        "mcast_leaf_guarded_capacity_tracks": 2019,
+        "mcast_leaf_needs_growth": false
+      },
+      "default_off": true,
+      "actual_gold_required": true,
+      "physical_closed": false,
+      "model_gain_credit": false,
+      "parent_COMPOSITION_open": [
+        "actual per-input expected ownership/cohort map",
+        "bit order from corrected die source owner",
+        "actual reset/drain/related clock insertion",
+        "rate price in unified model after measured component latency",
+        "actual channel/pin dimensions including new owner/ACK pins"
+      ]
+    },
+    {
+      "function": "gather4",
+      "payload_bits": 1080,
+      "input_count": 4,
+      "output_count": 1,
+      "input_width": 270,
+      "capture_words_each": 8,
+      "protected_input_FF": 3752,
+      "protected_controller_FF": 434,
+      "protected_ACK_receipt_FF": 0,
+      "total_FF": 4186,
+      "coded_payload_bits_per_capture": 2304,
+      "input_bits_per_accept": 1856,
+      "output_bits_per_accept": 1274,
+      "reverse_ack_bits": 0,
+      "MACs_per_cycle": 0,
+      "memory_ports": "existing checked FF banks; one local capture/stream per edge, one controller load",
+      "transport_replica_cost": {
+        "checked_banks": 5,
+        "encoder64_count": 33,
+        "checker72_count": 58,
+        "owner_comparators": 3
+      },
+      "FF_area_um2": 1220.6376,
+      "FF_placement_um2_at55": 2219.341090909091,
+      "legacy_raw_FF_reserved": 4320,
+      "clock": "1.2GHz positive root for held function; actual even four-inverter forwarded root. Related receiver insertion/hold still OPEN.",
+      "composed_latency_edges": {
+        "input_capture": 1,
+        "publication_arm": 1,
+        "join": "wait all actual input permissions",
+        "retire": "one atomic output acceptance retires all input seats"
+      },
+      "routing": {
+        "pitch_um": 0.048,
+        "branch_bits_with_owner_ack": 1274,
+        "tracks_1layer_required": 1274,
+        "mcast_leaf_face_um": 120.936,
+        "mcast_leaf_guarded_capacity_tracks": 2019,
+        "mcast_leaf_needs_growth": false
+      },
+      "default_off": true,
+      "actual_gold_required": true,
+      "physical_closed": false,
+      "model_gain_credit": false,
+      "parent_COMPOSITION_open": [
+        "actual per-input expected ownership/cohort map",
+        "bit order from corrected die source owner",
+        "actual reset/drain/related clock insertion",
+        "rate price in unified model after measured component latency",
+        "actual channel/pin dimensions including new owner/ACK pins"
+      ]
+    },
+    {
+      "function": "gather8",
+      "payload_bits": 2160,
+      "input_count": 8,
+      "output_count": 1,
+      "input_width": 270,
+      "capture_words_each": 8,
+      "protected_input_FF": 7504,
+      "protected_controller_FF": 434,
+      "protected_ACK_receipt_FF": 0,
+      "total_FF": 7938,
+      "coded_payload_bits_per_capture": 4608,
+      "input_bits_per_accept": 3712,
+      "output_bits_per_accept": 2354,
+      "reverse_ack_bits": 0,
+      "MACs_per_cycle": 0,
+      "memory_ports": "existing checked FF banks; one local capture/stream per edge, one controller load",
+      "transport_replica_cost": {
+        "checked_banks": 9,
+        "encoder64_count": 65,
+        "checker72_count": 110,
+        "owner_comparators": 7
+      },
+      "FF_area_um2": 2314.7208,
+      "FF_placement_um2_at55": 4208.583272727273,
+      "legacy_raw_FF_reserved": 8640,
+      "clock": "1.2GHz positive root for held function; actual even four-inverter forwarded root. Related receiver insertion/hold still OPEN.",
+      "composed_latency_edges": {
+        "input_capture": 1,
+        "publication_arm": 1,
+        "join": "wait all actual input permissions",
+        "retire": "one atomic output acceptance retires all input seats"
+      },
+      "routing": {
+        "pitch_um": 0.048,
+        "branch_bits_with_owner_ack": 2354,
+        "tracks_1layer_required": 2354,
+        "mcast_leaf_face_um": 120.936,
+        "mcast_leaf_guarded_capacity_tracks": 2019,
+        "mcast_leaf_needs_growth": false
+      },
+      "default_off": true,
+      "actual_gold_required": true,
+      "physical_closed": false,
+      "model_gain_credit": false,
+      "parent_COMPOSITION_open": [
+        "actual per-input expected ownership/cohort map",
+        "bit order from corrected die source owner",
+        "actual reset/drain/related clock insertion",
+        "rate price in unified model after measured component latency",
+        "actual channel/pin dimensions including new owner/ACK pins"
+      ]
+    }
+  ],
+  "status": "SIZED_COMPONENT_GLUE_ONLY_PARENT_MAP_AND_PHYSICAL_OPEN",
+  "station_master_count": 1,
+  "new_208_modules": false,
+  "cdist": {
+    "legacy_bits": 45,
+    "actual_forward_bits": 42,
+    "actual_reverse_bits": 3,
+    "groups": 8,
+    "forward_total_bits": 336,
+    "reverse_total_bits": 24,
+    "source_owner_required": true
+  },
+  "duplex": {
+    "TF5_each_direction": 487,
+    "TF5_total": 974,
+    "actual_TU_default_PWT": 545,
+    "status": "configured tuple/credit mapping required; cannot connect assumed487 to default545"
+  },
+  "protection": "Existing W2 bank repair/fail-closed implementation unchanged; no free protection; no timing closure inherited",
+  "route_launch_allowed": false
+}
