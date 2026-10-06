@@ -1349,7 +1349,7 @@ def case_ir(m, work, window, cov):
 #             macros at the spine's S end, host UCIe macro at its N end; collective + SerDes slab in the free S band
 #             W of the spine, host slab in the free N band E of the spine
 Q_OUT = 'results/rtl/hbm_accel_qwen_die_floorplan_20261005'
-Q_FINAL_ROUND = 'q4'
+Q_FINAL_ROUND = 'q3'
 Q_TILE_ROUTE = dict(TP2='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/physical.json',
                     TP4='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/physical.json')
 Q_SRAM_RW = 'physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.json'
@@ -1809,10 +1809,15 @@ def q_tree_paths(m):
     out_from = defaultdict(list)
     for bid, eps in by_dst.items():
         out_from[eps[0]].append(bid)
+    # a host tile consuming its own t_out is an element-internal hop (no die net, no die-level stage)
+    internal = {(e['at'], e['port']) for e in m.get('internal_nets', [])}
     paths = {}
     for (c, r), it in m['tiles'].items():
         p, node = [], (it.name, 't_out')
-        while node in out_from:
+        while node in out_from or node in internal:
+            if node in internal:
+                node = (node[0], 'n_y')
+                continue
             bid = out_from[node][0]
             p.append(bid)
             node = (by_dst[bid][1][0], 'n_y')
