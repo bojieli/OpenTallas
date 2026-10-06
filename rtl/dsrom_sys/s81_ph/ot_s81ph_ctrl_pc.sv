@@ -16,8 +16,11 @@ module ot_s81ph_ctrl_pc #(
     parameter integer AW = 30,
     parameter integer TW = 17
 ) (
-    input  wire          cks, input wire srst_n,
-    input  wire          ckh, input wire hrst_n,
+    input  wire          cks,
+    input  wire          ckh,
+    input  wire          rst,         // die reset (active low, asynchronous): synchronised locally into cks and ckh
+    input  wire [1:0]    ci,          // status chain in {fault, live} (registered in the neighbouring column)
+    output reg  [1:0]    co,          // status chain out
     // stream side (die)
     input  wire [340:0]  rq,          // {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v}
     output wire          rk,          // request credit pulse
@@ -44,6 +47,14 @@ module ot_s81ph_ctrl_pc #(
     input  wire [255:0]  kr_data
 );
     localparam integer QW = 340, RW = 256 + TW + 4;
+    // ---- local reset synchronisers (one per column and domain: no die-wide synchronous reset tree)
+    wire srst_n, hrst_n;
+    ot_s81ph_sync u_srs (.clk(cks), .rst_n(rst), .d(1'b1), .q(srst_n));
+    ot_s81ph_sync u_hrs (.clk(ckh), .rst_n(rst), .d(1'b1), .q(hrst_n));
+    wire h_live;
+    ot_s81ph_sync u_hl (.clk(cks), .rst_n(srst_n), .d(hrst_n), .q(h_live));
+    always @(posedge cks or negedge srst_n)
+        if (!srst_n) co <= 2'b00; else co <= {ci[1] | s_ovf, ci[0] & h_live};
     // ---- stream side: request pin register -> request FIFO
     reg [340:0] rq_q;
     always @(posedge cks or negedge srst_n)

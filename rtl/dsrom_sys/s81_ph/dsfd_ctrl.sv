@@ -16,6 +16,8 @@ module dsfd_ctrl (
     output wire [31:0] wd,
     output reg  [1:0] st
 );
+    // resets: rst is asynchronous (false path at the pin); every column synchronises it locally; the PHY reset and
+    // the centre status use their own synchronisers next to the PHY control pins / the centre pins
     wire hrst_n, srst_n;
     ot_s81ph_sync u_hrs (.clk(ckh), .rst_n(rst), .d(1'b1), .q(hrst_n));
     ot_s81ph_sync u_srs (.clk(cks), .rst_n(rst), .d(1'b1), .q(srst_n));
@@ -19996,8 +19998,14 @@ module dsfd_ctrl (
     wire [31:0] s_ovf;
     wire [31:0] rv;
     genvar g;
+    // status chains {fault, live}: PC 0 -> PC 15 and PC 31 -> PC 16, one register per column, meeting at the centre
+    wire [1:0] ci [0:31];
+    wire [1:0] co [0:31];
     generate for (g = 0; g < 32; g = g + 1) begin : g_pc
-        ot_s81ph_ctrl_pc u_pc (.cks(cks), .srst_n(srst_n), .ckh(ckh), .hrst_n(hrst_n),
+        if (g == 0 || g == 31) begin : g_end assign ci[g] = 2'b01; end
+        else if (g < 16) begin : g_w assign ci[g] = co[g - 1]; end
+        else begin : g_e assign ci[g] = co[g + 1]; end
+        ot_s81ph_ctrl_pc u_pc (.cks(cks), .ckh(ckh), .rst(rst), .ci(ci[g]), .co(co[g]),
             .rq(rq[g*341 +: 341]), .rk(rk[g]), .rv(rv[g]), .r_data(rd[g*256 +: 256]), .r_tag(rd[8192 + g*17 +: 17]),
             .r_beat(rd[8736 + g*4 +: 4]), .wd(wd[g]), .s_ovf(s_ovf[g]),
             .k_v(p_k_v[g]), .k_rdy(p_k_rdy[g]), .k_addr(p_k_addr[g*30 +: 30]), .k_len(p_k_len[g*4 +: 4]),
@@ -20011,6 +20019,8 @@ module dsfd_ctrl (
     always @(posedge ckh or negedge hrst_n) if (!hrst_n) oor_h <= 1'b0; else oor_h <= oor_h | p_k_oor | p_w_oor;
     wire [1:0] hs;
     ot_s81ph_sync #(.W(2)) u_hs (.clk(cks), .rst_n(srst_n), .d({oor_h, hrst_n}), .q(hs));
-    always @(posedge cks or negedge srst_n) if (!srst_n) st <= 2'b00; else st <= {st[1] | hs[1] | (|s_ovf), hs[0]};
+    always @(posedge cks or negedge srst_n)
+        if (!srst_n) st <= 2'b00;
+        else st <= {st[1] | hs[1] | co[15][1] | co[16][1], hs[0] & co[15][0] & co[16][0]};
 endmodule
 `default_nettype wire

@@ -27,3 +27,7 @@ set_input_delay -min 0 -clock vclk_h $ot_phy
 set_output_delay -min 0 -clock vclk_h $ot_phy
 # phy[12808] is the PHY clk pin: ckh fed through (the PHY's clock), not a data output
 set_false_path -to [get_ports {phy[12808]}]
+# rst is the asynchronous die reset: every column synchronises it locally (2-flop async-assert / sync-release
+# synchronisers in both domains), so the pin -> synchroniser arcs are not timed (assertion is asynchronous by design,
+# release is resolved by the synchronisers); the synchronised resets are timed normally inside each column.
+set_false_path -from [get_ports rst]

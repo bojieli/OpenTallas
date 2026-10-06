@@ -1,6 +1,6 @@
 --- a/tools/dsrom_s81_fulldie.py
 +++ b/tools/dsrom_s81_fulldie.py
-@@ -164,6 +164,14 @@
+@@ -164,6 +164,46 @@
  LANE_X = XI + XCTL + 3       # one lane's bits from its region FIFO (chained x + lane control)
  SVC_HUB_BITS = dict(q=512, ao=512, ix=512)
  HBM_RD_BITS = 8192 + 544 + 128   # controller -> scan service: kr_data + kr_tag + kr_beat (the PHY's read side)
@@ -12,10 +12,53 @@
 +PH_RQ_BITS, PH_NPC = 341, 32
 +if PH_CTRL:
 +    HBM_RD_BITS += PH_NPC
++
++
++def ph_ctrl_xs():
++    """CLAUDE S81-PH ctrl contract: per-port pin x (master coordinates, M5 tracks 0.012 + n 0.048, 2-track pitch) of the
++    ctrl N face / svc S face.  PC p's request group (rq bits p*341.., rk[p], wd[p]) sits over the centroid of the PHY's
++    K pins of PC p, its response group (rd data, tag, beat, valid of PC p) over the centroid of the PHY's KR pins of PC p,
++    so every PC is a local column of the ctrl (PHY pins of PC p span ~120 um at a 265.6 um PC pitch).  Clock, reset and
++    status pins sit in the gap between PC 15 and PC 16."""
++    ph = real_lef(PHY_LEF)
++    W_ = dict(k_v=1, k_rdy=1, k_addr=30, k_len=4, k_tag=17, k_we=1, k_wdata=256, k_wstrb=32, k_wr_done=1, kr_v=1,
++              kr_rdy=1, kr_tag=17, kr_beat=4, kr_data=256)
++    cen = defaultdict(list)
++    for n_, (lay_, r_) in ph['pins'].items():
++        mm = re.match(r'^(\w+)\[(\d+)\]$', n_)
++        if mm and mm.group(1) in W_:
++            cen[(int(mm.group(2)) // W_[mm.group(1)], 'kr' if mm.group(1).startswith('kr') else 'k')].append((r_[0] + r_[2]) / 2)
++    snap = lambda x: 0.012 + round((x - 0.012) / 0.048) * 0.048
++    xs = {p_: [None] * b for p_, b in (('rd', HBM_RD_BITS), ('rq', PH_NPC * PH_RQ_BITS), ('rk', PH_NPC), ('wd', PH_NPC),
++                                       ('st', 2), ('ckh', 1), ('cks', 1), ('rst', 1))}
++    def lay(bits, centre):
++        x0 = snap(centre - len(bits) * 0.096 / 2)
++        for i_, (p_, b_) in enumerate(bits):
++            xs[p_][b_] = round(x0 + i_ * 0.096, 4)
++    for c in range(PH_NPC):
++        lay([('rq', c * PH_RQ_BITS + i_) for i_ in range(PH_RQ_BITS)] + [('rk', c), ('wd', c)],
++            sum(cen[(c, 'k')]) / len(cen[(c, 'k')]))
++        lay([('rd', c * 256 + i_) for i_ in range(256)] + [('rd', 8192 + c * 17 + i_) for i_ in range(17)]
++            + [('rd', 8736 + c * 4 + i_) for i_ in range(4)] + [('rd', 8864 + c)], sum(cen[(c, 'kr')]) / len(cen[(c, 'kr')]))
++    gap = (max(cen[(PH_NPC // 2 - 1, 'kr')]) + min(cen[(PH_NPC // 2, 'k')])) / 2
++    lay([('ckh', 0), ('cks', 0), ('rst', 0), ('st', 0), ('st', 1)], gap)
++    assert all(v is not None for l_ in xs.values() for v in l_)
++    return xs
  LINK_BITS = 1024
  CLK_BITS = 3
  
-@@ -3030,6 +3038,11 @@
+@@ -970,8 +1010,9 @@
+     xy = {p: s for p, s in mst.ports.items() if s[0] == 'xy'}
+     for port, spec in xy.items():
+         n = wmap.get(port, len(spec[1]))
++        y0 = mst.h - 0.192 if len(spec) > 2 and spec[2] == 'N' else 0.0     # CLAUDE S81-PH: ('xy', xs, 'N')
+         for i, x in enumerate(spec[1][:n]):
+-            out.append((f'{port}[{i}]', 'M5', (x - 0.012, 0.0, x + 0.012, 0.192)))
++            out.append((f'{port}[{i}]', 'M5', (x - 0.012, y0, x + 0.012, y0 + 0.192)))
+     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
+     rest.ports = {p: s for p, s in mst.ports.items() if s[0] != 'xy'}
+     rest.order = [p for p in mst.order if p in rest.ports]
+@@ -3030,6 +3071,11 @@
      for st, ph in m['phys'].items():
          bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
          bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
@@ -27,12 +70,31 @@
      # ---------------- clocks, resets, top ports
      col = coll.name
      bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
-@@ -3902,7 +3915,7 @@
+@@ -3902,12 +3948,24 @@
              Mx.order.append('phy')
          else:
              Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
 -        _lay(Mx, 'N', P_(['rd']), 'M5')
-+        _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'st'] if PH_CTRL else ['rd']), 'M5')
-         _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
+-        _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
++        if PH_CTRL and _LAY_K[0] == 1:
++            for p_, l_ in ph_ctrl_xs().items():
++                Mx.ports[p_] = ('xy', l_, 'N')
++                Mx.order.append(p_)
++        else:
++            _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'st'] if PH_CTRL else ['rd']), 'M5')
++            _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
      else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
          faces = defaultdict(list)
++        phs = {}
++        if PH_CTRL and kind == 'svc' and _LAY_K[0] == 1:
++            xs_ = ph_ctrl_xs()
++            phs = dict(rd=xs_['rd'], rq=xs_['rq'], rk=xs_['rk'], wd=xs_['wd'], hs=xs_['st'])
++            for p_, l_ in phs.items():
++                Mx.ports[p_] = ('xy', l_)
++                Mx.order.append(p_)
+         for p_ in sorted(ports):
+-            if p_ == 'phy':
++            if p_ == 'phy' or p_ in phs:
+                 continue
+             faces[_peer_face(m, it, p_)].append(p_)
+         for f, lst in faces.items():
