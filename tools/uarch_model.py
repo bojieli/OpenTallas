@@ -11745,3 +11745,9 @@ def hbm_integrated_gu_wide_launch_model():
         tracks_required_delta=5,channel_capacity=None,parent_slot_fit=None,
         fullGU_service='existing Franklin768 source descriptors and9216 rows, actual TC/CVT/drain unchanged',
         whole_token=False,physical_admitted=False,adopted=False)
+
+
+def dsrom_protected_vm_model():
+    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
+    from dsrom_protected_vm import model
+    return model()
