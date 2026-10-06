@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // 1.2 GHz (0.833 ns at ASAP7 SS, 60 ps setup uncertainty) binary32 add and multiply for the DS HBM accelerator's
 // serial unit (ot_hdc_v41x_vec, hbm-fmax-su 2026-10-04).  Bit for bit and cycle for cycle (at their LAT) the
-// adder of ot_hdc_fp32_add_fast / ot_hdc_fp32_add_lat and the multiplier of ot_hdc_fp32_mul_fast /
+// adder of ot_hbm_selected_c12__ot_hdc_fp32_add_fast / ot_hdc_fp32_add_lat and the multiplier of ot_hbm_selected_c12__ot_hdc_fp32_mul_fast /
 // ot_hdc_fp32_mul_lat (rtl/test/tb_su_fp32_f12.sv); only the register boundaries move.
 //
 // Every cut point is optional (CUTS bit k, LAT = 1 + popcount(CUTS)); the output register is always there.
@@ -34,7 +34,7 @@
 // carry) precomputed in the stage before; every increment is ot_hbm_selected_c12__ot_hdc_inc_k (rtl/hdc/ot_hdc_prefix.sv); only
 // the valid bits are reset (the data registers of add_lat / mul_lat cut bundles reset too: their contents
 // never reach y without a valid, and y / err / valid_out reset as before).
-// Needs rtl/hdc/ot_hdc_fastfp.sv (ot_hdc_lzc32, ot_hdc_mul24_rows) and rtl/hdc/ot_hdc_prefix.sv.
+// Needs rtl/hdc/ot_hdc_fastfp.sv (ot_hbm_selected_c12__ot_hdc_lzc32, ot_hbm_selected_c12__ot_hdc_mul24_rows) and rtl/hdc/ot_hdc_prefix.sv.
 // ---------------------------------------------------------------------------
 
 // a W-bit bundle with its valid bit (bit W-1), registered when CUT = 1 (the valid reset to 0), else a wire
@@ -181,7 +181,7 @@ module ot_hbm_selected_c12__ot_hdc_fp32_add_f12 #(
     wire [7:0]  room = t_exp - 8'd1;
     wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
     wire [5:0]  lz_w;
-    ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
+    ot_hbm_selected_c12__ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
     localparam integer W3 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
     wire [W3-1:0] q3;
     ot_hbm_selected_c12__ot_hdc_f12_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n),
@@ -273,8 +273,8 @@ module ot_hbm_selected_c12__ot_hdc_fp32_mul_f12 #(
     wire nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
     wire zero = (a[30:0] == 31'd0) || (b[30:0] == 31'd0);
     wire [5:0] a_cz, b_cz;                      // clz23 of the fraction (23 for a zero fraction)
-    ot_hdc_lzc32 u_la (.x({a[22:0], 9'h1ff}), .n(a_cz));
-    ot_hdc_lzc32 u_lb (.x({b[22:0], 9'h1ff}), .n(b_cz));
+    ot_hbm_selected_c12__ot_hdc_lzc32 u_la (.x({a[22:0], 9'h1ff}), .n(a_cz));
+    ot_hbm_selected_c12__ot_hdc_lzc32 u_lb (.x({b[22:0], 9'h1ff}), .n(b_cz));
     localparam integer W0 = 1 + 1 + 2 + 1 + 23 + 23 + 8 + 8 + 5 + 5;
     wire [W0-1:0] q0;
     ot_hbm_selected_c12__ot_hdc_f12_cut #(.W(W0), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
@@ -306,7 +306,7 @@ module ot_hbm_selected_c12__ot_hdc_fp32_mul_f12 #(
     wire power_c;
     ot_hbm_selected_c12__ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
-    ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
+    ot_hbm_selected_c12__ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
     localparam integer W2 = 1 + 1 + 2 + 1 + 48 * 8 + 12;
     wire [W2-1:0] q2;
     ot_hbm_selected_c12__ot_hdc_f12_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n),

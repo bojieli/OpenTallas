@@ -1,0 +1,37 @@
+{
+  "selected_parent": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+  "instance": "g_on.g_die[d].u_sfu_c12.u_stage.u_sfu",
+  "publication_instance": "g_on.g_die[d].g_sfu_native_vm.u_vm",
+  "flags": {
+    "ENABLE": 1,
+    "COMBINED_ENABLE": 1,
+    "SFU_C12_ENABLE": 1,
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "TW": 17,
+    "PW": 20
+  },
+  "default_OFF": true,
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "7afdade607fbb9dfbb4ac2ef3c5cbeff9a04c0518024cee627561ee72dc4797e",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv": "ffc3f626090de736e9e732feb51ddbaad49c384b1b1b1489e4d7e41abc91ead9",
+    "rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv": "e93235e7eb33ea931e7766259b7126e0953ea741710cccd0b7a426223a76e7ea",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0"
+  },
+  "source_provider": "existing mutually-exclusive SU337/273 CAP1 borrower;8 actual sector reads",
+  "publisher": "one existing32SRAM root, no CP result write in native mode",
+  "enrollment": "stage + publisher atomic acceptance; real accepted root bind/full73 allocation required",
+  "addresses": "provider source/dest BYTE32; destination128B aligned converted>>2 to nativeWORD32",
+  "completion": "stage + publisher held completion + full73/tag match + real borrower reverseACK + caller acceptance",
+  "warm": "new offers blocked immediately; root quarantine delayed until actual source RX packet drained; stage and root warm ACK jointly exposed",
+  "added_mutable_FF": 0,
+  "existing_priced_state": "same1440codedFF provider landing/216codedFF descriptor + existing publisher/root costs; no payload/provider replica",
+  "checks": {
+    "parent_wiring_iverilog_ignore_missing_children_exit": 0,
+    "bench_wiring_iverilog_ignore_missing_children_exit": 0,
+    "full_child_elaboration": false,
+    "numerical_PASS": false,
+    "SSFF_closed": false
+  },
+  "minimum_gate": "python3 tools/hbm_integrated_sfu_provider_gate.py --native-vm --out NEW_E2_NVME_ATTEMPT"
+}
