@@ -11422,3 +11422,48 @@ def hbm_smh_macro_band_price(macros, cells=0):
         macro_clk_to_q='Original SS SRAM library retained; full SS setup/FF hold required',
         all_class_closure=False,parent_context_closed=False,adopted=False)
     return base
+
+
+def hbm_integrated_stage_join_model():
+    """Missing enclosing CP-to-stage descriptor seat; no new child arithmetic."""
+    return dict(schema='opentallas.hbm.integrated.stage_join.v1',
+        existing_composition='hbm_accel_rows; released SU c12 model and child calendars retained',
+        metadata=dict(frame=73, pc=32, op=32, source_instance=16,
+                      expert=9, matrix=1, row=12, count=9, phase=2,
+                      warm_quarantine=1, fault=1),
+        useful_bits=188, W6_rows=3, coded_FF_bits=216, padding_bits=4,
+        raw_authoritative_shadow_bits=0, payload_duplicate_bits=0,
+        MACs_per_cycle_delta=0, memory_bytes_per_cycle_delta=0,
+        replica_count=1, encoder_count=3, decoder_count=3,
+        metadata_read_bits=216, metadata_write_bits=216,
+        boundary_descriptor_bits=184, boundary_control_bits=8,
+        tracks_required=192, channel_capacity=None, slot_fit=None,
+        mux='one 188-bit coded next-state selector, no payload mux or arithmetic',
+        FF_area_floor_um2=216*.2916, clock_pins=216,
+        FF_clock_capacitance_ff=216*.433982,
+        normal_minimum_join_edges=3,
+        latency='one capture, one accepted start, one held drain/completion edge; actual stalls and CP calendar measured separately',
+        CE_scrub_minimum_edges=1, DUE='held debt until root POR',
+        protection='existing W6 correction/scrub; full frame live-owner veto; warm request drains retained work',
+        workload_positions=dict(DS1M=1048575,Qwen8K=8191),
+        child_source_edits=False, default_enabled=False,
+        physical_admitted=False, full_token_gate=False, adopted=False,
+        SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25)
+
+
+def hbm_integrated_gu_wide_launch_model():
+    """Integration-only source view; preserve actual selected-SIMT arithmetic."""
+    return dict(schema='opentallas.hbm.integrated.gu_wide_launch.v1',
+        base='hbm_simt_gu_coded_retention_model, full73 frame already retained',
+        source_view='selected SIMT launch TOKEN17/POS20 and full launch/frame comparator',
+        hierarchical_SM_source_changed=False, default_GU_JOIN=0,
+        added_input_bits=5, added_frame_comparator_bits=5,
+        existing_uniform_registers='UR0/UR1 remain32 bits each, preserve original payload protection owner',
+        logical_register_bits_added=0, mapped_FF_delta_upper_bound=5,
+        mapped_FF_delta_note='Constant upper launch bits may have been eliminated; count actual mapping before physical admission',
+        reused_coded_metadata_FF_bits=216, new_payload_copy_bits=0,
+        memory_bytes_per_cycle_delta=0, MACs_per_cycle_delta=0,
+        added_pipeline_cycles=0, replicas_per_selected_SM=1,
+        tracks_required_delta=5,channel_capacity=None,parent_slot_fit=None,
+        fullGU_service='existing Franklin768 source descriptors and9216 rows, actual TC/CVT/drain unchanged',
+        whole_token=False,physical_admitted=False,adopted=False)
