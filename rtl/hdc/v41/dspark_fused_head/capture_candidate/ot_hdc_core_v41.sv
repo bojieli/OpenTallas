@@ -524,6 +524,7 @@ module ot_hdc_core_v41 #(
     generate if(FH_RETIRE) begin : g_fh_retirement
         localparam integer PW=5512;
         wire retired_v,retired_warm,retired_warm_payload,retired_tag_v;
+        wire retired_ov_payload,retired_leaf_v_payload;
         wire [PW-1:0] packet={fh_raw_leaf,me_raw_we,me_raw_addr,me_raw_mask,me_raw_data,
             fh_raw_tag,fh_raw_tag_v,me_raw_ov,fh_raw_leaf_v,fh_raw_warm};
         wire [PW-1:0] retired;
@@ -540,7 +541,11 @@ module ot_hdc_core_v41 #(
             .lane_veto(veto),.write_veto(write_veto),.busy(fh_retire_busy),.warm_ack(fh_warm_ack),
             .fault(fh_parent_fault),.warm_debt(fh_warm_debt));
         assign {retired_leaf,retired_we,vw_me_addr,vw_me_mask,vw_me_data,
-            retired_tag,retired_tag_v,fh_retired_ov,fh_retired_leaf_v,retired_warm_payload}=retired;
+            retired_tag,retired_tag_v,retired_ov_payload,retired_leaf_v_payload,retired_warm_payload}=retired;
+        // Data registers intentionally retain across reset. Only the resettable
+        // valid line owns progress/argmax events; stale payload flags cannot.
+        assign fh_retired_ov=retired_v&&retired_ov_payload;
+        assign fh_retired_leaf_v=retired_v&&retired_leaf_v_payload;
         assign vw_me_we=retired_v?(retired_we&~write_veto):4'b0;
         assign me_ov=retired_v&&fh_retired_ov;
         assign fh_write_warm=retired_warm&&(|vw_me_we);
