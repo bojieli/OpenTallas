@@ -11845,6 +11845,8 @@ def dsrom_wfc_protected_caller_adapter_price():
     from pathlib import Path
     root=Path(__file__).resolve().parents[1]
     provider=json.loads((root/'results/uarch/dsrom_protected_vm_20261006/model.json').read_text())
+    receipt=root/'results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r2_PASS/result.json'
+    measured=json.loads(receipt.read_text()) if receipt.is_file() else None
     owner=47
     flags=8
     state=3
@@ -11870,7 +11872,10 @@ def dsrom_wfc_protected_caller_adapter_price():
       link_router_stalled=False,controller_pause='clock enables; root clocks unchanged, actual router drains independently',
       latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
       mandatory_per_A_read_capture_bubble_edges=1,
-      actual_service_wait_edges=None,actual_token_latency_ns=None,
+      actual_service_wait_edges=measured['observed_service'] if measured else None,actual_token_latency_ns=None,
+      actual_context_nominal_fast_cycles=measured['nominal']['fast_cycles'] if measured else None,
+      actual_native_capture_fast_edges=measured['nominal']['native_capture_fast_edges'] if measured else None,
+      actual_context_scope='Minimum commonowner native service; config init/preload/retirement fixtures not full numerical engine/token latency',
       allwriter_contract='bundle XA/XB0..3 native order including sameowner simultaneous XAread/write; old reads before all writes; distinct XB owner backpressured and unaccepted; distinct simultaneous XA RX/TX owners explicitly rejected without serialization',
       global_VM_geometry_owner='Turing current r8/new-frame binding',
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
