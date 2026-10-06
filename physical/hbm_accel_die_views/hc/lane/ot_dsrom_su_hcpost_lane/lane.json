@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.hbm_hub_lane_view.v1",
+ "lane": "ot_dsrom_su_hcpost_lane",
+ "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/l2hc_a",
+ "closed": true,
+ "recipe": "r2/r3: signals M2-M5, pins M4 left edge every track, PDN top M6 (su/route_lane.sh)",
+ "interface_sdc": "physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc (Carson real SU view)",
+ "outcheck": "NOT_REGISTER_DIRECT in c1[31] -> g_u_m15.u.u.u_k1.g_r.r[72]$_DFF_P_ ['XOR2x2_ASAP7_75t_R']\nNOT_REGISTER_DIRECT in p[31] -> u_m4.u.u_k1.g_r.r[72]$_DFF_P_ ['XOR2x2_ASAP7_75t_R']\noutputs 18 input_paths 346 not_register_direct 345",
+ "layers": {
+  "pg": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6"
+   ]
+  },
+  "obs": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "RVTN",
+   "RVTP"
+  ],
+  "size": [
+   85.32,
+   115.02
+  ]
+ },
+ "exit": {
+  "rc": "0",
+  "corner_rc": "0",
+  "post_rc": "1",
+  "export_rc": "0"
+ },
+ "ss_worst_slack_ps": 8.04,
+ "ff_worst_hold_slack_ps": 3.86,
+ "ss_violating_d_pins": 0,
+ "ff_violating_d_pins": 0,
+ "drc_violations": 0,
+ "antenna_violating_nets": 0.0,
+ "max_slew_cap_fanout": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "source_commit": "266d1b808a933a8400849ebe6ac9e607a096b4f6",
+ "args": "ot_dsrom_su_hcpost_lane 85.32 115.02 rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv --param ML=5 --param AL=5",
+ "acceptance": "pass",
+ "sha256": {
+  "ot_dsrom_su_hcpost_lane.lef": "b93402d28bcf7f189a41b016b37803b5616bd201129eff840be9ffc3d04f6b0c",
+  "ot_dsrom_su_hcpost_lane_ff.lib": "b6d83f5611763dc628e41047302684c6afc0f7499511711ca7f963ad694d929a",
+  "ot_dsrom_su_hcpost_lane_ss.lib": "b1919a7e29927f42024bf07409e3e5b1f0bc50531597c164cef0d20c19e04b8a"
+ }
+}
