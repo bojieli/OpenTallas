@@ -369,7 +369,7 @@ module ot_dsrom_window_writer_pipeline #(
                 ADDR3: begin checked_addr <= row_base + (SEC_W+1)'(sec); state <= sec == 16 ? WS : WC; end
                 WC: if (grant) begin
                     st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
-                    sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+                    sectors_written_carry <= sectors_written_carry; // deliberately stale
                     state <= WC_DONE;
                 end
                 WC_DONE: if (done_write) begin sec <= 5'd16; state <= ADDR3; end

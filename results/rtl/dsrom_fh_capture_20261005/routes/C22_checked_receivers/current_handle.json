@@ -13,5 +13,12 @@
     "report_hook_failure_first",
     "report_hook_failure_supply_prePDN"
   ],
-  "notes": "Signal-only pin inventory corrected for canonical report_net syntax and prePDN supplies. No RTL/synth/golden changes; terminal attempts retained remote."
+  "notes": "Signal-only pin inventory corrected for canonical report_net syntax and prePDN supplies. No RTL/synth/golden changes; terminal attempts retained remote.",
+  "container": "4019575adaa7625fd5c6dc1af27c777eb51cb78b2e011581171917185a3bfa6d",
+  "openroad_pid": 1969583,
+  "stage": "2_1_floorplan repair timing",
+  "active_ideal_SS_setup_estimate_ps": -86.99,
+  "estimate_endpoint": "u_head.iw_issued",
+  "estimate_scope": "Unplaced ideal-clock repair estimate; not SSFF closure",
+  "receiver_corner_caps": "receiver_corner_pin_caps.json"
 }
