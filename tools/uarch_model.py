@@ -7907,6 +7907,47 @@ def hbm_accel_rows():
     return build(sys.modules[__name__])
 
 
+def qwen_code_pair_margin_price():
+    """Margin-first CODE pair (rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv), owner rule
+    2026-10-06. Priced from the RTL register inventory; the headline cost uses the leaf model's measured
+    exposed-edge fraction (results/uarch/qwen_hbm_code_payload_leaf_20261005/model.json, Hubble 15,287 edges).
+    Revision 3 (rev2 plus a corrected-data / DMR slot-enable register before the output flops). Revision 2: control tags and visible metadata as duplicated plain registers (no SECDED decode/encode in the
+    one-cycle loop or before the receipt pins), W6 decode split at a registered syndrome before the output flops."""
+    banks, ports = 5, 2
+    central_request = ports * 2 + ports * 2 * 13 + ports * 2 + 2 * 13 + 256 + 32      # DMR valid/row, data, checks
+    per_bank = 2 + 2 + 2 + 1 + 2 * 10 + 2 * 3 + 2 * 10 + 2 * 3 + 256 + 32 + 2 * 3   # kept request/write copies
+    output = (ports * 5 * 2 * 2 + ports * 2 + ports * 2 + ports * 288 * 2 + 2660 + 3 * ports + 2)
+    syndrome = ports * 4 * 8
+    control_tags, metadata = 59, 192 + 12 + 5 + 13 + 12
+    state_delta = 2 * (control_tags + metadata) - (72 + 288 + 72)   # vs leaf control+metadata codes + pipeline code
+    steer = ports * 256 + 2 * (banks * ports + ports) + 2 * ports       # corrected data, DMR slot enables, flags
+    added_ff = central_request + banks * ports * per_bank + output + syndrome + state_delta + steer
+    edge_fraction = 6.54150585464774e-05
+    added_read_edges = 6
+    return dict(status="PRICED_BEFORE_ROUTE", revision=3, default_enabled=False,
+                added_read_edges=added_read_edges, added_write_edges_exposed=0,
+                added_write_edges_internal=2, II=1, backpressure=False,
+                added_ff=added_ff, added_ff_breakdown=dict(central_request=central_request,
+                    per_bank_kept=banks * ports * per_bank, mux_transport_output=output, syndrome=syndrome,
+                    duplicated_state_vs_secded=state_delta, corrected_data_and_slot_enables=steer),
+                codecs=dict(payload_encode64=4, payload_syndrome_for_flags_decode64=8,
+                            payload_syndrome_split=8, payload_correction=8,
+                            control_and_metadata_secded="replaced by duplicate-and-compare (fail-closed)"),
+                ff_area_um2_proxy=round(added_ff * 0.29160, 1),
+                headline_cost_fraction=added_read_edges * edge_fraction,
+                headline_cost_percent=round(100 * added_read_edges * edge_fraction, 4),
+                pre_approved_limit_percent=2.0,
+                route_period_ps=770, signoff_period_ps=833.333, accept_ss_ps=40, accept_ff_ps=15,
+                prelayout_probe_r0="SECDED control loop -543 ps, metadata decode->visible pins -439 ps, "
+                                   "decode->rom_rd flops -402 ps at 770 ps (EPYC1 probe_r0, floorplan stage)",
+                prelayout_probe_r1="rev2 at 770 ps: SRAM->capture -10.4 ps (clk->q bound), syndrome->rom_rd +36.0, "
+                                   "slot select->rom_rd +39.7 (below the +60 plan) -> rev3 adds the corrected-data/"
+                                   "slot-enable stage (+1 edge)",
+                fault_semantics="fault-free cycle-exact (+6 edges on responses); upsets of tags/metadata fail closed "
+                                "(no silent correction); new acceptance inhibited one edge after a detection; "
+                                "uncorrectable or post-detection responses never delivered valid")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--hbrom-inputs", help="default-off ROM-fed reusable-compute cluster model input JSON")
@@ -10683,6 +10724,43 @@ def dsrom_window_full_block_pipeline_model():
             adoption=False))
 
 
+
+
+def dsrom_window_stage_margin_model(layers=61, requests_per_job=32, ar_tok_s=1687.9):
+    """WINDOW hier-parent stage MARGIN=1 (default off; claude/takeover-window-stage-20261006).
+
+    OWNER_RULE_MARGIN_FIRST: every boundary register-to-register and every >~400 um wire staged in the
+    1.9 mm frame (4 banks at 900 um pitch, 17 hardened 107/77 um columns each).  Sized before route.
+    The compat row merge keeps one four-row request outstanding, so every added read edge is paid
+    per request; the write-side edges are paid once per job.
+    """
+    npc, banks, cols, rowb, pos_w, user_w = 32, 4, 17, 4224, 21, 10
+    req_bits = 1+user_w+pos_w+4
+    ff = dict(request_pin_and_global_chain=3*req_bits,
+              request_per_bank_kept_copy=banks*(1+pos_w),
+              request_per_column_kept_addr_valid=banks*cols*6,
+              response_per_bank_column_output=banks*rowb+banks,
+              response_control_edge=1+user_w+pos_w+4+1,
+              write_input_fifo=npc*(2*(13+4+256)+5),
+              write_per_bank_kept_beat_copy=banks*npc*(256+5),
+              write_per_column_chosen=banks*cols*npc,
+              accepted_report_edge=npc*(1+13+4+256),
+              all_rows_register=1)
+    read_edges, write_edges, all_rows_edges = 4, 2, 1
+    added_cycles_per_job_upper = requests_per_job*read_edges + write_edges + all_rows_edges
+    token_us = layers*added_cycles_per_job_upper/1.2e9*1e6
+    return dict(status='PREBUILD_DEFAULT_OFF', lever='WINDOW stage MARGIN',
+        added_FF_bits=sum(ff.values()), added_FF=ff,
+        added_FF_area_um2=sum(ff.values())*DFF_UM2,
+        edges=dict(read_request=3, read_response=1, write_input_fifo=1, write_bank_copy=1, all_rows=1),
+        added_cycles_per_window_job_upper=added_cycles_per_job_upper,
+        compat_merge_outstanding_requests=1,
+        layers=layers, added_token_us_upper=token_us,
+        fraction_of_AR_token_upper=token_us*1e-6*ar_tok_s,
+        AR_tok_s_basis=ar_tok_s, AR_basis='ds_rom.ar_tok_s_1m scoreboard value; WINDOW job assumed fully serial (upper)',
+        within_owner_2pct=token_us*1e-6*ar_tok_s <= 0.02,
+        boundary='inputs captured at the pin, outputs from flops, no register inside a one-cycle loop',
+        exactness='bytes/order/checks unchanged; witnesses at the effective request edge')
 
 
 def hbm_r5a_protected_pipeline_model():

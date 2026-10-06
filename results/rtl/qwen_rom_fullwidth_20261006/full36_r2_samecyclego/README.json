@@ -1,0 +1,8 @@
+{
+ "status": "L0 PASS_FULLSHAPE_L0_P8191 (exact, 4 dies x and kvP); full token RUNNING",
+ "source_commit": "59da397a9 (SAME_CYCLE_GO=1 via full_build --parallel-transport)",
+ "host": "EPYC2 /srv/opentallas-scratch2/claude/qwen-fullwidth-r2 (full-r2; TERMINAL file when runtime+check finish)",
+ "L0": {"core_cycles": 6188, "controller_rises": 5036, "die3_fill_cycles": 1500, "fill_exposed_cold": 1500, "stall_kv": 932, "stall_bridge": 425, "wall_s": 2673.7},
+ "supersedes_failure": "full36_r1 FAIL_RUNTIME L0 cyc14 kv 8000 (context go&&!gr), retained",
+ "full_token": "fulltoken --pos 8191 --token 24 --kv-ideal 0 --early-go 1 --posted-wb 1; expected next token 18, logit bits 42282b99; reference 193,955 cycles"
+}

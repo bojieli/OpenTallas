@@ -1,0 +1,27 @@
+    1200* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -10.412 |        0.0 |   -26655.2 |   2560 | on.column\[0\].bank\[0\].u_bank/cap_code\[100\]$_DFF_P_/D
+    1200* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -10.412 |        0.0 |   -26655.2 |   2560 | on.column\[0\].bank\[0\].u_bank/cap_code\[100\]$_DFF_P_/D
+    1200* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -10.412 |        0.0 |   -26655.2 |   2560 | on.column\[0\].bank\[0\].u_bank/cap_code\[100\]$_DFF_P_/D
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -10.412 |        0.0 |   -26655.2 |   2560 | on.column\[0\].bank\[0\].u_bank/cap_code\[100\]$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+CODE_MARGIN_CAPTURE_FENCES flops=2560 regions=10
+    -10.4  2560 on.column[*].bank[*].u_bank/data_store/rd_out[*] -> on.column[*].bank[*].u_bank/cap_code[*]$_DFF_P_/D
+     36.0  1484 on.syn5[*][*]$_DFF_P_/QN -> rom_rd[*]$_DFF_PN0_/D
+     39.5     1 wr_column[*] -> wr_r
+     39.7  1076 on.osel_a[*]$_DFF_PN0_/QN -> rom_rd[*]$_DFF_PN0_/D
+     51.8   234 wr_column[*] -> on.m[*]$_DFFE_PN0P_/D
+     51.8   234 wr_column[*] -> on.u_meta_b/q[*]$_DFF_PN0_/D
+     64.1     1 on.u_meta_b/q[*]$_DFF_PN0_/QN -> visible_v
+     73.7     2 wr_column[*] -> on.u_req_b/q[*]$_DFF_PN0_/D
+     73.7     2 wr_column[*] -> on.wq_v_a[*]$_DFF_PN0_/D
+     75.9     2 on.sel_code[*][*]$_DFF_P_/QN -> on.unc5[*]$_DFF_PN0_/D
+     78.9     1 wr_column[*] -> on.c[*]$_DFF_PN0_/D
+     78.9     1 wr_column[*] -> on.u_ctl_b/q[*]$_DFF_PN0_/D
+     87.4   320 on.column[*].bank[*].u_bank/check_store/rd_out[*] -> on.column[*].bank[*].u_bank/cap_code[*]$_DFF_P_/D
+     97.0     2 on.sel_code[*][*]$_DFF_P_/QN -> on.corr5[*]$_DFF_PN0_/D
+    100.6     4 wr_owned[*] -> on.wq_checks[*]$_DFF_P_/D
+    127.7     1 on.u_meta_b/q[*]$_DFF_PN0_/QN -> on.fq_a$_DFF_PN0_/D
+    127.7     1 on.u_meta_b/q[*]$_DFF_PN0_/QN -> on.u_fault_b/q$_DFF_PN0_/D
+    167.9     2 on.sel_code[*][*]$_DFF_P_/QN -> on.syn5[*][*]$_DFF_P_/D
+    194.5     8 on.column[*].bank[*].u_bank/wsel_a[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/check_store/w_mask_in[*]
+    194.5    64 on.column[*].bank[*].u_bank/waddr_a[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/check_store/w_mask_in[*]
