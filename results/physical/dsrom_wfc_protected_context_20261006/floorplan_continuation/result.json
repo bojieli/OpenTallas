@@ -1,6 +1,6 @@
 {
   "scope": "COND_BODY_DIAGNOSTIC only",
-  "recipe_commit": "16e289c8f",
+  "recipe_commit": "67f8865c2",
   "continuations": [
     {
       "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r3-floorplan-resume",
@@ -195,5 +195,25 @@
   "DRC": null,
   "source_or_reset_qualified": false,
   "headline_allowed": false,
-  "all_failed_roots_retained": true
+  "all_failed_roots_retained": true,
+  "current": {
+    "verdict": "RUNNING_COND_BODY_DIAGNOSTIC",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r7-floorplan-resume",
+    "supervisor": 4075640,
+    "container": "50776b5d4666e78f2ee4aced80061981d4a7854cf0acaf8144950a4979bc02cc",
+    "verified_OpenROAD": 4076874,
+    "stage": "2_4_floorplan_pdn",
+    "macro_placement_count": 306,
+    "provider_serial_clock_checks": 288,
+    "real_PG_bindings_passed": 306,
+    "macro_dont_touch_restored": true,
+    "macro_signal_nets_unchanged": true,
+    "synth_replayed": false,
+    "golden_replayed": false,
+    "clock_constraints_unchanged": true,
+    "SSFF": null,
+    "DRC": null,
+    "external_source_and_IO_qualified": false
+  }
 }
