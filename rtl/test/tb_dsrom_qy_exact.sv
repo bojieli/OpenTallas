@@ -1,16 +1,4 @@
 `timescale 1ns/1ps
-// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 10 by default).
-// SEQ (QX >= 9, the segment tree ot_v41_segtree5: a tree level costs one more cycle, so output TIMES are later and
-// data-dependent): the outputs are compared as sequences, per (macro, row, segment, position) key, every dut event against
-// the reference's event of that key in order (value, row, segments, error); the walker / FIFO / issue state is still
-// compared cycle by cycle; the fault bit is compared per reset window (did it rise); events still pending when both
-// are in reset are counted (dropped by the reset), and nothing may be pending at the end.  The output stage reads the
-// row / segment tables when a partial leaves, so SEQ models the S81 spine contract (the next phase's configuration
-// and go only after every row of the previous phase is written): configure() first services any accepted walk,
-// then waits until both elements are
-// quiet -- walkers idle, both element busy/drain outputs idle, both macros' trees empty
-// (no queued / staged / in-flight node, nothing held), no tree input
-// for 32 cycles, and no partial pending in the sequence compare.
 // QY exactness bench (2026-10-04): tb_dsrom_qz_exact with dut = ot_v41_rom_elem_q_qy_w10 (QY = 1 by default).  QY
 // reports fault FL = 2 cycles later, so the dut's fault bit is compared with the ref's L + FL cycles earlier (every
 // other field still L) and the post-reset exemption is L + FL + 1 cycles.  Built with QP_CHECK the dut also asserts
@@ -29,17 +17,15 @@
 // QP_XS = 0: the dut gets go, the configuration and reset one cycle earlier than the ref (the spine issuing them
 // early) and the beats at the same time.  Built with +define+QP_CHECK (and QT_CHECK) the dut also checks its
 // segment-tree local decisions against the global ones every cycle.  Stimulus as tb_dsrom_qtiming_exact.
-module tb_dsrom_qx_exact;
+module tb_dsrom_qy_exact;
  integer SEED = 1;
  parameter integer NRAND = 400;
  parameter integer QP = 1, XS = 1, CAP = 0, P1 = 1, CSAM = 10;   // QP = 0: the copy's default (no shift)
  parameter integer QZ = 1;                                         // QZ = 0: the qp circuit
  parameter integer QY = 1;                                         // QY = 0: the qz circuit
- parameter integer QX = 10;                                         // 2, 1: earlier QX levels, 0: the qy circuit
  localparam integer FL = QY != 0 ? 2 : 0;                          // fault reporting delay
  localparam integer QK = QP != 0 ? CAP + P1 : 0;
  localparam integer L = QP != 0 ? XS + QK : 0;
- localparam integer SEQ = QX >= 9 ? 1 : 0;
  localparam integer FS = QP != 0 ? XS : 0;    // front-end state shift
  reg clk=0, rst_n=0, cfg_v=0, go=0, xs_v=0;
  reg [4:0] cfg_a=0; reg [47:0] cfg_d=0;
@@ -61,7 +47,7 @@ module tb_dsrom_qx_exact;
   .clk(clk), .rst_n(rf_rst_n), .cfg_v(rf_cfg_v), .cfg_a(rf_cfg_a), .cfg_d(rf_cfg_d), .go(rf_go),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
   .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qx_w10 #(.QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+ ot_v41_rom_elem_q_qy_w10 #(.QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
   .QP_CAP(CAP), .QP_P1(P1), .QP_CSAM(CSAM), .INSTANCE("d")) dut (
   .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
@@ -114,108 +100,12 @@ module tb_dsrom_qx_exact;
  integer st_ex = 0, st_go = -1;
  always @(negedge rst_n) begin last_assert = tcyc; st_ex = 1; st_go = -1; end
  always @(negedge clk) if (st_ex && rst_n && dut.u_e.go_e && st_go < 0) st_go = tcyc;
- // SEQ: per-key event FIFOs (see the header)
- typedef bit [53:0] ev_t;
- // Segment indices need not be unique across rows. Independent trees may
- // finish in a different order; preserve ordering within each real identity.
- typedef bit [24:0] key_t;
- ev_t rq [key_t][$];
- ev_t dq [key_t][$];
- integer rqt [key_t][$];
- integer dqt [key_t][$];
- integer ref_nan_rows = 0;   // reference row outputs with the error flag (a NaN code in a term): NaN coverage
- integer seq_matched = 0, seq_dropped = 0, rflt = 0, dflt = 0;
- // measured extra output delay per matched partial: dut cycle - ref cycle - L (cycles)
- integer dmax = -1000, dmin = 1000; longint dsum = 0; integer dhist [0:15];
- initial for (int i = 0; i < 16; i++) dhist[i] = 0;
- function automatic void seq_delay(input integer d);
-   if (d > dmax) dmax = d; if (d < dmin) dmin = d; dsum = dsum + d; dhist[(d < 0) ? 0 : (d > 15 ? 15 : d)]++;
- endfunction
- bit both_rst_seen = 0;
- task automatic seq_push(input bit is_dut, input key_t key, input ev_t e);
-   if (is_dut) begin
-     if (rq[key].size() > 0) begin
-       if (rq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, e, rq[key][0]);
-       seq_delay(tcyc - rqt[key][0] - L);
-       void'(rq[key].pop_front()); void'(rqt[key].pop_front()); seq_matched = seq_matched + 1;
-     end else begin dq[key].push_back(e); dqt[key].push_back(tcyc); end
-   end else begin
-     if (dq[key].size() > 0) begin
-       if (dq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, dq[key][0], e);
-       seq_delay(dqt[key][0] - tcyc - L);
-       void'(dq[key].pop_front()); void'(dqt[key].pop_front()); seq_matched = seq_matched + 1;
-     end else begin rq[key].push_back(e); rqt[key].push_back(tcyc); end
-   end
- endtask
- function automatic integer seq_pending();
-   seq_pending = 0;
-   foreach (rq[k]) seq_pending = seq_pending + rq[k].size();
-   foreach (dq[k]) seq_pending = seq_pending + dq[k].size();
- endfunction
- // SEQ: element quiet (see the header); the ref's trees are segtree2 (g_tr2), the dut's segtree5 (g_tr5)
- wire seq_quiet_trees;
- if (SEQ != 0) begin : g_seqq
-   wire r0 = ref_dut.u_e.g_mac[0].g_tr2.u_tree.qc == 0 && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.x_v && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.sv
-          && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.add_v && ref_dut.u_e.g_mac[0].g_tr2.u_tree.have == 0 && !ref_dut.u_e.g_mac[0].b_v;
-   wire r1 = ref_dut.u_e.g_mac[1].g_tr2.u_tree.qc == 0 && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.x_v && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.sv
-          && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.add_v && ref_dut.u_e.g_mac[1].g_tr2.u_tree.have == 0 && !ref_dut.u_e.g_mac[1].b_v;
-   wire d0 = dut.u_e.g_mac[0].g_tr5.u_tree.qc == 0 && !dut.u_e.g_mac[0].g_tr5.u_tree.x_v && !dut.u_e.g_mac[0].g_tr5.u_tree.y_v
-          && !dut.u_e.g_mac[0].g_tr5.u_tree.sv && !dut.u_e.g_mac[0].g_tr5.u_tree.add_v && dut.u_e.g_mac[0].g_tr5.u_tree.have == 0
-          && !dut.u_e.g_mac[0].b_v;
-   wire d1 = dut.u_e.g_mac[1].g_tr5.u_tree.qc == 0 && !dut.u_e.g_mac[1].g_tr5.u_tree.x_v && !dut.u_e.g_mac[1].g_tr5.u_tree.y_v
-          && !dut.u_e.g_mac[1].g_tr5.u_tree.sv && !dut.u_e.g_mac[1].g_tr5.u_tree.add_v && dut.u_e.g_mac[1].g_tr5.u_tree.have == 0
-          && !dut.u_e.g_mac[1].b_v;
-   // Tree emptiness alone misses issued work still in ROM/lane/chain stages.
-   // Keep the current configuration until the real element drain is idle too.
-   assign seq_quiet_trees = r0 && r1 && d0 && d1 && !ref_dut.u_e.walk_busy && !dut.u_e.walk_busy && !ab && !bb;
- end else begin : g_nseqq
-   assign seq_quiet_trees = 1'b1;
- end
- integer seq_waits = 0, seq_serviced_beats = 0;
- task automatic seq_wait_quiet;
-   integer q;
-   q = 0;
-   while (q < 32) begin
-     @(negedge clk);
-     // A randomized short go-to-check gap can leave a walk awaiting XS.
-     // Keep its configuration and service the real requested pair/position;
-     // an idle clock cannot complete an input-dependent walk. The 32 quiet
-     // cycles also cover a go still traversing the registered front end.
-     if (ref_dut.u_e.n_run) begin
-       beat(0, 12);
-       seq_serviced_beats = seq_serviced_beats + 1;
-       q = 0;
-     end else if (seq_quiet_trees && av == 0 && bv == 0) q = q + 1; else q = 0;
-   end
-   // Fully drained elements cannot produce another counterpart. Reject a
-   // missing or extra identity instead of waiting forever for its event.
-   if (seq_pending() != 0) $fatal(1, "sequence mismatch: %0d unmatched events after full drain", seq_pending());
-   seq_waits = seq_waits + 1;
- endtask
- always @(negedge clk) if (SEQ != 0) begin
-   for (int m = 0; m < 2; m++) begin
-     if (av[m] && rf_rst_n && ae[m]) ref_nan_rows++;
-     if (av[m] && rf_rst_n) seq_push(0, {1'(m), ar[16*m +: 16], asg[5*m +: 5], ap[3*m +: 3]}, {ad[32*m +: 32], ar[16*m +: 16], an[5*m +: 5], ae[m]});
-     if (bv[m] && rst_n)    seq_push(1, {1'(m), br[16*m +: 16], bsg[5*m +: 5], bp[3*m +: 3]}, {bd[32*m +: 32], br[16*m +: 16], bn[5*m +: 5], be[m]});
-   end
-   if (af && rf_rst_n) rflt = 1;
-   if (bf && rst_n) dflt = 1;
-   if (!rst_n && !rf_rst_n) begin
-     if (!both_rst_seen) begin
-       if (rflt != dflt) $fatal(1, "fault differs in a reset window (ref %0d dut %0d) cycle=%0d", rflt, dflt, tcyc);
-       seq_dropped = seq_dropped + seq_pending();
-       rq.delete(); dq.delete(); rqt.delete(); dqt.delete();
-       rflt = 0; dflt = 0;
-     end
-     both_rst_seen = 1;
-   end else both_rst_seen = 0;
- end
  always @(negedge clk) begin
    tcyc = tcyc + 1;
    if (rst_n) cyc = cyc + 1;
    oh[tcyc % 32] = ro; sh[tcyc % 32] = rs;
    if (tcyc > L + FL + 2 && tcyc - last_assert > L + FL + 1) begin
-     if (SEQ == 0 && !oeq(dov, {oh[(tcyc - L) % 32][OW-1:1], oh[(tcyc - L - FL) % 32][0]})) $fatal(1, "output mismatch cycle=%0d (dut %h, ref L=%0d earlier %h)", tcyc, dov, L, oh[(tcyc - L) % 32]);
+     if (!oeq(dov, {oh[(tcyc - L) % 32][OW-1:1], oh[(tcyc - L - FL) % 32][0]})) $fatal(1, "output mismatch cycle=%0d (dut %h, ref L=%0d earlier %h)", tcyc, dov, L, oh[(tcyc - L) % 32]);
      if (st_ex && st_go >= 0 && tcyc > st_go + 2) st_ex = 0;
      if (!st_ex && ds !== sh[(tcyc - FS) % 32]) $fatal(1, "state divergence cycle=%0d dut %h ref %h", tcyc, ds, sh[(tcyc - FS) % 32]);
      compared = compared + 1;
@@ -242,33 +132,13 @@ module tb_dsrom_qx_exact;
  task automatic cfg(input integer a,input [47:0] d);
    @(negedge clk); #0.01; cfg_v=1; cfg_a=5'(a); cfg_d=d;
  endtask
- // +nan_sparse (2026-10-05, QX = 10 NS negative control): random x and ROM codes carry a NaN code (E4M3 S.1111.111)
- // in about one byte in 128, so nearly every row is NaN-poisoned and a dropped NaN partial (BT_MUTANT_NS) is masked.
- // With +nan_sparse every NaN code is cleared (7F -> 7E, both operands, ref and dut alike) and one x vector in eight
- // carries exactly one NaN byte in a random lane, so a row's NaN comes from one lane of one term.
- bit nan_sparse = 0;
- initial nan_sparse = $test$plusargs("nan_sparse");
  task automatic rnd_x;
    for (integer i=0;i<8;i=i+1) begin xs_q0[32*i+:32]=$urandom; xs_q1[32*i+:32]=$urandom; end
-   if (nan_sparse) begin
-     for (integer i=0;i<32;i=i+1) begin
-       if (xs_q0[8*i+:7] == 7'h7F) xs_q0[8*i+:7] = 7'h7E;
-       if (xs_q1[8*i+:7] == 7'h7F) xs_q1[8*i+:7] = 7'h7E;
-     end
-     if ($urandom % 8 == 0) begin
-       integer l; l = $urandom % 32;
-       if ($urandom % 2) xs_q0[8*l+:7] = 7'h7F; else xs_q1[8*l+:7] = 7'h7F;
-     end
-   end
    xs_e0=10'd100+10'($urandom%50); xs_e1=10'd100+10'($urandom%50);
-   // +nan_sparse: x scales that keep the terms finite (the default 100..149 overflows about two terms in three, which
-   // sets the row error flag on every row and masks any single NaN source)
-   if (nan_sparse) begin xs_e0 = 10'(-200 + int'($urandom % 100)); xs_e1 = 10'(-200 + int'($urandom % 100)); end
  endtask
  // mode 0 sparse FP4 two sub-blocks (8-bit wrap), 1 all eight FP8 classes, 2 empty Q family, 3 random
  task automatic configure(input integer mode);
    integer nu,base,fp4,lo,hi,valid,plast,qlast; reg [47:0] d;
-   if (SEQ != 0) seq_wait_quiet;
    plast = (mode==0) ? 2 : (mode==3 ? $urandom%3 : 0);
    qlast = 0;
    for(integer c=0;c<8;c=c+1) begin
@@ -355,33 +225,12 @@ module tb_dsrom_qx_exact;
        @(negedge clk); #0.01; go=1; tick(1+$urandom%2); @(negedge clk); #0.01; go=0; tick($urandom%140);
      end
    end
-   // SEQ's configuration fence intentionally removes accidental mid-drain
-   // phase changes. Exercise the original go_mid_drain coverage explicitly
-   // with the same configuration and the real walker/drain state instead.
-   if (SEQ != 0) for (integer d = 0; d < 24; d = d + 1) begin
-     phase(1, 0);
-     while (ref_dut.u_e.walk_busy || dut.u_e.walk_busy) @(negedge clk);
-     if (ref_dut.u_e.drain == 0) $fatal(1, "directed go missed the real drain window");
-     @(negedge clk); #0.01; go=1; tick(1);
-     @(negedge clk); #0.01; go=0;
-     seq_wait_quiet;
-   end
    tick(400);
-   if (SEQ != 0) begin
-     seq_wait_quiet;
-     if (seq_pending() != 0) $fatal(1, "sequence: %0d events still pending at the end", seq_pending());
-     if (rflt != dflt) $fatal(1, "fault differs at the end (ref %0d dut %0d)", rflt, dflt);
-     $display("NAN_ROWS ref=%0d", ref_nan_rows);
-     $display("SEQ matched=%0d dropped_at_reset=%0d extra_delay_cycles min=%0d max=%0d mean_x1000=%0d", seq_matched, seq_dropped,
-              dmin, dmax, seq_matched ? (dsum * 1000) / seq_matched : 0);
-     $write("SEQ extra_delay_hist"); for (int i = 0; i < 16; i++) $write(" %0d", dhist[i]); $write("\n");
-     $display("SEQ serviced_wait_beats=%0d", seq_serviced_beats);
-   end
    if(hits<2000 || issues<2000 || rows<200 || nonzero<100 || classes!=255 || wraps==0 || qadv==0 || restarts<4 ||
       rejected<50 || go_closed<20 || go_drain<20 || closed_cycles<1000 || resets<3)
      $fatal(1,"coverage incomplete h=%0d i=%0d r=%0d w=%0d q=%0d rst=%0d rej=%0d gc=%0d gd=%0d go=%0d cc=%0d rs=%0d",
             hits,issues,rows,wraps,qadv,restarts,rejected,go_closed,go_drain,go_open,closed_cycles,resets);
-   $display("QZ=%0d QY=%0d QX=%0d FL=%0d", QZ, QY, QX, FL);
+   $display("QZ=%0d QY=%0d FL=%0d", QZ, QY, FL);
    $display("PASS QP=%0d XS=%0d CAP=%0d P1=%0d L=%0d compared=%0d exempt=%0d seed=%0d cycles=%0d gated_edges=%0d closed_cycles=%0d hits=%0d issues=%0d rows=%0d nonzero=%0d classes=%0d wraps=%0d qadv=%0d restarts=%0d rejected=%0d go_closed=%0d go_drain=%0d go_open=%0d resets=%0d",
        QP,XS,CAP,P1,L,compared,exempt,SEED,cyc,gated_edges,closed_cycles,hits,issues,rows,nonzero,classes,wraps,qadv,restarts,rejected,go_closed,go_drain,go_open,resets);
    $finish;
@@ -407,14 +256,7 @@ module ot_rom_4096x274_m8 #(parameter INSTANCE="")(
  bit bk1;
  initial bk1 = inst.len() > 0 && inst.getc(inst.len() - 1) == "1";
  wire [273:0] flip = bk1 ? {146'd0, {128{1'b1}}} : 274'd0;   // bits 127:0 are codes in FP8 and FP4 words
- bit nan_sparse = 0;
- initial nan_sparse = $test$plusargs("nan_sparse");
- // +nan_sparse: no byte of bits 255:0 is a NaN code (see the bench header), ref and dut alike
- function automatic [273:0] clean(input [273:0] w);
-   clean = w;
-   for (integer i=0;i<32;i=i+1) if (clean[8*i+:7] == 7'h7F) clean[8*i+:7] = 7'h7E;
- endfunction
- always @(posedge clk) if(ce_in) rd_out <= nan_sparse ? clean(word(addr_in) ^ flip) : (word(addr_in) ^ flip);
+ always @(posedge clk) if(ce_in) rd_out <= word(addr_in) ^ flip;
 endmodule
 module ot_rom_8192x274_m8 #(parameter INSTANCE="")(
  input wire clk,ce_in,input wire [12:0] addr_in,output reg [273:0] rd_out);
