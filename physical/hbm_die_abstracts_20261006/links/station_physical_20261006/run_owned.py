@@ -3,7 +3,7 @@
 The underlying shared driver is unchanged. Every source transform is recorded.
 No synthesis/route wall, file or address-space cap is imposed.
 """
-import argparse,hashlib,json,sys,types,shutil,re
+import argparse,hashlib,json,sys,types,shutil,re,os
 from pathlib import Path
 root=Path(__file__).resolve().parents[4];sys.path.insert(0,str(root/'tools'))
 import run_abi3_physical_persistent as persistent
@@ -21,6 +21,8 @@ def mapped(block,work,case):
  net=work/'mapped.v'
  if not net.is_file():raise driver.FlowError('actual selected mapped netlist missing')
  dest=case/'w11_endpoint_mapped.v';shutil.copyfile(net,dest)
+ if os.environ.get('GAUSS_SOURCE_LOCAL_SDC'):
+  shutil.copyfile(os.environ['GAUSS_SOURCE_LOCAL_SDC'],case/'source_local.sdc')
  return {'mapped_netlist_sha256':driver.sha256_file(net),'basis':'Gauss exact attribute-preserving mapped single-station input; legacy filename only, no W11 guard/claim'}
 driver.prepare_w11_orfs_endpoint_netlist=mapped
 if a.reuse_synthesis_dir:
