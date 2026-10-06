@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "ea6256e95",
+ "generated_from_commit": "3cd1068e8",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -5788,7 +5788,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json) + 112 cycles (core r5b_f3ba DEC_LA_AMQ, SS +0.87 / FF +7.12 ps) at 1.2 GHz; MTP mode = AR (DSpark OFF); full-system SS/FF not qualified",
    "value": 6187.0,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "qwen_rom.token_cycles_8k_composed": {
@@ -5803,7 +5803,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 193955,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_conditional_all": {
@@ -5816,9 +5816,9 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "ds_rom.conditional_all.composed.AR_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); alternatives not stacked",
-   "value": 2290.1,
+   "value": 2288.9,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_conditional_all": {
@@ -5831,9 +5831,9 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "ds_rom.conditional_all.composed.MTP_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 6287.8,
+   "value": 6285.4,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_ar_tok_s": {
@@ -5848,7 +5848,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis Manhattan",
    "value": 1999.7,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_mtp_tok_s": {
@@ -5863,7 +5863,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3993.7,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_ar_tok_s": {
@@ -5878,7 +5878,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis median routed bundle",
    "value": 1948.8,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_mtp_tok_s": {
@@ -5893,7 +5893,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3944.2,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_ar_tok_s": {
@@ -5908,7 +5908,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis longest routed bundle",
    "value": 1921.5,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_mtp_tok_s": {
@@ -5923,7 +5923,7 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3917.2,
    "resolved": true,
-   "blob": "e82e95cf6727dc0be13021993a52dd0f353f38cb",
+   "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
    "last_commit": "82238b79f 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
