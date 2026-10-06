@@ -17,7 +17,8 @@ PER=${OT_FS_PERIOD:-0.770}; AQ=${OT_FS_AQ:-ot_dsrom_aq12m}
 COMMON="--view asap7 --clock-period-ns $PER --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr"
 SP="--top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --source rtl/hdc/v41x/$AQ.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp_lat_f12.sv --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_prefix.sv"
 OV=(--orfs-var "VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS")
-BC=(--step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl)
+# v13b: the hooks carry the buffer-budget raise AND the reference-pin IO budget from CTS on (io_ref_pre/post.tcl)
+BC=(--step-tcl PRE_CTS=physical/dsrom_field_spine/io_ref_pre.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/dsrom_field_spine/io_ref_pre.tcl --step-tcl POST_CTS=physical/dsrom_field_spine/io_ref_post.tcl --step-tcl POST_GLOBAL_ROUTE=physical/dsrom_field_spine/io_ref_post.tcl)
 run() { # tag
   t=$1; c=${t%%_*}; v=${t##*_}; pq=${c:1:1}; r=${c#*r}
   KM="${OT_FS_MULKM:-ot_dsrom_aq12m_mul} ${OT_FS_KM:-}"; DENS=(); vl=${v:0:1}
