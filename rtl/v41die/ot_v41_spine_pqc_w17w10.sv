@@ -715,17 +715,21 @@ module ot_v41_spine_pqc_w17w10 #(
         // stage 1 also registers the fp32-row select locally (pinned rule)
         // v9: row_ge and the format bits are registered; the select is formed in front of the kept g_sel copies
         // (v8: q0_row -> row >= rsplit -> select -> q1_s was an SS class at R = 128)
-        reg        q1_ge;
-        reg [3:0]  q1_fm;
-        always @(posedge clk) begin q1_ge <= row_ge; q1_fm <= fm_m; end
-        wire       q1_s = q1_fm[0] || (q1_fm[1] && (q1_ge ? q1_fm[3] : q1_fm[2]));
+        // v12: the select's two outcomes (row >= rsplit: fm0 | fm1 & fm3, else fm0 | fm1 & fm2) are formed before stage
+        // 1 and registered with row_ge in four kept copies, one per g_sel lane; the lane's select is one mux in front of
+        // its u_s (v11 R = 128: one q1_ge flop -> select -> four g_sel copies across the byte lanes was the only routed
+        // baseline SS class, -72 ps post-CTS).  Same function and latency as v11.
+        wire       s_hi = fm_m[0] || (fm_m[1] && fm_m[3]);
+        wire       s_lo = fm_m[0] || (fm_m[1] && fm_m[2]);
         // stage 2: the address add; the select in four kept copies (one per byte of the word), the data forwarded
         wire [VAW-1:0] w_s;
         ot_v41_ksadd #(.W(VAW)) u_w (.a(q1_a[VAW*gk +: VAW]), .b(q1_p[VAW*gk +: VAW]), .cin(1'b0), .s(w_s), .cout());
         wire [3:0] q2_sel;
         genvar gsl;
         for (gsl = 0; gsl < 4; gsl = gsl + 1) begin : g_sel
-            ot_v41_kreg #(.W(1)) u_s (.clk(clk), .arst_n(rst_n), .d(q1_s), .q(q2_sel[gsl]));
+            wire [2:0] q1_g;                                // {row_ge, select if ge, select if not}
+            ot_v41_kreg #(.W(3)) u_g (.clk(clk), .arst_n(rst_n), .d({row_ge, s_hi, s_lo}), .q(q1_g));
+            ot_v41_kreg #(.W(1)) u_s (.clk(clk), .arst_n(rst_n), .d(q1_g[2] ? q1_g[1] : q1_g[0]), .q(q2_sel[gsl]));
         end
         reg [VAW-1:0] q2_a;
         reg [31:0]    q2_f32;

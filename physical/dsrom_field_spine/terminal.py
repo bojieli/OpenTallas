@@ -28,8 +28,9 @@ act = {k: sum(bool(re.fullmatch(p, n)) for n in names) for k, p in pat.items()}
 # v10 / v11 kept copies: g_ixc (stage-3 BF16 read sub-index, ot_v41_kreg) and the quantisers' s11 exponent copies
 # (ot_dsrom_aq12f g_s11c, inside the kept quantiser hierarchy: named u_sp.g_aq[k].u_aq/g_s11c[j].u_c/...)
 names2 = {"/".join(n.split("/")[:2]) for n in re.findall(r"^\s*DFF\w+\s+\\?(\S+)", net, re.M) if n.count("/") >= 2}
-pat2 = dict(g_ixc=r"u_sp\.g_ixc\[\d+\]\.u_ix", g_s11c=r"u_sp\.g_aq\[\d+\]\.u_aq/g_s11c\[\d+\]\.u_c")
-exp.update(g_ixc=32, g_s11c=8)
+pat2 = dict(g_ixc=r"u_sp\.g_ixc\[\d+\]\.u_ix", g_s11c=r"u_sp\.g_aq\[\d+\]\.u_aq/g_s11c\[\d+\]\.u_c",
+            g_selg=r"u_sp\.g_reg\[\d+\]\.g_sel\[\d+\]\.u_g")
+exp.update(g_ixc=32, g_s11c=8, g_selg=4 * R)   # v12: per-lane kept {row_ge, select outcomes} copies
 act.update({k: sum(bool(re.fullmatch(p, n)) for n in (names | names2)) for k, p in pat2.items()})
 si = phy.get("signal_integrity_violations", {})
 d.update(SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["violating_d_pins"],

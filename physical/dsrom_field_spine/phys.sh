@@ -1,5 +1,5 @@
 #!/bin/bash
-# DS-ROM field SPINE (ot_v41_spine_pqc_w17w10 v11: quantiser ot_dsrom_aq12f, RPT 2, registered replica masters, two-stage BF16 read) SS/FF screens at 1.2 GHz (0.833 ns), 60/25 ps uncertainty
+# DS-ROM field SPINE (ot_v41_spine_pqc_w17w10 v12: v11 (quantiser ot_dsrom_aq12f, RPT 2, registered replica masters, two-stage BF16 read) + per-lane kept select copies) SS/FF screens at 1.2 GHz (0.833 ns), 60/25 ps uncertainty
 # (WC = SS setup corner; hold at WC + BC = FF), ADDER_MAP_FILE disabled, the quantiser's f12 multiplier kept as its own
 # hierarchy, routed in context of registered neighbours.  Run from a source root holding tools/ rtl/ physical/.
 # Usage: phys.sh <scratch dir> <tag>...   tag = c<PQ>r<R>_<v>:  R 16 (core-utilization 35) or 128 (480 x 480 um die);
@@ -36,7 +36,7 @@ run() { # tag
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
   echo "$(date -Is) START $t $(hostname)" >> $J/MANIFEST
-  /srv/opentallas-scratch/admit.sh $g -- python3 tools/run_abi3_physical.py $COMMON $SP "${OV[@]}" --orfs-var "SYNTH_KEEP_MODULES=$KM" "${X[@]}" "${DENS[@]}" --slew-margin-percent $S --hold-margin-ns $H --param PQ=$pq --param R=$r "${SH[@]}" --nickname-tag dsfs11_$t --keep-workdir $O/work_$t --output $O/$t.json --force > $J/$t.log 2>&1
+  /srv/opentallas-scratch/admit.sh $g -- python3 tools/run_abi3_physical.py $COMMON $SP "${OV[@]}" --orfs-var "SYNTH_KEEP_MODULES=$KM" "${X[@]}" "${DENS[@]}" --slew-margin-percent $S --hold-margin-ns $H --param PQ=$pq --param R=$r "${SH[@]}" --nickname-tag dsfs12_$t --keep-workdir $O/work_$t --output $O/$t.json --force > $J/$t.log 2>&1
   echo $? > $J/$t.exit
   python3 tools/w18/corner_sta.py --orfs-dir $O/work_$t/orfs --output $O/${t}_corner_sta.json > $J/${t}_sta.log 2>&1
   python3 physical/dsrom_field_spine/terminal.py $O $t > $J/${t}_terminal.log 2>&1
