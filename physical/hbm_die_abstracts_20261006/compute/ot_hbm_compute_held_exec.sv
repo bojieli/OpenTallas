@@ -19,14 +19,14 @@ module ot_hbm_compute_held_exec #(parameter integer IW=1,OW=1)(
  assign engine_error_seen=ctl[2];
  assign launch=normal&&!fault&&state==0&&input_v;
  assign input_r=normal&&!fault&&state==2&&release_op;
- wire receive=normal&&!fault&&input_v&&state==1&&engine_v;
+ wire receive=normal&&!fault&&input_v&&state==1&&engine_v&&result_r;
  wire illegal=normal&&(state==3||(engine_v&&state!=1));
  assign fault=input_fault|result_fault|ctl_fault;
  assign req_r=input_ready&&!fault&&normal;
  assign rsp_v=result_v&&!fault&&normal;
  // CE repair freezes the unchanged pipelines before held operands can change.
  // Gate/CTS/load cost is explicit and physically OPEN; no borrowed leaf clock.
- ot_hdc_cg u_engine_gate(.clk(clk),.en(!rst_n||(input_v&&normal&&!fault)),.gclk(engine_clk));
+ ot_hdc_cg u_engine_gate(.clk(clk),.en(!rst_n||(input_v&&normal&&!fault&&(state!=1||result_r))),.gclk(engine_clk));
  ot_hbm_w2_protected_cut #(.W(IW)) u_request(
   .clk(clk),.por_n(rst_n),.in_v(req_v&&!fault&&normal),.in_r(input_ready),.in_d(req_d),
   .out_v(input_v),.out_r(input_r),.out_d(engine_d),.empty(input_empty),.fault(input_fault));
