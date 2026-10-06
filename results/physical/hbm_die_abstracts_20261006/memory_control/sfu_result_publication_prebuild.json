@@ -1,0 +1,31 @@
+{
+  "schema": "hbm.memory_control.native_sfu_result_publication.prebuild.v1",
+  "existing_composed_models": [
+    "hbm_vm_publication_parent_model in tools/uarch_model.py",
+    "results/physical/hbm_die_abstracts_20261006/compute/framed_sfu_before_rtl.json",
+    "hbm_integrated_sfu_c12_stage_model in tools/uarch_model.py"
+  ],
+  "purpose": "missing64FP32 framedSFU->nativeVM publication join; exactdata no arithmetic",
+  "source_result_bits": 2081,
+  "source_beats1024": 3,
+  "data_FP32_words": 64,
+  "publication_rows1024": 2,
+  "provider": "one existingot_hbm_vm_publication_parent.result_pub with realindexFP32SRAM write/readbackACK",
+  "MACs_per_cycle": 0,
+  "boundary_bits": {
+    "rx": 1102,
+    "publication": 1129,
+    "ACK": 105
+  },
+  "stored_data_protected_FF": 2304,
+  "metadata_protected_FF": 216,
+  "total_added_FF": 2520,
+  "new_backing_SRAM_bytes": 0,
+  "replicas": 1,
+  "area_and_routing": "32W6 codecs plus full73/tag32/index/last comparators, sequential2x1024 existingborrowedwriteport; placement/slot/load remainunqualified",
+  "composed_latency": "3accepted sourcebeats +2actual SRAM write/readback publication/ACK services +held completion; no assumed free physicalproviderlatency, no rate credit",
+  "source_clock": "explicitclk_sm; mustbindsameactualroot asVM parent. SFU833psvsnative1111ps mismatch stillOPEN; noimplicitCDC",
+  "parent_qualified": false,
+  "adopted": false,
+  "default_enabled": false
+}
