@@ -1,0 +1,284 @@
+{
+ "schema": "opentallas.hbm_die_views_index.v1",
+ "die": "HBM accelerator DS die",
+ "round": "r16g",
+ "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+ "status_values": [
+  "closed",
+  "interim-not-closed",
+  "reservation",
+  "missing"
+ ],
+ "masters": {
+  "hfd_attn_tile": {
+   "kind": "attn_tile",
+   "status": "missing",
+   "instances": 64
+  },
+  "hfd_barrier": {
+   "kind": "barrier",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_cdist_r14": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_cdist_r15": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_cmdproc": {
+   "kind": "cmdproc",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_coll": {
+   "kind": "coll",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_gath_r10": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_gath_r24": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_gath_r25": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_gath_r8": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_gath_r9": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_hc": {
+   "kind": "hc",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_host_slab": {
+   "kind": "host_slab",
+   "status": "reservation",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/host_slab",
+   "lef": "hfd_host_slab.lef",
+   "lib": null
+  },
+  "hfd_index_q": {
+   "kind": "index_q",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_loader": {
+   "kind": "loader",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_mcast_r5": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_mcast_r6": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_mcast_r7": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_meso_r1": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_meso_r28": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 9
+  },
+  "hfd_meso_r32": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_quant": {
+   "kind": "quant",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_router": {
+   "kind": "router",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_serdes_slab": {
+   "kind": "serdes_slab",
+   "status": "reservation",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/serdes_slab",
+   "lef": "hfd_serdes_slab.lef",
+   "lib": null
+  },
+  "hfd_sfu": {
+   "kind": "sfu",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_sm": {
+   "kind": "sm",
+   "status": "missing",
+   "instances": 32
+  },
+  "hfd_stn_r0": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_stn_r11": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 12
+  },
+  "hfd_stn_r12": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 12
+  },
+  "hfd_stn_r13": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 12
+  },
+  "hfd_stn_r16": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 24
+  },
+  "hfd_stn_r17": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 12
+  },
+  "hfd_stn_r18": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_stn_r19": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_stn_r2": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_stn_r20": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_stn_r21": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_stn_r22": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_stn_r23": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_stn_r26": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_stn_r27": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 27
+  },
+  "hfd_stn_r29": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_stn_r3": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_stn_r30": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_stn_r31": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 6
+  },
+  "hfd_stn_r4": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 20
+  },
+  "hfd_su": {
+   "kind": "su",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_svc_NE": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_svc_NW": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_svc_SE": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_svc_SW": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  }
+ },
+ "counts": {
+  "missing": 50,
+  "reservation": 2
+ }
+}
