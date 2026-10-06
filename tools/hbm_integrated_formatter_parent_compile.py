@@ -85,8 +85,24 @@ def observation_top(observation_wrapper,wrapper_pin,parameters):
     elif wrapper_pin:raise ValueError('Wrapper pin without actual source')
     return top
 
+def companion_sources(harness_source,fixture_preparer,fixture_dependencies,top):
+    companions=[]
+    for source in (harness_source,fixture_preparer,*fixture_dependencies):
+        if source:
+            if source.is_absolute() or '..' in source.parts:
+                raise ValueError('Committed root-relative harness/fixture dependency required')
+            companions.append(str(source))
+    if harness_source:
+        for name in re.findall(r'^\s*#include\s+"([^"]+)"',(ROOT/harness_source).read_text(),re.M):
+            if name=='V'+top+'.h' or re.fullmatch(r'verilated(?:_\w+)?\.h',name):continue
+            rel=harness_source.parent/name
+            if '..' in rel.parts:raise ValueError('Unsupported harness include path')
+            companions.append(str(rel))
+    return list(dict.fromkeys(companions))
+
 def prepare(work,body_pin,partition_reduction=False,native_norm_production=False,
-            observation_wrapper=None,wrapper_pin=None,harness_source=None,fixture_preparer=None):
+            observation_wrapper=None,wrapper_pin=None,harness_source=None,fixture_preparer=None,
+            fixture_dependencies=()):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
@@ -97,17 +113,7 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         if str(observation_wrapper) in paths:raise ValueError('Duplicate observation wrapper source')
         paths.append(str(observation_wrapper))
     work.mkdir(parents=True,exist_ok=False)
-    companions=[]
-    for source in (harness_source,fixture_preparer):
-        if source:
-            if source.is_absolute() or '..' in source.parts:raise ValueError('Committed root-relative harness source required')
-            companions.append(str(source))
-    if harness_source:
-        for name in re.findall(r'^\s*#include\s+"([^"]+)"',(ROOT/harness_source).read_text(),re.M):
-            if name=='V'+top+'.h' or re.fullmatch(r'verilated(?:_\w+)?\.h',name):continue  # Generated/tool headers are pinned by the model build.
-            rel=harness_source.parent/name
-            if '..' in rel.parts:raise ValueError('Unsupported harness include path')
-            companions.append(str(rel))
+    companions=companion_sources(harness_source,fixture_preparer,fixture_dependencies,top)
     all_files=paths+INCLUDES+companions
     missing=[s for s in all_files if not (ROOT/s).is_file()]
     pins={s:sha(ROOT/s) for s in all_files if (ROOT/s).is_file()}
@@ -189,6 +195,7 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         observation_wrapper_sha256=wrapper_pin,
         harness_source=str(harness_source) if harness_source else None,
         fixture_preparer=str(fixture_preparer) if fixture_preparer else None,
+        fixture_dependencies=[str(p) for p in fixture_dependencies],
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
         sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
@@ -707,6 +714,7 @@ def main():
     p.add_argument('--wrapper-sha256',help='Published Bacon wrapper source SHA')
     p.add_argument('--harness-source',type=Path,help='Committed Bacon C++ harness and local includes to pin/copy')
     p.add_argument('--fixture-preparer',type=Path,help='Committed authentic-input preparation helper to pin/copy')
+    p.add_argument('--fixture-dependency',type=Path,action='append',default=[],help='Committed imported fixture dependency to pin/copy; repeat for each actual dependency')
     p.add_argument('--live-plan',type=Path);p.add_argument('--live-models',type=Path)
     p.add_argument('--object-helper',type=Path);p.add_argument('--reuse-archives',type=Path)
     p.add_argument('--fixture-root',type=Path);p.add_argument('--object-workers',type=int,default=1)
@@ -718,5 +726,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256,a.harness_source,a.fixture_preparer) if a.prepare else (continue_parent(a) if a.continue_parent else enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256,a.harness_source,a.fixture_preparer,a.fixture_dependency) if a.prepare else (continue_parent(a) if a.continue_parent else enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())

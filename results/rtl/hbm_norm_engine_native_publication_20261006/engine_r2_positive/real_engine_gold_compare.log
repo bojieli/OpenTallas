@@ -1,0 +1,5 @@
+NORM_ENGINE_NATIVE_PUBLICATION_PASS N64 D5120 KIND0 CP25600 sectors3200 ACK400 FP32ACK160 QUANTACK240 words12800 finalWORD16383 codegroups160 scalegroups160 QDQgroups160 full73 held7edges warm_jointretire actual_engine_outputs child_edges=4289
+- /srv/opentallas-scratch/codex/hbm-norm-engine-46b81ca11/source-r2/physical/hbm_die_abstracts_20261006/memory_control/tb_norm_engine_native_publication.sv:243: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 3050.435 s; speed 474.841 ns/s
+- Verilator: cpu 3050.340 s on 1 threads; allocated 62 MB
