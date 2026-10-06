@@ -4,10 +4,10 @@
 // Existing stage216codedFF budget; no second descriptor/engine for this norm.
 // Supplier is the real clock-held vectorVM ABI, NOT a native1024 port alias.
 module ot_hbm_integrated_norm_stage #(
- parameter integer ENABLE=0,KIND=0,N=64,D=5120,RD=0,AW=24,
+ parameter integer ENABLE=0,NATIVE_VM=0,KIND=0,N=64,D=5120,RD=0,AW=24,
  parameter integer PUBLISH_QUANT=1,ROUTED=1,RW=9,BW=9,BCAST=7,RET=8
 )(
- input wire clk,por_n,warm_req,output wire warm_ack,
+ input wire clk,por_n,warm_req,input wire native_clock_enable,native_read_permit,output wire warm_ack,
  input wire enroll_v,output wire enroll_r,input wire [72:0] enroll_frame,
  input wire [31:0] enroll_pc,enroll_op,input wire [15:0] enroll_source,
  input wire [8:0] enroll_expert,input wire enroll_matrix,
@@ -48,6 +48,8 @@ module ot_hbm_integrated_norm_stage #(
  assign vm_we=child_vm_we&{N{!fault}};
  assign q_valid=child_q_valid&&!fault;assign q_index=child_q_index;
  assign q_codes=child_q_codes;assign q_exp=child_q_exp;assign q_bf16=child_q_bf16;
+ wire child_clk;
+ ot_hdc_cg u_norm_icg(.clk(clk),.en(!por_n||!NATIVE_VM||(native_clock_enable&&!ce&&!due)),.gclk(child_clk));
  wire sr,start_v,start_r,finish_r,complete_v,issued,stage_fault;
  wire child_busy,child_done,child_fault;wire [31:0] child_id;
  wire source_match=allocation_valid&&allocation_frame==held_frame;
@@ -83,9 +85,9 @@ module ot_hbm_integrated_norm_stage #(
  .held_source(),.held_expert(),.held_matrix(),.held_row(),.held_count());
  ot_hbm_integrated_norm_vm #(.ENABLE(1),.KIND(KIND),.N(N),.D(D),.RD(RD),.AW(AW),
  .PUBLISH_QUANT(PUBLISH_QUANT),.ROUTED(ROUTED),.LM(5),.LA(6),.RW(RW),.BW(BW),.BCAST(BCAST),.RET(RET),
- .RXS(1),.SXC(1),.FREG(1),.HOLD_COMPLETION(1)) u_norm(
- .clk(clk),.rst_n(por_n),.cmd_valid(start_v),.cmd_ready(start_r),
- .completion_ready(finish_r&&!bad_child&&finish_match),
+ .RXS(1),.SXC(1),.FREG(1),.HOLD_COMPLETION(1),.FINITE_NATIVE_READS(NATIVE_VM)) u_norm(
+ .clk(child_clk),.rst_n(por_n),.cmd_valid(start_v),.cmd_ready(start_r),
+ .completion_ready(finish_r&&!bad_child&&finish_match),.native_read_permit(native_read_permit),
  .source_ready(permission),.landing_reserved(sink_match&&grant&&!stage_fault&&!bad_child),
  .busy(child_busy),.done(child_done),.fault(child_fault),.job_id(held_frame[31:0]),
  .xbase(xbase),.ubase(ubase),.wbase(wbase),.ybase(ybase),.gain_base(gain_base),

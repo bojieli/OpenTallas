@@ -10,10 +10,10 @@ module ot_hbm_integrated_norm_vm #(
  parameter integer ENABLE=0,KIND=0,N=1024,D=5120,RD=0,AW=24,
  parameter integer PUBLISH_QUANT=1,ROUTED=1,
  parameter integer LM=6,LA=5,RW=9,BW=9,BCAST=7,RET=8,
- parameter integer RXS=0,SXC=0,FREG=0,HOLD_COMPLETION=0
+ parameter integer RXS=0,SXC=0,FREG=0,HOLD_COMPLETION=0,FINITE_NATIVE_READS=0
 )(
  input wire clk,rst_n,cmd_valid,source_ready,landing_reserved,
- input wire completion_ready,
+ input wire completion_ready,native_read_permit,
  output wire cmd_ready,output reg busy,output wire done,output wire fault,
  input wire [31:0] job_id,
  input wire [AW-1:0] xbase,ubase,wbase,ybase,gain_base,
@@ -46,17 +46,19 @@ module ot_hbm_integrated_norm_vm #(
  wire [N*32-1:0] yd,rod;
  reg [7:0] ro_index;
  reg collision;
- wire read_gain=state==GAIN && requested<NV && gain_ready;
- wire read_data=state==DATA && requested<NB && in_ready;
+ wire want_gain=state==GAIN && requested<NV && gain_ready;
+ wire read_gain=want_gain&&(!FINITE_NATIVE_READS||native_read_permit);
+ wire want_data=state==DATA && requested<NB && in_ready;
+ wire read_data=want_data&&(!FINITE_NATIVE_READS||native_read_permit);
  assign cmd_ready=ENABLE && !busy && !(HOLD_COMPLETION && done) && !fault && source_ready && landing_reserved;
  wire accepted=cmd_valid && cmd_ready;
  integer l,k,element,wl;
  always @* begin
-  rd_addr=0;rd_re=0;rd_src=0;
-  if(read_gain) for(l=0;l<N;l=l+1) begin
+  rd_addr=0;rd_re=0;rd_src=0;element=0;
+  if(want_gain) for(l=0;l<N;l=l+1) begin
    rd_addr[l*AW+:AW]=gb+requested*N+l; rd_re[l]=(requested*N+l<D);rd_src[l*2+:2]=1;
   end
-  if(read_data) for(l=0;l<N;l=l+1) begin
+  if(want_data) for(l=0;l<N;l=l+1) begin
    if(KIND==0) for(k=0;k<4;k=k+1) begin
     rd_addr[(k*N+l)*AW+:AW]=xb+k*D+requested*N+l;
     rd_re[k*N+l]=(requested*N+l<D);
