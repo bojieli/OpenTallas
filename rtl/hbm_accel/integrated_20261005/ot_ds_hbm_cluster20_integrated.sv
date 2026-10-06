@@ -362,7 +362,7 @@ end else begin:g_on
          .job(cpl_job),.gen(cpl_generation),.token(launch_token),.pos(launch_pos),
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
          .gather_retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),
-         .owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame),
+         .gather_granted(fmt_lease_valid),.gather_frame73(fmt_lease_frame),
          .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),.pair_token17(index_pair_token17[d*17+:17]),
          .pair_job(index_pair[d*85+53+:32]),.pair_gen(index_pair[d*85+49+:4]),.pair_pos(index_pair[d*85+29+:20]),
          .pair_rank(index_pair[d*85+22+:7]),.pair_word(index_pair[d*85+16+:6]),.pair_tag(index_pair[d*85+:16]),
