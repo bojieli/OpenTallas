@@ -191,6 +191,26 @@
      "measured_share": 1.0001
     }
    },
+   "qelem_pq": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json",
+    "delta": {
+     "AR_us": -121.046,
+     "AR_tok_s": 433.4,
+     "MTP_step_us": -143.629,
+     "MTP_tok_s": 1008.2
+    },
+    "if_adopted": {
+     "AR_us": 471.42,
+     "AR_tok_s": 2121.3,
+     "MTP_step_us": 701.25,
+     "MTP_tok_s": 5930.8,
+     "MTP_tok_s_tau_published": 5544.2,
+     "II_us": 20.765,
+     "measured_share": 1.0002
+    }
+   },
    "su_softmax": {
     "cls": "conditional",
     "verdict": "PENDING_SSFF",
@@ -232,7 +252,8 @@
     "su_softmax"
    ],
    "alternatives_not_stacked": {
-    "field_spine": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
+    "field_spine": "overlaps qelem_pq on 325 nodes; qelem_pq kept in the joint",
+    "qelem_pq": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
    },
    "composed": {
     "AR_us": 450.492,
@@ -483,6 +504,7 @@
   "ds_rom_conditional": [
    "field_spine",
    "field_spine_pq",
+   "qelem_pq",
    "su_softmax"
   ],
   "ds_rom_excluded": [
@@ -502,10 +524,11 @@
   "levers": {
    "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
    "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "4ae2036774202fdbf5dded2521c3bd20da3d03f9b5d2002365ffe9fb951c0b3d",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "17f21cbb2894c5805e1fb8301477d18cf018d64df003cf23e92e1832241182ad",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "3e6af41146bfb1d9b38560ae8f766aa8f03f253187b8e9cd89a2d7ba48999931",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "8af663b80905cc1d2056f6e593b489ea02965045aff91953143b6c313b8350a5",
    "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
    "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
+   "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "fd84c48f4e98fc1a704d90a3e5d15d37e7105302ddb990c18b9dd8f6ed790359",
    "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
    "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
    "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "d93d1ea4fc1eb4ad2b4e36f5e8fe8d3962998d9e6d5a60c1c45b97349af6b9ba",
