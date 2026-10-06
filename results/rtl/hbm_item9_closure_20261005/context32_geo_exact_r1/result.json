@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS_GEO_ACTUAL32_GATHER",
+  "completed_callers": 32,
+  "TX_records": 128,
+  "RX_records": 256,
+  "cycles": 789,
+  "new_cycles": 0,
+  "clocks_period_ps": 833,
+  "baseline_reused": "context32_exact_r1/result.json",
+  "unchanged_baseline_rerun": false,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_geo.sv": "485b6e665599ca4e919d0fff3a2cfebf6123d2c78bc3b5dc5285721831af2596",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv": "9f9b4146e47a98f04b4cd0cfdb6dedfeacc1a454a82a46a3d1bccb16efe84801",
+    "rtl/gpu_sys/ot_gpu_coll_item9_context32_geo.sv": "a3e5425af6b3258414d79b7708a9186fd94a9843933aed7e930009761bdb3d63",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_context32_geo.sv": "1db3151a2a560093bfbe5f937d49d6b5ed4f09a3947699e7dd5b6f89f0300cc5"
+  },
+  "contextual_SS_FF": false,
+  "adopted": false
+}

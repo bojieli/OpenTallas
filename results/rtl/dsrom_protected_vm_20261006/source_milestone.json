@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.ds.protected-vm.source-milestone.v1",
+  "source_commit": "5d3bc100b",
+  "model_before_RTL_commits": [
+    "450b06a57",
+    "fabea7936",
+    "29cd01455",
+    "dbf286a93"
+  ],
+  "model": "results/uarch/dsrom_protected_vm_20261006/model.json",
+  "source_sha256": {
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv": "0971d6c260351a2bc8f5def5e590c90a82131668769232cf177a1e64bdd85c82",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_backend.sv": "0bdf7684f894aa780cf022aed88c8bdfa7e790d93e449e2177e61ca6c5764471",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_codec.sv": "dc2ca82f3b0d8b1a75bea2e9f6a82945ebf61e235345227ca9182fd70ce094b3",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_ratio_fifo.sv": "110a9e1859f58f2663c878085c104369a20ca3486de8294882e9e6ffbb523811",
+    "rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv": "a35c1f72f61dc6d34174be304f0a2cb66cc82f53df777332240bcca956465d08"
+  },
+  "source_default_ENABLE": 0,
+  "source_inventory": {
+    "payload_real_v2_SRAMs": 256,
+    "check_real_v2_SRAMs": 32,
+    "full_bytes": 2097152,
+    "word_address_bits": 15,
+    "owner_bits": 47,
+    "accepted_ordinal_bits": 32
+  },
+  "ENABLE_ON_source_lint": {
+    "verdict": "PASS",
+    "tool": "local lightweight Verilator4.038 source/blackbox elaboration, no heavy build",
+    "top": "ot_dsrom_protected_vm",
+    "parameters": {
+      "ENABLE": 1
+    },
+    "defines": [
+      "SYNTHESIS"
+    ],
+    "warning_note": "TIMESCALEMOD disabled for unchanged existing SECDED package lacking timescale; no timing constraint waived"
+  },
+  "functional_gate": {
+    "state": "PREPARED_NOT_COMPILED_AT_SOURCE_HANDOFF",
+    "host": "ot-epyc2",
+    "root": "/srv/opentallas-scratch2/codex/ds-protected-vm-20261006/gate_r1",
+    "controller_pid": 2374835,
+    "unchanged_guard": "/srv/opentallas-scratch/admit.sh",
+    "reservation_GiB": 4,
+    "workers": 1,
+    "capacity_condition": "fresh load<128 AND actualidleworker/RAM/disk fit, before and after unchangedguard",
+    "modes": [
+      "gold native olddata+5orderedmaskedwrites+full-depth lastrow+protected receipt",
+      "actualdataCE",
+      "earlyfence",
+      "actualdataUE",
+      "wrongownerfence",
+      "warmfast",
+      "warmslow",
+      "ordinalstatecorruption",
+      "FIFOcontrolcorruption"
+    ],
+    "one_source_config": true
+  },
+  "protection_receipt": "positive data/check SRAM readback before row_visible, reverse consumed/fenced exactowner/ordinal before port_retired",
+  "C8_retire_authority": false,
+  "known_limits": [
+    "Only canonical xa + collective xb minimum ports, remaining nativecore allcaller integration still open",
+    "Warm reset quarantines retained debt; no claimed warm recovery",
+    "Post-map independent protective storage retention remains mandatory",
+    "Actual loaded 3:4 parent CTS/SPEF and SS60/FF25 remain open"
+  ],
+  "adopted": false,
+  "functional_golden_PASS": false,
+  "SS_FF_qualified": false,
+  "missing_input_clocks": true,
+  "canonical_behavioral_history_preserved": true,
+  "producer_PASS_reused": true,
+  "Claude_combined_modified": false,
+  "Bacon_HBM_root_modified": false
+}

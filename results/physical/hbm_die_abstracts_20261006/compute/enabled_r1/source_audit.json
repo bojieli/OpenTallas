@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.compute.enabled.audit.v1",
+  "previous_source_milestone": "3061c7001/f34aff623",
+  "findings": [
+    {
+      "id": "SIDE_PRIME",
+      "status": "SOURCE_FIX_PREPARED_GATE_PENDING",
+      "reason": "SIDE fn_d/fn_q requires one edge lead on v_q. New gated launch used stale fn_q on first operation",
+      "price": "same2controllerstatebits/+1rootcycle per request; reset fanout/ICGphysicalcost OPEN"
+    },
+    {
+      "id": "FN_OUT_DIRECTION",
+      "status": "INSPECTED",
+      "reason": "fn_out input preserved; SIDEX4 g_out completion-selects result, so fn_out unused on adopted path. Added vo_q has identical capture edge to y_q"
+    },
+    {
+      "id": "STICKY_HC_ERROR",
+      "status": "SOURCE_FIX_PREPARED_GATE_PENDING",
+      "reason": "HC-post leaf fault is sticky until reset; reset engine only in normalIDLE/POR prevents nexttransaction error contamination without clearing in-flight CE-held pipes"
+    },
+    {
+      "id": "PROTECTED_PAYLOAD",
+      "status": "GATE_PREPARED",
+      "reason": "W2 cut raw q transient during CE but out_v withdraws permission. ICG freezes whole engine, not a guessed validity delay. Result CE withdraws rsp_v, repairs, restores exact word; UE denies request/response. Bench tests actual encodedword mutations."
+    },
+    {
+      "id": "WARM_RESET",
+      "status": "ACTUAL_CONTRACT_DEPENDENCY",
+      "reason": "No separate warm reset input; root rst_n is existing bank por_n and clears payload/cancels ownership. Bench proves cancellation and no stale/duplicate return, not payload retention. Production warmdrain/quarantine join is Gibbs-owned."
+    },
+    {
+      "id": "HC_M6A5_HISTORICAL_EXACT_SOURCE_FAILURE",
+      "status": "OWNER_HANDOFF_SINGLE_CHILD_GATE_PENDING",
+      "source_sha256": "16132b073fa54389782f6081f5c26b6f7be53c4941f87932c6b5c82bd3122411",
+      "failure_records": [
+        "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng16_w33_23_m6a5_h.json",
+        "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m6a5_h.json"
+      ],
+      "reason": "Historical full streaming golden rows fail for exact current source. m4 y*p is fixed L5 while other multipliers ML6; potential one-cycle alignment issue handed to source owner, not assumed causal or fixed. Current parent holds input through retirement; minimum real held-child gate still required. No archive imported."
+    }
+  ],
+  "fullshape_gate": "Hierarchical Verilator5.050 packet prepared; no compile/runtime or gate verdict",
+  "next_HC_paths": {
+    "HC_PRE": "golden seqsum4/preweights then BF16; existing SU lower_hc_pre_norm needs selected source hook",
+    "projection": "ot_hdc_v41x_hcp actual command+eight skewed FP32weight/BF16x bank ports, held o_valid/o_ready; not closed as parent",
+    "Sinkhorn": "ot_hdc_sinkhorn_mc held req until busy/done+512b output, actual STEP_CYC related clock, source/parameters/heldconsumer ownership required from Gibbs/Turing afterPOSTgate"
+  },
+  "HC_build": "BLOCKED before admission/compilation: current16132 arithmetic source must be owner-corrected with m4/data/e4 phase alignment; owner pin + minimum actualgroup receipt required before HC64 build"
+}

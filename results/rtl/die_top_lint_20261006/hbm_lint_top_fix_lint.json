@@ -1,0 +1,849 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "hbm",
+ "top_fix": true,
+ "generator": "tools/hbm_accel_die_fp.py",
+ "generator_sha256": "351db816c5daa7c3efef57f89384df520830899e433ad6ff0867f0806c371da9",
+ "lint_tool_sha256": "cf25754e0f6e491b39800b64e0fff6b6e01ad3a3de50000a5eccd614977b26e6",
+ "variant": {
+  "n_mirror_fix": true,
+  "x_chain": true,
+  "w_my": true,
+  "strip_d": 864.0,
+  "port_fix": true,
+  "ew_corridor": true,
+  "sm_xmid": true,
+  "lanes": true,
+  "spch": 1036.8,
+  "root_pins": true,
+  "serdes_mg": 250.56,
+  "row1_flip": false,
+  "W": 24401.52,
+  "H": 19722.96
+ },
+ "census": {
+  "instances": 348,
+  "buses": 568,
+  "net_bits": 564238,
+  "masters": 230,
+  "real_instances": 46,
+  "placeholder_instances": 302
+ },
+ "real_blocks": {
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "file": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 4
+  },
+  "ot_pdie_serdes": {
+   "module": "ot_pdie_serdes",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 9
+  },
+  "ot_pdie_ucie": {
+   "module": "ot_pdie_ucie",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 1
+  },
+  "hfd_sm": {
+   "module": "ot_hbm_accel_sm_v",
+   "file": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "kind": "RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)",
+   "params": {
+    "ENABLE": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "NC": 8,
+    "RMAX": 4096,
+    "XD": 128,
+    "MAX_OUT": 512,
+    "DS": 3,
+    "DG": 3,
+    "DW": 4,
+    "PIO": 2
+   },
+   "instances": 32
+  }
+ },
+ "connectivity": [],
+ "unbound_real_pins": [
+  {
+   "master": "hfd_sm",
+   "port": "d_base",
+   "insts": 32,
+   "bits": 1024,
+   "dir": "input",
+   "width": 32
+  },
+  {
+   "master": "hfd_sm",
+   "port": "d_lines",
+   "insts": 32,
+   "bits": 768,
+   "dir": "input",
+   "width": 24
+  },
+  {
+   "master": "hfd_sm",
+   "port": "d_ready",
+   "insts": 32,
+   "bits": 32,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "hfd_sm",
+   "port": "d_valid",
+   "insts": 32,
+   "bits": 32,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "hfd_sm",
+   "port": "rst_n",
+   "insts": 32,
+   "bits": 32,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "rx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "output",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "tx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "input",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "port": "rx",
+   "insts": 1,
+   "bits": 256,
+   "dir": "output",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "port": "tx",
+   "insts": 1,
+   "bits": 256,
+   "dir": "input",
+   "width": 512
+  }
+ ],
+ "placeholder_port_direction_conflicts": {},
+ "clocking": [
+  {
+   "master": "hfd_attn_tile",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 64
+  },
+  {
+   "master": "hfd_barrier",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cdist_*",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 8
+  },
+  {
+   "master": "hfd_cmdproc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_coll",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_gath_*",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 16
+  },
+  {
+   "master": "hfd_hc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_host_slab",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "hfd_index_q",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_loader",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_mcast_*",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 16
+  },
+  {
+   "master": "hfd_quant",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_router",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_serdes_slab",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 2
+  },
+  {
+   "master": "hfd_sfu",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_sm",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 32
+  },
+  {
+   "master": "hfd_stn_*",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 168
+  },
+  {
+   "master": "hfd_su",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_svc_NE",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_NW",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SE",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SW",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 4
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 9
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 1
+  }
+ ],
+ "clock_sources": {
+  "hb_coll": [
+   "pll_hbm",
+   "pll_serial",
+   "pll_stream"
+  ]
+ },
+ "top_ports": 0,
+ "physical": {
+  "missing_pins": [],
+  "face_away": [],
+  "pin_spread": [
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "phy_SW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "svc_SW",
+    "master": "hfd_svc_SW",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "phy_SE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "svc_SE",
+    "master": "hfd_svc_SE",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "phy_NW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "svc_NW",
+    "master": "hfd_svc_NW",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "phy_NE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "svc_NE",
+    "master": "hfd_svc_NE",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "lk_lk_S0_e",
+    "cls": "link",
+    "inst": "lk_S0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1418.6,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S1_e",
+    "cls": "link",
+    "inst": "lk_S1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 628.1,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S2_e",
+    "cls": "link",
+    "inst": "lk_S2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1559.0,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S3_e",
+    "cls": "link",
+    "inst": "lk_S3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 537.3,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S4_e",
+    "cls": "link",
+    "inst": "lk_S4",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 474.7,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N0_e",
+    "cls": "link",
+    "inst": "lk_N0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 777.8,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N1_e",
+    "cls": "link",
+    "inst": "lk_N1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1315.7,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N2_e",
+    "cls": "link",
+    "inst": "lk_N2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 635.3,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N3_e",
+    "cls": "link",
+    "inst": "lk_N3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 170.9,
+    "bits": 974
+   },
+   {
+    "bus": "host_e",
+    "cls": "host",
+    "inst": "lk_host",
+    "master": "ot_pdie_ucie",
+    "port": "iox",
+    "face": "W",
+    "span_um": 1235.7,
+    "peer_manhattan_um": 531.6,
+    "bits": 512
+   },
+   {
+    "bus": "rt_SW_e",
+    "cls": "result_trunk",
+    "inst": "hb_su_SW",
+    "master": "hfd_su",
+    "port": "r",
+    "face": "S",
+    "span_um": 414.5,
+    "peer_manhattan_um": 142.7,
+    "bits": 2160
+   }
+  ],
+  "pin_spread_count": 19,
+  "abut_without_channel": [
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm24 / svc_NE gap 129.62 um",
+     "sm25 / svc_NE gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm16 / svc_NW gap 129.62 um",
+     "sm17 / svc_NW gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm8 / svc_SE gap 129.62 um",
+     "sm9 / svc_SE gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm0 / svc_SW gap 129.62 um",
+     "sm1 / svc_SW gap 129.62 um"
+    ]
+   }
+  ]
+ },
+ "meso_forwarded_gap": {
+  "waypoint_masters": {
+   "hfd_stn": 168,
+   "hfd_mcast": 16,
+   "hfd_gath": 16,
+   "hfd_cdist": 8
+  },
+  "waypoints": 208,
+  "forwarded_stage_bits": 838784,
+  "ot_fwd_link_stage_W512_needed": 2096,
+  "fifo_placeholders": {},
+  "clock_region_crossings": {
+   "phy_dfi|region": {
+    "buses": 4,
+    "bits": 88952
+   },
+   "weight|domain": {
+    "buses": 32,
+    "bits": 35168
+   },
+   "weight_req|domain": {
+    "buses": 32,
+    "bits": 1408
+   },
+   "weight|region": {
+    "buses": 8,
+    "bits": 8792
+   },
+   "x_trunk|region": {
+    "buses": 16,
+    "bits": 33008
+   },
+   "x_leaf|region": {
+    "buses": 16,
+    "bits": 33008
+   },
+   "result_leaf|region": {
+    "buses": 16,
+    "bits": 4320
+   },
+   "result_trunk|region": {
+    "buses": 17,
+    "bits": 19440
+   },
+   "result_trunk|domain": {
+    "buses": 4,
+    "bits": 8640
+   },
+   "control|region": {
+    "buses": 4,
+    "bits": 1440
+   },
+   "control_leaf|region": {
+    "buses": 32,
+    "bits": 1440
+   },
+   "expert_req|region": {
+    "buses": 4,
+    "bits": 512
+   },
+   "expert_req|domain": {
+    "buses": 4,
+    "bits": 512
+   },
+   "kv_rows|domain": {
+    "buses": 8,
+    "bits": 8192
+   },
+   "kv_rows|region": {
+    "buses": 10,
+    "bits": 10240
+   },
+   "attn_out|domain": {
+    "buses": 4,
+    "bits": 4096
+   },
+   "hub|region": {
+    "buses": 4,
+    "bits": 2048
+   },
+   "link|region": {
+    "buses": 9,
+    "bits": 8766
+   },
+   "link|domain": {
+    "buses": 9,
+    "bits": 8766
+   },
+   "host|region": {
+    "buses": 1,
+    "bits": 512
+   },
+   "host|domain": {
+    "buses": 1,
+    "bits": 512
+   }
+  }
+ },
+ "block_shape": {
+  "hfd_barrier": {
+   "in_bits": 0,
+   "out_bits": 64,
+   "shape": "source: no input net"
+  },
+  "hfd_hc": {
+   "in_bits": 4096,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_host_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  },
+  "hfd_serdes_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  }
+ },
+ "counterparts": {
+  "hfd_coll": {
+   "rtl": "ot_hbm_accel_tu_endpoint (rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv)",
+   "die_abstract_bits": 17537,
+   "rtl_in_bits": 5429,
+   "rtl_out_bits": 6627,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "pclk": "input 1",
+    "prst_n": "input 1",
+    "rank": "input 8",
+    "pf": "input 16",
+    "go": "input 1",
+    "inj_idx": "output 32",
+    "inj_rd": "output 2",
+    "inj_data": "input 1024",
+    "ph_tx_v": "output 8",
+    "ph_tx_flit": "output 4360",
+    "sw_cr_ret": "input 8",
+    "ph_rx_v": "input 8",
+    "ph_rx_flit": "input 4360",
+    "rx_credit": "output 8",
+    "del_valid": "output 4",
+    "del_flit": "output 2180",
+    "fault": "output 1",
+    "stat_credit_stall": "output 32"
+   },
+   "die_ports": {
+    "f_cmdproc": 64,
+    "f_su_NE": 1024,
+    "f_su_NW": 1024,
+    "f_su_SE": 1024,
+    "f_su_SW": 1024,
+    "f_vm": 512,
+    "llk_N0": 974,
+    "llk_N1": 974,
+    "llk_N2": 974,
+    "llk_N3": 974,
+    "llk_S0": 974,
+    "llk_S1": 974,
+    "llk_S2": 974,
+    "llk_S3": 974,
+    "llk_S4": 974,
+    "pll_hbm": 1,
+    "pll_serial": 1,
+    "pll_stream": 1,
+    "t_su_NE": 1024,
+    "t_su_NW": 1024,
+    "t_su_SE": 1024,
+    "t_su_SW": 1024
+   }
+  },
+  "hfd_loader": {
+   "rtl": "ot_hbm_accel_loader_host (rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv)",
+   "die_abstract_bits": 853,
+   "error": "interface not parsed: name 'ND' is not defined"
+  },
+  "hfd_index_q": {
+   "rtl": "ot_hbm_accel_index_path (rtl/hbm_accel/index/ot_hbm_accel_index_path.sv)",
+   "die_abstract_bits": 4608,
+   "error": "interface not parsed: name 'NS' is not defined"
+  },
+  "hfd_attn_tile": {
+   "rtl": "ot_attn_tile_registered_parent (rtl/hbm_accel/ot_attn_tile_registered_parent.sv)",
+   "die_abstract_bits": 4096,
+   "rtl_in_bits": 1620,
+   "rtl_out_bits": 529,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "ld_v": "input 1",
+    "ld_mode": "input 1",
+    "ld_bank": "input 3",
+    "ld_grp": "input 8",
+    "ld_w": "input 1024",
+    "ld_w2v": "input 1",
+    "iv": "input 1",
+    "ibank": "input 3",
+    "ib": "input 576",
+    "ov": "output 1",
+    "oy": "output 512",
+    "oflt": "output 16"
+   },
+   "die_ports": {
+    "ck": 1,
+    "i": 512,
+    "k": 1024,
+    "kd": 1024,
+    "ku": 1024,
+    "o": 512
+   }
+  },
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "top_fixes": {
+  "TF1_clock_domain_nets": "one 1-bit PLL output port and ONE multi-load net per clock domain (stream / serial / hbm; the 2 shield tracks are a routing rule, not netlist bits) instead of N two-pin nets all bound to the single port pll (duplicate named-port connection: the generated top does not elaborate)",
+  "TF2_all_sms_clocked": "HBM: every SM of a group on the clk_stream net (generated: sms[0] of each group only, 28 of 32 SMs unclocked)",
+  "TF3_tiles_clocked": "HBM: the 64 attention tiles on clk_stream (generated: not on any clock net)",
+  "TF4_link_macro_clk": "SerDes / UCIe parallel-side clk on clk_stream (generated: unbound on every link macro)",
+  "TF5_link_tx_rx_split": "HBM: link chain 971 -> 974 b bound tx[486:0] + rx[486:0] per macro (generated: tx[511:0] + rx[458:0]: RX 9 x 459 = 4,131 b < 8 TU ports x (545 flit + valid + credit) = 4,376 b, the ot_hbm_accel_tu_endpoint ph_rx side); host chain 512 b bound tx[255:0] + rx[255:0] (generated: tx[511:0], NO receive pins)",
+  "TF6_sm_orientation": "HBM: S-side SM groups un-mirrored about x (generator flip = (side == N) != (None and ...) is True for S too: all 16 S SMs placed MX / R180, d / q faces away from their stream service, c away from the hub); fixed by passing row1_flip=False",
+  "TF7_sm_bundle_widths": "HBM: weight line 1100 -> 1099 b and request 48 -> 44 b to match ot_hbm_accel_sm_v (no rsp_ready pin; 4 unused request bits)"
+ },
+ "verilog": {
+  "top": "hbm_lint_top_fix",
+  "stubs": 226,
+  "nc_wires": 962,
+  "filelist": "hbm_lint_top_fix.f",
+  "rtl_files": 27,
+  "unresolved_modules": []
+ }
+}

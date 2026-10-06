@@ -1,0 +1,78 @@
+{
+ "schema": "hbm.su.c12.lane_closure.v1",
+ "date": "2026-10-06",
+ "clock": "0.833 ns (1.2 GHz); SS setup WC + 60 ps, FF hold BC + 25 ps; tools/w18/corner_sta.py on the routed ODB/SPEF",
+ "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv, ot_hdc_v41x_sfu_c12.sv, ot_hdc_v41x_vec_side_c12.sv (vehicles rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv), lane/side RTL unchanged since 4866be787",
+ "io": "outputs and inputs false-pathed in the route, then every output and input path checked register-direct on the routed netlist (outcheck.txt: not_register_direct 0)",
+ "routes": {
+  "full_u30_h25": {
+   "top": "ot_su12_full",
+   "ss_setup_ps": 4.77,
+   "ff_hold_ps": 5.33,
+   "closes_signoff": true,
+   "odb_sha256": "4aa5e82406c2e53bfa0a9f3827b3f50418e54b259ac3d2810b75bb1e46f595e8",
+   "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+   "io_check": "outputs 299 input_paths 710 not_register_direct 0",
+   "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/full_u30_h25"
+  },
+  "light_u30": {
+   "top": "ot_su12_light",
+   "ss_setup_ps": 16.17,
+   "ff_hold_ps": 4.27,
+   "closes_signoff": true,
+   "odb_sha256": "c5e6eca078fb204ab1f980847b178827e0676dbaa6c0c2d90d1c6a7fb7befc48",
+   "source": "4866be787 (claude/hbm-su-attn-close-20261005) + reducer r3 working tree",
+   "io_check": "outputs 265 input_paths 1042 not_register_direct 0",
+   "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/light_u30"
+  },
+  "sfu_u25": {
+   "top": "ot_su12_sfu",
+   "ss_setup_ps": 4.89,
+   "ff_hold_ps": 0.7,
+   "closes_signoff": true,
+   "odb_sha256": "a0623fc5753c2bc474a698002f7c76b5f8b0a11c638a5480fa2dea11b508fdda",
+   "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+   "io_check": "outputs 266 input_paths 929 not_register_direct 0",
+   "root": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-su-c12/routes/sfu_u25"
+  },
+  "sfu_u30_h20": {
+   "top": "ot_su12_sfu",
+   "ss_setup_ps": 19.04,
+   "ff_hold_ps": 8.13,
+   "closes_signoff": true,
+   "odb_sha256": "5d721a20e69e2d46d88ef35ea282b5d1300b57c8d90a935252839d790d9dedbf",
+   "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+   "io_check": "outputs 266 input_paths 929 not_register_direct 0",
+   "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/sfu_u30_h20"
+  },
+  "side_u25": {
+   "top": "ot_su12_side",
+   "ss_setup_ps": 3.66,
+   "ff_hold_ps": 1.78,
+   "closes_signoff": true,
+   "odb_sha256": "14644e3c53be1136d9aa04889d29d76934454747c46440d1fe580181ddfa0031",
+   "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+   "io_check": "outputs 33 input_paths 36 not_register_direct 0",
+   "root": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-su-c12/routes/side_u25"
+  },
+  "side_u30": {
+   "top": "ot_su12_side",
+   "ss_setup_ps": 18.16,
+   "ff_hold_ps": 1.01,
+   "closes_signoff": true,
+   "odb_sha256": "04ece99988e8231f9ec3b54cb38c7d4d425bd7a73305f487d69f4fe534ce4aab",
+   "source": "4866be787 (claude/hbm-su-attn-close-20261005) + reducer r3 working tree",
+   "io_check": "outputs 33 input_paths 36 not_register_direct 0",
+   "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/side_u30"
+  }
+ },
+ "adopted": {
+  "light_lane": "light_u30",
+  "sfu_lane": "sfu_u30_h20",
+  "side_pipe": "side_u30",
+  "full_lane": "full_u30_h25"
+ },
+ "verdict": "ADOPTED for the HBM SU at 1.2 GHz: the light lane, SFU lane, side pipe and the full-function lane (8 heads of SFU depth in one element) close SS60/FF25 with DRC 0. The SU as a whole is qualified only when the reducer (slice + top) and the controller close; both are routing (see STATUS).",
+ "exactness": "tools/hbm_su_c12.py campaign PASS (results/rtl/hbm_su_c12_20261005/campaign_full.json): SFU equivalence 1M operands, random N16 24/24 + N64 16/16, vehicle 56/56; N1024/M256 v2 + P6 chains exact (su_runs/)",
+ "rate": "DS 1M with every SU at 1.2 GHz (CTL12 cycles): matched AR 2076.1 tok/s, MTP 3884.2 (composition.json). Against the SU at the 0.9 GHz serial-domain policy (same measured chains): +1.60% AR, +2.38% MTP (Codex Lagrange recomposition 2026-10-05T20:43Z)."
+}

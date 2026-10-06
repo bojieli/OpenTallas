@@ -1,0 +1,25 @@
+Terminated                 ( cd "$repo" && "$output/obj/Vtb_wfc_protected_stage" ) > "$output/run.log" 2>&1
+Command exited with non-zero status 143
+	Command being timed: "bash /srv/opentallas-scratch/codex/zeno-wfc-protected-join-r3/src/tools/dsrom_wfc_protected_exact.sh /srv/opentallas-scratch/codex/zeno-wfc-protected-join-r3/out"
+	User time (seconds): 143.63
+	System time (seconds): 3.58
+	Percent of CPU this job got: 125%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:57.30
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 465420
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 3
+	Minor (reclaiming a frame) page faults: 1133937
+	Voluntary context switches: 309
+	Involuntary context switches: 386
+	Swaps: 0
+	File system inputs: 272
+	File system outputs: 420088
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 143

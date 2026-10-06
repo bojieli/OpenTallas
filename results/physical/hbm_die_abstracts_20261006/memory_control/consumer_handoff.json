@@ -1,0 +1,563 @@
+{
+  "authority_path": "results/rtl/die_top_lint_20261006/hbm_die_abstract_list.json",
+  "authority_sha256": "78934f31e63d413b6786967b90def71f378eb9838575cfc289e46475df0172e6",
+  "actual_family_kinds": 23,
+  "actual_copies": 348,
+  "rows": [
+    {
+      "family": "hfd_attn_tile",
+      "instances": 64,
+      "die_ports": {
+        "k": {
+          "bits": 1024,
+          "face": "W"
+        },
+        "i": {
+          "bits": 512,
+          "face": "W"
+        },
+        "o": {
+          "bits": 512,
+          "face": "E"
+        },
+        "ku": {
+          "bits": 1024,
+          "face": "N"
+        },
+        "kd": {
+          "bits": 1024,
+          "face": "S"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "RETAINED_LEAF_VIEW_ONLY",
+      "source_owner": "Claude",
+      "missing_or_scope": "m6h1 real1664pin LEF/SSFF, leaf+18.9112059346/+1.5452361612ps; H7 query/kvforward/rowchain ports mismatch; 64tileparentOPEN"
+    },
+    {
+      "family": "hfd_barrier",
+      "instances": 1,
+      "die_ports": {
+        "ck": {
+          "bits": 3,
+          "face": "S"
+        },
+        "t_cmdproc": {
+          "bits": 64,
+          "face": "S"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "RETAINED_ROUTE_CLOSED_EXPORT_PENDING",
+      "source_owner": "source record b4866515f4d9eaea300820a816d280b4c05c0c4c",
+      "missing_or_scope": "K32 actualarr32/rel32/up/rel_in/clk/rst_n; SS worst+330.53 FF+39.39ps; H10 missingSMarrive diewire"
+    },
+    {
+      "family": "hfd_cmdproc",
+      "instances": 1,
+      "die_ports": {
+        "cSW": {
+          "bits": 360,
+          "face": "W"
+        },
+        "t_su_SW": {
+          "bits": 64,
+          "face": "W"
+        },
+        "cNW": {
+          "bits": 360,
+          "face": "W"
+        },
+        "t_su_NW": {
+          "bits": 64,
+          "face": "W"
+        },
+        "cSE": {
+          "bits": 360,
+          "face": "E"
+        },
+        "t_su_SE": {
+          "bits": 64,
+          "face": "E"
+        },
+        "cNE": {
+          "bits": 360,
+          "face": "E"
+        },
+        "t_su_NE": {
+          "bits": 64,
+          "face": "E"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "N"
+        },
+        "f_barrier": {
+          "bits": 64,
+          "face": "N"
+        },
+        "t_coll": {
+          "bits": 64,
+          "face": "N"
+        },
+        "f_loader": {
+          "bits": 341,
+          "face": "S"
+        },
+        "f_router": {
+          "bits": 64,
+          "face": "S"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REAL_RTL_PHYSICAL_OPEN",
+      "source_owner": "Gibbs",
+      "missing_or_scope": "ot_ds_hbm_cmdproc20 staticprogramstore/issue realports sourcebinding/SSFF unavailable"
+    },
+    {
+      "family": "hfd_coll",
+      "instances": 1,
+      "die_ports": {
+        "f_cmdproc": {
+          "bits": 64,
+          "face": "S"
+        },
+        "f_vm": {
+          "bits": 512,
+          "face": "N"
+        },
+        "f_su_SW": {
+          "bits": 1024,
+          "face": "W"
+        },
+        "t_su_SW": {
+          "bits": 1024,
+          "face": "W"
+        },
+        "llk_S0": {
+          "bits": 971,
+          "face": "W"
+        },
+        "llk_S1": {
+          "bits": 971,
+          "face": "W"
+        },
+        "llk_S2": {
+          "bits": 971,
+          "face": "W"
+        },
+        "pll": {
+          "bits": 3,
+          "face": "W"
+        },
+        "llk_N0": {
+          "bits": 971,
+          "face": "W"
+        },
+        "llk_N1": {
+          "bits": 971,
+          "face": "W"
+        },
+        "f_su_NW": {
+          "bits": 1024,
+          "face": "W"
+        },
+        "t_su_NW": {
+          "bits": 1024,
+          "face": "W"
+        },
+        "f_su_SE": {
+          "bits": 1024,
+          "face": "E"
+        },
+        "t_su_SE": {
+          "bits": 1024,
+          "face": "E"
+        },
+        "llk_S3": {
+          "bits": 971,
+          "face": "E"
+        },
+        "llk_S4": {
+          "bits": 971,
+          "face": "E"
+        },
+        "llk_N2": {
+          "bits": 971,
+          "face": "E"
+        },
+        "llk_N3": {
+          "bits": 971,
+          "face": "E"
+        },
+        "f_su_NE": {
+          "bits": 1024,
+          "face": "E"
+        },
+        "t_su_NE": {
+          "bits": 1024,
+          "face": "E"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "ACCEPTED_VIEW_REQUESTED_NO_NEW_STRUCTURE",
+      "source_owner": "Dirac",
+      "missing_or_scope": "pclk/rank/pf inj1024/del2184 trueABI required; no borrowed clock"
+    },
+    {
+      "family": "hfd_index_q",
+      "instances": 4,
+      "die_ports": {
+        "k": {
+          "bits": 1024,
+          "face": "S"
+        },
+        "a0": {
+          "bits": 512,
+          "face": "W"
+        },
+        "a1": {
+          "bits": 512,
+          "face": "W"
+        },
+        "a2": {
+          "bits": 512,
+          "face": "W"
+        },
+        "a3": {
+          "bits": 512,
+          "face": "W"
+        },
+        "t_su": {
+          "bits": 1024,
+          "face": "E"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "E"
+        },
+        "t_vm": {
+          "bits": 512,
+          "face": "E"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REAL_NATIVE_RTL_PARENT_OPEN",
+      "source_owner": "Gibbs/Sagan",
+      "missing_or_scope": "native32heads/128dim/sourceVM candidate SRAM/SSFF/TP96 orderedglobalID gather remain unqualified; no borrowed419cycle credit"
+    },
+    {
+      "family": "hfd_loader",
+      "instances": 1,
+      "die_ports": {
+        "ck": {
+          "bits": 3,
+          "face": "N"
+        },
+        "t_cmdproc": {
+          "bits": 341,
+          "face": "N"
+        },
+        "h": {
+          "bits": 512,
+          "face": "E"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REJECT_TIMING_PRESERVED",
+      "source_owner": "Gibbs",
+      "missing_or_scope": "old32bitND1 loader isolated SS-3672.04ps; realvisible128MiB CRC exact is functional only; runtime303627 tokenpending"
+    },
+    {
+      "family": "hfd_router",
+      "instances": 1,
+      "die_ports": {
+        "eSW": {
+          "bits": 128,
+          "face": "W"
+        },
+        "eNW": {
+          "bits": 128,
+          "face": "W"
+        },
+        "f_su_SW": {
+          "bits": 256,
+          "face": "W"
+        },
+        "f_su_NW": {
+          "bits": 256,
+          "face": "W"
+        },
+        "eSE": {
+          "bits": 128,
+          "face": "E"
+        },
+        "eNE": {
+          "bits": 128,
+          "face": "E"
+        },
+        "f_su_SE": {
+          "bits": 256,
+          "face": "E"
+        },
+        "f_su_NE": {
+          "bits": 256,
+          "face": "E"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "N"
+        },
+        "f_vm": {
+          "bits": 512,
+          "face": "N"
+        },
+        "t_cmdproc": {
+          "bits": 64,
+          "face": "N"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REJECT_SS_TIMING_PRESERVED",
+      "source_owner": "source record b4866515f4d9eaea300820a816d280b4c05c0c4c",
+      "missing_or_scope": "topk_f3 routedSS-369.79ps FF+6.23ps; expertworkgroup parentnotbuilt"
+    },
+    {
+      "family": "hfd_sm",
+      "instances": 32,
+      "die_ports": {
+        "d": {
+          "bits": 1100,
+          "face": "S"
+        },
+        "q": {
+          "bits": 48,
+          "face": "S"
+        },
+        "x": {
+          "bits": 2063,
+          "face": "W"
+        },
+        "r": {
+          "bits": 270,
+          "face": "E"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "N"
+        },
+        "c": {
+          "bits": 45,
+          "face": "N"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "COMPATIBILITY_DECLARATIONS_ONLY",
+      "source_owner": "Claude",
+      "missing_or_scope": "latest owner2af419b76 front oq4/registeredheads retire+1 tiles bterm3+7 cycles DBF7; parent open; frozen structural source untouched"
+    },
+    {
+      "family": "hfd_svc_*",
+      "instances": 4,
+      "die_ports": {
+        "kv": {
+          "bits": 1024,
+          "face": "N"
+        },
+        "lsm4": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "lsm0": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "qsm0": {
+          "bits": 48,
+          "face": "N"
+        },
+        "qsm4": {
+          "bits": 48,
+          "face": "N"
+        },
+        "lsm5": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "ik": {
+          "bits": 1024,
+          "face": "N"
+        },
+        "lsm1": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "qsm1": {
+          "bits": 48,
+          "face": "N"
+        },
+        "qsm5": {
+          "bits": 48,
+          "face": "N"
+        },
+        "lsm6": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "e": {
+          "bits": 128,
+          "face": "N"
+        },
+        "lsm2": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "qsm2": {
+          "bits": 48,
+          "face": "N"
+        },
+        "qsm6": {
+          "bits": 48,
+          "face": "N"
+        },
+        "lsm7": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "lsm3": {
+          "bits": 1100,
+          "face": "N"
+        },
+        "qsm3": {
+          "bits": 48,
+          "face": "N"
+        },
+        "qsm7": {
+          "bits": 48,
+          "face": "N"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "N"
+        },
+        "phy": {
+          "bits": 22238,
+          "face": "xy"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REAL_PCWB_BINDING_LINT_PASS_EXPERT_INTERFACE_OPEN",
+      "source_owner": "Gibbs/Bacon/Euclid",
+      "missing_or_scope": "full32PC/16CA/32landingCDC; service1024ps/core833.333ps; protectedheldowner/writevisibility actual63ports; expert sharing not bound"
+    },
+    {
+      "family": "hfd_vm",
+      "instances": 1,
+      "die_ports": {
+        "f_su_SW": {
+          "bits": 2048,
+          "face": "W"
+        },
+        "iSW": {
+          "bits": 512,
+          "face": "W"
+        },
+        "t_su_SW": {
+          "bits": 2048,
+          "face": "W"
+        },
+        "xSW": {
+          "bits": 2063,
+          "face": "W"
+        },
+        "f_su_NW": {
+          "bits": 2048,
+          "face": "W"
+        },
+        "iNW": {
+          "bits": 512,
+          "face": "W"
+        },
+        "t_su_NW": {
+          "bits": 2048,
+          "face": "W"
+        },
+        "xNW": {
+          "bits": 2063,
+          "face": "W"
+        },
+        "f_su_SE": {
+          "bits": 2048,
+          "face": "E"
+        },
+        "iSE": {
+          "bits": 512,
+          "face": "E"
+        },
+        "t_su_SE": {
+          "bits": 2048,
+          "face": "E"
+        },
+        "xSE": {
+          "bits": 2063,
+          "face": "E"
+        },
+        "f_su_NE": {
+          "bits": 2048,
+          "face": "E"
+        },
+        "iNE": {
+          "bits": 512,
+          "face": "E"
+        },
+        "t_su_NE": {
+          "bits": 2048,
+          "face": "E"
+        },
+        "xNE": {
+          "bits": 2063,
+          "face": "E"
+        },
+        "t_quant": {
+          "bits": 1024,
+          "face": "N"
+        },
+        "ck": {
+          "bits": 3,
+          "face": "S"
+        },
+        "t_coll": {
+          "bits": 512,
+          "face": "S"
+        },
+        "t_router": {
+          "bits": 512,
+          "face": "S"
+        }
+      },
+      "die_master_closed": false,
+      "source_owner_handoff_required": true,
+      "status": "REAL_ACTIVATION_STAGING_MULTICAST_COMPONENT_PASS_PARENT_OPEN",
+      "source_owner": "Gibbs/Turing",
+      "missing_or_scope": "22actualSRAM2banks128,2063payload192actualidentity codedmutableprotection,held4reverseACK; exactseed1PASS32comparisons/trueACK+SRAMUE negatives; SU/index/resultpublication ABI unbound"
+    }
+  ],
+  "new_heavy_jobs_launched": 0,
+  "latest_E2_capacity": {
+    "utc": "2026-10-06T03:30:31Z",
+    "load1": 302.01,
+    "CPU_count": 128,
+    "idle_CPU_equivalents": 0.07994378952299165,
+    "MemAvailable_kB": 570315984
+  },
+  "new_heavy_allowed": false
+}

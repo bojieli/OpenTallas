@@ -1,0 +1,145 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/diagnose.ys' --
+
+1. Executing SLANG frontend.
+Top level design units:
+    ot_dsrom_wfc_protected_clocked_stage
+
+../src/rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:222:21: warning: asynchronous load value missing for variable '\o'
+        if (!rst_n) begin
+                    ^~~~~
+../src/rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv:221:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) begin
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:273:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:273:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:277:48: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                                               ^~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:277:17: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:301:48: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                                               ^~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:301:17: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:366:48: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                                               ^~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:366:17: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+        always @(posedge clk or negedge rst_q) if (advance || !rst_q)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:584:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_q) if (advance || !rst_q) begin
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:584:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_q) if (advance || !rst_q) begin
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'bERROR: Design elaboration failed; see full log for details
+1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:44: error: simple if-else pattern expected in modeling an asynchronous load on a flip-flop
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../src/rtl/rom/wavefront/context/protected_20261006/ot_rom_pkg_ctrl_wfc_enclosed_vm.sv:838:13: note: asynchronous load pattern implied by edge sensitivity on multiple signals
+    always @(posedge clk or negedge rst_n) if (advance || !rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [--error-limit=]
+
+Build failed: 20 errors, 1 warning
+<suppressed ~2129 debug messages>

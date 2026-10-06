@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.barrier-k32-export-admission.v1",
+  "capacity": {
+    "utc": "2026-10-06T04:17:09Z",
+    "CPU_count": 64,
+    "load1": 19.076171875,
+    "idle_CPU_equivalents": 42.76663542642924,
+    "MemAvailable_bytes": 43374989312,
+    "NVMe_free_bytes": 303178559488,
+    "CPU_fit": true,
+    "guard_core_sha256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f",
+    "guard_reserve_bytes": 20246159155,
+    "guard_ramping_bytes": 2147483648
+  },
+  "guard_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+  "input_sha256": {
+    "odb": "0a876018c8a9cdc8231d7206892b32af6da55db740428ea1e1bc9975400343b2",
+    "spef": "f8ced04e846f0bedbf2454a7391e576632cf5bd413b9a900d6a57a160502dc1d",
+    "sdc": "dc105653e03b921eb8a6b589c88f8e46c00d0e9759b7b6dd0db6299a68524475"
+  },
+  "tool_sha256": "e7fbb26926adbe5d48df51307d8148a76fd044bb512b3650dc1017b07d4bc131",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "requested_CPU": 1,
+  "reservation_GiB": 4,
+  "RAM_basis": "retained attention view export observed2GiB; barrier139standardcells; reserve4GiB without per-process cap",
+  "builds_replayed": 0,
+  "routes_replayed": 0,
+  "status": "FRESH_CPU_FIT_BEFORE_GUARD",
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "4",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/src-f49d36ce6/physical/hbm_die_abstracts_20261006/memory_control/export_barrier.py",
+    "--admitted",
+    "--orfs-dir",
+    "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/input/orfs",
+    "--out",
+    "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/export-agi-r1",
+    "--tool",
+    "/srv/opentallas-scratch/codex/hbm-memory-barrier-export-20261006/src-f49d36ce6/physical/hbm_die_abstracts_20261006/memory_control/export_barrier_views.py"
+  ],
+  "exit": 0,
+  "guard_unchanged": true
+}

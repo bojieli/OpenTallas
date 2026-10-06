@@ -1,0 +1,7 @@
+OPEN parent contract: commit actual clock/root/reset authority and receiver delay/corner-cap evidence before preparing/submitting route
+    while executing
+"error "OPEN parent contract: commit actual clock/root/reset authority and receiver delay/corner-cap evidence before preparing/submitting route""
+    invoked from within
+"if {![info exists actual_parent_file] || ![file exists $actual_parent_file]} {
+ error "OPEN parent contract: commit actual clock/root/reset authority ..."
+    (file "physical/hbm_die_abstracts_20261006/links/callers/parent_contract.tcl" line 4)
