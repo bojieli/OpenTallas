@@ -239,9 +239,13 @@ def cmd_record(a):
     runs = {}
     for f in a.runs.split(","):
         r = json.loads(Path(f).read_text())
-        key = f"lph{r['lph']}_e{r['elm']}{r['ela']}" + (f"_u{r['lm']}{r['la']}" if (r.get("lm", 5), r.get("la", 4)) != (5, 4) else "")
+        if r.get("tag"):                    # tagged rounds (a6x6, x7) differ in ADD6/EXP6/EXPNS/DENK, not LM/LA
+            key = f"lph{r['lph']}_{r['tag']}"
+        else:
+            key = f"lph{r['lph']}_e{r['elm']}{r['ela']}" + (f"_u{r['lm']}{r['la']}" if (r.get("lm", 5), r.get("la", 4)) != (5, 4) else "")
         runs[key] = r
-        (OUT / f"run_{key}.json").write_text(json.dumps(r, indent=1) + "\n")
+        if Path(f).resolve() != (OUT / f"run_{key}.json").resolve():
+            (OUT / f"run_{key}.json").write_text(json.dumps(r, indent=1) + "\n")
     main = runs[a.main]
     assert main["all_exact"]
     def per_T(r, T):
