@@ -41,5 +41,8 @@
   "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
   "actual_mapped_FF": 93309,
   "mapped_local_controls_and_loads_pass": true,
-  "actual_mapped_cell_area_um2": 49127.9
+  "actual_mapped_cell_area_um2": 49127.9,
+  "actual_prepared_route": "route_r2_prepared/preparation.json",
+  "route_launch_allowed": false,
+  "route_blocking_dependency": "Turing actual source-bound finite315.956 allocation plus connected producer/receiver/clock-reset/corridor binding; missing actualrecord notcapacity"
 }
