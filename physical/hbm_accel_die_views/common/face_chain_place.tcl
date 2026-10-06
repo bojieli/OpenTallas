@@ -64,8 +64,15 @@ proc fc_cent {pts} {
 proc fc_lerp {a b f} {
   return [list [expr {[lindex $a 0]+$f*([lindex $b 0]-[lindex $a 0])}] [expr {[lindex $a 1]+$f*([lindex $b 1]-[lindex $a 1])}]]
 }
+array set fc_dist {}
+proc fc_rec {bt a b} {
+  global fc_dist fc_dbu
+  set port [regsub {\[.*} [$bt getName] {}]
+  lappend fc_dist($port) [expr {(abs([lindex $a 0]-[lindex $b 0])+abs([lindex $a 1]-[lindex $b 1]))/$fc_dbu}]
+}
 proc fc_move {inst p} {
   global fc_x0 fc_y0 fc_x1 fc_y1
+  if {[info exists ::env(OT_FC_REPORT)]} return
   set m [$inst getMaster]; set w [$m getWidth]; set h [$m getHeight]
   set x [expr {round(max($fc_x0, min($fc_x1-$w, [lindex $p 0]-$w/2.0)))}]
   set y [expr {round(max($fc_y0, min($fc_y1-$h, [lindex $p 1]-$h/2.0)))}]
@@ -126,6 +133,7 @@ foreach bt [$fc_blk getBTerms] {
   if {![llength $ld]} continue
   set pts {}; foreach i $ld { lappend pts [fc_center $i] }
   set B [fc_cent $pts]
+  fc_rec $bt $P $B
   foreach mv $moves {
     lassign $mv kk grp
     set p [fc_lerp $P $B [expr {double($kk)/$fc_n}]]
@@ -165,6 +173,7 @@ foreach bt [$fc_blk getBTerms] {
     set d [fc_driver [[lindex $ins 0] getNet]]
   }
   if {$A eq ""} continue
+  fc_rec $bt $A $P
   # the cells collected after a flop (pend) were walked before reaching the next flop upstream: they belong to it
   for {set q 0} {$q < [llength $walked]} {incr q} {
     lassign [lindex $walked $q] f kk pd
@@ -185,5 +194,9 @@ foreach nm [array names fc_stage] {
 foreach c [array names fc_hang] {
   lassign $fc_hang($c) i nm
   if {[info exists fc_pos($nm)]} { fc_move $i $fc_pos($nm); incr n_moved }
+}
+foreach port [lsort [array names fc_dist]] {
+  set l [lsort -real $fc_dist($port)]; set n [llength $l]; set sm 0.0; foreach v $l { set sm [expr {$sm+$v}] }
+  puts [format "OT_FC_DIST %s n %d mean %.0f p90 %.0f max %.0f um" $port $n [expr {$sm/$n}] [lindex $l [expr {int(0.9*($n-1))}]] [lindex $l end]]
 }
 puts "OT_FC: face chains N=$fc_n: $n_in input, $n_out output, $n_thru pass-through; $n_moved cells moved ([array size fc_stage] output-chain flops)"

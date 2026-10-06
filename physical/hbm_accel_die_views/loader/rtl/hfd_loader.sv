@@ -11,10 +11,7 @@ module hfd_loader (
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
     reg [513:0] i0_h; always @(posedge clk) i0_h <= h;
-    reg [513:0] i1_h; always @(posedge clk) i1_h <= i0_h;
-    reg [513:0] i2_h; always @(posedge clk) i2_h <= i1_h;
-    reg [513:0] i3_h; always @(posedge clk) i3_h <= i2_h;
-    reg [513:0] i_h; always @(posedge clk) i_h <= i3_h;
+    reg [513:0] i_h; always @(posedge clk) i_h <= i0_h;
     wire [0:0] w_ld_clk_host;
     wire [0:0] w_ld_rst_host_n;
     wire [0:0] w_ld_clk_mem;
@@ -213,14 +210,14 @@ module hfd_loader (
     wire [513:0] od_h = {338'd0, w_ld_h_dma_bresp[1:0], w_ld_h_dma_bvalid[0:0], w_ld_h_dma_wready[0:0], w_ld_h_dma_awready[0:0], w_ld_h_dma_rlast[0:0], w_ld_h_dma_rresp[1:0], w_ld_h_dma_rdata[63:0], w_ld_h_dma_rvalid[0:0], w_ld_h_dma_arready[0:0], w_ld_h_rready[0:0], w_ld_h_araddr[11:0], w_ld_h_arvalid[0:0], w_ld_h_bready[0:0], w_ld_h_wstrb[3:0], w_ld_h_wdata[31:0], w_ld_h_wvalid[0:0], w_ld_h_awaddr[11:0], w_ld_h_awvalid[0:0], w_ld_s_rdata[31:0], w_ld_s_rvalid[0:0], w_ld_s_arready[0:0], w_ld_s_bvalid[0:0], w_ld_s_wready[0:0], w_ld_s_awready[0:0]};
     wire [513:0] o_h;
     for (genvar k = 0; k < 514; k = k + 1) begin : g_o_h
-        ot_hfd_oreg5 u (.clk(clk), .d(od_h[k]), .q(o_h[k]));
+        ot_hfd_oreg2 u (.clk(clk), .d(od_h[k]), .q(o_h[k]));
     end
     assign h[255:0] = o_h[255:0];
     assign h[512] = fclk_0;
     wire [340:0] od_t_cmdproc = {268'd0, w_ld_req_wdata[63:0], w_ld_req_addr[7:0], w_ld_req_v[0]};
     wire [340:0] o_t_cmdproc;
     for (genvar k = 0; k < 341; k = k + 1) begin : g_o_t_cmdproc
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
+        ot_hfd_oreg2 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
     end
     assign t_cmdproc[340:0] = o_t_cmdproc[340:0];
 endmodule

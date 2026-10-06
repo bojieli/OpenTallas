@@ -14,10 +14,7 @@ module hfd_quant (
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
     reg [1023:0] i0_f_vm; always @(posedge clk) i0_f_vm <= f_vm;
-    reg [1023:0] i1_f_vm; always @(posedge clk) i1_f_vm <= i0_f_vm;
-    reg [1023:0] i2_f_vm; always @(posedge clk) i2_f_vm <= i1_f_vm;
-    reg [1023:0] i3_f_vm; always @(posedge clk) i3_f_vm <= i2_f_vm;
-    reg [1023:0] i_f_vm; always @(posedge clk) i_f_vm <= i3_f_vm;
+    reg [1023:0] i_f_vm; always @(posedge clk) i_f_vm <= i0_f_vm;
     wire [0:0] w_aq_clk;
     wire [0:0] w_aq_rst_n;
     wire [0:0] w_aq_v;
@@ -50,25 +47,25 @@ module hfd_quant (
     wire [511:0] od_t_su_NE = {w_aq_y[511:0]};
     wire [511:0] o_t_su_NE;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[511:0] = o_t_su_NE[511:0];
     wire [511:0] od_t_su_NW = {w_aq_y[511:0]};
     wire [511:0] o_t_su_NW;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[511:0] = o_t_su_NW[511:0];
     wire [511:0] od_t_su_SE = {w_aq_y[511:0]};
     wire [511:0] o_t_su_SE;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
+        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[511:0] = o_t_su_SE[511:0];
     wire [511:0] od_t_su_SW = {w_aq_y[511:0]};
     wire [511:0] o_t_su_SW;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_SW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[511:0] = o_t_su_SW[511:0];
 endmodule
