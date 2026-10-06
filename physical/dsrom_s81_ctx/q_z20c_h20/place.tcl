@@ -8,7 +8,7 @@ lassign $_sg gx gw gy gh; set r [ot_mts::rule $m R0]
 lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy
 set px [ot_mts::snap_axis [expr {round(50.4*$_dbu)}] $gx $gw $Px $Sx "u_blk x"]
 set py [ot_mts::snap_axis [expr {round(50.220000000000006*$_dbu)}] $gy $gh $Py $Sy "u_blk y"]
-$i setOrient R0; $i setLocation $px $py; $i setPlacementStatus FIRM
+$i setPlacementStatus PLACED; $i setOrient R0; $i setLocation $px $py; $i setPlacementStatus FIRM
 foreach b [$_blk getBlockages] { odb::dbBlockage_destroy $b }
 set fence [dict create]
 dict set fence bN11 {270.4 237.34 290.4 257.34}

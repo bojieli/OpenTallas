@@ -9,7 +9,7 @@ proc fplace {nm x y o} { global _blk _dbu _sg; set i [ot_find $nm]; set m [$i ge
   lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy
   set px [expr {double([ot_mts::snap_axis [expr {round($x*$_dbu)}] $gx $gw $Px $Sx "$nm x"])/$_dbu}]
   set py [expr {double([ot_mts::snap_axis [expr {round($y*$_dbu)}] $gy $gh $Py $Sy "$nm y"])/$_dbu}]
-  $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM }
+  $i setPlacementStatus PLACED; $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM }
 fplace e1008 4.320 133.920 R0
 fplace c1008_0 4.320 60.480 MY
 fplace c1008_1 50.976 60.480 MY

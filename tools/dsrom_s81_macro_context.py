@@ -197,7 +197,7 @@ def emit(a):
          "lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy",
          f'set px [ot_mts::snap_axis [expr {{round({mx}*$_dbu)}}] $gx $gw $Px $Sx "u_blk x"]',
          f'set py [ot_mts::snap_axis [expr {{round({my}*$_dbu)}}] $gy $gh $Py $Sy "u_blk y"]',
-         "$i setOrient R0; $i setLocation $px $py; $i setPlacementStatus FIRM",
+         "$i setPlacementStatus PLACED; $i setOrient R0; $i setLocation $px $py; $i setPlacementStatus FIRM",
          "foreach b [$_blk getBlockages] { odb::dbBlockage_destroy $b }", "set fence [dict create]"]
     for bn, bx in fences.items():
         T.append(f"dict set fence {bn} {{{bx[0]} {bx[1]} {bx[2]} {bx[3]}}}")

@@ -258,7 +258,7 @@ def emit(a):
          "  lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy",
          '  set px [expr {double([ot_mts::snap_axis [expr {round($x*$_dbu)}] $gx $gw $Px $Sx "$nm x"])/$_dbu}]',
          '  set py [expr {double([ot_mts::snap_axis [expr {round($y*$_dbu)}] $gy $gh $Py $Sy "$nm y"])/$_dbu}]',
-         "  $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM }"]
+         "  $i setPlacementStatus PLACED; $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM }"]
     for it in macros:
         T.append(f"fplace {it.name} {it.x - x0:.3f} {it.y - yb:.3f} {it.orient}")
     T += ["set nb 0; foreach b [$_blk getBlockages] { odb::dbBlockage_destroy $b; incr nb }",
