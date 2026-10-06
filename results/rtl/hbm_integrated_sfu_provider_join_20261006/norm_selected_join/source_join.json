@@ -1,0 +1,30 @@
+{
+  "instance": "g_on.g_die[d].u_norm_c12",
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "ecf300d7811884e04aa25030916c9a24520e37eed7041f887af730041aabe4ef",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv": "79a4c7246889432352e728481dd535a411031e50008cfa7cbd936ffaf6fc2d13",
+    "rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_vm.sv": "59bf8d35f9cc56834cd6d21dbc447e714c6260ea1059ecd6f96b661afd60dbf5",
+    "rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv": "cd9d935963a8836bb885cb49913d03aadb57442c78d5ec802c74baba255ca53c"
+  },
+  "default_ENABLE": 0,
+  "selected_parameter": "NORM_C12_ENABLE=1",
+  "retention": "Existing stage_join W6 188 raw /216 coded FF; no second norm descriptor or engine",
+  "clock": "clk_sm; no root/leaf timing qualification inherited",
+  "lease": "Existing peer0 calendar, mutually exclusive with SU/SFU; full73 actual CP frame",
+  "completion": "Held child completion, real provider drain, held checked full73 publication and existing peer reverse ACK before caller release",
+  "warm": "Block new admission/start; retain accepted child and drain; root POR alone resets payload",
+  "model_refs": [
+    "results/rtl/hbm_norm_vm_boundary_20261006/model_delta.json",
+    "results/rtl/hbm_norm_vm_boundary_20261006/finite_native_parent_model.json"
+  ],
+  "consumed_child_protocol_PASS": "35361d30d / c6bde56b4, unchanged; not replayed",
+  "wiring_check": {
+    "tool": "iverilog -g2012 -i",
+    "rc": 0,
+    "scope": "Enabled named-port/width wiring only; unresolved large children ignored, NOT full elaboration or numerical validation"
+  },
+  "open_binding": "Actual readyless vector-VM rd_addr/rd_re/rd_src/rd_q supplier and vm_we/q publication landing; native held1024 interface is a distinct ABI. Scalars/bases must remain owned and stable throughout accepted operation; no unpriced protection inferred.",
+  "functional_parent_qualified": false,
+  "SS60_FF25_context_qualified": false,
+  "whole_ALLON_qualified": false
+}
