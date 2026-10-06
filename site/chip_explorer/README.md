@@ -39,11 +39,16 @@ The rendering code does not need to change.
 
 Rack data (`DATA.racks`, `DATA.links`) is assembled in `tools/chip_explorer_build.py`:
 - frame, cable, power-shelf and cooling constants come from `results/arch/v41_rack.json`, the legacy 28-stage rack study;
-- S81 die counts come from `results/uarch/dsrom_c_recheck_20261004/model.json`, and the 52 added draft dies from the DP1-EP5 draft record;
+- the DS ROM S81 racks, die counts, HBM stacks and hop classes come from `results/arch/dsrom_s81_rack_20261006/rack.json` (`tools/dsrom_s81_rack.py`);
 - per-die power comes from the S81 full-die floorplan and the HBM die floorplan, and system power from `results/arch/energy_silicon_measured/energy_silicon.json`;
-- link rates come from `results/rtl/dsrom_1m_allmeasured_20261004/links.json` and `configs/hardware/technology.json`.
+- link rates come from `results/rtl/dsrom_1m_allmeasured_20261004/links.json` and `configs/hardware/technology.json`; link latencies from `results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json`.
 
-No committed S81 or HBM-accelerator rack design exists yet. The build packs trays into racks itself (`build_racks`), and those values are marked estimate. Replace them when a rack record lands.
+The S81 rack record resolves three conflicts the rack view exposed (CLAUDE DS-RACK, 2026-10-06):
+- **Links.** Owner decision 2026-10-06: every link that leaves a package runs full RS(544,514) FEC (board, in-rack cable, rack to rack), for the DS ROM array and the HBM accelerator. Light FEC is not used anywhere; in-package UCIe keeps its own spec. The DS ROM stage hop, token return and TP4 collectives are re-measured in RTL on the full-FEC channel; each hop class adds only its cable flight beyond the 0.3 m inside the 209 ns channel. The packing puts two stages in a tray and runs the chain down R1 and up R2. That gives 40 board hops, 39 tray-to-tray hops and 1 rack crossing, the minimum for 81 stages at two a tray.
+- **HBM stacks.** KV stacks are sized to need (scenario C). The 32 scan dies and the 12 head dies have 4 stacks each, the other 292 layer dies have 1, and the Engram table and draft dies have none: 468 stacks. The S81 die floorplan is the scan die. The power model's 452 is the same rule at 8 head dies.
+- **Head and table dies.** The split is 12 head dies plus 36 Engram table dies, making 372 dies, plus 52 draft dies for 424 in total. Two older figures are stale: 8 + 36 from the C1 ledger, and 12 + 32 that this page showed earlier.
+
+The HBM accelerator fits one rack; its packing is still built here (`build_racks`) and marked estimate.
 
 Known stale inputs, to refresh when they land on main:
 - Qwen ROM r17b. It is being rebuilt without the near-HBM row engines and with its clocks wired.

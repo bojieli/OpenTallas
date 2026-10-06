@@ -4,14 +4,15 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 575.4,
- "AR_tok_s": 1737.9,
+ "AR_us": 597.449,
+ "AR_tok_s": 1673.8,
  "critical_path_us_by_class": {
   "zero": 0.0,
-  "measured": 512.586,
-  "measured+vendor_phy": 45.096,
+  "measured": 527.406,
+  "measured+vendor_phy": 50.361,
   "inside_measured": 0.19,
-  "extra_S81_hops": 17.422
+  "extra_S81_hops": 19.243,
+  "cable_flight": 0.143
  },
  "measured_share": 0.9998,
  "modelled_on_path_us": 0,
@@ -26,69 +27,69 @@
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
-    "busy_us": 23.6087
+    "busy_us": 24.1087
    },
    {
     "first": "L13.ffn.hc_pre",
     "hop": "L14.substage_hop0",
-    "busy_us": 20.6067
+    "busy_us": 21.1067
    },
    {
     "first": "L7.ffn.hc_pre",
     "hop": "L8.substage_hop0",
-    "busy_us": 19.9129
+    "busy_us": 20.4129
    },
    {
     "first": "L1.ffn.hc_pre",
     "hop": "L2.substage_hop0",
-    "busy_us": 17.792
+    "busy_us": 18.292
    },
    {
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
-    "busy_us": 13.4671
+    "busy_us": 13.9671
    },
    {
     "first": "L31.ffn.hc_pre",
     "hop": "L32.substage_hop0",
-    "busy_us": 13.4671
+    "busy_us": 13.9671
    }
   ],
   "worst_stage": {
    "first": "L19.ffn.hc_pre",
    "hop": "L20.substage_hop0",
-   "busy_us": 23.6087
+   "busy_us": 24.1087
   },
-  "II_us": 24.463,
-  "verify_us": 697.713,
-  "draft_us": 119.211,
+  "II_us": 25.05,
+  "verify_us": 722.697,
+  "draft_us": 122.788,
   "draft_terms": {
    "block5_us": 38.3718,
-   "blocks_us": 83.992,
+   "blocks_us": 87.57,
    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
    "head_occ_us": 6.9892,
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 820.14,
-  "MTP_tok_s": 5071.1,
+  "step_us": 848.702,
+  "MTP_tok_s": 4900.4,
   "tau": 4.159,
   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
-  "mtp_over_ar": 2.918,
+  "mtp_over_ar": 2.928,
   "tau_sensitivity": {
    "published": {
     "tau": 3.8879,
-    "MTP_tok_s": 4740.5,
+    "MTP_tok_s": 4581.0,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
    },
    "published_low": {
     "tau": 3.43,
-    "MTP_tok_s": 4182.2,
+    "MTP_tok_s": 4041.5,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
    },
    "published_high": {
     "tau": 4.31748,
-    "MTP_tok_s": 5264.3,
+    "MTP_tok_s": 5087.2,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
   },
@@ -153,7 +154,7 @@
    "why": "no S81 clock-region map of every 1.2 GHz edge; the clocking decision prices them at +661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"
   },
   {
-   "term": "light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)",
+   "term": "full-KP4 PHY (209 ns a board or cable hop, OWNER full-FEC baseline 2026-10-06) and UCIe PHY (10 ns)",
    "us": null,
    "why": "VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"
   },
@@ -199,7 +200,7 @@
   {
    "term": "embed (owner-rank ROM row read + wire + TP4 send + 4-copy expand)",
    "record": "embed.json",
-   "us_on_path": 0.812,
+   "us_on_path": 0.895,
    "exact": true,
    "was": "modelled 0.032 us"
   },
@@ -220,14 +221,14 @@
   {
    "term": "MTP draft: three DSpark blocks at full shape",
    "record": "draft_blocks.json",
-   "us": 83.992,
+   "us": 87.57,
    "exact": true,
    "was": "43.215 us reduced-vehicle"
   }
  ],
  "requires_binding": [],
  "info": {
-  "hop_us": 0.7575,
+  "hop_us": 0.8366666666666667,
   "cand": {
    "local_after_scan_cycles": 11720,
    "reader_cycles": 5821
@@ -263,13 +264,13 @@
    },
    "record": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json"
   },
-  "hop_tier": "light_fec",
+  "hop_tier": "full_fec",
   "engram": {
    "nodes": 10,
    "exact": true
   },
   "embed": {
-   "us": 0.81191,
+   "us": 0.8952,
    "parts": {
     "rom": 0.2692,
     "wire": 0.0667,
@@ -282,7 +283,16 @@
   "draft_blocks": {
    "us": 83.992,
    "lever": "draft",
-   "source": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json (DP1-EP5 placement; tools/dsrom_1m_draft_blocks.py recovery)"
+   "source": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json (DP1-EP5 placement; tools/dsrom_1m_draft_blocks.py recovery)",
+   "full_fec": {
+    "us": 3.5775,
+    "cycles": 4293,
+    "board_hops": 7,
+    "collective_issues": 36,
+    "hop_delta_cycles": 99,
+    "collective_delta_cycles": 100,
+    "record": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
+   }
   },
   "levers": {
    "applied": [
@@ -369,2203 +379,2216 @@
    "model_f2s_us": 0.00444,
    "model_s2f_us": 0.00417,
    "unpatched_swapped": 49
+  },
+  "full_fec": {
+   "rack": "results/arch/dsrom_s81_rack_20261006/rack.json",
+   "links": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+   "cable_flight_us": 0.1433,
+   "stage_hops_by_class": {
+    "in-tray": 40,
+    "in-rack": 39,
+    "rack-to-rack": 1
+   },
+   "head_hop": "rack-to-rack",
+   "token_return": "in-rack",
+   "ii_hop_cable_us": 0.0058
   }
  },
  "patches": [
   {
    "node": "L0.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L3.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L9.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L21.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.substage_hop1",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.substage_hop0",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "head.hop",
    "model_us": 0.4446,
-   "measured_us": 0.7575,
+   "measured_us": 0.8367,
    "cls": "measured+vendor_phy",
-   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+   "source": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc)",
    "modelled_part_us": 0.0
   },
   {
    "node": "token.return",
    "model_us": 1.7512,
-   "measured_us": 1.155,
+   "measured_us": 1.815,
    "cls": "measured+vendor_phy",
-   "source": "token return: 8 x (link_rt endpoint 6 cyc + light-FEC PHY VENDOR BUDGET 156 cyc) + 90 wire",
+   "source": "token return: 8 x (link_rt endpoint 6 cyc + full-KP4 PHY VENDOR BUDGET 209 ns + 4 cyc cable flight) + 90 wire",
    "modelled_part_us": 0.0
   },
   {
    "node": "L0.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.attn.a_allgather",
    "model_us": 0.2496,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L3.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.a_allgather",
    "model_us": 0.2496,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L9.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.a_allgather",
    "model_us": 0.2496,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.a_allgather",
    "model_us": 0.2384,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L21.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.attn.a_allgather",
    "model_us": 0.2346,
-   "measured_us": 0.2333,
+   "measured_us": 0.3167,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 3648 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.idx.topk_merge",
    "model_us": 0.2814,
-   "measured_us": 0.2783,
+   "measured_us": 0.3617,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 16384 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.cand.merge",
    "model_us": 0.4603,
-   "measured_us": 0.4583,
+   "measured_us": 0.5417,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 65536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 65536 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L0.attn.rows_allgather",
    "model_us": 0.4678,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.attn.rows_allgather",
    "model_us": 0.4678,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L3.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L9.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L15.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.attn.rows_allgather",
    "model_us": 0.6667,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L21.attn.rows_allgather",
    "model_us": 0.6758,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.attn.rows_allgather",
    "model_us": 0.6758,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.attn.rows_allgather",
    "model_us": 0.6758,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.rows_allgather",
    "model_us": 0.0,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.attn.rows_allgather",
    "model_us": 0.6692,
-   "measured_us": 0.4658,
+   "measured_us": 0.5492,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 67584 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L0.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L3.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L9.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L21.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.attn.out_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L0.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L1.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L2.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L3.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L4.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L5.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L6.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L7.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L8.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L9.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L10.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L11.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L12.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L13.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L14.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L15.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L16.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L17.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L18.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L19.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L20.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L21.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L22.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L23.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L24.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L25.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L26.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L27.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L28.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L29.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L30.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L31.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L32.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L33.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L34.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L35.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L36.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L37.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L38.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L39.ffn.router_allgather",
    "model_us": 0.2304,
-   "measured_us": 0.2258,
+   "measured_us": 0.3092,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 1536 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L0.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L3.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L9.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L21.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.ffn.combine_allreduce",
    "model_us": 0.4869,
-   "measured_us": 0.4917,
+   "measured_us": 0.575,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_reduce 20480 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact",
    "modelled_part_us": 0.0
   },
   {
    "node": "head.argmax_merge",
    "model_us": 0.2257,
-   "measured_us": 0.22,
+   "measured_us": 0.3033,
    "cls": "measured",
-   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), all_gather 32 B, bit-exact",
+   "source": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 32 B, bit-exact",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
@@ -6178,9 +6201,9 @@
   {
    "node": "embed",
    "model_us": 0.032,
-   "measured_us": 0.8119,
+   "measured_us": 0.8952,
    "cls": "measured",
-   "source": "embed: owner-rank ROM row read 323 cyc (ot_dsrom_embed_row_reader on the ROM macro, 320 words) + S81 floorplan wire 80 cyc + TP4 owner->4 ranks (all_gather 160 words/rank on tb_w15b_v41_tp4 S81) 442 cyc + SU 4-copy expand wired 97 slow cyc; serial",
+   "source": "embed: owner-rank ROM row read 323 cyc (ot_dsrom_embed_row_reader on the ROM macro, 320 words) + S81 floorplan wire 80 cyc + TP4 owner->4 ranks (all_gather 160 words/rank on tb_w15b_v41_tp4 S81) 442 cyc + SU 4-copy expand wired 97 slow cyc; serial + 100 cyc full-FEC board leg (links_full_fec.json, constant over every measured TP4 payload)",
    "modelled_part_us": 0.0
   },
   {
@@ -22838,7 +22861,7 @@
   },
   {
    "node": "embed",
-   "us": 0.8119,
+   "us": 0.8952,
    "cls": "measured"
   },
   {
@@ -22873,7 +22896,7 @@
   },
   {
    "node": "L0.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -22953,7 +22976,7 @@
   },
   {
    "node": "L0.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -22963,7 +22986,7 @@
   },
   {
    "node": "L0.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -22998,7 +23021,7 @@
   },
   {
    "node": "L0.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -23043,7 +23066,7 @@
   },
   {
    "node": "L0.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23098,7 +23121,7 @@
   },
   {
    "node": "L1.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -23178,7 +23201,7 @@
   },
   {
    "node": "L1.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23188,7 +23211,7 @@
   },
   {
    "node": "L1.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -23223,7 +23246,7 @@
   },
   {
    "node": "L1.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -23268,7 +23291,7 @@
   },
   {
    "node": "L1.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23308,7 +23331,7 @@
   },
   {
    "node": "L2.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -23353,7 +23376,7 @@
   },
   {
    "node": "L2.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -23368,7 +23391,7 @@
   },
   {
    "node": "L2.attn.rows_allgather",
-   "us": 0.4708,
+   "us": 0.5541,
    "cls": "measured"
   },
   {
@@ -23418,7 +23441,7 @@
   },
   {
    "node": "L2.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23428,12 +23451,12 @@
   },
   {
    "node": "L2.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L2.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -23468,7 +23491,7 @@
   },
   {
    "node": "L2.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -23513,7 +23536,7 @@
   },
   {
    "node": "L2.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23553,7 +23576,7 @@
   },
   {
    "node": "L3.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -23633,7 +23656,7 @@
   },
   {
    "node": "L3.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23643,7 +23666,7 @@
   },
   {
    "node": "L3.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -23678,7 +23701,7 @@
   },
   {
    "node": "L3.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -23723,7 +23746,7 @@
   },
   {
    "node": "L3.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23763,7 +23786,7 @@
   },
   {
    "node": "L4.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -23843,7 +23866,7 @@
   },
   {
    "node": "L4.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23853,12 +23876,12 @@
   },
   {
    "node": "L4.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L4.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -23893,7 +23916,7 @@
   },
   {
    "node": "L4.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -23938,7 +23961,7 @@
   },
   {
    "node": "L4.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -23978,7 +24001,7 @@
   },
   {
    "node": "L5.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -24058,7 +24081,7 @@
   },
   {
    "node": "L5.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24068,7 +24091,7 @@
   },
   {
    "node": "L5.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -24103,7 +24126,7 @@
   },
   {
    "node": "L5.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -24148,7 +24171,7 @@
   },
   {
    "node": "L5.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24188,7 +24211,7 @@
   },
   {
    "node": "L6.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -24268,7 +24291,7 @@
   },
   {
    "node": "L6.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24278,12 +24301,12 @@
   },
   {
    "node": "L6.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L6.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -24318,7 +24341,7 @@
   },
   {
    "node": "L6.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -24363,7 +24386,7 @@
   },
   {
    "node": "L6.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24403,7 +24426,7 @@
   },
   {
    "node": "L7.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -24483,7 +24506,7 @@
   },
   {
    "node": "L7.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24493,7 +24516,7 @@
   },
   {
    "node": "L7.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -24528,7 +24551,7 @@
   },
   {
    "node": "L7.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -24573,7 +24596,7 @@
   },
   {
    "node": "L7.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24613,7 +24636,7 @@
   },
   {
    "node": "L8.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -24658,7 +24681,7 @@
   },
   {
    "node": "L8.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -24673,7 +24696,7 @@
   },
   {
    "node": "L8.attn.rows_allgather",
-   "us": 0.4708,
+   "us": 0.5541,
    "cls": "measured"
   },
   {
@@ -24723,7 +24746,7 @@
   },
   {
    "node": "L8.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24733,12 +24756,12 @@
   },
   {
    "node": "L8.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L8.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -24773,7 +24796,7 @@
   },
   {
    "node": "L8.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -24818,7 +24841,7 @@
   },
   {
    "node": "L8.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24858,7 +24881,7 @@
   },
   {
    "node": "L9.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -24938,7 +24961,7 @@
   },
   {
    "node": "L9.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -24948,7 +24971,7 @@
   },
   {
    "node": "L9.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -24983,7 +25006,7 @@
   },
   {
    "node": "L9.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -25028,7 +25051,7 @@
   },
   {
    "node": "L9.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25068,7 +25091,7 @@
   },
   {
    "node": "L10.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -25148,7 +25171,7 @@
   },
   {
    "node": "L10.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25158,7 +25181,7 @@
   },
   {
    "node": "L10.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -25193,7 +25216,7 @@
   },
   {
    "node": "L10.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -25238,7 +25261,7 @@
   },
   {
    "node": "L10.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25278,7 +25301,7 @@
   },
   {
    "node": "L11.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -25358,7 +25381,7 @@
   },
   {
    "node": "L11.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25368,12 +25391,12 @@
   },
   {
    "node": "L11.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L11.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -25408,7 +25431,7 @@
   },
   {
    "node": "L11.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -25453,7 +25476,7 @@
   },
   {
    "node": "L11.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25493,7 +25516,7 @@
   },
   {
    "node": "L12.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -25573,7 +25596,7 @@
   },
   {
    "node": "L12.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25583,7 +25606,7 @@
   },
   {
    "node": "L12.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -25618,7 +25641,7 @@
   },
   {
    "node": "L12.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -25663,7 +25686,7 @@
   },
   {
    "node": "L12.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25703,7 +25726,7 @@
   },
   {
    "node": "L13.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -25783,7 +25806,7 @@
   },
   {
    "node": "L13.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25793,12 +25816,12 @@
   },
   {
    "node": "L13.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L13.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -25833,7 +25856,7 @@
   },
   {
    "node": "L13.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -25878,7 +25901,7 @@
   },
   {
    "node": "L13.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -25933,7 +25956,7 @@
   },
   {
    "node": "L14.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -25978,7 +26001,7 @@
   },
   {
    "node": "L14.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -25993,7 +26016,7 @@
   },
   {
    "node": "L14.attn.rows_allgather",
-   "us": 0.4708,
+   "us": 0.5541,
    "cls": "measured"
   },
   {
@@ -26043,7 +26066,7 @@
   },
   {
    "node": "L14.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26053,7 +26076,7 @@
   },
   {
    "node": "L14.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -26088,7 +26111,7 @@
   },
   {
    "node": "L14.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -26133,7 +26156,7 @@
   },
   {
    "node": "L14.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26173,7 +26196,7 @@
   },
   {
    "node": "L15.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -26253,7 +26276,7 @@
   },
   {
    "node": "L15.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26263,12 +26286,12 @@
   },
   {
    "node": "L15.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L15.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -26303,7 +26326,7 @@
   },
   {
    "node": "L15.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -26348,7 +26371,7 @@
   },
   {
    "node": "L15.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26388,7 +26411,7 @@
   },
   {
    "node": "L16.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -26468,7 +26491,7 @@
   },
   {
    "node": "L16.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26478,7 +26501,7 @@
   },
   {
    "node": "L16.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -26513,7 +26536,7 @@
   },
   {
    "node": "L16.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -26558,7 +26581,7 @@
   },
   {
    "node": "L16.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26598,7 +26621,7 @@
   },
   {
    "node": "L17.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -26678,7 +26701,7 @@
   },
   {
    "node": "L17.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26688,12 +26711,12 @@
   },
   {
    "node": "L17.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L17.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -26728,7 +26751,7 @@
   },
   {
    "node": "L17.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -26773,7 +26796,7 @@
   },
   {
    "node": "L17.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26813,7 +26836,7 @@
   },
   {
    "node": "L18.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -26893,7 +26916,7 @@
   },
   {
    "node": "L18.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -26903,7 +26926,7 @@
   },
   {
    "node": "L18.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -26938,7 +26961,7 @@
   },
   {
    "node": "L18.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -26983,7 +27006,7 @@
   },
   {
    "node": "L18.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27023,7 +27046,7 @@
   },
   {
    "node": "L19.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -27103,7 +27126,7 @@
   },
   {
    "node": "L19.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27113,12 +27136,12 @@
   },
   {
    "node": "L19.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L19.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -27153,7 +27176,7 @@
   },
   {
    "node": "L19.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -27198,7 +27221,7 @@
   },
   {
    "node": "L19.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27238,7 +27261,7 @@
   },
   {
    "node": "L20.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -27283,7 +27306,7 @@
   },
   {
    "node": "L20.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -27298,7 +27321,7 @@
   },
   {
    "node": "L20.attn.rows_allgather",
-   "us": 0.4708,
+   "us": 0.5541,
    "cls": "measured"
   },
   {
@@ -27348,7 +27371,7 @@
   },
   {
    "node": "L20.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27358,7 +27381,7 @@
   },
   {
    "node": "L20.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -27393,7 +27416,7 @@
   },
   {
    "node": "L20.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -27438,7 +27461,7 @@
   },
   {
    "node": "L20.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27478,7 +27501,7 @@
   },
   {
    "node": "L21.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -27558,7 +27581,7 @@
   },
   {
    "node": "L21.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27568,7 +27591,7 @@
   },
   {
    "node": "L21.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -27603,7 +27626,7 @@
   },
   {
    "node": "L21.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -27648,7 +27671,7 @@
   },
   {
    "node": "L21.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27688,7 +27711,7 @@
   },
   {
    "node": "L22.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -27768,7 +27791,7 @@
   },
   {
    "node": "L22.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27778,12 +27801,12 @@
   },
   {
    "node": "L22.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L22.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -27818,7 +27841,7 @@
   },
   {
    "node": "L22.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -27863,7 +27886,7 @@
   },
   {
    "node": "L22.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27903,7 +27926,7 @@
   },
   {
    "node": "L23.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -27983,7 +28006,7 @@
   },
   {
    "node": "L23.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -27993,7 +28016,7 @@
   },
   {
    "node": "L23.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -28028,7 +28051,7 @@
   },
   {
    "node": "L23.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -28073,7 +28096,7 @@
   },
   {
    "node": "L23.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28113,7 +28136,7 @@
   },
   {
    "node": "L24.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -28158,7 +28181,7 @@
   },
   {
    "node": "L24.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -28173,7 +28196,7 @@
   },
   {
    "node": "L24.attn.rows_allgather",
-   "us": 0.4658,
+   "us": 0.5492,
    "cls": "measured"
   },
   {
@@ -28223,7 +28246,7 @@
   },
   {
    "node": "L24.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28233,12 +28256,12 @@
   },
   {
    "node": "L24.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L24.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -28273,7 +28296,7 @@
   },
   {
    "node": "L24.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -28318,7 +28341,7 @@
   },
   {
    "node": "L24.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28358,7 +28381,7 @@
   },
   {
    "node": "L25.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -28438,7 +28461,7 @@
   },
   {
    "node": "L25.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28448,7 +28471,7 @@
   },
   {
    "node": "L25.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -28483,7 +28506,7 @@
   },
   {
    "node": "L25.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -28528,7 +28551,7 @@
   },
   {
    "node": "L25.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28568,7 +28591,7 @@
   },
   {
    "node": "L26.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -28648,7 +28671,7 @@
   },
   {
    "node": "L26.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28658,12 +28681,12 @@
   },
   {
    "node": "L26.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L26.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -28698,7 +28721,7 @@
   },
   {
    "node": "L26.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -28743,7 +28766,7 @@
   },
   {
    "node": "L26.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28783,7 +28806,7 @@
   },
   {
    "node": "L27.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -28863,7 +28886,7 @@
   },
   {
    "node": "L27.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28873,7 +28896,7 @@
   },
   {
    "node": "L27.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -28908,7 +28931,7 @@
   },
   {
    "node": "L27.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -28953,7 +28976,7 @@
   },
   {
    "node": "L27.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -28993,7 +29016,7 @@
   },
   {
    "node": "L28.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -29038,7 +29061,7 @@
   },
   {
    "node": "L28.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -29053,7 +29076,7 @@
   },
   {
    "node": "L28.attn.rows_allgather",
-   "us": 0.4658,
+   "us": 0.5492,
    "cls": "measured"
   },
   {
@@ -29103,7 +29126,7 @@
   },
   {
    "node": "L28.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29113,12 +29136,12 @@
   },
   {
    "node": "L28.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L28.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -29153,7 +29176,7 @@
   },
   {
    "node": "L28.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -29198,7 +29221,7 @@
   },
   {
    "node": "L28.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29238,7 +29261,7 @@
   },
   {
    "node": "L29.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -29318,7 +29341,7 @@
   },
   {
    "node": "L29.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29328,7 +29351,7 @@
   },
   {
    "node": "L29.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -29363,7 +29386,7 @@
   },
   {
    "node": "L29.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -29408,7 +29431,7 @@
   },
   {
    "node": "L29.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29448,7 +29471,7 @@
   },
   {
    "node": "L30.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -29528,7 +29551,7 @@
   },
   {
    "node": "L30.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29538,7 +29561,7 @@
   },
   {
    "node": "L30.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -29573,7 +29596,7 @@
   },
   {
    "node": "L30.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -29618,7 +29641,7 @@
   },
   {
    "node": "L30.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29658,7 +29681,7 @@
   },
   {
    "node": "L31.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -29738,7 +29761,7 @@
   },
   {
    "node": "L31.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29748,12 +29771,12 @@
   },
   {
    "node": "L31.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L31.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -29788,7 +29811,7 @@
   },
   {
    "node": "L31.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -29833,7 +29856,7 @@
   },
   {
    "node": "L31.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29873,7 +29896,7 @@
   },
   {
    "node": "L32.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -29918,7 +29941,7 @@
   },
   {
    "node": "L32.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -29933,7 +29956,7 @@
   },
   {
    "node": "L32.attn.rows_allgather",
-   "us": 0.4658,
+   "us": 0.5492,
    "cls": "measured"
   },
   {
@@ -29983,7 +30006,7 @@
   },
   {
    "node": "L32.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -29993,7 +30016,7 @@
   },
   {
    "node": "L32.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -30028,7 +30051,7 @@
   },
   {
    "node": "L32.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -30073,7 +30096,7 @@
   },
   {
    "node": "L32.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30113,7 +30136,7 @@
   },
   {
    "node": "L33.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -30193,7 +30216,7 @@
   },
   {
    "node": "L33.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30203,12 +30226,12 @@
   },
   {
    "node": "L33.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L33.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -30243,7 +30266,7 @@
   },
   {
    "node": "L33.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -30288,7 +30311,7 @@
   },
   {
    "node": "L33.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30328,7 +30351,7 @@
   },
   {
    "node": "L34.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -30408,7 +30431,7 @@
   },
   {
    "node": "L34.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30418,7 +30441,7 @@
   },
   {
    "node": "L34.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -30453,7 +30476,7 @@
   },
   {
    "node": "L34.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -30498,7 +30521,7 @@
   },
   {
    "node": "L34.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30538,7 +30561,7 @@
   },
   {
    "node": "L35.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -30618,7 +30641,7 @@
   },
   {
    "node": "L35.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30628,12 +30651,12 @@
   },
   {
    "node": "L35.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L35.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -30668,7 +30691,7 @@
   },
   {
    "node": "L35.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -30713,7 +30736,7 @@
   },
   {
    "node": "L35.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30753,7 +30776,7 @@
   },
   {
    "node": "L36.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -30798,7 +30821,7 @@
   },
   {
    "node": "L36.attn.idx.topk_merge",
-   "us": 0.2783,
+   "us": 0.3617,
    "cls": "measured"
   },
   {
@@ -30813,7 +30836,7 @@
   },
   {
    "node": "L36.attn.rows_allgather",
-   "us": 0.4658,
+   "us": 0.5492,
    "cls": "measured"
   },
   {
@@ -30863,7 +30886,7 @@
   },
   {
    "node": "L36.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30873,7 +30896,7 @@
   },
   {
    "node": "L36.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -30908,7 +30931,7 @@
   },
   {
    "node": "L36.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -30953,7 +30976,7 @@
   },
   {
    "node": "L36.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -30993,7 +31016,7 @@
   },
   {
    "node": "L37.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -31073,7 +31096,7 @@
   },
   {
    "node": "L37.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31083,12 +31106,12 @@
   },
   {
    "node": "L37.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
    "node": "L37.substage_hop1",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -31123,7 +31146,7 @@
   },
   {
    "node": "L37.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -31168,7 +31191,7 @@
   },
   {
    "node": "L37.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31208,7 +31231,7 @@
   },
   {
    "node": "L38.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -31288,7 +31311,7 @@
   },
   {
    "node": "L38.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31298,7 +31321,7 @@
   },
   {
    "node": "L38.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -31333,7 +31356,7 @@
   },
   {
    "node": "L38.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -31378,7 +31401,7 @@
   },
   {
    "node": "L38.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31418,7 +31441,7 @@
   },
   {
    "node": "L39.attn.a_allgather",
-   "us": 0.2333,
+   "us": 0.3167,
    "cls": "measured"
   },
   {
@@ -31498,7 +31521,7 @@
   },
   {
    "node": "L39.attn.out_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31508,7 +31531,7 @@
   },
   {
    "node": "L39.substage_hop0",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -31543,7 +31566,7 @@
   },
   {
    "node": "L39.ffn.router_allgather",
-   "us": 0.2308,
+   "us": 0.3141,
    "cls": "measured"
   },
   {
@@ -31588,7 +31611,7 @@
   },
   {
    "node": "L39.ffn.combine_allreduce",
-   "us": 0.4917,
+   "us": 0.575,
    "cls": "measured"
   },
   {
@@ -31598,7 +31621,7 @@
   },
   {
    "node": "head.hop",
-   "us": 0.7575,
+   "us": 0.8367,
    "cls": "measured+vendor_phy"
   },
   {
@@ -31633,12 +31656,12 @@
   },
   {
    "node": "head.argmax_merge",
-   "us": 0.2249,
+   "us": 0.3083,
    "cls": "measured"
   },
   {
    "node": "token.return",
-   "us": 1.155,
+   "us": 1.815,
    "cls": "measured+vendor_phy"
   }
  ],
@@ -31677,7 +31700,7 @@
   "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "c7aeb690326f6167bea94c6caebebd980cc60fcd3be7be7bc17cc1e64e66ada5",
+  "tools/dsrom_1m_allmeasured.py": "a6e49d626fc2f780d9ae10c302c86346aee816d4159ec5dcd6c2b3dc32b389f3",
   "tools/dsrom_1m_measure.py": "bf3feec72e3211c22cc9d08616ecac10a50b2a43a2035e15676a91c3ee056a67"
  }
 }
