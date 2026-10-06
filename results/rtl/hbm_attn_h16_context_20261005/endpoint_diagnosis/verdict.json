@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.h16.actual_cts_endpoint_diagnosis.v1",
+  "status": "FAIL_PRESERVED_NO_CLOCK_QUALIFICATION",
+  "source_commit": "d42ab03089f6da7a0f747f5bb4bbbc2a2debbb38",
+  "bulk_host": "ot-epyc2",
+  "bulk_root": "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_cts_diagnostic",
+  "reconstruction": {
+    "original_failed_cts_saved_odb": false,
+    "reconstructed_workers": 1,
+    "original_workers": 16,
+    "same_native_hold_buffers": 28221,
+    "same_native_wc_hold_wns_ps": -2398.384766,
+    "all_negative_endpoints": true,
+    "endpoint_count_bound": "actual get_pins inventory 251138"
+  },
+  "policy": {
+    "period_ps": 833.333333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "input_min_ps": 0,
+    "input_max_ps": 166.666667,
+    "output_delay_ps": 166.666667
+  },
+  "actual_worst_hold": {
+    "input": "ib[27]",
+    "shared_SS_load_fF": 44.0736,
+    "WC_data_arrival_ps": 80.121788,
+    "WC_macro_clock_pin_ps": 2004.549194,
+    "WC_macro_hold_ps": 448.957336,
+    "BC_data_arrival_ps": 52.995316,
+    "BC_macro_clock_pin_ps": 1410.032471,
+    "BC_macro_hold_ps": 283.809448,
+    "BC_slack_ps": -1665.846558
+  },
+  "highest_shared_input": {
+    "input": "ib[348]",
+    "shared_SS_load_fF": 211.888,
+    "WC_path": "input404 BUFx8 -> wire228108 BUFx16f -> place182964 BUFx3 -> g_g[4].u_g/ib[348]",
+    "WC_arrival_ps": 603.949951,
+    "WC_hold_slack_ps": -1851.67041,
+    "BC_arrival_ps": 442.842499,
+    "BC_hold_slack_ps": -1246.915649
+  },
+  "source_classification": {
+    "worst_input_path": "buffers and wire only; no source arithmetic/combinational operator",
+    "output_path": "real macro clkQ plus buffers and wire; no source arithmetic",
+    "external_input_launch_clock_network_ps": 0,
+    "external_output_capture_clock_network_ps": 0,
+    "macro_clock": "propagated actual CTS insertion",
+    "canonical_leaf": "gated/falsepathed IO leaf +18.911/+1.545 does not qualify these parent interfaces",
+    "allcorner_spef_bug": "not this diagnostic; placement parasitics explicit WC/BC native",
+    "physical_clock_contract_mismatch": "selected model M8/M9 tracks but native GRT clock layers M4..M9; CTS placement uses platform effective clock RC",
+    "native_clock_RC_ohm_per_um": 0.0214161,
+    "selected_M8_RC": [
+      0.00844765,
+      0.103962
+    ],
+    "selected_M9_RC": [
+      0.00889556,
+      0.0928446
+    ],
+    "must_not_claim": "GRT routed M8/M9 clock, final extracted closure, unqualified input-launch or receiver relationship",
+    "native_clock_RC_platform_capacitance_per_length": 0.145426,
+    "RC_units_note": "Exact native setRC.tcl numeric values; capacitance unit follows loaded Liberty/OpenROAD units, not asserted pF."
+  },
+  "PG": {
+    "VDD": "PASS",
+    "VSS": "PSM0069 FAIL preserved",
+    "repair_owner": "Codex:Turing",
+    "repair_scope": "finite in-core M2 boundary landing, retained actual halo5 tapcell predecessor; no duplicate PG repair"
+  },
+  "next_action": "Implement source-faithful launch/broadcast/receiver clock relation with actual parent contract and selected physical clock tracks; price cuts before RTL; original input/output constraints and SS/FF policy remain required; no density rerun",
+  "evidence_sha256": {
+    "classify.py": "f8e774d44a99610d2d0b9e2375de9b91dd47922b32db42f1d75e4a98c363a143",
+    "all_endpoint_classes.json": "52f00743089e2e46af3d662fa214be0cd3ccf5ef4d5158337244900adda4321d",
+    "after_repair_WC_max_worst.rpt": "57b4707a48ddca17b09ccbbe1c42cefbddf8a8c2766e24631e22382dd7c2b042",
+    "after_repair_WC_min_ib348.rpt": "570faf2e6caf30f948f055d1442cdaed18d1948e91fa29c48eda1e35e8a3ce69",
+    "after_repair_WC_min_worst.rpt": "8acacb9cf22b169268189de95e353a0bc90de375ed64b04ad4384dbd9c1097a7",
+    "before_repair_instance_distribution.json": "7500b0e57b74ef00f21db21a20eaf2f814e29c0de5e9cb92bdea6e8c6e191db7",
+    "before_repair_BC_min_worst.rpt": "024ab3f837144e81f81ba1f2db5d11f5415d7fbe6380bc42b2c8225f34333b39",
+    "after_repair_BC_min_worst.rpt": "024ab3f837144e81f81ba1f2db5d11f5415d7fbe6380bc42b2c8225f34333b39",
+    "before_repair_BC_min_ib348.rpt": "99e7c4fee7ff3155b1503d86d48554ddc3e6a8042fa76cb8f20a6efa75b72f5c",
+    "before_repair_BC_max_worst.rpt": "924978f2453b5b5f95de3d4716540d76c0acbbabcb2e797ca88fa6379f326906",
+    "after_repair_BC_max_worst.rpt": "5c0a963c75fc17665b5259da4e36134e36d9e31bd6866fa556efeeb3cdaedcc4",
+    "before_repair_WC_min_ib348.rpt": "570faf2e6caf30f948f055d1442cdaed18d1948e91fa29c48eda1e35e8a3ce69",
+    "before_repair_WC_max_worst.rpt": "44fb414ae9bb4aaa5029d6a9eba0810904d2db3d9d55a6129c6daa74c5a67a97",
+    "before_repair_WC_min_worst.rpt": "8acacb9cf22b169268189de95e353a0bc90de375ed64b04ad4384dbd9c1097a7",
+    "after_repair_instance_distribution.json": "488ae7e50e84c5b1413d0003b6825442d08955bb20c1c267bbc55bc8cb23bb09",
+    "after_repair_BC_min_ib348.rpt": "99e7c4fee7ff3155b1503d86d48554ddc3e6a8042fa76cb8f20a6efa75b72f5c"
+  }
+}

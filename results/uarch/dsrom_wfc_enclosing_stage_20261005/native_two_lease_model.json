@@ -1,0 +1,68 @@
+{
+  "before_RTL": true,
+  "MAXU": 866,
+  "SOURCE": 0,
+  "mechanism": "Legal native RX nextposition concurrent TX previousposition: perform TX-only original read issue then actual queue capture/consumption and provider retirement; RX tuple held unaccepted and immutable; perform RX-only protected write with distinct savedowner then actual native acceptance/consumption and provider retirement before another TXread. XB unaccepted/backpressured during pair; sameowner normal read2/write5 path unchanged.",
+  "retained_fields": {
+    "current_provider_owner47_shadow94": true,
+    "paired_write_owner47_shadow94": true,
+    "state4_shadow8": true,
+    "flags9_shadow18": true,
+    "expectedwe5_shadow10": true
+  },
+  "caller_FF": 224,
+  "delta_FF": 98,
+  "new_read_payload_copy_FF": 0,
+  "new_write_payload_copy_FF": 0,
+  "new_memory_ports": 0,
+  "new_completion_authorities": 0,
+  "new_codecs": 0,
+  "MACs_per_cycle": 0,
+  "boundary_bits_delta": 33,
+  "tracks_delta": 33,
+  "mux": "two native memory step qualifiers, true savedlease comparator47 inside existing512NAND control margin",
+  "new_pipeline_edges": 0,
+  "latency": "Existing firstread reply12-13fast+ISSUE1+CAPTURE1+DRAIN1+receipt6-7 then nextwrite20-21fast+ISSUE1+DRAIN1+receipt6-7 plus phase transitions; two serial actual protected packets, measured accepted->retired pair in changed overlap fixture before composing. No free overlap or oneedge assumptions.",
+  "projected_pair_fast_edges_range": [
+    51,
+    57
+  ],
+  "projected_pair_ns_at833ps": [
+    42.5,
+    47.5
+  ],
+  "area_delta_um2_upper": 74.29968,
+  "parent_slot": "Turing currentWFC core648x648 logic+VM288 macro body unchanged; existingCE/control budget2923um2 retains growth allowance",
+  "default_ENABLE": 0,
+  "default_STRUCTURAL": 0,
+  "exact": "Read old TX row BEFORE held RX write commits; actual native stream writes/reads/pointers each advance once, not two duplicate general steps; both owner receipts protected by unchanged provider. Wrong/missing held write tuple faults, warm pair remains owned.",
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "adopted": false,
+  "actual_changed_source_measurement": {
+    "source": "1860b98a0",
+    "receipt": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r4_PASS/result.json",
+    "legal_pairs": 41,
+    "first_read_accept_to_write_accept_fast_edges": [
+      23,
+      23
+    ],
+    "controller_read_reply_fast_edges": [
+      12,
+      13
+    ],
+    "controller_write_reply_fast_edges": [
+      20,
+      21
+    ],
+    "consume_to_retire_fast_edges": [
+      6,
+      7
+    ],
+    "nominal_fast_cycles": 18736,
+    "actual_second_native_capture_fast_edges": 3,
+    "latency_composed": "23 actual fastedges read accept->writeaccept; add measured write reply20/21 +two nativecommit/consume stateedges+actualreceipt6/7 before second retirement; preserve consumer stalls, no overlap credit. Fixture/coldinit/preload totals not token latency.",
+    "field_spine_v11_costs": "Not included: standaloneP0. Future binding requires owner-confirmed +1 broadcast/root/rowwrite edges and actualphase into selectedS81 source.",
+    "token_credit": 0
+  }
+}

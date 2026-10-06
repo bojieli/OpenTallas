@@ -1,0 +1,15 @@
+{
+  "source_commit": "090bd3652350efbe578d644fa1ae19e6469c1ab7",
+  "remote_path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/5_1_grt.tmp.log",
+  "snapshot_bytes": 109173,
+  "snapshot_sha256": "0fe64cbd4fa83601ea4541a951c4bffec44547548178500e2649cb2b1a987b7f",
+  "literal_phase_evidence": [
+    "    final |       0 |    2052 |        0 |      0 |     0 |    +0.1% | -619.571 | -2279824.0 | -3057455.8 |  16456 | o_tx_rec[122]",
+    "[WARNING RSZ-0062] Unable to repair all setup violations.",
+    "[INFO RSZ-0046] Found 8939 endpoints with hold violations.",
+    "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+    "     1180 |       0 |    4716 |            0 |    +0.9% | -715.284 | -5771195.000 | data[6562]$_DFF_P_/D"
+  ],
+  "live": true,
+  "signoff": false
+}

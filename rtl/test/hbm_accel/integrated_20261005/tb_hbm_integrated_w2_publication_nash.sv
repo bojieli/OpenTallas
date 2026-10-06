@@ -1,10 +1,14 @@
 `timescale 1ns/1ps
 // Component fixture: actual CP20, W2 sink, shared protected borrower and byte RAM.
 // Distinct literal payloads are test stimulus, not native arithmetic outputs.
+// This component has root POR only; it does not certify parent warm quarantine.
 module tb_hbm_integrated_w2_publication_nash;
  parameter integer REGISTERED_SUBBLOCKS=0;
+ parameter integer PROTECTED_TRANSACTION_PIPELINE=0;
+ parameter integer PROTECTED_PARENT_BOUNDARY=0;
  `include "private_alloc.svh"
- reg clk=0; always #5 clk=~clk;
+ reg clk=0; always #(PROTECTED_PARENT_BOUNDARY?0.416666666667:5) clk=~clk;
+ reg clk_mem=0;always #0.512 clk_mem=~clk_mem;
  reg por_n=0,cmd_we=0,db_v=0,cpl_rdy=0;
  reg [1:0] cmd_addr=0; reg [63:0] cmd_wdata=0;
  localparam [31:0] JOB=32'h9234abcd, OPA=32'h00002317, OPB=32'h0000b5a2;
@@ -22,7 +26,7 @@ module tb_hbm_integrated_w2_publication_nash;
   .db_v(db_v),.db_rdy(db_rdy),.db_token(TOKEN),.db_pos(POS),.db_job(JOB),.db_generation(GEN),
   .cpl_position(cpl_position),.cpl_job(cpl_job),.cpl_generation(cpl_generation),
   .launch_v(launch_v),.launch_pc(launch_pc),.launch_token(launch_token),.launch_pos(launch_pos),
-  .sm_done(sm_done),.sm_fault({1'b0,shared_fault|sink_fault}),.res_v(res_v),.res_data(res_data),
+  .sm_done(sm_done),.sm_fault({1'b0,shared_fault|sink_fault|boundary_fault}),.res_v(res_v),.res_data(res_data),
   .cpl_v(cpl_v),.cpl_rdy(cpl_rdy),.cpl_token(cpl_token),.cpl_status(cpl_status),
   .cpl_cycles(cpl_cycles),.st_kernels(st_kernels),.st_busy(st_busy));
  reg lease_requested=0,reserve_v=0,release_intent=0,allocated=0;
@@ -42,6 +46,9 @@ module tb_hbm_integrated_w2_publication_nash;
  integer cycle=0,writes=0,reads=0,verified=0,released=0,request_stalls=0,delivery_stalls=0;
  integer provider_age=0,accepted_requests=0,consumed_responses=0;
  reg provider_pending=0,corrupt=0,corrupted=0,cp_callback=0;
+ reg control_corrupt=0,owner_corrupt=0,protection_injected=0;
+ reg boundary_due=0;
+ wire protection_negative=control_corrupt||owner_corrupt||boundary_due;
  reg [7:0] ram[0:RAM_BYTES-1];
  wire provider_drained=!provider_pending&&!m_rsp_v&&accepted_requests==consumed_responses;
  wire installed=allocated && BASE_A[5:0]==0 && BASE_B[5:0]==0 &&
@@ -50,9 +57,75 @@ module tb_hbm_integrated_w2_publication_nash;
  // Same parent hook: native completion alone is insufficient to request release.
  wire release_v=release_intent&&sink_retire_r;
  wire release_accept=release_v&&releases[2];
+ wire boundary_fault,boundary_drained;
+ wire o_m_req_v,o_m_req_ready,o_m_req_we,o_m_rsp_v,o_m_rsp_ready,o_m_rsp_we;
+ wire [31:0] o_m_req_addr,o_m_req_strb;wire [255:0] o_m_req_data,o_m_rsp_data;
+ wire [15:0] o_m_req_tag,o_m_rsp_tag;
+ generate if(PROTECTED_PARENT_BOUNDARY)begin:parent_boundary
+ ot_hbm_w2_gateway_cdc u_gateway(
+  .clk_s(clk),.rst_s_n(por_n),.clk_m(clk_mem),.rst_m_n(por_n),
+  .s_req_v(o_m_req_v),.s_req_rdy(o_m_req_ready),.s_req_we(o_m_req_we),.s_req_addr(o_m_req_addr),
+  .s_req_wdata(o_m_req_data),.s_req_wstrb(o_m_req_strb),.s_req_tag(o_m_req_tag),
+  .s_rsp_v(o_m_rsp_v),.s_rsp_rdy(o_m_rsp_ready),.s_rsp_we(o_m_rsp_we),.s_rsp_tag(o_m_rsp_tag),.s_rsp_data(o_m_rsp_data),
+  .m_req_v(m_req_v),.m_req_rdy(m_req_ready),.m_req_we(m_req_we),.m_req_addr(m_req_addr),
+  .m_req_wdata(m_req_data),.m_req_wstrb(m_req_strb),.m_req_tag(m_req_tag),
+  .m_rsp_v(m_rsp_v),.m_rsp_rdy(m_rsp_ready),.m_rsp_we(m_rsp_we),.m_rsp_tag(m_rsp_tag),.m_rsp_data(m_rsp_data),
+  .fault(boundary_fault),.drained_s(boundary_drained));
+ initial if($test$plusargs("CORRECT_GATEWAY_CE"))begin
+  wait(u_gateway.u_response_cut0.out_v);@(negedge clk);
+  u_gateway.u_response_cut0.u_state.code[0]=u_gateway.u_response_cut0.u_state.code[0]^72'h1;
+  $display("GATEWAY_CE_INJECT cycle=%0d",cycle);
+  @(negedge clk);
+  while(!u_gateway.u_response_cut0.u_state.normal)begin
+   if(boundary_fault||!owner.on.debt[0]||!grants[2]||release_accept||!por_n)
+    $fatal(1,"gateway CE lost protected accepted owner/debt");
+   @(negedge clk);
+  end
+  $display("PASS_GATEWAY_CE_REPAIR cycle=%0d retained_owner_debt=1",cycle);
+ end
+ initial if($test$plusargs("CORRUPT_GATEWAY_CONTROL"))begin
+  wait(u_gateway.u_request_cut0.out_v);@(negedge clk);
+  u_gateway.u_request_cut0.u_state.code[6]=u_gateway.u_request_cut0.u_state.code[6]^72'h3;
+  protection_injected=1;
+  repeat(12)begin @(negedge clk);
+   if(!boundary_fault||!owner.on.debt[0]||!grants[2]||release_accept||released||cp_callback||(cpl_v&&cpl_status==0))
+    $fatal(1,"gateway control DUE escaped accepted owner/debt");
+  end
+  $display("PASS_GATEWAY_DUE_ACCEPTED_DEBT_RETAINED");
+  $fatal(1,"EXPECTED_GATEWAY_CONTROL_FAIL_CLOSED");
+ end
+ initial if($test$plusargs("CORRECT_CDC_MEMORY_CE")||$test$plusargs("CORRUPT_CDC_MEMORY_DUE"))begin
+  wait(u_gateway.u_existing_shape_cdc.u_req.push);
+  @(posedge clk);@(negedge clk);
+  u_gateway.u_existing_shape_cdc.u_req.mem[0][71:0]=u_gateway.u_existing_shape_cdc.u_req.mem[0][71:0]^($test$plusargs("CORRUPT_CDC_MEMORY_DUE")?72'h3:72'h1);
+  if($test$plusargs("CORRUPT_CDC_MEMORY_DUE"))begin
+   protection_injected=1;wait(boundary_fault);
+   repeat(12)begin @(negedge clk);
+    if(!boundary_fault||!owner.on.debt[0]||!grants[2]||release_accept||released||cp_callback||(cpl_v&&cpl_status==0))
+     $fatal(1,"CDC memory DUE erased accepted owner/debt");
+   end
+   $display("PASS_CDC_MEMORY_DUE_ACCEPTED_DEBT_RETAINED");$fatal(1,"EXPECTED_CDC_MEMORY_FAIL_CLOSED");
+  end else begin
+   wait(u_gateway.u_existing_shape_cdc.u_req.u_head.repairing);
+   $display("CDC_MEMORY_CE_REPAIR_BEGIN cycle=%0d",cycle);
+   while(!u_gateway.u_existing_shape_cdc.u_req.u_head.normal)begin
+    if(boundary_fault||!owner.on.debt[0]||!grants[2]||m_req_v||release_accept)
+     $fatal(1,"CDC memory CE unchecked request/credit");
+    @(negedge clk);
+   end
+   $display("PASS_CDC_MEMORY_CE_REPAIR cycle=%0d accepted_owner_debt=1",cycle);
+  end
+ end
+ end else begin:legacy_boundary
+ assign {m_req_v,m_req_we,m_req_addr,m_req_data,m_req_strb,m_req_tag}=
+        {o_m_req_v,o_m_req_we,o_m_req_addr,o_m_req_data,o_m_req_strb,o_m_req_tag};
+ assign o_m_req_ready=m_req_ready;
+ assign {o_m_rsp_v,o_m_rsp_we,o_m_rsp_tag,o_m_rsp_data}={m_rsp_v,m_rsp_we,m_rsp_tag,m_rsp_data};
+ assign m_rsp_ready=o_m_rsp_ready;assign boundary_fault=0;assign boundary_drained=provider_drained;
+ end endgenerate
  ot_hbm_integrated_sm0_borrow #(.ENABLE(1)) owner(
   .clk(clk),.por_n(por_n),.native_clients_drained(accepted_requests==consumed_responses),
-  .cdc_drained(provider_drained),.observe_req(4'b0),.observe_rsp(4'b0),
+  .cdc_drained(provider_drained&&boundary_drained),.observe_req(4'b0),.observe_rsp(4'b0),
   .observe_req_we(4'b0),.observe_rsp_we(4'b0),.observe_req_tag(64'b0),.observe_rsp_tag(64'b0),
   .return_offer(4'b0),.response_authorized(response_authorized),
   .native_job(JOB),.native_gen(GEN),.native_token(TOKEN),.native_pos(POS),.native_credit_empty(native_credit_empty),
@@ -64,14 +137,14 @@ module tb_hbm_integrated_w2_publication_nash;
   .req_addr({s_req[335:304],96'b0}),.req_wdata({s_req[303:48],768'b0}),
   .req_wstrb({s_req[47:16],96'b0}),.req_tag({s_req[15:0],48'b0}),
   .rsp_v(rsp_v),.rsp_rdy({s_rsp_r&&delivery_enabled,3'b0}),.rsp_we(rsp_we),.rsp_tag(rsp_tag),.rsp_data(rsp_data),
-  .m_req_v(m_req_v),.m_req_rdy(m_req_ready),.m_req_we(m_req_we),.m_req_addr(m_req_addr),
-  .m_req_wdata(m_req_data),.m_req_wstrb(m_req_strb),.m_req_tag(m_req_tag),
-  .m_rsp_v(m_rsp_v),.m_rsp_rdy(m_rsp_ready),.m_rsp_we(m_rsp_we),.m_rsp_tag(m_rsp_tag),.m_rsp_data(m_rsp_data),
+  .m_req_v(o_m_req_v),.m_req_rdy(o_m_req_ready),.m_req_we(o_m_req_we),.m_req_addr(o_m_req_addr),
+  .m_req_wdata(o_m_req_data),.m_req_wstrb(o_m_req_strb),.m_req_tag(o_m_req_tag),
+  .m_rsp_v(o_m_rsp_v),.m_rsp_rdy(o_m_rsp_ready),.m_rsp_we(o_m_rsp_we),.m_rsp_tag(o_m_rsp_tag),.m_rsp_data(o_m_rsp_data),
   .idle(shared_idle),.fault(shared_fault));
  assign s_req_r=req_rdy[3];
  assign s_rsp_v=rsp_v[3]&&delivery_enabled;
  assign s_rsp={rsp_tag[63:48],rsp_we[3],rsp_data[1023:768]};
- ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.REGISTERED_SUBBLOCKS(REGISTERED_SUBBLOCKS)) sink(
+ ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.REGISTERED_SUBBLOCKS(REGISTERED_SUBBLOCKS),.PROTECTED_TRANSACTION_PIPELINE(PROTECTED_TRANSACTION_PIPELINE)) sink(
   .clk(clk),.por_n(por_n),.owned(grants[2]),.installed(installed),.reserve_v(reserve_v),.reserve_r(reserve_r),
   .pair_op(1'b1),.rows_a(2'd2),.rows_b(2'd2),.op_a(OPA),.op_b(OPB),
   .base_a(BASE_A),.limit_a(LIMIT_A),.base_b(BASE_B),.limit_b(LIMIT_B),.provider_tag(16'hf239),.frame(FRAME),
@@ -91,43 +164,27 @@ module tb_hbm_integrated_w2_publication_nash;
  always @(posedge clk)begin
   if(por_n)begin
    cycle<=cycle+1;
+   if(PROTECTED_PARENT_BOUNDARY&&(cycle==20||cycle==35||cycle==100))begin
+    $display("BOUNDARY_DEBUG cycle=%0d launch=%b lease=%b grants=%b permit=%b retained=%b boundary_drained=%b fault=%b owner_req=%b stage_req=%b mem_req=%b",cycle,launch_v,lease_requested,grants,source_permit,retained,boundary_drained,boundary_fault,o_m_req_v,parent_boundary.u_gateway.rq0v,m_req_v);
+    $display("BOUNDARY_EMPTY cuts=%b cdc=%b req=%b rsp=%b reqptr=%h/%h normals=%b/%b headphase=%b",parent_boundary.u_gateway.empty,parent_boundary.u_gateway.cdc_empty,parent_boundary.u_gateway.u_existing_shape_cdc.req_empty_s,parent_boundary.u_gateway.u_existing_shape_cdc.rsp_empty_s,parent_boundary.u_gateway.u_existing_shape_cdc.u_req.wq,parent_boundary.u_gateway.u_existing_shape_cdc.u_req.rq,parent_boundary.u_gateway.u_existing_shape_cdc.u_req.wn,parent_boundary.u_gateway.u_existing_shape_cdc.u_req.rn,parent_boundary.u_gateway.u_existing_shape_cdc.u_req.hp);
+    $fflush();
+   end
    if(cycle>2000)$fatal(1,"logical progress exhausted: cycle=%0d writes=%0d reads=%0d verified=%0d",cycle,writes,reads,verified);
-   if(shared_fault)$fatal(1,"shared owner fault cycle=%0d",cycle);
-   if(sink_fault&&!corrupt)$fatal(1,"normal sink fault cycle=%0d",cycle);
+   if(boundary_fault&&!protection_negative)$fatal(1,"normal boundary fault");
+   if(shared_fault&&!protection_negative)$fatal(1,"shared owner fault cycle=%0d",cycle);
+   if(sink_fault&&!corrupt&&!protection_negative)$fatal(1,"normal sink fault cycle=%0d",cycle);
    if(m_req_v&&!m_req_ready)request_stalls<=request_stalls+1;
    if(rsp_v[3]&&!delivery_enabled)delivery_stalls<=delivery_stalls+1;
-   if((release_accept||cp_callback||cpl_v)&&verified!=4&&!corrupt)$fatal(1,"early release/CP END before all four payload readbacks");
+   if((release_accept||cp_callback||cpl_v)&&verified!=4&&!corrupt&&
+      (!protection_negative||release_accept||cp_callback||cpl_status==0))$fatal(1,"early release/CP END before all four payload readbacks");
+   if(protection_injected&&(release_accept||cp_callback||(cpl_v&&cpl_status==0)))
+    $fatal(1,"protection corruption released accepted debt or posted successful CPL");
    sm_done<=0;res_v<=0;
    if(release_accept)begin
     if(!provider_drained||!sink_done||verified!=4)$fatal(1,"release without checked provider drain");
     released<=released+1;cp_callback<=1;
     sm_done<=2'b01;res_v<=2'b01;res_data<={32'b0,15'b0,TOKEN};
     $display("ACTUAL_SHARED_RELEASE cycle=%0d verified=%0d",cycle,verified);
-   end
-   if(m_req_v&&m_req_ready)begin
-    slot=address_slot(integer'(m_req_addr));
-    if(slot<0||m_req_addr+32>RAM_BYTES||!installed||!grants[2])$fatal(1,"unallocated byte address or unowned request %h",m_req_addr);
-    provider_pending<=1;provider_age<=0;accepted_requests<=accepted_requests+1;
-    m_rsp_tag<=m_req_tag;m_rsp_we<=m_req_we;
-    expected_row=literal_row(slot);
-    if(m_req_we)begin
-     if(m_req_strb!==32'hffffffff)$fatal(1,"partial unexpected strobe");
-     for(j=0;j<8;j=j+1)if(m_req_data[j*32+:32]!==expected_row[j*32+:32])$fatal(1,"write original row%0d word%0d mismatch",slot,j);
-     for(j=0;j<32;j=j+1)if(m_req_strb[j])ram[integer'(m_req_addr)+j]<=m_req_data[j*8+:8];
-     m_rsp_data<=0;writes<=writes+1;
-    end else begin
-     for(j=0;j<32;j=j+1)m_rsp_data[j*8+:8]<=ram[integer'(m_req_addr)+j];
-     if(corrupt&&!corrupted)begin m_rsp_data[0]<=~ram[integer'(m_req_addr)][0];corrupted<=1;end
-     reads<=reads+1;
-    end
-    $display("PROVIDER_ACCEPT cycle=%0d we=%0d byte_address=%0d slot=%0d",cycle,m_req_we,m_req_addr,slot);
-   end
-   if(provider_pending&&!m_rsp_v)begin
-    provider_age<=provider_age+1;
-    if(provider_age==4)m_rsp_v<=1;
-   end
-   if(m_rsp_v&&m_rsp_ready)begin
-    m_rsp_v<=0;provider_pending<=0;consumed_responses<=consumed_responses+1;
    end
    if(s_rsp_v&&s_rsp_r&&!s_rsp[256])begin
     // Independently compare all eight words of the original restored row.
@@ -141,14 +198,122 @@ module tb_hbm_integrated_w2_publication_nash;
    end
   end
  end
+ wire provider_clk=PROTECTED_PARENT_BOUNDARY?clk_mem:clk;
+ integer provider_slot;reg [255:0] provider_expected;
+ always @(posedge provider_clk)if(por_n)begin
+   if(m_req_v&&m_req_ready)begin
+    provider_slot=address_slot(integer'(m_req_addr));
+    if(provider_slot<0||m_req_addr+32>RAM_BYTES||!installed||!grants[2])$fatal(1,"unallocated byte address or unowned request %h",m_req_addr);
+    provider_pending<=1;provider_age<=0;accepted_requests<=accepted_requests+1;
+    m_rsp_tag<=m_req_tag;m_rsp_we<=m_req_we;
+    provider_expected=literal_row(provider_slot);
+    if(m_req_we)begin
+     if(m_req_strb!==32'hffffffff)$fatal(1,"partial unexpected strobe");
+     for(j=0;j<8;j=j+1)if(m_req_data[j*32+:32]!==provider_expected[j*32+:32])$fatal(1,"write original row%0d word%0d mismatch",provider_slot,j);
+     for(j=0;j<32;j=j+1)if(m_req_strb[j])ram[integer'(m_req_addr)+j]<=m_req_data[j*8+:8];
+     m_rsp_data<=0;writes<=writes+1;
+    end else begin
+     for(j=0;j<32;j=j+1)m_rsp_data[j*8+:8]<=ram[integer'(m_req_addr)+j];
+     if(corrupt&&!corrupted)begin m_rsp_data[0]<=~ram[integer'(m_req_addr)][0];corrupted<=1;end
+     reads<=reads+1;
+    end
+    $display("PROVIDER_ACCEPT cycle=%0d we=%0d byte_address=%0d provider_slot=%0d",cycle,m_req_we,m_req_addr,provider_slot);
+   end
+   if(provider_pending&&!m_rsp_v)begin
+    provider_age<=provider_age+1;
+    if(provider_age==4)m_rsp_v<=1;
+   end
+   if(m_rsp_v&&m_rsp_ready)begin
+    m_rsp_v<=0;provider_pending<=0;consumed_responses<=consumed_responses+1;
+   end
+ end
+ wire callback_seat_available;
+ generate if(PROTECTED_TRANSACTION_PIPELINE)begin:callback_reservation
+  assign callback_seat_available=retained&&grants[2]&&!sink_fault&&sink.transaction_pipeline.u_pipe.have_free;
+ end else begin:callback_legacy
+  assign callback_seat_available=source_permit;
+ end endgenerate
  task automatic issue_row(input integer s);
   @(negedge clk);
-  if(!source_permit)$fatal(1,"no preGO reservation for no-ready result slot%0d",s);
+  if(!callback_seat_available)$fatal(1,"no retained owner/free preGO seat for no-ready result slot%0d",s);
   result_v=1;result_op=s<2?OPA:OPB;result_row=12'(s%2);result_data=literal_row(s);
  endtask
+ generate if(PROTECTED_TRANSACTION_PIPELINE)begin:inject_pipeline
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   sink.transaction_pipeline.u_pipe.code[71]=sink.transaction_pipeline.u_pipe.code[71]^72'h3;
+   protection_injected=1;
+  end
+  initial begin
+   integer ce_word,ce_start,ce_stall_edges;
+   if($test$plusargs("CORRECT_PAYLOAD_CE")||$test$plusargs("CORRECT_SELECTED_PAYLOAD_CE"))begin
+    ce_word=$test$plusargs("CORRECT_SELECTED_PAYLOAD_CE")?51:8;
+    wait(provider_pending);@(negedge clk);
+    ce_start=cycle;ce_stall_edges=0;
+    sink.transaction_pipeline.u_pipe.code[ce_word]=sink.transaction_pipeline.u_pipe.code[ce_word]^72'h1;
+    // Check the real accepted-debt owner on every correction service edge.
+    // The selected-stage case targets the payload held for the accepted WR.
+    @(negedge clk);
+    while(!sink.transaction_pipeline.u_pipe.normal)begin
+     if(sink_fault||source_permit||s_req_v||s_rsp_r||!retained||!owner.on.debt[0])
+      $fatal(1,"CE used unchecked permission or lost accepted debt");
+     ce_stall_edges=ce_stall_edges+1;
+     @(negedge clk);
+    end
+    if(sink_fault||sink.transaction_pipeline.u_pipe.ce[ce_word]||!retained||ce_stall_edges==0)
+     $fatal(1,"CE did not hold/recheck/scrub protected payload");
+    $display("PASS_CORRECT_PAYLOAD_CE codeword=%0d start=%0d resume=%0d stall_edges=%0d held_owner_debt=1 protected_recheck=1",ce_word,ce_start,cycle,ce_stall_edges);
+   end
+  end
+ end else if(REGISTERED_SUBBLOCKS)begin:inject_registered
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   // Two parity-invalid copies must fail closed. The routed alias census gives
+   // no independent-physical-copy credit; this is source functional injection.
+   sink.registered_subblocks.control_view.a[0]=~sink.registered_subblocks.control_view.a[0];
+   sink.registered_subblocks.control_view.b[0]=~sink.registered_subblocks.control_view.b[0];
+   protection_injected=1;
+  end
+ end else begin:inject_legacy
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   sink.on.code[24]=sink.on.code[24]^72'h3;
+   protection_injected=1;
+  end
+ end endgenerate
+ initial begin
+  wait(owner_corrupt);wait(provider_pending);@(negedge clk);
+  owner.on.control_code=owner.on.control_code^72'h3;
+  protection_injected=1;
+ end
  reg [76:0] held_cpl;
+ reg [15:0] debt_tag;reg debt_we;
+ task automatic check_retained_protection_debt;
+  wait(provider_pending);
+  debt_tag=m_req_tag;debt_we=m_req_we;
+  wait(protection_injected);
+  // Allow the real provider/borrower to capture a return, but never retire it
+  // through a corrupt authority. Check the actual existing protected ledger.
+  repeat(12)begin
+   @(negedge clk);
+   if(!por_n||!retained||sink_retire_r||release_accept||released!=0||cp_callback||
+      (cpl_v&&cpl_status==0)||s_req_v||m_req_v)
+    $fatal(1,"accepted debt disappeared or escaped corrupt authority");
+   if(!owner.on.debt[0]||owner.on.debt[19:4]!==debt_tag||owner.on.debt[3]!==debt_we||
+      owner.on.fl[65]||owner.on.fh[65]||owner.on.frame[72:0]!==FRAME)
+    $fatal(1,"protected accepted debt/tag/frame lost after authority corruption");
+  end
+  if(!(shared_fault||sink_fault))$fatal(1,"authority DUE did not assert fault");
+  $display("AUTHORITY_CORRUPTION_ACCEPTED_DEBT_RETAINED control=%0d owner=%0d tag=%h",control_corrupt,owner_corrupt,debt_tag);
+  $fatal(1,"EXPECTED_AUTHORITY_CORRUPTION_FAIL_CLOSED retained_debt=1 releases=0 root_por=1");
+ endtask
  initial begin
   corrupt=$test$plusargs("CORRUPT_READBACK");
+  control_corrupt=$test$plusargs("CORRUPT_SINK_CONTROL");
+  owner_corrupt=$test$plusargs("CORRUPT_SHARED_OWNER");
+  boundary_due=$test$plusargs("CORRUPT_GATEWAY_CONTROL")||$test$plusargs("CORRUPT_CDC_MEMORY_DUE");
+  if(integer'(corrupt)+integer'(control_corrupt)+integer'(owner_corrupt)>1)
+   $fatal(1,"select one concrete fault injection per run");
   for(integer k=0;k<RAM_BYTES;k=k+1)ram[k]=8'h6d;
   repeat(3)@(negedge clk);por_n=1;
   repeat(2)@(negedge clk);
@@ -170,7 +335,11 @@ module tb_hbm_integrated_w2_publication_nash;
   @(negedge clk);result_v=0;native_done=1;release_intent=1;
   @(negedge clk);native_done=0;
   if(writes>=4||release_accept||cpl_v)$fatal(1,"early native completion did not precede physical publication");
-  if(corrupt)begin
+  if(boundary_due)begin
+   wait(protection_injected);wait(1'b0);
+  end else if(protection_negative)begin
+   check_retained_protection_debt();
+  end else if(corrupt)begin
    wait(sink_fault);repeat(2)@(negedge clk);
    if(released!=0||cp_callback||grants[2]!==1)$fatal(1,"corruption released ownership");
    if(cpl_v&&cpl_status==0)$fatal(1,"corruption posted successful completion");

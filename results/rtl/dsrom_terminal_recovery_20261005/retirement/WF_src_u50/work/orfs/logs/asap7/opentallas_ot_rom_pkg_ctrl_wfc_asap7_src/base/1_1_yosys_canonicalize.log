@@ -1,0 +1,74 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/clock_period.txt
+Setting clock period to 833
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv
+12. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+Warning: Replacing memory \txq_l with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:630
+Warning: Replacing memory \txq_d with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:628
+Warning: Replacing memory \side_cnt with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:493
+Warning: Replacing memory \ptok with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:493
+Warning: Replacing memory \rbv with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:493
+Warning: Replacing memory \rbi with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:493
+Warning: Replacing memory \rcnt with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:493
+14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+28. Executing HIERARCHY pass (managing design hierarchy).
+29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc'.
+29.1. Analyzing design hierarchy..
+29.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc_src'.
+Warning: Replacing memory \pq_k with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:928
+Warning: Replacing memory \pq_q with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:928
+Warning: Replacing memory \pq_blk with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:928
+Warning: Replacing memory \pq_pos with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:928
+Warning: Replacing memory \pq_u with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:928
+Warning: Replacing memory \rq_i with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:921
+Warning: Replacing memory \rq_p with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:921
+Warning: Replacing memory \rq_u with list of registers. See /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:921
+29.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc_upos'.
+29.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc_upos'.
+29.5. Analyzing design hierarchy..
+29.6. Analyzing design hierarchy..
+29.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc_grp'.
+29.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_pkg_ctrl_wfc_grp'.
+29.9. Analyzing design hierarchy..
+29.10. Analyzing design hierarchy..
+29.11. Analyzing design hierarchy..
+30. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Ignoring module $paramod$9b103c81f8f31450683a20e5c8a6e9a39e2f7679\ot_rom_pkg_ctrl_wfc_upos because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$452b627d00610ed0f9683e1fb16f2c7317bee850\ot_rom_pkg_ctrl_wfc_src because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$d36fa3d6d839a08c6a6dd0572586c390eb668478\ot_rom_pkg_ctrl_wfc_grp because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_rom_pkg_ctrl_wfc because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$2b07c23ce3731abfcd08e514022f2f04b078f42c\ot_rom_pkg_ctrl_wfc_upos because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$9de5b28074b39d90f2a7d169d7dd51d5927d69b7\ot_rom_pkg_ctrl_wfc_grp because it contains processes (run 'proc' command first).
+31. Executing RTLIL backend.
+Warnings: 21 unique messages, 141 total
+End of script. Logfile hash: 30d7218d8e, time: 12.56s, user: 12.49s, system: 0.03s, MEM: 149.46 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 76% 15x chparam (9 sec), 16% 1x hierarchy (2 sec), ...
+Elapsed time: 0:12.59[h:]min:sec. CPU time: user 12.53 sys 0.05 (99%). Peak memory: 155100KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil         12            151 445ee15b7882f3ff18d2

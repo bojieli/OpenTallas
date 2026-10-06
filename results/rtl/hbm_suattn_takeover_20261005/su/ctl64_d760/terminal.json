@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "ctl64_d760",
+  "host": "ot-epyc1tb",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch/claude/hbm-su-c12/src",
+  "original_physical_status": "error",
+  "terminal_error": "RSZ-0060 Max buffer count reached in cts.tcl:83",
+  "hold_buffers_inserted": 60174,
+  "CTS_hold_wns_ps": -67.724,
+  "CTS_hold_tns_ps": -2316.506,
+  "worst_d_pin": "u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D",
+  "signoff_ss_ff": false,
+  "final_extracted_route_available": false,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "adopted": false,
+  "note": "Immutable actual CTS terminal, not SS/FF extracted signoff. Native hold repair exhausted actual buffer count. No cap increase, hold-margin waiver, source tuning or rebuild. Checkpoints retained in original job root with hashes."
+}

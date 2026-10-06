@@ -1,0 +1,19 @@
+{
+  "purpose": "One diagnostic CTS continuation from preserved3_place only; recover missing failurestate classes and launch/capture clocks",
+  "original_job": "/srv/opentallas-scratch/claude/hbm-su-c12/routes/ctl64_d760",
+  "source_changes": false,
+  "new_density_recipe": false,
+  "threads": 1,
+  "expected_peak_GiB": 8,
+  "peak_basis": "originalCTS observed4.115GiB; originalpre-CTS peak5.255GiB; extra state-report buffers reserve",
+  "snapshot_endpoint_path_limit": 88570,
+  "limit_basis": "actualoriginal clock sink inventory88570, one path per endpoint; not a file/time/AS cap",
+  "clock_ps": 833,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "hold_repair_margin_ps": 10,
+  "claim": "reconstructed diagnostic continuation, never original failed state or signoff",
+  "thread_basis": "fresh measured small diagnostic slot; unchanged stored placement/source/geometry/constraints, reconstructed CTS is explicitly not original failed state"
+}

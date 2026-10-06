@@ -1,0 +1,10 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Traceback (most recent call last):
+  File "/src/tools/hbm_outer_die_context.py", line 179, in <module>
+    if os.environ.get('OT_OUTER_ASSEMBLE') == '1': assemble()
+  File "/src/tools/hbm_outer_die_context.py", line 101, in assemble
+    design.readLef(plat+'/lef/asap7_tech_1x_201209.lef')
+AttributeError: 'Design' object has no attribute 'readLef'. Did you mean: 'readDef'?

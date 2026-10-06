@@ -1,0 +1,102 @@
+{
+  "host": "climbing-locust",
+  "observed_utc": "2026-10-05T22:25:11.057277+00:00",
+  "jobs": [
+    {
+      "label": "txmask_ctx_r2",
+      "root": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2",
+      "terminal_files": {},
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_r2/base/4_1_cts.odb",
+          "bytes": 154021930,
+          "mtime_ns": 1791179136706809776
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_r2/base/4_cts.odb",
+          "bytes": 154021930,
+          "mtime_ns": 1791179137268813247
+        }
+      ]
+    },
+    {
+      "label": "HA2_PF384_u25",
+      "root": "/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1",
+      "terminal_files": {},
+      "checkpoints": []
+    },
+    {
+      "label": "HA2_PF384_u30",
+      "root": "/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1",
+      "terminal_files": {},
+      "checkpoints": []
+    },
+    {
+      "label": "HA2_PF384_u35",
+      "root": "/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1",
+      "terminal_files": {},
+      "checkpoints": []
+    }
+  ],
+  "live_processes": [
+    {
+      "pid": 1201219,
+      "start_ticks": "4488796",
+      "cmd": "docker run --rm -v /srv/opentallas/repos/einstein-ha2-tu-owner-routes:/src:ro -v /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u35/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u35/base/1_2_yosys.v ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 1259511,
+      "start_ticks": "4531950",
+      "cmd": "docker run --rm -v /srv/opentallas/repos/einstein-ha2-tu-owner-routes:/src:ro -v /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u30/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u30/base/1_2_yosys.v ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 1264328,
+      "start_ticks": "4538563",
+      "cmd": "docker run --rm -v /srv/opentallas/repos/einstein-ha2-tu-owner-routes:/src:ro -v /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u25/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_ha2_tu_owner_adapter_asap7_ha2_tu_owner_pf384_u25/base/1_2_yosys.v ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780310,
+      "start_ticks": "1810933",
+      "cmd": "bash tools/ha2_tu_owner_route.sh 25 /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1 ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780313,
+      "start_ticks": "1810933",
+      "cmd": "bash tools/ha2_tu_owner_route.sh 30 /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1 ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780315,
+      "start_ticks": "1810934",
+      "cmd": "bash tools/ha2_tu_owner_route.sh 35 /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1 ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780319,
+      "start_ticks": "1810936",
+      "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top ot_ha2_tu_owner_adapter --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv --param NC=8 --param NOG=8 --param PFMAX=384 --param NPT=8 --param INJ=2 --param LANES=16 --param BF16=1 --param LAT=7 --param SLOTREG=1 --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 --io-delay-fraction .2 --orfs-corner WC --hold-corners WC,BC --core-utilization 25 --place-density .55 --hold-margin-ns .01 --slew-margin-percent 30 --orfs-var ADDER_MAP_FILE= --purpose signoff_target --stages synth,pnr --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --nickname-tag ha2_tu_owner_pf384_u25 --keep-workdir /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1/work --output /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1/physical.json ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780322,
+      "start_ticks": "1810937",
+      "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top ot_ha2_tu_owner_adapter --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv --param NC=8 --param NOG=8 --param PFMAX=384 --param NPT=8 --param INJ=2 --param LANES=16 --param BF16=1 --param LAT=7 --param SLOTREG=1 --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 --io-delay-fraction .2 --orfs-corner WC --hold-corners WC,BC --core-utilization 35 --place-density .55 --hold-margin-ns .01 --slew-margin-percent 30 --orfs-var ADDER_MAP_FILE= --purpose signoff_target --stages synth,pnr --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --nickname-tag ha2_tu_owner_pf384_u35 --keep-workdir /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1/work --output /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1/physical.json ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    },
+    {
+      "pid": 3780323,
+      "start_ticks": "1810937",
+      "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top ot_ha2_tu_owner_adapter --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv --param NC=8 --param NOG=8 --param PFMAX=384 --param NPT=8 --param INJ=2 --param LANES=16 --param BF16=1 --param LAT=7 --param SLOTREG=1 --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 --io-delay-fraction .2 --orfs-corner WC --hold-corners WC,BC --core-utilization 30 --place-density .55 --hold-margin-ns .01 --slew-margin-percent 30 --orfs-var ADDER_MAP_FILE= --purpose signoff_target --stages synth,pnr --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --nickname-tag ha2_tu_owner_pf384_u30 --keep-workdir /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1/work --output /srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1/physical.json ",
+      "cwd": "/srv/opentallas/repos/einstein-ha2-tu-owner-routes"
+    }
+  ],
+  "coowner": "Codex:item9",
+  "prior_owners_retained": true,
+  "new_jobs": 0,
+  "no_signals_sent": true,
+  "no_deleted_files": true
+}

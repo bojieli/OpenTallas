@@ -1,0 +1,160 @@
+{
+  "schema": "opentallas.dsrom.v9.parent.map-terminal.v1",
+  "verdict": "REJECT_DPL_PLACEMENT_DIAGNOSTIC_ONLY",
+  "completed_utc": "2026-10-05T23:08:25.553576+00:00",
+  "source_commit": "a2beef00ca0319615b8c6020e2f82dd9e3a4d8db",
+  "source_clean": true,
+  "run_root": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4",
+  "supervisor_exit": 1,
+  "verified_absent_pids": [
+    939346,
+    940244,
+    1053713
+  ],
+  "error": "DPL-0033 detailed placement checks failed during check placement",
+  "error_source": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/logs/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp.log:56106",
+  "completed_stages": [
+    "source-identical retained synthesis netlist/link",
+    "floorplan",
+    "tapcell",
+    "PG",
+    "initial global placement and IO placement",
+    "global placement",
+    "timing resize"
+  ],
+  "failed_stage": "detailed placement legalization/check placement",
+  "latest_completed_ODB": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_4_place_resized.odb",
+  "failed_ODB": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp-failed.odb",
+  "failed_DP_seconds": 3224.36,
+  "nonconverged_violations": 29727,
+  "final_design_violations": 31146,
+  "last_improvement_check": {
+    "wrong_regions": 0,
+    "row_alignment": 0,
+    "site_alignment": 30976,
+    "adjacent_overlaps": 26474,
+    "edge_spacing": 11440,
+    "padding": 3589
+  },
+  "final_padding_check_failed": 85,
+  "pre_DP_movable_instances": 171145,
+  "pre_DP_movable_area_um2": 34182.21,
+  "pre_DP_whole_core_utilization_percent": 14.2499,
+  "mapped_netlist_sha256": "0c47087a99067e6622cd8ce3ad357d124099974379ed3d39651713df01e9c1e9",
+  "mapped_netlist_unchanged": true,
+  "synthesis_reused": true,
+  "CTS_completed": false,
+  "SPEF_present": false,
+  "SSFF_qualified": false,
+  "functional_qualified": false,
+  "classification": "DIAGNOSTIC/GEOMETRY ONLY: old PQ0 fault/pend Slang-X/TIEHI source; NOT fixed-source physical evidence or a full QX10 engine",
+  "missing_input_clocks": true,
+  "replacement_primary": "f471758a0 corrected loader source + Noether-owned selected0032 full four-ROM native enclosing wrapper",
+  "restart_or_duplicate_authorized": false,
+  "source_objects_checkpoints_preserved": true,
+  "checkpoints": [
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_1_yosys_canonicalize.rtlil",
+      "bytes": 926724,
+      "sha256": "6915e508cb7b7fd5de1c0827a0d4fd8b31202fdef968888e53123d958d7581a0"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.sdc",
+      "bytes": 1620,
+      "sha256": "7121ca3c8577b84c55c54c3050058add31136273569a7d4a3a0ac0b795b6766f"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.v",
+      "bytes": 8473621,
+      "sha256": "0c47087a99067e6622cd8ce3ad357d124099974379ed3d39651713df01e9c1e9"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_synth.odb",
+      "bytes": 31703724,
+      "sha256": "b221b54855eaee824962d1a68ae0044eb6148d0f50d68463493537e3e5fb2fe6"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_synth.sdc",
+      "bytes": 1004148,
+      "sha256": "5803fa85324883e51b61836cc28ebb683a58a5067ee66239e35d5bb340693c95"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_1_floorplan.odb",
+      "bytes": 33901583,
+      "sha256": "b17b2e4bedcc98035495ff1ce192cdefbcea8d004bcc0763253f84626040afa0"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_1_floorplan.sdc",
+      "bytes": 1004148,
+      "sha256": "5803fa85324883e51b61836cc28ebb683a58a5067ee66239e35d5bb340693c95"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_2_floorplan_macro.odb",
+      "bytes": 33901583,
+      "sha256": "b17b2e4bedcc98035495ff1ce192cdefbcea8d004bcc0763253f84626040afa0"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_2_floorplan_macro.tcl",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_3_floorplan_tapcell.odb",
+      "bytes": 38709616,
+      "sha256": "6872f3febcbefef22c1f51f6bc24d7f6125e475630ec5d1462fbbec2f4d92db2"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_4_floorplan_pdn.odb",
+      "bytes": 96664944,
+      "sha256": "2bce46c2bd58d88bd63879a47664bae9f090f6cdfb789be0da4735bfc4c8837a"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_floorplan.odb",
+      "bytes": 96664944,
+      "sha256": "2bce46c2bd58d88bd63879a47664bae9f090f6cdfb789be0da4735bfc4c8837a"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_floorplan.sdc",
+      "bytes": 1004148,
+      "sha256": "5803fa85324883e51b61836cc28ebb683a58a5067ee66239e35d5bb340693c95"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_1_place_gp_skip_io.odb",
+      "bytes": 96664944,
+      "sha256": "ad0577221060bc88f0efe890447cbe46da6a42828592374198c2ce3bf6253ea4"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_2_place_iop.odb",
+      "bytes": 96944928,
+      "sha256": "6d7ebbd788a3c2302bffadef49d99f4e81f39d3125ad77287cafa325b2a618a8"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_2_place_iop.tcl",
+      "bytes": 410688,
+      "sha256": "6b931ed9029e8016fba66e560d2cf3ad9e18b2523be882ecc889bdc648efc0bf"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_3_place_gp.odb",
+      "bytes": 103542675,
+      "sha256": "9330258b511b8a224c9b1521ad1e3433fe836865c24969a69ff4815a3c8c22ad"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_4_place_resized.odb",
+      "bytes": 130522570,
+      "sha256": "e8b93db36ca03b215f976608f2e78a730286545bed4fdcfd8707c36ddcde9531"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp-failed.odb",
+      "bytes": 131189488,
+      "sha256": "5a6fc6bf1699caaf9c5ffb27f42fb3f16c218a79cd118766b94c942a83332f2f"
+    }
+  ],
+  "raw_record_sha256": {
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/physical.json": "3b0f444f4f0ea6c0c9e314daa26215431d9aef7e2ddcab4bdedde5318f01197d",
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/resume.json": "ab947102c5c277d180bc5bb5bf56e7702ea52784576bdf56623174c3c8bf8fe1",
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/supervisor.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/supervisor.log": "cbeda5a8473458506517e106d6966f4aaf828a1b30890edca29961c4c7ae9168",
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/logs/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp.log": "1392beebf838e4776935cbd50b6a1d48738ebf591543e4a75907963d9693079b",
+    "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r4/work/orfs/logs/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_5_place_dp.json": "849a5686dd5b0f087b971bf84aac91082c2c9eaa9514f1793ca477154fc2ee15"
+  }
+}

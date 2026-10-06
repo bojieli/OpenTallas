@@ -1,0 +1,197 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "su_softmax",
+ "verdict": "PENDING_SSFF",
+ "exact": true,
+ "ss_ff": null,
+ "nodes": {
+  "*.attn.max": {
+   "us": 0.07667,
+   "cycles": 92,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 640",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.exp": {
+   "us": 0.12333,
+   "cycles": 148,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 640",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.den": {
+   "us": 0.04167,
+   "cycles": 50,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 640",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.sink": {
+   "us": 0.01167,
+   "cycles": 14,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 640",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.normalize": {
+   "us": 0.10833,
+   "cycles": 130,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 640",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L0.attn.max": {
+   "us": 0.05,
+   "cycles": 60,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L0.attn.exp": {
+   "us": 0.09667,
+   "cycles": 116,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L0.attn.den": {
+   "us": 0.02917,
+   "cycles": 35,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L0.attn.sink": {
+   "us": 0.01167,
+   "cycles": 14,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L0.attn.normalize": {
+   "us": 0.10833,
+   "cycles": 130,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L1.attn.max": {
+   "us": 0.05,
+   "cycles": 60,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L1.attn.exp": {
+   "us": 0.09667,
+   "cycles": 116,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L1.attn.den": {
+   "us": 0.02917,
+   "cycles": 35,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L1.attn.sink": {
+   "us": 0.01167,
+   "cycles": 14,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "L1.attn.normalize": {
+   "us": 0.10833,
+   "cycles": 130,
+   "source": "ot_dsrom_su_softmax H 16 LPH 16 (exp LM 5 / LA 4, ot_dsrom_su_fdiv_f12), fused 1.2 GHz, DIN 33 / DOUT 23 / RWU 9 / RWD 9 wire stages; exact on L0/L3/L20/L24 golden 1M + stress (su_softmax/run_lph16_e54.json); T 128",
+   "cls": "measured",
+   "kind": "fused_fast"
+  }
+ },
+ "measurement": {
+  "main": "lph16_e54",
+  "runs": {
+   "lph16_e54": {
+    "all_exact": true,
+    "T640": {
+     "attn.max": 92,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 130
+    },
+    "T128": {
+     "attn.max": 60,
+     "attn.exp": 116,
+     "attn.den": 35,
+     "attn.sink": 14,
+     "attn.normalize": 130
+    }
+   }
+  },
+  "cases": [
+   {
+    "name": "L20.attn.softmax_T640",
+    "source": "golden",
+    "exact": true
+   },
+   {
+    "name": "L0.attn.softmax_T128",
+    "source": "golden",
+    "exact": true
+   },
+   {
+    "name": "L3.attn.softmax_T640",
+    "source": "golden",
+    "exact": true
+   },
+   {
+    "name": "L24.attn.softmax_T640",
+    "source": "golden",
+    "exact": true
+   },
+   {
+    "name": "stress0_T640",
+    "source": "random seed 20261004 case 0",
+    "exact": true
+   },
+   {
+    "name": "stress1_T128",
+    "source": "random seed 20261004 case 1",
+    "exact": true
+   },
+   {
+    "name": "stress2_T640",
+    "source": "random seed 20261004 case 2",
+    "exact": true
+   },
+   {
+    "name": "stress3_T128",
+    "source": "random seed 20261004 case 3",
+    "exact": true
+   },
+   {
+    "name": "stress4_T640",
+    "source": "random seed 20261004 case 4",
+    "exact": true
+   },
+   {
+    "name": "stress5_T128",
+    "source": "random seed 20261004 case 5",
+    "exact": true
+   }
+  ],
+  "clock_hz": 1200000000.0,
+  "wire": {
+   "DIN": 33,
+   "DOUT": 23,
+   "RWU": 9,
+   "RWD": 9
+  }
+ },
+ "default": "opt-in: applied only in the recovery baseline; the stream unit's softmax lowering is unchanged",
+ "note": "awaiting routed SS60/FF25 closure of the softmax slice (variants running); ot_dsrom_su_fdiv_f12 routed SS +150.3 / FF +7.19 ps"
+}

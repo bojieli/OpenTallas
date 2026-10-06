@@ -592,5 +592,22 @@
       "model_delta_owner": "Maxwell",
       "default_enabled": false
     }
+  },
+  "selected_native_provider_join": {
+    "default_enabled_in_candidate_on": true,
+    "source_default_OFF": true,
+    "parameter": "SU_PROVIDER_ADAPTER=1",
+    "source": "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv",
+    "source_sha256": "c188e01425ce04f5c9748cd9f8ab12893207bc7e109b9061657b516d46ec2264",
+    "receipt_source": "2356f08c6",
+    "owner_bits": 73,
+    "request_bits": 337,
+    "response_bits": 273,
+    "replacement": "existing association and bus hookup; one association per selected die",
+    "arithmetic_binding": "existing executor ALAT5; releasedc12 ALAT6 distinct prepared source, not silently substituted",
+    "physical_qualified": false,
+    "minimum_parent_gate": "PASS45 changed CP/sharedborrow/provider boundary; full parent/numerical/physical OPEN",
+    "offpackage_FEC": "FULL; no130nslight budget",
+    "gate_record": "results/rtl/hbm_integrated_native_joins_20261006/record.json"
   }
 }

@@ -1,0 +1,6 @@
+EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1863518 fin=1732595/1863467 issues=29192/29224 rejects=2846/2846 squashed=1480/1512 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+EQUIV PASS
+- /srv/opentallas-scratch2/jobs/zeno-wfc-decoded-source-r1/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv:295: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2ms; walltime 94.648 s; speed 19.689 us/s
+- Verilator: cpu 94.647 s on 1 threads; alloced 1019 MB

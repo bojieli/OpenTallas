@@ -1,0 +1,43 @@
+{
+  "verdict": "PASS_CANONICAL_FRONTEND_PHYSICAL_RUNNING",
+  "source_commit": "6512685dd",
+  "selfmerged_source_main": "4220552d8",
+  "engine_source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "frontend": "ORFS enrolled built-in read_slang, SYNTH_HDL_FRONTEND=slang",
+  "canonical_tool": "Yosys0.68+post",
+  "canonical_completed": true,
+  "canonical_elapsed_seconds": 2.11,
+  "original_return_RTL_retained": true,
+  "arithmetic_rewritten": false,
+  "smoke_repeated": false,
+  "reused_smoke_job": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005",
+  "unchanged_pinned_nonrunner_files": 60,
+  "actual_admission": {
+    "utc": "2026-10-05T23:44:00Z",
+    "stage": "actual-exec-physical",
+    "load1": 79.8916015625,
+    "idle_cores_5s": 35.876,
+    "required_cores": 4,
+    "reservation_GiB": 32,
+    "mem_available_bytes": 501292511232,
+    "disk_free_bytes": 967715135488,
+    "required_disk_bytes": 5334089008,
+    "inventory_basis": "fresh actual Z18a work1763342096 bytes plus this source archive"
+  },
+  "active_controller_pid": 3597753,
+  "physical_exec_pid": 3598462,
+  "physical_stage": "synthesis in progress at observation; no final timing verdict",
+  "mandatory_protective_flop_mapping_gate": true,
+  "real_ROMs_required": 4,
+  "physical_qualified": false,
+  "whole_field_missing_input_clocks": true,
+  "prior_parser_failure_preserved": "../failed_r2",
+  "cancelled_import_expansion_preserved": "../cancelled_r3",
+  "files": {
+    "1_1_yosys_canonicalize.log": "486a97138c1379072bacc9a9b1d2283f7c55669ef28e333f75eaeb2575db69a4",
+    "physical.started.json": "54765fe3c94889d76d34f1bb2a7ce51ff8aaf3d0de11b59c4c89163470bb77b5",
+    "capacity.jsonl": "4902f82875f75123f3f3ad379f6a4e2b31b6ec487bd2862aefd11303838ed713",
+    "reused_smoke_source_identity.json": "9587455fd3aeea9695b47b0659dc16ded9e12f1ddbbaa50a8a7c7825743a1b5c",
+    "source_snapshot.json": "2467924c46d01ed7c0296022fb8f6ad59104bb99186adb47ba6c2af4e72c0476"
+  }
+}

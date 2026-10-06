@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS_TREE_ACTUAL32_GATHER",
+  "completed_callers": 32,
+  "TX_records": 128,
+  "RX_records": 256,
+  "cycles": 789,
+  "new_cycles": 0,
+  "clocks_period_ps": 833,
+  "baseline_reused": "context32_exact_r1/result.json",
+  "unchanged_baseline_rerun": false,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv": "c27b8f4b91b09253b224dd3478fcdf4244de24e29a9d349b41190a072f885749",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv": "9f9b4146e47a98f04b4cd0cfdb6dedfeacc1a454a82a46a3d1bccb16efe84801",
+    "rtl/gpu_sys/ot_gpu_coll_item9_context32_tree.sv": "a6f90f049b54ae9e43c6dd953dd5153923df2c8921d551f11d335e633b6acbf9",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_context32_tree.sv": "397a28b10d802fc766bbcd0002f2d9a6747b55108a573d5ff1913025c6a95393"
+  },
+  "contextual_SS_FF": false,
+  "adopted": false
+}

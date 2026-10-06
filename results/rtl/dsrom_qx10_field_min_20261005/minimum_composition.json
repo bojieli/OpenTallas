@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.dsrom-field-qelem-minimum-composition.v1",
+ "element_source_commit": "0032b7355",
+ "terms": [
+  {
+   "phase": "L20.a_proj.fp8",
+   "region": 0,
+   "rows": 6,
+   "measured_last_cycles": 409,
+   "measured_idle_cycles": 410,
+   "additional_last_cycles_vs_qx9": 0,
+   "additional_idle_cycles_vs_qx9": 0,
+   "existing_s81_wire_cycles": 80,
+   "phase_region_last_cycles_with_wire": 489,
+   "phase_region_last_us_with_wire": 0.4075
+  },
+  {
+   "phase": "L20.exp158.gu",
+   "region": 0,
+   "rows": 12,
+   "measured_last_cycles": 398,
+   "measured_idle_cycles": 399,
+   "additional_last_cycles_vs_qx9": 0,
+   "additional_idle_cycles_vs_qx9": 0,
+   "existing_s81_wire_cycles": 80,
+   "phase_region_last_cycles_with_wire": 478,
+   "phase_region_last_us_with_wire": 0.3983333333333333
+  },
+  {
+   "phase": "L20.exp158.w2",
+   "region": 0,
+   "rows": 10,
+   "measured_last_cycles": 285,
+   "measured_idle_cycles": 286,
+   "additional_last_cycles_vs_qx9": 0,
+   "additional_idle_cycles_vs_qx9": 0,
+   "existing_s81_wire_cycles": 80,
+   "phase_region_last_cycles_with_wire": 365,
+   "phase_region_last_us_with_wire": 0.30416666666666664
+  }
+ ],
+ "scope": "Individual measured phase/region terms; incomplete nodes are not substituted into the token graph.",
+ "complete_field_campaign": false,
+ "node_summary": null,
+ "AR_tok_s": null,
+ "MTP_tok_s": null,
+ "physical_qualified": false,
+ "missing_input_clocks": true,
+ "inputs": {
+  "results/rtl/dsrom_qx10_field_min_20261005/record.json": "fb97499ca22c421a7b6ab692157cf8140f4fbf07c1a2adb6ad45e9fda946a2d5",
+  "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json": "d3e3dd86023e13dae213fd752b9de8e1fb4103f5ce93da1e5b81da9e064e8952",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx9/L20.a_proj.fp8/result.json": "af14865e91509b357637913b534de99357ee2cf3ff9a1d358f59bb4a801a0a53",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx10/L20.a_proj.fp8/result.json": "175bdf42054222314de92037de651c4b6d2c5250d2cc925de7ed3b0561986be9",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx9/L20.exp158.gu/result.json": "dac69927b83106d4ffc16cb73e9ad42f0c3ea5ae3dfa3e121fc6cac10bef53ca",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx10/L20.exp158.gu/result.json": "4a2b23cacba48d9175cacbaa2abf268bc226ebb382a585fc127b87579810ea4e",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx9/L20.exp158.w2/result.json": "5e5dc5e978385c93fd1dd8e68bc65cd62a84d028e4278432259072499f114e8d",
+  "results/rtl/dsrom_qx10_field_min_20261005/qx10/L20.exp158.w2/result.json": "37b59db52ab5fd322840deb6d9c2e42ae7e61bc3b7f44517a6cb11f3fa25a61e"
+ },
+ "analytical_qx10_additional_pipeline_cycles": 0,
+ "tool_sha256": "3f7bc545e50e244087a0181091a0f25d9c2c58acaa442a70ea8e17b2addce3aa"
+}

@@ -1,0 +1,29 @@
+{
+  "source_commit": "2c384412f275a1e0d4777aff3996050b934a6786",
+  "model_before_RTL_commit": "80eccd911",
+  "files": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv": "09a2f559f06ada4ff97084d7f880f60afa1c88818ec6c56e82a39ad8f2c28f35"
+  },
+  "command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_su_cp_grouped_owner",
+    "-Ptb_su_cp_grouped_owner.BALANCED_OWNER_BOUNDARY_TEST=1",
+    "-o",
+    "/tmp/harvey-cp-balanced-veto-exact-r1.vvp",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv"
+  ],
+  "host": "localhost",
+  "E2_guard_refusal": "No compile/runtime started; source snapshot preserved"
+}

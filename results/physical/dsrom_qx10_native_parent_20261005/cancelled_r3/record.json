@@ -1,0 +1,11 @@
+{
+  "status": "SUPERSEDED_BY_OWNER_FRONTEND_ENVELOPE",
+  "own_pgid_stopped": 3578367,
+  "reason": "Owner requires enrolled Slang frontend, original pinned return RTL, and reuse R2 smoke without repeat",
+  "R3_source_ref_preserved": "cf17391a1",
+  "sources_objects_logs_preserved": "ot-epyc1tb:/srv/opentallas-scratch/codex/noether-qx10-native-parent-r3-20261005",
+  "new_source_processing": "SYNTH_HDL_FRONTEND=slang; original return package before return consumer; ORFS enrolled read_slang is built in, no -m plugin load",
+  "RTL_rewrite_adopted": false,
+  "physical_stage_started": false,
+  "missing_input_clocks": true
+}

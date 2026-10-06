@@ -1,0 +1,233 @@
+{
+  "schema": "opentallas.dsrom.cfg_provider.receipt.v1",
+  "scope": "one PHW6/NSEG8/CW25 finite native pair configuration provider; NOT full PHW10 field or WFC configuration",
+  "source_commits": {
+    "model_and_exact_component": "36a846101",
+    "synthesis_blackbox_enrollment": "f874ab9f9",
+    "numeric_retention_attribute": "91984e906"
+  },
+  "current_source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.json": "5a0d43ff6fadb327f5f91cd3bec44ea1a6e3b0312e0835ea883656c7495266f9",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib": "dc3a5a3e07e8508650a320f4ab27933622a52756c99e4d013278c849314da59d",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6",
+    "physical/dsrom_v9_cfg_context/ot_v41_pair_cfgrom_context.sv": "f539127b50c6f569f83c74ad02b4a2dc8981fc59661be4a37b0fd760ee386ae4",
+    "physical/dsrom_v9_cfg_context/ot_v41_pair_pq_ld_cfgrom.sv": "08183afc4fd4778b33842a83d8bb67c20b59a1195ad12429529fb8b1b03a0291",
+    "physical/dsrom_v9_cfg_context/tb_cfgrom_context.sv": "c60ce752d0916056b73c305d627229ea8689c5610da57c834a09a9b3f4f717b4",
+    "physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+    "results/uarch/dsrom_v9_cfg_context_20261005/model.json": "e8e71ff7fdbf43dc4773326af1319fdb3ff2cb6577c74c6c805a08665f71066d",
+    "tools/dsrom_v9_cfg_context.py": "ab2d2ec2ff3b6508bd447363f0b408c9f595d2c833eecb814ae98cfa78cc0e67",
+    "tools/uarch_model.py": "252c933e5ef5c766200dce8d54687f9e1d301f244b791e13699b153b27e99772"
+  },
+  "remote_root": "ot-epyc2:/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "functional_gate": {
+    "verdict": "PASS",
+    "PQ0_checks": 6070,
+    "PQ1_checks": 6070,
+    "all_phases": 64,
+    "reads_each_phase": 25,
+    "PQ0_words": 3837,
+    "PQ1_words": 3791,
+    "PQ0_go": 201,
+    "PQ1_go": 232,
+    "PQ0_fault_cycles": 0,
+    "PQ1_fault_cycles": 3765,
+    "reset_hold_clear_checked": true,
+    "reference": "byte-identical f471/r3 loader SHA75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+    "payload": "nonzero address-distinct fixture, not checkpoint campaign",
+    "added_loader_cycles": 0,
+    "gate_log": "raw/gate.log",
+    "later_source_changes": "SYNTHESIS-only macro BB enrollment and integer retention attributes; loader/bench/macro behavioral hashes unchanged; no repeated exact gate"
+  },
+  "mapped_component": {
+    "macro_instances": 1,
+    "macro": "ot_rom_4096x72_m8",
+    "cells_including_macro": 452,
+    "DFFHQN": 67,
+    "DFFASRHQN": 8,
+    "area_including_macro_um2": 2445.00772,
+    "macro_area_um2": 2391.58656,
+    "standard_cell_area_um2": 53.42115999999987,
+    "PQ_mapped": 0,
+    "full_engine_protective_gate": "separate native_r4_boundary receipt; this component has no engine",
+    "retained_netlist_derivation": {
+      "parent_netlist_sha256": "f0e95f81f35a3b5bb97bd9b91b3a0f38cfb16027f26fde93ac2c030174c57c13",
+      "derived_netlist_sha256": "df9cebac072636be86e300794e506c21ced768e3d083345dff778cc07ab2577a",
+      "exact_edit": "one macro dont_touch string true -> numeric1; all cell/net/port/clock/data text unchanged",
+      "synthesis_repeated": false
+    },
+    "flow_status": "canonical and technology mapping completed; original end-of-synth load failed on string retention attribute. Attribute-only retained-netlist successor links SS/FF; no P&R/CTS claim."
+  },
+  "clocks": {
+    "root": "clk, same free/root as loader and native D3",
+    "cfg_macro": "g_hard_cfg.u_cfg/clk = clk",
+    "capture": "original loader c_d at following free edge",
+    "first_read": "ld_start uses selected current cfg_ph or actual pend_ph *25",
+    "remaining_reads": "ld_a+1, CE only while ld_k<24; 25 actual reads",
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "new_clock_domains": 0
+  },
+  "receiver_measurements": {
+    "SS": {
+      "macro_input_caps_fF": {
+        "clk": 8.6838,
+        "ce_in": 0.5788,
+        "addr_in[0]": 0.5788,
+        "addr_in[1]": 0.5788,
+        "addr_in[2]": 0.5788,
+        "addr_in[3]": 0.5788,
+        "addr_in[4]": 0.5788,
+        "addr_in[5]": 0.5788,
+        "addr_in[6]": 0.5788,
+        "addr_in[7]": 0.5788,
+        "addr_in[8]": 0.5788,
+        "addr_in[9]": 0.5788,
+        "addr_in[10]": 0.5788,
+        "addr_in[11]": 0.5788
+      },
+      "payload_receiver_count": 48,
+      "payload_receiver_load_each_fF": [
+        0.525341,
+        0.528014
+      ],
+      "payload_receiver_load_total_fF": 25.336652999999988,
+      "logical_address_internal_receiver_caps_fF": {
+        "cfg_rom_a[0]": 1.022837,
+        "cfg_rom_a[10]": 0.464106,
+        "cfg_rom_a[1]": 1.0425200000000001,
+        "cfg_rom_a[2]": 0.525341,
+        "cfg_rom_a[3]": 0.0,
+        "cfg_rom_a[4]": 0.0,
+        "cfg_rom_a[5]": 0.525341,
+        "cfg_rom_a[6]": 0.0,
+        "cfg_rom_a[7]": 1.889684,
+        "cfg_rom_a[8]": 0.450054,
+        "cfg_rom_a[9]": 0.901377
+      },
+      "logical_address_zero_direct_receiver_explanation": "Bits 3,4,6 have no direct standard-cell sinks in this mapped component. No load is assigned to those old observation outputs. All 12 actual cm_read_a macro pins are connected and have measured nonzero Liberty input cap; integration must use these actual read-address nets.",
+      "probe": "raw/receiver_probe_r3/SS_receiver_loads.tsv",
+      "linked_odb_sha256": "8bdc58f6c95269a12a6670b1d6473a4f52510f0dd26ef2fa6b2a99eeea22d310",
+      "clock_tree_propagated": false,
+      "parasitics_available": false
+    },
+    "FF": {
+      "macro_input_caps_fF": {
+        "clk": 10.3732,
+        "ce_in": 0.6837,
+        "addr_in[0]": 0.6837,
+        "addr_in[1]": 0.6837,
+        "addr_in[2]": 0.6837,
+        "addr_in[3]": 0.6837,
+        "addr_in[4]": 0.6837,
+        "addr_in[5]": 0.6837,
+        "addr_in[6]": 0.6837,
+        "addr_in[7]": 0.6837,
+        "addr_in[8]": 0.6837,
+        "addr_in[9]": 0.6837,
+        "addr_in[10]": 0.6837,
+        "addr_in[11]": 0.6837
+      },
+      "payload_receiver_count": 48,
+      "payload_receiver_load_each_fF": [
+        0.626818,
+        0.634173
+      ],
+      "payload_receiver_load_total_fF": 30.418239000000018,
+      "logical_address_internal_receiver_caps_fF": {
+        "cfg_rom_a[0]": 1.230128,
+        "cfg_rom_a[10]": 0.551033,
+        "cfg_rom_a[1]": 1.254181,
+        "cfg_rom_a[2]": 0.626818,
+        "cfg_rom_a[3]": 0.0,
+        "cfg_rom_a[4]": 0.0,
+        "cfg_rom_a[5]": 0.626818,
+        "cfg_rom_a[6]": 0.0,
+        "cfg_rom_a[7]": 2.2496400000000003,
+        "cfg_rom_a[8]": 0.536639,
+        "cfg_rom_a[9]": 1.07583
+      },
+      "logical_address_zero_direct_receiver_explanation": "Bits 3,4,6 have no direct standard-cell sinks in this mapped component. No load is assigned to those old observation outputs. All 12 actual cm_read_a macro pins are connected and have measured nonzero Liberty input cap; integration must use these actual read-address nets.",
+      "probe": "raw/receiver_probe_r4/FF_receiver_loads.tsv",
+      "linked_odb_sha256": "8bdc58f6c95269a12a6670b1d6473a4f52510f0dd26ef2fa6b2a99eeea22d310",
+      "clock_tree_propagated": false,
+      "parasitics_available": false
+    }
+  },
+  "model": "results/uarch/dsrom_v9_cfg_context_20261005/model.json",
+  "failed_evidence": [
+    {
+      "path": "raw/mapped_provider",
+      "reason": "behavioral macro view enrolled instead of existing synthesis BB; Slang rejected mixed-string ROM initialization"
+    },
+    {
+      "path": "raw/mapped_provider_r2",
+      "reason": "mapping complete, OpenROAD end-of-synth failed stoi on string dont_touch attribute"
+    },
+    {
+      "path": "raw/receiver_probe",
+      "reason": "same retained string attribute rejected during read"
+    },
+    {
+      "path": "raw/receiver_probe_r3/FF.log",
+      "reason": "broad Liberty glob loaded duplicate SIMPLE FF versions; get_lib_pins ambiguous. FF-only successor uses exact project five library families."
+    }
+  ],
+  "qualification": {
+    "SS_setup_closed": false,
+    "FF_hold_closed": false,
+    "CTS": false,
+    "SPEF": false,
+    "full_field_missing_input_clocks": true,
+    "global_WFC_config_or_slot_binding": false,
+    "adopted": false,
+    "token_rate_credit": 0
+  },
+  "next_integration": "Noether may consume additive u_ld+u_cfg provider, replace only finite PHW6 cfg cut, connect original cfg/go/free signals and c_v/c_a/c_d/go_e outputs, include actual BB+LEF+SS/FFLib and reserve modeled parent rectangle/halo. Re-evaluate full parent model and source-bound timing on necessary successor after current terminal; no duplicate native/Z18 route.",
+  "raw_sha256": {
+    "raw/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "raw/cfg_loads.tcl": "9b62c6f0bbeb9590725fd8e6bb808115444e03b40e9501235cd1ea58cb62ae63",
+    "raw/cfg_loads_r4.tcl": "697255199b3509006b70494f02376b72487642b453b9311fcf626e7b24837964",
+    "raw/command.json": "49a6c76c7de6136443b360450f1090251573af094147e3e7c75ee8a29b841222",
+    "raw/gate.log": "96db35af993bad3bad32953f48945a95505a366e0263040ddde3356328e44c1e",
+    "raw/headroom.jsonl": "0a4649bca8a9dd6450bd09f1d52f97d3f71b0564e2b48fdc2eecda1dc9c9aeb5",
+    "raw/linked_input_r3/constraint.sdc": "2bd0f62ed3e061b89625dab786b90a106ea454add82e7835d50cc8eb26f4d4ea",
+    "raw/linked_input_r3/derivation.json": "7a36d7ae410df8198c782423250ab058d7ad71f8dae70d3cb44f30004bde30c5",
+    "raw/map_r2.py": "4eb06662d7baf1fd7b8edd99de9ae4c6d6b9cd62e15e2a814cea1272a2a2c651",
+    "raw/map_r2_headroom.jsonl": "951efbf6d9f85e590747649cd80b3a80f5a61c950fc3b5ae9aae128d398dd8c6",
+    "raw/mapped_provider/config.mk": "d67d5bc995a3470dcb85019480e3147b332087a15ffcbaf6c355f5e5078440b8",
+    "raw/mapped_provider/logs/asap7/copernicus_cfg_provider/base/1_1_yosys_canonicalize.log": "207085cba3bb675cfc9d6a34feea2229ec3fadfc42858e299a431373b594cc59",
+    "raw/mapped_provider/run.log": "10764f20b03b27d71dc6dd82a203fb8fa049059fe948fd05aa0bad4204e57176",
+    "raw/mapped_provider/terminal.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "raw/mapped_provider_r2/config.mk": "1a9d1933edaf7b6a34adadee4d151dcabc728ab7c47554d34b2df132608864c3",
+    "raw/mapped_provider_r2/logs/asap7/copernicus_cfg_provider/base/1_synth.log": "34787047ed5d44eadf56b7a5b625e8b25c1bef8dbcb4c4354705dc856f57745f",
+    "raw/mapped_provider_r2/reports/asap7/copernicus_cfg_provider/base/synth_check.txt": "70fb7d564fdb6b39a24ab88cfd87eb005dcbcc459bfbd51c7fe7bf1f7c5a1124",
+    "raw/mapped_provider_r2/reports/asap7/copernicus_cfg_provider/base/synth_stat.txt": "1ba0a2c449b6a7660442ea5516d9dacb8f667f929242a2396feb64145ea8891a",
+    "raw/mapped_provider_r2/run.log": "259e44fdaed71c233c017e6a53eb1ed6b88ab2db388f89bf495f8ed67b671c74",
+    "raw/mapped_provider_r2/terminal.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "raw/probe_r3.py": "6673ec8d2752d6e81e21c479d3a7bf355d857c74cd292fd3a48861e8d2f0bfb8",
+    "raw/probe_r3_headroom.jsonl": "bd20fee8aeb8521c9410e7afc201a23c89ed309b02b0ff6e0bff0a9c3ec2d0c0",
+    "raw/probe_r4.py": "6e9a5609d2f6828ea01b090f4f268bb9c1ece18aaa1b393610a1704013a8f05d",
+    "raw/probe_r4_headroom.jsonl": "2dd147cc9707e1a1ea23d9a014790bc5e61d997f60f49e67fa50c8d680a44522",
+    "raw/receiver_probe/SS.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "raw/receiver_probe/SS.log": "a51719992ad63711b6a30ee9e36b72eff26bad17c990f1b314e885c311d6925c",
+    "raw/receiver_probe_r3/FF.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "raw/receiver_probe_r3/FF.log": "e29f0a5ee03b713c0194a7beb30494b7ea86c5662da438139cf32ec3d8c68a63",
+    "raw/receiver_probe_r3/SS.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "raw/receiver_probe_r3/SS.log": "271064f89b5414f5cb1eda48baafd99dedd831642d9a3ab7dbc3e032ee56aeab",
+    "raw/receiver_probe_r3/SS_clocks.rpt": "42fd1a3267d441cd00bab96f1279562b318444e66400bca3a978805bfd5f7ab0",
+    "raw/receiver_probe_r3/SS_receiver_loads.tsv": "ddfc1175f7c53296cda1c5c120b6fbb0e697af9cc46aae5e9900af6c6bc19f2f",
+    "raw/receiver_probe_r4/FF.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "raw/receiver_probe_r4/FF.log": "baee9e920137115a99ba93b4732a42740fae3a9f86a18db3a74bec45559c94bc",
+    "raw/receiver_probe_r4/FF_clocks.rpt": "42fd1a3267d441cd00bab96f1279562b318444e66400bca3a978805bfd5f7ab0",
+    "raw/receiver_probe_r4/FF_receiver_loads.tsv": "6b7e959ce6d257dd4ccc16df25300d37bedca956c12af1b37ddd41e276f79dc3",
+    "raw/run.py": "2a6bf463b3782927962e6b85edd32a19bad93d7bf79fc899eaa58f10886f075d",
+    "raw/source_pins.json": "2071de2e80863199674559552828ff2c894b3f44065dc755160c48777b470895",
+    "raw/terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

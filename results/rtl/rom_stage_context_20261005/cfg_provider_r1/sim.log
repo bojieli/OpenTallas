@@ -1,0 +1,8 @@
+MARK go 2999 ready=1
+MARK end 4127 rows=14
+MARK go 19000 ready=1
+MARK end 20128 rows=28
+MARK go 34999 ready=1
+MARK end 36127 rows=42
+PASS actual W5 context rows=42 nonzero=36 beats=168 cycles=36327
+/srv/opentallas-scratch2/codex/w5-context-20261005/cfg-context-r1/output/bench.sv:103: $finish called at 30272524218 (1fs)

@@ -1,0 +1,14 @@
+{
+  "source_commit": "6fc28b155c419ee79da72f1eb084aae2141f1f64",
+  "source_sha256": {
+    "ot_qwen_stream4_cdc_pc.sv": "a97f5b3fd85862509c09f48b43e3b27eec48baac6739e67c71952f5e0b1e9f3a",
+    "ot_qwen_hbm_stream4_cdc.sv": "ec1b680a977f0814130eba93b4768c1f909463fe1c7bcdf4882198356f10b5e7",
+    "tb_qwen_rt_kv_stream4.cpp": "47d60f5db5ad4a0bf7b4bd3bd48c5e56df76a5fa2886b16e7ddde25a3cad3841",
+    "tb_qwen_rt_kv_stream4_cdc.sv": "b7c7448bfd352dbf2b91a0f25c24fff120174f0de77150682445019936983893"
+  },
+  "executable_sha256": "140e2b48e645aa7184cc20aaf7fc93ef50e100b2eb2b0af82b1a3277f23cd50c",
+  "host": "ot-epyc2",
+  "build_recipe": "build.sh SRC5 cdc 2 b_r5; -DCDC -GSYNC=2, default per-PC sizes LD64/WB16/AD64, unchanged128-PC wrapper and full8191-position service workload",
+  "candidate_selected_in_production": false,
+  "protection_qualification": false
+}

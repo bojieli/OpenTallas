@@ -1,0 +1,171 @@
+{
+  "authority": "DIRECT USER soleKantcleanup oldtightframeSTOP; no namedcurrentconsumer; existingfinalZ18c/d failhistory+currenttallZ20 supersede",
+  "case": "Z18b",
+  "host": "ot-epyc1tb",
+  "container": "e6863bb6f8199bf6c778a7419ca8875cf518221f59406c536d6db52d7f8c7587",
+  "container_started": "2026-10-05T20:13:36.298092307Z",
+  "mounts": {
+    "/src": "/srv/opentallas-scratch/claude/dsrom-qtclose/wt-0032b7355",
+    "/work": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z18b/work/orfs"
+  },
+  "config_sha256": "d3f0c71878d7f953a2566c56b11b4da62d3ebf7881d38d50f461011bc53c3142",
+  "source_hashes": {
+    "/src/rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+    "/src/rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+    "/src/rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "/src/rtl/v41rom/ot_v41_chain3.sv": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+    "/src/rtl/v41rom/ot_v41_chain4.sv": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+    "/src/rtl/v41rom/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+    "/src/rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "/src/rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "/src/rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "/src/rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "/src/rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "/src/rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "/src/rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "/src/rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "/src/rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "/src/physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+    "/src/rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "/src/rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "/src/rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "/src/rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "/src/rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "/src/rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+    "/src/rtl/v41rom/ot_v41_bterm3_w10.sv": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+    "/src/rtl/v41rom/ot_v41_bterm4_w10.sv": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+    "/src/rtl/v41rom/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+    "/src/rtl/v41rom/ot_v41_segtree4.sv": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+    "/src/rtl/v41rom/ot_v41_segtree5.sv": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+    "/src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c"
+  },
+  "checkpoint_inventory": [
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_2_place_iop.odb",
+      "bytes": 102544840,
+      "mtime_ns": 1791231563046342487
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/1_synth.odb",
+      "bytes": 88164610,
+      "mtime_ns": 1791231225663568174
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_place.odb",
+      "bytes": 100656033,
+      "mtime_ns": 1791232488406459073
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/2_2_floorplan_macro.odb",
+      "bytes": 88568147,
+      "mtime_ns": 1791231473764079051
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_1_grt.odb",
+      "bytes": 208374222,
+      "mtime_ns": 1791240687355886974
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_4_place_resized.odb",
+      "bytes": 100583649,
+      "mtime_ns": 1791232219451631298
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_3_place_gp.odb",
+      "bytes": 100204386,
+      "mtime_ns": 1791232058053347346
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/2_1_floorplan.odb",
+      "bytes": 88566995,
+      "mtime_ns": 1791231322709941480
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_1_place_gp_skip_io.odb",
+      "bytes": 102494632,
+      "mtime_ns": 1791231559416291118
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/2_3_floorplan_tapcell.odb",
+      "bytes": 89857473,
+      "mtime_ns": 1791231477685134538
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/4_cts.odb",
+      "bytes": 111831695,
+      "mtime_ns": 1791232942700971988
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/2_4_floorplan_pdn.odb",
+      "bytes": 102494632,
+      "mtime_ns": 1791231484496230922
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/3_5_place_dp.odb",
+      "bytes": 100656033,
+      "mtime_ns": 1791232487717449195
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/2_floorplan.odb",
+      "bytes": 102494632,
+      "mtime_ns": 1791231484948237319
+    },
+    {
+      "path": "work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/4_1_cts.odb",
+      "bytes": 111831695,
+      "mtime_ns": 1791232941882960261
+    }
+  ],
+  "retained_checkpoint": {
+    "path": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z18b/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_1_grt.odb",
+    "sha256": "fc30ec32a3bb4d6edff5d4a702dbf8173c825f19fb1207a08fbdce22c20a404e"
+  },
+  "cohort": {
+    "3299137": {
+      "ppid": 559332,
+      "start": "22258456",
+      "cmd": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=20 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_2_route ",
+      "rss_kB": 2612
+    },
+    "559332": {
+      "ppid": 559245,
+      "start": "21311285",
+      "cmd": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate ",
+      "rss_kB": 2716
+    },
+    "3299180": {
+      "ppid": 3299157,
+      "start": "22258497",
+      "cmd": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_2_route.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 20 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_2_route.json ",
+      "rss_kB": 11484
+    },
+    "559245": {
+      "ppid": 559220,
+      "start": "21311274",
+      "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate ",
+      "rss_kB": 3408
+    },
+    "3299181": {
+      "ppid": 3299180,
+      "start": "22258500",
+      "cmd": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 20 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_2_route.json ",
+      "rss_kB": 26657740
+    },
+    "3299155": {
+      "ppid": 3299137,
+      "start": "22258483",
+      "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route ",
+      "rss_kB": 3592
+    },
+    "3299157": {
+      "ppid": 3299155,
+      "start": "22258484",
+      "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route ",
+      "rss_kB": 2212
+    }
+  },
+  "reason": "CANCELLED_SUPERSEDED not timingfailure/deadlock",
+  "all_source_objects_logs_retained": true,
+  "utc": "2026-10-06T05:18:55Z"
+}

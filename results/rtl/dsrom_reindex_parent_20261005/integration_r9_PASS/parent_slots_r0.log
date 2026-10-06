@@ -1,0 +1,6 @@
+HANDOFF job 1 start-after-prev-done=1
+JOB 0 pos=1048574 slot=6 start=4106 first_key=102 last_key=501 last_scored=549 done=671 busy=671 passes=1 keys=1944 out=512 errors=0
+JOB 1 pos=1048575 slot=7 start=4778 first_key=223 last_key=777 last_scored=825 done=942 busy=942 passes=1 keys=3880 out=512 errors=0
+SUMMARY njobs=2 lsw=3 mdrop=1 lat=48 key_errors=0 short=0 ovf=0 hidden_out=2 errors=0 cycles=5747
+PASS
+- /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/physical_src/rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf.sv:344: Verilog $finish

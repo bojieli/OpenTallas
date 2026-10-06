@@ -1,0 +1,39 @@
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce.g_cuts.g_lv[3].g_n[0].g_ln[15].u_add.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:55:64: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BF16' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   55 |     wire config_ok = PF > 0 && PF <= PFMAX && PF % NC == 0 && (!BF16 || !(OF & 1));
+      |                                                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:55:73: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's AND generates 32 bits.
+                                                                                 : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   55 |     wire config_ok = PF > 0 && PF <= PFMAX && PF % NC == 0 && (!BF16 || !(OF & 1));
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:56:53: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rptr' generates 6 bits.
+                                                                                  : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   56 |     assign quiet = pending == 0 && (!active || rptr >= OF);
+      |                                                     ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:60:64: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BF16' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   60 |       else pending <= pending + (issue ? 1 : 0) - (r_v ? (BF16 ? 2 : 1) : 0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:67:69: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rptr' generates 6 bits.
+                                                                                  : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   67 |     always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (rptr < OF) ? pres[c][rptr] : 1'b0;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:80:66: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rptr_n' generates 6 bits.
+                                                                                  : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+   80 |     wire [OFMX-1:0] read_oh_n={{(OFMX-1){1'b0}},1'b1} << (rptr_n < OFMX ? rptr_n : 0);
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:155:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'BF16' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_item9_ha2_cuts_fullshape.dut.u_reduce'
+  155 |                 if (BF16) begin
+      |                 ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.392 MB sources in 29 modules, into 39.641 MB in 56 C++ files needing 0.000 MB
+- Verilator: Walltime 7.334 s (elab=0.101, cvt=6.847, bld=0.000); cpu 7.334 s on 1 threads; allocated 1334.230 MB
