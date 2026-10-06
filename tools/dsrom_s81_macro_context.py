@@ -228,7 +228,7 @@ def emit(a):
          f' --pin-region "^ck$=bottom:{W / 2 - 20:.2f}-{W / 2 + 20:.2f}" --pin-region "^obs.*=top:{W * 0.1:.2f}-{W * 0.9:.2f}" \\',
          " --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \\",
          f" --step-tcl POST_MACRO_PLACE={rel}/place.tcl --sdc-append {rel}/ctx.sdc \\",
-         " --orfs-var REMOVE_ABC_BUFFERS=1 --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var NUM_CORES=${CORES:-16} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} "
+         " --orfs-var REMOVE_ABC_BUFFERS=1 --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var MAX_ROUTING_LAYER=M9 --orfs-var NUM_CORES=${CORES:-16} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} "
          "--hold-corners WC,BC \\",
          " --orfs-corner WC --pnr-stop-after ${STOP:-finish} --nickname-tag ctx_${V:-a}_20261006 \\",
          ' --output $J/out ${ARGS:-} > $J/launch.log 2>&1']
