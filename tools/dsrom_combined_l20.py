@@ -420,9 +420,16 @@ def cmd_qelem_lever(a):
     cfg = FIELD_CFGS[a.cfg or "pq1_q10"]
     work = Path(a.work).resolve() / f"field_{a.cfg or 'pq1_q10'}"
     _qelem_swap(cfg, work)
+    import dsrom_1m_allmeasured_adapters as AD
     rec = Path(a.out or ROOT / "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem.json")
     FS.G.set_arith("chunk8")
-    rc = FS.cmd_record(argparse.Namespace(work=work, plan_dir=Path(a.plan_pq), config="pq", record=rec))
+    rc = 0
+    if not a.lever_only:
+        rc = FS.cmd_record(argparse.Namespace(work=work, plan_dir=Path(a.plan_pq), config="pq", record=rec))
+        r = json.loads(rec.read_text())
+        r["config"] = "pq_qelem"          # its own row in tools/dsrom_field_reprice_r8.py (regions/pq_qelem.json.gz)
+        rec.write_text(json.dumps(r, indent=1) + "\n")
+    AD.FIELD_GEOM = None                  # S81 floorplan wire here; tools/dsrom_field_reprice_r8.py record --levers re-prices
     note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s, pair FILE SWAP "
             "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP %d / GUARD %d / GSLACK %d. Replaces "
             "field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq "
@@ -803,6 +810,7 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--out")
     ap.add_argument("--source-commit", default="")
+    ap.add_argument("--lever-only", action="store_true", help="qelem-lever: the record exists; write the lever only")
     ap.add_argument("--field-layers", default="20", help="field: layers to run (comma list) or 'all' (full S81 plan)")
     a = ap.parse_args()
     return dict(static=cmd_static, edges=cmd_edges, field=cmd_field, units=cmd_units, compose=cmd_compose,

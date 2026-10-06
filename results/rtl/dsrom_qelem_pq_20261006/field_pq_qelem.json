@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.dsrom.field_spine.v1",
- "config": "pq",
+ "config": "pq_qelem",
  "status": "pass",
  "claim_boundary": "RTL measurement (Verilator, 2-state) of the S81 rank-0 dies' ROM-field matvec nodes on the timing-closed spine ot_v41_spine_pqc_w17w10, one region at full shape, every region, bit-exact vs the golden; die-level node time composed from the region runs; S81 floorplan wire stages (504 um a stage) added analytically.",
  "vehicle": {
