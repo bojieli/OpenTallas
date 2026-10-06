@@ -31,7 +31,11 @@ module ot_v41_pair_cfgrom_context #(
     if (HARD_CFG != 0) begin : g_hard_cfg
         wire [71:0] q;
         (* keep, dont_touch = "true" *)
-        ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP)) u_cfg (
+        ot_rom_4096x72_m8
+`ifndef SYNTHESIS
+            #(.VIAMAP(VIAMAP))
+`endif
+        u_cfg (
             .clk(clk), .ce_in(cfg_rom_read_ce), .addr_in(cfg_rom_read_a), .rd_out(q)
         );
         assign cfg_q = q[47:0];
