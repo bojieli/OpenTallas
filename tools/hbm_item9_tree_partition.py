@@ -116,6 +116,7 @@ summary=dict(source_mapped_sha256=s['mapped_sha256'],mapped_JSON_sha256=s['artif
  parent_layout_sha256=a['actual_parent_layout_sha256'],
  parent_channel_upper_before_other_claims=a.get('central_flat_mux_common_west_cut',{}).get('four_layer_upper_before_other_claims'),
  parent_geometry_regenerated_source_pinned=hold.exists(),
+ physical_margin_inventory=a.get('physical_margin_inventory'),
  primary_caller_inputs_are_source_local=True,distributed_request_bits=131072,shared_response_bits=4096,shared_response_real_receivers=32,
  actual_intermediate_gate_affinities=True,payload_affinity_separate_from_shared_control=payload_only,
  zero_origin_control_buffers_use_actual_receiver_affinity=receiver_affinity,

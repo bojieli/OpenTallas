@@ -1,0 +1,18 @@
+{
+  "objective": "routable loaded SS/FF closure; do not minimise die area at the routing limit",
+  "standard_cell_utilization_basis": "placed standard-cell area / actually available standard-cell row area",
+  "macro_footprint_basis": "actual macro outlines and obstruction/halo union, accounted separately from standard cells",
+  "channel_capacity_basis": "actual reserved tracks after other claims, PG, vias and clock trunks",
+  "CTS_reset_and_loaded_repair_area_um2": null,
+  "current_macro_obstruction_and_row_area_um2": null,
+  "current_reserved_channel_capacity": null,
+  "positive_routing_clock_PG_and_repair_margin_required": true,
+  "unknown_margin_is_not_free_capacity": true,
+  "fit_only_at_limit_action": "coordinate Turing larger slot or repartition before physical launch",
+  "repartition_latency_price_required_before_RTL": true,
+  "die_count_and_transport_latency_must_be_composed": true,
+  "arbitrary_density_sweep_for_timing": false,
+  "live_jobs_restart_for_settings": false,
+  "peer_q_frames_or_generators_in_scope": false,
+  "current_parent_geometry_qualified": false
+}

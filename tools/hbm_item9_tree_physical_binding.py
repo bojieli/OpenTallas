@@ -99,6 +99,20 @@ with (out / 'actual_region_cells.tsv').open('w') as f:
  for name, idx in names.items():
   f.write(f'{name}\t{idx}\n')
 (out / 'actual_west_crossing_net_bits.json').write_text(json.dumps(crossing) + '\n')
+bboxes={**boxes,'32':binding['endpoint_allocation']}
+gross_area={name:(bboxes[str(idx)][2]-bboxes[str(idx)][0])*(bboxes[str(idx)][3]-bboxes[str(idx)][1])
+            for name,idx in regions.items()}
+accounting=dict(mapped_standard_cell_area_um2=dict(region_area),
+ gross_region_bbox_area_um2=gross_area,
+ standard_cell_area_over_gross_bbox_fraction={name:region_area[name]/gross_area[name] for name in regions},
+ actual_standard_cell_row_area_um2=None,actual_standard_cell_utilization=None,
+ actual_macro_obstruction_and_halo_union_um2=None,actual_macro_footprint_fraction=None,
+ actual_clock_PG_and_loaded_repair_area_um2=None,
+ reserved_signal_tracks_after_other_claims=None,
+ owner_margin_inventory=binding.get('physical_margin_inventory'),
+ unknown_margin_is_not_free_capacity=True,
+ larger_slot_or_repartition_required_if_only_limit_fit=True,
+ repartition_added_latency_must_be_priced_before_RTL=True)
 summary = dict(source_mapped_sha256=source['mapped_sha256'],
  affinity_sha256=hashlib.sha256((affinity / 'summary.json').read_bytes()).hexdigest(),
  actual_region_cell_area_um2=dict(region_area),
@@ -111,7 +125,7 @@ summary = dict(source_mapped_sha256=source['mapped_sha256'],
  parent_layout_sha256=binding.get('parent_layout_sha256'),
  parent_geometry_regenerated_source_pinned=binding.get('parent_geometry_regenerated_source_pinned',False),
  four_source_root_connected_library_loads=clock_loads,
- region_bboxes_um={**boxes, '32': binding['endpoint_allocation']},
+ region_bboxes_um=bboxes,physical_capacity_accounting=accounting,
  actual_cell_memberships=str(out / 'actual_region_cells.tsv'),
  actual_member_count=len(names), source_new_cycles=0,
  all_other_claim_corridors_reserved=False, wire_RC_and_CTS_measured=False,
