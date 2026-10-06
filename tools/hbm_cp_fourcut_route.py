@@ -104,6 +104,30 @@ def main():
             explicit_modeled_density=0.5,automatic_density_prequery_disabled=True,
             canonical_initial_placement_removes_empty_core=True,
             membership_after_port_buffering=True)
+    # Validate the actual pinned packet before --prepare-only can succeed.
+    # The tapcell gate has one canonical file-join dependency; other installed
+    # CP hooks source literal /src paths. No Tcl hook is rewritten or waived.
+    dependencies=set()
+    for index,option in enumerate(argv[:-1]):
+        if option in ('--source','--sdc-append'):
+            dependencies.add(argv[index+1])
+        elif option=='--step-tcl':
+            dependencies.add(argv[index+1].split('=',1)[1])
+        elif option=='--orfs-var' and argv[index+1].startswith('PDN_TCL=/src/'):
+            dependencies.add(argv[index+1].split('/src/',1)[1])
+    pending=list(dependencies)
+    import re
+    while pending:
+        path=pending.pop()
+        file=ROOT/path
+        if not file.is_file():raise FileNotFoundError('Pinned CP packet missing required input: '+path)
+        if file.suffix!='.tcl':continue
+        children=re.findall(r'^source /src/([^\s]+)',file.read_text(),re.MULTILINE)
+        if path=='physical/common/ot_macro_track_assert_hook.tcl':
+            children.append('physical/common/ot_macro_track_snap.tcl')
+        for child in children:
+            if child not in dependencies:dependencies.add(child);pending.append(child)
+    record['physical_dependencies_sha256']={path:sha(ROOT/path) for path in sorted(dependencies)}
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
