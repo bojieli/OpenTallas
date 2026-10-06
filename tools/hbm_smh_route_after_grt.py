@@ -1,13 +1,14 @@
-"""Continue only this owner's successful r2 GRT; no synth/place/CTS/GRT replay."""
+"""Continue only this owner's successful GRT; no synth/place/CTS/GRT replay."""
 import sys,os,json,time,subprocess,shutil,hashlib,importlib.util,re
 from pathlib import Path
 sys.path.insert(0,'/srv/opentallas-scratch');import admit_core
 label=sys.argv[1]
-root=Path('/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r2');w=root/label;src=root/'src'
+root=Path(sys.argv[2]) if len(sys.argv)>2 else Path('/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r2')
+w=root/label;src=root/'src'
 meta=w/'final_continuation';meta.mkdir(exist_ok=False)
 image='sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
-(meta/'status').write_text('WAIT_EXISTING_R2_GRT_TERMINAL\n')
+(meta/'status').write_text('WAIT_EXISTING_GRT_TERMINAL\n')
 while not (w/'terminal.json').exists():time.sleep(30)
 term=json.loads((w/'terminal.json').read_text())
 if term['rc']!=0:
@@ -39,7 +40,7 @@ def container(cmd,name=None):
 guard('route')
 # Explicit do- stages have no prerequisite rebuild. do-route is excluded: it
 # would invoke GRT again. No guessed droute_end_iter or other execution cap.
-cmd=container('source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=24 do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc do-6_1_fill do-6_1_fill.sdc do-6_report','codex-smh-final-r2-'+label)
+cmd=container('source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=24 do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc do-6_1_fill do-6_1_fill.sdc do-6_report','codex-smh-final-'+root.name+'-'+label)
 (meta/'route_command.json').write_text(json.dumps(cmd,indent=2)+'\n');(meta/'status').write_text('LIVE_DETAIL_ROUTE_FINAL_FROM_GOOD_GRT\n')
 with (meta/'route.log').open('w') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
 subprocess.run(container('chmod -R a+rwX /work'),check=True)
