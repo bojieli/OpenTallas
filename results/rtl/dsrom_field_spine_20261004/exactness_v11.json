@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.dsrom.field_spine.v11_exactness.v1",
+ "spine_rtl_sha256": "247b59864ea3ef009e009a17925638279ccf4b2d05ef6470c7cb7e12b888aa4b",
+ "quantiser_rtl_sha256": "81946a90e378a1e6c860a13a18187e8bca890f6ef998eb196beb1508fc9b1f74",
+ "source_commit": "3e3bb1c32",
+ "host": "ot-epyc2",
+ "bench": "tools/dsrom_field_spine.py run (Verilator; rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp); a run passes only with tb PASS, 0 mismatched and 0 extra rows; the CLI exits 1 on any failed run",
+ "campaigns": [
+  {
+   "config": "PQ=0 baseline",
+   "mode": "phase x region (S81 canonical)",
+   "runs": 20160,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node back-to-back",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node back-to-back (S81+R93)",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "single-phase nodes",
+   "runs": 3792,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  }
+ ],
+ "rows_checked_each_config": 249920,
+ "rows_mismatched": 0,
+ "records": [
+  "results/rtl/dsrom_field_spine_20261004/field_baseline_v11.json",
+  "results/rtl/dsrom_field_spine_20261004/field_pq_v11.json"
+ ],
+ "mutant_check": {
+  "mutation": "qb row low-half write takes the high half of the quantiser output (one line)",
+  "runs": 8,
+  "failed": 8,
+  "cli_exit": 1
+ },
+ "quantiser_equivalence": {
+  "bench": "rtl/test/dsrom_sys/tb_aq12f_eq.sv (iverilog, lockstep ot_dsrom_aq12f vs ot_dsrom_aq12, every output every cycle; exits nonzero on any mismatch)",
+  "cycles": 60000,
+  "valid_vectors": 45134,
+  "faults": 889,
+  "mismatches": 0,
+  "verdict": "PASS",
+  "mutants": {
+   "OT_AQ12F_MUT_DD": 1419,
+   "OT_AQ12F_MUT_GE": 1769,
+   "OT_AQ12F_MUT_SEL": 3548
+  },
+  "mutants_note": "mismatch counts in 5,000 cycles, each exits 1; a dropped nonfinite partial OR is an equivalent mutant (a nonfinite lane is always the magnitude max, so the multiplier's fault raises it) and was replaced by MUT_SEL"
+ },
+ "cycle_delta_vs_v9": {
+  "PQ1": "+4 cycles every node (RPT 2 on broadcast, root inputs, row writes; two-stage BF16 broadcast read)",
+  "PQ0": "+3 cycles every phase (same stages, paid per phase)"
+ },
+ "manifest": [
+  "2026-10-05T21:38:24-07:00 source: v11 files from git archive 3e3bb1c32 (sha-verified)",
+  "2026-10-05T21:38:33-07:00 mutant diff lines 1",
+  "2026-10-05T21:38:33-07:00 build pq0",
+  "2026-10-05T21:43:57-07:00 build pq0 rc=0",
+  "2026-10-05T21:43:57-07:00 build pq1",
+  "2026-10-05T21:52:26-07:00 build pq1 rc=0",
+  "2026-10-05T21:52:26-07:00 start B_node",
+  "2026-10-05T21:52:26-07:00 start A_phase",
+  "2026-10-05T22:01:30-07:00 end B_node rc=0 failed 0",
+  "2026-10-05T22:01:30-07:00 start B_single",
+  "2026-10-05T22:07:17-07:00 end B_single rc=0 failed 0",
+  "2026-10-05T22:07:17-07:00 start B_np2",
+  "2026-10-05T22:08:13-07:00 end B_np2 rc=0 failed 0",
+  "2026-10-05T22:18:27-07:00 end A_phase rc=0 failed 0",
+  "2026-10-05T22:18:27-07:00 start A_node",
+  "2026-10-05T22:24:12-07:00 end A_node rc=0 failed 0",
+  "2026-10-05T22:24:12-07:00 start A_np2",
+  "2026-10-05T22:24:52-07:00 end A_np2 rc=0 failed 0",
+  "2026-10-05T22:24:52-07:00 records",
+  "2026-10-05T22:24:53-07:00 rec0 rc=0",
+  "2026-10-05T22:24:53-07:00 rec1 rc=0",
+  "2026-10-05T22:31:51-07:00 mutant run rc=1 (expect 1) failed 8",
+  "2026-10-05T22:31:51-07:00 DONE"
+ ]
+}
