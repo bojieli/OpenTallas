@@ -9,6 +9,7 @@
 // no unilateral credit/reset recovery promise is made.
 module ot_hbm_native_station #(
  parameter integer MODE=0,ENABLE=0,W=512,NI=1,NO=1,IW=W,
+ parameter integer RELEASE_BACKPRESSURE=0,
  parameter [191:0] COHORT_MASK={192{1'b1}}
 )(
  input wire fclk_i,input wire [3:0] rst_n,
@@ -24,6 +25,7 @@ module ot_hbm_native_station #(
  input wire [NO-1:0] ACK_v,input wire [NO*192-1:0] ACK_owner,
  // Release pulses once after actual acceptance+matching reverse ACKs.
  // Upstream must reserve its reverse receipt on acceptance (VM-root contract).
+ input wire source_release_r,
  output wire source_release,drained,paused,fault
 );
  generate if(MODE==0)begin:forwarding
@@ -124,7 +126,10 @@ module ot_hbm_native_station #(
    end else if(|ACK_v)ack_bad=1;
   end
   assign illegal=cohort_bad||ack_bad;
+  // Opt-in held retirement for a real full-frame upstream receipt seat.
+  // Default0 preserves the original readyless-release ABI; no added state.
   assign release_all=normal&&join_present&&active&&
+   (!RELEASE_BACKPRESSURE||source_release_r)&&
    ((MODE==1)?((acked&ALL)==ALL):out_r[0]);
   wire arm=normal&&join_present&&!active&&!fault;
   wire [63:0] next_ctl=release_all?64'b0:
