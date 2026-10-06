@@ -1,5 +1,5 @@
 {
-  "top": "ot_dsrom_wfc_protected_stage",
+  "top": "ot_dsrom_wfc_protected_inputclock_stage",
   "source": "1860b98a006d25c5009961adedf8b0fb24e18e9a",
   "internal_real": [
     "u_cfg:14SRAM",
@@ -19,9 +19,7 @@
     "Turing": [
       "host cmd_*, cold/fast/slow reset roots actual insertion/slew",
       "in_*/out_*, bl_rx_*/bl_tx_*, rcfg_* finite router/link endpoints and min/max arrival/load",
-      "xb_v/owner/we4/waddr4/wdata4/re/raddr/consume* actual writer/read/consumer endpoint timing and load",
-      "current WFC/VM commonPLL parent root insertion/slew; standalone local propagated CTS is not parent CTS",
-      "literal commonPLL/divider producer module/instance and fast_clk/slow_clk source pins with actual 3:4 phase; generated-clock SDC is currently a documented assumption, not instantiated producer proof"
+      "xb_v/owner/we4/waddr4/wdata4/re/raddr/consume* actual writer/read/consumer endpoint timing and load"
     ]
   },
   "qualification": "INTERNAL_REAL_SOURCE_ONLY_PENDING_EXTERNAL_ENDPOINT_TIMING",
@@ -31,9 +29,25 @@
     "hook": "provider_macro_connect.tcl",
     "sha256": "e3b247457a40e08d8cc3ac1dd2b52408c3879433b98e74cbfc43568d886f55c6",
     "source_owner": "Copernicus",
-    "source_hierarchy": "u_memory.g_live.u_backend.g_data[0..63].g_column[0..3].u_data; g_checks[0..31].u_check",
+    "source_hierarchy": "u_r4.u_memory.g_live.u_backend.g_data[0..63].g_column[0..3].u_data; g_checks[0..31].u_check",
     "actual_data_word_split": "group=word[14:9], row=word[8:0]; checkgroup=word[14:10], half=word[9]",
     "PG": "VDD/VSS actual LEF pins; source hook fails missing signal/clock/PG connection",
     "RTL_ABI_incompatibility_found": false
-  }
+  },
+  "clock_source": {
+    "body_boundary": "fast_clk / slow_clk / clock_source_fault",
+    "failed_generator_source": "76158a8b3",
+    "failure_evidence": "410492892",
+    "body_instantiates_failed_generator": false,
+    "clock_source_owner": "Turing structural repair",
+    "owner_SDC_required": "RECEIVED9915aa96b SHA3655193f7f228a077688e2d132b9ab3e7b697c54bc667c9e2a7c400577cb7591; diagnostic bypass of numeric IP fields",
+    "target_fast_ps": 833.3333333333334,
+    "target_slow_ps": 1111.111111111111,
+    "body_route_qualifies_clock_source": false,
+    "mode": "IDEAL_EXTERNAL_INPUT_DIAGNOSTIC",
+    "physical_source_qualified": false,
+    "full_headline_allowed": false
+  },
+  "finite_IO_source_bound": false,
+  "external_IO_blocks_diagnostic": false
 }

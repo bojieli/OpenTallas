@@ -1,0 +1,1536 @@
+{
+  "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "ot_dsrom_wfc_common_clock_source": {
+      "attributes": {
+        "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:4.1-33.10",
+        "top": "00000000000000000000000000000001",
+        "hdlname": "ot_dsrom_wfc_common_clock_source"
+      },
+      "parameter_default_values": {
+        "ENABLE": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "pll_vco": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "por_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "clk_fast": {
+          "direction": "output",
+          "bits": [ 4 ]
+        },
+        "clk_slow": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "clock_fault": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+        "$abc$486$auto$blifparse.cc:397:parse_blif$487": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 7 ],
+            "Y": [ 8 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$488": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 9 ],
+            "Y": [ 10 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$489": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 11 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$490": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 13 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$491": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 15 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$492": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 17 ],
+            "Y": [ 18 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$493": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 19 ],
+            "Y": [ 20 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$494": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 21 ],
+            "Y": [ 22 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$495": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 23 ],
+            "Y": [ 24 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$496": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 25 ],
+            "Y": [ 26 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$497": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 27 ],
+            "Y": [ 28 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$498": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 29 ],
+            "Y": [ 30 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$499": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 31 ],
+            "Y": [ 32 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$500": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 33 ],
+            "Y": [ 34 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$501": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 2 ],
+            "Y": [ 35 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$502": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 36 ],
+            "Y": [ 5 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$503": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 37 ],
+            "Y": [ 38 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$504": {
+          "hide_name": 1,
+          "type": "OAI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 23 ],
+            "A2": [ 29 ],
+            "B": [ 25 ],
+            "Y": [ 39 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$505": {
+          "hide_name": 1,
+          "type": "XOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 17 ],
+            "B": [ 36 ],
+            "Y": [ 40 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$506": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 15 ],
+            "B": [ 21 ],
+            "Y": [ 41 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$507": {
+          "hide_name": 1,
+          "type": "OR2x2_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 7 ],
+            "B": [ 13 ],
+            "Y": [ 42 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$508": {
+          "hide_name": 1,
+          "type": "AND4x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 39 ],
+            "B": [ 40 ],
+            "C": [ 41 ],
+            "D": [ 42 ],
+            "Y": [ 43 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$509": {
+          "hide_name": 1,
+          "type": "NAND4xp25_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 39 ],
+            "B": [ 40 ],
+            "C": [ 41 ],
+            "D": [ 42 ],
+            "Y": [ 44 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$510": {
+          "hide_name": 1,
+          "type": "OAI222xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 9 ],
+            "A2": [ 11 ],
+            "B1": [ 15 ],
+            "B2": [ 21 ],
+            "C1": [ 25 ],
+            "C2": [ 29 ],
+            "Y": [ 45 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$511": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 19 ],
+            "B": [ 37 ],
+            "Y": [ 46 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$512": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 23 ],
+            "B": [ 33 ],
+            "Y": [ 47 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$513": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 27 ],
+            "B": [ 31 ],
+            "Y": [ 48 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$514": {
+          "hide_name": 1,
+          "type": "AO22x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 9 ],
+            "A2": [ 11 ],
+            "B1": [ 13 ],
+            "B2": [ 7 ],
+            "Y": [ 49 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$515": {
+          "hide_name": 1,
+          "type": "NOR5xp2_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 45 ],
+            "B": [ 46 ],
+            "C": [ 47 ],
+            "D": [ 48 ],
+            "E": [ 49 ],
+            "Y": [ 50 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$516": {
+          "hide_name": 1,
+          "type": "OR5x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 45 ],
+            "B": [ 46 ],
+            "C": [ 47 ],
+            "D": [ 48 ],
+            "E": [ 49 ],
+            "Y": [ 51 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$517": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 43 ],
+            "B": [ 50 ],
+            "Y": [ 52 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$518": {
+          "hide_name": 1,
+          "type": "NOR3xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 38 ],
+            "B": [ 44 ],
+            "C": [ 51 ],
+            "Y": [ 53 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$519": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 53 ],
+            "Y": [ 6 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$520": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 31 ],
+            "B": [ 53 ],
+            "Y": [ 54 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$521": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 29 ],
+            "B": [ 33 ],
+            "Y": [ 55 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$522": {
+          "hide_name": 1,
+          "type": "AND4x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 37 ],
+            "B": [ 43 ],
+            "C": [ 50 ],
+            "D": [ 55 ],
+            "Y": [ 56 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$523": {
+          "hide_name": 1,
+          "type": "AOI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 29 ],
+            "A2": [ 6 ],
+            "B": [ 56 ],
+            "Y": [ 57 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$524": {
+          "hide_name": 1,
+          "type": "OAI31xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 38 ],
+            "A2": [ 44 ],
+            "A3": [ 51 ],
+            "B": [ 28 ],
+            "Y": [ 58 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$525": {
+          "hide_name": 1,
+          "type": "OAI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 31 ],
+            "A2": [ 6 ],
+            "B": [ 58 ],
+            "Y": [ 59 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$526": {
+          "hide_name": 1,
+          "type": "AO21x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 26 ],
+            "A2": [ 6 ],
+            "B": [ 56 ],
+            "Y": [ 60 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$527": {
+          "hide_name": 1,
+          "type": "NOR3xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 30 ],
+            "B": [ 33 ],
+            "C": [ 6 ],
+            "Y": [ 61 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$528": {
+          "hide_name": 1,
+          "type": "NAND3xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 29 ],
+            "B": [ 34 ],
+            "C": [ 53 ],
+            "Y": [ 62 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$529": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 15 ],
+            "B": [ 31 ],
+            "Y": [ 63 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$530": {
+          "hide_name": 1,
+          "type": "AND4x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 37 ],
+            "B": [ 43 ],
+            "C": [ 50 ],
+            "D": [ 63 ],
+            "Y": [ 64 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$531": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 64 ],
+            "Y": [ 65 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$532": {
+          "hide_name": 1,
+          "type": "NOR2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 9 ],
+            "B": [ 6 ],
+            "Y": [ 66 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$533": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 10 ],
+            "B": [ 53 ],
+            "Y": [ 67 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$534": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 7 ],
+            "B": [ 9 ],
+            "Y": [ 4 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$535": {
+          "hide_name": 1,
+          "type": "NOR5xp2_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 29 ],
+            "B": [ 34 ],
+            "C": [ 38 ],
+            "D": [ 44 ],
+            "E": [ 51 ],
+            "Y": [ 68 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$536": {
+          "hide_name": 1,
+          "type": "AOI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 23 ],
+            "A2": [ 6 ],
+            "B": [ 68 ],
+            "Y": [ 69 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$537": {
+          "hide_name": 1,
+          "type": "AO21x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 22 ],
+            "A2": [ 6 ],
+            "B": [ 64 ],
+            "Y": [ 70 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$538": {
+          "hide_name": 1,
+          "type": "AO21x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 34 ],
+            "A2": [ 6 ],
+            "B": [ 68 ],
+            "Y": [ 71 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$539": {
+          "hide_name": 1,
+          "type": "AOI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 15 ],
+            "A2": [ 6 ],
+            "B": [ 64 ],
+            "Y": [ 72 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$540": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 53 ],
+            "Y": [ 73 ]
+          }
+        },
+        "$abc$486$auto$blifparse.cc:397:parse_blif$541": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 2 ],
+            "Y": [ 74 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$244": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 60 ],
+            "QN": [ 25 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$245": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 69 ],
+            "QN": [ 23 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$246": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 59 ],
+            "QN": [ 27 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$247": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 70 ],
+            "QN": [ 21 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$248": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 53 ],
+            "QN": [ 19 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$249": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 57 ],
+            "QN": [ 29 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$250": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 71 ],
+            "QN": [ 33 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$251": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 54 ],
+            "QN": [ 31 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$252": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 72 ],
+            "QN": [ 15 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$253": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 73 ],
+            "QN": [ 37 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$357": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:15.3-19.6"
+          },
+          "connections": {
+            "CLK": [ 74 ],
+            "D": [ 66 ],
+            "QN": [ 7 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$358": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:15.3-19.6"
+          },
+          "connections": {
+            "CLK": [ 35 ],
+            "D": [ 67 ],
+            "QN": [ 13 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$359": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 61 ],
+            "QN": [ 9 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$360": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 62 ],
+            "QN": [ 11 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$361": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 64 ],
+            "QN": [ 36 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$362": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 65 ],
+            "QN": [ 17 ],
+            "RESETN": [ "1" ],
+            "SETN": [ 3 ]
+          }
+        }
+      },
+      "netnames": {
+        "$0\\on.fh[0:0]": {
+          "hide_name": 1,
+          "bits": [ 66 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:15.3-19.6"
+          }
+        },
+        "$0\\on.fhn[0:0]": {
+          "hide_name": 1,
+          "bits": [ 67 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:15.3-19.6"
+          }
+        },
+        "$0\\on.fq[0:0]": {
+          "hide_name": 1,
+          "bits": [ 61 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          }
+        },
+        "$0\\on.fqn[0:0]": {
+          "hide_name": 1,
+          "bits": [ 62 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          }
+        },
+        "$0\\on.sq[0:0]": {
+          "hide_name": 1,
+          "bits": [ 64 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          }
+        },
+        "$0\\on.sqn[0:0]": {
+          "hide_name": 1,
+          "bits": [ 65 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:20.3-31.6"
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$454": {
+          "hide_name": 1,
+          "bits": [ 9 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$456": {
+          "hide_name": 1,
+          "bits": [ 11 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$458": {
+          "hide_name": 1,
+          "bits": [ 13 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$460": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$462": {
+          "hide_name": 1,
+          "bits": [ 17 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$464": {
+          "hide_name": 1,
+          "bits": [ 19 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$466": {
+          "hide_name": 1,
+          "bits": [ 21 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$468": {
+          "hide_name": 1,
+          "bits": [ 23 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$470": {
+          "hide_name": 1,
+          "bits": [ 25 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$472": {
+          "hide_name": 1,
+          "bits": [ 27 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$474": {
+          "hide_name": 1,
+          "bits": [ 29 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$476": {
+          "hide_name": 1,
+          "bits": [ 31 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$478": {
+          "hide_name": 1,
+          "bits": [ 33 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$480": {
+          "hide_name": 1,
+          "bits": [ 36 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$482": {
+          "hide_name": 1,
+          "bits": [ 37 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$dfflibmap.cc:546:dfflibmap$484": {
+          "hide_name": 1,
+          "bits": [ 7 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3504:NotGate$449": {
+          "hide_name": 1,
+          "bits": [ 35 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3504:NotGate$453": {
+          "hide_name": 1,
+          "bits": [ 74 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$431": {
+          "hide_name": 1,
+          "bits": [ 54 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$433": {
+          "hide_name": 1,
+          "bits": [ 57 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$435": {
+          "hide_name": 1,
+          "bits": [ 59 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$437": {
+          "hide_name": 1,
+          "bits": [ 60 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$439": {
+          "hide_name": 1,
+          "bits": [ 69 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$441": {
+          "hide_name": 1,
+          "bits": [ 70 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$443": {
+          "hide_name": 1,
+          "bits": [ 53 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$445": {
+          "hide_name": 1,
+          "bits": [ 71 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$447": {
+          "hide_name": 1,
+          "bits": [ 72 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$auto$rtlil.cc:3513:MuxGate$451": {
+          "hide_name": 1,
+          "bits": [ 73 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n103": {
+          "hide_name": 1,
+          "bits": [ 68 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n72": {
+          "hide_name": 1,
+          "bits": [ 39 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n73": {
+          "hide_name": 1,
+          "bits": [ 40 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n74": {
+          "hide_name": 1,
+          "bits": [ 41 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n75": {
+          "hide_name": 1,
+          "bits": [ 42 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n76": {
+          "hide_name": 1,
+          "bits": [ 43 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n77": {
+          "hide_name": 1,
+          "bits": [ 44 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n78": {
+          "hide_name": 1,
+          "bits": [ 45 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n79": {
+          "hide_name": 1,
+          "bits": [ 46 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n80": {
+          "hide_name": 1,
+          "bits": [ 47 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n81": {
+          "hide_name": 1,
+          "bits": [ 48 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n82": {
+          "hide_name": 1,
+          "bits": [ 49 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n83": {
+          "hide_name": 1,
+          "bits": [ 50 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n84": {
+          "hide_name": 1,
+          "bits": [ 51 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n89": {
+          "hide_name": 1,
+          "bits": [ 55 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n90": {
+          "hide_name": 1,
+          "bits": [ 56 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n92": {
+          "hide_name": 1,
+          "bits": [ 58 ],
+          "attributes": {
+          }
+        },
+        "$abc$486$new_n97": {
+          "hide_name": 1,
+          "bits": [ 63 ],
+          "attributes": {
+          }
+        },
+        "clk_fast": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:5.40-5.48"
+          }
+        },
+        "clk_slow": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "init": "0",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:5.49-5.57"
+          }
+        },
+        "clock_fault": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:5.58-5.69"
+          }
+        },
+        "on.bad": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:12.8-12.11"
+          }
+        },
+        "on.f[0]": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.13-10.14"
+          }
+        },
+        "on.f[1]": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "offset": 1,
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.13-10.14"
+          }
+        },
+        "on.failed": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.40-11.46"
+          }
+        },
+        "on.failed_n": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.49-11.57"
+          }
+        },
+        "on.fh": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.18-11.20"
+          }
+        },
+        "on.fhn": {
+          "hide_name": 0,
+          "bits": [ 14 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.23-11.26"
+          }
+        },
+        "on.fn[0]": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.17-10.19"
+          }
+        },
+        "on.fn[1]": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "offset": 1,
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.17-10.19"
+          }
+        },
+        "on.fq": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.7-11.9"
+          }
+        },
+        "on.fqn": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.12-11.15"
+          }
+        },
+        "on.s[0]": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.22-10.23"
+          }
+        },
+        "on.s[1]": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "offset": 1,
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.22-10.23"
+          }
+        },
+        "on.sn[0]": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.26-10.28"
+          }
+        },
+        "on.sn[1]": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "offset": 1,
+          "attributes": {
+            "init": "0",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:10.26-10.28"
+          }
+        },
+        "on.sq": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.29-11.31"
+          }
+        },
+        "on.sqn": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "init": "1",
+            "keep": "00000000000000000000000000000001",
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:11.34-11.37"
+          }
+        },
+        "pll_vco": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:5.13-5.20"
+          }
+        },
+        "por_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv:5.21-5.26"
+          }
+        }
+      }
+    }
+  }
+}

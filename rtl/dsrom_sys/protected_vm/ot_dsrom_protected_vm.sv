@@ -2,7 +2,7 @@
 // Additive minimum WFC + collective native ports. Not the unprotected one-edge fixture.
 // One accepted-edge bundle; old-data reads precede xa,xb0..3 writes. Default off.
 // Positive row visibility is a protected backend fact, NEVER C8 retirement.
-module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
+module ot_dsrom_protected_vm #(parameter integer ENABLE=0,parameter integer DISTRIBUTED_CMD=0)(
  input wire fast_clk,slow_clk,cold_n,fast_rst_n,slow_rst_n,
  input wire request_v,output wire request_ready,input wire [46:0] request_owner,
  input wire [1:0] read_enable,input wire [29:0] read_addr,
@@ -62,7 +62,7 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
    .wclk(fast_clk),.wrst_n(cold_n&&fast_rst_n),.w_v(consume_ok),.w_rdy(ack_fifo_ready),.w_d(encoded_receipt),
    .rclk(slow_clk),.rrst_n(cold_n&&slow_rst_n),.r_v(ack_s_v),.r_rdy(ack_s_ready),.r_d(ack_s_code),.w_live(),.r_live(),.control_fault(transport_fault[2]));
   wire backend_debt,backend_fault,backend_init;
-  ot_dsrom_vm_backend u_backend(.clk(slow_clk),.cold_n(cold_n),.rst_n(slow_rst_n),
+  ot_dsrom_vm_backend #(.DISTRIBUTED_CMD(DISTRIBUTED_CMD)) u_backend(.clk(slow_clk),.cold_n(cold_n),.rst_n(slow_rst_n),
    .req_v(req_s_v),.req_ready(req_s_ready),.req_code(req_s_code),
    .reply_v(rep_s_v),.reply_ready(rep_s_ready),.reply_code(rep_s_code),
    .receipt_v(ack_s_v),.receipt_ready(ack_s_ready),.receipt_code(ack_s_code),

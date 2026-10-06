@@ -1,0 +1,19 @@
+{
+  "rank": 1,
+  "keys": 10928,
+  "beats": 171,
+  "blocks": 1366,
+  "quarter_block_limit": 342,
+  "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+  "source_pins": {
+    "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+    "/tmp/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+  },
+  "append_source": "saved actual ik20 row",
+  "comparison_only": "scores.mem; never a DUT operand",
+  "payload_sha256": "c681830ed34b95d88a6cd295e16c6a9ddcfc51947c2c9fef2f6c01950ced6537",
+  "outputs": {
+    "keys.mem": "5d0e93b1622f3488575867bafda00f280966641e176890f4538193c5765f9e55",
+    "scores.mem": "79658ad51130c1762beb4d4c9fefbaad1429606713668e521af5db47287dc2d3"
+  }
+}

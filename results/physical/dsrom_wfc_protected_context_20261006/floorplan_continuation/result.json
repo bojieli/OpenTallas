@@ -1,0 +1,219 @@
+{
+  "scope": "COND_BODY_DIAGNOSTIC only",
+  "recipe_commit": "67f8865c2",
+  "continuations": [
+    {
+      "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r3-floorplan-resume",
+      "container": "f45b870d4fe8e1e35ac0e08ece0f775e403e4cc79d9e4be9bd2b0dfbc0338aa4",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 2,
+        "Error": "",
+        "StartedAt": "2026-10-06T09:04:52.166231204Z",
+        "FinishedAt": "2026-10-06T09:04:57.6460125Z"
+      },
+      "terminal": "2",
+      "errors": [
+        "Error: macro_place.tcl, 6 missing close-brace"
+      ],
+      "306macros_matched": true,
+      "PG_complete": false,
+      "provider_complete": false,
+      "rawlog_sha256": "ce9cf78a9194e747878fa403c12ff4cffb0c16d9f83d9f43e2e6a2b0f6654538",
+      "synth_replayed": false
+    },
+    {
+      "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r4-floorplan-resume",
+      "container": "d5f0c760fe73cf4364bb62d972865cbc3f3f6f34bf2707f37ba7b9e5682c43b1",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 2,
+        "Error": "",
+        "StartedAt": "2026-10-06T09:06:15.902565843Z",
+        "FinishedAt": "2026-10-06T09:06:22.09959671Z"
+      },
+      "terminal": "2",
+      "errors": [
+        "[ERROR STA-0562] get_clocks -of_objects is not a known keyword or flag.",
+        "Error: macro_place.tcl, 6 STA-0562"
+      ],
+      "306macros_matched": true,
+      "PG_complete": false,
+      "provider_complete": false,
+      "rawlog_sha256": "83b4ec2d123870d545bc650e80b9fa649fb657540714044894bddec5f0188056",
+      "synth_replayed": false
+    },
+    {
+      "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r5-floorplan-resume",
+      "container": "3b95763862272186df69a91fb5f60795622525d66f5f55b4959b85b0916d40ef",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 2,
+        "Error": "",
+        "StartedAt": "2026-10-06T09:08:04.902632866Z",
+        "FinishedAt": "2026-10-06T09:08:49.072880495Z"
+      },
+      "terminal": "2",
+      "errors": [
+        "Error: macro_place.tcl, 6 Actual PG hook failed: u_r4.u_memory.g_live.u_backend.g_checks\\[0\\].u_check/VDD must connect to VDD"
+      ],
+      "306macros_matched": true,
+      "PG_complete": false,
+      "provider_complete": false,
+      "rawlog_sha256": "3aa3c6308edacc79a56a4f660256a77781c34c7f8c4345d5a1d003cafaba3a44",
+      "synth_replayed": false
+    },
+    {
+      "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r6-floorplan-resume",
+      "container": "8651b5b7556af9e1beb02169f740e94231e79b8d130180b039922ed751a7612a",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 2,
+        "Error": "",
+        "StartedAt": "2026-10-06T09:09:47.90506983Z",
+        "FinishedAt": "2026-10-06T09:10:02.127021087Z"
+      },
+      "terminal": "2",
+      "errors": [
+        "[ERROR ODB-0369] Attempt to connect iterm of dont_touch instance u_r4.u_memory.g_live.u_backend.g_checks\\[0\\].u_check",
+        "Error: macro_place.tcl, 6 ODB-0369"
+      ],
+      "306macros_matched": true,
+      "PG_complete": false,
+      "provider_complete": false,
+      "rawlog_sha256": "53453a7f65cdd745faa3dfadee7a35f4688045f2fe6ad4028c1b566c5f3de5d5",
+      "synth_replayed": false
+    }
+  ],
+  "active_supervisor": {
+    "pid": 4069048,
+    "start_ticks": "25968176",
+    "boot_id": "61274e16-7745-49f1-9bae-df70e3eb8702",
+    "utc": "2026-10-06T09:09:45.378328+00:00",
+    "argv": [
+      "python3",
+      "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r6-exact-pg/physical/dsrom_wfc_protected_context/run.py",
+      "--source",
+      "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r6-exact-pg",
+      "--output",
+      "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r6-floorplan-resume",
+      "--density",
+      "0.55",
+      "--body-clock-sdc",
+      "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r6-exact-pg/physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc",
+      "--resume-from-floorplan",
+      "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r2-cdc6480"
+    ]
+  },
+  "headroom": [
+    {
+      "utc": "2026-10-06T09:09:41Z",
+      "stage": "pre-guard",
+      "cpus": 128,
+      "load1": 57.69384765625,
+      "idle_cpus": 76.72394652490033,
+      "available_bytes": 766145986560,
+      "nvme_free_bytes": 483720470528,
+      "threads": 16,
+      "guard": "/srv/opentallas-scratch/admit.sh",
+      "reservation_GiB": 64,
+      "cpu_fit": true,
+      "fit": true
+    },
+    {
+      "utc": "2026-10-06T09:09:46Z",
+      "stage": "pre-guard",
+      "cpus": 128,
+      "load1": 58.439453125,
+      "idle_cpus": 74.6883502736513,
+      "available_bytes": 765298479104,
+      "nvme_free_bytes": 483720462336,
+      "threads": 16,
+      "guard": "/srv/opentallas-scratch/admit.sh",
+      "reservation_GiB": 64,
+      "cpu_fit": true,
+      "fit": true
+    },
+    {
+      "utc": "2026-10-06T09:09:47Z",
+      "stage": "post-guard",
+      "cpus": 128,
+      "load1": 59.044921875,
+      "idle_cpus": 75.16936303243455,
+      "available_bytes": 765095059456,
+      "nvme_free_bytes": 483720458240,
+      "threads": 16,
+      "guard": "/srv/opentallas-scratch/admit.sh",
+      "reservation_GiB": 64,
+      "cpu_fit": true,
+      "fit": true
+    }
+  ],
+  "checkpoint": {
+    "from_root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r2-cdc6480",
+    "from_stage": "2_1_floorplan",
+    "source_RTL_identical": true,
+    "skipped": "synth/floorplan/golden",
+    "checkpoint_sha256": {
+      "1_2_yosys.v": "58696283823b1110fd0eb4c7f9d99552e86d2fb772c55ca6ee3a27ad787bbb7c",
+      "1_synth.odb": "6dfedbd1c0acf2c0c547490e0dbeeab2a7e40ff775dd8521013bf2fc2513caf3",
+      "1_synth.sdc": "7623d584c7ad223b592a59b048077fbc4ba196241b0643a96407341822fd322f",
+      "2_1_floorplan.odb": "80e41b7383ce361422423de1e94c73a87f8af81cb2f2535c95450ac55431a627",
+      "2_1_floorplan.sdc": "7623d584c7ad223b592a59b048077fbc4ba196241b0643a96407341822fd322f"
+    }
+  },
+  "recipe_hashes": {
+    "macro_placement.tcl": "6351b1dbc7545d307939b16a1ec8f5301c5ba9f597bc3593eb1b20346d51c20a",
+    "provider_macro_connect.tcl": "ce33a4bcde3207a0ee7e24db943ad262f19f01493b5ee2c8ca5d633e993f28e1",
+    "run.py": "2b1a7abb806e98f7db8d8dc950c3445d53b0e183c1ec8348463e899000eb9713"
+  },
+  "SSFF": null,
+  "DRC": null,
+  "source_or_reset_qualified": false,
+  "headline_allowed": false,
+  "all_failed_roots_retained": true,
+  "current": {
+    "verdict": "RUNNING_COND_BODY_DIAGNOSTIC",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r7-floorplan-resume",
+    "supervisor": 4075640,
+    "container": "50776b5d4666e78f2ee4aced80061981d4a7854cf0acaf8144950a4979bc02cc",
+    "verified_OpenROAD": 4076874,
+    "stage": "2_4_floorplan_pdn",
+    "macro_placement_count": 306,
+    "provider_serial_clock_checks": 288,
+    "real_PG_bindings_passed": 306,
+    "macro_dont_touch_restored": true,
+    "macro_signal_nets_unchanged": true,
+    "synth_replayed": false,
+    "golden_replayed": false,
+    "clock_constraints_unchanged": true,
+    "SSFF": null,
+    "DRC": null,
+    "external_source_and_IO_qualified": false
+  }
+}

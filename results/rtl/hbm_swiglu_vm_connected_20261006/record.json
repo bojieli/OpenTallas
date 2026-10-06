@@ -1,0 +1,64 @@
+{
+  "schema": "hbm.swiglu.connected-vm.v1",
+  "verdict": "PASS_CONNECTED_VM_CONTROL",
+  "parent_hook_path": "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv",
+  "parent_hook_base_revision": "e6378d49c",
+  "parent_hook_base_sha256": "1a79190bb283e76672c7c644fdd0f8cb4d9ca264cd356ea1b2a7c9e22d1dc539",
+  "parent_hook_sha256": "2ef89225cfc197242369a1d1574fc6e7a501f207cdb5c3f50ef14d51f24ff0fd",
+  "config": {
+    "ENABLE": 1,
+    "KIND": 3,
+    "N": 32,
+    "D": 64,
+    "AW": 10,
+    "PUBLISH_QUANT": 1,
+    "ROUTED": 1,
+    "ADOPTED_SWIGLU_QUANT_ONLY": 1
+  },
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+    "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": "2ef89225cfc197242369a1d1574fc6e7a501f207cdb5c3f50ef14d51f24ff0fd",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_swiglu_quant_adapter.sv": "2927f86c3345388ad3a6e96f6aae6f94ddf56852f5f861850cc56ce53dff2699",
+    "results/rtl/hbm_swiglu_vm_connected_20261006/connected_production_header_probe.sv": "bcf51c25ff6ba9a5ad25468a59a607e99ff8c89abf03773f83c90db51ac91e77",
+    "rtl/test/hbm_accel/integrated_20261006/tb_hbm_swiglu_vm_connected.sv": "2919821b88ff3b279274640cbbb3250d44b7a9488530c8be50c8e51d14f19f19"
+  },
+  "result": {
+    "ordered_vm_input_beats": 2,
+    "quant_landing_packets": 2,
+    "checked_readback_ACKs": 2,
+    "identity_bits": 73,
+    "token_bits": 17,
+    "position_bits": 20,
+    "prequant_VM_writes": 0,
+    "real_lease": "ot_hbm_integrated_sm0_borrow protected shared grant/reverse release",
+    "real_owner": "ot_hbm_integrated_stage_join protected216codedFF descriptor",
+    "memory": "Existing one-cycle SU VM enables/addresses and finite reserved quant landing writes/readback",
+    "warm": "Whole accepted command drains; warm blocks new stage admission. Engine POR is root only.",
+    "negative_controls": [
+      "completion TOKEN17 bit16 wrong keeps lease/stage retained",
+      "completion POS20 bit19 wrong keeps lease/stage retained",
+      "accepted source_ready withdraw faults and keeps busy/lease/debt; no completion"
+    ],
+    "masked_undriven": "All disabled VM read ports are X including plane3; selected producer ignores them",
+    "original_path": "Default flag0 unchanged arithmetic/VM writes; q_frame zero in original mode"
+  },
+  "validation_scope": "NEW connected memory/lease/frame/landing controller only, deterministic production-header port probe; no arithmetic/numerical gate rerun or whole parent/token PASS",
+  "arithmetic_source_unchanged": true,
+  "arithmetic_gate_rerun": false,
+  "arithmetic_basis": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
+  "first_failure": {
+    "log": "first_vm_join_FAIL.log",
+    "probe": "first_vm_join_FAIL_probe.sv",
+    "cause": "TEST_PROBE payload staging shared output register; adjacent packets overwrite payload at first valid. Fixed test probe staging only; production arithmetic unchanged."
+  },
+  "model_delta": "Reuse existing VM state/payload/base/scalar regs and KIND3 unused ro_index as quant output cursor; no added metadata/payload FF or bridge cycles. Canonical producer replaces original selected engine. Existing protected parent stage/lease/quant landing costs apply; loaded slot closure remains Gibbs.",
+  "parent_installed": false,
+  "parent_owner": "Gibbs",
+  "physical_SS60_FF25_qualified": false,
+  "source_install": "Apply literal_vm_insertion.patch or scoped cherry-pick hook step; install literal connected instance with actual parent stage held73, grant, VM reply and reserved quant landing. Do not tie grant/reservation/drains high. Root/reset owner signal remains held through warm. Original prequant Y is separate, no silent replacement.",
+  "compile_selection": "Use adopted f12 qmul/qadd wrapper exactly once with canonical swiglu/f12/add6 sources. Existing native c12 ALAT6/MLAT6 parameters unchanged."
+}

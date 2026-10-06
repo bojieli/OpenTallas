@@ -1,0 +1,52 @@
+{
+  "default": 0,
+  "replica_count": 1,
+  "state_FF_bits": 0,
+  "evidence_class": "IDEAL_EXTERNAL_INPUT_DIAGNOSTIC",
+  "MACs_per_cycle": 0,
+  "memory_port_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": {
+    "external_clocks": 2,
+    "external_fault": 1
+  },
+  "replica_mux_demux_cost": 0,
+  "added_pipeline_cycles": 0,
+  "fast_period_ps": 833.3333333333334,
+  "slow_period_ps": 1111.111111111111,
+  "fast_waveform_ps": [
+    0,
+    416.6666666666667
+  ],
+  "slow_waveform_ps": [
+    0,
+    555.5555555555555
+  ],
+  "common_rising_epoch_ps": 0,
+  "common_rising_period_ps": 3333.3333333333335,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "source_scope": "Ideal external inputs solely for conditional BODY physical defecthunt",
+  "source_insertion_ps": null,
+  "source_slew_ps": null,
+  "source_jitter_ps": null,
+  "source_qualification": false,
+  "physical_closed": false,
+  "other_IO_bound": false,
+  "headline_allowed": false,
+  "latency_contribution": "No changed data cycles. Body timing margin is available source/IO budget, not measured source timing. Clock-IP acquisition and physical cost are excluded unknowns, not zero.",
+  "routing_tracks_needed": {
+    "body_clock_inputs": 2,
+    "fault": 1
+  },
+  "channel_capacity": null,
+  "floorplan_slot_fit": false,
+  "waveform_basis": "tb_wfc_protected_stage fast/slow both start high at common epoch,50pct duty and3:4; owner exact833.333/1111.111 periods replace bench decimal rounding only",
+  "artifact_hashes": {
+    "body_ideal_inputs.sdc": "3655193f7f228a077688e2d132b9ab3e7b697c54bc667c9e2a7c400577cb7591",
+    "clock_inputs.sdc": "b9c530d4a585056e48063359d484cb705e7cd8026b711d0559d75efb680646a8",
+    "report_body_budget.tcl": "c565aada115293c4ddc2aa91202dd5a6488f6ade40dd40ce2f1888d1d8e05f33"
+  },
+  "fault_reset_semantics": "cold_n coldPOR only, domain active-lowreset release externalunbound; clock_source_fault active-high realveto/quarantine input, source musthold untilcoldrecovery; no sticky detection orsafeclockstop claim inbody",
+  "dispatch_dependency": "Zeno new owned pinned source consumes these two files, current two-source driver compatible. No characterization dictionary required for ONE conditionalu55defecthunt.",
+  "validation": "Tcl execution/sequence check; not actual OpenSTA API or timing qualification"
+}

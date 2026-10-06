@@ -25,6 +25,9 @@
 // QX = 5 (after route Z7's post-CTS screen, SS -40.7 ps on w_cnt -> hazard compare -> issue -> walker enables): the
 // issue hazard is a register loaded with its next-cycle value (three register-only candidates selected by go / issue).
 // QP_CHECK asserts it equals the original every cycle.  Zero added cycles.
+// QX = 10 (zero cycles, after routes Z15a / Z15b): lane NaN flag as 8-lane partials (bterm4 NS), chain adder step 0 on
+// every forward candidate in parallel (ot_v41_chain4 PD / ot_v41_fadd2), r_dp by parallel prefix differences, and the
+// go / restart segment-flag candidates of w_sf_r from registers formed a cycle earlier.
 // QX = 9 (owner decision 2026-10-05, structural): the segment tree is ot_v41_segtree5, its decide stage split into a
 // read stage (80-slot held / have / above selects reduced into 4 group partials, next-state forwarding) and a decide
 // stage, so a tree level costs one more cycle and the element's partial outputs leave later (data-dependent; same
@@ -667,10 +670,26 @@ module ot_v41_rom_elem_qx_w10 #(
             always @(posedge gclk)
                 for (dc = 0; dc < NSEG; dc = dc + 1)
 `ifdef QP_MUTANT_DP
-                    r_dp[dc] <= xs_p - ((cfg_v_e && cfg_a_e == 5'(NSEG + dc)) ? cfg_d_e[8:1] : c_u0[dc]) + ((dc == 5) ? 8'd1 : 8'd0);
+                    if (QX < 10) r_dp[dc] <= xs_p - ((cfg_v_e && cfg_a_e == 5'(NSEG + dc)) ? cfg_d_e[8:1] : c_u0[dc]) + ((dc == 5) ? 8'd1 : 8'd0);
 `else
-                    r_dp[dc] <= xs_p - (((QY != 0) ? qy_cdec[dc] : (cfg_v_e && cfg_a_e == 5'(NSEG + dc))) ? cfg_d_e[8:1] : c_u0[dc]);
+                    if (QX < 10) r_dp[dc] <= xs_p - (((QY != 0) ? qy_cdec[dc] : (cfg_v_e && cfg_a_e == 5'(NSEG + dc))) ? cfg_d_e[8:1] : c_u0[dc]);
 `endif
+            // QX = 10: both differences by prefix adders in parallel, then the select (route Z15b: b_cfg_d -> select ->
+            // rippled 8-bit subtract -> r_dp -56.8 ps)
+            if (QX >= 10) begin : g_dpk
+                wire [7:0] dpc;
+                ot_v41_ksadd #(.W(8)) u_dpc (.a(xs_p), .b(~cfg_d_e[8:1]), .cin(1'b1), .s(dpc), .cout());
+                for (genvar dk = 0; dk < NSEG; dk = dk + 1) begin : g_k
+                    wire [7:0] dpu;
+                    ot_v41_ksadd #(.W(8)) u_dpu (.a(xs_p), .b(~c_u0[dk]), .cin(1'b1), .s(dpu), .cout());
+                    always @(posedge gclk)
+`ifdef QP_MUTANT_DP
+                        r_dp[dk] <= (((QY != 0) ? qy_cdec[dk] : (cfg_v_e && cfg_a_e == 5'(NSEG + dk))) ? dpc : dpu) + ((dk == 5) ? 8'd1 : 8'd0);
+`else
+                        r_dp[dk] <= ((QY != 0) ? qy_cdec[dk] : (cfg_v_e && cfg_a_e == 5'(NSEG + dk))) ? dpc : dpu;
+`endif
+                end
+            end
         end
         for (genvar hc = 0; hc < HC; hc = hc + 1) begin : g_hc
             (* keep, dont_touch = "true" *) reg d_run;
@@ -1205,8 +1224,28 @@ module ot_v41_rom_elem_qx_w10 #(
             qx_sw_l  = qx_sw_l  | (qx_sf_ohl[k] && qx_sa == c_s0[k]);
         end
     end
+    // QX = 10: the go / restart candidates from free-clock registers formed a cycle earlier (route Z15b: c_v ->
+    // base_live -> first class -> flags -> w_sf_r -20.1 ps).  The go candidate is formed against the go_bf PIN (go_e's
+    // family a cycle ahead) and the restart candidate against the running family; under the spine contract the
+    // configuration is final a cycle before go_e and unchanged while a walk runs (QP_CHECK asserts both at use).
+    reg  [3:0] qx_sf_fr, qx_sf_lr, qx_sf_fp;
+    reg  [NSEG-1:0] qx_bgp;
+    always @* for (int k = 0; k < NSEG; k++) qx_bgp[k] = c_v[k] && c_bf[k] == go_bf;
+    wire [NSEG-1:0] qx_ohfp = qx_low(qx_bgp);
+    always @* begin
+        qx_sf_fp = 4'd0;
+        for (int k = 0; k < NSEG; k++) qx_sf_fp = qx_sf_fp | ({4{qx_ohfp[k]}} & qx_sfl(c_s0[k]));
+    end
+    always @(posedge clk) begin qx_sf_fr <= qx_sf_fp; qx_sf_lr <= qx_sf_l; end
+`ifdef QP_CHECK
+    always @(negedge clk) if (QX >= 10 && rst_n && ((go_e && qx_sf_fr !== qx_sf_f) || (w_restart && qx_sf_lr !== qx_sf_l))) begin
+        $display("QX_CHECK FAIL: registered go / restart flag candidates %b/%b != %b/%b at %t", qx_sf_fr, qx_sf_lr,
+                 qx_sf_f, qx_sf_l, $time); $fatal(1);
+    end
+`endif
     wire qx_sld = go_e || issue && w_seg_last;                              // the walker loads w_s
-    wire [3:0] qx_sf_ld = go_e ? qx_sf_f : !w_cl ? qx_sfl(s_next) : w_restart ? qx_sf_l :
+    wire [3:0] qx_sf_ld = go_e ? ((QX >= 10) ? qx_sf_fr : qx_sf_f) : !w_cl ? qx_sfl(s_next) :
+                          w_restart ? ((QX >= 10) ? qx_sf_lr : qx_sf_l) :
 `ifdef QX_MUTANT_SF
                           qx_sfl(s_next);                                   // negative control: next class as s + 1
 `else
@@ -1568,9 +1607,9 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
     if (FAST != 0 && QPIPE != 0) begin : g_l3
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
             .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
@@ -1655,10 +1694,10 @@ module ot_v41_rom_elem_qx_w10 #(
     wire          ci1_last = (BP != 0 && fam) ? m_last : l1_t[4];
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
     if (FAST != 0 && QZ != 0) begin : g_ch3
-    ot_v41_chain3 #(.ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk), .rst_n(rst_mc), .v(ci0_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk), .rst_n(rst_mc), .v(ci0_v),
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
         .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain3 #(.ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk), .rst_n(rst_mc), .v(ci1_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk), .rst_n(rst_mc), .v(ci1_v),
         .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
         .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
     end else if (FAST != 0) begin : g_ch2

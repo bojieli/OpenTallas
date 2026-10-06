@@ -25,7 +25,14 @@
     "PW": 20,
     "IMW": 14,
     "SFU_C12_ENABLE": 1,
-    "SFU_NATIVE_VM_ENABLE": 1
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "NORM_C12_ENABLE": 1,
+    "NORM_KIND": 0,
+    "NORM_N": 64,
+    "NORM_D": 5120,
+    "NORM_RD": 0,
+    "NORM_AW": 24,
+    "NORM_PUBLISH_QUANT": 1
   },
   "source_list": "rtl/hbm_accel/integrated_20261006/sfu_c12_selected_parent.files.f",
   "protected_full_frame_bits": 73,
@@ -50,5 +57,45 @@
     "TW": 17,
     "PW": 20
   },
-  "native_VM_numerical_qualified": false
+  "native_VM_numerical_qualified": false,
+  "norm_c12": {
+    "LM": 5,
+    "LA": 6,
+    "RXS": 1,
+    "SXC": 1,
+    "FREG": 1,
+    "HOLD_COMPLETION": 1,
+    "functional_parent_qualified": false,
+    "supplier_binding": "clock-held 4*N FP32 read ports; explicit allocation and checked publication full73 required"
+  },
+  "norm_native_minimum_gate": {
+    "status": "PASS",
+    "N": 32,
+    "D": 64,
+    "Q_FP32_ONLY": true,
+    "NORM_NATIVE_VM_ENABLE": 1,
+    "default_OFF": true,
+    "production_config_adopted": false
+  },
+  "norm_native_production_candidate": {
+    "parameters": {
+      "NORM_C12_ENABLE": 1,
+      "NORM_NATIVE_VM_ENABLE": 1,
+      "NORM_NATIVE_INPUT_CP": 1,
+      "NORM_KIND": 0,
+      "NORM_N": 64,
+      "NORM_D": 5120,
+      "NORM_RD": 0,
+      "NORM_AW": 24,
+      "NORM_PUBLISH_QUANT": 1
+    },
+    "input_source": "existing norm_allocation_valid/frame accepted CP input lease +existing peer0 calendar, not SRAM input preload",
+    "result_words": 12800,
+    "FP32_ACKs": 160,
+    "quant_ACKs": 240,
+    "runtime_PASS": false,
+    "production_adopted": false,
+    "full_parent_qualified": false,
+    "SSFF_qualified": false
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "status": "ACTUAL_RETAINED_MAP_ROUTE_LIVE_PHYSICAL_PENDING",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182",
+    "tools/hbm_router_successor_model_20261006.py": "0678ddf09854d55c8f48d750aafd4b39cdaf7e32d5494491073d6ef896cb2831",
+    "tools/hbm_router_successor_gate_20261006.py": "0e359ebcf1f5c0ed1100d35b46b91c7ecd4fb3fd83178fad230978462550db95"
+  },
+  "model_sha256": "99235d32c82fd4bd8270973b6027e3832f26dbd96aa480c41170bf3cbeb55dd6",
+  "previous_live_source_untouched": "19c66ba94/a438d922",
+  "default_ENABLE": 0,
+  "functional_pass": true,
+  "physical_closed": false,
+  "parent_qualified": false,
+  "gate_inventory": {
+    "workers": 1,
+    "declared_RAM_GiB": 2,
+    "expected_basis": "previous actual22836KiB peak, doubled real merge pipeline registers; reserve2GiB via unchanged guard, no processcap",
+    "host": "Kant sole fresh E1 fit",
+    "duplicate_job": false
+  },
+  "successor_route_inventory": {
+    "workers": 16,
+    "declared_RAM_GiB": 96,
+    "disk_free_need_GiB": 64,
+    "basis": "old literal384/K6 DRT26.75GiB times99238/45270=58.64GiB plus mapping/extraction/repair headroom; reservation not processcap",
+    "host": "E1 ONLY fresh Kant fit; E2 useful currentDRT preserved",
+    "launch_allowed": false,
+    "dependencies": [],
+    "state": "SOLE_ATTEMPT_ALREADY_ADMITTED_NO_DUPLICATE"
+  },
+  "changed_source_gate": "one actual384/K6 independent FP32 golden64vectors with II24 back-to-back/bubbles and partial+full-vector warmPOR; samebinary realbank/heldreset negatives",
+  "actual_gate": "gate-r2/gate.json",
+  "actual_binary_sha256": "1fb68c48a7fffde07c347f217af4105c8a31eab7489daa28d47110b3c2ff3f68",
+  "actual_peak_child_rss_KiB": 46292,
+  "gate_replayed": false,
+  "actual_map": "map-r2/map.json",
+  "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
+  "actual_mapped_FF": 93309,
+  "mapped_local_controls_and_loads_pass": true,
+  "actual_mapped_cell_area_um2": 49127.9,
+  "actual_prepared_route": "route_r2_prepared/preparation.json",
+  "route_launch_allowed": false,
+  "actual_route": "route-r2/launch.json",
+  "actual_allocation": "route-r2/actual_parent_allocation.json"
+}

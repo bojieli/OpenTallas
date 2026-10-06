@@ -1,0 +1,55 @@
+{
+  "status": "ACTUAL_NATIVE_MAP_AND_LOCAL_CONTROL_LOADS_PASS",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182"
+  },
+  "gate_sha256": "d1972309c85ec8437a27116a24e625123ceb01bf50bcdb9860907d19eef2422a",
+  "model_sha256": "99235d32c82fd4bd8270973b6027e3832f26dbd96aa480c41170bf3cbeb55dd6",
+  "sdc_sha256": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93",
+  "config_sha256": "2946b7b325725c616e1fc9e9edab83f87b033a5e6212b11455d1baf654d869b3",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "declared_ram_gib": 32,
+  "workers": 16,
+  "ram_basis": "retained9GiB flowpeak times99238/45270=19.73GiB plus12GiB reserve; no address-space cap",
+  "native_flags": {
+    "SYNTH_HIERARCHICAL": 1,
+    "SYNTH_KEEP_MODULES": "ot_hbm_router_lane_local"
+  },
+  "physical_closed": false,
+  "parent_qualified": false,
+  "place_or_route_launched": false,
+  "frame_allocation": "modeled finite frame for synthesis context only; actual Turing parent allocation/receiver pending",
+  "command": [
+    "docker",
+    "run",
+    "--cpus",
+    "16",
+    "--name",
+    "carson-router-successor-map-r2",
+    "-e",
+    "OMP_NUM_THREADS=16",
+    "-v",
+    "/srv/opentallas-scratch/codex/carson-router-successor-20261006/map-source-9e74a6096:/src:ro",
+    "-v",
+    "/srv/opentallas-scratch/codex/carson-router-successor-20261006/map-r2/orfs:/work",
+    "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "bash",
+    "-lc",
+    "python3 /work/preserve_attributes.py && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 synth"
+  ],
+  "native_map_returncode": 0,
+  "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
+  "analysis_returncode": 0,
+  "post_capacity": {
+    "phase": "terminal",
+    "utc": "2026-10-06T08:33:51Z",
+    "load": 43.11669921875,
+    "idle_cpus": 84.88972904851921,
+    "cpus": 128,
+    "disk_free_bytes": 506182135808,
+    "fits": true
+  }
+}
