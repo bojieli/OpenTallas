@@ -75,14 +75,14 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--source', type=Path, required=True)
-    p.add_argument('--stage', choices=['build', 'runtime'], required=True)
+    p.add_argument('--stage', choices=['build', 'finish-build', 'runtime'], required=True)
     p.add_argument('--workers', type=int, default=4)
     a = p.parse_args()
     output = a.output
     r = json.loads((output/'prepared.json').read_text())
     authority = Path('/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1')
     tools = a.source/'tools/qwen_rom_combined_p0_20261005'
-    fresh(output, a.stage, a.workers if a.stage == 'build' else 16)
+    fresh(output, a.stage, a.workers if a.stage != 'runtime' else 16)
     if a.stage == 'build':
         stage(output, 'frontend', r['frontend'])
         stage(output, 'access', ['python3', str(tools/'access.py'),
@@ -96,6 +96,18 @@ def main():
         stage(output, 'compile', r['compile_top']+['-j', str(a.workers), 'CXX=g++-15'])
         stage(output, 'link', r['link'])
         (output/'build_complete').write_text('canonical 5.050 top built with retained leaves\n')
+        return
+    if a.stage == 'finish-build':
+        if (output/'frontend.exit').read_text().strip() != '0' or (output/'access.exit').read_text().strip() != '0':
+            raise RuntimeError('retained frontend/access PASS required; no regeneration')
+        if (output/'compile.exit').read_text().strip() != '2':
+            raise RuntimeError('expected immutable missing-hier-make compile failure required')
+        fragment = output/'die/Vdie_hier.mk'
+        if not fragment.is_file():
+            raise RuntimeError('fix actual generated archive-binding make fragment before compiling')
+        stage(output, 'compile_r2', r['compile_top']+['-j', str(a.workers), 'CXX=g++-15'])
+        stage(output, 'link_r2', r['link'])
+        (output/'build_complete').write_text('canonical 5.050 retained top built with retained leaves\n')
         return
     if not (output/'build_complete').is_file():
         raise RuntimeError('one completed canonical top build required')
