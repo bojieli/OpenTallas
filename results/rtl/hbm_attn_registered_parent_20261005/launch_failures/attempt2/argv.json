@@ -31,7 +31,7 @@
   "--sdc-append",
   "physical/hbm_attn_registered_parent/parent.sdc",
   "--stages",
-  "pnr",
+  "synth,pnr",
   "--die-area",
   "0",
   "0",
@@ -81,5 +81,9 @@
   "unlimited",
   "--flow-timeout-seconds",
   "unlimited",
-  "--keep-heavy-artifacts"
+  "--keep-heavy-artifacts",
+  "--output",
+  "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-r2/physical.json",
+  "--keep-workdir",
+  "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-r2/work"
 ]
