@@ -5,7 +5,8 @@ Final routed inputs must match committed hashes. Input capacitances and actual
 clock->output arcs are audited, never filled using arbitrary defaults.
 One native OpenROAD thread is sufficient for the 39k-cell FIFO extraction.
 """
-import argparse, hashlib, json, re, subprocess
+import argparse, hashlib, json, re, subprocess, shutil
+from types import SimpleNamespace
 from pathlib import Path
 
 LIBS = {
@@ -20,7 +21,7 @@ def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--base',type=Path,required=True);p.add_argument('--libs',type=Path,required=True)
  p.add_argument('--evidence',type=Path,required=True);p.add_argument('--source',type=Path,required=True)
- p.add_argument('--out',type=Path,required=True);p.add_argument('--openroad',default='openroad')
+ p.add_argument('--reuse-ss',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--openroad',default='openroad')
  a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
  ev=json.loads(a.evidence.read_text());base=a.base.resolve()
  expected=ev['setup_ss']
@@ -63,13 +64,19 @@ foreach bt [$b getBTerms] {{
  puts $f [join [list [$bt getName] [$bt getIoType] [$net getName] $cap $loads] "\\t"]
 }}
 close $f
-redirect {{{out}/clock_paths_{c}.txt}} {{
- report_checks -path_delay min_max -to [all_outputs] -group_path_count 8 -format full_clock_expanded
-}}
+report_checks -path_delay min_max -to [all_outputs] -group_path_count 8 -format full_clock_expanded > {{{out}/clock_paths_{c}.txt}}
 write_timing_model -library_name ot_meso_fifo_{c} {{{out}/ot_meso_fifo_{c}.lib}}
 '''+(f'write_abstract_lef {{{out}/ot_meso_fifo.lef}}\n' if c=='ss' else '')+'puts OT_EXPORT_DONE\nexit\n'
   script=out/f'export_{c}.tcl';script.write_text(tcl)
-  run=subprocess.run([a.openroad,'-no_init','-threads','1','-exit',str(script)],capture_output=True,text=True)
+  if c=='ss' and a.reuse_ss:
+   # Reuse the completed extraction which stopped only on the PG-cap audit.
+   old=a.reuse_ss.resolve();log=(old/'export_ss.log').read_text()
+   if 'OT_EXPORT_DONE' not in log or str(base/'6_final.odb') not in (old/'export_ss.tcl').read_text():raise ValueError('SS reuse source mismatch')
+   for n in ['ot_meso_fifo_ss.lib','ot_meso_fifo.lef','pins_ss.tsv','clock_paths_ss.txt']:shutil.copyfile(old/n,out/n)
+   rec['corners'][c]['reused_completed_extraction']=dict(path=str(old),hashes={n:sha(old/n) for n in ['ot_meso_fifo_ss.lib','ot_meso_fifo.lef','pins_ss.tsv','clock_paths_ss.txt','export_ss.tcl','export_ss.log']})
+   run=SimpleNamespace(returncode=0,stdout=log,stderr='')
+  else:
+   run=subprocess.run([a.openroad,'-no_init','-threads','1','-exit',str(script)],capture_output=True,text=True)
   (out/f'export_{c}.log').write_text(run.stdout+run.stderr)
   rec['corners'][c].update(returncode=run.returncode,done='OT_EXPORT_DONE' in run.stdout)
   if run.returncode or 'OT_EXPORT_DONE' not in run.stdout:
@@ -82,6 +89,7 @@ write_timing_model -library_name ot_meso_fifo_{c} {{{out}/ot_meso_fifo_{c}.lib}}
    while depth and end<len(lib):
     depth+=(lib[end]=='{')-(lib[end]=='}');end+=1
    body=lib[m.end():end-1];name=m.group(1).strip('\"')
+   if name in ['VDD','VSS']:continue  # LEF USE POWER/GROUND, not signal/clock loads
    if re.search(r'direction\s*:\s*input\s*;',body):
     cap=re.search(r'(?<!_)\bcapacitance\s*:\s*([0-9.eE+-]+)',body)
     if not cap or float(cap[1])<=0:raise ValueError('missing actual positive input cap '+name)
