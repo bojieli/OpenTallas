@@ -46,6 +46,7 @@ module tb_wfc_structural_full;
     parameter integer SEED     = 1;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
+    parameter integer INJECT_ILLEGAL = 1; // retained negative; nominal gate overrides to zero
     parameter integer FDLY     = 4;       // the DUT may latch a header-position fault this many cycles later
     parameter integer RSTD     = 1;       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
 
@@ -231,7 +232,7 @@ module tb_wfc_structural_full;
                     su = h32(sent, 0, 32'h05) % USERS;
                     sp = upn[su];
                     if (sp > 0 && h32(sent, 2, 32'h06) % 6 == 0) sp = sp - 1 - (h32(sent, 3, 32'h07) % WIN);
-                    if (sent > NJOBS - 50 && h32(sent, 4, 32'h08) % 8 == 0) sp = sp + 3;   // illegal (fault)
+                    if (INJECT_ILLEGAL && sent > NJOBS - 50 && h32(sent, 4, 32'h08) % 8 == 0) sp = sp + 3;   // illegal (fault)
                     if (sp < 0) sp = 0;
                     upn[su] = sp + 1;
                     in_valid <= 1'b1; in_last <= 1'b0; left <= RXWORDS;
@@ -269,6 +270,85 @@ module tb_wfc_structural_full;
             end
             if (SOURCE && users_done == USERS && fin_cyc[gi] == 0) fin_cyc[gi] = cyc;
         end
+    end endgenerate
+
+    // Independent transaction oracle; no timing or other lane supplies expected data.
+    generate for(gi=0;gi<3;gi=gi+1)begin:g_protocol_gold
+      reg ihold=0,ohold=0;
+      reg [FLIT:0] held_in,held_out;
+      integer input_stalls=0,output_stalls=0;
+      always @(posedge clk)if(rst_n)begin
+        if(ihold && (!g[gi].in_valid || {g[gi].in_data,g[gi].in_last}!==held_in))
+          $fatal(1,"producer changed held offer lane%0d cycle%0d",gi,cyc);
+        if(ohold && (!g[gi].out_valid || {g[gi].out_data,g[gi].out_last}!==held_out))
+          $fatal(1,"consumer lost held output lane%0d cycle%0d",gi,cyc);
+        ihold=g[gi].in_valid&&!g[gi].in_ready;
+        ohold=g[gi].out_valid&&!g[gi].out_ready;
+        held_in={g[gi].in_data,g[gi].in_last};held_out={g[gi].out_data,g[gi].out_last};
+        if(ihold)input_stalls=input_stalls+1;
+        if(ohold)output_stalls=output_stalls+1;
+      end
+      if(!SOURCE&&!INJECT_ILLEGAL)begin:nominal
+        integer positions[0:MAXU-1];
+        integer accepted=0,iw=0,vmwords=0,launched=0,oflits=0,forwarded=0;
+        integer us,ps,ord,wordno,previous_user=0;
+        reg [FLIT-1:0] expected,headers[0:7],txgold[0:7];
+        initial for(integer u=0;u<MAXU;u=u+1)positions[u]=0;
+        always @(posedge clk)if(rst_n)begin
+          if(g[gi].proto_fault)$fatal(1,"nominal full20000 gate fault lane%0d accepted%0d",gi,accepted);
+          if(g[gi].in_valid&&g[gi].in_ready)begin
+            if(iw==0)begin
+              ord=accepted;us=h32(ord,0,32'h05)%USERS;ps=positions[us];
+              if(ps>0&&h32(ord,2,32'h06)%6==0)ps=ps-1-(h32(ord,3,32'h07)%WIN);
+              if(ps<0)ps=0;positions[us]=ps+1;
+              expected=0;expected[HDR_TYPE+:4]=1;expected[HDR_LEN+:8]=RXWORDS;
+              expected[HDR_USER+:8]=us;expected[HDR_USER_HI+:(USER_W-8)]=us>>8;
+              expected[HDR_POS+:NW]=ps;expected[HDR_IDX+:NW]=h32(ord,5,0);
+              expected[HDR_VAL+:32]=h32(ord,6,0);expected[HDR_TOK+:NW]=h32(ord,7,0);
+              if(g[gi].in_data!==expected||g[gi].in_last)$fatal(1,"independent accepted header lane%0d ordinal%0d",gi,ord);
+              if(accepted-launched>=8)$fatal(1,"accepted header finite queue overflow");
+              headers[accepted%8]=expected;accepted=accepted+1;iw=RXWORDS;
+            end else begin
+              expected={FLIT/32{h32(accepted,iw,32'hF1)}};
+              if(g[gi].in_data!==expected||g[gi].in_last!=(iw==1))$fatal(1,"independent accepted payload lane%0d ordinal%0d word%0d",gi,accepted,iw);
+              iw=iw-1;
+            end
+          end
+          if(g[gi].vm_we)begin
+            ord=vmwords/RXWORDS+1;wordno=vmwords%RXWORDS;
+            expected={FLIT/32{h32(ord,RXWORDS-wordno,32'hF1)}};
+            if(g[gi].vm_waddr!=wordno||g[gi].vm_wdata!==expected)$fatal(1,"independent VM gold lane%0d wordordinal%0d",gi,vmwords);
+            vmwords=vmwords+1;
+          end
+          if(g[gi].core_start)begin
+            if(launched>=accepted||launched-forwarded>=8)$fatal(1,"independent launch lifecycle bounds");
+            expected=headers[launched%8];
+            if(g[gi].core_token!==expected[HDR_TOK+:NW]||g[gi].core_pos!==expected[HDR_POS+:NW]||
+               g[gi].core_user!=previous_user||g[gi].kv_base!=AW'(previous_user*KVW))
+              $fatal(1,"independent old publication launch tuple lane%0d ordinal%0d",gi,launched);
+            ps=expected[HDR_POS+:NW];us=expected[HDR_USER+:8]|(expected[HDR_USER_HI+:(USER_W-8)]<<8);
+            expected[7:0]=1;expected[HDR_LEN+:8]=XWORDS;
+            expected[HDR_IDX+:NW]=h32(previous_user,ps,32'h11);
+            expected[HDR_VAL+:32]=h32(previous_user,ps,32'h12);
+            txgold[launched%8]=expected;previous_user=us;launched=launched+1;
+          end
+          if(g[gi].out_valid&&g[gi].out_ready)begin
+            ord=oflits/(XWORDS+1);wordno=oflits%(XWORDS+1);
+            if(ord>=launched)$fatal(1,"output without actual launch");
+            if(wordno==0)expected=txgold[ord%8];
+            else if(wordno<=RXWORDS)expected={FLIT/32{h32(ord+1,RXWORDS-wordno+1,32'hF1)}};
+            else expected=0;
+            if(g[gi].out_data!==expected||g[gi].out_last!=(wordno==XWORDS))
+              $fatal(1,"independent outbound gold lane%0d flitordinal%0d got%h expected%h",gi,oflits,g[gi].out_data,expected);
+            oflits=oflits+1;if(wordno==XWORDS)forwarded=forwarded+1;
+          end
+        end
+        final begin
+          if(accepted!=NJOBS||vmwords!=NJOBS*RXWORDS||launched!=NJOBS||forwarded!=NJOBS||iw!=0)
+            $fatal(1,"nominal independent gold lifecycle incomplete");
+          $display("NOMINAL_GOLD lane=%0d accepted=%0d VM=%0d launches=%0d forwarded=%0d flits=%0d input_stalls=%0d output_stalls=%0d fault=0",gi,accepted,vmwords,launched,forwarded,oflits,input_stalls,output_stalls);
+        end
+      end
     end endgenerate
 
     assign o0 = g[0].obs;
