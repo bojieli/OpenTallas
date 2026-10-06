@@ -47,14 +47,21 @@ module ot_hbm_stn_launch #(parameter integer W = 512) (
 endmodule
 
 // terminate a forwarded slice into ck: write on the forwarded clock's falling edge (kept inverter), mesochronous
-// crossing ot_meso_fifo D4 (no backpressure on die links: w_v = r_rdy = 1)
+// crossing ot_meso_fifo D4 (no backpressure on die links: w_v = r_rdy = 1).  ot_meso_fifo takes wrst_n synchronous
+// to wclk and rrst_n synchronous to rclk, so the station's one quasi-static rst_n is resynchronised into each domain
+// (two flops each); its DOWN/ALIGN/READY/RUN handshake already tolerates any release order between the two sides.
+// Without this the single rst terminal fans out to every flop of both domains under the 0.2 T input budget and,
+// into the write side, under the 356.667 ps crossing bound (measured r2_hfd_meso_r32: SS -214.6 ps on rst).
 module ot_hbm_stn_meso #(parameter integer W = 512) (
     input wire fclk_i, input wire [W-1:0] d_i, input wire ck, input wire rst_n, output wire [W-1:0] d_o);
     wire wclk;
     ot_fwd_clk_inv u_winv (.a(fclk_i), .y(wclk));
+    reg [1:0] wrs, rrs;
+    always @(posedge wclk) wrs <= {wrs[0], rst_n};
+    always @(posedge ck) rrs <= {rrs[0], rst_n};
     wire w_rdy, r_v, w_live, r_live, w_fault, r_fault;
     ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1)) u_fifo (
-        .wclk(wclk), .wrst_n(rst_n), .w_v(1'b1), .w_rdy(w_rdy), .w_d(d_i),
-        .rclk(ck), .rrst_n(rst_n), .r_v(r_v), .r_rdy(1'b1), .r_d(d_o),
+        .wclk(wclk), .wrst_n(wrs[1]), .w_v(1'b1), .w_rdy(w_rdy), .w_d(d_i),
+        .rclk(ck), .rrst_n(rrs[1]), .r_v(r_v), .r_rdy(1'b1), .r_d(d_o),
         .w_live(w_live), .r_live(r_live), .w_fault(w_fault), .r_fault(r_fault));
 endmodule
