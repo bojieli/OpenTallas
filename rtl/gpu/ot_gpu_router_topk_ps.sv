@@ -66,6 +66,39 @@ module ot_gpu_router_topk_ps_core #(
             okey = c[31] ? ~c : (c | 32'h8000_0000);
         end
     endfunction
+    // Magnitude compare as an explicit log-depth (gt, eq) prefix tree on plain gates: a `>=` operator is mapped
+    // through $alu to a ripple carry chain (measured: 32-bit compare 750 ps WC pre-repair, MAJ chain), so no
+    // relational operator on a key appears in this module.  Operands are zero-extended to 64 bits.
+    function automatic [1:0] cmp_tree(input [63:0] a, input [63:0] b);   // {a > b, a == b}
+        reg [63:0] g, e;
+        integer s, t;
+        begin
+            g = a & ~b; e = ~(a ^ b);
+            for (s = 1; s < 64; s = s * 2)
+                for (t = 0; t < 64; t = t + 2 * s) begin
+                    g[t] = g[t+s] | (e[t+s] & g[t]);
+                    e[t] = e[t+s] & e[t];
+                end
+            cmp_tree = {g[0], e[0]};
+        end
+    endfunction
+    function automatic ge_k(input [63:0] a, input [63:0] b);
+        reg [1:0] r; begin r = cmp_tree(a, b); ge_k = r[1] | r[0]; end
+    endfunction
+    function automatic gt_k(input [63:0] a, input [63:0] b);
+        reg [1:0] r; begin r = cmp_tree(a, b); gt_k = r[1]; end
+    endfunction
+    // population count of 16 bits as a balanced adder tree (2-, 3-, 4-, 5-bit adds)
+    function automatic [4:0] pop16(input [15:0] x);
+        reg [1:0] a [0:7]; reg [2:0] b [0:3]; reg [3:0] c [0:1];
+        integer q;
+        begin
+            for (q = 0; q < 8; q = q + 1) a[q] = {1'b0, x[2*q]} + {1'b0, x[2*q+1]};
+            for (q = 0; q < 4; q = q + 1) b[q] = {1'b0, a[2*q]} + {1'b0, a[2*q+1]};
+            for (q = 0; q < 2; q = q + 1) c[q] = {1'b0, b[2*q]} + {1'b0, b[2*q+1]};
+            pop16 = {1'b0, c[0]} + {1'b0, c[1]};
+        end
+    endfunction
     integer i, j, m, k, b;
     // ---- reset synchroniser + registered synchronous reset ----
     reg rs0, rs1;
@@ -113,7 +146,7 @@ module ot_gpu_router_topk_ps_core #(
         gt2 <= {P*P{1'b0}};
         for (j = 0; j < P; j = j + 1)
             for (m = j + 1; m < P; m = m + 1)
-                gt2[j*P+m] <= (NEG == 2) ? (key1[j] > key1[m]) : (key1[j] >= key1[m]);
+                gt2[j*P+m] <= (NEG == 2) ? gt_k(key1[j], key1[m]) : ge_k(key1[j], key1[m]);
         for (j = 0; j < P; j = j + 1) key2[j] <= key1[j];
         base2 <= base1; l2 <= l1; bank2 <= bank1; fresh2 <= fresh1; hasf2 <= hasf1;
         v2 <= rst_c ? 1'b0 : v1;
@@ -124,14 +157,14 @@ module ot_gpu_router_topk_ps_core #(
     reg [IW-1:0]  base3;
     reg           v3, l3, bank3, fresh3;
     reg [1:0]     hasf3;
-    reg [LP:0]    cnt;
+    reg [15:0]    bv;
     always @(posedge clk) begin
         for (m = 0; m < P; m = m + 1) begin
-            cnt = 0;
+            bv = 16'd0;
             for (j = 0; j < P; j = j + 1)
-                if (j < m) cnt = cnt + gt2[j*P+m];
-                else if (j > m) cnt = cnt + !gt2[m*P+j];
-            rk3[m] <= cnt;
+                if (j < m) bv[j] = gt2[j*P+m];
+                else if (j > m) bv[j] = !gt2[m*P+j];
+            rk3[m] <= pop16(bv);
             key3[m] <= key2[m];
         end
         base3 <= base2; l3 <= l2; bank3 <= bank2; fresh3 <= fresh2; hasf3 <= hasf2;
@@ -166,8 +199,8 @@ module ot_gpu_router_topk_ps_core #(
             mine = v4 && (bank4 == b);
             for (i = 0; i < K; i = i + 1)
                 for (j = 0; j < K; j = j + 1)
-                    c5[i*K+j] = (NEG == 1) ? (R[b*K+i][EW-1:IW] > L4[j][EW-1:IW])
-                                           : (R[b*K+i][EW-1:IW] >= L4[j][EW-1:IW]);
+                    c5[i*K+j] = (NEG == 1) ? gt_k(R[b*K+i][EW-1:IW], L4[j][EW-1:IW])
+                                           : ge_k(R[b*K+i][EW-1:IW], L4[j][EW-1:IW]);
             for (k = 0; k < K; k = k + 1) begin
                 sel5[b*K+k] <= {2*K{1'b0}};
                 if (!mine) sel5[b*K+k][k] <= 1'b1;               // hold
@@ -209,8 +242,8 @@ module ot_gpu_router_topk_ps_core #(
         for (i = 0; i < K; i = i + 1)
             for (j = 0; j < K; j = j + 1)
                 c8[i*K+j] = !hasf7[1] ? 1'b1 : !hasf7[0] ? 1'b0 :
-                            (NEG == 4) ? (F[i][EW-1:IW] >= F[K+j][EW-1:IW])
-                                       : ({F[i][EW-1:IW], ~F[i][IW-1:0]} > {F[K+j][EW-1:IW], ~F[K+j][IW-1:0]});
+                            (NEG == 4) ? ge_k(F[i][EW-1:IW], F[K+j][EW-1:IW])
+                                       : gt_k({F[i][EW-1:IW], ~F[i][IW-1:0]}, {F[K+j][EW-1:IW], ~F[K+j][IW-1:0]});
         for (k = 0; k < K; k = k + 1) begin
             sel8[k] <= {2*K{1'b0}};
             for (i = 0; i <= k; i = i + 1)
@@ -238,20 +271,22 @@ module ot_gpu_router_topk_ps_core #(
     reg [IW-1:0]  id10 [0:K-1];
     reg [KR:0]    rk11 [0:K-1];
     reg [IW-1:0]  id11 [0:K-1];
-    reg [KR:0]    rc;
+    reg [15:0]    rv;
+    reg [4:0]     rp;
     reg           v10, v11;
     always @(posedge clk) begin
         lt10 <= {K*K{1'b0}};
         for (j = 0; j < K; j = j + 1)
-            for (m = j + 1; m < K; m = m + 1) lt10[j*K+m] <= id9[j] < id9[m];
+            for (m = j + 1; m < K; m = m + 1) lt10[j*K+m] <= gt_k(id9[m], id9[j]);
         for (j = 0; j < K; j = j + 1) id10[j] <= id9[j];
         v10 <= rst_c ? 1'b0 : v9;
         for (m = 0; m < K; m = m + 1) begin
-            rc = 0;
+            rv = 16'd0;
             for (j = 0; j < K; j = j + 1)
-                if (j < m) rc = rc + lt10[j*K+m];
-                else if (j > m) rc = rc + !lt10[m*K+j];
-            rk11[m] <= rc;
+                if (j < m) rv[j] = lt10[j*K+m];
+                else if (j > m) rv[j] = !lt10[m*K+j];
+            rp = pop16(rv);
+            rk11[m] <= rp[KR:0];
             id11[m] <= id10[m];
         end
         v11 <= rst_c ? 1'b0 : v10;
