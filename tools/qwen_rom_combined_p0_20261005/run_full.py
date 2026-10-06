@@ -75,14 +75,21 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--source', type=Path, required=True)
-    p.add_argument('--stage', choices=['build', 'finish-build', 'runtime'], required=True)
+    p.add_argument('--stage', choices=['build', 'finish-build', 'relink-driver', 'runtime'], required=True)
     p.add_argument('--workers', type=int, default=4)
     a = p.parse_args()
     output = a.output
     r = json.loads((output/'prepared.json').read_text())
     authority = Path('/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1')
     tools = a.source/'tools/qwen_rom_combined_p0_20261005'
-    fresh(output, a.stage, a.workers if a.stage != 'runtime' else 16)
+    fresh(output, a.stage, 1 if a.stage == 'relink-driver' else
+          (a.workers if a.stage != 'runtime' else 16))
+    if a.stage == 'relink-driver':
+        if not (output/'reuse_completed_top').is_file():
+            raise RuntimeError('explicit completed top reference required; no model build')
+        stage(output, 'driver_link', r['link'])
+        (output/'build_complete').write_text('corrected driver linked with genuine retained full top\n')
+        return
     if a.stage == 'build':
         stage(output, 'frontend', r['frontend'])
         stage(output, 'access', ['python3', str(tools/'access.py'),
