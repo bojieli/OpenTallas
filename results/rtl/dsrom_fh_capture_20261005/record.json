@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "DECODE_SPLIT_EXACT_PASS_C15_CORRECTED_CONES_PHYSICAL_RUNNING",
+  "status": "DECODE_SPLIT_EXACT_PASS_RECTANGULAR_PARTITION_SOURCE_READY",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -173,5 +173,26 @@
     "extra_cycles": 0,
     "max_guarded_group_padded_occupancy": 0.1400986124726005,
     "slot_growth_mm2": 0
+  },
+  "C15_actual_result": {
+    "terminal_exit": 2,
+    "first_error": "GPL0305 Inf/NaN gradient step in3_1_place_gp_skip_io",
+    "earlier_errors": false,
+    "automatic_target_density": 0.06949999978765846,
+    "actual_per_lane_GPL_min_density": [
+      0.08,
+      0.09
+    ],
+    "groups_finished": 63,
+    "stalled_lane": 62,
+    "qualified": false,
+    "successor": "C16_rect_strips",
+    "structural_fix": "All complete mappedlane cones use site-aligned nonmacro standardcell strips above actualSRAMbody29.7um+2umrowhalo; all64actualrow/tap/paddedmembers guard5 measured",
+    "max_guarded_padded_fraction": 0.17848423086885443,
+    "actual_repair_growth_factor": 1.485494547366295,
+    "derived_target_density": 0.27,
+    "slot_growth_mm2": 0,
+    "extra_cycles": 0,
+    "source_RTL_unchanged": true
   }
 }
