@@ -379,6 +379,7 @@ def _r18_masters(v, m):
         byname = {i.name: i for i in model['insts']}
         for inst, ps in used.items():
             mst_used.setdefault(byname[inst].master, set()).update(ps)
+        mirrored_x = {i.master for i in model['insts'] if i.orient in ('MX', 'R180')}
         for mn, M in out.items():
             # Q14: drop abstract ports no die net reaches
             for pn in [p for p in M.order if p not in mst_used.get(mn, set())]:
@@ -397,6 +398,17 @@ def _r18_masters(v, m):
                     if pn in M.ports:
                         M.order.remove(pn)
                         M.ports.pop(pn)
+                    if mn in mirrored_x:
+                        # MX / R180 masters: an M8 area pin's mirror lands off the M8 track (r18c: ot_mts found no
+                        # legal origin for qfd_lst_c_split MX); an M5 pin on the N face stays on track mirrored
+                        nf = [q for q, sp in M.ports.items() if sp[0] == 'face' and sp[2] == 'N'
+                              and not (q in R18_CK or q.startswith(('pll_', 'fck_')))]
+                        if nf:
+                            raise ValueError(f'{mn}: N face taken, no mirror-legal clock pin slot')
+                        M.ports[pn] = ('face', 1, 'N', 'M5', 4.0 + j * 1.0, 1)
+                        M.order.append(pn)
+                        j += 1
+                        continue
                     M.order.append(pn)
                     M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * 1.6)),
                            min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * 1.6)), 1)
