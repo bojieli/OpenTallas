@@ -1,0 +1,205 @@
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:41:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+   41 |  generate if(!ENABLE) begin:disabled
+      |              ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:105:28: Operator COND expects 20 bits on the Conditional True, but Conditional True's VARREF 'ld_rank' generates 7 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  105 |             fw = (LDW == 1 ? ld_rank : lj[RB-1:0]) * wpr + ld_word;
+      |                            ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:105:28: Operator COND expects 20 bits on the Conditional False, but Conditional False's SEL generates 7 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  105 |             fw = (LDW == 1 ? ld_rank : lj[RB-1:0]) * wpr + ld_word;
+      |                            ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:105:58: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'ld_word' generates 12 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  105 |             fw = (LDW == 1 ? ld_rank : lj[RB-1:0]) * wpr + ld_word;
+      |                                                          ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:106:32: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'fw' generates 20 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  106 |             if (ld_id) imem[fw / QW][32*LW*(fw % QW) +: 32*LW] <= ld_data[32*LW*lj +: 32*LW];
+      |                                ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:106:48: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'fw' generates 20 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  106 |             if (ld_id) imem[fw / QW][32*LW*(fw % QW) +: 32*LW] <= ld_data[32*LW*lj +: 32*LW];
+      |                                                ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:108:25: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'fw' generates 20 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  108 |                 kmem[fw / QW][32*(LW*(fw % QW) + ln) +: 32] <= okey(ld_data[32*(LW*lj + ln) +: 32]);
+      |                         ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:108:42: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'fw' generates 20 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  108 |                 kmem[fw / QW][32*(LW*(fw % QW) + ln) +: 32] <= okey(ld_data[32*(LW*lj + ln) +: 32]);
+      |                                          ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:137:28: Operator EQ expects 64 bits on the LHS, but LHS's SEL generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  137 |             m = (top[31:0] == ({32'd0, prefix} >> sh));
+      |                            ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:139:51: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'sh' generates 6 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  139 |                 h1_hot[b][l] <= m && (((kk >> (sh - DIG)) & (NBIN - 1)) == b);
+      |                                                   ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:144:49: Operator ADD expects 7 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  144 |             for (l = 0; l < P; l = l + 1) s = s + h1_hot[b][l];
+      |                                                 ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:176:17: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's DIVS generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  176 |             wpr <= NMAX / LW; h0_v <= 1'b0; h1_v <= 1'b0; h2_v <= 1'b0;
+      |                 ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:180:41: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'n' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  180 |             if (!busy) wpr <= (WB+1)'(n / LW);
+      |                                         ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:30: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                              ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:55: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'n' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                                                       ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:50: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                                                  ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:65: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                                                                 ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:91: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'n' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                                                                                           ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:195:86: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  195 |                         nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
+      |                                                                                      ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:190:82: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'n' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  190 |                     if (nan_seen || k == 0 || n == 0 || ((n * N) % P) != 0 || (n % PF) != 0 || n > NMAX || k > n * N) fault <= 1'b1;
+      |                                                                                  ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:190:98: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'n' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  190 |                     if (nan_seen || k == 0 || n == 0 || ((n * N) % P) != 0 || (n % PF) != 0 || n > NMAX || k > n * N) fault <= 1'b1;
+      |                                                                                                  ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:190:110: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'k' generates 16 bits.
+                                                      : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  190 |                     if (nan_seen || k == 0 || n == 0 || ((n * N) % P) != 0 || (n % PF) != 0 || n > NMAX || k > n * N) fault <= 1'b1;
+      |                                                                                                              ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:201:81: Operator ADD expects 16 bits on the RHS, but RHS's ARRAYSEL generates 7 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  201 |                     if (h2_v) for (b = 0; b < NBIN; b = b + 1) cnt[b] <= cnt[b] + h2_pc[b];
+      |                                                                                 ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:220:77: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'sh' generates 6 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  220 |                         prefix <= prefix | ({{(32-DIG){1'b0}}, pbin} << (sh - DIG));
+      |                                                                             ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:226:68: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'k_r' generates 16 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  226 |                             eq_left <= rr - pgt; outw_left <= (k_r + LW - 1) / LW;
+      |                                                                    ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:226:60: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  226 |                             eq_left <= rr - pgt; outw_left <= (k_r + LW - 1) / LW;
+      |                                                            ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:224:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pass' generates 4 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  224 |                         if (pass == NPASS - 1) begin
+      |                                  ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:236:43: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'frow' generates 19 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  236 |                         f0_k <= kmem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
+      |                                           ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:236:61: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'frow' generates 19 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  236 |                         f0_k <= kmem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
+      |                                                             ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:237:43: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'frow' generates 19 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  237 |                         f0_i <= imem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
+      |                                           ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:237:61: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'frow' generates 19 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  237 |                         f0_i <= imem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
+      |                                                             ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:260:35: Operator ADD expects 5 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  260 |                             e = e + f1_eq[l];
+      |                                   ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:270:83: Operator ADD expects 5 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  270 |                         for (l = 0; l < PF; l = l + 1) begin f3_tp[l] <= a; a = a + f2_take[l]; end
+      |                                                                                   ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:278:83: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  278 |                         for (l = j; l < PF; l = l + 1) if (f3_take[l] && f3_tp[l] == j) x = x | f3_id[32*l +: 32];
+      |                                                                                   ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:289:70: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'f4_n' generates 5 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  289 |                             s = s | ({{(32*PF){1'b0}}, f4_c & ((f4_n == PF) ? {(32*PF){1'b1}} :
+      |                                                                      ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:294:40: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's VARREF 'OW' generates 32 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  294 |                         if (m >= PF) w = OW;
+      |                                        ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:295:92: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'm' generates 6 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  295 |                         else if (st == S_DRAIN && !fpipe && m != 0) w = ($clog2(OW+1))'((m + LW - 1) / LW);
+      |                                                                                            ^
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:294:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'm' generates 6 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  294 |                         if (m >= PF) w = OW;
+      |                               ^~
+%Warning-WIDTH: rtl/chip/ot_coll_topk_merge.sv:299:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'w' generates 1 bits.
+                                                     : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_merge
+  299 |                                         ((w == OW) ? {(32*LW*OW){1'b1}} :
+      |                                             ^~
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:83:29: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'emitted' generates 16 bits.
+                                                                             : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+   83 |  assign ld_rank=RB'((emitted-16)/NPER);
+      |                             ^
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:84:30: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'emitted' generates 16 bits.
+                                                                             : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+   84 |  assign ld_word=MW'(((emitted-16)%NPER)/16);
+      |                              ^
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:163:24: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 20 bits.
+                                                                              : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+  163 |       bad=0;previous_id=mdec[request_rank][42:23];
+      |                        ^
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:166:48: Operator NEQ expects 32 bits on the RHS, but RHS's VARREF 'request_rank' generates 7 bits.
+                                                                              : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+  166 |        if(check_id>=1048576||((check_id>>3)%96)!=request_rank||
+      |                                                ^~
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:191:62: Operator SUB expects 32 or 6 bits on the LHS, but LHS's VARREF 'lane' generates 4 bits.
+                                                                              : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+  191 |       if(emitted!=0&&winner_id<=id_word[32*((lane==0)?15:lane-1)+:32])bad=1;
+      |                                                              ^
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:191:31: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'winner_id' generates 20 bits.
+                                                                              : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+  191 |       if(emitted!=0&&winner_id<=id_word[32*((lane==0)?15:lane-1)+:32])bad=1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:207:16: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'emitted' generates 16 bits.
+                                                                              : ... In instance ot_hbm_formatter_selected_id_consumer.on.u_order
+  207 |      if(emitted==TOTAL)begin ordered_loaded<=1;state<=WAIT_RELEASE;end
+      |                ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv:93:42: Input port connection 'stride' expects 32 bits on the pin connection, but pin connection's CONST '16'h0' generates 16 bits.
+                                                                                                                 : ... In instance ot_hbm_formatter_selected_id_consumer
+   93 |    .go(core_go),.n(16'd512),.k(16'd512),.stride(16'd0),.busy(core_busy),.done(core_done),.fault(core_fault),
+      |                                          ^~~~~~
+%Error-BLKLOOPINIT: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv:164:71: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  164 |     for(integer w=0;w<32;w=w+1)for(integer k=0;k<8;k=k+1)landing[w][k]<=encode64(0);
+      |                                                                       ^~
+%Error-BLKLOOPINIT: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:157:28: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  157 |      for(i=0;i<N;i=i+1)meta[i]<=encode64(0);
+      |                            ^
+%Error-BLKLOOPINIT: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:146:9: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  146 |     meta[i]<=encode64(0);for(j=0;j<8;j=j+1)heads[i][j]<=encode64(0);
+      |         ^
+%Error-BLKLOOPINIT: rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv:146:49: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  146 |     meta[i]<=encode64(0);for(j=0;j<8;j=j+1)heads[i][j]<=encode64(0);
+      |                                                 ^
+%Error-BLKLOOPINIT: rtl/chip/ot_coll_topk_merge.sv:139:30: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  139 |                 h1_hot[b][l] <= m && (((kk >> (sh - DIG)) & (NBIN - 1)) == b);
+      |                              ^~
+%Error: Exiting due to 5 error(s)
