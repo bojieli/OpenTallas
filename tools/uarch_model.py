@@ -10358,13 +10358,18 @@ def dsrom_window_full_block_pipeline_model():
     read_completion_snapshot = banks*4
     read_snapshot_gross = read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot
     read_qualification_extra = read_snapshot_gross-banks
+    merge_read_address_FF = 21
+    merge_accepted_identity_FF = 21
+    merge_control_FF = merge_read_address_FF+merge_accepted_identity_FF
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
-             read_extra + read_qualification_extra + writer_control_upper + job_control_upper)
+             read_extra + read_qualification_extra + merge_control_FF +
+             writer_control_upper + job_control_upper)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
-    ff_area = added*DFF_UM2
+    merge_reset_FF_extra = merge_read_address_FF*(.37908-DFF_UM2)
+    ff_area = added*DFF_UM2+merge_reset_FF_extra
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
@@ -10372,8 +10377,11 @@ def dsrom_window_full_block_pipeline_model():
     # Each new witness holds when req_v is low. Reserve four NAND2 cell areas
     # per enable mux, with no removed-enable or shared-inverter savings credit.
     read_snapshot_enable_mux = read_snapshot_gross*4*.08748
+    merge_increment_logic = 21*2*12*.08748
+    merge_enable_and_lane_decode = (merge_control_FF*4+banks*3)*.08748
     cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
-                   read_snapshot_enable_mux)
+                   read_snapshot_enable_mux+merge_increment_logic+
+                   merge_enable_and_lane_decode)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10399,6 +10407,11 @@ def dsrom_window_full_block_pipeline_model():
             read_completion_group_snapshot_FF_bits=read_completion_snapshot,
             removed_direct_bank_ok_FF_bits=banks,
             read_qualification_added_FF_bits=read_qualification_extra,
+            merge_read_address_FF_bits=merge_read_address_FF,
+            merge_accepted_identity_FF_bits=merge_accepted_identity_FF,
+            merge_added_payload_FF_bits=0,
+            merge_address_lookahead='advance only with original next_row transitions; snapshot expected accepted WB first independently from wbase+next_row, not from lookahead address',
+            merge_lane_writes='four fixed 4240-bit lanes decoded from registered nlanes; no variable part-select multiplication or shift',
             read_qualification='fresh accepted-request operands and preedge completion captured with payload; qualification at existing second read edge, not reused permission',
             job_control_upper_bits=job_control_upper, added_FF_upper_bits=added,
             qualified_ready='current elastic occupancy and downstream transfer; never permission cached across mutation',
@@ -10413,6 +10426,11 @@ def dsrom_window_full_block_pipeline_model():
             read_control_route_tracks_lower_bound=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
             read_snapshot_enable_additional_sinks=read_snapshot_gross,
             read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
+            merge_control_internal_bits_per_cycle=merge_control_FF,
+            merge_control_route_tracks_lower_bound=merge_control_FF,
+            merge_extra_external_ports=0, merge_extra_memory_ports=0,
+            merge_static_lane_decode_replicas=banks,
+            merge_per_lane_write_enable_fanout=16*265,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
@@ -10421,12 +10439,17 @@ def dsrom_window_full_block_pipeline_model():
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
             read_qualification_logic_allowance_um2=read_qualification_logic,
             read_snapshot_enable_mux_allowance_um2=read_snapshot_enable_mux,
+            merge_reset_FF_extra_um2=merge_reset_FF_extra,
+            merge_increment_logic_allowance_um2=merge_increment_logic,
+            merge_enable_and_static_lane_decode_allowance_um2=merge_enable_and_lane_decode,
+            merge_removed_mux_or_adder_savings_credit_um2=0,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
-            read_added_cycles=1, read_qualification_added_cycles=0, existing_stream_validation_tail_cycles_upper=8,
+            read_added_cycles=1, read_qualification_added_cycles=0, merge_added_cycles=0,
+            existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
             added_layer_cycles_upper=4+7+32+128+8,
@@ -10442,6 +10465,10 @@ def dsrom_window_full_block_pipeline_model():
             read_snapshot_gross_sink_clock_cap_fF={
                 'SS':read_snapshot_gross*.446638, 'FF':read_snapshot_gross*.52201},
             read_snapshot_clock_cap_basis='pinned ORFS DFFHQNx1 SS/FF CLK capacitance in fF; no removed-sink credit, buffer/wire cost and root pin capacitance require actual CTS',
+            merge_new_clock_sinks=merge_control_FF,
+            merge_sink_clock_cap_fF={
+                'SS':21*(.433982+.446638), 'FF':21*(.503152+.52201)},
+            merge_clock_cap_basis='21 DFFASRHQN address lookahead +21 DFFHQN independently captured accepted identity; pinned SS/FF CLK cap, not root loading',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
