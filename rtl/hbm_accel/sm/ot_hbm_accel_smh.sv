@@ -25,13 +25,17 @@
 // Columns 0..NL-1 lie west of the front (column NL-1 next to it), NL..NC-1 east (NL = NC/2); a column at hop h
 // (1 = next to the front) receives its row bundle h cycles after the front's output register.
 //
-// Cycles against ot_hbm_accel_sm_pq (DS = 3, DG = 3, PIO = 2), all latency only (one issue a cycle, the issue
-// loop and every single-cycle loop unchanged): the row bundle lands in a hop-h column S+2+h (sm_pq: L2 at S+4), i.e.
-// -1..+2; results reach the pins' output chain 5 cycles later than sm_pq's rv_q (2*hop transport + deskew to the
-// farthest column), and the issue's retire count (rdone) 6 later.  x writes land relatively earlier than reads
-// (write edge W+4+h, read edge S+3+h; sm_pq W+7, S+5), so every load the hub legally issues for sm_pq is legal here.
-// The fault output is a sticky OR, now 1-2 cycles later (registered at each hop).
-// Arithmetic, line order, tree order, x addressing: unchanged (the leaf, tree, stack and issue are sm_pq's modules).
+// Cycles against ot_hbm_accel_sm_pq (DS = 3, DG = 3, PIO = 2), all latency only (one issue a cycle, the issue loop and
+// every single-cycle loop unchanged; measured on the 12 PQ sequences, records results/rtl/hbm_sm_structure_20261005):
+//   row bundle: a hop-h column lands S+2+h (sm_pq: every column S+4): -1..+2;
+//   gather: G1 -> tree input 2 flops (sm_pq 4): -2 (two rows per tile, one pass per tile);
+//   stack: ot_hbm_accel_stack (pending lookup registered): +1;
+//   results: 2h transport + deskew to the farthest column; the pins' output chain sees a row +3..4 cycles after
+//   sm_pq, rdone likewise (measured +3..4 cycles per dependent op in the serial runs);
+//   x write: the strap rotation in two registered stages: write edge W+5+h, read edge S+3+h (sm_pq W+7, S+5): the
+//   same write-before-read margin, so every load the hub issues for sm_pq is legal here.
+// The fault output is a sticky OR, now registered at each hop (a few cycles later).
+// Arithmetic, line order, tree order, x addressing: unchanged (leaf, tree, stack pairing and issue are sm_pq's).
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_smh #(
     parameter integer SUB  = 4,
@@ -565,7 +569,8 @@ endmodule
 // One tile (identical everywhere): RPT leaves of one column (rows p*RPT .. p*RPT+RPT-1) sharing the x-write bundle.
 // Relative to the landing edge L (the row bundles' flops; = sm_pq's L2):
 //   L     rin / bin landed (and driven on to the next tile from these flops); gin landed into gout[RPT..]
-//   L+1   E3: c3, w3; x-store read latched (address from L); x-write data / masks / enables registered
+//   L+1   E3: c3, w3; x-store read latched (address from L); x-write rotation stage W1
+//   L+2   x-write data / masks / enables registered (W2), written at L+3
 //   L+2   E4 (the column logic's input registers, ot_gpu_sm_v stage 2)
 //   ...   G1 (gout[0..RPT-1], lane k = row p*RPT + RPT-1-k): the column result selected by the producing column's
 //         valid (sm_pq fix)
@@ -609,7 +614,7 @@ module ot_hbm_accel_smh_tile #(
     localparam integer RBW = CW + WSW + 1 + XW;
     localparam integer BBW = 1 + XW + NBEAT + 2048;
     localparam integer GLW = 2 + 32 + TAGW;
-    localparam integer NG  = (SLW + NMG - 1) / NMG;
+    localparam integer NG  = (LBS * 266 + NMG - 1) / NMG + (LSB * 16 + NMG - 1) / NMG;   // mask groups per leaf
     // ---- landing: the x-write bundle (driven on to the next tile from these flops) ----
     wire [BBW-1:0] bl;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
@@ -677,7 +682,7 @@ module ot_hbm_accel_smh_leaf #(
     input  wire                     b_en,
     input  wire [$clog2(XD)-1:0]    b_a,
     input  wire [2047:0]            b_d,
-    input  wire [((LBS*266+LSB*16+NMG-1)/NMG)*NBEAT-1:0] ohr,
+    input  wire [((LBS*266+NMG-1)/NMG+(LSB*16+NMG-1)/NMG)*NBEAT-1:0] ohr,
     output wire                     gv,
     output wire                     gf,
     output wire [31:0]              gy,
@@ -698,41 +703,67 @@ module ot_hbm_accel_smh_leaf #(
         if (!rst_n) c3v <= 2'b00;
         else c3v <= c_l[CW-1:CW-2];
     always @(posedge clk) begin c3d <= c_l[CW-3:0]; w3 <= w_l; end
-    // ---- x write: the slice by strap rotation, masks by strap thermometer, all registered at E3 ----
+    // ---- x write: the slice by strap rotation, masks by strap thermometer; two registered stages ----
+    // W1: rotate by the offset's high bits (a[10:6]), latch the beat's one-hot at g / g + 1 per mask group;
+    // W2 (= E3 level): rotate by the low bits, per-bit masks, per-macro write enables.  The rotation is a shifter
+    // on constant selects split in two (9 mux levels across the 2048-bit beat do not fit one cycle with their wires).
+    localparam integer RH = 6;                                   // low bits rotated in W2
+    localparam integer NBK = LBS * 266, NBF = LSB * 16;
     wire [10:0]   a1 = {xs_a1, {G1S{1'b0}}};
     wire [10:0]   a2 = {xs_a2, {G2S{1'b0}}};
     wire [4095:0] dd = {b_d, b_d};
-    wire [4095:0] blk_s = dd >> a1;
-    wire [4095:0] bf_s  = dd >> a2;
+    wire [4095:0] blk_h = dd >> {a1[10:RH], {RH{1'b0}}};
+    wire [4095:0] bf_h  = dd >> {a2[10:RH], {RH{1'b0}}};
+    reg  [NBK+(1<<RH)-2:0] blk1;
+    reg  [NBF+(1<<RH)-2:0] bf1;
+    reg            we1;
+    reg  [XW-1:0]  wa1;
+    localparam integer NG1 = (NBK + NMG - 1) / NMG;              // mask groups of the block-dot field
+    localparam integer NGR = NG1 + (NBF + NMG - 1) / NMG;        // + of the BF16 field (a group is in one field)
+    reg  [NGR-1:0] ml1, mh1;                                     // per mask group: beat one-hot at g, at g + 1
+    genvar b, m;
+    generate for (b = 0; b < NGR; b = b + 1) begin : g_mg
+        wire [NBEAT-1:0] oh = ohr[b*NBEAT +: NBEAT];
+        wire [4:0] g0 = (b < NG1) ? xs_g1 : xs_g2;
+        wire [5:0] g1n = {1'b0, g0} + 6'd1;
+        always @(posedge clk) begin
+            ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+            mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+        end
+    end endgenerate
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) we1 <= 1'b0;
+        else we1 <= b_en;
+    always @(posedge clk) begin
+        blk1 <= blk_h[NBK+(1<<RH)-2:0];
+        bf1  <= bf_h[NBF+(1<<RH)-2:0];
+        wa1  <= b_a;
+    end
+    wire [NBK+(1<<RH)-2:0] blk_l = blk1 >> a1[RH-1:0];
+    wire [NBF+(1<<RH)-2:0] bf_l  = bf1 >> a2[RH-1:0];
     wire [4095:0] blk_c = {{2048{1'b1}}, {2048{1'b0}}} >> a1;    // 1 where the field bit is in beat g1 + 1
     wire [4095:0] bf_c  = {{2048{1'b1}}, {2048{1'b0}}} >> a2;
-    wire [SLW-1:0] wd_n = {bf_s[LSB*16-1:0], blk_s[LBS*266-1:0]};
-    wire [SLW-1:0] car  = {bf_c[LSB*16-1:0], blk_c[LBS*266-1:0]};
+    wire [SLW-1:0] wd_n = {bf_l[NBF-1:0], blk_l[NBK-1:0]};
+    wire [SLW-1:0] car  = {bf_c[NBF-1:0], blk_c[NBK-1:0]};
     reg  [SLW-1:0] wd_q, wm_q;
     reg            we_q;
     reg  [XW-1:0]  wa_q;
     reg  [NXL-1:0] wce_q;
     wire [SLW-1:0] wm_n;
-    genvar b, m;
     generate for (b = 0; b < SLW; b = b + 1) begin : g_wm
-        localparam integer GR = b / NMG;
-        wire [NBEAT-1:0] oh = ohr[GR*NBEAT +: NBEAT];
-        wire [4:0] g0 = (b < LBS * 266) ? xs_g1 : xs_g2;
-        wire [5:0] g1n = {1'b0, g0} + 6'd1;
-        wire lo = (g0 < NBEAT) ? oh[g0] : 1'b0;
-        wire hi = (g1n < NBEAT) ? oh[g1n] : 1'b0;
-        assign wm_n[b] = car[b] ? hi : lo;
+        localparam integer GB = (b < NBK) ? b / NMG : NG1 + (b - NBK) / NMG;
+        assign wm_n[b] = car[b] ? mh1[GB] : ml1[GB];
     end endgenerate
     wire [NXL*256-1:0] wm_nm = {{(NXL*256-SLW){1'b0}}, wm_n};
     always @(posedge clk or negedge rst_n)
         if (!rst_n) we_q <= 1'b0;
-        else we_q <= b_en;
+        else we_q <= we1;
     generate for (m = 0; m < NXL; m = m + 1) begin : g_wce
         always @(posedge clk or negedge rst_n)
             if (!rst_n) wce_q[m] <= 1'b0;
-            else wce_q[m] <= b_en && (|wm_nm[256*m +: 256]);
+            else wce_q[m] <= we1 && (|wm_nm[256*m +: 256]);
     end endgenerate
-    always @(posedge clk) begin wa_q <= b_a; wd_q <= wd_n; wm_q <= wm_n; end
+    always @(posedge clk) begin wa_q <= wa1; wd_q <= wd_n; wm_q <= wm_n; end
     wire [NXL*256-1:0] wd_m = {{(NXL*256-SLW){1'b0}}, wd_q};
     wire [NXL*256-1:0] wm_m = {{(NXL*256-SLW){1'b0}}, wm_q};
     // ---- x store: NXL macros, read from the landed address ----

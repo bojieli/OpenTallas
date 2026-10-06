@@ -219,13 +219,15 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     for st in static_inputs:
         s.append(f"set_false_path -from [get_ports {{{st}}}]   ;# static strap: a tie cell in the parent")
     if element_io:
-        s += ["# element pins: the W13 die budget (ot_hbm_accel_sm_v_die_budget.sdc), unchanged",
+        s += ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min), referenced like every port",
+              "# to the block's own clock insertion (nbr_clk): the parent balances this block's internal flops with",
+              "# the hub's.  The element top keeps the binding ideal-clock die budget and reports it unchanged.",
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
-              "set_input_delay -max 473 -clock core_clk $elem_in",
-              "set_input_delay -min [expr $clk_period * 0.2] -clock core_clk $elem_in",
-              "set_output_delay -max 323 -clock core_clk $elem_out",
-              "set_output_delay -min [expr $clk_period * 0.2] -clock core_clk $elem_out",
+              "set_input_delay -max 473 -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr $clk_period * 0.2] -clock nbr_clk $elem_in",
+              "set_output_delay -max 323 -clock nbr_clk $elem_out",
+              "set_output_delay -min [expr $clk_period * 0.2] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
               "set nbr_out [get_ports {rout_* bout_*}]"]
     else:
@@ -481,7 +483,8 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--geom", default=None)
     b.add_argument("--pd", default="0.60")
-    b.add_argument("--lat", default="250", help="neighbour clock insertion carried by the virtual clock (ps)")
+    b.add_argument("--lat", default="720", help="the block's own measured clock insertion (ps): the parent balances "
+                   "internal flops, so a neighbour's flop sits at the same latency relative to this block's pin")
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
     b.add_argument("--need", default="40")
     b.add_argument("--hold-margin", default="10", help="ORFS hold repair margin (ps); sign-off stays 25 ps at FF")

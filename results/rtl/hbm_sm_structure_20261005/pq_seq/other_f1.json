@@ -136,7 +136,7 @@
    }
   }
  ],
- "generated_utc": "2026-10-05T18:23:55Z",
+ "generated_utc": "2026-10-05T19:33:57Z",
  "build_command": [
   "verilator",
   "--binary",
@@ -146,7 +146,7 @@
   "--top-module",
   "tb_hbm_accel_sm_pq_seq",
   "--Mdir",
-  "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/sim2/w/build_pq_verilator_nc8_xb2_haz1_g0_smh",
+  "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/sim3/w/build_pq_verilator_nc8_xb2_haz1_g0_smh",
   "-j",
   "8",
   "-DOT_SMH",
@@ -227,7 +227,7 @@
   "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv": "ac1cb6f5aa29f597fbeefc8606b9abe47083ffefc6e655cdef851cc914c43274",
   "rtl/test/tb_hbm_accel_sm_pq_seq.sv": "0fe9b260ea9a52fbd77141a16c372155189d33a88b83df2388c9b8858fcff5f6",
   "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv": "02d3f6bbaa7bf63203b7fedcf4675e5b5f9f3534a5514d37c3c077f22b403f00",
-  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "b530444bf356bc42ed77d0929068911c6e245ed26e72df0038d74733453fa1d9",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "1ee11408808c5fc772c05fea187a8bb6c1dbd7d1a6bb35838388cfdc4c140f8a",
   "tools/dshbm_sm_pq_seq.py": "f16a15b413c3909d7a1d9a331993a7f1d88032b1457a447b5d32519140763b39",
   "tools/dshbm_matched_sm_seq.py": "9381e605dcf93d1c176ab10ec1be57b9268d6ee17166a2ce67eb6392aeab5a17",
   "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8"
