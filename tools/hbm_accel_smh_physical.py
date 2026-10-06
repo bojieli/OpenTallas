@@ -945,7 +945,8 @@ def cmd_block(a):
         (work / "hops.tcl").write_text(HOPS)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     if a.piece != "front" and a.pin_flops:
-        (work / "hops.tcl").write_text(PIN_TCL)
+        # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
+        (work / "hops.tcl").write_text(PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n"))
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     die = (round(w, 3), round(h, 3))
     (work / "pins.tcl").write_text(pin_tcl(pins))
@@ -1064,6 +1065,7 @@ def main(argv=None):
                    "skew + 25 (90 until the element top measures it)")
     b.add_argument("--die-skew", default="150", help="setup budget on the element pins (cross a die wire, ps)")
     b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
+    b.add_argument("--pin-depth", default="16", help="tile / be: edge strip depth (um) for the W / E port flops")
     b.add_argument("--io-ref", action="store_true", help="abutting port delays referenced to a register clock pin of "
                    "the block (per-corner insertion) instead of nbr_clk with the SS insertion as source latency")
     t = sub.add_parser("top")
