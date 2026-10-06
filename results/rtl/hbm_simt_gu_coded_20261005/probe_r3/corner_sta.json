@@ -1,0 +1,33 @@
+{
+  "scope": "Isolated loaded real W6 metadata retention; full selected SM/parent unqualified",
+  "corners": {
+    "ss": {
+      "check": "setup",
+      "worst_slack_ps": -391.60819031991423,
+      "TNS_ps": -101487.89186814611,
+      "violating_D_pins": 323,
+      "worst_reg_D_ps": "-386.884247",
+      "worst_output_ps": "-391.608185",
+      "worst_R2R_ps": "-169.807785",
+      "worst_I2R_ps": "-18.115898"
+    },
+    "ff": {
+      "check": "hold",
+      "worst_slack_ps": 34.03927834044751,
+      "TNS_ps": 0.0,
+      "violating_D_pins": 0,
+      "worst_reg_D_ps": "34.039280",
+      "worst_output_ps": "181.685135",
+      "worst_R2R_ps": "34.244213",
+      "worst_I2R_ps": "34.039280"
+    }
+  },
+  "adopted": false,
+  "parent_context_closed": false,
+  "final_sha256": {
+    "6_final.odb": "65a0d7d49331b875487105965742bb89d4640b2c379255e030d4315e6a05dd7c",
+    "6_final.spef": "7e6477087fe3560b660ebfca70ea3a22ad4677dab0265899a9a8f6cab7a30d58",
+    "6_final.sdc": "90d168b7eabc4755359809b551c8d3b081d4259ff2d5b9a61c3053caaff3c1de"
+  },
+  "isolated_SSFF_pass": false
+}

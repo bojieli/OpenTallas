@@ -1,0 +1,16 @@
+In file included from /srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-80f87ea89/src/tools/qwen_rom_combined_p0_20261005/linked_driver.cpp:7:
+/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4___024root.h:14:100: error: expected class-name before ‘{’ token
+   14 | class alignas(VL_CACHE_LINE_BYTES) Vtb_qwen_rt_kv_stream4___024root final : public VerilatedModule {
+      |                                                                                                    ^
+/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4___024root.h:50962:5: error: ‘VlTriggerVec’ does not name a type
+50962 |     VlTriggerVec<1> __VstlTriggered;
+      |     ^~~~~~~~~~~~
+/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4___024root.h:50963:5: error: ‘VlTriggerVec’ does not name a type
+50963 |     VlTriggerVec<1> __VicoTriggered;
+      |     ^~~~~~~~~~~~
+/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4___024root.h:50964:5: error: ‘VlTriggerVec’ does not name a type
+50964 |     VlTriggerVec<5> __VactTriggered;
+      |     ^~~~~~~~~~~~
+/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4___024root.h:50965:5: error: ‘VlTriggerVec’ does not name a type
+50965 |     VlTriggerVec<5> __VnbaTriggered;
+      |     ^~~~~~~~~~~~

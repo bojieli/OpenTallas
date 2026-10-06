@@ -81,6 +81,22 @@ module tb_hbm_accel_r5a_p2;
       force dut.on.loc[0].ix=32'd123;
     end
   end
+  // Corrupt after the SRAM code has reached the captured correction stage,
+  // before its first publication. The real syndrome and packet rails, rather
+  // than an upstream encoded test word, must refuse these faults.
+  initial begin
+    wait(rst_n);
+    if(MUT==7 || MUT==8)begin
+      wait(dut.on.sm[0].v2); @(negedge clk);
+      if(MUT==7)begin
+        if(dut.on.sm[0].synd[0])force dut.on.sm[0].synd[0]=1'b0;
+        else force dut.on.sm[0].synd[0]=1'b1;
+      end else begin
+        if(dut.on.sm[0].packet2[2])force dut.on.sm[0].packet2[2]=1'b0;
+        else force dut.on.sm[0].packet2[2]=1'b1;
+      end
+    end
+  end
   // ---------------- backing array: [pc][bank][row][col] ----------------
   bit [255:0] mem [longint];
   function automatic longint midx(input integer pc, bk, rw, col); midx = ((longint'(pc) * 32 + bk) * 65536 + rw) * 32 + col; endfunction
@@ -201,7 +217,7 @@ module tb_hbm_accel_r5a_p2;
       if (cnt[m] == LINES[m]) t_e1[m] = $time;
       if (cnt[m] == LINES[m] * NIDS) t_done[m] = $time;
     end
-    if (fault) begin $display("DUT FAULT at %0d ps", $time); $finish; end
+    if (fault) begin $display("DUT FAULT at %0d ps sm0_delivered=%0d", $time,cnt[0]); $finish; end
   end
 
   always @(posedge clk) for (int m = 0; m < NSM; m++) s_rdy[m] <= (STALL == 0) || ($urandom_range(99) >= STALL);

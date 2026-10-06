@@ -1,0 +1,19 @@
+{
+  "source_commit": "bbcb3d019",
+  "PROTECTED": 1,
+  "SYNC": 2,
+  "NSTK": 4,
+  "NPC": 128,
+  "LD": 64,
+  "WB": 16,
+  "AD": 64,
+  "CLK_fs": 833333,
+  "HCLK_fs": 1024000,
+  "build_workers": 4,
+  "build_guard_GiB": 96,
+  "build_reservation_basis": "prior raw STREAM4 build declared32GiB; protected mutable FF ratio2.93; rounded96GiB fleet admission only, no process address/wall/file limits",
+  "corner_tool_parent": "dc3085b40",
+  "corner_tool_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+  "exact_cases": 32,
+  "adopted": false
+}

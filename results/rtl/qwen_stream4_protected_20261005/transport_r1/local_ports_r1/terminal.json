@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS_LOCAL_PC_CODEC_REUSE_ACK_HOLD",
+  "exit_code": 0,
+  "LOCAL_WIRE_SPANS": 14,
+  "ACK_BACKPRESSURE": 1,
+  "clock_ps": {
+    "CLK": 833.333,
+    "HCLK": 1024
+  },
+  "gate": "warm-held ACK9x64 actual output not retired until ready; local wire281x64/289x16/9x64;40 WR cache/owner wrap; descriptor/GO consumed order; credit-rail mismatch; cache upset quarantine",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "a6129b02eb347a0b2063d2b3ce7292d69c8996207add8271ff3dc4d18224866a",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "a3d9ea57412314505d0f6255b44845a52abe125f15f7a330420b20ab2fb3c4a3",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5d77bb9aeac2bbec8784d92798e30bee7f2a5a91752199abf06a11b12c79a098",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_local_ports.sv": "2aacc7466f4bf8832d5a18cb1379b946b36f0c1935591d230790b45746897fde"
+  },
+  "compile_command": "iverilog -g2012 -s tb_qwen_s4_protected_local_ports -o /tmp/tb_qwen_s4_local_ports.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/lib/ot_reset_sync.sv rtl/hdc/kv/ot_qwen_s4_checked_state.sv rtl/hdc/kv/ot_qwen_s4_protected_ring.sv rtl/hdc/kv/ot_qwen_s4_protected_pc.sv rtl/hdc/kv/ot_qwen_s4_protected_control.sv rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_local_ports.sv",
+  "run_command": "vvp /tmp/tb_qwen_s4_local_ports.vvp",
+  "full128_source_span_table_matches_model": true,
+  "physical_qualified": false,
+  "shared_stack_adapter_ready": false
+}

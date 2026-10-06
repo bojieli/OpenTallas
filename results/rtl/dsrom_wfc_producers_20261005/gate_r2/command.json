@@ -1,0 +1,21 @@
+[
+  "verilator",
+  "--binary",
+  "--timing",
+  "--assert",
+  "-Wno-fatal",
+  "--top-module",
+  "tb_wfc_producers",
+  "-j",
+  "1",
+  "--Mdir",
+  "/srv/opentallas-scratch2/codex/wfc-producers-20261005/gate_r2/objects",
+  "-o",
+  "producer_gate",
+  "rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv",
+  "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv",
+  "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv",
+  "rtl/dft/ot_rom_secded_dec.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+]

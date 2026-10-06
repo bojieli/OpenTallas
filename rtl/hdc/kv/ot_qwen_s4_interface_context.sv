@@ -6,6 +6,7 @@
 // not u_me's gated clock. HCLK is an independent external periodic root.
 module ot_qwen_s4_interface_context #(
     parameter integer PROTECTED=0,
+    parameter integer LOCAL_TRANSPORT=0,ACK_BACKPRESSURE=0,
     parameter integer MEM_WORDS=3*131072,
     parameter integer PHASE=0
 )(
@@ -18,7 +19,7 @@ module ot_qwen_s4_interface_context #(
     output wire [128*17-1:0] l_sec,
     output wire [128*8-1:0] l_row,
     output wire [128*256-1:0] l_data,
-    input wire [127:0] l_pop, w_v,
+    input wire [127:0] l_pop, w_v, wd_ready,
     input wire [128*24-1:0] w_sec,
     input wire [128*256-1:0] w_data,
     input wire [128*9-1:0] w_tag,
@@ -43,6 +44,141 @@ module ot_qwen_s4_interface_context #(
 );
     localparam integer NSTK=4, NPC=128, TAGW=9, CRED=32,
         LR=64, WBUF=16, WQ=4, SYNC=2;
+    // Literal b3r12 PC-to-lfifo paths, rounded up at430.56um per cut.
+    // Reuse charged u_l/u_w/u_a codec endpoints; preserve the real CDC.
+    function automatic integer local_spans(input integer p);
+        case(p)
+            0: local_spans=14;
+            1: local_spans=13;
+            2: local_spans=12;
+            3: local_spans=10;
+            4: local_spans=9;
+            5: local_spans=8;
+            6: local_spans=7;
+            7: local_spans=5;
+            8: local_spans=5;
+            9: local_spans=7;
+            10: local_spans=8;
+            11: local_spans=9;
+            12: local_spans=10;
+            13: local_spans=12;
+            14: local_spans=13;
+            15: local_spans=14;
+            16: local_spans=13;
+            17: local_spans=12;
+            18: local_spans=11;
+            19: local_spans=10;
+            20: local_spans=8;
+            21: local_spans=7;
+            22: local_spans=6;
+            23: local_spans=5;
+            24: local_spans=5;
+            25: local_spans=6;
+            26: local_spans=7;
+            27: local_spans=8;
+            28: local_spans=10;
+            29: local_spans=11;
+            30: local_spans=12;
+            31: local_spans=14;
+            32: local_spans=14;
+            33: local_spans=13;
+            34: local_spans=12;
+            35: local_spans=10;
+            36: local_spans=9;
+            37: local_spans=8;
+            38: local_spans=7;
+            39: local_spans=5;
+            40: local_spans=5;
+            41: local_spans=7;
+            42: local_spans=8;
+            43: local_spans=9;
+            44: local_spans=10;
+            45: local_spans=12;
+            46: local_spans=13;
+            47: local_spans=14;
+            48: local_spans=13;
+            49: local_spans=12;
+            50: local_spans=11;
+            51: local_spans=10;
+            52: local_spans=8;
+            53: local_spans=7;
+            54: local_spans=6;
+            55: local_spans=5;
+            56: local_spans=5;
+            57: local_spans=6;
+            58: local_spans=7;
+            59: local_spans=8;
+            60: local_spans=10;
+            61: local_spans=11;
+            62: local_spans=12;
+            63: local_spans=14;
+            64: local_spans=13;
+            65: local_spans=12;
+            66: local_spans=11;
+            67: local_spans=10;
+            68: local_spans=8;
+            69: local_spans=7;
+            70: local_spans=6;
+            71: local_spans=5;
+            72: local_spans=5;
+            73: local_spans=6;
+            74: local_spans=7;
+            75: local_spans=8;
+            76: local_spans=10;
+            77: local_spans=11;
+            78: local_spans=12;
+            79: local_spans=14;
+            80: local_spans=14;
+            81: local_spans=13;
+            82: local_spans=12;
+            83: local_spans=10;
+            84: local_spans=9;
+            85: local_spans=8;
+            86: local_spans=7;
+            87: local_spans=5;
+            88: local_spans=5;
+            89: local_spans=7;
+            90: local_spans=8;
+            91: local_spans=9;
+            92: local_spans=10;
+            93: local_spans=12;
+            94: local_spans=13;
+            95: local_spans=14;
+            96: local_spans=13;
+            97: local_spans=12;
+            98: local_spans=11;
+            99: local_spans=10;
+            100: local_spans=8;
+            101: local_spans=7;
+            102: local_spans=6;
+            103: local_spans=5;
+            104: local_spans=5;
+            105: local_spans=6;
+            106: local_spans=7;
+            107: local_spans=8;
+            108: local_spans=10;
+            109: local_spans=11;
+            110: local_spans=12;
+            111: local_spans=14;
+            112: local_spans=14;
+            113: local_spans=13;
+            114: local_spans=12;
+            115: local_spans=10;
+            116: local_spans=9;
+            117: local_spans=8;
+            118: local_spans=7;
+            119: local_spans=5;
+            120: local_spans=5;
+            121: local_spans=7;
+            122: local_spans=8;
+            123: local_spans=9;
+            124: local_spans=10;
+            125: local_spans=12;
+            126: local_spans=13;
+            127: local_spans=14;
+            default: local_spans=0;
+        endcase
+    endfunction
     generate if(PROTECTED)begin:selected
     wire h_rst_n;
     ot_reset_sync u_hrst(.clk(hclk),.async_rst_n(rst_n),.sync_rst_n(h_rst_n));
@@ -83,11 +219,12 @@ module ot_qwen_s4_interface_context #(
     end
 
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
-        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC),
+            .LOCAL_WIRE_SPANS(LOCAL_TRANSPORT?local_spans(q):0),.ACK_BACKPRESSURE(ACK_BACKPRESSURE)) u_cdc (
             .clk(clk), .por_n(rst_n), .warm_rst_n(warm_rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
-            .w_room(w_room[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
+            .w_room(w_room[q]), .wd_ready(wd_ready[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
             .hclk(hclk),
             .h_lv(h_lv[q]), .h_lsec(h_lsec[q*17 +: 17]), .h_lrow(h_lrow[q*8 +: 8]), .h_ldata(h_ldata[q*256 +: 256]), .h_cred(cred_ret[q*3 +: 3]),
             .h_wv(wr_v[q]), .h_wsec(wr_sec[q*24 +: 24]), .h_hand(wr_v[q] && wr_r[q]), .h_wcon(h_wcon[q]),

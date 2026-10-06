@@ -1,0 +1,534 @@
+{
+  "SS": {
+    "native_time_unit": "ns",
+    "native_to_ps": 1000.0,
+    "classes": {
+      "enclosing_IO.max": {
+        "endpoints": 1918,
+        "violators": 86,
+        "missing_paths": 1832,
+        "functional_missing_paths": 1832,
+        "worst_ps": -1731.123,
+        "worst_endpoint": "fault"
+      },
+      "enclosing_IO.min": {
+        "endpoints": 1918,
+        "violators": 0,
+        "missing_paths": 1832,
+        "functional_missing_paths": 1832,
+        "worst_ps": 734.761,
+        "worst_endpoint": "cm_a[10]"
+      },
+      "domain_MAC.max": {
+        "endpoints": 24862,
+        "violators": 10363,
+        "missing_paths": 928,
+        "functional_missing_paths": 928,
+        "worst_ps": -501.661,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_mac[0].g_l2.u_l0.p0_we[7]$_DFF_P_/D"
+      },
+      "domain_MAC.min": {
+        "endpoints": 24862,
+        "violators": 47,
+        "missing_paths": 928,
+        "functional_missing_paths": 928,
+        "worst_ps": -35.571,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_mac[0].g_pa2.u_pair.u_c5.g_r.r[0]$_DFF_P_/D"
+      },
+      "BST_capture.max": {
+        "endpoints": 1641,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 290.502,
+        "worst_endpoint": "u_bst.genblk1.g_line.line[557]$_DFF_P_/D"
+      },
+      "BST_capture.min": {
+        "endpoints": 1641,
+        "violators": 591,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -941.7560000000001,
+        "worst_endpoint": "u_bst.genblk1.g_line.line[396]$_DFF_P_/D"
+      },
+      "return_tag_queue.max": {
+        "endpoints": 4096,
+        "violators": 4096,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -1067.2839999999999,
+        "worst_endpoint": "u_return.u_n.bt[14][5]$_DFFE_PP_/D"
+      },
+      "return_tag_queue.min": {
+        "endpoints": 4096,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 72.437,
+        "worst_endpoint": "u_return.u_n.bt[14][19]$_DFFE_PP_/D"
+      },
+      "return_payload.max": {
+        "endpoints": 4256,
+        "violators": 4128,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -1044.299,
+        "worst_endpoint": "u_return.u_n.ad[31][3]$_DFFE_PP_/D"
+      },
+      "return_payload.min": {
+        "endpoints": 4256,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 55.346,
+        "worst_endpoint": "u_return.u_n.u_fd.genblk1.g_line.line[144]$_DFF_P_/D"
+      },
+      "AO_scheduler_controller.max": {
+        "endpoints": 547,
+        "violators": 107,
+        "missing_paths": 182,
+        "functional_missing_paths": 182,
+        "worst_ps": -725.6590000000001,
+        "worst_endpoint": "u_stage.u_ao.u_p.u_ctl.u_sched/u_pg.cnt[6]$_DFFE_PN0P_/D"
+      },
+      "AO_scheduler_controller.min": {
+        "endpoints": 547,
+        "violators": 2,
+        "missing_paths": 182,
+        "functional_missing_paths": 182,
+        "worst_ps": -44.988,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_r.u_ctl.late$_DFFE_PN0P_/D"
+      },
+      "domain_control_result.max": {
+        "endpoints": 5369,
+        "violators": 1806,
+        "missing_paths": 26,
+        "functional_missing_paths": 26,
+        "worst_ps": -860.062,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_cg.u_cg.u_icg/ENA"
+      },
+      "domain_control_result.min": {
+        "endpoints": 5369,
+        "violators": 573,
+        "missing_paths": 26,
+        "functional_missing_paths": 26,
+        "worst_ps": -458.25300000000004,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.s_row[11][4]$_DFFE_PP_/D"
+      },
+      "loader.max": {
+        "endpoints": 190,
+        "violators": 47,
+        "missing_paths": 18,
+        "functional_missing_paths": 18,
+        "worst_ps": -786.0970000000001,
+        "worst_endpoint": "u_ld.g_protected.u_freeze.u_icg/ENA"
+      },
+      "loader.min": {
+        "endpoints": 190,
+        "violators": 97,
+        "missing_paths": 18,
+        "functional_missing_paths": 18,
+        "worst_ps": -263.807,
+        "worst_endpoint": "u_ld.g_qualify.u_low.u_latch/D"
+      },
+      "return_control.max": {
+        "endpoints": 361,
+        "violators": 179,
+        "missing_paths": 56,
+        "functional_missing_paths": 56,
+        "worst_ps": -1073.1470000000002,
+        "worst_endpoint": "u_return.u_n.br[5]$_DFFE_PN0P_/D"
+      },
+      "return_control.min": {
+        "endpoints": 361,
+        "violators": 0,
+        "missing_paths": 56,
+        "functional_missing_paths": 56,
+        "worst_ps": 63.687999999999995,
+        "worst_endpoint": "u_return.u_rd.genblk1.g_one.line[50]$_DFF_P_/D"
+      },
+      "AO_retained_shadow.max": {
+        "endpoints": 1352,
+        "violators": 1352,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -631.7479999999999,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.g_sh[7].r[1]$_DFFE_PP_/D"
+      },
+      "AO_retained_shadow.min": {
+        "endpoints": 1352,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 30.932000000000002,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.g_sh[24].r[12]$_DFFE_PP_/D"
+      },
+      "return_tag.max": {
+        "endpoints": 170,
+        "violators": 34,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -1803.911,
+        "worst_endpoint": "u_return.u_n.by_t[6]$_DFF_P_/D"
+      },
+      "return_tag.min": {
+        "endpoints": 170,
+        "violators": 3,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -45.756,
+        "worst_endpoint": "u_return.u_n.u_dt.genblk1.g_line.line[164]$_DFF_P_/D"
+      },
+      "AO_replay_CDC.max": {
+        "endpoints": 520,
+        "violators": 203,
+        "missing_paths": 140,
+        "functional_missing_paths": 140,
+        "worst_ps": -657.741,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.dirty[9]$_DFF_PN0_/D"
+      },
+      "AO_replay_CDC.min": {
+        "endpoints": 520,
+        "violators": 2,
+        "missing_paths": 140,
+        "functional_missing_paths": 140,
+        "worst_ps": -6.375,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_r.g_e[0].u_eao.ready$_DFFE_PN0P_/D"
+      },
+      "return_adder.max": {
+        "endpoints": 1116,
+        "violators": 204,
+        "missing_paths": 372,
+        "functional_missing_paths": 372,
+        "worst_ps": -1399.6280000000002,
+        "worst_endpoint": "u_return.u_n.u_add.s1_dist[6]$_DFF_PN0_/D"
+      },
+      "return_adder.min": {
+        "endpoints": 1116,
+        "violators": 0,
+        "missing_paths": 372,
+        "functional_missing_paths": 372,
+        "worst_ps": 51.767,
+        "worst_endpoint": "u_return.u_n.u_add.s2_code[23]$_DFF_PN0_/D"
+      },
+      "domain_ingress_DIF.max": {
+        "endpoints": 576,
+        "violators": 0,
+        "missing_paths": 11,
+        "functional_missing_paths": 11,
+        "worst_ps": 169.259,
+        "worst_endpoint": "u_stage.g_el[0].u_dif.cdc_dr1$_DFF_PN0_/RESETN"
+      },
+      "domain_ingress_DIF.min": {
+        "endpoints": 576,
+        "violators": 552,
+        "missing_paths": 11,
+        "functional_missing_paths": 11,
+        "worst_ps": -666.116,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D"
+      },
+      "source_checked_state.max": {
+        "endpoints": 774,
+        "violators": 252,
+        "missing_paths": 258,
+        "functional_missing_paths": 258,
+        "worst_ps": -110.40700000000001,
+        "worst_endpoint": "u_settings/primary[68]$_DFFE_PN0P_/D"
+      },
+      "source_checked_state.min": {
+        "endpoints": 774,
+        "violators": 254,
+        "missing_paths": 258,
+        "functional_missing_paths": 258,
+        "worst_ps": -544.5790000000001,
+        "worst_endpoint": "u_settings/inverse[48]$_DFFE_PN1P_/D"
+      },
+      "AO_quarantine.max": {
+        "endpoints": 9,
+        "violators": 5,
+        "missing_paths": 2,
+        "functional_missing_paths": 2,
+        "worst_ps": -1294.552,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_freeze.u_icg/ENA"
+      },
+      "AO_quarantine.min": {
+        "endpoints": 9,
+        "violators": 0,
+        "missing_paths": 2,
+        "functional_missing_paths": 2,
+        "worst_ps": 67.548,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_qualify.u_latch/D"
+      }
+    },
+    "clock_terminals": 41870,
+    "excluded_clock_graph_rows": 83748,
+    "duplicate_endpoint_rows": 172,
+    "terminals_without_clock": []
+  },
+  "FF": {
+    "native_time_unit": "ns",
+    "native_to_ps": 1000.0,
+    "classes": {
+      "enclosing_IO.max": {
+        "endpoints": 1918,
+        "violators": 75,
+        "missing_paths": 1832,
+        "functional_missing_paths": 1832,
+        "worst_ps": -1139.1070000000002,
+        "worst_endpoint": "fault"
+      },
+      "enclosing_IO.min": {
+        "endpoints": 1918,
+        "violators": 0,
+        "missing_paths": 1832,
+        "functional_missing_paths": 1832,
+        "worst_ps": 497.23699999999997,
+        "worst_endpoint": "cm_a[10]"
+      },
+      "domain_MAC.max": {
+        "endpoints": 24862,
+        "violators": 0,
+        "missing_paths": 928,
+        "functional_missing_paths": 928,
+        "worst_ps": 36.131,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_mac[0].g_l2.u_l0.p0_we[7]$_DFF_P_/D"
+      },
+      "domain_MAC.min": {
+        "endpoints": 24862,
+        "violators": 205,
+        "missing_paths": 928,
+        "functional_missing_paths": 928,
+        "worst_ps": -79.579,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_mac[0].g_pa2.u_pair.u_c5.g_r.r[0]$_DFF_P_/D"
+      },
+      "AO_retained_shadow.max": {
+        "endpoints": 1352,
+        "violators": 1352,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -174.853,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.g_sh[15].r[15]$_DFFE_PP_/D"
+      },
+      "AO_retained_shadow.min": {
+        "endpoints": 1352,
+        "violators": 3,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -6.313,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.g_sh[24].r[12]$_DFFE_PP_/D"
+      },
+      "return_payload.max": {
+        "endpoints": 4256,
+        "violators": 4128,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -585.938,
+        "worst_endpoint": "u_return.u_n.bd[16][9]$_DFFE_PP_/D"
+      },
+      "return_payload.min": {
+        "endpoints": 4256,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 11.254999999999999,
+        "worst_endpoint": "u_return.u_n.bd[19][26]$_DFFE_PP_/D"
+      },
+      "return_tag_queue.max": {
+        "endpoints": 4096,
+        "violators": 4096,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -592.505,
+        "worst_endpoint": "u_return.u_n.bt[22][1]$_DFFE_PP_/D"
+      },
+      "return_tag_queue.min": {
+        "endpoints": 4096,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 10.923,
+        "worst_endpoint": "u_return.u_n.bt[58][7]$_DFFE_PP_/D"
+      },
+      "return_adder.max": {
+        "endpoints": 1116,
+        "violators": 126,
+        "missing_paths": 372,
+        "functional_missing_paths": 372,
+        "worst_ps": -283.06,
+        "worst_endpoint": "u_return.u_n.u_add.s1_dist[6]$_DFF_PN0_/D"
+      },
+      "return_adder.min": {
+        "endpoints": 1116,
+        "violators": 0,
+        "missing_paths": 372,
+        "functional_missing_paths": 372,
+        "worst_ps": 10.132,
+        "worst_endpoint": "u_return.u_n.u_add.s2_code[23]$_DFF_PN0_/D"
+      },
+      "BST_capture.max": {
+        "endpoints": 1641,
+        "violators": 0,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": 486.573,
+        "worst_endpoint": "u_bst.genblk1.g_line.line[823]$_DFF_P_/D"
+      },
+      "BST_capture.min": {
+        "endpoints": 1641,
+        "violators": 649,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -592.634,
+        "worst_endpoint": "u_bst.genblk1.g_line.line[396]$_DFF_P_/D"
+      },
+      "domain_control_result.max": {
+        "endpoints": 5369,
+        "violators": 338,
+        "missing_paths": 26,
+        "functional_missing_paths": 26,
+        "worst_ps": -318.65900000000005,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_cg.u_cg.u_icg/ENA"
+      },
+      "domain_control_result.min": {
+        "endpoints": 5369,
+        "violators": 597,
+        "missing_paths": 26,
+        "functional_missing_paths": 26,
+        "worst_ps": -267.954,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.s_n[4][3]$_DFFE_PP_/D"
+      },
+      "domain_ingress_DIF.max": {
+        "endpoints": 576,
+        "violators": 0,
+        "missing_paths": 11,
+        "functional_missing_paths": 11,
+        "worst_ps": 75.219,
+        "worst_endpoint": "u_stage.g_el[0].u_dif.cdc_dr1$_DFF_PN0_/RESETN"
+      },
+      "domain_ingress_DIF.min": {
+        "endpoints": 576,
+        "violators": 552,
+        "missing_paths": 11,
+        "functional_missing_paths": 11,
+        "worst_ps": -364.794,
+        "worst_endpoint": "u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D"
+      },
+      "source_checked_state.max": {
+        "endpoints": 774,
+        "violators": 0,
+        "missing_paths": 258,
+        "functional_missing_paths": 258,
+        "worst_ps": 357.469,
+        "worst_endpoint": "u_settings/primary[68]$_DFFE_PN0P_/D"
+      },
+      "source_checked_state.min": {
+        "endpoints": 774,
+        "violators": 254,
+        "missing_paths": 258,
+        "functional_missing_paths": 258,
+        "worst_ps": -313.594,
+        "worst_endpoint": "u_settings/primary[73]$_DFFE_PN0P_/D"
+      },
+      "AO_scheduler_controller.max": {
+        "endpoints": 547,
+        "violators": 60,
+        "missing_paths": 182,
+        "functional_missing_paths": 182,
+        "worst_ps": -201.323,
+        "worst_endpoint": "u_stage.u_ao.u_p.u_ctl.u_sched/u_pg.cnt[6]$_DFFE_PN0P_/D"
+      },
+      "AO_scheduler_controller.min": {
+        "endpoints": 547,
+        "violators": 3,
+        "missing_paths": 182,
+        "functional_missing_paths": 182,
+        "worst_ps": -33.192,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_r.u_ctl.late$_DFFE_PN0P_/D"
+      },
+      "loader.max": {
+        "endpoints": 190,
+        "violators": 1,
+        "missing_paths": 18,
+        "functional_missing_paths": 18,
+        "worst_ps": -240.873,
+        "worst_endpoint": "u_ld.g_protected.u_freeze.u_icg/ENA"
+      },
+      "loader.min": {
+        "endpoints": 190,
+        "violators": 102,
+        "missing_paths": 18,
+        "functional_missing_paths": 18,
+        "worst_ps": -202.671,
+        "worst_endpoint": "u_ld.g_qualify.u_low.u_latch/D"
+      },
+      "AO_replay_CDC.max": {
+        "endpoints": 520,
+        "violators": 106,
+        "missing_paths": 140,
+        "functional_missing_paths": 140,
+        "worst_ps": -180.10399999999998,
+        "worst_endpoint": "u_stage.u_ao.u_p.g_e[0].u_eao.dirty[7]$_DFF_PN0_/D"
+      },
+      "AO_replay_CDC.min": {
+        "endpoints": 520,
+        "violators": 2,
+        "missing_paths": 140,
+        "functional_missing_paths": 140,
+        "worst_ps": -29.278,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_r.g_e[0].u_eao.ready$_DFFE_PN0P_/D"
+      },
+      "return_tag.max": {
+        "endpoints": 170,
+        "violators": 33,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -502.132,
+        "worst_endpoint": "u_return.u_n.by_t[6]$_DFF_P_/D"
+      },
+      "return_tag.min": {
+        "endpoints": 170,
+        "violators": 4,
+        "missing_paths": 0,
+        "functional_missing_paths": 0,
+        "worst_ps": -67.59,
+        "worst_endpoint": "u_return.u_n.u_dt.genblk1.g_line.line[164]$_DFF_P_/D"
+      },
+      "return_control.max": {
+        "endpoints": 361,
+        "violators": 178,
+        "missing_paths": 56,
+        "functional_missing_paths": 56,
+        "worst_ps": -567.7919999999999,
+        "worst_endpoint": "u_return.u_n.ae[3]$_DFFE_PP_/D"
+      },
+      "return_control.min": {
+        "endpoints": 361,
+        "violators": 0,
+        "missing_paths": 56,
+        "functional_missing_paths": 56,
+        "worst_ps": 11.665999999999999,
+        "worst_endpoint": "u_return.u_rd.genblk1.g_one.line[50]$_DFF_P_/D"
+      },
+      "AO_quarantine.max": {
+        "endpoints": 9,
+        "violators": 4,
+        "missing_paths": 2,
+        "functional_missing_paths": 2,
+        "worst_ps": -771.173,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_freeze.u_icg/ENA"
+      },
+      "AO_quarantine.min": {
+        "endpoints": 9,
+        "violators": 1,
+        "missing_paths": 2,
+        "functional_missing_paths": 2,
+        "worst_ps": -55.609,
+        "worst_endpoint": "u_stage.u_ao.g_checked.u_qualify.u_latch/D"
+      }
+    },
+    "clock_terminals": 41870,
+    "excluded_clock_graph_rows": 83748,
+    "duplicate_endpoint_rows": 172,
+    "terminals_without_clock": []
+  }
+}

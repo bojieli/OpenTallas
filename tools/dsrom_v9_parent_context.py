@@ -44,6 +44,26 @@ def model(root):
     available = (parent_box[2]-parent_box[0])*(parent_box[3]-parent_box[1])
     if mapped_budget/.5 >= available:
         raise ValueError('complete register/control cut does not fit the actual remaining slot')
+    fixfile = root/'results/rtl/dsrom_v9_parent_frontend_fix_20261005/parent_retained_rails.json'
+    frontend_successor = None
+    if fixfile.exists():
+        retained = json.loads(fixfile.read_text())
+        if retained['total_state_bits'] > boundary_ff_upper:
+            raise ValueError('source-faithful protective rails exceed the existing state bound')
+        frontend_successor = dict(
+            source='physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context_frontend.sv',
+            loader='physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv',
+            correction='explicit fault/pend self-hold; original reset/set precedence retained',
+            generic_FF_state_bits=retained['generic_FF_state_bits'],
+            generic_memory_state_bits=retained['generic_memory_state_bits'],
+            total_state_bits=retained['total_state_bits'],
+            protective_rails={name: row['bits'] for name, row in retained['rails'].items()},
+            count_basis=str(fixfile.relative_to(root)),
+            count_basis_sha256=hashlib.sha256(fixfile.read_bytes()).hexdigest(),
+            source_gate='PASS minimum original/corrected PQ0/PQ1 exact; not full engine/campaign',
+            new_pipeline_edges=0, changed_physical_measured=False,
+            old_map_r4_functional_credit=False,
+            old_map_r4_scope='preserved diagnostic/geometry only: reset-only PQ0 fault/pend lowered to X')
     return dict(schema='opentallas.dsrom.v9.parent_clock_context.v1',
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         input_hashes={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -91,6 +111,7 @@ def model(root):
                       admission='unchanged host guard plus fresh measured CPU/RAM/disk before actual execution',
                       wall_file_AS_limits='none'),
         parent_only_mapping_admitted=True, full_QX_context_admitted=False,
+        frontend_successor=frontend_successor,
         full_field_build_admitted=False, missing_input_clocks=True,
         remaining_dependency='qualified full-shape QX10 LEF/SS/FF timing and exact gate from live Z18; all terminal arrival/child clock-tree qualification still outstanding',
         physical_closed=False)

@@ -298,6 +298,7 @@ endmodule
 //
 // pg_en = 0 holds the domain powered (req_on = 1): gating is opt-in at run time as well as by parameter.
 // ---------------------------------------------------------------------------
+(* keep_hierarchy = "yes" *)
 module ot_w5_sched #(
     parameter integer NSUB = 4,           // header-ring segments of the domain
     parameter integer TW   = 24           // schedule counter width (AR period at 1.2 GHz is ~486k cycles)
@@ -383,7 +384,7 @@ module ot_w5_stage_pg_ctl_sp #(
 );
     wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] sched_snapshot;
     wire clk_en, req_on;
-    ot_w5_sched #(.NSUB(NSUB), .TW(TW)) u_sched (
+    (* keep, dont_touch *) ot_w5_sched #(.NSUB(NSUB), .TW(TW)) u_sched (
         .snapshot(sched_snapshot), .clk(a_clk), .rst_n(rst_n), .pg_en(pg_en), .sched_v(sched_v), .sched_gap(sched_gap), .cfg_lead(pg_lead),
         .cfg_bet(pg_bet), .cfg_idle(pg_idle), .cfg_step(pg_step), .cfg_rst(pg_rst), .cfg_ack_to(pg_ack_to),
         .dom_busy(go | dom_busy), .sw_en(sw_en), .sw_ack(sw_ack), .iso_n(iso_n), .dom_rst_n(dom_rst_n),
@@ -579,7 +580,10 @@ wire ao_clk, bad, quarantine;
 (* keep, dont_touch *) reg sticky=0, sticky_inverse=1;
 generate if (PROTECT!=0) begin:g_checked
     assign bad=|(snap_p^snap_r);
-    assign quarantine=bad|sticky|~sticky_inverse|external_quarantine|(|fault_p);
+    wire settled_alarm;
+    ot_w5_fault_low u_qualify(.clk(aon_clk),.rst_n(rst_n),
+        .alarm(bad|external_quarantine|(|fault_p)),.settled(settled_alarm));
+    assign quarantine=settled_alarm|sticky|~sticky_inverse;
     always @(posedge aon_clk or negedge rst_n)
         if(!rst_n) begin sticky<=0;sticky_inverse<=1;end
         else if(quarantine) begin sticky<=1;sticky_inverse<=0;end

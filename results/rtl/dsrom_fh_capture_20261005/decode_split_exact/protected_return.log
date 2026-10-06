@@ -1,0 +1,8 @@
+SOURCE_PIN verified fd25e1e26c8e50f543a200b7bb46346fabc6c72d
+- Verilator: Built from 0.099 MB sources in 7 modules, into 6.228 MB in 27 C++ files needing 0.067 MB
+- Verilator: Walltime 6.552 s (elab=0.081, cvt=1.064, bld=5.353); cpu 1.312 s on 16 threads; alloced 113.582 MB
+PASS FH SRAM G4W16 rows505 accepted=32512 released=32512 writes=32352 CE=1 protected-identity-warm-mask-debt
+- Verilator: $finish at 11us; walltime 0.023 s; speed 474.753 us/s
+- Verilator: cpu 0.024 s on 1 threads; alloced 1018 MB
+- Verilator: Built from 6.479 MB sources in 71 modules, into 130.581 MB in 258 C++ files needing 1.001 MB
+- Verilator: Walltime 64.826 s (elab=0.675, cvt=40.248, bld=23.072); cpu 44.822 s on 8 threads; alloced 2278.387 MB

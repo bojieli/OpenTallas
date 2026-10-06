@@ -13,6 +13,47 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def context_decision(output):
+    """Make the loaded child-context decision explicit, without inventing an IR limit."""
+    def read(path):
+        return json.loads(path.read_text()) if path.exists() else {}
+    root = output.parent
+    physical = read(root/'physical.json')
+    corners = read(root/'corner_sta.json')
+    loaded = read(output/'loaded_ir.json')
+    metrics = physical.get('place_and_route', {}).get('metrics', {})
+    checks = {}
+    for corner in ('ss','ff'):
+        result = corners.get(corner, {})
+        slack = result.get('worst_slack_ps')
+        checks[corner] = isinstance(slack, (int,float)) and slack >= 0 and not result.get('errors')
+    checks['DRC'] = metrics.get('drc_errors') == 0
+    checks['nonzero_loaded_IR'] = all(loaded.get('corners', {}).get(c, {}).get(
+        'nonzero_loaded_analysis_complete', False) for c in ('SS','FF'))
+    actions = []
+    if not checks['ss']:
+        actions.append('CP source owner: use actual terminal path classes to qualify the prepared exact control/quiet/entry/parity source cut; register its bounded unified-model entry before RTL. Keep full same-edge owner checks and accepted-debt drain.')
+    if not checks['ff']:
+        actions.append('CP source owner: classify actual data hold separately from asynchronous reset/removal; preserve 25ps uncertainty and current source phase.')
+    if not checks['DRC']:
+        actions.append('Turing physical owner: use terminal marker coordinates/net classes to repair actual pin/via access allocation, preserving both fences and all236 reserved pins; retained mapped/placed checkpoints remain the source for any authorized physical continuation.')
+    if not checks['nonzero_loaded_IR']:
+        actions.append('Complete loaded corner-grid analysis from retained routed artifacts; raw failure log is authoritative, not a zero-load pass.')
+    actions.append('Turing: bind the actual permissible child rail-drop budget and workload activity before any IR/adoption claim; current vectorless input0.1/ideal boundary supply remains conditional and excludes parent-grid drop.')
+    record = dict(schema='hbm.cp.loaded-context.decision.v1',
+        disposition='REPAIR_MANDATORY_BASELINE' if not all(checks.values()) else 'HOLD_IR_QUALIFICATION',
+        checks=checks, terminal_SS_FF=corners, DRC=metrics.get('drc_errors'),
+        loaded_IR=loaded.get('corners', {}), IR_drop_budget=None,
+        workload_peak_qualified=False, adopted=False, required_next_actions=actions,
+        clock_relaxation=False, region_waiver=False, source_job_restart=False)
+    (output/'context_decision.json').write_text(json.dumps(record,indent=2)+'\n')
+    # The existing terminal collector reads loaded_ir.json for its direct
+    # owner notification. Include the decision there before its exit marker.
+    loaded['context_decision'] = {k: record[k] for k in (
+        'disposition', 'checks', 'required_next_actions')}
+    (output/'loaded_ir.json').write_text(json.dumps(loaded,indent=2)+'\n')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--orfs', type=Path, required=True)
@@ -61,4 +102,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    try:
+        main()
+    finally:
+        if '--output' in sys.argv:
+            output = Path(sys.argv[sys.argv.index('--output')+1]).resolve()
+            output.mkdir(parents=True, exist_ok=True)
+            context_decision(output)

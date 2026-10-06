@@ -1,0 +1,145 @@
+(41.4873046875, 44.61376953125, 57.09912109375)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[0\].head\[0\].u_g OLD 5000 5000 NEW 4992 4992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[0\].head\[1\].u_g OLD 352982 5000 NEW 352992 4992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[0\].head\[2\].u_g OLD 700964 5000 NEW 700944 4992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[0\].head\[3\].u_g OLD 1048946 5000 NEW 1048944 4992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[1\].head\[0\].u_g OLD 5000 352982 NEW 4992 352992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[1\].head\[1\].u_g OLD 352982 352982 NEW 352992 352992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[1\].head\[2\].u_g OLD 700964 352982 NEW 700944 352992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[1\].head\[3\].u_g OLD 1048946 352982 NEW 1048944 352992
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[2\].head\[0\].u_g OLD 5000 700964 NEW 4992 700944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[2\].head\[1\].u_g OLD 352982 700964 NEW 352992 700944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[2\].head\[2\].u_g OLD 700964 700964 NEW 700944 700944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[2\].head\[3\].u_g OLD 1048946 700964 NEW 1048944 700944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[3\].head\[0\].u_g OLD 5000 1048946 NEW 4992 1048944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[3\].head\[1\].u_g OLD 352982 1048946 NEW 352992 1048944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[3\].head\[2\].u_g OLD 700964 1048946 NEW 700944 1048944
+ACCESS_ONLY_ALIGN u_tile/registered_parent.row\[3\].head\[3\].u_g OLD 1048946 1048946 NEW 1048944 1048944
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       29
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_attn_registered_parent_phys
+Die area:                 ( 0 0 ) ( 1349110 1349980 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     270611
+Number of terminals:      4
+Number of snets:          2
+Number of nets:           212797
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+[INFO DRT-0164] Number of unique instances = 150.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 3639317.
+[INFO DRT-0033] V1 shape region query size = 35017411.
+[INFO DRT-0033] M2 shape region query size = 561984.
+[INFO DRT-0033] V2 shape region query size = 689784.
+[INFO DRT-0033] M3 shape region query size = 1913215.
+[INFO DRT-0033] V3 shape region query size = 461361.
+[INFO DRT-0033] M4 shape region query size = 1087639.
+[INFO DRT-0033] V4 shape region query size = 461361.
+[INFO DRT-0033] M5 shape region query size = 489276.
+[INFO DRT-0033] V5 shape region query size = 316708.
+[INFO DRT-0033] M6 shape region query size = 318186.
+[INFO DRT-0033] V6 shape region query size = 689956.
+[INFO DRT-0033] M7 shape region query size = 299868.
+[INFO DRT-0033] V7 shape region query size = 2370036.
+[INFO DRT-0033] M8 shape region query size = 234193.
+[INFO DRT-0033] V8 shape region query size = 1963140.
+[INFO DRT-0033] M9 shape region query size = 117365.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0076]   Complete 3000 pins.
+[INFO DRT-0076]   Complete 4000 pins.
+[INFO DRT-0076]   Complete 5000 pins.
+[INFO DRT-0076]   Complete 6000 pins.
+[INFO DRT-0076]   Complete 7000 pins.
+[INFO DRT-0078]   Complete 7173 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 130 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 180648 groups.
+#scanned instances     = 270611
+#unique  instances     = 134
+#stdCellGenAp          = 4554
+#stdCellValidPlanarAp  = 25
+#stdCellValidViaAp     = 3929
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 461214
+#instTermValidViaApCnt = 0
+#macroGenAp            = 21268
+#macroValidPlanarAp    = 20928
+#macroValidViaAp       = 14076
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:07:47, elapsed time = 00:07:45, memory = 2827.50 (MB), peak = 4052.79 (MB)
+ALIGNED_NATIVE_ACCESS_PASS

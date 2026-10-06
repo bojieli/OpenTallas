@@ -1,0 +1,15 @@
+{
+  "own_drivers": [
+    "tools/hbm_item9_context32_tree_orfs_synth.py",
+    "tools/hbm_item9_ha2_orfs_synth.py"
+  ],
+  "source_import": "direct original RTL, not shared native mapped.raw.v export",
+  "canonicalize": "ORFS synth_canonicalize.tcl:16 write_rtlil, only src attributes removed by repeatable build",
+  "mapped_export": "ORFS synth.tcl:326 write_verilog -nohex -nodec; no -noattr",
+  "cached_continuation": "ORFS synth_preamble.tcl:16 SYNTH_NETLIST_FILES copies retained mapped netlist then exits without ABC",
+  "shared_native_export": "tools/run_abi3_physical.py:700 post-native write_verilog -noattr requires audit if reimported for ABC; untouched",
+  "mapped_inventory_view": "unset keep_hierarchy in read-only finalmapped JSON view only; no ABC",
+  "live_jobs_restarted": false,
+  "changed_RTL_logic": false,
+  "golden_gate_rerun": false
+}

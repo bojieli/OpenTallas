@@ -1,0 +1,460 @@
+module \ot_v41_pair_pq_ld$ot_v41_v9_parent_clock_context.u_ld
+  attribute \hdlname "clk"
+  wire input 1 \clk
+  attribute \hdlname "rst_n"
+  wire input 2 \rst_n
+  attribute \hdlname "cfg_go"
+  wire input 4 \cfg_go
+  attribute \hdlname "cfg_ph"
+  wire width 6 input 6 \cfg_ph
+  attribute \hdlname "cfg_np"
+  wire width 3 input 7 \cfg_np
+  attribute \hdlname "go"
+  wire input 5 \go
+  attribute \hdlname "e_sh_free"
+  wire input 13 \e_sh_free
+  attribute \hdlname "e_bank_free"
+  wire input 14 \e_bank_free
+  attribute \hdlname "cm_a"
+  wire width 11 output 12 \cm_a
+  attribute \hdlname "cm_q"
+  wire width 48 input 15 \cm_q
+  attribute \hdlname "c_v"
+  wire output 8 \c_v
+  attribute \hdlname "c_a"
+  wire width 5 output 10 \c_a
+  attribute \hdlname "c_d"
+  wire width 48 output 11 \c_d
+  attribute \hdlname "go_e"
+  wire output 16 \go_e
+  attribute \hdlname "ld_busy"
+  wire output 9 \ld_busy
+  attribute \hdlname "fault"
+  wire output 3 \fault
+  attribute \hdlname "ld_run"
+  wire \ld_run
+  attribute \hdlname "ld_k"
+  wire width 5 \ld_k
+  wire $act$34
+  attribute \hdlname "ld_np"
+  wire width 3 \ld_np
+  wire $act$35
+  wire $procmux$4737_Y
+  wire $39y
+  wire width 48 $40y
+  attribute \hdlname "ld_start"
+  wire \ld_start
+  attribute \hdlname "act"
+  wire \act
+  wire width 48 $41y
+  wire width 48 $c_d$42
+  wire $5y
+  wire $procmux$4739_Y
+  wire width 5 $procmux$4751_Y
+  wire width 11 $procmux$4745_Y
+  wire width 11 $11y
+  wire width 11 $12y
+  wire width 3 $13y
+  wire width 5 $14y
+  wire width 11 $15y
+  wire $16y
+  wire $ld_run$17
+  wire $ld_run$18
+  wire width 5 $ld_k$19
+  wire width 11 $ld_a$20
+  wire $ld_run$21
+  wire width 5 $ld_k$22
+  wire width 11 $ld_a$23
+  wire width 3 $ld_np$24
+  wire $procmux$4757_Y
+  wire $procmux$4728_Y
+  wire $28y
+  wire $29y
+  wire $30y
+  wire $31y
+  wire $32y
+  wire $33y
+  cell $mux $procmux$4739
+    parameter \WIDTH 1
+    connect \A 1'x
+    connect \B $procmux$4737_Y
+    connect \S \ld_run
+    connect \Y $procmux$4739_Y
+  end
+  cell $logic_and $1
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \cfg_go
+    connect \B 1'1
+    connect \Y \ld_start
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4775
+    parameter \WIDTH 3
+    connect \A \ld_np
+    connect \B $13y
+    connect \S \ld_start
+    connect \Y $ld_np$24
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4742
+    parameter \WIDTH 1
+    connect \A $procmux$4739_Y
+    connect \B 1'x
+    connect \S \ld_start
+    connect \Y $ld_run$17
+  end
+  cell $mux $procmux$4745
+    parameter \WIDTH 11
+    connect \A \cm_a
+    connect \B $15y
+    connect \S \ld_run
+    connect \Y $procmux$4745_Y
+  end
+  cell $logic_or $5
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \ld_run
+    connect \B \c_v
+    connect \Y $5y
+  end
+  cell $logic_or $6
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A $5y
+    connect \B 1'x
+    connect \Y \ld_busy
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4748
+    parameter \WIDTH 11
+    connect \A $procmux$4745_Y
+    connect \B 11'x
+    connect \S \ld_start
+    connect \Y $ld_a$20
+  end
+  cell $mux $procmux$4737
+    parameter \WIDTH 1
+    connect \A \ld_run
+    connect \B 1'0
+    connect \S $16y
+    connect \Y $procmux$4737_Y
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4772
+    parameter \WIDTH 1
+    connect \A $ld_run$18
+    connect \B 1'1
+    connect \S \ld_start
+    connect \Y $ld_run$21
+  end
+  cell $mux $11
+    parameter \WIDTH 11
+    connect \A 11'00000xxxxxx
+    connect \B { 5'00000 \cfg_ph }
+    connect \S \cfg_go
+    connect \Y $11y
+  end
+  cell $mul $12
+    parameter \A_WIDTH 11
+    parameter \B_WIDTH 11
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 11
+    connect \A $11y
+    connect \B 11'00000011001
+    connect \Y $12y
+  end
+  cell $mux $13
+    parameter \WIDTH 3
+    connect \A 3'x
+    connect \B \cfg_np
+    connect \S \cfg_go
+    connect \Y $13y
+  end
+  cell $add $14
+    parameter \A_WIDTH 5
+    parameter \B_WIDTH 5
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 5
+    connect \A \ld_k
+    connect \B 5'00001
+    connect \Y $14y
+  end
+  cell $add $15
+    parameter \A_WIDTH 11
+    parameter \B_WIDTH 11
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 11
+    connect \A \cm_a
+    connect \B 11'00000000001
+    connect \Y $15y
+  end
+  cell $eq $16
+    parameter \A_WIDTH 5
+    parameter \B_WIDTH 5
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \ld_k
+    connect \B 5'11000
+    connect \Y $16y
+  end
+  cell $aldff $driver$c_v
+    parameter \CLK_POLARITY 1
+    parameter \ALOAD_POLARITY 0
+    parameter \WIDTH 1
+    connect \CLK \clk
+    connect \ALOAD \rst_n
+    connect \D \ld_run
+    connect \AD 1'0
+    connect \Q \c_v
+  end
+  cell $aldff $driver$ld_run
+    parameter \CLK_POLARITY 1
+    parameter \ALOAD_POLARITY 0
+    parameter \WIDTH 1
+    connect \CLK \clk
+    connect \ALOAD \rst_n
+    connect \D $ld_run$21
+    connect \AD 1'0
+    connect \Q \ld_run
+  end
+  cell $aldff $driver$ld_k
+    parameter \CLK_POLARITY 1
+    parameter \ALOAD_POLARITY 0
+    parameter \WIDTH 5
+    connect \CLK \clk
+    connect \ALOAD \rst_n
+    connect \D $ld_k$22
+    connect \AD 5'00000
+    connect \Q \ld_k
+  end
+  cell $dffe $driver$ld_a
+    parameter \CLK_POLARITY 1
+    parameter \EN_POLARITY 1
+    parameter \WIDTH 11
+    connect \CLK \clk
+    connect \EN \rst_n
+    connect \D $ld_a$23
+    connect \Q \cm_a
+  end
+  cell $dffe $driver$ld_np
+    parameter \CLK_POLARITY 1
+    parameter \EN_POLARITY 1
+    parameter \WIDTH 3
+    connect \CLK \clk
+    connect \EN \rst_n
+    connect \D $ld_np$24
+    connect \Q \ld_np
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4735
+    parameter \WIDTH 1
+    connect \A $act$34
+    connect \B 1'0
+    connect \S $28y
+    connect \Y $act$35
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4768
+    parameter \WIDTH 5
+    connect \A $ld_k$19
+    connect \B 5'00000
+    connect \S \ld_start
+    connect \Y $ld_k$22
+  end
+  cell $logic_or $28
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \cfg_go
+    connect \B \ld_start
+    connect \Y $28y
+  end
+  cell $ge $29
+    parameter \A_WIDTH 5
+    parameter \B_WIDTH 5
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \c_a
+    connect \B 5'01000
+    connect \Y $29y
+  end
+  cell $logic_and $30
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \c_v
+    connect \B $29y
+    connect \Y $30y
+  end
+  cell $lt $31
+    parameter \A_WIDTH 5
+    parameter \B_WIDTH 5
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \c_a
+    connect \B 5'10000
+    connect \Y $31y
+  end
+  cell $logic_and $32
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A $30y
+    connect \B $31y
+    connect \Y $32y
+  end
+  cell $logic_and $33
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A $32y
+    connect \B \c_d [0]
+    connect \Y $33y
+  end
+  cell $aldff $driver$act
+    parameter \CLK_POLARITY 1
+    parameter \ALOAD_POLARITY 0
+    parameter \WIDTH 1
+    connect \CLK \clk
+    connect \ALOAD \rst_n
+    connect \D $act$35
+    connect \AD 1'0
+    connect \Q \act
+  end
+  cell $logic_and $36
+    parameter \A_WIDTH 1
+    parameter \B_WIDTH 1
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \go
+    connect \B \act
+    connect \Y \go_e
+  end
+  cell $mux $procmux$4751
+    parameter \WIDTH 5
+    connect \A \ld_k
+    connect \B $14y
+    connect \S \ld_run
+    connect \Y $procmux$4751_Y
+  end
+  cell $eq $39
+    parameter \A_WIDTH 5
+    parameter \B_WIDTH 5
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 1
+    connect \A \ld_k
+    connect \B 5'10000
+    connect \Y $39y
+  end
+  cell $or $40
+    parameter \A_WIDTH 48
+    parameter \B_WIDTH 48
+    parameter \A_SIGNED 0
+    parameter \B_SIGNED 0
+    parameter \Y_WIDTH 48
+    connect \A \cm_q
+    connect \B { 42'000000000000000000000000000000000000000000 \ld_np 3'000 }
+    connect \Y $40y
+  end
+  cell $mux $41
+    parameter \WIDTH 48
+    connect \A \cm_q
+    connect \B $40y
+    connect \S $39y
+    connect \Y $41y
+  end
+  cell $dff $driver$c_a
+    parameter \CLK_POLARITY 1
+    parameter \WIDTH 5
+    connect \CLK \clk
+    connect \D \ld_k
+    connect \Q \c_a
+  end
+  cell $dff $driver$c_d
+    parameter \CLK_POLARITY 1
+    parameter \WIDTH 48
+    connect \CLK \clk
+    connect \D $c_d$42
+    connect \Q \c_d
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4754
+    parameter \WIDTH 5
+    connect \A $procmux$4751_Y
+    connect \B 5'x
+    connect \S \ld_start
+    connect \Y $ld_k$19
+  end
+  cell $mux $procmux$4757
+    parameter \WIDTH 1
+    connect \A \ld_run
+    connect \B $ld_run$17
+    connect \S \ld_run
+    connect \Y $procmux$4757_Y
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4760
+    parameter \WIDTH 1
+    connect \A $procmux$4757_Y
+    connect \B 1'x
+    connect \S \ld_start
+    connect \Y $ld_run$18
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4764
+    parameter \WIDTH 11
+    connect \A $ld_a$20
+    connect \B $12y
+    connect \S \ld_start
+    connect \Y $ld_a$23
+  end
+  cell $mux $procmux$4726
+    parameter \WIDTH 48
+    connect \A \c_d
+    connect \B $41y
+    connect \S \ld_run
+    connect \Y $c_d$42
+  end
+  cell $mux $procmux$4728
+    parameter \WIDTH 1
+    connect \A \act
+    connect \B 1'1
+    connect \S $33y
+    connect \Y $procmux$4728_Y
+  end
+  attribute \full_case 1
+  cell $mux $procmux$4731
+    parameter \WIDTH 1
+    connect \A $procmux$4728_Y
+    connect \B 1'x
+    connect \S $28y
+    connect \Y $act$34
+  end
+  connect \fault 1'x
+end

@@ -1,0 +1,50 @@
+{
+  "stats": {
+    "refpb_notice": {
+      "cases": 1,
+      "passed": 1,
+      "max_ns": 150.423,
+      "mean_ns": 150.42,
+      "min_ns": 150.423,
+      "over_gate": 1
+    },
+    "refpb_no_notice": {
+      "cases": 1,
+      "passed": 1,
+      "max_ns": 367.923,
+      "mean_ns": 367.92,
+      "min_ns": 367.923,
+      "over_gate": 1
+    },
+    "refab": {
+      "cases": 1,
+      "passed": 1,
+      "max_ns": 509.59,
+      "mean_ns": 509.59,
+      "min_ns": 509.59,
+      "over_gate": 1
+    }
+  },
+  "exact": {
+    "verdict": "PASS",
+    "cases": 4,
+    "backpressure_cases": 3,
+    "sectors_checked_per_case": 9408
+  },
+  "negative": [
+    {
+      "case": "neg_corrupt_sector",
+      "verdict": "FAIL",
+      "bad": 1,
+      "viol": 0
+    },
+    {
+      "case": "neg_trcd_check_plus_1ns",
+      "verdict": "FAIL",
+      "bad": 0,
+      "viol": 687
+    }
+  ],
+  "gain_us": 13.023,
+  "protection_pass": true
+}

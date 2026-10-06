@@ -20,7 +20,7 @@ module tb_w5_ao_protection;
  integer f,i,cycles;
  reg [24:0] v0,d0;reg [1322:0] snap;
  initial begin
- for(f=0;f<10;f=f+1)begin
+ for(f=0;f<11;f=f+1)begin
   @(negedge clk);por_n=0;cv=0;sv=0;external_stop=0;domain_fault=0;
   repeat(4)@(negedge clk);por_n=1;
   for(i=0;i<25;i=i+1)begin
@@ -43,6 +43,13 @@ module tb_w5_ao_protection;
   7:dut.u_p.g_e[0].u_eao.iso_q=~dut.u_p.g_e[0].u_eao.iso_q;
   8:external_stop=1;
   9:domain_fault=1;
+  10:begin
+   @(posedge clk);#0.1;
+   dut.u_p.g_e[0].u_eao.g_sh[0].r[3]=~dut.u_p.g_e[0].u_eao.g_sh[0].r[3];
+   // A true high-phase upset must be excluded at the next low phase,
+   // before any following root rising edge can authorize a receipt.
+   @(negedge clk);
+  end
   endcase
   #0.01;
   if(!pgfault || pgready || !busy || arst) $fatal(1,"fault failed exclusion f=%0d",f);
@@ -55,6 +62,6 @@ module tb_w5_ao_protection;
   cv=0;sv=0;
   $display("FAULT_PASS family=%0d retained_valid=%h retained_dirty=%h",f,v0,d0);
  end
- $display("PASS protected full25 AO 10 fault families retained debt/no fake ACK/cold-only recovery");$finish;
+ $display("PASS protected full25 AO 11 fault families retained debt/no fake ACK/cold-only recovery");$finish;
  end
 endmodule

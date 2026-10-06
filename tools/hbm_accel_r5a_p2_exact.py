@@ -1,16 +1,10 @@
-"""HA4 R5a: routed-expert first access on the streaming controller, refresh live (RTL, Verilator).
+"""Measure the default-OFF P2 expert-fetch component at full32PC/8SM/96SRAM.
 
-Builds rtl/test/hbm_accel/tb_hbm_accel_expert_first_access.sv (REFpb and REFab) and sweeps the
-router's top-6 time across a whole REFpb round (and every REFab stagger) with and without the
-static-schedule refresh notice.  Each run prints one FIRST line; the record keeps every case.
-
-    python3 tools/hbm_accel_expert_first_access.py --work DIR --out RECORD.json [--jobs N] [--variant sram]
-
---variant sram runs the successor ot_hbm_accel_expert_fetch_stream_sram (staging on compiled 1R1W
-macros) on tb_hbm_accel_expert_first_access_sram.sv, and adds SM back-pressure exactness cases.
-
-The bench clock is the controller's CK/2 (1.024 ns, 976.6 MHz): the stream sequencer closes SS
-there and misses 1.2 GHz by 4.7 ps (52ce3e9c1), so the CK/2 service is what is priced.
+--points 1 is the minimal changed-capture gate: REFpb notice/non-notice, REFab,
+three backpressure levels, correction and fail-stop controls. --points 64 is
+an 88-case headline sweep, required only when the changed mechanism warrants it.
+The 140ns first-access gate and composed40-fetch token gain remain independent.
+Uses retained matching C++ objects; never accepts a binary for different RTL.
 """
 from __future__ import annotations
 
@@ -34,7 +28,8 @@ SOURCES = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
            'physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v',
            'rtl/test/hbm_accel/tb_hbm_accel_r5a_p2.sv']
 TOP='tb_hbm_accel_r5a_p2'
-VARIANTS={'p2':(SOURCES,TOP)}
+STACK_SOURCES=SOURCES[:-1]+['rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv','rtl/test/hbm_accel/tb_hbm_accel_r5a_stack_p2.sv']
+VARIANTS={'p2':(SOURCES,TOP),'stack_p2':(STACK_SOURCES,'tb_hbm_accel_r5a_stack_p2')}
 STALL_PCT = (10, 40, 75)
 GATE_NS = 140.0
 PRICE = dict(central_refresh_live_ns=469.5, postponed_ns=133.2, cdc_ns=6.4, stall_ns=0.1, routed_fetches=40,
@@ -87,12 +82,22 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--jobs', type=int, default=16)
     ap.add_argument('--points', type=int, default=64)
+    ap.add_argument('--mutations-only',action='store_true',help='verify corrected SM-code injections3/4 using one matching REFpb build; no ordinary or88-case replay')
     ap.add_argument('--variant', choices=sorted(VARIANTS), default='p2')
     a = ap.parse_args(argv)
     sources, top = VARIANTS[a.variant]
     if a.out.exists():
         raise SystemExit('fresh record path required')
     a.work.mkdir(parents=True, exist_ok=True)
+    if a.mutations_only:
+        if a.variant!='stack_p2':raise SystemExit('SM code injection gate requires real stack')
+        exe=build(a.work,1,sources,top)
+        rows=[dict(case='single_bit_correction',**run(exe,8000000,NOTICE_LEAD_PS,3)),
+              dict(case='double_bit_refusal',**run(exe,8000000,NOTICE_LEAD_PS,4))]
+        passed=rows[0]['verdict']=='PASS' and rows[0].get('bad',1)==0 and rows[1]['verdict']=='FAIL' and 'DUT FAULT' in rows[1].get('raw','') and 'bit_count=2' in rows[1].get('raw','') and 'sm0_delivered=0' in rows[1].get('raw','')
+        j=dict(source_commit=os.environ.get('OT_SOURCE_COMMIT'),input_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},
+               variant=a.variant,mutation_gate='PASS' if passed else 'FAIL',cases=rows,RTL_changed=False,ordinary_cases_replayed=False,physical_context='NOT_RUN',adoption=False)
+        a.out.write_text(json.dumps(j,indent=2)+'\n');print(json.dumps(j,indent=2));return
     with ThreadPoolExecutor(2) as ex:
         exe_pb, exe_ab = ex.map(lambda m: build(a.work, m, sources, top), (1, 0))
     t0 = 8_000_000                                    # after the first full REFpb round and first REFab stagger
@@ -102,7 +107,7 @@ def main(argv=None):
         jobs.append(('refpb_notice', exe_pb, t0 + i * pb_span // a.points + 7_013 * i % 1024, NOTICE_LEAD_PS))
         jobs.append(('refpb_no_notice', exe_pb, t0 + i * pb_span // a.points + 7_013 * i % 1024, 0))
         jobs.append(('refab', exe_ab, t0 + i * ab_span // a.points + 7_013 * i % 1024, 0))
-    if a.variant == 'p2':
+    if a.variant in ('p2','stack_p2'):
         for st_pct in STALL_PCT:
             for i in range(0, a.points, 8):
                 jobs.append((f'refpb_notice_stall{st_pct}', exe_pb, t0 + i * pb_span // a.points + 7_013 * i % 1024,
@@ -114,7 +119,11 @@ def main(argv=None):
     protection=[dict(case='single_bit_correction',**run(exe_pb,t0,NOTICE_LEAD_PS,3)),
                 dict(case='double_bit_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,4)),
                 dict(case='wrong_sector_identity',**run(exe_pb,t0,NOTICE_LEAD_PS,5)),
-                dict(case='mutable_state_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,6))]
+                dict(case='mutable_state_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,6)),
+                dict(case='captured_syndrome_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,7)),
+                dict(case='post_syndrome_packet_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,8))]
+    if a.variant=='stack_p2':
+        protection.append(dict(case='SM_capture_parity_refusal',**run(exe_pb,t0,NOTICE_LEAD_PS,9)))
     by = {c: [r for r in res if r['case'] == c] for c in ('refpb_notice', 'refpb_no_notice', 'refab')}
     st = {c: stats(v) for c, v in by.items()}
     sel = st['refpb_notice']
@@ -140,10 +149,13 @@ def main(argv=None):
                           backpressure_cases=len(stall_rows),
                           sectors_checked_per_case=6 * 392 * 4),
                negative_controls=[dict(case=n['case'], verdict=n['verdict'], bad=n.get('bad'), viol=n.get('viol')) for n in neg],
+               performance=dict(verdict='PASS' if measured is not None and measured<=GATE_NS else 'FAIL',
+                    first_access_gate_ns=GATE_NS, criterion='all SMs first-expert w1/w3 access, independent of composed token gain'),
+               adoption=False, physical_context='NOT_RUN',
                price=PRICE, measured_first_access_worst_ns=measured,
                measured_r5a_gain_us_vs_central=gain_us,
                cases=res + neg, protection=protection,
-               protection_pass=protection[0]['verdict']=='PASS' and protection[0].get('bad',1)==0 and all(p['verdict']=='FAIL' and 'DUT FAULT' in p.get('raw','') for p in protection[1:]))
+               protection_pass=protection[0]['verdict']=='PASS' and protection[0].get('bad',1)==0 and all(p['verdict']=='FAIL' and 'DUT FAULT' in p.get('raw','') for p in protection[1:]) and all('sm0_delivered=0' in p.get('raw','') for p in protection[4:]))
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=2) + '\n')
     print(json.dumps(dict(stats=st, exact=rec['exact'], negative=rec['negative_controls'], gain_us=gain_us,protection_pass=rec['protection_pass']), indent=2))

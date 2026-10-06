@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL_DIRECTED_DRIVER_PROGRESS",
+  "reason": "VVP SIGINT diagnostic: simulation reached11849585676830fs without terminating finite512 record/55span test; debug stopped only own local VVP3790056. Existing E2 simulations untouched.",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "0672238d169cf73ede95d9dac805e8311983228d355563d271138be656591203",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_packet_link.sv": "8d9400c6eb39a1ea9f6111339c414840b47d1d3fae5191374c3401829edeced9"
+  },
+  "physical_qualified": false
+}

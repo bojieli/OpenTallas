@@ -17,7 +17,7 @@
 // x.hex; +NOPS.  Output out.txt: "<op> <row> <data>" result lines and one "# op ..." timing line per op.
 module tb_hbm_accel_sm_pq_seq;
     parameter integer SUB = 4, LBS = 2, LSB = 16, NC = 1, XDEPTH = 128, RMAX = 256, LEV = 4,
-                      LAT = 60, JIT = 40, MAXOPS = 64, XB = 0, HAZ = 1, G1ASB = 0;
+                      LAT = 60, JIT = 40, MAXOPS = 64, XB = 0, HAZ = 1, G1ASB = 0, BD_PREFIX = 0;
     localparam integer RW = $clog2(RMAX);
     localparam integer XW = $clog2(XDEPTH);
     localparam integer FRAGW = NC * (SUB * LBS * 266 + SUB * LSB * 16);
@@ -38,7 +38,7 @@ module tb_hbm_accel_sm_pq_seq;
 `ifdef OT_SMH
     // the hierarchical element ot_hbm_accel_smh (same pins, same protocol; +define+OT_SMH)
     ot_hbm_accel_smh #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
-                       .MAX_OUT(512), .HAZ(HAZ)) dut (
+                       .MAX_OUT(512), .HAZ(HAZ), .BD_PREFIX(BD_PREFIX)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
         .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),

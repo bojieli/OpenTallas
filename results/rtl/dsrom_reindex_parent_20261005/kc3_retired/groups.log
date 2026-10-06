@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/dsrom-reindex-close/wt-c09f9e91b/tools/dsrom_reindex_close.py", line 203, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/dsrom-reindex-close/wt-c09f9e91b/tools/dsrom_reindex_close.py", line 199, in main
+    {"groups": cmd_groups, "record": cmd_record}[a.cmd](a)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/dsrom-reindex-close/wt-c09f9e91b/tools/dsrom_reindex_close.py", line 119, in cmd_groups
+    artifacts_sha256={p.name: sha(p) for p in (odb, sdc, spef)}, corners={})
+                              ~~~^^^
+  File "/srv/opentallas-scratch/claude/dsrom-reindex-close/wt-c09f9e91b/tools/dsrom_reindex_close.py", line 98, in sha
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+                          ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/dsrom-reindex-close/runs/kc3/work/orfs/results/asap7/opentallas_ot_hdc_v41x_idx_kgctl_ctx_asap7_kc3/base/6_final.odb'

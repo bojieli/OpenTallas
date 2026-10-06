@@ -9,6 +9,7 @@
 // loaded when both clear; a second broadcast before the load, or a go before the load finished, is a FAULT.
 // PQ = 0: the pinned loader (load at the broadcast).
 // ---------------------------------------------------------------------------
+(* keep_hierarchy = "yes" *)
 module ot_w5_loader_raw #(
     parameter integer NSEG = 8,
     parameter integer PHW = 6,
@@ -25,6 +26,7 @@ module ot_w5_loader_raw #(
     input  wire           e_sh_free,
     input  wire           e_bank_free,
     output wire [AW-1:0]  cm_a,
+    output wire [11:0] cm_read_a,output wire cm_read_ce,
     input  wire [47:0]    cm_q,
     (* keep, dont_touch *) output reg            c_v,
     (* keep, dont_touch *) output reg  [4:0]     c_a,
@@ -44,6 +46,10 @@ module ot_w5_loader_raw #(
     wire        ld_ok = (PQ == 0) || (e_sh_free && e_bank_free);
     wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
     assign cm_a = ld_a;
+    // Exact current PQ0/PQ1 provider lookahead, no new state or capture edge.
+    assign cm_read_a = ld_start ? 12'(cfg_go ? cfg_ph : pend_ph) * 12'(CW)
+                               : 12'(ld_a) + 12'd1;
+    assign cm_read_ce = rst_n && (ld_start || (ld_run && ld_k < 5'(CW-1)));
     assign ld_busy = ld_run || c_v || pend;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -88,13 +94,21 @@ module ot_w5_loader_checked #(parameter integer ENABLE=0)(
  input wire clk,por_n,cfg_go,input wire [5:0] cfg_ph,input wire [2:0] cfg_np,
  input wire go,input wire [47:0] cm_q,output wire [10:0] cm_a,
  output wire c_v,output wire [4:0] c_a,output wire [47:0] c_d,
- output wire go_e,ld_busy,fault
+ output wire go_e,ld_busy,fault,
+ output wire [11:0] cm_read_a,output wire cm_read_ce
 );
 wire cp,gp,bp,fp,cr,gr,br,fr,lc,bad;
 wire [4:0] ap,ar;wire [47:0] dp,dr;wire [10:0] mp,mr;
 wire [85:0] sp,sr;
+wire [11:0] read_ap,read_ar;wire read_cp,read_cr;
 (* keep,dont_touch *) reg sticky,sticky_inverse;
-wire stop=bad|sticky|~sticky_inverse;
+wire qualified_bad;
+generate if(ENABLE!=0)begin:g_qualify
+ ot_w5_fault_low u_low(.clk(clk),.rst_n(por_n),.alarm(bad),.settled(qualified_bad));
+end else begin:g_no_qualify
+ assign qualified_bad=0;
+end endgenerate
+wire stop=qualified_bad|sticky|~sticky_inverse;
 always @(posedge clk or negedge por_n)
  if(!por_n)begin sticky<=0;sticky_inverse<=1;end
  else if(ENABLE!=0 && stop)begin sticky<=1;sticky_inverse<=0;end
@@ -102,15 +116,16 @@ always @(posedge clk or negedge por_n)
 generate if(ENABLE!=0)begin:g_protected
  assign bad=|(sp^sr);
  ot_hdc_cg u_freeze(.clk(clk),.en(!stop|!por_n),.gclk(lc));
- ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_r(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
- .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mr),.cm_q(cm_q),
+ (* keep, dont_touch *) ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_r(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
+ .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mr),.cm_read_a(read_ar),.cm_read_ce(read_cr),.cm_q(cm_q),
  .c_v(cr),.c_a(ar),.c_d(dr),.go_e(gr),.ld_busy(br),.fault(fr),.snapshot(sr));
 end else begin:g_default
  assign bad=0;assign sr=sp;assign lc=clk;
 end endgenerate
- ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_p(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
- .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mp),.cm_q(cm_q),
+ (* keep, dont_touch *) ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_p(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
+ .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mp),.cm_read_a(read_ap),.cm_read_ce(read_cp),.cm_q(cm_q),
  .c_v(cp),.c_a(ap),.c_d(dp),.go_e(gp),.ld_busy(bp),.fault(fp),.snapshot(sp));
+assign cm_read_a=read_ap;assign cm_read_ce=read_cp&!stop;
 assign cm_a=mp;assign c_a=ap;assign c_d=dp;
 assign c_v=cp&!stop;assign go_e=gp&!stop;assign ld_busy=bp|stop;assign fault=fp|stop;
 endmodule

@@ -1,0 +1,51 @@
+{
+  "source_commit": "916b7a879537a4fa88cb7f9c4670e225fa2f54a7",
+  "input_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv": "214baf61951dbfb62d9bb7766b01ddd418cad0f461a534f574d67e58e3a4643a",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv": "d7a2043b17da497637eb721a3f039d04b444b955fd78fe208348ba1c2cc32a4f",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv": "6e6bfb470c05837e4ac7324f46aad9e0354bea77a7d244dbb7dab19a3ab2d8d6",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv": "fa6630f03dfb92891cac34a7a68ab5ba70d7ba6f8ee0020486ea5e5ba47ff476",
+    "rtl/test/hbm_accel/tb_hbm_accel_r5a_stack_p2.sv": "b178718c3fac2df2f49d32ca09954b448dc3aa01cc04cef9d9881300899814d9"
+  },
+  "variant": "stack_p2",
+  "mutation_gate": "PASS",
+  "cases": [
+    {
+      "case": "single_bit_correction",
+      "ref_mode": 1,
+      "phase": 0,
+      "t_route_ps": 8000000,
+      "notice_lead_ps": 300000,
+      "first_act_ps": 15360,
+      "w13_first_all_ps": 153757,
+      "exp1_all_ps": 176257,
+      "done_ps": 790424,
+      "good": 9408,
+      "bad": 0,
+      "viol": 0,
+      "act": 768,
+      "rd": 9408,
+      "ref": 2296,
+      "mut": 3,
+      "stall_pct": 0,
+      "verdict": "PASS",
+      "violations_text": [],
+      "w13_first_all_ns": 153.757
+    },
+    {
+      "case": "double_bit_refusal",
+      "t_route_ps": 8000000,
+      "notice_lead_ps": 300000,
+      "mut": 4,
+      "verdict": "FAIL",
+      "raw": "INJECT SM_code bit_count=2\nDUT FAULT at 8082923 ps sm0_delivered=0\n- /srv/opentallas-scratch2/jobs/r5a-stack-p2-mutation-r5/source/rtl/test/hbm_accel/tb_hbm_accel_r5a_stack_p2.sv:240: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 8us; walltime 11.694 s; speed 691.209 ns/s\n- Verilator: cpu 11.693 s on 1 threads; allocated 20 MB\n"
+    }
+  ],
+  "RTL_changed": false,
+  "ordinary_cases_replayed": false,
+  "physical_context": "NOT_RUN",
+  "adoption": false
+}

@@ -7,13 +7,18 @@
 #include "Vtb_qwen_rt_kv_stream4___024root.h"
 using Model = Vtb_qwen_rt_kv_stream4;
 #define P0_MEMBER(name) tb_qwen_rt_kv_stream4__DOT__##name
+#define P0_BACKING u_hbm__DOT__mem
+#define P0_SLICES slice
 #else
 #include "Vjoin.h"
 #include "Vjoin___024root.h"
 using Model = Vjoin;
 #define P0_MEMBER(name) tb_qwen_p0_linked__DOT__##name
+#define P0_BACKING u_producer__DOT__u_hbm__DOT__mem
+#define P0_SLICES u_consumer__DOT__slice
 #endif
 #include "clock.hpp"
+#include "fixture_expected.hpp"
 #include <array>
 #include <cstdint>
 #include <cstdio>
@@ -22,6 +27,12 @@ using Model = Vjoin;
 #include <string>
 #include <vector>
 
+
+#define P0_PATH_EXPAND(name) P0_MEMBER(name)
+static uint64_t hash_byte(uint64_t h,uint8_t c) { return (h^c)*1099511628211ULL; }
+static uint64_t hash_bytes(const std::vector<uint8_t>& bytes) {
+    uint64_t h=14695981039346656037ULL;for(auto c:bytes)h=hash_byte(h,c);return h;
+}
 constexpr int P=8191, NT=1536;
 constexpr size_t ELEMENTS=4194304;
 static void need(bool ok,const char* message) { if(!ok) throw std::runtime_error(message); }
@@ -61,13 +72,18 @@ struct Fixture {
         }
         need(std::feof(f),"malformed actual token KV");std::fclose(f);
         for(auto& family:seen)for(auto& head:family)for(bool value:head)need(value,"missing actual token KV");
+        need(hash_bytes(history)==qwen_combined_p0::expected_history_fp8,"released history numerical hash differs");
+        uint64_t hash=14695981039346656037ULL;
+        for(int kind=0;kind<2;++kind)for(int h=0;h<2;++h)for(int d=0;d<128;++d)hash=hash_byte(hash,(kind?v:k)[h][d]);
+        need(hash==qwen_combined_p0::expected_token_K_then_V,"released token numerical hash differs");
     }
 };
 template<class M> constexpr bool linked_abi=requires(M& m) {
     m.warm_rst_n; m.hold_rows; m.bad_ack_tag; m.join_debt;
     m.join_desc_accepted; m.join_go; m.join_row_take; m.join_row_valid; m.join_bad_ack_seen;
     m.join_desc_committed; m.join_go_committed;
-    m.join_write_accepted;
+    m.join_write_accepted; m.join_ack_valid;
+    m.join_row_sec; m.join_row_layer; m.join_row_data;
 };
 template<class M> class Session {
     std::unique_ptr<M> top_;
@@ -104,18 +120,23 @@ public:
         }
         clocks_.edge(tick_*833333+416666,ctl,[&]{m().clk=1;},settle);
         ++tick_;
-        if(!expect_fault)need(!m().fault,"actual linked endpoint fault");
+        if(!expect_fault && m().fault) {
+            if constexpr(linked_abi<M>) std::fprintf(stderr,"LINKED_FAULT core_edge=%llu code=%04x debt=%u rows=%llu writes=%llu ACK=%llu\n",
+                (unsigned long long)tick_,unsigned(m().fault_code),unsigned(m().join_debt),
+                (unsigned long long)rows_,(unsigned long long)writes_,(unsigned long long)acks_);
+            need(false,"actual linked endpoint fault");
+        }
     }
     template<class Predicate> void until(Predicate done,bool expect_fault=false) {
         while(!done())step(expect_fault); // no guessed simulation deadline
     }
     void preload(const Fixture& fixture) {
-        auto& mem=m().rootp->P0_MEMBER(u_hbm__DOT__mem);
+        auto& mem=m().rootp->P0_PATH_EXPAND(P0_BACKING);
         for(size_t sector=0;sector<ELEMENTS/32;++sector)for(int w=0;w<8;++w) {
             uint32_t bits=0;for(int j=0;j<4;++j)bits|=uint32_t(fixture.history[sector*32+w*4+j])<<(8*j);
             mem[sector][w]=bits;
         }
-        auto& slices=m().rootp->P0_MEMBER(slice);
+        auto& slices=m().rootp->P0_PATH_EXPAND(P0_SLICES);
         for(int t=0;t<NT;++t)for(int a=0;a<128;++a)for(int w=0;w<16;++w)slices[t][a][w]=0xa5a5a5a5;
     }
     void start() {m().start=1;step();m().start=0;}
@@ -134,15 +155,24 @@ public:
         }
         m().kvd_v=1;step(corrupt);m().kvd_v=0;
     }
-    void check_token(const Fixture& f) {
-        auto& mem=m().rootp->P0_MEMBER(u_hbm__DOT__mem);
+    uint64_t check_token(const Fixture& f) {
+        auto& mem=m().rootp->P0_PATH_EXPAND(P0_BACKING);
         auto byte=[&](size_t e){return uint8_t(mem[e/32][(e%32)/4]>>(8*(e%4)));};
         for(int h=0;h<2;++h)for(int d=0;d<128;++d) {
             need(byte(((h*512+P/16)*128+d)*16+P%16)==f.k[h][d],"actual K writeback differs");
             need(byte(2097152+(h*8192+P)*128+d)==f.v[h][d],"actual V writeback differs");
         }
+        auto expected=f.history;
+        for(int h=0;h<2;++h)for(int d=0;d<128;++d) {
+            expected[((h*512+P/16)*128+d)*16+P%16]=f.k[h][d];
+            expected[2097152+(h*8192+P)*128+d]=f.v[h][d];
+        }
+        uint64_t hash=14695981039346656037ULL;
+        for(size_t e=0;e<ELEMENTS;++e) {auto actual=byte(e);need(actual==expected[e],"actual backing changed outside token or differs");hash=hash_byte(hash,actual);}
+        need(hash==qwen_combined_p0::expected_backing_after_ACK,"actual final backing numerical hash differs");
+        return hash;
     }
-    void check_slices(const Fixture& f) {
+    uint64_t check_slices(const Fixture& f) {
         std::vector<uint8_t> expected(size_t(NT)*128*64,0xa5);
         auto put=[&](int tile,int local,int b,uint8_t value){expected[(size_t(tile)*128+local)*64+b]=value;};
         for(int h=0;h<2;++h)for(int t=0;t<512;++t)for(int d=0;d<128;++d)for(int lane=0;lane<16;++lane) {
@@ -155,31 +185,63 @@ public:
             uint8_t c=p==P?f.v[h][q*16+lane]:f.history[2097152+(h*8192+p)*128+q*16+lane];
             put(g/4,22+(p/512)*2+h,(g%4)*16+lane,c);
         }
-        auto& slices=m().rootp->P0_MEMBER(slice);
-        for(int t=0;t<NT;++t)for(int a=0;a<128;++a)for(int b=0;b<64;++b)
-            need(uint8_t(slices[t][a][b/4]>>(8*(b%4)))==expected[(size_t(t)*128+a)*64+b],"actual masked slice differs from released history/token");
+        auto& slices=m().rootp->P0_PATH_EXPAND(P0_SLICES);
+        uint64_t hash=14695981039346656037ULL;
+        for(int t=0;t<NT;++t)for(int a=0;a<128;++a)for(int b=0;b<64;++b) {
+            uint8_t actual=slices[t][a][b/4]>>(8*(b%4));
+            need(actual==expected[(size_t(t)*128+a)*64+b],"actual masked slice differs from released history/token");
+            hash=hash_byte(hash,actual);
+        }
+        need(hash==qwen_combined_p0::expected_registered_slices,"actual registered slice numerical hash differs");
+        return hash;
     }
     void released_join(const Fixture& fixture) {
         if constexpr(linked_abi<M>) {
-            preload(fixture);m().hold_rows=1;start();
+            preload(fixture);m().hold_rows=1;auto begin=tick_;auto hbegin=clocks_.controller_rises();start();
             until([&]{for(int w=0;w<4;++w)if(m().join_row_valid[w])return true;return false;});
-            auto row_count=rows_;
-            for(int i=0;i<24;++i)step();
+            auto first_row=tick_;auto row_count=rows_;
+            std::printf("LINKED_FIRST_HELD_ROW core_edge=%llu controller_edge=%llu\n",(unsigned long long)(first_row-begin),(unsigned long long)(clocks_.controller_rises()-hbegin));
+            // Snapshot the existing producer output registers, not a new row buffer.
+            std::array<uint32_t,4> held_valid{};
+            std::array<uint32_t,68> held_sec{};
+            std::array<uint32_t,32> held_layer{};
+            std::array<uint32_t,1024> held_data{};
+            for(int w=0;w<4;++w)held_valid[w]=m().join_row_valid[w];
+            for(int w=0;w<68;++w)held_sec[w]=m().join_row_sec[w];
+            for(int w=0;w<32;++w)held_layer[w]=m().join_row_layer[w];
+            for(int w=0;w<1024;++w)held_data[w]=m().join_row_data[w];
+            for(int i=0;i<24;++i) {
+                step();
+                for(int pc=0;pc<128;++pc)if((held_valid[pc/32]>>(pc%32))&1) {
+                    need((m().join_row_valid[pc/32]>>(pc%32))&1,"held row lost valid");
+                    for(int b=0;b<17;++b) {int bit=pc*17+b;need(((m().join_row_sec[bit/32]^held_sec[bit/32])>>(bit%32)&1)==0,"held row sector changed");}
+                    need(((m().join_row_layer[pc/4]^held_layer[pc/4])>>(8*(pc%4))&255)==0,"held row layer changed");
+                    for(int w=0;w<8;++w)need(m().join_row_data[pc*8+w]==held_data[pc*8+w],"held row payload changed");
+                }
+            }
             need(rows_==row_count,"held row retired without actual consumer pop");
             m().hold_rows=0;token(fixture);
             // Pause only after every real producer write acceptance. This
             // cannot revoke a caller's already-issued registered pulse.
             until([&]{return writes_==136;});
             need(m().wb_busy&&m().join_debt>0,"warm stimulus needs real accepted outstanding ACK debt");
+            auto warm_begin=tick_;auto warm_debt=m().join_debt;
+            std::printf("LINKED_WARM_BEGIN core_edge=%llu write_reserved=%llu ACK=%llu debt=%u\n",(unsigned long long)(warm_begin-begin),(unsigned long long)writes_,(unsigned long long)acks_,unsigned(warm_debt));
             m().warm_rst_n=0;
             for(int i=0;i<24;++i)step();
-            m().warm_rst_n=1;
+            auto warm_end=tick_;m().warm_rst_n=1;
             until([&]{return m().kv_ok&&m().kv_write_drained&&!m().wb_busy&&m().join_debt==0;});
             for(int i=0;i<3;++i)step(); // existing registered slice visibility
             need(descriptors_==1&&go_==1,"actual command/GO count differs");
             need(h_descriptors_==1&&h_go_==1,"protected descriptor/GO did not commit once to real controllers");
             need(writes_==136&&acks_==136,"actual K128/V8 acceptance/ACK count differs");
-            check_token(fixture);check_slices(fixture);
+            auto drained=tick_;
+            auto backing_hash=check_token(fixture),slice_hash=check_slices(fixture);
+            std::printf("{\"case\":\"released_P8191_L0_rank0\",\"core_edges\":%llu,\"controller_edges\":%llu,\"first_row_core_edge\":%llu,\"warm_begin_core_edge\":%llu,\"warm_end_core_edge\":%llu,\"drain_core_edge\":%llu,\"warm_begin_debt\":%u,\"fill_cycles\":%u,\"fill_sectors\":%u,\"write_sectors\":%u,\"response_stall\":%u,\"write_latency_max\":%u,\"backing_fnv1a64\":\"%016llx\",\"slice_fnv1a64\":\"%016llx\",\"full_token\":false,\"physical_qualified\":false}\n",
+                (unsigned long long)(tick_-begin),(unsigned long long)(clocks_.controller_rises()-hbegin),
+                (unsigned long long)(first_row-begin),(unsigned long long)(warm_begin-begin),(unsigned long long)(warm_end-begin),(unsigned long long)(drained-begin),
+                unsigned(warm_debt),unsigned(m().st_fill_cycles),unsigned(m().st_fill_sectors),unsigned(m().st_wr_sectors),unsigned(m().st_rsp_stall),unsigned(m().st_wr_lat_max),
+                (unsigned long long)backing_hash,(unsigned long long)slice_hash);
             std::printf("PASS_RELEASED_P8191_LINKED_JOIN core_edges=%llu controller_edges=%llu descriptor=%llu go=%llu h_descriptor=%llu h_go=%llu rows=%llu ACK=%llu debt=%u warm_held=1\n",
                 (unsigned long long)tick_,(unsigned long long)clocks_.controller_rises(),
                 (unsigned long long)descriptors_,(unsigned long long)go_,(unsigned long long)h_descriptors_,(unsigned long long)h_go_,(unsigned long long)rows_,(unsigned long long)acks_,unsigned(m().join_debt));
@@ -212,6 +274,8 @@ public:
 };
 int main(int argc,char** argv) {
     try {
+        Verilated::commandArgs(argc,argv);
+        std::setvbuf(stdout,nullptr,_IOLBF,0);
         if(argc==2&&std::string(argv[1])=="--compile-probe") {
             std::printf("PASS_DRIVER_TU_LINK linked_endpoint_ABI=%d runtime_exercised=0\n",int(linked_abi<Model>));return 0;
         }

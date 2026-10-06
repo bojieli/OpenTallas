@@ -15,11 +15,12 @@ rtl/v41rom/ot_v41_bterm2_w10.sv
 rtl/v41rom/ot_v41_chain2.sv
 rtl/v41rom/ot_v41_segtree2.sv
 rtl/v41rom/ot_v41_bf16_lanes2.sv
+rtl/experimental/w5_context/ot_w5_fault_low.sv
 rtl/experimental/w5_context/ot_w5_stage.sv
 rtl/experimental/w5_context/ot_w5_context.sv
 rtl/experimental/w5_context/ot_w5_loader.sv
 rtl/hdc/kv/ot_qwen_s4_checked_state.sv
-rtl/v41die/ot_v41_retn_w17w10.sv
-rtl/v41rom/ot_v41_ret.sv
+rtl/experimental/w5_context/ot_w5_return.sv
 physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v
 physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v
+physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
