@@ -134,6 +134,62 @@
    "ff_worst_hold_slack_ps": 12.27,
    "drc_violations": 0,
    "source_commit": "d118d672a41b274990210e627d2e31fdaecfe669"
+  },
+  {
+   "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m11hc",
+   "config": "hc ML7 AL6 85.32x115.02 CP .77 HM .02 (no ECO)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 re-time after the post-route hold ECO",
+   "ss_worst_slack_ps": 70.37,
+   "ff_worst_hold_slack_ps": 12.3,
+   "drc_violations": 0,
+   "note": "hold below +15 -> ECO"
+  },
+  {
+   "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m11hc/eco",
+   "config": "hc ML7 AL6 + hold ECO (HM 22, SM 45; 328 cells; signal + clock re-route)",
+   "closed_833": true,
+   "accept_40_15": true,
+   "signoff": "833 re-time after the post-route hold ECO",
+   "ss_worst_slack_ps": 69.48,
+   "ff_worst_hold_slack_ps": 16.64,
+   "drc_violations": 0,
+   "note": "ADOPTED lane view"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/m6light_b/eco",
+   "config": "light + hold ECO (1,018 cells; full re-route)",
+   "closed_833": false,
+   "accept_40_15": false,
+   "signoff": "833 re-time after the post-route hold ECO",
+   "ss_worst_slack_ps": 29.45,
+   "ff_worst_hold_slack_ps": -4.69,
+   "drc_violations": 0,
+   "note": "re-routing the clock moved skew: hold worse, setup -11.6"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/m6light_b/eco_kc",
+   "config": "light + hold ECO HM 30, clock wires kept (5,811 cells)",
+   "closed_833": false,
+   "accept_40_15": false,
+   "signoff": "833 re-time after the post-route hold ECO",
+   "ss_worst_slack_ps": null,
+   "ff_worst_hold_slack_ps": null,
+   "drc_violations": null,
+   "note": "DRT-0206 checkConnectivity on the kept clock nets: no result"
+  },
+  {
+   "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/hub/routes/m6sfu_a/eco",
+   "config": "sfu + hold ECO (3,871 cells; full re-route)",
+   "closed_833": true,
+   "accept_40_15": false,
+   "signoff": "833 re-time after the post-route hold ECO",
+   "ss_worst_slack_ps": 27.37,
+   "ff_worst_hold_slack_ps": 13.13,
+   "drc_violations": 0,
+   "note": "setup -24.2 from the re-route, hold still < 15"
   }
- ]
+ ],
+ "eco_finding": "post-route hold ECO = repair_timing -hold on RCX parasitics + re-route. Incremental GRT over kept detailed wires breaks DRT (~1M violations); keeping the clock wires fails DRT connectivity; a full signal+clock re-route works (DRC 0) but moves setup by -1 (hc) to -24 ps (sfu) and skew-dependent hold by up to -27 ps. HC (SS +70) absorbs it and closes; light (+41) and sfu (+52) cannot: both are limited by the gather index path (q_sh -> vi_q << sh + a -> rd_addr_r, one cycle) and light also by the imm3 compare into p_a (b_q cx_imm3 -> okey -> kge -> pre_a2 -> p_a). Owner rule: change the RTL (gather shift register +1 cycle on gathers, imm3 key precompute) in the shared SU c12 lane / controller depth model, then one route each."
 }
