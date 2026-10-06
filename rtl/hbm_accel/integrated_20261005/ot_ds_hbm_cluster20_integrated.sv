@@ -271,6 +271,10 @@ initial if(NORM_NATIVE_VM_ENABLE&&(!NORM_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||NORM
  (NORM_KIND!=1||NORM_RD!=0||NORM_D*3+(NORM_PUBLISH_QUANT?(NORM_D/NORM_N)*NORM_QROWS*32:0)>16384))))
  $fatal(1,"native norm requires actual CP input lease for HC/KV and output SRAM window <=16384 words");
 initial if(NORM_C12_ENABLE&&(!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20)) $fatal(1,"norm requires enabled protected full73 combined parent");
+// The production book is backed by two actual 64MiB sector arrays.
+// A smaller provider would alias high addresses through model modulo indexing.
+initial if(FORMATTER_PREINSTALL_ENABLE&&(!ENABLE||!COMBINED_ENABLE||NS!=2||MEM_WORDS!=2097152||VM_AW!=21))
+ $fatal(1,"formatter preinstall requires actual NS2/MEM_WORDS2097152/VM_AW21 provider");
 initial if(FORMATTER_DIRECT_SOURCE_REPLAY&&(!ENABLE||!COMBINED_ENABLE||!FORMATTER_ENABLE||!FORMATTER_PREINSTALL_ENABLE))
  $fatal(1,"direct source replay requires actual protected formatter/preinstall parent");
 initial if(SFU_NATIVE_VM_ENABLE&&!SFU_C12_ENABLE) $fatal(1,"native VM requires actual SFUc12 stage");
