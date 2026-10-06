@@ -219,12 +219,15 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
     while {$placed_row < $K && $q < $m && $guard < 4*$K} {
       incr guard
       set i [lindex $cells $q]; set w [[$i getMaster] getWidth]
-      if {$x + $w > $rx1} break
-      if {[ws_free $ri $x [expr {$x+$w}]]} {
+      # footprint reserved for the resizer: FIRM flops are still resized in place (repair_design upsized
+      # DFFHQNx1 -> x2 into a tapcell, s1_b2 DPL-0033), so keep 3 sites free right of every placed cell
+      set wr [expr {$w + 3*$sitew}]
+      if {$x + $wr > $rx1} break
+      if {[ws_free $ri $x [expr {$x+$wr}]]} {
         $i setOrient [lindex $row 5]
         $i setLocation $x $ry
         $i setPlacementStatus FIRM
-        lappend occ($ri) [list $x [expr {$x+$w}]]
+        lappend occ($ri) [list $x [expr {$x+$wr}]]
         incr q; incr placed_row
       }
       set x [expr {$x + $pitch}]

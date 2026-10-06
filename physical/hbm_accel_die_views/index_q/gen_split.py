@@ -128,9 +128,12 @@ HDR = """`timescale 1ps/1fs
 
 
 def rsync():
-    return ("  wire c = ck[0];\n  reg rs1, rs2;\n"
-            "  always @(posedge c or negedge rst[0]) if (!rst[0]) {rs2, rs1} <= 2'b00; else {rs2, rs1} <= {rs1, 1'b1};\n"
-            "  wire rn = rs2;\n")
+    # the synchroniser is named rst_s so the io_vclk SDC's reset-release multicycle (rst_mcp2: release reaches every
+    # flop within 2 cycles; the die holds rst >= 3 cycles and sends no valid within 2 cycles of release) applies to
+    # the band's own release net (s1_b5: rs2 -> u_a3 valid recovery -89 ps at 770 across the 830 um band)
+    return ("  wire c = ck[0];\n  reg [1:0] rst_s;\n"
+            "  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};\n"
+            "  wire rn = rst_s[1];\n")
 
 
 def pipe(name, w, n, vin, din, qv, q):
@@ -156,9 +159,11 @@ def band_rtl(st):
       .wdata(kc), .full(full_), .rd_freed(fr_), .rclk(c), .rrst_n(rn), .re(1'b1), .rdata(kh[g]),
       .empty(ke[g]));
   end endgenerate
-  reg kv; reg [511:0] kf;
-  always @(posedge c or negedge rn) if (!rn) kv <= 1'b0; else kv <= !ke[0] && !ke[1];
-  always @(posedge c) kf <= kh[0] ^ kh[1];
+  // FIFO readouts registered at each FIFO before the XOR (margin rule; s2_b0: 8:1 read mux + XOR across the two
+  // FIFOs -118 ps at 770): +1 key cycle
+  reg kv0, kv; reg [511:0] kr0, kr1, kf;
+  always @(posedge c or negedge rn) if (!rn) begin kv0 <= 1'b0; kv <= 1'b0; end else begin kv0 <= !ke[0] && !ke[1]; kv <= kv0; end
+  always @(posedge c) begin kr0 <= kh[0]; kr1 <= kh[1]; kf <= kr0 ^ kr1; end
 {pipe('u_kp', 512, st['b0.kp'], 'kv', 'kf', 'kpv', 'kpq')}  assign kout = {{kpq, kpv}};
 {pipe('u_a0', 528, st['b0.a0'], 'a0[0]', 'a0[528:1]', 'a0v', 'a0q')}  assign a0o = {{a0q, a0v}};
 endmodule
@@ -254,7 +259,7 @@ def main():
     # to its own distance
     rows = {'a0': st['b0.a0'] + st['b1.a0'] + st['b2.r0'] + 2, 'a1': st['b2.r1'] + 2,
             'a2': st['b3.a2'] + st['b2.r2'] + 2, 'a3': st['b5.a3'] + st['b4.a3'] + st['b3.a3'] + st['b2.r3'] + 2}
-    keys = 1 + st['b0.kp'] + sum(st[f'b{i}.kp'] for i in (1, 2, 3, 4)) + st['b5.kp'] + 1
+    keys = 2 + st['b0.kp'] + sum(st[f'b{i}.kp'] for i in (1, 2, 3, 4)) + st['b5.kp'] + 1
     led = dict(hop_um=HOP, bands=dict(zip(NAMES, [dict(y0_um=y, h_um=h) for y, h in zip(Y0, H)])), stages=st,
                regs=dict(rows=rows, keys=keys), margin_view_regs=dict(rows=11, keys=18),
                added_cycles=dict(rows={r: v - 11 for r, v in rows.items()}, keys=keys - 18))

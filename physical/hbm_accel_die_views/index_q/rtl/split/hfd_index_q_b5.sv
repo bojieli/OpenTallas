@@ -7,9 +7,9 @@ module hfd_index_q_b5 (
     input wire [528:0] a3, input wire [0:0] ck, input wire [0:0] rst, input wire [512:0] kin,
     output wire [528:0] a3o, output wire [511:0] t_vm);
   wire c = ck[0];
-  reg rs1, rs2;
-  always @(posedge c or negedge rst[0]) if (!rst[0]) {rs2, rs1} <= 2'b00; else {rs2, rs1} <= {rs1, 1'b1};
-  wire rn = rs2;
+  reg [1:0] rst_s;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+  wire rn = rst_s[1];
   wire pv; wire [511:0] pq;
   ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(pv), .q(pq));
   reg [511:0] vm;
