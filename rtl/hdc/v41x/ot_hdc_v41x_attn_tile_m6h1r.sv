@@ -320,9 +320,13 @@ endmodule
 // The H16 tile as a parent of four hardened quads: the quads face one central register channel (left quads mirrored
 // so their input edge faces it); ROOT -> ROW bank (one per quad row, between its two quads) -> quads.  Quad (y, x) holds
 // heads GB = 8 y + 2 x .. (ot_attn_tile_m6h1q); the function of ot_attn_tile_m6h1 with every input, rst_n included,
-// delayed 3 cycles (ROOT, ROW, the quad's HC) and the outputs taken straight from the quads' leaves.
+// delayed 3 + PMID cycles (ROOT, [MID,] ROW, the quad's HC) and the outputs taken straight from the quads' leaves.
+// PMID = 1: one more bank per quad row between ROOT and ROW (the far row's quad inputs sit ~950 um from the
+// bottom-edge ROOT: two 475 um hops fail at SS, three ~320 um hops do not need repeaters past the SS reach).
 // ---------------------------------------------------------------------------
-module ot_attn_tile_m6h1p (
+module ot_attn_tile_m6h1p #(
+    parameter integer PMID = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -345,8 +349,13 @@ module ot_attn_tile_m6h1p (
     wire [15:0] gov;
     genvar y, x, l;
     generate for (y = 0; y < 2; y = y + 1) begin : g_y
-        wire [PW-1:0] row_q;
-        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(root_q), .q(row_q));
+        wire [PW-1:0] row_q, mid_q;
+        if (PMID > 0) begin : g_mid
+            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_mid (.clk(clk), .d(root_q), .q(mid_q));
+        end else begin : g_nomid
+            assign mid_q = root_q;
+        end
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
         wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
         wire [2:0]    q_ld_bank, q_ibank;
         wire [7:0]    q_ld_grp;

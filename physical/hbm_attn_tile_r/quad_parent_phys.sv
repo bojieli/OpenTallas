@@ -10,7 +10,9 @@ module ot_attn_rp_reg #(parameter integer W = 1) (
     always @(posedge clk) q <= d;
 endmodule
 
-module ot_attn_tile_m6h1p (
+module ot_attn_tile_m6h1p #(
+    parameter integer PMID = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -33,8 +35,13 @@ module ot_attn_tile_m6h1p (
     wire [15:0] gov;
     genvar y, x, l;
     generate for (y = 0; y < 2; y = y + 1) begin : g_y
-        wire [PW-1:0] row_q;
-        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(root_q), .q(row_q));
+        wire [PW-1:0] row_q, mid_q;
+        if (PMID > 0) begin : g_mid
+            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_mid (.clk(clk), .d(root_q), .q(mid_q));
+        end else begin : g_nomid
+            assign mid_q = root_q;
+        end
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
         wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
         wire [2:0]    q_ld_bank, q_ibank;
         wire [7:0]    q_ld_grp;
