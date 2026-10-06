@@ -275,6 +275,56 @@ def config_mk(name, nick, die, macros, extra):
     return "\n".join(lines) + "\n"
 
 
+HOPS = r"""# front hop flops, FIRM (tools/hbm_accel_smh_physical.py); asap7 has no tapcells, rows alternate orientation
+set ot_blk [ord::get_db_block]
+set ot_rows {}
+foreach r [$ot_blk getRows] { lappend ot_rows [list [lindex [$r getOrigin] 1] [$r getOrient]] }
+set ot_rows [lsort -integer -index 0 $ot_rows]
+proc ot_place {re xlo xhi ylo yhi} {
+    global ot_blk ot_rows
+    set names {}
+    foreach i [$ot_blk getInsts] {
+        set n [$i getName]
+        if {[regexp $re $n] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $n }
+    }
+    set names [lsort $names]
+    set dbu [$ot_blk getDbUnitsPerMicron]
+    set px [expr {int(1.62 * $dbu)}]
+    set k 0
+    set rows {}
+    set par 0
+    foreach r $ot_rows {
+        set y [lindex $r 0]
+        if {$y < $ylo * $dbu || $y > $yhi * $dbu} { continue }
+        if {$par % 2 == 0} { lappend rows $r }
+        incr par
+    }
+    set n [llength $names]
+    foreach r $rows {
+        for {set x [expr {int($xlo * $dbu)}]} {$x + $px <= int($xhi * $dbu)} {incr x $px} {
+            if {$k >= $n} { break }
+            set xs [expr {1080 * $dbu / 1000 + (($x - 1080 * $dbu / 1000) / (54 * $dbu / 1000)) * (54 * $dbu / 1000)}]
+            place_inst -name [lindex $names $k] -location [list [expr {double($xs) / $dbu}] [expr {double([lindex $r 0]) / $dbu}]] -orientation [lindex $r 1] -status FIRM
+            incr k
+        }
+    }
+    if {$k < $n} { error "ot_place $re: placed $k of $n in ($xlo $xhi $ylo $yhi)" }
+    puts "ot_place $re: $n flops"
+}
+# retire chain (column 0's aligned valid -> issue): 3 stages from the back-end edge upward
+ot_place {^u_sv\.g_s\[0\]} 100 140 270 290
+ot_place {^u_sv\.g_s\[1\]} 100 140 480 500
+ot_place {^u_sv\.g_s\[2\]} 100 140 690 710
+# x-write bundle of the far row (row 1): A above the ring block, M in the side bands beside it
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 790 830
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 790 830
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 2 50 530 590
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 375 430 530 590
+# the request skid beside the south pins
+ot_place {^u_rsk\.} 135 175 2 8
+"""
+
+
 RUN = r"""#!/bin/bash
 # {label}: route, abstract, sign-off corner STA.  Host-side paths; the container sees /src (sources) and /work.
 set -u
@@ -396,6 +446,10 @@ def cmd_block(a):
                f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_block(a.lat, element_io=True, ring=True)
+        # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
+        # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
+        (work / "hops.tcl").write_text(HOPS)
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     die = (round(w, 3), round(h, 3))
     (work / "pins.tcl").write_text(pin_tcl(pins))
     if tcl:

@@ -359,6 +359,52 @@ module ot_hbm_accel_smh_skid2 #(
     end endgenerate
 endmodule
 
+// ot_hbm_accel_smh_skid2 with the whole control state (count, write and read pointers) held in one kept copy per
+// 32-bit slice plus one copy for each port (ready to the source, valid to the sink): a push or pop is applied by
+// every copy alike (bit-identical), so no state register fans out across the line.  Same behaviour, +1 cycle.
+module ot_hbm_accel_smh_skid3 #(
+    parameter integer W = 8
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         m_valid,
+    input  wire         m_ready,
+    output wire [W-1:0] m_data
+);
+    localparam integer NS = (W + 31) / 32;
+    // copy NS: the source port's (ready), copy NS + 1: the sink port's (valid); copies 0 .. NS-1: the slices
+    wire [4*(NS+2)-1:0] st;                    // per copy {cnt[1:0], wp, rp}
+    wire [1:0] cs = st[4*NS + 2 +: 2];
+    wire [1:0] cm = st[4*(NS+1) + 2 +: 2];
+    assign s_ready = (cs != 2'd2);
+    assign m_valid = (cm != 2'd0);
+    wire push = s_valid && s_ready;
+    wire pop  = m_valid && m_ready;
+    genvar i;
+    generate for (i = 0; i < NS + 2; i = i + 1) begin : g_c
+        wire [1:0] c = st[4*i + 2 +: 2];
+        wire wp = st[4*i + 1], rp = st[4*i];
+        // push / pop recomputed from this copy's own count (all copies hold the same count)
+        wire pu = s_valid && (c != 2'd2);
+        wire po = (c != 2'd0) && m_ready;
+        ot_hbm_accel_bc_kreg #(.W(4), .RV(4'd0)) u (.clk(clk), .rst_n(rst_n),
+            .d({c + {1'b0, pu} - {1'b0, po}, pu ? ~wp : wp, po ? ~rp : rp}), .q(st[4*i +: 4]));
+        if (i < NS) begin : g_d
+            localparam integer LO = 32 * i;
+            localparam integer WB = (W - LO < 32) ? W - LO : 32;
+            reg [WB-1:0] e0, e1;
+            always @(posedge clk) begin
+                if (pu && !wp) e0 <= s_data[LO +: WB];
+                if (pu && wp)  e1 <= s_data[LO +: WB];
+            end
+            assign m_data[LO +: WB] = rp ? e1 : e0;
+        end
+    end endgenerate
+endmodule
+
 // ot_hbm_accel_smv_chan with a registered head: the sink FIFO's output is a register holding mem[rp] (refilled
 // from mem[rp + 1] on a pop, or from the arriving entry when it lands at the new head), so m_data leaves a flop
 // and no read-pointer mux sits between the FIFO and the consumer / pin.  Cycle-identical to ot_hbm_accel_smv_chan:
@@ -540,7 +586,7 @@ module ot_hbm_accel_smh_front #(
         .s_valid(b_valid), .s_ready(b_ready), .s_data(b_data), .outstanding(), .idle());
     // the line stream to the issue through a 2-entry skid with a registered ready and a registered head: the bulk
     // copy's pop sees only its own queue and this register (+1 cycle on the stream; order and data unchanged)
-    ot_hbm_accel_smh_skid2 #(.W(1088)) u_sk (.clk(clk), .rst_n(rst_n), .s_valid(b_valid), .s_ready(b_ready),
+    ot_hbm_accel_smh_skid3 #(.W(1088)) u_sk (.clk(clk), .rst_n(rst_n), .s_valid(b_valid), .s_ready(b_ready),
         .s_data(b_data), .m_valid(w_valid), .m_ready(w_ready), .m_data(w_data));
     reg  [XW-1:0] xb_q;
     wire        sv, h_busy, h_arrive, h_released;
@@ -555,9 +601,8 @@ module ot_hbm_accel_smh_front #(
     // from NFC registered copies of {launch, format} (<= 16 replicas each): the launch no longer fans out to every
     // replica.  Exact: the first line of a launched op reaches the unpack >= 3 cycles after the launch (setup
     // cycle, then issue, then s1), the last line of the previous op unpacks no later than the launch cycle.
-    // (round 4) the launch is registered once beside the issue (pop_r, fmt_q), then copied (NFC copies), then the
-    // 2 NFMT replicas (one set per side) load: visible 3 cycles after the launch; the first line of the new op
-    // reaches the unpack >= 4 cycles after it (setup, issue, s1, hop H).
+    // (round 4) the launch is registered once beside the issue (pop_r, fmt_q), then copied, then the 2 NFMT
+    // replicas (one set per side) load.
     localparam integer NFR = 2 * NFMT;
     localparam integer NFC = (NFR + 7) / 8;
     reg              pop_r;
@@ -565,13 +610,29 @@ module ot_hbm_accel_smh_front #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin pop_r <= 1'b0; fmt_q <= 2'd0; end
         else begin pop_r <= h_pop; if (h_pop) fmt_q <= h_fmt; end
+    // (round 7) one more copy layer (pd1 / fq1: 4 copies, one per (side, sub pair)) between the launch register and
+    // the NFC copies: replicas visible 4 cycles after the launch; the first line of the new op reaches the unpack
+    // in cycle t + 4 at the earliest (launch t, setup t + 1, first issue t + 2, s1, hop H)
+    wire [3:0]       pd1;
+    wire [7:0]       fq1;
     wire [NFC-1:0]   pd_c;
     wire [2*NFC-1:0] fq_c;
     wire [2*NFR-1:0] fmt_r;
     genvar k;
-    generate for (k = 0; k < NFC; k = k + 1) begin : g_fc
-        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_pd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pop_r), .q(pd_c[k]));
+    generate for (k = 0; k < 4; k = k + 1) begin : g_f1
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_pd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pop_r), .q(pd1[k]));
         ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_fq (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(fmt_q),
+            .q(fq1[2*k +: 2]));
+    end endgenerate
+    generate for (k = 0; k < NFC; k = k + 1) begin : g_fc
+        // copy k serves replicas 8k .. 8k + 7: side (8k) / NFMT, sub pair by the replica's sub
+        localparam integer R0 = 8 * k;
+        localparam integer SD = R0 / NFMT;
+        localparam integer JR = R0 % NFMT;
+        localparam integer SPR = (JR < SUB * LBS * 8) ? JR / (LBS * 8) : JR - SUB * LBS * 8;
+        localparam integer G1 = SD * 2 + ((SPR / RPT) % 2);
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_pd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pd1[G1]), .q(pd_c[k]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_fq (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(fq1[2*G1 +: 2]),
             .q(fq_c[2*k +: 2]));
     end endgenerate
     generate for (k = 0; k < NFR; k = k + 1) begin : g_fmt
