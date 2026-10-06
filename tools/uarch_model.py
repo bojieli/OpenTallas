@@ -12372,3 +12372,23 @@ def dsrom_wfc_common_clock_source_model():
         channel_capacity=None, floorplan_slot_fit=False,
         protection='Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.',
         physical_closed=False, PLL_IP_qualified=False)
+
+
+def dsrom_wfc_clock_ip_boundary_model():
+    """External coherent clock-IP boundary; not a replacement IP area estimate."""
+    return dict(default=0, replica_count=1, MACs_per_cycle=0,
+        memory_port_bytes_per_cycle=0, communication_intensity=0,
+        boundary_bits_per_cycle=dict(clock_inputs=2, clock_outputs=2,
+                                     phase_valid=1, sticky_fault=1, fault_output=1),
+        state_FF_bits=0, replica_mux_demux_cost=0,
+        combinational_gates=dict(INV=1, OR2=1),
+        IP_area_um2=None, IP_power_W=None, IP_startup_latency_ps=None,
+        routing_tracks_needed=dict(clock=2, validity=1, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        added_pipeline_cycles=0,
+        fast_period_ps=2500/3, slow_period_ps=10000/9,
+        generated_clock_edges=dict(fast=[1,4,7], slow=[1,5,9]),
+        latency_contribution='No data-stage change; characterized IP startup, clock insertion/skew, and quarantine latency remain required missing terms.',
+        protection='External IP must hold phase-valid low before acquisition, and latch fault/invalidity until cold POR after any phase loss. Boundary vetoes enrollment, never gates clock outputs; it does not implement or qualify clock stop.',
+        assumption='Explicit external coherent IP, not implemented divider or qualified PLL',
+        physical_closed=False, PLL_IP_qualified=False)
