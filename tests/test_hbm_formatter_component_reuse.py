@@ -63,6 +63,12 @@ class ComponentReuse(unittest.TestCase):
             with self.assertRaises(ValueError):R.reuse_component(j,c,{'models':{'Vleaf':model}},out)
             (directory/name).write_text(original)
         self.assertTrue(R.reuse_component(j,c,{'models':{'Vleaf':model}},out))
+    def test_verilator_encoded_private_namespace(self):
+        self.edit('private.sv','module native__exp(input x, output y); assign y=x; endmodule\n')
+        self.m['sources'].append('private.sv')
+        args=self.work/'private.f';args.write_text('--cc\n--hierarchical-block native___05Fexp,native___05Fexp_1\n')
+        self.jobs.append(dict(prefix='Vprivate',top='native___05Fexp_1',directory=str(self.work/'private'),verilator_args=str(args),deps=[],sources=[]))
+        self.assertEqual(self.contracts()['Vprivate']['original_module'],'native__exp')
     def test_macro_constructed_module_refuses_enrollment(self):
         self.edit('parent.sv','`define MOD(x) name``x\nmodule parent; endmodule\n')
         with self.assertRaises(ValueError):self.contracts()

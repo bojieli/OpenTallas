@@ -302,7 +302,7 @@ def component_contracts(work,m,jobs,tool_pins):
             if line.startswith('--hierarchical-block '):
                 pair=line.split(' ',1)[1].split(',',2)
                 if pair[1]==j['top']:original=pair[0];break
-        original=re.sub(r'__([0-9A-Fa-f]{2})',lambda x:chr(int(x[1],16)),original)
+        original=re.sub(r'__([0-9A-Fa-f]{3})',lambda x:chr(int(x[1],16)),original)
         if original not in modules:raise ValueError('Actual module implementation missing '+original)
         pending=[original]+sorted(macro_roots&modules.keys());closure=set()
         while pending:
