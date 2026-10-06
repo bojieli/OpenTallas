@@ -27,7 +27,15 @@ module ot_hbm_integrated_su_cp_association #(parameter integer ENABLE=0,FAST_OWN
    // Accepted association bypass applies only to executor debt/drain. New
    // admission retains every current owner, phase/status and error factor.
    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(CONTROL_TAIL_CUT)) admit(.bits({1'b1,raw_grant,!rails_bad,qualified_owned_terms[8:0]}),.result(new_request_permit));
+   if(CONTROL_TAIL_CUT==2)begin:late_executor
+    wire admitted,owner_bad,local_ok;
+    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) early_gate(.bits({6'b111111,qualified_owned_terms[5:0]}),.result(local_ok));
+    ot_hbm_cp_frontier_nand3 owner_gate(.bits(qualified_owned_terms[8:6]),.result(owner_bad));
+    assign admitted=associated||(!owner_bad&&local_ok);
+    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) executor_gate(.bits({9'b111111111,raw_grant,!rails_bad,admitted}),.result(exec_owned));
+   end else begin:prior_executor
    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(CONTROL_TAIL_CUT)) executor(.bits({1'b1,raw_grant,!rails_bad,(qualified_owned_terms[8:0]|{9{associated}})}),.result(exec_owned));
+   end
   end else begin:prior_receiver
    assign exec_owned=raw_grant&&!rails_bad&&(associated||qualified_owned);
    assign new_request_permit=raw_grant&&!rails_bad&&qualified_owned;

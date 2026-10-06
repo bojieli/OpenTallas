@@ -24,7 +24,7 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  ot_hbm_cp_parallel_phase phase_probe_dut(.q(phase_probe[8:0]),.n(phase_probe[17:9]),.valid(phase_probe_valid));
  reg [11:0] tail_probe=0;wire tail_probe_result;
  integer tail_truth_checks=0,tail_unknown_checks=0;
- ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) tail_probe_dut(
+ ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(CONTROL_TAIL_CUT_TEST)) tail_probe_dut(
   .bits(tail_probe),.result(tail_probe_result));
  reg [63:0] veto_held_n=0,veto_live=0;wire veto_mismatch;
  reg [3:0] veto_bad=0;wire veto_permit;
