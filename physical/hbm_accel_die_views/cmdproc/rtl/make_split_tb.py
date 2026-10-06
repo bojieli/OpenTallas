@@ -68,7 +68,7 @@ for p, v in sorted(ports.items()):
         elif W.fclk_bits('hfd_cmdproc').get(p, {}).get(i) != 'out':   # forwarded clocks: ~clk in both, not data
             outb.append((p, i))
 conn_r = ', '.join([f'.{p}(r_{p})' for p in sorted(ports) if p not in ('ck', 'rst')] + ['.ck(clk)', '.rst(rst)'])
-T.append(f'    hfd_cmdproc_ref ref({conn_r});')
+T.append(f'    hfd_cmdproc_ref u_ref({conn_r});')
 T.append('    wire [146:0] xl; wire [15:0] xb, xt;')
 for nm, pl in (('s', sorted(S_PORTS)), ('n', sorted(set(ports) - S_PORTS - {'ck', 'rst'}))):
     c = ', '.join([f'.{p}(s_{p})' for p in pl] + ['.ck(clk)', '.rst(rst)', '.xl(xl)', '.xb(xb)', '.xt(xt)'])

@@ -665,7 +665,7 @@ module tb_cmdproc_split;
     reg [63:0] drv_t_su_SE;
     wire [63:0] r_t_su_SW, s_t_su_SW;
     reg [63:0] drv_t_su_SW;
-    hfd_cmdproc_ref ref(.cNE(r_cNE), .cNW(r_cNW), .cSE(r_cSE), .cSW(r_cSW), .f_barrier(r_f_barrier), .f_coll(r_f_coll), .f_loader(r_f_loader), .f_router(r_f_router), .t_barrier(r_t_barrier), .t_coll(r_t_coll), .t_su_NE(r_t_su_NE), .t_su_NW(r_t_su_NW), .t_su_SE(r_t_su_SE), .t_su_SW(r_t_su_SW), .ck(clk), .rst(rst));
+    hfd_cmdproc_ref u_ref(.cNE(r_cNE), .cNW(r_cNW), .cSE(r_cSE), .cSW(r_cSW), .f_barrier(r_f_barrier), .f_coll(r_f_coll), .f_loader(r_f_loader), .f_router(r_f_router), .t_barrier(r_t_barrier), .t_coll(r_t_coll), .t_su_NE(r_t_su_NE), .t_su_NW(r_t_su_NW), .t_su_SE(r_t_su_SE), .t_su_SW(r_t_su_SW), .ck(clk), .rst(rst));
     wire [146:0] xl; wire [15:0] xb, xt;
     hfd_cmdproc_s u_s(.cSE(s_cSE), .cSW(s_cSW), .f_loader(s_f_loader), .f_router(s_f_router), .t_su_SE(s_t_su_SE), .t_su_SW(s_t_su_SW), .ck(clk), .rst(rst), .xl(xl), .xb(xb), .xt(xt));
     hfd_cmdproc_n u_n(.cNE(s_cNE), .cNW(s_cNW), .f_barrier(s_f_barrier), .f_coll(s_f_coll), .t_barrier(s_t_barrier), .t_coll(s_t_coll), .t_su_NE(s_t_su_NE), .t_su_NW(s_t_su_NW), .ck(clk), .rst(rst), .xl(xl), .xb(xb), .xt(xt));
