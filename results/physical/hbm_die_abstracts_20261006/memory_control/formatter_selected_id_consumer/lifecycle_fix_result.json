@@ -1,0 +1,16 @@
+{
+  "status": "LIFECYCLE_SOURCE_FIX_IMPLEMENTED_RUNTIME_PENDING",
+  "source": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv",
+  "sha256": "f12d4769cf3c72542053fb8bb9863a113a74f926cf79b5ce5bcdc7ebd14a26a1",
+  "prior_source_commit": "fa1d745fc",
+  "prior_elaboration_does_not_qualify_this_successor": true,
+  "defect": "ADAPTER_RELEASE advanced on ready alone while CE could suppress valid; helper could release context before stalled child adapter retirement.",
+  "fix": "Advance only ad_release_v && ad_release_r; export consumer_adapter_drained only RETIRE, reverse accepted, sink/core debt clear and !ad_retained.",
+  "wrapper_required": "helper.source_reverse_v = parent.source_reverse_v && child.consumer_adapter_drained; parent.source_reverse_r = helper.source_reverse_r && child.consumer_adapter_drained. Gate both sides so no unmatched handshake. Original source metadata and full73 remain unchanged.",
+  "state_added": 0,
+  "nominal_release_edge_delta": 1,
+  "build_launched": false,
+  "numerical_pass": false,
+  "parent_connected": false,
+  "physical_closed": false
+}

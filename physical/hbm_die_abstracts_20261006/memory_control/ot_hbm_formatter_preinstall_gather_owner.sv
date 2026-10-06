@@ -8,7 +8,11 @@
 // Installer/source phase and original W15 held-caller enrollment remain required.
 module ot_hbm_formatter_preinstall_gather_owner #(
  parameter integer ENABLE=0,VM_AW=0,PREINSTALL_ENABLE=0,
- parameter [63:0] ENTRY_PC=0
+ parameter [63:0] ENTRY_PC=0,
+ parameter [31:0] SCORE_SOURCE=32'h80000,ID_SOURCE=32'h80800,
+ parameter [31:0] ARENA_BASE=32'h10000,ARENA_LIMIT=32'h70000,
+ parameter [31:0] SINK_BASE=32'h70000,SINK_LIMIT=32'h70800,
+ parameter [32:0] CAPACITY_BYTES=33'h100000
 )(
  input wire clk,por_n,
  input wire warm_req,
@@ -136,7 +140,8 @@ module ot_hbm_formatter_preinstall_gather_owner #(
   assign descriptor_readback=0;assign descriptor_mask=0;
   assign descriptor_good=0;assign actual_lease_frame=0;
  end endgenerate
- ot_hbm_formatter_preinstall #(.ENABLE(32'(ENABLE!=0&&PREINSTALL_ENABLE!=0)),.ENTRY_PC(ENTRY_PC)) u_preinstall(
+ ot_hbm_formatter_preinstall #(.ENABLE(32'(ENABLE!=0&&PREINSTALL_ENABLE!=0)), .ENTRY_PC(ENTRY_PC),.SCORE_SOURCE(SCORE_SOURCE),.ID_SOURCE(ID_SOURCE),
+  .ARENA_BASE(ARENA_BASE),.ARENA_LIMIT(ARENA_LIMIT),.SINK_BASE(SINK_BASE),.SINK_LIMIT(SINK_LIMIT),.CAPACITY_BYTES(CAPACITY_BYTES)) u_preinstall(
   .clk(clk),.por_n(por_n),.warm_req(warm_req),.actual_cp_frame({pos,token,gen,job}),
   .begin_v(preinstall_begin_v),.begin_r(preinstall_begin_r),.begin_frame(preinstall_begin_frame),
   .score_plane_base(preinstall_score_base),.id_plane_base(preinstall_id_base),
