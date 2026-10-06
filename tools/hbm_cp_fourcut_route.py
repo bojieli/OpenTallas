@@ -20,7 +20,7 @@ def main():
     import hbm_cp_parent_context as context
     # Verify the already generated, committed source envelope; do not mutate
     # the pinned clean source checkout during physical execution.
-    from uarch_model import hbm_cp_validate_allocated_sources
+    from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
     cp = json.loads((ROOT/context.CONTRACT).read_text())['CP']
     checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True)
     inputs = json.loads((ROOT/'physical/hbm_cp_parent_context_20261005/inputs.json').read_text())
