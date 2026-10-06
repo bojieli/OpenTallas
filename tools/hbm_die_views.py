@@ -467,22 +467,39 @@ def cmd_die(a):
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
         idx = json.loads(Path(a.index).read_text())['masters']
         mismatched = {n for n in views if idx[n].get('check', {}).get('verdict') == 'MISMATCH'}
-        pinrec = {}
+        pinrec, regadj = {}, []
         el = (work / 'elements.lef').read_text()
         for n, lef in views.items():
             r = parse_lef(lef)
             om = re.search(r'\n(\s*OBS\n.*?\n\s*END)\n', r['text'], re.S)
             obs = om.group(1) if om else '  OBS\n  END'
             # bundled tech LEF (k > 1) defines the metal layers only: keep the view's metal obstructions
-            keep, cur = [], True
+            # M8 / M9 obstructions become GRT region adjustments instead (measured r6_attn: a macro OBS on M8/M9
+            # makes GRT drop the die's M8/M9 layer adjustments, capacity x10 and overflow not comparable)
+            keep, cur, hi = [], True, defaultdict(list)
             for ln in obs.split('\n'):
                 mm = re.match(r'\s*LAYER (\S+)', ln)
                 if mm:
-                    cur = bool(re.fullmatch(r'M[1-9]', mm.group(1)))
+                    cur = bool(re.fullmatch(r'M[1-7]', mm.group(1)))
+                    hil = mm.group(1) if mm.group(1) in ('M8', 'M9') else None
+                mr = re.match(r'\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', ln)
+                if mr and not cur and hil:
+                    hi[hil].append(tuple(float(v) for v in mr.groups()))
                 if cur or not ln.strip().startswith(('LAYER', 'RECT', 'POLYGON')):
                     if cur or not mm:
                         keep.append(ln)
             obs = '\n'.join(keep)
+            for ly, rs in hi.items():
+                if len(rs) > 16:        # a reduced outline-minus-pins OBS: its bounding box
+                    rs = [(min(r_[0] for r_ in rs), min(r_[1] for r_ in rs), max(r_[2] for r_ in rs),
+                           max(r_[3] for r_ in rs))]
+                for it in m['insts']:
+                    if it.master != n:
+                        continue
+                    for r_ in rs:
+                        x0_, y0_, x1_, y1_ = _xf(r_, it, r['w'], r['h'])
+                        regadj.append(f'set_global_routing_region_adjustment {{{x0_:.3f} {y0_:.3f} {x1_:.3f} '
+                                      f'{y1_:.3f}}} -layer {ly} -adjustment 1.0')
             pat = r'(MACRO ' + re.escape(n) + r'\n.*?)\n  OBS\n.*?\n  END\n(END ' + re.escape(n) + r'\n)'
             el, k = re.subn(pat, lambda mm: mm.group(1) + '\n' + obs + '\n' + mm.group(2), el, flags=re.S)
             assert k == 1, (n, k)
@@ -493,11 +510,16 @@ def cmd_die(a):
                 el = el.replace(body, nb)
                 pinrec[n] = rec
         (work / 'elements.lef').write_text(el)
+        if regadj:
+            t_ = (work / 'run.tcl').read_text()
+            t_ = t_.replace('set_routing_layers -signal M2-M9', '\n'.join(regadj) + '\nset_routing_layers -signal M2-M9', 1)
+            (work / 'run.tcl').write_text(t_)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
     if a.case == 'real' and pads:
         man['mirror_pads'] = pads
     if a.case == 'grt':
+        man['m8_m9_view_blockages'] = len(regadj)
         man['real_pin_plan'] = pinrec if a.real_pins else 'generator pins (views MATCH or --real-pins off)'
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))

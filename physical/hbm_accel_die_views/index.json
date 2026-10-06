@@ -1619,7 +1619,7 @@
   },
   "hfd_stn_r4": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 20,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r4",
    "lef": "hfd_stn_r4.lef",
@@ -1658,18 +1658,18 @@
     }
    },
    "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r4",
-    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r4 top=physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv DW=120.936 DH=51.816 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r9d30_hfd_stn_r4",
+    "SOURCE_COMMIT": "841eff21ba596fbc3c4f718fb1a7a2b34aab27b4",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src10 master=hfd_stn_r4 top=physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv DW=120.936 DH=51.816 PD=0.30 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
     "exit": [
      "rc=0",
      "corner_rc=0",
      "export_rc=0",
      "check_rc=0"
     ],
-    "ss_setup_ps": 4.78,
-    "ff_hold_ps": 435.52,
-    "drc": 1,
+    "ss_setup_ps": 19.21,
+    "ff_hold_ps": 433.75,
+    "drc": 0,
     "closes_signoff": true,
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc",
@@ -1708,8 +1708,8 @@
   }
  },
  "counts": {
-  "interim-not-closed": 3,
-  "closed": 23,
+  "interim-not-closed": 2,
+  "closed": 24,
   "missing": 24,
   "reservation": 2
  }
