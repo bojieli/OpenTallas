@@ -23,10 +23,16 @@ OV=(--orfs-var "VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS")
 BC=(--step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl)
 run() { # tag
   t=$1; c=${t%%_*}; v=${t##*_}; pq=${c:1:1}; r=${c#*r}
-  KM="ot_hdc_fp32_mul_f12_l5"; DENS=(); case $v in *k) KM="$KM ot_dsrom_aq12"; v=${v%k};; esac
-  case ${v:0:1} in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
+  # variant: a trailing k keeps ot_dsrom_aq12 as its own synthesis hierarchy (the closure recipe); the first letter
+  # picks the hold target / slew margin / step hooks (see the header)
+  KM="ot_hdc_fp32_mul_f12_l5"; DENS=(); vl=${v:0:1}
+  case $v in *k) KM="$KM ot_dsrom_aq12";; esac
+  case ${vl} in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
              d) H=0.022; S=45; X=(--orfs-var GPL_ROUTABILITY_DRIVEN=0);;
-             e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");; esac
+             e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");;
+             p) H=0.020; S=40; X=("${BC[@]}"); DENS=(--place-density 0.55);;
+             q) H=0.020; S=40; X=("${BC[@]}"); DENS=(--place-density 0.70);;
+             *) echo "phys.sh: unknown variant '$v' (tag $t)" >&2; exit 2;; esac
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
   echo "$(date -Is) START $t $(hostname)" >> $J/MANIFEST
