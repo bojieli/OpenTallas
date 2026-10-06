@@ -28,7 +28,13 @@ module ot_qwen_stream4_cdc_pc #(
     parameter integer LD   = 64,            // landing depth, power of two
     parameter integer WB   = 16,            // write-queue depth, power of two
     parameter integer AD   = 64,            // write-done depth, power of two
-    parameter integer SYNC = 2              // synchronizer flops per crossing
+    parameter integer SYNC = 2,             // synchronizer flops per crossing
+    // r8 (default 0 = r6/r7 structure): RSEL 1 = every landing read column group owns a one-hot select
+    // register in its own kept hierarchy (ot_hdc_v41x_kreg), loaded with decode(next read index): the
+    // r7 routes showed yosys merging the r3 (* keep *) index copies back into lr_bin (one driver, a
+    // 9/14/30/31 buffer tree into the 64:1 mux, SS -1.1..-49.9 ps).  RNG = column groups when RSEL = 1.
+    parameter integer RSEL = 0,
+    parameter integer RNG  = 10
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
@@ -141,19 +147,34 @@ module ot_qwen_stream4_cdc_pc #(
     // A group's output register loads whenever the presented word is free (!l_v || l_pop): when the FIFO
     // is empty it loads the unwritten slot at the read index, which l_v (= 0) marks invalid.  Identical
     // l_v / l_* sequence on every valid cycle; zero added cycles.
-    localparam integer NG = 5, GW = (281 + NG - 1) / NG;
+    localparam integer NG = (RSEL != 0) ? RNG : 5, GW = (281 + NG - 1) / NG;
     wire [NG*GW-1:0] l_word;
     reg  [NG*GW-1:0] l_q;
+    wire [LD-1:0] lr_hot_n = {{(LD-1){1'b0}}, 1'b1} << lr_bin_n[LA-1:0];
     for (genvar gi = 0; gi < NG; gi = gi + 1) begin : lgrp
         localparam integer LO = gi * GW, HI = (LO + GW > 281) ? 281 : LO + GW;
-        (* keep *) reg [LA-1:0] ix;
-            always @(posedge clk or negedge c_rl)
-            if (!c_rl) ix <= 0; else ix <= lr_bin_n[LA-1:0];
-        wire [280:0] row = lmem[ix];
-        // The group register loads unconditionally: while the presented word is held, the head does not
-        // move, so the load is idempotent; the routing of the presented word is l_v's job.  (Route r5:
-        // the !vg||l_pop enable cone was one AND3 driving ~30 loads and held 12 max-slew endpoints.)
-        always @(posedge clk) l_q[HI-1:LO] <= row[HI-1:LO];
+        if (RSEL != 0) begin : g_hot
+            // one-hot select of this group, a separate physical register (kept hierarchy); reset = slot 0
+            wire [LD-1:0] hot;
+            ot_hdc_v41x_kreg #(.W(LD), .R(0)) u_sel (.clk(clk), .rst_n(1'b1),
+                .d(c_rl ? lr_hot_n : {{(LD-1){1'b0}}, 1'b1}), .q(hot));
+            reg [HI-LO-1:0] rowg;
+            integer e;
+            always @(*) begin
+                rowg = '0;
+                for (e = 0; e < LD; e = e + 1) rowg = rowg | ({(HI-LO){hot[e]}} & lmem[e][HI-1:LO]);
+            end
+            always @(posedge clk) l_q[HI-1:LO] <= rowg;
+        end else begin : g_ix
+            (* keep *) reg [LA-1:0] ix;
+                always @(posedge clk or negedge c_rl)
+                if (!c_rl) ix <= 0; else ix <= lr_bin_n[LA-1:0];
+            wire [280:0] row = lmem[ix];
+            // The group register loads unconditionally: while the presented word is held, the head does not
+            // move, so the load is idempotent; the routing of the presented word is l_v's job.  (Route r5:
+            // the !vg||l_pop enable cone was one AND3 driving ~30 loads and held 12 max-slew endpoints.)
+            always @(posedge clk) l_q[HI-1:LO] <= row[HI-1:LO];
+        end
     end
     always @(*) {l_sec, l_row, l_data} = l_q[280:0];
 

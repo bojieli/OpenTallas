@@ -26,7 +26,9 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer PULLIN    = 0,
     parameter integer WQ        = 4,
     parameter integer WBUF      = 16,
-    parameter integer SYNC      = 2
+    parameter integer SYNC      = 2,
+    parameter integer RSEL      = 0,       // r8 landing read select (ot_qwen_stream4_cdc_pc), default the r6/r7 structure
+    parameter integer RNG       = 10
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -108,7 +110,7 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC*24-1:0] h_csec; wire [NPC*256-1:0] h_cdata; wire [NPC*TAGW-1:0] h_ctag;
     wire [NPC-1:0] h_wcon = col_v & col_we;
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
-        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_cdc (
             .clk(clk), .c_arst_n(rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
