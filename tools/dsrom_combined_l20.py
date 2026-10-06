@@ -394,8 +394,8 @@ FIELD_CFGS = {
     "pq0_q9": dict(pq=0, qelem=9, plan="base"),
     # PQ 1 + the PQ q-element (ot_v41_rom_elem_qx_pq_w10, 2026-10-06; before it this case was a NOT-buildable
     # control): the spine's GAP / GUARD carry the element's configuration replay (see the element header)
-    "pq1_q10": dict(pq=1, qelem=10, plan="pq", gap=int(os.environ.get("OT_PQQ_GAP", "42")),
-                    guard=int(os.environ.get("OT_PQQ_GUARD", "210")), gslack=int(os.environ.get("OT_PQQ_GSLACK", "32"))),
+    "pq1_q10": dict(pq=1, qelem=10, plan="pq", gap=int(os.environ.get("OT_PQQ_GAP", "32")),
+                    guard=int(os.environ.get("OT_PQQ_GUARD", "202")), gslack=int(os.environ.get("OT_PQQ_GSLACK", "32"))),
 }
 
 
