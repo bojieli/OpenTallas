@@ -1,0 +1,53 @@
+{
+  "scope": "Head minimum child context: native VM source-owned fast-domain request/checked-reply endpoint copies; backend/transport remain parent scope",
+  "before_RTL": true,
+  "parent_source": {
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv": "f765dae04268ca8eb3a3055803c0edbfad619f04a72079ecad5e5ef7bc4328ff",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02"
+  },
+  "request_bits": 2831,
+  "reply_bits": 1267,
+  "existing_native_endpoint_FF_bits": 8196,
+  "architectural_new_FF_bits": 0,
+  "context_clock": "Same native fast_clk as headclk,833.333333ps; backend slow_clk1111.111111ps related3:4 retained parent source",
+  "native_write_ports": {
+    "head_group_to_native_port": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "native_xa_port": 0,
+    "word_address_bits": 15,
+    "head_address_bits": 24,
+    "bounds": "Enabled head word high9bits must be zero, no truncation of enabled out-of-range address",
+    "payload_bits_per_cycle": 2048,
+    "mask_bits": 64
+  },
+  "read_ports": "Head LG addends remain actual64protectedlocal macros; do not replace four addend reads by native two-read port fiction",
+  "warm_ACK": "Checked published reply_owner/row_visible/visible_addr/visible_mask, port1 forheadgroup0; does not derive ACK from C8/port retirement. Parent keeps full47owner and32ordinal validity; local8ID only matches alreadyvalidated native tuple.",
+  "macro_counts": {
+    "head_local_protected": 64,
+    "parent_VM_data": 256,
+    "parent_VM_check": 32,
+    "parent_not_rebuilt": true
+  },
+  "macro_corner": {
+    "SS_clkQ_ps": 524.0724742442052,
+    "FF_clkQ_ps": 346.0436643943168,
+    "SS_clock_pin_fF": 8.68376,
+    "FF_clock_pin_fF": 10.3732
+  },
+  "floorplan": {
+    "existing_head_um": [
+      2000,
+      660
+    ],
+    "context_endpoint_FF_bits": 8196,
+    "stdcell_area_mapping_required": true,
+    "loaded_clock_repair_margin_required": true,
+    "ready_for_route": false
+  },
+  "latency": "No added architectural stages: endpoint copies represent existing native registers. Native backend readback/crossing latency already priced by Copernicus model; actual head+40cycle candidate still must be measured separately.",
+  "proof_scope": "Child only. Native reply inputs must bind real protected transport/publish controls and related clock paths in parent; no all-output falsepaths/zero loads may qualify those boundaries."
+}

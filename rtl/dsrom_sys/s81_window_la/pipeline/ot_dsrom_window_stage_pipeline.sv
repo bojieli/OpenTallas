@@ -185,7 +185,17 @@ module ot_dsrom_window_stage_pipeline #(
     reg  [3:0] bank_qv;
     reg  v1, bad1, v0, bad0;
     reg [USER_W-1:0] user0; reg [POS_W-1:0] first0; reg [3:0] mask0;
-    reg [3:0] bank_ok0;
+    reg [POS_W-1:0] owner_first0;
+    reg [POS_W:0] owner_end0;
+    reg [USER_W-1:0] owner_user0;
+    // Accepted-request witnesses share the payload's two read edges. Capture
+    // the preedge owner/completion state; a later job or landing cannot change
+    // this request's validity. No permission is reused for another request.
+    always @(posedge clk) if (req_v) begin
+        owner_first0 <= j_first;
+        owner_end0 <= {1'b0, j_first} + (POS_W+1)'(j_count);
+        owner_user0 <= j_user;
+    end
     reg  [USER_W-1:0] user1;
     reg  [POS_W-1:0] first1;
     reg  [3:0] mask1;
@@ -195,9 +205,17 @@ module ot_dsrom_window_stage_pipeline #(
         wire [1:0] lane = 2'(b) - req_first_row[1:0];
         wire [POS_W:0] wanted = {1'b0, req_first_row} + (POS_W+1)'(lane);
         wire [4:0] raddr = wanted[6:2];
-        wire [POS_W:0] rel = wanted - {1'b0, j_first};
-        wire ok = wanted < (POS_W+1)'(MAX_CONTEXT) && wanted >= {1'b0, j_first} &&
-                  rel < (POS_W+1)'(j_count) && req_user == j_user && slot_done[wanted[6:0]];
+        reg [POS_W:0] wanted0;
+        reg [3:0] complete_group0;
+        always @(posedge clk) if (req_v) wanted0 <= wanted;
+        for (genvar group=0; group<4; group=group+1) begin : g_read_complete
+            wire [4:0] slot_row = 5'(8*group) + 5'(raddr[2:0]);
+            always @(posedge clk) if (req_v)
+                complete_group0[group] <= slot_done[{slot_row, 2'(b)}];
+        end
+        wire ok0 = wanted0 < (POS_W+1)'(MAX_CONTEXT) &&
+                   wanted0 >= {1'b0, owner_first0} && wanted0 < owner_end0 &&
+                   user0 == owner_user0 && complete_group0[wanted0[6:5]];
         for (genvar k = 0; k < PITCH; k = k + 1) begin : g_col
             localparam integer CWID = (k < 16) ? 256 : 128;
             reg [CWID-1:0] mem [0:31];
@@ -245,8 +263,8 @@ module ot_dsrom_window_stage_pipeline #(
             end
         end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin bank_ok0[b]<=0; bank_qv[b]<=0; end
-            else begin if(req_v) bank_ok0[b]<=ok; if(v0) bank_qv[b]<=bank_ok0[b]; end
+            if (!rst_n) bank_qv[b]<=0;
+            else if(v0) bank_qv[b]<=ok0;
     end endgenerate
     // lanes (stage4's second register: bank order -> chronological lanes)
     wire [3:0] lane_ok;
