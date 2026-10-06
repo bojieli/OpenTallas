@@ -47,5 +47,6 @@ spec = dict(master='hfd_loader', note=(
     'm_* and rsp_* have no die net (cfg chain / folded).'), instances=[dict(
         name='ld', module='ot_hbm_accel_loader_host', file=F, params=dict(ENABLE=1, ND=2), bind=b)], extra_out=eo)
 spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
+spec['face_stages'] = 3  # owner margin-first rule 2026-10-06: pin flop + 2 stages each face (1.4 mm views)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')
 print(rx - 256, tx)

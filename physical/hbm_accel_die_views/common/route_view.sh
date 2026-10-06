@@ -7,7 +7,7 @@
 #      SRCS (extra --source files, space separated), MACROS (space separated NAME=DIR macro views),
 #      MAXL (top signal routing layer, default M7), PDN (PDN tcl, default common/pdn_view.tcl), HM (hold margin ns),
 #      SDCA (extra --sdc-append file), STEPS (extra --step-tcl args), CTSA (CTS_ARGS), PRECTS (PRE_CTS hook; die
-#      wrappers with forwarded-clock outputs use common/pre_cts_fclk_root_buf.tcl)
+#      wrappers with forwarded-clock outputs use common/pre_cts_fclk_root_buf.tcl), POSTSDC (corner_sta --post-sdc)
 set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 W=$OUT/$lab; mkdir -p $W; cd $SRC
@@ -32,7 +32,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
 mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
-python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} ${POSTSDC:+--post-sdc $POSTSDC} --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done
 python3 tools/hbm_fmax_attn_abstract.py --orfs-dir $W/work/orfs --name $master --out $W/view $mvx --tmp-dir $W/abs_tmp > $W/export.log 2>&1
