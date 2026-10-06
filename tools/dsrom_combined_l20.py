@@ -411,10 +411,9 @@ def cmd_field(a):
             return 2
     status["build"] = "ok"
     rcs = {}
-    for mode, extra in (("node", []), ("single", ["--single-only"])):
-        ns = argparse.Namespace(work=work, plan_dir=plan, mode="node" if mode == "node" else "phase",
-                                single_only=(mode == "single"), layers="20", regions="", only_nodes="", sample=0,
-                                keep=False, positions=1, force=False, jobs=a.jobs)
+    for mode in ("phase", "node"):          # every L20 phase alone (as-built rule), then nodes back to back
+        ns = argparse.Namespace(work=work, plan_dir=plan, mode=mode, single_only=False, layers="20", regions="",
+                                only_nodes="", sample=0, keep=False, positions=1, force=False, jobs=a.jobs)
         rcs[mode] = FS.cmd_run(ns)
     status["run_rc"] = rcs
     (work / "status.json").write_text(json.dumps(status, indent=1) + "\n")
@@ -422,8 +421,11 @@ def cmd_field(a):
 
 
 def field_summary(work: Path, cfg_name: str, plan_dir: Path):
+    """L20 nodes of one field configuration: exactness of every phase x region run and every node's back-to-back
+    run, and the node time by the as-built rule of tools/dsrom_field_spine.py (sum over the node's phases of
+    go -> idle + 1, + go -> last row write of the last; each phase at the max over the die's regions; cycles, no
+    floorplan wire)."""
     import dsrom_field_spine as FS
-    import dsrom_recovery_field as F
     w = work / f"field_{cfg_name}"
     st = json.loads((w / "status.json").read_text()) if (w / "status.json").exists() else {}
     if st.get("build") != "ok":
@@ -434,21 +436,25 @@ def field_summary(work: Path, cfg_name: str, plan_dir: Path):
     for key, phs in sorted(g.items()):
         if key[0] != 20:
             continue
-        regs = sorted({r for ph in phs for r in ph["regions"]})
+        stats = [FS.phase_stats(w, key, i, ph) for i, ph in enumerate(phs)]
+        ok = all(x["exact"] for x in stats)
+        missing += sum(x["regions"] - x["regions_run"] for x in stats)
+        tot = None
+        if ok:
+            tot = sum(x["go_to_idle_cycles"] + 1 for x in stats[:-1]) + stats[-1]["go_to_last_row_cycles"]
+        node_ok = None
         if len(phs) >= 2:
+            regs = sorted({r for ph in phs for r in ph["regions"]})
             rs = [FS.load(w, key, reg) for reg in regs]
-        else:
-            rs = [FS.load(w, FS.phase_key(key, 0), reg) for reg in phs[0]["regions"]]
-        missing += sum(r is None for r in rs)
-        rs = [r for r in rs if r]
-        ok = bool(rs) and all(r["pass_"] for r in rs) and len(rs) == len(regs if len(phs) >= 2 else phs[0]["regions"])
+            missing += sum(r is None for r in rs)
+            node_ok = all(r is not None and r["pass_"] for r in rs)
+            ok = ok and node_ok
         bad += not ok
-        gw = [r["node"]["last_w"] - r["node"]["go"] for r in rs if r.get("node") and r["node"]["last_w"] >= 0]
-        nodes.append(dict(node=f"L{key[0]}.{key[1]}", stage=key[2], phases=len(phs), regions=len(regs),
-                          runs=len(rs), exact=ok, rows_checked=sum(r["rows"] for r in rs),
-                          rows_mismatched=sum(r["mismatched"] + r["extra"] for r in rs),
-                          go_to_last_row_cycles=max(gw) if gw else None))
-    return dict(cfg=cfg_name, build="ok", build_json=json.loads((w / "build" / "build.json").read_text()).get("params"),
+        nodes.append(dict(node=f"L{key[0]}.{key[1]}", stage=key[2], phases=len(phs),
+                          regions=len({r for ph in phs for r in ph["regions"]}), exact=ok, node_runs_exact=node_ok,
+                          rows_checked=sum(x["rows_checked"] for x in stats),
+                          rows_mismatched=sum(x["rows_mismatched"] for x in stats), total_cycles=tot))
+    return dict(cfg=cfg_name, build="ok", params=json.loads((w / "build" / "build.json").read_text()).get("params"),
                 nodes=nodes, n_nodes=len(nodes), n_bad=bad, missing_runs=missing,
                 exact=(bad == 0 and missing == 0 and bool(nodes)))
 
@@ -548,24 +554,36 @@ COMPOSE_LEVERS = ("field_spine_pq", "su_hcpost", "su_routeract", "su_norm", "su_
 
 
 def cmd_compose(a):
-    """Lever matrix through the timing authority.  Lever records not yet ADOPT are passed as conditional candidates
-    (apply_candidate: same node replacement, never changes a record); ADOPT records on main are excluded when OFF."""
+    """Lever matrix through the timing authority, on its own adoption code path (apply_levers): each configuration
+    composes from a scratch copy of levers/*.json in which the matrix levers ON read verdict ADOPT and the OFF ones
+    read OFF_FOR_MATRIX; every other record (draft, head, router, hop, field) is copied unchanged.  The committed
+    records are never modified."""
+    import shutil
     import dsrom_1m_allmeasured as AM
     recs = {lv: json.loads((LEVERS_DIR / f"{lv}.json").read_text()) for lv in COMPOSE_LEVERS}
     adopted_main = {lv for lv, r in recs.items() if r.get("verdict") == "ADOPT"}
 
     def run(on, label):
-        excluded = tuple(lv for lv in adopted_main if lv not in on)
-        cands = tuple(dict(r, lever=lv) for lv, r in recs.items() if lv in on and lv not in adopted_main)
-        ns = argparse.Namespace(rec=AM.REC, out=Path(a.work) / f"compose_{label}.json", baseline="recovery",
-                                recovery=AM.RECOVERY, window="s81", hop_tier="light_fec")
-        res = AM.compose(ns, candidates=cands, excluded_levers=excluded, write_output=True)
+        tmp = ROOT / ".combined_matrix" / label          # under ROOT: the authority's rel() needs repo paths
+        if tmp.exists():
+            shutil.rmtree(tmp)
+        (tmp / "levers").mkdir(parents=True)
+        for f in LEVERS_DIR.glob("*.json"):
+            r = json.loads(f.read_text())
+            if r.get("lever") in COMPOSE_LEVERS:
+                r["verdict"] = "ADOPT" if r["lever"] in on else "OFF_FOR_MATRIX"
+            (tmp / "levers" / f.name).write_text(json.dumps(r))
+        ns = argparse.Namespace(rec=AM.REC, out=tmp / "composition.json", baseline="recovery",
+                                recovery=tmp, window="s81", hop_tier="light_fec")
+        AM.compose(ns, write_output=True)
+        excluded, cands = [lv for lv in COMPOSE_LEVERS if lv not in on], []
         d = json.loads(ns.out.read_text())
-        keep = {k: d.get(k) for k in ("AR_us", "AR_tok_s", "MTP_tok_s", "step_us", "II_us")}
-        if not keep["AR_us"]:
-            keep = {k: v for k, v in d.items() if isinstance(v, (int, float))}
-        st = d.get("stage_busy") or d.get("stages") or {}
-        return dict(levers_on=list(on), excluded=list(excluded), candidates=[c["lever"] for c in cands], **keep,
+        cp = d.get("critical_path", [])
+        l20 = [c for c in cp if str(c.get("node", "")).startswith("L20.")]
+        keep = dict(AR_us=d.get("AR_us"), AR_tok_s=d.get("AR_tok_s"), MTP_tok_s=(d.get("MTP") or {}).get("MTP_tok_s"),
+                    II_us=(d.get("MTP") or {}).get("II_us"), L20_on_critical_path_us=round(sum(c.get("us", 0) for c in l20), 4),
+                    L20_nodes=len(l20), applied=[x["lever"] for x in (d.get("info", {}).get("levers", {}) or {}).get("applied", [])])
+        return dict(levers_on=list(on), excluded=list(excluded), candidates=cands, **keep,
                     output=rel(ns.out))
 
     m = {"all_off": run((), "all_off"), "all_on": run(COMPOSE_LEVERS, "all_on")}
@@ -587,6 +605,66 @@ def cmd_compose(a):
 
 
 # ------------------------------------------------------------------------------------------------------ record
+def crosscheck(w: Path, parts: dict, field: dict) -> list:
+    """Run-vs-composition at L20: (1) every L20 node a matrix lever owns: the lever record's us vs the all-ON
+    composition's applied value (+ its measured CDC) -- an application or double-charge error shows here; (2) the
+    unit runs' L20 cycles vs the lever record; (3) the field: PQ 0 fresh vs the committed v9 baseline (harness
+    reproduction) and PQ 0 + q-element vs PQ 0 (the q-element's cycle effect, not in any lever record)."""
+    out = []
+    comp = Path(w) / "compose_all_on.json"
+    pat = {}
+    allon = (parts.get("compose") or {}).get("matrix", {}).get("all_on", {})
+    cpath = ROOT / allon["output"] if allon.get("output") else None
+    if cpath and cpath.exists():
+        d = json.loads(cpath.read_text())
+        for x in d.get("patches", []):
+            pat[x["node"]] = x
+    for lv in COMPOSE_LEVERS:
+        r = json.loads((LEVERS_DIR / f"{lv}.json").read_text())
+        for k, v in r.get("nodes", {}).items():
+            n = "L20." + k[2:] if k.startswith("*.") else k
+            if not n.startswith("L20.") or n not in pat:
+                if n.startswith("L20."):
+                    out.append(dict(kind="lever node absent from the all-ON composition", lever=lv, node=n))
+                continue
+            got = pat[n].get("measured_us")
+            if got is None or abs(got - v["us"]) > 5e-4:
+                out.append(dict(kind="composition applies a different value than the lever record", lever=lv, node=n,
+                                lever_us=v["us"], composition_us=got, source=pat[n].get("source", "")[:120]))
+            cdc = pat[n].get("cdc_measured_us")
+            if cdc and v.get("kind") == "fused_fast":
+                out.append(dict(kind="CDC still charged on a fused 1.2 GHz node with all levers ON", lever=lv, node=n,
+                                cdc_us=cdc))
+    # unit cycles vs lever records (1.2 GHz units; routeract's short lane runs at 0.9 GHz)
+    unit_node = {"su_hcpost": {"L20.attn.hc_post": ["L20.attn.hc_post"], "L20.ffn.hc_post": ["L20.ffn.hc_post"]}}
+    for row in (parts.get("units") or {}).get("rows", []):
+        if not row["l20"]:
+            continue
+        nodes = unit_node.get(row["unit"], {}).get(row["case"])
+        if nodes and isinstance(row.get("cycles"), (int, float)):
+            us = row["cycles"] / 1.2e3
+            lev = sum(pat.get(n, {}).get("measured_us") or 0 for n in nodes)
+            if abs(us - lev) > 5e-4:
+                out.append(dict(kind="unit run vs composition", unit=row["unit"], case=row["case"], run_us=round(us, 5),
+                                composition_us=lev))
+    # field
+    base = json.loads((ROOT / "results/rtl/dsrom_field_spine_20261004/field_baseline.json").read_text())
+    bmap = {n["node"]: n.get("total_cycles") for n in base.get("node_summary", [])}
+    f0 = {n["node"]: n for n in (field.get("pq0") or {}).get("nodes", [])}
+    fq = {n["node"]: n for n in (field.get("pq0_q9") or {}).get("nodes", [])}
+    for n, x in sorted(f0.items()):
+        if bmap.get(n) is not None and x.get("total_cycles") != bmap[n]:
+            out.append(dict(kind="field PQ 0 fresh run != committed v9 baseline (harness)", node=n,
+                            fresh_cycles=x.get("total_cycles"), committed_cycles=bmap[n]))
+        if n in fq and fq[n].get("total_cycles") is not None and x.get("total_cycles") is not None:
+            dlt = fq[n]["total_cycles"] - x["total_cycles"]
+            if dlt:
+                out.append(dict(kind="q-element changes the L20 field node (not in any lever record or composition)",
+                                node=n, pq0_cycles=x["total_cycles"], pq0_q9_cycles=fq[n]["total_cycles"],
+                                delta_cycles=dlt))
+    return out
+
+
 def cmd_record(a):
     w = Path(a.work)
     out = Path(a.out) if a.out else OUT
@@ -611,8 +689,9 @@ def cmd_record(a):
             fails.append(f"field {c}")
     if parts["static"] and parts["static"]["unresolved_conflicts"]:
         fails.append("static conflicts")
+    xc = crosscheck(w, parts, field)
     rec = dict(schema="opentallas.dsrom-combined.record.v1", generated_utc=now(), source_commit=a.source_commit,
-               verdict="PASS" if not fails else "FAIL", failures=fails, field=field, **parts)
+               verdict="PASS" if not fails else "FAIL", failures=fails, run_vs_composition=xc, field=field, **parts)
     (out / "combined.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("RECORD", rec["verdict"], fails)
     return 0 if not fails else 1
