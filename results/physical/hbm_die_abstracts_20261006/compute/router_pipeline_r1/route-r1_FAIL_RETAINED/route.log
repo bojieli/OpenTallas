@@ -1,0 +1,1020 @@
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+mkdir -p /work/results/asap7/carson_router_pipeline_r1/base/
+echo 833.0000 > /work/results/asap7/carson_router_pipeline_r1/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/carson_router_pipeline_r1/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/carson_router_pipeline_r1/base/clock_period.txt
+Setting clock period to 833.0000
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv
+12. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv
+13. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv
+14. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_topk_pipeline'.
+16. Executing HIERARCHY pass (managing design hierarchy).
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_topk_pipeline'.
+17.1. Analyzing design hierarchy..
+17.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_merge6'.
+17.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_lane_pipeline'.
+Warning: Replacing memory \payload_q with list of registers. See /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv:34
+17.10. Analyzing design hierarchy..
+17.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.14. Analyzing design hierarchy..
+17.15. Analyzing design hierarchy..
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Ignoring module $paramod$dc3436b4f46d302d56e9267dcf8ab9c7741eb9cb\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$3c62abecbc83f11908e4a7ce8adea0d1072457ca\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$5c114b61f366274bd7b1c6743d535c8ae3c4935d\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_lane_pipeline because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$f87990c9ea730079f46c3e6fe13557f51454bf3a\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$753302effe44f5a6c65d0568fa238fb87e60db51\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$30ff585351fd087b060bcb4dfda9049a1ac0374a\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_topk_pipeline because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_merge6 because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$953ab22f9a2006c5b17e633c4216c8ec40e21300\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$d7c54670974889bf3cbe1d731039dbfc24fa7284\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$149f5524f342f9486e4e52e83248ec2eab598b5a\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+19. Executing RTLIL backend.
+Warnings: 13 unique messages, 13 total
+End of script. Logfile hash: cb738dc978, time: 0.75s, user: 0.70s, system: 0.03s, MEM: 81.31 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 82% 12x read_liberty (0 sec), 13% 1x hierarchy (0 sec), ...
+Elapsed time: 0:00.77[h:]min:sec. CPU time: user 0.72 sys 0.04 (99%). Peak memory: 86348KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          0             84 9054e6f29c114137df17
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/carson_router_pipeline_r1/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/carson_router_pipeline_r1/base/clock_period.txt
+Setting clock period to 833.0000
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [31]:
+    port Q[31] of cell $procdff$9860 ($dff)
+    port Q[31] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [30]:
+    port Q[30] of cell $procdff$9860 ($dff)
+    port Q[30] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [29]:
+    port Q[29] of cell $procdff$9860 ($dff)
+    port Q[29] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [28]:
+    port Q[28] of cell $procdff$9860 ($dff)
+    port Q[28] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [27]:
+    port Q[27] of cell $procdff$9860 ($dff)
+    port Q[27] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [26]:
+    port Q[26] of cell $procdff$9860 ($dff)
+    port Q[26] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [25]:
+    port Q[25] of cell $procdff$9860 ($dff)
+    port Q[25] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [24]:
+    port Q[24] of cell $procdff$9860 ($dff)
+    port Q[24] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [23]:
+    port Q[23] of cell $procdff$9860 ($dff)
+    port Q[23] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [22]:
+    port Q[22] of cell $procdff$9860 ($dff)
+    port Q[22] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [21]:
+    port Q[21] of cell $procdff$9860 ($dff)
+    port Q[21] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [20]:
+    port Q[20] of cell $procdff$9860 ($dff)
+    port Q[20] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [19]:
+    port Q[19] of cell $procdff$9860 ($dff)
+    port Q[19] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [18]:
+    port Q[18] of cell $procdff$9860 ($dff)
+    port Q[18] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [17]:
+    port Q[17] of cell $procdff$9860 ($dff)
+    port Q[17] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [16]:
+    port Q[16] of cell $procdff$9860 ($dff)
+    port Q[16] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [15]:
+    port Q[15] of cell $procdff$9860 ($dff)
+    port Q[15] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [14]:
+    port Q[14] of cell $procdff$9860 ($dff)
+    port Q[14] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [13]:
+    port Q[13] of cell $procdff$9860 ($dff)
+    port Q[13] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [12]:
+    port Q[12] of cell $procdff$9860 ($dff)
+    port Q[12] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [11]:
+    port Q[11] of cell $procdff$9860 ($dff)
+    port Q[11] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [10]:
+    port Q[10] of cell $procdff$9860 ($dff)
+    port Q[10] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [9]:
+    port Q[9] of cell $procdff$9860 ($dff)
+    port Q[9] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [8]:
+    port Q[8] of cell $procdff$9860 ($dff)
+    port Q[8] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [7]:
+    port Q[7] of cell $procdff$9860 ($dff)
+    port Q[7] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [6]:
+    port Q[6] of cell $procdff$9860 ($dff)
+    port Q[6] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [5]:
+    port Q[5] of cell $procdff$9860 ($dff)
+    port Q[5] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [4]:
+    port Q[4] of cell $procdff$9860 ($dff)
+    port Q[4] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [3]:
+    port Q[3] of cell $procdff$9860 ($dff)
+    port Q[3] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [2]:
+    port Q[2] of cell $procdff$9860 ($dff)
+    port Q[2] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [1]:
+    port Q[1] of cell $procdff$9860 ($dff)
+    port Q[1] of cell $procdff$9845 ($dff)
+Warning: multiple conflicting drivers for ot_hbm_router_lane_pipeline.\i [0]:
+    port Q[0] of cell $procdff$9860 ($dff)
+    port Q[0] of cell $procdff$9845 ($dff)
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Rerunning OPT passes. (Removed registers in this run.)
+4.1.6. Executing OPT_EXPR pass (perform const folding).
+4.1.7. Executing OPT_MERGE pass (detect identical cells).
+4.1.8. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.10. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.21. Executing OPT_MERGE pass (detect identical cells).
+4.3.22. Executing OPT_SHARE pass.
+4.3.23. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.25. Executing OPT_EXPR pass (perform const folding).
+4.3.26. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.29. Executing OPT_MERGE pass (detect identical cells).
+4.3.30. Executing OPT_SHARE pass.
+4.3.31. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.33. Executing OPT_EXPR pass (perform const folding).
+4.3.34. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.35. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.36. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.37. Executing OPT_MERGE pass (detect identical cells).
+4.3.38. Executing OPT_SHARE pass.
+4.3.39. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.40. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.41. Executing OPT_EXPR pass (perform const folding).
+4.3.42. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.43. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.44. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.45. Executing OPT_MERGE pass (detect identical cells).
+4.3.46. Executing OPT_SHARE pass.
+4.3.47. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.48. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.49. Executing OPT_EXPR pass (perform const folding).
+4.3.50. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.51. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.52. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.53. Executing OPT_MERGE pass (detect identical cells).
+4.3.54. Executing OPT_SHARE pass.
+4.3.55. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.57. Executing OPT_EXPR pass (perform const folding).
+4.3.58. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.61. Executing OPT_MERGE pass (detect identical cells).
+4.3.62. Executing OPT_SHARE pass.
+4.3.63. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.64. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.65. Executing OPT_EXPR pass (perform const folding).
+4.3.66. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.4.39. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.40. Executing OPT_EXPR pass (perform const folding).
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Rerunning OPT passes. (Maybe there is more to do..)
+5.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.19. Executing OPT_MERGE pass (detect identical cells).
+5.20. Executing OPT_DFF pass (perform DFF optimizations).
+5.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.22. Executing OPT_EXPR pass (perform const folding).
+5.23. Rerunning OPT passes. (Maybe there is more to do..)
+5.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.26. Executing OPT_MERGE pass (detect identical cells).
+5.27. Executing OPT_DFF pass (perform DFF optimizations).
+5.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.29. Executing OPT_EXPR pass (perform const folding).
+5.30. Rerunning OPT passes. (Maybe there is more to do..)
+5.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.33. Executing OPT_MERGE pass (detect identical cells).
+5.34. Executing OPT_DFF pass (perform DFF optimizations).
+5.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.36. Executing OPT_EXPR pass (perform const folding).
+5.37. Rerunning OPT passes. (Maybe there is more to do..)
+5.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.40. Executing OPT_MERGE pass (detect identical cells).
+5.41. Executing OPT_DFF pass (perform DFF optimizations).
+5.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.43. Executing OPT_EXPR pass (perform const folding).
+5.44. Rerunning OPT passes. (Maybe there is more to do..)
+5.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.47. Executing OPT_MERGE pass (detect identical cells).
+5.48. Executing OPT_DFF pass (perform DFF optimizations).
+5.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.50. Executing OPT_EXPR pass (perform const folding).
+5.51. Rerunning OPT passes. (Maybe there is more to do..)
+5.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.54. Executing OPT_MERGE pass (detect identical cells).
+5.55. Executing OPT_DFF pass (perform DFF optimizations).
+5.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.57. Executing OPT_EXPR pass (perform const folding).
+5.58. Rerunning OPT passes. (Maybe there is more to do..)
+5.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.61. Executing OPT_MERGE pass (detect identical cells).
+5.62. Executing OPT_DFF pass (perform DFF optimizations).
+5.63. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.64. Executing OPT_EXPR pass (perform const folding).
+5.65. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/carson_router_pipeline_r1/base/abc.constr -D 833.0
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `\ot_hbm_router_topk_pipeline' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+Took 181 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/carson_router_pipeline_r1/base/abc.constr -D 833.0
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+Warnings: 32 unique messages, 32 total
+End of script. Logfile hash: 0346c7fff5, time: 312.64s, user: 177.94s, system: 3.97s, MEM: 1993.53 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 50% 1x abc (180 sec), 14% 58x opt_expr (52 sec), ...
+Elapsed time: 5:13.30[h:]min:sec. CPU time: user 355.36 sys 4.72 (114%). Peak memory: 2041376KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v            313           1993 a60571e04221f664cd8b
+cp /work/constraint.sdc /work/results/asap7/carson_router_pipeline_r1/base/1_2_yosys.sdc
+touch -r /work/constraint.sdc /work/results/asap7/carson_router_pipeline_r1/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+mkdir -p /work/objects/asap7/carson_router_pipeline_r1/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+link_design ot_hbm_router_topk_pipeline
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 0 unused instances and 0 unused nets.
+Design area 32134 um^2 100% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/carson_router_pipeline_r1/base/1_synth.sdc
+Elapsed time: 0:07.14[h:]min:sec. CPU time: user 6.85 sys 0.30 (99%). Peak memory: 851524KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            7            831 17c5be7ca738ee1a61cf
+1_synth                   .sdc                             310e8727b62532ff3b35
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+Running floorplan.tcl, stage 2_1_floorplan
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/1_synth.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/1_synth.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 245907
+[INFO IFP-0001] Added 1071 rows of 5358 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 293.431 293.431 ) um
+[INFO IFP-0101] Core BBox: (  2.052  2.160 ) ( 291.384 291.330 ) um
+[INFO IFP-0102] Core area:                        83666.134 um^2
+[INFO IFP-0103] Total instances area:             32133.751 um^2
+[INFO IFP-0104] Effective utilization:                0.384
+[INFO IFP-0105] Number of instances:                 245907
+source /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120/TIELOx1_ASAP7_75t_R/L
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 258 tie TIEHIx1_ASAP7_75t_R instances.
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+[WARNING EST-0027] no estimated parasitics. Using wire load models.
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 1.54s
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.75e-01
+        M3 |        3.13e-02 |         1.56e-01
+        M4 |        1.80e-02 |         1.78e-01
+        M5 |        1.90e-02 |         1.64e-01
+        M6 |        1.19e-02 |         1.87e-01
+        M7 |        1.25e-02 |         1.63e-01
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 32145 um^2 38% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.sdc
+Elapsed time: 1:51.50[h:]min:sec. CPU time: user 128.25 sys 25.43 (137%). Peak memory: 1401560KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb          111           1368 e611e6c8eced4b7c87f2
+2_1_floorplan             .sdc                             310e8727b62532ff3b35
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+No macros found: Skipping macro_placement
+Design area 32145 um^2 38% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/2_2_floorplan_macro.odb
+Elapsed time: 0:02.81[h:]min:sec. CPU time: user 2.59 sys 0.23 (100%). Peak memory: 670488KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            2            654 e611e6c8eced4b7c87f2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 2142 endcaps.
+[INFO TAP-0005] Inserted 5901 tapcells.
+Design area 32380 um^2 39% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:02.48[h:]min:sec. CPU time: user 2.25 sys 0.22 (99%). Peak memory: 527020KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            2            514 10690ad2df0531b86f5b
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_1).
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 0.88s
+Design area 32380 um^2 39% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:04.61[h:]min:sec. CPU time: user 4.33 sys 0.28 (99%). Peak memory: 702664KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb            4            686 53fdc5b2b42d5522f331
+cp /work/results/asap7/carson_router_pipeline_r1/base/2_4_floorplan_pdn.odb /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.odb
+cp /work/results/asap7/carson_router_pipeline_r1/base/2_1_floorplan.sdc /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+Running global_place_skip_io.tcl, stage 3_1_place_gp_skip_io
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.4779999977350235, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.4399999976158142
+global_placement -skip_io -density 0.4779999977350235 -pad_left 0 -pad_right 0
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.052  2.160 ) ( 291.384 291.330 ) um
+[INFO GPL-0016] Core area:                   83666.134 um^2
+[INFO GPL-0036] Movable instances area:      32144.993 um^2
+[INFO GPL-0037] Total instances area:        32379.526 um^2
+[INFO GPL-0035] Pin density area adjust:      4002.875 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            254207
+[INFO GPL-0007] Movable instances:              246164
+[INFO GPL-0008] Fixed instances:                  8043
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 246680
+[INFO GPL-0011] Number of pins:                 824679
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 293.431 293.431 ) um
+[INFO GPL-0013] Placement BBox: (  2.052  2.160 ) ( 291.384 291.330 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 83666.134 um^2
+[INFO GPL-0017] Fixed instances area:          234.534 um^2
+[INFO GPL-0018] Movable instances area:      36147.867 um^2
+[INFO GPL-0019] Utilization:                    43.326 %
+[INFO GPL-0020] Standard cells area:         36147.867 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 246164	Region center = 0
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4780
+[INFO GPL-0024] Movable insts average area:      0.147 um^2
+[INFO GPL-0025] Ideal bin area:                  0.307 um^2
+[INFO GPL-0026] Ideal bin count:                272346
+[INFO GPL-0027] Total bin area:              83666.134 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,    512
+[INFO GPL-0029] Bin size (W * H):       0.565 *  0.565 um
+[INFO GPL-0030] Number of bins:                 262144
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9980 |  8.041066e+04 |   +0.00% |  1.66e-15 |      
+       10 |   0.9980 |  6.274665e+04 |  -21.97% |  2.70e-15 |      
+       20 |   0.9980 |  6.030116e+04 |   -3.90% |  4.41e-15 |      
+       30 |   0.9980 |  5.771584e+04 |   -4.29% |  7.18e-15 |      
+       40 |   0.9979 |  5.504476e+04 |   -4.63% |  1.17e-14 |      
+       50 |   0.9979 |  5.234561e+04 |   -4.90% |  1.90e-14 |      
+       60 |   0.9979 |  4.962009e+04 |   -5.21% |  3.10e-14 |      
+       70 |   0.9979 |  4.690308e+04 |   -5.48% |  5.05e-14 |      
+       80 |   0.9979 |  4.423294e+04 |   -5.69% |  8.23e-14 |      
+       90 |   0.9978 |  4.165750e+04 |   -5.82% |  1.34e-13 |      
+      100 |   0.9978 |  3.921653e+04 |   -5.86% |  2.18e-13 |      
+      110 |   0.9978 |  3.699088e+04 |   -5.68% |  3.56e-13 |      
+      120 |   0.9978 |  3.522728e+04 |   -4.77% |  5.79e-13 |      
+      130 |   0.9977 |  3.439312e+04 |   -2.37% |  9.44e-13 |      
+      140 |   0.9977 |  3.517826e+04 |   +2.28% |  1.54e-12 |      
+      150 |   0.9976 |  3.869560e+04 |  +10.00% |  2.50e-12 |      
+      160 |   0.9974 |  4.746266e+04 |  +22.66% |  4.07e-12 |      
+      170 |   0.9968 |  6.318878e+04 |  +33.13% |  6.62e-12 |      
+      180 |   0.9955 |  8.698580e+04 |  +37.66% |  1.08e-11 |      
+      190 |   0.9931 |  1.202512e+05 |  +38.24% |  1.75e-11 |      
+      200 |   0.9892 |  1.626598e+05 |  +35.27% |  2.83e-11 |      
+      210 |   0.9837 |  2.129008e+05 |  +30.89% |  4.59e-11 |      
+      220 |   0.9765 |  2.734338e+05 |  +28.43% |  7.43e-11 |      
+      230 |   0.9672 |  3.494410e+05 |  +27.80% |  1.20e-10 |      
+      240 |   0.9558 |  4.443734e+05 |  +27.17% |  1.93e-10 |      
+      250 |   0.9412 |  5.578667e+05 |  +25.54% |  3.11e-10 |      
+      260 |   0.9213 |  6.868974e+05 |  +23.13% |  5.00e-10 |      
+      270 |   0.8985 |  8.187495e+05 |  +19.20% |  8.03e-10 |      
+      280 |   0.8750 |  9.480922e+05 |  +15.80% |  1.29e-09 |      
+      290 |   0.8507 |  1.069714e+06 |  +12.83% |  2.07e-09 |      
+      300 |   0.8221 |  1.170869e+06 |   +9.46% |  3.34e-09 |      
+      310 |   0.7925 |  1.240410e+06 |   +5.94% |  5.39e-09 |      
+      320 |   0.7642 |  1.272199e+06 |   +2.56% |  8.75e-09 |      
+      330 |   0.7231 |  1.313490e+06 |   +3.25% |  1.42e-08 |      
+      340 |   0.6731 |  1.368434e+06 |   +4.18% |  2.30e-08 |      
+      350 |   0.6409 |  1.348486e+06 |   -1.46% |  3.74e-08 |      
+      360 |   0.5934 |  1.347888e+06 |   -0.04% |  6.09e-08 |      
+      370 |   0.5409 |  1.431757e+06 |   +6.22% |  9.83e-08 |      
+      380 |   0.4972 |  1.430993e+06 |   -0.05% |  1.60e-07 |      
+      390 |   0.4503 |  1.462796e+06 |   +2.22% |  2.59e-07 |      
+      400 |   0.4091 |  1.434186e+06 |   -1.96% |  4.23e-07 |      
+      410 |   0.3709 |  1.437950e+06 |   +0.26% |  6.87e-07 |      
+      420 |   0.3355 |  1.424225e+06 |   -0.95% |  1.09e-06 |      
+      430 |   0.3089 |  1.405509e+06 |   -1.31% |  1.60e-06 |      
+      440 |   0.2814 |  1.390174e+06 |   -1.09% |  2.36e-06 |      
+      450 |   0.2551 |  1.380087e+06 |   -0.73% |  3.47e-06 |      
+      460 |   0.2287 |  1.372322e+06 |   -0.56% |  5.11e-06 |      
+      470 |   0.2040 |  1.367085e+06 |   -0.38% |  7.53e-06 |      
+      480 |   0.1800 |  1.363527e+06 |   -0.26% |  1.11e-05 |      
+      490 |   0.1576 |  1.361521e+06 |   -0.15% |  1.63e-05 |      
+      500 |   0.1378 |  1.360278e+06 |   -0.09% |  2.41e-05 |      
+      510 |   0.1206 |  1.359845e+06 |   -0.03% |  3.55e-05 |      
+      520 |   0.1056 |  1.359872e+06 |   +0.00% |  5.22e-05 |      
+      525 |   0.0995 |  1.359627e+06 |          |  6.59e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 525
+[INFO GPL-1002] Placed Cell Area            36147.8674
+[INFO GPL-1003] Available Free Area         83431.6006
+[INFO GPL-1004] Minimum Feasible Density        0.4400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.4814
+[INFO GPL-1008]     - For 80% usage of free space: 0.5416
+[INFO GPL-1009]     - For 50% usage of free space: 0.8665
+[INFO GPL-1014] Final placement area: 36147.87 (+0.00%)
+Took 35 seconds: global_placement -skip_io -density 0.4779999977350235 -pad_left 0 -pad_right 0
+Design area 32380 um^2 39% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/3_1_place_gp_skip_io.odb
+Elapsed time: 0:38.02[h:]min:sec. CPU time: user 245.91 sys 0.55 (648%). Peak memory: 1060984KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb           38           1036 24baaafa3bb6c50981e2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 12164
+[INFO PPL-0002] Number of I/O             571
+[INFO PPL-0003] Number of I/O w/sink      571
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 35699.19 um.
+Design area 32380 um^2 39% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/3_2_place_iop.odb
+Elapsed time: 0:02.45[h:]min:sec. CPU time: user 2.20 sys 0.26 (100%). Peak memory: 702832KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb            2            686 c8632a9ce2534db7b64c
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO RSZ-0026] Removed 14557 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 515 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 55 BUFx2_ASAP7_75t_R output buffers.
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.46850000679492954, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.4300000071525574
+global_placement -density 0.46850000679492954 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.052  2.160 ) ( 291.384 291.330 ) um
+[INFO GPL-0016] Core area:                   83666.134 um^2
+[INFO GPL-0036] Movable instances area:      31116.505 um^2
+[INFO GPL-0037] Total instances area:        31351.039 um^2
+[INFO GPL-0035] Pin density area adjust:      4008.114 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            240220
+[INFO GPL-0007] Movable instances:              232177
+[INFO GPL-0008] Fixed instances:                  8043
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 232693
+[INFO GPL-0011] Number of pins:                 797276
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 293.431 293.431 ) um
+[INFO GPL-0013] Placement BBox: (  2.052  2.160 ) ( 291.384 291.330 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 83666.134 um^2
+[INFO GPL-0017] Fixed instances area:          234.534 um^2
+[INFO GPL-0018] Movable instances area:      35124.619 um^2
+[INFO GPL-0019] Utilization:                    42.100 %
+[INFO GPL-0020] Standard cells area:         35124.619 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 232177	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00550207 HPWL: 1456341895
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00398660 HPWL: 375724155
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00215096 HPWL: 378279009
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00154158 HPWL: 368460252
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00141066 HPWL: 373855868
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00100121 HPWL: 365675015
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00089605 HPWL: 370027985
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00046838 HPWL: 363992521
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00044238 HPWL: 367601113
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00024686 HPWL: 364511390
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00053579 HPWL: 366263313
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00021698 HPWL: 366189833
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00018652 HPWL: 366136184
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00013071 HPWL: 365862541
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00011277 HPWL: 365963346
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00008277 HPWL: 366104507
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00008343 HPWL: 365952764
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00007151 HPWL: 366246052
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00006068 HPWL: 366120299
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00005169 HPWL: 366356481
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4685
+[INFO GPL-0024] Movable insts average area:      0.151 um^2
+[INFO GPL-0025] Ideal bin area:                  0.323 um^2
+[INFO GPL-0026] Ideal bin count:                259101
+[INFO GPL-0027] Total bin area:              83666.134 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       1.130 *  1.130 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9899 |  1.666091e+05 |   +0.00% |  7.78e-15 |      
+       10 |   0.9826 |  2.085434e+05 |  +25.17% |  1.26e-14 |      
+       20 |   0.9790 |  2.203694e+05 |   +5.67% |  2.05e-14 |      
+       30 |   0.9780 |  2.270864e+05 |   +3.05% |  3.33e-14 |      
+       40 |   0.9771 |  2.355166e+05 |   +3.71% |  5.42e-14 |      
+       50 |   0.9760 |  2.443387e+05 |   +3.75% |  8.82e-14 |      
+       60 |   0.9752 |  2.519414e+05 |   +3.11% |  1.44e-13 |      
+       70 |   0.9743 |  2.607866e+05 |   +3.51% |  2.34e-13 |      
+       80 |   0.9735 |  2.697923e+05 |   +3.45% |  3.80e-13 |      
+       90 |   0.9725 |  2.779855e+05 |   +3.04% |  6.19e-13 |      
+      100 |   0.9715 |  2.856415e+05 |   +2.75% |  1.01e-12 |      
+      110 |   0.9707 |  2.926958e+05 |   +2.47% |  1.64e-12 |      
+      120 |   0.9697 |  2.992659e+05 |   +2.24% |  2.67e-12 |      
+      130 |   0.9691 |  3.055509e+05 |   +2.10% |  4.34e-12 |      
+      140 |   0.9682 |  3.116528e+05 |   +2.00% |  7.07e-12 |      
+      150 |   0.9671 |  3.179632e+05 |   +2.02% |  1.15e-11 |      
+      160 |   0.9660 |  3.251249e+05 |   +2.25% |  1.87e-11 |      
+      170 |   0.9644 |  3.341729e+05 |   +2.78% |  3.05e-11 |      
+      180 |   0.9620 |  3.468247e+05 |   +3.79% |  4.96e-11 |      
+      190 |   0.9578 |  3.654971e+05 |   +5.38% |  8.06e-11 |      
+      200 |   0.9507 |  3.931277e+05 |   +7.56% |  1.31e-10 |      
+      210 |   0.9396 |  4.327163e+05 |  +10.07% |  2.12e-10 |      
+      220 |   0.9234 |  4.875793e+05 |  +12.68% |  3.44e-10 |      
+      230 |   0.9038 |  5.600596e+05 |  +14.87% |  5.56e-10 |      
+      240 |   0.8794 |  6.540893e+05 |  +16.79% |  8.97e-10 |      
+      250 |   0.8494 |  7.814629e+05 |  +19.47% |  1.44e-09 |      
+      260 |   0.8180 |  9.044501e+05 |  +15.74% |  2.32e-09 |      
+      270 |   0.7863 |  1.002802e+06 |  +10.87% |  3.73e-09 |      
+      280 |   0.7561 |  1.062785e+06 |   +5.98% |  6.03e-09 |      
+      290 |   0.7203 |  1.084319e+06 |   +2.03% |  9.80e-09 |      
+      300 |   0.6775 |  1.103323e+06 |   +1.75% |  1.59e-08 |      
+      310 |   0.6315 |  1.166675e+06 |   +5.74% |  2.58e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 311, overflow: 0.631, keep resizer changes at: 1, HPWL: 1166674750
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    232693
+    final |     +1.3% |     112 |    4109 |          1709 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1492 slew violations.
+[INFO RSZ-0035] Found 1603 fanout violations.
+[INFO RSZ-0036] Found 6 capacitance violations.
+[INFO RSZ-0037] Found 41 long wires.
+[INFO RSZ-0039] Resized 112 instances.
+[INFO RSZ-0038] Inserted 4109 buffers in 1709 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    231919
+    23100 |     +0.0% |       0 |        0 |    208819
+    46200 |     +0.0% |      67 |      202 |    185719
+    69300 |     +1.0% |    2159 |     5924 |    162619
+    92400 |     +1.3% |    2184 |     7172 |    139519
+   115500 |     +1.6% |    2229 |     8689 |    116419
+   138600 |     +3.2% |    2715 |    15820 |     93319
+   161700 |     +5.6% |    3028 |    26501 |     70219
+   184800 |     +9.2% |    3066 |    42057 |     47119
+   207900 |    +12.0% |    3075 |    54149 |     24019
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# rsz::Rebuffer::insertAssuredOption(std::vector<std::shared_ptr<rsz::BufferedNet>, std::allocator<std::shared_ptr<rsz::BufferedNet> > >&, std::shared_ptr<rsz::BufferedNet>, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# 0x000000000336BF41 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 5# 0x000000000336B0EE in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 6# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 7# 0x000000000336B0EE in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 8# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 9# 0x000000000336B0EE in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+10# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# 0x000000000336B083 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+12# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# rsz::Rebuffer::recoverArea(std::shared_ptr<rsz::BufferedNet> const&, rsz::FixedDelay, float) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+14# rsz::Rebuffer::fullyRebuffer(sta::Pin*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+15# rsz::Resizer::findResizeSlacks(bool, bool, float) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+16# gpl::TimingBase::executeTimingDriven(bool, bool) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+17# gpl::NesterovPlace::runTimingDriven(int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, int&, long&, bool, int&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+18# gpl::NesterovPlace::doNesterovPlace(int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+19# gpl::Replace::doNesterovPlace(int, gpl::PlaceOptions const&, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+20# replace_nesterov_place_cmd(std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > const&, std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > const&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+21# 0x0000000000FF07D3 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+22# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+23# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+24# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+25# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+26# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+27# 0x0000000003E22810 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+28# ord::tclAppInit(Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+29# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+30# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+31# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+32# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+33# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+Elapsed time: 3:44.98[h:]min:sec. CPU time: user 625.88 sys 98.64 (322%). Peak memory: 9255316KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 245
+make: *** [Makefile:499: /work/results/asap7/carson_router_pipeline_r1/base/3_3_place_gp.odb] Error 2

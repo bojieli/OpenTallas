@@ -1,0 +1,49 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:43:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                     : ... In instance ot_hbm_vm_publication_parent
+   43 |  generate if(!ENABLE)begin:off
+      |              ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv:21:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                        : ... In instance ot_hbm_vm_publication_parent.on.u_activation
+   21 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv:31:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                          : ... In instance ot_hbm_vm_publication_parent.on.u_index
+   31 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:74:21: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_vm_publication_parent.on.receipts[0].u_receipt.u_state
+   74 |      else begin code[index]<=snapshot^mask;code[WORDS]<=encode64({ctl[63:3],3'd3});end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:14: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'index' generates 16 bits.
+                                                                                             : ... In instance ot_hbm_vm_publication_parent.on.receipts[0].u_receipt.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |              ^~
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:27: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_vm_publication_parent.on.receipts[0].u_receipt.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:75:21: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_vm_publication_parent.on.receipts[0].u_receipt.u_state
+   75 |    3:if(check72(code[index])!=0)begin failed<=1;failed_n<=0;end
+      |                     ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv:143:49: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'row' generates 9 bits.
+                                                                                                           : ... In instance ot_hbm_vm_publication_parent.on.u_index
+  143 |       reg [63:0] v;v=valid_bits[k*64+:64];if(row/64==k)v[row%64]=1;
+      |                                                 ^
+%Warning-UNOPTFLAT: physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:64:62: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_vm_publication_parent.on.iread_r'
+   64 |   wire index_drained,index_fault,ibind_r,iwr_r,iACK_v,irsp_v,iread_r;
+      |                                                              ^~~~~~~
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:64:62:      Example path: ot_hbm_vm_publication_parent.on.iread_r
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:175:22:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:36:38:      Example path: index_read_r
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:176:10:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:176:8:      Example path: ot_hbm_vm_publication_parent.on.rd
+                    physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv:80:20:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:64:34:      Example path: ot_hbm_vm_publication_parent.on.ibind_r
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:92:16:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:9:32:      Example path: bind_r
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:93:10:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:93:8:      Example path: ot_hbm_vm_publication_parent.on.bf
+                    physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv:82:16:      Example path: ASSIGNW
+                    physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv:64:62:      Example path: ot_hbm_vm_publication_parent.on.iread_r

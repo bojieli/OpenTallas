@@ -1,0 +1,42 @@
+{
+  "status": "SOURCE_OWNER_FIX_PENDING_PRICE_BEFORE_RTL",
+  "existing_model": "results/physical/hbm_die_abstracts_20261006/links/native_quarter/model_before_rtl.json",
+  "existing_model_sha256": "87d5a8e2cdb20f3a105bddb16fdaf2155bead01a114f3b1e826b0ddf3055a098",
+  "existing_quarter_source": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv",
+  "existing_quarter_source_sha256": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+  "serial_stations_per_quarter": 4,
+  "fanouts": [
+    3,
+    3,
+    3,
+    2
+  ],
+  "station_implementation_count": 1,
+  "waypoint_copies": 208,
+  "target_period_ns": 0.8333333333333334,
+  "actual_selected_FF": {
+    "NO2": 5916,
+    "NO3": 6566
+  },
+  "latency_price": {
+    "normal_forward_added_edges_per_station": "f, actual selected source mechanism only",
+    "reverse_receipt_added_edges_per_station": "r, actual selected source mechanism only",
+    "quarter_farthest_forward_added_ns": "4*f/1.2",
+    "quarter_farthest_return_added_ns": "4*r/1.2",
+    "quarter_roundtrip_added_ns": "4*(f+r)/1.2",
+    "one_edge_per_forward_hop_ns": 3.3333333333333335,
+    "one_edge_per_both_directions_ns": 6.666666666666667,
+    "CE_existing_repair_edges": 5,
+    "CE_only_added_edge_ns": 0.8333333333333334,
+    "CE_only_constraint": "Normal fault masking and held ownership must remain immediate; an unchecked pipeline stage cannot grant normal/ACK permissions."
+  },
+  "area_price": {
+    "added_protected_state_bits": "OPEN source-owner implementation required; every added mutable bit must be protected and priced",
+    "clock_receiver_cap": "OPEN actual selected mapped FF clock pins, then CTS",
+    "balanced_combinational_option": "No new cycles/FF only if exact first-CE priority and held/fault/repair calendar preserved; positive gates and fanout/area still measured"
+  },
+  "selected_fix": null,
+  "RTL_modified": false,
+  "physical_launch_allowed": false,
+  "reason": "Exact controller/code-bit trace plus Jason coding-control owner decision required; frozen maps retained attrs. Do not launch unchanged width/density variants."
+}

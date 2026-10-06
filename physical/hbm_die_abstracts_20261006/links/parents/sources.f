@@ -1,0 +1,5 @@
+rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
+rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv
+rtl/common/ot_fwd_link_stage.sv
+physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv
+physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv
