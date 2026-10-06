@@ -1,0 +1,24 @@
+{"pass_exact": true, "slots": 6, "negative": true}
+	Command being timed: "python3 tools/hbm_integrated_expert_pq.py --step build-run --out /srv/opentallas-scratch/codex/item2-hbm-integrated-20261006/r3 --service /srv/opentallas-scratch/codex/item2-hbm-integrated-20261006/fixtures/hubble-wg-service-r2/L20 --arithmetic /srv/opentallas-scratch/codex/item2-hbm-integrated-20261006/fixtures/die2-arithmetic --ids 41,65,158,164,259,266 --jobs 16"
+	User time (seconds): 305454.12
+	System time (seconds): 93.78
+	Percent of CPU this job got: 1075%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:53:18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1496904
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 762
+	Minor (reclaiming a frame) page faults: 9769711
+	Voluntary context switches: 1018
+	Involuntary context switches: 6252269
+	Swaps: 0
+	File system inputs: 90320
+	File system outputs: 3184664
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
