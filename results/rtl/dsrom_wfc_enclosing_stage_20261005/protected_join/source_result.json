@@ -1,0 +1,84 @@
+{
+  "date_UTC": "2026-10-06T04:22:29.474948+00:00",
+  "result": "ACTUAL_PROVIDER_CALLER_SOURCE_JOIN_LINT_PASS_RUNTIME_PENDING",
+  "scope": "fullMAXU866 SOURCE0 canonical L19 cfg/prompt and whole-stage WFC/C8 minimum native XA/XB boundary, not numerical fullstage or whole S81",
+  "provider_source": "554d7b0c9",
+  "provider_main": "16aa68768",
+  "default_ENABLE": 0,
+  "default_STRUCTURAL": 0,
+  "real_VM_macros": 288,
+  "prompt_SRAMs": 14,
+  "configuration_ROMs": 4,
+  "ROM_ECC": false,
+  "model_before_RTL_commit": "d4c7cca1f",
+  "caller_FF": 126,
+  "read_payload_copy_FF": 0,
+  "clocking": "WFC state CE only, router/root fast clock continues; related fast/slow roots 3:4, physical periods833.333333/1111.111111ps",
+  "bench_period_ps": {
+    "fast": 833.334,
+    "slow": 1111.112,
+    "phase_ps": 0
+  },
+  "semantics": [
+    "actual XA RX/TX epoch/user/position owner; different XB owner backpressured, not relabelled",
+    "two protected reads precede five writers in retained XA/XB0/XB1/XB2/XB3 priority",
+    "positive row visibility enables native commit, not provider retirement",
+    "actual WFC read capture and held external XB reply consumed by exactowner required before allcopies_fenced",
+    "C8 fragment retirement and canonical whole-stage ACK remain separate from provider consume/port_retired",
+    "warm accepted debt retained and poisoned; no reset forgiveness"
+  ],
+  "source_checks": {
+    "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+    "ENABLE1_STRUCTURAL1_bench_lint": {
+      "exit": 0,
+      "seconds": 2.738,
+      "allocated_MB": 121.156,
+      "macro_views": "alignedv2 SRAM blackbox and existing ROM blackbox, -DSYNTHESIS; not numerical SRAM simulation"
+    },
+    "defaultOFF_lint": {
+      "exit": 0,
+      "seconds": 0.039,
+      "allocated_MB": 43.152
+    },
+    "shell_syntax": "PASS",
+    "generator_python_syntax": "PASS",
+    "generator_regeneration": "PASS",
+    "diff_check": "PASS",
+    "preserved_first_lint_failures": [
+      "ROM blackbox VIAMAP parameter without -DSYNTHESIS",
+      "defaultOFF lint command .bb.v filenames nonexistent, corrected to _bb.v; not RTL/runtime verdicts"
+    ]
+  },
+  "functional_gate": {
+    "status": "NOT_RUN",
+    "runner": "tools/dsrom_wfc_protected_exact.sh",
+    "one_configuration": true,
+    "independent_golden": "41 native VM writes, 47 output flits, actual olddata read and lastwriter4444, highword32767",
+    "negative": "wrongowner readconsume rejected plus accepted VM and WFC warm debt retained",
+    "latency": "actual accepted->reply/consume->retire fast counter, slow-edge counter, actual C8 capture; no fixed oneedge assumption",
+    "dependency": "Supplier source554d7b0c9 unchanged; normal MODE0 full2MiB6tx/7read/7visiblewrite948cycles and CE/warm/identity cases retained PASS. Historical MODE3 expected quarantine followed by inappropriate positive finish; bench-only correctionc671, sole AGI3504062 UE-only gate pending. Reuse all completed supplier cases; new caller mechanism runs once after actual supplier release and fresh unchanged admission; no final physical prerequisite for source."
+  },
+  "hub_routing_layer_gate": "PENDING_CHANGED_CONTEXT_RUNTIME_AND_PHYSICAL; router source retained, no routing PASS claimed",
+  "SS60_FF25_context_qualified": false,
+  "adopted": false,
+  "source_sha256": {
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_vm_caller_adapter.sv": "863f99e24371c61fa547f3ed33cb1559a09c785e8bb5549feb3d2cc79fc9f576",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_protected_stage.sv": "2a488bd9688bbe52d728ca0b54bd05a1c058068346dcb685a6c1d4227961a327",
+    "rtl/test/dsrom_wavefront/tb_wfc_protected_stage.sv": "ee6ac82239c49babc011d4f3a1d2c17b2183b9f535875ff59a5cc27002a24472",
+    "tools/dsrom_wfc_protected_sources.py": "2adefb821011ae3b309c4012936214137ed457137a5669789a367839e021fbbe",
+    "tools/dsrom_wfc_protected_exact.sh": "b09f308b606ad594b59f8709b081a9c9e082d5c73fa1436d1d168e5b3bdefaa3",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_codec.sv": "dc2ca82f3b0d8b1a75bea2e9f6a82945ebf61e235345227ca9182fd70ce094b3",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_backend.sv": "0bdf7684f894aa780cf022aed88c8bdfa7e790d93e449e2177e61ca6c5764471",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv": "f765dae04268ca8eb3a3055803c0edbfad619f04a72079ecad5e5ef7bc4328ff",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_ratio_fifo.sv": "110a9e1859f58f2663c878085c104369a20ca3486de8294882e9e6ffbb523811"
+  },
+  "preserved_original_controller_sha256": "4032da3c9b4baa4f4639b836379d8f5eba3b365c68b708edbaeb185784dbcc62",
+  "raw_lint_logs": [
+    "zeno-wfc-protected-join-lint-r1-20261006.log.gz",
+    "zeno-wfc-protected-join-lint-r2-20261006.log.gz",
+    "zeno-wfc-protected-join-bench-lint-r1-20261006.log.gz",
+    "zeno-wfc-protected-join-defaultoff-lint-r1-20261006.log.gz",
+    "zeno-wfc-protected-join-defaultoff-lint-r2-20261006.log.gz"
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "opentallas.hbm.compute.quarter_size.v1",
+  "model_source": "tools/uarch_model.py PRESETS.proposal sfu_lanes / 4, hbm_gpu_design(v41) HC 5120 / 4",
+  "model_sha256": "caf0d5b67a790700538177bb0fdaaff6ed3dac5a521cf6505531ce6438215b33",
+  "protection_source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+  "sfu": {
+    "top": "ot_hbm_sfu_quarter",
+    "lanes": 64,
+    "replicas": 4,
+    "opcodes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "port_bits": {
+      "request": 2083,
+      "response": 2081
+    },
+    "port_bytes": {
+      "request": 260.375,
+      "response": 260.125
+    },
+    "clock_ps": 833.3333333333334,
+    "MLAT": 6,
+    "ALAT": 6,
+    "DDIV": 21,
+    "SIDEX": 4,
+    "primitives": "c12 exp/divider/side arithmetic from adopted SU; completion exported from same side result register",
+    "composed_cycles": "request capture + PRIME (1 added root/engine edge) + dispatch + existing opcode pipeline + protected result capture; engine completion drives retirement, no invented zero latency",
+    "expected_engine_depth": {
+      "exp": 94,
+      "sigm": 121,
+      "silu": 121,
+      "rsqrt": 77,
+      "sqrt": 35,
+      "softplus_sqrt": 276,
+      "egate": 158
+    },
+    "held": {
+      "request": {
+        "payload_bits": 2084,
+        "data_words": 33,
+        "storage_ff": 2738,
+        "check_bits": 264,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "response": {
+        "payload_bits": 2082,
+        "data_words": 33,
+        "storage_ff": 2738,
+        "check_bits": 264,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "controller": {
+        "payload_bits": 64,
+        "data_words": 1,
+        "storage_ff": 434,
+        "check_bits": 8,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "wrapper_ff": 5910,
+      "wrapper_dff_area_lower_um2": 1723.3560000000002,
+      "combinational_SECDED_mux_fanout_area": "must measure; not zero or counted as closed",
+      "outstanding_transactions": 1,
+      "request_capture": 1,
+      "prime": 1,
+      "dispatch": 1,
+      "response_capture": 1,
+      "no_backpressure_loss": "request held until response consumed; response held in protected cut",
+      "parent_clock_closed": false,
+      "ICG_replicas": 1,
+      "ICG_clock_load_area": "must measure actual parent; no leaf insertion inheritance",
+      "clock_freezes_on": "CE repair or protected controller nonnormal",
+      "engine_reset_policy": "POR or normal IDLE only; no reset during CE repair",
+      "latency_delta_cycles": 1,
+      "state_ff_delta": 0,
+      "reset_fanout_cost": "real reset fanout/CTS/load cost remains to be measured; not free"
+    }
+  },
+  "hc": {
+    "top": "ot_hbm_hc_quarter",
+    "output_lanes": 256,
+    "groups": 64,
+    "replicas": 4,
+    "fp32_mac_budget": 1280,
+    "operation": "HC_POST",
+    "coverage": "HC_POST only. HC_PRE/projection/Sinkhorn/selection remain source-owner dependencies, no whole mHC claim",
+    "port_bits": {
+      "request": 10912,
+      "response": 8225
+    },
+    "port_bytes": {
+      "request": 1364.0,
+      "response": 1028.125
+    },
+    "ML": 6,
+    "AL": 5,
+    "WIN": 0,
+    "WOUT": 0,
+    "primitives": "ot_dsrom_su_hcpost_group/lane, closed lane_m6a5 SS+.56 FF+4.47; no parent clock inheritance",
+    "fp32_mul_replicas": 1280,
+    "fp32_add_replicas": 1024,
+    "golden_order": "r0*c0+r1*c1; +r2*c2; +r3*c3; +y*p; BF16 RNE",
+    "composed_cycles": "request capture + PRIME (1 added root/engine edge) + dispatch + unchanged group input and HC-post pipeline + protected result capture",
+    "held": {
+      "request": {
+        "payload_bits": 10913,
+        "data_words": 171,
+        "storage_ff": 12674,
+        "check_bits": 1368,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "response": {
+        "payload_bits": 8226,
+        "data_words": 129,
+        "storage_ff": 9650,
+        "check_bits": 1032,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "controller": {
+        "payload_bits": 64,
+        "data_words": 1,
+        "storage_ff": 434,
+        "check_bits": 8,
+        "control_words": 5,
+        "repair": "existing W2 five-edge CE repair; permissions fail closed"
+      },
+      "wrapper_ff": 22758,
+      "wrapper_dff_area_lower_um2": 6636.232800000001,
+      "combinational_SECDED_mux_fanout_area": "must measure; not zero or counted as closed",
+      "outstanding_transactions": 1,
+      "request_capture": 1,
+      "prime": 1,
+      "dispatch": 1,
+      "response_capture": 1,
+      "no_backpressure_loss": "request held until response consumed; response held in protected cut",
+      "parent_clock_closed": false,
+      "ICG_replicas": 1,
+      "ICG_clock_load_area": "must measure actual parent; no leaf insertion inheritance",
+      "clock_freezes_on": "CE repair or protected controller nonnormal",
+      "engine_reset_policy": "POR or normal IDLE only; no reset during CE repair",
+      "latency_delta_cycles": 1,
+      "state_ff_delta": 0,
+      "reset_fanout_cost": "real reset fanout/CTS/load cost remains to be measured; not free"
+    }
+  },
+  "physical": {
+    "utilization": [
+      0.55,
+      0.6
+    ],
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "slot_fit": "OPEN: actual protected parent geometry/load/CTS/PG/routing inventory not measured; historical outlines not inherited",
+    "routing": "real port bit count above; tracks/serialized 1024b framing require corrected generator consumer binding"
+  },
+  "adopted": false,
+  "per_user_gain_claim": false
+}

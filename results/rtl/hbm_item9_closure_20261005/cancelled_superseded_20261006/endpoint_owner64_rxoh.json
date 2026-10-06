@@ -1,0 +1,117 @@
+{
+  "status": "CANCELLED_SUPERSEDED",
+  "utc": "2026-10-06T06:20:35.331861+00:00",
+  "container": "26a098e8aad8f60561ca5f24b1d15240f5172b36c3fd12d7031e9b3f413d8f79",
+  "route_pid": 4182833,
+  "root": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1",
+  "reason": "Old generic-IO context superseded by exact853 PIPE successor; cannot provide missing installed O_COLL join/regenerated parent pin/clock/load binding. No current build consumer of future outputs; read-only collectors retired. Cancellation is not a final SS/FF verdict.",
+  "unique_required_unmeasured_result": null,
+  "preserve_all_sources_logs_CTS_objects": true,
+  "physical_signoff": false,
+  "adopted": false,
+  "pre_stop_audit": {
+    "utc": "2026-10-06T06:19:45.800082+00:00",
+    "roots": {
+      "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1": {
+        "exists": true,
+        "checkpoints": [
+          {
+            "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts.odb",
+            "bytes": 179166147,
+            "sha256": "cb9b75f79d3717639533081d450bfcf7b03c21aa0048d1af4ad53fcd0f030cd0"
+          },
+          {
+            "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts.sdc",
+            "bytes": 1543190,
+            "sha256": "e91eba248145133d5dd4873522f1b73835ea53029349bc0b4f398925fa39dc5a"
+          },
+          {
+            "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts_final.rpt",
+            "bytes": 68793,
+            "sha256": "7b675d50fa2e6c6c1b47544c9fd632f8dee1d9c6ba76a99758b00d88f0befd22"
+          }
+        ],
+        "last_log": {
+          "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/5_1_grt.tmp.log",
+          "tail": "     1520 |       0 |    6076 |            0 |    +1.1% | -710.333 | -5734483.500 | data[8082]$_DFF_P_/D\n     1530 |       0 |    6116 |            0 |    +1.1% | -710.228 | -5733403.000 | data[6127]$_DFF_P_/D\n     1540 |       0 |    6156 |            0 |    +1.1% | -710.133 | -5732333.000 | data[6741]$_DFF_P_/D\n     1550 |       0 |    6196 |            0 |    +1.1% | -710.030 | -5731264.500 | data[7812]$_DFF_P_/D\n     1560 |       0 |    6236 |            0 |    +1.1% | -709.916 | -5730194.000 | data[6032]$_DFF_P_/D\n     1570 |       0 |    6276 |            0 |    +1.1% | -709.833 | -5729110.000 | data[6181]$_DFF_P_/D\n     1580 |       0 |    6316 |            0 |    +1.2% | -709.765 | -5728036.000 | rx_rec[165]$_DFF_P_/D\n     1590 |       0 |    6356 |            0 |    +1.2% | -709.596 | -5726963.500 | data[6743]$_DFF_P_/D\n"
+        }
+      }
+    },
+    "containers": [
+      {
+        "id": "26a098e8aad8f60561ca5f24b1d15240f5172b36c3fd12d7031e9b3f413d8f79",
+        "pid": 1345292,
+        "running": true,
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "/srv/opentallas/repos/codex-item9-20261005",
+            "Destination": "/src",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs",
+            "Destination": "/work",
+            "Mode": "",
+            "RW": true,
+            "Propagation": "rprivate"
+          }
+        ],
+        "cmd": [
+          "bash",
+          "-lc",
+          "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+        ]
+      }
+    ],
+    "consumers": [
+      {
+        "pid": 1246044,
+        "cmd": "bash -c bash tools/hbm_item9_route.sh /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1 item9_owner64_rxoh_r1 results/rtl/hbm_item9_closure_20261005/endpoint_r2/result.json results/rtl/hbm_item9_closure_20261005/exact_r1/result.json; echo $? > /srv/opentallas-scratch2/codex/item9-closure-20261005/exit ",
+        "cwd": "/srv/opentallas/repos/codex-item9-20261005",
+        "files": []
+      },
+      {
+        "pid": 1246045,
+        "cmd": "bash tools/hbm_item9_route.sh /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1 item9_owner64_rxoh_r1 results/rtl/hbm_item9_closure_20261005/endpoint_r2/result.json results/rtl/hbm_item9_closure_20261005/exact_r1/result.json ",
+        "cwd": "/srv/opentallas/repos/codex-item9-20261005",
+        "files": []
+      },
+      {
+        "pid": 1246077,
+        "cmd": "python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asap7 --top noc_tw_coll_ctx_owner64 --param TX_MASK_LA=1 --param OWNER64=1 --param RXOH=1 --param RDUP=16 --source rtl/link/ot_link_afifo.sv --source rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv --source rtl/gpu_sys/ot_gpu_coll_mux_f12.sv --source rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv --source rtl/gpu_sys/ot_gpu_coll_endpoint_f12_cuts.sv --source results/rtl/hbm_item9_closure_20261005/noc_tw_coll_ctx_owner64.sv --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 --die-area 0 0 540 540 --core-area 2.16 2.16 538.84 538.84 --stages synth,pnr --core-utilization 30 --place-density .55 --hold-margin-ns .01 --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --purpose signoff_target --nickname-tag item9_owner64_rxoh_r1 --keep-workdir /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work --output /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/physical.json ",
+        "cwd": "/srv/opentallas/repos/codex-item9-20261005",
+        "files": [
+          "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/run.log",
+          "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/run.log"
+        ]
+      },
+      {
+        "pid": 1345251,
+        "cmd": "docker run --rm -v /srv/opentallas/repos/codex-item9-20261005:/src:ro -v /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate ",
+        "cwd": "/srv/opentallas/repos/codex-item9-20261005",
+        "files": []
+      }
+    ]
+  },
+  "retired_collector_pid": 2723893,
+  "signal": "SIGTERM",
+  "signal_sent": true,
+  "signal_utc": "2026-10-06T06:21:03.738472+00:00",
+  "initial_attempt_note": "First audit-gated attempt stopped before route signal; root-owned route required existing sudo permission",
+  "post_stop": {
+    "utc": "2026-10-06T06:21:35.304406+00:00",
+    "container_running": false,
+    "route_pid_present": false,
+    "checkpoint_hashes_unchanged": true,
+    "stage_logs_retained": true
+  },
+  "physical_record_after_stop": {
+    "flow_completed": false,
+    "status": "error",
+    "error": "FlowError: ORFS place-and-route failed with exit 2:\n0 |    +1.0% | -713.349 | -5757103.500 | data[6561]$_DFF_P_/D\n     1320 |       0 |    5276 |            0 |    +1.0% | -713.235 | -5756020.500 | data[157]$_DFF_P_/D\n     1330 |       0 |    5316 |            0 |    +1.0% | -713.081 | -5754944.000 | data[3058]$_DFF_P_/D\n     1340 |       0 |    5356 |            0 |    +1.0% | -712.950 | -5753865.500 | data[3207]$_DFF_P_/D\n     1350 |       0 |    5396 |            0 |    +1.0% | -712.677 | -5752788.500 | data[2809]$_DFF_P_/D\n     1360 |       0 |    5436 |            0 |    +1.0% | -712.498 | -5751718.500 | data[6721]$_DFF_P_/D\n     1370 |       0 |    5476 |            0 |    +1.0% | -712.358 | -5750635.000 | data[6894]$_DFF_P_/D\n     1380 |       0 |    5516 |            0 |    +1.0% | -712.165 | -5749548.500 | data[2465]$_DFF_P_/D\n     1390 |       0 |    5556 |            0 |    +1.0% | -712.050 | -5748462.500 | data[399]$_DFF_P_/D\n     1400 |       0 |    5596 |            0 |    +1.0% | -711.944 | -5747380.000 | data[7770]$_DFF_P_/D\n     1410 |       0 |    5636 |            0 |    +1.0% | -711.775 | -5746306.000 | data[3465]$_DFF_P_/D\n     1420 |       0 |    5676 |            0 |    +1.0% | -711.639 | -5745226.500 | data[2300]$_DFF_P_/D\n     1430 |       0 |    5716 |            0 |    +1.0% | -711.528 | -5744150.000 | data[6895]$_DFF_P_/D\n     1440 |       0 |    5756 |            0 |    +1.1% | -711.397 | -5743080.500 | data[2805]$_DFF_P_/D\n     1450 |       0 |    5796 |            0 |    +1.1% | -711.283 | -5742006.000 | data[7771]$_DFF_P_/D\n     1460 |       0 |    5836 |            0 |    +1.1% | -711.081 | -5740933.000 | data[1931]$_DFF_P_/D\n     1470 |       0 |    5876 |            0 |    +1.1% | -710.946 | -5739854.500 | data[7574]$_DFF_P_/D\n     1480 |       0 |    5916 |            0 |    +1.1% | -710.812 | -5738785.500 | data[6712]$_DFF_P_/D\n     1490 |       0 |    5956 |            0 |    +1.1% | -710.642 | -5737712.500 | data[6910]$_DFF_P_/D\n     1500 |       0 |    5996 |            0 |    +1.1% | -710.541 | -5736634.500 | data[413]$_DFF_P_/D\n     1510 |       0 |    6036 |            0 |    +1.1% | -710.462 | -5735569.000 | data[4006]$_DFF_P_/D\n     1520 |       0 |    6076 |            0 |    +1.1% | -710.333 | -5734483.500 | data[8082]$_DFF_P_/D\n     1530 |       0 |    6116 |            0 |    +1.1% | -710.228 | -5733403.000 | data[6127]$_DFF_P_/D\n     1540 |       0 |    6156 |            0 |    +1.1% | -710.133 | -5732333.000 | data[6741]$_DFF_P_/D\n     1550 |       0 |    6196 |            0 |    +1.1% | -710.030 | -5731264.500 | data[7812]$_DFF_P_/D\n     1560 |       0 |    6236 |            0 |    +1.1% | -709.916 | -5730194.000 | data[6032]$_DFF_P_/D\n     1570 |       0 |    6276 |            0 |    +1.1% | -709.833 | -5729110.000 | data[6181]$_DFF_P_/D\n     1580 |       0 |    6316 |            0 |    +1.2% | -709.765 | -5728036.000 | rx_rec[165]$_DFF_P_/D\n     1590 |       0 |    6356 |            0 |    +1.2% | -709.596 | -5726963.500 | data[6743]$_DFF_P_/D\n\nElapsed time: 0:08.22[h:]min:sec. CPU time: user 7.91 sys 0.30 (99%). Peak memory: 827440KB.\nElapsed time: 1:42.54[h:]min:sec. CPU time: user 116.08 sys 22.73 (135%). Peak memory: 1503760KB.\nElapsed time: 0:04.03[h:]min:sec. CPU time: user 3.80 sys 0.23 (99%). Peak memory: 683964KB.\nElapsed time: 0:02.83[h:]min:sec. CPU time: user 2.64 sys 0.18 (100%). Peak memory: 712384KB.\nElapsed time: 0:07.76[h:]min:sec. CPU time: user 7.49 sys 0.26 (99%). Peak memory: 785916KB.\nElapsed time: 1:05.43[h:]min:sec. CPU time: user 353.08 sys 0.92 (541%). Peak memory: 1492900KB.\nElapsed time: 0:07.87[h:]min:sec. CPU time: user 7.46 sys 0.40 (99%). Peak memory: 785084KB.\nElapsed time: 8:47.08[h:]min:sec. CPU time: user 1009.46 sys 86.27 (207%). Peak memory: 4445280KB.\nElapsed time: 11:29.94[h:]min:sec. CPU time: user 740.05 sys 44.22 (113%). Peak memory: 2129544KB.\nElapsed time: 8:40.92[h:]min:sec. CPU time: user 570.13 sys 39.26 (116%). Peak memory: 3226380KB.\nElapsed time: 10:08.14[h:]min:sec. CPU time: user 773.03 sys 123.12 (147%). Peak memory: 4171364KB.\nElapsed time: 6:59:23.73[h:]min:sec. CPU time: user 28179.74 sys 94.16 (112%). Peak memory: 8405452KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 241\nmake: *** [Makefile:585: /work/results/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/5_1_grt.odb] Error 2\n"
+  }
+}

@@ -2,6 +2,7 @@
 """Reuse real macro/backing access resolution for the additive P0 root."""
 import argparse
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 
@@ -23,6 +24,9 @@ def main():
     backing = args.backing_member or TOP+'__DOT__u_hbm__DOT__mem'
     if not prefix.endswith('__DOT__') or prefix+'prog_mem' not in header or backing not in header:
         raise ValueError('actual generated consumer and producer-owned backing required')
+    debt = prefix+'u_kv__DOT__w_valid'
+    if not re.search(r'QData/\*63:0\*/\s+'+re.escape(debt)+r'\s*;', header):
+        raise ValueError('actual 64-entry service write-ACK ownership bitmap required')
     if '--kv-ideal' not in extra or extra[extra.index('--kv-ideal')+1] != '0':
         raise ValueError('P0 forbids ideal KV access generation')
     if '--hbm-layers' not in extra or extra[extra.index('--hbm-layers')+1] != '36':
@@ -40,6 +44,9 @@ def main():
         access = access.replace(BASE+'__DOT__', prefix)
         access += ('\nstatic_assert(sizeof(decltype(rm_hbm_mem(static_cast<Vdie___024root*>(nullptr))))'
                    ' == size_t(36)*131072*32, "P0 requires genuine 36-layer backing; MEM1 forbidden");\n')
+        access += ('\n// Read-only original service ACK owners: only identity-valid ACKs clear a bit.\n'
+                   'inline uint64_t rm_write_ack_owners(const Vdie___024root* r) { return r->'
+                   +debt+'; }\n')
         args.out.write_text(access)
 
 

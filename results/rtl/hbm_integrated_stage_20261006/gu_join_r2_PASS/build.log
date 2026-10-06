@@ -1,0 +1,27 @@
+rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_gu_sm20.sv:365: warning: Port 4 (op_rows) of ot_gpu_sm expects 5 bits, got 11.
+rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_gu_sm20.sv:365:        : Pruning 6 high bits of the expression.
+rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_gu_sm20.sv:365: warning: Port 12 (w_data) of ot_gpu_sm expects 16 bits, got 256.
+rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_gu_sm20.sv:365:        : Pruning 240 high bits of the expression.
+	Command being timed: "iverilog -g2012 -s tb_hbm_integrated_gu_sm20 -o /tmp/hbm-integrated-gu-descriptor-joined-r2/gate.vvp -f /tmp/hbm-integrated-gu-descriptor-joined-r2/sources.args"
+	User time (seconds): 0.30
+	System time (seconds): 0.02
+	Percent of CPU this job got: 101%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.33
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 119040
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 28727
+	Voluntary context switches: 44
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 20136
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

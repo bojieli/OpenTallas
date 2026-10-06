@@ -1,0 +1,88 @@
+{
+  "status": "CANCELLED_SUPERSEDED",
+  "utc": "2026-10-06T06:20:38.175940+00:00",
+  "container": "07e18fc70d609e38c9dead4685163ed9e34c1f44e2ddabe1e6d73192509be7c8",
+  "route_pid": 1398737,
+  "root": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8",
+  "reason": "Old generic-IO context superseded by exact853 PIPE successor; cannot provide missing installed O_COLL join/regenerated parent pin/clock/load binding. No current build consumer of future outputs; read-only collectors retired. Cancellation is not a final SS/FF verdict.",
+  "unique_required_unmeasured_result": null,
+  "preserve_all_sources_logs_CTS_objects": true,
+  "physical_signoff": false,
+  "adopted": false,
+  "pre_stop_audit": {
+    "utc": "2026-10-06T06:19:45.802387+00:00",
+    "roots": {
+      "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8": {
+        "exists": true,
+        "checkpoints": [
+          {
+            "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/reports/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_cts_final.rpt",
+            "bytes": 65501,
+            "sha256": "d84be26e7ee867a8ede23d6ed1d9d76a7e5e10861bf719de7e61b24d8de75454"
+          },
+          {
+            "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_cts.odb",
+            "bytes": 128178966,
+            "sha256": "972b1d04d564832c4f6d2d309eff557bb5c34b78473920f1bfda47c8f86481e2"
+          },
+          {
+            "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_cts.sdc",
+            "bytes": 1544823,
+            "sha256": "1ebb220588bd002b9dd5a35b0133263de0cac0de416f8cc819f731dd4351cd93"
+          }
+        ],
+        "last_log": {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/logs/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/5_1_grt.tmp.log",
+          "tail": "     7930 |       0 |   32388 |            0 |    +9.0% | -420.826 | -1175863.000 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7940 |       0 |   32440 |            0 |    +9.0% | -420.826 | -1175089.250 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7950 |       0 |   32491 |            0 |    +9.0% | -420.826 | -1174667.250 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7960 |       0 |   32546 |            0 |    +9.0% | -420.826 | -1173949.125 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7970 |       0 |   32604 |            0 |    +9.1% | -420.826 | -1173331.375 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7980 |       0 |   32649 |            0 |    +9.1% | -420.826 | -1172774.625 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     7990 |       0 |   32696 |            0 |    +9.1% | -420.826 | -1172578.625 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n     8000 |       0 |   32761 |            0 |    +9.1% | -420.826 | -1172098.000 | u_ep.g_on.dat[658]$_DFFE_PP_/D\n"
+        }
+      }
+    },
+    "containers": [
+      {
+        "id": "07e18fc70d609e38c9dead4685163ed9e34c1f44e2ddabe1e6d73192509be7c8",
+        "pid": 1853834,
+        "running": true,
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "/srv/opentallas-scratch/claude/hbm-fmax-noc/src",
+            "Destination": "/src",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs",
+            "Destination": "/work",
+            "Mode": "",
+            "RW": true,
+            "Propagation": "rprivate"
+          }
+        ],
+        "cmd": [
+          "bash",
+          "-lc",
+          "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+        ]
+      }
+    ],
+    "consumers": []
+  },
+  "signal": "SIGTERM",
+  "signal_sent": true,
+  "signal_utc": "2026-10-06T06:21:06.435486+00:00",
+  "initial_attempt_note": "First audit-gated attempt stopped before route signal; root-owned route required existing sudo permission",
+  "post_stop": {
+    "utc": "2026-10-06T06:21:38.146280+00:00",
+    "container_running": false,
+    "route_pid_present": false,
+    "checkpoint_hashes_unchanged": true,
+    "stage_logs_retained": true
+  },
+  "physical_record_after_stop": {
+    "flow_completed": false,
+    "status": "error",
+    "error": "TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/srv/opentallas-scratch/claude/hbm-fmax-noc/src:/src:ro', '-v', '/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', \"trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\"]' timed out after 21600 seconds"
+  }
+}

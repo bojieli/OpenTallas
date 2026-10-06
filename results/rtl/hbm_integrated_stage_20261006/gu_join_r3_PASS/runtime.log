@@ -1,0 +1,28 @@
+PASS_INTEGRATED_GU_HELD_CE masks_accept=1 genuine_producer_preserved=1
+PASS_GU_RETIREMENT_EXPORT enabled=1 experts=41,65 matrices=G,U rows=48 stores=48 acks=8 spans=4 held_cycles=10 retained_FP32_input=1 live_full_chain=0
+PASS_REJECT_TOKEN17_HIGH_BIT
+PASS_REJECT_POS20_HIGH_BIT
+PASS_INTEGRATED_GU_DESCRIPTOR_JOIN retained_actual_FP32=1 live_TC_producer=0 rows=48 token17=1 pos20=1
+	Command being timed: "vvp gate.vvp"
+	User time (seconds): 0.51
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.53
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 39168
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8726
+	Voluntary context switches: 1
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

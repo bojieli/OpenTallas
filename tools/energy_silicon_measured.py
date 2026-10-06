@@ -36,6 +36,9 @@ CDC_PATH = "results/rtl/rom_stage_spine_cdc_20261004/verdict.json"            # 
 REG_PATH = "results/external/registry.json"
 INTEG_PATH = "results/uarch/hbm_accelerator_integration_20261004/model.json"
 RECHECK_PATH = "results/uarch/dsrom_c_recheck_20261004/model.json"
+# adopted S81 system (CLAUDE DS-RACK 2026-10-06): 324 layer + 12 head + 36 Engram table + 52 DP1-EP5 draft dies; HBM
+# stacks sized to need (scenario C rule at 12 head dies = 468); the recheck's 368 dies / 452 stacks are 8 head dies
+RACK_PATH = "results/arch/dsrom_s81_rack_20261006/rack.json"
 ECON_PATH = "results/uarch/economics.json"
 QHBM_P8191 = "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json"
 RANK = ["measured", "composed_from_measured", "published", "partial", "off_target_context", "modelled", "assumed",
@@ -162,7 +165,11 @@ def ds(get, reg, el, dram):
     rc = load(RECHECK_PATH)["priced"]["S81_ragged_RD64_replicated"]
     sysr = rc["system"]
     S = sysr["stages"]
-    layer_dies, total_dies, stacks = sysr["layer_dies"], sysr["total_dies"], sysr["stacks_ASSUMED_W3_rule"]
+    rk = load(RACK_PATH)
+    cnt = rk["counts"]
+    assert cnt["layer"] == sysr["layer_dies"] and cnt["stages"] == S
+    layer_dies, draft_dies, stacks = cnt["layer"], cnt["draft"], rk["stacks"]["total"]
+    total_dies = cnt["dies"]
     pairs = rc["area"]["pairs"]
     sys.path.insert(0, str(ROOT / "tools"))
     import dsrom_return_storage_hbm as R                       # the C1 ledger constants (isopower history 8bb540cd1)
@@ -178,7 +185,8 @@ def ds(get, reg, el, dram):
     dyn_ar = Term(0.1186, "modelled", "C1 model dynamic J/token at 1M (isopower history 8bb540cd1; dsrom_return_storage_hbm)")
     dyn_mtp = Term(round(0.1704 * 3.649 / tau.value, 4), "modelled",
                    "C1 MTP dynamic 170.4 mJ/token at tau 3.649 x 3.649 / tau (work per step schedule-invariant)")
-    head_w, table_w = C1["head_w"], C1["table_w"]
+    ht_die_w = (C1["head_w"] + C1["table_w"]) / 44            # C1 ledger: one W a head or table die (8 + 36 there)
+    head_w, table_w = round(cnt["head"] * ht_die_w, 1), round(cnt["table"] * ht_die_w, 1)
 
     def static(pg: bool, f: float, pair_pg_w: float, hub_res: float):
         """System static W: layer dies (field measured per pair, hub modelled, SerDes modelled) + head + table + stacks."""
@@ -188,12 +196,13 @@ def ds(get, reg, el, dram):
         else:
             layer = (pairs * (f * el["cg_idle"].value + (1 - f) * pair_pg_w) + hub_w * (f + (1 - f) * hub_res)
                      + serdes_w * (f + (1 - f) * 0.10))
-        return layer_dies * layer + head_w + table_w + stacks * stack_idle, dict(
+        return (layer_dies + draft_dies) * layer + head_w + table_w + stacks * stack_idle, dict(
             layer_die_w=round(layer, 3), field_w=round(pairs * (el["cg_idle"].value if not pg else
                                                                  f * el["cg_idle"].value + (1 - f) * pair_pg_w), 3),
             hub_w=round(hub_w if not pg else hub_w * (f + (1 - f) * hub_res), 3),
             serdes_w=round(serdes_w if not pg else serdes_w * (f + (1 - f) * 0.10), 3),
-            head_w=head_w, table_w=table_w, stacks_idle_w=round(stacks * stack_idle, 1))
+            head_w=head_w, table_w=table_w, stacks_idle_w=round(stacks * stack_idle, 1),
+            draft_dies_w=round(draft_dies * layer, 1))
 
     t_ar_us = ar_us.value
     wake_us = el["wake_ns"].value * 1e-3
@@ -202,7 +211,9 @@ def ds(get, reg, el, dram):
     unv_common = ["hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
                   "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
                   f"head dies {head_w} W and Engram table dies {table_w} W, never gated (modelled)",
-                  f"HBM stack idle 2.8 W x {stacks} stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+                  f"HBM stack idle 2.8 W x {stacks} stacks (ASSUMED band 1.2-6.4 W; scenario C rule: 4 on 32 scan "
+                  f"+ 12 head dies, 1 on the other 292 layer dies, 0 on table and draft dies, {RACK_PATH})",
+                  f"{draft_dies} DP1-EP5 draft dies charged a layer die's static and gated like one (ASSUMED)",
                   "dynamic energy per token (C1 model)"]
     rows, ledgers = {}, {}
     st_icg, lg = static(False, 1.0, 0.0, 1.0)
@@ -231,7 +242,9 @@ def ds(get, reg, el, dram):
         ledgers[f"{name}_mtp_b1"] = dict(lg, active_fraction=round(f_mtp, 5))
         rows[f"mtp_b1_{name}"] = energy_row(mtp, s_m, worst("modelled", ppg.status), dyn_mtp, unv, "f = 7/S")
     sil = silicon(total_dies, get("ds_rom.die_mm2"), stacks, dram)
-    rom = dict(design="DS ROM S81 (324 layer + 44 head/table dies, 2 dies a package)", stages=S, layer_dies=layer_dies,
+    rom = dict(design=f"DS ROM S81 ({layer_dies} layer + {cnt['head']} head + {cnt['table']} Engram table + {draft_dies} "
+                      f"draft dies, 2 dies a package; {stacks} HBM3E stacks)", stages=S, layer_dies=layer_dies,
+               head_dies=cnt["head"], table_dies=cnt["table"], draft_dies=draft_dies, stacks=stacks,
                total_dies=total_dies, pairs_per_layer_die=pairs, rates=dict(ar=ar.d(), mtp=mtp.d(), ar_us=ar_us.d()),
                silicon=sil, power=rows, static_ledgers=ledgers,
                element=dict(active_w=el["active"].d(), cg_idle_w=el["cg_idle"].d(), pg_idle_w=el["pg_idle"].d(),

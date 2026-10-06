@@ -1,0 +1,52 @@
+{
+  "scope": "Generic elaborated parent retention and electrical logical loads; not ASAP7 mapping, timing, wireload or clkQ qualification",
+  "retained_instances": {
+    "ot_hdc_v41_fh_fault_copy": 69,
+    "ot_hdc_v41_fh_fault_relay": 16
+  },
+  "fault_net_logical_input_loads": {
+    "g_commit.u_cut.g_cut.quadrant_fault": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "g_commit.u_cut.g_cut.relay_fault": [
+      6,
+      4,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+    ],
+    "g_commit.u_cut.g_cut.row_fault": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "generic_FF_bits_unique_module_definitions": 22157,
+  "expected_instances": {
+    "relay": 16,
+    "copy": 69
+  },
+  "source_commit": "0b93ca835",
+  "generic_parent_FF_bits_with_actual_replication": 22240,
+  "priced_producer_and_commit_metadata_FF_bits": 341,
+  "priced_connected_FF_total": 22581
+}

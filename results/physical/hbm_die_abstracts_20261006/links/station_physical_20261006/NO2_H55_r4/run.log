@@ -1,0 +1,90 @@
+Actual SS/FF selected receiver pin caps measured
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/make_component_sdc.py:16: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
+  lines+=['foreach p [all_outputs] {',' set n [get_full_name $p]',' set receiver {}',' if {[regexp {^out_data\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_data[%d]} [expr {$bit%2063}]]}',' if {[regexp {^out_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_owner[%d]} [expr {$bit%192}]]}',' if {[regexp {^out_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {in_frame[%d]} [expr {$bit%73}]]}',' if {[regexp {^out_v\[[0-9]+\]$} $n]} {set receiver in_v}',f' if {{$n eq "in_r" || $n eq "release_r"}} {{set receiver {{out_r[{a.NO-1}]}}}}',' if {$n eq "release_v"} {set receiver {ACK_v[0]}}',' if {[regexp {^release_owner\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_owner[%d]} $bit]}',' if {[regexp {^release_frame\[([0-9]+)\]$} $n -> bit]} {set receiver [format {ACK_frame[%d]} $bit]}',' if {$n in {fault paused drained}} {set receiver in_v}',' if {$n eq "fclk_o"} {set receiver clk_sm}',' if {$receiver eq "" || ![info exists cap_ss($receiver)] || ![info exists cap_ff($receiver)]} {error "unbound actual mapped receiver $n -> $receiver"}',' set_load -max $cap_ss($receiver) $p',' set_load -min $cap_ff($receiver) $p','}']
+Source-local component contract generated; parent wire/CTS context OPEN
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+PL-1002] Placed Cell Area            10113.4617
+[INFO GPL-1003] Available Free Area         16953.6969
+[INFO GPL-1004] Minimum Feasible Density        0.6000 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.6628
+[INFO GPL-1008]     - For 80% usage of free space: 0.7457
+[INFO GPL-1014] Final placement area: 10113.46 (+0.00%)
+Took 13 seconds: global_placement -skip_io -density 0.6300000226497651 -pad_left 0 -pad_right 0
+Design area 9443 um^2 56% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_1_place_gp_skip_io.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb           23            500 8caae87572ba124c5d38
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/2_floorplan.sdc
+Took 7 seconds: read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0044] Pin group: [ clk_sm in_r in_v por_n release_r ... ]
+[INFO PPL-0044] Pin group: [ fclk_o ]
+[ERROR PPL-0024] Number of IO pins (7795) exceeds maximum number of available positions (6912). Increase the die perimeter from 669.42um to 748.32um.
+Error: io_placement.tcl, 21 PPL-0024
+
+Elapsed time: 0:00.06[h:]min:sec. CPU time: user 0.03 sys 0.02 (99%). Peak memory: 24336KB.
+Elapsed time: 0:00.05[h:]min:sec. CPU time: user 0.03 sys 0.02 (99%). Peak memory: 24824KB.
+Elapsed time: 0:09.07[h:]min:sec. CPU time: user 8.64 sys 0.43 (99%). Peak memory: 581556KB.
+Elapsed time: 4:36.62[h:]min:sec. CPU time: user 908.84 sys 803.43 (618%). Peak memory: 667412KB.
+Elapsed time: 0:11.19[h:]min:sec. CPU time: user 10.91 sys 0.28 (100%). Peak memory: 405836KB.
+Elapsed time: 0:10.87[h:]min:sec. CPU time: user 10.60 sys 0.27 (100%). Peak memory: 369632KB.
+Elapsed time: 0:11.51[h:]min:sec. CPU time: user 11.17 sys 0.33 (99%). Peak memory: 415704KB.
+Elapsed time: 0:23.67[h:]min:sec. CPU time: user 150.61 sys 0.55 (638%). Peak memory: 512260KB.
+Elapsed time: 0:11.08[h:]min:sec. CPU time: user 10.80 sys 0.28 (99%). Peak memory: 416704KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_2_place_iop.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r4/physical.json
+real route failed before terminal geometry; source/logs retained
+Command exited with non-zero status 1
+	Command being timed: "python3 physical/hbm_die_abstracts_20261006/links/station_physical_20261006/route_worker.py --NO 2 --orientation H --util 55 --cache /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_synth_r1/work --run /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r4"
+	User time (seconds): 1.09
+	System time (seconds): 0.42
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:13.53
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 72448
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 61696
+	Voluntary context switches: 9868
+	Involuntary context switches: 7
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 155488
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

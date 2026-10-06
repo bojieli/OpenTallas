@@ -1,0 +1,666 @@
+{
+  "schema": "opentallas.hbm.native_station.variants.v1",
+  "owner_inventory": {
+    "kinds": 23,
+    "copies": 348,
+    "waypoints": 208,
+    "stn": 168,
+    "gath": 16,
+    "mcast": 16,
+    "cdist": 8
+  },
+  "implementation": "ot_hbm_native_register_slice",
+  "source_hashes": {
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/tb_native_slice.sv": "b324bffe5ae9e90bd3fb7bcc1f86eeb6b173b84e32c8468323774bc9fcb6af3c"
+  },
+  "parameters": {
+    "STAGES": 4,
+    "ENABLE": 1,
+    "SPAN_NM": 430560
+  },
+  "classes": [
+    {
+      "family": "x_trunk",
+      "copies": 12,
+      "width_after_TF5_TF7": 2063,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "result_trunk",
+      "copies": 14,
+      "width_after_TF5_TF7": 2160,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "weight",
+      "copies": 32,
+      "width_after_TF5_TF7": 1099,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "kv_rows",
+      "copies": 26,
+      "width_after_TF5_TF7": 1024,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "link",
+      "copies": 26,
+      "width_after_TF5_TF7": 974,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "host",
+      "copies": 8,
+      "width_after_TF5_TF7": 512,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "control",
+      "copies": 20,
+      "width_after_TF5_TF7": 360,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    },
+    {
+      "family": "expert_req",
+      "copies": 30,
+      "width_after_TF5_TF7": 128,
+      "status": "RTL_FORWARDING_ONLY_PARENT_ABI_OPEN"
+    }
+  ],
+  "variants": [
+    {
+      "width": 128,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 128,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 128,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 128,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 128,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 128,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 128,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 128,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 180,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 180,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 180,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 180,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 180,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 180,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 180,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 180,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 360,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 360,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 360,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 360,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 360,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 360,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 360,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 360,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 512,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 512,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 512,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 512,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 512,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 512,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 512,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 512,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 540,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 540,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 540,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 540,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 540,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 540,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 540,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 540,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 974,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 974,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 974,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 974,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 974,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 974,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 974,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 974,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1024,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1024,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1024,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1024,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1024,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1024,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1024,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1024,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1080,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1080,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1080,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1080,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1080,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1080,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1080,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1080,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1099,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1099,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1099,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1099,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1099,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1099,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 1099,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 1099,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2063,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2063,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2063,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2063,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2063,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2063,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2063,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2063,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2160,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2160,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2160,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2160,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "H",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2160,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2160,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 55,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    },
+    {
+      "width": 2160,
+      "top": "ot_hbm_native_register_slice",
+      "parameters": {
+        "W": 2160,
+        "STAGES": 4,
+        "ENABLE": 1
+      },
+      "orientation": "V",
+      "target_utilization_percent": 60,
+      "status": "PREPARED_NOT_LAUNCHED_NOT_HARDENED"
+    }
+  ],
+  "actual_ports": {
+    "fclk_i": "input; root of actual forwarded chain",
+    "fclk_o": "output; four kept inversions, no independent/free output clock",
+    "rst_n": "input[3:0]; each synchronous to corresponding forwarded capture clock",
+    "i_v": "input; valid, no ready",
+    "i_d": "input[W-1:0]",
+    "o_v": "registered output valid",
+    "o_d": "registered output[W-1:0]; invalid data unspecified"
+  },
+  "golden": {
+    "exact_seed": "1062026",
+    "width": 2160,
+    "cycles": 1200,
+    "reset_recovery": true,
+    "negative": "actual RTL clock inversion removed; fails check15 after reset initialization; original source unchanged"
+  },
+  "contract": {
+    "finite_flow": "No ready; upstream must reserve capacity before issuance. Holding output while downstream stalls is not implemented or claimed.",
+    "protection": "Payload transparently carried; upstream protection ownership and valid/control checks require actual parent binding. No free protection.",
+    "link_host": "Opposite TX/RX directions require two independent directional instances/clock-reset domains and actual bit packing; one wide unidirectional station is not a link/host parent.",
+    "gath_mcast_cdist": "Actual t0/t1/a2/b2/tap ABI, ownership, beat alignment, validity and direction semantics not implemented by generic forwarding; await source owner mechanisms. Width variants alone do not qualify these parents.",
+    "span": "4-stage state cost from existing stn_size; physical reach is not inferred from four co-located captures."
+  },
+  "sizing_sources": [
+    "tools/hbm_accel_die_fp.py: stn_size four*bits*0.2916/0.6 +2000 sizing",
+    "results/uarch/meso_fifo_20261004/verdict.json",
+    "results/uarch/meso_fifo_20261004/clocking_model_measured.json"
+  ],
+  "heavy_launch": {
+    "host": "ot-epyc2 ONLY",
+    "scratch": "/srv/opentallas-scratch2/codex/hbm-links-abstracts-20261006",
+    "admission": "/srv/opentallas-scratch/admit.sh unchanged",
+    "threads": 16,
+    "status": "CPU_CAPACITY_HOLD",
+    "no_RAM_only_admit_waiter": true
+  },
+  "meso": {
+    "instances_min": 48,
+    "parameters": {
+      "W": 512,
+      "DEPTH": 4,
+      "OFFSET": 2,
+      "CREDITS": 8
+    },
+    "area_um2": 4842.31,
+    "extra_latency_periods_average": 2.0135,
+    "roundtrip_typical_periods": 4,
+    "roundtrip_edge_periods": 5,
+    "parent_clocks": [
+      "wclk",
+      "rclk"
+    ],
+    "no_unclocked_station_credit": true
+  },
+  "reservations": {
+    "type": "placement blockages only",
+    "serdes": 2,
+    "host": 1,
+    "logic": false,
+    "lef_logic": false,
+    "geometry_source_required": true
+  },
+  "parent_closed": false
+}

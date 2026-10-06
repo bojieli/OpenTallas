@@ -1,0 +1,677 @@
+{
+ "scope": "Source-bound HBM abstract owner handoff, not placement or full parent qualification",
+ "baseline_inventory_kinds": 23,
+ "baseline_copies": 348,
+ "waypoint_copies": 208,
+ "waypoint_slice_count_per_copy": 1,
+ "waypoint_size_variants_approximately": 11,
+ "not_27_hardened_tops_or208_masters": true,
+ "generator_owner": "Claude HBM-DIE-FIX",
+ "die_placement": "HOLD pending corrected regenerated endpoints/clocks/reset/orientation/sourceABI",
+ "old_r14_clock_pose_corridor_inheritance_valid": false,
+ "old_JSON_port_faces_widths_scope": "historical only; reconcile exactcurrent RTL plus correctedgenerator, not new contract authority",
+ "SS_setup_ps": 60,
+ "FF_hold_ps": 25,
+ "stream_period_ps": 833.3333333333334,
+ "serial_period_ps": 1111.111111111111,
+ "HBM_period_ps": 1024,
+ "source_phase_ps": 0,
+ "parent_clock_insertion_skew_RC_loads_not_measured": true,
+ "utilization_target": [
+  0.55,
+  0.6
+ ],
+ "separate_CTS_PG_routing_reserves_required": true,
+ "macro_loads_are_source_local_before_parent_wire_CTS": true,
+ "one_seed_passing_source_not_replayed": true,
+ "golden_and_meaningful_negative_controls_retained": true,
+ "preserve_attributes_before_intermediate_resynthesis": true,
+ "explicit_corner_SPEF_required": true,
+ "slabs_are_blockages_not_hardened_logic": true,
+ "source_ownership": {
+  "SM_structural": "Claude HBM-SM",
+  "attention_parent": "Claude HBM-SU/ATTN",
+  "CP_child": "Harvey",
+  "W2_child": "Jason",
+  "outer_generator": "Claude HBM-DIE-FIX",
+  "physical_placement_integration": "Turing"
+ },
+ "return_needed": "Own source/top/parameters and real view paths with hashes, actual LEF ports/layers/orientations/obstructions, SS/FF LIB time-cap units+internalclock latency+pin loads, corner source/ODB/SPEF verdict and residual boundaries; missing parents actualRTL before views, no placeholderclosed status",
+ "pending_corrected_generator": {
+  "path": "/home/ubuntu/wt-hbm-die-fix/tools/hbm_accel_die_fp.py",
+  "sha256": "d991625c1e3bc15f7287b012ecca347f6325aa2e890dbe907bfda2a4aa553bfe",
+  "scope": "READ_ONLY r15source deltas; not correctedregeneratedall-endpoint validation receipt"
+ },
+ "pending_r15_deltas": {
+  "SM_weight_bits": 1099,
+  "SM_request_bits": 44,
+  "SM_descriptor_bits": 58,
+  "SM_control_leaf_bits": 103,
+  "attention_ld_bits": 1038,
+  "attention_query_bits": 580,
+  "attention_result_bits": 529,
+  "TU_quarter_inject_bits": 1024,
+  "TU_quarter_delivery_plus_idx_rd_bits": 580,
+  "TU_cmd_rank_pf_go_bits": 25,
+  "TU_status_fault_stall_bits": 33,
+  "SerDes_each_direction_bits_per_macro": 487,
+  "SerDes_full_TX_RX_bits": 974,
+  "host_TX_bits": 256,
+  "host_RX_bits": 256,
+  "clock_reset": "One realnet per root domain reachesall clockedblocks; forwardedstations useactualfclk_i/o and localreset; meso hasactualwclk/rclk, no shared3-bitckfiction"
+ },
+ "owner": "Gauss",
+ "owner_id": "01a10f3a-f28e-7912-850b-1662ee052e29",
+ "write_scope": "physical/hbm_die_abstracts_20261006/links",
+ "work": "208single-registerslice waypoint copies/~11actualsizevariants plusmeso/slabs; no208distinctmasters or fouruninstantiatedstages",
+ "historical_port_requests": [
+  {
+   "family": "hfd_cdist_*",
+   "masters": 8,
+   "instances": 8,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     43.176,
+     110.136
+    ],
+    [
+     62.184,
+     88.536
+    ]
+   ],
+   "distinct_sizes": 2,
+   "ports": {
+    "a": {
+     "bits": 360,
+     "face": "N"
+    },
+    "b": {
+     "bits": 180,
+     "face": "S"
+    },
+    "t0": {
+     "bits": 45,
+     "face": "W"
+    },
+    "t1": {
+     "bits": 45,
+     "face": "W"
+    },
+    "t2": {
+     "bits": 45,
+     "face": "E"
+    },
+    "t3": {
+     "bits": 45,
+     "face": "E"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_gath_*",
+   "masters": 16,
+   "instances": 16,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     81.192,
+     82.056
+    ],
+    [
+     109.704,
+     110.136
+    ],
+    [
+     166.728,
+     168.456
+    ]
+   ],
+   "distinct_sizes": 3,
+   "ports": {
+    "t0": {
+     "bits": 270,
+     "face": "E"
+    },
+    "t1": {
+     "bits": 270,
+     "face": "E"
+    },
+    "b": {
+     "bits": 540,
+     "face": "N"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_host_slab",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "host link reservation slab",
+   "ledger": null,
+   "size_um": [
+    [
+     594.408,
+     16824.216
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "host_slab"
+  },
+  {
+   "family": "hfd_mcast_*",
+   "masters": 16,
+   "instances": 16,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     133.032,
+     120.936
+    ],
+    [
+     241.896,
+     241.896
+    ]
+   ],
+   "distinct_sizes": 2,
+   "ports": {
+    "t1": {
+     "bits": 2063,
+     "face": "N"
+    },
+    "a": {
+     "bits": 2063,
+     "face": "N"
+    },
+    "b": {
+     "bits": 2063,
+     "face": "W"
+    },
+    "t0": {
+     "bits": 2063,
+     "face": "S"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_serdes_slab",
+   "masters": 1,
+   "instances": 2,
+   "status": "NEEDS hardened abstract",
+   "rtl": "TU SerDes reservation slab (no logic)",
+   "ledger": null,
+   "size_um": [
+    [
+     2462.376,
+     3656.856
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "serdes_slab"
+  },
+  {
+   "family": "hfd_stn_*",
+   "masters": 168,
+   "instances": 168,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     18.984,
+     118.776
+    ],
+    [
+     31.08,
+     88.536
+    ],
+    [
+     39.288,
+     77.736
+    ],
+    [
+     48.792,
+     127.416
+    ]
+   ],
+   "distinct_sizes": 15,
+   "ports": {
+    "a": {
+     "bits": 1100,
+     "face": "S"
+    },
+    "b": {
+     "bits": 1100,
+     "face": "N"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "masters": 1,
+   "instances": 4,
+   "status": "REAL hardened view",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     8500.056,
+     1177.2
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "phy"
+  },
+  {
+   "family": "ot_pdie_serdes",
+   "masters": 1,
+   "instances": 9,
+   "status": "REAL pin macro, placeholder content (ot_pdie_*)",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     250.056,
+     2250.216
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "link"
+  },
+  {
+   "family": "ot_pdie_ucie",
+   "masters": 1,
+   "instances": 1,
+   "status": "REAL pin macro, placeholder content (ot_pdie_*)",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     260.808,
+     1652.424
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "link"
+  }
+ ],
+ "source_interfaces": [
+  {
+   "path": "rtl/common/ot_fwd_link_stage.sv",
+   "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+   "module_interface_source": "module ot_fwd_link_stage #(\n    parameter integer W=512,\n    parameter bit ENABLE=0,\n    parameter integer SPAN_NM=430560\n)(input wire fclk_i, input wire rst_n,\n  input wire i_v, input wire [W-1:0] i_d,\n  output wire fclk_o, output wire o_v, output wire [W-1:0] o_d);"
+  },
+  {
+   "path": "rtl/common/ot_meso_fifo.sv",
+   "sha256": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+   "module_interface_source": "module ot_meso_fifo #(\n    parameter int W        = 512,\n    parameter int DEPTH    = 4,      // ring slots, power of two\n    parameter int OFFSET   = 2,      // placement lag window centre, periods (window OFFSET -+ 0.5)\n    parameter int GUARD_LO = 0,      // low guard trips at lag < (GUARD_LO + 0.5) T\n    parameter int GUARD_HI = 4,      // high guard trips at lag > (GUARD_HI - 0.5) T; <= DEPTH\n    parameter int CREDITS  = 8,      // receive buffer entries = writer credits\n    parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)\n    parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)\n    parameter bit ENABLE   = 0\n) (\n    input  logic         wclk,\n    input  logic         wrst_n,     // synchronous to wclk\n    input  logic         w_v,\n    output logic         w_rdy,\n    input  logic [W-1:0] w_d,\n    input  logic         rclk,\n    input  logic         rrst_n,     // synchronous to rclk\n    output logic         r_v,\n    input  logic         r_rdy,\n    output logic [W-1:0] r_d,\n    output logic         w_live,\n    output logic         r_live,\n    output logic         w_fault,    // sticky: credit-ring guard or lap slip\n    output logic         r_fault     // sticky: data-ring guard, lap slip or buffer overflow\n`ifdef OT_MESO_DEBUG\n   ,output logic [$clog2(DEPTH):0] dbg_wc, dbg_rp, dbg_cc, dbg_cp,\n    output logic [1:0]             dbg_ws, dbg_rs\n`endif\n);"
+  }
+ ],
+ "meso_verdict": {
+  "schema": "opentallas.meso_fifo.verdict.v1",
+  "date": "2026-10-04",
+  "status": "MESO_FIFO_CLOSED; FORWARDED_HOP_CLOSED_REG_TO_REG; HOP_FIXTURE_PORT_BOUNDARY_NOT_CLOSED",
+  "rtl": {
+   "ot_meso_fifo": "rtl/common/ot_meso_fifo.sv (default-off ENABLE=0; DEPTH 4, OFFSET 2, guards 0/4, CREDITS 8+1; closed source aec121692: registered one-hot ring selects, kept 2:1 next-state selects, per-64-bit index copies)",
+   "ot_fwd_link_stage": "rtl/common/ot_fwd_link_stage.sv (Codex 6de31bae2 + two changes: forwarding inverter is a kept cell ot_fwd_clk_inv, else synthesis folds it into the next stage's flops; data flops need no reset hold, removing a 512-load rst_n enable)"
+  },
+  "campaign": {
+   "d4_central": {
+    "words": 220331463,
+    "errors": 0,
+    "false_faults": 0,
+    "window_violations": 0,
+    "stream_words_per_cycle_min": 1.0,
+    "lag_ps": [
+     839.7,
+     2493.5
+    ],
+    "crossing_delta_periods_mean": 2.0135,
+    "crossing_delta_periods_range": [
+     1.5193,
+     2.512
+    ],
+    "round_trip_delta_histogram": {
+     "4": 36,
+     "5": 1
+    },
+    "drift_runs": 78,
+    "drift_all_fail_closed": true
+   },
+   "d8_tt_routed": {
+    "words": 51535701,
+    "errors": 0,
+    "false_faults": 0,
+    "window_violations": 0,
+    "stream_words_per_cycle_min": 1.0,
+    "lag_ps": [
+     518.3,
+     4481.8
+    ],
+    "crossing_delta_periods_mean": 2.9762,
+    "crossing_delta_periods_range": [
+     2.488,
+     3.4494
+    ],
+    "round_trip_delta_histogram": {
+     "6": 21
+    },
+    "drift_runs": 78,
+    "drift_all_fail_closed": true
+   },
+   "d16_bound_ss": {
+    "words": 51005834,
+    "errors": 0,
+    "false_faults": 0,
+    "window_violations": 0,
+    "stream_words_per_cycle_min": 1.0,
+    "lag_ps": [
+     829.3,
+     7503.8
+    ],
+    "crossing_delta_periods_mean": 4.9762,
+    "crossing_delta_periods_range": [
+     4.4881,
+     5.4493
+    ],
+    "round_trip_delta_histogram": {
+     "10": 20,
+     "9": 1
+    },
+    "drift_runs": 78,
+    "drift_all_fail_closed": true
+   }
+  },
+  "mutants": {
+   "OFFSET": true,
+   "NO_GUARD": true,
+   "EARLY_CREDIT": true
+  },
+  "price_per_token": {
+   "central_thick_metal": {
+    "typical": {
+     "per_op": 4,
+     "qwen_cycles": 1012,
+     "qwen_pct_calibrated": -0.235,
+     "qwen_pct_near_hbm": -0.44,
+     "ds_cycles": 1321,
+     "ds_pct": -0.273
+    },
+    "worst_phase": {
+     "per_op": 5,
+     "qwen_cycles": 1265,
+     "qwen_pct_calibrated": -0.294,
+     "qwen_pct_near_hbm": -0.549,
+     "ds_cycles": 1652,
+     "ds_pct": -0.342
+    },
+    "phase_average": {
+     "per_op": 4.027,
+     "qwen_cycles": 1019,
+     "qwen_pct_calibrated": -0.237,
+     "qwen_pct_near_hbm": -0.443,
+     "ds_cycles": 1330,
+     "ds_pct": -0.275
+    },
+    "model_only_per_op": 2
+   },
+   "tt_routed": {
+    "typical": {
+     "per_op": 6,
+     "qwen_cycles": 1518,
+     "qwen_pct_calibrated": -0.352,
+     "qwen_pct_near_hbm": -0.658,
+     "ds_cycles": 1982,
+     "ds_pct": -0.41
+    },
+    "worst_phase": {
+     "per_op": 7,
+     "qwen_cycles": 1771,
+     "qwen_pct_calibrated": -0.411,
+     "qwen_pct_near_hbm": -0.767,
+     "ds_cycles": 2312,
+     "ds_pct": -0.477
+    },
+    "phase_average": {
+     "per_op": 5.9524,
+     "qwen_cycles": 1506,
+     "qwen_pct_calibrated": -0.349,
+     "qwen_pct_near_hbm": -0.653,
+     "ds_cycles": 1966,
+     "ds_pct": -0.406
+    },
+    "model_only_per_op": 6
+   },
+   "bound_ss_routed": {
+    "typical": {
+     "per_op": 10,
+     "qwen_cycles": 2530,
+     "qwen_pct_calibrated": -0.585,
+     "qwen_pct_near_hbm": -1.092,
+     "ds_cycles": 3303,
+     "ds_pct": -0.681
+    },
+    "worst_phase": {
+     "per_op": 11,
+     "qwen_cycles": 2783,
+     "qwen_pct_calibrated": -0.644,
+     "qwen_pct_near_hbm": -1.2,
+     "ds_cycles": 3633,
+     "ds_pct": -0.748
+    },
+    "phase_average": {
+     "per_op": 9.9524,
+     "qwen_cycles": 2518,
+     "qwen_pct_calibrated": -0.583,
+     "qwen_pct_near_hbm": -1.087,
+     "ds_cycles": 3287,
+     "ds_pct": -0.677
+    },
+    "model_only_per_op": 8
+   }
+  },
+  "physical_asap7_1p2GHz_60_25ps": {
+   "meso_d4_v2_fallthrough_output": {
+    "source_commit": "f8baf0651",
+    "setup_ss_ps": -85.13,
+    "hold_ff_ps": 9.61,
+    "verdict": "REJECTED: cross-clock r_v path and local buffer->r_d"
+   },
+   "meso_d4_v3_registered_output": {
+    "source_commit": "88632fc2f",
+    "setup_ss_ps": -29.96,
+    "hold_ff_ps": 10.56,
+    "std_cell_area_um2": 4892.7,
+    "violating_d_pins": 19,
+    "verdict": "NOT CLOSED: s_lap -> lap compare -> cnt, 369.35 ps against the 356.667 ps crossing budget"
+   },
+   "meso_d4_v4_kept_crossing_term": {
+    "source_commit": "a5db2e1dd",
+    "setup_ss_ps": -14.13,
+    "setup_tns_ps": -38.7,
+    "hold_ff_ps": 8.93,
+    "std_cell_area_um2": 4999.82,
+    "violating_d_pins": 6,
+    "verdict": "NOT CLOSED: w_cred[0..3] <- credit-ring s_v1 4:1 pointer-decoded mux (AND2/AO211/OA211/OR4) + lap XNOR; cnt[1]/tl[0] <- data-ring valid mux (physical/meso_d4_v4/violating_paths_ss.txt)"
+   },
+   "fwd_span430_midpoint": {
+    "setup_ss_ps": -88.5,
+    "hold_ff_ps": 37.65,
+    "reg_d_setup_ss_ps": 24.45083,
+    "verdict": "NOT QUALIFIED at 430.56 um standalone: flop -> east port data wire (220 ps) vs CTS-tapped forwarded clock (68 ps past the flop clock); registers and hold pass",
+    "superseded_by": "fwd_hop2 runs: the -88.5 ps was the CTS-tapped clock vs the 220 ps data wire; with the clock forwarded beside the bus the hop has +374 ps"
+   },
+   "fwd_span430_rx_end_fence": "ABORTED in global-route repair at -471 ps WNS (outputs); no rescue loop",
+   "meso_d4_v5_onehot_select": {
+    "source_commit": "9dd52e6c6",
+    "setup_ss_ps": -21.38,
+    "setup_tns_ps": -111.6,
+    "hold_ff_ps": 10.29,
+    "violating_d_pins": 9,
+    "verdict": "NOT CLOSED: registered one-hot selects shortened the mux to OAI22+OR4 (206 ps), but ABC folded the hit back into the counter arithmetic (XNOR/AO32 after it)"
+   },
+   "meso_d4_v6_kept_selects": {
+    "source_commit": "8baea9a28",
+    "setup_ss_ps": 12.26,
+    "hold_ff_ps": 8.65,
+    "max_slew_violations": 4,
+    "verdict": "TIMING CLOSED, not physically clean: 4 max-slew violations on the 512-load one-hot data-index net"
+   },
+   "meso_d4_v7_closed": {
+    "source_commit": "aec121692",
+    "setup_ss_ps": 10.13,
+    "setup_tns_ps": 0.0,
+    "hold_ff_ps": 9.44,
+    "violating_d_pins": 0,
+    "std_cell_area_um2": 4842.31,
+    "drc_errors": 0,
+    "max_slew_violations": 0,
+    "max_cap_violations": 0,
+    "status": "pass",
+    "closes_signoff": true,
+    "added_latency_cycles": 0,
+    "verdict": "CLOSED at SS 60 ps / FF 25 ps, physically clean. Zero added latency: every crossing term (slot valid / lap) is a two-level AND-OR of write-domain flops with REGISTERED one-hot read-domain selects (placed and advanced with the pointer), and it only drives a kept 2:1 select between next states precomputed from local flops; the 512-bit data select has one one-hot index register per 64-bit chunk. Campaign on this source is cycle-identical to v4."
+   },
+   "fwd_hop2_fixture": "physical/rom_clock/ot_fwd_link_hop2.sv: stage A (west fence) -> 440 um -> stage B (east fence), B clocked ONLY by A's forwarded clock (fwd_hop2.sdc: generated clock fwd_a at the last of six kept span repeaters; fwd_forwarded_subtree.tcl keeps the forwarded subtree: ORFS repair_clock_inverters skipped)",
+   "fwd_hop2_synchronous_counterfactual": {
+    "setup_ss_reg_to_reg_ps": -330.27,
+    "hold_ff_ps": 213.44,
+    "verdict": "inverter folded into B's flops, so CTS built ONE balanced tree over 440 um: -330 ps. A synchronous span does not close; forwarding is required"
+   },
+   "fwd_hop2_v7": {
+    "source_commit": "4e13f3442",
+    "hop_setup_ss_ps": 165.28,
+    "hop_hold_ff_ps": 297.54,
+    "boundary_input_ps": -656.51,
+    "verdict": "HOP CLOSED; boundary failed (rst_n 512-load enable). Path detail: physical/fwd_hop2_v7/hop_path_{ss,ff}.txt"
+   },
+   "fwd_hop2_v11": {
+    "source_commit": "ab338894c",
+    "hop_setup_ss_ps": 373.97,
+    "hop_hold_ff_ps": 246.18,
+    "input_to_reg_ss_ps": 129.12,
+    "output_port_ss_ps": -426.15,
+    "max_slew_violations": 14,
+    "closes_signoff": false,
+    "verdict": "HOP CLOSED with ~374 ps setup / ~246 ps hold margin at a 440 um span: no added stages over the 430.56 um pitch. Fixture output boundary (B flop -> east port, Codex output-delay rule 166.67 ps) fails: a buffer inserted by timing-driven global placement was stranded at x 250 um on the B -> port net"
+   },
+   "fwd_hop2_v12": {
+    "source_commit": "ab338894c",
+    "gpl_timing_driven": 0,
+    "hop_setup_ss_ps": 329.08,
+    "hop_hold_ff_ps": 263.04,
+    "worst_ss_ps": -213.89,
+    "input_to_reg_ss_ps": -131.75,
+    "max_slew_violations": 138,
+    "verdict": "non-timing-driven placement moves the failure to the input boundary; v13/v14 (re-buffer before resize) crashed TritonCTS"
+   }
+  },
+  "verdict": [
+   "Meso FIFO W512 D4 CLOSED at 1.2 GHz: SS +10.13 ps, FF +9.44 ps, 0 DRC/slew/cap, 4842.31 um2 (aec121692), with no added latency; the campaign on that RTL is cycle-identical to v4 (0 errors, drift fails closed, mutants 3/3).",
+   "Measured option-C price unchanged: 2 periods a crossing, 4 a round trip (5 at the resolution edge): Qwen -0.235% / -0.44%, DS -0.273% (clocking_model_measured.json now carries the closure).",
+   "Forwarded link: the A->B hop over 440 um with the clock forwarded beside its bus closes with +374 ps setup / +246 ps hold (v11), so the 430.56 um pitch needs no added stages; a synchronous (one balanced tree) span measures -330 ps. The standalone hop fixture's port boundaries are still unclosed (placement artifacts), recorded as open."
+  ],
+  "campaign_source": {
+   "commit": "aec121692",
+   "note": "tools/meso_fifo_campaign.py on the closed RTL (campaign.json): word, latency and round-trip numbers identical to the v4 campaign (220,331,463 / 51,535,701 / 51,005,834 words, 0 errors, 0 false faults, 0 window violations; drift 78/78 fail closed per config; mutants 3/3)"
+  },
+  "forwarded_link_stage": {
+   "hop_span_um": 440.0,
+   "stage_pitch_um": 430.56,
+   "added_stages": 0,
+   "hop_setup_ss_ps": 373.97,
+   "hop_hold_ff_ps": 246.18,
+   "source": "physical/fwd_hop2_v11",
+   "implementation": "forwarded clock = kept inverter at the launching stage + repeated clock-net span beside the bus + the receiving stage's own CTS subtree; not shielded (no NDR in this flow; coupling is not in the STA)",
+   "open_item": "standalone fixture's port boundaries (placeholders for the neighbouring hops, which are this same hop) have not closed in ORFS: outputs -426.15 ps (v11), inputs -131.75 ps (v12)"
+  }
+ },
+ "selected_meso_corner": {
+  "schema": "opentallas.w18.corner_sta.v1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/meso-fifo/runs/meso_d4_v7/work/orfs",
+  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_meso_fifo\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name wclk -period 833.3330 [get_ports {wclk}]\nset_clock_uncertainty -setup 60.0000 wclk\nset_clock_uncertainty -hold 25.0000 wclk\nset_propagated_clock [get_clocks {wclk}]\ncreate_clock -name rclk ",
+  "setup_ss": {
+   "corner": "ss",
+   "check": "setup",
+   "worst_slack_ps": 10.13,
+   "tns_ps": 0.0,
+   "worst_register_d_slack_ps": 10.130619,
+   "worst_reg_to_reg_slack_ps": 10.13,
+   "worst_input_to_reg_slack_ps": 310.38,
+   "worst_output_port_slack_ps": 47.738258,
+   "violating_d_pins": 0,
+   "errors": [],
+   "odb_sha256": "9ba4a580ad980fbe4a88e7f34aa7e010a7d2f29706e5ac61069b86be1ed0f2d3",
+   "spef_sha256": "e0ae91fb8f04a3dc0f6e58f57c6497bba03bbc0228c6eb647c018765692ceca0",
+   "sdc_sha256": "1bb36ee283e8c50bb77a2f284b0c708a1e97d17f9924749c127ce2f39892184f"
+  },
+  "hold_ff": {
+   "corner": "ff",
+   "check": "hold",
+   "worst_slack_ps": 9.44,
+   "tns_ps": 0.0,
+   "worst_register_d_slack_ps": 9.442294,
+   "worst_reg_to_reg_slack_ps": 30.89,
+   "worst_input_to_reg_slack_ps": 56.33,
+   "worst_output_port_slack_ps": 242.208008,
+   "violating_d_pins": 0,
+   "errors": [],
+   "odb_sha256": "9ba4a580ad980fbe4a88e7f34aa7e010a7d2f29706e5ac61069b86be1ed0f2d3",
+   "spef_sha256": "e0ae91fb8f04a3dc0f6e58f57c6497bba03bbc0228c6eb647c018765692ceca0",
+   "sdc_sha256": "1bb36ee283e8c50bb77a2f284b0c708a1e97d17f9924749c127ce2f39892184f"
+  },
+  "libraries": {
+   "ss": [
+    "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+    "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+    "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+    "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+   ],
+   "ff": [
+    "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+    "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+    "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+    "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+   ]
+  },
+  "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+  "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+  "closes_signoff": true
+ },
+ "forwarded_boundaries": {
+  "single_stage_span_limit_nm": 430560,
+  "capture_edge": "negedge incoming fclk; keptinverter yields followingstage oppositehalfcycle",
+  "kept_cell": "ot_fwd_clk_inv; preservekeep_hierarchy before intermediate resynthesis",
+  "standalone_IO_not_closed": "fwdhop2v11 output-426.15ps/v12 input-131.75ps, reg2regpositive373.97ps doesnotwaiveportboundary",
+  "old_model_waypoint_spacing_um": 1722.24,
+  "old_four_stage_credit_valid_for_one_registerslice": false,
+  "meso_depth": 4,
+  "meso_offset_periods": 2,
+  "meso_credits": 8,
+  "meso_same_reference_equal_frequency_required": true,
+  "meso_not_3to4_or_async_bridge": true,
+  "old_floorplan_missing_at_least_W512_instances": 48,
+  "new_count_needs_corrected_census": true,
+  "floorplan_clock_insertion_RC_loads_qualified": false,
+  "slabs_are_only_blockages": true,
+  "pin_onlySerDes_UCIe_not_logicclosed": true
+ }
+}

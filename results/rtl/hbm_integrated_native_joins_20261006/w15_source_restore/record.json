@@ -1,0 +1,18 @@
+{
+  "restored_source": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv",
+  "preserved_commit": "f835c8641da66fb74ec152a9053e36130ec4cc31",
+  "byte_identical": true,
+  "sha256": "a3b437fb1d53c712c23626b1a665fc6295df82fc6ec81117b59dc65dd0c6a571",
+  "enabled_elaboration_rc": 0,
+  "params": {
+    "ENABLE": 1,
+    "VM_AW": 21
+  },
+  "runtime": "NOT_RUN; no unchanged numerical proof replay",
+  "full_parent_elaborated": false,
+  "remaining_source_file_blocker": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv",
+  "formatter_RTL_writer": "Bacon",
+  "formatter_files_f_compile_writer": "Lorentz",
+  "hostsmoke": "303627 pinned source unchanged",
+  "qualification": "source restoration and compile only; not numerical, installed allocation or contextual physical closure"
+}

@@ -6,7 +6,7 @@
 // Warm reset is NOT connected to por_n. No accepted record is erased/replayed.
 module ot_qwen_s4_protected_ring #(
     parameter integer WIDTH=281, DEPTH=64, PC_ID=0, KIND=0, SYNC=2,
-    parameter integer WIRE_STAGES=0,
+    parameter integer WIRE_STAGES=0, READ_RSEL=0,
     parameter integer P=$clog2(DEPTH)+1,
     parameter integer PIECES=(WIDTH+1+43)/44,
     parameter integer CW=PIECES*72
@@ -80,7 +80,8 @@ module ot_qwen_s4_protected_ring #(
     wire [D3W-1:0] d3;
     wire ev=e1[E1W-1],v0=d0[D0W-1],v1=d1[D1W-1],v2=d2[D2W-1],v3=d3[D3W-1];
     assign wr_fault=ws_bad||e1_bad||w_sticky||enc_order_bad||wire_remote_fault;
-    assign rd_fault=rs_bad||d0_bad||d1_bad||d2_bad||d3_bad||r_sticky||due_bad||delivery_order_bad||wire_receive_fault;
+    wire read_select_fault;
+    assign rd_fault=rs_bad||d0_bad||d1_bad||d2_bad||d3_bad||r_sticky||due_bad||delivery_order_bad||wire_receive_fault||read_select_fault;
     assign wr_ready=wr_online&&rr_ok&&!wr_fault&&allow_new&&(wr_occupancy<DEPTH);
     wire accept=wr_valid&&wr_ready;
     // Encode cut1: raw64 + five partial8 parity/syndrome groups. Code-position
@@ -213,8 +214,41 @@ module ot_qwen_s4_protected_ring #(
     ot_qwen_s4_checked_state #(.W(4*P+1)) u_rs(.clk(rd_clk),.por_n(por_n),.en(rd_online&&!rd_fault),
         .d({r_sticky||bad_retire,delivered_next,(release_next>>1)^release_next,release_next,fetch_next}),.q(rs),.qi(rsi),.bad(rs_bad));
     assign retired=release_bin;
+    wire [CW-1:0] read_code;
+    generate if(READ_RSEL)begin:r9_read
+        // Owner c8ba43664 RSEL1 column mux, applied to the FULL immutable
+        // sealed word. Existing checked D0 is the held-valid register: it
+        // captures only on advance, never the void r6/r7/r8 unconditional
+        // reload. D0's owner/valid and the remaining cuts hold together.
+        // Protected pointer fetch_next replaces raw lr_bin_n. No raw FIFO,
+        // reset epoch, credit, pop or completion authority is introduced.
+        localparam integer GROUPS=(CW+28)/29;
+        wire [GROUPS-1:0] group_bad;
+        wire [DEPTH-1:0] current_hot={{(DEPTH-1){1'b0}},1'b1} << fetch_bin[A-1:0];
+        wire [DEPTH-1:0] next_hot={{(DEPTH-1){1'b0}},1'b1} << fetch_next[A-1:0];
+        for(genvar g=0;g<GROUPS;g=g+1)begin:column
+            localparam integer LO=g*29, HI=(LO+29>CW)?CW:LO+29;
+            wire [DEPTH-1:0] hot;wire selector_bad;
+            // Kept checked-state hierarchy protects both the select and
+            // its held alignment with the actual protected source PC.
+            ot_qwen_s4_checked_state #(.W(DEPTH),.INIT(1)) u_sel(
+                .clk(rd_clk),.por_n(por_n),.en(rd_online&&!rd_fault),
+                .d(next_hot),.q(hot),.bad(selector_bad));
+            assign group_bad[g]=selector_bad||(rd_online&&(hot!=current_hot));
+            wire [HI-LO-1:0] acc[0:DEPTH];
+            assign acc[0]='0;
+            for(genvar e=0;e<DEPTH;e=e+1)begin:owner_or
+                assign acc[e+1]=acc[e]|({(HI-LO){hot[e]}}&mem[e][HI-1:LO]);
+            end
+            assign read_code[HI-1:LO]=acc[DEPTH];
+        end
+        assign read_select_fault=|group_bad;
+    end else begin:existing_read
+        assign read_code=mem[fetch_bin[A-1:0]];
+        assign read_select_fault=1'b0;
+    end endgenerate
     ot_qwen_s4_checked_state #(.W(D0W)) u_d0(.clk(rd_clk),.por_n(por_n),.en(advance),
-        .d(fetch ? {1'b1,fetch_bin,mem[fetch_bin[A-1:0]]} : {D0W{1'b0}}),.q(d0),.bad(d0_bad));
+        .d(fetch ? {1'b1,fetch_bin,read_code} : {D0W{1'b0}}),.q(d0),.bad(d0_bad));
     reg [D1W-1:0] d1_next;
     always @* begin
         d1_next='0;d1_next[0+:CW]=d0[0+:CW];d1_next[CW+PIECES*40+:P+1]=d0[CW+:P+1];

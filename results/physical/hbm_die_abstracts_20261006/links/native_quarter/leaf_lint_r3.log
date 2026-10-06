@@ -1,0 +1,65 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv:18:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                             : ... In instance ot_hbm_native_frame_station
+   18 |  generate if(!ENABLE)begin:disabled
+      |              ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:74:21: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_receipt.u_state
+   74 |      else begin code[index]<=snapshot^mask;code[WORDS]<=encode64({ctl[63:3],3'd3});end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:14: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'index' generates 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_receipt.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |              ^~
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:27: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_receipt.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:75:21: Bit extraction of array[9:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_receipt.u_state
+   75 |    3:if(check72(code[index])!=0)begin failed<=1;failed_n<=0;end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:74:21: Bit extraction of array[8:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.receipts[0].reserved.u_ack.u_state
+   74 |      else begin code[index]<=snapshot^mask;code[WORDS]<=encode64({ctl[63:3],3'd3});end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:27: Bit extraction of array[8:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.receipts[0].reserved.u_ack.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:75:21: Bit extraction of array[8:0] requires 4 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.receipts[0].reserved.u_ack.u_state
+   75 |    3:if(check72(code[index])!=0)begin failed<=1;failed_n<=0;end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:74:21: Bit extraction of array[41:0] requires 6 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   74 |      else begin code[index]<=snapshot^mask;code[WORDS]<=encode64({ctl[63:3],3'd3});end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:27: Bit extraction of array[41:0] requires 6 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:75:21: Bit extraction of array[41:0] requires 6 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   75 |    3:if(check72(code[index])!=0)begin failed<=1;failed_n<=0;end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:74:21: Bit extraction of array[5:0] requires 3 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   74 |      else begin code[index]<=snapshot^mask;code[WORDS]<=encode64({ctl[63:3],3'd3});end
+      |                     ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:73:27: Bit extraction of array[5:0] requires 3 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   73 |    2:if(index>=WORDS||code[index]!==snapshot)begin failed<=1;failed_n<=0;end
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:75:21: Bit extraction of array[5:0] requires 3 bit index, not 16 bits.
+                                                                                             : ... In instance ot_hbm_native_frame_station.held.u_native..held.inputs[0].u_cut.u_state
+   75 |    3:if(check72(code[index])!=0)begin failed<=1;failed_n<=0;end
+      |                     ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv:132:5: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'RELEASE_BACKPRESSURE' generates 32 bits.
+                                                                                                : ... In instance ot_hbm_native_frame_station.held.u_native
+  132 |    (!RELEASE_BACKPRESSURE||source_release_r)&&
+      |     ^
+%Error-BLKLOOPINIT: rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv:57:32: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+   57 |    for(i=0;i<WORDS+5;i=i+1)code[i]<=encode64(0);
+      |                                ^
+%Error: Exiting due to 1 error(s)

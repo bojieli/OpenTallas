@@ -1,0 +1,14 @@
+read_verilog -sv /src/physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv
+hierarchy -check -top ot_dsrom_wfc_common_clock_source -chparam ENABLE 1
+proc
+setattr -set keep 1 t:$adff t:$dff t:$adffe t:$dffe
+setattr -set keep 1 w:on.f w:on.fn w:on.s w:on.sn w:on.fq w:on.fqn w:on.fh w:on.fhn w:on.sq w:on.sqn w:on.failed w:on.failed_n w:on.bad
+synth -top ot_dsrom_wfc_common_clock_source -flatten -noabc
+dfflibmap -liberty /out/libs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+abc -liberty /out/libs/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib -liberty /out/libs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib -liberty /out/libs/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib -liberty /out/libs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /out/libs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib -D 277.777777778
+splitnets -ports
+opt_clean
+tee -o /out/mapped.stat stat -liberty /out/libs/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib -liberty /out/libs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib -liberty /out/libs/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib -liberty /out/libs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /out/libs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib
+write_verilog /out/mapped.attributes.v
+write_verilog -noattr /out/mapped.v
+write_json /out/mapped.json

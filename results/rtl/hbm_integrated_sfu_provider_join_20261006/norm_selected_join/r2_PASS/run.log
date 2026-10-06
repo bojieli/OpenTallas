@@ -1,0 +1,6 @@
+PASS_NORM_SAMEBANK_GOLDEN_READBACK words=64 actual_ACKs=2 full73 held_response
+NORM_NATIVE_VM_JOIN_PASS 64FP32 real32SRAM checkedpublication full73 highTOKEN17refusal warmjointretire
+- /srv/opentallas-scratch2/codex/hbm-norm-native-73fe978cd/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_norm_native_vm_join.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.658 s; speed 1.882 us/s
+- Verilator: cpu 0.658 s on 1 threads; allocated 24 MB

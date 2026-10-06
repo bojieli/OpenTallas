@@ -1,0 +1,3927 @@
+{
+ "schema": "opentallas.dsrom-s81-rack.v1",
+ "tool": "tools/dsrom_s81_rack.py",
+ "decision_links": "OWNER 2026-10-06: full RS(544,514) FEC on every off-package link (board, in-rack cable, rack to rack) for both the DS ROM array and the HBM accelerator; light FEC is not used anywhere. In-package UCIe keeps its own spec.",
+ "counts": {
+  "stages": 81,
+  "layer": 324,
+  "head": 12,
+  "table": 36,
+  "draft": 52,
+  "dies": 424,
+  "src": {
+   "head": "results/uarch/dsrom_l2_head_mac_20261004/model.json verdict.recommended_head_dies (owner-adopted 12, codex_notes 2026-10-04 '12 head dies / 372 total stay'); results/rtl/dsrom_recovery_20261004/levers/head.json 'per head die (1 of 12)'",
+   "table": "results/uarch/dsrom_l2_head_mac_20261004/model.json head_groups['12'].total_dies 372 - 324 layer - 12 head",
+   "draft": "results/rtl/dsrom_recovery_20261004/levers/draft.json dies_added (DP1-EP5)"
+  }
+ },
+ "stacks": {
+  "per_die": {
+   "scan": 4,
+   "layer": 1,
+   "head": 4,
+   "table": 0,
+   "draft": 0
+  },
+  "scan_stages": [
+   4,
+   16,
+   28,
+   40,
+   48,
+   56,
+   64,
+   72
+  ],
+  "scan_dies": 32,
+  "total": 468,
+  "rule_4S_plus_128_at_8_head": 452,
+  "src": "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md line 17 (scenario C: 4 stacks on the 32 index-scanning rank dies, 1 on the other rank dies, 4 on each head die; tables none); scan stages results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json scan_service_homes (provisional homes: the count, 32 dies, is what the stacks need)",
+  "note": "the power model's 452 (tools/dsrom_c_recheck.py stacks = 4S + 128) is this rule with 8 head dies; draft expert replicas (DP1-EP5) hold no per-user state, the drafter's KV rides on the head dies' stacks as in scenario C"
+ },
+ "die_w": {
+  "layer": 84.1,
+  "head_table": 92.34,
+  "stack": 2.8,
+  "src": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w (busiest layer die, used for every layer and draft die); tools/dsrom_c_recheck.py (HEAD_W + TABLE_W) / HEAD_TABLE_DIES (C1 ledger: one W a head or table die); results/arch/v41_rack.json hbm3e_stack_static_w"
+ },
+ "packing": {
+  "rule": "2 consecutive stages a 1 OU tray of 4 two-die packages (board link between them); the stage chain is a U over two racks (R1 top -> bottom, across at the bottom, R2 bottom -> top, above the Engram table trays); head trays beside S0 (8-traversal token return on the shortest cable), draft trays beside the head trays; Engram tables at the bottom of R2 (lifts S80 to the head trays' height)",
+  "minimum": "81 stages at 2 a tray = 41 trays: 40 board hops + 40 cable hops is the minimum; one stage hop crosses racks (S81 does not fit one 44 OU rack with its power shelves)",
+  "r1_stages": [
+   0,
+   53
+  ],
+  "r2_stages": [
+   54,
+   80
+  ],
+  "rack_crossing": {
+   "src": "S53",
+   "dst": "S54",
+   "length_m": 1.544,
+   "medium": "passive twinax DAC"
+  }
+ },
+ "racks": [
+  {
+   "name": "R1",
+   "rows": [
+    {
+     "ou": 1,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf A1 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 2,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf B1 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 3,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf A2 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 4,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf B2 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 5,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S52 + S53",
+     "pk": [
+      {
+       "id": 104,
+       "r": "stage",
+       "d": [
+        "s52r0",
+        "s52r1"
+       ],
+       "s": 52,
+       "k": 1
+      },
+      {
+       "id": 105,
+       "r": "stage",
+       "d": [
+        "s52r2",
+        "s52r3"
+       ],
+       "s": 52,
+       "k": 1
+      },
+      {
+       "id": 106,
+       "r": "stage",
+       "d": [
+        "s53r0",
+        "s53r1"
+       ],
+       "s": 53,
+       "k": 1
+      },
+      {
+       "id": 107,
+       "r": "stage",
+       "d": [
+        "s53r2",
+        "s53r3"
+       ],
+       "s": 53,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 6,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S50 + S51",
+     "pk": [
+      {
+       "id": 100,
+       "r": "stage",
+       "d": [
+        "s50r0",
+        "s50r1"
+       ],
+       "s": 50,
+       "k": 1
+      },
+      {
+       "id": 101,
+       "r": "stage",
+       "d": [
+        "s50r2",
+        "s50r3"
+       ],
+       "s": 50,
+       "k": 1
+      },
+      {
+       "id": 102,
+       "r": "stage",
+       "d": [
+        "s51r0",
+        "s51r1"
+       ],
+       "s": 51,
+       "k": 1
+      },
+      {
+       "id": 103,
+       "r": "stage",
+       "d": [
+        "s51r2",
+        "s51r3"
+       ],
+       "s": 51,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 7,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S48 + S49 (scan die: S48, 4 stacks)",
+     "pk": [
+      {
+       "id": 96,
+       "r": "stage",
+       "d": [
+        "s48r0",
+        "s48r1"
+       ],
+       "s": 48,
+       "k": 4
+      },
+      {
+       "id": 97,
+       "r": "stage",
+       "d": [
+        "s48r2",
+        "s48r3"
+       ],
+       "s": 48,
+       "k": 4
+      },
+      {
+       "id": 98,
+       "r": "stage",
+       "d": [
+        "s49r0",
+        "s49r1"
+       ],
+       "s": 49,
+       "k": 1
+      },
+      {
+       "id": 99,
+       "r": "stage",
+       "d": [
+        "s49r2",
+        "s49r3"
+       ],
+       "s": 49,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 8,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S46 + S47",
+     "pk": [
+      {
+       "id": 92,
+       "r": "stage",
+       "d": [
+        "s46r0",
+        "s46r1"
+       ],
+       "s": 46,
+       "k": 1
+      },
+      {
+       "id": 93,
+       "r": "stage",
+       "d": [
+        "s46r2",
+        "s46r3"
+       ],
+       "s": 46,
+       "k": 1
+      },
+      {
+       "id": 94,
+       "r": "stage",
+       "d": [
+        "s47r0",
+        "s47r1"
+       ],
+       "s": 47,
+       "k": 1
+      },
+      {
+       "id": 95,
+       "r": "stage",
+       "d": [
+        "s47r2",
+        "s47r3"
+       ],
+       "s": 47,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 9,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S44 + S45",
+     "pk": [
+      {
+       "id": 88,
+       "r": "stage",
+       "d": [
+        "s44r0",
+        "s44r1"
+       ],
+       "s": 44,
+       "k": 1
+      },
+      {
+       "id": 89,
+       "r": "stage",
+       "d": [
+        "s44r2",
+        "s44r3"
+       ],
+       "s": 44,
+       "k": 1
+      },
+      {
+       "id": 90,
+       "r": "stage",
+       "d": [
+        "s45r0",
+        "s45r1"
+       ],
+       "s": 45,
+       "k": 1
+      },
+      {
+       "id": 91,
+       "r": "stage",
+       "d": [
+        "s45r2",
+        "s45r3"
+       ],
+       "s": 45,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 10,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S42 + S43",
+     "pk": [
+      {
+       "id": 84,
+       "r": "stage",
+       "d": [
+        "s42r0",
+        "s42r1"
+       ],
+       "s": 42,
+       "k": 1
+      },
+      {
+       "id": 85,
+       "r": "stage",
+       "d": [
+        "s42r2",
+        "s42r3"
+       ],
+       "s": 42,
+       "k": 1
+      },
+      {
+       "id": 86,
+       "r": "stage",
+       "d": [
+        "s43r0",
+        "s43r1"
+       ],
+       "s": 43,
+       "k": 1
+      },
+      {
+       "id": 87,
+       "r": "stage",
+       "d": [
+        "s43r2",
+        "s43r3"
+       ],
+       "s": 43,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 11,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S40 + S41 (scan die: S40, 4 stacks)",
+     "pk": [
+      {
+       "id": 80,
+       "r": "stage",
+       "d": [
+        "s40r0",
+        "s40r1"
+       ],
+       "s": 40,
+       "k": 4
+      },
+      {
+       "id": 81,
+       "r": "stage",
+       "d": [
+        "s40r2",
+        "s40r3"
+       ],
+       "s": 40,
+       "k": 4
+      },
+      {
+       "id": 82,
+       "r": "stage",
+       "d": [
+        "s41r0",
+        "s41r1"
+       ],
+       "s": 41,
+       "k": 1
+      },
+      {
+       "id": 83,
+       "r": "stage",
+       "d": [
+        "s41r2",
+        "s41r3"
+       ],
+       "s": 41,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 12,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S38 + S39",
+     "pk": [
+      {
+       "id": 76,
+       "r": "stage",
+       "d": [
+        "s38r0",
+        "s38r1"
+       ],
+       "s": 38,
+       "k": 1
+      },
+      {
+       "id": 77,
+       "r": "stage",
+       "d": [
+        "s38r2",
+        "s38r3"
+       ],
+       "s": 38,
+       "k": 1
+      },
+      {
+       "id": 78,
+       "r": "stage",
+       "d": [
+        "s39r0",
+        "s39r1"
+       ],
+       "s": 39,
+       "k": 1
+      },
+      {
+       "id": 79,
+       "r": "stage",
+       "d": [
+        "s39r2",
+        "s39r3"
+       ],
+       "s": 39,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 13,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S36 + S37",
+     "pk": [
+      {
+       "id": 72,
+       "r": "stage",
+       "d": [
+        "s36r0",
+        "s36r1"
+       ],
+       "s": 36,
+       "k": 1
+      },
+      {
+       "id": 73,
+       "r": "stage",
+       "d": [
+        "s36r2",
+        "s36r3"
+       ],
+       "s": 36,
+       "k": 1
+      },
+      {
+       "id": 74,
+       "r": "stage",
+       "d": [
+        "s37r0",
+        "s37r1"
+       ],
+       "s": 37,
+       "k": 1
+      },
+      {
+       "id": 75,
+       "r": "stage",
+       "d": [
+        "s37r2",
+        "s37r3"
+       ],
+       "s": 37,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 14,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S34 + S35",
+     "pk": [
+      {
+       "id": 68,
+       "r": "stage",
+       "d": [
+        "s34r0",
+        "s34r1"
+       ],
+       "s": 34,
+       "k": 1
+      },
+      {
+       "id": 69,
+       "r": "stage",
+       "d": [
+        "s34r2",
+        "s34r3"
+       ],
+       "s": 34,
+       "k": 1
+      },
+      {
+       "id": 70,
+       "r": "stage",
+       "d": [
+        "s35r0",
+        "s35r1"
+       ],
+       "s": 35,
+       "k": 1
+      },
+      {
+       "id": 71,
+       "r": "stage",
+       "d": [
+        "s35r2",
+        "s35r3"
+       ],
+       "s": 35,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 15,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S32 + S33",
+     "pk": [
+      {
+       "id": 64,
+       "r": "stage",
+       "d": [
+        "s32r0",
+        "s32r1"
+       ],
+       "s": 32,
+       "k": 1
+      },
+      {
+       "id": 65,
+       "r": "stage",
+       "d": [
+        "s32r2",
+        "s32r3"
+       ],
+       "s": 32,
+       "k": 1
+      },
+      {
+       "id": 66,
+       "r": "stage",
+       "d": [
+        "s33r0",
+        "s33r1"
+       ],
+       "s": 33,
+       "k": 1
+      },
+      {
+       "id": 67,
+       "r": "stage",
+       "d": [
+        "s33r2",
+        "s33r3"
+       ],
+       "s": 33,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 16,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S30 + S31",
+     "pk": [
+      {
+       "id": 60,
+       "r": "stage",
+       "d": [
+        "s30r0",
+        "s30r1"
+       ],
+       "s": 30,
+       "k": 1
+      },
+      {
+       "id": 61,
+       "r": "stage",
+       "d": [
+        "s30r2",
+        "s30r3"
+       ],
+       "s": 30,
+       "k": 1
+      },
+      {
+       "id": 62,
+       "r": "stage",
+       "d": [
+        "s31r0",
+        "s31r1"
+       ],
+       "s": 31,
+       "k": 1
+      },
+      {
+       "id": 63,
+       "r": "stage",
+       "d": [
+        "s31r2",
+        "s31r3"
+       ],
+       "s": 31,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 17,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S28 + S29 (scan die: S28, 4 stacks)",
+     "pk": [
+      {
+       "id": 56,
+       "r": "stage",
+       "d": [
+        "s28r0",
+        "s28r1"
+       ],
+       "s": 28,
+       "k": 4
+      },
+      {
+       "id": 57,
+       "r": "stage",
+       "d": [
+        "s28r2",
+        "s28r3"
+       ],
+       "s": 28,
+       "k": 4
+      },
+      {
+       "id": 58,
+       "r": "stage",
+       "d": [
+        "s29r0",
+        "s29r1"
+       ],
+       "s": 29,
+       "k": 1
+      },
+      {
+       "id": 59,
+       "r": "stage",
+       "d": [
+        "s29r2",
+        "s29r3"
+       ],
+       "s": 29,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 18,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S26 + S27",
+     "pk": [
+      {
+       "id": 52,
+       "r": "stage",
+       "d": [
+        "s26r0",
+        "s26r1"
+       ],
+       "s": 26,
+       "k": 1
+      },
+      {
+       "id": 53,
+       "r": "stage",
+       "d": [
+        "s26r2",
+        "s26r3"
+       ],
+       "s": 26,
+       "k": 1
+      },
+      {
+       "id": 54,
+       "r": "stage",
+       "d": [
+        "s27r0",
+        "s27r1"
+       ],
+       "s": 27,
+       "k": 1
+      },
+      {
+       "id": 55,
+       "r": "stage",
+       "d": [
+        "s27r2",
+        "s27r3"
+       ],
+       "s": 27,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 19,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S24 + S25",
+     "pk": [
+      {
+       "id": 48,
+       "r": "stage",
+       "d": [
+        "s24r0",
+        "s24r1"
+       ],
+       "s": 24,
+       "k": 1
+      },
+      {
+       "id": 49,
+       "r": "stage",
+       "d": [
+        "s24r2",
+        "s24r3"
+       ],
+       "s": 24,
+       "k": 1
+      },
+      {
+       "id": 50,
+       "r": "stage",
+       "d": [
+        "s25r0",
+        "s25r1"
+       ],
+       "s": 25,
+       "k": 1
+      },
+      {
+       "id": 51,
+       "r": "stage",
+       "d": [
+        "s25r2",
+        "s25r3"
+       ],
+       "s": 25,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 20,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S22 + S23",
+     "pk": [
+      {
+       "id": 44,
+       "r": "stage",
+       "d": [
+        "s22r0",
+        "s22r1"
+       ],
+       "s": 22,
+       "k": 1
+      },
+      {
+       "id": 45,
+       "r": "stage",
+       "d": [
+        "s22r2",
+        "s22r3"
+       ],
+       "s": 22,
+       "k": 1
+      },
+      {
+       "id": 46,
+       "r": "stage",
+       "d": [
+        "s23r0",
+        "s23r1"
+       ],
+       "s": 23,
+       "k": 1
+      },
+      {
+       "id": 47,
+       "r": "stage",
+       "d": [
+        "s23r2",
+        "s23r3"
+       ],
+       "s": 23,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 21,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S20 + S21",
+     "pk": [
+      {
+       "id": 40,
+       "r": "stage",
+       "d": [
+        "s20r0",
+        "s20r1"
+       ],
+       "s": 20,
+       "k": 1
+      },
+      {
+       "id": 41,
+       "r": "stage",
+       "d": [
+        "s20r2",
+        "s20r3"
+       ],
+       "s": 20,
+       "k": 1
+      },
+      {
+       "id": 42,
+       "r": "stage",
+       "d": [
+        "s21r0",
+        "s21r1"
+       ],
+       "s": 21,
+       "k": 1
+      },
+      {
+       "id": 43,
+       "r": "stage",
+       "d": [
+        "s21r2",
+        "s21r3"
+       ],
+       "s": 21,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 22,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S18 + S19",
+     "pk": [
+      {
+       "id": 36,
+       "r": "stage",
+       "d": [
+        "s18r0",
+        "s18r1"
+       ],
+       "s": 18,
+       "k": 1
+      },
+      {
+       "id": 37,
+       "r": "stage",
+       "d": [
+        "s18r2",
+        "s18r3"
+       ],
+       "s": 18,
+       "k": 1
+      },
+      {
+       "id": 38,
+       "r": "stage",
+       "d": [
+        "s19r0",
+        "s19r1"
+       ],
+       "s": 19,
+       "k": 1
+      },
+      {
+       "id": 39,
+       "r": "stage",
+       "d": [
+        "s19r2",
+        "s19r3"
+       ],
+       "s": 19,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 23,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S16 + S17 (scan die: S16, 4 stacks)",
+     "pk": [
+      {
+       "id": 32,
+       "r": "stage",
+       "d": [
+        "s16r0",
+        "s16r1"
+       ],
+       "s": 16,
+       "k": 4
+      },
+      {
+       "id": 33,
+       "r": "stage",
+       "d": [
+        "s16r2",
+        "s16r3"
+       ],
+       "s": 16,
+       "k": 4
+      },
+      {
+       "id": 34,
+       "r": "stage",
+       "d": [
+        "s17r0",
+        "s17r1"
+       ],
+       "s": 17,
+       "k": 1
+      },
+      {
+       "id": 35,
+       "r": "stage",
+       "d": [
+        "s17r2",
+        "s17r3"
+       ],
+       "s": 17,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 24,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S14 + S15",
+     "pk": [
+      {
+       "id": 28,
+       "r": "stage",
+       "d": [
+        "s14r0",
+        "s14r1"
+       ],
+       "s": 14,
+       "k": 1
+      },
+      {
+       "id": 29,
+       "r": "stage",
+       "d": [
+        "s14r2",
+        "s14r3"
+       ],
+       "s": 14,
+       "k": 1
+      },
+      {
+       "id": 30,
+       "r": "stage",
+       "d": [
+        "s15r0",
+        "s15r1"
+       ],
+       "s": 15,
+       "k": 1
+      },
+      {
+       "id": 31,
+       "r": "stage",
+       "d": [
+        "s15r2",
+        "s15r3"
+       ],
+       "s": 15,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 25,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S12 + S13",
+     "pk": [
+      {
+       "id": 24,
+       "r": "stage",
+       "d": [
+        "s12r0",
+        "s12r1"
+       ],
+       "s": 12,
+       "k": 1
+      },
+      {
+       "id": 25,
+       "r": "stage",
+       "d": [
+        "s12r2",
+        "s12r3"
+       ],
+       "s": 12,
+       "k": 1
+      },
+      {
+       "id": 26,
+       "r": "stage",
+       "d": [
+        "s13r0",
+        "s13r1"
+       ],
+       "s": 13,
+       "k": 1
+      },
+      {
+       "id": 27,
+       "r": "stage",
+       "d": [
+        "s13r2",
+        "s13r3"
+       ],
+       "s": 13,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 26,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S10 + S11",
+     "pk": [
+      {
+       "id": 20,
+       "r": "stage",
+       "d": [
+        "s10r0",
+        "s10r1"
+       ],
+       "s": 10,
+       "k": 1
+      },
+      {
+       "id": 21,
+       "r": "stage",
+       "d": [
+        "s10r2",
+        "s10r3"
+       ],
+       "s": 10,
+       "k": 1
+      },
+      {
+       "id": 22,
+       "r": "stage",
+       "d": [
+        "s11r0",
+        "s11r1"
+       ],
+       "s": 11,
+       "k": 1
+      },
+      {
+       "id": 23,
+       "r": "stage",
+       "d": [
+        "s11r2",
+        "s11r3"
+       ],
+       "s": 11,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 27,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S8 + S9",
+     "pk": [
+      {
+       "id": 16,
+       "r": "stage",
+       "d": [
+        "s8r0",
+        "s8r1"
+       ],
+       "s": 8,
+       "k": 1
+      },
+      {
+       "id": 17,
+       "r": "stage",
+       "d": [
+        "s8r2",
+        "s8r3"
+       ],
+       "s": 8,
+       "k": 1
+      },
+      {
+       "id": 18,
+       "r": "stage",
+       "d": [
+        "s9r0",
+        "s9r1"
+       ],
+       "s": 9,
+       "k": 1
+      },
+      {
+       "id": 19,
+       "r": "stage",
+       "d": [
+        "s9r2",
+        "s9r3"
+       ],
+       "s": 9,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 28,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S6 + S7",
+     "pk": [
+      {
+       "id": 12,
+       "r": "stage",
+       "d": [
+        "s6r0",
+        "s6r1"
+       ],
+       "s": 6,
+       "k": 1
+      },
+      {
+       "id": 13,
+       "r": "stage",
+       "d": [
+        "s6r2",
+        "s6r3"
+       ],
+       "s": 6,
+       "k": 1
+      },
+      {
+       "id": 14,
+       "r": "stage",
+       "d": [
+        "s7r0",
+        "s7r1"
+       ],
+       "s": 7,
+       "k": 1
+      },
+      {
+       "id": 15,
+       "r": "stage",
+       "d": [
+        "s7r2",
+        "s7r3"
+       ],
+       "s": 7,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 29,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S4 + S5 (scan die: S4, 4 stacks)",
+     "pk": [
+      {
+       "id": 8,
+       "r": "stage",
+       "d": [
+        "s4r0",
+        "s4r1"
+       ],
+       "s": 4,
+       "k": 4
+      },
+      {
+       "id": 9,
+       "r": "stage",
+       "d": [
+        "s4r2",
+        "s4r3"
+       ],
+       "s": 4,
+       "k": 4
+      },
+      {
+       "id": 10,
+       "r": "stage",
+       "d": [
+        "s5r0",
+        "s5r1"
+       ],
+       "s": 5,
+       "k": 1
+      },
+      {
+       "id": 11,
+       "r": "stage",
+       "d": [
+        "s5r2",
+        "s5r3"
+       ],
+       "s": 5,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 30,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S2 + S3",
+     "pk": [
+      {
+       "id": 4,
+       "r": "stage",
+       "d": [
+        "s2r0",
+        "s2r1"
+       ],
+       "s": 2,
+       "k": 1
+      },
+      {
+       "id": 5,
+       "r": "stage",
+       "d": [
+        "s2r2",
+        "s2r3"
+       ],
+       "s": 2,
+       "k": 1
+      },
+      {
+       "id": 6,
+       "r": "stage",
+       "d": [
+        "s3r0",
+        "s3r1"
+       ],
+       "s": 3,
+       "k": 1
+      },
+      {
+       "id": 7,
+       "r": "stage",
+       "d": [
+        "s3r2",
+        "s3r3"
+       ],
+       "s": 3,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 31,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S0 + S1",
+     "pk": [
+      {
+       "id": 0,
+       "r": "stage",
+       "d": [
+        "s0r0",
+        "s0r1"
+       ],
+       "s": 0,
+       "k": 1
+      },
+      {
+       "id": 1,
+       "r": "stage",
+       "d": [
+        "s0r2",
+        "s0r3"
+       ],
+       "s": 0,
+       "k": 1
+      },
+      {
+       "id": 2,
+       "r": "stage",
+       "d": [
+        "s1r0",
+        "s1r1"
+       ],
+       "s": 1,
+       "k": 1
+      },
+      {
+       "id": 3,
+       "r": "stage",
+       "d": [
+        "s1r2",
+        "s1r3"
+       ],
+       "s": 1,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 32,
+     "h": 1,
+     "kind": "head",
+     "label": "head tray 0: embed, LM head, norm",
+     "pk": [
+      {
+       "id": 162,
+       "r": "head",
+       "d": [
+        "h0",
+        "h1"
+       ],
+       "k": 4
+      },
+      {
+       "id": 163,
+       "r": "head",
+       "d": [
+        "h2",
+        "h3"
+       ],
+       "k": 4
+      },
+      {
+       "id": 164,
+       "r": "head",
+       "d": [
+        "h4",
+        "h5"
+       ],
+       "k": 4
+      },
+      {
+       "id": 165,
+       "r": "head",
+       "d": [
+        "h6",
+        "h7"
+       ],
+       "k": 4
+      }
+     ],
+     "w": 828.3,
+     "stacks": 32
+    },
+    {
+     "ou": 33,
+     "h": 1,
+     "kind": "head",
+     "label": "head tray 1: embed, LM head, norm",
+     "pk": [
+      {
+       "id": 166,
+       "r": "head",
+       "d": [
+        "h8",
+        "h9"
+       ],
+       "k": 4
+      },
+      {
+       "id": 167,
+       "r": "head",
+       "d": [
+        "h10",
+        "h11"
+       ],
+       "k": 4
+      }
+     ],
+     "w": 414.2,
+     "stacks": 16
+    },
+    {
+     "ou": 34,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 0 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 186,
+       "r": "draft",
+       "d": [
+        "d0",
+        "d1"
+       ],
+       "k": 0
+      },
+      {
+       "id": 187,
+       "r": "draft",
+       "d": [
+        "d2",
+        "d3"
+       ],
+       "k": 0
+      },
+      {
+       "id": 188,
+       "r": "draft",
+       "d": [
+        "d4",
+        "d5"
+       ],
+       "k": 0
+      },
+      {
+       "id": 189,
+       "r": "draft",
+       "d": [
+        "d6",
+        "d7"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 35,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 1 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 190,
+       "r": "draft",
+       "d": [
+        "d8",
+        "d9"
+       ],
+       "k": 0
+      },
+      {
+       "id": 191,
+       "r": "draft",
+       "d": [
+        "d10",
+        "d11"
+       ],
+       "k": 0
+      },
+      {
+       "id": 192,
+       "r": "draft",
+       "d": [
+        "d12",
+        "d13"
+       ],
+       "k": 0
+      },
+      {
+       "id": 193,
+       "r": "draft",
+       "d": [
+        "d14",
+        "d15"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 36,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 2 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 194,
+       "r": "draft",
+       "d": [
+        "d16",
+        "d17"
+       ],
+       "k": 0
+      },
+      {
+       "id": 195,
+       "r": "draft",
+       "d": [
+        "d18",
+        "d19"
+       ],
+       "k": 0
+      },
+      {
+       "id": 196,
+       "r": "draft",
+       "d": [
+        "d20",
+        "d21"
+       ],
+       "k": 0
+      },
+      {
+       "id": 197,
+       "r": "draft",
+       "d": [
+        "d22",
+        "d23"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 37,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 3 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 198,
+       "r": "draft",
+       "d": [
+        "d24",
+        "d25"
+       ],
+       "k": 0
+      },
+      {
+       "id": 199,
+       "r": "draft",
+       "d": [
+        "d26",
+        "d27"
+       ],
+       "k": 0
+      },
+      {
+       "id": 200,
+       "r": "draft",
+       "d": [
+        "d28",
+        "d29"
+       ],
+       "k": 0
+      },
+      {
+       "id": 201,
+       "r": "draft",
+       "d": [
+        "d30",
+        "d31"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 38,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 4 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 202,
+       "r": "draft",
+       "d": [
+        "d32",
+        "d33"
+       ],
+       "k": 0
+      },
+      {
+       "id": 203,
+       "r": "draft",
+       "d": [
+        "d34",
+        "d35"
+       ],
+       "k": 0
+      },
+      {
+       "id": 204,
+       "r": "draft",
+       "d": [
+        "d36",
+        "d37"
+       ],
+       "k": 0
+      },
+      {
+       "id": 205,
+       "r": "draft",
+       "d": [
+        "d38",
+        "d39"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 39,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 5 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 206,
+       "r": "draft",
+       "d": [
+        "d40",
+        "d41"
+       ],
+       "k": 0
+      },
+      {
+       "id": 207,
+       "r": "draft",
+       "d": [
+        "d42",
+        "d43"
+       ],
+       "k": 0
+      },
+      {
+       "id": 208,
+       "r": "draft",
+       "d": [
+        "d44",
+        "d45"
+       ],
+       "k": 0
+      },
+      {
+       "id": 209,
+       "r": "draft",
+       "d": [
+        "d46",
+        "d47"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 672.8,
+     "stacks": 0
+    },
+    {
+     "ou": 40,
+     "h": 1,
+     "kind": "draft",
+     "label": "draft tray 6 (DP1-EP5 expert replicas)",
+     "pk": [
+      {
+       "id": 210,
+       "r": "draft",
+       "d": [
+        "d48",
+        "d49"
+       ],
+       "k": 0
+      },
+      {
+       "id": 211,
+       "r": "draft",
+       "d": [
+        "d50",
+        "d51"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 336.4,
+     "stacks": 0
+    },
+    {
+     "ou": 41,
+     "h": 1,
+     "kind": "switch",
+     "label": "Engram / host switch (51.2T class, 1 OU)"
+    },
+    {
+     "ou": 42,
+     "h": 2,
+     "kind": "host",
+     "label": "host: 2-socket CPU + 2 x 400G NIC (prefill KV ingest) + BMC"
+    },
+    {
+     "ou": 44,
+     "h": 1,
+     "kind": "mgmt",
+     "label": "management switch (1 GbE OOB) + leak detection"
+    }
+   ],
+   "used_ou": 44,
+   "dies": 280,
+   "packages": 140,
+   "trays": 36,
+   "stacks": 324,
+   "chips_kw": 24.55,
+   "wall_kw": 32.96,
+   "prov_kw": 39.55,
+   "shelves": 4,
+   "kg": 1072
+  },
+  {
+   "name": "R2",
+   "rows": [
+    {
+     "ou": 1,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf A1 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 2,
+     "h": 1,
+     "kind": "power",
+     "label": "power shelf B1 (33 kW, 6 x 5.5 kW PSU)"
+    },
+    {
+     "ou": 3,
+     "h": 1,
+     "kind": "table",
+     "label": "Engram table tray 0",
+     "pk": [
+      {
+       "id": 168,
+       "r": "table",
+       "d": [
+        "t0",
+        "t1"
+       ],
+       "k": 0
+      },
+      {
+       "id": 169,
+       "r": "table",
+       "d": [
+        "t2",
+        "t3"
+       ],
+       "k": 0
+      },
+      {
+       "id": 170,
+       "r": "table",
+       "d": [
+        "t4",
+        "t5"
+       ],
+       "k": 0
+      },
+      {
+       "id": 171,
+       "r": "table",
+       "d": [
+        "t6",
+        "t7"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 738.7,
+     "stacks": 0
+    },
+    {
+     "ou": 4,
+     "h": 1,
+     "kind": "table",
+     "label": "Engram table tray 1",
+     "pk": [
+      {
+       "id": 172,
+       "r": "table",
+       "d": [
+        "t8",
+        "t9"
+       ],
+       "k": 0
+      },
+      {
+       "id": 173,
+       "r": "table",
+       "d": [
+        "t10",
+        "t11"
+       ],
+       "k": 0
+      },
+      {
+       "id": 174,
+       "r": "table",
+       "d": [
+        "t12",
+        "t13"
+       ],
+       "k": 0
+      },
+      {
+       "id": 175,
+       "r": "table",
+       "d": [
+        "t14",
+        "t15"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 738.7,
+     "stacks": 0
+    },
+    {
+     "ou": 5,
+     "h": 1,
+     "kind": "table",
+     "label": "Engram table tray 2",
+     "pk": [
+      {
+       "id": 176,
+       "r": "table",
+       "d": [
+        "t16",
+        "t17"
+       ],
+       "k": 0
+      },
+      {
+       "id": 177,
+       "r": "table",
+       "d": [
+        "t18",
+        "t19"
+       ],
+       "k": 0
+      },
+      {
+       "id": 178,
+       "r": "table",
+       "d": [
+        "t20",
+        "t21"
+       ],
+       "k": 0
+      },
+      {
+       "id": 179,
+       "r": "table",
+       "d": [
+        "t22",
+        "t23"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 738.7,
+     "stacks": 0
+    },
+    {
+     "ou": 6,
+     "h": 1,
+     "kind": "table",
+     "label": "Engram table tray 3",
+     "pk": [
+      {
+       "id": 180,
+       "r": "table",
+       "d": [
+        "t24",
+        "t25"
+       ],
+       "k": 0
+      },
+      {
+       "id": 181,
+       "r": "table",
+       "d": [
+        "t26",
+        "t27"
+       ],
+       "k": 0
+      },
+      {
+       "id": 182,
+       "r": "table",
+       "d": [
+        "t28",
+        "t29"
+       ],
+       "k": 0
+      },
+      {
+       "id": 183,
+       "r": "table",
+       "d": [
+        "t30",
+        "t31"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 738.7,
+     "stacks": 0
+    },
+    {
+     "ou": 7,
+     "h": 1,
+     "kind": "table",
+     "label": "Engram table tray 4",
+     "pk": [
+      {
+       "id": 184,
+       "r": "table",
+       "d": [
+        "t32",
+        "t33"
+       ],
+       "k": 0
+      },
+      {
+       "id": 185,
+       "r": "table",
+       "d": [
+        "t34",
+        "t35"
+       ],
+       "k": 0
+      }
+     ],
+     "w": 369.4,
+     "stacks": 0
+    },
+    {
+     "ou": 8,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S54 + S55",
+     "pk": [
+      {
+       "id": 108,
+       "r": "stage",
+       "d": [
+        "s54r0",
+        "s54r1"
+       ],
+       "s": 54,
+       "k": 1
+      },
+      {
+       "id": 109,
+       "r": "stage",
+       "d": [
+        "s54r2",
+        "s54r3"
+       ],
+       "s": 54,
+       "k": 1
+      },
+      {
+       "id": 110,
+       "r": "stage",
+       "d": [
+        "s55r0",
+        "s55r1"
+       ],
+       "s": 55,
+       "k": 1
+      },
+      {
+       "id": 111,
+       "r": "stage",
+       "d": [
+        "s55r2",
+        "s55r3"
+       ],
+       "s": 55,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 9,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S56 + S57 (scan die: S56, 4 stacks)",
+     "pk": [
+      {
+       "id": 112,
+       "r": "stage",
+       "d": [
+        "s56r0",
+        "s56r1"
+       ],
+       "s": 56,
+       "k": 4
+      },
+      {
+       "id": 113,
+       "r": "stage",
+       "d": [
+        "s56r2",
+        "s56r3"
+       ],
+       "s": 56,
+       "k": 4
+      },
+      {
+       "id": 114,
+       "r": "stage",
+       "d": [
+        "s57r0",
+        "s57r1"
+       ],
+       "s": 57,
+       "k": 1
+      },
+      {
+       "id": 115,
+       "r": "stage",
+       "d": [
+        "s57r2",
+        "s57r3"
+       ],
+       "s": 57,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 10,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S58 + S59",
+     "pk": [
+      {
+       "id": 116,
+       "r": "stage",
+       "d": [
+        "s58r0",
+        "s58r1"
+       ],
+       "s": 58,
+       "k": 1
+      },
+      {
+       "id": 117,
+       "r": "stage",
+       "d": [
+        "s58r2",
+        "s58r3"
+       ],
+       "s": 58,
+       "k": 1
+      },
+      {
+       "id": 118,
+       "r": "stage",
+       "d": [
+        "s59r0",
+        "s59r1"
+       ],
+       "s": 59,
+       "k": 1
+      },
+      {
+       "id": 119,
+       "r": "stage",
+       "d": [
+        "s59r2",
+        "s59r3"
+       ],
+       "s": 59,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 11,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S60 + S61",
+     "pk": [
+      {
+       "id": 120,
+       "r": "stage",
+       "d": [
+        "s60r0",
+        "s60r1"
+       ],
+       "s": 60,
+       "k": 1
+      },
+      {
+       "id": 121,
+       "r": "stage",
+       "d": [
+        "s60r2",
+        "s60r3"
+       ],
+       "s": 60,
+       "k": 1
+      },
+      {
+       "id": 122,
+       "r": "stage",
+       "d": [
+        "s61r0",
+        "s61r1"
+       ],
+       "s": 61,
+       "k": 1
+      },
+      {
+       "id": 123,
+       "r": "stage",
+       "d": [
+        "s61r2",
+        "s61r3"
+       ],
+       "s": 61,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 12,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S62 + S63",
+     "pk": [
+      {
+       "id": 124,
+       "r": "stage",
+       "d": [
+        "s62r0",
+        "s62r1"
+       ],
+       "s": 62,
+       "k": 1
+      },
+      {
+       "id": 125,
+       "r": "stage",
+       "d": [
+        "s62r2",
+        "s62r3"
+       ],
+       "s": 62,
+       "k": 1
+      },
+      {
+       "id": 126,
+       "r": "stage",
+       "d": [
+        "s63r0",
+        "s63r1"
+       ],
+       "s": 63,
+       "k": 1
+      },
+      {
+       "id": 127,
+       "r": "stage",
+       "d": [
+        "s63r2",
+        "s63r3"
+       ],
+       "s": 63,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 13,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S64 + S65 (scan die: S64, 4 stacks)",
+     "pk": [
+      {
+       "id": 128,
+       "r": "stage",
+       "d": [
+        "s64r0",
+        "s64r1"
+       ],
+       "s": 64,
+       "k": 4
+      },
+      {
+       "id": 129,
+       "r": "stage",
+       "d": [
+        "s64r2",
+        "s64r3"
+       ],
+       "s": 64,
+       "k": 4
+      },
+      {
+       "id": 130,
+       "r": "stage",
+       "d": [
+        "s65r0",
+        "s65r1"
+       ],
+       "s": 65,
+       "k": 1
+      },
+      {
+       "id": 131,
+       "r": "stage",
+       "d": [
+        "s65r2",
+        "s65r3"
+       ],
+       "s": 65,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 14,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S66 + S67",
+     "pk": [
+      {
+       "id": 132,
+       "r": "stage",
+       "d": [
+        "s66r0",
+        "s66r1"
+       ],
+       "s": 66,
+       "k": 1
+      },
+      {
+       "id": 133,
+       "r": "stage",
+       "d": [
+        "s66r2",
+        "s66r3"
+       ],
+       "s": 66,
+       "k": 1
+      },
+      {
+       "id": 134,
+       "r": "stage",
+       "d": [
+        "s67r0",
+        "s67r1"
+       ],
+       "s": 67,
+       "k": 1
+      },
+      {
+       "id": 135,
+       "r": "stage",
+       "d": [
+        "s67r2",
+        "s67r3"
+       ],
+       "s": 67,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 15,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S68 + S69",
+     "pk": [
+      {
+       "id": 136,
+       "r": "stage",
+       "d": [
+        "s68r0",
+        "s68r1"
+       ],
+       "s": 68,
+       "k": 1
+      },
+      {
+       "id": 137,
+       "r": "stage",
+       "d": [
+        "s68r2",
+        "s68r3"
+       ],
+       "s": 68,
+       "k": 1
+      },
+      {
+       "id": 138,
+       "r": "stage",
+       "d": [
+        "s69r0",
+        "s69r1"
+       ],
+       "s": 69,
+       "k": 1
+      },
+      {
+       "id": 139,
+       "r": "stage",
+       "d": [
+        "s69r2",
+        "s69r3"
+       ],
+       "s": 69,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 16,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S70 + S71",
+     "pk": [
+      {
+       "id": 140,
+       "r": "stage",
+       "d": [
+        "s70r0",
+        "s70r1"
+       ],
+       "s": 70,
+       "k": 1
+      },
+      {
+       "id": 141,
+       "r": "stage",
+       "d": [
+        "s70r2",
+        "s70r3"
+       ],
+       "s": 70,
+       "k": 1
+      },
+      {
+       "id": 142,
+       "r": "stage",
+       "d": [
+        "s71r0",
+        "s71r1"
+       ],
+       "s": 71,
+       "k": 1
+      },
+      {
+       "id": 143,
+       "r": "stage",
+       "d": [
+        "s71r2",
+        "s71r3"
+       ],
+       "s": 71,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 17,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S72 + S73 (scan die: S72, 4 stacks)",
+     "pk": [
+      {
+       "id": 144,
+       "r": "stage",
+       "d": [
+        "s72r0",
+        "s72r1"
+       ],
+       "s": 72,
+       "k": 4
+      },
+      {
+       "id": 145,
+       "r": "stage",
+       "d": [
+        "s72r2",
+        "s72r3"
+       ],
+       "s": 72,
+       "k": 4
+      },
+      {
+       "id": 146,
+       "r": "stage",
+       "d": [
+        "s73r0",
+        "s73r1"
+       ],
+       "s": 73,
+       "k": 1
+      },
+      {
+       "id": 147,
+       "r": "stage",
+       "d": [
+        "s73r2",
+        "s73r3"
+       ],
+       "s": 73,
+       "k": 1
+      }
+     ],
+     "w": 728.8,
+     "stacks": 20
+    },
+    {
+     "ou": 18,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S74 + S75",
+     "pk": [
+      {
+       "id": 148,
+       "r": "stage",
+       "d": [
+        "s74r0",
+        "s74r1"
+       ],
+       "s": 74,
+       "k": 1
+      },
+      {
+       "id": 149,
+       "r": "stage",
+       "d": [
+        "s74r2",
+        "s74r3"
+       ],
+       "s": 74,
+       "k": 1
+      },
+      {
+       "id": 150,
+       "r": "stage",
+       "d": [
+        "s75r0",
+        "s75r1"
+       ],
+       "s": 75,
+       "k": 1
+      },
+      {
+       "id": 151,
+       "r": "stage",
+       "d": [
+        "s75r2",
+        "s75r3"
+       ],
+       "s": 75,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 19,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S76 + S77",
+     "pk": [
+      {
+       "id": 152,
+       "r": "stage",
+       "d": [
+        "s76r0",
+        "s76r1"
+       ],
+       "s": 76,
+       "k": 1
+      },
+      {
+       "id": 153,
+       "r": "stage",
+       "d": [
+        "s76r2",
+        "s76r3"
+       ],
+       "s": 76,
+       "k": 1
+      },
+      {
+       "id": 154,
+       "r": "stage",
+       "d": [
+        "s77r0",
+        "s77r1"
+       ],
+       "s": 77,
+       "k": 1
+      },
+      {
+       "id": 155,
+       "r": "stage",
+       "d": [
+        "s77r2",
+        "s77r3"
+       ],
+       "s": 77,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 20,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S78 + S79",
+     "pk": [
+      {
+       "id": 156,
+       "r": "stage",
+       "d": [
+        "s78r0",
+        "s78r1"
+       ],
+       "s": 78,
+       "k": 1
+      },
+      {
+       "id": 157,
+       "r": "stage",
+       "d": [
+        "s78r2",
+        "s78r3"
+       ],
+       "s": 78,
+       "k": 1
+      },
+      {
+       "id": 158,
+       "r": "stage",
+       "d": [
+        "s79r0",
+        "s79r1"
+       ],
+       "s": 79,
+       "k": 1
+      },
+      {
+       "id": 159,
+       "r": "stage",
+       "d": [
+        "s79r2",
+        "s79r3"
+       ],
+       "s": 79,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 21,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S80",
+     "pk": [
+      {
+       "id": 160,
+       "r": "stage",
+       "d": [
+        "s80r0",
+        "s80r1"
+       ],
+       "s": 80,
+       "k": 1
+      },
+      {
+       "id": 161,
+       "r": "stage",
+       "d": [
+        "s80r2",
+        "s80r3"
+       ],
+       "s": 80,
+       "k": 1
+      }
+     ],
+     "w": 347.6,
+     "stacks": 4
+    },
+    {
+     "ou": 22,
+     "h": 1,
+     "kind": "mgmt",
+     "label": "management switch (1 GbE OOB) + leak detection"
+    }
+   ],
+   "used_ou": 22,
+   "dies": 144,
+   "packages": 72,
+   "trays": 19,
+   "stacks": 144,
+   "chips_kw": 12.81,
+   "wall_kw": 15.99,
+   "prov_kw": 19.19,
+   "shelves": 2,
+   "kg": 654
+  }
+ ],
+ "link_basis": {
+  "twinax_ns_per_m": 4.6,
+  "flight_included_m": 0.3,
+  "dac_reach_m": 2.0,
+  "aec_ns": 3,
+  "hop_cycles": 1004,
+  "hop_us": 0.8367,
+  "light_fec_hop_cycles_was": 909,
+  "src": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json hop (RTL ot_dsrom_link_rt, board channel 251 cycles = 209 ns full KP4); results/arch/v41_rack.json physical_constants twinax_ns_per_m / hop_flight_included_m / dac_112g_reach_m / aec_added_latency_ns"
+ },
+ "link_classes": [
+  {
+   "cls": "in-package",
+   "what": "die to die inside a two-die package (TP4 pair half)",
+   "medium": "UCIe advanced package",
+   "fec": "none (UCIe CRC + retry)",
+   "ns": 10.0,
+   "src": "configs/hardware/technology.json links.rom_package_ucie"
+  },
+  {
+   "cls": "in-tray",
+   "what": "package to package on one tray board: TP4 collectives, stage hop between the two stages of a tray",
+   "medium": "112G PAM4 board trace <= 0.3 m",
+   "fec": "RS(544,514) KP4 (full)",
+   "ns": 209.0,
+   "src": "configs/hardware/technology.json links.rom_board_serdes full_kp4_fec_s; RTL hop 1004 cycles = 0.8367 us (results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json)"
+  },
+  {
+   "cls": "in-rack",
+   "what": "tray to adjacent tray: stage hops, token return, draft links",
+   "medium": "passive twinax DAC ~0.8 m",
+   "fec": "RS(544,514) KP4 (full)",
+   "ns": 211.3,
+   "src": "technology.json links.rom_rack_cable_serdes (209 ns) + flight beyond 0.3 m at 4.6 ns/m"
+  },
+  {
+   "cls": "rack-to-rack",
+   "what": "the one stage hop between racks and the head hop",
+   "medium": "passive twinax DAC <= 2 m (AEC past 2 m)",
+   "fec": "RS(544,514) KP4 (full)",
+   "ns": 214.7,
+   "src": "results/arch/v41_rack.json dac_112g_reach_m 2 m (IEEE 802.3ck CR), twinax 4.6 ns/m; length from the packing"
+  }
+ ],
+ "stage_hops": [
+  {
+   "src": "S0",
+   "dst": "S1",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S1",
+   "dst": "S2",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S2",
+   "dst": "S3",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S3",
+   "dst": "S4",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S4",
+   "dst": "S5",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S5",
+   "dst": "S6",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S6",
+   "dst": "S7",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S7",
+   "dst": "S8",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S8",
+   "dst": "S9",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S9",
+   "dst": "S10",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S10",
+   "dst": "S11",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S11",
+   "dst": "S12",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S12",
+   "dst": "S13",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S13",
+   "dst": "S14",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S14",
+   "dst": "S15",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S15",
+   "dst": "S16",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S16",
+   "dst": "S17",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S17",
+   "dst": "S18",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S18",
+   "dst": "S19",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S19",
+   "dst": "S20",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S20",
+   "dst": "S21",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S21",
+   "dst": "S22",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S22",
+   "dst": "S23",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S23",
+   "dst": "S24",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S24",
+   "dst": "S25",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S25",
+   "dst": "S26",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S26",
+   "dst": "S27",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S27",
+   "dst": "S28",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S28",
+   "dst": "S29",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S29",
+   "dst": "S30",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S30",
+   "dst": "S31",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S31",
+   "dst": "S32",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S32",
+   "dst": "S33",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S33",
+   "dst": "S34",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S34",
+   "dst": "S35",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S35",
+   "dst": "S36",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S36",
+   "dst": "S37",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S37",
+   "dst": "S38",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S38",
+   "dst": "S39",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S39",
+   "dst": "S40",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S40",
+   "dst": "S41",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S41",
+   "dst": "S42",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S42",
+   "dst": "S43",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S43",
+   "dst": "S44",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S44",
+   "dst": "S45",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S45",
+   "dst": "S46",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S46",
+   "dst": "S47",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S47",
+   "dst": "S48",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S48",
+   "dst": "S49",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S49",
+   "dst": "S50",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S50",
+   "dst": "S51",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S51",
+   "dst": "S52",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S52",
+   "dst": "S53",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S53",
+   "dst": "S54",
+   "cls": "rack-to-rack",
+   "what": "stage hop",
+   "length_m": 1.544,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 5.72,
+   "retimer_ns": 0.0,
+   "extra_cycles": 7,
+   "hop_cycles": 1011
+  },
+  {
+   "src": "S54",
+   "dst": "S55",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S55",
+   "dst": "S56",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S56",
+   "dst": "S57",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S57",
+   "dst": "S58",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S58",
+   "dst": "S59",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S59",
+   "dst": "S60",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S60",
+   "dst": "S61",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S61",
+   "dst": "S62",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S62",
+   "dst": "S63",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S63",
+   "dst": "S64",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S64",
+   "dst": "S65",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S65",
+   "dst": "S66",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S66",
+   "dst": "S67",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S67",
+   "dst": "S68",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S68",
+   "dst": "S69",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S69",
+   "dst": "S70",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S70",
+   "dst": "S71",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S71",
+   "dst": "S72",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S72",
+   "dst": "S73",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S73",
+   "dst": "S74",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S74",
+   "dst": "S75",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S75",
+   "dst": "S76",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S76",
+   "dst": "S77",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S77",
+   "dst": "S78",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S78",
+   "dst": "S79",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S79",
+   "dst": "S80",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  }
+ ],
+ "head_hop": {
+  "src": "S80",
+  "dst": "head",
+  "cls": "rack-to-rack",
+  "what": "head hop (last stage -> head dies)",
+  "length_m": 1.928,
+  "medium": "passive twinax DAC",
+  "fec": "RS(544,514) KP4 (full)",
+  "flight_extra_ns": 7.49,
+  "retimer_ns": 0.0,
+  "extra_cycles": 9,
+  "hop_cycles": 1013
+ },
+ "token_return": {
+  "src": "head",
+  "dst": "S0",
+  "cls": "in-rack",
+  "what": "token return (head -> stage 0)",
+  "length_m": 0.848,
+  "medium": "passive twinax DAC",
+  "fec": "RS(544,514) KP4 (full)",
+  "flight_extra_ns": 2.52,
+  "retimer_ns": 0.0,
+  "extra_cycles": 4,
+  "hop_cycles": 1008
+ },
+ "draft_links": {
+  "src": "head",
+  "dst": "draft",
+  "cls": "in-rack",
+  "what": "draft seed / replica links (head and draft trays)",
+  "length_m": 0.896,
+  "medium": "passive twinax DAC",
+  "fec": "RS(544,514) KP4 (full)",
+  "flight_extra_ns": 2.74,
+  "retimer_ns": 0.0,
+  "extra_cycles": 4,
+  "hop_cycles": 1008
+ },
+ "hop_summary": {
+  "stage_hops": {
+   "in-tray": 40,
+   "in-rack": 39,
+   "rack-to-rack": 1
+  },
+  "stage_hop_extra_cycles": 163,
+  "head_hop_extra_cycles": 9,
+  "token_return_extra_cycles_each": 4,
+  "draft_link_extra_cycles_each": 4,
+  "note": "extra = flight beyond the 0.3 m inside the measured full-KP4 hop (+ AEC past 2 m); the composition adds these to the measured hop"
+ },
+ "inputs": {
+  "results/arch/v41_rack.json": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
+  "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+  "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json": "4afc64790f8788bc2a68aee943ec2ea750d4fffbcbd3c3432039ad56d150baa0",
+  "results/uarch/dsrom_l2_head_mac_20261004/model.json": "d4c59bac5ae7ac2f110ecea454df6c68ba3e73aef607dc87701cb921b5105fc6",
+  "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
+  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+  "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md": "dbcd252ab1690af56d3e18ae94f4f845076b22a7cee157c2d0632f7d7f9e5343",
+  "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json": "20df9f7983c7cfead0614690552559bd2844e72b33c324ecfaa05f3ebdfb3db6",
+  "tools/dsrom_c_recheck.py": "bdf9f4b6245d96be0c76822b5839912e090e1cad2db659765a183113704daa9b"
+ },
+ "tool_sha256": "a8655e629cb897b162189c70a9ab2f4c5b92282bab2ade5a1ac58dd8cfcf127e"
+}

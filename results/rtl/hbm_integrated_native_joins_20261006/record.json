@@ -1,0 +1,70 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "44b83db20fda708a25de0ce29a2323cd5f10f755afb467fb71991ea6f547872f",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv": "c188e01425ce04f5c9748cd9f8ab12893207bc7e109b9061657b516d46ec2264",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_native_index_sram_join.sv": "7a96f765542435659c48116d3540d3f033806428ee99fe0acc034d0b896ca2c8",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "9744b0dbfc057889caf020f5a412494650d17c2cbbda2601821e246974a072e2",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "3d2cd1ddf67a68181e94f61f7f0537e159d074d2d9d0197e7934b51361619205",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_su_provider_parent.sv": "c7d80cc649af20abaaa5551896a483df0c67cf15be7a0efe4c20aebc4514c6ff",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e"
+  },
+  "selected_parent_parameters": {
+    "SU_PROVIDER_ADAPTER": 1,
+    "SU_ENABLE": 1,
+    "SU_REGISTERED_OUTPUTS": 1,
+    "SU_REGISTERED_STATUS": 1,
+    "SU_REGISTERED_BOUNDARY": 1,
+    "SU_BALANCED_OWNER_BOUNDARY": 1,
+    "SU_FOUR_COMBINATIONAL_CUTS": 1,
+    "SU_FAST_OWNER_FRONTIER": 1
+  },
+  "gate": {
+    "tool": "Icarus Verilog/vvp",
+    "compile_rc": 0,
+    "runtime_rc": 0,
+    "checks": 45,
+    "FAST_OWNER_FRONTIER_TEST": 1,
+    "FOUR_COMBINATIONAL_CUTS_TEST": 1,
+    "scope": "actual cmdproc20 LAUNCH/END + CP binding + shared borrower + newly selected provider adapter; transaction identity/drain/release, not arithmetic"
+  },
+  "light_preflight": {
+    "CPUs": 32,
+    "load1": 0.93359375,
+    "MemAvailable_kB": 187789324,
+    "disk_free_bytes": 175696048128
+  },
+  "measured_runtime": {
+    "max_RSS_kB": 8960,
+    "elapsed_seconds": 2.73,
+    "workers": 1,
+    "execution_caps": null
+  },
+  "native_index_join": {
+    "ENABLE1_compile_rc": 0,
+    "runtime": "NOT_RUN",
+    "caller": "ot_hbm_accel_index_query_source",
+    "backend_child_PASS_reused": "aa52fdb03 / 257WR 257checkedACK 129RD 128blocks 4128FP32 +actualSRAMUE",
+    "owner_full73": "protected enclosing owner retained through accepted bind/write publication/query; never reconstructed from backend63",
+    "required_parent_hooks": [
+      "real exclusive allocator frame/base/span",
+      "protected actual window bind receipt full73",
+      "actual producer_published and producer_drained",
+      "consumer drain/persistentcompletion"
+    ],
+    "formatter_85_599_512_bound": false
+  },
+  "full_parent_elaborated": false,
+  "full_parent_blocker": "missing ot_hbm_integrated_formatter_provider selected source; connected numericalc12/nativeproducer fixtures and index allocation caller remain outstanding",
+  "full_token_PASS": false,
+  "parent_physical_qualified": false,
+  "HC": "BLOCKED_16132_RELEASE_NULL",
+  "offpackage_FEC": "FULL; exact latency handoff pending",
+  "added_pipeline_edges": 0,
+  "added_owner_payload_state_bits": 0
+}
