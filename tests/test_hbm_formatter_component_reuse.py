@@ -85,4 +85,30 @@ class ComponentReuse(unittest.TestCase):
         self.edit('parent.sv','`define MOD(x) name``x\nmodule parent; endmodule\n')
         with self.assertRaises(ValueError):self.contracts()
 
+    def test_generation_time_output_tampering_rejects(self):
+        d=self.work/'generated';d.mkdir()
+        binary=self.work/'verilator_bin';binary.write_text('compiler')
+        header=d/'Vleaf.h';header.write_text('original generated ABI')
+        record=d/'Vleaf__verFiles.dat';rows=[]
+        for kind,path in [('S',binary),('T',header)]:
+            st=path.stat()
+            rows.append(f'{kind} {st.st_size} {st.st_ino} 0 0 {st.st_mtime_ns//10**9} {st.st_mtime_ns%10**9} "unhashed" "{path}"')
+        record.write_text('\n'.join(rows)+'\n')
+        self.assertIn(str(header),R.recorded_dependencies(d,'Vleaf'))
+        header.write_text('replaced generated ABI with different size')
+        with self.assertRaises(ValueError):R.recorded_dependencies(d,'Vleaf')
+
+    def test_regenerated_dependency_interface_rejects_even_same_contract(self):
+        j=self.jobs[1];directory=Path(j['directory']);directory.mkdir(parents=True)
+        terminal=directory/'terminal.json';terminal.write_text('{"exit":0}')
+        c=self.contracts()['Vleaf'];expected={'Vhelper':{'helper.sv':'original DPI','Vhelper.h':'original header'}}
+        model=dict(contract=c,contract_sha256=R.digest(c),directory=str(directory),
+                   terminal=str(terminal),terminal_sha256=R.sha(terminal),artifacts={},interfaces={},
+                   dependency_interfaces=expected,parse_only_diagnostics=[])
+        out=self.work/'out';out.mkdir()
+        for name in ('helper.sv','Vhelper.h'):
+            changed={p:dict(pins) for p,pins in expected.items()};changed['Vhelper'][name]='different generated ABI'
+            self.assertFalse(R.reuse_component(j,c,{'models':{'Vleaf':model}},out,changed))
+        self.assertTrue(R.reuse_component(j,c,{'models':{'Vleaf':model}},out,expected))
+
 if __name__=='__main__':unittest.main()

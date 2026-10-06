@@ -340,7 +340,7 @@ def terminal_path(old,prefix):
 def recorded_dependencies(directory,prefix,source_root=None):
     """Verify legacy generation-time dependency signatures before hashing them.
 
-    Verilator recorded inode, size and nanosecond mtime for every read input.
+    Verilator recorded inode, size and nanosecond mtime for inputs and outputs.
     ctime is excluded because adding a hardlink changes it without editing the
     file. New enrollment pins the actual bytes as well as these original rows.
     Missing/replaced/modified compiler, source or child-interface inputs refuse
@@ -348,19 +348,33 @@ def recorded_dependencies(directory,prefix,source_root=None):
     """
     p=directory/(prefix+'__verFiles.dat');rows={}
     for line in p.read_text().splitlines():
-        if not line.startswith('S '):continue
+        if not line.startswith(('S ','T ')):continue
         parts=shlex.split(line)
         if len(parts)!=9:raise ValueError('Unsupported Verilator dependency signature')
         path=Path(parts[8])
         if not path.is_absolute():path=(source_root or directory)/path
+        # The signature file records itself before its own contents are written.
+        if parts[0]=='T' and path.resolve()==p.resolve():continue
         stat=path.stat()
         expected=[int(parts[1]),int(parts[2]),int(parts[5])*10**9+int(parts[6])]
         if [stat.st_size,stat.st_ino,stat.st_mtime_ns]!=expected:
-            raise ValueError('Input changed since model generation '+str(path))
-        rows[str(path)]=dict(signature=expected,sha256=sha(path))
-    if not any(Path(p).name=='verilator_bin' for p in rows):
+            raise ValueError('File changed since model generation '+str(path))
+        rows[str(path)]=dict(kind=parts[0],signature=expected,sha256=sha(path))
+    if not any(Path(p).name=='verilator_bin' and v['kind']=='S' for p,v in rows.items()):
         raise ValueError('No generation-time compiler signature')
     return rows
+
+def dependency_interfaces(j,by_prefix):
+    """Check the actual generated dependency ABI, including protected DPI names."""
+    interfaces={}
+    for prefix in j.get('deps',[]):
+        directory=Path(by_prefix[prefix]['directory'])
+        pins={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*')
+              if p.is_file() and p.suffix in ('.sv','.h')}
+        if not all(any(p.endswith(ext) for p in pins) for ext in ('.sv','.h')):
+            raise ValueError('Missing real dependency interface '+prefix)
+        interfaces[prefix]=pins
+    return interfaces
 
 def enroll_models(a):
     """Read completed models only; no compiler, admission or live-directory writes."""
@@ -378,7 +392,9 @@ def enroll_models(a):
             rejected[prefix]='Compiler/model failure';continue
         if j['top']=='ot_ds_hbm_cluster20_integrated':
             rejected[prefix]='Parent always rebuilt against current source';continue
-        try:dependency_signatures=recorded_dependencies(directory,prefix,work/'src')
+        try:
+            dependency_signatures=recorded_dependencies(directory,prefix,work/'src')
+            dep_interfaces=dependency_interfaces(j,{j['prefix']:j for j in jobs})
         except (OSError,ValueError) as e:
             rejected[prefix]=str(e);continue
         artifacts={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*') if p.is_file()}
@@ -400,14 +416,18 @@ def enroll_models(a):
             directory=str(directory),artifacts=artifacts,
             interfaces={p:h for p,h in artifacts.items() if p.endswith(('.sv','.h'))},
             generation_inputs=dependency_signatures,
+            dependency_interfaces=dep_interfaces,
             terminal=str(terminal),terminal_sha256=sha(terminal),parse_only_diagnostics=parse_only)
     write(out/'models.json',dict(work=str(work),tool=tool_pins,models=models,rejected=rejected))
     print(json.dumps(dict(enrolled=list(models),rejected=rejected,compiler_invoked=False)))
     return 0
 
-def reuse_component(j,contract,enrollment,out):
+def reuse_component(j,contract,enrollment,out,current_interfaces=None):
     old=enrollment['models'].get(j['prefix'])
     if not old or old['contract_sha256']!=digest(contract):return False
+    if old.get('dependency_interfaces',{})!=(current_interfaces or {}):return False
+    if 'contract' in old and digest(old['contract'])!=old['contract_sha256']:
+        raise ValueError('Retained contract changed')
     if sha(old['terminal'])!=old['terminal_sha256']:raise ValueError('Retained terminal changed')
     directory=Path(old['directory'])
     for rel,h in old['artifacts'].items():
@@ -427,6 +447,8 @@ def compile_plan(a):
     """Consume the completed real parameter graph; never flatten/replan it."""
     work=a.work.resolve();m=verified(work)
     out=a.output.resolve()
+    if a.enrollment and a.retained_models:
+        raise ValueError('Choose exact component enrollment or same-plan continuation')
     graph=work/'obj/Vot_ds_hbm_cluster20_integrated.json'
     jobs=json.loads(graph.read_text())['submodules']
     guard=Path('/srv/opentallas-scratch/admit.sh')
@@ -447,6 +469,8 @@ def compile_plan(a):
         write(out/'supervisor.json',dict(pid=os.getpid(),host=socket.gethostname(),
               memory_gib=a.memory_gib,cpu_cores=a.cpu_cores))
     inputs=json.loads((out/'inputs.json').read_text())
+    if inputs['source_sha256']!=m['source_sha256'] or inputs['parameters']!=m['parameters']:
+        raise ValueError('Source/parameters changed across admission')
     for path,h in inputs['plan_sha256'].items():
         if sha(path)!=h:raise ValueError('Derived graph changed '+path)
     if sha(__file__)!=inputs['driver_sha256']:raise ValueError('Compile driver changed')
@@ -491,7 +515,8 @@ def compile_plan(a):
         if not ready:raise ValueError('Real dependency wrappers unavailable; no substitute')
         j=ready[0];remaining.remove(j)
         if enrollment and j['top']!='ot_ds_hbm_cluster20_integrated':
-            if reuse_component(j,contracts[j['prefix']],enrollment,out):
+            if reuse_component(j,contracts[j['prefix']],enrollment,out,
+                               dependency_interfaces(j,{n['prefix']:n for n in jobs})):
                 completed.append(j['prefix']);continue
         leaf=out/j['prefix'];leaf.mkdir(exist_ok=False)
         cmd=[str(a.tool.resolve()),'--Mdir',j['directory'],'-f',j['verilator_args'],*j['sources']]
