@@ -97,8 +97,9 @@ def rng(bits):
 
 
 class Emit:
-    def __init__(self, rec, fcm, mutant=False):
+    def __init__(self, rec, fcm, mutant=False, margin=False):
         self.rec, self.fcm, self.n = rec, fcm, 0
+        self.margin = margin          # owner margin rule: register every face pin of a meso crossing (see --margin)
         self.body, self.sdc, self.map = [], [], {}
         self.clk_in, self.clk_out = [], []        # (port, idx) forwarded clock inputs / outputs
         self.mutant = mutant          # negative control: the first primitive swaps its two lowest data bits
@@ -162,7 +163,8 @@ class Emit:
         w = len(ibits)
         wn = f'm_{u}'
         self.body.append(f'  wire [{w - 1}:0] {wn};')
-        self.body.append(f'  ot_hbm_stn_meso #(.W({w})) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
+        ri = ', .RI(1), .RDREG(1)' if self.margin else ''
+        self.body.append(f'  ot_hbm_stn_meso #(.W({w}){ri}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
                          f'.ck(ck[0]), .rst_n(rst[0]), .d_o({wn}));')
         self.clk_in.append((ip, iclk))
         for i in ibits:
@@ -186,6 +188,15 @@ class Emit:
             self.map[f'{op}[{b}]'] = dict(src=s, dom='ck')
             self.outs[(op, b)] = ('ck',)
 
+    def drive(self, op, obits, src):
+        """--margin: ck-domain output bits op[obits] from the wire bit expressions src through a register of their own
+        at this port (a FIFO output that feeds two faces gets one copy per face)."""
+        u = self.name('pin')
+        w = len(obits)
+        self.body.append(f'  reg [{w - 1}:0] {u}; always @(posedge ck[0]) {u} <= {{{", ".join(reversed(src))}}};')
+        for j, b in enumerate(obits):
+            self.body.append(f'  assign {op}[{b}] = {u}[{j}];')
+
     def reg(self, srcs, tag):
         """register ck-domain inputs once; returns the list of register bit expressions."""
         u = self.name('reg')
@@ -194,8 +205,8 @@ class Emit:
         return [f'{u}[{i}]' for i in range(w)]
 
 
-def build(rec, fcm, mutant=False):
-    E = Emit(rec, fcm, mutant)
+def build(rec, fcm, mutant=False, margin=False):
+    E = Emit(rec, fcm, mutant, margin)
     mst = rec['master']
     role = mst.split('_')[1]
     P = rec['ports']
@@ -232,7 +243,10 @@ def build(rec, fcm, mutant=False):
         db = dirs(rec, 'b')
         for ib, ic in E.slices('a', 'in'):
             wn, srcs = E.meso('a', ib, ic, 'down')
-            E.body.append(f'  assign {rng([("b", i) for i in ib])} = {wn};')
+            if E.margin:
+                E.drive('b', ib, [f'{wn}[{j}]' for j in range(len(ib))])
+            else:
+                E.body.append(f'  assign {rng([("b", i) for i in ib])} = {wn};')
             E.local(srcs, 'b', ib)
         if lay['a'][0][2]:
             for ob, oc in E.slices('a', 'out'):
@@ -250,7 +264,10 @@ def build(rec, fcm, mutant=False):
                 E.fwd('a', ib, ic, 'b', ob, oc)
             wn, srcs = E.meso('a', ib, ic, 'tap')
             for t in ('t0', 't1'):
-                E.body.append(f'  assign {rng([(t, i) for i in ib])} = {wn};')
+                if E.margin:
+                    E.drive(t, ib, [f'{wn}[{j}]' for j in range(len(ib))])
+                else:
+                    E.body.append(f'  assign {rng([(t, i) for i in ib])} = {wn};')
                 E.local(srcs, t, ib)
         rl = 'mcast'
     elif role == 'gath':
@@ -304,14 +321,21 @@ def build(rec, fcm, mutant=False):
         for t in range(4):
             tp = f't{t}'
             dt = dirs(rec, tp)
+            tob = []
             for i in range(W):
                 ai = t * W + i
                 assert (dt[i] == 'out') == (da[ai] == 'in'), (mst, tp, i)
                 if dt[i] == 'out':
-                    E.body.append(f'  assign {tp}[{i}] = {down[ai][0]};')
+                    tob.append(i)
                     E.local([down[ai][1]], tp, [i])
                 else:
                     E.ins[(tp, i)] = ('ck', 0)
+            if tob:
+                if E.margin:
+                    E.drive(tp, tob, [down[t * W + i][0] for i in tob])
+                else:
+                    for i in tob:
+                        E.body.append(f'  assign {tp}[{i}] = {down[t * W + i][0]};')
         # b downstream: leaves 4.. of a
         if has('b'):
             for ob, oc in E.slices('b', 'out'):
@@ -422,6 +446,11 @@ def main(argv=None):
     ap.add_argument('--ports', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--master', action='append')
+    ap.add_argument('--margin', action='store_true',
+                    help='owner margin rule (2026-10-06): every face pin of a meso crossing registered -- the FIFO input '
+                         'captured at the pin on the write clock (ot_hbm_stn_meso RI=1, +1 cycle), the FIFO readout '
+                         'registered at its select (RDREG=1, +1 cycle) and every ck-domain output it feeds launched '
+                         'from a register of its own per port (+1 cycle)')
     a = ap.parse_args(argv)
     fcm = fc_map()
     pdir = Path(a.ports)
@@ -431,8 +460,8 @@ def main(argv=None):
     summary = {}
     for n in names:
         rec = json.loads((pdir / n / 'ports.json').read_text())
-        E, role = build(rec, fcm)
-        Em, _ = build(rec, fcm, mutant=True)
+        E, role = build(rec, fcm, margin=a.margin)
+        Em, _ = build(rec, fcm, mutant=True, margin=a.margin)
         d = out / n
         d.mkdir(parents=True, exist_ok=True)
         (d / f'{n}.sv').write_text(module_text(rec, E))
