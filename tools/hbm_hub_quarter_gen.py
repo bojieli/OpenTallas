@@ -174,8 +174,6 @@ def emit_rtl(P, neg=False):
         for n, w in P.ins:
             if n in q['per_lane']:
                 bits = [(j * P.LP + pi + t) % P.LB for t in range(w)]
-                if neg and j == 1 and pi == 0:
-                    bits = [(x + 1) % P.LB for x in bits]       # negative control: lane 1's first per-lane bit off by one
                 conns.append(f'.{n}({{' + ', '.join(f'{b}[{x}]' for x in reversed(bits)) + '})')
                 pi += w
             else:
@@ -200,7 +198,10 @@ def emit_rtl(P, neg=False):
                 if kk != k or gg != g:
                     continue
                 for t in range(P.LO):
-                    terms.setdefault(P.slot(j, t), []).append(f'lo_{j}[{t}]')
+                    x = P.slot(j, t)
+                    if neg and j == 1 and t < 8:
+                        x = (x + 1) % P.WC          # negative control: lane 1's first 8 result bits one slot off
+                    terms.setdefault(x, []).append(f'lo_{j}[{t}]')
             prev = f'acc_{k}_{g + 1}' if g + 1 < P.G else None
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
