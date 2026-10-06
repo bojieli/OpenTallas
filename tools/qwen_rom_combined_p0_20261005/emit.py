@@ -98,6 +98,18 @@ def emit(host, output, top=TOP, transport_quiet=False):
                         '        }, [&] { settle(live_all); });')
     text = text.replace('QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE',
                         'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE')
+    # Existing service counters distinguish a progressing history fill from
+    # clock-only activity. This changes the next host TU, never a live run.
+    heartbeat = '        if (tick % progress_every == 0) {'
+    text = replace_once(text, heartbeat, heartbeat + '\n'
+        '            for (int d=0; d<D; ++d)\n'
+        '                printf("P0_FLOW tick=%ld rank=%d layer=%u fill=%u writes=%u "\n'
+        '                       "stall_kv=%u stall_mem=%u stall_bridge=%u stall_retire=%u "\n'
+        '                       "rsp_stall=%u kv_fault=%04x\\n", tick, d, die[d]->rm_layer,\n'
+        '                       die[d]->st_fill_sectors, die[d]->st_wr_sectors,\n'
+        '                       die[d]->st_stall_kv, die[d]->st_stall_mem,\n'
+        '                       die[d]->st_stall_bridge, die[d]->st_stall_retire,\n'
+        '                       die[d]->st_rsp_stall, die[d]->kv_fault_code);')
     text = replace_once(text, '                    printf("QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE',
                         '                    printf("P0_CLOCK controller_rises=%llu elapsed_fs=%llu\\n",\n'
                         '                        (unsigned long long)clocks.controller_rises(),\n'
