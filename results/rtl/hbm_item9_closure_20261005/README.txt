@@ -123,3 +123,13 @@ physical gain/adoption inferred. ExistingfourclockSTA liveactualarrival search
 verified read-only anddetached; no jobrestart. Actualraw response QNloads and
 rootclock connectedpinloads extracted separately; sharedbuffer tree mustbe
 traced torealcaller receiver gates, rawregisterload is not32receiverload.
+
+Actual changed TREE SS/FF pin-load binding fromcompletedmappedJSON, source
+sha pinned:4096responsebits EACH trace6realBUF/INVtree nodes to33actualleaf
+inputpins (32caller receiver gates plusretainedendpointfeedback). SS totalleaf
+pinload29.944183fF/bit, FF34.942481fF/bit. RawQN firstload only0.5065fF SS;
+never substituteitforactualreceiverload. Realclk_sm293768connectedCLKpins
+carry130.927786pF SS/152.932374pF FF beforephysicalwireRC/CTS. Clock-load
+artifact retains source/mapped/library/JSONhashes; allbulkobjects stayE2.
+Existingprofile showscurrentSTA remainsininputDelayTag/findTag arrival search;
+no hangingdriverkill, constraints unchanged, no repeatedpassedgoldengate.
