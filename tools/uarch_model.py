@@ -11318,3 +11318,11 @@ def dsrom_wfc_producers_model(layer=19):
     """Finite actual WFC configuration, prompt and emitted-plan producers."""
     from dsrom_wfc_producers import model
     return model(layer)
+
+
+def hbm_r14_real_leaf_placement_defect_model():
+    """Native copied r14 leaf grid repair; no open-block physical qualification."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_r14_real_leaf_defect_hunt_20261006/model.json').read_text())
