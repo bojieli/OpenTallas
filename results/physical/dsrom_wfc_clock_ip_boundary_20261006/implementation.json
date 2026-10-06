@@ -1,0 +1,30 @@
+{
+  "implementation": "explicit external clock-IP boundary, not PLL/divider implementation",
+  "failed_source": "76158a8b3",
+  "rejection_evidence": "410492892",
+  "body_source": "0dbeae18d",
+  "source_hashes": {
+    "physical/dsrom_wfc_clock_ip_boundary_20261006/clock_inputs.sdc": "c96aaccc00fdc63a84773a3e1d4afed6b615d9bd28474d238c0f6e6da6bb063c",
+    "physical/dsrom_wfc_clock_ip_boundary_20261006/ot_dsrom_wfc_clock_ip_boundary.sv": "e2b4dd6a92495d47ebe0e620d01d76c8be56c937959dc52f9eaa4befaba148b0"
+  },
+  "checks": [
+    {
+      "ENABLE": 0,
+      "compile_returncode": 0
+    },
+    {
+      "ENABLE": 1,
+      "compile_returncode": 0
+    }
+  ],
+  "missing_binding_negative": "PASS rejected before any timing installation",
+  "STA_API_execution": false,
+  "physical_qualified": false,
+  "source_stop_policy_qualified": false,
+  "clock_adapter_FF": 0,
+  "data_latency_cycles_added": 0,
+  "waveform": "clock wires unchanged; external provider must supply phase/duty fast{1 4 7},slow{1 5 9}",
+  "fault_policy": "External primitive guarantees phase_valid acquisition and sticky invalidity/fault until cold POR; adapter adds enrollment fault, no safe-clock-stop guarantee. No assumption that body drains faulted debt or implements old half-edge stop.",
+  "dispatch_ready": false,
+  "required_next_input": "Literal characterized or explicitly assumed external-IP source record with non-default numeric latency/slew/uncertainty/fault/reset bounds. No suitable primitive record currently supplied. Zeno composes other native IO and actual CTS; no failed generator."
+}
