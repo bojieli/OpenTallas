@@ -11277,8 +11277,11 @@ def dsrom_window_parent_boundary_model():
         values = re.search(r'cell_rise\s*\(mc_delay\)\s*\{.*?values\s*\((.*?)\);', lib, re.S)
         clkq = [float(x) for x in re.findall(r'[0-9]+\.[0-9]+', values.group(1))]
         cap = float(re.search(r'pin \(clk\).*?capacitance\s*:\s*([0-9.]+)', lib, re.S).group(1))
+        pin_caps = {p:float(re.search(r'(?:pin|bus) \('+p+r'\).*?capacitance\s*:\s*([0-9.]+)',lib,re.S).group(1))
+                    for p in ('wd_in','w_ce_in','w_addr_in','r_addr_in')}
         corner_views[corner] = dict(clk_cap_fF=cap, clkQ_table_min_ps=min(clkq),
             clkQ_table_max_ps=max(clkq), min_period_ps=macro['timing'][corner]['min_period_ps'],
+            input_pin_cap_fF=pin_caps,
             basis='own predictive compiled corner Liberty; full slew/load table, not routed capture qualification')
     d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
     tiles = nl * (d // td)
@@ -11333,6 +11336,24 @@ def dsrom_window_parent_boundary_model():
             macro_dimensions_um=[macro['area']['macro_width_um'],macro['area']['macro_height_um']],
             corner_views=corner_views,
             total_macro_clk_cap_fF={c:nl*slices*x['clk_cap_fF'] for c,x in corner_views.items()},
+            actual_source_macro_loads=dict(
+                WINDOW_payload_format_bits=nl*rowbits,
+                each_WINDOW_payload_format_bit_macro_wd_fanout=1,
+                constant_padding_macro_wd_bits=nl*(slices*256-rowbits),
+                macro_write_enable_fanout_per_lane=slices,
+                macro_read_write_address_fanout=nl*slices,
+                per_corner={c:dict(
+                    WINDOW_payload_format_bit_sink_cap_fF=x['input_pin_cap_fF']['wd_in'],
+                    WINDOW_payload_format_total_sink_cap_fF=nl*rowbits*x['input_pin_cap_fF']['wd_in'],
+                    per_lane_macro_write_enable_sink_cap_fF=slices*x['input_pin_cap_fF']['w_ce_in'],
+                    per_write_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['w_addr_in'],
+                    per_read_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['r_addr_in'])
+                    for c,x in corner_views.items()},
+                nominal_component_output_load_fF=3.898,
+                only_direct_macro_input_pins=True,
+                intervening_enable_logic_and_route_cap_not_free=True,
+                macro_read_output_to_E1_decode_capture_loaded_STA_required=True,
+                routing_and_clock_and_parent_allocation_not_qualified=True),
             pin_alignment_required='existing ot_macro_track_snap placement and assertion per actual orientation',
             SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
         communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
@@ -12394,6 +12415,38 @@ def hbm_integrated_sfu_c12_stage_model():
         production_source_binding=False, numerical_qualified=False, token_rate_credit=0)
 
 
+def hbm_integrated_norm_quant_native_join_model(n=64, d=5120):
+    """Missing quant landing only; existing native supplier/calendar/root reused."""
+    assert n % 32 == 0 and d % n == 0
+    raw = n * 24 + n // 32 * 10
+    coded = ((raw + 63) // 64) * 72
+    rows = (n * 8 + 1023) // 1024 + (n // 32 * 10 + 1023) // 1024 + (n * 16 + 1023) // 1024
+    return dict(default_OFF=True, replicas=1, new_MACs_per_cycle=0,
+        arithmetic='existing selected norm/c12 exact outputs; no arithmetic change',
+        existing_supplier_coded_FF=11664, added_quant_raw_bits=raw,
+        added_quant_coded_FF=coded, added_control_FF=72,
+        added_quant_FF_area_floor_um2=(coded+72)*.2916,
+        owner='reuse actual stage216 codedFF/full73; no new frame seat',
+        control='existing128raw/144coded index/pending/ACKcount +32raw rounded to one72coded W6 row for accepted quant base',
+        provider='existing peer0 CP337/273 READ, under actual full73 calendar lease; no new provider',
+        source_allocation='existing norm_allocation_valid/frame must bind actual held CP input allocation',
+        new_SRAM=0, result_backend='same32SRAM root, actual exclusive result window',
+        input_bytes_per_accepted_sector=32, output_bytes_per_checked_row=128,
+        input_request_bits=337, input_response_bits=273,
+        quant_bits_per_vector=raw, quant_identity_and_control_bits=114,
+        routing_tracks_added=raw+114, CP_tracks_reused=337+273,
+        replicas_mux_demux='one new selection of existing CP peer0; one source, one sink; mutually exclusive with SU/SFU',
+        fanout='existing quant outputs gain one protected landing consumer; held73 aliases existing stage',
+        input_WORDs_HC=5*d, result_WORDs=d+(d//n)*rows*32,
+        root_capacity_WORDs=16384, result_window_fits=d+(d//n)*rows*32<=16384,
+        FP32_checked_ACKs=d//32, quant_checked_ACKs=(d//n)*rows,
+        input_scalar_READs_HC=5*d, actual_CP_READs_may_share_sector=False,
+        composed_latency='existing enrollment + actual5D held CP sector responses + existing norm clock edges + D/32 FP32 and (D/N)*QROWS real checked SRAM ACKs + drained finish/full73 caller reverse ACK; engine held by existing ICG during all service debt',
+        channel_capacity=None, floorplan_slot_fit=False, physical_closed=False,
+        actual_receiver_load=None, clock='existing clk_sm/ICG, parent833/1111 context OPEN',
+        model_ready_for_functional_join=True, adopted=False, token_rate_credit=0)
+
+
 def hbm_integrated_sfu_provider_join_model():
     """One actual SFU operation reuses the selected SU borrower/provider seat."""
     return dict(default_OFF=True, replicas=1, existing_stage_wrapper_FF=8936,
@@ -12474,3 +12527,23 @@ def dsrom_wfc_clock_ip_boundary_model():
         protection='External IP must hold phase-valid low before acquisition, and latch fault/invalidity until cold POR after any phase loss. Boundary vetoes enrollment, never gates clock outputs; it does not implement or qualify clock stop.',
         assumption='Explicit external coherent IP, not implemented divider or qualified PLL',
         physical_closed=False, PLL_IP_qualified=False)
+
+
+def dsrom_wfc_ideal_input_body_model():
+    """Owner-authorized BODY diagnostic, not a clock-IP timing envelope."""
+    return dict(default=0, replica_count=1, state_FF_bits=0,
+        MACs_per_cycle=0, memory_port_bytes_per_cycle=0,
+        boundary_bits_per_cycle=dict(external_clocks=2, external_fault=1),
+        replica_mux_demux_cost=0, added_pipeline_cycles=0,
+        fast_period_ps=2500/3, slow_period_ps=10000/9,
+        fast_waveform_ps=[0,1250/3], slow_waveform_ps=[0,5000/9],
+        common_rising_epoch_ps=0, common_rising_period_ps=10000/3,
+        setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        source_scope='Ideal external inputs solely for conditional BODY physical defecthunt',
+        source_insertion_ps=None, source_slew_ps=None, source_jitter_ps=None,
+        source_qualification=False, physical_closed=False,
+        other_IO_bound=False, headline_allowed=False,
+        latency_contribution='No changed data cycles. Body timing margin is available source/IO budget, not measured source timing. Clock-IP acquisition and physical cost are excluded unknowns, not zero.',
+        routing_tracks_needed=dict(body_clock_inputs=2, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        waveform_basis='tb_wfc_protected_stage fast/slow both start high at common epoch,50pct duty and3:4; owner exact833.333/1111.111 periods replace bench decimal rounding only')

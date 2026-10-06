@@ -1,0 +1,40 @@
+{
+  "status": "ACTUAL_POST_CTS_SETUP_FAIL_INTERMEDIATE_GRT_REPAIR_LIVE",
+  "source_commit": "19c66ba94",
+  "ss_setup_ps": -483.749,
+  "ff_hold_ps": 9.89861,
+  "setup_violations": 18162,
+  "hold_violations": 0,
+  "max_slew_violations": 0,
+  "max_capacitance_violations": 0,
+  "max_fanout_violations": 0,
+  "cell_area_um2": 34922.9,
+  "core_area_um2": 83666.1,
+  "utilization": 0.417407,
+  "clock_setup_skew_ps": 95.6897,
+  "clock_hold_skew_ps": 76.3033,
+  "worst_setup_start": "g_on.g_lane[31].u_lane.x_first$_DFF_PN0_",
+  "worst_setup_end": "g_on.g_lane[31].u_lane.ge_q[4]$_DFF_P_",
+  "reported_reset_removal_bc_ps": 20.25,
+  "reported_reset_recovery_wc_ps": 364.71,
+  "root_period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "extracted_final_signoff": false,
+  "DRC_final": "NOT_REACHED",
+  "antenna_final": "NOT_REACHED",
+  "physical_closed": false,
+  "parent_qualified": false,
+  "retained_checkpoint": {
+    "4_cts.odb": {
+      "bytes": 135812769,
+      "sha256": "329a9e3b1dc0a703554836a031f12d62de227d9f02e321000cd92e15a4708126"
+    },
+    "4_cts.sdc": {
+      "bytes": 57285,
+      "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f"
+    }
+  },
+  "route_progress": "same admitted flowrepair-r2 global-route repair_timing all21407 initial violating endpoints; no source/clock changes or new variants",
+  "remote_root": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/flowrepair-r2"
+}

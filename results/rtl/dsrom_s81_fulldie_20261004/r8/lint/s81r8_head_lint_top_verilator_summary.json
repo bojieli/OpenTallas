@@ -1,0 +1,75 @@
+{
+ "rc": 0,
+ "time_s": 129.0,
+ "peak_GB": 4.47,
+ "counts": {
+  "Warning-DECLFILENAME": {
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 1,
+   "rtl:ot_rom_4096x72_m8_bb.v": 1,
+   "rtl:ot_pdie_serdes_bb.v": 1,
+   "rtl:ot_pdie_ucie_bb.v": 1,
+   "rtl:s81r8_head_lint_top_real_shells.sv": 1,
+   "rtl:dsfd_glue.sv": 1,
+   "rtl:ot_fwd_link_stage.sv": 1,
+   "rtl:ot_v41_ret.sv": 1,
+   "rtl:ot_meso_fifo.sv": 1,
+   "stubs": 1
+  },
+  "Warning-PINCONNECTEMPTY": {
+   "rtl:dsfd_glue.sv": 416
+  },
+  "Warning-PINMISSING": {
+   "top": 2125
+  },
+  "Warning-SYNCASYNCNET": {
+   "rtl:dsfd_glue.sv": 1
+  },
+  "Warning-UNDRIVEN": {
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+   "rtl:ot_rom_4096x72_m8_bb.v": 1,
+   "rtl:ot_pdie_serdes_bb.v": 1,
+   "rtl:ot_pdie_ucie_bb.v": 1
+  },
+  "Warning-UNUSEDPARAM": {
+   "rtl:s81r8_head_lint_top_real_shells.sv": 15,
+   "rtl:ot_meso_fifo.sv": 1
+  },
+  "Warning-UNUSEDSIGNAL": {
+   "top": 247128,
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+   "rtl:ot_rom_4096x72_m8_bb.v": 3,
+   "rtl:ot_pdie_serdes_bb.v": 2,
+   "rtl:ot_pdie_ucie_bb.v": 2,
+   "rtl:dsfd_glue.sv": 15,
+   "rtl:ot_meso_fifo.sv": 1,
+   "rtl:ot_v41_ret.sv": 4,
+   "rtl:ot_fp32_add_rne_pipe.sv": 1,
+   "rtl:ot_hdc_delay.sv": 1
+  },
+  "Warning-WIDTHEXPAND": {
+   "rtl:ot_v41_ret.sv": 15
+  }
+ },
+ "examples": {
+  "Warning-DECLFILENAME": [
+   "Filename 's81r8_head_lint_top_stubs' does not match MODULE name: 'dsfd_bf'"
+  ],
+  "Warning-PINCONNECTEMPTY": [],
+  "Warning-PINMISSING": [
+   "Cell has missing pin: 'b_v'",
+   "Cell has missing pin: 'b_d'",
+   "Cell has missing pin: 'l_v'",
+   "Cell has missing pin: 'l_d'"
+  ],
+  "Warning-WIDTHEXPAND": [],
+  "Warning-UNUSEDSIGNAL": [
+   "Signal is not used: 'lint_nc_0'",
+   "Signal is not used: 'lint_nc_1'",
+   "Signal is not used: 'lint_nc_2'",
+   "Signal is not used: 'lint_nc_3'"
+  ],
+  "Warning-UNDRIVEN": [],
+  "Warning-UNUSEDPARAM": [],
+  "Warning-SYNCASYNCNET": []
+ }
+}
