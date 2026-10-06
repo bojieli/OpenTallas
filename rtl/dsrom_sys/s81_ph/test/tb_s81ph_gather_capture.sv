@@ -139,14 +139,35 @@ module tb_s81ph_gather_capture;
         end
         idle(200);
         begin : cmp
-            integer bad, tot, tr, td;
-            bad = 0; tot = 0;
+            // ORDERED (default): every root's write sequence equal.  +UNORD (pipelined root, ot_s81ph_ret_root_p):
+            // every root's writes equal as a multiset (rows of one root may complete in another order: VM state is
+            // the same, addresses within a phase are distinct); counts of roots whose order differs are reported.
+            // Fault runs (ref_fault): fail closed = the DUT faults too and makes no write the reference does not make.
+            integer bad, tot, tr, td, reord, extra, j, hit;
+            reg unord;
+            unord = $test$plusargs("UNORD");
+            bad = 0; tot = 0; reord = 0; extra = 0;
             for (k = 0; k < NR; k = k + 1) begin
                 tr = refq[k].size(); td = dutq[k].size(); tot = tot + tr;
-                if (tr != td) begin bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: ref %0d writes, dut %0d", k, tr, td); end
-                else for (rr = 0; rr < tr; rr = rr + 1) if (refq[k][rr] != dutq[k][rr]) begin
-                    bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d write %0d: ref %h dut %h", k, rr, refq[k][rr], dutq[k][rr]); break; end
+                if (ref_fault && unord) begin
+                    for (rr = 0; rr < td; rr = rr + 1) begin
+                        hit = 0; for (j = 0; j < tr; j = j + 1) if (refq[k][j] == dutq[k][rr]) hit = 1;
+                        if (!hit) begin extra = extra + 1; bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: dut write %h not made by ref", k, dutq[k][rr]); end
+                    end
+                end else if (tr != td) begin bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: ref %0d writes, dut %0d", k, tr, td); end
+                else begin
+                    for (rr = 0; rr < tr; rr = rr + 1) if (refq[k][rr] != dutq[k][rr]) begin
+                        if (!unord) begin bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d write %0d: ref %h dut %h", k, rr, refq[k][rr], dutq[k][rr]); end
+                        else reord = reord + 1;
+                        break; end
+                    if (unord) begin
+                        refq[k].sort(); dutq[k].sort();
+                        for (rr = 0; rr < tr; rr = rr + 1) if (refq[k][rr] != dutq[k][rr]) begin
+                            bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d sorted write %0d: ref %h dut %h", k, rr, refq[k][rr], dutq[k][rr]); break; end
+                    end
+                end
             end
+            if (unord) $display("UNORD reordered_roots=%0d fault_run_dut_writes_not_in_ref=%0d", reord, extra);
             $display("SUMMARY phases=%0d writes=%0d ref_fault=%0d dut_fault=%0d ref_drained=%0d dut_drained=%0d max_extra_cycles=%0d timeouts=%0d mismatching_roots=%0d",
                      n_ph, tot, ref_fault, dst[3], r_drained, dst[2], maxd, timeouts, bad);
             if (bad == 0 && ref_fault == dst[3] && timeouts == 0 && (ref_fault || r_drained == dst[2])) $display("RESULT PASS");
