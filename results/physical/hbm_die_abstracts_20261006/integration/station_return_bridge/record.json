@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.hbm.vm.station_return_bridge.v1",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "624d3c821cce33b0c6c7d7066228c160abdaa198ae0fa41a269cfee053a7d166",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_station_return_bridge.sv": "0c8df286263414c0207cef8849a87219b4e77bcf7f797fb650265a591010ed89",
+    "physical/hbm_die_abstracts_20261006/integration/tb_vm_station_return_bridge.sv": "3da2fabc7999864712b88cafbf981f7ef3f3082f751c9a1ea20eeb514c702695"
+  },
+  "default_enabled": false,
+  "pass_marker": "PASS_VM_STATION_RETURN_BRIDGE checks=19 sends=9 native_events=3 parent_receipts=1 NO3=1 emptyCEarrival=1 warmdebt=1 UE_no_ACK=1 collision_quarantined=1",
+  "gate_scope": "one actual NO3 native station + actual readyless protected bridge; fixture source owners and consumer ACKs; not final eightSM/quarter/fullparent qualification",
+  "same_stimulus_configuration": true,
+  "actual_parent_response_backpressure": true,
+  "storage": {
+    "protected_FF_each": 360,
+    "replicas_for_root_quarters": 4,
+    "total_FF": 1440,
+    "FF_area_floor_um2": 419.904,
+    "SRAM_added": 0
+  },
+  "latency": {
+    "added_root_capture_edges": 1,
+    "CE_and_backpressure": "retain same actual owed completion until acceptance; no fixed timeout"
+  },
+  "clock": {
+    "parent_root": "clk_sm",
+    "native_station_capture_root": "same actual clk_sm input/fclk_i",
+    "cold_reset": "por_n -> station rst_n[0]",
+    "forwarded_output_clock": "four actual kept inversions in existing native station; not used as new root/borrowed insertion",
+    "uncertainty_policy_ps": {
+      "SS_setup": 60,
+      "FF_hold": 25
+    },
+    "receiver_load_fF": null,
+    "propagated_skew_ps": null,
+    "physical_closed": false
+  },
+  "pin_binding": {
+    "station_release": "native_station.source_release",
+    "station_owner": "native_station.out_owner[191:0] still held on release edge",
+    "held_frame": "vm_publication_parent.held_frame full73 protected while native root debt remains",
+    "ACK_v": "vm_publication_parent.tap_ACK_v[q]",
+    "ACK_r": "vm_publication_parent.tap_ACK_r[q]",
+    "ACK_owner": "vm_publication_parent.tap_ACK_owner[q*192+:192]",
+    "ACK_frame": "vm_publication_parent.tap_ACK_frame[q*73+:73]",
+    "empty_and_fault": "must join soleGibbs all_routes_drained/fault; no new root/index banks or driver"
+  },
+  "lint": {
+    "enabled": "PASS",
+    "UNOPTFLAT": 0,
+    "LATCH": 0,
+    "default_OFF_elaboration": "PASS"
+  },
+  "physical_qualified": false,
+  "remaining_dependencies": [
+    "Gibbs actual held native issuer identity192 and recipient/native visibility ACK",
+    "existing multicast chain remaining columns, true matched reverse receipts; firstNO3fixture not full installed fanout qualification",
+    "actual receiver clock/wire/load/PG/channel qualification",
+    "single PCWB/expert rowstate/REFpb/calendar source ownership"
+  ],
+  "FEC": "Local/onpackage root receipt only; offpackage FULLFEC mandatory; no130nslight budget",
+  "log_sha256": {
+    "enabled_lint.log": "1a0fb8b60880f39822447512cefae86f09ab27f332b0fd6bf5427f5fd5fad601",
+    "default_off_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime_r1.log": "c6965cdac00f1709ea08b203a714785245522f59668564774ec64b9c60325aa9",
+    "compile_r1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

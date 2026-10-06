@@ -1,0 +1,102 @@
+{
+  "verdict": "PASS_ACTUAL_NATIVE_TWO_LEASE_WFC_JOIN_NOT_FULL_NUMERICAL_OR_SSFF",
+  "source_commit": "1860b98a006d25c5009961adedf8b0fb24e18e9a",
+  "provider_unchanged": "554d7b0c9",
+  "model_before_RTL": "504715330",
+  "tool": "Verilator5.050 2026-07-01",
+  "build_exit": 0,
+  "runtime_exit": 0,
+  "scope": "Minimum real canonical cfg/prompt MAXU866 SOURCE0 L19 WFC/router/C8/provider full2MiB/288SRAM, actualnativepreviousTX/nextRX overlap; external engine command/retirement/restore/visibility protocol fixture, not whole numerical engine/field/native array",
+  "nominal": {
+    "MAXU": 866,
+    "SOURCE": 0,
+    "VM_words": 32768,
+    "VM_word_bits": 512,
+    "VM_SRAMs": 288,
+    "prompt_SRAMs": 14,
+    "ROMs": 4,
+    "whole_ACKs": 1,
+    "canonical_commands": 668,
+    "fixture_engine_retirements": 192,
+    "independent_VM_write_checks": 82,
+    "independent_old_TX_output_flit_checks": 47,
+    "provider_accepted_replied_consumed_retired_bundles": 178,
+    "actual_XA_read_captures": 46,
+    "legal_distinct_XA_owner_pairs": 41,
+    "native_capture_fast_edges": 3,
+    "nominal_fast_cycles": 18736
+  },
+  "legal_owner_case": {
+    "read_TX": "epoch9/user865/position0",
+    "write_RX": "epoch9/user865/position1",
+    "canonical_guard": "rx_word_free permits RXwriteword < TXreadpointer; secondheader accepted while firstTX active, read/write originallysameedge",
+    "supported": true,
+    "flow": "TX-only protected read and actual existing WFCqueue capture/fence/retirement, then heldRXowner protected write and real source acceptance/positivevisible/fence/retirement BEFORE any nextTXread",
+    "XB": "Held valid tuple UNACCEPTED during pair; eventual actualowner highwordread/reply consumed/retired checked. Sameowner native read2/write5 accepted bundle path unchanged; supplier MODE0 read2/write5 maskedpriorityPASS retained"
+  },
+  "observed_service": {
+    "first_read_accept_to_paired_write_accept_fast_edges": [
+      23,
+      23
+    ],
+    "paired_events": 41,
+    "reply_fast_edges": [
+      12,
+      13,
+      20,
+      21,
+      71
+    ],
+    "consume_to_retire_fast_edges": [
+      6,
+      7
+    ],
+    "native_wait_is_variable": true
+  },
+  "negatives": {
+    "wrong_external_read_owner_refused": true,
+    "warm_provider_and_WFC_owned_debt_preserved": true,
+    "whole_stage_ACK_unchanged": true
+  },
+  "performance": {
+    "build_seconds": 27.464,
+    "build_allocated_MB": 268.191,
+    "generated_CPP_MB": 22.381,
+    "runtime_seconds": 3.945,
+    "runtime_allocated_MB": 11,
+    "total_wall_seconds": 31.58,
+    "peak_job_RSS_KiB": 468504
+  },
+  "bench_clock": {
+    "fast_period_ps": 833.334,
+    "slow_period_ps": 1111.112,
+    "phase_ps": 0,
+    "ratio": "3:4 exact commonframe3333.336ps"
+  },
+  "current_caller_control_FF": 224,
+  "delta_vs_R2_FF": 98,
+  "new_payload_copy_FF": 0,
+  "new_codecs": 0,
+  "new_completion_authorities": 0,
+  "prior_failures_retained": [
+    "../gate_r1_FAIL/ retirement observation before actualconsumer posedge",
+    "../gate_r3_FAIL/ ordinary readissue suppressed RXheader and made legaloverlap wait unreachable; exact diagnosed ownbinary SIGTERM, terminal143, no wallcap"
+  ],
+  "runtime_root": "ot-agidock128:/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r4",
+  "retained_objects": "R1/R2/R3/R4 unique sources, outputs, generated/compiled objects and binaries retained in place. All actual gate supervisors and binaries exited after terminal",
+  "P0_standalone_scope": true,
+  "SS60_FF25_qualified": false,
+  "whole_numerical_qualified": false,
+  "adopted": false,
+  "field_spine_v11": "3e3bb1c32 +1 broadcast/root/rowwrite boundaries not present in this standalone vehicle; future S81 join requires owner-agreed exactselected caller endpoints and actualphase pricing; no zeroedge or inheritedfield clock qualification",
+  "raw_sha256": {
+    "resources.log": "254c010029d67c773799d3b108ae9e25d80121f423d6de9f0f02fd9d0f6a1676",
+    "build.log.gz": "d6d2d608a79b65d75ded971b6dd545e5687d45577f7fd6590309cb516edf0dcd",
+    "verdict": "eab96ac6ad52943abd56d3856f78af5dc7ef44c3c79c58a3c3385d10f3986620",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "tool.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "headroom.jsonl": "07e78a06b142b6f9048e80975f1b7b2bac91ff18056eed7ac87937f8b3a4a143",
+    "command.json": "cf02748459910200ef2f3232becc104a4becaddb2165a0bfc1831b007d5d74f4",
+    "run.log": "c91f00404efca34a7b1a7ab4c2a0ea071f759f249d5374b6987d639d088eadc5"
+  }
+}
