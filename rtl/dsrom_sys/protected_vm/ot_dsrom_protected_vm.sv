@@ -56,7 +56,7 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
    .reply_v(rep_s_v),.reply_ready(rep_s_ready),.reply_code(rep_s_code),
    .receipt_v(ack_s_v),.receipt_ready(ack_s_ready),.receipt_code(ack_s_code),
    .initializing(backend_init),.debt(backend_debt),.fault(backend_fault));
-  assign request_ready=cold_n&&fast_rst_n&&!fault&&!debt&&!exhausted&&!initializing&&req_fifo_ready;
+  assign request_ready=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&!debt&&!exhausted&&!initializing&&req_fifo_ready;
   assign rep_f_ready=cold_n&&fast_rst_n&&!fault&&debt;
   assign reply_v=cold_n&&fast_rst_n&&!fault&&debt&&received&&!acked;
   assign reply_owner=held_reply.owner;assign read_data=held_reply.data;
@@ -73,7 +73,7 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
    end else begin
     retired<=0;backend_fault0<=backend_fault;backend_fault1<=backend_fault0;
     init0<=backend_init;init1<=init0;
-    if(!fast_rst_n)begin if(debt)fail();end
+    if(!fast_rst_n||!slow_rst_n)begin if(debt)fail();end
     else if(bad)fail();
     else if(!fault)begin
      if(request_v&&request_ready)begin
