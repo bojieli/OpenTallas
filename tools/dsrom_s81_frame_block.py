@@ -282,7 +282,7 @@ def emit(a):
          f' --pin-region "^(ck|rst).*=bottom:{px + 80:.2f}-{px + 120:.2f}" \\',
          " --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \\",
          f" --step-tcl POST_MACRO_PLACE={rel}/place.tcl --sdc-append {rel}/frame.sdc \\",
-         " --orfs-var NUM_CORES=${CORES:-24} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \\",
+         " --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var NUM_CORES=${CORES:-24} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \\",
          " --orfs-corner WC --pnr-stop-after ${STOP:-finish} --nickname-tag s81frame_${V:-a}_20261006 \\",
          ' --output $J/out ${ARGS:-} > $J/launch.log 2>&1']
     (out / "launch.sh").write_text("\n".join(L) + "\n")

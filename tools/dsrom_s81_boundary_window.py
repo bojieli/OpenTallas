@@ -50,9 +50,10 @@ read_sdc /o/boundary.sdc
 read_spef /b/{spef}
 set_propagated_clock [all_clocks]
 set ck [lindex [all_clocks] 0]
-set clkports [get_ports -quiet [get_property $ck sources]]
+set clkn {{}}
+foreach s [get_property $ck sources] {{ lappend clkn [get_full_name $s] }}
 set ins {{}}
-foreach p [all_inputs] {{ if {{[lsearch -exact $clkports $p] < 0}} {{ lappend ins $p }} }}
+foreach p [all_inputs] {{ if {{[lsearch -exact $clkn [get_full_name $p]] < 0}} {{ lappend ins $p }} }}
 set_input_delay 0 -clock $ck $ins
 set_output_delay 0 -clock $ck [all_outputs]
 set fo [open /o/window_${{C}}.tsv w]
