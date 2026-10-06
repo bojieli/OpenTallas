@@ -47,6 +47,15 @@ def emit(host, output, top=TOP, transport_quiet=False):
                             '                for (int d = 0; d < D; d++) busy |= die[d]->kv_wb_busy;',
                             '                for (int d = 0; d < D; d++)\n'
                             '                    busy |= die[d]->kv_wb_busy || !die[d]->transport_quiet;')
+        text = replace_once(text,
+                            '                if (cur + 1 == stages.size()) { draining = true; final_cyc = cyc; }',
+                            '                if (cur + 1 == stages.size()) { draining = true; final_cyc = cyc;\n'
+                            '                    for (int d=0; d<D; ++d) die[d]->warm_rst_n=0;\n'
+                            '                }')
+        text = replace_once(text,
+                            '                    printf("WRITEBACK drained=%d after %u cycles past the last stage',
+                            '                    printf("P0_FINAL_VISIBLE core_cycle=%u token_cycle=%u\\n", cyc, final_cyc);\n'
+                            '                    printf("WRITEBACK drained=%d after %u cycles past the last stage')
     text = replace_once(text, 'die[d]->rm_kv_ideal = kv_ideal;',
                         'die[d]->rm_kv_ideal = kv_ideal;\n'
                         '        die[d]->hclk = 0; die[d]->warm_rst_n = 1;')
