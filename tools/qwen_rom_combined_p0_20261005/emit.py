@@ -22,6 +22,27 @@ def replace_once(text, old, new):
     return text.replace(old, new)
 
 
+def emit_layer(full_host, layer_host):
+    """One full-shape TP4 cold L0, reusing the final model and real backing.
+
+    Validate/preload the complete released manifest first. Only the executed
+    stage list is shortened; no clocks, arithmetic, transport or fault checks
+    are bypassed. No next-layer overlap or full-token claim is made.
+    """
+    text = Path(full_host).read_text()
+    if 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE' not in text or '!die[d]->transport_quiet' not in text:
+        raise ValueError('actual full protected host with genuine drain required')
+    marker = '    if (stages.back().name != "head") fatal("P0 fullhead missing");'
+    text = replace_once(text, marker, marker + '\n'
+        '    stages.resize(1); // full manifest/backing validated above; execute L0 only\n'
+        '    for (int d=0; d<D; ++d) die[d]->rm_next_layer=uint8_t(-1);\n'
+        '    printf("P0_MINIMUM_SCOPE L0 TP4 P8191 cold no_next_prefetch full_token=0\\n");')
+    text = replace_once(text, 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE',
+                        'QWEN_ROM_COMBINED_P0_FULLSHAPE_LAYER DONE')
+    with Path(layer_host).open('x') as out:
+        out.write(text)
+
+
 def emit(host, output, top=TOP, transport_quiet=False):
     raw = Path(host).read_bytes()
     if hashlib.sha256(raw).hexdigest() != HOST_SHA:

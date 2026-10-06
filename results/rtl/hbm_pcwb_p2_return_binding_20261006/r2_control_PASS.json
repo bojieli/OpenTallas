@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "new actual coded quota/ordinal/owner control, all32PC; not full calendar/PHY/P2 numerical integration",
+  "read_accepts": 1024,
+  "ordered_returns": 1024,
+  "actual_freed_events": 1024,
+  "negative_checks": [
+    "return does not free a landing seat",
+    "CE pauses then scrubs",
+    "actual owner-code2bitUE suppresses issue/return",
+    "false freed refusal",
+    "owner rebind with accepted READ debt refusal"
+  ],
+  "root_wiring_compile": "Icarus-g2012 -i enabledP2 root wiring rc0, unresolved old children ignored; no full-parent compile claim",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_p2_return_bind.sv": "dd1e9deab4af2d6cea240cb6a3662041bc134de2db1450b819547721587af239",
+    "rtl/test/hbm_accel/tb_hbm_pcwb_p2_return_bind.sv": "af5ce9f0f5df66b021569ecf0bf318dd36d3bcca70bdd5ce68dd5738ca3e9bd6",
+    "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv": "fde6b79760522569e84be39ed23adb30c05dc2144e1ab419cddc583ef3e0eb6b"
+  },
+  "SSFF_qualified": false,
+  "whole_P2_qualified": false,
+  "arithmetic_qualified": false
+}

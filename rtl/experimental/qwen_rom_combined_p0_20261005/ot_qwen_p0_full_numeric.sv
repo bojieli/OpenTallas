@@ -9,6 +9,7 @@ module ot_qwen_p0_full_numeric #(
     // Descartes' source-only protected port join. Does not select or qualify
     // Claude's raw RSEL CDC; actual protected physical binding remains open.
     parameter integer CDC_CONSUMER_JOIN = 0,
+    parameter integer LANDING_RSEL = 0, // owner implemented protected full504 r9 read
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
     parameter integer G = 6144,
@@ -127,6 +128,7 @@ module ot_qwen_p0_full_numeric #(
     ot_qwen_p0_full_transport_join #(
         .PROTECTED_STREAM4(PROTECTED_STREAM4),
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
+        .LANDING_RSEL(LANDING_RSEL),
         .BASELINE_AR(BASELINE_AR),
         .CORE_FS(CORE_FS),
         .CTL_FS(CTL_FS),
