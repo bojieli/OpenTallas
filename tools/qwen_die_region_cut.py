@@ -119,10 +119,7 @@ def cut():
                 ln = pin_layer(ol, horiz)
                 lay = layers[ln]
                 w = lay.getWidth()
-                try:
-                    ln_len = max(4 * w, int(lay.getArea() * dbu * dbu / w) + 1)
-                except Exception:
-                    ln_len = 4 * w
+                ln_len = max(4 * w, um(0.2))                          # on-track stub, 0.2 um (>= min area)
                 if horiz:
                     c = min(max(py, y0 + 2 * w), y1 - 2 * w)
                 else:
