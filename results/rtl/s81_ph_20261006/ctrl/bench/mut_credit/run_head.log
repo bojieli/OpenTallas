@@ -28,3 +28,13 @@ ERR (d) pc 31 credits 6 != 8
 ERR (d) pc 31 accepted 46 != 48
 ERR (d) phase 0: write-done dut 514 ref 526 writes 526
 ERR (d) phase 0: st 11
+phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 2521 ref 2521
+ERR phase 1: timeout
+ERR (c) phase 1: response beats dut 2160 ref 2548 expected 2548
+ERR (d) pc 0 credits 2 != 8
+ERR (d) pc 0 accepted 42 != 48
+ERR (d) pc 1 credits 2 != 8
+ERR (d) pc 1 accepted 42 != 48
+ERR (d) pc 2 credits 0 != 8
+ERR (d) pc 2 accepted 40 != 48
+ERR (d) pc 3 credits 2 != 8

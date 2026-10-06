@@ -107,10 +107,10 @@
   "model_term": "COMPOSE: add 12 cycles to every HBM read latency of the S81 scan (KV / index / window streams); a streamed scan hides it behind its prefetch depth, a dependent read does not"
  },
  "why_columns": "m1 (centred N-face pins, x 3771-4729) was stopped before placement: every PC's die pins would sit up to 4.2 mm from its PHY pins (> 8 wire stages at 504 um/stage SS); with per-PC columns every path is local to a 265.6 um column and 248 um high.",
- "reset": "rst is asynchronous (false path at the pin); every PC column holds its own 2-flop synchronisers in cks and ckh; status {fault, live} travels on two registered chains (PC0->PC15, PC31->PC16, one register per column) to the centre st register",
+ "reset": "rst is asynchronous (false path at the pin); every PC column holds its own 2-flop synchronisers in cks and ckh; status {fault, live} travels on two registered chains (PC0->PC15, PC31->PC16, one register per column) to the centre st register; data registers (rq/k_*/krd/r_*) carry no reset, only valid/state flops do (column reset fanout ~30 async loads)",
  "bench": {
   "tb": "rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv (+ generated test/ot_s81ph_phy_on_bus.sv)",
-  "source": "080eb7d3d",
+  "source": "ea356ef63",
   "host": "ot-epyc2 Verilator 5.032",
   "gold": [
    "gold: ckh 1024 ps, seed 20261006, 2 phases x 1536 requests PASS",
@@ -122,6 +122,7 @@
    "S81PH_MUT_BEAT (response beat bits rotated): FAIL 3402",
    "S81PH_MUT_CREDIT (credit returned on write, not on free): FAIL 885 (overrun drops, timeout, st fault)"
   ],
-  "records": "results/rtl/s81_ph_20261006/ctrl/bench/*"
+  "records": "results/rtl/s81_ph_20261006/ctrl/bench/*",
+  "note": "re-run at ea356ef63 ([0:0] 1-bit ports, data registers without reset): every gold and mutant result identical to 080eb7d3d (gold x3 PASS; MUT_PACK 3565, MUT_BEAT 3402, MUT_CREDIT 885 errors)"
  }
 }
