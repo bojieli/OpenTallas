@@ -25,6 +25,7 @@ if __name__=='__main__':
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--baseline',type=Path,required=True)
     ap.add_argument('--boundary-hold',action='store_true')
+    ap.add_argument('--region-only',action='store_true',help='Resume PDN with canonical initial-place empty-core removal; omit broken automatic-density prequery')
     a=ap.parse_args();out=a.out.resolve();baseline=a.baseline.resolve()
     if out==baseline or (out/'resume.terminal.json').exists():
         raise SystemExit('fresh own variant required; preserve every terminal')
@@ -45,14 +46,17 @@ if __name__=='__main__':
     model=json.loads((ROOT/'results/uarch/dsrom_qx10_parent_context_20261005'/model_name).read_text())
     if not model['full_context_build_ready']:
         raise SystemExit('unified model rejects resumed context')
+    if a.region_only and a.boundary_hold:
+        raise SystemExit('region-only correction preserves the retained PDN and all memberships; no concurrent hold variant')
+    checkpoint='2_4_floorplan_pdn.odb' if a.region_only else '2_3_floorplan_tapcell.odb'
     work=out/'work/orfs'
     result=next(work.glob('results/asap7/*/base'))
     old_result=next((baseline/'work/orfs').glob('results/asap7/*/base'))
     reused={}
-    for n in ('1_2_yosys.v','1_synth.odb','2_3_floorplan_tapcell.odb'):
+    for n in dict.fromkeys(('1_2_yosys.v','1_synth.odb','2_3_floorplan_tapcell.odb',checkpoint)):
         if digest(result/n)!=digest(old_result/n):raise SystemExit('checkpoint identity changed: '+n)
         reused[n]=digest(result/n)
-    hooks=[('pdn_count_fix.tcl','post_pdn_regions.tcl')]
+    hooks=[('region_only.tcl','region_only.tcl')] if a.region_only else [('pdn_count_fix.tcl','post_pdn_regions.tcl')]
     if a.boundary_hold:
         if model['boundary_hold']['buffers']!=3:raise SystemExit('missing three-buffer model')
         hooks=[('regions.tcl','post_pdn_regions.tcl'),('hold_boundary.tcl','post_detail_place_hold_boundary.tcl')]
@@ -60,8 +64,16 @@ if __name__=='__main__':
         shutil.copy2(BASE/source,work/'hooks'/target)
     image=subprocess.check_output(['docker','image','inspect','openroad/orfs:latest',
                                    '--format','{{.Id}}'],text=True).strip()
+    if a.region_only:
+        baseline_receipt=json.loads((baseline/'resume.receipt.json').read_text())
+        if image!=baseline_receipt['image_id']:
+            raise SystemExit('region-only continuation requires the exact retained canonical image')
+        if 'export PLACE_DENSITY = 0.6\n' not in (work/'config.mk').read_text():
+            raise SystemExit('region-only continuation requires unchanged modeled density0.6')
     receipt=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                  image_id=image,baseline=str(baseline),reused_checkpoint_sha256=reused,
+                 checkpoint=checkpoint,region_only=a.region_only,place_density=0.6,
+                 automatic_density_prequery_disabled=a.region_only,tool_binary_changed=False,
                  identical_RTL_macro_and_clock_sources=identical,smoke_replayed=False,
                  added_pipeline_cycles=0,mandatory_boundary_buffers=3 if a.boundary_hold else 0,started_ns=time.time_ns(),
                  setup_uncertainty_ps=60,hold_uncertainty_ps=25,missing_input_clocks=True)
@@ -73,7 +85,9 @@ if __name__=='__main__':
            'python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && '
            'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=4 '
            +('POST_DETAIL_PLACE_TCL=/work/hooks/post_detail_place_hold_boundary.tcl ' if a.boundary_hold else '')+
-           f'-o /work/{relative}/2_3_floorplan_tapcell.odb finish metadata-generate')
+           ('PLACE_DENSITY_LB_ADDON= PRE_GLOBAL_PLACE_SKIP_IO_TCL=/work/hooks/region_only.tcl '
+            'POST_GLOBAL_PLACE_SKIP_IO_TCL=/work/hooks/region_only.tcl ' if a.region_only else '')+
+           f'-o /work/{relative}/{checkpoint} finish metadata-generate')
     command=['docker','run','--rm','-v',str(ROOT)+':/src:ro','-v',str(work)+':/work',
              '-w','/OpenROAD-flow-scripts/flow',image,'bash','-lc',shell]
     (out/'resume.command.json').write_text(json.dumps(command,indent=2)+'\n')
