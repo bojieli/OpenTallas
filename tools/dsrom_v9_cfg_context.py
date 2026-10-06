@@ -66,7 +66,7 @@ def model(root):
         physical_qualified=False,missing_input_clocks=True)
 
 
-def composed_capture_model(root, terms_path):
+def composed_capture_model(root, terms_path, input_load_path=None):
     """Fill measured local cells/load/setup; leave wire and clock insertion open."""
     result = model(root)
     terms = json.loads(terms_path.read_text())
@@ -87,6 +87,16 @@ def composed_capture_model(root, terms_path):
     result['clocks']['local_capture_cells_load_and_setup_priced'] = True
     result['clocks']['routed_wire_clock_slew_and_insertion_priced'] = False
     result['clocks']['SS_remaining_before_wire_and_skew_ps'] = terms['SS_worst']['remaining_before_wire_and_relative_skew_ps']
+    if input_load_path:
+        loads = json.loads(input_load_path.read_text())
+        assert loads['derived_netlist_sha256'] == terms['derived_netlist_sha256']
+        for corner in ('SS', 'FF'):
+            row = loads['corners'][corner]
+            path = root / row['file']
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == row['sha256']
+            assert row['ports']['clk']['receivers'] == 76
+        result['mapped_input_receiver_loads'] = loads
+        result['inputs'][str(input_load_path.relative_to(root))] = hashlib.sha256(input_load_path.read_bytes()).hexdigest()
     return result
 
 
@@ -96,8 +106,12 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out',type=Path,required=True)
     parser.add_argument('--capture-terms', type=Path)
+    parser.add_argument('--input-load-terms', type=Path)
     args=parser.parse_args()
+    if args.input_load_terms and not args.capture_terms:
+        parser.error('--input-load-terms requires --capture-terms')
     args.out.parent.mkdir(parents=True,exist_ok=True)
-    result = (composed_capture_model(Path(__file__).resolve().parents[1], args.capture_terms.resolve())
+    result = (composed_capture_model(Path(__file__).resolve().parents[1], args.capture_terms.resolve(),
+                                    args.input_load_terms.resolve() if args.input_load_terms else None)
               if args.capture_terms else uarch_model.dsrom_v9_cfg_context_model())
     args.out.write_text(json.dumps(result,indent=2)+'\n')
