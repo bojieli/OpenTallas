@@ -65,7 +65,8 @@ SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r14b'            # the round the records and the pricing are taken from (r8 until 2026-10-05 pm)
+FINAL_ROUND = 'r16g'            # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
+#                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
 # ------------------------------------------------------------------------------------------------ block ledger
 # (mm2, grade, source).  grade: measured (placed/routed record), model (unified-model ledger), estimate (labelled).
@@ -190,7 +191,19 @@ FIX15 = dict(orient_fix=True, clk_dom=True, sm_rtl_w=True, sm_desc=True, link_rt
              hub_io=True, fwd=True, rq_chain=True, stn_share=True)
 ATTN_MEAS = dict(attn_tile_w_um=1349.136, attn_tile_h_um=1350.0)   # 16 m6h1 head macros (hbm_child_contract_20261005)
 R15 = dict(R14B, **FIX15)
-ADOPTED = R15
+# r16e (adopted 2026-10-06): r15 with the measured attention-tile outline (64 x 1,349 x 1,350 um: the hub band grows
+# 7.2 -> 12.1 mm, 481.3 -> 600.8 mm2), the spine column on a centred 7.5 mm span (the taller band otherwise spreads its
+# blocks apart), a 1,400 um spine with 1,244 um side channels and a 2,000 um VM face (r16b, the same die without them:
+# GRT i50 overflow 121 at the VM faces and on the N link trunks).  Variants in feasibility.json r16a-f.
+R16E = dict(R15, hub_h=12100.0, spine_h=7500.0, spine_w=1399.68, spch=1244.16, face_vm=2000.0, **ATTN_MEAS)
+# r16g (adopted): r16e + face_fix -- the shared tile / SU masters' role ports on fixed faces (SW frame: the tile packet
+# enters from the hub edge (k, ci on S; cf on N), the query and the results on the inner face (q, o on E; i, rf on W;
+# ri on E), the SU result trunk on the hub-edge face S)
+R16G = dict(R16E, face_fix=True)
+FACE_FIX = {('hfd_attn_tile', 'k'): 'S', ('hfd_attn_tile', 'ci'): 'S', ('hfd_attn_tile', 'cf'): 'N',
+            ('hfd_attn_tile', 'q'): 'E', ('hfd_attn_tile', 'o'): 'E', ('hfd_attn_tile', 'ri'): 'E',
+            ('hfd_attn_tile', 'i'): 'W', ('hfd_attn_tile', 'rf'): 'W', ('hfd_su', 'r'): 'S'}
+ADOPTED = R16G
 
 
 def build(variant=None):
@@ -275,11 +288,14 @@ def build(variant=None):
     cy0 = dn(hmid - hs[ctr] / 2, GY)
     lower = variant.get('spine_lower', ['loader', 'router', 'cmdproc'])
     upper = variant.get('spine_upper', ['vm', 'barrier', 'quant'])
-    glo = (cy0 - hy0 - sum(hs[n] for n in lower)) / len(lower)
-    ghi = (hy1 - (cy0 + hs[ctr]) - sum(hs[n] for n in upper)) / len(upper)
+    # r16 option spine_h: the spine column spans a centred band of that height (a taller hub band for the measured
+    # attention tiles otherwise spreads the spine blocks apart)
+    sy0, sy1 = (hy0, hy1) if 'spine_h' not in variant else (up(hmid - variant['spine_h'] / 2, GY), dn(hmid + variant['spine_h'] / 2, GY))
+    glo = (cy0 - sy0 - sum(hs[n] for n in lower)) / len(lower)
+    ghi = (sy1 - (cy0 + hs[ctr]) - sum(hs[n] for n in upper)) / len(upper)
     assert min(glo, ghi) >= 43.2, ('spine column too short', glo, ghi)
     place = [(ctr, cy0)]
-    yy = hy0 + glo / 2
+    yy = sy0 + glo / 2
     for n in lower:
         place.append((n, yy))
         yy += hs[n] + glo
@@ -299,6 +315,9 @@ def build(variant=None):
     geo['ew_y'] = dict(S=(hub['router'].y + hub['router'].h + SHAVE + hub['cmdproc'].y) / 2,
                        N=(hub['vm'].y + hub['vm'].h + SHAVE + hub['barrier'].y) / 2)
     qh = dn((hh - HCH) / 2, GY)
+    # r16 option cq_h: SU / SFU / HC quarters keep that height (r14b 3,080 um) on a taller hub band, at the hub edge
+    # (cq_at='edge') or against the equator channel (cq_at='equator'); the scan quadrants use the full qh
+    qhc = min(qh, dn(variant['cq_h'], GY)) if 'cq_h' in variant else qh
 
     def qori(q):
         """r10: the four copies of a shared hub master (SU / SFU / HC quarters, index quarters, attention tiles) are
@@ -311,11 +330,15 @@ def build(variant=None):
     def quarters(name, mm2, xw, xe, dom='serial_0p9'):
         """r3: four quarters (SW, NW W of the spine; SE, NE E of it) of qh each around the equator channel, so that
         every stack quadrant has its own quarter on its side of the spine; returns (west x, east x) of the next ring."""
-        w = up(mm2 / 4 * 1e6 / qh, GX)
+        w = up(mm2 / 4 * 1e6 / qhc, GX)
+        eq = variant.get('cq_at') == 'equator'
         for q in ('SW', 'SE', 'NW', 'NE'):
             x_ = dn(xw - w, GX) if q[1] == 'W' else up(xe, GX)
-            y_ = hy0 if q[0] == 'S' else dn(hy1 - qh, GY)
-            it = Inst(f'hb_{name}_{q}', f'hfd_{name}', x_, y_, w - SHAVE, qh - SHAVE, qori(q), kind='hub', region='hub',
+            if eq:
+                y_ = dn(hmid - HCH / 2 - qhc, GY) if q[0] == 'S' else up(hmid + HCH / 2, GY)
+            else:
+                y_ = hy0 if q[0] == 'S' else dn(hy1 - qhc, GY)
+            it = Inst(f'hb_{name}_{q}', f'hfd_{name}', x_, y_, w - SHAVE, qhc - SHAVE, qori(q), kind='hub', region='hub',
                       domain=dom)
             insts.append(it)
             hub[f'{name}_{q}'] = it
@@ -1223,6 +1246,11 @@ def masters(m, k=1):
             mt = re.fullmatch(r'[xce](SW|SE|NW|NE)', port) or re.fullmatch(r'llk_([SN])\d', port)
             if mt:
                 along = 0.0 if mt.group(1)[0] == 'S' else it.h
+        if m['variant'].get('face_fix') and (mname, port) in FACE_FIX:
+            # r16g: role ports of shared masters on their fixed master-frame face (r16e lint: the corner-tile KV pin
+            # and three SU result pins took their face from another copy's peer and faced away on the mirrors)
+            face = FACE_FIX[(mname, port)]
+            along = ly if face in 'EW' else lx
         if mname == 'hfd_sm' and port in ('x', 'c') and m['variant'].get('sm_xmid'):
             along = sum(sm_span[face]) / 2      # r12 option: x / c pins centred in their pin region (row-neutral)
         items[mname][face].append((along, port))
@@ -1904,14 +1932,14 @@ def case_ir(m, work, window, cov):
 
 
 def variant_arg(v):
-    """'' -> the adopted default (r15); 'r8' -> the r1-r8 geometry; 'r10' / 'r14b' / 'r15' / 'r15m' presets; a JSON dict
+    """'' -> the adopted default (r16g); 'r8' -> the r1-r8 geometry; 'r10' / 'r14b' / 'r15' / 'r15m' / 'r16e' presets; a JSON dict
     -> those keys (absent keys = r8 behaviour); a JSON dict with "base": preset -> the preset updated with the keys."""
     if v == 'service-attn-r1':          # Codex child-contract revision: built on the r14b nets (kept replayable)
         return dict(R14B, hub_h=12355.2, attn_tile_w_um=1349.136,
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
