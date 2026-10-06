@@ -129,17 +129,27 @@ def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
         adoption=False, physical_closed=False, measured_cycles=None)
 
 
-def dsrom_fh_fault_retire_model():
+def dsrom_fh_fault_retire_model(integrated_parent=False):
     """C17 source-owned four-edge fault/transaction retirement cut, before RTL.
 
     This is a component proposal, not an adopted core or a rate measurement.
     The producer must retain its warm-index/commit debt until retirement.
     """
     packet_bits = 64*49 + (2048+64+4*24+4) + 160+1+1
+    if integrated_parent:
+        # Original tuple plus distinct progress/leaf-valid markers and an
+        # eight-bit in-flight identity, compared at actual warm commit.
+        packet_bits += 2+8
     ff = dict(transaction_packet=4*packet_bits, packet_valid=4,
               local_eight_bank_fault=8, two_row_fault=4,
               kept_global_relays=16, lane_veto_copies=64,
               write_veto_copies=4, status_copy=1)
+    if integrated_parent:
+        ff.update(parent_sequence_and_expected_identity=16,
+            parent_expected_warm_word_and_mask=24+16,
+            parent_warm_debt_sent_and_protocol_fault=3,
+            producer_issued_and_warm_marker=2, producer_raw_leaf_valid=1,
+            protected_SRAM_commit_identity_pipeline=2*(4*24+64+8+1))
     return dict(parameter='FAULT_RETIRE', default=0, G=4, W=16,
         stages=4, MACs_per_cycle=0, FP32_adds_per_cycle=0,
         new_memory_ports=0, memory_payload_bytes_per_cycle=256,
@@ -149,7 +159,10 @@ def dsrom_fh_fault_retire_model():
             result_data_mask_addr_write_enable=2048+64+4*24+4,
             result_tag=160, result_valid=1, warm_index_marker=1),
         FF_bits=ff, FF_total=sum(ff.values()), FF_area_proxy_um2=sum(ff.values())*DFF_UM2,
-        fault_tree=dict(local_banks_per_row=8, rows_per_quadrant=2,
+        fault_tree=dict(local_banks_per_cluster=8, local_cluster_macro_rows=2,
+            local_cluster_macro_columns=4, clusters_per_quadrant=2,
+            local_cluster_span_um=dict(x=3*240+174.096,y=70+29.7),
+            quadrant_span_um=dict(x=3*240+174.096,y=3*70+29.7),
             quadrant_sources_per_relay=4, relay_replicas=16,
             max_quadrant_logical_fanout=16, max_relay_logical_fanout=6,
             max_lane_veto_external_loads=2,
@@ -164,6 +177,8 @@ def dsrom_fh_fault_retire_model():
             requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
         protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
         flow_control='4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains',
+        integrated_parent=bool(integrated_parent),
+        commit_contract='Warm ACK must match in-flight8-bit identity, actual word address and lane mask; wrong/missing ACK keeps debt quarantined. Real SRAM commit timing or test consumer memory-write edge supplies ACK; pipeline emission alone does not.',
         floorplan=dict(existing_width_um=2000,existing_height_um=660,
             macro_count=64,macro_moves=0,actual_new_cell_area_um2=None,
             routing_tracks_and_loaded_clock_PG_repair_margin=None,
@@ -10549,6 +10564,53 @@ def hbm_r5a_p2_stack_context_model():
         gates=dict(exact=ordinary_pass,protection=protection_pass,physical=False,performance=False,adopted=False))
 
 
+
+def hbm_r5a_row_address_context_model():
+    """Actual parent addresses are HBM row19, not the logical expert9 namespace.
+
+    Reuse the existing W6 descriptor72 and PC-local held row19. The old mapped
+    row9 vehicle stays pinned. This enables an enclosing source to supply its
+    real byte-address-to-PC/row allocation; it does not invent that allocation.
+    """
+    base=hbm_r5a_p2_stack_context_model()
+    return dict(item=6,enabled_default=False,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_row_p2.sv',
+        original_source='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv',
+        shape=base['shape'],compute=base['compute'],
+        descriptor=dict(input='e_row[18:0]',meaning='physical HBM row allocated by the enclosing owner',
+            physical_row_not_inferred_from_logical_expert=True,logical_expert_translation_owned_by_parent=True,
+            code_bits=72,data_bits=64,address_bits=19,zero_padding_bits=45,
+            maximum_row=524287,ROW_BASE=0,PC_local_row_bits=19),
+        state=dict(added_FF_bits=0,descriptor_code_bits_unchanged=72,
+            PC_tab_code_bits_unchanged=32*8*72,
+            configuration_code_bits_unchanged=7200,
+            parent_owner_frame73_not_stored_for_free=True),
+        ports=dict(added_input_bits=10,outer_bits=25132,
+            raw_return_bits_per_cycle=32*256,coded_return_bits_per_cycle=32*360,
+            SM_capture_bits_per_cycle=8*1024),
+        logic=dict(new_codec_instances=0,new_muxes=0,new_memory_ports=0,
+            descriptor_reserved_zero_guard_bits=45,previous_guard_bits=55,
+            new_replica_count=0,physical_area_credit_taken=0),
+        area=dict(macro_count=96,macro_area_um2=base['area']['macro_area_um2'],
+            standard_cell_ceiling_um2=base['area']['combined_standard_cell_ceiling_um2'],
+            predecessor_footprint_floor_mm2=1.59207,
+            actual_larger_slot_or_repartition_owned_by='Turing',
+            actual_PG_clock_and_loaded_repair_margin_pending=True),
+        latency=dict(added_edges=0,existing_measured_context_charge_ns=3.334,
+            first_access_FAIL_ns=153.757,first_access_target_ns=140,
+            actual_row19_gate_pending=True,additional_parent_transport_not_free=True),
+        GU_binding=dict(source='tools/hubble_live_gu_enrollment.py::simt_weight_image',
+            actual_bytes_per_span=288*288,actual_32B_sectors_per_span=2592,
+            actual_128B_packets_per_span=648,
+            existing_fetch_packets_per_descriptor=49*8,
+            full_span_not_one_current_fetch_descriptor=True,
+            receiver='Franklin actual treq_addr32/treq_tag16 -> trsp_data256 and original retained FRAME73 seat',
+            clock='real stream_clk833.333333333ps/service_clk1024ps; receiver clock must be bound by owner',
+            packet_layout_and_PCWB_refresh_sharing_not_implemented=True,
+            raw1024_stream_is_not_BF16_GU=True),
+        protection=base['cuts']['SM_protection'],
+        gates=dict(exact=False,physical=False,performance=False,adopted=False))
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
@@ -11745,3 +11807,9 @@ def hbm_integrated_gu_wide_launch_model():
         tracks_required_delta=5,channel_capacity=None,parent_slot_fit=None,
         fullGU_service='existing Franklin768 source descriptors and9216 rows, actual TC/CVT/drain unchanged',
         whole_token=False,physical_admitted=False,adopted=False)
+
+
+def dsrom_protected_vm_model():
+    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
+    from dsrom_protected_vm import model
+    return model()

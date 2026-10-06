@@ -1,0 +1,4 @@
+PASS held fullshape mcast2063x3/gather270x8 seed1062026; each tap once, one source release, atomic join, quiesce, real CE repair
+PASS negative actual wrong-owner ACK rejected, debt retained
+PASS reserved empty ACK CE blocks new ownership and drain until repaired
+PASS negative actual permission UE rejected with no retire/reset credit

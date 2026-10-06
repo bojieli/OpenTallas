@@ -1,0 +1,91 @@
+{
+  "item": 6,
+  "enabled_default": false,
+  "source": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_row_p2.sv",
+  "original_source": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv",
+  "shape": {
+    "NPC": 32,
+    "NSM": 8,
+    "DEPTH": 512,
+    "CRED": 32,
+    "replicas_per_die": 4
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "rounding_changes": 0,
+    "reduction_changes": 0
+  },
+  "descriptor": {
+    "input": "e_row[18:0]",
+    "meaning": "physical HBM row allocated by the enclosing owner",
+    "physical_row_not_inferred_from_logical_expert": true,
+    "logical_expert_translation_owned_by_parent": true,
+    "code_bits": 72,
+    "data_bits": 64,
+    "address_bits": 19,
+    "zero_padding_bits": 45,
+    "maximum_row": 524287,
+    "ROW_BASE": 0,
+    "PC_local_row_bits": 19
+  },
+  "state": {
+    "added_FF_bits": 0,
+    "descriptor_code_bits_unchanged": 72,
+    "PC_tab_code_bits_unchanged": 18432,
+    "configuration_code_bits_unchanged": 7200,
+    "parent_owner_frame73_not_stored_for_free": true
+  },
+  "ports": {
+    "added_input_bits": 10,
+    "outer_bits": 25132,
+    "raw_return_bits_per_cycle": 8192,
+    "coded_return_bits_per_cycle": 11520,
+    "SM_capture_bits_per_cycle": 8192
+  },
+  "logic": {
+    "new_codec_instances": 0,
+    "new_muxes": 0,
+    "new_memory_ports": 0,
+    "descriptor_reserved_zero_guard_bits": 45,
+    "previous_guard_bits": 55,
+    "new_replica_count": 0,
+    "physical_area_credit_taken": 0
+  },
+  "area": {
+    "macro_count": 96,
+    "macro_area_um2": 497052.0,
+    "standard_cell_ceiling_um2": 563641.7312,
+    "predecessor_footprint_floor_mm2": 1.59207,
+    "actual_larger_slot_or_repartition_owned_by": "Turing",
+    "actual_PG_clock_and_loaded_repair_margin_pending": true
+  },
+  "latency": {
+    "added_edges": 0,
+    "existing_measured_context_charge_ns": 3.334,
+    "first_access_FAIL_ns": 153.757,
+    "first_access_target_ns": 140,
+    "actual_row19_gate_pending": true,
+    "additional_parent_transport_not_free": true
+  },
+  "GU_binding": {
+    "source": "tools/hubble_live_gu_enrollment.py::simt_weight_image",
+    "actual_bytes_per_span": 82944,
+    "actual_32B_sectors_per_span": 2592,
+    "actual_128B_packets_per_span": 648,
+    "existing_fetch_packets_per_descriptor": 392,
+    "full_span_not_one_current_fetch_descriptor": true,
+    "receiver": "Franklin actual treq_addr32/treq_tag16 -> trsp_data256 and original retained FRAME73 seat",
+    "clock": "real stream_clk833.333333333ps/service_clk1024ps; receiver clock must be bound by owner",
+    "packet_layout_and_PCWB_refresh_sharing_not_implemented": true,
+    "raw1024_stream_is_not_BF16_GU": true
+  },
+  "protection": "16 W6 SECDED64 held words then corrected1024 capture with16 parity bits; double errors or held parity/valid faults refuse publication",
+  "gates": {
+    "exact": false,
+    "physical": false,
+    "performance": false,
+    "adopted": false
+  },
+  "source_sha256": "c4a791e0015bda9569bae75bbc9e5cafbea300dd862e4b056d6e1a9b4a3e4172",
+  "original_source_sha256": "fa6630f03dfb92891cac34a7a68ab5ba70d7ba6f8ee0020486ea5e5ba47ff476"
+}
