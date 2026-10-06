@@ -17,3 +17,9 @@ module ot_hfd_oreg3 (input wire clk, input wire d, output reg q);
     reg s0, s1;
     always @(posedge clk) begin s0 <= d; s1 <= s0; q <= s1; end
 endmodule
+// ot_hfd_oreg5: face_stages 5 (1.4 mm views: the last flop at the pin, four more carry the wire from the core at
+// <= ~450 um a stage; qm_pd55 CTS put -198 / -135 ps on the first two stages of a 3-stage chain)
+module ot_hfd_oreg5 (input wire clk, input wire d, output reg q);
+    reg s0, s1, s2, s3;
+    always @(posedge clk) begin s0 <= d; s1 <= s0; s2 <= s1; s3 <= s2; q <= s3; end
+endmodule
