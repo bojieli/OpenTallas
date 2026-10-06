@@ -147,12 +147,13 @@ module ot_qwen_stream4_cdc_pc #(
     for (genvar gi = 0; gi < NG; gi = gi + 1) begin : lgrp
         localparam integer LO = gi * GW, HI = (LO + GW > 281) ? 281 : LO + GW;
         (* keep *) reg [LA-1:0] ix;
-        (* keep *) reg          vg;
-        always @(posedge clk or negedge c_rl)
-            if (!c_rl) begin ix <= 0; vg <= 1'b0; end
-            else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
+            always @(posedge clk or negedge c_rl)
+            if (!c_rl) ix <= 0; else ix <= lr_bin_n[LA-1:0];
         wire [280:0] row = lmem[ix];
-        always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
+        // The group register loads unconditionally: while the presented word is held, the head does not
+        // move, so the load is idempotent; the routing of the presented word is l_v's job.  (Route r5:
+        // the !vg||l_pop enable cone was one AND3 driving ~30 loads and held 12 max-slew endpoints.)
+        always @(posedge clk) l_q[HI-1:LO] <= row[HI-1:LO];
     end
     always @(*) {l_sec, l_row, l_data} = l_q[280:0];
 
