@@ -4,10 +4,26 @@
 No source transformation, synthesis, timing rerun, placeholder pins or free
 channel capacity. Bulk per-cell bindings stay on the compute host.
 """
-import hashlib,json,re,sys
+import hashlib,json,re,sys,time
 from collections import Counter,deque
 from pathlib import Path
 loads,allocation,out=map(Path,sys.argv[1:4]);payload_only='--payload-affinity' in sys.argv[4:];receiver_affinity='--receiver-affinity' in sys.argv[4:];assert not out.exists()
+# Die-lint invalidation holds geometry-dependent work before bulk mapped parsing.
+# The queued source synthesis and intrinsic library-load extraction remain useful.
+# Preserve the old allocation; resume only with a separately regenerated binding.
+hold=out.parent/'ITEM9_PARENT_GEOMETRY_HOLD.json'
+if hold.exists():
+ instruction=json.loads(hold.read_text())
+ replacement=Path(instruction['replacement_allocation'])
+ print('ITEM9_GEOMETRY_HOLD: waiting for regenerated caller allocation '+str(replacement),flush=True)
+ while not replacement.exists():time.sleep(10)
+ candidate=json.loads(replacement.read_text())
+ assert candidate['actual_parent_layout_sha256']!=instruction['invalid_parent_layout_sha256']
+ assert hashlib.sha256(replacement.read_bytes()).hexdigest()!=instruction['invalid_allocation_sha256']
+ regenerated_layout=Path(candidate['actual_parent_layout_file'])
+ assert hashlib.sha256(regenerated_layout.read_bytes()).hexdigest()==candidate['actual_parent_layout_sha256']
+ assert {x['caller'] for x in candidate['local_caller_proposal']}==set(range(32))
+ allocation=replacement
 s=json.loads((loads/'summary.json').read_text());a=json.loads(allocation.read_text())
 assert s['actual_library_pin_loads'] and not s['physical_qualified']
 raw=loads/'mapped.json';assert hashlib.sha256(raw.read_bytes()).hexdigest()==s['artifacts']['mapped.json']['sha256']
@@ -97,6 +113,9 @@ summary=dict(source_mapped_sha256=s['mapped_sha256'],mapped_JSON_sha256=s['artif
  mapped_flops=len(ff),mapped_comb_cells=len(comb),all_comb_dependencies_resolved=True,
  region_cell_counts=counts,region_master_counts=masters,actual_source_mask_affinities={k:dict(v) for k,v in groups.items()},
  local_allocations=regions,endpoint_allocation=a['baseline_endpoint_mux']['proposed_child_bbox_um'],
+ parent_layout_sha256=a['actual_parent_layout_sha256'],
+ parent_channel_upper_before_other_claims=a.get('central_flat_mux_common_west_cut',{}).get('four_layer_upper_before_other_claims'),
+ parent_geometry_regenerated_source_pinned=hold.exists(),
  primary_caller_inputs_are_source_local=True,distributed_request_bits=131072,shared_response_bits=4096,shared_response_real_receivers=32,
  actual_intermediate_gate_affinities=True,payload_affinity_separate_from_shared_control=payload_only,
  zero_origin_control_buffers_use_actual_receiver_affinity=receiver_affinity,

@@ -10589,6 +10589,8 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             exact_gate=True, physical_gain_measured=False, adopted=False),
         geographic_request_tree=dict(
             optin_parameter='GEO default0 in new item9_geo successor',
+            parent_geometry_status='HOLD: die-lint 7ccef3810; old allocation/mirroring/corridors unqualified pending Claude HBM-DIE-FIX regeneration',
+            geometry_leaf_order_is_block_evidence_only=True,
             motivation='mapped balanced tree has 97789 west-cut nets versus 50594 track upper; assignment-only receiver correction did not solve it',
             actual_failed_binding='loaded32_tree_physical_binding_r3/summary.json',
             geometry_leaf_order_32=[*range(8), *range(16,24), *range(8,16), *range(24,32)],
@@ -10611,6 +10613,9 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
         actual_32SM_caller_context=dict(
             lineage='ot_gpu_simt_sm O_COLL c_data/c_mode/c_count and B_COLL_REQ/B_COLL_RSP; original item9 baseline',
             selected_DS_smv_TU_equivalence=False,
+            old_outer_allocation_qualified=False,
+            regenerated_parent_clock_inheritance_assumed=False,
+            parent_geometry_hold='die-lint 7ccef3810; Claude HBM-DIE-FIX owns generator/route/reprice; Turing placement held',
             caller_replicas=nsm, caller_vector_bits=width,
             caller_request_FF_bits=nsm*(width+9), caller_response_FF_bits=nsm*width,
             caller_state_FF_bits=nsm*2,
