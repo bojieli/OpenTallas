@@ -56,8 +56,12 @@ proc ws_bfs {all dir depth} {
   for {set d 0} {$d < $depth && [llength $front]} {incr d} {
     set pins {}; set next {}
     foreach i $front {
+      set sq [[$i getMaster] isSequential]
       foreach it [$i getITerms] {
         if {$dir eq "back"} { if {[$it isOutputSignal]} continue } else { if {![$it isOutputSignal]} continue }
+        # backwards through a flop only along its data input (an async reset / set pin leads to the reset port:
+        # hfd_index_q_b0 u_kp found rst before the k pins through the FIFO's write-domain reset)
+        if {$dir eq "back" && $sq && [[$it getMTerm] getName] ne "D"} continue
         set n [$it getNet]; if {[ws_skip $n]} continue
         foreach bt [$n getBTerms] { if {[info exists ws_pin([$bt getName])]} { lappend pins $ws_pin([$bt getName]) } }
         foreach o [$n getITerms] {
@@ -95,15 +99,26 @@ proc ws_partner {c} {
   return "-"
 }
 array set ws_tgt {}; array set ws_cells {}
+# OT_WS_FILE (optional): explicit chain endpoints, `set ws_ab(<chain>) {ax ay bx by anA anB}` in um of this block (a
+# generated view whose chains run between internal units rather than terminals); a listed chain skips the search
+global ws_ab
+array set ws_ab {}
+if {[info exists ::env(OT_WS_FILE)] && $::env(OT_WS_FILE) ne ""} { source $::env(OT_WS_FILE) }
 foreach c [lsort -dictionary [array names ws_n]] {
   set N $ws_n($c)
   if {[ws_partner $c] ne ""} continue
   if {![info exists ws_st($c,0)] || ![info exists ws_st($c,[expr {$N-1}])]} continue
+  if {[info exists ws_ab($c)]} {
+    lassign $ws_ab($c) ax ay bx by anA anB
+    set A [list [list [expr {round($ax*$ws_dbu)}] [expr {round($ay*$ws_dbu)}]]]
+    set B [list [list [expr {round($bx*$ws_dbu)}] [expr {round($by*$ws_dbu)}]]]
+  } else {
   set A [ws_bfs $ws_st($c,0) back $ws_depth]; set dA $::ws_lastd
   set B [ws_bfs $ws_st($c,[expr {$N-1}]) fwd $ws_depth]; set dB $::ws_lastd
   # a chain end whose terminal is reached within one cell (pin -> flop, flop QN -> inverter -> pin) is a FACE register:
   # it is anchored at that pin; otherwise the end sits one hop in from its terminal
   set anA [expr {$dA >= 0 && $dA <= 1}]; set anB [expr {$dB >= 0 && $dB <= 1}]
+  }
   if {![llength $A] || ![llength $B]} {
     puts "OT_WS: chain $c N=$N: no terminal on one side ([llength $A] in / [llength $B] out), left unfenced"
     continue
