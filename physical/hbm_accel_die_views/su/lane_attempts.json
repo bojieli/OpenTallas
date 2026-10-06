@@ -191,5 +191,18 @@
    "note": "setup -24.2 from the re-route, hold still < 15"
   }
  ],
- "eco_finding": "post-route hold ECO = repair_timing -hold on RCX parasitics + re-route. Incremental GRT over kept detailed wires breaks DRT (~1M violations); keeping the clock wires fails DRT connectivity; a full signal+clock re-route works (DRC 0) but moves setup by -1 (hc) to -24 ps (sfu) and skew-dependent hold by up to -27 ps. HC (SS +70) absorbs it and closes; light (+41) and sfu (+52) cannot: both are limited by the gather index path (q_sh -> vi_q << sh + a -> rd_addr_r, one cycle) and light also by the imm3 compare into p_a (b_q cx_imm3 -> okey -> kge -> pre_a2 -> p_a). Owner rule: change the RTL (gather shift register +1 cycle on gathers, imm3 key precompute) in the shared SU c12 lane / controller depth model, then one route each."
+ "eco_finding": "post-route hold ECO = repair_timing -hold on RCX parasitics + re-route. Incremental GRT over kept detailed wires breaks DRT (~1M violations); keeping the clock wires fails DRT connectivity; a full signal+clock re-route works (DRC 0) but moves setup by -1 (hc) to -24 ps (sfu) and skew-dependent hold by up to -27 ps. HC (SS +70) absorbs it and closes; light (+41) and sfu (+52) cannot: both are limited by the gather index path (q_sh -> vi_q << sh + a -> rd_addr_r, one cycle) and light also by the imm3 compare into p_a (b_q cx_imm3 -> okey -> kge -> pre_a2 -> p_a). Owner rule: change the RTL (gather shift register +1 cycle on gathers, imm3 key precompute) in the shared SU c12 lane / controller depth model, then one route each.",
+ "rtl_levers_gsh_kimm": {
+  "commit": "66e7df57d (default off; lane / controller / campaign depth model / tb / vehicles)",
+  "bench": "tools/hbm_su_c12.py campaign --quick --no-1024 (random N16 x3 + N64 x2 vs the golden reference), EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/sugk",
+  "results": {
+   "GSH 1 KIMM 1": "5/5 PASS (cycles 1098/1601/1775/1648/1782 vs base 1096/1600/1774/1648/1782: +0..+2)",
+   "base (GSH 0 KIMM 0)": "5/5 PASS",
+   "NEGATIVE: lane GSH 1, controller fetch depth without GSH": "0/5 PASS (vm_bad 30-35 per run)",
+   "NEGATIVE: lane KIMM 1, controller sends raw imm3": "1/5 PASS (4 FAIL, vm_bad 130-634)"
+  },
+  "vehicle_batch": "not run: the vehicle records need the python tokenizers module on EPYC2 (ModuleNotFoundError) -- random campaign is the exact bench here",
+  "cycle_cost": "GSH: +1 cycle per gather fetch (controller x_dF 6+OPR+CAPR+1); KIMM: 0",
+  "routes": "m12light (AGIdock, 79.92x162, GSH 1 KIMM 1, CP .77, HM .02), m12sfu (EPYC2, 159.84x330.48)"
+ }
 }
