@@ -18,6 +18,8 @@ def main():
     parser.add_argument('--job-root', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--fast-owner', action='store_true')
+    parser.add_argument('--variant', type=int, choices=(1,2,3), default=1,
+                        help='Distinct installed GPL/DRT seeds, unchanged constraints and density')
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
@@ -48,11 +50,32 @@ def main():
                           ('--output', job/'physical.json'),
                           ('--nickname-tag', 'harvey_cp_fourcut_context_r1')]:
         argv[argv.index(option)+1] = str(value)
+    finite = None
     if args.fast_owner:
         assert inputs['parameters']['SU_FAST_OWNER_FRONTIER']==1
+        finite_path = ROOT/'results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json'
+        finite = json.loads(finite_path.read_text())
+        assert finite['source_commit'].startswith('e0e05a19e')
+        assert finite['boundary_bits']==12 and finite['external_pins']==236
+        assert finite['charged_body_total_um2'] <= finite['cell_budget_um2']
+        assert len(set(finite['M7']['reserved_factor_track_X_DBU']))==12
+        for path,digest in finite['hooks_sha256'].items():
+            assert sha(ROOT/path)==digest, path
+        for option,values in [('--die-area',finite['local_die_um']),
+                              ('--core-area',finite['local_core_um'])]:
+            index=argv.index(option)+1
+            argv[index:index+4]=[str(v) for v in values]
+        index=argv.index('--step-tcl')+1
+        assert argv[index].startswith('POST_IO_PLACEMENT=')
+        argv[index]='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
+        argv += ['--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
+                 '--orfs-var', f'GPL_RANDOM_SEED={args.variant}',
+                 '--orfs-var', f'OR_SEED={args.variant}']
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
+    if finite:
+        argv[-1]='PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'
     record = dict(schema='hbm.cp.fourcut.context-route.v1', argv=argv,
         checked_sources=checked, exact_gate=model['exact_measurement'],
         exact_sha256=sha(ROOT/model['exact_measurement']),
@@ -61,6 +84,12 @@ def main():
         old_R6_preserved=True, fences_changed=False, pins_changed=False,
         setup_ps=60, hold_ps=25, source_phase_ps=0,
         added_RTL_FF=0, added_RTL_cycles=0, adopted=False,fast_owner=args.fast_owner)
+    if finite:
+        record.update(finite_parent_model='results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json',
+            finite_parent_model_sha256=sha(finite_path), finite_allocation=finite,
+            placement_seed=args.variant, detailed_route_seed=args.variant,
+            analytical_inputs_until_actual_CTS=True,
+            parent_supply_drop_unmeasured=True)
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
@@ -92,7 +121,11 @@ def main():
             resume_resized_sha256=args.resume_resized_sha256,
             upstream_sha256={str(p.relative_to(case)):h for p,h in frozen.items()})
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
-    shutil.copyfile(hook, case/'cts_membership.tcl')
+    if finite:
+        (case/'cts_membership.tcl').write_text(
+            'source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl\n')
+    else:
+        shutil.copyfile(hook, case/'cts_membership.tcl')
     patch = '''from pathlib import Path
 import hashlib,json
 p=Path('/OpenROAD-flow-scripts/flow/scripts/cts.tcl')

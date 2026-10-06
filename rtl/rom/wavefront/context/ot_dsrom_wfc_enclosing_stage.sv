@@ -86,7 +86,7 @@ module ot_dsrom_wfc_enclosing_stage #(
    wire health=c8_write_quiet&&!c8_write_quarantine&&!c8_write_fault&&!coll_busy;
    wire matching_result=owned&&issued&&launched&&whole_stage_identity==stage_request_identity;
    wire result_v=whole_stage_v&&matching_result&&!poison&&!c8_poison;
-   assign whole_stage_accepted=accepted&&owned&&issued&&launched&&!poison&&!c8_poison;
+   assign whole_stage_accepted=accepted&&result_v&&health;
    assign busy=owned||core_busy||c8_active;
    assign fault=poison||c8_poison||proto_fault||rtr_overflow;
    always @(posedge clk)begin

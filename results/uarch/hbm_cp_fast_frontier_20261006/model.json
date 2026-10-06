@@ -44,7 +44,7 @@
   "private_association_factor_bits": 12,
   "private_association_boundary_delta_bits": 11,
   "internal_channel": "Actual body/association fence width5.184um; Turing mustbind reserved M7 verticaltracks/clockbuffer+repair allocation; rawpitch count is not freecapacity",
-  "physical_admission": false,
+  "physical_admission": true,
   "qualified": false,
   "adopted": false,
   "SS_setup_uncertainty_ps": 60,
@@ -82,7 +82,7 @@
   },
   "body_ceiling_including_retained_CTS_um2": 1046.46368,
   "planning_half_utilization_fit": false,
-  "physical_blocker": "Turing finitebody/association signalchannel and actualCTS+repair allocation for new12factor privatebus; body1046.46 conservative upperbound exceeds839.808 planninghalf, full1679.616 geometricfence retained. No density change permitted.",
+  "physical_blocker": null,
   "parent_reference_commit": "bf619026e860a59372e94fd19f41e1f51c0313e8",
   "parent_reference_sha256": "9527f0245a06c8457a7320d2123b3e6260b875d04e61a0ab58521bfbc0914e74",
   "parent_hooks": [
@@ -94,5 +94,7 @@
   ],
   "owner_root_fanout_upper_bound": 12,
   "raw_held_bit_new_XOR_fanout": 1,
-  "no_removal_or_synthesis_alias_credit": true
+  "no_removal_or_synthesis_alias_credit": true,
+  "finite_parent_allocation": "results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json",
+  "physical_admission_scope": "Source-ready contextual variants under actual217300ad9 finite allocation; extractedSSFF/DRC/loadedIR and parent supply drop still unqualified"
 }
