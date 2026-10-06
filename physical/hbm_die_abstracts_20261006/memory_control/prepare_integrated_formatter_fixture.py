@@ -18,6 +18,8 @@ from hbm_opt_integrated_20261005_gather import compile_normal_gather
 
 PHASE = 'L20.op14.index_scores.pre_candidate_mask.local_top512'
 GOLD_SHA = '5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45'
+FINAL_REFERENCE = ROOT / 'results/rtl/hbm_index_tp96_producer_20261006/final_reference_r1/ids.u32'
+FINAL_REFERENCE_SHA = 'fa5fd356d42ffeb6aae1d8eea2fd43f65192b27ba7bbffe054461fce034df19d'
 
 
 def sha(p):
@@ -158,11 +160,13 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
             raise ValueError('saved unmasked FP32-exact reference required')
         if not np.array_equal(planes['scores'], scores.view('<u4')[ids]):
             raise ValueError('actual source score differs from independent saved reference')
-        # This independent selection is used only for final readback comparison.
-        # It is not emitted as a command, source operand or sink write payload.
-        global_ids = np.arange(1048576, dtype=np.uint32)
-        top = np.lexsort((global_ids, -saved))[:512]
-        final_ids = np.sort(top).astype('<u4')
+    # Exact captured independent final selection, comparison only. Preserve
+    # its actual order; do not regenerate a host selection from scores.
+    if sha(FINAL_REFERENCE) != FINAL_REFERENCE_SHA:
+        raise ValueError('captured L20 final U32 reference pin differs')
+    final_ids = np.fromfile(FINAL_REFERENCE, dtype='<u4')
+    if final_ids.shape != (512,) or len(np.unique(final_ids)) != 512 or (final_ids >= 1048576).any():
+        raise ValueError('captured final selection extent differs')
     output.mkdir(parents=True, exist_ok=False)
     for name in ('scores.mem', 'ids.mem'):
         shutil.copyfile(producer_path.parent / name, output / name)
@@ -177,7 +181,7 @@ def prepare(installation_path, producer_path, gold_path, output, book_path=None,
            len(occupied), compiled['entry_pc'], 20, 20, 0]
     (output / 'formatter.cfg').write_text(''.join(f'{v:08x}\n' for v in cfg))
     source_pins = {str(producer_path): sha(producer_path), str(phase_path): sha(phase_path),
-                   str(gold_path): GOLD_SHA}
+                   str(gold_path): GOLD_SHA, str(FINAL_REFERENCE): FINAL_REFERENCE_SHA}
     if book_path is not None:
         source_pins[str(book_path)] = book_sha
     else:
