@@ -1,0 +1,10 @@
+COUNTER_BOUNDARY_ENTER value=000000fe
+COUNTER_BOUNDARY_ENTER value=000000ff
+COUNTER_BOUNDARY_ENTER value=0000fffe
+COUNTER_BOUNDARY_ENTER value=0000ffff
+COUNTER_BOUNDARY_ENTER value=00fffffe
+COUNTER_BOUNDARY_ENTER value=00ffffff
+COUNTER_BOUNDARY_ENTER value=fffffffe
+COUNTER_BOUNDARY_ENTER value=ffffffff
+WINDOW_WRITER_STAT_CARRY_PASS negatives=5 wrap_cases=8 final_blocks=16 final_writes=32 compared_cycles=820
+/srv/opentallas-scratch/jobs/mencius-window-writer-stat-r10/source/rtl/test/dsrom_sys/s81_window_la/tb_window_writer_stat_carry.sv:166: $finish called at 8660000 (1ps)
