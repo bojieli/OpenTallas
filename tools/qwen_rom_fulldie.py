@@ -91,6 +91,9 @@ R19 = False
 KVL_BITS = 768                 # a row's landing bits a cycle: 24 rows x 768 >= 64 PCs x 283 a half array
 KV_TILE_W = 319.68             # (125,000 / 0.5 + 10 ROM + 2 KV macros + 10,000 halo) / 1291.68 + corridor, on 0.432
 KV_MACRO = 'ot_sram_1r1w_128x256_m1_r2c2'
+# r20d: GRT M9 adjustment over the corridors (None: the base adjustment).  r20b i5: corridor M9 carries only tree-word
+# vertical legs (the corridor chain is on M7, ~0.55 m a corridor) and all residual M9 overflow sits there
+CORR_M9_ADJ = None
 CDC_HO = 319                   # h_cred 3 + h_wv 1 + h_wsec 24 + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_fault 1
 CDC_CO = 283                   # l_v 1 + l_sec 17 + l_row 8 + l_data 256 + l_pop 1 (l_* = the element's W face)
 KVC_W = 96.768
@@ -1313,6 +1316,10 @@ def case_grt(m, work, k, tag, iters=50):
         # corridor gate constraint (3): no long haul on M2-M5 (pins on M4/M5 are reached by vias at the pin gcell)
         adj.append(f'set_global_routing_layer_adjustment {ln} {1.0 if ln in ("M2", "M3", "M4", "M5") else VIA_OBS + 2 * REGION_PG["tile_field"]:.4f}')
     for r in m['regions']:
+        if r['kind'] == 'corridor' and CORR_M9_ADJ is not None:
+            x0, y0, x1, y1 = r['rect']
+            adj.append(f'set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer M9 '
+                       f'-adjustment {CORR_M9_ADJ:.4f}')
         if r['kind'] in ('tile_field', 'corridor', 'channel', 'phy'):
             continue
         a = VIA_OBS + 2 * REGION_PG[r['kind']]

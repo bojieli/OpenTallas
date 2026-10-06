@@ -66,7 +66,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
-             tree_interleave=False):
+             tree_interleave=False, corr_m9_adj=None):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -96,6 +96,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.STRIP_SPAN = strip_span or r18
     v.R18 = r18 or r19
     v.R19 = r19
+    v.CORR_M9_ADJ = corr_m9_adj
     if r19:
         v.TILE_SLOT = (v.KV_TILE_W, v.TILE_SLOT[1])
         v.TILE_BODY_W = v.KV_TILE_W - v.CORR
@@ -177,6 +178,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _tree_cols(v, tree_cols, interleave=tree_interleave)
     m['b3r2']['b3r7_tree_pin_columns'] = tree_cols
     m['b3r2']['r20_tree_pin_interleave'] = tree_interleave
+    m['b3r2']['r20_corridor_m9_adjustment'] = corr_m9_adj
     m['b3r2']['b3r8_bw_align'] = bw_align
     m['b3r2']['b3r9_east_mirror'] = east_mirror
     m['b3r2']['b3r10_bw_edge'] = bw_edge
@@ -1831,6 +1833,7 @@ def main(argv=None):
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
     ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
                     'fabric from per-stack landing crossbars (KV reconciliation)')
+    ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
     ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
                     'the tile body')
     ap.add_argument('--r18', action='store_true', help='r18: die-top lint Q1-Q14 (no row engines, CDC clusters, clock '
@@ -1863,7 +1866,7 @@ def main(argv=None):
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave)
+                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:
