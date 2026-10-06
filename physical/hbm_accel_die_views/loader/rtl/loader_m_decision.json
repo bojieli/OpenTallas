@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_die_view.rtl_decision.v1",
+ "block": "hfd_loader (ot_hfd_loader_host_m)",
+ "date": "2026-10-06",
+ "owner_instruction": "coordinator 2026-10-06: compute the loader's required bandwidth against the >= 90 % of HBM peak load rule; half-rate 2x-wide datapath with proper CDC if that meets it, else pipeline +5-6 stages with kept copies",
+ "bandwidth": {
+  "loader_role": "host -> HBM ingress (model image load / store-back) and verify read-back; the per-token weight and KV reads stream from HBM through the service ports, not through the loader",
+  "host_ingress_Bps": 9.6e9,
+  "host_ingress_basis": "64-bit host DMA beat per clk_host cycle, clk_host on the 1.2 GHz die clock in this view (ot_hbm_accel_dma64)",
+  "engine_side_Bps_per_die": 38.4e9,
+  "engine_side_basis": "one 256-bit MREQ per clk_mem cycle (1.2 GHz)",
+  "hbm_die_column_peak_Bps": 4.0e12,
+  "hbm_peak_source": "results/uarch/hbm_current_target_portmap_20261005/model_portmap.json DS.port_prices.die_column_peak_Bps",
+  "rule_applicability": "the >= 90 % HBM-peak rule binds weight / KV streaming loads; the loader's throughput is bounded by the host link (9.6 GB/s, 0.24 % of the die-column peak), so the rule does not bind it; the engines already run 4x faster than the host link can feed",
+  "half_rate_2x_wide": "would meet the loader's own bandwidth (512 b at 0.6 GHz = 38.4 GB/s per die) but does not remove the failing class: the CRC-32 recurrence would fold 512 data bits per cycle (a deeper feed-forward tree into the same recurrence), and it adds a CDC pair per engine"
+ },
+ "failing_class": "CRC-32 fold of a 256-bit beat into the running CRC in one cycle (crc <= crc_fold(crc, w)): ld3 CTS -4,229 ps at u_store crc_got, 42,497 violating endpoints; the unchanged host's own record tapeout_hbm_loader_20261004 SS -3,672 ps at 1.0 ns",
+ "decision": "same clock, CRC pipelined by linearity: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi); P1 register the beat, P2 the two 128-bit partials, P3 the recurrence (32 x 32 XOR matrix + one XOR); every CRC consumer waits for its pipeline to drain",
+ "cycle_cost": "+2 cycles on each descriptor's completion (host LOAD / STORE status, memory verify / store completion record), 0 on throughput; off the per-token path",
+ "exactness": "tb_loader_m_equiv.sv: unchanged vs margin host in identical environments, 3 seeds x 40 programs = 255 descriptors (LOAD verify on/off, wrong expected CRC, STORE back, misaligned), MREQ write stream, DMA write stream and every CSR except CYCLES identical; 3 mutants (dropped data partial, dropped verify partial, store drain gate removed) fail",
+ "next": "margin routes ldm_*; any class still within 50 ps after the CRC fix gets stages in the same generator"
+}
