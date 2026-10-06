@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_index_q_b4",
+ "kind": "index_q",
+ "status": "closed",
+ "lef": "hfd_index_q_b4.lef",
+ "lib": {
+  "ss": "hfd_index_q_b4_ss.lib",
+  "ff": "hfd_index_q_b4_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_index_q_b4.lef": "4d1391d59ae0ad4a3e03341d73a7963b9d032a7e369f5f6163fa17db6d414d20",
+  "hfd_index_q_b4_ss.lib": "3696a93cc05e3f74d3cbf059c3674036a7b4a818c6367eb308110326bbc558a2",
+  "hfd_index_q_b4_ff.lib": "0939e99d0f5161aef0ebdcc3c27da57e45da9e4869afbe57013609c51aec29e3"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "positions": "exact",
+  "problems": [],
+  "obs_above_generator": [],
+  "pg_pins": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ]
+  },
+  "gen_pins": 2086,
+  "view_pins": 2086
+ },
+ "size_um": [
+  930.072,
+  829.896
+ ],
+ "source": {
+  "route": "/srv/opentallas-scratch/claude/hbm-abstracts/svcidx/routes/s1_b4",
+  "host": "ot-agidock128",
+  "SOURCE_COMMIT": "ee91d083df167b731ba06af9f877588a10b74eec",
+  "ss_setup_ps": 95.43,
+  "ff_hold_ps": 18.32,
+  "closes_signoff_SS60_FF25": true,
+  "clock_period_ns": 0.833,
+  "status": "not_met",
+  "drc": 0,
+  "antenna": 0,
+  "cell_um2": 6013.08,
+  "seq_um2": 1270.09,
+  "core_um2": 770661,
+  "macro_um2": 0
+ },
+ "wrapper": null,
+ "bench": "bench_s3 (src_s3 351d3b775): six bands joined, IDXQ_BENCH PASS; b2 lane-swap mutant FAIL",
+ "note": "routed from src_s1 (ee91d083d); 351d3b775 only renames the band reset synchroniser rs1/rs2 -> rst_s (same netlist function). Sign-off corner_sta re-run with signoff_unc60.sdc + vclk_corner_true.sdc (route SDC STA kept as corner_sta_route.json on the host).",
+ "defects": []
+}

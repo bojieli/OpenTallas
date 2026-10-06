@@ -472,8 +472,49 @@
   },
   "hfd_index_q_b4": {
    "kind": "index_q",
-   "status": "missing",
-   "instances": 4
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b4",
+   "lef": "hfd_index_q_b4.lef",
+   "lib": {
+    "ss": "hfd_index_q_b4_ss.lib",
+    "ff": "hfd_index_q_b4_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     930.072,
+     829.896
+    ],
+    "size_gen": [
+     930.072,
+     829.896
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "/srv/opentallas-scratch/claude/hbm-abstracts/svcidx/routes/s1_b4",
+    "host": "ot-agidock128",
+    "SOURCE_COMMIT": "ee91d083df167b731ba06af9f877588a10b74eec",
+    "ss_setup_ps": 95.43,
+    "ff_hold_ps": 18.32,
+    "closes_signoff_SS60_FF25": true,
+    "clock_period_ns": 0.833,
+    "status": "not_met",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 6013.08,
+    "seq_um2": 1270.09,
+    "core_um2": 770661,
+    "macro_um2": 0
+   },
+   "margin": {
+    "ss_setup_ps": 95.43,
+    "ff_hold_ps": 18.32,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
+   }
   },
   "hfd_index_q_b5": {
    "kind": "index_q",
@@ -2100,8 +2141,8 @@
  },
  "counts": {
   "interim-not-closed": 8,
-  "closed": 24,
-  "missing": 25,
+  "closed": 25,
+  "missing": 24,
   "reservation": 2
  }
 }
