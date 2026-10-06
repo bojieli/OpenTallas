@@ -57,6 +57,12 @@
 // function and latency as ot_dsrom_aq12; four kept copies of the S11 exponent broadcast, Kogge-Stone max compares,
 // the nonfinite OR split at S1).  No cycle changes.
 //
+// v13 (2026-10-06, margin-first owner rule: SS >= +60 ps at 833.333 ps, routed at 770 ps): one more register stage on
+// every class within ~70 ps in the routed v11 screens: the return select (q1_gs -> kept per-lane copies, +1 row-write
+// cycle), a second replica-master stage (+1 configuration cycle), the op row-total terms (s_tq, read >= CFG_WAIT
+// cycles later), the reader's last-word compare from a registered rd_i + 2, 64 kept BF16 sub-index copies; the
+// quantiser restaged as ot_dsrom_aq12m.
+//
 // The broadcast wire to the regions and the return wire from them are NOT in this module: they are the S81 floorplan's
 // registered wire stages at the measured SS reach of 504 um a stage (results/rtl/dsrom_s81_fulldie_20261004/
 // floorplan.json trunk_stages.stages_at_504, field_one_way 41), charged once per node by the field composition.
@@ -184,6 +190,7 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [18:0]    s_tot [0:3];       // rows of the op (all positions): two registered steps, read at go
     reg [18:0]    s_tm0 [0:3];
     reg [18:0]    s_tm1 [0:3];
+    reg [18:0]    s_tq [0:3][0:3];   // v13: the four masked terms registered before the sums (s_pw -> s_tm +18 ps)
     reg [2:0]     s_np [0:3];        // positions - 1
     reg [3:0]     s_np1 [0:3];       // positions
     reg [VAW-1:0] s_xps [0:3];
@@ -346,6 +353,7 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [1:0]  rd_tag;
     reg [2:0]  rd_pos, rd_np;
     reg [15:0] rd_i, rd_nb;
+    reg [15:0] rd_i2;                // v13: rd_i + 2, so rd_last is a compare of registers (rd_i -> rd_last +35.8 ps)
     reg [SAW-1:0] rd_a, rd_sb;
     reg        rd_fam;
     reg [3:0]  cred;                 // free FIFO entries not claimed by a read in flight
@@ -535,10 +543,11 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [2:0]   bt_np, bt_pos;
     reg [PHW-1:0] bt_ph;
     integer kl, ku, kc, kj;
-    wire [32*3-1:0] p2_bb;                 // stage-3 copies of p1_bb / p1_bg (kept: identical per byte lane)
-    wire [31:0]     p2_bg;
-    generate for (gc = 0; gc < 32; gc = gc + 1) begin : g_ixc
-        ot_v41_kreg #(.W(4)) u_ix (.clk(clk), .arst_n(rst_n), .d({p1_bb[3*gc +: 3], p1_bg[gc]}),
+    // v13: one kept copy per 16-bit lane (64; v11: one per lane pair, R16 routed g_ixc -> bt_d +40.7 ps at 833)
+    wire [64*3-1:0] p2_bb;                 // stage-3 copies of p1_bb / p1_bg (kept: identical per lane)
+    wire [63:0]     p2_bg;
+    generate for (gc = 0; gc < 64; gc = gc + 1) begin : g_ixc
+        ot_v41_kreg #(.W(4)) u_ix (.clk(clk), .arst_n(rst_n), .d({p1_bb[3*(gc/2) +: 3], p1_bg[gc/2]}),
                                   .q({p2_bb[3*gc +: 3], p2_bg[gc]}));
     end endgenerate
     always @(posedge clk) begin
@@ -559,7 +568,7 @@ module ot_v41_spine_pqc_w17w10 #(
         // stage 3 of the BF16 read
         for (ku = 0; ku < 4; ku = ku + 1)
             for (kl = 0; kl < 16; kl = kl + 1)
-                bt_d[256*ku + 16*kl +: 16] <= p2_bg[8*ku + kl/2] ? bra[16*ku + kl][16*p2_bb[3*(8*ku + kl/2) +: 3] +: 16] : 16'd0;
+                bt_d[256*ku + 16*kl +: 16] <= p2_bg[16*ku + kl] ? bra[16*ku + kl][16*p2_bb[3*(16*ku + kl) +: 3] +: 16] : 16'd0;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -630,11 +639,13 @@ module ot_v41_spine_pqc_w17w10 #(
     // v11: the masters (slot registers -> stride adders -> packing) are registered once at the spine before the group
     // replicas, so the replicas' D is a wire from one register (v9 R = 128: s_ops -> o3/o5/o7 -> 16 replicas across
     // the die was an SS class, -21.1 ps; +1 cycle on the configuration's way to the return stage)
-    reg  [GRW-1:0]     g_mdr;
-    always @(posedge clk) g_mdr <= g_md;
+    reg  [GRW-1:0]     g_mdr, g_mdr2;
+    // v13 (margin-first): a second master stage, so the die-crossing replica nets start from a register placed
+    // between the slot logic and the groups (+1 cycle on the configuration's way to the return stage)
+    always @(posedge clk) begin g_mdr <= g_md; g_mdr2 <= g_mdr; end
     wire [NGR*GRW-1:0] g_rep;                               // per region group, kept copies (ot_v41_kreg)
     generate for (gg = 0; gg < NGR; gg = gg + 1) begin : g_grp
-        ot_v41_kreg #(.W(GRW)) u_rep (.clk(clk), .arst_n(rst_n), .d(g_mdr), .q(g_rep[GRW*gg +: GRW]));
+        ot_v41_kreg #(.W(GRW)) u_rep (.clk(clk), .arst_n(rst_n), .d(g_mdr2), .q(g_rep[GRW*gg +: GRW]));
     end endgenerate
     // stages 1 and 2, region-local: the row's op tag registered as kept one-hot copies (0: base, 1: 1/3 x stride,
     // 2: 5/7 x stride, 3: rsplit / format / live (valid-gated), 4: row count (valid-gated))
@@ -721,21 +732,32 @@ module ot_v41_spine_pqc_w17w10 #(
         // baseline SS class, -72 ps post-CTS).  Same function and latency as v11.
         wire       s_hi = fm_m[0] || (fm_m[1] && fm_m[3]);
         wire       s_lo = fm_m[0] || (fm_m[1] && fm_m[2]);
+        // v13 (margin-first): {row_ge, s_hi, s_lo} registered once at the comparator (q1_gs), then the kept per-lane
+        // copies (stage 1b) cross to the byte lanes register-to-register; the address sum and the data take the same
+        // extra stage (q1b_*): +1 cycle on every row write
+        reg [2:0]  q1_gs;
+        always @(posedge clk) q1_gs <= {row_ge, s_hi, s_lo};
         // stage 2: the address add; the select in four kept copies (one per byte of the word), the data forwarded
         wire [VAW-1:0] w_s;
         ot_v41_ksadd #(.W(VAW)) u_w (.a(q1_a[VAW*gk +: VAW]), .b(q1_p[VAW*gk +: VAW]), .cin(1'b0), .s(w_s), .cout());
+        reg [VAW-1:0] q1b_w;
+        reg [31:0]    q1b_f32;
+        reg [15:0]    q1b_bf;
+        always @(posedge clk) begin
+            q1b_w <= w_s; q1b_f32 <= q1_f32[32*gk +: 32]; q1b_bf <= q1_bf[16*gk +: 16];
+        end
         wire [3:0] q2_sel;
         genvar gsl;
         for (gsl = 0; gsl < 4; gsl = gsl + 1) begin : g_sel
             wire [2:0] q1_g;                                // {row_ge, select if ge, select if not}
-            ot_v41_kreg #(.W(3)) u_g (.clk(clk), .arst_n(rst_n), .d({row_ge, s_hi, s_lo}), .q(q1_g));
+            ot_v41_kreg #(.W(3)) u_g (.clk(clk), .arst_n(rst_n), .d(q1_gs), .q(q1_g));
             ot_v41_kreg #(.W(1)) u_s (.clk(clk), .arst_n(rst_n), .d(q1_g[2] ? q1_g[1] : q1_g[0]), .q(q2_sel[gsl]));
         end
         reg [VAW-1:0] q2_a;
         reg [31:0]    q2_f32;
         reg [15:0]    q2_bf;
         always @(posedge clk) begin
-            q2_a <= w_s; q2_f32 <= q1_f32[32*gk +: 32]; q2_bf <= q1_bf[16*gk +: 16];
+            q2_a <= q1b_w; q2_f32 <= q1b_f32; q2_bf <= q1b_bf;
         end
         // stage 3: write
         always @(posedge clk) begin
@@ -750,11 +772,11 @@ module ot_v41_spine_pqc_w17w10 #(
     ot_hdc_delay #(.W(R*VAW + R*32), .D(RPT)) u_pwd (.clk(clk), .rst_n(rst_n), .d({w_addr_r, w_data_r}),
                                                      .q({w_addr, w_data}));
     reg [NGR-1:0] q2_f;
-    reg [R-1:0]   q2_v;
+    reg [R-1:0]   q2_v, q1b_v;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin w_we_r <= {R{1'b0}}; q2_v <= {R{1'b0}}; q2_f <= {NGR{1'b0}}; end
+        if (!rst_n) begin w_we_r <= {R{1'b0}}; q2_v <= {R{1'b0}}; q1b_v <= {R{1'b0}}; q2_f <= {NGR{1'b0}}; end
         else begin
-            q2_v <= q1_v; w_we_r <= q2_v;
+            q1b_v <= q1_v; q2_v <= q1b_v; w_we_r <= q2_v;
             for (kg = 0; kg < NGR; kg = kg + 1) begin
                 q2_f[kg] <= 1'b0;
                 for (kr = 0; kr < RG; kr = kr + 1) if (RG * kg + kr < R && q1_f[RG * kg + kr]) q2_f[kg] <= 1'b1;
@@ -832,8 +854,12 @@ module ot_v41_spine_pqc_w17w10 #(
                 s_pw[a_tag2] <= ph_q0; s_rs[a_tag2] <= ph_q1[15:0]; sr[a_tag2] <= 1'b1;
             end
             for (ks = 0; ks < 4; ks = ks + 1) begin       // rows * (np + 1), np + 1 in 1..8
-                s_tm0[ks] <= ({3'd0, s_pw[ks][61:46]} & {19{s_np1[ks][0]}}) + ({2'd0, s_pw[ks][61:46], 1'b0} & {19{s_np1[ks][1]}});
-                s_tm1[ks] <= ({1'd0, s_pw[ks][61:46], 2'b0} & {19{s_np1[ks][2]}}) + ({s_pw[ks][61:46], 3'b0} & {19{s_np1[ks][3]}});
+                s_tq[ks][0] <= {3'd0, s_pw[ks][61:46]} & {19{s_np1[ks][0]}};
+                s_tq[ks][1] <= {2'd0, s_pw[ks][61:46], 1'b0} & {19{s_np1[ks][1]}};
+                s_tq[ks][2] <= {1'd0, s_pw[ks][61:46], 2'b0} & {19{s_np1[ks][2]}};
+                s_tq[ks][3] <= {s_pw[ks][61:46], 3'b0} & {19{s_np1[ks][3]}};
+                s_tm0[ks] <= s_tq[ks][0] + s_tq[ks][1];
+                s_tm1[ks] <= s_tq[ks][2] + s_tq[ks][3];
                 s_tot[ks] <= s_tm0[ks] + s_tm1[ks];
             end
             // issue: configuration, then go
@@ -881,17 +907,17 @@ module ot_v41_spine_pqc_w17w10 #(
             clr_q[1] <= (ld_st0 && ldt[0] == 1'b1) || (!ld_st0 && ld_st1 && (ld_tag[0] ^ ~ld_pos[0]) == 1'b1);
             // stream-ROM reader (op order; a slot's words are read once)
             if (!rd_run && sv[rdt] && sr[rdt] && !s_rd[rdt]) begin
-                rd_run <= 1'b1; rd_tag <= rdt; rd_pos <= 3'd0; rd_i <= 16'd0; rd_np <= s_np[rdt];
+                rd_run <= 1'b1; rd_tag <= rdt; rd_pos <= 3'd0; rd_i <= 16'd0; rd_i2 <= 16'd2; rd_np <= s_np[rdt];
                 rd_nb <= s_pw[rdt][29:14]; rd_sb <= SAW'(s_pw[rdt][45:30]); rd_a <= SAW'(s_pw[rdt][45:30]);
                 rd_last <= s_pw[rdt][29:14] == 16'd1; rd_fam <= s_pw[rdt][0];
                 s_rd[rdt] <= 1'b1; rdt <= rdt + 2'd1;
             end else if (rd_iss) begin
                 if (rd_last) begin
-                    rd_i <= 16'd0; rd_a <= rd_sb; rd_last <= rd_nb == 16'd1;
+                    rd_i <= 16'd0; rd_i2 <= 16'd2; rd_a <= rd_sb; rd_last <= rd_nb == 16'd1;
                     if (rd_pos != rd_np) rd_pos <= rd_pos + 3'd1;
                     else rd_run <= 1'b0;
                 end else begin
-                    rd_i <= rd_i + 16'd1; rd_a <= rd_a + SAW'(1); rd_last <= rd_i + 16'd2 == rd_nb;
+                    rd_i <= rd_i + 16'd1; rd_i2 <= rd_i2 + 16'd1; rd_a <= rd_a + SAW'(1); rd_last <= rd_i2 == rd_nb;
                 end
             end
             r0_v <= rd_iss; r0_a <= rd_a; r0_lp <= rd_last; r0_lo <= rd_last && rd_pos == rd_np; r0_fam <= rd_fam;
