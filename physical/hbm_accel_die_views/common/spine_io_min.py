@@ -92,9 +92,11 @@ def main():
                  '  set ot_s [sta::redirect_string_end]',
                  '  if {[regexp {rise -> rise.*?([0-9.]+)\\s+([0-9.]+)\\s+latency} $ot_s -> ot_lo ot_hi]} {']
         for p, r in ports.items():
-            lines.append(f'    foreach ot_q [get_ports -quiet {{{p} {p}[*]}}] {{ if {{[get_property $ot_q direction] eq "input"}} '
-                         f'{{ set_input_delay -min [expr {{$ot_hi - $ot_lo + {r["credit_in_ps"]}}}] -clock vclk $ot_q }} '
-                         f'elseif {{[get_property $ot_q direction] eq "output"}} '
+            # inout die ports (the retyped cSE/cSW/h buses) are 'bidirect' to STA: both roles get their credit
+            lines.append(f'    foreach ot_q [get_ports -quiet {{{p} {p}[*]}}] {{ set ot_d [get_property $ot_q direction]; '
+                         f'if {{$ot_d in {{input bidirect}}}} '
+                         f'{{ set_input_delay -min [expr {{$ot_hi - $ot_lo + {r["credit_in_ps"]}}}] -clock vclk $ot_q }}; '
+                         f'if {{$ot_d in {{output bidirect}}}} '
                          f'{{ set_output_delay -min {r["credit_out_ps"]} -clock vclk $ot_q }} }}')
         lines += ['    puts "OT_IOMIN: per-port die-path hold credit applied"', '  }', '}', '']
         (out_dir / f'io_min_{mst}.sdc').write_text('\n'.join(lines))
