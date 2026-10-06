@@ -24,3 +24,13 @@ cut 1 -> cut 3: the sum carry chain AND the leading-zero OR tree in one stage) -
 (+34.6) / `fault` (+38.0), whose slack is the 200 ps IO budget against ~400 ps of internal clock insertion.
 The pin registers did their job (no boundary path is critical).  Below +40 -> RTL change, not a re-route: the exp
 polynomial adds get the sum | LZC cut (CUTS bit 2), see `EXP_ASUM` below.
+
+## ESUM = 1 (exp polynomial adds on `ot_hdc_fp32_add_f12_l5s`, 0c9c4c32a, default off)
+
+| run | source | result | cycles (W64, routed / shared) |
+|---|---|---|---|
+| `run_rtl_W64_NB32_m5a4q5_ireg_esum_*.json` | 0c9c4c32a, IREG = 1, ESUM = 1 | PASS 9/9 | 247 / 197 (+6 vs IREG only) |
+| `mutant_esum_LP_eq_LA_run.json` | same, exp alignment `LP = LA` (the cut's cycle not accounted) | FAIL (3,350 a errors, 106 q errors) | - |
+
+Cost: +6 cycles per lane op on top of IREG (2 lane ops a layer): ~0.6 us a token, < 0.1 % AR.
+Route (ONE variant): `physical/dsrom_su_swiglu_ireg/launch_esum.sh`, EPYC2 `.../s81-rerun/swiglu_esum/route/lane_esum_m770`.
