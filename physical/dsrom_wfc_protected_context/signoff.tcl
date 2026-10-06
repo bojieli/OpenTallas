@@ -27,3 +27,15 @@ check_setup -verbose > $out/unconstrained_context_raw.rpt
 report_clock_properties [all_clocks] > $out/clock_properties_raw.rpt
 # External IO is explicitly unbound; positive internal slack is not full closure.
 puts "CONTEXT INTERNAL_REAL_R4_PROVIDER_PRODUCER_C8; EXTERNAL_IO_UNBOUND; NO_FULL_PARENT_CLOSURE"
+
+# Owner-authorized ideal-source diagnostic: retain all four clock-pair budgets.
+source /src/physical/dsrom_wfc_clock_ip_boundary_20261006/report_body_budget.tcl
+puts "WFC_SCOPE IDEAL_EXTERNAL_INPUT_DIAGNOSTIC CONDITIONAL_BODY_ONLY NO_SOURCE_QUALIFICATION NO_HEADLINE"
+
+set coverage_file [open "$out/body_port_inventory_raw.rpt" w]
+puts $coverage_file "COND_BODY_DIAGNOSTIC external fault/reset/engine IO UNQUALIFIED; no safe-reset or source qualification"
+puts $coverage_file "INPUT_BIT_PORT_COUNT [llength [all_inputs]]"
+puts $coverage_file "OUTPUT_BIT_PORT_COUNT [llength [all_outputs]]"
+foreach port [all_inputs] {puts $coverage_file "INPUT [get_full_name $port]"}
+foreach port [all_outputs] {puts $coverage_file "OUTPUT [get_full_name $port]"}
+close $coverage_file
