@@ -8,7 +8,7 @@
 // Prints ATTNDIE role=<r> cycles=<n> mismatches=<m> ov=<compared valid words>; $fatal on any mismatch or no valid word.
 // NEG=1: flips one oy bit of the view's o in the compare (negative control, must fail).
 module tb_hfd_attn_tile_b (input wire clk);
-    parameter integer NK = 3, NC = 1, NR = 2, PMID = 1, NFC = 1, NFR = 2, NL = 4, NI = 4;
+    parameter integer NK = 4, NC = 2, NR = 3, PMID = 1, NFC = 2, NFR = 3, NL = 6, NI = 4;
     localparam integer H = 16, TD = 32, NBANK = 5, BW = 3, PWORDS = 2;
     parameter integer NCYC = 6000;
     parameter integer NEG = 0;
