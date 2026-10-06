@@ -6,9 +6,11 @@
 // launches on the received clock's falling edge and the next station captures half a period later on the falling
 // edge of the clock sent here, so clock-to-out of the QN capture flop (+ output inverter and port buffer, ~226 ps
 // routed SS) spends the whole T/2 - 0.2 T io budget - 60 ps uncertainty window (190 ps) unless the forwarded
-// clock trails the data; the FF hold side of the same arc has ~470 ps to give.  OT_STN_FDLY overrides the default.
+// clock trails the data; the FF hold side of the same arc has ~470 ps to give.  Measured on the worst r1 view
+// hfd_stn_r21 (SS setup, routed): FDLY 0 -28.34 ps, 1 +7.54 ps, 2 +21.73 ps (FF hold 478 ps throughout) -> default 2.
+// OT_STN_FDLY overrides the default.
 `ifndef OT_STN_FDLY
-`define OT_STN_FDLY 0
+`define OT_STN_FDLY 2
 `endif
 module ot_hbm_stn_fwd #(parameter integer W = 512, parameter integer FDLY = `OT_STN_FDLY) (
     input wire fclk_i, input wire [W-1:0] d_i, output wire fclk_o, output wire [W-1:0] d_o);
