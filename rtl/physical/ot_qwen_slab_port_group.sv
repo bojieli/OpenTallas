@@ -77,7 +77,11 @@ module ot_qwen_slab_port_group #(
     //               s3 tag line, available that early -- header 1.), so an op gains no cycle.  res_in is due
     //               LEAD cycles after its tag, as before.
     parameter integer S5_CTL = 0,
-    parameter integer SCALE_PAIR = 0
+    parameter integer SCALE_PAIR = 0,
+    //   OREG 1 (owner margin rule 2026-10-06): every result / argmax output leaves through one more register, a kept
+    //               per-bit module (ot_qwen_slab_pg_oreg1, SYNTH_KEEP_MODULES) the placer puts at the output pin.
+    //               +1 cycle per ME op on the result path (values unchanged).
+    parameter integer OREG = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -346,7 +350,17 @@ module ot_qwen_slab_port_group #(
         od1 <= scaled;
         oa2 <= oa1; om2 <= om1; od2 <= od1;
     end
-    assign ov = ov2; assign o_we = we2; assign o_addr = oa2; assign o_mask = om2; assign o_data = od2;
+    localparam integer NO = 1 + 1 + AW + W + W*32;
+    wire [NO-1:0] o_pre = {ov2, we2, oa2, om2, od2};
+    wire [NO-1:0] o_out;
+    generate if (OREG != 0) begin : g_oreg
+        for (genvar ob = 0; ob < NO; ob = ob + 1) begin : g_b
+            ot_qwen_slab_pg_oreg1 u_r (.clk(clk), .d(o_pre[ob]), .q(o_out[ob]));
+        end
+    end else begin : g_nooreg
+        assign o_out = o_pre;
+    end endgenerate
+    assign {ov, o_we, o_addr, o_mask, o_data} = o_out;
 
     // ---- argmax leaves and the group's 4 compare levels (RTL g_leaf / g_alvl) ----------------------
     // The RTL's node test  x0.v && (!x1.v || k0 > k1 || (k0 == k1 && row0 < row1))  is evaluated as one
@@ -401,9 +415,16 @@ module ot_qwen_slab_port_group #(
             end
         end
     endgenerate
-    assign am_top = alv[LV][CW-1:0];
-    assign am_tv = tv[TL];
-    assign am_rmax = trm[TL];
+    wire [CW+1:0] am_pre = {tv[TL], trm[TL], alv[LV][CW-1:0]};
+    wire [CW+1:0] am_out;
+    generate if (OREG != 0) begin : g_amreg
+        for (genvar ab = 0; ab < CW + 2; ab = ab + 1) begin : g_b
+            ot_qwen_slab_pg_oreg1 u_r (.clk(clk), .d(am_pre[ab]), .q(am_out[ab]));
+        end
+    end else begin : g_noamreg
+        assign am_out = am_pre;
+    end endgenerate
+    assign {am_tv, am_rmax, am_top} = am_out;
 
     // ---- block-word crossing FIFO (decision C) ----------------------------------------------------
     generate if (BW_FIFO != 0) begin : g_bw
@@ -475,4 +496,9 @@ module ot_qwen_slab_pg_bdec #(parameter integer AW = 24, parameter integer BK = 
     output reg  [11:0]   a_q
 );
     always @(posedge clk) begin ce_q <= gre && (addr[AW-1:12] == BK); a_q <= addr[11:0]; end
+endmodule
+
+// ot_qwen_slab_pg_oreg1: one output-pin register bit (OREG); kept so equal-D flops are never merged into one driver
+module ot_qwen_slab_pg_oreg1 (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
 endmodule
