@@ -16,5 +16,9 @@ test -f $SRC/$V/lane/$lane/$lane.lef && test -f $SRC/$V/rtl/macro_place.tcl || {
 # are dropped from the route copy of the wrapper; lint and the bench keep the committed wrapper with them
 mkdir -p $SRC/.views/$lab; sed -E 's/ #\(\.[A-Za-z]+\([0-9]+\)(, \.[A-Za-z]+\([0-9]+\))*\) u_lane_/ u_lane_/' $SRC/$V/rtl/hfd_$q.sv > $SRC/.views/$lab/hfd_$q.sv
 MACROS="$lane=$V/lane/$lane" PDN=physical/hbm_accel_die_views/su/pdn_quarter.tcl MAXL=M7 \
-  exec bash $SRC/physical/hbm_accel_die_views/common/route_view.sh $lab hfd_$q .views/$lab/hfd_$q.sv \
-  --orfs-var MACRO_PLACEMENT_TCL=/src/$V/rtl/macro_place.tcl --orfs-var PLACE_DENSITY_LB_ADDON= "$@"
+  bash $SRC/physical/hbm_accel_die_views/common/route_view.sh $lab hfd_$q .views/$lab/hfd_$q.sv \
+  --orfs-var MACRO_PLACEMENT_TCL=/src/$V/rtl/macro_place.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --clock-period-ns ${CP:-0.77} --io-delay-fraction 0.4 "$@"
+# owner margin rule: routed at CP (default 0.77 ns, passed as --clock-period-ns), signed off at 833 ps
+cd $SRC && python3 tools/w18/corner_sta.py --macro $V/lane/$lane --orfs-dir $OUT/$lab/work/orfs \
+  --post-sdc physical/hbm_accel_die_views/su/signoff833_ck.sdc --output $OUT/$lab/corner_sta_833.json > $OUT/$lab/corner833.log 2>&1
+echo "signoff833_rc=$?" >> $OUT/$lab/exit
