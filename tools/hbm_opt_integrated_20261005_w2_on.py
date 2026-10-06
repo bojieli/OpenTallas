@@ -25,6 +25,8 @@ OWN_FILES = [OWN + n + '.sv' for n in (
     'ot_hbm_integrated_w2_result_sink')]
 PEER_FILES = ['physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv',
               'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
+              'rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv',
+              'rtl/chip/ot_w15_coll_dma.sv',
               OWN + 'ot_hbm_integrated_w2_sector_adapter.sv',
               'rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv']
 # Exact installed dimensions: original two-die/four-SM parent.
