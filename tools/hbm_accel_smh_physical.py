@@ -328,6 +328,25 @@ proc ::ot_flop_port {inst} {
     if {$bt eq ""} { set bt [::ot_net_port $dn d] }
     return $bt
 }
+# first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
+# clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+proc ::ot_skip {c w2 y dir sw} {
+    if {![dict exists $::ot_occ $y]} { return $c }
+    set ivs [dict get $::ot_occ $y]
+    set moved 1
+    while {$moved} {
+        set moved 0
+        foreach iv $ivs {
+            lassign $iv a b
+            if {$dir > 0} {
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+            } else {
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+            }
+        }
+    }
+    return $c
+}
 proc ::ot_pin_place_auto {re depth} {
     set dbu [$::ot_blk getDbUnitsPerMicron]
     set sw [expr {int(round(0.054 * $dbu))}]
@@ -341,6 +360,12 @@ proc ::ot_pin_place_auto {re depth} {
         if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
     }
     set m0 [expr {$m0 + $capw}]
+    set ::ot_occ [dict create]
+    foreach i [$::ot_blk getInsts] {
+        if {[[$i getMaster] isBlock] || ![$i isPlaced]} { continue }
+        set bb [$i getBBox]
+        dict lappend ::ot_occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+    }
     set E [dict create W {} E {} S {} N {}]
     set skip 0
     foreach i [$::ot_blk getInsts] {
@@ -376,6 +401,8 @@ proc ::ot_pin_place_auto {re depth} {
                 foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
                     if {$r < 0 || $r >= $nr} { continue }
                     set c [lindex $cur $r]
+                    set rr [lindex $rows $r]
+                    set c [::ot_skip $c $w2 [lindex $rr 0] [expr {$e eq "W" ? 1 : -1}] $sw]
                     if {$e eq "W"} {
                         if {$c + $w2 > $hi} { continue }
                         set x $c; lset cur $r [expr {$c + $w2}]
@@ -383,7 +410,6 @@ proc ::ot_pin_place_auto {re depth} {
                         if {$c - $w2 < $lo} { continue }
                         set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
                     }
-                    set rr [lindex $rows $r]
                     place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                     set done 1; incr placed; break
                 }
@@ -414,8 +440,9 @@ proc ::ot_pin_place_auto {re depth} {
                 set x [expr {$px - $w / 2}]
                 set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
                 if {$x < $c} { set x $c }
-                if {$x + $w2 > $dw - $m0 - $dp} { continue }
                 set rr [lindex $er $r]
+                set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
                 place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                 lset cur $r [expr {$x + $w2}]
                 set done 1; incr placed
@@ -637,6 +664,25 @@ proc ::ot_flop_port {inst} {
     if {$bt eq ""} { set bt [::ot_net_port $dn d] }
     return $bt
 }
+# first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
+# clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+proc ::ot_skip {c w2 y dir sw} {
+    if {![dict exists $::ot_occ $y]} { return $c }
+    set ivs [dict get $::ot_occ $y]
+    set moved 1
+    while {$moved} {
+        set moved 0
+        foreach iv $ivs {
+            lassign $iv a b
+            if {$dir > 0} {
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+            } else {
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+            }
+        }
+    }
+    return $c
+}
 proc ::ot_pin_place_auto {re depth} {
     set dbu [$::ot_blk getDbUnitsPerMicron]
     set sw [expr {int(round(0.054 * $dbu))}]
@@ -650,6 +696,12 @@ proc ::ot_pin_place_auto {re depth} {
         if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
     }
     set m0 [expr {$m0 + $capw}]
+    set ::ot_occ [dict create]
+    foreach i [$::ot_blk getInsts] {
+        if {[[$i getMaster] isBlock] || ![$i isPlaced]} { continue }
+        set bb [$i getBBox]
+        dict lappend ::ot_occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+    }
     set E [dict create W {} E {} S {} N {}]
     set skip 0
     foreach i [$::ot_blk getInsts] {
@@ -685,6 +737,8 @@ proc ::ot_pin_place_auto {re depth} {
                 foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
                     if {$r < 0 || $r >= $nr} { continue }
                     set c [lindex $cur $r]
+                    set rr [lindex $rows $r]
+                    set c [::ot_skip $c $w2 [lindex $rr 0] [expr {$e eq "W" ? 1 : -1}] $sw]
                     if {$e eq "W"} {
                         if {$c + $w2 > $hi} { continue }
                         set x $c; lset cur $r [expr {$c + $w2}]
@@ -692,7 +746,6 @@ proc ::ot_pin_place_auto {re depth} {
                         if {$c - $w2 < $lo} { continue }
                         set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
                     }
-                    set rr [lindex $rows $r]
                     place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                     set done 1; incr placed; break
                 }
@@ -723,8 +776,9 @@ proc ::ot_pin_place_auto {re depth} {
                 set x [expr {$px - $w / 2}]
                 set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
                 if {$x < $c} { set x $c }
-                if {$x + $w2 > $dw - $m0 - $dp} { continue }
                 set rr [lindex $er $r]
+                set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
                 place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                 lset cur $r [expr {$x + $w2}]
                 set done 1; incr placed
