@@ -1,0 +1,41 @@
+{
+  "variant": "R8",
+  "remote_source_commit": "9da2e2a05dcf7ff718ec4a069f24822be0d21d8f",
+  "implementation_commits": [
+    "2298408bc",
+    "732b2a260"
+  ],
+  "original_tool": "OpenROAD26Q3-1510-g6cb3f2b704",
+  "canonical_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "first_placement_stage": "PASS",
+  "placement_elapsed_seconds": 85,
+  "IO_stage": "PASS",
+  "IO_elapsed_seconds": 2,
+  "route_terminal": false,
+  "actual_empty_core_removed": "GPL-0123 by existing Replace::doInitialPlace",
+  "algorithm_tuned": false,
+  "PLACE_DENSITY": 0.6,
+  "PLACE_DENSITY_LB_ADDON": "",
+  "movable": 248447,
+  "parent_members": 211245,
+  "engine_members": 37202,
+  "unassigned": 0,
+  "original_members_and_fence_bounds_checked_before_and_after": true,
+  "actual_weight_macro_instances": 4,
+  "retained_PDN_sha256": "89549f1d02a58150646919c65f62b8f42dd00fb3e9aff808efcffb5d102f52ba",
+  "mapped_netlist_sha256": "3b5b8fc95fb5b84b292f3a4bc598ce94baa050f29c7b228ee38bfb4640bd7a51",
+  "all_61_original_pins_unchanged": true,
+  "source_or_netlist_or_clock_modified": false,
+  "fake_cells_added": false,
+  "synthesis_repeated": false,
+  "smoke_replayed": false,
+  "tool_build_performed": false,
+  "SS60_FF25_qualified": false,
+  "full_field_missing_input_clocks": true,
+  "continuing_stage": "3_3_place_gp",
+  "evidence_sha256": {
+    "resume.receipt.json": "b44d61a354f794d7d31316a2ce82e53e637e947557c45160d62aa7cc1619a8ff",
+    "capacity.jsonl": "81f4d2e04a03eba7a7f6bb6bcb01c4f1cad615e1d20aced91aaf76ac1cd9783b",
+    "placement.log": "60c1272dbe44333542c4df91f6e353d2326f43585af613b1430589b2042c95fc"
+  }
+}
