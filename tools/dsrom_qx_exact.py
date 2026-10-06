@@ -40,7 +40,7 @@ RTL = ["rtl/v41rom/ot_v41_rom_elem_q_w10.sv", "rtl/v41rom/ot_v41_rom_elem_q_qp_w
        "rtl/v41rom/ot_v41_kreg.sv", "rtl/v41rom/ot_v41_chain3.sv"]
 RTL += [f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bterm", "ot_v41_chain", "ot_v41_segtree", "ot_v41_bf16_lanes",
         "ot_v41_fadd", "ot_v41_bmul2", "ot_v41_bterm2_w10", "ot_v41_chain2", "ot_v41_segtree2", "ot_v41_bf16_lanes2",
-        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_chain4", "ot_v41_fadd2")]
+        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_segtree6", "ot_v41_chain4", "ot_v41_fadd2")]
 RTL += [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += ["rtl/common/ot_prefix.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"]
 PASS = re.compile(r"PASS QP=(\d+) XS=(\d+) CAP=(\d+) P1=(\d+) L=(\d+) compared=(\d+) exempt=(\d+) seed=(\d+) cycles=(\d+) "
@@ -51,7 +51,8 @@ KEYS = ("QPIPE", "QP_XS", "QP_CAP", "QP_P1", "shift_L", "compared_cycles", "exem
         "gated_edges", "closed_cycles", "hits", "issues", "rows", "nonzero", "classes_mask", "wraps", "q_advances",
         "mtp_restarts", "rejected", "go_gate_closed", "go_mid_drain", "go_walking", "resets")
 CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
-BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"],
+BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"], "pos_qm2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=2"],
+          "neg_qm2z": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Z"], "neg_qm2q": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Q"],
           "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
           "neg_qxca": ["+define+QX_MUTANT_CA", "-GQX=8"], "neg_qxnca": ["+define+QX_MUTANT_NCA", "-GQX=8"],
@@ -146,7 +147,8 @@ def main() -> None:
                  ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_pd", 1), ("neg_dp10", 1)]
         # +nan_sparse (bench header): the QX = 10 lane-NaN partials (bterm4 NS) and their negative control on sparse NaNs
         jobs += [("pos", 1, ("+nan_sparse",)), ("neg_ns", 1, ("+nan_sparse",))]
-        jobs += [("neg_qmns", 1, ("+nan_sparse",)), ("neg_qmsh", 1)]      # QM lane (ot_v41_bterm5_w10) controls
+        jobs += [("neg_qmns", 1, ("+nan_sparse",)), ("neg_qmsh", 1)]
+        jobs += [("pos_qm2", s) for s in range(1, n + 1)] + [("pos_qm2", 7), ("neg_qm2z", 1), ("neg_qm2q", 1)]      # QM lane (ot_v41_bterm5_w10) controls
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:

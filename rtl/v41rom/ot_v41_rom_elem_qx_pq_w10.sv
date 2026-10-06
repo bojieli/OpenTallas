@@ -209,7 +209,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer PQ = 0,           // see the PQ header: 0 = the qx element
     parameter integer RT = 3,           // PQ: settle cycles after the replay
     parameter integer QW = 0,           // 1: lanes decode the weight codes before their P0 register (bterm4 WD)
-    parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles)
+    parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
+                                        // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -1927,7 +1928,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [TRW-1:0] t_tree;
     wire [2:0]     t_pos;
     wire [31:0] t_val;
-    if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
+    if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
+    // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
+        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
+        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
+    end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
     ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
