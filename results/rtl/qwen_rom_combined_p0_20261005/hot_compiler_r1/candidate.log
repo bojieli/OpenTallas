@@ -1,0 +1,29 @@
+images loaded in 3.7 s
+models constructed and preloaded in 11.0 s (tiles/die=1536, kv_ideal=0, pos=8191 token=24)
+P0_MINIMUM_SCOPE L0 TP4 P8191 cold no_next_prefetch full_token=0
+P0_NATIVE_EVAL tick=0 enabled=1 die_evals=20 coll_evals=5 reentries_skipped=1 die_ns=346876593 coll_ns=249522 fabric_comb_ns=232472 fabric_edge_ns=10682106 propagate_ns=1866722
+P0_FLOW tick=0 rank=0 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=0 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=0 rank=1 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=0 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=0 rank=2 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=0 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=0 rank=3 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=0 stall_retire=0 rsp_stall=0 kv_fault=0000
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=0s passes=5
+P0_NATIVE_EVAL tick=128 enabled=1 die_evals=2592 coll_evals=648 reentries_skipped=129 die_ns=26738925988 coll_ns=37950965 fabric_comb_ns=11796844 fabric_edge_ns=1634713631 propagate_ns=273536466
+P0_FLOW tick=128 rank=0 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=28 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=128 rank=1 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=28 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=128 rank=2 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=28 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=128 rank=3 layer=0 fill=0 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=28 stall_retire=0 rsp_stall=0 kv_fault=0000
+progress tick=128 cyc=129 pc_base=0/0 me_busy=117/117 kv_ok=0 drained=1 wall=32s passes=648
+P0_NATIVE_EVAL tick=256 enabled=1 die_evals=5472 coll_evals=1368 reentries_skipped=257 die_ns=53581985144 coll_ns=75013170 fabric_comb_ns=43277546 fabric_edge_ns=3443025163 propagate_ns=558951021
+P0_FLOW tick=256 rank=0 layer=0 fill=132 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=70 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=256 rank=1 layer=0 fill=132 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=70 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=256 rank=2 layer=0 fill=132 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=70 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=256 rank=3 layer=0 fill=132 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=70 stall_retire=0 rsp_stall=0 kv_fault=0000
+progress tick=256 cyc=257 pc_base=0/0 me_busy=245/245 kv_ok=0 drained=1 wall=64s passes=1368
+P0_NATIVE_EVAL tick=384 enabled=1 die_evals=8352 coll_evals=2088 reentries_skipped=385 die_ns=67050203882 coll_ns=115405792 fabric_comb_ns=77701377 fabric_edge_ns=5244534476 propagate_ns=875025453
+P0_FLOW tick=384 rank=0 layer=0 fill=644 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=140 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=384 rank=1 layer=0 fill=644 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=140 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=384 rank=2 layer=0 fill=644 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=140 stall_retire=0 rsp_stall=0 kv_fault=0000
+P0_FLOW tick=384 rank=3 layer=0 fill=644 writes=0 wrack_retired=0 wrack_debt=0 stall_kv=0 stall_mem=0 stall_bridge=140 stall_retire=0 rsp_stall=0 kv_fault=0000
+progress tick=384 cyc=385 pc_base=0/0 me_busy=258/258 kv_ok=0 drained=1 wall=82s passes=2088
+P0_NATIVE_NEGATIVE actual selector primary rail mutation tick=448
+P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=99.361458130 wall_per_core=0.193687053 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=78798725343 coll_ns=154618390 fabric_comb_ns=109203865 fabric_edge_ns=7069339965 propagate_ns=1186821353 full_token=0

@@ -232,6 +232,61 @@ struct Fabric {
     }
 };
 
+// ---- tile port recorder (default off: env RT_TILE_TRACE="i,j,..." [RT_TILE_TRACE_DIR]) --------------
+// For each listed tile of die 0, one record per fabric clock edge: the core cycle (u32), every tile input as
+// the tile sees it just before the rising edge, then every tile output just after it.  A tile-only replay
+// (rtl/test/qwen_rom_runtime/qwen_tile_replay.cpp) drives the same Verilated tile from these records, checks
+// the outputs bit-exact and dumps the tile's switching activity (sign-off power).  Nothing else changes.
+#define OT_TILE_INPUTS(X) X(rst_n) X(tile_id) X(ib_go) X(ib) X(xl) X(n_a) X(n_b) X(n_va) X(rom_rd) X(kvs_rd) X(kv_q)
+#define OT_TILE_OUTPUTS(X) X(t_out) X(t_vout) X(n_y) X(n_vy) X(fault) X(rom_ce) X(rom_addr) X(kvs_r_ce) X(kvs_r_addr) X(kv_re) X(kv_addr)
+struct TileRec {
+    std::vector<int> idx; std::vector<FILE*> fh;
+    void open(const std::string& dir) {
+        const char* s = getenv("RT_TILE_TRACE");
+        if (!s || !*s) return;
+        std::string d = getenv("RT_TILE_TRACE_DIR") ? getenv("RT_TILE_TRACE_DIR") : dir;
+        for (const char* p = s; *p;) {
+            int i = atoi(p);
+            if (i < 0 || i >= NT) fatal("RT_TILE_TRACE tile index", i);
+            idx.push_back(i);
+            char fn[64]; snprintf(fn, sizeof fn, "/tile%04d.rec", i);
+            FILE* f = fopen((d + fn).c_str(), "wb");
+            if (!f) fatal("RT_TILE_TRACE open");
+            uint32_t hdr[4] = {0x4f54524cu, 0, 0, 0};
+#define OT_SZ(n) hdr[1] += sizeof(((Vtile*)nullptr)->n);
+            OT_TILE_INPUTS(OT_SZ)
+#undef OT_SZ
+#define OT_SZ(n) hdr[2] += sizeof(((Vtile*)nullptr)->n);
+            OT_TILE_OUTPUTS(OT_SZ)
+#undef OT_SZ
+            hdr[3] = uint32_t(i);
+            fwrite(hdr, 4, 4, f);
+            fh.push_back(f);
+            while (*p && *p != ',') p++;
+            if (*p == ',') p++;
+        }
+        printf("RT_TILE_TRACE %zu tiles of die 0 -> %s\n", idx.size(), d.c_str());
+    }
+    void pre(Fabric& f, uint32_t cyc) {
+        for (size_t k = 0; k < idx.size(); k++) {
+            Vtile& x = *f.t[idx[k]];
+            fwrite(&cyc, 4, 1, fh[k]);
+#define OT_W(n) fwrite(&x.n, sizeof(x.n), 1, fh[k]);
+            OT_TILE_INPUTS(OT_W)
+#undef OT_W
+        }
+    }
+    void post(Fabric& f) {
+        for (size_t k = 0; k < idx.size(); k++) {
+            Vtile& x = *f.t[idx[k]];
+#define OT_W(n) fwrite(&x.n, sizeof(x.n), 1, fh[k]);
+            OT_TILE_OUTPUTS(OT_W)
+#undef OT_W
+        }
+    }
+    void close() { for (auto f : fh) fclose(f); fh.clear(); }
+};
+
 int main(int argc, char** argv) {
     if (argc < 5 || strcmp(argv[1], "--stages")) { fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --plan F [opts]\n", argv[0]); return 2; }
     const std::string dir = argv[3], preload = argv[4];
@@ -357,6 +412,8 @@ int main(int argc, char** argv) {
            int(std::count_if(fab[0]->hl.begin(), fab[0]->hl.end(), [](int v) { return v > 0; })));
     fflush(stdout);
 
+    TileRec trec;
+    trec.open(dir);
     auto wire_coll = [&]() -> bool {
         bool ch = false;
         uint8_t iv = 0, il = 0, im = 0;
@@ -476,12 +533,13 @@ int main(int argc, char** argv) {
                 fflush(stdout);
                 uint8_t hf = 0;
                 for (int d = 0; d < D; d++) hf |= (die[d]->hbm_fault | wst[d]->fault) << d;
-                if (sf || cf || lf || hf) { printf("TOKEN FAULT stage=%s hbm=%d\n", stages[cur].name.c_str(), int(hf)); return 1; }
+                if (sf || cf || lf || hf) { printf("TOKEN FAULT stage=%s hbm=%d\n", stages[cur].name.c_str(), int(hf)); trec.close(); return 1; }
                 if (cur + 1 == stages.size()) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
                     printf("QWEN_HBMACC_TOKEN PASS stages=%zu token=%u val=%08x die1_token=%u cycles=%u edges=%ld "
                            "settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d ctl_cycles=%ld preroll=%ld\n", stages.size(), die[0]->seq_ntok,
                            die[0]->seq_nval, die[D - 1]->seq_ntok, cyc, edges, max_settle, sec, ru.ru_maxrss, threads, ctl_cycles, preroll);
+                    trec.close();
                     return 0;
                 }
                 next_stage = true;
@@ -580,7 +638,9 @@ int main(int argc, char** argv) {
         coll.clk = 1;
         for (int d = 0; d < D; d++) die[d]->eval();
         coll.eval();
+        if (me_en[0] && !trec.idx.empty()) trec.pre(*fab[0], die[0]->cyc);
         for (int d = 0; d < D; d++) if (me_en[d]) fab[d]->edge();
+        if (me_en[0] && !trec.idx.empty()) trec.post(*fab[0]);
         edges++;
         // ---- commit writes and registered responses ---------------------------------------
         for (int d = 0; d < D; d++) {

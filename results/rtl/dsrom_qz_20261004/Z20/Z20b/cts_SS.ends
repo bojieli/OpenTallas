@@ -1,0 +1,11 @@
+max_delay/setup group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_e.g_mac[1].g_l3.u_l0.g_p1s.pa_sh[7][3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1335.14 1412.36  -77.22 (VIOLATED)
+u_e.g_mac[1].g_l3.u_l0.g_p1s.pa_sh[7][4]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1335.12 1404.47  -69.36 (VIOLATED)
+u_e.g_mac[1].g_l3.u_l0.g_p1s.pa_sh[7][2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1347.68 1399.29  -51.61 (VIOLATED)
+u_e.g_mac[1].g_l3.u_l0.g_p1s.pa_nang[0]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1341.82 1350.59   -8.76 (VIOLATED)
+u_e.g_mac[0].g_l3.u_l0.g_p1s.pa_sh[7][3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1343.01 1344.06   -1.06 (VIOLATED)
+

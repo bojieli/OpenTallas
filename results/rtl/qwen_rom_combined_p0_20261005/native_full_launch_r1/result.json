@@ -1,0 +1,33 @@
+{
+  "pid": 348585,
+  "time": 1791269084.2889855,
+  "source_commit": "c7a6265b8",
+  "retained_model": "b04e893e7",
+  "retained_top_sha256": "dca4fc6d5b12f3c80f7def3e0320dc5b0bf8dbad079df0dfc7c366d6ac66d4d6",
+  "full_host_sha256": "8e94008897ea20e354c4f323041b7671fb7bfc0104bcbfa75184106404ad652f",
+  "scope": "ONE final full36/head/P8191/TP4/144history/300byteoutputs finiteprotectedCDC/warm/ACK/drain smoke; onlyhostlink; no frontend/engine regeneration",
+  "original_runtimes_preserved": [
+    153089,
+    1959093
+  ],
+  "physical_qualified": false,
+  "status": "RUNNING_FINAL_NATIVE_FULL36_HEAD",
+  "simulator_pid": 349565,
+  "driver_link_exit": 0,
+  "root": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_c7a6265b8",
+  "selected": {
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1,
+    "real_KV": 1,
+    "position": 8191,
+    "ranks": 4,
+    "layers": 36,
+    "head": true
+  },
+  "native_exact_gate": "../native_host_trace_r1/result.json",
+  "full_token_pass": false,
+  "first_L0_numerical_pending": true,
+  "no_frontend_or_engine_rebuild": true,
+  "remaining_host_cost": "Measured prefix speedup1.1348, not a steady fulltoken ETA; dieeval remainsdominant; Descartes source-only disjoint hotspot inspection assigned"
+}

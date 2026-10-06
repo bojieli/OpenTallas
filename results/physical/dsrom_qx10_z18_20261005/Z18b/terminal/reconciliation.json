@@ -1,0 +1,341 @@
+{
+  "source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "geometry_um": [
+    510.84,
+    151.2
+  ],
+  "geometry_current": false,
+  "current_geometry_owner": "Claude QELEM taller Z20 / Claude S81-DIE slot-height generator",
+  "real_ROM_instances": 4,
+  "source_match_count": 27,
+  "launch_source_count": 29,
+  "route_source_rows": [
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+      "sha256": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+      "sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain3.sv",
+      "sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain4.sv",
+      "sha256": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd2.sv",
+      "sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm3_w10.sv",
+      "sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm4_w10.sv",
+      "sha256": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree3.sv",
+      "sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree4.sv",
+      "sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree5.sv",
+      "sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    }
+  ],
+  "exact": {
+    "source_match": true,
+    "scope": "Retained QX10 seed1 NRAND400+24 real-drain cases with7801 matched partials and neg_tree caught; minimum full-K field28 rows. Not whole-campaign exact qualification.",
+    "whole_campaign_qualified": false
+  },
+  "latency_reconciliation": {
+    "analytical_added_pipeline_stages": 0,
+    "measured_extra_last_and_idle_cycles_vs_QX9": 0,
+    "measured_phases": [
+      {
+        "phase": "L20.a_proj.fp8",
+        "region": 0,
+        "rows": 6,
+        "measured_last_cycles": 409,
+        "measured_idle_cycles": 410,
+        "additional_last_cycles_vs_qx9": 0,
+        "additional_idle_cycles_vs_qx9": 0,
+        "existing_s81_wire_cycles": 80,
+        "phase_region_last_cycles_with_wire": 489,
+        "phase_region_last_us_with_wire": 0.4075
+      },
+      {
+        "phase": "L20.exp158.gu",
+        "region": 0,
+        "rows": 12,
+        "measured_last_cycles": 398,
+        "measured_idle_cycles": 399,
+        "additional_last_cycles_vs_qx9": 0,
+        "additional_idle_cycles_vs_qx9": 0,
+        "existing_s81_wire_cycles": 80,
+        "phase_region_last_cycles_with_wire": 478,
+        "phase_region_last_us_with_wire": 0.3983333333333333
+      },
+      {
+        "phase": "L20.exp158.w2",
+        "region": 0,
+        "rows": 10,
+        "measured_last_cycles": 285,
+        "measured_idle_cycles": 286,
+        "additional_last_cycles_vs_qx9": 0,
+        "additional_idle_cycles_vs_qx9": 0,
+        "existing_s81_wire_cycles": 80,
+        "phase_region_last_cycles_with_wire": 365,
+        "phase_region_last_us_with_wire": 0.30416666666666664
+      }
+    ],
+    "consistent": true,
+    "basis": "All27 Z18b route RTL hashes equal the retained exact and full-K minimum field source. QX10 analytical0 added stages agrees measured0 extra last/idle cycles. This owner-cancelled old-frame route supplies no timing qualification or gain; existing wire terms remain historical pending taller-frame composition.",
+    "existing_wire_terms_historical": true,
+    "new_taller_frame_partition_requires_recomposition": true,
+    "whole_token_rate_repriced": false
+  },
+  "handoff": {
+    "qualified": false,
+    "blocked_by": [
+      "Owner-cancelled superseded old frame",
+      "No final source-matched contextual SS60/FF25 reports or routed SPEF"
+    ],
+    "full_field_missing_input_clocks": true
+  },
+  "linked_inputs": {
+    "results/rtl/dsrom_qx10_field_min_20261005/minimum_composition.json": "7a8ff9daf14b7b2c783a88f12a062260d620d0e1c6710cdba8044b43965e406d",
+    "results/physical/dsrom_qx10_z18_20261005/Z18d/terminal/reconciliation.json": "8bf8ce0108fa17debfc2c180c4012f3c651cb5c91fc52ad67a32692dbc61b9b9"
+  },
+  "schema": "opentallas.dsrom-qx10-z18b.terminal-source-reconciliation.v1",
+  "verdict": "CANCELLED_SUPERSEDED_UNQUALIFIED_NO_HANDOFF",
+  "all29_live_source_hashes_match_launch_and_owner_stop": true,
+  "terminal": {
+    "launch_rc": 1,
+    "ORFS_exit": 143,
+    "status": "CANCELLED_SUPERSEDED",
+    "stopped_by": "Kant",
+    "authority": "DIRECT USER soleKantcleanup oldtightframeSTOP; no namedcurrentconsumer; existingfinalZ18c/d failhistory+currenttallZ20 supersede",
+    "finished_utc": "2026-10-06T05:18:59Z",
+    "stage": "detail_route interrupted during53rd stubborn-tiles iteration",
+    "flow_completed": false,
+    "post_STA_completed": false
+  },
+  "last_DRT": {
+    "last_partial_iteration_violations": 24,
+    "last_partial_iteration_completion_percent": 60,
+    "last_completed_report_violations": 25,
+    "last_completed_report_classes": [
+      {
+        "kind": "CutSpcTbl",
+        "layer": "V4",
+        "count": 1
+      },
+      {
+        "kind": "EOL",
+        "layer": "M4",
+        "count": 2
+      },
+      {
+        "kind": "Metal Spacing",
+        "layer": "M3",
+        "count": 13
+      },
+      {
+        "kind": "Metal Spacing",
+        "layer": "M4",
+        "count": 1
+      },
+      {
+        "kind": "Short",
+        "layer": "M3",
+        "count": 2
+      },
+      {
+        "kind": "eolKeepOut",
+        "layer": "M4",
+        "count": 6
+      }
+    ],
+    "completed_terminal_DRC_verdict": false,
+    "partial_iteration_classes_not_reported": true
+  },
+  "final_context": {
+    "SS_setup_wns_ps": null,
+    "FF_hold_wns_ps": null,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "clock_period_ps": 833,
+    "final_reports_absent": true,
+    "intermediate_reports_are_not_signoff": true,
+    "top_level_driver_corner_metadata": "TT",
+    "requested_ORFS_corner": "WC"
+  },
+  "preservation": {
+    "recipes_changed": false,
+    "relaunches": 0,
+    "prior_failures_unchanged": true,
+    "all_remote_source_objects_logs_retained": true,
+    "retained_GRT_checkpoint": {
+      "path": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z18b/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18b_20261004/base/5_1_grt.odb",
+      "sha256": "fc30ec32a3bb4d6edff5d4a702dbf8173c825f19fb1207a08fbdce22c20a404e"
+    }
+  },
+  "files": {
+    "4_cts_final.rpt": "b922cf41d87d68ebf6190d89b90e5c1ae8c2eaa794496028e1912652b6a14c35",
+    "5_2_route.tmp.log": "9466f0992ffb7b5e63c0482beb6dba5ab6c446d92e7ce94896690701cd536892",
+    "5_global_route.rpt": "be63736946b83288d41d86502d299473499111ed49e77b92d416353a5d8acb7f",
+    "5_route_drc.rpt-10.rpt": "6cd3775f3b78a3a61a53a353bf1d88abe2042dc3a6fd56f097eaeb870e15c389",
+    "5_route_drc.rpt-15.rpt": "98a31dcbd741a1e5130aa6cadd8cde6ffee743c2fbeb18c814bf4824f40d38d4",
+    "5_route_drc.rpt-20.rpt": "3cfe564fb5a6eb1cbeb015458ba0a5f225d35c4f8003b373e317fbc39f5482e1",
+    "5_route_drc.rpt-25.rpt": "b1d86d03f5a49e498b3a51fec493610bfadd1c736f64e7ccb712176a26928cf3",
+    "5_route_drc.rpt-30.rpt": "f441846c84a7df54dd8eebdcd94b70199530d2a3a09c4666931e6de309705f3a",
+    "5_route_drc.rpt-35.rpt": "ff6eb5fe47f061b43a10dd8f23e02910f036cd5189358ed7988b976c265e7f79",
+    "5_route_drc.rpt-40.rpt": "6c09f3aaaf087192b78b9c435495f911adae9e3cb9e409df27b75a63f3b19429",
+    "5_route_drc.rpt-45.rpt": "4fa85d9302e89ff87dc408d689ee547ecc96e8816d166bf50f7566c50b328f0d",
+    "5_route_drc.rpt-5.rpt": "5724e4608e16d96511904d29ab7f6febee9091386d14134aa95aefef04fd49e8",
+    "5_route_drc.rpt-50.rpt": "02838f5cb08d22c1772636c4d2a0eb73bd1583f4ffff6d3037e788a342c5488b",
+    "config.mk": "d3f0c71878d7f953a2566c56b11b4da62d3ebf7881d38d50f461011bc53c3142",
+    "constraint.sdc": "d3bffafc2b420f07d5e236cfba5cd16b2bc4677608578f579d3b79d380cca01f",
+    "launch.done": "65353fba5d7b5049b65c04e36f87212693af738be7d344a864ae462b3fb59183",
+    "launch.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "macro_gate.json": "87685bf1327b60026a6b1faccb5c81bfb2986b1fd92e11fee900561c769b6182",
+    "owner_before.json": "74e6dda59ffdabc36e48ba999f257802eb508d210c420ea351d6d43759bd620c",
+    "owner_stop.json": "8c40458f615c98193228a90977159698c24f3fe5e6c23cec41463145fdeffde1",
+    "owner_terminal_receipt.json": "e03b28420df8e7362a846ae11ba4e843b8091deda6f2f5ac6061aab4615d6d12",
+    "physical.json": "f4508ca9c1f42d9893b693f32a8937aff186d9e24fb685e0f3fc658c26b700a2",
+    "receipt.json": "398cefd6c14d5f459c0ead330cfd4cb98bdee8cc609b29692d4d3b017e6e1614",
+    "retained_checkpoints.json": "997fec49ffa97bb2a8d608604808e43915d8e9555d59d8afc38f3243a475a91e",
+    "terminal_presence.json": "6e0ad514f396930070d40943dcbac383ad4ef29218bbabb918b2ce0950aab7ca"
+  }
+}
