@@ -13,7 +13,7 @@
 // Prints REDC12 N=.. cycles=.. events=.. mismatches=.. and exits nonzero ($fatal) on any mismatch.
 module tb_hdc_v41x_vec_red_c12 #(
     parameter integer N = 64, parameter integer LV = 6, parameter integer MLAT = 6, parameter integer ALAT = 6,
-    parameter integer RPAD = 1, parameter integer RSL = 1, parameter integer RTAP = 1, parameter integer ROUT = 0, parameter integer SL = 64
+    parameter integer RPAD = 1, parameter integer RSL = 1, parameter integer RTAP = 1, parameter integer ROUT = 0, parameter integer ROGS = 4, parameter integer SL = 64
 ) (input wire clk);
     localparam integer AW = 24, MW = 9, NC = N / 8, D = RPAD + RSL + RTAP + ROUT;
     localparam integer OW = NC + NC * AW + NC * 32 + MW + 1;
@@ -74,7 +74,7 @@ module tb_hdc_v41x_vec_red_c12 #(
         .meta_in(meta_in), .o_we(r_we), .o_addr(r_addr), .o_data(r_data), .o_meta(r_meta), .o_ev(r_ev),
         .busy(r_busy), .fault(r_f));
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                          .RTAP(RTAP), .ROUT(ROUT), .SL(SL)) u_dut (.clk(clk), .rst_n(rst_n),
+                          .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(SL)) u_dut (.clk(clk), .rst_n(rst_n),
         .v_in(v_in), .x_in(x_in), .live_in(live_in), .mx_in(mx_in), .sq_in(sq_in), .lt_in(lt_in), .span_in(span_in),
         .l_in(l_in), .last_in(last_in), .nres_in(nres_in), .rnd_in(rnd_in), .rbase_in(rbase_in), .rsh_in(rsh_in),
         .meta_in(meta_in), .o_we(d_we), .o_addr(d_addr), .o_data(d_data), .o_meta(d_meta), .o_ev(d_ev),

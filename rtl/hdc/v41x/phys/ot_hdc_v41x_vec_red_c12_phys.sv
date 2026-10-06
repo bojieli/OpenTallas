@@ -56,3 +56,61 @@ module ot_hdc_v41x_vred_top1024_c12 (
     ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(6), .RPAD(1), .RSL(2), .RTAP(1),
                            .ROUT(1), .SL(64)) u (.*);
 endmodule
+
+// the same top with one ROUT bundle copy per 2 slot(s) (ROGS 2): the OUT select fanout of each copy is 2/4 of the above
+module ot_hdc_v41x_vred_top1024_c12_g2 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire          mx_in,
+    input  wire [3:0]    lt_in,
+    input  wire          span_in,
+    input  wire [2:0]    l_in,
+    input  wire          last_in,
+    input  wire [7:0]    nres_in,
+    input  wire          rnd_in,
+    input  wire [23:0]   rbase_in,
+    input  wire [4:0]    rsh_in,
+    input  wire [8:0]    meta_in,
+    input  wire [7679:0] lv_in,
+    input  wire [15:0]   sfault_in,
+    output wire [127:0]  o_we,
+    output wire [3071:0] o_addr,
+    output wire [4095:0] o_data,
+    output wire [8:0]    o_meta,
+    output wire          o_ev,
+    output wire          busy,
+    output wire          fault
+);
+    ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(6), .RPAD(1), .RSL(2), .RTAP(1),
+                           .ROUT(1), .ROGS(2), .SL(64)) u (.*);
+endmodule
+
+// the same top with one ROUT bundle copy per 1 slot(s) (ROGS 1): the OUT select fanout of each copy is 1/4 of the above
+module ot_hdc_v41x_vred_top1024_c12_g1 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire          mx_in,
+    input  wire [3:0]    lt_in,
+    input  wire          span_in,
+    input  wire [2:0]    l_in,
+    input  wire          last_in,
+    input  wire [7:0]    nres_in,
+    input  wire          rnd_in,
+    input  wire [23:0]   rbase_in,
+    input  wire [4:0]    rsh_in,
+    input  wire [8:0]    meta_in,
+    input  wire [7679:0] lv_in,
+    input  wire [15:0]   sfault_in,
+    output wire [127:0]  o_we,
+    output wire [3071:0] o_addr,
+    output wire [4095:0] o_data,
+    output wire [8:0]    o_meta,
+    output wire          o_ev,
+    output wire          busy,
+    output wire          fault
+);
+    ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(6), .RPAD(1), .RSL(2), .RTAP(1),
+                           .ROUT(1), .ROGS(1), .SL(64)) u (.*);
+endmodule
