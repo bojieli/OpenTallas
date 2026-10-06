@@ -14,11 +14,29 @@ import subprocess
 import dshbm_expert_interleave_native as I
 import dshbm_w2_pair_seq as P
 import hbm_accel_activation_layout as X
+import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 TOP='tb_hbm_integrated_expert_pq'
 SRC=list(dict.fromkeys([s for s in P.SRC if not s.startswith('rtl/test/')]+I.NEW+[
  'rtl/test/hbm_accel/integrated_20261006/'+TOP+'.sv']))
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def prepare_arithmetic(out, weights, inputs, layer, die=2, stack=0):
+ """Golden only the 72 released GU rows consumed by this minimum component."""
+ ids=tuple(map(int,np.fromfile(inputs/f'L{layer}/expert_ids.u32',dtype='<u4')))
+ x=I.G.from_bits(np.fromfile(inputs/f'L{layer}/ffn_norm.u32',dtype='<u4'))
+ reader=I.exported_weight_reader(weights/f'L{layer}',layer,ids)
+ out.mkdir(parents=True,exist_ok=False);gu=[];expected=[];gold=[];xw=None
+ for e in ids:
+  p,sc=I.paired_rows(reader,e,die,stack);raw=I.compact_stream(p,sc);g=I.sm_vectors(p,sc,x)
+  if I.expand_stream(raw)!=tuple(g['lines']):raise ValueError('service/numerical byte order')
+  gu.extend(int.from_bytes(raw[i:i+128],'little') for i in range(0,len(raw),128))
+  expected.extend(g['lines']);gold.extend(int(I.G.bits(v)) for v in g['gold'][0]);xw=g['xw']
+ for name,data,width in [('gu.hex',gu,256),('sm_expected.hex',expected,272),('gold.hex',gold,8),('x.hex',xw,6816)]:
+  (out/name).write_text(''.join(f'{v:0{width}x}\n' for v in data))
+ (out/'input_origin.json').write_text(json.dumps(dict(layer=layer,die=die,stack=stack,ids=ids,
+  source_weights=sha(weights/f'L{layer}/source.json'),source_activation=sha(inputs/f'L{layer}/ffn_norm.u32'),
+  scope='72-row reference arithmetic; no model inference'),indent=2)+'\n')
+ return ids
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--out',type=Path,required=True);p.add_argument('--service',type=Path,required=True)
