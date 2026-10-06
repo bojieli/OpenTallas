@@ -1,0 +1,28 @@
+{
+  "status": "ACTUAL_DISTINCT_RANK_SOURCE_PREPARED_NOT_RUNTIME_QUALIFIED",
+  "ranks": [
+    1,
+    31
+  ],
+  "keys_each": 10928,
+  "rank31_newest_global_block": 131071,
+  "saved_allrank_gold_matches_retained_rank0_premask": true,
+  "allrank_gold_sha256": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+  "runtime_source_pins_match_29a9": true,
+  "model": "results/uarch/hbm_index_path_20261005/model.json",
+  "native_geometry": {
+    "NS": 16,
+    "NK": 4,
+    "IH": 32,
+    "head_dim": 128,
+    "Q": 4,
+    "W": 16
+  },
+  "added_DUT_stages": 0,
+  "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+  "candidate_mask_applied": false,
+  "new_engine_RTL": false,
+  "P_and_R_launched": false,
+  "full_index_qualified": false,
+  "SS_FF_closed": false
+}
