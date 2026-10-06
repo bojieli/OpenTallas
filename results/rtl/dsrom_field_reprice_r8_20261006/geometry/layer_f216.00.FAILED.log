@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_field_reprice_r8.py", line 335, in <module>
+    sys.exit(dict(geometry=cmd_geometry, regions=cmd_regions, check=cmd_check)[a.cmd](a))
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_field_reprice_r8.py", line 96, in cmd_geometry
+    m = S.build()
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 301, in build
+    return build_r8(variant)
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 2677, in build_r8
+    buses_r8(m)
+    ~~~~~~~~^^^
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 2979, in buses_r8
+    _svc_chains(m, CH8, P, cor, end_spec, hub_block)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 3268, in _svc_chains
+    single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 3211, in single
+    sts = CH8.run(name, [lw], _dedup(path), allc, src_xy)
+  File "/srv/opentallas-scratch2/scratch/claude/ds-reprice/src/tools/dsrom_s81_fulldie.py", line 2412, in run
+    raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
+RuntimeError: chain coSW: no station spot near s=5275 of 28434 (15409, 3571)

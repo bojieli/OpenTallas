@@ -1,0 +1,34 @@
+{
+ "ss": {
+  "endpoints": 216,
+  "groups": [
+   {
+    "cls": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 216,
+    "worst_ps": -13.6
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].u_rom/rd_out[*]",
+    "end": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 216,
+    "worst_ps": -13.6,
+    "example": "g_col[0].g_bank[2].u_rom/rd_out[96] -> g_col[0].g_bank[2].cap4[96]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 0,
+  "groups": [],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/QN",
+    "end": "g_col[*].g_bank[*].u_rom/addr_in[*]",
+    "n": 2,
+    "worst_ps": -4.0,
+    "example": "g_col[0].g_bank[3].u_r3/a_q[6]$_DFF_P_/QN -> g_col[0].g_bank[3].u_rom/addr_in[6]"
+   }
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+
+-- Running command `read_verilog -lib -sv /tmp/codex-kc8-hierarchical-source-r1/interface_only.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+hierarchy -check -top ot_dsrom_reindex_hierarchical_parent -chparam ENABLE 1
+proc
+opt_clean
+check -assert
+write_json /tmp/codex-kc8-hierarchical-source-r1/interface.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/codex-kc8-hierarchical-source-r1/interface_only.sv
+/tmp/codex-kc8-hierarchical-source-r1/interface_only.sv:1: ERROR: syntax error, unexpected TOK_REG, expecting TOK_ID or TOK_INTEGER or TOK_SIGNED or '['

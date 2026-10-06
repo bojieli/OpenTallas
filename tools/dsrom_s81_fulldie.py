@@ -48,7 +48,15 @@ DECISION = 'results/uarch/dsrom_c_recheck_20261004/model.json'
 # OT_S81_Q_LEF (default unset = the R_cap0 abstract below): an alternative routed q abstract for the die-level
 # pin-access check of a successor element (e.g. the QX q-element), same port names, height <= the 157.68 frame.
 Q_LEF = os.environ.get('OT_S81_Q_LEF', 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz')
-CFG_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
+CFG_LEF_V1 = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
+CFG_LEF_V2 = 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef'
+CFG_LEF = CFG_LEF_V1
+HEAD_BUNDLES = 0
+HEAD_A_LEF = 'results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz'
+HEAD_B_LEF = 'results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz'
+HEAD_ELEM_W = dict(A=0.19837, B=0.185753)     # W, reproduced routes (physcost/abstracts/provenance.json)
+MESO_V7 = 'results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json'   # closed slot (ROM inventory note 3)
+MESO_V7_UM2 = 4842.0                          # per W512 D4 slot, results/uarch/meso_fifo_20261004/verdict.json
 FIXED = 'results/uarch/dsrom_c_w4_20261003/inputs/fixed.json'
 CONTRACT = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/physical_contract.json'
 PHY_LEF = 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef'
@@ -68,21 +76,42 @@ HEAD_REC = 'results/uarch/dsrom_l2_head_mac_20261004/model.json'
 NVX_UM2 = 115775.5            # NV5 batched-draft-head delta per lm-head pair, placed (HEAD_REC variants NV=5)
 NV_BITS = 4 * 266             # the four extra x vectors handed from the pair to its NV extension
 DIE_KIND = 'layer'
+GEN = 'r7'          # 'r7': the 21fcf6469 floorplan/netlist (default, reproducible); 'r8': the wired die (S81-DIE, below)
 
 
-def configure(die):
+def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND
-    DIE_KIND = die
-    if die == 'layer':
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES
+    DIE_KIND, GEN = die, gen
+    # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
+    CFG_LEF = CFG_LEF_V2 if gen == 'r8' else CFG_LEF_V1
+    REAL_FILES.clear()
+    HEAD_BUNDLES = 0
+    if die in ('layer', 'layer1'):
         PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
     else:
         h = json.loads((ROOT / HEAD_REC).read_text())
         v = next(x for x in h['variants'] if x['NV'] == 5)['head_groups']['12']
         PAIRS, NV_PAIRS = math.ceil(v['content_pairs_per_die']), math.ceil(v['lm_head_pairs_per_die'])
         BF_PAIRS = round((PAIRS - NV_PAIRS) * 519 / 2417)
+        if gen == 'r8':
+            # recovery lever head.json (ADOPT, closed r4_A/r4_B): the lm-head pairs (bf + NV5 nvx + cfg) are replaced
+            # by ot_dsrom_head_bundle units (4 A + 1 B ot_dsrom_head_elem, 128 vocabulary rows each): 129,280 rows /
+            # 128 = 1,010 bundles over the 12 head dies (ROM inventory note 1)
+            PAIRS, NV_PAIRS = PAIRS - NV_PAIRS, 0
+            HEAD_BUNDLES = math.ceil(129280 / 128 / 12)
+
+
+def set_pairs(n):
+    """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
+    global PAIRS, BF_PAIRS, NV_PAIRS
+    if DIE_KIND == 'layer':
+        PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
+    else:
+        NV_PAIRS = round(NV_PAIRS * n / PAIRS)
+        PAIRS, BF_PAIRS = n, round((n - NV_PAIRS) * 519 / 2417)
 
 
 def nv_sites():
@@ -201,6 +230,8 @@ def _bus(base, n):
 
 def real_ports():
     """master -> port -> ordered real pin names (the netlist binds port bit i to the i-th name)."""
+    if GEN == 'r8':
+        return real_ports_r8()
     qp = dict(
         xi=_bus('xs_q0', 256) + _bus('xs_e0', 10),
         k=_bus('xs_b', 3) + _bus('xs_p', 8) + _bus('xs_pos', 3) + _bus('xs_sv', 2) + ['xs_v', 'clk', 'go', 'rst_n'],
@@ -225,7 +256,7 @@ REAL_FILES = {}
 def _init_real():
     if REAL_FILES:
         return
-    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF):
+    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF) + ((HEAD_A_LEF, HEAD_B_LEF) if HEAD_BUNDLES else ()):
         REAL_FILES[real_lef(rel)['name']] = rel
 
 
@@ -266,6 +297,8 @@ def return_tree(leaves):
 
 # ------------------------------------------------------------------------------------------------ build
 def build(variant=None):
+    if GEN == 'r8':
+        return build_r8(variant)
     variant = variant or {}
     W, H = DIE
     insts, regions, notes = [], [], []
@@ -775,6 +808,8 @@ def _real_master_bundled(rel, k, ports):
 
 def masters(m, k=1):
     """Generated abstracts (and, for k > 1, bundled views of the real LEFs)."""
+    if m['variant'].get('gen') == 'r8':
+        return masters_r8(m, k)
     M = {}
 
     def mk(name, w, h, obs, note):
@@ -909,6 +944,8 @@ def port_widths(m, k):
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         for inst, port in eps:
+            if inst == 'TOP':
+                continue
             key = (by[inst].master, port)
             w[key] = max(w.get(key, 0), n)
     return w
@@ -988,14 +1025,20 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     rp = real_ports() if k == 1 else {}
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
-    V = [f'// tools/dsrom_s81_fulldie.py: die-level nets only (k = {k})', f'module {top} ();']
+    tops = [b for b in m['buses'] if b[1] == 'top_in']        # r8: die top input ports (refclk, por_n)
+    V = [f'// tools/dsrom_s81_fulldie.py: die-level nets only (k = {k})',
+         f'module {top} (' + ', '.join(b[0] for b in tops) + ');']
+    V += [f'  input {b[0]};' for b in tops]
     for bid, cls, bits, eps in m['buses']:
         if cls in skip:
             continue
         n = bits if k == 1 else max(1, math.ceil(bits / k))
-        net = f'n_{bid}'
-        V.append(f'  wire [{n - 1}:0] {net};')
+        net = bid if cls == 'top_in' else f'n_{bid}'
+        if cls != 'top_in':
+            V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             if mst in rp and port in rp[mst]:
                 names = rp[mst][port][:n]
@@ -1051,6 +1094,10 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
+    if GEN == 'r8' and it.kind in ('stn', 'hend', 'hb_elem', 'hbglue'):
+        return it.power_w
+    if GEN == 'r8' and it.kind in POWER8:
+        return POWER8[it.kind][0]
     if it.kind in POWER:
         return POWER[it.kind][0]
     key = it.name if it.name in DENS else it.kind
@@ -1128,7 +1175,7 @@ def write_def_floorplan(m, path):
 def svg(m, path, scale=0.03):
     W, H = DIE
     s = scale
-    col = dict(q='#9ecae1', bf='#3182bd', cfg='#deebf7', node='#fd8d3c', fifo_blk='#e6550d', waypoint='#08519c',
+    col = dict(stn='#08306b', sstn='#6baed6', seq='#bcbddc', cfifo='#e6550d', hend='#a63603', rstg='#fd8d3c', q='#9ecae1', bf='#3182bd', cfg='#deebf7', node='#fd8d3c', fifo_blk='#e6550d', waypoint='#08519c',
                hub_fifo='#a63603', hub='#74c476', phy='#756bb1', ctrl='#9e9ac8', svc='#fdd0a2', band_blk='#c7e9c0',
                link='#fee391')
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W * s:.0f}" height="{H * s:.0f}" viewBox="0 0 {W * s:.1f} {H * s:.1f}">',
@@ -1227,6 +1274,17 @@ def trunk_stages(m):
     return out
 
 
+def top_pins(m, k=1):
+    """r8: die top input ports (refclk, por_n) on the W die edge at the collective's (PLL) height"""
+    tops = [b[0] for b in m['buses'] if b[1] == 'top_in']
+    if not tops:
+        return ''
+    y0 = dn(m['hub']['collective'].y + m['hub']['collective'].h / 2, GY)
+    return '\n'.join(f'place_pin -pin_name {p} -layer M4 -location {{0.5 {y0 + 4.32 * i:.3f}}} '
+                     f'-pin_size {{{1.0 * k:.3f} {max(0.072, 0.024 * k):.3f}}} '
+                     f'-force_to_die_boundary' for i, p in enumerate(tops))
+
+
 # ------------------------------------------------------------------------------------------------ case (a): real
 def case_real(m, work):
     work.mkdir(parents=True, exist_ok=True)
@@ -1234,7 +1292,10 @@ def case_real(m, work):
     _init_real()
     import gzip
     (work / 'q_elem.lef').write_text(_lef_text(Q_LEF))
-    for rel, nm in ((CFG_LEF, 'cfg.lef'), (PHY_LEF, 'phy.lef'), (SERDES_LEF, 'serdes.lef'), (UCIE_LEF, 'ucie.lef')):
+    for rel, nm in ((CFG_LEF, 'cfg.lef'), (PHY_LEF, 'phy.lef'), (SERDES_LEF, 'serdes.lef'), (UCIE_LEF, 'ucie.lef'),
+                    (HEAD_A_LEF, 'head_a.lef'), (HEAD_B_LEF, 'head_b.lef')):
+        if rel in (HEAD_A_LEF, HEAD_B_LEF) and not HEAD_BUNDLES:
+            continue
         (work / nm).write_text(_lef_text(rel))
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
     write_netlist(m, 1, work / 'die.v')
@@ -1258,7 +1319,7 @@ proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag [expr {{$r/1024}}] MB [clock seconds]" }}
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
-foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef elements.lef}} {{ read_lef /work/$f }}
+foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef {'head_a.lef head_b.lef ' if HEAD_BUNDLES else ''}elements.lef}} {{ read_lef /work/$f }}
 read_verilog /work/die.v
 link_design dsfd_die
 mem linked
@@ -1267,6 +1328,7 @@ source {PLAT}/openRoad/make_tracks.tcl
 set ::env(MAKE_TRACKS) {PLAT}/openRoad/make_tracks.tcl
 source /work/snap.tcl
 mem floorplan
+{top_pins(m)}
 set t0 [clock seconds]
 source /work/place.tcl
 puts "OT_TIME place_s=[expr {{[clock seconds]-$t0}}]"
@@ -1325,7 +1387,7 @@ def case_grt(m, work, k, tag, iters, cov, empty=False):
     (work / 'tech.lef').write_text(VD.bundled_tech_lef(k))
     mm = dict(m)
     if empty:      # one short local bus only: GRT builds no GCell grid without a net
-        mm['buses'] = [next(b_ for b_ in m['buses'] if b_[1] == 'cfg_ctl')]
+        mm['buses'] = [next(b_ for b_ in m['buses'] if b_[1] in ('cfg_ctl', 'rom_ce'))]
     write_netlist(mm, k, work / 'die.v')
     W, H = DIE
     tracks = [f'make_tracks {n} -x_offset {off * k:.3f} -x_pitch {p * k:.3f} -y_offset {off * k:.3f} -y_pitch {p * k:.3f}'
@@ -1356,6 +1418,7 @@ read_verilog /work/die.v
 link_design dsfd_die
 initialize_floorplan -die_area {{0 0 {W:.3f} {H:.3f}}} -core_area {{0 0 {W:.3f} {H:.3f}}} -site bsite
 {chr(10).join(tracks)}
+{top_pins(mm, k)}
 {chr(10).join(place)}
 mem placed
 {chr(10).join(adj)}
@@ -1414,10 +1477,11 @@ COV = dict(field=0.0439, hub=0.025, svc=0.1639, channel=0.0439)    # per-net M8/
 def windows(m):
     g = m['geo']
     f = m['frames']
+    cp, cw_ = g.get('col_pitch', COL_PITCH), g.get('col_w', COL_W)
     # field: W half, tier 2, columns 3..5 (one clock region) with its channel and the next region's edge
     xa = g['col_x']('W', 5) - 300.0
     w = {
-        'field': (xa, g['ch_y'][2] - 100.0, xa + 3 * COL_PITCH + 600.0, g['tier_y'][2] + 2700.0),
+        'field': (xa, g['ch_y'][2] - 100.0, xa + 3 * cp + 600.0, g['tier_y'][2] + 2700.0),
         'field_bf': None,
         'spine': (g['x_sp'] - 400.0, m['mid'] - 1400.0, g['x_fe'] + 400.0, m['mid'] + 1400.0),
         'band_s': (m['svcs']['SW'].x + 2500.0, 0.0, m['svcs']['SW'].x + 5500.0, m['svcs']['SW'].y + SVC_D + 900.0),
@@ -1425,11 +1489,15 @@ def windows(m):
     # the frame with the most BF pairs
     rb = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'BF'))
     fr = f[rb]
-    w['field_bf'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + COL_W + 1000.0, fr['y'] + 2600.0)
+    w['field_bf'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + cw_ + 1000.0, fr['y'] + 2600.0)
+    hbf = [r for r in f if f[r].get('bundles')]
+    if hbf:
+        fr = f[hbf[len(hbf) // 2]]
+        w['field_hb'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + cw_ + 1000.0, fr['y'] + 2600.0)
     if NV_PAIRS:
         rn = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'NV'))
         fr = f[rn]
-        w['field_nv'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + COL_W + 1000.0, fr['y'] + 2600.0)
+        w['field_nv'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + cw_ + 1000.0, fr['y'] + 2600.0)
     return {k: tuple(round(v, 3) for v in r) for k, r in w.items()}
 
 
@@ -1961,6 +2029,1814 @@ def where(m, x, y):
     return 'other'
 
 
+# ================================================================================================ r8: the wired die
+# CLAUDE S81-DIE (2026-10-06).  The r7 netlist (21fcf6469) was physically feasible but NOT wired (CLAUDE DIE-LINT,
+# results/rtl/die_top_lint_20261006/findings.json S1-S17, TF1-TF7).  `--gen r8` builds the same die (same element
+# masters, ROMs, PHYs, links, slabs, pair/BF/NV split, ragged return tree) with every die-level connection bound to a
+# real port, and the forwarded links / clock-region crossings instantiated from their RTL:
+#   x path      q-element x is two INPUT lanes (xs_q0 S face, xs_q1 N face): one 564-b lane stream per column
+#               {x0 = q0,e0,ctl 283 | x1 = q1,e1 266 | cc = go,cfg_go,cfg_ph[10],cfg_np[3] 15} from the column's entry
+#               meso FIFO (dsfd_cfifo, ot_meso_fifo W564) up a slot-station chain (dsfd_sstn_*, one registered stage per
+#               slot, in the slot's cfg band); station k drives slot k's S-face pins; station k+1 re-buffers slot k's
+#               q1/e1 to its N-face pins (qt) so both lanes arrive in the same cycle (S2, S6, S15a).
+#   cfg         one ot_s81_cfg7_seq per pair (real RTL, exact gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv): shared
+#               12-b row address, one ce per ROM, 7 x 48-b payload, registered bank select; drives the element cfg
+#               port and gates go (S3a, S3b); the 7 cfg ROMs are mirrored (MY) so their pins face the sequencer (S15b).
+#   return      leaf = the q lane's 63 b {pv, pval, prow, pseg, pnseg, perr, ppos}; every node is a generated wrapper
+#               dsfd_node_<a><b>[f] of the REAL ot_v41_retn_w17w10 that packs a leaf exactly as ot_v41_field_w17w10
+#               ({ppos, prow, pseg, 3'd0, pnseg}), with clk / rst_n from the column root and a registered fault chain
+#               (S4a, S4b, S5); root -> column FIFO through dsfd_rstg register stages in a strip sub-column.
+#   clocks      top ports refclk / por_n -> collective PLL / reset controller -> ONE net per domain (stream, serial,
+#               hbm; TF1/S1) and per-domain reset nets (S8); each column FIFO is its column's clock/reset root (option C
+#               region root): one column clock + reset net to every pair, ROM, sequencer, station, node (S6, S7).
+#   forwarded   every die-level link is a chain of dsfd_stn_* stations, ONE ot_fwd_link_stage (W <= 512 slices) per
+#               station, spaced <= 430.56 um, each lane with its own forwarded clock; bidirectional trunks split into
+#               one chain per direction (S12b, S13); multi-lane return trunks carry one lane per column.
+#   crossings   entry meso FIFO per column (dsfd_cfifo); hub-side end blocks: meso (lane -> local stream), ratio CDC
+#               (lane -> serial VM) and start blocks (serial VM -> lane), all ot_meso_fifo / ot_ratio_cdc_fifo (S12a).
+#   outputs     HC slab returns t_vm (S9, HC split around a crossing corridor at the VM's y so E-half chains cross
+#               the spine column through stations); NV5 extension returns nvr to its pair (S10).
+#   floorplan   TIER_COLS 9/11/12/12/11/9 (64 frames per half, unchanged) frees 2,288 um: a 259.2 um channel between
+#               the spine and field column 0 on both halves (S14) that is the vertical corridor of the W/E chains, and
+#               a 47.52 um return-stage sub-column per frame.
+# Owner-block interfaces (VM, SU, HC, gather, capture, collective, selector, collector, scan service, controller, BF,
+# NV5) stay placeholders with the port lists below; FINDINGS in results/rtl/dsrom_s81_fulldie_20261004/r8/.
+TIER_COLS8 = (10, 11, 11, 11, 11, 10)
+SPF = 518.4                         # spine <-> field column 0 channel (S14; 259.2 overflowed: W chains + VM pins)
+RSC_W = 47.52                       # return-stage sub-column of the node strip
+COL_W8 = 2 * LANE_W + NS_W + RSC_W  # 1,182.816
+COL_PITCH8 = COL_W8 + 8.64
+HC_CORR = 1209.6                    # HC split: E-half crossing corridor at the VM's y (604.8: GRT overflow, see r8 README)
+VCH8 = 1209.6                       # r8 VCH (604.8 in r7; the r8 forwarded chains + hub CDC blocks overflowed it)
+SPINE_W8 = SPINE_W + VCH8 - VCH
+X0B, X1B, CCB = 283, 266, 15        # lane stream: x0 (q0 e0 + 17 ctl) | x1 (q1 e1) | cc (go cfg_go cfg_ph cfg_np)
+LSW = X0B + X1B + CCB               # 564
+LEAF, NODEB, STB = 63, 66, 2
+CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
+STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
+SEQ_WH = (34.56, 60.48)
+STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',))
+HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
+HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
+HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
+HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)
+SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spread at 3 tracks (r8 GRT: a 52 um station
+                                    # piled the slot-to-slot stream into one M7 column over the element row)
+CF_WH = (850.176, 47.52)
+RSTG_WH = (38.88, 34.56)
+NVR = RET                           # NV5 draft-head result word back into its lm-head pair
+SEQ_XL, SSTN_X, R_CFGX = 326.16, 365.04, 37.152
+CF_X = 328.32                       # column FIFO x in the frame
+GLUE_RTL = 'results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv'
+# Slot parameterisation (owner decision 2026-10-06: taller q-element slot, fewer elements per die, 55-60 % cell
+# utilisation).  ELEM_FRAME_H = the element frame height in its slot (157.68 today: q / BF outline + halo); the slot is
+# the cfg band (ELEM_DY) + the element frame + 4.32; SLOTS8 = the slots per column that fit the field height between
+# the bands with a >= FIELD_MARGIN gap each side; PAIRS = pairs (elements) per die (configure(pairs=...)).
+ELEM_FRAME_H = 157.68
+FIELD_MARGIN = 216.0
+SLOT_H8, SLOTS8 = SLOT_H, SLOTS
+
+
+def slot_geometry(elem_frame_h=None, field_margin=None):
+    global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN
+    if elem_frame_h:
+        ELEM_FRAME_H = float(elem_frame_h)
+    if field_margin is not None:
+        FIELD_MARGIN = float(field_margin)
+    SLOT_H8 = round(up(ELEM_DY + ELEM_FRAME_H + 4.32, GY), 3)
+    band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
+    avail = DIE[1] - 2 * band - 2 * FIELD_MARGIN - (TIERS + 1) * CH
+    SLOTS8 = int(avail // (TIERS * SLOT_H8))
+    return SLOT_H8, SLOTS8
+
+
+def set_globals_pairs(p, b, n):
+    global PAIRS, BF_PAIRS, NV_PAIRS
+    PAIRS, BF_PAIRS, NV_PAIRS = p, b, n
+
+
+def _frames_fit(slots, slot_h):
+    """the r8 field packing (as build_r8) of the current PAIRS / BF / NV sets fits `slots` per column"""
+    rng, hbf = frame_plan_r8()
+    bfs, nvs = bf_sites(), nv_sites()
+    for r in range(ROOTS):
+        lo, hi = rng[r]
+        slot, half_open, n = -1, None, hi - lo
+        for p in range(lo, hi):
+            if p in nvs:
+                slot += 2
+            elif p in bfs:
+                slot += 1
+            elif half_open is not None:
+                half_open = None
+            else:
+                slot += 1
+                half_open = slot
+        if slot >= slots or 2 * n - 1 > int(slots * slot_h / NODE_FRAME[1] + 1e-6):
+            return False
+    return True
+
+
+def frame_slots_needed(npairs_frame, bf_frac, nv_frac=0.0):
+    nb = round(npairs_frame * bf_frac)
+    nv = round(npairs_frame * nv_frac)
+    q = npairs_frame - nb - nv
+    return nb + 2 * nv + math.ceil(q / 2)
+
+
+def capacity_report():
+    """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
+    sh, sl = slot_geometry()
+    keep = (PAIRS, BF_PAIRS, NV_PAIRS)
+    best = 0
+    for p in range(1000, 4000, 16):
+        set_pairs(p)
+        if _frames_fit(sl, sh):
+            best = p
+    for p in range(best, best + 16):
+        set_pairs(p)
+        if _frames_fit(sl, sh):
+            best = p
+    set_globals_pairs(*keep)
+    inv = json.loads((ROOT / 'results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json').read_text())
+    total = 81 * 4 * 2417
+    return dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
+                max_pairs_per_layer_die=best, pairs_per_layer_die_now=2417,
+                layer_field_pairs_total=total, layer_field_pairs_basis='81 stages x 4 ranks x 2,417 (S81 decision)',
+                layer_dies_now=81 * 4, layer_dies_at_max=math.ceil(total / best) if best else None,
+                extra_layer_dies=(math.ceil(total / best) - 81 * 4) if best else None,
+                inventory_compiled_pairs_TP4=inv.get('compiled_pairs_TP4'),
+                rack=dict(scan_dies_4stack=32, layer_dies_1stack=292, head_dies=12, table_dies=36, draft_dies=52,
+                          total=424, layer_dies_total=324, head_bundles_per_head_die=math.ceil(129280 / 128 / 12),
+                          source='results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 '
+                                 'table, 1-stack layer dies)'),
+                meso_slot=dict(record=MESO_V7, um2_per_W512_slot=MESO_V7_UM2, cfifo_W564_slots=2,
+                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)))
+CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
+POWER8 = dict(
+    seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
+    sstn=(LSW * FLOP_CLK_W * 1.5, 'DERIVED 564 stage flops x W18 per-flop clock x 1.5'),
+    cfifo=(5 * LSW * FLOP_CLK_W * 1.5 + CRET * FLOP_CLK_W * 1.5,
+           'DERIVED meso W564 D4 (4 ring + 1 output word) + return register x W18 per-flop clock x 1.5'),
+    rstg=(NODEB * FLOP_CLK_W * 1.5, 'DERIVED 66 stage flops'),
+    stn=(0.0, 'per station: lane bits x W18 per-flop clock x 1.5 (inst_power_r8)'),
+    hend=(0.0, 'per end/start block: 5 x lane bits x W18 per-flop clock x 1.5 (inst_power_r8)'),
+)
+
+
+def real_ports_r8():
+    qn = real_lef(Q_LEF)['name']
+    ln = lambda m_: ['pv[%d]' % m_] + _bus('pval', 64)[32 * m_:32 * m_ + 32] + _bus('prow', 32)[16 * m_:16 * m_ + 16] \
+        + _bus('pseg', 10)[5 * m_:5 * m_ + 5] + _bus('pnseg', 10)[5 * m_:5 * m_ + 5] + ['perr[%d]' % m_] \
+        + _bus('ppos', 6)[3 * m_:3 * m_ + 3]
+    qp = dict(x0=_bus('xs_q0', 256) + _bus('xs_e0', 10) + _bus('xs_b', 3) + _bus('xs_p', 8) + _bus('xs_pos', 3)
+              + _bus('xs_sv', 2) + ['xs_v'],
+              x1=_bus('xs_q1', 256) + _bus('xs_e1', 10), go=['go'], ck=['clk'], rs=['rst_n'],
+              cfg=_bus('cfg_a', 5) + _bus('cfg_d', 48) + ['cfg_v'], r0=ln(0), r1=ln(1), st=['busy', 'fault'])
+    assert len(qp['x0']) == X0B and len(qp['x1']) == X1B and len(qp['r0']) == LEAF
+    assert len(set(qp['r0'] + qp['r1'])) == 2 * LEAF == RET
+    cfg = dict(ck=['clk'], ce=['ce_in'], a=_bus('addr_in', 12), rd=_bus('rd_out', 48))
+    phy = real_lef(PHY_LEF)
+    dfi = sorted(phy['pins'], key=lambda p: (phy['pins'][p][1][0], p))
+    sd = dict(tx=_bus('tx', 512), rx=_bus('rx', 512), ck=['clk'])
+    out = {qn: qp, real_lef(CFG_LEF)['name']: cfg, phy['name']: dict(dfi=dfi), real_lef(SERDES_LEF)['name']: sd,
+           real_lef(UCIE_LEF)['name']: sd}
+    if HEAD_BUNDLES:
+        he = dict(x=_bus('x', 256), go=['go'], ck=['clk'], rs=['rst_n'], row0=_bus('row0', 17), bv=['b_v'],
+                  bd=_bus('b_d', 32), ov=['o_v'], od=_bus('o_d', 32), done=['done'], brow=_bus('best_row', 17),
+                  bbits=_bus('best_bits', 32), bkey=_bus('best_key', 32), flt=['fault'])
+        out[real_lef(HEAD_A_LEF)['name']] = he
+        out[real_lef(HEAD_B_LEF)['name']] = he
+    return out
+
+
+# outputs no consumer reads in the RTL the die wiring follows (ot_dsrom_head_bundle): A root / logit streams, B logit
+# stream and argmax (the B element is a root1024 producer only); cfg ROM spare columns rd_out[71:48]
+UNUSED_BY_DESIGN = {('ot_dsrom_head_elem_A', p_) for p_ in ('o_v', 'o_d', 'l_v', 'l_d')} | \
+    {('ot_dsrom_head_elem_B', p_) for p_ in ('l_v', 'l_d', 'done', 'best_row', 'best_bits', 'best_key', 'b_v', 'b_d')}
+
+
+def HB_PER_FRAME():
+    return int(SLOTS8 * SLOT_H8 / HB_H + 1e-6)
+
+
+def frame_plan_r8():
+    """frame -> (first pair, last pair + 1) and the head-bundle frames (head die r8: 5 bundles a frame, spread)"""
+    hb = {}
+    if HEAD_BUNDLES:
+        nf = math.ceil(HEAD_BUNDLES / HB_PER_FRAME())
+        fr = sorted({round((i + 0.5) * ROOTS / nf) for i in range(nf)})
+        left = HEAD_BUNDLES
+        for r in fr:
+            hb[r] = min(HB_PER_FRAME(), left)
+            left -= hb[r]
+    rest = [r for r in range(ROOTS) if r not in hb]
+    rng = {r: (0, 0) for r in hb}
+    assert not hb or HB_PER_FRAME() >= 1
+    for i, r in enumerate(rest):
+        rng[r] = (math.floor(i * PAIRS / len(rest)), math.floor((i + 1) * PAIRS / len(rest)))
+    return rng, hb
+
+
+# ---------------------------------------------------------------------------------------- occupancy / placement
+class Occ:
+    """Spatial index of placed rectangles (200 um bins)."""
+
+    def __init__(self, B=200.0):
+        self.B, self.g = B, defaultdict(list)
+
+    def _bins(self, x0, y0, x1, y1):
+        B = self.B
+        for a in range(int(x0 // B), int(x1 // B) + 1):
+            for b in range(int(y0 // B), int(y1 // B) + 1):
+                yield (a, b)
+
+    def add(self, r):
+        for k in self._bins(*r):
+            self.g[k].append(r)
+
+    def free(self, r, gap=0.0):
+        x0, y0, x1, y1 = r
+        for k in self._bins(x0 - gap, y0 - gap, x1 + gap, y1 + gap):
+            for a0, b0, a1, b1 in self.g[k]:
+                if a0 < x1 + gap - 1e-6 and x0 - gap < a1 - 1e-6 and b0 < y1 + gap - 1e-6 and y0 - gap < b1 - 1e-6:
+                    return False
+        return True
+
+
+def _inside(r, rects):
+    return any(r[0] >= a - 1e-6 and r[1] >= b - 1e-6 and r[2] <= c + 1e-6 and r[3] <= d + 1e-6 for a, b, c, d in rects)
+
+
+def _mh(p, q):
+    return abs(p[0] - q[0]) + abs(p[1] - q[1])
+
+
+class Placer:
+    def __init__(self, m):
+        self.m, self.occ, self.n = m, Occ(), defaultdict(int)
+        for it in m['insts']:
+            self.occ.add(it.box())
+
+    def add(self, it):
+        self.m['insts'].append(it)
+        self.occ.add(it.box())
+        return it
+
+    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10):
+        """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev`."""
+        reach = reach or LINK_STAGE_UM
+        al = [0.0]
+        for i in range(1, int(span / 4.32) + 1):
+            al += [-4.32 * i, 4.32 * i]
+        cr = [0.0]
+        step = (h if horiz else w) + 2.16
+        for i in range(1, rows + 1):
+            cr += [step * i, -step * i]
+        cands = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+        for a, c in cands:
+            dx, dy = (a, c) if horiz else (c, a)
+            x = dn(cx + dx - w / 2, GX)
+            y = dn(cy + dy - h / 2, GY)
+            r = (x, y, x + w, y + h)
+            if not _inside(r, allowed) or not self.occ.free(r, 0.432):
+                continue
+            if prev is not None and _mh(prev, (x + w / 2, y + h / 2)) > reach:
+                continue
+            return x, y
+        return None
+
+
+def _poly_len(P):
+    return sum(_mh(P[i], P[i + 1]) for i in range(len(P) - 1))
+
+
+def _poly_at(P, s):
+    """point and direction ('E','W','N','S') at path length s"""
+    for i in range(len(P) - 1):
+        L = _mh(P[i], P[i + 1])
+        if s <= L + 1e-9 or i == len(P) - 2:
+            a, b = P[i], P[i + 1]
+            f = 0.0 if L == 0 else min(1.0, max(0.0, s / L))
+            pt = (a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f)
+            d = ('E' if b[0] > a[0] else 'W') if abs(b[0] - a[0]) > abs(b[1] - a[1]) else ('N' if b[1] > a[1] else 'S')
+            return pt, d
+        s -= L
+    return P[-1], 'E'
+
+
+def face_need(bits):
+    """face length for ports of these widths, at k = 1 (pitch 0.048) and in the k = 16 bundled GRT view"""
+    k1 = sum(b * 0.048 for b in bits) + 0.144 * len(bits)
+    k16 = sum(max(1, math.ceil(b / 16)) * 0.768 + 0.93 for b in bits)
+    return max(k1, k16) + 2.0
+
+
+def stn_dims(lanes, horiz):
+    """station size: pins of every lane (fclk + data) on the input and the output face; ~0.7 um2 a stage bit"""
+    pins = sum(w + 1 for w in lanes)
+    bits = sum(lanes)
+    face = face_need([b for w in lanes for b in (1, w)])
+    if horiz:
+        h = up(max(face, 17.28), GY)
+        w = up(max(17.28, bits * 0.7 / h), GX)
+    else:
+        w = up(max(face, 17.28), GX)
+        h = up(max(17.28, bits * 0.7 / w), GY)
+    return w - SHAVE, h - SHAVE
+
+
+def stn_master(lanes, horiz):
+    sig = '_'.join(f'{w}x{n}' for w, n in _rle(lanes))
+    return f'dsfd_stn{"h" if horiz else "v"}_{sig}'
+
+
+def _rle(xs):
+    out = []
+    for x in xs:
+        if out and out[-1][0] == x:
+            out[-1][1] += 1
+        else:
+            out.append([x, 1])
+    return out
+
+
+class Chains:
+    """forwarded-link chain builder: stations (one ot_fwd_link_stage per lane slice), nets, records"""
+
+    def __init__(self, m, P):
+        self.m, self.P, self.B = m, P, m['buses']
+        self.rec = []          # (chain, stations, max_hop_um, length_um)
+
+    def bus(self, bid, cls, bits, eps):
+        self.B.append((bid, cls, bits, eps))
+
+    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn'):
+        """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
+        where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
+        L = _poly_len(path)
+        stops = sorted(set(round(s, 3) for s in forced if 0 < s <= L + 1e-6))
+        out, pos, cur = [], 0.0, src
+        end = path[-1]
+        fi = 0
+        while True:
+            nxt = stops[fi] if fi < len(stops) else None
+            if nxt is None and _mh(cur, end) <= LINK_STAGE_UM - 30.0 and L - pos <= LINK_STAGE_UM - 30.0:
+                break
+            if nxt is not None and nxt - pos <= STEP8:
+                target, must = nxt, True
+                fi += 1
+            else:
+                target, must = min(pos + STEP8, L), False
+            placed = None
+            t_ = target
+            if must and target - pos <= 20.0 and out:
+                continue                     # the previous station stands at this stop
+            while placed is None and (t_ > pos + 20.0 or must):
+                (cx, cy), d = _poly_at(path, t_)
+                horiz = d in 'EW'
+                w, h = stn_dims(lanes, horiz)
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz)
+                if placed is None:
+                    if must:
+                        placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
+                        break
+                    t_ -= 25.0
+            if placed is None:            # widen the search (still within reach of the previous station)
+                t_ = max(pos + 20.0, target - 150.0)
+                (cx, cy), d = _poly_at(path, t_)
+                horiz = d in 'EW'
+                w, h = stn_dims(lanes, horiz)
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24)
+            if placed is None:
+                raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
+            x, y = placed
+            orient = {'E': 'R0', 'W': 'MY', 'N': 'R0', 'S': 'MX'}[d]
+            self.P.n[name] += 1
+            it = Inst(f'f_{name}_{self.P.n[name]}', stn_master(lanes, horiz), x, y, w, h, orient, kind='stn',
+                      region='link', domain='fwd')
+            it.power_w = sum(lanes) * FLOP_CLK_W * 1.5
+            self.P.add(it)
+            c = (x + w / 2, y + h / 2)
+            out.append((it, max(t_, pos + 1.0), _mh(cur, c)))
+            cur, pos = c, max(t_, pos + 1.0)
+        self.rec.append(dict(chain=name, lanes=list(lanes), stations=len(out), length_um=round(L, 1),
+                             max_hop_um=round(max([h_ for _, _, h_ in out] + [_mh(cur, end)]), 1),
+                             last_hop_um=round(_mh(cur, end), 1)))
+        return out
+
+
+def build_r8(variant=None):
+    variant = dict(variant or {})
+    W, H = DIE
+    insts, regions, notes = [], [], []
+    bounds, bfs, nvs = region_bounds(), bf_sites(), nv_sites()
+    COLS8 = max(TIER_COLS8)
+    x_lw = up(EDGE, GX)
+    slack = W - 2 * x_lw - 2 * LINK_COL - 2 * COLS8 * COL_PITCH8 - SPINE_W8 - 2 * SPF
+    assert slack >= 0, slack
+    x_fw = up(x_lw + LINK_COL + 0.5 * slack, GX)
+    x_sp = up(x_fw + COLS8 * COL_PITCH8 - 8.64 + SPF, GX)       # spine W edge
+    x_fe = up(x_sp + SPINE_W8, GX)                                # spine E edge
+    x_le = dn(W - EDGE - LINK_COL, GX)
+    assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
+    band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
+    SLOT_H, SLOTS = slot_geometry()
+    field_h = TIERS * SLOTS * SLOT_H + (TIERS + 1) * CH
+    y_f = up((H - field_h) / 2, GY)
+    ch_y = [y_f + t * (SLOTS * SLOT_H + CH) for t in range(TIERS + 1)]
+    tier_y = [c + CH for c in ch_y[:TIERS]]
+    y_top = ch_y[TIERS] + CH
+
+    def col_x(half, c):
+        return dn(x_sp - SPF - (c + 1) * COL_PITCH8 + 8.64, GX) if half == 'W' else up(x_fe + SPF + c * COL_PITCH8, GX)
+    geo = dict(slot_h=SLOT_H, slots=SLOTS, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
+               band_depth=band, field_h=field_h, spine_cx=x_sp + SPINE_W8 / 2, col_x=col_x, col_pitch=COL_PITCH8,
+               col_w=COL_W8, spf=SPF, tier_cols=list(TIER_COLS8))
+    rq, rc = real_lef(Q_LEF), real_lef(CFG_LEF)
+    frames, slot_of = {}, {}
+    order = [(h, t, c) for h in 'WE' for t in range(TIERS) for c in range(TIER_COLS8[t])]
+    assert len(order) == ROOTS
+    rng, hbf = frame_plan_r8()
+    for r, (half, t, c) in enumerate(order):
+        x0, y0 = col_x(half, c), tier_y[t]
+        frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
+        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + SLOTS * SLOT_H]))
+        if r in hbf:
+            # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
+            ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
+            frames[r].update(elems=[], bundles=hbf[r], last_slot=hbf[r] - 1, ret_stages=0)
+            for b in range(hbf[r]):
+                yb = y0 + b * HB_H + 4.32
+                g = f'g{r}_{b}'
+                insts.append(Inst(f'{g}b', rb_['name'], x0 + 4.32, yb, rb_['w'], rb_['h'], kind='hb_elem',
+                                  region=f'frame_{r}', power_w=HEAD_ELEM_W['B']))
+                insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,
+                                  HB_GLUE[1] - SHAVE, kind='hbglue', region=f'frame_{r}', power_w=HB_GLUE_W))
+                for q in range(4):
+                    insts.append(Inst(f'{g}a{q}', ra_['name'], x0 + 4.32 + q * HB_PITCH[0], yb + HB_PITCH[1],
+                                      ra_['w'], ra_['h'], kind='hb_elem', region=f'frame_{r}', power_w=HEAD_ELEM_W['A']))
+            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+                              CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+            continue
+        pairs = list(range(*rng[r]))
+        slot, half_open, elems = -1, None, []
+        for p in pairs:
+            if p in nvs:
+                slot += 2
+                elems.append((p, 'NV', slot - 1, 'B'))
+            elif p in bfs:
+                slot += 1
+                elems.append((p, 'BF', slot, 'B'))
+            elif half_open is not None:
+                elems.append((p, 'q', half_open, 'R'))
+                half_open = None
+            else:
+                slot += 1
+                half_open = slot
+                elems.append((p, 'q', slot, 'L'))
+        assert slot < SLOTS, f'frame {r}: {len(pairs)} pairs need {slot + 1} slots > {SLOTS} at slot height {SLOT_H}'
+        assert 2 * len(pairs) - 1 <= int(SLOTS * SLOT_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
+        frames[r]['elems'] = elems
+        frames[r]['last_slot'] = slot
+        for p, kind, s, ln in elems:
+            sy = y0 + s * SLOT_H
+            ex = x0 + (LANE_W if ln == 'R' else 0) + 4.32
+            if kind == 'NV':
+                it = Inst(f'e{p}', 'dsfd_bfnv', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf_nv',
+                          region=f'frame_{r}')
+                nh = up(NVX_UM2 / 1002.888, GY)
+                insts.append(Inst(f'v{p}', 'dsfd_nvx', ex, sy + SLOT_H + CFG_DY, 1002.888, nh - SHAVE, kind='nvx',
+                                  region=f'frame_{r}'))
+            elif kind == 'BF':
+                it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
+            else:
+                assert rq['h'] <= ELEM_FRAME_H, (rq['h'], ELEM_FRAME_H)
+                it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], kind='q', region=f'frame_{r}')
+            insts.append(it)
+            slot_of[p] = (r, s, ln)
+            # L lane / BF: ROMs (mirrored, pins east) then the sequencer, east of them, toward the slot station;
+            # R lane: the sequencer (mirrored) first, west of its ROMs (pins west), facing the station on its west
+            if ln == 'R':
+                sx = x0 + LANE_W + R_CFGX
+                cx0, ro, so = sx + SEQ_WH[0] + 3.888, 'R0', 'MY'
+            else:
+                cx0, ro, so = x0 + 4.32, 'MY', 'R0'
+                sx = cx0 + (CFG_PER_PAIR - 1) * CFG_PITCH + rc['w'] + 3.888
+            for j in range(CFG_PER_PAIR):
+                insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH, sy + CFG_DY, rc['w'], rc['h'], ro,
+                                  kind='cfg', region=f'frame_{r}'))
+            insts.append(Inst(f's{p}', 'ot_s81_cfg7_seq', sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
+                              kind='seq', region=f'frame_{r}'))
+        # slot stations (one per used slot), above the NV extension in an NV slot
+        nvslots = {s + 1 for p, kind, s, ln in elems if kind == 'NV'}
+        if slot in nvslots:
+            slot -= 1                  # a top slot holding only an NV extension needs no station
+            frames[r]['last_slot'] = slot
+            frames[r]['nv_top'] = True
+        for s in range(slot + 1):
+            sy = y0 + s * SLOT_H
+            yy = sy + CFG_DY if s not in nvslots else sy + CFG_DY + up(NVX_UM2 / 1002.888, GY) + 4.32
+            insts.append(Inst(f't{r}_{s}', 'dsfd_sstn', x0 + SSTN_X, yy, SSTN_WH[0] - SHAVE, SSTN_WH[1] - SHAVE,
+                              kind='sstn', region=f'frame_{r}'))
+        nodes, root = return_tree(2 * len(pairs))
+        frames[r]['tree'] = (nodes, root)
+        rank = _inorder_rank(nodes, root)
+        for j, (nid, a, b) in enumerate(nodes):
+            insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + 2 * LANE_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
+                              NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
+        # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
+        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+                          CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+    # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
+    x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
+    cw = dn((SPINE_W8 - VCH8) / 2, GX)
+    x_spe = x_vch + VCH8
+    regions.append(dict(name='spine', kind='hub', rect=[x_sp, y_f, x_fe, y_top]))
+    regions.append(dict(name='vch', kind='channel', rect=[x_vch, y_f, x_vch + VCH8, y_top]))
+    mid = (y_f + y_top) / 2
+    hub = {}
+
+    def slab(name, mm2, x, y, w, dom='stream_1p2', master=None):
+        h = up(mm2 * 1e6 / w, GY)
+        it = Inst(f'sp_{name}', master or f'dsfd_sp_{name}', x, y, w - SHAVE, h - SHAVE, kind='hub', region='spine',
+                  domain=dom)
+        insts.append(it)
+        hub[name] = it
+        return it
+    centre = ['gather', 'vm', 'capture', 'collective']
+    centre_area = dict(HUB_MM2)
+    wfc_rect = None
+    if DIE_KIND == 'layer':
+        centre.insert(2, 'wfc')
+        centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
+    ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
+    yc = dn(mid - ch_ / 2, GY)
+    su_lo = HUB_MM2['su'] * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
+    yy = yc
+    for n in centre:
+        if n == 'wfc':
+            wh = up(centre_area[n] * 1e6 / cw, GY)
+            wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
+        else:
+            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
+        yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
+    slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
+    vm = hub['vm']
+    corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
+    c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
+    lo_av, hi_av = c0 - (band + SPINE_GAP), (H - band - SPINE_GAP) - c1      # HC halves sized to the room each side
+    fs = lo_av / (lo_av + hi_av)
+    hs_ = up(HUB_MM2['hc'] * fs * 1e6 / cw, GY)
+    slab('hc_s', HUB_MM2['hc'] * fs, x_spe, dn(c0 - hs_, GY), cw, dom='serial_0p9')
+    slab('hc_n', HUB_MM2['hc'] * (1 - fs), x_spe, c1, cw, dom='serial_0p9')
+    regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
+    for it in insts:
+        if it.region == 'spine':
+            assert it.y >= band + SPINE_GAP and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
+    # ---- bands (as r7)
+    rp = real_lef(PHY_LEF)
+    phys, ctrls, svcs = {}, {}, {}
+    xs_phy = [up(x_fw + (x_sp - x_fw) / 2 - PHY_W / 2, GX), up(x_fe + (x_le - x_fe) / 2 - PHY_W / 2, GX)]
+    band_ys = {}
+    for side in 'SN':
+        for i, xp in enumerate(xs_phy):
+            st = f'{side}{"WE"[i]}'
+            if side == 'S':
+                yp = up(EDGE, GY)
+                yc_ = up(yp + PHY_H + 8.64, GY)
+                ys_ = up(yc_ + CTRL_D + 8.64, GY)
+                orient = 'R0'
+            else:
+                yp = dn(H - EDGE - PHY_H, GY)
+                yc_ = dn(yp - 8.64 - CTRL_D, GY)
+                ys_ = dn(yc_ - 8.64 - SVC_D, GY)
+                orient = 'MX'
+            band_ys[side] = ys_
+            if st not in STACKS[DIE_KIND]:
+                continue           # 1-stack layer die (scenario C): only the SW stack is built
+            phys[st] = Inst(f'phy_{st}', rp['name'], xp, yp, rp['w'], rp['h'], orient, kind='phy', region='phy',
+                            domain='hbm')
+            ctrls[st] = Inst(f'ctrl_{st}', 'dsfd_ctrl', xp, yc_, PHY_W - SHAVE, CTRL_D - SHAVE, orient, kind='ctrl',
+                             region='ctrl', domain='hbm')
+            svcs[st] = Inst(f'svc_{st}', 'dsfd_svc', xp, ys_, PHY_W - SHAVE, SVC_D - SHAVE, orient, kind='svc',
+                            region='svc')
+            insts += [phys[st], ctrls[st], svcs[st]]
+            regions.append(dict(name=f'svc_{st}', kind='svc', rect=[xp, min(yc_, ys_), xp + PHY_W,
+                                                                    max(yc_ + CTRL_D, ys_ + SVC_D)]))
+    gap_x0, gap_x1 = xs_phy[0] + PHY_W, xs_phy[1]
+    for side, name in (('S', 'selector'), ('N', 'collector')):
+        w = dn(min(gap_x1 - gap_x0 - 2 * 8.64, 2 * SPINE_W), GX)
+        h = up(HUB_MM2[name] * 1e6 / w, GY)
+        x = up((gap_x0 + gap_x1) / 2 - w / 2, GX)
+        y = band_ys[side] if side == 'S' else band_ys[side] + SVC_D - h
+        it = Inst(f'bk_{name}', f'dsfd_bk_{name}', x, y, w - SHAVE, h - SHAVE, kind='band_blk', region='svc')
+        insts.append(it)
+        hub[name] = it
+    rs_, ru_ = real_lef(SERDES_LEF), real_lef(UCIE_LEF)
+    links = []
+    for side in 'WE':
+        stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
+        tot = sum(m_['h'] for _, m_ in stack) + 3 * 43.2
+        y = up(mid - tot / 2, GY)
+        for i, (kind, m_) in enumerate(stack):
+            if side == 'W':
+                x, orient = x_lw, ('R0' if kind == 'serdes' else 'MY')
+            else:
+                x, orient = up(x_le + LINK_COL - m_['w'], GX), ('MY' if kind == 'serdes' else 'R0')
+            it = Inst(f'lk_{side}{i}', m_['name'], x, y, m_['w'], m_['h'], orient, kind='link', region='link',
+                      domain='link')
+            insts.append(it)
+            links.append(it)
+            y = up(y + m_['h'] + 43.2, GY)
+    variant.update(gen='r8', die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+                                                    layer1='layer die, 1 HBM3E stack (292 of the rack)',
+                                                    head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
+                   pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
+                   elem_frame_h=ELEM_FRAME_H, slot_h=SLOT_H, slots=SLOTS)
+    m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
+             ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
+             corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
+    spine_y0 = min(it.y for it in insts if it.region == 'spine')
+    spine_y1 = max(it.y + it.h for it in insts if it.region == 'spine')
+    for reg in regions:
+        if reg['name'] in ('spine', 'vch'):
+            reg['rect'][1] = min(reg['rect'][1], spine_y0)
+            reg['rect'][3] = max(reg['rect'][3], spine_y1)
+    if DIE_KIND == 'layer':
+        reservation = json.loads((ROOT / 'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
+        x0, y0, x1, y1 = wfc_rect
+        reservation['selected_WFC_gross_um'] = wfc_rect
+        reservation['selected_WFC_core_um'] = [x0 + 17.28, y0 + 17.28, x1 - 17.28, y1 - 17.28]
+        assert all(not (it.x < x1 and it.x + it.w > x0 and it.y < y1 and it.y + it.h > y0) for it in insts)
+        m['child_reservations'] = {'wfc': reservation}
+        regions.append(dict(name='wfc_selected_child', kind='soft_child_reservation', rect=[x0, y0, x1, y1]))
+        m['wfc_rect'] = wfc_rect
+    m['buses'] = []
+    buses_r8(m)
+    return m
+
+
+# ---------------------------------------------------------------------------------------- r8 nets
+def _corridors(m):
+    g = m['geo']
+    W, H = DIE
+    b0, b1 = g['band_depth'] + 4.32, H - g['band_depth'] - 4.32
+    cor = dict(
+        s14W=(g['x_sp'] - SPF + 4.32, b0, g['x_sp'] - 4.32, b1),
+        s14E=(g['x_fe'] + 4.32, b0, g['x_fe'] + SPF - 4.32, b1),
+        vch=(m['x_vch'] + 4.32, b0, m['x_vch'] + VCH8 - 4.32, b1),
+        hcc=(m['x_spe'] - 4.32, m['corridor'][0] + 4.32, g['x_fe'] + 4.32, m['corridor'][1] - 4.32),
+        edgeW=(g['x_lw'] + LINK_COL + 4.32, g['y_f'], g['x_fw'] - 4.32, g['y_top']),
+        edgeE=(g['x_le'] - (g['x_fw'] - g['x_lw'] - LINK_COL) + 4.32, g['y_f'], g['x_le'] - 4.32, g['y_top']),
+        stripS=(g['x_lw'] + LINK_COL + 4.32, g['band_depth'] + 4.32, g['x_le'] - 4.32, g['y_f'] - 4.32),
+        stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
+        gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
+        gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    for t, c in enumerate(g['ch_y']):
+        cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + CH - 4.32 - CF_WH[1] - 2.16)
+    return cor
+
+
+def buses_r8(m):
+    """All r8 nets (endpoint 0 = the driver) and the glue instances they need."""
+    g, B = m['geo'], m['buses']
+    P = Placer(m)
+    CH8 = Chains(m, P)
+    m['chains'] = CH8.rec
+    by = {it.name: it for it in m['insts']}
+    hub = m['hub']
+    cor = _corridors(m)
+
+    def bus(bid, cls, bits, eps):
+        B.append((bid, cls, bits, eps))
+    # ---------------- head-bundle frames (head die): column stream up a glue chain, result chain down
+    for r, f in m['frames'].items():
+        if not f.get('bundles'):
+            continue
+        cf = f'cf{r}'
+        nb = f['bundles']
+        col_ck, col_rs = [(cf, 'co')], [(cf, 'rs')]
+        for b in range(nb):
+            gn = f'g{r}_{b}'
+            el = [f'{gn}b'] + [f'{gn}a{q}' for q in range(4)]
+            col_ck += [(gn, 'ck')] + [(e, 'ck') for e in el]
+            col_rs += [(gn, 'rs')] + [(e, 'rs') for e in el]
+            src = cf if b == 0 else f'g{r}_{b - 1}'
+            bus(f'hxa_{r}_{b}', 'x_lane', X0B, [(src, 'xa'), (gn, 'xai')])
+            bus(f'hxb_{r}_{b}', 'x_lane', X1B, [(src, 'xb'), (gn, 'xbi')])
+            bus(f'hcc_{r}_{b}', 'x_ctl', CCB, [(src, 'cc'), (gn, 'cci')])
+            bus(f'hso_{r}_{b}', 'stat', STB, [(gn, 'so'), ((f'g{r}_{b - 1}', 'si') if b else (cf, 'st'))])
+            bus(f'hro_{r}_{b}', 'col_ret', NODEB, [(gn, 'ro'), ((f'g{r}_{b - 1}', 'ri') if b else (cf, 'ri'))])
+            # glue -> elements (skewed x lanes, go, row0, B root demux) and elements -> glue (argmax, B root, fault)
+            bus(f'hex_{r}_{b}a', 'hb_x', 256, [(gn, 'xsa')] + [(f'{gn}a{q}', 'x') for q in range(4)])
+            bus(f'hex_{r}_{b}b', 'hb_x', 256, [(gn, 'xsb'), (f'{gn}b', 'x')])
+            bus(f'hgo_{r}_{b}', 'go', 1, [(gn, 'go')] + [(e, 'go') for e in el])
+            bus(f'hbd_{r}_{b}', 'hb_root', 32, [(gn, 'bd')] + [(f'{gn}a{q}', 'bd') for q in range(4)])
+            bus(f'hbov_{r}_{b}', 'hb_root', 1, [(f'{gn}b', 'ov'), (gn, 'bov')])
+            bus(f'hbod_{r}_{b}', 'hb_root', 32, [(f'{gn}b', 'od'), (gn, 'bod')])
+            bus(f'hr0b_{r}_{b}', 'hb_ctl', 17, [(gn, 'r0b'), (f'{gn}b', 'row0')])
+            bus(f'hbf_{r}_{b}', 'stat', 1, [(f'{gn}b', 'flt'), (gn, 'bflt')])
+            for q in range(4):
+                a = f'{gn}a{q}'
+                bus(f'hr0_{r}_{b}_{q}', 'hb_ctl', 17, [(gn, f'r0a{q}'), (a, 'row0')])
+                bus(f'hbv_{r}_{b}_{q}', 'hb_root', 1, [(gn, f'bv{q}'), (a, 'bv')])
+                for pt, w_ in (('done', 1), ('brow', 17), ('bbits', 32), ('bkey', 32), ('flt', 1)):
+                    bus(f'h{pt}_{r}_{b}_{q}', 'hb_res', w_, [(a, pt), (gn, f'a{q}{pt}')])
+        bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
+        bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
+    # ---------------- field, per frame
+    for r, f in m['frames'].items():
+        if f.get('bundles'):
+            continue
+        cf = f'cf{r}'
+        elems = f['elems']
+        last = f['last_slot']
+        slot_elems = defaultdict(list)
+        for p, kind, s, ln in elems:
+            slot_elems[s].append((p, kind, ln))
+        nvslots = {s + 1: p for p, kind, s, ln in elems if kind == 'NV'}
+        col_ck = [(cf, 'co')]
+        col_rs = [(cf, 'rs')]
+        # stations
+        for s in range(last + 1):
+            t_ = f't{r}_{s}'
+            col_ck.append((t_, 'ck'))
+            col_rs.append((t_, 'rs'))
+            if s == 0:
+                bus(f'xa_{r}_0', 'x_lane', X0B, [(cf, 'xa'), (t_, 'xai')])
+                bus(f'xb_{r}_0', 'x_lane', X1B, [(cf, 'xb'), (t_, 'xbi')])
+                bus(f'cc_{r}_0', 'x_ctl', CCB, [(cf, 'cc'), (t_, 'cci')])
+        # elements, sequencers, ROMs, status
+        for s in range(last + 1):
+            t_ = f't{r}_{s}'
+            es = slot_elems.get(s, [])
+            xa_eps, xb_eps, cc_eps = [], [], []
+            for j, (p, kind, ln) in enumerate(es):
+                e, sq = f'e{p}', f's{p}'
+                xa_eps.append((e, 'x0'))
+                if kind in ('BF', 'NV'):
+                    xb_eps.append((e, 'x1'))
+                cc_eps.append((sq, 'lc'))
+                col_ck += [(e, 'ck'), (sq, 'clk')] + [(f'c{p}_{k}', 'ck') for k in range(CFG_PER_PAIR)]
+                col_rs += [(e, 'rs'), (sq, 'rst_n')]
+                bus(f'cfg_{p}', 'cfg', CFGB, [(sq, 'cfg'), (e, 'cfg')])
+                bus(f'go_{p}', 'go', 1, [(sq, 'go_e'), (e, 'go')])
+                bus(f'ra_{p}', 'rom_a', 12, [(sq, 'a')] + [(f'c{p}_{k}', 'a') for k in range(CFG_PER_PAIR)])
+                for k in range(CFG_PER_PAIR):
+                    bus(f'rc_{p}_{k}', 'rom_ce', 1, [(sq, f'ce{k}'), (f'c{p}_{k}', 'ce')])
+                    bus(f'rq_{p}_{k}', 'rom_q', 48, [(f'c{p}_{k}', 'rd'), (sq, f'q{k}')])
+                bus(f'es_{p}', 'stat', STB, [(e, 'st'), (t_, f'e{j}')])
+                bus(f'ss_{p}', 'stat', STB, [(sq, 'st'), (t_, f'c{j}')])
+                if kind == 'NV':
+                    bus(f'nv_{p}', 'nv', NV_BITS, [(e, 'nv'), (f'v{p}', 'nv')])
+                    bus(f'nvr_{p}', 'nvr', NVR, [(f'v{p}', 'nvr'), (e, 'nvr')])
+            if s in nvslots:
+                p = nvslots[s]
+                col_ck.append((f'v{p}', 'ck'))
+                col_rs.append((f'v{p}', 'rs'))
+                bus(f'es_v{p}', 'stat', STB, [(f'v{p}', 'st'), (t_, 'e0')])
+            if s == last and (s + 1) in nvslots:          # NV extension in the (station-less) top slot
+                p = nvslots[s + 1]
+                col_ck.append((f'v{p}', 'ck'))
+                col_rs.append((f'v{p}', 'rs'))
+                bus(f'es_v{p}', 'stat', STB, [(f'v{p}', 'st'), (t_, 'e1')])
+            # x lanes of this slot: station s drives slot s's S-face pins; q x1 (N face) from station s+1's qt
+            nxt = f't{r}_{s + 1}' if s < last else None
+            qs = [(f'e{p}', 'x1') for p, kind, ln in es if kind == 'q']
+            if nxt is not None:
+                B.append((f'xa_{r}_{s + 1}', 'x_lane', X0B, [(t_, 'xa'), (nxt, 'xai')] + xa_eps))
+                B.append((f'xb_{r}_{s + 1}', 'x_lane', X1B, [(t_, 'xb'), (nxt, 'xbi')] + xb_eps))
+                B.append((f'cc_{r}_{s + 1}', 'x_ctl', CCB, [(t_, 'cc'), (nxt, 'cci')] + cc_eps))
+                if qs:
+                    bus(f'qt_{r}_{s}', 'x_lane', X1B, [(nxt, 'qt')] + qs)
+            else:
+                B.append((f'xa_{r}_{s + 1}', 'x_lane', X0B, [(t_, 'xa')] + xa_eps))
+                B.append((f'xb_{r}_{s + 1}', 'x_lane', X1B, [(t_, 'xb')] + xb_eps + qs))
+                B.append((f'cc_{r}_{s + 1}', 'x_ctl', CCB, [(t_, 'cc')] + cc_eps))
+            # status chain down the column: station s -> station s-1 -> ... -> column FIFO
+            bus(f'so_{r}_{s}', 'stat', STB, [(t_, 'so'), ((f't{r}_{s - 1}', 'si') if s else (cf, 'st'))])
+        # return tree
+        nodes, root = f['tree']
+        elist = [p for p, *_ in elems]
+        ids = {n[0]: j for j, n in enumerate(nodes)}
+        rank = _inorder_rank(nodes, root)
+        by_rank = sorted(nodes, key=lambda n_: rank[n_[0]])
+        for nid, a, b in nodes:
+            nn = f'n{r}_{ids[nid]}'
+            col_ck.append((nn, 'clk'))
+            col_rs.append((nn, 'rst_n'))
+            for side, c in (('a', a), ('b', b)):
+                if c.startswith('N'):
+                    bus(f'rt_{r}_{ids[nid]}{side}', 'ret_tree', NODEB, [(f'n{r}_{ids[c]}', 'o'), (nn, side)])
+                else:
+                    li = int(c[1:])
+                    bus(f'rt_{r}_{ids[nid]}{side}', 'ret_leaf', LEAF, [(f'e{elist[li // 2]}', f'r{li % 2}'), (nn, side)])
+        for k_ in range(len(by_rank) - 1, 0, -1):
+            bus(f'nf_{r}_{k_}', 'stat', 1, [(f'n{r}_{ids[by_rank[k_][0]]}', 'fo'), (f'n{r}_{ids[by_rank[k_ - 1][0]]}', 'fi')])
+        bus(f'nf_{r}_0', 'stat', 1, [(f'n{r}_{ids[by_rank[0][0]]}', 'fo'), (f't{r}_0', 'nf')])
+        # root -> column FIFO through register stages in the strip sub-column
+        rootn = by[f'n{r}_{ids[root]}'] if f'n{r}_{ids[root]}' in by else next(i_ for i_ in m['insts'] if i_.name == f'n{r}_{ids[root]}')
+        cfi = next(i_ for i_ in m['insts'] if i_.name == cf)
+        sx = f['x'] + 2 * LANE_W + NS_W + 4.32
+        ytop = rootn.y + rootn.h
+        ybot = cfi.y + cfi.h
+        prev, k_ = (f'n{r}_{ids[root]}', 'o'), 0
+        d = ytop - ybot + abs(sx - (rootn.x + rootn.w / 2))
+        nst = max(0, math.ceil(d / (LINK_STAGE_UM - 40.0)) - 1)
+        for i_ in range(nst):
+            yy = dn(ytop - (i_ + 1) * (ytop - ybot) / (nst + 1) - RSTG_WH[1] / 2, GY)
+            it = P.add(Inst(f'rg{r}_{i_}', 'dsfd_rstg', sx, yy, RSTG_WH[0] - SHAVE, RSTG_WH[1] - SHAVE, kind='rstg',
+                            region=f'frame_{r}'))
+            col_ck.append((it.name, 'ck'))
+            col_rs.append((it.name, 'rs'))
+            bus(f'rr_{r}_{i_}', 'col_ret', NODEB, [prev, (it.name, 'i')])
+            prev = (it.name, 'o')
+        bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (cf, 'ri')])
+        f['ret_stages'] = nst
+        bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
+        bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
+    by = {it.name: it for it in m['insts']}
+    # ---------------- hub glue blocks next to the slabs
+    vm, ga, coll = hub['vm'], hub['gather'], hub['collective']
+    x_sp, x_fe, x_vch = g['x_sp'], g['x_fe'], m['x_vch']
+
+    def hub_block(name, master, kind, w, h, face_x, y_c, side, allowed):
+        """end/start block beside a slab face: side 'W' = in the S14 W channel, 'E' = in the VCH"""
+        xx = face_x - w - 4.32 if side == 'W' else face_x + 4.32
+        if name.startswith('hr_') and side == 'E':
+            xx = face_x + 0.55 * VCH8           # E-half return ends mid-VCH: keep the VCH west lanes free (r8 GRT)
+        if name.startswith('hr_') and side == 'W':
+            xx = face_x - 0.55 * SPF - w
+        pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
+        assert pl, name
+        it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
+        return it
+    m['glue'] = {}          # master -> spec (for the RTL / LEF generators)
+    G = m['glue']
+
+    def end_spec(kind, lanes, fmt):
+        """kind m2l (meso, lane -> local stream), r2l (ratio CDC, lane -> serial), l2r (serial -> lane)"""
+        sig = '_'.join(f'{w}x{n}' for w, n in _rle(lanes))
+        name = f'dsfd_{kind}_{fmt}_{sig}'
+        G[name] = dict(kind=kind, lanes=list(lanes), fmt=fmt)
+        pins_in = sum(w + 2 + 1 for w in lanes) if kind != 'l2r' else lanes[0] + 1
+        pins_out = sum(w + 1 for w in lanes) + 2 if kind != 'l2r' else lanes[0] + 2 + 1
+        bits = sum(lanes)
+        ins = [b for w in lanes for b in (1, w + 2)] if kind != 'l2r' else [lanes[0] + 1]
+        outs = [sum(w + 1 for w in lanes) + 2] if kind != 'l2r' else [1, lanes[0] + 2, 3]
+        face = face_need(ins + outs + [1, 1, 1, 1])
+        h = up(max(face, 30.24), GY)
+        w = up(max(30.24, bits * 3.0 / h, face), GX)
+        return name, w - SHAVE, h - SHAVE
+    # x root: VM -> two serial->stream CDC start blocks (W channel / VCH)
+    vmc = vm.y + vm.h / 2
+    starts = {}
+    for side in 'WE':
+        nm, w, h = end_spec('l2r', [LSW], 'vr')
+        it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
+                       side, [cor['s14W'] if side == 'W' else cor['vch']])
+        starts[side] = it
+        bus(f'xr_{side}', 'local', LSW + 1, [(vm.name, f'x{side.lower()}'), (it.name, 'i')])
+        bus(f'xrs_{side}', 'local', 3, [(it.name, 'st'), (vm.name, f'x{side.lower()}s')])
+    # ---------------- x trunks: per half, a vertical spine (up / down) with a branch per tier channel
+    rowx = 64.8          # x-trunk station row (offset in the channel)
+    rowr = 8.64          # return-trunk row
+    rowl = 118.8         # link row
+    s14x = {'W': x_sp - SPF / 2, 'E': x_fe + SPF / 2}
+    m['chain_paths'] = []
+
+    def tap_x(half, c, off):
+        return g['col_x'](half, c) + off
+
+    for half in 'WE':
+        st = starts[half]
+        src_xy = (st.x + st.w / 2, st.y + st.h / 2)
+        # path from the start block to the half's S14 channel at the VM's y
+        for dirn, tiers in (('dn', [2, 1, 0]), ('up', [3, 4, 5])):
+            sx_ = s14_x(m, half, f'x{dirn}')
+            if half == 'W':
+                p0 = [src_xy, (sx_, src_xy[1])]
+            else:
+                cy_ = corr_y(m, f'x{dirn}')
+                p0 = [src_xy, (src_xy[0], cy_), (sx_, cy_)]
+            ys = [g['ch_y'][t] + rowx + 15.0 for t in tiers]
+            path = _dedup(p0 + [(sx_, y_) for y_ in ys])
+            forced = [_poly_len(path[:path.index((sx_, y_)) + 1]) for y_ in ys]
+            allowed = [cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']] + \
+                      [cor[f'ch{t}'] for t in tiers]
+            sts = CH8.run(f'x{half}{dirn}', [LSW + 2], path, allowed, src_xy, forced=forced)
+            br = {}
+            chain_nets(CH8, f'x{half}{dirn}', (st.name, 'fo', 'od'), [it for it, _, _ in sts], [LSW + 2])
+            for t, s_f in zip(tiers, forced):
+                junc = min(sts, key=lambda q: abs(q[1] - s_f))[0]
+                br[t] = junc
+            # horizontal branch per tier
+            for t in tiers:
+                ncol = TIER_COLS8[t]
+                y_ = g['ch_y'][t] + rowx + 15.0
+                xs_ = [tap_x(half, c, SSTN_X + SSTN_WH[0] / 2) for c in range(ncol)]
+                far = xs_[-1]
+                hp = [(br[t].x + br[t].w / 2, br[t].y + br[t].h / 2), (sx_, y_), (far, y_)]
+                hp = _dedup(hp)
+                forced_h = [abs(x_ - sx_) + _mh(hp[0], hp[1]) for x_ in xs_]
+                sts_h = CH8.run(f'x{half}{t}', [LSW + 2], hp, [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E']],
+                                hp[0], forced=forced_h)
+                chain_nets(CH8, f'x{half}{t}', (br[t].name, 'fo0', 'do0'), [it for it, _, _ in sts_h], [LSW + 2])
+                kv = 1 + next(i_ for i_, q in enumerate(sts) if q[0] is br[t])
+                for c in range(ncol):
+                    r = _frame_of(m, half, t, c)
+                    ih = min(range(len(sts_h)), key=lambda i_: abs((sts_h[i_][0].x + sts_h[i_][0].w / 2) - xs_[c]))
+                    _add_tap(m, sts_h[ih][0], 0, (f'cf{r}', 'xf', 'xd'))
+                    m.setdefault('x_stages', {})[r] = kv + ih + 1
+    # ---------------- return trunks: per tier-half one multi-lane chain (one lane per column) -> gather end block
+    for half in 'WE':
+        for t in range(TIERS):
+            ncol = TIER_COLS8[t]
+            y_ = g['ch_y'][t] + rowr + 20.0
+            xs_ = [tap_x(half, c, CF_X + CF_WH[0] - 30.0) for c in range(ncol)]
+            sx_ = s14_x(m, half, f'r{t}')
+            path = [(xs_[-1], y_), (sx_, y_)]
+            gy = ga.y + ga.h * (0.15 + 0.7 * t / (TIERS - 1))
+            if half == 'W':
+                path += [(sx_, gy)]
+            else:
+                cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
+                path += [(sx_, cy_), (vx_, cy_), (vx_, gy)]
+            path = _dedup(path)
+            forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
+            lanes_at = []
+            allowed = [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']]
+            # lanes: column c joins at its tap; a station carries every lane that has joined so far
+            sts = _run_multi(CH8, f'r{half}{t}', path, allowed, forced, ncol)
+            nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
+            endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
+                             [cor['s14W'] if half == 'W' else cor['vch']])
+            _multi_nets(m, CH8, f'r{half}{t}', sts, ncol, [_frame_of(m, half, t, c) for c in range(ncol)], endb)
+            bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
+    # ---------------- scan services <-> VM, band links, selector / collector -> VM
+    _svc_chains(m, CH8, P, cor, end_spec, hub_block)
+    # ---------------- links: collective <-> link macros
+    _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
+    # ---------------- hub-internal buses (adjacent slabs, direct)
+    hb = hub
+    for a_, b_, bits, pa, pb in (('vm', 'su_s', 1024, 't_su_s', 'f_vm'), ('vm', 'su_n', 1024, 't_su_n', 'f_vm'),
+                                 ('vm', 'hc_s', 1024, 't_hc', 'f_vm'), ('hc_n', 'vm', 1024, 't_vm', 'f_hc'),
+                                 ('vm', 'gather', 512, 't_gather', 'f_vm'), ('gather', 'capture', 576, 't_capture', 'f_gather'),
+                                 ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
+                                 ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
+                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')):
+        bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
+    # ---------------- PHY / controller / service
+    npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
+    for st, ph in m['phys'].items():
+        bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
+        bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    # ---------------- clocks, resets, top ports
+    col = coll.name
+    bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
+    bus('por_n', 'top_in', 1, [('TOP', 'por_n'), (col, 'por')])
+    by = {it.name: it for it in m['insts']}
+    dom = defaultdict(list)
+    rst = defaultdict(list)
+    for it in m['insts']:
+        if it.kind == 'cfifo':
+            dom['stream'].append((it.name, 'ck'))
+            rst['stream'].append((it.name, 'rst'))
+        elif it.kind in ('hub', 'band_blk') and it.name != col:
+            d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
+            dom[d_].append((it.name, 'ck'))
+            rst[d_].append((it.name, 'rst'))
+        elif it.kind == 'svc':
+            dom['stream'].append((it.name, 'ck'))
+            rst['stream'].append((it.name, 'rst'))
+        elif it.kind == 'ctrl':
+            dom['hbm'].append((it.name, 'ckh'))
+            dom['stream'].append((it.name, 'cks'))
+            rst['hbm'].append((it.name, 'rst'))
+        elif it.kind == 'hend':
+            spec = G[it.master]
+            if spec['kind'] == 'l2r':
+                dom['serial'].append((it.name, 'ck'))
+                rst['serial'].append((it.name, 'rs'))
+                dom['stream'].append((it.name, 'cks'))
+                rst['stream'].append((it.name, 'rss'))
+            else:
+                d_ = 'serial' if spec['kind'] == 'r2l' else 'stream'
+                dom[d_].append((it.name, 'ck'))
+                rst[d_].append((it.name, 'rs'))
+    for d_ in ('stream', 'serial', 'hbm'):
+        bus(f'clk_{d_}', 'clock', 1, [(col, f'pll_{d_}')] + dom[d_])
+        bus(f'rst_{d_}', 'reset', 1, [(col, f'rst_{d_}')] + rst[d_])
+    # one net per driver port: chains that branch (x spines -> tier branches, the start block -> both spines) declared
+    # one net per branch; merge them into the driver's single multi-load net
+    merged, at = [], {}
+    for b in m['buses']:
+        k_ = b[3][0] if b[3][0][0] != 'TOP' else (b[0],)
+        if k_ in at:
+            i_ = at[k_]
+            o = merged[i_]
+            assert o[1] == b[1] and o[2] == b[2], (o[:3], b[:3])
+            merged[i_] = (o[0], o[1], o[2], o[3] + [e for e in b[3][1:] if e not in o[3]])
+        else:
+            at[k_] = len(merged)
+            merged.append(b)
+    m['buses'] = merged
+    return m
+
+
+LANES_VCH, LANES_CORR = 26, 16
+
+
+def vch_x(m, tag):
+    """per-chain x track inside the VCH (spreads the vertical chains over its width instead of one centre line)"""
+    d = m.setdefault('_vch_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_VCH
+    return m['x_vch'] + 60.0 + (VCH8 - 120.0) * (i + 0.5) / LANES_VCH
+
+
+LANES_S14 = 8
+
+
+def s14_x(m, half, tag):
+    """per-chain x track inside the half's spine-to-field (S14) channel"""
+    d = m.setdefault('_s14_lane_' + half, {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_S14
+    g = m['geo']
+    x0 = g['x_sp'] - SPF if half == 'W' else g['x_fe']
+    return x0 + 50.0 + (SPF - 100.0) * (i + 0.5) / LANES_S14
+
+
+def corr_y(m, tag):
+    """per-chain y track inside the HC crossing corridor"""
+    d = m.setdefault('_corr_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_CORR
+    c0, c1 = m['corridor']
+    return c0 + 60.0 + (c1 - c0 - 120.0) * (i + 0.5) / LANES_CORR
+
+
+def corr_c(m):
+    return (m['corridor'][0] + m['corridor'][1]) / 2
+
+
+def _dedup(P):
+    out = []
+    for p in P:
+        if not out or _mh(out[-1], p) > 1e-6:
+            out.append(p)
+    return out
+
+
+def _frame_of(m, half, t, c):
+    for r, f in m['frames'].items():
+        if f['half'] == half and f['tier'] == t and f['col'] == c:
+            return r
+    raise KeyError((half, t, c))
+
+
+def chain_nets(CH8, name, src, stations, lanes):
+    """single-lane chain nets: src (inst, fclk port, data port) -> station 1 lane 0 -> ... ; the last station's
+    outputs are left for the caller (taps / sink)."""
+    prev = src
+    for k, it in enumerate(stations):
+        CH8.bus(f'{name}_f{k}', 'fclk', 1, [(prev[0], prev[1]), (it.name, 'fi0')])
+        CH8.bus(f'{name}_d{k}', 'lane', lanes[0], [(prev[0], prev[2]), (it.name, 'di0')])
+        prev = (it.name, 'fo0', 'do0')
+    CH8.m.setdefault('chain_tail', {})[name] = prev
+
+
+def _add_tap(m, st_inst, lane, sink):
+    """add a load (sink inst, fclk port, data port) to the nets driven by station st_inst's lane `lane`; if the
+    station drives nothing yet, create the nets."""
+    fo, do = f'fo{lane}', f'do{lane}'
+    for i, (bid, cls, bits, eps) in enumerate(m['buses']):
+        if eps[0] == (st_inst.name, fo):
+            m['buses'][i] = (bid, cls, bits, eps + [(sink[0], sink[1])])
+        elif eps[0] == (st_inst.name, do):
+            m['buses'][i] = (bid, cls, bits, eps + [(sink[0], sink[2])])
+            break
+    else:
+        lw = int(st_inst.master.split('_')[2].split('x')[0])
+        m['buses'].append((f'{st_inst.name}_tf{lane}', 'fclk', 1, [(st_inst.name, fo), (sink[0], sink[1])]))
+        m['buses'].append((f'{st_inst.name}_td{lane}', 'lane', lw, [(st_inst.name, do), (sink[0], sink[2])]))
+
+
+def _run_multi(CH8, name, path, allowed, forced, ncol):
+    """multi-lane trunk: the station count per position decides its lane count (lanes joined so far)."""
+    L = _poly_len(path)
+    # first pass with the widest signature (sizes), then per station the lanes joined so far
+    sts = CH8.run(name, [CRET + 2] * ncol, path, allowed, path[0], forced=forced)
+    out = []
+    for it, s_, hop in sts:
+        joined = sum(1 for f_ in forced if f_ <= s_ + 1e-6)
+        n = max(1, joined)
+        horiz = it.master.startswith('dsfd_stnh')
+        it.master = stn_master([CRET + 2] * n, horiz)
+        it.power_w = n * (CRET + 2) * FLOP_CLK_W * 1.5
+        out.append((it, s_, n))
+    return out
+
+
+def _multi_nets(m, CH8, name, sts, ncol, frames_far_to_near, endb):
+    """lanes: lane j of a station = the j-th column to have joined (the farthest first)."""
+    B = m['buses']
+    cur = {}      # lane j -> (inst, fport, dport) currently driving it
+    fr = list(reversed(frames_far_to_near)) if False else frames_far_to_near[::-1]
+    # frames_far_to_near is given near -> far by column index; joining order is far -> near
+    order = [frames_far_to_near[c] for c in range(ncol - 1, -1, -1)]
+    for j in range(ncol):
+        m.setdefault('r_stages', {})[order[j]] = sum(1 for it, s_, n in sts if n > j)
+    for k, (it, s_, n) in enumerate(sts):
+        while len(cur) < n:
+            j = len(cur)
+            cur[j] = (f'cf{order[j]}', 'rf', 'rd')
+        for j in range(n):
+            src = cur[j]
+            B.append((f'{name}_f{k}_{j}', 'fclk', 1, [(src[0], src[1]), (it.name, f'fi{j}')]))
+            B.append((f'{name}_d{k}_{j}', 'lane', CRET + 2, [(src[0], src[2]), (it.name, f'di{j}')]))
+            cur[j] = (it.name, f'fo{j}', f'do{j}')
+    while len(cur) < ncol:
+        j = len(cur)
+        cur[j] = (f'cf{order[j]}', 'rf', 'rd')
+    for j in range(ncol):
+        src = cur[j]
+        B.append((f'{name}_fe_{j}', 'fclk', 1, [(src[0], src[1]), (endb.name, f'fi{j}')]))
+        B.append((f'{name}_de_{j}', 'lane', CRET + 2, [(src[0], src[2]), (endb.name, f'di{j}')]))
+
+
+def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
+    g, hub = m['geo'], m['hub']
+    vm, sel, colr = hub['vm'], hub['selector'], hub['collector']
+    H = DIE[1]
+    allc = list(cor.values())
+    yS = (g['band_depth'] + g['y_f']) / 2
+    yN = (g['y_top'] + H - g['band_depth']) / 2
+    s14W = g['x_sp'] - SPF / 2
+    vchx = m['x_vch'] + VCH8 / 2
+    vmy = vm.y + vm.h / 2
+
+    def vm_side(st):
+        return 'W' if st[1] == 'W' else 'E'
+
+    def spine_x(side):
+        return s14_x(m, 'W', f'svc{len(m.get("_s14_lane_W", {}))}') if side == 'W' else \
+            vch_x(m, f'svc{side}{len(m.get("_vch_lane", {}))}')
+
+    def face_pt(sv, off):
+        """(x, y) on the svc's field-facing edge, `off` from its east end"""
+        x = sv.x + sv.w - off
+        y = sv.y + sv.h if sv.orient == 'R0' else sv.y
+        return x, y
+
+    def strip_y(sv, tag=''):
+        """per-chain y track in the band strip (spread over its height)"""
+        d = m.setdefault('_strip_lane', {})
+        k_ = (sv.orient, tag)
+        if k_ not in d:
+            d[k_] = sum(1 for o in d if o[0] == sv.orient)
+        i = d[k_] % 6
+        y0 = yS if sv.orient == 'R0' else yN
+        return y0 + (i - 2.5) * 55.0
+
+    def single(name, payload, fmt, src, src_xy, path, sink_end):
+        """src: (inst, fclk port, data port); sink_end: (end inst) -> lane 0 ports fi0/di0"""
+        lw = payload + (2 if fmt == 'vr' else 0)
+        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy)
+        chain_nets(CH8, name, src, [it for it, _, _ in sts], [lw])
+        tail = m['chain_tail'][name]
+        CH8.bus(f'{name}_fe', 'fclk', 1, [(tail[0], tail[1]), (sink_end.name, 'fi0')])
+        CH8.bus(f'{name}_de', 'lane', lw, [(tail[0], tail[2]), (sink_end.name, 'di0')])
+        return sts
+
+    def beside_svc(name, master, w, h, sv, off):
+        x, y = face_pt(sv, off)
+        yy = y + h / 2 + 6.0 if sv.orient == 'R0' else y - h / 2 - 6.0
+        pl = P.near(x, yy, w, h, [cor['stripS'] if sv.orient == 'R0' else cor['stripN']], horiz=True, span=400.0)
+        assert pl, name
+        return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
+
+    def beside_blk(name, master, w, h, blk, face, yfrac):
+        y = blk.y + blk.h * yfrac
+        x = blk.x - w / 2 - 6.0 if face == 'W' else blk.x + blk.w + w / 2 + 6.0
+        gap = cor['gapS'] if blk.y < DIE[1] / 2 else cor['gapN']
+        pl = P.near(x, y, w, h, [gap], horiz=False, span=300.0, rows=8)
+        assert pl, name
+        return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0' if face == 'E' else 'MY', kind='hend', region='svc'))
+    for i, (st, sv) in enumerate(m['svcs'].items()):
+        side = vm_side(st)
+        sx = spine_x(side)
+        sgn = -1 if st[0] == 'S' else 1          # end blocks spread over the VM face (r8 GRT: one pile at its centre)
+        vy = vmy + sgn * (350.0 if st[1] == 'E' else 400.0)
+        # VM -> svc: query vector (serial VM -> stream lane), entry meso at the service
+        nm, w, h = end_spec('l2r', [512], 'vr')
+        hs = P.add(_hub_at(P, f'hq_{st}', nm, w, h, vm, side, vy, cor))
+        CH8.bus(f'hq_{st}_i', 'local', 513, [(vm.name, f'q{st}'), (hs.name, 'i')])
+        CH8.bus(f'hq_{st}_s', 'local', 3, [(hs.name, 'st'), (vm.name, f'q{st}s')])
+        nm, w, h = end_spec('m2l', [512], 'vr')
+        he = beside_svc(f'hqe_{st}', nm, w, h, sv, 400.0)
+        px, py = face_pt(sv, 400.0)
+        single(f'q{st}', 512, 'vr', (hs.name, 'fo', 'od'), (hs.x + hs.w / 2, hs.y + hs.h / 2),
+               [(hs.x + hs.w / 2, hs.y + hs.h / 2), (sx, vy), (sx, strip_y(sv, 'q' + st)), (px, strip_y(sv, 'q' + st)), (px, he.y + he.h / 2)], he)
+        CH8.bus(f'hqe_{st}_o', 'local', 515, [(he.name, 'o'), (sv.name, 'q')])
+        # svc -> VM: attention output + index (1,024 b), ratio CDC at the VM
+        nm, w, h = end_spec('r2l', [1024], 'vr')
+        ha = P.add(_hub_at(P, f'ha_{st}', nm, w, h, vm, side, vmy + sgn * (650.0 if st[1] == 'E' else 800.0), cor))
+        px, py = face_pt(sv, 600.0)
+        single(f'a{st}', 1024, 'vr', (sv.name, 'af', 'ad'), (px, py),
+               [(px, py), (px, strip_y(sv, 'a' + st)), (sx, strip_y(sv, 'a' + st)), (sx, ha.y + ha.h / 2), (ha.x + ha.w / 2, ha.y + ha.h / 2)], ha)
+        CH8.bus(f'ha_{st}_o', 'local', 1027, [(ha.name, 'o'), (vm.name, f'a{st}')])
+        # svc -> selector (index scores) and -> collector (attention partials): meso entry beside the band block
+        for tag, blk, port, off, pfx in (('ix', sel, 'i', 1200.0, 'x'), ('co', colr, 'c', 1500.0, 'o')):
+            face = 'W' if st[1] == 'W' else 'E'
+            nm, w, h = end_spec('m2l', [512], 'vr')
+            he = beside_blk(f'h{tag}_{st}', nm, w, h, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
+            px, py = face_pt(sv, off)
+            ex_ = he.x + he.w / 2
+            if (blk.y < DIE[1] / 2) == (sv.orient == 'R0'):          # same band
+                path = [(px, py), (px, strip_y(sv, tag + st)), (ex_, strip_y(sv, tag + st)), (ex_, he.y + he.h / 2)]
+            else:                                                      # across the die through the VCH
+                yo = yS if blk.y < DIE[1] / 2 else yN
+                vx_ = vch_x(m, f'{tag}{st}')
+                path = [(px, py), (px, strip_y(sv, tag + st)), (vx_, strip_y(sv, tag + st)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
+            single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
+            CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
+    # selector / collector -> VM (ratio CDC beside the VM, VCH side)
+    for name, blk, yo in (('sel', sel, yS), ('col', colr, yN)):
+        nm, w, h = end_spec('r2l', [512], 'vr')
+        vy = vmy + (-1 if name == 'sel' else 1) * 950.0
+        he = P.add(_hub_at(P, f'h{name}', nm, w, h, vm, 'E', vy, cor))
+        bx = blk.x + blk.w / 2 + 300.0
+        by_ = blk.y + blk.h if name == 'sel' else blk.y
+        single(name, 512, 'vr', (blk.name, 'vf', 'vd'), (bx, by_),
+               [(bx, by_), (bx, yo), (vch_x(m, name), yo), (vch_x(m, name), he.y + he.h / 2),
+                (he.x + he.w / 2, he.y + he.h / 2)], he)
+        CH8.bus(f'h{name}_o', 'local', 515, [(he.name, 'o'), (vm.name, name)])
+
+
+def _hub_at(P, name, master, w, h, slab, side, y, cor):
+    """an end / start block beside a hub slab: side 'W' in the S14 W channel, 'E' in the VCH"""
+    x = slab.x - w / 2 - 6.0 if side == 'W' else slab.x + slab.w + w / 2 + 6.0
+    pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=1800.0, rows=6)
+    assert pl, name
+    return Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind='hend', region='hub')
+
+
+def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
+    g, hub = m['geo'], m['hub']
+    coll = hub['collective']
+    allc = list(cor.values())
+    s14 = {'W': g['x_sp'] - SPF / 2, 'E': g['x_fe'] + SPF / 2}
+    vchx = m['x_vch'] + VCH8 / 2
+    edge = {'W': (cor['edgeW'][0] + cor['edgeW'][2]) / 2, 'E': (cor['edgeE'][0] + cor['edgeE'][2]) / 2}
+    cy = coll.y + coll.h / 2
+    for lk in m['links']:
+        side, i = lk.name[3], int(lk.name[4])
+        t = 2 if i < 2 else 3
+        ry = g['ch_y'][t] + rowl + 15.0 + 50.0 * (i % 2)
+        ly = lk.y + lk.h / 2
+        lx = lk.x + lk.w if side == 'W' else lk.x
+        yy = cy + (i - 1.5) * 90.0
+        cx = coll.x if side == 'W' else coll.x + coll.w
+        nm = f'K{side}{i}'
+        if side == 'W':
+            sx_ = s14_x(m, 'W', nm)
+            core = [(cx, yy), (sx_, yy), (sx_, ry)]
+        else:
+            vx_, cy_ = vch_x(m, nm), corr_y(m, nm)
+            sx_ = s14_x(m, 'E', nm)
+            core = [(cx, yy), (vx_, yy), (vx_, cy_), (sx_, cy_), (sx_, ry)]
+        path = _dedup(core + [(edge[side], ry), (edge[side], ly), (lx, ly)])
+        nm = f'K{side}{i}'
+        # tx: collective -> macro tx (raw 512); the macro's parallel clock is the chain's forwarded clock
+        sts = CH8.run(f'{nm}t', [512], path, allc, path[0])
+        chain_nets(CH8, f'{nm}t', (coll.name, f'tf{side}{i}', f'td{side}{i}'), [it for it, _, _ in sts], [512])
+        tail = m['chain_tail'][f'{nm}t']
+        # rx: macro rx -> stations back -> hub meso end beside the collective
+        endn, w, h = end_spec('m2l', [512], 'raw')
+        he = P.add(_hub_at(P, f'hl_{side}{i}', endn, w, h, coll, side, yy, cor))
+        rpath = _dedup(path[::-1][:-1] + [(he.x + he.w / 2, he.y + he.h / 2)])
+        rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly))
+        rst = [it for it, _, _ in rs]
+        CH8.bus(f'{nm}_clk', 'fclk', 1, [(tail[0], tail[1]), (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
+                                                                                [(he.name, 'fi0')]))
+        CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
+        if rst:
+            CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
+            prev = (rst[0].name, 'fo0', 'do0')
+            for k, it in enumerate(rst[1:], 1):
+                CH8.bus(f'{nm}r_f{k}', 'fclk', 1, [(prev[0], prev[1]), (it.name, 'fi0')])
+                CH8.bus(f'{nm}r_d{k}', 'lane', 512, [(prev[0], prev[2]), (it.name, 'di0')])
+                prev = (it.name, 'fo0', 'do0')
+            CH8.bus(f'{nm}r_fe', 'fclk', 1, [(prev[0], prev[1]), (he.name, 'fi0')])
+            CH8.bus(f'{nm}r_de', 'lane', 512, [(prev[0], prev[2]), (he.name, 'di0')])
+        else:
+            CH8.bus(f'{nm}r_de', 'lane', 512, [(lk.name, 'rx'), (he.name, 'di0')])
+        CH8.bus(f'hl_{side}{i}_o', 'local', 515, [(he.name, 'o'), (coll.name, f'r{side}{i}')])
+
+
+# ---------------------------------------------------------------------------------------- r8 ports / masters
+GLUE_PREFIX = ('dsfd_stn', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+
+
+def is_glue(master):
+    return master.startswith(GLUE_PREFIX)
+
+
+def port_usage(m):
+    """inst -> port -> (dir, bits): endpoint 0 of a net drives it (r8 convention); top inputs drive their loads."""
+    use = defaultdict(dict)
+    for bid, cls, bits, eps in m['buses']:
+        for j, (inst, port) in enumerate(eps):
+            if inst == 'TOP':
+                continue
+            d = 'output' if j == 0 and cls != 'top_in' else 'input'
+            if cls == 'phy_dfi':
+                d = 'inout'
+            old = use[inst].get(port)
+            if old and old[0] != d:
+                raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
+            use[inst][port] = (d, max(bits, old[1] if old else 0))
+    return use
+
+
+def finalize_r8(m):
+    """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
+    nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
+    use = port_usage(m)
+    by_ = {it.name: it for it in m['insts']}
+    m['_nets_of_o'] = defaultdict(list)
+    for b_ in m['buses']:
+        if b_[3][0][1] == 'o':
+            m['_nets_of_o'][b_[3][0][0]].append(b_)
+    for it in m['insts']:
+        u = use.get(it.name, {})
+        if it.kind == 'hend' and '__' not in it.master:
+            # one master per hub end/start block: its pin faces follow its own peers
+            new = f'{it.master}__{it.name}'
+            m['glue'][new] = m['glue'][it.master]
+            it.master, it.orient = new, 'R0'
+        if it.kind == 'sstn':
+            code = ''.join(k for k in ('e0', 'e1', 'c0', 'c1', 'si', 'nf', 'qt') if k in u)
+            it.master = f'dsfd_sstn_{code or "x"}'
+        elif it.kind == 'node':
+            par = [e for b_ in m['_nets_of_o'].get(it.name, []) for e in b_[3][1:]]
+            py = max((by_[e[0]].y for e in par), default=0.0)
+            it.master = 'dsfd_node_%s%s%s%s' % ('L' if u['a'][1] == LEAF else 'N', 'L' if u['b'][1] == LEAF else 'N',
+                                                'f' if 'fi' in u else '', 'u' if py > it.y else 'd')
+    pdir = defaultdict(dict)
+    for it in m['insts']:
+        for p_, (d, b) in use.get(it.name, {}).items():
+            old = pdir[it.master].get(p_)
+            if old and (old[0] != d or old[1] != b):
+                raise ValueError(f'{it.master}.{p_}: {old} vs {(d, b)} on {it.name}')
+            pdir[it.master][p_] = (d, b)
+    m['pdir'] = pdir
+    for it in m['insts']:
+        if it.kind == 'hend':
+            it.power_w = 5 * sum(b for d, b in pdir[it.master].values() if d == 'input') * FLOP_CLK_W * 1.5
+    return pdir
+
+
+def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
+    """ports [(name, bits)] laid one after another along a face (pitch 1 track), centred on the face if start is None"""
+    p = TRK[layer][1]
+    K = _LAY_K[0]
+    sp = lambda b: max(1, math.ceil(b / K)) * p * K * pitch
+    gap = max(gap, 0.144, 1.2 * p * K)
+    tot = sum(sp(b) for _, b in ports) + gap * (len(ports) - 1)
+    L = length if length is not None else (M.h if face in 'EW' else M.w)
+    pos = start if start is not None else max(2 * p * K + 0.2, (L - tot) / 2)
+    for name, b in ports:
+        M.face(name, b, face, layer, pos + sp(b) / 2, pitch)
+        pos += sp(b) + gap
+
+
+_LAY_K = [1]
+
+
+def _peer_face(m, it, port):
+    """face of `it` toward the other endpoints of the nets on (it, port) (nearest point of each peer's outline)"""
+    by = m['_by']
+    xs, ys = [], []
+    cx_, cy_ = it.x + it.w / 2, it.y + it.h / 2
+    for bid, cls, bits, eps in m['_nets_of'].get((it.name, port), []):
+        for inst, p_ in eps:
+            if inst != it.name and inst in by:
+                o = by[inst]
+                xs.append(min(max(cx_, o.x), o.x + o.w))
+                ys.append(min(max(cy_, o.y), o.y + o.h))
+    if not xs:
+        return 'N'
+    dx = sum(xs) / len(xs) - (it.x + it.w / 2)
+    dy = sum(ys) / len(ys) - (it.y + it.h / 2)
+    f = ('E' if dx > 0 else 'W') if abs(dx) * it.h > abs(dy) * it.w else ('N' if dy > 0 else 'S')
+    if it.orient in ('MY', 'R180'):
+        f = {'E': 'W', 'W': 'E'}.get(f, f)
+    if it.orient in ('MX', 'R180'):
+        f = {'N': 'S', 'S': 'N'}.get(f, f)
+    return f
+
+
+def masters_r8(m, k=1):
+    pdir = m.get('pdir') or finalize_r8(m)
+    if '_by' not in m:
+        m['_by'] = {it.name: it for it in m['insts']}
+        nets = defaultdict(list)
+        for b in m['buses']:
+            for inst, p_ in b[3]:
+                nets[(inst, p_)].append(b)
+        m['_nets_of'] = nets
+    first = {}
+    for it in m['insts']:
+        first.setdefault(it.master, it)
+    _init_real()
+    M = {}
+    _LAY_K[0] = k
+    for mst, it in first.items():
+        if mst in REAL_FILES:
+            continue
+        ports = pdir.get(mst, {})
+        Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst == 'ot_s81_cfg7_seq' else 7, f'r8 {it.kind}')
+        M[mst] = Mx
+        _faces_r8(m, Mx, it, ports)
+    if k > 1:
+        for name, ports in real_ports_r8().items():
+            M[name] = _spread_ports(_real_master_bundled(REAL_FILES[name], k, ports), k)
+    return M
+
+
+def _spread_ports(Mx, k):
+    """bundled real view: ports on one face and layer pushed apart so their bundle pins never overlap"""
+    groups = defaultdict(list)
+    for p_ in Mx.order:
+        s = Mx.ports[p_]
+        if s[0] == 'face':
+            groups[(s[2], s[3])].append(p_)
+    for (face, layer), lst in groups.items():
+        pk = TRK[layer][1] * k
+        span = lambda p_: max(1, math.ceil(Mx.ports[p_][1] / k)) * pk * Mx.ports[p_][5]
+        lst.sort(key=lambda p_: Mx.ports[p_][4])
+        L = Mx.h if face in 'EW' else Mx.w
+        lo = 2 * pk
+        for p_ in lst:
+            _, w, f, ly, c, pt = Mx.ports[p_]
+            s0 = max(c - span(p_) / 2, lo)
+            Mx.ports[p_] = ('face', w, f, ly, s0 + span(p_) / 2, pt)
+            lo = s0 + span(p_) + 2 * pk
+        if lo > L:                     # too many bundle pins at the real pitch: pack them at 1 bundle track
+            lo = 2 * pk
+            for p_ in lst:
+                _, w, f, ly, c, pt = Mx.ports[p_]
+                sp_ = max(1, math.ceil(w / k)) * pk
+                Mx.ports[p_] = ('face', w, f, ly, lo + sp_ / 2, 1)
+                lo += sp_ + 2 * pk
+            if lo > L:
+                raise ValueError(f'{Mx.name}: bundled face {face} overflows ({lo:.1f} > {L:.1f})')
+    return Mx
+
+
+def _faces_r8(m, Mx, it, ports):
+    P_ = lambda names: [(n, ports[n][1]) for n in names if n in ports]
+    kind, mst = it.kind, Mx.name
+    if kind == 'stn':
+        horiz = mst.startswith('dsfd_stnh')
+        n = len([p_ for p_ in ports if p_.startswith('fi')])
+        ins = [x for j in range(n) for x in ((f'fi{j}', 1), (f'di{j}', ports[f'di{j}'][1]))]
+        outs = [x for j in range(n) for x in ((f'fo{j}', 1), (f'do{j}', ports[f'do{j}'][1]))]
+        _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
+        _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+    elif kind == 'sstn':
+        _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
+        _lay(Mx, 'E', P_(['nf']), 'M4')
+    elif kind == 'node':
+        la, lb, up_ = mst[10] == 'L', mst[11] == 'L', mst.endswith('u')
+        _lay(Mx, 'W', P_([s_ for s_, lf in (('a', la), ('b', lb)) if lf]), 'M4')
+        sface = [s_ for s_, lf in (('a', la),) if not lf] + ['fo'] + ([] if up_ else ['o'])
+        nface = [s_ for s_, lf in (('b', lb),) if not lf] + ['fi'] + (['o'] if up_ else [])
+        _lay(Mx, 'S', P_(sface), 'M5')
+        _lay(Mx, 'N', P_(nface), 'M5')
+        _lay(Mx, 'E', P_(['clk', 'rst_n']), 'M4')
+    elif kind == 'rstg':
+        _lay(Mx, 'N', P_(['i']), 'M5')
+        _lay(Mx, 'S', P_(['o']), 'M5')
+        _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
+    elif kind == 'cfifo':
+        c0 = SSTN_X + SSTN_WH[0] / 2 - CF_X
+        c1 = COL_W8 - RSC_W / 2 - CF_X
+        _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
+        _lay(Mx, 'N', P_(['xa', 'xb', 'cc', 'st']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
+        _lay(Mx, 'N', P_(['co', 'rs']), 'M5', start=c0 + 60.0)
+        _lay(Mx, 'W', P_(['ck', 'rst']), 'M4')
+    elif kind == 'seq':
+        _lay(Mx, 'W', P_([f'q{j}' for j in range(7)] + ['a'] + [f'ce{j}' for j in range(7)]), 'M4', gap=0.0)
+        _lay(Mx, 'N', P_(['cfg', 'go_e']), 'M5')
+        _lay(Mx, 'E', P_(['lc', 'st']), 'M4')
+        _lay(Mx, 'S', P_(['clk', 'rst_n']), 'M5')
+    elif kind == 'hend':
+        faces = defaultdict(list)
+        for p_ in sorted(ports, key=_pnum):
+            faces['S' if p_ in ('ck', 'cks', 'rs', 'rss') else _peer_face(m, it, p_)].append((p_, ports[p_][1]))
+        for f, lst in faces.items():
+            L = Mx.h if f in 'EW' else Mx.w
+            K = _LAY_K[0]
+            need = sum(max(1, math.ceil(b / K)) * K * 0.048 + max(0.144, 0.0576 * K) for _, b in lst) + 1.0
+            if need > L:
+                raise ValueError(f'{Mx.name}: face {f} needs {need:.1f} um > {L:.1f}')
+            _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
+    elif kind in ('bf', 'bf_nv'):
+        _lay(Mx, 'S', P_(['go', 'cfg', 'ck', 'rs']), 'M5', start=230.0)
+        _lay(Mx, 'S', P_(['x0', 'x1']), 'M5', start=SSTN_X - 4.32 - 10.0)
+        _lay(Mx, 'N', P_(['nv', 'nvr']), 'M5', start=560.0)
+        _lay(Mx, 'E', P_(['r0', 'r1']), 'M4')
+        _lay(Mx, 'S', P_(['st']), 'M5', start=SSTN_X - 4.32 + 40.0)
+    elif kind == 'nvx':
+        _lay(Mx, 'S', P_(['nv', 'nvr']), 'M5', start=560.0)
+        _lay(Mx, 'N', P_(['st', 'ck', 'rs']), 'M5', start=SSTN_X)
+    elif kind == 'ctrl':
+        ph = real_lef(PHY_LEF)
+        dfi = real_ports_r8()[ph['name']]['dfi']
+        if _LAY_K[0] == 1:
+            Mx.ports['phy'] = ('xy', [(ph['pins'][n][1][0] + ph['pins'][n][1][2]) / 2 for n in dfi])
+            Mx.order.append('phy')
+        else:
+            Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
+        _lay(Mx, 'N', P_(['rd']), 'M5')
+        _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
+    else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
+        faces = defaultdict(list)
+        for p_ in sorted(ports):
+            if p_ == 'phy':
+                continue
+            faces[_peer_face(m, it, p_)].append(p_)
+        for f, lst in faces.items():
+            lst.sort(key=lambda p_: _peer_pos(m, it, p_, f))
+            L = Mx.h if f in 'EW' else Mx.w
+            K = _LAY_K[0]
+            bwf = lambda b: max(1, math.ceil(b / K)) * K * 0.048
+            tot = sum(bwf(ports[p_][1]) for p_ in lst) + 2.0 * len(lst)
+            if tot > L - 1.0:
+                raise ValueError(f'{Mx.name} face {f}: {tot:.0f} um of pins > {L:.0f}')
+            # ports in peer order, spread evenly over the whole face (equal gaps): a slab face carries thousands of
+            # die wires, and packing them at the peer positions piled them into one GCell column (r8 GRT, VM E face)
+            if False:
+                gap = (L - 0.8 - sum(bwf(ports[p_][1]) for p_ in lst)) / (len(lst) + 1)
+                pos = 0.4 + gap
+                for p_ in lst:
+                    bw = bwf(ports[p_][1])
+                    Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
+                    pos += bw + gap
+                continue
+            pos = 0.4                     # band blocks / services: at their peers' positions where they fit
+            for p_ in lst:
+                bw = bwf(ports[p_][1])
+                want = _peer_pos(m, it, p_, f) - bw / 2
+                rem = sum(bwf(ports[q][1]) + 2.0 for q in lst[lst.index(p_) + 1:])
+                pos = min(max(pos, want), L - 0.4 - rem - bw)
+                Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
+                pos += bw + 2.0
+
+
+def _pnum(p_):
+    mm = re.match(r'^([a-z]+)(\d*)$', p_)
+    return (int(mm.group(2)) if mm and mm.group(2) else -1, p_)
+
+
+def _peer_pos(m, it, port, f):
+    """peer centroid along face f, in the master frame"""
+    by = m['_by']
+    xs, ys = [], []
+    for bid, cls, bits, eps in m['_nets_of'].get((it.name, port), []):
+        for inst, p_ in eps:
+            if inst != it.name and inst in by:
+                o = by[inst]
+                xs.append(o.x + o.w / 2)
+                ys.append(o.y + o.h / 2)
+    if not xs:
+        return 0.0
+    if f in 'EW':
+        v = sum(ys) / len(ys) - it.y
+        return it.h - v if it.orient in ('MX', 'R180') else v
+    v = sum(xs) / len(xs) - it.x
+    return it.w - v if it.orient in ('MY', 'R180') else v
+
+
+# ---------------------------------------------------------------------------------------- r8 glue RTL
+def _decl(ports):
+    return ',\n'.join(f'    {d} wire [{b - 1}:0] {p_}' for p_, (d, b) in sorted(ports.items(), key=lambda kv: _pnum(kv[0])))
+
+
+def _sync(name, clk, rst_in):
+    return (f'    reg [1:0] {name}_q; always @(posedge {clk} or negedge {rst_in}) if (!{rst_in}) {name}_q <= 2\'b00; '
+            f'else {name}_q <= {{{name}_q[0], 1\'b1}};\n    wire {name} = {name}_q[1];')
+
+
+def glue_rtl(m):
+    """Verilog of every generated glue master (structural over the real primitives ot_fwd_link_stage, ot_meso_fifo,
+    ot_ratio_cdc_fifo, ot_v41_retn_w17w10)."""
+    pdir = m['pdir']
+    G = m['glue']
+    out = ['// GENERATED by tools/dsrom_s81_fulldie.py --gen r8 (CLAUDE S81-DIE): S81 die glue masters.',
+           '// Forwarded stations: one ot_fwd_link_stage (ENABLE, W <= 512 slices) per lane; column FIFO: ot_meso_fifo',
+           '// W564 entry crossing; hub end/start blocks: ot_meso_fifo / ot_ratio_cdc_fifo; return nodes wrap',
+           '// ot_v41_retn_w17w10 with the ot_v41_field_w17w10 leaf packing.  Lane format vr: d[0] rst_n, d[1] valid.',
+           '`timescale 1ns/1ps', '']
+    for mst in sorted(pdir):
+        if not is_glue(mst):
+            continue
+        ports = pdir[mst]
+        body = []
+        if mst.startswith('dsfd_stn'):
+            n = len([p_ for p_ in ports if p_.startswith('fi')])
+            for j in range(n):
+                w = ports[f'di{j}'][1]
+                ns = math.ceil(w / 512)
+                for s in range(ns):
+                    lo, hi = 512 * s, min(w, 512 * (s + 1))
+                    fo = f'fo{j}[0]' if s == 0 else f'fx{j}_{s}'
+                    if s:
+                        body.append(f'    wire {fo};')
+                    body.append(f'    ot_fwd_link_stage #(.W({hi - lo}), .ENABLE(1\'b1)) u_{j}_{s} (.fclk_i(fi{j}[0]), '
+                                f'.rst_n(1\'b1), .i_v(1\'b1), .i_d(di{j}[{hi - 1}:{lo}]), .fclk_o({fo}), .o_v(), '
+                                f'.o_d(do{j}[{hi - 1}:{lo}]));')
+        elif mst.startswith('dsfd_sstn'):
+            body.append('    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;')
+            body.append('    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end')
+            body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15\'d0; else rc <= cci;')
+            body.append('    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset')
+            body.append('    assign xb = rb;\n    assign cc = rc;')
+            if 'qt' in ports:
+                body.append('    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer')
+            terms = [p_ for p_ in ('e0', 'e1', 'c0', 'c1', 'si') if p_ in ports]
+            o = ' | '.join(terms) if terms else "2'b00"
+            nf = ' | {nf[0], 1\'b0}' if 'nf' in ports else ''
+            body.append(f'    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2\'b00; else rst <= {o}{nf};')
+            body.append('    assign so = rst;')
+        elif mst.startswith('dsfd_node'):
+            la, lb, fch = mst[10] == 'L', mst[11] == 'L', 'f' in mst[12:]
+            for s_, leaf in (('a', la), ('b', lb)):
+                if leaf:
+                    body.append(f'    wire {s_}_v = {s_}[0]; wire [31:0] {s_}_d = {s_}[32:1]; wire {s_}_e = {s_}[59];')
+                    body.append(f'    wire [31:0] {s_}_t = {{{s_}[62:60], {s_}[48:33], {s_}[53:49], 3\'d0, {s_}[58:54]}};')
+                else:
+                    body.append(f'    wire {s_}_v = {s_}[0]; wire [31:0] {s_}_t = {s_}[32:1]; wire [31:0] {s_}_d = {s_}[64:33]; '
+                                f'wire {s_}_e = {s_}[65];')
+            body.append('    wire ov, oe, flt; wire [31:0] ot_, od;')
+            body.append('    ot_v41_retn_w17w10 #(.RD(64), .RST(1), .BYPASS(1)) u_n (.clk(clk[0]), .rst_n(rst_n[0]), '
+                        '.a_v(a_v), .a_t(a_t), .a_d(a_d), .a_e(a_e), .b_v(b_v), .b_t(b_t), .b_d(b_d), .b_e(b_e), '
+                        '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt), .quiet());')
+            body.append('    assign o = {oe, od, ot_, ov};')
+            fi = ' | fi[0]' if fch else ''
+            body.append(f'    reg fr; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) fr <= 1\'b0; else fr <= flt{fi};')
+            body.append('    assign fo = fr;')
+        elif mst == 'dsfd_rstg':
+            body.append('    reg [65:0] r; always @(posedge ck[0]) r <= i;')
+            body.append('    assign o = {r[65:1], r[0] & rs[0]};')
+        elif mst == 'dsfd_cfifo':
+            body += [_sync('rsync', 'ck[0]', 'rst[0]'),
+                     '    assign co = ck;          // column clock-tree root (option C region root)',
+                     '    assign rs = rsync;',
+                     '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
+                     '    ot_meso_fifo #(.W(564), .ENABLE(1\'b1)) u_x (.wclk(xf[0]), .wrst_n(xd[0]), .w_v(xd[1]), .w_rdy(wr), '
+                     '.w_d(xd[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
+                     '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
+                     '    // lane stream {x0 283 | x1 266 | cc 15}; xs_v, go and cfg_go qualified by the FIFO valid',
+                     '    assign xa = {xq[282] & xv, xq[281:0]};',
+                     '    assign xb = xq[548:283];',
+                     '    assign cc = {xq[563:551], xq[550] & xv, xq[549] & xv};',
+                     '    reg [67:0] rr; reg flt;',
+                     '    always @(posedge ck[0] or negedge rsync) if (!rsync) begin rr <= 68\'d0; flt <= 1\'b0; end',
+                     '        else begin rr <= {st[1] | flt, st[0] | ~rl, ri}; flt <= flt | wf | rf_ | (xd[1] & ~wr); end',
+                     '    assign rf = ck;',
+                     '    assign rd = {rr, rr[0], rsync};   // {status, root word, valid = root o_v, rst_n}']
+        else:
+            spec = G[mst]
+            kind, lanes, fmt = spec['kind'], spec['lanes'], spec['fmt']
+            if kind == 'l2r':
+                pw = lanes[0]
+                body += [_sync('rsl', 'ck[0]', 'rs[0]'), _sync('rss_', 'cks[0]', 'rss[0]'),
+                         '    wire wr, wl, rv, rl;', f'    wire [{pw - 1}:0] rd_;',
+                         f'    ot_ratio_cdc_fifo #(.W({pw})) u_c (.wclk(ck[0]), .wrst_n(rsl), .w_v(i[0]), .w_rdy(wr), '
+                         f'.w_d(i[{pw}:1]), .rclk(cks[0]), .rrst_n(rss_), .r_v(rv), .r_rdy(1\'b1), .r_d(rd_), '
+                         '.w_live(wl), .r_live(rl));',
+                         '    assign fo = cks;', '    assign od = {rd_, rv, rss_};', "    assign st = {1'b0, wl, wr};"]
+            else:
+                body.append(_sync('rsl', 'ck[0]', 'rs[0]'))
+                base, lv, fl = 0, [], []
+                for j, pw in enumerate(lanes):
+                    vr = fmt == 'vr'
+                    if vr:
+                        wr, wv, wd = f'di{j}[0]', f'di{j}[1]', f'di{j}[{pw + 1}:2]'
+                    else:
+                        body.append(_sync(f'wrs{j}', f'fi{j}[0]', 'rs[0]'))
+                        wr, wv, wd = f'wrs{j}', "1'b1", f'di{j}[{pw - 1}:0]'
+                    body.append(f'    wire rv{j}, rl{j}, wf{j}, rf{j}; wire [{pw - 1}:0] rq{j};')
+                    if kind == 'm2l':
+                        body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1)) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
+                                    f'.w_v({wv}), .w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), '
+                                    f'.r_rdy(1\'b1), .r_d(rq{j}), .w_live(), .r_live(rl{j}), .w_fault(wf{j}), .r_fault(rf{j}));')
+                    else:
+                        body.append(f'    assign wf{j} = 1\'b0; assign rf{j} = 1\'b0;')
+                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw})) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
+                                    f'.w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), .r_rdy(1\'b1), '
+                                    f'.r_d(rq{j}), .w_live(), .r_live(rl{j}));')
+                    body.append(f'    assign o[{base + pw}:{base}] = {{rq{j}, rv{j}}};')
+                    base += pw + 1
+                    lv.append(f'rl{j}')
+                    fl += [f'wf{j}', f'rf{j}']
+                body.append(f'    assign o[{base + 1}:{base}] = {{{" | ".join(fl)}, {" & ".join(lv)}}};   // {{fault, live}}')
+        out.append(f'module {mst} (\n{_decl(ports)}\n);')
+        out += body
+        out.append('endmodule\n')
+    return '\n'.join(out)
+
+
+def plan_record_r8(m):
+    kinds, area = defaultdict(int), defaultdict(float)
+    for it in m['insts']:
+        kinds[it.kind] += 1
+        area[it.kind] += (it.w + SHAVE) * (it.h + SHAVE) / 1e6
+    cls = defaultdict(lambda: dict(buses=0, wires=0))
+    for bid, c, bits, eps in m['buses']:
+        cls[c]['buses'] += 1
+        cls[c]['wires'] += bits
+    g = m['geo']
+    ch = m['chains']
+    fr = m['frames']
+    xs, rs = m.get('x_stages', {}), m.get('r_stages', {})
+    rt = {r: xs.get(r, 0) + 2 + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + 2
+          for r, f in fr.items()}
+    far = max(rt, key=rt.get)
+    stn = [it for it in m['insts'] if it.kind == 'stn']
+    slices = sum(math.ceil(w / 512) for it in stn for w in _stn_lanes(m, it))
+    meso = sum(1 for it in m['insts'] if it.kind == 'cfifo') + sum(
+        len(m['glue'][it.master]['lanes']) for it in m['insts'] if it.kind == 'hend' and m['glue'][it.master]['kind'] == 'm2l')
+    ratio = sum(1 for it in m['insts'] if it.kind == 'hend' and m['glue'][it.master]['kind'] != 'm2l')
+    over = [c for c in ch if c['max_hop_um'] > LINK_STAGE_UM]
+    return dict(
+        schema='opentallas.dsrom-s81-fulldie.floorplan.r8.v1', tool='tools/dsrom_s81_fulldie.py --gen r8',
+        tool_sha256=sha('tools/dsrom_s81_fulldie.py'),
+        sources_sha256={p_: sha(p_) for p_ in (DECISION, Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF, CFG7_RTL, MESO_V7,
+                                               HEAD_A_LEF, HEAD_B_LEF, 'rtl/v41rom/ot_dsrom_head_bundle.sv',
+                                               'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
+                                               'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
+        die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
+        slot=dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=g['slot_h'], slots_per_column=g['slots'],
+                  capacity=capacity_report()),
+        instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
+        placed_footprint_mm2=round(sum(area.values()), 2),
+        utilisation=dict(placed_over_die=round(sum(area.values()) / (DIE[0] * DIE[1] / 1e6), 4),
+                         field_frames_mm2=round(ROOTS * COL_W8 * g['slots'] * g['slot_h'] / 1e6, 2)),
+        geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'col_x'},
+        forwarded=dict(stations=len(stn), ot_fwd_link_stage_instances=slices, chains=len(ch),
+                       max_hop_um=max(c['max_hop_um'] for c in ch), hops_over_430p56=len(over),
+                       over_examples=over[:10], meso_fifos=meso, ratio_cdc_fifos=ratio),
+        field_round_trip_cycles=dict(farthest_frame=far, cycles=rt[far], x_trunk_stages=xs.get(far),
+                                     column_slot_stages=fr[far]['last_slot'] + 1, root_stages=fr[far].get('ret_stages'),
+                                     return_trunk_stages=rs.get(far), meso_crossings=2, crossing_cycles_each=2,
+                                     basis='per frame: x trunk stations to its tap + entry meso 2 + slot stations '
+                                           '+ return-tree root stages + return trunk stations + hub meso 2 (the tree '
+                                           'levels and the element pipeline excluded)'),
+        bus_classes=dict(cls), chains=ch, scan_die_power=scan_die_power(),
+        power_model={k: dict(w=round(v[0], 6), basis=v[1]) for k, v in POWER8.items()})
+
+
+def write_glue(elem_h=None, pairs=None):
+    """glue RTL for the union of the layer and head dies (one module per master name; names encode the signature)"""
+    keep = (DIE_KIND, PAIRS, BF_PAIRS, NV_PAIRS)
+    merged = dict(pdir={}, glue={})
+    for die in ('layer', 'layer1', 'head'):
+        configure(die, 'r8')
+        if elem_h:
+            slot_geometry(elem_h)
+        if pairs and die == 'layer':
+            set_pairs(pairs)
+        mm = build()
+        finalize_r8(mm)
+        for k_, v in mm['pdir'].items():
+            if is_glue(k_):
+                assert merged['pdir'].setdefault(k_, v) == v, k_
+        merged['glue'].update(mm['glue'])
+    configure(keep[0], 'r8')
+    (ROOT / GLUE_RTL).parent.mkdir(parents=True, exist_ok=True)
+    (ROOT / GLUE_RTL).write_text(glue_rtl(merged))
+
+
+def _stn_lanes(m, it):
+    pd = m['pdir'][it.master]
+    return [pd[p_][1] for p_ in sorted(pd, key=_pnum) if p_.startswith('di')]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
@@ -1977,20 +3853,58 @@ def main(argv=None):
     ap.add_argument('--out', type=Path)
     ap.add_argument('--psmt', type=Path, help='record: the PSM macro-current control directory (mode psmt)')
     ap.add_argument('--only', default='', help='record: case-name regex (cases built by the current floorplan)')
-    ap.add_argument('--die', default='layer', choices=['layer', 'head'])
+    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
+    ap.add_argument('--gen', default='r7', choices=['r7', 'r8'], help='r7: the 21fcf6469 die (default); r8: wired die')
+    ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
+    ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
     a = ap.parse_args(argv)
-    configure(a.die)
+    configure(a.die, a.gen)
+    if a.gen == 'r8':
+        if a.elem_h or a.field_margin is not None:
+            slot_geometry(a.elem_h, a.field_margin)
+        if a.pairs:
+            set_pairs(a.pairs)
     m = build()
+    if a.gen == 'r8':
+        finalize_r8(m)
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
         cov[k_] = float(v)
+    if a.mode == 'check' and a.gen == 'r8':
+        print(json.dumps(legality(m), indent=1))
+        pc = pin_clashes(m)
+        pc16 = pin_clashes(m, 16, 0.024 * 16 - 1e-6)
+        write_lefs(m, 16, '/dev/null')
+        print(json.dumps(dict(generated_pin_clashes=len(pc), examples=pc[:10], k16_clashes=len(pc16), k16_examples=pc16[:5])))
+        rec = plan_record_r8(m)
+        print(json.dumps({k_: rec[k_] for k_ in ('slot', 'instances', 'placed_footprint_mm2', 'utilisation', 'forwarded',
+                                                  'field_round_trip_cycles')}, indent=1))
+        return 0
     if a.mode == 'check':
         print(json.dumps(legality(m), indent=1))
         pc = pin_clashes(m)
         pc16 = pin_clashes(m, 16, 0.024 * 16 - 1e-6)
         print(json.dumps(dict(generated_pin_clashes=len(pc), examples=pc[:10], k16_clashes=len(pc16), k16_examples=pc16[:10])))
         print(json.dumps(trunk_stages(m), indent=1))
+        return 0
+    if a.mode == 'plan' and a.gen == 'r8':
+        out = ROOT / OUT / 'r8' / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
+        out.mkdir(parents=True, exist_ok=True)
+        rec = plan_record_r8(m)
+        rec['legality_python'] = legality(m)
+        rec['generated_pin_clashes'] = len(pin_clashes(m))
+        rec['windows_um'] = windows(m)
+        rec['child_reservations'] = m.get('child_reservations', {})
+        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+        svg(m, out / 'floorplan.svg')
+        write_def_floorplan(m, out / 'floorplan.def')
+        if a.die == 'layer':
+            write_glue(a.elem_h, a.pairs)
+        print(json.dumps({k_: rec[k_] for k_ in ('slot', 'instances', 'placed_footprint_mm2', 'legality_python',
+                                                  'generated_pin_clashes', 'forwarded', 'field_round_trip_cycles')},
+                         indent=1, default=str))
         return 0
     if a.mode == 'plan':
         out = ROOT / OUT / ('' if a.die == 'layer' else 'head_die')
@@ -2015,8 +3929,10 @@ def main(argv=None):
                 if man.get('case') == 'a':
                     cases[d.name] = Q.record_a(d)
                 elif man.get('case') == 'b':
-                    configure(man.get('variant', {}).get('die', 'layer'))
+                    configure(man.get('variant', {}).get('die', 'layer'), man.get('variant', {}).get('gen', 'r7'))
                     m = build()
+                    if man.get('variant', {}).get('gen') == 'r8':
+                        finalize_r8(m)
                     cases[d.name] = record_b(d, m)
                     bd = a.work / (re.sub(r'_i\d+$', '_i5', d.name) + '_base')   # the empty baseline is iteration-free
                     if not man.get('empty_baseline') and bd.is_dir():
