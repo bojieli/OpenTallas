@@ -65,7 +65,7 @@ def _isa_bits():
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
-             slab_group_h=0.0, cdc=None):
+             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -92,6 +92,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     # the b3r16 area-derived slab (8 x 342.9 um)
     v.SLAB_GROUP_H = slab_group_h
     v.CDC = cdc
+    v.STRIP_SPAN = strip_span or r18
+    v.R18 = r18
+    if r18:
+        if not (cdc and slab_group_h):
+            raise ValueError('r18 builds on the r17 die (--slab-group-h and --cdc)')
+        v.STRIP_W = v.KVC_W
     m = v.build(tree_mode='banded')
     _split_south(v, m)
     if b3r3:
@@ -122,6 +128,16 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             break
         else:
             raise SystemExit('band repack does not pack')
+    if slab_group_h:
+        # r17: the band slabs are their own PG/power region: measured routed element power (r6d 0.229 W in
+        # 777.576 x 455.76 um = 0.646 W/mm2, 1.7x the spine's 0.385 W/mm2 reservation) and the die lattice's
+        # coverage (tile field; r17b spine_slab IR at the hub's 2.5 % was 37.4 mV > 35)
+        v.REGION_PG['slab'] = v.REGION_PG['tile_field'] if slab_pg is None else slab_pg
+        v.REGION_W_PER_MM2 = dict(v.REGION_W_PER_MM2, slab=slab_w_per_mm2)
+        for it in m['insts']:
+            if it.kind == 'spine_block' and it.master.startswith('qfd_port_tiles'):
+                m['regions'].append(dict(name=f'slab_{it.name[3:]}', kind='slab',
+                                         rect=[it.x, it.y, it.x + it.w + v.SHAVE, it.y + it.h + v.SHAVE]))
     if edge_gap:
         _edge_gap(v, m, edge_gap)
     if east_mirror:
@@ -166,7 +182,217 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r11_io_faces'] = io_faces
     m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
+    if r18:
+        _r18_post(v, m)
     return v, m
+
+
+# ------------------------------------------------------------------------------------------------ r18 (die-top lint)
+XF_GAP = 30.0       # um between the channel CDC cluster and the spine columns (their channel-face pins stay open)
+
+
+def _r18_post(v, m):
+    """Die-top lint Q1-Q14 (results/rtl/die_top_lint_20261006/qwen_rom_findings.json, main 694e21a6e):
+      Q7  no row engines / near-HBM combine (built in _build with R18); the hub keeps the link endpoints and the root
+      Q5  every serial <-> stream <-> link crossing goes through a CDC cluster: sp_xfifo (decision C X1/X2/X3 ratio
+          FIFOs, in the spine channel between SU64 / VM and the sequencer) or io_xfifo (beside the collective);
+          the KV-new write rides the STREAM4 CDC write queues (no kvn bus)
+      Q9  token id -> embedding ROM address (emb_a, from the core in the sequencer slab)
+      Q10 tree-top result word -> vector memory (tt_res, through sp_xfifo)
+      Q11 UCIe / SerDes receive words (ucie_rx / serdes_rx)
+      Q1-Q4 clock nets: one stream net per decision-C region from the hub root, the serial net, the two link-PHY
+          clocks, one HBM clock per stack from its controller's PLL entry (PHY clk and every CDC hclk), resets of
+          the CDC / PHY, forwarded clocks along the link stations (Q6); the field clock leaves the corridor words
+      Q8  role variants of the station / head / channel-waypoint masters
+      Q14 no abstract port without a die net (dropped in the masters wrapper)"""
+    g = m['geo']
+    by = {i.name: i for i in m['insts']}
+    for it in m['insts']:
+        if it.kind == 'cdc':
+            it.domain = 'cdc'
+    # ---- Q4: the field clock / reset bits leave the corridor / tap / head-chain words
+    B = []
+    for bid, cl, bits, eps in m['buses']:
+        if cl in ('corridor', 'head_chain'):
+            bits -= 65                 # 64 forwarded clock tracks + 1 reset
+        elif cl == 'tap':
+            bits -= 2                  # clock + reset
+        if cl == 'clock_trunk':
+            continue                   # replaced below
+        B.append((bid, cl, bits, eps))
+    m['buses'] = B
+    # ---- sp_xfifo: in the spine channel, below the hub, clear of the link waypoints
+    hub = m['hub']
+    lv = sorted(i.y + i.h for i in m['insts'] if i.kind == 'link_station' and abs(i.x - g['x_vch']) < 140
+                and i.y + i.h <= hub.y)
+    y0 = v.up(max(lv) + 15.0, v.GY)
+    y1 = v.dn(hub.y - 30.0, v.GY)
+    xf = v.Inst('sp_xfifo', 'qfd_sp_xfifo', v.up(g['x_vch'] + XF_GAP, v.GX), y0,
+                v.dn(v.VCH - 2 * XF_GAP, v.GX) - v.SHAVE, y1 - y0 - v.SHAVE, kind='xfifo', region='hub', domain='cdc')
+    m['insts'].append(xf)
+    by[xf.name] = xf
+    iox = m['io']['xfifo']
+    # ---- new buses (Q9, Q10, Q11)
+    m['buses'] += [('emb_a', 'io', 24, [('sp_constants_sequencer', 'ea'), ('io_embedding_rom', 'a')]),
+                   ('tt_res', 'tree_spine', v.TREE_BITS, [('sp_tree_top', 'r'), ('sp_vector_memory', 'tr')]),
+                   ('ucie_rx', 'io', 2 * v.IO_BITS, [('io_ucie', 'r'), ('io_collective', 'ur')]),
+                   ('serdes_rx', 'io', 2 * v.IO_BITS, [('io_serdes', 'r'), ('io_collective', 'sr')])]
+    # ---- Q5: every remaining cross-domain bus through a CDC cluster
+    io_side = {'io_collective', 'io_ucie', 'io_serdes'}
+    B = []
+    xing = []
+    for bid, cl, bits, eps in m['buses']:
+        ds = {by[i].domain for i, _ in eps}
+        if len(ds) < 2 or 'cdc' in ds:
+            B.append((bid, cl, bits, eps))
+            continue
+        (a, pa), (b, pb) = eps
+        X = iox if (a in io_side and b in io_side) or {a, b} & io_side and 'sp_constants_sequencer' in (a, b) else xf
+        B.append((bid, cl, bits, [(a, pa), (X.name, f'i_{bid}')]))
+        B.append((bid + '_x', cl, bits, [(X.name, f'o_{bid}'), (b, pb)]))
+        xing.append(dict(bus=bid, cls=cl, bits=bits, src=a, dst=b, fifo=X.name,
+                         domains=[by[a].domain, by[b].domain]))
+    m['buses'] = B
+    # ---- clocks / resets (Q1-Q4, Q6)
+    regs = m['clock_regions']
+
+    def region_of(it):
+        cx, cy = it.x + it.w / 2, it.y + it.h / 2
+        for k, r in enumerate(regs):
+            a, b_, c, d = r['rect']
+            if a <= cx <= c and b_ <= cy <= d:
+                return k
+        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
+                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+    per = {}
+    for it in m['insts']:
+        if it.domain == 'stream_1p2' and it.name != 'hub_el':
+            per.setdefault(region_of(it), []).append((it.name, 'ck'))
+        elif it.kind == 'cdc':
+            per.setdefault(region_of(it), []).append((it.name, 'clk'))
+    per.setdefault(region_of(xf), []).append((xf.name, 'ck'))
+    per.setdefault(region_of(iox), []).append((iox.name, 'ck'))
+    CK = [('clk_root', 'clock_trunk', 1, [('io_collective', 'pll_stream'), ('hub_el', 'ck')])]
+    for k in sorted(per):
+        CK.append((f'clk_r{k}', 'clock_trunk', 1, [('hub_el', f'pll_r{k}')] + per[k]))
+    ser = [(i.name, 'ck') for i in m['insts'] if i.domain == 'serial_0p9' and i.name != 'io_collective']
+    CK.append(('clk_serial', 'clock_trunk', 1, [('io_collective', 'pll_serial')] + ser + [(xf.name, 'cks'), (iox.name, 'cks')]))
+    CK.append(('clk_ucie', 'clock_trunk', 1, [('io_collective', 'pll_ucie'), ('io_ucie', 'ck'), (iox.name, 'cku')]))
+    CK.append(('clk_serdes', 'clock_trunk', 1, [('io_collective', 'pll_serdes'), ('io_serdes', 'ck'), (iox.name, 'ckd')]))
+    RS = []
+    for st, ct in m['ctrls'].items():
+        cds = m['cdcs'][st]
+        CK.append((f'clk_hbm_{st}', 'clock_trunk', 1, [(ct.name, 'pll_hbm'), (f'phy_{st}', 'clk')] +
+                   [(cd.name, 'hclk') for cd in cds]))
+        RS.append((f'rst_hbm_{st}', 'reset', 1, [(ct.name, 'hrst'), (f'phy_{st}', 'rst_n')] +
+                   [(cd.name, 'h_arst_n') for cd in cds]))
+        RS.append((f'rst_kv_{st}', 'reset', 1, [(m['lfifos'][st].name, 'crst')] + [(cd.name, 'c_arst_n') for cd in cds]))
+    # Q6: a forwarded clock with every link hop (the waypoint stations are forwarded-clock link stages)
+    for bid, cl, bits, eps in list(m['buses']):
+        if cl in ('link_spine', 'link_channel'):
+            CK.append((f'fck_{bid}', 'clock_trunk', 1, [(eps[0][0], f'fck_{eps[0][1]}'), (eps[1][0], f'fck_{eps[1][1]}')]))
+    m['buses'] += CK + RS
+    m['r18'] = dict(crossings=xing, clock_nets=len(CK), region_nets=len(per), reset_nets=len(RS),
+                    sp_xfifo=[round(xf.x, 3), round(xf.y, 3), round(xf.w, 3), round(xf.h, 3)],
+                    io_xfifo=[round(iox.x, 3), round(iox.y, 3), round(iox.w, 3), round(iox.h, 3)],
+                    fifo_bits=dict(sp=sum(x['bits'] for x in xing if x['fifo'] == 'sp_xfifo'),
+                                   io=sum(x['bits'] for x in xing if x['fifo'] == 'io_xfifo')))
+    # ---- Q8: role variants (flow direction differs by instance)
+    mid = g['mid']
+    for it in m['insts']:
+        if it.kind == 'station':
+            it.master = 'qfd_cst_n' if it.y >= mid else 'qfd_cst_s'
+        elif it.kind == 'head':
+            it.master = 'qfd_chead_e' if it.x >= g['x_vch'] else 'qfd_chead_w'
+        elif it.master == 'qfd_lst_h':
+            it.master = 'qfd_lst_h_e' if it.x >= g['x_vch'] else 'qfd_lst_h_w'
+    _r18_masters(v, m)
+
+
+R18_CK = ('ck', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
+
+
+def _r18_masters(v, m):
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        for var, src in (('qfd_cst_n', 'qfd_cst'), ('qfd_cst_s', 'qfd_cst'), ('qfd_chead_e', 'qfd_chead'),
+                         ('qfd_chead_w', 'qfd_chead'), ('qfd_lst_h_e', 'qfd_lst_h'), ('qfd_lst_h_w', 'qfd_lst_h')):
+            o = out[src]
+            n = v.Master(var, o.w, o.h, o.obs_top, o.note + f' ({var[-1].upper()} flow variant)')
+            n.ports, n.order = dict(o.ports), list(o.order)
+            out[var] = n
+        for src in ('qfd_cst', 'qfd_chead', 'qfd_lst_h'):
+            out.pop(src, None)
+        hb = out['qfd_hub']
+        hb.note = 'hub element: 4 stack-link endpoints (FIFO 8) and the stream clock root (near-HBM combine DROPPED)'
+        for pn in ('ls', 'ck') + tuple(p for p in hb.order if p.startswith('ck') and p != 'ck'):
+            if pn in hb.ports:
+                hb.ports.pop(pn)
+                hb.order.remove(pn)
+        # Q13: the hub's SU / VM words face the channel CDC cluster below-east of it; VM em faces the channel too
+        for pn, fr in (('x3', 0.22), ('ar', 0.36)):
+            if pn in hb.ports:
+                hb.ports[pn] = ('face', v.IO_BITS, 'E', 'M4', hb.h * fr, 2)
+        if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
+            hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
+        vm = out['qfd_sp_vector_memory']
+        if 'em' in vm.ports:
+            vm.ports['em'] = ('face', v.IO_BITS, 'E', 'M4', vm.h / 2 + 60, 2)
+        if 'xw' in vm.ports:           # both head chains now leave through the channel CDC cluster
+            vm.ports['xw'] = ('face', vm.ports['xw'][1], 'E', 'M4', vm.h / 2 + 130, 1)
+        xf = next(i for i in model['insts'] if i.name == 'sp_xfifo')
+        if 'qfd_sp_xfifo' not in out:
+            out['qfd_sp_xfifo'] = v.Master('qfd_sp_xfifo', xf.w, xf.h, 3, 'decision-C X1/X2/X3 ratio CDC FIFO cluster '
+                                           '(ot_ratio_cdc_fifo 3:4, depth 4), std cells M1-M3, die routing above')
+        iox = model['io']['xfifo']
+        out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
+                                       'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
+        # CDC cluster data ports: one pin group per crossing on the face toward its other endpoint
+        byn = {i.name: i for i in model['insts']}
+        for X in (xf, iox):
+            M = out[X.master]
+            cur = {}
+            for bid, cl, nb, eps in model['buses']:
+                for j, (inst, port) in enumerate(eps):
+                    if inst != X.name:
+                        continue
+                    ot = byn[eps[1 - j][0]]
+                    if X is iox and abs(ot.cy - X.cy) > abs(ot.cx - X.cx):
+                        face, along, layer = ('N' if ot.cy > X.cy else 'S'), M.w, 'M5'
+                    else:
+                        face, along, layer = ('E' if ot.cx > X.cx else 'W'), M.h, 'M4'
+                    span = (max(1, math.ceil(nb / k)) * 0.048 * k if k > 1 else nb * 0.048) + 1.0
+                    c0 = cur.get(face, along - 2.0)
+                    if c0 - span < 1.0:
+                        raise ValueError(f'{X.master}.{port}: face {face} full')
+                    M.face(port, nb, face, layer, c0 - span / 2, 1)
+                    cur[face] = c0 - span
+        used = {}
+        for bid, cl, bits, eps in model['buses']:
+            for inst, port in eps:
+                used.setdefault(inst, set()).add(port.lstrip('*'))
+        mst_used = {}
+        byname = {i.name: i for i in model['insts']}
+        for inst, ps in used.items():
+            mst_used.setdefault(byname[inst].master, set()).update(ps)
+        for mn, M in out.items():
+            # Q14: drop abstract ports no die net reaches
+            for pn in [p for p in M.order if p not in mst_used.get(mn, set())]:
+                M.order.remove(pn)
+                M.ports.pop(pn, None)
+            # clock / reset ports: M8 area pins in a row at the block centre (reachable over any OBS)
+            j = 0
+            for pn in sorted(mst_used.get(mn, set())):
+                if pn in M.ports:
+                    continue
+                if pn in R18_CK or pn.startswith(('pll_', 'fck_')):
+                    M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * 1.6)),
+                           min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * 1.6)), 1)
+                    j += 1
+        return out
+    v.masters = masters
 
 
 def _edge_gap(v, m, gap):
@@ -594,6 +820,7 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
     by = {i.name: i for i in m['insts']}
 
     def masters(model, k=1, port_bits=None):
+        by = {i.name: i for i in model['insts']}
         out = base(model, k, port_bits)
         hub = out['qfd_hub']
         if 'lsw' not in hub.ports:
@@ -1048,6 +1275,15 @@ def clock_regions(v, m):
         y1 = rows[4 * b + 3] + v.TILE_SLOT[1] if b < BANDS - 1 else g['y_top']
         R.append(dict(name=f'creg_spine_{b}', kind='spine_band', rect=[g['x_spine'], y0, g['x_arr_e'], y1]))
     for st, res in m['renges'].items():
+        if not res:
+            # r18: no row engines; the strip third = the CDC frames of that third of the stack (+ the concentrator)
+            cds = m['cdcs'][st]
+            n = len(cds)
+            for k in range(3):
+                parts = cds[k * n // 3:(k + 1) * n // 3] + ([m['lfifos'][st]] if k == 1 else [])
+                R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min(i.x for i in parts),
+                         min(i.y for i in parts), max(i.x + i.w for i in parts), max(i.y + i.h for i in parts)]))
+            continue
         for k in range(3):
             parts = res[2 * k:2 * k + 2] + ([m['lfifos'][st]] if k == 1 else [])
             if m.get('cdcs'):
@@ -1507,6 +1743,12 @@ def main(argv=None):
                     'channel inside the array-facing slab face; block-word pins on M6 in it')
     ap.add_argument('--slab-group-h', type=float, default=0.0, help='r17: band slab = 8 routed port-group elements of '
                     'this height (um; 455.76 / 570.24 closed routes) + 8 block-word FIFOs; 0 = b3r16 area-derived slab')
+    ap.add_argument('--slab-pg', type=float, default=None, help='r17: M8/M9 PG coverage per net over the band slabs '
+                    '(default: the tile-field coverage)')
+    ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
+    ap.add_argument('--r18', action='store_true', help='r18: die-top lint Q1-Q14 (no row engines, CDC clusters, clock '
+                    'nets, role variants)')
+    ap.add_argument('--strip-span', action='store_true', help='r17d: strip/CDC/controller PG regions per stack span')
     ap.add_argument('--routed', type=Path, help='wire8k: path_sta record (routed stage counts) instead of geometry')
     ap.add_argument('--inst-density', action='append', default=[],
                     help='r17 ir: MASTER_PREFIX=W_PER_MM2 measured element power density over the instance (repeatable)')
@@ -1532,7 +1774,8 @@ def main(argv=None):
                     bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
                     io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
-                    slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc))
+                    slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
+                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:
