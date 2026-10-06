@@ -939,7 +939,11 @@ module ot_rom_pkg_ctrl_wfc #(
             rd_pre <= c_vm_re;
             rd_last_pre <= c_vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
+`ifdef OT_WFC_NEG_VMRD
+            rd_inflight <= c_vm_re;                  // negative control: VM_REG read data taken one edge early
+`else
             rd_inflight <= VM_REG ? rd_pre : c_vm_re;
+`endif
             rd_last <= VM_REG ? rd_last_pre : (c_vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1)));
             // Same queue, same priority, same write edge. The opt-in bank
@@ -1054,7 +1058,12 @@ module ot_rom_pkg_ctrl_wfc #(
                 if (!rst_q) begin
                     jd <= 1'b0; rd <= 1'b0; rdp <= 1'b0; ws <= {{(TXQ-1){1'b0}}, 1'b1}; rs <= {{(TXQ-1){1'b0}}, 1'b1};
                 end else begin
-                    jd <= completion_qual && !job_done; rdp <= c_vm_re; rd <= VM_REG ? rdp : c_vm_re;
+                    jd <= completion_qual && !job_done; rdp <= c_vm_re;
+`ifdef OT_WFC_NEG_VMRD
+                    rd <= c_vm_re;
+`else
+                    rd <= VM_REG ? rdp : c_vm_re;
+`endif
                     if (q_push) ws <= (ws << 1) | (ws >> (TXQ - 1));
                     if (tx_pop) rs <= (rs << 1) | (rs >> (TXQ - 1));
                 end
@@ -1563,7 +1572,11 @@ module ot_rom_pkg_ctrl_wfc_src #(
                     end
                 end
                 S_RD0: st <= S_RD1;
+`ifdef OT_WFC_NEG_RDP
+                S_RD1: st <= S_RD2;                 // negative control: the extra capture stage without its state
+`else
                 S_RD1: st <= RDP ? S_RDM : S_RD2;   // RD_PIPE: the read crosses the macro capture stage
+`endif
                 S_RDM: st <= S_RD2;
                 S_RD2: st <= S_EX;
                 default: st <= S_IDLE;
@@ -1807,7 +1820,11 @@ module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D 
             wp <= {{(D-1){1'b0}}, 1'b1}; rp <= {{(D-1){1'b0}}, 1'b1};
         end else begin
             cnt <= cnt_n;
+`ifdef OT_WFC_NEG_LINK
+            rdy <= (cnt_n + {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1}) <= CB'(D - 1);   // negative control: forgets a grant in flight
+`else
             rdy <= (cnt_n + {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1} + {{(CB-1){1'b0}}, r2}) <= CB'(D - 1);
+`endif
             r1 <= rdy; r2 <= r1;
             if (push) wp <= {wp[D-2:0], wp[D-1]};
             if (popq) rp <= {rp[D-2:0], rp[D-1]};
