@@ -72,6 +72,11 @@ STATION = (CORR, 69.12)        # corridor station / column-head frame
 LST_V = (VCH, 34.56)
 LST_H = (34.56, HCH)
 HUB_EL = 412.56
+# r17 STREAM4 clock crossing: None (default) keeps the b3r16 shoreline.  Otherwise dict(w=, h=, per_stack=32,
+# hbm_bits=, core_bits=): one routed per-PC CDC element (rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv) frame per HBM
+# pseudo-channel in a column between the controller and the strip; the controller -> row-engine read bus is carried
+# through them (controller -> CDC HCLK side, CDC core side -> the row engine serving that PC).
+CDC = None
 CORRIDOR_BITS = 637            # clock 64 + reset 64 + instruction 379 + go 1 + x 128 + ready 1
 TAP_BITS = 511                 # instruction 379 + go 1 + x 128 + ready 1 + clock 1 + reset 1
 TREE_BITS = 512                # W12 tile n_y / t_out word (16 x 32)
@@ -181,7 +186,8 @@ def _build(spine_w, tree_mode):
         spine_w = need_w
     cw = dn((spine_w - VCH) / 2, GX)
     # x layout
-    band = PHY_DEPTH + CTRL_W + STRIP_W
+    cdc_w = 0.0 if CDC is None else up(CDC['w'] + SHAVE, GX)
+    band = PHY_DEPTH + CTRL_W + cdc_w + STRIP_W
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
     x_spine = x_arr_w + 32 * TILE_SLOT[0]
@@ -313,13 +319,17 @@ def _build(spine_w, tree_mode):
     # ---- shoreline bands
     stack_cy = [ch_y[0] + HCH / 2, ch_y[1] + HCH / 2]
     bands = {'W': x_wband, 'E': x_eband}
-    lfifos, ctrls, renges, phys = {}, {}, {}, {}
+    lfifos, ctrls, renges, phys, cdcs = {}, {}, {}, {}, {}
     for side, xb in bands.items():
         orient = 'MY' if side == 'W' else 'R0'
         if side == 'W':
-            x_phy, x_ctrl, x_strip = xb, xb + PHY_DEPTH, xb + PHY_DEPTH + CTRL_W
+            x_phy, x_ctrl, x_strip = xb, xb + PHY_DEPTH, xb + PHY_DEPTH + CTRL_W + cdc_w
+            x_cdc = xb + PHY_DEPTH + CTRL_W
         else:
-            x_strip, x_ctrl, x_phy = xb, xb + STRIP_W, xb + STRIP_W + CTRL_W
+            x_strip, x_ctrl, x_phy = xb, xb + STRIP_W + cdc_w, xb + STRIP_W + cdc_w + CTRL_W
+            x_cdc = xb + STRIP_W
+        if CDC is not None:
+            regions.append(dict(name=f'cdc_{side}', kind='strip', rect=[x_cdc, y0, x_cdc + cdc_w, y_top]))
         regions.append(dict(name=f'strip_{side}', kind='strip', rect=[x_strip, y0, x_strip + STRIP_W, y_top]))
         regions.append(dict(name=f'ctrl_{side}', kind='ctrl', rect=[x_ctrl, y0, x_ctrl + CTRL_W, y_top]))
         regions.append(dict(name=f'phy_{side}', kind='phy', rect=[x_phy, y0, x_phy + PHY_DEPTH, y_top]))
@@ -334,6 +344,20 @@ def _build(spine_w, tree_mode):
             ctrls[st] = Inst(f'ctrl_{st}', 'qfd_ctrl', x_ctrl, sy0, CTRL_W - SHAVE, span - SHAVE, orient, kind='ctrl',
                              region='ctrl', domain='hbm_976p6')
             insts.append(ctrls[st])
+            if CDC is not None:
+                n = CDC['per_stack']
+                pitch = dn(span / n, GY)
+                if pitch < CDC['h'] + SHAVE - 1e-6:
+                    raise SystemExit(f'CDC: {n} frames of {CDC["h"]} um do not fit the {span:.1f} um stack span')
+                cdcs[st] = []
+                for p in range(n):
+                    cy = sy0 + p * pitch + dn((pitch - CDC['h'] - SHAVE) / 2, GY)
+                    it = Inst(f'cdc_{st}_{p}', 'qfd_cdc', x_cdc + (cdc_w - CDC['w'] - SHAVE) / 2 if side == 'E' else
+                              x_cdc + cdc_w - CDC['w'] - SHAVE - (cdc_w - CDC['w'] - SHAVE) / 2, cy, CDC['w'], CDC['h'],
+                              orient, kind='cdc', region='strip')
+                    it.x = dn(it.x, GX)
+                    cdcs[st].append(it)
+                    insts.append(it)
             yy = sy0
             renges[st] = []
             for k in range(7):
@@ -406,7 +430,9 @@ def _build(spine_w, tree_mode):
                stack_cy=stack_cy, row_y=row_y, band=band, spine_content_mm2=content,
                spine_w_needed=need_w, spine_w_r2=SPINE_W_R2, spine_parts=spine_parts, spine_unplaced_mm2=leftovers)
     model = dict(die=die, geo=geo, insts=insts, regions=regions, notes=notes, hub=hub, phys=phys, ctrls=ctrls,
-                 renges=renges, lfifos=lfifos, io=io, legs=legs, hwp=hwp, col_x=col_x, tree_mode=tree_mode)
+                 renges=renges, lfifos=lfifos, io=io, legs=legs, hwp=hwp, col_x=col_x, tree_mode=tree_mode, cdcs=cdcs)
+    if CDC is not None:
+        geo['cdc_col_w'] = cdc_w
     model['buses'] = buses(model)
     return model
 
@@ -504,8 +530,15 @@ def buses(m):
         for a, b in ((2, 1), (1, 0), (3, 4), (4, 5)):
             pa, pb = ('fs', 'fn') if b < a else ('fn', 'fs')
             B.append((f'fan_{st}_{a}{b}', 'strip_fan', LINK_TRACKS, [(res[a].name, pa), (res[b].name, pb)]))
-        for k, re_ in enumerate(res):
-            B.append((f'rd_{st}_{k}', 'hbm_read', RE_READ_BITS, [(f'ctrl_{st}', f're{k}'), (re_.name, 'rd')]))
+        if m.get('cdcs'):
+            for p, cd in enumerate(m['cdcs'][st]):
+                k = p * len(res) // len(m['cdcs'][st])
+                j = p - min(q for q in range(len(m['cdcs'][st])) if q * len(res) // len(m['cdcs'][st]) == k)
+                B.append((f'cdh_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'], [(f'ctrl_{st}', f'c{p}'), (cd.name, 'h')]))
+                B.append((f'cdc_{st}_{p}', 'cdc_core', CDC['core_bits'], [(cd.name, 'c'), (res[k].name, f'c{j}')]))
+        else:
+            for k, re_ in enumerate(res):
+                B.append((f'rd_{st}_{k}', 'hbm_read', RE_READ_BITS, [(f'ctrl_{st}', f're{k}'), (re_.name, 'rd')]))
         B.append((f'kvn_{st}', 'hbm_read', KVNEW_BITS, [(f'lfifo_{st}', 'kv'), (f'ctrl_{st}', 'kv')]))
         B.append((f'dfi_{st}', 'phy_dfi', len(phy_pins()), [(f'ctrl_{st}', 'phy'), (f'phy_{st}', '*dfi')]))
     # hub-internal crossings and IO
@@ -612,6 +645,25 @@ def masters(m, k=1, port_bits=None):
         yy = kk * RE_H + (FIFO[1] if kk >= 3 else 0) + RE_H / 2
         c.face(f're{kk}', RE_READ_BITS, 'W', 'M4', yy, 2)
     c.face('kv', KVNEW_BITS, 'W', 'M4', 3 * RE_H + FIFO[1] / 2 - 20, 1)
+    if m.get('cdcs'):
+        # the controller's per-PC CDC ports face the CDC frame they feed; the row engine's per-PC landing ports
+        # face the CDC frames it serves (centred on each frame)
+        for o in list(c.order):
+            if o.startswith('re'):
+                c.order.remove(o)
+                c.ports.pop(o)
+        cds = m['cdcs'][st0]
+        for p, cd in enumerate(cds):
+            c.face(f'c{p}', CDC['hbm_bits'], 'W', 'M4', cd.y - m['ctrls'][st0].y + cd.h / 2, 2)
+        cdm = mk('qfd_cdc', CDC['w'], CDC['h'], 7, 'STREAM4 per-PC CDC element (ot_qwen_stream4_cdc_pc, routed frame)')
+        cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
+        cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
+        nmax = max(sum(1 for p in range(len(cds)) if p * 6 // len(cds) == k) for k in range(6))
+        if 'rd' in re_.ports:
+            re_.order.remove('rd')
+            re_.ports.pop('rd')
+        for j in range(nmax):
+            re_.face(f'c{j}', CDC['core_bits'], 'E', 'M4', (j + 0.5) * re_.h / nmax, 2)
     hb = mk('qfd_hub', m['hub'].w, m['hub'].h, 7, 'hub element: near-HBM combine (P.V 8-9, Z 5-10, 1/Z), 4 link '
             'endpoints (FIFO 8), X3 q/new-KV staging')
     hb.face('ln', 2 * LINK_TRACKS, 'N', 'M5', hb.w / 2, 1)
@@ -1199,7 +1251,13 @@ WINDOWS = {
     'tile_field': lambda g: (g['x_arr_w'] + 8 * TILE_SLOT[0], g['row_y'][2], g['x_arr_w'] + 16 * TILE_SLOT[0], g['row_y'][4]),
     'shoreline_w': lambda g: (g['x_wband'], g['stack_cy'][0] - 1300, g['x_arr_w'] + 4 * TILE_SLOT[0], g['stack_cy'][0] + 1300),
     'spine_hub': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['mid'] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0], g['mid'] + 1300),
+    # r17: a full band-slab stack (bands 1 W/E: 8 routed port groups each) at its measured density
+    'spine_slab': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['row_y'][6] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0],
+                             g['row_y'][6] + 1300),
 }
+# r17: measured per-instance power density (W/mm2) by master prefix, overriding the region density under the
+# instance (empty = the b3r16 region densities everywhere)
+INST_W_PER_MM2 = {}
 BUMP_PITCH, BUMP_SIZE = 45.0, 20.0          # v41_die_assembly CONST bump_pitch_um 45 (published 25-55), contact 2 x 10 um
 POWER_BUMP_FRACTION = 0.25                  # v41_die_assembly CONST power_bump_fraction (assumed)
 VDD_V = 0.7
@@ -1309,6 +1367,8 @@ def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch
         by_net[nn].setdefault(round((b_ + e_) / 2, 3), []).append((a_, c_))
     ys_sorted = {nn: sorted(v) for nn, v in by_net.items()}
     comps, power, lefs, kinds = [], {}, {}, {}
+    ovr = [(it, d_) for it in m['insts'] for pre, d_ in INST_W_PER_MM2.items() if it.master.startswith(pre)
+           and it.x < x1 and it.x + it.w > x0 and it.y < y1 and it.y + it.h > y0]
     import bisect
     missing = 0
     for j in range(ny):
@@ -1344,6 +1404,13 @@ def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch
                                       ['  END', f'END {mn}', ''])
             kd = region_at(m, x0 + cx0 + cell / 2, y0 + cy0 + cell / 2)
             dens = REGION_W_PER_MM2[kd] if peak else REGION_W_PER_MM2[kd] * 0.25
+            if INST_W_PER_MM2:
+                px, py = x0 + cx0 + cell / 2, y0 + cy0 + cell / 2
+                for it, dd in ovr:
+                    if it.x <= px < it.x + it.w and it.y <= py < it.y + it.h:
+                        dens = dd if peak else dd * 0.25
+                        kd = f'inst:{it.master}'
+                        break
             if signal_bumps_phy and kd in ("phy", "io"):
                 dens = 0.0   # the PHY/IO macro is fed by its own supply bumps among its signal bumps
             n = f'L_{i}_{j}'

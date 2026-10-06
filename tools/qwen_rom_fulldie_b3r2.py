@@ -64,7 +64,8 @@ def _isa_bits():
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
-             bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0):
+             bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
+             slab_group_h=0.0, cdc=None):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -86,6 +87,11 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.FIFO = (v.FIFO[0], v.FIFO[1] + sf_extra_h)
     bw_mm2 = PORT_GROUPS * BW_FIFO_BITS * FIFO_MM2_PER_BIT
     v.SPINE_BLOCKS = [(n, (a + bw_mm2) if n == 'port_tiles' else a, d, s) for n, a, d, s in v.SPINE_BLOCKS]
+    # r17: the band slab is 8 routed port-group elements (ot_qwen_slab_port_group, 777.576 x slab_group_h um each,
+    # BW_FIFO=0) stacked in its column plus the 8 block-word meso FIFOs (meso_d4_v7, own element); default 0 keeps
+    # the b3r16 area-derived slab (8 x 342.9 um)
+    v.SLAB_GROUP_H = slab_group_h
+    v.CDC = cdc
     m = v.build(tree_mode='banded')
     _split_south(v, m)
     if b3r3:
@@ -347,6 +353,7 @@ def _repack_b3r3(v, m):
     hub = m['hub']
     m['insts'] = [i for i in m['insts'] if i.kind != 'spine_block']
     cols, free = _spine_free(v, m, [])
+    spans = {c: [list(iv) for iv in ivs] for c, ivs in free.items()}   # r17: link-channel-bounded column spans
     area = {n: a for n, a, *_ in v.SPINE_BLOCKS}
     dom = {n: d for n, a, d, *_ in v.SPINE_BLOCKS}
     hh = lambda mm2: v.up(mm2 * 1e6 / cw, v.GY)
@@ -375,8 +382,16 @@ def _repack_b3r3(v, m):
     tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
     half = (area['port_tiles'] + area['scale_rom']) / (2 * BANDS)
     h_sl = hh(half)
+    if getattr(v, 'SLAB_GROUP_H', 0.0):
+        per = PORT_GROUPS // (2 * BANDS)
+        h_sl = v.up(per * v.SLAB_GROUP_H + per * BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw, v.GY)
+        m['geo']['slab_group_h_um'] = v.SLAB_GROUP_H
+        m['geo']['slab_h_um'] = h_sl
     m['band_slabs'] = {}
     order = sorted(range(BANDS), key=lambda b: abs(tgt[b] - g['mid']))
+    if getattr(v, 'SLAB_GROUP_H', 0.0):
+        _repack_r17(v, m, free, put, parts, tgt, order, cw, spans)
+        return
     for b in order:
         for side in ('W', 'E'):
             y = _place_near(v, free, side, h_sl, tgt[b])
@@ -391,6 +406,87 @@ def _repack_b3r3(v, m):
         m['band_slabs'][('scale', b)] = m['band_slabs'][('port', b)]
     m['scale_in_port'] = True
     m['geo']['spine_parts_band'] = parts
+    m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
+
+
+def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans):
+    """r17 band slabs of routed port-group elements: each band half is 8 groups of SLAB_GROUP_H (+ its 8 block-word
+    FIFOs) in the column of its half, nearest the band centre.  Where the column's free interval is shorter (the
+    hub column between the horizontal link channels holds SU64, the vector memory, the hub and the tree top), the
+    half keeps as many whole groups as fit and its remaining groups form one overflow fragment in the other column
+    of the same span (`_f2`/`_f3`, result word to the band primary through the existing pfrag bus).  Bands nearest
+    the hub are packed first."""
+    per = PORT_GROUPS // (2 * BANDS)
+    fifo_um = BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw
+    hgt = lambda n: v.up(n * v.SLAB_GROUP_H + n * fifo_um, v.GY)   # noqa: E731
+
+    def span(c, t):
+        return next((sp for sp in spans[c] if sp[0] - 1e-6 <= t <= sp[1] + 1e-6),
+                    min(spans[c], key=lambda sp: min(abs(sp[0] - t), abs(sp[1] - t))))
+
+    def cands(c, t, h):
+        lo, hi = span(c, t)
+        return [iv for iv in free[c] if iv[0] >= lo - 1e-6 and iv[1] <= hi + 1e-6 and iv[1] - iv[0] >= h - 1e-6]
+
+    def place(c, t, h):
+        best = None
+        for iv in cands(c, t, h):
+            y = min(max(t - h / 2, iv[0]), iv[1] - h)
+            y = v.up(y, v.GY) if v.up(y, v.GY) + h <= iv[1] + 1e-6 else v.dn(y, v.GY)
+            if best is None or abs(y + h / 2 - t) < best[0] - 1e-6:
+                best = (abs(y + h / 2 - t), iv, y)
+        if best is None:
+            raise SystemExit(f'spine r17: {h:.1f} um does not fit column {c} in the span of y {t:.0f}')
+        _take(free[c], best[1], best[2], best[2] + h)
+        return best[2]
+    def cap(iv):
+        n = 0
+        while hgt(n + 1) <= iv[1] - iv[0] + 1e-6:
+            n += 1
+        return n
+
+    def dist(iv, t):
+        return 0.0 if iv[0] <= t <= iv[1] else min(abs(iv[0] - t), abs(iv[1] - t))
+    over, nfr = [], {}
+    for b in order:
+        for side in ('W', 'E'):
+            left = [GROUPS_PER_BAND * b + (0 if side == 'W' else 8) + j for j in range(per)]
+            first = True
+            while left:
+                # nearest interval of the span with room for at least one group: own column, then the other one
+                col, iv = None, None
+                for c in ((side, 'E' if side == 'W' else 'W')):
+                    ivs = [iv_ for iv_ in cands(c, tgt[b], hgt(1))]
+                    if ivs:
+                        col, iv = c, min(ivs, key=lambda iv_: dist(iv_, tgt[b]))
+                        break
+                if col is None:
+                    raise SystemExit(f'spine r17: band {b} {side} groups {left} do not fit the span of y {tgt[b]:.0f}')
+                n = min(len(left), cap(iv))
+                h = hgt(n)
+                y = min(max(tgt[b] - h / 2, iv[0]), iv[1] - h)
+                y = v.up(y, v.GY) if v.up(y, v.GY) + h <= iv[1] + 1e-6 else v.dn(y, v.GY)
+                _take(free[col], iv, y, y + h)
+                if first and col == side:
+                    name = f'sp_port_tiles_{b}' if side == 'W' else f'sp_port_tiles_{b}_f1'
+                else:
+                    k = nfr.get(b, 2)
+                    nfr[b] = k + 1
+                    name = f'sp_port_tiles_{b}_f{k}'
+                    over.append((b, side, col, left[:n]))
+                first = False
+                it = put(name, 'qfd' + name[2:], col, y, h)
+                m['band_slabs'].setdefault(('port', b), []).append((it, left[:n]))
+                parts.append(dict(name=name[3:], kind='port+scale', band=b, side=side, col=col, groups=left[:n],
+                                  y=round(y, 3), h=h, target_y=round(tgt[b], 1),
+                                  offset_um=round(y + h / 2 - tgt[b], 1)))
+                left = left[n:]
+    for b in range(BANDS):
+        m['band_slabs'][('port', b)].sort(key=lambda z: z[0].name)
+        m['band_slabs'][('scale', b)] = m['band_slabs'][('port', b)]
+    m['scale_in_port'] = True
+    m['geo']['spine_parts_band'] = parts
+    m['geo']['slab_overflow'] = [dict(band=b, side=s_, col=c_, groups=g_) for b, s_, c_, g_ in over]
     m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
 
 
@@ -696,6 +792,11 @@ def _channel_pins(v, model, out, bits, far, k):
             continue
         used = [(W.y + a, W.y + b) for a, b in _face_used(out[W.master], 'E', k)] + \
                [(E.y + a, E.y + b) for a, b in _face_used(out[E.master], 'W', k)]
+        if getattr(v, 'SLAB_GROUP_H', 0.0):
+            # r17: a link waypoint in the channel abuts both faces and buries any pin in its y span (r17p
+            # DRT-0073 on sp_port_tiles_2_f2/cw2: lv_S_2_E covers the fragment's W face at y 11,969-12,003)
+            used += [(i.y - 2.0, i.y + i.h + 2.0) for i in model['insts']
+                     if i.kind == 'link_station' and xs - 1.0 <= i.x <= xs + v.VCH + 1.0]
         free = [(lo, hi)]
         for a, b in sorted(used):
             nf = []
@@ -937,6 +1038,10 @@ def clock_regions(v, m):
     for st, res in m['renges'].items():
         for k in range(3):
             parts = res[2 * k:2 * k + 2] + ([m['lfifos'][st]] if k == 1 else [])
+            if m.get('cdcs'):
+                # r17: the CDC frames of the PCs this third's row engines serve (their core-side clock)
+                n = len(m['cdcs'][st])
+                parts = parts + [cd for p, cd in enumerate(m['cdcs'][st]) if p * len(res) // n in (2 * k, 2 * k + 1)]
             R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min(i.x for i in parts), min(i.y for i in parts),
                      max(i.x + i.w for i in parts), max(i.y + i.h for i in parts)]))
     for name, it in m['io'].items():
@@ -1065,7 +1170,7 @@ def latency_tws(stages):
 
 
 def wire_bound_8k(v, m, comp='results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json',
-                  ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json'):
+                  ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json', routed=None):
     """The measured 8K token / DSpark step (REAL_MEM RTL, which already carries the RTL wire stages bd/nws/tws/ord of
     its build) with the die floorplan's measured wire-stage bounds added: worst block word (tws) minus the RTL's tws
     on every ME op, the hub<->stack link delta (2 traversals a layer pass), and the F2 two-beat +1 a ME op.  ME ops a
@@ -1079,6 +1184,12 @@ def wire_bound_8k(v, m, comp='results/rtl/qwen_dspark_system_20261004/ctx8k/step
     if (ops_tok - 1) % 36:
         raise SystemExit(f'ME ops a token {ops_tok} is not 36 x n + 1')
     ops_layer, ops_head = (ops_tok - 1) // 36, 1
+    if routed is not None:
+        # r17: stage counts from the die's global-route wire lengths (tools/qwen_rom_die_path_sta.py) instead of
+        # the floorplan's rectilinear centre distances
+        bw = dict(bw, max=routed['block_words']['stages_routed_max'], basis='GRT routed length (path_sta)',
+                  floorplan_max=bw['max'])
+        ls = dict(ls, delta_stages_at_430=routed['links']['stages_routed'] - ls['r2_model_total_stages'])
     d_tws = bw['max'] - rtl['tws']
     d_link = ls['delta_stages_at_430']
     per_layer = ops_layer * (d_tws + 1) + 2 * d_link
@@ -1109,6 +1220,7 @@ def wire_bound_8k(v, m, comp='results/rtl/qwen_dspark_system_20261004/ctx8k/step
                             penalty_cycles=st_pen, bound_step_cycles=st1, tau=tau,
                             measured_tok_s=round(tau * clk / st0, 1), bound_tok_s=round(tau * clk / st1, 1),
                             delta_pct=round(100 * (st0 / st1 - 1), 3)),
+                basis='routed (GRT wire length per die net)' if routed is not None else 'floorplan geometry',
                 status='bound: floorplan stage counts at the 430.56 um corridor-gate pitch (no routed-path STA); the '
                        'hub<->stack delta assumes the REAL_MEM measurement carries the r2 46-stage link; F2 bound '
                        'is 0 once the column-FIFO prefetch is measured')
@@ -1341,6 +1453,18 @@ write_db /work/floorplan_pdn.odb
     return man
 
 
+def _cdc_arg(t):
+    """--cdc W,H[,N[,HB,CB]]: the per-PC CDC frame.  Port bits from the RTL port list of ot_qwen_stream4_cdc_pc
+    (TAGW 9): HCLK side h_lv 1 + h_lsec 17 + h_lrow 8 + h_ldata 256 + h_cred 3 + h_wv 1 + h_wsec 24 + h_hand 1 + h_wcon 1
+    + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_av 1 + h_atag 9 + h_fault 1 = 613; core side l_v 1 + l_sec 17 +
+    l_row 8 + l_data 256 + l_pop 1 + w_v 1 + w_sec 24 + w_data 256 + w_tag 9 + w_room 1 + wd_v 1 + wd_tag 9 + c_fault 1 = 585."""
+    if not t:
+        return None
+    f = [float(x) for x in t.split(',')]
+    return dict(w=f[0], h=f[1], per_stack=int(f[2]) if len(f) > 2 else 32,
+                hbm_bits=int(f[3]) if len(f) > 3 else 613, core_bits=int(f[4]) if len(f) > 4 else 585)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k'])
@@ -1369,6 +1493,13 @@ def main(argv=None):
                     '(5 = slab routed M1-M5, M6/M7 free over it)')
     ap.add_argument('--m6-strip', type=float, default=0.0, help='b3r15 option B: width (um) of an OBS-M1-M5 entry '
                     'channel inside the array-facing slab face; block-word pins on M6 in it')
+    ap.add_argument('--slab-group-h', type=float, default=0.0, help='r17: band slab = 8 routed port-group elements of '
+                    'this height (um; 455.76 / 570.24 closed routes) + 8 block-word FIFOs; 0 = b3r16 area-derived slab')
+    ap.add_argument('--routed', type=Path, help='wire8k: path_sta record (routed stage counts) instead of geometry')
+    ap.add_argument('--inst-density', action='append', default=[],
+                    help='r17 ir: MASTER_PREFIX=W_PER_MM2 measured element power density over the instance (repeatable)')
+    ap.add_argument('--cdc', default='', help='r17 STREAM4 CDC column: W,H[,per_stack[,hbm_bits,core_bits]] of the '
+                    'routed ot_qwen_stream4_cdc_pc frame (um); empty = b3r16 shoreline')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
     ap.add_argument('--pdn-rev', default='r4', choices=['r4', 'r5'], help='pdn mode: r5 = anchored, phase-grouped '
                     'macro grids (no PDN-0182 grid-ownership conflicts)')
@@ -1388,9 +1519,10 @@ def main(argv=None):
                     b3r6=a.b3r6, tree_cols=a.tree_cols,
                     bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
                     io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
-                    edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip)
+                    edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
+                    slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc))
     if a.mode == 'wire8k':
-        rec = wire_bound_8k(v, m)
+        rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:
             a.out.write_text(json.dumps(rec, indent=1) + '\n')
         print(json.dumps(dict(ar=rec['ar'], dspark=rec['dspark'], deltas=rec['deltas']), indent=1))
@@ -1415,6 +1547,7 @@ def main(argv=None):
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('tag', 'instances', 'bundle_pins', 'bundle_nets', 'wires')}))
     elif a.mode == 'ir':
+        v.INST_W_PER_MM2 = {kv.split('=')[0]: float(kv.split('=')[1]) for kv in a.inst_density}
         # the IR PASS recipe of the b2 floorplan (cases ir_*_align_b45): bump-aligned straps, every core bump power
         man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch)
         man['b3r2'] = dict(producer=__file__, band=a.band, die=m['die'])
