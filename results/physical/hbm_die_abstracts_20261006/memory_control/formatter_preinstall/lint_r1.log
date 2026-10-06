@@ -1,0 +1,21 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv:8:20: Operator VAR 'ENABLE' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+                                                                                                      : ... In instance ot_hbm_formatter_preinstall_gather_owner.u_preinstall
+    8 |  parameter integer ENABLE=0,
+      |                    ^~~~~~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv:136:39: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'plane_count' generates 13 bits.
+                                                                                                        : ... In instance ot_hbm_formatter_preinstall_gather_owner.u_preinstall
+  136 |   wire [4:0] word_index=5'(plane_count/96);
+      |                                       ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv:107:75: Operator DIV expects 33 bits on the LHS, but LHS's VARREF 'score_count' generates 12 bits.
+                                                                                           : ... In instance ot_hbm_formatter_preinstall_gather_owner.u_bridge
+  107 |  wire [32:0] score_expected={1'b0,base}+33'(req_rank)*2048+33'(score_count/96)*64;
+      |                                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv:108:76: Operator DIV expects 33 bits on the LHS, but LHS's VARREF 'id_count' generates 12 bits.
+                                                                                           : ... In instance ot_hbm_formatter_preinstall_gather_owner.u_bridge
+  108 |  wire [32:0] id_expected={1'b0,base}+196608+33'(req_rank)*2048+33'(id_count/96)*64;
+      |                                                                            ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall_gather_owner.sv:165:37: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                     : ... In instance ot_hbm_formatter_preinstall_gather_owner
+  165 |  assign formatter_lease_valid=ENABLE&&borrow_granted&&retained&&!fault;
+      |                                     ^~
