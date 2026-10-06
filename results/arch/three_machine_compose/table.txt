@@ -2,30 +2,31 @@ THREE-MACHINE COMPOSITION (per user, target context)
 
 machine                              AR tok/s  MTP tok/s  MTP@3.8879  note
 (links: FULL RS(544,514) FEC on every off-package link, owner 2026-10-06)
-DS ROM 1M (adopted levers)            1,687.9    4,922.6     4,601.7  tau 4.159; MTP physical_qualified=False
-  + all PENDING_SSFF (CONDITIONAL)    2,219.8    6,141.6     5,741.2  not a headline
+DS ROM 1M (adopted levers)            1,675.0    4,895.0     4,575.9  tau 4.159; MTP physical_qualified=False
+  + all PENDING_SSFF (CONDITIONAL)    2,204.6    6,113.9     5,715.3  not a headline
 Qwen ROM 8K (P8191)                   6,180.1    6,180.1           -  194,172 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
   KV (all 36 layers, FP8, in token) 576 MiB/token; landing 3,042 B/cyc/rank = 3.65 TB/s/die (91.3% peak), exposed 1363 cyc
   r18g die wire bound (PENDING)       5,783.8                         65 ps skew 5,702.3; GRT 11,534 overflow; not a headline
 HBM accel DS 1M, wire floor           1,999.7    3,993.7     3,733.4  +37.917 us wire
 HBM accel DS 1M, wire median          1,948.8    3,944.2     3,687.1  +50.983 us wire
 HBM accel DS 1M, wire bound           1,921.5    3,917.2     3,661.8  +58.269 us wire
-full FEC vs light FEC (superseded) DS ROM dAR -65.2 tok/s (+22.049 us), dMTP -172.2 tok/s (+28.561 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
+full FEC vs light FEC (superseded) DS ROM dAR -65.2 tok/s (+22.366 us), dMTP -172.2 tok/s (+28.879 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
 
-DS ROM / HBM (wire median): AR 0.8661x  MTP 1.2481x
+DS ROM / HBM (wire median): AR 0.8595x  MTP 1.2411x
 
 PER-LEVER DELTAS (adopted: headline minus headline-without; conditional: if-adopted minus headline)
 machine   lever                  class           dAR us  dAR tok/s  dMTP step  dMTP tok/s
-DS ROM    draft                  adopted          0.000        0.0    -27.546       155.4
-DS ROM    head                   adopted       -102.043      248.0   -687.601      2208.7
-DS ROM    router                 adopted        -12.100       33.8    -13.619        78.1
-DS ROM    su_hcpost              adopted        -16.133       44.8    -18.158       103.6
-DS ROM    su_norm                adopted        -43.074      114.4    -48.344       266.4
-DS ROM    su_routeract           adopted        -11.555       32.3    -13.006        74.6
-DS ROM    su_swiglu              adopted        -18.013       49.8    -21.175       120.4
-DS ROM    field_spine            conditional     -8.414       24.3     -9.937        58.6
-DS ROM    field_spine_pq         conditional   -129.023      469.9   -153.133      1089.7
-DS ROM    su_softmax             conditional    -12.951       37.7    -14.558        86.3
+DS ROM    draft                  adopted          0.000        0.0    -27.546       153.7
+DS ROM    head                   adopted       -102.043      244.5   -687.379      2189.1
+DS ROM    router                 adopted        -12.100       33.3    -13.618        77.2
+DS ROM    su_hcpost              adopted        -16.133       44.1    -18.158       102.4
+DS ROM    su_norm                adopted        -43.074      112.7    -48.344       263.5
+DS ROM    su_routeract           adopted        -11.555       31.8    -13.005        73.8
+DS ROM    su_swiglu              adopted        -18.013       49.0    -21.175       119.0
+DS ROM    field_spine            conditional    -10.192       29.1    -12.041        70.4
+DS ROM    field_spine_pq         conditional   -130.457      468.4   -154.826      1090.8
+DS ROM    qelem_pq               conditional   -121.114      426.3   -143.786       997.1
+DS ROM    su_softmax             conditional    -12.952       37.2    -14.559        85.3
 DS ROM    field                  excluded     REJECT
 DS ROM    hop                    excluded     REJECT
 Qwen ROM  core_context           adopted         +0 cyc        0.0

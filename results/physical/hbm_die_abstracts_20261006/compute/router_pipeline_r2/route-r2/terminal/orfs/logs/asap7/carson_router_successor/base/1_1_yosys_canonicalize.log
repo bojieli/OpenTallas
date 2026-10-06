@@ -1,0 +1,57 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/carson_router_successor/base/clock_period.txt
+Setting clock period to 833.0000
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv
+12. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv
+13. Executing Verilog-2005 frontend: /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv
+14. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_topk_successor'.
+16. Executing HIERARCHY pass (managing design hierarchy).
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_topk_successor'.
+17.1. Analyzing design hierarchy..
+17.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_cs'.
+17.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_merge6_cut'.
+17.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_lane_local'.
+Warning: Replacing memory \payload_q with list of registers. See /src/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv:34
+17.10. Analyzing design hierarchy..
+17.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_pair_cut'.
+17.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_cs_cut'.
+17.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_cs_cut'.
+17.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_router_cs_cut'.
+17.15. Analyzing design hierarchy..
+17.16. Analyzing design hierarchy..
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Ignoring module $paramod$3c62abecbc83f11908e4a7ce8adea0d1072457ca\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$5c114b61f366274bd7b1c6743d535c8ae3c4935d\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_lane_local because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_pair_cut because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_topk_successor because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_router_merge6_cut because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$953ab22f9a2006c5b17e633c4216c8ec40e21300\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$d7c54670974889bf3cbe1d731039dbfc24fa7284\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$149f5524f342f9486e4e52e83248ec2eab598b5a\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$dc3436b4f46d302d56e9267dcf8ab9c7741eb9cb\ot_gpu_topk_cs because it contains processes (run 'proc' command first).
+19. Executing RTLIL backend.
+Warnings: 11 unique messages, 11 total
+End of script. Logfile hash: 6254872082, time: 0.62s, user: 0.59s, system: 0.02s, MEM: 81.32 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 84% 12x read_liberty (0 sec), 11% 1x hierarchy (0 sec), ...
+Elapsed time: 0:00.63[h:]min:sec. CPU time: user 0.60 sys 0.03 (99%). Peak memory: 86376KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          0             84 4a7da477f1cc6d22ceaa

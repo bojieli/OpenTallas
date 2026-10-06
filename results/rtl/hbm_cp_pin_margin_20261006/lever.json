@@ -1,0 +1,61 @@
+{
+ "schema": "hbm.cp.pin-margin.lever.v1",
+ "owner": "Claude:tk-hbm-cp (takeover of Codex item 5, Harvey)",
+ "lever": "SU_PIN_MARGIN=1 + SU_RELEASE_REPLAY=1 on ot_hbm_integrated_su_cp_context (default 0; canonical owner-veto CP params unchanged)",
+ "replaces": "Harvey 270d0a6f9 canonical route TERMINAL FAIL SS -234.04 / FF -28.56 ps (results/physical/hbm_cp_owner_veto_parent_context_20261006/r1_terminal)",
+ "rtl": {
+  "boundary": "every input captured at its pin and once more (2 edges); every output launched from a pin flop (1 edge)",
+  "core": "exact restructure: phase validity only as the final dominating term of every D/output (Shannon), 192-bit live-owner compare registered one edge ahead from the pin stage, 4 kept capture-enable copies (54 loads each); shared_fault->qualification_fault is now flop->flop",
+  "release": "SU_RELEASE_REPLAY: accepted release = release_v delayed 3 edges AND registered release_r = the caller's actual fire (latency-insensitive valid/ready)",
+  "fault_semantics": "every veto (phase rails, status rails, owner mismatch, shared/exec fault) still acts on the same core edge as the publication it vetoes; at the pins both appear together, 3 edges after the parent drove the input (exact lockstep bench). Parent-visible: a shared/exec fault reaches the CP fault pin 3 edges later (closed-loop bench: detected within 3, a 2-edge bound reports late); stale publications in that window are gated at the shared owner (sm0_borrow req_rdy/grant require its own ownership and !fault the same edge) and die_fault includes shared_fault directly.",
+  "source_sha256": {
+   "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "fcd6c1b7a7d244e80d56857eae9b414e388ef873c0273f1c6ff93354320b0760",
+   "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "cd97f7cdca3c5d701949c91f829e9376bdc4f3474c788b24e67f7f1be9813ff9",
+   "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "2423b70ed5e126220b70857ff90390c7042fe82e697af1753c4668ecb5780a53"
+  }
+ },
+ "cycle_cost": {
+  "measured": "closed loop with the real ot_hbm_integrated_sm0_borrow, deterministic delays (DET=1, 200 tx): launch->CP done 48 -> 63 cycles per SU CP transaction (+15); native launch pass-through +3 edges (exact bench)",
+  "per_token_bound": "DS HBM AR 533.08 us/token, 343 cmdproc issues/token (CLAUDE_HBMABS_MARGIN_RECOMPOSE basis): all SU CP transactions +15 x 343 = 5,145 cycles = 4.29 us = +0.80%; all native launches +3 x 343 = 1,029 cycles = 0.86 us = +0.16%. Within the <= 2% per-lever pre-approval.",
+  "added_cycles_per_SU_transaction": 15,
+  "added_edges_native_launch": 3,
+  "DS_AR_bound_pct": 0.8
+ },
+ "area": {
+  "synth_um2_before": 727.702,
+  "synth_um2_after": 875.019,
+  "flops_before": 673,
+  "flops_after": 1028
+ },
+ "physical": {
+  "route": "EPYC2 /srv/opentallas-scratch2/scratch/claude/tk-hbm-cp/route_r1 (one route; 770 ps effective = setup uncertainty 123 ps; IO 0.2T+150 ps vs vclk; same 82.08 um die / 47.52 um core / 236 pins / PDN as Harvey r1)",
+  "signoff_833": {
+   "ss": 76.14,
+   "ff": 15.97,
+   "ss_r2r": 91.68,
+   "ss_i2r": 76.14,
+   "ss_out": 175.443466,
+   "ff_r2r": 15.97,
+   "ff_i2r": 43.24,
+   "ff_out": 66.181808,
+   "vclk_insertion_ss": [
+    118.86,
+    145.04,
+    131.95
+   ],
+   "vclk_insertion_ff": [
+    68.37,
+    85.43,
+    76.9
+   ]
+  },
+  "drc": 0,
+  "antenna": 0,
+  "accept": "SS >= +40 / FF >= +15 met",
+  "evidence": "results/physical/hbm_cp_pin_margin_20261006/r1"
+ },
+ "view": "physical/hbm_cp_pin_margin_20261006/ot_hbm_integrated_su_cp_context/{.lef,_ss.lib,_ff.lib}",
+ "bench": "results/rtl/hbm_cp_pin_margin_20261006/bench_r2 (exact lockstep 2 seeds + 5 mutants; closed loop L1-L6)",
+ "adopted": false,
+ "adoption_gate": "die-context STA with the real abstract (HBM die coordinator) before adoption; integration note: parent admission interlocks that read su_pending/su_selected/su_owned (sfu_admit/norm_admit) see them 3 edges after the launch and must be re-qualified when this view is bound"
+}

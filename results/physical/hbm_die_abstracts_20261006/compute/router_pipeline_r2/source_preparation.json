@@ -1,5 +1,5 @@
 {
-  "status": "ACTUAL_RETAINED_MAP_ROUTE_LIVE_PHYSICAL_PENDING",
+  "status": "ACTUAL_ROUTED_FAILURE_CLASSES_RETAINED",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182",
@@ -42,5 +42,6 @@
   "actual_prepared_route": "route_r2_prepared/preparation.json",
   "route_launch_allowed": false,
   "actual_route": "route-r2/launch.json",
-  "actual_allocation": "route-r2/actual_parent_allocation.json"
+  "actual_allocation": "route-r2/actual_parent_allocation.json",
+  "actual_terminal": "route-r2/terminal/verdict.json"
 }

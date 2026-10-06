@@ -14,7 +14,7 @@ module tb_qwen_p0_parallel_bank;
     wire [543:0] l_sec;wire [255:0] l_row;wire [8191:0] l_data,h_cdata;
     wire [287:0] wd_tag,h_ctag;wire [95:0] h_cred;
     wire [767:0] h_wsec,h_csec;
-    ot_qwen_p0_parallel_bank #(.ENABLE(1),.LANDING_RSEL(1)) dut(.*);
+    ot_qwen_p0_parallel_bank #(.ENABLE(1),.LANDING_RSEL(1),.LOCAL_WIRE_SPANS(14)) dut(.*);
     // Module cold/warm names are explicit: warm never resets accepted owners.
     // The aliases are inputs, not tied control/ready substitutes.
     wire por_n=por,warm_rst_n=warm;
@@ -54,7 +54,7 @@ module tb_qwen_p0_parallel_bank;
         $readmemh(gold_path,gold);
         for(integer p=0;p<32;p=p+1)begin taken[p]=0;acked[p]=0;credits[p]=0;captured[p]=0;end
         repeat(5)@(negedge clk);por=1;
-        repeat(12)@(negedge hclk);sample_faults=1;
+        repeat(32)@(negedge hclk);sample_faults=1;
         for(integer j=0;j<4;j=j+1)begin
             @(negedge hclk);
             for(integer p=0;p<32;p=p+1)begin

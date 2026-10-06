@@ -22,11 +22,16 @@ def model():
     ack = ring(9, 64, 128, pair, util)
     callback = ring(4, 4, 4, pair, util)
     endpoint_core = sum(x['core_mm2_all'] for x in (landing, write, ack, callback))
+    from qwen_stream4_parallel_pc_model import model as leaf_model
+    owner_leaf = leaf_model(ROOT)
     return dict(schema='qwen.p0.parallel-protected.prebuild.v1', default_OFF=True,
         owner_directive='e1701384d', MACs_per_edge=0, arithmetic_change=False,
         stacks_per_rank=4, PCs_per_stack=32, TP_ranks=4,
         topology='128 independent protected sector landing/ACK/write endpoints per rank; no stack row funnel',
         required_leaf='actual ot_qwen_stream4_cdc_pc RSEL1 with owner sector/control protection',
+        owner_leaf=owner_leaf,
+        owner_leaf_cell_area_delta_mm2_per_rank=128*owner_leaf['estimated_cell_area_delta_per_PC_mm2'],
+        owner_leaf_FF_delta_per_rank=128*owner_leaf['estimated_FF_delta_per_PC'],
         leaf_charges_conservative_existing_model=dict(landing=landing, write=write, ack=ack, callback=callback),
         conservative_endpoint_core_mm2_per_rank=endpoint_core,
         root_checked_callback_and_sync_FF=4*(2*6+8),
@@ -53,7 +58,7 @@ def model():
         latency='actual endpoint encode/decode/crossing/route cycles and per-layer overlap must be measured; callback descriptor/GO consumption fence retained; no token rate credit',
         local_routes='owner must supply parallel source-to-tile landing homes and coded lane spans; old stack trunk/local span calendar is not reused',
         tile_KV_MiB_per_rank=12, tile_residency='one current layer window, mandatory36layer traffic',
-        protected_leaf_inventory_pending=True, physical_qualified=False,
+        protected_leaf_inventory_pending=False, physical_qualified=False,
         setup_uncertainty_ps=60, hold_uncertainty_ps=25,
         new_controller=False, new_arithmetic=False, rate_credit=False)
 
