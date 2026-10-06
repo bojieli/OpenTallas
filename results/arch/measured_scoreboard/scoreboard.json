@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "61baba4bd",
+ "generated_from_commit": "a15d36e18",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -5893,7 +5893,7 @@
    "value": 6180.1,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "qwen_rom.token_cycles_8k_composed": {
    "target": "qwen_rom",
@@ -5908,7 +5908,7 @@
    "value": 194172,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "ds_rom.ar_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5923,7 +5923,7 @@
    "value": 2204.6,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "ds_rom.mtp_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5938,7 +5938,7 @@
    "value": 6113.9,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_floor_ar_tok_s": {
    "target": "hbm_ds",
@@ -5953,7 +5953,7 @@
    "value": 1999.7,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_floor_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5968,7 +5968,7 @@
    "value": 3993.7,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_median_ar_tok_s": {
    "target": "hbm_ds",
@@ -5983,7 +5983,7 @@
    "value": 1948.8,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_median_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5998,7 +5998,7 @@
    "value": 3944.2,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_bound_ar_tok_s": {
    "target": "hbm_ds",
@@ -6013,7 +6013,7 @@
    "value": 1921.5,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "hbm_ds.matched_levers_wire_bound_mtp_tok_s": {
    "target": "hbm_ds",
@@ -6028,7 +6028,7 @@
    "value": 3917.2,
    "resolved": true,
    "blob": "83db1c1d2c638905440e417bed673dd44307eace",
-   "last_commit": "5b7396aff 2026-10-06"
+   "last_commit": "3661e31c6 2026-10-06"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
