@@ -10,7 +10,7 @@
 // and (ROC = 1) each leaf's 33/34 output bits are captured next to its output pins (OC, one per leaf); ROC = 0 takes the
 // outputs straight from the leaves, whose outputs are register-direct inside the hardened macro.
 // Every register bank is a kept-hierarchy instance (ot_attn_rp_reg), so synthesis keeps the copies.
-// Function: ot_attn_tile_m6h1 with every input (rst_n included) delayed by RIN = 3 cycles and every output by
+// Function: ot_attn_tile_m6h1 with every input (rst_n included) delayed by RIN = 3 + RMID cycles and every output by
 // ROC cycles (+3 + ROC cycles on the tile's latency; tb_hdc_v41x_attn_tile_m6h1r_lockstep against tile_l).
 // rst_n is carried as data (the leaves' asynchronous reset is driven from the HC register).
 // Sources: this file, ot_hdc_v41x_attn_tile_m8_phys.sv (ot_attn_hgrp_m6h1) and its sources.
@@ -25,8 +25,10 @@ module ot_attn_rp_reg #(parameter integer W = 1) (
 endmodule
 
 module ot_attn_tile_m6h1r #(
-    parameter integer ROC = 1               // 1: per-leaf output capture (+1 cycle); 0: outputs straight from the leaves
-) (                                         //    (the leaf's outputs are register-direct inside the macro)
+    parameter integer ROC = 1,              // 1: per-leaf output capture (+1 cycle); 0: outputs straight from the leaves
+                                            //    (the leaf's outputs are register-direct inside the macro)
+    parameter integer RMID = 0              // 1: one more register (MID) between COL and each HC (+1 cycle), so the
+) (                                         //    tree reaches from tile inputs at the bottom edge centre
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -53,8 +55,13 @@ module ot_attn_tile_m6h1r #(
             wire [PW-1:0] col_q;
             (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_col (.clk(clk), .d(root_q), .q(col_q));
             for (h = 0; h < 2; h = h + 1) begin : g_h               // channel half h: rows 2h, 2h+1
-                wire [PW-1:0] hc_q;
-                (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(col_q), .q(hc_q));
+                wire [PW-1:0] mid_q, hc_q;
+                if (RMID > 0) begin : g_mid
+                    (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_mid (.clk(clk), .d(col_q), .q(mid_q));
+                end else begin : g_nomid
+                    assign mid_q = col_q;
+                end
+                (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(mid_q), .q(hc_q));
                 wire          l_rst_n, l_ld_v, l_ld_mode, l_ld_w2v, l_iv;
                 wire [2:0]    l_ld_bank, l_ibank;
                 wire [7:0]    l_ld_grp;
@@ -91,4 +98,21 @@ module ot_attn_tile_m6h1r #(
         end
     endgenerate
     assign ov = gov[0];
+    // The leaves' rst_n is a 3-cycle path (the leaf's reset recovery is 1,062 ps against its clk pin at SS, longer
+    // than a cycle; physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): the tile's rst_n must hold every value for at
+    // least 3 cycles (a quasi-static reset).  Checked here in simulation.
+    // synthesis translate_off
+    reg rst_prev = 1'b0;
+    integer rst_age = 3;
+    always @(posedge clk) begin
+        if (rst_n !== rst_prev) begin
+            if (rst_age < 3) begin
+                $display("OT_ATTN_TILE_RST_PROTOCOL rst_n changed after %0d cycles (need >= 3)", rst_age);
+                $fatal(1, "ot_attn_tile_m6h1r: rst_n held < 3 cycles");
+            end
+            rst_age = 1;
+        end else if (rst_age < 3) rst_age = rst_age + 1;
+        rst_prev <= rst_n;
+    end
+    // synthesis translate_on
 endmodule
