@@ -10356,8 +10356,8 @@ def dsrom_window_full_block_pipeline_model():
     read_wanted_snapshot = banks*22
     read_owner_snapshot = 21+22+10
     read_completion_snapshot = banks*4
-    read_qualification_extra = (read_wanted_snapshot + read_owner_snapshot +
-                                read_completion_snapshot - banks)
+    read_snapshot_gross = read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot
+    read_qualification_extra = read_snapshot_gross-banks
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
@@ -10369,7 +10369,11 @@ def dsrom_window_full_block_pipeline_model():
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
     read_qualification_logic = (22*12 + banks*22*6)*.08748
-    cell_budget = baseline+ff_area+mux_area_upper+read_qualification_logic
+    # Each new witness holds when req_v is low. Reserve four NAND2 cell areas
+    # per enable mux, with no removed-enable or shared-inverter savings credit.
+    read_snapshot_enable_mux = read_snapshot_gross*4*.08748
+    cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
+                   read_snapshot_enable_mux)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10403,6 +10407,11 @@ def dsrom_window_full_block_pipeline_model():
             landing_data_bits_per_cycle=column_payload,
             read_boundary_bits_per_cycle=banks*rowb,
             read_control_snapshot_internal_bits_per_cycle=read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot,
+            read_owner_operand_receiver_replicas=banks,
+            read_owner_operand_max_receiver_fanout=banks,
+            read_control_directed_bit_routes=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
+            read_control_route_tracks_lower_bound=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
+            read_snapshot_enable_additional_sinks=read_snapshot_gross,
             read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
@@ -10411,6 +10420,7 @@ def dsrom_window_full_block_pipeline_model():
             actual_parent_channel_capacity=None, parent_channel_fit=False),
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
             read_qualification_logic_allowance_um2=read_qualification_logic,
+            read_snapshot_enable_mux_allowance_um2=read_snapshot_enable_mux,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
@@ -10426,6 +10436,12 @@ def dsrom_window_full_block_pipeline_model():
             mandatory_clock_closure=True, measured=False),
         clock=dict(period_ps=1e12/clock, SS_setup_uncertainty_ps=60,
             FF_hold_uncertainty_ps=25, real_FF_clkQ_from_corner_liberty=True,
+            read_snapshot_gross_new_clock_sinks=read_snapshot_gross,
+            read_snapshot_removed_clock_sinks=banks,
+            read_snapshot_net_logical_clock_sink_delta=read_qualification_extra,
+            read_snapshot_gross_sink_clock_cap_fF={
+                'SS':read_snapshot_gross*.446638, 'FF':read_snapshot_gross*.52201},
+            read_snapshot_clock_cap_basis='pinned ORFS DFFHQNx1 SS/FF CLK capacitance in fF; no removed-sink credit, buffer/wire cost and root pin capacitance require actual CTS',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
