@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 // Native full BF-capable S81 pair. This is NOT the current dsfd_bf pin contract:
 // the die must carry the native BF stream and go_bf to use this block.
+// Compile with ot_v41_rom_elem_w10_rne_wake_prepare.sv (same legacy module
+// name), ot_v41_bf16_lanes2_rne_prepare.sv, and the shared RNE multiplier
+// companions. The exact runner packages their pinned arithmetic dependencies.
 // Zero additional wrapper cycles. Original prepared element remains byte-identical.
 module ot_s81_bf_native #(
     parameter integer NSEG = 8,
