@@ -8,7 +8,7 @@
 #      MAXL (top signal routing layer, default M7), PDN (PDN tcl, default common/pdn_view.tcl), HM (hold margin ns),
 #      SDCA (extra --sdc-append file), STEPS (extra --step-tcl args), CTSA (CTS_ARGS),
 #      PER (route clock period ns, default 0.833; margin rule: route at 0.770, sign off at 0.833), IOF (io delay
-#      fraction, default 0.2), WSF (wire-stage fence density: common/wire_stage_fence.tcl POST_FLOORPLAN, regions per ot_svc_vpipe stage)
+#      fraction, default 0.2), WSF (wire-stage placement density: common/wire_stage_fence.tcl PRE_GLOBAL_PLACE, FIRM stage flops)
 set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 W=$OUT/$lab; mkdir -p $W; cd $SRC
@@ -27,7 +27,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/hbm_accel_die_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
-  ${WSF:+--step-tcl POST_FLOORPLAN=physical/hbm_accel_die_views/common/wire_stage_fence.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl --orfs-var OT_WS_DENSITY=$WSF} \
+  ${WSF:+--step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl --orfs-var OT_WS_DENSITY=$WSF} \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag hv_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
