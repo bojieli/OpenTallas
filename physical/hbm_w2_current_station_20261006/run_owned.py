@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,24 @@ p.add_argument('--reuse-map', type=Path,
 a = p.parse_args()
 run = a.run.resolve()
 run.mkdir(parents=True, exist_ok=False)
+image = os.environ.get('OPENTALLAS_ORFS_IMAGE', 'openroad/orfs:asap7lock')
+os.environ.update(OT_ORFS_NUM_CORES='16', OPENTALLAS_ORFS_IMAGE=image)
+# Resolve the installed platform make variables, including its selected VT,
+# rather than assuming library pin spellings or reading an unset host env.
+query = 'print-ties:;@printf "%s\\n" "$(TIEHI_CELL_AND_PORT)" "$(TIELO_CELL_AND_PORT)"'
+tie_command = ['docker','run','--rm','--entrypoint','make',image,
+    '--no-print-directory','-s','-f','/OpenROAD-flow-scripts/flow/platforms/asap7/config.mk',
+    'PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7', '--eval='+query, 'print-ties']
+resolved = subprocess.check_output(tie_command, text=True).strip().splitlines()
+assert len(resolved) == 2
+hi, lo = [line.split() for line in resolved]
+assert len(hi) == len(lo) == 2
+assert all(re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', token) for token in hi+lo)
+tie_map = f'hilomap -singleton -hicell {hi[0]} {hi[1]} -locell {lo[0]} {lo[1]}'
+(run/'platform_ties.json').write_text(json.dumps(dict(
+    TIEHI_CELL_AND_PORT=hi, TIELO_CELL_AND_PORT=lo, command=tie_command,
+    installed_image_id=subprocess.check_output(['docker','image','inspect',image,
+        '--format','{{.Id}}'], text=True).strip()), indent=2)+'\n')
 manifest = json.loads((HERE / 'sources.json').read_text())
 for path, digest in manifest['generated_pins'].items():
     assert hashlib.sha256((HERE / path).read_bytes()).hexdigest() == digest
@@ -37,7 +56,7 @@ code = original.replace(old, 'f"write_verilog {raw_netlist}"')
 needle = '                "splitnets -ports",'
 assert code.count(needle) == 1
 code = code.replace(needle,
-    '                "hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L",\n' + needle)
+    '                '+repr(tie_map)+',\n' + needle)
 guard = 'if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 270418:'
 assert code.count(guard) == 1
 code = code.replace(guard, 'if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 5916:')
@@ -47,10 +66,28 @@ driver = types.ModuleType('descartes_w2_current_driver')
 driver.__file__ = str(shared)
 sys.modules[driver.__name__] = driver
 exec(compile(code, str(shared), 'exec'), driver.__dict__)
+# The kept forwarding hierarchy makes Yosys emit both a hierarchy summary and
+# an expanded cell table. The shared parser counts summary rows as macro cells.
+# Use only the final expanded table, whose four physical inverter cells are
+# already included, and keep the raw report as evidence.
+native_parse_stat = driver.parse_stat
+def station_stat(text):
+    hierarchy = text.split('=== design hierarchy ===', 1)[1]
+    marker = '+----------Count including submodules.'
+    table = hierarchy[hierarchy.rindex(marker):]
+    record = native_parse_stat(table)
+    record['per_cell'].pop('submodules', None)
+    record['per_cell'].pop('ot_fwd_clk_inv', None)
+    count = int(re.search(r'^\s*(\d+)\s+\S+\s+cells\s*$', table, re.M).group(1))
+    assert sum(v['count'] for v in record['per_cell'].values()) == count
+    record['chip_area_um2'] = float(re.search(
+        r"Chip area for top module .*?: ([0-9.]+)", table).group(1))
+    return record
+driver.parse_stat = station_stat
 (run / 'adapter.json').write_text(json.dumps(dict(
     source_driver_sha256=hashlib.sha256(original.encode()).hexdigest(),
     effective_driver_sha256=hashlib.sha256(code.encode()).hexdigest(),
-    attrs_preserved=True, tie_mapping='actual ASAP7 TIEHIx1_ASAP7_75t_R/H, TIELOx1_ASAP7_75t_R/L',
+    attrs_preserved=True, tie_mapping=tie_map,
     constant_PG_relabeling=False, functional_replay=False,
     source_manifest_sha256=hashlib.sha256((HERE / 'sources.json').read_bytes()).hexdigest()), indent=2)+'\n')
 base = ROOT / 'physical/hbm_die_abstracts_20261006/links/station_physical_20261006'
@@ -68,7 +105,7 @@ def synth(*args, **kwargs):
             assert driver.sha256_file(ROOT/source['path']) == source['sha256'], 'cached source differs'
         for lib in old['corner']['liberty']:
             assert driver.sha256_file(Path(lib['path'])) == lib['sha256'], 'cached mapping library differs'
-        assert 'hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H' in (cached/'synth.ys').read_text()
+        assert tie_map in (cached/'synth.ys').read_text(), 'cached platform tie mapping differs'
         original_run = driver.run
         def consume(cmd, *aa, **kk):
             if cmd[:1] == [str(driver.YOSYS)]:
@@ -94,7 +131,7 @@ def synth(*args, **kwargs):
         result = native_synth(*args, **kwargs)
     mapped = result['netlist']
     text = mapped.read_text()
-    if 'TIEHIx1_ASAP7_75t_R' not in text:
+    if hi[0] not in text:
         raise driver.FlowError('actual high constant tie mapping missing')
     # This full CURRENT map needs a high tie only. A low tie may be absent
     # because every constant-zero sink was optimized away or uses its inverse.
@@ -148,7 +185,6 @@ argv += ['--source','rtl/common/ot_fwd_link_stage.sv',
          '--purpose','signoff_target','--nickname-tag','Descartes_CURRENT_NO2_H55',
          '--output',str(run/'physical.json')]
 (run/'argv.json').write_text(json.dumps(argv, indent=2)+'\n')
-os.environ.update(OT_ORFS_NUM_CORES='16',OPENTALLAS_ORFS_IMAGE='openroad/orfs:asap7lock')
 try:
     rc = persistent.launch(driver, argv, workdir=run/'work', receipt=run/'launch.json')
 except BaseException as exc:

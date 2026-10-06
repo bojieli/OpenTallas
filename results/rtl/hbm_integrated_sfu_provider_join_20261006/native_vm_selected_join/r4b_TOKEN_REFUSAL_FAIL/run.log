@@ -1,0 +1,6 @@
+SFU_NATIVE_CHECKED_PUBLICATION cycles=130 reads=8 writes=0 full73=1fffff00019ca001234
+SFU_NATIVE_SRAM_READBACK block=0 cycles=134 addr=64 full73=1fffff00019ca001234
+SFU_NATIVE_SRAM_READBACK block=1 cycles=140 addr=96 full73=1fffff00019ca001234
+[236668000] %Fatal: tb_hbm_integrated_sfu_native_vm_join.sv:149: Assertion failed in tb_hbm_integrated_sfu_native_vm_join: TOKEN17_WRONG_JOINT_ACCEPT
+%Error: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-a6ff3a402/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:149: Verilog $stop
+Aborting...

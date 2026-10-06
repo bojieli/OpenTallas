@@ -146,7 +146,7 @@ module tb_hbm_integrated_sfu_native_vm_join;
   reset();start(0,8191);w=0;
   while(!publication_v)begin tick();w=w+1;if(fault||w>4000)$fatal(1,"TOKEN_NEGATIVE_SETUP");end
   negstep();publication_owner=frame^(73'b1<<52);publication_r=1;tick();negstep();publication_r=0;
-  if(!fault||!retained||!nv_complete_v||release_v||!grant)$fatal(1,"TOKEN17_WRONG_JOINT_ACCEPT");
+  if(!fault||!retained||!nv_complete_v||release_v||!grant)$fatal(1,"TOKEN17_REFUSAL_CONTRACT fault=%b retained=%b native_complete=%b release_v=%b grant=%b reverse_ACKs=%0d",fault,retained,nv_complete_v,release_v,grant,acks);
   $display("SFU_NATIVE_VM_JOIN_PASS 64FP32 actual32SRAM checked2ACK CP8READ zeroCPwrite full73 warm jointretire");$finish;
  end
 endmodule
