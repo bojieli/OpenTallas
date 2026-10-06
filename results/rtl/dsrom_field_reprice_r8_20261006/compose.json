@@ -299,12 +299,73 @@
     "MTP_step_us": 22.294,
     "MTP_tok_s": -195.8
    }
+  },
+  "r9f198.72": {
+   "label": "S81-RERUN r9 die, FH 192.24 (10 slots; hub stations + q banks + column relays)",
+   "elem_h": 198.72,
+   "fh": 192.24,
+   "pairs_per_layer_die": 2050,
+   "layer_dies": 383,
+   "extra_layer_dies": 59,
+   "stages": 96,
+   "extra_stage_hops": 15,
+   "farthest_round_trip": {
+    "layer": 140,
+    "layer1": 141
+   },
+   "wire_per_region": {
+    "min": 44,
+    "max": 149,
+    "mean": 98.11
+   },
+   "headline": {
+    "AR_us": 605.172,
+    "AR_tok_s": 1652.4,
+    "MTP_step_us": 857.669,
+    "MTP_tok_s": 4849.2,
+    "MTP_tok_s_tau_published": 4533.1,
+    "II_us": 25.298,
+    "measured_share": 1.0
+   },
+   "conditional_all": {
+    "AR_us": 462.934,
+    "AR_tok_s": 2160.1,
+    "MTP_step_us": 689.625,
+    "MTP_tok_s": 6030.8,
+    "MTP_tok_s_tau_published": 5637.7,
+    "II_us": 20.137,
+    "measured_share": 1.0001
+   },
+   "headline_delta_vs_old80": {
+    "AR_us": 49.151,
+    "AR_tok_s": -146.1,
+    "MTP_step_us": 55.46,
+    "MTP_tok_s": -335.2
+   },
+   "conditional_all_delta_vs_old80": {
+    "AR_us": 26.051,
+    "AR_tok_s": -128.8,
+    "MTP_step_us": 27.929,
+    "MTP_tok_s": -254.6
+   },
+   "headline_delta_vs_current_frame": {
+    "AR_us": 12.706,
+    "AR_tok_s": -35.5,
+    "MTP_step_us": 12.79,
+    "MTP_tok_s": -73.4
+   },
+   "conditional_delta_vs_current_frame": {
+    "AR_us": 12.442,
+    "AR_tok_s": -59.7,
+    "MTP_step_us": 12.437,
+    "MTP_tok_s": -110.8
+   }
   }
  },
  "tool_sha256": {
-  "tools/dsrom_field_reprice_r8.py": "1db1e8eb7b2ebb91879c40068952ee9a97b1c67159469fff4ddf58766c2a2c32"
+  "tools/dsrom_field_reprice_r8.py": "fb00396ad542baa4194893ab0cb7a0d178e3998f2fa3a93357e4db21fe5632aa"
  },
  "inputs": {
-  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "8b66bebfadc2e3d3e021a476f8020845a9e290ba4dc5a07d297e6fc8541a7a06"
+  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "b778b9ee30e9d3b97f2ae7baf44e579e196f9c9ed0683666ba1236b03672d199"
  }
 }
