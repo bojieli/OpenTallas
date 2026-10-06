@@ -11,6 +11,7 @@
 // Prints KGSTACK lines (per stack: blocks, sectors, first / last output cycle, HBM
 // stats) and KGATHER_PASS with the rank's last output cycle.
 module tb_hdc_v41x_idx_kgather #(
+    parameter integer SPLIT_COUNTERS = 0,
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 0,
     parameter integer OPT_KC8 = 0,
@@ -70,7 +71,7 @@ module tb_hdc_v41x_idx_kgather #(
             .rsp_tag(h_rsp_tag[s*NPC*TAGW +:NPC*TAGW]),
             .rsp_beat(h_rsp_beat[s*NPC*BEATW +:NPC*BEATW]),
             .rsp_data(h_rsp_data[s*NPC*DW +:NPC*DW]));
-        ot_dsrom_reindex_gather_parent #( .NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),
+        ot_dsrom_reindex_gather_parent #(.SPLIT_COUNTERS(SPLIT_COUNTERS), .NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),
             .DW(DW),.LBW(LBW),.LMW(LMW),.DF(DF)) kg (
             .clk(clk),.rst_n(rst_n),.lw_v(lw_v[s]),.lw_slot(3'd0),.lw_addr(lw_addr),.lw_blk(lw_blk[s]),
             .cmd_v(cmd_v),.cmd_slot(3'd0),.cmd_base(HW'(BASE+s*BSTEP)),.cmd_skip(10'((s*OSTEP)%1024)),

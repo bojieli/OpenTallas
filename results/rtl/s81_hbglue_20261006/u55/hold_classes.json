@@ -1,0 +1,60 @@
+{
+  "lane_skew_shift": {
+    "count": 1178,
+    "worst_ps": -6.136536,
+    "examples": [
+      [
+        "g_sk[11].u_b.genblk1.g_line.line[186]$_DFF_P_/QN",
+        "g_sk[11].u_b.genblk1.g_line.line[202]$_DFF_P_/D",
+        -6.136536
+      ],
+      [
+        "g_sk[12].u_a.genblk1.g_line.line[225]$_DFF_P_/QN",
+        "g_sk[12].u_a.genblk1.g_line.line[241]$_DFF_P_/D",
+        -5.200687
+      ],
+      [
+        "g_sk[13].u_a.genblk1.g_line.line[275]$_DFF_P_/QN",
+        "g_sk[13].u_a.genblk1.g_line.line[291]$_DFF_P_/D",
+        -4.88691
+      ]
+    ]
+  },
+  "broadcast_shift": {
+    "count": 21,
+    "worst_ps": -2.173609,
+    "examples": [
+      [
+        "u_x.genblk1.g_line.line[362]$_DFF_P_/QN",
+        "u_x.genblk1.g_line.line[874]$_DFF_P_/D",
+        -2.173609
+      ],
+      [
+        "u_x.genblk1.g_line.line[313]$_DFF_P_/QN",
+        "u_x.genblk1.g_line.line[825]$_DFF_P_/D",
+        -1.78034
+      ],
+      [
+        "u_x.genblk1.g_line.line[161]$_DFF_P_/QN",
+        "u_x.genblk1.g_line.line[673]$_DFF_P_/D",
+        -1.725342
+      ]
+    ]
+  },
+  "other": {
+    "count": 2,
+    "worst_ps": -1.690856,
+    "examples": [
+      [
+        "c1[1][20]$_DFF_P_/QN",
+        "res_bits[20]$_DFF_P_/D",
+        -1.690856
+      ],
+      [
+        "c1[1][21]$_DFF_P_/QN",
+        "res_bits[21]$_DFF_P_/D",
+        -1.241826
+      ]
+    ]
+  }
+}
