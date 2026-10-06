@@ -3,9 +3,10 @@
 # L for placement (ideal clocks); once CTS has built the tree, ot_vclk_from_insertion sets vclk's latency to the
 # midpoint of core_clk's propagated insertion (report_clock_latency, rise) before any timing repair, so every IO path
 # sees only its register's skew from the block's own mean insertion (+ the SDC's 150 ps allowance).  The value is
-# written into 4_cts.sdc / 6_final.sdc by ORFS (write_sdc) and so reaches sign-off.
-proc ot_vclk_from_insertion {} {
-  if {[info exists ::ot_vclk_L_done] || [llength [get_clocks -quiet vclk]] == 0} { return }
+# written into 4_cts.sdc / 6_final.sdc by ORFS (write_sdc) and so reaches sign-off.  post_cts_vclk.tcl re-measures after
+# the CTS-stage repair (it moves the insertion: qm2_pd55 517-1029 ps before, 848-1029 ps after).
+proc ot_vclk_from_insertion {{force 0}} {
+  if {(!$force && [info exists ::ot_vclk_L_done]) || [llength [get_clocks -quiet vclk]] == 0} { return }
   sta::redirect_string_begin
   report_clock_latency -clock core_clk
   set s [sta::redirect_string_end]
