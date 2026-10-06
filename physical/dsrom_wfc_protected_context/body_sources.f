@@ -2,6 +2,7 @@ rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
 rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv
 rtl/dsrom_sys/protected_vm/ot_dsrom_vm_codec.sv
 rtl/dsrom_sys/protected_vm/ot_dsrom_vm_ratio_fifo.sv
+rtl/dsrom_sys/protected_vm/ot_dsrom_vm_macro_command.sv
 rtl/dsrom_sys/protected_vm/ot_dsrom_vm_backend.sv
 rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv
 rtl/rom/wavefront/context/ot_dsrom_wfc_vm_caller_adapter.sv

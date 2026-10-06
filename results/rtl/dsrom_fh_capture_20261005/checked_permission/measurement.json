@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS conditional minimum head numerical",
+  "full_shape": "G4W16 MP1 ALAT7 CAPTURE1 RETURN_EXTRA3 FH_RETIRE1 CHECK_PIPE1",
+  "cycles": 63028,
+  "retained_r11_cycles": 62963,
+  "changed_source_delta_cycles": 65,
+  "changed_source_delta_ns": 54.166666666666664,
+  "per_warm_chain_delta_cycles": 13,
+  "decode_split_baseline_cycles": 62878,
+  "total_delta_cycles": 150,
+  "all_five_original_TOKX_values_exact": true,
+  "vm_mismatch": 0,
+  "kv_mismatch": 0,
+  "fault": 0,
+  "negative_gate": {
+    "source": "r14",
+    "cases": 9,
+    "verdict": "PASS",
+    "coverage": [
+      "ordinary held transaction",
+      "full47bit owner",
+      "full32bit ordinal",
+      "held overwrite quarantine",
+      "bounds no truncation",
+      "masked-X normalization",
+      "once-only warm ACK",
+      "late payload/reduction mirror fault",
+      "reset pending grant"
+    ]
+  },
+  "scope": "New checked grant is connected to actual warm VM fixture write and debt ACK. Original two-edge streamed ordinary writes retained. Native parent arbitration/backend/transport qualification remains conditional; actual parent request_ready/retention mandatory.",
+  "logic_unchanged_after_PASS": "Only keep/dont_touch attributes added on paired metadata; no functional replay. Mapped retention must be measured before physical qualification.",
+  "retained_failures": [
+    "r13 first runtime quarantine",
+    "r14 ordinary streaming fixture/one-held contract mismatch",
+    "C20 DPL0033 and SS preCTS -1831.70ps"
+  ],
+  "physical_closed": false,
+  "adopted": false
+}

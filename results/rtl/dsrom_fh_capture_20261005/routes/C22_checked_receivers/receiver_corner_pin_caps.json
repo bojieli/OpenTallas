@@ -1,0 +1,40 @@
+{
+  "SS": {
+    "pins": {
+      "D": {
+        "capacitance": "0.524726",
+        "rise_capacitance": "0.524726",
+        "fall_capacitance": "0.518657"
+      },
+      "CLK": {
+        "capacitance": "0.446638",
+        "rise_capacitance": "0.446567",
+        "fall_capacitance": "0.446638"
+      },
+      "QN": {}
+    },
+    "units": [
+      "capacitive_load_unit (1,ff);",
+      "time_unit : \"1ps\";"
+    ]
+  },
+  "FF": {
+    "pins": {
+      "D": {
+        "capacitance": "0.62135",
+        "rise_capacitance": "0.62135",
+        "fall_capacitance": "0.619256"
+      },
+      "CLK": {
+        "capacitance": "0.52201",
+        "rise_capacitance": "0.517449",
+        "fall_capacitance": "0.52201"
+      },
+      "QN": {}
+    },
+    "units": [
+      "capacitive_load_unit (1,ff);",
+      "time_unit : \"1ps\";"
+    ]
+  }
+}

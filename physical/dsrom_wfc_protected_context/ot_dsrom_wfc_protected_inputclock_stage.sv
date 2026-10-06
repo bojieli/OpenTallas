@@ -3,7 +3,7 @@
 // This top contains NO failed divider and supplies NO clock-source qualification.
 // Cold-POR-only sticky clock fault vetoes enrollment/ready and exposes quarantine;
 // pending provider state and consumer/fence ports are never reset or tied off.
-module ot_dsrom_wfc_protected_inputclock_stage #(parameter ENABLE=0, STRUCTURAL=0)(
+module ot_dsrom_wfc_protected_inputclock_stage #(parameter ENABLE=0, STRUCTURAL=0, DISTRIBUTED_CMD=0)(
  input wire fast_clk,slow_clk,cold_n,slow_rst_n,
  input wire fast_rst_n,
  input wire  cold_fenced,
@@ -130,7 +130,7 @@ module ot_dsrom_wfc_protected_inputclock_stage #(parameter ENABLE=0, STRUCTURAL=
  assign vm_quarantined = raw_vm_quarantined | clock_source_fault;
  wire  raw_wfc_fault;
  assign wfc_fault = raw_wfc_fault | clock_source_fault;
- ot_dsrom_wfc_protected_stage #(.ENABLE(ENABLE),.STRUCTURAL(STRUCTURAL)) u_r4(
+ ot_dsrom_wfc_protected_stage #(.ENABLE(ENABLE),.STRUCTURAL(STRUCTURAL),.DISTRIBUTED_CMD(DISTRIBUTED_CMD)) u_r4(
  .fast_clk(fast_clk),
  .slow_clk(slow_clk),
  .cold_n(cold_n),

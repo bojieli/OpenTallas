@@ -266,7 +266,7 @@
     "C17b": "terminal DPL0033; original failure retained",
     "C18": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
     "C19": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
-    "C20": "ACTUAL loaded fullroute admitted EPYC2 controller212904/OpenROAD218758/containerfd03d66af60d;60pct16CPU48GiB unchangedfreshprepostguard; all13 mapped/PDN objects reused"
+    "C20": "TERMINAL08:27Z exit2 DPL0033; resized SS-1831.70ps/BC hold-6.77567ps; no CTS/extractedSSFF/routeDRC; source/gold/checkpoints retained"
   },
   "C18_actual_result": {
     "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
@@ -356,7 +356,7 @@
     "unchanged_admit_peak_GiB": 48,
     "reuse": "all13 synth/floorplan objects; no synthesis/gold/model replay",
     "scope": "conditional loaded head64SRAM/native fast capture/checkedreply/argmax, external provider parent-root transport scope retained",
-    "actual_stage": "3_1_place_gp_skip_io iteration100, live",
+    "actual_stage": "3_5_place_dp",
     "container": "fd03d66af60d",
     "OpenROAD_pid": 218758,
     "qualified": false,
@@ -368,6 +368,11 @@
     "mapped_packet_DFF_count": 18040,
     "mapped_native_endpoint_DFF_count": 7066,
     "retention_basis": "Actual mapped ASAP7 DFF masters in retained cells.tsv; original sequential flag misses escaped names, corrected report tool for later extraction",
-    "observation_boundary_scope": "Native receiving FF/pin loads internal and real; external parent protected transport/caller/root crossing remains Turing/Copernicus scope, no fullparent claim"
+    "observation_boundary_scope": "Native receiving FF/pin loads internal and real; external parent protected transport/caller/root crossing remains Turing/Copernicus scope, no fullparent claim",
+    "terminal": true,
+    "controller_live": false,
+    "OpenROAD_live": false,
+    "container_live": false,
+    "failure_record": "results/rtl/dsrom_fh_capture_20261005/routes/C20_fault_retire_native/fullroute_failure.json"
   }
 }

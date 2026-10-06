@@ -1,0 +1,135 @@
+{"utc": "2026-10-06T05:43:46Z", "phase": "preguard", "load": 68.31689453125, "idleCPU": 63.16217099848255, "memory_available": 349742096384, "disk_free": 1908420317184, "requiredCPU": 16, "expected_memory_GiB": 8, "disk_estimate_bytes": 1073741824, "inventory_source_bytes": 2741281, "existing_same_shape_work_bytes": 87941020}
+{"utc": "2026-10-06T05:43:51Z", "phase": "postguard", "load": 67.73095703125, "idleCPU": 63.35626807695846, "memory_available": 349079744512, "disk_free": 1908419350528, "requiredCPU": 16, "expected_memory_GiB": 8, "disk_estimate_bytes": 1073741824, "inventory_source_bytes": 2741281, "existing_same_shape_work_bytes": 87941020}
+view=asap7 corner=TT block=ot_hbm_integrated_su_cp_context top=ot_hbm_integrated_su_cp_context purpose=characterization
+  pnr:   wirelength=22559 um vias=51847 DRC=4323 antenna_nets=0 Fmax=1172.95 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/jobs/harvey-cp-phase-parallel-parent-context-r3/physical.json
+{
+  "schema": "hbm.cp.parent-context.corners.v1",
+  "ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -19.21,
+    "tns_ps": -143.0,
+    "worst_register_d_slack_ps": 41.606274,
+    "worst_reg_to_reg_slack_ps": 41.61,
+    "worst_input_to_reg_slack_ps": 211.09,
+    "worst_output_port_slack_ps": -19.214685,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "44f236f3de07ed2c38e140abed1a9bb3b47b405ae61bbd56879fdaf8fcb6ed2a",
+    "spef_sha256": "2f865646785f1e11ee6538d804cf28e656fe5e423df8bdbe7d286afa2ee490df",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": 6.79,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 6.79197,
+    "worst_reg_to_reg_slack_ps": 12.69,
+    "worst_input_to_reg_slack_ps": 6.79,
+    "worst_output_port_slack_ps": 63.013603,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "44f236f3de07ed2c38e140abed1a9bb3b47b405ae61bbd56879fdaf8fcb6ed2a",
+    "spef_sha256": "2f865646785f1e11ee6538d804cf28e656fe5e423df8bdbe7d286afa2ee490df",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+  "uses_extracted_interconnect_and_propagated_clock": true,
+  "external_loads_analytical": true,
+  "parent_budget_adoption": false
+}
+{
+  "schema": "hbm.cp.context.loaded-ir.v1",
+  "inputs": {
+    "6_final.odb": "44f236f3de07ed2c38e140abed1a9bb3b47b405ae61bbd56879fdaf8fcb6ed2a",
+    "6_final.sdc": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7",
+    "6_final.spef": "2f865646785f1e11ee6538d804cf28e656fe5e423df8bdbe7d286afa2ee490df"
+  },
+  "activity": "OpenSTA vectorless input activity 0.1, propagated; clocks from actual retained SDC",
+  "source": "Ideal supply at existing child PG boundary pins; parent-grid drop excluded",
+  "grid_rebuilt": false,
+  "source_phase_ps": 0,
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "workload_peak_qualified": false,
+  "adopted": false,
+  "corners": {
+    "SS": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0016534304013475776,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00165,
+          "supply_v": 0.63,
+          "worst_voltage_v": 0.628,
+          "average_voltage_v": 0.629,
+          "average_ir_drop_v": 0.000735,
+          "worst_ir_drop_v": 0.00214,
+          "worst_drop_percent": 0.34,
+          "em_max_current_a": 5.2e-05,
+          "em_average_current_a": 8.81e-07,
+          "resistors": 77153
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00165,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00204,
+          "average_voltage_v": 0.000641,
+          "average_ir_drop_v": 0.000641,
+          "worst_ir_drop_v": 0.00204,
+          "worst_drop_percent": 0.32,
+          "em_max_current_a": 4.26e-05,
+          "em_average_current_a": 7.92e-07,
+          "resistors": 77941
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-phase-parallel-parent-context-r3/loaded_ir/SS.log"
+    },
+    "FF": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.002793334424495697,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00279,
+          "supply_v": 0.77,
+          "worst_voltage_v": 0.767,
+          "average_voltage_v": 0.769,
+          "average_ir_drop_v": 0.00102,
+          "worst_ir_drop_v": 0.00307,
+          "worst_drop_percent": 0.4,
+          "em_max_current_a": 7.35e-05,
+          "em_average_current_a": 1.23e-06,
+          "resistors": 77153
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00279,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00287,
+          "average_voltage_v": 0.000887,
+          "average_ir_drop_v": 0.000887,
+          "worst_ir_drop_v": 0.00287,
+          "worst_drop_percent": 0.37,
+          "em_max_current_a": 6.06e-05,
+          "em_average_current_a": 1.1e-06,
+          "resistors": 77941
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-phase-parallel-parent-context-r3/loaded_ir/FF.log"
+    }
+  }
+}
