@@ -1,6 +1,6 @@
 // hfd_quant: thin registered die wrapper (tools/hbm_die_wrap.py, CLAUDE HBM-ABSTRACTS spine).
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
-// instantiates it except the die view route.  INTERIM: ot_hdc_actquant (unchanged; routed at 0.9 GHz only, results/physical_abi3/asap7/hdc/v41/ot_hdc_actquant) behind the die ports: x = f_vm[1023:0] (32 FP32 a block); the dequantised BF16 block y[511:0] is broadcast to the four SU quarters (t_su_*). The die interface carries no valid / format bit (v is tied 1: one block a cycle, II = 1) and fp4 alternates from a wrapper toggle so both formats stay live; q / e / vo / fault have no die net (generator-side width defect).
+// instantiates it except the die view route.  Quant view: ot_hfd_actquant_m (make_actquant_m.py: margin-first port of the 1.2 GHz ot_dsrom_actquant_f12, lever su_swiglu 1d4ea2dc2; exact vs ot_hdc_actquant and f12 on 87,475 blocks, tb_aq_equiv.sv; LATENCY 22 = original 13 + 9, f12 + 4) behind the die ports: x = f_vm[1023:0] (32 FP32 a block); the dequantised BF16 block y[511:0] is broadcast to the four SU quarters (t_su_*). The die interface carries no valid / format bit (v tied 1, II = 1) and fp4 alternates from a wrapper toggle so both formats stay live; q / e / vo / fault have no die net (generator-side width defect): they end in kept sink flops.
 module hfd_quant (
     input wire [0:0] ck,
     input wire [1023:0] f_vm,
@@ -32,7 +32,19 @@ module hfd_quant (
     assign w_aq_v = 1'd1;
     assign w_aq_fp4 = tgl;
     assign w_aq_x = {i_f_vm[1023:0]};
-    ot_hdc_actquant u_aq (.clk(w_aq_clk), .rst_n(w_aq_rst_n), .v(w_aq_v), .fp4(w_aq_fp4), .x(w_aq_x), .vo(w_aq_vo), .q(w_aq_q), .e(w_aq_e), .y(w_aq_y), .fault(w_aq_fault));
+    ot_hfd_actquant_m #(.MLAT(5)) u_aq (.clk(w_aq_clk), .rst_n(w_aq_rst_n), .v(w_aq_v), .fp4(w_aq_fp4), .x(w_aq_x), .vo(w_aq_vo), .q(w_aq_q), .e(w_aq_e), .y(w_aq_y), .fault(w_aq_fault));
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_aq_vo
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_aq_vo[k]), .q());
+    end
+    for (genvar k = 0; k < 256; k = k + 1) begin : g_sink_w_aq_q
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_aq_q[k]), .q());
+    end
+    for (genvar k = 0; k < 10; k = k + 1) begin : g_sink_w_aq_e
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_aq_e[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_aq_fault
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_aq_fault[k]), .q());
+    end
     wire [511:0] od_t_su_NE = {w_aq_y[511:0]};
     wire [511:0] o_t_su_NE;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NE
