@@ -91,6 +91,12 @@ proc fc_move {inst p} {
   $inst setPlacementStatus PLACED
 }
 
+# Timing-driven global placement keeps the buffers of its virtual repair (keep_resize_below_overflow), placed along
+# the pre-move routes: qm5_pd55 y[172] -> s0 ran 499 -> 1277 -> 762 um through five such buffers (-415 ps on a
+# 318 um hop).  Remove them first (the walk then sees bare chains); 3_4 repair_design re-buffers the moved nets.
+if {[info exists ::env(OT_FC_KEEPBUF)] && $::env(OT_FC_KEEPBUF)} {
+  puts "OT_FC: buffers kept"
+} elseif {[catch {remove_buffers} fc_err]} { puts "OT_FC: remove_buffers failed: $fc_err" } else { puts "OT_FC: buffers removed before the chain walk" }
 array set fc_done {}
 set n_in 0; set n_thru 0; set n_out 0; set n_moved 0
 # ---- inputs (and pass-throughs)
@@ -189,6 +195,14 @@ foreach bt [$fc_blk getBTerms] {
     set ins [fc_sig_inputs $d]
     if {[fc_seq $d] || [llength $ins] != 1} { set A [fc_center $d]; break }
     set d [fc_driver [[lindex $ins 0] getNet]]
+  }
+  # a core endpoint FLOP (e.g. quant u_aq.y) sits where global placement pulled it toward its far loads, away from
+  # its own logic (qm5_pd55: y[81] 5 buffers / -83 ps from its D cone): pull it to its D-input drivers first (once)
+  if {$A ne "" && [fc_seq $d] && ![info exists fc_done([$d getName])]} {
+    set pts {}
+    foreach it [fc_sig_inputs $d] { set dd [fc_driver [$it getNet]]; if {$dd ne "NULL" && $dd ne $d} { lappend pts [fc_center $dd] } }
+    if {[llength $pts]} { set A [fc_cent $pts]; fc_move $d $A; incr n_moved }
+    set fc_done([$d getName]) 1
   }
   if {$A eq ""} continue
   fc_rec $bt $A $P

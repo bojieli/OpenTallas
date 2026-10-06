@@ -109,8 +109,8 @@ module tb_hfd_quant;
             @(negedge clk);
             nchk = nchk + 1; if (t_su_SW[511:0] !== q4_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SW[511:0] %h ref %h cyc %0d", t_su_SW[511:0], q4_aq_y[511:0], cyc); end
             nchk = nchk + 1; if (t_su_NW[511:0] !== q4_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NW[511:0] %h ref %h cyc %0d", t_su_NW[511:0], q4_aq_y[511:0], cyc); end
-            nchk = nchk + 1; if (t_su_SE[511:0] !== q3_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[511:0] %h ref %h cyc %0d", t_su_SE[511:0], q3_aq_y[511:0], cyc); end
-            nchk = nchk + 1; if (t_su_NE[511:0] !== q3_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[511:0] %h ref %h cyc %0d", t_su_NE[511:0], q3_aq_y[511:0], cyc); end
+            nchk = nchk + 1; if (t_su_SE[511:0] !== q4_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_SE[511:0] %h ref %h cyc %0d", t_su_SE[511:0], q4_aq_y[511:0], cyc); end
+            nchk = nchk + 1; if (t_su_NE[511:0] !== q4_aq_y[511:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_su_NE[511:0] %h ref %h cyc %0d", t_su_NE[511:0], q4_aq_y[511:0], cyc); end
             randomize_inputs;
         end
         $display("TB_hfd_quant checks=%0d mismatches=%0d", nchk, err);
