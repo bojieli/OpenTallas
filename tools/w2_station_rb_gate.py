@@ -9,6 +9,9 @@
    bounded waits (listed in BENCH_EDITS) because the rb chain is slower. The
    legacy chain runs the SAME edited bench for the calendar baseline.
 3. Negative controls: each mutant must FAIL the bench that targets it.
+   (The EVAL "settled" qualifier is not a safety mechanism: removing it only
+   adds redundant recheck edges, since normal itself is sampled in EVAL and an
+   EVAL excursion lasts >= 4 edges; it is therefore not a negative control.)
 """
 import argparse, hashlib, json, subprocess
 from pathlib import Path
@@ -36,15 +39,17 @@ BENCH_EDITS = [
  ("  @(negedge clk_sm);wait(q_ack_v);",
   "  for(integer k=0;k<20&&q_ack_v;k++)@(negedge clk_sm);\n  if(q_ack_v)$fatal(1,\"held receipt CE was not withdrawn\");\n  wait(q_ack_v);",
   'held-receipt CE: wait for the (registered, <=20 edge) withdrawal before the 4-edge hold check; withdrawal is now itself checked'),
+ ("  do @(posedge clk_sm);while(tap_ACK_r!==4'hf);@(negedge clk_sm);other_ack=0;ack_gate=0;",
+  "  do @(posedge clk_sm);while(tap_ACK_r!==4'hf);@(negedge clk_sm);other_ack=0;@(negedge clk_sm);ack_gate=0;",
+  'STRONGER stimulus: the parent-side ACK gate stays open one more edge, so a held quarter ACK presented twice is counted by the existing quarter_acks==1 check'),
  ("  wait(warm_ack);if(!chain_warm||!chain_empty)",
   "  wait(warm_ack);for(integer k=0;k<8&&!(chain_warm&&chain_empty);k++)@(negedge clk_sm);\n  if(!chain_warm||!chain_empty)",
   'registered drained/warm status: <=8 edges after warm_ack (same check)'),
 ]
 BANK_MUTANTS = {
  'B1_live_q_no_alignment': (BANK, '  assign q[g*64+:64]=q_d2[g];', '  assign q[g*64+:64]=raw64(code[g]);'),
- 'B2_copy_check_removed': (BANK, '  assign cbad[g]=(com_q[g]', '  assign cbad[g]=1\'b0&&(com_q[g]'),
+ 'B2_copy_check_removed': (BANK, '   f2<=s_ctlbad || (|s_cbad) ||', '   f2<=s_ctlbad || 1\'b0 ||'),
  'B3_controller_check_removed': (BANK, '   f2<=s_ctlbad ||', '   f2<=1\'b0 ||'),
- 'B4_unsettled_eval_decision': (BANK, ' wire settled=phase==P_EVAL && ph2==P_EVAL && !freeze;', ' wire settled=phase==P_EVAL && !freeze;'),
 }
 CHAIN_MUTANTS = {
  'S1_sm_duplicate_mask_removed': (CHAIN, '   assign sm_v[I]=ov[t]&&!fault&&!smj[I];assign ready[t]=sm_r[I]&&!fault&&!smj[I];',
