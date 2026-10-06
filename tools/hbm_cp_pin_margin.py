@@ -119,6 +119,8 @@ def route_argv(job, threads, tag):
             elif v.startswith(('PRE_GLOBAL_PLACE=', 'PRE_GLOBAL_ROUTE=', 'PRE_DETAIL_PLACE=')): pass
             else: out += [a[i], v]
             i += 2; continue
+        if a[i] == '--orfs-var' and a[i+1].startswith('TMPDIR='):
+            i += 2; continue  # /work/tmp does not exist in a fresh work dir
         if a[i] == '--orfs-var' and a[i+1].startswith('NUM_CORES='):
             out += ['--orfs-var', f'NUM_CORES={threads}']; i += 2; continue
         out.append(a[i]); i += 1
