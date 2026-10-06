@@ -142,7 +142,7 @@ def gate_sched(a):
         for cname, ex in SCHED_CFGS.items():
             variants = [] if a.no_as_built else [("as_built", False, dict(ex))]
             variants += [(f"s{fpl}{fml}_b{nb}{a.tag}", True, dict(ex, FPL=fpl, FML=fml, NBANKP=nb,
-                                                                     TILE_S=1 if fml == 6 else 0, **SX[0]))
+                                                                     TILE_S=1 if fml in (6, 8) else 0, **SX[0]))
                          for nb in a.banks]
             for vname, s, e in variants:
                 use(s)
@@ -170,7 +170,7 @@ def gate_verify6(a):
         ex = {"PWORDS": 2, "ILV": 1, "REPL": 2, "NSTAGE": 2}
         for vname, s, e in ([] if a.no_as_built else [("as_built", False, dict(ex))]) + \
                 [(f"s{fpl}{fml}_b{nb}{a.tag}", True, dict(ex, FPL=fpl, FML=fml, NBANKP=nb,
-                                                           TILE_S=1 if fml == 6 else 0, **SX[0]))
+                                                           TILE_S=1 if fml in (6, 8) else 0, **SX[0]))
                  for nb in a.banks]:
             use(s)
             exe = C.build_engine(work, {k: SCHED[k] for k in ("H", "D", "TD", "NL", "TROWS")}, man["counts"], e)

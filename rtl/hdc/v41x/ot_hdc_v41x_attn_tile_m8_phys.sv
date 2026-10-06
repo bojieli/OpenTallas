@@ -228,3 +228,181 @@ module ot_attn_tile_m7h1 (
     endgenerate
     assign ov = gov[0];
 endmodule
+
+// The one-head FPL 6 element with NBANK 6 stationary banks (the engine's NBANKP 6: the deeper FPL 6 / FML 8 tile
+// holds each block's bank longer; 6 banks remove the T = 640 bank stalls measured at NBANK 5).
+module ot_attn_hgrp_m6h1b6 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [31:0]   oy,
+    output wire [0:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(6), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The one-head FPL 6 element with NBANK 7 stationary banks (the engine's NBANKP 7: the deeper FPL 6 / FML 8 tile
+// holds each block's bank longer; 7 banks remove the T = 640 bank stalls measured at NBANK 5).
+module ot_attn_hgrp_m6h1b7 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [31:0]   oy,
+    output wire [0:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(7), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The one-head FPL 6 / FML 8 element, NBANK 5, with the p-mode columns pre-selected by the tile wiring (PCOLP: port
+// ld_wp = this head's words j*16 + gid of both p-words; replaces the 16-way gsel AND-OR that limited NBANK 7 at -12 ps).
+module ot_attn_hgrp_m6h1b5p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire [63:0]   ld_wp,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [31:0]   oy,
+    output wire [0:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1),
+                              .PCOLP(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The one-head FPL 6 / FML 8 element, NBANK 6, with the p-mode columns pre-selected by the tile wiring (PCOLP: port
+// ld_wp = this head's words j*16 + gid of both p-words; replaces the 16-way gsel AND-OR that limited NBANK 7 at -12 ps).
+module ot_attn_hgrp_m6h1b6p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire [63:0]   ld_wp,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [31:0]   oy,
+    output wire [0:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(6), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1),
+                              .PCOLP(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The one-head FPL 6 / FML 8 element, NBANK 7, with the p-mode columns pre-selected by the tile wiring (PCOLP: port
+// ld_wp = this head's words j*16 + gid of both p-words; replaces the 16-way gsel AND-OR that limited NBANK 7 at -12 ps).
+module ot_attn_hgrp_m6h1b7p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire [63:0]   ld_wp,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [31:0]   oy,
+    output wire [0:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(7), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1),
+                              .PCOLP(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The two-head FPL 6 / FML 8 element with the pre-selected p-mode columns (PCOLP), NBANK 6: the closing one-head
+// element ot_attn_hgrp_m6h1b6p bound four to a tile (the same bits, the same cycles, 8 instances per tile).
+module ot_attn_hgrp_m6h2b6p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire [63:0]   ld_wp,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [63:0]   oy,
+    output wire [1:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(2), .TD(32), .NBANK(6), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1),
+                              .PCOLP(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
+// The two-head FPL 6 / FML 8 element with the pre-selected p-mode columns (PCOLP), NBANK 7: the closing one-head
+// element ot_attn_hgrp_m6h1b7p bound four to a tile (the same bits, the same cycles, 8 instances per tile).
+module ot_attn_hgrp_m6h2b7p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire [63:0]   ld_wp,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [63:0]   oy,
+    output wire [1:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(2), .TD(32), .NBANK(7), .BW(3), .PWORDS(2), .FPL(6), .FML(8), .F12(1),
+                              .PCOLP(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule

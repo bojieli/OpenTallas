@@ -26,7 +26,9 @@ module ot_hdc_v41x_attn_hgrp_s #(
     parameter integer PWORDS = 1,
     parameter integer FPL = 3,
     parameter integer FML = 3,
-    parameter integer F12 = 0          // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
+    parameter integer F12 = 0,         // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
+    parameter integer PCOLP = 0        // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
+                                       //    replacing the gsel AND-OR over the H/HG groups (same bits, same cycle)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -36,6 +38,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
     input  wire [BW-1:0]     ld_bank,
     input  wire [7:0]        ld_grp,
     input  wire [PWORDS*TD*16-1:0] ld_w,
+    input  wire [HG*PWORDS*(TD/H)*16-1:0] ld_wp,   // PCOLP: head gh's word j of p-word w at ((gh*PWORDS + w)*R + j)*16
     input  wire              ld_w2v,
     input  wire              iv,
     input  wire [BW-1:0]     ibank,
@@ -148,19 +151,30 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             // this head's columns of a p-mode word: word j*H + hh, j = 0 .. R-1 (an AND-OR over the groups)
             reg [R*16-1:0] pcol, pcol2;
-            integer gj, gg;
-            always @* begin
-                pcol = {R*16{1'b0}};
-                pcol2 = {R*16{1'b0}};
-                for (gj = 0; gj < R; gj = gj + 1)
-                    for (gg = 0; gg < H / HG; gg = gg + 1) begin
-                        pcol[gj*16 +: 16] = pcol[gj*16 +: 16] |
-                                            ({16{gsel[gg]}} & r_ld_w[(gj * H + gg * HG + gh) * 16 +: 16]);
-                        if (PWORDS > 1)
-                            pcol2[gj*16 +: 16] = pcol2[gj*16 +: 16] |
-                                                 ({16{gsel[gg]}} & r_ld_w[(PWORDS > 1 ? TD * 16 : 0) +
-                                                                          (gj * H + gg * HG + gh) * 16 +: 16]);
-                    end
+            if (PCOLP == 0) begin : g_pc
+                integer gj, gg;
+                always @* begin
+                    pcol = {R*16{1'b0}};
+                    pcol2 = {R*16{1'b0}};
+                    for (gj = 0; gj < R; gj = gj + 1)
+                        for (gg = 0; gg < H / HG; gg = gg + 1) begin
+                            pcol[gj*16 +: 16] = pcol[gj*16 +: 16] |
+                                                ({16{gsel[gg]}} & r_ld_w[(gj * H + gg * HG + gh) * 16 +: 16]);
+                            if (PWORDS > 1)
+                                pcol2[gj*16 +: 16] = pcol2[gj*16 +: 16] |
+                                                     ({16{gsel[gg]}} & r_ld_w[(PWORDS > 1 ? TD * 16 : 0) +
+                                                                              (gj * H + gg * HG + gh) * 16 +: 16]);
+                        end
+                end
+            end else begin : g_pp
+                // this head's own kept copy of its pre-selected columns (the R0 register of the p-mode words)
+                wire [PWORDS*R*16-1:0] r_ld_wp;
+                ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_n),
+                    .d(ld_wp[gh*PWORDS*R*16 +: PWORDS*R*16]), .q(r_ld_wp));
+                always @* begin
+                    pcol = r_ld_wp[0 +: R*16];
+                    pcol2 = (PWORDS > 1) ? r_ld_wp[(PWORDS > 1 ? R*16 : 0) +: R*16] : {R*16{1'b0}};
+                end
             end
             wire [TD-1:0]    we;
             wire [TD*16-1:0] wd;
@@ -225,7 +239,8 @@ module ot_hdc_v41x_attn_tile_s #(
     parameter integer FPL = 7,
     parameter integer FML = 6,           // 6 (split product) or 8 (+ D2 dequantiser stage, seven-stage product)
     parameter integer HG = 4,          // heads per hardened group (H % HG == 0)
-    parameter integer F12 = 0
+    parameter integer F12 = 0,
+    parameter integer PCOLP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -243,8 +258,9 @@ module ot_hdc_v41x_attn_tile_s #(
     output wire [H-1:0]      oflt
 );
     localparam integer NG = H / HG;
+    localparam integer RT = TD / H;
     wire [NG-1:0] gov;
-    genvar g;
+    genvar g, gh2, gw, gj2;
     generate
         if (FML != 6 && FML != 8) begin : g_bad_fml
             initial $error("ot_hdc_v41x_attn_tile_s: the split product needs FML = 6 or 8");
@@ -253,10 +269,20 @@ module ot_hdc_v41x_attn_tile_s #(
             initial $error("ot_hdc_v41x_attn_tile_s: H must be a multiple of HG");
         end
         for (g = 0; g < NG; g = g + 1) begin : g_g
+            // the group's heads' p-mode columns, wired out of ld_w (word j*H + hh of each p-word)
+            wire [HG*PWORDS*RT*16-1:0] wp;
+            for (gh2 = 0; gh2 < HG; gh2 = gh2 + 1) begin : g_wh
+                for (gw = 0; gw < PWORDS; gw = gw + 1) begin : g_ww
+                    for (gj2 = 0; gj2 < RT; gj2 = gj2 + 1) begin : g_wj
+                        assign wp[((gh2*PWORDS + gw)*RT + gj2)*16 +: 16] =
+                            ld_w[gw*TD*16 + (gj2*H + g*HG + gh2)*16 +: 16];
+                    end
+                end
+            end
             ot_hdc_v41x_attn_hgrp_s #(.H(H), .HG(HG), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
-                                      .FML(FML), .F12(F12)) u_g (
+                                      .FML(FML), .F12(F12), .PCOLP(PCOLP)) u_g (
                 .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
-                .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
+                .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
         end
     endgenerate
