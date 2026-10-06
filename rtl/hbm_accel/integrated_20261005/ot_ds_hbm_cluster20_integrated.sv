@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
@@ -161,6 +161,61 @@ module ot_ds_hbm_cluster20_integrated #(
  output wire [ND*(1)-1:0] norm_due,
  // Owned combined callbacks. Descriptor/GO must originate from the actual
  // installed recipe; absent 96x512 source/entry remains compiler-failclosed.
+ // Actual preinstall uses the SAME index borrower before gather start.
+ input wire [ND*1-1:0] preinstall_begin_v,
+ output wire [ND*1-1:0] preinstall_begin_r,
+ input wire [ND*73-1:0] preinstall_begin_frame,
+ input wire [ND*32-1:0] preinstall_score_base,
+ input wire [ND*32-1:0] preinstall_id_base,
+ input wire [ND*33-1:0] preinstall_capacity,
+ input wire [ND*8-1:0] preinstall_occupied_records,
+ input wire [ND*5-1:0] preinstall_layer,
+ input wire [ND*5-1:0] preinstall_candidate_source_layer,
+ input wire [ND*1-1:0] preinstall_candidate_masked,
+ input wire [ND*1-1:0] preinstall_record_v,
+ output wire [ND*1-1:0] preinstall_record_r,
+ input wire [ND*2-1:0] preinstall_record_kind,
+ input wire [ND*7-1:0] preinstall_record_rank,
+ input wire [ND*32-1:0] preinstall_record_base,
+ input wire [ND*32-1:0] preinstall_record_end,
+ input wire [ND*73-1:0] preinstall_record_frame,
+ input wire [ND*3-1:0] preinstall_other_writer_v,
+ input wire [ND*96-1:0] preinstall_other_writer_base,
+ input wire [ND*96-1:0] preinstall_other_writer_end,
+ input wire [ND*1-1:0] preinstall_source_v,
+ output wire [ND*1-1:0] preinstall_source_r,
+ input wire [ND*73-1:0] preinstall_source_frame,
+ input wire [ND*7-1:0] preinstall_source_rank,
+ input wire [ND*1-1:0] preinstall_source_plane,
+ input wire [ND*5-1:0] preinstall_source_word,
+ input wire [ND*512-1:0] preinstall_source_data,
+ output wire [ND*1-1:0] preinstall_source_ACK_v,
+ input wire [ND*1-1:0] preinstall_source_ACK_r,
+ output wire [ND*73-1:0] preinstall_source_ACK_frame,
+ output wire [ND*7-1:0] preinstall_source_ACK_rank,
+ output wire [ND*1-1:0] preinstall_source_ACK_plane,
+ output wire [ND*5-1:0] preinstall_source_ACK_word,
+ output wire [ND*1-1:0] reservation_v,
+ input wire [ND*1-1:0] reservation_r,
+ output wire [ND*1-1:0] reservation_checked,
+ output wire [ND*1-1:0] reservation_exclusive,
+ output wire [ND*73-1:0] reservation_frame,
+ output wire [ND*512-1:0] reservation_descriptor,
+ input wire [ND*1-1:0] consumer_reverse_v,
+ output wire [ND*1-1:0] consumer_reverse_r,
+ input wire [ND*73-1:0] consumer_reverse_frame,
+ input wire [ND*1-1:0] consumer_sink_ACK_drained,
+ output wire [ND*1-1:0] source_reverse_v,
+ input wire [ND*1-1:0] source_reverse_r,
+ output wire [ND*1-1:0] source_reverse_checked,
+ output wire [ND*1-1:0] source_drained,
+ output wire [ND*73-1:0] source_reverse_frame,
+ output wire [ND*1-1:0] preinstall_retained,
+ output wire [ND*73-1:0] preinstall_frame,
+ output wire [ND*1-1:0] preinstall_warm_ack,
+ output wire [ND*1-1:0] preinstall_fault,
+ output wire [ND*1-1:0] preinstall_ce,
+ output wire [ND*1-1:0] preinstall_due,
  input wire [ND-1:0] gather_desc_v,gather_start_v,gather_book_valid,gather_req_v,gather_rsp_r,
  input wire [ND*3-1:0] gather_desc_index,input wire [ND*64-1:0] gather_desc_data,
  input wire [ND*649-1:0] gather_req,
@@ -216,6 +271,12 @@ initial if(NORM_NATIVE_VM_ENABLE&&(!NORM_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||NORM
  (NORM_KIND!=1||NORM_RD!=0||NORM_D*3+(NORM_PUBLISH_QUANT?(NORM_D/NORM_N)*NORM_QROWS*32:0)>16384))))
  $fatal(1,"native norm requires actual CP input lease for HC/KV and output SRAM window <=16384 words");
 initial if(NORM_C12_ENABLE&&(!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20)) $fatal(1,"norm requires enabled protected full73 combined parent");
+// The production book is backed by two actual 64MiB sector arrays.
+// A smaller provider would alias high addresses through model modulo indexing.
+initial if(FORMATTER_PREINSTALL_ENABLE&&(!ENABLE||!COMBINED_ENABLE||NS!=2||MEM_WORDS!=2097152||VM_AW!=21))
+ $fatal(1,"formatter preinstall requires actual NS2/MEM_WORDS2097152/VM_AW21 provider");
+initial if(FORMATTER_DIRECT_SOURCE_REPLAY&&(!ENABLE||!COMBINED_ENABLE||!FORMATTER_ENABLE||!FORMATTER_PREINSTALL_ENABLE))
+ $fatal(1,"direct source replay requires actual protected formatter/preinstall parent");
 initial if(SFU_NATIVE_VM_ENABLE&&!SFU_C12_ENABLE) $fatal(1,"native VM requires actual SFUc12 stage");
 initial if(SFU_C12_ENABLE && (!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20))
  $fatal(1,"SFU c12 requires enabled combined full73 parent");
@@ -289,6 +350,30 @@ generate if(COMBINED_ENABLE==0) begin:g_original
  assign cp_reset_ack=0;
  assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign index_pairs_frame73=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
+ assign preinstall_begin_r=0;
+ assign preinstall_record_r=0;
+ assign preinstall_source_r=0;
+ assign preinstall_source_ACK_v=0;
+ assign preinstall_source_ACK_frame=0;
+ assign preinstall_source_ACK_rank=0;
+ assign preinstall_source_ACK_plane=0;
+ assign preinstall_source_ACK_word=0;
+ assign reservation_v=0;
+ assign reservation_checked=0;
+ assign reservation_exclusive=0;
+ assign reservation_frame=0;
+ assign reservation_descriptor=0;
+ assign consumer_reverse_r=0;
+ assign source_reverse_v=0;
+ assign source_reverse_checked=0;
+ assign source_drained=0;
+ assign source_reverse_frame=0;
+ assign preinstall_retained=0;
+ assign preinstall_frame=0;
+ assign preinstall_warm_ack=0;
+ assign preinstall_fault=0;
+ assign preinstall_ce=0;
+ assign preinstall_due=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
  assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
  assign w2_native_rsp_tag=0;assign w2_native_rsp_data=0;assign w2_sector_drained=1;
@@ -354,6 +439,30 @@ end else if(ENABLE==0) begin:g_off
  assign cp_reset_ack=0;
  assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign index_pairs_frame73=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
+ assign preinstall_begin_r=0;
+ assign preinstall_record_r=0;
+ assign preinstall_source_r=0;
+ assign preinstall_source_ACK_v=0;
+ assign preinstall_source_ACK_frame=0;
+ assign preinstall_source_ACK_rank=0;
+ assign preinstall_source_ACK_plane=0;
+ assign preinstall_source_ACK_word=0;
+ assign reservation_v=0;
+ assign reservation_checked=0;
+ assign reservation_exclusive=0;
+ assign reservation_frame=0;
+ assign reservation_descriptor=0;
+ assign consumer_reverse_r=0;
+ assign source_reverse_v=0;
+ assign source_reverse_checked=0;
+ assign source_drained=0;
+ assign source_reverse_frame=0;
+ assign preinstall_retained=0;
+ assign preinstall_frame=0;
+ assign preinstall_warm_ack=0;
+ assign preinstall_fault=0;
+ assign preinstall_ce=0;
+ assign preinstall_due=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
  assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
  assign w2_native_rsp_tag=0;assign w2_native_rsp_data=0;assign w2_sector_drained=1;
@@ -398,7 +507,7 @@ end else begin:g_on
         wire shared_fault;wire [1:0] peer_grants,peer_releases;
         wire [3:0] response_authorized,return_offer;
         assign sm_done=su_selected?{{(NSM-1){1'b0}},su_done}:native_done;
-        assign sm_fault=native_fault | {NSM{su_fault|su_exec_fault|su_association_fault|fmt_fault|cp_reset_fault|store_fault|sfu_fault[d]|norm_fault[d]}};
+        assign sm_fault=native_fault | {NSM{su_fault|su_exec_fault|su_association_fault|fmt_fault|preinstall_fault[d]|cp_reset_fault|store_fault|sfu_fault[d]|norm_fault[d]}};
         wire [31:0] launch_pc;
         wire [TW-1:0] launch_token; wire [PW-1:0] launch_pos;
         wire [NSM*32-1:0] res_data;
@@ -415,8 +524,9 @@ end else begin:g_on
         // The CP's context cannot change across any prior native/borrower debt.
         wire all_prior_quiet=!(|busy)&&!(|launch_v)&&!(|a_req_v)&&!(|a_rsp_v)&&
                              !(|obs_req)&&!(|obs_rsp);
-        wire all_routes_drained=native_credit_empty&&shared_idle&&!su_pending&&!su_owned&&
-                                !gather_retained[d]&&!fmt_retained&&!sfu_retained[d]&&!norm_retained[d]&&(!SFU_NATIVE_VM_ENABLE||!sfu_vm_retained[d])&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
+        wire preinstall_accept=FORMATTER_PREINSTALL_ENABLE&&preinstall_begin_v[d]&&preinstall_begin_r[d];
+        wire all_routes_drained=!preinstall_accept&&native_credit_empty&&shared_idle&&!su_pending&&!su_owned&&
+                                !preinstall_retained[d]&&!gather_retained[d]&&!fmt_retained&&!sfu_retained[d]&&!norm_retained[d]&&(!SFU_NATIVE_VM_ENABLE||!sfu_vm_retained[d])&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
         assign db_rdy[d]=cp_idle&&all_routes_drained&&!cp_reset_wait;
         assign cpl_v[d]=cp_cpl_v&&all_routes_drained;
         assign cp_retire_ready=cpl_rdy[d]&&all_routes_drained;
@@ -459,12 +569,12 @@ end else begin:g_on
         wire sfu_route=SFU_C12_ENABLE&&sfu_retained[d];
         wire [72:0] peer0_frame=sfu_route?sfu_held_frame[d*73+:73]:norm_route?norm_held_frame[d*73+:73]:su_provider_frame;
         wire [72:0] actual_cp_frame={launch_pos,launch_token,cpl_generation,cpl_job};
-        wire sfu_admit=!su_pending&&!su_selected&&!su_owned&&!norm_retained[d]&&!cp_reset_wait&&
+        wire sfu_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_pending&&!su_selected&&!su_owned&&!norm_retained[d]&&!cp_reset_wait&&
                        sfu_enroll_frame[d*73+:73]==actual_cp_frame;
         // Admission checks the offered tuple; after acceptance the SAME coded
         // stage owns the tuple. No preseeded or shadow descriptor.
         wire [72:0] norm_allocation_target=norm_retained[d]?norm_held_frame[d*73+:73]:norm_enroll_frame[d*73+:73];
-        wire norm_admit=!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==actual_cp_frame))));
+        wire norm_admit=!preinstall_retained[d]&&!preinstall_accept&&!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==actual_cp_frame))));
         assign norm_enroll_r[d]=norm_offer_r&&norm_admit;
         assign sfu_enroll_r[d]=sfu_offer_r&&sfu_admit;
         wire [336:0] su_provider_req;
@@ -554,7 +664,7 @@ end else begin:g_on
          .rsp_v(w2_sink_rsp_v),.rsp_r(w2_sink_rsp_r),.rsp(w2_provider_rsp));
         assign su_owned=peer_grants[0]&&!sfu_route&&!norm_route;assign su_release_r=peer_releases[0]&&!sfu_route&&!norm_route;
         wire [11:0] su_owned_frontier_terms;
-        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION)) u_su_cp(
+        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT)) u_su_cp(
          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
          .native_launch(native_launch),.lease_v(su_lease_v),.lease_granted(su_owned),
@@ -579,7 +689,7 @@ end else begin:g_on
          .exec_done(su_exec_done),.exec_fault(su_exec_fault),.retired_original_ops(su_retired),
          .caller_exec_done(su_caller_done),.caller_exec_fault(su_caller_fault),.caller_retired_original_ops(su_caller_retired));
         end else begin:g_su_legacy_provider
-        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_association(
+        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT)) u_su_association(
          .clk(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),.qualified_owned_terms(su_owned_frontier_terms),
          .exec_owned(su_executor_owned),.new_request_permit(su_new_request_permit),.fault(su_association_fault));
         assign su_provider_req_v=su_req_v&&su_new_request_permit;assign su_provider_req=su_request;
@@ -600,7 +710,9 @@ end else begin:g_on
         wire [31:0] bound_arena_base,bound_arena_limit;
         // Normal producer and formatter consume their own real tagged response.
         wire formatter_response=FORMATTER_ENABLE&&shared_gather_rsp[3:1]==3'd3;
-        wire store_response=NORMAL_GATHER_ENABLE&&(shared_gather_rsp[3:1]==3'd1||shared_gather_rsp[3:1]==3'd2);
+        // Direct-source replay is a scoped minimum harness, not W15 readthrough.
+        // Exclude the unbound normal producer so kind1/2 receipts remain external.
+        wire store_response=NORMAL_GATHER_ENABLE&&!FORMATTER_DIRECT_SOURCE_REPLAY&&(shared_gather_rsp[3:1]==3'd1||shared_gather_rsp[3:1]==3'd2);
         assign shared_gather_req_v=fmt_req_v||store_req_v||gather_req_v[d];
         assign shared_gather_req=fmt_req_v?fmt_req:store_req_v?store_req:gather_req[d*649+:649];
         assign fmt_req_r=shared_gather_req_r&&fmt_req_v;
@@ -610,7 +722,7 @@ end else begin:g_on
         assign gather_rsp[d*637+:637]=shared_gather_rsp;
         assign shared_gather_rsp_r=formatter_response?fmt_rsp_r:store_response?store_rsp_r:gather_rsp_r[d];
         assign gather_release_r[d]=bridge_release_r&&!fmt_retained;
-        ot_hbm_integrated_w15_store #(.ENABLE(NORMAL_GATHER_ENABLE),.VM_AW(VM_AW)) u_normal_store(
+        ot_hbm_integrated_w15_store #(.ENABLE(NORMAL_GATHER_ENABLE&&!FORMATTER_DIRECT_SOURCE_REPLAY),.VM_AW(VM_AW)) u_normal_store(
          .clk(clk_sm),.por_n(rst_sm_n),.go(normal_go[d]),.id_plane(normal_id_plane[d]),
          .command_tag(normal_command_tag[d*16+:16]),.source_word(normal_source_word[d*32+:32]),
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
@@ -643,7 +755,63 @@ end else begin:g_on
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
          .release_pos(gather_release_frame[d*73+53+:20]),.release_token17(gather_release_frame[d*73+36+:17]),
          .publication_done(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]));
-        ot_hbm_integrated_gather_owner #(.ENABLE(1),.VM_AW(VM_AW)) u_shared(
+        ot_hbm_formatter_preinstall_gather_owner #(.ENABLE(1),.VM_AW(VM_AW),.PREINSTALL_ENABLE(FORMATTER_PREINSTALL_ENABLE)) u_shared(
+         .warm_req(cp_reset_req[d]||cp_reset_wait),
+         .preinstall_begin_v(preinstall_begin_v[d]),
+         .preinstall_begin_r(preinstall_begin_r[d]),
+         .preinstall_begin_frame(preinstall_begin_frame[d*73+:73]),
+         .preinstall_score_base(preinstall_score_base[d*32+:32]),
+         .preinstall_id_base(preinstall_id_base[d*32+:32]),
+         .preinstall_capacity(preinstall_capacity[d*33+:33]),
+         .preinstall_occupied_records(preinstall_occupied_records[d*8+:8]),
+         .preinstall_layer(preinstall_layer[d*5+:5]),
+         .preinstall_candidate_source_layer(preinstall_candidate_source_layer[d*5+:5]),
+         .preinstall_candidate_masked(preinstall_candidate_masked[d]),
+         .preinstall_record_v(preinstall_record_v[d]),
+         .preinstall_record_r(preinstall_record_r[d]),
+         .preinstall_record_kind(preinstall_record_kind[d*2+:2]),
+         .preinstall_record_rank(preinstall_record_rank[d*7+:7]),
+         .preinstall_record_base(preinstall_record_base[d*32+:32]),
+         .preinstall_record_end(preinstall_record_end[d*32+:32]),
+         .preinstall_record_frame(preinstall_record_frame[d*73+:73]),
+         .preinstall_other_writer_v(preinstall_other_writer_v[d*3+:3]),
+         .preinstall_other_writer_base(preinstall_other_writer_base[d*96+:96]),
+         .preinstall_other_writer_end(preinstall_other_writer_end[d*96+:96]),
+         .preinstall_source_v(preinstall_source_v[d]),
+         .preinstall_source_r(preinstall_source_r[d]),
+         .preinstall_source_frame(preinstall_source_frame[d*73+:73]),
+         .preinstall_source_rank(preinstall_source_rank[d*7+:7]),
+         .preinstall_source_plane(preinstall_source_plane[d]),
+         .preinstall_source_word(preinstall_source_word[d*5+:5]),
+         .preinstall_source_data(preinstall_source_data[d*512+:512]),
+         .preinstall_source_ACK_v(preinstall_source_ACK_v[d]),
+         .preinstall_source_ACK_r(preinstall_source_ACK_r[d]),
+         .preinstall_source_ACK_frame(preinstall_source_ACK_frame[d*73+:73]),
+         .preinstall_source_ACK_rank(preinstall_source_ACK_rank[d*7+:7]),
+         .preinstall_source_ACK_plane(preinstall_source_ACK_plane[d]),
+         .preinstall_source_ACK_word(preinstall_source_ACK_word[d*5+:5]),
+         .reservation_v(reservation_v[d]),
+         .reservation_r(reservation_r[d]),
+         .reservation_checked(reservation_checked[d]),
+         .reservation_exclusive(reservation_exclusive[d]),
+         .reservation_frame(reservation_frame[d*73+:73]),
+         .reservation_descriptor(reservation_descriptor[d*512+:512]),
+         .consumer_reverse_v(consumer_reverse_v[d]),
+         .consumer_reverse_r(consumer_reverse_r[d]),
+         .consumer_reverse_frame(consumer_reverse_frame[d*73+:73]),
+         .consumer_sink_ACK_drained(consumer_sink_ACK_drained[d]),
+         .source_reverse_v(source_reverse_v[d]),
+         .source_reverse_r(source_reverse_r[d]),
+         .source_reverse_checked(source_reverse_checked[d]),
+         .source_drained(source_drained[d]),
+         .source_reverse_frame(source_reverse_frame[d*73+:73]),
+         .preinstall_retained(preinstall_retained[d]),
+         .preinstall_frame(preinstall_frame[d*73+:73]),
+         .preinstall_warm_ack(preinstall_warm_ack[d]),
+         .preinstall_fault(preinstall_fault[d]),
+         .preinstall_ce(preinstall_ce[d]),
+         .preinstall_due(preinstall_due[d]),
+
          .clk(clk_sm),.por_n(rst_sm_n),
          .desc_v(gather_desc_v[d]),.desc_r(gather_desc_r[d]),.desc_index(gather_desc_index[d*3+:3]),.desc_data(gather_desc_data[d*64+:64]),
          .start_v(gather_start_v[d]),.start_r(gather_start_r[d]),.installed_book_valid(gather_book_valid[d]),

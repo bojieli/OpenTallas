@@ -40,8 +40,36 @@ puts "WFC_ACTUAL_MACROS $count $kinds; 32 reserved VM slots empty"
 source /src/physical/dsrom_wfc_protected_context/provider_macro_connect.tcl
 ds_vm_connect u_r4.u_memory.g_live.u_backend clk_serial
 # Canonical producer macros also expose real LEF PG pins, not BB signals.
-foreach prefix {u_r4.u_cfg u_r4.u_whole} {
-  add_global_connection -net VDD -inst_pattern "^${prefix}\\..*" -pin_pattern {^VDD$} -power
-  add_global_connection -net VSS -inst_pattern "^${prefix}\\..*" -pin_pattern {^VSS$} -ground
+set producer_pg 0
+foreach inst [$block getInsts] {
+  set name [$inst getName]
+  if {[string first "u_r4.u_cfg." $name]==0 || [string first "u_r4.u_whole." $name]==0} {
+    if {[[$inst getMaster] getName] in {ot_sram_1r1w_512x128_m4_r2c2 ot_rom_4096x72_m8}} {
+      ds_vm_bind_pg $inst;incr producer_pg
+    }
+  }
 }
-global_connect
+if {$producer_pg != 18} {error "Actual producer PG inventory mismatch $producer_pg"}
+puts "WFC_ACTUAL_MACRO_PG 306 realVDD/VSS; dont_touch retained"
+
+if {[info exists ::env(WFC_DISTRIBUTED_CMD)] && $::env(WFC_DISTRIBUTED_CMD)==1} {
+  source /src/physical/dsrom_protected_vm_context/distributed_address_loads.tcl
+  source /src/physical/dsrom_wfc_protected_context/distributed_retention.tcl
+  ds_vm_check_distributed_addresses u_r4.u_memory.g_live.u_backend
+  ds_wfc_check_distributed_retention u_r4.u_memory.g_live.u_backend
+}
+
+# Current selected hardmacros are fixed by place_macro and are not resizable
+# standard cells. Allow their inputs to receive real buffers; OpenDB otherwise
+# aborts repair_design on immutable sink pins (retained R7 RSZ-3006). This does
+# not clear any command q/q_check FF attribute or alter macro source/netlist.
+set repairable_macro_inputs 0
+foreach inst [$block getInsts] {
+  if {[[$inst getMaster] getName] in {ot_sram_1r1w_512x128_m4_r2c2 ot_rom_4096x72_m8}} {
+    if {[$inst getPlacementStatus] ni {FIRM LOCKED}} {error "Macro not physically fixed [$inst getName]"}
+    $inst setDoNotTouch 0
+    incr repairable_macro_inputs
+  }
+}
+if {$repairable_macro_inputs != 306} {error "Actual macro input-buffer scope mismatch"}
+puts "WFC_FIXED_MACRO_INPUT_BUFFER_REPAIR 306; q/q_check FF protection unchanged"

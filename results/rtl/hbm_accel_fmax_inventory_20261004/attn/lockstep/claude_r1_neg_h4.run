@@ -1,0 +1,10 @@
+MISMATCH cyc=64 ov 0/0 oy 72bf001b68700000e6b7c00059d74000 / 00000000000000000000000000000000 of f / f
+MISMATCH cyc=65 ov 0/0 oy ea710cf0e987300044755fe46737a000 / 00000000000000000000000000000000 of f / f
+MISMATCH cyc=66 ov 0/0 oy 695b3000eeb2ac006d11a000e8a28000 / 00000000000000000000000000000000 of f / f
+MISMATCH cyc=67 ov 0/0 oy eb034ff5fc05e009fe8310007a124000 / 72bf0000407ab000c7ba6000328f0000 of f / f
+MISMATCH cyc=68 ov 1/1 oy 71012fb2ea83400005770000a8686000 / 695b3000e9873000447560006737a000 of f / f
+TILESLOCK cycles=5000 mismatches=4936 ov=3736
+[0] %Fatal: tb_hdc_v41x_attn_tile_s_lockstep.sv:80: Assertion failed in TOP.tb_hdc_v41x_attn_tile_s_lockstep: TILESLOCK FAIL mismatches=4936 ov=3736
+%Error: rtl/test/tb_hdc_v41x_attn_tile_s_lockstep.sv:80: Verilog $stop
+Aborting...
+rc=1

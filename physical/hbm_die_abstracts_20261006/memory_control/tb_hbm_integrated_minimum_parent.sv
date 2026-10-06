@@ -1,6 +1,12 @@
 `timescale 1ps/1fs
 // Additive integrated-stage fixture, not a token or physical closure claim.
 module tb_hbm_integrated_minimum_parent #(
+ parameter integer FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,
+ parameter [63:0] FORMATTER_ENTRY_PC=0,
+ parameter [31:0] FORMATTER_SCORE_SOURCE=32'h80000,FORMATTER_ID_SOURCE=32'h80800,
+ parameter [31:0] FORMATTER_ARENA_BASE=32'h10000,FORMATTER_ARENA_LIMIT=32'h70000,
+ parameter [31:0] FORMATTER_SINK_BASE=32'h70000,FORMATTER_SINK_LIMIT=32'h70800,
+ parameter [32:0] FORMATTER_CAPACITY_BYTES=33'h100000,
  parameter integer COMBINED_ENABLE=1,SFU_C12_ENABLE=1,SFU_NATIVE_VM_ENABLE=1,NORM_C12_ENABLE=1,NORM_NATIVE_VM_ENABLE=1,NORM_NATIVE_INPUT_CP=1,SU_ENABLE=1,SU_REGISTERED_OUTPUTS=1,SU_REGISTERED_STATUS=1,SU_REGISTERED_BOUNDARY=1,SU_BALANCED_OWNER_BOUNDARY=1,SU_FOUR_COMBINATIONAL_CUTS=1,SU_FAST_OWNER_FRONTIER=1,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=1,W2_RESULT_ENABLE=1,W2_SECTOR_ENABLE=1,FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,VM_AW=21,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  parameter integer ENABLE=1, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
@@ -8,7 +14,73 @@ module tb_hbm_integrated_minimum_parent #(
  parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1,
  parameter integer W2_PROTECTED_TRANSACTION_PIPELINE=0
 )(
+ input wire fixture_formatter_enable,fixture_formatter_go,
+ output wire fixture_formatter_go_r,fixture_formatter_pair_r,
+ output wire fixture_formatter_configuration_valid,output wire [511:0] fixture_formatter_descriptor,
+ output wire fixture_formatter_consumer_v,input wire fixture_formatter_consumer_r,
+ output wire [598:0] fixture_formatter_consumer_pairs,
+ output wire [72:0] fixture_formatter_consumer_frame,
+ output wire fixture_formatter_fault,fixture_formatter_retained,fixture_formatter_warm_ack,
+ output reg [31:0] fixture_formatter_pairs,fixture_formatter_reservations,fixture_formatter_reverses,
+ output reg [31:0] fixture_formatter_source_accepts,fixture_formatter_source_ACKs,
+ output reg [31:0] fixture_formatter_desc_accepts,fixture_formatter_begin_accepts,fixture_formatter_record_accepts,fixture_formatter_go_accepts,
+ output reg [31:0] fixture_formatter_mem_requests,fixture_formatter_mem_returns,
  input wire por_n, clk_host, clk_sm, clk_mem, clk_link,
+ input wire [ND*1-1:0] preinstall_begin_v,
+ output wire [ND*1-1:0] preinstall_begin_r,
+ input wire [ND*73-1:0] preinstall_begin_frame,
+ input wire [ND*32-1:0] preinstall_score_base,
+ input wire [ND*32-1:0] preinstall_id_base,
+ input wire [ND*33-1:0] preinstall_capacity,
+ input wire [ND*8-1:0] preinstall_occupied_records,
+ input wire [ND*5-1:0] preinstall_layer,
+ input wire [ND*5-1:0] preinstall_candidate_source_layer,
+ input wire [ND*1-1:0] preinstall_candidate_masked,
+ input wire [ND*1-1:0] preinstall_record_v,
+ output wire [ND*1-1:0] preinstall_record_r,
+ input wire [ND*2-1:0] preinstall_record_kind,
+ input wire [ND*7-1:0] preinstall_record_rank,
+ input wire [ND*32-1:0] preinstall_record_base,
+ input wire [ND*32-1:0] preinstall_record_end,
+ input wire [ND*73-1:0] preinstall_record_frame,
+ input wire [ND*3-1:0] preinstall_other_writer_v,
+ input wire [ND*96-1:0] preinstall_other_writer_base,
+ input wire [ND*96-1:0] preinstall_other_writer_end,
+ input wire [ND*1-1:0] preinstall_source_v,
+ output wire [ND*1-1:0] preinstall_source_r,
+ input wire [ND*73-1:0] preinstall_source_frame,
+ input wire [ND*7-1:0] preinstall_source_rank,
+ input wire [ND*1-1:0] preinstall_source_plane,
+ input wire [ND*5-1:0] preinstall_source_word,
+ input wire [ND*512-1:0] preinstall_source_data,
+ output wire [ND*1-1:0] preinstall_source_ACK_v,
+ input wire [ND*1-1:0] preinstall_source_ACK_r,
+ output wire [ND*73-1:0] preinstall_source_ACK_frame,
+ output wire [ND*7-1:0] preinstall_source_ACK_rank,
+ output wire [ND*1-1:0] preinstall_source_ACK_plane,
+ output wire [ND*5-1:0] preinstall_source_ACK_word,
+ output wire [ND*1-1:0] reservation_v,
+ input wire [ND*1-1:0] reservation_r,
+ output wire [ND*1-1:0] reservation_checked,
+ output wire [ND*1-1:0] reservation_exclusive,
+ output wire [ND*73-1:0] reservation_frame,
+ output wire [ND*512-1:0] reservation_descriptor,
+ input wire [ND*1-1:0] consumer_reverse_v,
+ output wire [ND*1-1:0] consumer_reverse_r,
+ input wire [ND*73-1:0] consumer_reverse_frame,
+ input wire [ND*1-1:0] consumer_sink_ACK_drained,
+ output wire [ND*1-1:0] source_reverse_v,
+ input wire [ND*1-1:0] source_reverse_r,
+ output wire [ND*1-1:0] source_reverse_checked,
+ output wire [ND*1-1:0] source_drained,
+ output wire [ND*73-1:0] source_reverse_frame,
+ output wire [ND*1-1:0] preinstall_retained,
+ output wire [ND*73-1:0] preinstall_frame,
+ output wire [ND*1-1:0] preinstall_warm_ack,
+ output wire [ND*1-1:0] preinstall_fault,
+ output wire [ND*1-1:0] preinstall_ce,
+ output wire [ND*1-1:0] preinstall_due,
+
  // Local reset is deferred; it never resets shared credit or the provider.
  input wire [ND-1:0] cp_reset_req,output wire [ND-1:0] cp_reset_ack,
  input wire [ND-1:0] cmd_we,
@@ -204,12 +276,83 @@ module tb_hbm_integrated_minimum_parent #(
  output wire [ND*1088-1:0] w2_native_rsp_data,
  output wire rst_sm_n, output wire sys_fault,
  output reg [31:0] fixture_cp_requests,fixture_cp_returns,fixture_ACKs,fixture_final_ACK_addr,fixture_bind_accepts,fixture_enroll_accepts,fixture_read_accepts,fixture_rsp_accepts,fixture_retire_accepts,fixture_db_accepts,fixture_cpl_accepts,
+ output reg [31:0] fixture_sfu_enroll_accepts,fixture_sfu_cp_requests,fixture_sfu_cp_returns,fixture_sfu_ACKs,fixture_sfu_TXs,fixture_sfu_releases,
  output reg fixture_observer_fault
 );
 
 // Bench-only observation of die0 in the exact selected ND2 parent. All other
 // ports are forwarded unchanged. No provider, grant, ACK, output or state writes.
+
+ // Gauss's protected installer is external to the production parent. Its book,
+ // publication and reverse outputs are driven by actual successor events.
+ // The numerical caller/consumer is Gauss-owned and must supply the existing
+ // index_pair and consumer readiness ports; C++ does not manufacture replies.
+ assign fixture_formatter_configuration_valid=FORMATTER_ENABLE&&FORMATTER_PREINSTALL_ENABLE&&FORMATTER_DIRECT_SOURCE_REPLAY;
+ assign fixture_formatter_descriptor={64'b0,64'b0,(64'd96|(64'd512<<16)|(64'd32<<32)),
+  31'b0,FORMATTER_CAPACITY_BYTES,FORMATTER_SINK_LIMIT,FORMATTER_SINK_BASE,
+  FORMATTER_ARENA_LIMIT,FORMATTER_ARENA_BASE,FORMATTER_ID_SOURCE,FORMATTER_SCORE_SOURCE,FORMATTER_ENTRY_PC};
+ wire [ND-1:0] fixture_parent_desc_r;
+ wire f_desc_v,f_desc_caller_r,f_book,f_gather_start,f_formatter_start,f_pair_v,f_pairs_r;
+ wire f_reservation_r,f_reverse_r,f_formatter_release,f_gather_release;
+ wire f_result_published,f_source_reverse_done;
+ wire [2:0] f_desc_index;wire [63:0] f_desc_data;
+ wire [84:0] f_pair;wire [16:0] f_pair_token;
+ wire [72:0] f_release_frame;
+ wire [72:0] f_cp_frame={dut.g_on.g_die[0].launch_pos,dut.g_on.g_die[0].launch_token,
+  dut.g_on.g_die[0].cpl_generation,dut.g_on.g_die[0].cpl_job};
+ wire [72:0] f_gather_frame=dut.g_on.g_die[0].fmt_lease_frame;
+ assign gather_desc_r=fixture_formatter_enable?{fixture_parent_desc_r[ND-1:1],f_desc_caller_r}:fixture_parent_desc_r;
+ ot_hbm_formatter_install_consumer #(.ENABLE(1),.ENTRY_PC(FORMATTER_ENTRY_PC),
+  .SCORE_SOURCE(FORMATTER_SCORE_SOURCE),.ID_SOURCE(FORMATTER_ID_SOURCE),
+  .ARENA_BASE(FORMATTER_ARENA_BASE),.ARENA_LIMIT(FORMATTER_ARENA_LIMIT),
+  .SINK_BASE(FORMATTER_SINK_BASE),.SINK_LIMIT(FORMATTER_SINK_LIMIT),.CAPACITY_BYTES(FORMATTER_CAPACITY_BYTES)) u_fixture_formatter(
+  .clk_sm(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[0]),.actual_cp_frame(f_cp_frame),
+  .caller_desc_v(gather_desc_v[0]&&fixture_formatter_enable),.caller_desc_r(f_desc_caller_r),
+  .caller_desc_index(gather_desc_index[2:0]),.caller_desc_data(gather_desc_data[63:0]),
+  .parent_desc_v(f_desc_v),.parent_desc_r(fixture_parent_desc_r[0]),.parent_desc_index(f_desc_index),.parent_desc_data(f_desc_data),
+  .caller_go_v(fixture_formatter_go&&fixture_formatter_enable),.caller_go_r(fixture_formatter_go_r),
+  .reservation_v(reservation_v[0]&&fixture_formatter_enable),.reservation_r(f_reservation_r),.reservation_checked(reservation_checked[0]),
+  .reservation_exclusive(reservation_exclusive[0]),.reservation_frame(reservation_frame[72:0]),.reservation_descriptor(reservation_descriptor[511:0]),
+  .installer_book_v(f_book),.held_frame(f_release_frame),.gather_start_v(f_gather_start),.gather_start_r(gather_start_r[0]),
+  .gather_retained(gather_retained[0]),.gather_arena_visible(gather_arena_visible[0]),.gather_sink_visible(gather_sink_visible[0]),
+  .gather_fault(dut.g_on.g_die[0].shared_fault),.gather_frame(f_gather_frame),
+  .formatter_start_v(f_formatter_start),.formatter_start_r(formatter_start_r[0]),
+  .formatter_retained(dut.g_on.g_die[0].fmt_retained),.formatter_fault(dut.g_on.g_die[0].fmt_fault),
+  .caller_pair_v(index_pair_v[0]&&fixture_formatter_enable),.caller_pair_r(fixture_formatter_pair_r),.caller_pair(index_pair[84:0]),.caller_pair_token17(index_pair_token17[16:0]),
+  .parent_pair_v(f_pair_v),.parent_pair_r(index_pair_r[0]),.parent_pair(f_pair),.parent_pair_token17(f_pair_token),
+  .parent_pairs_v(index_pairs_v[0]),.parent_pairs_r(f_pairs_r),.parent_pairs(index_pairs[598:0]),.parent_pairs_frame(index_pairs_frame73[72:0]),
+  .consumer_pairs_v(fixture_formatter_consumer_v),.consumer_pairs_r(fixture_formatter_consumer_r),
+  .consumer_pairs(fixture_formatter_consumer_pairs),.consumer_pairs_frame(fixture_formatter_consumer_frame),.consumer_loaded(),
+  .source_reverse_v(source_reverse_v[0]),.source_reverse_r(f_reverse_r),.source_reverse_checked(source_reverse_checked[0]),
+  .source_drained(source_drained[0]),.source_reverse_frame(source_reverse_frame[72:0]),
+  .result_published(f_result_published),.source_reverse_done(f_source_reverse_done),
+  .formatter_release_v(f_formatter_release),.formatter_release_r(formatter_release_r[0]),
+  .gather_release_v(f_gather_release),.gather_release_r(gather_release_r[0]),.release_frame(),
+  .retained(fixture_formatter_retained),.fault(fixture_formatter_fault),.warm_ack(fixture_formatter_warm_ack),.ce(),.due());
+ always @(posedge clk_sm)begin
+  if(!rst_sm_n)begin
+   fixture_formatter_source_accepts<=0;fixture_formatter_source_ACKs<=0;
+   fixture_formatter_desc_accepts<=0;fixture_formatter_begin_accepts<=0;fixture_formatter_record_accepts<=0;fixture_formatter_go_accepts<=0;
+   fixture_formatter_mem_requests<=0;fixture_formatter_mem_returns<=0;
+   fixture_formatter_pairs<=0;fixture_formatter_reservations<=0;fixture_formatter_reverses<=0;
+  end else begin
+   if(fixture_formatter_go&&fixture_formatter_go_r)fixture_formatter_go_accepts<=fixture_formatter_go_accepts+1;
+   if(gather_desc_v[0]&&gather_desc_r[0])fixture_formatter_desc_accepts<=fixture_formatter_desc_accepts+1;
+   if(preinstall_begin_v[0]&&preinstall_begin_r[0])fixture_formatter_begin_accepts<=fixture_formatter_begin_accepts+1;
+   if(preinstall_record_v[0]&&preinstall_record_r[0])fixture_formatter_record_accepts<=fixture_formatter_record_accepts+1;
+   if(preinstall_source_v[0]&&preinstall_source_r[0])fixture_formatter_source_accepts<=fixture_formatter_source_accepts+1;
+   if(preinstall_source_ACK_v[0]&&preinstall_source_ACK_r[0])fixture_formatter_source_ACKs<=fixture_formatter_source_ACKs+1;
+   if(gather_req_v[0]&&gather_req_r[0])fixture_formatter_mem_requests<=fixture_formatter_mem_requests+1;
+   if(gather_rsp_v[0]&&gather_rsp_r[0])fixture_formatter_mem_returns<=fixture_formatter_mem_returns+1;
+   if(fixture_formatter_consumer_v&&fixture_formatter_consumer_r)fixture_formatter_pairs<=fixture_formatter_pairs+1;
+   if(reservation_v[0]&&f_reservation_r&&fixture_formatter_enable)fixture_formatter_reservations<=fixture_formatter_reservations+1;
+   if(source_reverse_v[0]&&f_reverse_r&&fixture_formatter_enable)fixture_formatter_reverses<=fixture_formatter_reverses+1;
+  end
+ end
+
  ot_ds_hbm_cluster20_integrated #(
+  .FORMATTER_PREINSTALL_ENABLE(FORMATTER_PREINSTALL_ENABLE),
+  .FORMATTER_DIRECT_SOURCE_REPLAY(FORMATTER_DIRECT_SOURCE_REPLAY),
   .COMBINED_ENABLE(COMBINED_ENABLE),
   .SFU_C12_ENABLE(SFU_C12_ENABLE),
   .SFU_NATIVE_VM_ENABLE(SFU_NATIVE_VM_ENABLE),
@@ -420,23 +563,77 @@ module tb_hbm_integrated_minimum_parent #(
   .norm_fault(norm_fault),
   .norm_ce(norm_ce),
   .norm_due(norm_due),
-  .gather_desc_v(gather_desc_v),
-  .gather_start_v(gather_start_v),
-  .gather_book_valid(gather_book_valid),
+  .preinstall_begin_v(preinstall_begin_v),
+  .preinstall_begin_r(preinstall_begin_r),
+  .preinstall_begin_frame(preinstall_begin_frame),
+  .preinstall_score_base(preinstall_score_base),
+  .preinstall_id_base(preinstall_id_base),
+  .preinstall_capacity(preinstall_capacity),
+  .preinstall_occupied_records(preinstall_occupied_records),
+  .preinstall_layer(preinstall_layer),
+  .preinstall_candidate_source_layer(preinstall_candidate_source_layer),
+  .preinstall_candidate_masked(preinstall_candidate_masked),
+  .preinstall_record_v(preinstall_record_v),
+  .preinstall_record_r(preinstall_record_r),
+  .preinstall_record_kind(preinstall_record_kind),
+  .preinstall_record_rank(preinstall_record_rank),
+  .preinstall_record_base(preinstall_record_base),
+  .preinstall_record_end(preinstall_record_end),
+  .preinstall_record_frame(preinstall_record_frame),
+  .preinstall_other_writer_v(preinstall_other_writer_v),
+  .preinstall_other_writer_base(preinstall_other_writer_base),
+  .preinstall_other_writer_end(preinstall_other_writer_end),
+  .preinstall_source_v(preinstall_source_v),
+  .preinstall_source_r(preinstall_source_r),
+  .preinstall_source_frame(preinstall_source_frame),
+  .preinstall_source_rank(preinstall_source_rank),
+  .preinstall_source_plane(preinstall_source_plane),
+  .preinstall_source_word(preinstall_source_word),
+  .preinstall_source_data(preinstall_source_data),
+  .preinstall_source_ACK_v(preinstall_source_ACK_v),
+  .preinstall_source_ACK_r(preinstall_source_ACK_r),
+  .preinstall_source_ACK_frame(preinstall_source_ACK_frame),
+  .preinstall_source_ACK_rank(preinstall_source_ACK_rank),
+  .preinstall_source_ACK_plane(preinstall_source_ACK_plane),
+  .preinstall_source_ACK_word(preinstall_source_ACK_word),
+  .reservation_v(reservation_v),
+  .reservation_r(fixture_formatter_enable?{reservation_r[ND-1:1],f_reservation_r}:reservation_r),
+  .reservation_checked(reservation_checked),
+  .reservation_exclusive(reservation_exclusive),
+  .reservation_frame(reservation_frame),
+  .reservation_descriptor(reservation_descriptor),
+  .consumer_reverse_v(consumer_reverse_v),
+  .consumer_reverse_r(consumer_reverse_r),
+  .consumer_reverse_frame(consumer_reverse_frame),
+  .consumer_sink_ACK_drained(consumer_sink_ACK_drained),
+  .source_reverse_v(source_reverse_v),
+  .source_reverse_r(fixture_formatter_enable?{source_reverse_r[ND-1:1],f_reverse_r}:source_reverse_r),
+  .source_reverse_checked(source_reverse_checked),
+  .source_drained(source_drained),
+  .source_reverse_frame(source_reverse_frame),
+  .preinstall_retained(preinstall_retained),
+  .preinstall_frame(preinstall_frame),
+  .preinstall_warm_ack(preinstall_warm_ack),
+  .preinstall_fault(preinstall_fault),
+  .preinstall_ce(preinstall_ce),
+  .preinstall_due(preinstall_due),
+  .gather_desc_v(fixture_formatter_enable?{gather_desc_v[ND-1:1],f_desc_v}:gather_desc_v),
+  .gather_start_v(fixture_formatter_enable?{gather_start_v[ND-1:1],f_gather_start}:gather_start_v),
+  .gather_book_valid(fixture_formatter_enable?{gather_book_valid[ND-1:1],f_book}:gather_book_valid),
   .gather_req_v(gather_req_v),
   .gather_rsp_r(gather_rsp_r),
-  .gather_desc_index(gather_desc_index),
-  .gather_desc_data(gather_desc_data),
+  .gather_desc_index(fixture_formatter_enable?{gather_desc_index[ND*3-1:3],f_desc_index}:gather_desc_index),
+  .gather_desc_data(fixture_formatter_enable?{gather_desc_data[ND*64-1:64],f_desc_data}:gather_desc_data),
   .gather_req(gather_req),
-  .gather_desc_r(gather_desc_r),
+  .gather_desc_r(fixture_parent_desc_r),
   .gather_start_r(gather_start_r),
   .gather_req_r(gather_req_r),
   .gather_rsp_v(gather_rsp_v),
   .gather_rsp(gather_rsp),
-  .gather_release_v(gather_release_v),
-  .gather_result_published(gather_result_published),
-  .gather_reverse_done(gather_reverse_done),
-  .gather_release_frame(gather_release_frame),
+  .gather_release_v(fixture_formatter_enable?{gather_release_v[ND-1:1],f_gather_release}:gather_release_v),
+  .gather_result_published(fixture_formatter_enable?{gather_result_published[ND-1:1],f_result_published}:gather_result_published),
+  .gather_reverse_done(fixture_formatter_enable?{gather_reverse_done[ND-1:1],f_source_reverse_done}:gather_reverse_done),
+  .gather_release_frame(fixture_formatter_enable?{gather_release_frame[ND*73-1:73],f_release_frame}:gather_release_frame),
   .gather_release_r(gather_release_r),
   .gather_retained(gather_retained),
   .gather_arena_visible(gather_arena_visible),
@@ -463,12 +660,12 @@ module tb_hbm_integrated_minimum_parent #(
   .normal_vm_raddr(normal_vm_raddr),
   .normal_e_data(normal_e_data),
   .normal_e_tag(normal_e_tag),
-  .formatter_start_v(formatter_start_v),
-  .index_pair_v(index_pair_v),
-  .index_pairs_r(index_pairs_r),
-  .formatter_release_v(formatter_release_v),
-  .index_pair(index_pair),
-  .index_pair_token17(index_pair_token17),
+  .formatter_start_v(fixture_formatter_enable?{formatter_start_v[ND-1:1],f_formatter_start}:formatter_start_v),
+  .index_pair_v(fixture_formatter_enable?{index_pair_v[ND-1:1],f_pair_v}:index_pair_v),
+  .index_pairs_r(fixture_formatter_enable?{index_pairs_r[ND-1:1],f_pairs_r}:index_pairs_r),
+  .formatter_release_v(fixture_formatter_enable?{formatter_release_v[ND-1:1],f_formatter_release}:formatter_release_v),
+  .index_pair(fixture_formatter_enable?{index_pair[ND*85-1:85],f_pair}:index_pair),
+  .index_pair_token17(fixture_formatter_enable?{index_pair_token17[ND*17-1:17],f_pair_token}:index_pair_token17),
   .formatter_start_r(formatter_start_r),
   .index_pair_r(index_pair_r),
   .index_pairs_v(index_pairs_v),
@@ -536,6 +733,7 @@ module tb_hbm_integrated_minimum_parent #(
   .sys_fault(sys_fault));
  initial if(ND!=2||NSM!=2||NS!=2||NPC!=2||MEM_WORDS!=2097152||TW!=17||PW!=20||NORM_KIND!=0||NORM_N!=64||NORM_D!=5120||NORM_AW!=24||NORM_RD!=0||!NORM_PUBLISH_QUANT||!ENABLE||!COMBINED_ENABLE||!NORM_C12_ENABLE||!NORM_NATIVE_VM_ENABLE||!NORM_NATIVE_INPUT_CP||!SFU_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||!FORMATTER_ENABLE||!LOCAL_CP_RESET_ENABLE)
   $fatal(1,"minimum parent fixture selected graph/geometry mismatch");
+ reg [1:0] seen_sfu_ACK;
  reg [399:0] seen_ACK;
  integer slot;
  always @(posedge clk_sm) begin
@@ -551,7 +749,8 @@ module tb_hbm_integrated_minimum_parent #(
    fixture_retire_accepts<=0;
    fixture_db_accepts<=0;
    fixture_cpl_accepts<=0;
-   fixture_observer_fault<=0;seen_ACK<=0;
+   fixture_observer_fault<=0;seen_ACK<=0;seen_sfu_ACK<=0;
+   fixture_sfu_enroll_accepts<=0;fixture_sfu_cp_requests<=0;fixture_sfu_cp_returns<=0;fixture_sfu_ACKs<=0;fixture_sfu_TXs<=0;fixture_sfu_releases<=0;
   end else begin
    if(db_v[0]&&db_rdy[0])fixture_db_accepts<=fixture_db_accepts+1;
    if(cpl_v[0]&&cpl_rdy[0])fixture_cpl_accepts<=fixture_cpl_accepts+1;
@@ -577,6 +776,30 @@ module tb_hbm_integrated_minimum_parent #(
     end
    end
    if(norm_publication_v[0]&&(!(&seen_ACK)||fixture_ACKs!=400))fixture_observer_fault<=1;
+   // Read-only observation of actual CASE1 native SFU transport/checked SRAM.
+   if(sfu_enroll_v[0]&&sfu_enroll_r[0])fixture_sfu_enroll_accepts<=fixture_sfu_enroll_accepts+1;
+   if(dut.g_on.g_die[0].sfu_req_v&&dut.g_on.g_die[0].p_req_rdy[1]&&dut.g_on.g_die[0].sfu_route)begin
+    fixture_sfu_cp_requests<=fixture_sfu_cp_requests+1;
+    if(dut.g_on.g_die[0].sfu_req[336]||dut.g_on.g_die[0].sfu_req[335:304]<32'ha0000||dut.g_on.g_die[0].sfu_req[335:304]>=32'ha0100||dut.g_on.g_die[0].sfu_req[308:304]!=0)fixture_observer_fault<=1;
+   end
+   if(dut.g_on.g_die[0].p_rsp_v[1]&&dut.g_on.g_die[0].sfu_rsp_r&&dut.g_on.g_die[0].sfu_route)
+    fixture_sfu_cp_returns<=fixture_sfu_cp_returns+1;
+   if(dut.g_on.g_die[0].nv_tx_v&&dut.g_on.g_die[0].nv_tx_r)begin
+    fixture_sfu_TXs<=fixture_sfu_TXs+1;
+    if(dut.g_on.g_die[0].nv_tx_owner!=sfu_held_frame[72:0]||dut.g_on.g_die[0].nv_tx_index!=fixture_sfu_TXs||dut.g_on.g_die[0].nv_tx_last!=(fixture_sfu_TXs==2))fixture_observer_fault<=1;
+   end
+   if(dut.g_on.g_die[0].g_sfu_native_vm.u_vm.result_ACK_v&&dut.g_on.g_die[0].g_sfu_native_vm.u_vm.result_ACK_r)begin
+    fixture_sfu_ACKs<=fixture_sfu_ACKs+1;
+    if(sfu_vm_publication_ACK_frame[72:0]!=sfu_held_frame[72:0]||(sfu_vm_publication_ACK_addr[31:0]!=64&&sfu_vm_publication_ACK_addr[31:0]!=96))fixture_observer_fault<=1;
+    else begin
+     slot=(sfu_vm_publication_ACK_addr[31:0]-64)/32;
+     if(seen_sfu_ACK[slot])fixture_observer_fault<=1;
+     seen_sfu_ACK[slot]<=1;
+    end
+   end
+   if(dut.g_on.g_die[0].sfu_release_v&&dut.g_on.g_die[0].peer_releases[0]&&dut.g_on.g_die[0].sfu_route)
+    fixture_sfu_releases<=fixture_sfu_releases+1;
+   if(sfu_publication_v[0]&&(!(&seen_sfu_ACK)||fixture_sfu_ACKs!=2||fixture_sfu_TXs!=3))fixture_observer_fault<=1;
   end
  end
 endmodule

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Full physical data/check memory. Only owner-matched protected readback releases visibility.
 // Warm reset retains accepted debt; recovery is NOT fabricated from an empty transport.
-module ot_dsrom_vm_backend(
+module ot_dsrom_vm_backend #(parameter integer DISTRIBUTED_CMD=0)(
  input wire clk,cold_n,rst_n,
  input wire req_v,output wire req_ready,
  input wire [ot_dsrom_vm_pkg::REQ_CODE-1:0] req_code,
@@ -12,7 +12,7 @@ module ot_dsrom_vm_backend(
 );
  import ot_dsrom_vm_pkg::*;import ot_gpu_w6_secded_pkg::*;
  localparam INIT=0,IDLE=1,ISSUE=2,CAPTURE=3,DECODE=4,CHECK=5,MERGE=6,COMMIT=7,
-            SEND=8,WAIT_RECEIPT=9,FINAL_SEND=10;
+            SEND=8,WAIT_RECEIPT=9,FINAL_SEND=10,DIST_LOCAL=11,DIST_EXEC=12;
  reg [3:0] state,state_check;reg poison,poison_check,debt_check;
  reg [8:0] clear_row,clear_check;
  request_t packet,packet_check,incoming;
@@ -32,8 +32,10 @@ module ot_dsrom_vm_backend(
   (debt&&(packet!=~packet_check||mode!=~mode_check||writer!=~writer_check||writer>4||
    written!=~written_check||read_done!=~read_done_check||result_data!=~result_check||
    decoded_data!=~decoded_check||expected!=~expected_check||decoded_ue!=~decoded_ue_check||had_ce!=~had_ce_check));
- assign fault=poison||bad;wire safe=cold_n&&rst_n&&!fault;
- assign initializing=state==INIT;assign req_ready=safe&&state==IDLE&&!debt;
+ wire distributed_fault;
+ assign fault=poison||bad||distributed_fault;wire safe=cold_n&&rst_n&&!fault;
+ assign initializing=state==INIT||(DISTRIBUTED_CMD!=0&&(state==DIST_LOCAL||state==DIST_EXEC)&&command_was_init);
+ assign req_ready=safe&&state==IDLE&&!debt;
  assign receipt_ready=safe&&state==WAIT_RECEIPT&&debt;
  reply_t response;
  always @*begin
@@ -48,6 +50,41 @@ module ot_dsrom_vm_backend(
  wire [14:0] address=mode==0?packet.ra[14:0]:mode==1?packet.ra[29:15]:packet.wa[writer*15+:15];
  wire read_en=safe&&state==ISSUE;
  wire write_en=safe&&(state==INIT||state==COMMIT);
+ wire command_was_init,command_was_read,command_was_write;
+ wire [8:0] local_row[0:95];wire [95:0] local_read,local_write,local_init,local_half;
+ wire [17:0] command_in={state==INIT,read_en,write_en,state==INIT?{6'd0,clear_row}:address};
+ generate if(DISTRIBUTED_CMD!=0)begin:g_distributed
+  wire [17:0] cluster[0:11];wire [11:0] cluster_fault;wire [95:0] seat_fault;
+  for(genvar k=0;k<12;k=k+1)begin:g_cluster
+   (* keep_hierarchy=1 *) ot_dsrom_vm_macro_command #(.WIDTH(18)) u_cmd(
+    .clk(clk),.cold_n(cold_n),.capture(state==INIT||state==ISSUE||state==COMMIT),
+    .d(command_in),.command(cluster[k]),.fault(cluster_fault[k]));
+  end
+  for(genvar k=0;k<96;k=k+1)begin:g_local
+   wire [17:0] parent=cluster[k/8];
+   wire selected=parent[17]||(k<64?parent[14:9]==k:parent[14:10]==(k-64));
+   wire allowed=!cluster_fault[k/8];
+   wire [12:0] command;
+   (* keep_hierarchy=1 *) ot_dsrom_vm_macro_command #(.WIDTH(13)) u_cmd(
+    .clk(clk),.cold_n(cold_n),.capture(state==DIST_LOCAL),
+    .d({parent[17],parent[9],parent[8:0],parent[16]&&selected&&allowed,parent[15]&&selected&&allowed}),
+    .command(command),.fault(seat_fault[k]));
+   assign local_row[k]=command[10:2];assign local_init[k]=command[12];assign local_half[k]=command[11];
+   // Retain the immediate global fault/reset veto; a checked seat is not authority to waive it.
+   assign local_read[k]=state==DIST_EXEC&&safe&&!seat_fault[k]&&command[1];
+   assign local_write[k]=state==DIST_EXEC&&safe&&!seat_fault[k]&&command[0];
+  end
+  assign command_was_init=cluster[0][17];assign command_was_read=cluster[0][16];assign command_was_write=cluster[0][15];
+  assign distributed_fault=(|cluster_fault)||(|seat_fault);
+ end else begin:g_original_commands
+  assign distributed_fault=0;assign command_was_init=0;assign command_was_read=0;assign command_was_write=0;
+  for(genvar k=0;k<96;k=k+1)begin:g_local
+   assign local_row[k]=state==INIT?clear_row:address[8:0];
+   assign local_init[k]=state==INIT;assign local_half[k]=address[9];
+   assign local_read[k]=read_en&&(k<64?address[14:9]==k:address[14:10]==(k-64));
+   assign local_write[k]=write_en&&(state==INIT||(k<64?address[14:9]==k:address[14:10]==(k-64)));
+  end
+ end endgenerate
  wire [511:0] data_q[0:63];wire [127:0] check_q[0:31];
  function automatic [7:0] parity64(input [63:0] d);
   reg [71:0] code;integer k;
@@ -65,18 +102,18 @@ module ot_dsrom_vm_backend(
  for(genvar g=0;g<64;g=g+1)begin:g_data
   for(genvar c=0;c<4;c=c+1)begin:g_column
    (* keep=1,dont_touch=1 *) ot_sram_1r1w_512x128_m4_r2c2 u_data(
-    .clk(clk),.r_ce_in(read_en&&address[14:9]==g),.r_addr_in(address[8:0]),.rd_out(data_q[g][c*128+:128]),
-    .w_ce_in(write_en&&(state==INIT||address[14:9]==g)),.w_addr_in(state==INIT?clear_row:address[8:0]),
-    .wd_in(state==INIT?128'd0:expected[c*128+:128]),.w_mask_in({128{1'b1}}),
+    .clk(clk),.r_ce_in(local_read[g]),.r_addr_in(DISTRIBUTED_CMD!=0?local_row[g]:address[8:0]),.rd_out(data_q[g][c*128+:128]),
+    .w_ce_in(local_write[g]),.w_addr_in(local_row[g]),
+    .wd_in(local_init[g]?128'd0:expected[c*128+:128]),.w_mask_in({128{1'b1}}),
     .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(14'd0));
   end
  end
  for(genvar g=0;g<32;g=g+1)begin:g_checks
   (* keep=1,dont_touch=1 *) ot_sram_1r1w_512x128_m4_r2c2 u_check(
-   .clk(clk),.r_ce_in(read_en&&address[14:10]==g),.r_addr_in(address[8:0]),.rd_out(check_q[g]),
-   .w_ce_in(write_en&&(state==INIT||address[14:10]==g)),.w_addr_in(state==INIT?clear_row:address[8:0]),
-   .wd_in(state==INIT?128'd0:address[9]?{encoded_checks,64'd0}:{64'd0,encoded_checks}),
-   .w_mask_in(state==INIT?{128{1'b1}}:address[9]?{64'hffffffffffffffff,64'd0}:{64'd0,64'hffffffffffffffff}),
+   .clk(clk),.r_ce_in(local_read[64+g]),.r_addr_in(DISTRIBUTED_CMD!=0?local_row[64+g]:address[8:0]),.rd_out(check_q[g]),
+   .w_ce_in(local_write[64+g]),.w_addr_in(local_row[64+g]),
+   .wd_in(local_init[64+g]?128'd0:local_half[64+g]?{encoded_checks,64'd0}:{64'd0,encoded_checks}),
+   .w_mask_in(local_init[64+g]?{128{1'b1}}:local_half[64+g]?{64'hffffffffffffffff,64'd0}:{64'd0,64'hffffffffffffffff}),
    .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(14'd0));
  end
  wire [511:0] decoded_next;wire [7:0] ce,ue;
@@ -107,7 +144,7 @@ module ot_dsrom_vm_backend(
   else if(bad)fail();
   else if(!poison)begin
    case(state)
-    INIT:if(clear_row==511)jump(IDLE);else begin clear_row<=clear_row+1;clear_check<=~(clear_row+9'd1);end
+    INIT:if(DISTRIBUTED_CMD!=0)jump(DIST_LOCAL);else if(clear_row==511)jump(IDLE);else begin clear_row<=clear_row+1;clear_check<=~(clear_row+9'd1);end
     IDLE:if(req_v&&req_ready)begin
      debt<=1;debt_check<=0;packet<=incoming;packet_check<=~incoming;
      written<=0;written_check<=31;read_done<=0;read_done_check<=3;
@@ -117,7 +154,7 @@ module ot_dsrom_vm_backend(
      else if(incoming.re[1])begin select_mode(1);jump(ISSUE);end
      else begin_writes(incoming.we,0);
     end
-    ISSUE:jump(CAPTURE);
+    ISSUE:if(DISTRIBUTED_CMD!=0)jump(DIST_LOCAL);else jump(CAPTURE);
     CAPTURE:begin raw_data<=data_q[address[14:9]];raw_checks<=address[9]?check_q[address[14:10]][127:64]:check_q[address[14:10]][63:0];jump(DECODE);end
     DECODE:begin decoded_data<=decoded_next;decoded_check<=~decoded_next;decoded_ue<=|ue;decoded_ue_check<=~(|ue);
      had_ce<=had_ce||(|ce);had_ce_check<=~(had_ce||(|ce));jump(CHECK);end
@@ -132,7 +169,13 @@ module ot_dsrom_vm_backend(
     endcase
     MERGE:begin merged=decoded_data;for(integer k=0;k<16;k=k+1)if(packet.wm[writer*16+k])merged[k*32+:32]=packet.wd[writer*512+k*32+:32];
      if(packet.wm[writer*16+:16]==0)fail();else begin expected<=merged;expected_check<=~merged;jump(COMMIT);end end
-    COMMIT:begin select_mode(3);jump(ISSUE);end
+    COMMIT:if(DISTRIBUTED_CMD!=0)jump(DIST_LOCAL);else begin select_mode(3);jump(ISSUE);end
+    DIST_LOCAL:jump(DIST_EXEC);
+    DIST_EXEC:if(command_was_init)begin
+     if(clear_row==511)jump(IDLE);else begin clear_row<=clear_row+1;clear_check<=~(clear_row+9'd1);jump(INIT);end
+    end else if(command_was_read)jump(CAPTURE);
+    else if(command_was_write)begin select_mode(3);jump(ISSUE);end
+    else fail();
     SEND:if(reply_v&&reply_ready)jump(WAIT_RECEIPT);
     WAIT_RECEIPT:if(receipt_v&&receipt_ready)begin
      if(ack_ue||receipt[79:48]!=packet.ordinal||receipt[47:1]!=packet.owner||!receipt[0])fail();else jump(FINAL_SEND);

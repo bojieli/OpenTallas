@@ -1,0 +1,22 @@
+{
+  "netlists": [
+    {
+      "path": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run/work/orfs/1_2_yosys.raw.v",
+      "bytes": 528340795,
+      "sha256": "81133f54e73add39596f56fc8cfb750e056683779424776b5980d0e9f9d338c5",
+      "scalar_port_bits": 70354
+    },
+    {
+      "path": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run/work/orfs/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/1_2_yosys.v",
+      "bytes": 528340795,
+      "sha256": "81133f54e73add39596f56fc8cfb750e056683779424776b5980d0e9f9d338c5",
+      "scalar_port_bits": 70354
+    }
+  ],
+  "initial_metadata_save_failure": {
+    "error": "FileNotFoundError",
+    "path": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run/control/ss_mapped_netlist_metadata.json",
+    "hash_and_port_extraction_succeeded": true,
+    "corrected_using_captured_values_without_rehash": true
+  }
+}

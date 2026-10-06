@@ -5,7 +5,7 @@ Output objects stay separate from immutable generated models. The caller brings
 an actual successful current-source parent terminal and an optional source-owned
 C++ harness; no surrogate stimulus is emitted here.
 """
-import argparse, concurrent.futures, fcntl, hashlib, json, os, re, shutil, socket, subprocess, sys, time
+import argparse, concurrent.futures, fcntl, hashlib, importlib.util, json, os, re, shutil, socket, subprocess, sys, time
 from pathlib import Path
 
 def sha(p):
@@ -27,9 +27,10 @@ def harness_dependencies(source):
             pending.append(path)
     return pins
 
-def model_inputs(graph):
+def model_inputs(graph,prefixes=None):
     jobs=json.loads(graph.read_text())['submodules'];models=[]
     for job in jobs:
+        if prefixes is not None and job['prefix'] not in prefixes:continue
         directory=Path(job['directory']);p=directory/(job['prefix']+'.json')
         m=json.loads(p.read_text())
         if m['version']!=1:raise ValueError('Unsupported generated JSON version')
@@ -77,18 +78,34 @@ def build_one(compiler,source,output,opts,envelope):
     write(record,dict(contract=contract,object_sha256=sha(output),command=command))
     return output
 
-def build(models,out,compiler,archiver,workers,harness=None):
+def build(models,out,compiler,archiver,workers,harness=None,reuse_archives=None):
     libraries=[];all_runtime=set();timing=False
     envelope=digest([{k:v for k,v in m.items() if k!='job'} for m in models])
+    prior=None
+    if reuse_archives:
+        old_inputs=json.loads((reuse_archives/'inputs.json').read_text())
+        old_terminal=json.loads((reuse_archives/'terminal.json').read_text())
+        if old_terminal['exit'] or old_inputs['compiler']!=sha(compiler) or old_inputs['archiver']!=sha(archiver):
+            raise ValueError('Completed archive/compiler envelope differs')
+        prior=({m['job']['prefix']:m for m in old_inputs['models']},old_terminal['libraries'])
     for m in models:
         prefix=m['job']['prefix'];d=out/prefix;d.mkdir(exist_ok=True)
+        all_runtime.update(m['runtime']);timing|=m['options']['use_timing']
+        library=d/(prefix+'.a')
+        old_library=reuse_archives/prefix/(prefix+'.a') if prior else None
+        if prior and prior[0].get(prefix)==m and str(old_library) in prior[1]:
+            if sha(old_library)!=prior[1][str(old_library)]:raise ValueError('Retained archive changed')
+            if library.exists() and sha(library)!=sha(old_library):raise ValueError('Do not overwrite differing archive')
+            if not library.exists():shutil.copyfile(old_library,library)
+            libraries.append(library)
+            write(d/'archive_reuse.json',dict(source=str(old_library),sha256=sha(library),exact_model_tool_flags=True))
+            continue
         opts=flags(m);sources=[Path(s) for s in m['sources']]
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
             futures=[pool.submit(build_one,compiler,s,d/(s.stem+'.o'),opts,envelope) for s in sources]
             objects=[f.result() for f in futures]
-        library=d/(prefix+'.a')
         subprocess.run([str(archiver),'rcs',str(library),*map(str,objects)],check=True)
-        libraries.append(library);all_runtime.update(m['runtime']);timing|=m['options']['use_timing']
+        libraries.append(library)
         write(out/'progress.json',dict(completed_libraries=list(map(str,libraries)),current=prefix))
     if not harness:return dict(libraries={str(p):sha(p) for p in libraries},linked=False)
     # A single runtime compiled with the superset of the real hierarchy options.
@@ -114,7 +131,12 @@ def capacity(out,a):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('graph','terminal','output'):p.add_argument('--'+name,type=Path,required=True)
+    for name in ('graph','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--terminal',type=Path)
+    p.add_argument('--components-only',action='store_true',help='Build only exact completed enrolled children; no parent/link/runtime claim')
+    p.add_argument('--enrollment',type=Path)
+    p.add_argument('--component-driver',type=Path,help='Pinned current exact-reuse implementation; snapshot runner remains immutable')
+    p.add_argument('--reuse-archives',type=Path,help='Completed exact model/compiler/flags archive build; no C++ replay')
     p.add_argument('--harness',type=Path);p.add_argument('--workers',type=int,required=True)
     p.add_argument('--memory-gib',type=int,required=True);p.add_argument('--disk-reserve-bytes',type=int,required=True)
     p.add_argument('--host',required=True);p.add_argument('--compiler',type=Path,default=Path(shutil.which('g++') or '/missing'))
@@ -124,22 +146,45 @@ def main():
     out=a.output.resolve();guard=Path('/srv/opentallas-scratch/admit.sh')
     if socket.gethostname()!=a.host or not guard.is_file() or not str(out).startswith('/srv/opentallas-scratch'):
         raise ValueError('Measured E1/E2 NVMe host and unchanged guard required')
-    terminal=json.loads(a.terminal.read_text())
-    if terminal['exit'] or not terminal['full_parent_elaborated']:
-        raise ValueError('Wait for actual successful current-source parent generation')
     work=a.graph.resolve().parent.parent
     prepared=json.loads((work/'prepared.json').read_text())
-    if terminal['source_sha256']!=prepared['source_sha256'] or terminal['parameters']!=prepared['parameters']:
-        raise ValueError('Parent terminal differs from actual selected snapshot')
     for rel,h in prepared['source_sha256'].items():
         if sha(work/'src'/rel)!=h:raise ValueError('Current parent source changed '+rel)
-    models=model_inputs(a.graph);inputs=dict(graph=sha(a.graph),terminal=sha(a.terminal),
+    if not a.admitted:out.mkdir(parents=True,exist_ok=True)
+    prefixes=None;terminal=None
+    if a.components_only:
+        if not a.enrollment or a.harness:raise ValueError('Exact enrollment required; partial children cannot link a parent')
+        if sha(work/'runner.py')!=prepared['runner_sha256']:raise ValueError('Pinned component driver changed')
+        spec=importlib.util.spec_from_file_location('component_driver',a.component_driver or work/'runner.py')
+        driver=importlib.util.module_from_spec(spec);spec.loader.exec_module(driver)
+        m=driver.verified(work);jobs=json.loads(a.graph.read_text())['submodules']
+        enrolled=json.loads(a.enrollment.read_text())
+        tool=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+        if driver.tool_identity(tool)!=enrolled['tool']:raise ValueError('Retained generated tool/runtime differs')
+        contracts=driver.component_contracts(work,m,jobs,enrolled['tool']);prefixes=set()
+        for j in jobs:
+            if j['top'] in (driver.PARENT_TOP,driver.OBSERVER_TOP):continue
+            if not set(j.get('deps',[]))<=prefixes:continue
+            if driver.reuse_component(j,contracts[j['prefix']],enrolled,out,
+                                      driver.dependency_interfaces(j,{x['prefix']:x for x in jobs})):
+                prefixes.add(j['prefix'])
+        if not prefixes:raise ValueError('No exact completed child eligible for object build')
+    else:
+        if not a.terminal:raise ValueError('Actual current parent terminal required')
+        terminal=json.loads(a.terminal.read_text())
+        if terminal['exit'] or not terminal['full_parent_elaborated']:
+            raise ValueError('Wait for actual successful current-source parent generation')
+        if terminal['source_sha256']!=prepared['source_sha256'] or terminal['parameters']!=prepared['parameters']:
+            raise ValueError('Parent terminal differs from actual selected snapshot')
+    models=model_inputs(a.graph,prefixes);inputs=dict(graph=sha(a.graph),terminal=sha(a.terminal) if a.terminal else None,
         models=models,compiler=sha(a.compiler),archiver=sha(a.archiver),driver=sha(__file__),
         harness=sha(a.harness) if a.harness else None,workers=a.workers)
+    if a.enrollment:inputs['enrollment_sha256']=sha(a.enrollment)
+    if a.component_driver:inputs['component_driver_sha256']=sha(a.component_driver)
+    if a.reuse_archives:inputs['reuse_archive_inputs']=sha(a.reuse_archives/'inputs.json');inputs['reuse_archive_terminal']=sha(a.reuse_archives/'terminal.json')
     if a.harness:inputs['harness_dependencies']=harness_dependencies(a.harness)
-    if set(terminal['completed'])!={m['job']['prefix'] for m in models}:
+    if terminal and set(terminal['completed'])!={m['job']['prefix'] for m in models}:
         raise ValueError('Terminal does not cover this actual generated hierarchy')
-    if not a.admitted:out.mkdir(parents=True,exist_ok=True)
     with (out/'build.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         if (out/'terminal.json').exists():raise ValueError('Terminal build exists; no repeat')
@@ -154,9 +199,9 @@ def main():
                 claim.write(str(os.getpid())+'\n')
             write(out/'guard_command.json',cmd);fcntl.flock(lock,fcntl.LOCK_UN)
             return subprocess.call(cmd)
-        try:result=build(models,out,a.compiler,a.archiver,a.workers,a.harness)
+        try:result=build(models,out,a.compiler,a.archiver,a.workers,a.harness,a.reuse_archives)
         except Exception as e:
             write(out/'failure.json',dict(error=str(e),completed_objects_preserved=True));raise
-        write(out/'terminal.json',dict(exit=0,**result,numerical=False,physical_qualified=False))
+        write(out/'terminal.json',dict(exit=0,**result,components_only=a.components_only,numerical=False,physical_qualified=False))
     return 0
 if __name__=='__main__':raise SystemExit(main())

@@ -2,8 +2,9 @@
 """One source-pinned E2 route, fresh CPU fit before/after the unchanged guard."""
 import argparse, hashlib, json, os, shutil, subprocess, sys, time
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--source',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--density',choices=['0.55'],required=True);p.add_argument('--body-clock-sdc',type=Path);p.add_argument('--resume-from-floorplan',type=Path);p.add_argument('--admitted',action='store_true');p.add_argument('--preflight-only',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--source',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--density',choices=['0.55'],required=True);p.add_argument('--body-clock-sdc',type=Path);p.add_argument('--distributed-command',action='store_true');p.add_argument('--resume-from-floorplan',type=Path);p.add_argument('--admitted',action='store_true');p.add_argument('--preflight-only',action='store_true');a=p.parse_args()
 a.source=a.source.resolve();a.output=a.output.resolve()
+if a.distributed_command and a.resume_from_floorplan:sys.exit('Changed provider RTL needs fresh synthesis; never consume baseline ODB')
 a.output.mkdir(parents=True,exist_ok=True)
 def fit(stage):
  def cpu():
@@ -22,6 +23,7 @@ if not fit('post-guard' if a.admitted else 'pre-guard'):sys.exit(75)
 if a.preflight_only:sys.exit(0)
 if not a.admitted:
  argv=[sys.executable,str(Path(__file__).resolve()),'--source',str(a.source),'--output',str(a.output),'--density',a.density,'--body-clock-sdc',str(a.body_clock_sdc),'--admitted']
+ if a.distributed_command:argv += ['--distributed-command']
  if a.resume_from_floorplan:argv += ['--resume-from-floorplan',str(a.resume_from_floorplan.resolve())]
  sys.exit(subprocess.run(['/srv/opentallas-scratch/admit.sh','64','--',*argv]).returncode)
 if (a.output/'command.json').exists():sys.exit('Existing route attempt; collect/reuse it, never overwrite/relaunch')
@@ -58,6 +60,7 @@ if a.resume_from_floorplan:
  route_target='finish'
  (a.output/'continuation.json').write_text(json.dumps(dict(from_root=str(old),from_stage='2_1_floorplan',source_RTL_identical=True,skipped='synth/floorplan/golden',checkpoint_sha256={f:hashlib.sha256((old/sub/f).read_bytes()).hexdigest() for f in ['1_2_yosys.v','1_synth.odb','1_synth.sdc','2_1_floorplan.odb','2_1_floorplan.sdc']}),indent=2)+'\n')
 flow='source /OpenROAD-flow-scripts/env.sh; cd /OpenROAD-flow-scripts/flow; make DESIGN_CONFIG=/src/physical/dsrom_wfc_protected_context/body_config.mk WORK_HOME=/work FLOW_VARIANT='+variant+' PLACE_DENSITY='+a.density+' NUM_CORES=16 '+resume_flags+' '+route_target+'; route_rc=$?; if [ "$route_rc" -eq 0 ]; then make DESIGN_CONFIG=/src/physical/dsrom_wfc_protected_context/body_config.mk WORK_HOME=/work FLOW_VARIANT='+variant+' PLACE_DENSITY='+a.density+' NUM_CORES=16 RUN_SCRIPT=/src/physical/dsrom_wfc_protected_context/signoff.tcl RUN_LOG_NAME_STEM=protected_signoff run; exit $?; fi; exit "$route_rc"'
+if a.distributed_command:flow=flow.replace('body_config.mk','body_distributed_config.mk')
 cmd=['docker','run','--name','zeno-wfc-'+a.output.name,'--cidfile',str(a.output/'container.id'),'-v',str(a.source)+':/src:ro','-v',str(a.output)+':/work',image,'bash','-lc',flow]
 (a.output/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
 with (a.output/'run.log').open('w') as log:rc=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT).returncode
