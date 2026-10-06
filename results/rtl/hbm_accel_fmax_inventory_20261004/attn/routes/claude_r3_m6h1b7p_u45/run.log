@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_attn_hgrp_m6h1b7p top=ot_attn_hgrp_m6h1b7p purpose=signoff_target
+  synth: cells=379982 area=51155.742 um2 seq_area=12232.909 um2 macros=189995
+  pnr:   wirelength=689612 um vias=1686875 DRC=0 antenna_nets=0 Fmax=1224.17 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: PASS (all evaluated stages met)
+  wrote /srv/opentallas-scratch2/scratch/claude/hbm-attn/routes/r3_b7p_u45/physical.json
