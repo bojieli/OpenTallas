@@ -118,8 +118,8 @@ def corner_sta(orfs, output):
     sys.path.insert(0,str(ROOT/'tools/w18'))
     import corner_sta as base
     original=base.script
-    def script(corner,relative,macros):
-        text=original(corner,relative,macros)
+    def script(corner,relative,macros,post_sdc=()):
+        text=original(corner,relative,macros,post_sdc)
         # Remove the ideal network budget only; actual CTS propagation supplies it.
         # Source phase remains the original zero and SS60/FF25 stay unchanged.
         text=text.replace('set_propagated_clock [all_clocks]',
