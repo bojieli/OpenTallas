@@ -879,6 +879,10 @@ def cmd_block(a):
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
     extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": a.max_layer, "HOLD_SLACK_MARGIN": a.hold_margin,
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_block.tcl", "MACRO_PLACE_HALO": "3 3"}
+    if getattr(a, "io_ref", False):
+        # OpenROAD buffer_ports segfaults (Sim::findDisabledEdges) on the canonical SDC's -reference_pin under the
+        # WC + BC corners; the port flops sit at the pins (no port buffer needed), so skip port buffering.
+        extra["DONT_BUFFER_PORTS"] = "1"
     if a.grt_allow:
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
