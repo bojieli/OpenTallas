@@ -6,7 +6,7 @@
 // carry-save addition is exact modulo 2^42 under any grouping -- the same normalise, roundings and pack); the
 // stages are cut finer, every class within ~50 ps in the Z18-Z22 routes gets its own register:
 //   S0  m_   input capture at the pins (no logic between the element's word mux and a flop)       [new]
-//   S1  p0_  decode: FP4 e2m1 / FP8 fields per lane (sign, significands, exponent fields), NaN per 8 lanes,
+//   S1  p0_  decode: FP4 e2m1 / FP8 fields per lane (sign, significands, exponent fields), NaN per lane,
 //            xe + we                                                                                  [was P0 + P1a]
 //   S2  pa_  4x4 significand product (unsigned), shift amount, NaN OR                                [was P1a / P1b]
 //   S3  p1_  the product's sign and the low two shift bits (12-bit signed partial term)              [was P1b]
@@ -52,34 +52,36 @@ module ot_v41_bterm5_w10 #(
         else vs <= {vs[LATENCY-2:0], v};
 
     // -- S0: input capture ------------------------------------------------------------------------------
-    (* keep *) reg   m_fp4;
+    // the FP4 select in four kept copies (ot_v41_kreg: never merged with the tag delay line's copy of the same bit,
+    // Z24b post-CTS: a merged fp4 flop in the tag line drove all 32 lanes' decode, -190 ps), one per 8 lanes
+    wire [3:0]       m_fp4;
+    for (genvar g = 0; g < 4; g = g + 1) begin : g_f4
+        ot_v41_kreg #(.W(1)) u_f (.clk(clk), .arst_n(1'b1), .d(fp4), .q(m_fp4[g]));
+    end
     reg [255:0]      m_xq, m_wq;
     reg signed [9:0] m_xe, m_we;
     always @(posedge clk) begin
-        m_fp4 <= fp4; m_xq <= xq; m_wq <= wq; m_xe <= xe; m_we <= we;
+        m_xq <= xq; m_wq <= wq; m_xe <= xe; m_we <= we;
     end
 
     // -- S1: decode -----------------------------------------------------------------------------------
     reg               p0_sg [0:31];
     reg [3:0]         p0_xs [0:31], p0_ws [0:31], p0_xf [0:31], p0_wf [0:31];
-    reg [3:0]         p0_nang;
+    reg [31:0]        p0_nan;           // per lane (Z24b: the 8-lane NaN OR in the decode stage spanned the lane, -529 ps)
     reg signed [10:0] p0_es;
     reg [7:0]         xc, wc;
-    reg [3:0]         nang;
     always @(posedge clk) begin
         p0_es <= m_xe + m_we;
-        nang = 4'd0;
         for (i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
-            wc = m_fp4 ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
-            nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+            wc = m_fp4[i / 8] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
+            p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             p0_sg[i] <= xc[7] ^ wc[7];
             p0_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
             p0_ws[i] <= {(wc[6:3] != 4'd0), wc[2:0]};
             p0_xf[i] <= (xc[6:3] == 4'd0) ? 4'd1 : xc[6:3];
             p0_wf[i] <= (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
         end
-        p0_nang <= nang;
     end
 
     // -- S2: product, shift amount --------------------------------------------------------------------
@@ -91,9 +93,9 @@ module ot_v41_bterm5_w10 #(
     always @(posedge clk) begin
         pa_es <= p0_es;
 `ifdef BT5_MUTANT_NS
-        pa_nan <= |p0_nang[2:0];                                   // negative control: one partial dropped
+        pa_nan <= |p0_nan[23:0];                                   // negative control: 8 lanes dropped
 `else
-        pa_nan <= |p0_nang;
+        pa_nan <= |p0_nan;
 `endif
         for (i = 0; i < 32; i = i + 1) begin
             pa_sg[i] <= p0_sg[i];

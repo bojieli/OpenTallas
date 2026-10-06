@@ -212,6 +212,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
                                         // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
                                         // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
+                                        // 4 = + PQ configuration write stage (shadow file and tag tables; 0 walk cycles)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -417,7 +418,26 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [NB*5-1:0]   pq_idx, pq_n;
     if (PQ != 0) begin : g_pq
         reg [47:0] sh_w [0:RPW-1];
-        always @(posedge clk) if (cfg_v_x && {27'd0, cfg_a_x} < RPW) sh_w[cfg_a_x] <= cfg_d_x;
+        if (QM >= 4) begin : g_shp
+            // QM >= 4 (margin-first, Z24b post-CTS: b_cfg -> address decode -> 17 x 48 write enables / data -24 ps at
+            // 770): a write stage -- one-hot entry enables and four kept copies of the word, each feeding a quarter
+            // of the entries.  The word lands one cycle later, the same edge the tags module raises sh_full, so the
+            // replay (which starts after the swap) reads it.
+            reg [RPW-1:0] sh_en;
+            wire [47:0]   sh_d [0:3];
+            always @(posedge clk) for (int k = 0; k < RPW; k++) sh_en[k] <= cfg_v_x && {27'd0, cfg_a_x} == k;
+            for (genvar g = 0; g < 4; g = g + 1) begin : g_d
+                ot_v41_kreg #(.W(48)) u_d (.clk(clk), .arst_n(1'b1), .d(cfg_d_x), .q(sh_d[g]));
+            end
+            always @(posedge clk) for (int k = 0; k < RPW; k++)
+`ifdef QM4_MUTANT_SH
+                if (sh_en[k] && k != 3) sh_w[k] <= sh_d[(4 * k) / RPW];        // negative control: entry 3 never written
+`else
+                if (sh_en[k]) sh_w[k] <= sh_d[(4 * k) / RPW];
+`endif
+        end else begin : g_shn
+            always @(posedge clk) if (cfg_v_x && {27'd0, cfg_a_x} < RPW) sh_w[cfg_a_x] <= cfg_d_x;
+        end
         // replay: rk walks 0 .. RPW-1 after the swap; the boundary registers' timing is kept (word -> register)
         reg        rp_run;
         reg [4:0]  rk;
@@ -447,7 +467,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign cfg_v = cfg_v_x; assign cfg_a = cfg_a_x; assign cfg_d = cfg_d_x; assign qy_cdec = qy_cdec_x;
         assign pq_walking = walk_busy;
     end
-    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN)) u_pq (.clk(clk), .rst_n(rst_n),
+    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN), .WP(QM >= 4 ? 1 : 0)) u_pq (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v_x), .cfg_a(cfg_a_x), .cfg_d(cfg_d_x[25:0]), .go_e(go_e), .go_tag(go_tag_e), .walk_busy(walk_busy),
         .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(pq_sh_free), .swap(pq_swap), .fault(pq_fault),
         .t_tree(pq_tree), .t_pos(pq_pos), .q_idle(pq_idle), .q_row(pq_row), .q_idx(pq_idx), .q_n(pq_n));
