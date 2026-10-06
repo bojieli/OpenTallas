@@ -338,7 +338,7 @@ def cmd_record(a):
                        floor_cycles=sum(ft.values()), floor_terms=ft,
                        residual_over_floor=c["q_last"] - sum(ft.values()) if p["QUANT"] else None)
     res = dict(schema="opentallas.dsrom-recovery.su-norm.measure.v1", generated_utc=now(),
-               clock_hz=FAST, add_latency=a.la, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
+               clock_hz=FAST, add_latency=a.la, rxs=a.rxs, sxc=a.sxc, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
                                         basis="hub traverse once a chain: 22 / 15 slow stages x 748/504 um reach; "
                                               "RW / BW: the reducer's 6 slow cross-lane result stages x 1.5, each way"),
                variants=meas, runs={k: dict(status=r["status"], params=r["params"], fp=r["fp"], rows=len(r["rows"]),
@@ -419,6 +419,7 @@ def cmd_lever(a):
     base = ROOT / "results/rtl/dsrom_recovery_20261004"
     m = json.loads((base / "su_norm/measure.json").read_text())
     assert m.get("add_latency") == 6, "lever uses the LA6 (ot_dsrom_fp32_add_f12_l6) measurement"
+    assert (m.get("rxs"), m.get("sxc")) == (1, 1), "lever uses the LA6X (RXS 1, SXC 1) measurement"
     V = m["variants"]
     us = lambda c: round(c / FAST * 1e6, 5)                                             # noqa: E731
     src = ("ot_dsrom_su_norm {v} (N {N}, D {D}): {what} {c} cycles at 1.2 GHz from the vector-memory read to the last "
@@ -455,8 +456,13 @@ def cmd_lever(a):
     phys = {}
     for f in sorted((base / "su_norm/route").glob("corner_sta_*.json")):
         d = json.loads(f.read_text())
-        phys[f.stem[len("corner_sta_"):]] = dict(record=str(f.relative_to(ROOT)), ss_setup_ps=d["setup_ss"]["worst_slack_ps"],
-                                                 ff_hold_ps=d["hold_ff"]["worst_slack_ps"])
+        # signoff on register-to-register paths: the data ports face the parent's registered hub / wire stages on the
+        # same clock tree (su_norm_unit.sdc); the port slacks are listed beside them
+        phys[f.stem[len("corner_sta_"):]] = dict(record=str(f.relative_to(ROOT)),
+                                                 ss_setup_ps=d["setup_ss"]["worst_reg_to_reg_slack_ps"],
+                                                 ff_hold_ps=d["hold_ff"]["worst_reg_to_reg_slack_ps"],
+                                                 ss_setup_all_ps=d["setup_ss"]["worst_slack_ps"],
+                                                 ff_hold_all_ps=d["hold_ff"]["worst_slack_ps"])
     scr = {}
     for f in sorted((base / "su_norm/screen").glob("screen_*.json")):
         d = json.loads(f.read_text())
