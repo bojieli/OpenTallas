@@ -1,0 +1,42 @@
+{
+  "status": "LITERAL_NAMED_PINS_MATCH_ACTUAL_C972_HEADERS",
+  "checks": [
+    {
+      "module": "ot_hbm_integrated_sm0_borrow",
+      "instance": "bridge",
+      "named_pin_count": 56,
+      "missing": [],
+      "scope": "Literal spelling/unique named-pin audit; actual compile still required"
+    },
+    {
+      "module": "ot_hbm_die_vm_sfu_publication_root",
+      "instance": "vm",
+      "named_pin_count": 74,
+      "missing": [],
+      "scope": "Literal spelling/unique named-pin audit; actual compile still required"
+    },
+    {
+      "module": "ot_gpu_hbm_partition",
+      "instance": "cp_memory",
+      "named_pin_count": 15,
+      "missing": [],
+      "scope": "Literal spelling/unique named-pin audit; actual compile still required"
+    },
+    {
+      "module": "ot_hbm_integrated_stage_join",
+      "instance": "descriptor",
+      "named_pin_count": 38,
+      "missing": [],
+      "scope": "Literal spelling/unique named-pin audit; actual compile still required"
+    },
+    {
+      "module": "ot_hbm_norm_native_vm_adapter",
+      "instance": "adapter",
+      "named_pin_count": 51,
+      "missing": [],
+      "scope": "Literal spelling/unique named-pin audit; actual compile still required"
+    }
+  ],
+  "elaboration_pass": false,
+  "numerical_pass": false
+}
