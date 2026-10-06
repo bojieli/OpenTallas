@@ -62,4 +62,5 @@ spec = dict(master='hfd_coll', clock='refclk', rst='por', extra_inputs=['refclk'
     'endpoint needs SRAM FIFOs before a full-depth view exists. pclk = clk (the PHY clock is the link clock region '
     'outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.'),
     instances=[dict(name='ep', module='ot_hbm_accel_tu_endpoint', file=F, params=PRM, bind=b)], extra_out=eo)
+spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')

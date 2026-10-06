@@ -1,10 +1,39 @@
-{"master": "hfd_router",
+{
+ "master": "hfd_router",
  "note": "INTERIM: the current best routed router RTL ot_gpu_router_topk_f N384 P16 K6 IW9 (topk_f3, ctl_takeover_20261005, SS -369.79 / FF +6.23 ps, NOT closed; source physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned, sha = routed). The VM -> router bus f_vm[511:0] is in_vals (16 FP32 logits a beat); in_valid / in_last ride bits 0..1 of the SU(SW) -> router bus (the RTL has no other use for the 4 x 256 SU buses); the selected ids + valid (55 b) go to the cmdproc (t_cmdproc[54:0]) and, as the expert-fetch descriptor, to every stack's stream service (e*[54:0]; the expert workgroup steering is not built).",
  "instances": [
-  {"name": "rt", "module": "ot_gpu_router_topk_f", "file": "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv",
-   "params": {"N": 384, "P": 16, "K": 6, "IW": 9},
-   "bind": {"clk": "clk", "rst_n": "rst_n", "in_valid": "die:f_su_SW[0:1]", "in_last": "die:f_su_SW[1:2]",
-            "in_vals": "die:f_vm[0:512]",
-            "out_ids": ["die:t_cmdproc[0:54]", "die:eSW[0:54]", "die:eNW[0:54]", "die:eSE[0:54]", "die:eNE[0:54]"],
-            "out_valid": ["die:t_cmdproc[54:55]", "die:eSW[54:55]", "die:eNW[54:55]", "die:eSE[54:55]", "die:eNE[54:55]"]}}
- ]}
+  {
+   "name": "rt",
+   "module": "ot_gpu_router_topk_f",
+   "file": "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv",
+   "params": {
+    "N": 384,
+    "P": 16,
+    "K": 6,
+    "IW": 9
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "in_valid": "die:f_su_SW[0:1]",
+    "in_last": "die:f_su_SW[1:2]",
+    "in_vals": "die:f_vm[0:512]",
+    "out_ids": [
+     "die:t_cmdproc[0:54]",
+     "die:eSW[0:54]",
+     "die:eNW[0:54]",
+     "die:eSE[0:54]",
+     "die:eNE[0:54]"
+    ],
+    "out_valid": [
+     "die:t_cmdproc[54:55]",
+     "die:eSW[54:55]",
+     "die:eNW[54:55]",
+     "die:eSE[54:55]",
+     "die:eNE[54:55]"
+    ]
+   }
+  }
+ ],
+ "kept_out_regs": true
+}

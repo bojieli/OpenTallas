@@ -137,63 +137,10 @@ module hfd_cmdproc (
     wire fclk_5; ot_fwd_clk_inv u_fclk_5 (.a(clk), .y(fclk_5));
     wire fclk_6; ot_fwd_clk_inv u_fclk_6 (.a(clk), .y(fclk_6));
     wire fclk_7; ot_fwd_clk_inv u_fclk_7 (.a(clk), .y(fclk_7));
-    reg [826:0] o_cNE;
-    always @(posedge clk) begin
-        o_cNE <= 827'd0;
-        o_cNE[0:0] <= w_cpN_launch_v[8:8];
-        o_cNE[103:103] <= w_cpN_launch_v[9:9];
-        o_cNE[206:206] <= w_cpN_launch_v[10:10];
-        o_cNE[309:309] <= w_cpN_launch_v[11:11];
-        o_cNE[412:412] <= w_cpN_launch_v[12:12];
-        o_cNE[515:515] <= w_cpN_launch_v[13:13];
-        o_cNE[618:618] <= w_cpN_launch_v[14:14];
-        o_cNE[721:721] <= w_cpN_launch_v[15:15];
-        o_cNE[45:45] <= w_cpN_launch_v[8:8];
-        o_cNE[148:148] <= w_cpN_launch_v[9:9];
-        o_cNE[251:251] <= w_cpN_launch_v[10:10];
-        o_cNE[354:354] <= w_cpN_launch_v[11:11];
-        o_cNE[457:457] <= w_cpN_launch_v[12:12];
-        o_cNE[560:560] <= w_cpN_launch_v[13:13];
-        o_cNE[663:663] <= w_cpN_launch_v[14:14];
-        o_cNE[766:766] <= w_cpN_launch_v[15:15];
-        o_cNE[32:1] <= w_cpN_launch_pc[31:0];
-        o_cNE[135:104] <= w_cpN_launch_pc[31:0];
-        o_cNE[238:207] <= w_cpN_launch_pc[31:0];
-        o_cNE[341:310] <= w_cpN_launch_pc[31:0];
-        o_cNE[444:413] <= w_cpN_launch_pc[31:0];
-        o_cNE[547:516] <= w_cpN_launch_pc[31:0];
-        o_cNE[650:619] <= w_cpN_launch_pc[31:0];
-        o_cNE[753:722] <= w_cpN_launch_pc[31:0];
-        o_cNE[77:46] <= w_cpN_launch_pc[31:0];
-        o_cNE[180:149] <= w_cpN_launch_pc[31:0];
-        o_cNE[283:252] <= w_cpN_launch_pc[31:0];
-        o_cNE[386:355] <= w_cpN_launch_pc[31:0];
-        o_cNE[489:458] <= w_cpN_launch_pc[31:0];
-        o_cNE[592:561] <= w_cpN_launch_pc[31:0];
-        o_cNE[695:664] <= w_cpN_launch_pc[31:0];
-        o_cNE[798:767] <= w_cpN_launch_pc[31:0];
-        o_cNE[97:78] <= w_cpN_launch_pos[19:0];
-        o_cNE[200:181] <= w_cpN_launch_pos[19:0];
-        o_cNE[303:284] <= w_cpN_launch_pos[19:0];
-        o_cNE[406:387] <= w_cpN_launch_pos[19:0];
-        o_cNE[509:490] <= w_cpN_launch_pos[19:0];
-        o_cNE[612:593] <= w_cpN_launch_pos[19:0];
-        o_cNE[715:696] <= w_cpN_launch_pos[19:0];
-        o_cNE[818:799] <= w_cpN_launch_pos[19:0];
-        o_cNE[41:41] <= i_f_barrier[24];
-        o_cNE[144:144] <= i_f_barrier[25];
-        o_cNE[247:247] <= i_f_barrier[26];
-        o_cNE[350:350] <= i_f_barrier[27];
-        o_cNE[453:453] <= i_f_barrier[28];
-        o_cNE[556:556] <= i_f_barrier[29];
-        o_cNE[659:659] <= i_f_barrier[30];
-        o_cNE[762:762] <= i_f_barrier[31];
-        o_cNE[33:33] <= fold_0;
-        o_cNE[34:34] <= fold_1;
-        o_cNE[35:35] <= fold_2;
-        o_cNE[36:36] <= fold_3;
-        o_cNE[37:37] <= fold_4;
-        o_cNE[38:38] <= fold_5;
+    wire [826:0] od_cNE = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 3'd0, i_f_barrier[31], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 3'd0, i_f_barrier[30], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 3'd0, i_f_barrier[29], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 3'd0, i_f_barrier[28], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 3'd0, i_f_barrier[27], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 3'd0, i_f_barrier[26], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 3'd0, i_f_barrier[25], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8], 3'd0, i_f_barrier[24], 2'd0, fold_5, fold_4, fold_3, fold_2, fold_1, fold_0, w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8]};
+    wire [826:0] o_cNE;
+    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_cNE[k]), .q(o_cNE[k]));
     end
     assign cNE[41:0] = o_cNE[41:0];
     assign cNE[101:45] = o_cNE[101:45];
@@ -213,57 +160,10 @@ module hfd_cmdproc (
     assign cNE[822:766] = o_cNE[822:766];
     assign cNE[824] = fclk_0;
     assign cNE[825] = fclk_1;
-    reg [826:0] o_cNW;
-    always @(posedge clk) begin
-        o_cNW <= 827'd0;
-        o_cNW[0:0] <= w_cpN_launch_v[0:0];
-        o_cNW[103:103] <= w_cpN_launch_v[1:1];
-        o_cNW[206:206] <= w_cpN_launch_v[2:2];
-        o_cNW[309:309] <= w_cpN_launch_v[3:3];
-        o_cNW[412:412] <= w_cpN_launch_v[4:4];
-        o_cNW[515:515] <= w_cpN_launch_v[5:5];
-        o_cNW[618:618] <= w_cpN_launch_v[6:6];
-        o_cNW[721:721] <= w_cpN_launch_v[7:7];
-        o_cNW[45:45] <= w_cpN_launch_v[0:0];
-        o_cNW[148:148] <= w_cpN_launch_v[1:1];
-        o_cNW[251:251] <= w_cpN_launch_v[2:2];
-        o_cNW[354:354] <= w_cpN_launch_v[3:3];
-        o_cNW[457:457] <= w_cpN_launch_v[4:4];
-        o_cNW[560:560] <= w_cpN_launch_v[5:5];
-        o_cNW[663:663] <= w_cpN_launch_v[6:6];
-        o_cNW[766:766] <= w_cpN_launch_v[7:7];
-        o_cNW[32:1] <= w_cpN_launch_pc[31:0];
-        o_cNW[135:104] <= w_cpN_launch_pc[31:0];
-        o_cNW[238:207] <= w_cpN_launch_pc[31:0];
-        o_cNW[341:310] <= w_cpN_launch_pc[31:0];
-        o_cNW[444:413] <= w_cpN_launch_pc[31:0];
-        o_cNW[547:516] <= w_cpN_launch_pc[31:0];
-        o_cNW[650:619] <= w_cpN_launch_pc[31:0];
-        o_cNW[753:722] <= w_cpN_launch_pc[31:0];
-        o_cNW[77:46] <= w_cpN_launch_pc[31:0];
-        o_cNW[180:149] <= w_cpN_launch_pc[31:0];
-        o_cNW[283:252] <= w_cpN_launch_pc[31:0];
-        o_cNW[386:355] <= w_cpN_launch_pc[31:0];
-        o_cNW[489:458] <= w_cpN_launch_pc[31:0];
-        o_cNW[592:561] <= w_cpN_launch_pc[31:0];
-        o_cNW[695:664] <= w_cpN_launch_pc[31:0];
-        o_cNW[798:767] <= w_cpN_launch_pc[31:0];
-        o_cNW[97:78] <= w_cpN_launch_pos[19:0];
-        o_cNW[200:181] <= w_cpN_launch_pos[19:0];
-        o_cNW[303:284] <= w_cpN_launch_pos[19:0];
-        o_cNW[406:387] <= w_cpN_launch_pos[19:0];
-        o_cNW[509:490] <= w_cpN_launch_pos[19:0];
-        o_cNW[612:593] <= w_cpN_launch_pos[19:0];
-        o_cNW[715:696] <= w_cpN_launch_pos[19:0];
-        o_cNW[818:799] <= w_cpN_launch_pos[19:0];
-        o_cNW[41:41] <= i_f_barrier[16];
-        o_cNW[144:144] <= i_f_barrier[17];
-        o_cNW[247:247] <= i_f_barrier[18];
-        o_cNW[350:350] <= i_f_barrier[19];
-        o_cNW[453:453] <= i_f_barrier[20];
-        o_cNW[556:556] <= i_f_barrier[21];
-        o_cNW[659:659] <= i_f_barrier[22];
-        o_cNW[762:762] <= i_f_barrier[23];
+    wire [826:0] od_cNW = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[7:7], 3'd0, i_f_barrier[23], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[7:7], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[6:6], 3'd0, i_f_barrier[22], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[6:6], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[5:5], 3'd0, i_f_barrier[21], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[5:5], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[4:4], 3'd0, i_f_barrier[20], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[4:4], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[3:3], 3'd0, i_f_barrier[19], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[3:3], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[2:2], 3'd0, i_f_barrier[18], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[2:2], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[1:1], 3'd0, i_f_barrier[17], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[1:1], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[0:0], 3'd0, i_f_barrier[16], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[0:0]};
+    wire [826:0] o_cNW;
+    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_cNW[k]), .q(o_cNW[k]));
     end
     assign cNW[41:0] = o_cNW[41:0];
     assign cNW[101:45] = o_cNW[101:45];
@@ -283,57 +183,10 @@ module hfd_cmdproc (
     assign cNW[822:766] = o_cNW[822:766];
     assign cNW[824] = fclk_2;
     assign cNW[825] = fclk_3;
-    reg [826:0] o_cSE;
-    always @(posedge clk) begin
-        o_cSE <= 827'd0;
-        o_cSE[0:0] <= w_cpS_launch_v[8:8];
-        o_cSE[103:103] <= w_cpS_launch_v[9:9];
-        o_cSE[206:206] <= w_cpS_launch_v[10:10];
-        o_cSE[309:309] <= w_cpS_launch_v[11:11];
-        o_cSE[412:412] <= w_cpS_launch_v[12:12];
-        o_cSE[515:515] <= w_cpS_launch_v[13:13];
-        o_cSE[618:618] <= w_cpS_launch_v[14:14];
-        o_cSE[721:721] <= w_cpS_launch_v[15:15];
-        o_cSE[45:45] <= w_cpS_launch_v[8:8];
-        o_cSE[148:148] <= w_cpS_launch_v[9:9];
-        o_cSE[251:251] <= w_cpS_launch_v[10:10];
-        o_cSE[354:354] <= w_cpS_launch_v[11:11];
-        o_cSE[457:457] <= w_cpS_launch_v[12:12];
-        o_cSE[560:560] <= w_cpS_launch_v[13:13];
-        o_cSE[663:663] <= w_cpS_launch_v[14:14];
-        o_cSE[766:766] <= w_cpS_launch_v[15:15];
-        o_cSE[32:1] <= w_cpS_launch_pc[31:0];
-        o_cSE[135:104] <= w_cpS_launch_pc[31:0];
-        o_cSE[238:207] <= w_cpS_launch_pc[31:0];
-        o_cSE[341:310] <= w_cpS_launch_pc[31:0];
-        o_cSE[444:413] <= w_cpS_launch_pc[31:0];
-        o_cSE[547:516] <= w_cpS_launch_pc[31:0];
-        o_cSE[650:619] <= w_cpS_launch_pc[31:0];
-        o_cSE[753:722] <= w_cpS_launch_pc[31:0];
-        o_cSE[77:46] <= w_cpS_launch_pc[31:0];
-        o_cSE[180:149] <= w_cpS_launch_pc[31:0];
-        o_cSE[283:252] <= w_cpS_launch_pc[31:0];
-        o_cSE[386:355] <= w_cpS_launch_pc[31:0];
-        o_cSE[489:458] <= w_cpS_launch_pc[31:0];
-        o_cSE[592:561] <= w_cpS_launch_pc[31:0];
-        o_cSE[695:664] <= w_cpS_launch_pc[31:0];
-        o_cSE[798:767] <= w_cpS_launch_pc[31:0];
-        o_cSE[97:78] <= w_cpS_launch_pos[19:0];
-        o_cSE[200:181] <= w_cpS_launch_pos[19:0];
-        o_cSE[303:284] <= w_cpS_launch_pos[19:0];
-        o_cSE[406:387] <= w_cpS_launch_pos[19:0];
-        o_cSE[509:490] <= w_cpS_launch_pos[19:0];
-        o_cSE[612:593] <= w_cpS_launch_pos[19:0];
-        o_cSE[715:696] <= w_cpS_launch_pos[19:0];
-        o_cSE[818:799] <= w_cpS_launch_pos[19:0];
-        o_cSE[41:41] <= i_f_barrier[8];
-        o_cSE[144:144] <= i_f_barrier[9];
-        o_cSE[247:247] <= i_f_barrier[10];
-        o_cSE[350:350] <= i_f_barrier[11];
-        o_cSE[453:453] <= i_f_barrier[12];
-        o_cSE[556:556] <= i_f_barrier[13];
-        o_cSE[659:659] <= i_f_barrier[14];
-        o_cSE[762:762] <= i_f_barrier[15];
+    wire [826:0] od_cSE = {8'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[15:15], 3'd0, i_f_barrier[15], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[15:15], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[14:14], 3'd0, i_f_barrier[14], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[14:14], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[13:13], 3'd0, i_f_barrier[13], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[13:13], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[12:12], 3'd0, i_f_barrier[12], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[12:12], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[11:11], 3'd0, i_f_barrier[11], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[11:11], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[10:10], 3'd0, i_f_barrier[10], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[10:10], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[9:9], 3'd0, i_f_barrier[9], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[9:9], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[8:8], 3'd0, i_f_barrier[8], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[8:8]};
+    wire [826:0] o_cSE;
+    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_cSE[k]), .q(o_cSE[k]));
     end
     assign cSE[41:0] = o_cSE[41:0];
     assign cSE[101:45] = o_cSE[101:45];
@@ -353,57 +206,10 @@ module hfd_cmdproc (
     assign cSE[822:766] = o_cSE[822:766];
     assign cSE[824] = fclk_4;
     assign cSE[825] = fclk_5;
-    reg [826:0] o_cSW;
-    always @(posedge clk) begin
-        o_cSW <= 827'd0;
-        o_cSW[0:0] <= w_cpS_launch_v[0:0];
-        o_cSW[103:103] <= w_cpS_launch_v[1:1];
-        o_cSW[206:206] <= w_cpS_launch_v[2:2];
-        o_cSW[309:309] <= w_cpS_launch_v[3:3];
-        o_cSW[412:412] <= w_cpS_launch_v[4:4];
-        o_cSW[515:515] <= w_cpS_launch_v[5:5];
-        o_cSW[618:618] <= w_cpS_launch_v[6:6];
-        o_cSW[721:721] <= w_cpS_launch_v[7:7];
-        o_cSW[45:45] <= w_cpS_launch_v[0:0];
-        o_cSW[148:148] <= w_cpS_launch_v[1:1];
-        o_cSW[251:251] <= w_cpS_launch_v[2:2];
-        o_cSW[354:354] <= w_cpS_launch_v[3:3];
-        o_cSW[457:457] <= w_cpS_launch_v[4:4];
-        o_cSW[560:560] <= w_cpS_launch_v[5:5];
-        o_cSW[663:663] <= w_cpS_launch_v[6:6];
-        o_cSW[766:766] <= w_cpS_launch_v[7:7];
-        o_cSW[32:1] <= w_cpS_launch_pc[31:0];
-        o_cSW[135:104] <= w_cpS_launch_pc[31:0];
-        o_cSW[238:207] <= w_cpS_launch_pc[31:0];
-        o_cSW[341:310] <= w_cpS_launch_pc[31:0];
-        o_cSW[444:413] <= w_cpS_launch_pc[31:0];
-        o_cSW[547:516] <= w_cpS_launch_pc[31:0];
-        o_cSW[650:619] <= w_cpS_launch_pc[31:0];
-        o_cSW[753:722] <= w_cpS_launch_pc[31:0];
-        o_cSW[77:46] <= w_cpS_launch_pc[31:0];
-        o_cSW[180:149] <= w_cpS_launch_pc[31:0];
-        o_cSW[283:252] <= w_cpS_launch_pc[31:0];
-        o_cSW[386:355] <= w_cpS_launch_pc[31:0];
-        o_cSW[489:458] <= w_cpS_launch_pc[31:0];
-        o_cSW[592:561] <= w_cpS_launch_pc[31:0];
-        o_cSW[695:664] <= w_cpS_launch_pc[31:0];
-        o_cSW[798:767] <= w_cpS_launch_pc[31:0];
-        o_cSW[97:78] <= w_cpS_launch_pos[19:0];
-        o_cSW[200:181] <= w_cpS_launch_pos[19:0];
-        o_cSW[303:284] <= w_cpS_launch_pos[19:0];
-        o_cSW[406:387] <= w_cpS_launch_pos[19:0];
-        o_cSW[509:490] <= w_cpS_launch_pos[19:0];
-        o_cSW[612:593] <= w_cpS_launch_pos[19:0];
-        o_cSW[715:696] <= w_cpS_launch_pos[19:0];
-        o_cSW[818:799] <= w_cpS_launch_pos[19:0];
-        o_cSW[41:41] <= i_f_barrier[0];
-        o_cSW[144:144] <= i_f_barrier[1];
-        o_cSW[247:247] <= i_f_barrier[2];
-        o_cSW[350:350] <= i_f_barrier[3];
-        o_cSW[453:453] <= i_f_barrier[4];
-        o_cSW[556:556] <= i_f_barrier[5];
-        o_cSW[659:659] <= i_f_barrier[6];
-        o_cSW[762:762] <= i_f_barrier[7];
+    wire [826:0] od_cSW = {8'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[7:7], 3'd0, i_f_barrier[7], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[7:7], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[6:6], 3'd0, i_f_barrier[6], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[6:6], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[5:5], 3'd0, i_f_barrier[5], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[5:5], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[4:4], 3'd0, i_f_barrier[4], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[4:4], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[3:3], 3'd0, i_f_barrier[3], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[3:3], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[2:2], 3'd0, i_f_barrier[2], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[2:2], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[1:1], 3'd0, i_f_barrier[1], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[1:1], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[0:0], 3'd0, i_f_barrier[0], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[0:0]};
+    wire [826:0] o_cSW;
+    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_cSW[k]), .q(o_cSW[k]));
     end
     assign cSW[41:0] = o_cSW[41:0];
     assign cSW[101:45] = o_cSW[101:45];
@@ -423,70 +229,40 @@ module hfd_cmdproc (
     assign cSW[822:766] = o_cSW[822:766];
     assign cSW[824] = fclk_6;
     assign cSW[825] = fclk_7;
-    reg [63:0] o_t_barrier;
-    always @(posedge clk) begin
-        o_t_barrier <= 64'd0;
-        o_t_barrier[0:0] <= i_cSW[43];
-        o_t_barrier[1:1] <= i_cSW[146];
-        o_t_barrier[2:2] <= i_cSW[249];
-        o_t_barrier[3:3] <= i_cSW[352];
-        o_t_barrier[4:4] <= i_cSW[455];
-        o_t_barrier[5:5] <= i_cSW[558];
-        o_t_barrier[6:6] <= i_cSW[661];
-        o_t_barrier[7:7] <= i_cSW[764];
-        o_t_barrier[8:8] <= i_cSE[43];
-        o_t_barrier[9:9] <= i_cSE[146];
-        o_t_barrier[10:10] <= i_cSE[249];
-        o_t_barrier[11:11] <= i_cSE[352];
-        o_t_barrier[12:12] <= i_cSE[455];
-        o_t_barrier[13:13] <= i_cSE[558];
-        o_t_barrier[14:14] <= i_cSE[661];
-        o_t_barrier[15:15] <= i_cSE[764];
-        o_t_barrier[16:16] <= i_cNW[43];
-        o_t_barrier[17:17] <= i_cNW[146];
-        o_t_barrier[18:18] <= i_cNW[249];
-        o_t_barrier[19:19] <= i_cNW[352];
-        o_t_barrier[20:20] <= i_cNW[455];
-        o_t_barrier[21:21] <= i_cNW[558];
-        o_t_barrier[22:22] <= i_cNW[661];
-        o_t_barrier[23:23] <= i_cNW[764];
-        o_t_barrier[24:24] <= i_cNE[43];
-        o_t_barrier[25:25] <= i_cNE[146];
-        o_t_barrier[26:26] <= i_cNE[249];
-        o_t_barrier[27:27] <= i_cNE[352];
-        o_t_barrier[28:28] <= i_cNE[455];
-        o_t_barrier[29:29] <= i_cNE[558];
-        o_t_barrier[30:30] <= i_cNE[661];
-        o_t_barrier[31:31] <= i_cNE[764];
+    wire [63:0] od_t_barrier = {32'd0, i_cNE[764], i_cNE[661], i_cNE[558], i_cNE[455], i_cNE[352], i_cNE[249], i_cNE[146], i_cNE[43], i_cNW[764], i_cNW[661], i_cNW[558], i_cNW[455], i_cNW[352], i_cNW[249], i_cNW[146], i_cNW[43], i_cSE[764], i_cSE[661], i_cSE[558], i_cSE[455], i_cSE[352], i_cSE[249], i_cSE[146], i_cSE[43], i_cSW[764], i_cSW[661], i_cSW[558], i_cSW[455], i_cSW[352], i_cSW[249], i_cSW[146], i_cSW[43]};
+    wire [63:0] o_t_barrier;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_barrier
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_barrier[k]), .q(o_t_barrier[k]));
     end
     assign t_barrier[63:0] = o_t_barrier[63:0];
-    reg [24:0] o_t_coll;
-    always @(posedge clk) begin
-        o_t_coll <= 25'd0;
+    wire [24:0] od_t_coll = {25'd0};
+    wire [24:0] o_t_coll;
+    for (genvar k = 0; k < 25; k = k + 1) begin : g_o_t_coll
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_coll[k]), .q(o_t_coll[k]));
     end
     assign t_coll[24:0] = o_t_coll[24:0];
-    reg [63:0] o_t_su_NE;
-    always @(posedge clk) begin
-        o_t_su_NE <= 64'd0;
-        o_t_su_NE[16:0] <= w_cpN_launch_token[16:0];
+    wire [63:0] od_t_su_NE = {47'd0, w_cpN_launch_token[16:0]};
+    wire [63:0] o_t_su_NE;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[63:0] = o_t_su_NE[63:0];
-    reg [63:0] o_t_su_NW;
-    always @(posedge clk) begin
-        o_t_su_NW <= 64'd0;
-        o_t_su_NW[16:0] <= w_cpN_launch_token[16:0];
+    wire [63:0] od_t_su_NW = {47'd0, w_cpN_launch_token[16:0]};
+    wire [63:0] o_t_su_NW;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[63:0] = o_t_su_NW[63:0];
-    reg [63:0] o_t_su_SE;
-    always @(posedge clk) begin
-        o_t_su_SE <= 64'd0;
-        o_t_su_SE[16:0] <= w_cpS_launch_token[16:0];
+    wire [63:0] od_t_su_SE = {47'd0, w_cpS_launch_token[16:0]};
+    wire [63:0] o_t_su_SE;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[63:0] = o_t_su_SE[63:0];
-    reg [63:0] o_t_su_SW;
-    always @(posedge clk) begin
-        o_t_su_SW <= 64'd0;
-        o_t_su_SW[16:0] <= w_cpS_launch_token[16:0];
+    wire [63:0] od_t_su_SW = {47'd0, w_cpS_launch_token[16:0]};
+    wire [63:0] o_t_su_SW;
+    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[63:0] = o_t_su_SW[63:0];
 endmodule

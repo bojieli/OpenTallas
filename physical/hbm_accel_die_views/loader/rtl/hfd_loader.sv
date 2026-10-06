@@ -153,48 +153,17 @@ module hfd_loader (
     wire fold_4 = ^{fold_all[4], fold_all[10], fold_all[16], fold_all[22], fold_all[28], fold_all[34], fold_all[40], fold_all[46], fold_all[52], fold_all[58], fold_all[64], fold_all[70], fold_all[76], fold_all[82], fold_all[88], fold_all[94], fold_all[100], fold_all[106], fold_all[112], fold_all[118], fold_all[124], fold_all[130], fold_all[136], fold_all[142], fold_all[148], fold_all[154], fold_all[160], fold_all[166], fold_all[172], fold_all[178], fold_all[184], fold_all[190], fold_all[196], fold_all[202], fold_all[208], fold_all[214], fold_all[220], fold_all[226], fold_all[232], fold_all[238], fold_all[244], fold_all[250], fold_all[256], fold_all[262], fold_all[268], fold_all[274], fold_all[280], fold_all[286], fold_all[292], fold_all[298], fold_all[304], fold_all[310], fold_all[316], fold_all[322], fold_all[328]};
     wire fold_5 = ^{fold_all[5], fold_all[11], fold_all[17], fold_all[23], fold_all[29], fold_all[35], fold_all[41], fold_all[47], fold_all[53], fold_all[59], fold_all[65], fold_all[71], fold_all[77], fold_all[83], fold_all[89], fold_all[95], fold_all[101], fold_all[107], fold_all[113], fold_all[119], fold_all[125], fold_all[131], fold_all[137], fold_all[143], fold_all[149], fold_all[155], fold_all[161], fold_all[167], fold_all[173], fold_all[179], fold_all[185], fold_all[191], fold_all[197], fold_all[203], fold_all[209], fold_all[215], fold_all[221], fold_all[227], fold_all[233], fold_all[239], fold_all[245], fold_all[251], fold_all[257], fold_all[263], fold_all[269], fold_all[275], fold_all[281], fold_all[287], fold_all[293], fold_all[299], fold_all[305], fold_all[311], fold_all[317], fold_all[323], fold_all[329]};
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
-    reg [513:0] o_h;
-    always @(posedge clk) begin
-        o_h <= 514'd0;
-        o_h[0:0] <= w_ld_s_awready[0:0];
-        o_h[1:1] <= w_ld_s_wready[0:0];
-        o_h[2:2] <= w_ld_s_bvalid[0:0];
-        o_h[3:3] <= w_ld_s_arready[0:0];
-        o_h[4:4] <= w_ld_s_rvalid[0:0];
-        o_h[36:5] <= w_ld_s_rdata[31:0];
-        o_h[37:37] <= w_ld_h_awvalid[0:0];
-        o_h[49:38] <= w_ld_h_awaddr[11:0];
-        o_h[50:50] <= w_ld_h_wvalid[0:0];
-        o_h[82:51] <= w_ld_h_wdata[31:0];
-        o_h[86:83] <= w_ld_h_wstrb[3:0];
-        o_h[87:87] <= w_ld_h_bready[0:0];
-        o_h[88:88] <= w_ld_h_arvalid[0:0];
-        o_h[100:89] <= w_ld_h_araddr[11:0];
-        o_h[101:101] <= w_ld_h_rready[0:0];
-        o_h[102:102] <= w_ld_h_dma_arready[0:0];
-        o_h[103:103] <= w_ld_h_dma_rvalid[0:0];
-        o_h[167:104] <= w_ld_h_dma_rdata[63:0];
-        o_h[169:168] <= w_ld_h_dma_rresp[1:0];
-        o_h[170:170] <= w_ld_h_dma_rlast[0:0];
-        o_h[171:171] <= w_ld_h_dma_awready[0:0];
-        o_h[172:172] <= w_ld_h_dma_wready[0:0];
-        o_h[173:173] <= w_ld_h_dma_bvalid[0:0];
-        o_h[175:174] <= w_ld_h_dma_bresp[1:0];
-        o_h[176:176] <= fold_0;
-        o_h[177:177] <= fold_1;
-        o_h[178:178] <= fold_2;
-        o_h[179:179] <= fold_3;
-        o_h[180:180] <= fold_4;
-        o_h[181:181] <= fold_5;
+    wire [513:0] od_h = {332'd0, fold_5, fold_4, fold_3, fold_2, fold_1, fold_0, w_ld_h_dma_bresp[1:0], w_ld_h_dma_bvalid[0:0], w_ld_h_dma_wready[0:0], w_ld_h_dma_awready[0:0], w_ld_h_dma_rlast[0:0], w_ld_h_dma_rresp[1:0], w_ld_h_dma_rdata[63:0], w_ld_h_dma_rvalid[0:0], w_ld_h_dma_arready[0:0], w_ld_h_rready[0:0], w_ld_h_araddr[11:0], w_ld_h_arvalid[0:0], w_ld_h_bready[0:0], w_ld_h_wstrb[3:0], w_ld_h_wdata[31:0], w_ld_h_wvalid[0:0], w_ld_h_awaddr[11:0], w_ld_h_awvalid[0:0], w_ld_s_rdata[31:0], w_ld_s_rvalid[0:0], w_ld_s_arready[0:0], w_ld_s_bvalid[0:0], w_ld_s_wready[0:0], w_ld_s_awready[0:0]};
+    wire [513:0] o_h;
+    for (genvar k = 0; k < 514; k = k + 1) begin : g_o_h
+        ot_hfd_oreg1 u (.clk(clk), .d(od_h[k]), .q(o_h[k]));
     end
     assign h[255:0] = o_h[255:0];
     assign h[512] = fclk_0;
-    reg [340:0] o_t_cmdproc;
-    always @(posedge clk) begin
-        o_t_cmdproc <= 341'd0;
-        o_t_cmdproc[0:0] <= w_ld_req_v[0];
-        o_t_cmdproc[8:1] <= w_ld_req_addr[7:0];
-        o_t_cmdproc[72:9] <= w_ld_req_wdata[63:0];
+    wire [340:0] od_t_cmdproc = {268'd0, w_ld_req_wdata[63:0], w_ld_req_addr[7:0], w_ld_req_v[0]};
+    wire [340:0] o_t_cmdproc;
+    for (genvar k = 0; k < 341; k = k + 1) begin : g_o_t_cmdproc
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
     end
     assign t_cmdproc[340:0] = o_t_cmdproc[340:0];
 endmodule
