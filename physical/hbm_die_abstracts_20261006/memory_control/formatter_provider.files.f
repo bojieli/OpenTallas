@@ -122,3 +122,4 @@ rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_str
 rtl/hdc/v41x/ot_dsrom_aq12.sv
 rtl/hdc/v41x/ot_dsrom_divc.sv
 rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
+rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv
