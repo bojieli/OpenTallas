@@ -21,6 +21,12 @@
 | cmdproc +3/command | 1029 | 0.160 | 2.58 |
 | loader ck/2 (off token path) | 0 | 0 | 2.58 |
 | r19b pin-abutting stations (attn roots into index bands, index-key ends; +1 hop each) | 41 | 0.006 | 2.59 |
-| SM m3 (front strips + tileW macro registers) over SM m2 (SM stream: m2 +1.816% AR is the SM element structural cost, tracked by the SM stream) | 400 | 0.062 | 2.65 |
+| SM m2 structural redesign (SM stream: +7.988 us DS 1M AR = +1.816% of ITS 439.9 us base; NOT inside the r16j wire baseline) | 9586 | 1.486 | 4.08 |
+| SM m3 over m2 (front strips + tileW macro registers: +0.062% of 439.9 us = 0.273 us) | 328 | 0.051 | 4.13 |
 
-Cumulative +2.65% vs the r16j wire base (2026-10-07: +r19b pin stages, +SM m3; was +2.58%) (= +2.37% margin over the r17-staged wire base 538.478 us); MTP +1.15%. Pending: SU reducer SAFE ~+4/reduction, HA2 +1 edge, VM quadrant hops (measured), SM 3x3 grid lever (gives back up to the SM interim faces 0.46%). Source: recompose_r19_r13wire__cp_in_su.json
+Cumulative +2.65% vs the r16j wire base (2026-10-07: +r19b pin stages, +SM m3; was +2.58%) [SUPERSEDED by the TOTAL line] (= +2.37% margin over the r17-staged wire base 538.478 us); MTP +1.15%. Pending: SU reducer SAFE ~+4/reduction, HA2 +1 edge, VM quadrant hops (measured), SM 3x3 grid lever (gives back up to the SM interim faces 0.46%). Source: recompose_r19_r13wire__cp_in_su.json
+
+TOTAL HBM DS AR CLOSURE COST vs the pre-closure design (r16j wire-priced AR 537.376 us, before any margin / stage / split /
+SM-structure cost): +22.17 us = +4.13% (die-level +13.91 us = +2.59%, SM element m2+m3 +8.26 us = +1.54%; CP inside the
+SU block).  The SM m2 cost is NOT inside the r16j wire baseline: that baseline prices die wires on the pre-closure
+element latencies; the SM stream's +1.816% is relative to its own 439.9 us base and is added here in us.
