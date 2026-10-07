@@ -28,7 +28,7 @@ module dsfd_cfifo (
     reg [565:0] xi; always @(posedge xf[0]) xi <= xd;
     reg [1:0] sti; always @(posedge ck[0]) sti <= st;
     wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;
-    ot_meso_fifo #(.W(564), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_x (.wclk(xf[0]), .wrst_n(xi[0]), .w_v(xi[1]), .w_rdy(wr), .w_d(xi[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1'b1), .r_d(xq), .w_live(wl), .r_live(rl), .w_fault(wf), .r_fault(rf_));
+    ot_meso_fifo #(.W(564), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_x (.wclk(xf[0]), .wrst_n(xi[0]), .w_v(xi[1]), .w_rdy(wr), .w_d(xi[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1'b1), .r_d(xq), .w_live(wl), .r_live(rl), .w_fault(wf), .r_fault(rf_));
     reg wov; always @(posedge xf[0]) if (!xi[0]) wov <= 1'b0; else if (xi[1] & ~wr) wov <= 1'b1;
     reg [1:0] wov_s; always @(posedge ck[0]) wov_s <= {wov_s[0], wov};
     // lane stream {x0 283 | x1 266 | cc 15}; xs_v, go and cfg_go qualified by the FIFO valid, registered
@@ -312,7 +312,7 @@ module dsfd_m2l_raw_512x1__hl_E0 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -329,7 +329,7 @@ module dsfd_m2l_raw_512x1__hl_E1 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -346,7 +346,7 @@ module dsfd_m2l_raw_512x1__hl_E2 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -363,7 +363,7 @@ module dsfd_m2l_raw_512x1__hl_E3 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -380,7 +380,7 @@ module dsfd_m2l_raw_512x1__hl_W0 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -397,7 +397,7 @@ module dsfd_m2l_raw_512x1__hl_W1 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -414,7 +414,7 @@ module dsfd_m2l_raw_512x1__hl_W2 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -431,7 +431,7 @@ module dsfd_m2l_raw_512x1__hl_W3 (
     reg [1:0] wrs0_q; always @(posedge fi0[0] or negedge rs[0]) if (!rs[0]) wrs0_q <= 2'b00; else wrs0_q <= {wrs0_q[0], 1'b1};
     wire wrs0 = wrs0_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(wrs0), .w_v(1'b1), .w_rdy(), .w_d(di0[511:0]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -446,7 +446,7 @@ module dsfd_m2l_vr_512x1__hco_NE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -461,7 +461,7 @@ module dsfd_m2l_vr_512x1__hco_NW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -476,7 +476,7 @@ module dsfd_m2l_vr_512x1__hco_SE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -491,7 +491,7 @@ module dsfd_m2l_vr_512x1__hco_SW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -506,7 +506,7 @@ module dsfd_m2l_vr_512x1__hix_NE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -521,7 +521,7 @@ module dsfd_m2l_vr_512x1__hix_NW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -536,7 +536,7 @@ module dsfd_m2l_vr_512x1__hix_SE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -551,7 +551,7 @@ module dsfd_m2l_vr_512x1__hix_SW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -566,7 +566,7 @@ module dsfd_m2l_vr_512x1__hqe_NE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -581,7 +581,7 @@ module dsfd_m2l_vr_512x1__hqe_NW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -596,7 +596,7 @@ module dsfd_m2l_vr_512x1__hqe_SE (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -611,7 +611,7 @@ module dsfd_m2l_vr_512x1__hqe_SW (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -644,34 +644,34 @@ module dsfd_m2l_vr_68x10__hr_E0 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     assign o[691:690] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9};   // {fault, live}
 endmodule
@@ -704,34 +704,34 @@ module dsfd_m2l_vr_68x10__hr_E5 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     assign o[691:690] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9};   // {fault, live}
 endmodule
@@ -764,34 +764,34 @@ module dsfd_m2l_vr_68x10__hr_W0 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     assign o[691:690] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9};   // {fault, live}
 endmodule
@@ -824,34 +824,34 @@ module dsfd_m2l_vr_68x10__hr_W5 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     assign o[691:690] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9};   // {fault, live}
 endmodule
@@ -886,37 +886,37 @@ module dsfd_m2l_vr_68x11__hr_E1 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -951,37 +951,37 @@ module dsfd_m2l_vr_68x11__hr_E2 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1016,37 +1016,37 @@ module dsfd_m2l_vr_68x11__hr_E3 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1081,37 +1081,37 @@ module dsfd_m2l_vr_68x11__hr_E4 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1146,37 +1146,37 @@ module dsfd_m2l_vr_68x11__hr_W1 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1211,37 +1211,37 @@ module dsfd_m2l_vr_68x11__hr_W2 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1276,37 +1276,37 @@ module dsfd_m2l_vr_68x11__hr_W3 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -1341,37 +1341,37 @@ module dsfd_m2l_vr_68x11__hr_W4 (
     reg [1:0] rsl_q; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
     wire rsl = rsl_q[1];
     wire rv0, rl0, wf0, rf0; wire [67:0] rq0;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(di0[0]), .w_v(di0[1]), .w_rdy(), .w_d(di0[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[68:0] = {rq0, rv0};
     wire rv1, rl1, wf1, rf1; wire [67:0] rq1;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_1 (.wclk(fi1[0]), .wrst_n(di1[0]), .w_v(di1[1]), .w_rdy(), .w_d(di1[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv1), .r_rdy(1'b1), .r_d(rq1), .w_live(), .r_live(rl1), .w_fault(wf1), .r_fault(rf1));
     assign o[137:69] = {rq1, rv1};
     wire rv2, rl2, wf2, rf2; wire [67:0] rq2;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_2 (.wclk(fi2[0]), .wrst_n(di2[0]), .w_v(di2[1]), .w_rdy(), .w_d(di2[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv2), .r_rdy(1'b1), .r_d(rq2), .w_live(), .r_live(rl2), .w_fault(wf2), .r_fault(rf2));
     assign o[206:138] = {rq2, rv2};
     wire rv3, rl3, wf3, rf3; wire [67:0] rq3;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_3 (.wclk(fi3[0]), .wrst_n(di3[0]), .w_v(di3[1]), .w_rdy(), .w_d(di3[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv3), .r_rdy(1'b1), .r_d(rq3), .w_live(), .r_live(rl3), .w_fault(wf3), .r_fault(rf3));
     assign o[275:207] = {rq3, rv3};
     wire rv4, rl4, wf4, rf4; wire [67:0] rq4;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_4 (.wclk(fi4[0]), .wrst_n(di4[0]), .w_v(di4[1]), .w_rdy(), .w_d(di4[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv4), .r_rdy(1'b1), .r_d(rq4), .w_live(), .r_live(rl4), .w_fault(wf4), .r_fault(rf4));
     assign o[344:276] = {rq4, rv4};
     wire rv5, rl5, wf5, rf5; wire [67:0] rq5;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_5 (.wclk(fi5[0]), .wrst_n(di5[0]), .w_v(di5[1]), .w_rdy(), .w_d(di5[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv5), .r_rdy(1'b1), .r_d(rq5), .w_live(), .r_live(rl5), .w_fault(wf5), .r_fault(rf5));
     assign o[413:345] = {rq5, rv5};
     wire rv6, rl6, wf6, rf6; wire [67:0] rq6;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_6 (.wclk(fi6[0]), .wrst_n(di6[0]), .w_v(di6[1]), .w_rdy(), .w_d(di6[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv6), .r_rdy(1'b1), .r_d(rq6), .w_live(), .r_live(rl6), .w_fault(wf6), .r_fault(rf6));
     assign o[482:414] = {rq6, rv6};
     wire rv7, rl7, wf7, rf7; wire [67:0] rq7;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_7 (.wclk(fi7[0]), .wrst_n(di7[0]), .w_v(di7[1]), .w_rdy(), .w_d(di7[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv7), .r_rdy(1'b1), .r_d(rq7), .w_live(), .r_live(rl7), .w_fault(wf7), .r_fault(rf7));
     assign o[551:483] = {rq7, rv7};
     wire rv8, rl8, wf8, rf8; wire [67:0] rq8;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_8 (.wclk(fi8[0]), .wrst_n(di8[0]), .w_v(di8[1]), .w_rdy(), .w_d(di8[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv8), .r_rdy(1'b1), .r_d(rq8), .w_live(), .r_live(rl8), .w_fault(wf8), .r_fault(rf8));
     assign o[620:552] = {rq8, rv8};
     wire rv9, rl9, wf9, rf9; wire [67:0] rq9;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_9 (.wclk(fi9[0]), .wrst_n(di9[0]), .w_v(di9[1]), .w_rdy(), .w_d(di9[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv9), .r_rdy(1'b1), .r_d(rq9), .w_live(), .r_live(rl9), .w_fault(wf9), .r_fault(rf9));
     assign o[689:621] = {rq9, rv9};
     wire rv10, rl10, wf10, rf10; wire [67:0] rq10;
-    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
+    ot_meso_fifo #(.W(68), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_10 (.wclk(fi10[0]), .wrst_n(di10[0]), .w_v(di10[1]), .w_rdy(), .w_d(di10[69:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv10), .r_rdy(1'b1), .r_d(rq10), .w_live(), .r_live(rl10), .w_fault(wf10), .r_fault(rf10));
     assign o[758:690] = {rq10, rv10};
     assign o[760:759] = {wf0 | rf0 | wf1 | rf1 | wf2 | rf2 | wf3 | rf3 | wf4 | rf4 | wf5 | rf5 | wf6 | rf6 | wf7 | rf7 | wf8 | rf8 | wf9 | rf9 | wf10 | rf10, rl0 & rl1 & rl2 & rl3 & rl4 & rl5 & rl6 & rl7 & rl8 & rl9 & rl10};   // {fault, live}
 endmodule
@@ -2184,16 +2184,6 @@ module dsfd_rly_66_NW (
     assign o = r;
 endmodule
 
-module dsfd_rly_66_SE (
-    input wire [0:0] ck,
-    input wire [65:0] i,
-    output wire [65:0] o,
-    input wire [0:0] rs
-);
-    reg [65:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= 66'd0; else r <= i;
-    assign o = r;
-endmodule
-
 module dsfd_rly_66_SN (
     input wire [0:0] ck,
     input wire [65:0] i,
@@ -2205,16 +2195,6 @@ module dsfd_rly_66_SN (
 endmodule
 
 module dsfd_rly_66_SW (
-    input wire [0:0] ck,
-    input wire [65:0] i,
-    output wire [65:0] o,
-    input wire [0:0] rs
-);
-    reg [65:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= 66'd0; else r <= i;
-    assign o = r;
-endmodule
-
-module dsfd_rly_66_WE (
     input wire [0:0] ck,
     input wire [65:0] i,
     output wire [65:0] o,
