@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -68,10 +68,14 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   localparam [3:0] ALL=(4'b1111>>(4-NO));
   // Forwarded clock: four real kept inversions, as the original station.
   wire c1,c2,c3;
-  ot_fwd_clk_inv u_clk0(.a(clk_sm),.y(c1));
-  ot_fwd_clk_inv u_clk1(.a(c1),.y(c2));
-  ot_fwd_clk_inv u_clk2(.a(c2),.y(c3));
-  ot_fwd_clk_inv u_clk3(.a(c3),.y(fclk_o));
+  if(FCLK)begin:fwdclk
+   ot_fwd_clk_inv u_clk0(.a(clk_sm),.y(c1));
+   ot_fwd_clk_inv u_clk1(.a(c1),.y(c2));
+   ot_fwd_clk_inv u_clk2(.a(c2),.y(c3));
+   ot_fwd_clk_inv u_clk3(.a(c3),.y(fclk_o));
+  end else begin:nofwdclk
+   assign fclk_o=1'b0;
+  end
   // Cold POR: asynchronous assert, synchronous release (two kept stages).
   wire [1:0] rs;
   ot_hbm_w2_keep_reg #(.W(1)) u_rs0(.clk(clk_sm),.rst_n(por_n),.d(1'b1),.q(rs[0]));

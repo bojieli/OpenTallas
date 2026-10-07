@@ -80,6 +80,8 @@ def run(cmd, log):
 
 
 RELREG = False
+HALFV = False
+CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)('
 DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)'
 SAFEV = False
 
@@ -146,7 +148,12 @@ def quarter_bench(out, tag, rb=True, mutant=None):
     if rb:
         files = [f for f in files if not f.endswith(('ot_hbm_native_frame_station.sv', 'ot_hbm_native_quarter_chain.sv'))]
         files += [str(ROOT/BANK), str(ROOT/STATION), str(ROOT/CHAIN)]
+        if HALFV:
+            files += [str(ROOT/Q/'ot_hbm_native_frame_station_rb_half.sv')]
     files = mutate(out, mutant, files)
+    if HALFV and rb:
+        d = out/('half_'+tag); d.mkdir(exist_ok=True)
+        files = [(lambda f: (lambda m: (m.write_text(Path(f).read_text().replace(CHAIN_DEF_OLD, CHAIN_DEF_OLD.replace('STN_HALF=0','STN_HALF=1'))), str(m))[1])(d/Path(f).name))(f) if f.endswith('ot_hbm_native_quarter_chain_rb.sv') else f for f in files]
     tb = (ROOT/Q/'tb_native_quarter_publication.sv').read_text()
     for old, new, _ in BENCH_EDITS + [CAL+(None,)]:
         assert tb.count(old) == 1, old
@@ -174,12 +181,17 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--quarter-only', action='store_true')
     ap.add_argument('--neg-only', default=None, help='run one chain mutant only (exit 1 = rejected)')
+    ap.add_argument('--half', action='store_true', help='half-rate station shell (quarter bench only)')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG, SAFEV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe
+    global RELREG, SAFEV, HALFV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
+    if a.quarter_only:
+        r = quarter_bench(out, 'quarter_rb', True)
+        print(json.dumps(r, indent=1)); raise SystemExit(0 if r['passed'] else 1)
     if a.neg_only:  # single negative control: exit 1 when the mutant is (correctly) rejected, 0 if it slips through
         r = quarter_bench(out, 'neg_only', True, a.neg_only)
         print('NEG_ONLY', a.neg_only, 'REJECTED' if not r['passed'] else 'ACCEPTED'); print('FAIL' if not r['passed'] else 'PASS')
