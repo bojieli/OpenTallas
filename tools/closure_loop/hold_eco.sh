@@ -40,12 +40,14 @@ for k in $(seq 1 ${PASSES:-2}); do
   P=$OUT/pass$k; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
   cp $OB/6_final.sdc $EB/6_final.sdc
   echo "OT_PASS $k input $CUR_DIR/$CUR_DB spef $CUR_SPEF" | tee -a $OUT/eco.log
+  FAILED=0
   for c in ss ff; do
     orun $P/corner_$c.log hold_eco_corner.tcl -e OT_CORNER=$c -e OT_DB=/in/$CUR_DB -e OT_SDC=/ob/6_final.sdc \
       -e OT_SPEF=/inspef/$(basename $CUR_SPEF) -e OT_POST_SDC="${PS# }" -e OT_EFF=/p/eff_$c.sdc \
       -e OT_CRIT_PS=$(awk "BEGIN{print ${SM:-40} + 20}")
-    grep -q "OT_CORNER_EFF done" $P/corner_$c.log || { echo "corner $c session failed"; tail -20 $P/corner_$c.log; exit 9; }
+    grep -q "OT_CORNER_EFF done" $P/corner_$c.log || { echo "corner $c session failed"; tail -20 $P/corner_$c.log; FAILED=1; break; }
   done
+  [ $FAILED = 0 ] || { [ -n "$best" ] && break; exit 9; }   # a later pass failing keeps the best earlier pass
   python3 $CLD/hold_eco_sdc.py $P/eff_ss.sdc $P/eff_ff.sdc $P/merged.sdc >> $OUT/eco.log
   EXP_SS=$(awk '/OT_CORNER_EFF ss ws_max/{printf "%.2f", $4*1e12}' $P/corner_ss.log)
   EXP_FF=$(awk '/OT_CORNER_EFF ff ws_max/{printf "%.2f", $6*1e12}' $P/corner_ff.log)
@@ -70,7 +72,7 @@ print(hm + (a if not prev else min(12.0, max(a, 2 * (hm - float(prev))))))")
   fi
   L=$P/eco_$SESSION.log; cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
-  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; exit 9; }
+  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
   python3 tools/w18/corner_sta.py $CS_ARGS --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
   python3 - $P $k $SESSION $ACC_SS $ACC_FF <<'PY'
