@@ -93,7 +93,7 @@ def main():
                  '  if {[regexp {rise -> rise.*?([0-9.]+)\\s+([0-9.]+)\\s+latency} $ot_s -> ot_lo ot_hi]} {']
         for p, r in ports.items():
             # inout die ports (the retyped cSE/cSW/h buses) are 'bidirect' to STA: both roles get their credit
-            lines.append(f'    foreach ot_q [get_ports -quiet {{{p} {p}[*]}}] {{ set ot_d [get_property $ot_q direction]; '
+            lines.append(f'    foreach ot_q [get_ports -quiet {{{p} {p}[*]}}] {{ set ot_d [ot_port_dir $ot_q]; '
                          f'if {{$ot_d in {{input bidirect}}}} '
                          f'{{ set_input_delay -min [expr {{$ot_hi - $ot_lo + {r["credit_in_ps"]}}}] -clock vclk $ot_q }}; '
                          f'if {{$ot_d in {{output bidirect}}}} '
