@@ -86,3 +86,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# closure-loop source paths: whole rtl + native_quarter deps
