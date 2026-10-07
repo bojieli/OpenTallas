@@ -46,3 +46,15 @@ uncertainty), `route_esum_m770/io_{SS,FF}.log`:
   `launch_esum_hold.sh` (same RTL, `hold_io_append.sdc` puts the die hold IO constraints on the ideal port clock,
   hold margin 30 ps).
 Note: `-reference_pin` IO delays crash this OpenROAD build (Sim::findDisabledEdges), hence the virtual IO clocks.
+
+## Hold re-route `lane_esum_h770b` (EPYC3; input hold to die STA, buffer cap 100 %): SETUP CLOSED, HOLD NOT CLOSED
+
+Flow: NOT_MET in the route's own acceptance (WC route at 0.770).  Die-context sign-off at 0.833333 ns
+(`route_esum_h770b/run_io_h.sh`: IO clocks at this route's OWN measured insertion, SS 344.5..396.3 / FF 206.6..247.1 ps,
+200 ps setup IO budget, -50 ps hold IO term):
+- SS setup WNS **+65.23 ps** (TNS 0): closed.
+- FF hold: inputs **-111.3 ps** (g_ireg.r_w/r_u/r_g pin flops: no input hold repair in the block by construction, the
+  -50 ps term puts input data 50 ps before the earliest tree edge), outputs **-47.0 ps** (a[*]).
+Under the budget sheets' FF hold model (input min = clk->Q FF 32.2 + 0.112 ps/um x L, vclk at the block's mean
+insertion) the input classes are about -3 ps: hold is a repair item (die STA input hold window + the closure loop's
+hold ECO), not RTL.  Next: one closure-loop job of this lane with the budget-sheet SDCs (route + FF) and the auto hold ECO.
