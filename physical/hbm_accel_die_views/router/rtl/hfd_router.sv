@@ -47,30 +47,10 @@ module hfd_router (
     assign w_rt_in_vals = {i_f_vm[511:0]};
     assign w_rt_in_last = {i_f_su_SW[1:1]};
     ot_gpu_router_topk_ps #(.N(384), .P(16), .K(6), .IW(9), .PIPESEL(1)) u_rt (.clk(w_rt_clk), .rst_n(w_rt_rst_n), .in_valid(w_rt_in_valid), .in_vals(w_rt_in_vals), .in_last(w_rt_in_last), .out_valid(w_rt_out_valid), .out_ids(w_rt_out_ids));
-    // r5: forwarded clock trails its data by 3 kept inverter pairs (dv8 FF hold on eXX[128] -34.3 vs vclk; stations FDLY precedent)
-    wire [6:0] fclk_0_c; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0_c[0]));
-    for (genvar d = 1; d < 7; d = d + 1) begin : g_fd0
-        ot_fwd_clk_inv u_d (.a(fclk_0_c[d-1]), .y(fclk_0_c[d]));
-    end
-    wire fclk_0 = fclk_0_c[6];
-    // r5: forwarded clock trails its data by 3 kept inverter pairs (dv8 FF hold on eXX[128] -34.3 vs vclk; stations FDLY precedent)
-    wire [6:0] fclk_1_c; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1_c[0]));
-    for (genvar d = 1; d < 7; d = d + 1) begin : g_fd1
-        ot_fwd_clk_inv u_d (.a(fclk_1_c[d-1]), .y(fclk_1_c[d]));
-    end
-    wire fclk_1 = fclk_1_c[6];
-    // r5: forwarded clock trails its data by 3 kept inverter pairs (dv8 FF hold on eXX[128] -34.3 vs vclk; stations FDLY precedent)
-    wire [6:0] fclk_2_c; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2_c[0]));
-    for (genvar d = 1; d < 7; d = d + 1) begin : g_fd2
-        ot_fwd_clk_inv u_d (.a(fclk_2_c[d-1]), .y(fclk_2_c[d]));
-    end
-    wire fclk_2 = fclk_2_c[6];
-    // r5: forwarded clock trails its data by 3 kept inverter pairs (dv8 FF hold on eXX[128] -34.3 vs vclk; stations FDLY precedent)
-    wire [6:0] fclk_3_c; ot_fwd_clk_inv u_fclk_3 (.a(clk), .y(fclk_3_c[0]));
-    for (genvar d = 1; d < 7; d = d + 1) begin : g_fd3
-        ot_fwd_clk_inv u_d (.a(fclk_3_c[d-1]), .y(fclk_3_c[d]));
-    end
-    wire fclk_3 = fclk_3_c[6];
+    wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
+    wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
+    wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));
+    wire fclk_3; ot_fwd_clk_inv u_fclk_3 (.a(clk), .y(fclk_3));
     wire [128:0] od_eNE = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [128:0] o_eNE;
     for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eNE
