@@ -41,6 +41,41 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_adoption_hold_blocks_verdict_and_publish_without_stopping_route(self):
+        hold = Path(self.tmp.name) / "adoption_holds" / "race.json"
+        hold.parent.mkdir()
+        hold.write_text(json.dumps({"reason": "exact gate pending"}))
+        with patch.object(cl, "get_metrics") as metrics, patch.object(cl, "publish") as publish, \
+             patch.object(cl, "kill_own_stage") as kill, patch.object(cl, "log"):
+            cl.do_verdict(self.j, None, [])
+            cl.do_commit(self.j)
+        metrics.assert_not_called()
+        publish.assert_not_called()
+        kill.assert_not_called()
+        self.assertEqual(self.j["status"], "READY")
+        hold.unlink()
+        self.assertFalse(cl.adoption_held(self.j))
+
+    def test_mutation_bench_uses_private_source_for_cwd_and_explicit_src(self):
+        run = Path(self.tmp.name) / "run"
+        (run / "src").mkdir(parents=True)
+        (run / "cl").mkdir()
+        (run / "src" / "rtl.txt").write_text("golden")
+        j = dict(self.j, host="remote", run=str(run), attempt=1, commit_full="c" * 40,
+                 spec=dict(self.j["spec"], source={"commit": "c" * 40}))
+        st = dict(key="bench_neg", kind="bench", threads=1)
+        scripts = []
+        def remote(host, command, **kw):
+            if "input" in kw:
+                scripts.append(kw["input"])
+            return SimpleNamespace(stdout="", returncode=0)
+        with patch.object(cl, "ssh", remote):
+            cl.launch_stage(j, st, 'echo mutant > rtl.txt; test "$SRC" = "{SRC}"; test "{RUN}/src" = "$SRC"')
+        result = subprocess.run(["bash", "-c", scripts[0]], cwd=run / "src", capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((run / "src" / "rtl.txt").read_text(), "golden")
+        self.assertEqual((run / "bench_src_a1" / "rtl.txt").read_text(), "mutant\n")
+
     def test_unreadable_historical_bench_does_not_starve_recovery(self):
         first = dict(name="unreachable", status="NEEDS_RTL", spec={},
                      reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")

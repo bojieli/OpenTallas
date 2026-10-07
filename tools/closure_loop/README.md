@@ -237,3 +237,15 @@ shell preserves the rejected log as `eco_<session>_kept.log` and output as
 options disabled. SS/FF/DRC acceptance is unchanged. The local shell/Tcl fixture
 covers session arguments, retained failure evidence, and the clean retry; it is
 not physical validation of either wire-preservation option.
+
+### Adoption holds and mutation benches (2026-10-07)
+An owner can write `CL_STATE/adoption_holds/<job>.json` with a nonempty `reason`
+to retain running physical work while blocking verdict, collection, export and
+publication. Remove the hold only after its missing evidence is committed and
+bound to the job; archive the hold and release evidence. Timing and exactness
+requirements remain unchanged.
+Newly launched bench stages execute in `bench_src_a<attempt>`, a private copy of
+the job source shared only by its sequential bench stages. CWD, `$SRC`, `{SRC}`
+and legacy `{RUN}/src` point there. Route stages retain their original `src`.
+This prevents a negative control's in-place source mutation from racing synthesis.
+Previously launched stages require an owner audit before adoption.
