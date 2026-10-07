@@ -26,6 +26,7 @@
 | r21 index b5 t_vm pin stations (+1 hop per index scan, 8 scans) | 8 | 0.001 | 4.13 |
 | r22 relay stations abutting every hardened-block pin of a > 100 um die segment (500 relay ends, +1 hop each; OWNER 2026-10-07 rule 1) | 5522 | 0.857 | 4.98 |
 | r22 credit handshakes (SM weight_req ready: SM REQ_CREDIT + svc credit FIFO sized to the round trip) | 0 | 0 | 4.98 |
+| r23 2x hub area + attention tile 1778.5 x 1350 um + mcast_r6 a/b split + svc SE_s7/s8 split + VM early clock branch (die 30.59 mm wide; r23c GRT i5 wire record) | 8388 | 1.301 | 6.28 |
 
 Cumulative +2.65% vs the r16j wire base (2026-10-07: +r19b pin stages, +SM m3; was +2.58%) [SUPERSEDED by the TOTAL line] (= +2.37% margin over the r17-staged wire base 538.478 us); MTP +1.15%. Pending: SU reducer SAFE ~+4/reduction, HA2 +1 edge, VM quadrant hops (measured), SM 3x3 grid lever (gives back up to the SM interim faces 0.46%). Source: recompose_r19_r13wire__cp_in_su.json
 
@@ -33,3 +34,5 @@ TOTAL HBM DS AR CLOSURE COST vs the pre-closure design (r16j wire-priced AR 537.
 SM-structure cost): r22 +26.78 us = +4.98% (r21: +22.17 us = +4.13%) (die-level +13.91 us = +2.59%, SM element m2+m3 +8.26 us = +1.54%; CP inside the
 SU block).  The SM m2 cost is NOT inside the r16j wire baseline: that baseline prices die wires on the pre-closure
 element latencies; the SM stream's +1.816% is relative to its own 439.9 us base and is added here in us.
+
+TOTAL at r23: +33.77 us = +6.28% vs pre-closure (die-level +25.50 us, SM +8.261 us); headline record headline_with_closure_r23.json (AR 1750.9 tok/s, MTP 3626.1 tok/s).
