@@ -1416,13 +1416,19 @@ def region_at(m, x, y):
     return best or 'tile_field'
 
 
-def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False):
+def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False,
+            guard=0.0):
     """cov_scale multiplies every region's M8/M9 coverage; bump_pad adds a 20 x 20 um M9 landing pad at every bump
     site (the UBM/AP landing any bump has: ASAP7 has no AP/RDL layer, so without it the bump contacts only the
     0.48 um stripes under it); sources are explicit per-net bump sites (VSS interleaved half a pitch off VDD)."""
     work.mkdir(parents=True, exist_ok=True)
     g = m['geo']
     x0, y0, x1, y1 = [round(v, 3) for v in WINDOWS[window](g)]
+    # r21: a guard band around the judged window (the die continues past a window: without it the window edge has
+    # no grid / bumps beyond it and its cells read an artificial drop); clipped to the die
+    if guard:
+        x0, y0 = max(0.0, x0 - guard), max(0.0, y0 - guard)
+        x1, y1 = min(m['die']['w'], x1 + guard), min(m['die']['h'], y1 + guard)
     x0, y0 = dn(x0, GX), dn(y0, GY)
     W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     # straps: per region column/row segments; M9 vertical stripes at the pitch of the region under them, M8 horizontal
@@ -1635,6 +1641,7 @@ exit
     for n, p in power.items():
         tot[kinds[n]] = tot.get(kinds[n], 0.0) + p
     meta = dict(case='c', window=window, window_um=[x0, y0, x1, y1], size_um=[W, H], cell_um=cell, loads=len(comps),
+                guard_um=guard, judged_um=[round(a, 3) for a in WINDOWS[window](g)],
                 power_w_by_region={k_: round(v, 4) for k_, v in tot.items()}, power_w=round(sum(power.values()), 4), cells_without_both_rails=missing,
                 peak=peak, cov_scale=cov_scale, bump_pad=bump_pad, align=align, signal_bumps_phy=signal_bumps_phy, bump_sites=len(sites['VDD']), stripes=dict(M9=len(s9), M8=len(s8), vias=nvia, width_um=0.48,
                                         pitch_by_region={k_: pitch(v) for k_, v in REGION_PG.items() if v}),
@@ -1844,7 +1851,13 @@ def record_c(work):
                 x, y = float(fs[3]), float(fs[4])
                 W_, H_ = meta['size_um']
                 vp = meta['bumps']['vdd_pitch_um']
-                interior = vp <= x <= W_ - vp and vp <= y <= H_ - vp
+                gd = max(vp, meta.get('guard_um', 0.0))
+                if meta.get('guard_um'):
+                    jx0, jy0, jx1, jy1 = meta['judged_um']
+                    ox, oy = meta['window_um'][0], meta['window_um'][1]
+                    interior = jx0 - ox <= x <= jx1 - ox and jy0 - oy <= y <= jy1 - oy
+                else:
+                    interior = gd <= x <= W_ - gd and gd <= y <= H_ - gd
                 e = per.setdefault(kinds[fs[0]], {})
                 e[net] = round(max(e.get(net, 0.0), d * 1e3), 2)
                 if interior:
@@ -1856,7 +1869,8 @@ def record_c(work):
         if wi and len(wi) == 2:
             out['rail_to_rail_interior_mv'] = round(wi['VDD'] + wi['VSS'], 2)
             out['pass_interior'] = out['rail_to_rail_interior_mv'] <= meta['budget_mv']
-            out['interior_rule'] = 'cells at least one VDD bump pitch from every window edge (the die continues)'
+            out['interior_rule'] = ('the judged window inside a %.0f um guard band of continuing grid and bumps' % meta['guard_um']
+                                    if meta.get('guard_um') else 'cells at least one VDD bump pitch from every window edge (the die continues)')
     return out
 
 

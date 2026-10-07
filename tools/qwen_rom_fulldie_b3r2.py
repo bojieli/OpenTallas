@@ -2582,6 +2582,7 @@ def main(argv=None):
     ap.add_argument('--su-core-clock', action='store_true', help='r20g: SU64/SFU and the vector memory on the 1.2 GHz core '
                     'clock (as the measured token RTL)')
     ap.add_argument('--bw-wp', type=int, default=0, help='r20f: block-word waypoint every N tile columns (0: off)')
+    ap.add_argument('--ir-guard', type=float, default=0.0, help='r21: IR window guard band (um) of continuing grid / bumps')
     ap.add_argument('--relay-pitch', type=float, default=0.0, help='r21: relay registers on every die wire > 350 um '
                     'at this pitch (um; 0: off)')
     ap.add_argument('--slab-bw-m8', action='store_true', help='r21: band-slab block-word pins on M8 at the array face, '
@@ -2661,7 +2662,7 @@ def main(argv=None):
     elif a.mode == 'ir':
         v.INST_W_PER_MM2 = {kv.split('=')[0]: float(kv.split('=')[1]) for kv in a.inst_density}
         # the IR PASS recipe of the b2 floorplan (cases ir_*_align_b45): bump-aligned straps, every core bump power
-        man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch)
+        man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch, guard=a.ir_guard)
         man['b3r2'] = dict(producer=__file__, band=a.band, die=m['die'])
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('window', 'power_w', 'bump_sites')}))
