@@ -170,6 +170,12 @@ def validate(spec: dict) -> list[str]:
         return e
     if not NAME_RE.match(spec["name"]):
         e.append("name must match " + NAME_RE.pattern)
+    required = spec.get("host_require")
+    if required is not None and (not isinstance(required, list) or not required
+                                or any(not isinstance(x, str) for x in required)):
+        e.append("host_require must be a nonempty list of host names, not a boolean")
+    elif required and any(x not in {h["name"] for h in hosts_table()} for x in required):
+        e.append("host_require contains an unknown host")
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
