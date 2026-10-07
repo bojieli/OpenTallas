@@ -36,10 +36,14 @@ module hfd_vm_sw (
     reg [2255:0] x_f_e_row; always @(posedge clk) x_f_e_row <= f_e_row;
     // configuration chain (monolithic: 772 bits from f_su_NE[0]; here relayed NE -> SE -> SW on the wr buses)
     reg [771:0] cfg; always @(posedge clk) cfg <= {cfg[770:0], x_f_e_wr[1791]};
+    // write port depth (coordinator vm_wr_skew_finding.md): wr_v / bank / addr / owner / data[2062:2048] reach the root over
+    // f_su_NW (3 face stages in NW) + the NW -> SW wr bus (1 + 1) = 5; wr_data[2047:0] arrives on f_su_SW (3 face stages):
+    // two more registers so every field of the logical write port has ONE depth (5) at the root (0 cycles: wr_v is at 5)
+    reg [2047:0] wd0_f_su_SW, wd_f_su_SW; always @(posedge clk) begin wd0_f_su_SW <= i_f_su_SW; wd_f_su_SW <= wd0_f_su_SW; end
     wire m_v, m_we, m_bank; wire [6:0] m_addr; wire [2815:0] m_wd; wire m_rd_v; wire [2815:0] m_rd;
     wire wr_ready, wr_ACK_v, rd_ready, native_release, drained, fault; wire [3:0] tap_v; wire [191:0] wr_ACK_owner;
     wire [767:0] tap_owner; wire [4*2063-1:0] tap_data;
-    ot_hfd_vm_root_x #(.ENABLE(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), .mem_cmd_bank(m_bank), .mem_cmd_addr(m_addr), .mem_wd(m_wd), .mem_rd_v(m_rd_v), .mem_rd(m_rd), .wr_v(x_f_n_wr[15]), .wr_ready(wr_ready), .wr_bank(x_f_n_wr[16]), .wr_addr(x_f_n_wr[23:17]), .wr_data({x_f_n_wr[14:0], i_f_su_SW[2047:0]}), .wr_owner(x_f_n_wr[215:24]), .wr_ACK_v(wr_ACK_v), .wr_ACK_ready(x_f_n_wr[216]), .wr_ACK_owner(wr_ACK_owner), .rd_v(x_f_e_wr[0]), .rd_ready(rd_ready), .rd_bank(x_f_e_wr[1]), .rd_addr(x_f_e_wr[8:2]), .rd_owner(x_f_e_wr[200:9]), .tap_v(tap_v), .tap_ready(4'd15), .tap_data(tap_data), .tap_owner(tap_owner), .tap_ACK_v(cfg[3:0]), .tap_ACK_owner(cfg[771:4]), .native_release(native_release), .drained(drained), .fault(fault));
+    ot_hfd_vm_root_x #(.ENABLE(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), .mem_cmd_bank(m_bank), .mem_cmd_addr(m_addr), .mem_wd(m_wd), .mem_rd_v(m_rd_v), .mem_rd(m_rd), .wr_v(x_f_n_wr[15]), .wr_ready(wr_ready), .wr_bank(x_f_n_wr[16]), .wr_addr(x_f_n_wr[23:17]), .wr_data({x_f_n_wr[14:0], wd_f_su_SW[2047:0]}), .wr_owner(x_f_n_wr[215:24]), .wr_ACK_v(wr_ACK_v), .wr_ACK_ready(x_f_n_wr[216]), .wr_ACK_owner(wr_ACK_owner), .rd_v(x_f_e_wr[0]), .rd_ready(rd_ready), .rd_bank(x_f_e_wr[1]), .rd_addr(x_f_e_wr[8:2]), .rd_owner(x_f_e_wr[200:9]), .tap_v(tap_v), .tap_ready(4'd15), .tap_data(tap_data), .tap_owner(tap_owner), .tap_ACK_v(cfg[3:0]), .tap_ACK_owner(cfg[771:4]), .native_release(native_release), .drained(drained), .fault(fault));
     // root memory command: local slice (columns 0-2) at the root, the others on the wr buses
     reg c_v, c_we, c_bank; reg [6:0] c_addr; reg [767:0] c_wd;
     always @(posedge clk) begin c_v <= m_v && rst_n; c_we <= m_we; c_bank <= m_bank; c_addr <= m_addr; c_wd <= m_wd[767:0]; end

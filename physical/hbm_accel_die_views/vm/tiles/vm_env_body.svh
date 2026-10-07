@@ -1,7 +1,7 @@
 // tb_vm_tiles.sv environment body (included twice: monolithic / joined tiles)
 module `VM_ENV_NAME (input wire clk, output reg [63:0] h, output integer nev, output reg done,
                                               output reg fault_end);
-    reg [0:0] rst = 1;
+    reg [0:0] rst = 1; reg pd_end = 0;
     reg [2047:0] f_su_SW = 0, f_su_NW = 0, f_su_SE = 0, f_su_NE = 0; reg [511:0] iSW = 0, iNW = 0, iSE = 0, iNE = 0;
     wire [2047:0] t_su_SW, t_su_NW, t_su_SE, t_su_NE; wire [581:0] qSW, qNW, qSE, qNE; wire [2067:0] xSW, xNW, xSE, xNE;
     wire [1023:0] t_quant; wire [511:0] t_router;
@@ -72,11 +72,46 @@ if (`MODE == 1) begin
                 lf = nx(lf); f_su_SE[j*62 +: 62] = lf; lf = nx(lf); f_su_NE[j*62 +: 62] = lf; end
             for (j = 0; j < 8; j = j + 1) begin lf = nx(lf); iSW[j*64 +: 64] = lf; lf = nx(lf); iNW[j*64 +: 64] = lf;
                 lf = nx(lf); iSE[j*64 +: 64] = lf; lf = nx(lf); iNE[j*64 +: 64] = lf; end
-            f_su_NW[15] = 0; f_su_SE[0] = 0;
+            if (`MODE == 2) begin f_su_NW[15] = 0; f_su_SE[0] = 0; end   // MODE 3: valids random too
         end
+        pd_end = 1; repeat (4) @(posedge clk);
         done = 1;
         end
     end
+    // MODE 3 (port depth, coordinator vm_wr_skew_finding.md): random die inputs, valids included; at every edge each field of
+    // the root's logical write port (wr_v / bank / addr / owner / data[2062:2048] / data[2047:0]) and read port (rd_v /
+    // bank / addr / owner) is matched against the die-pin history at lags 0..15.  A port is ONE-DEPTH iff all its fields
+    // share a lag.  Expected: tiles wr 5 / rd 5; the monolithic wrapper wr_data[2047:0] 5 vs wr_v 4 (negative control).
+    generate if (`MODE == 3) begin : g_pd
+    localparam integer D = 16;
+    reg [216:0] hN [0:D-1]; reg [2047:0] hS [0:D-1]; reg [200:0] hE [0:D-1];
+    reg [D-1:0] bad [0:9]; integer i, cyc = 0; reg [D-1:0] wr_ok, rd_ok; reg reported = 0;
+    initial for (i = 0; i < 10; i = i + 1) bad[i] = 0;
+    always @(posedge clk) if (!rst && !reported) begin
+        for (i = D - 1; i > 0; i = i - 1) begin hN[i] = hN[i-1]; hS[i] = hS[i-1]; hE[i] = hE[i-1]; end
+        hN[0] = f_su_NW[216:0]; hS[0] = f_su_SW; hE[0] = f_su_SE[200:0]; cyc = cyc + 1;
+        if (cyc > D + 2 && !pd_end) for (i = 0; i < D; i = i + 1) begin
+            if (`VM_RT.wr_v !== hN[i][15]) bad[0][i] = 1'b1;
+            if (`VM_RT.wr_bank !== hN[i][16]) bad[1][i] = 1'b1;
+            if (`VM_RT.wr_addr !== hN[i][23:17]) bad[2][i] = 1'b1;
+            if (`VM_RT.wr_owner !== hN[i][215:24]) bad[3][i] = 1'b1;
+            if (`VM_RT.wr_data[2062:2048] !== hN[i][14:0]) bad[4][i] = 1'b1;
+            if (`VM_RT.wr_data[2047:0] !== hS[i]) bad[5][i] = 1'b1;
+            if (`VM_RT.rd_v !== hE[i][0]) bad[6][i] = 1'b1;
+            if (`VM_RT.rd_bank !== hE[i][1]) bad[7][i] = 1'b1;
+            if (`VM_RT.rd_addr !== hE[i][8:2]) bad[8][i] = 1'b1;
+            if (`VM_RT.rd_owner !== hE[i][200:9]) bad[9][i] = 1'b1;
+        end
+        if (pd_end) begin
+            reported = 1;
+            wr_ok = ~(bad[0] | bad[1] | bad[2] | bad[3] | bad[4] | bad[5]); rd_ok = ~(bad[6] | bad[7] | bad[8] | bad[9]);
+            $display("VM_PORT_DEPTH %s lag masks (bit L = matches at depth L): wr_v=%b wr_bank=%b wr_addr=%b wr_owner=%b wr_data_hi=%b wr_data_lo=%b rd_v=%b rd_bank=%b rd_addr=%b rd_owner=%b",
+                     `VM_TRACE, ~bad[0], ~bad[1], ~bad[2], ~bad[3], ~bad[4], ~bad[5], ~bad[6], ~bad[7], ~bad[8], ~bad[9]);
+            $display("VM_PORT_DEPTH %s wr=%s rd=%s", `VM_TRACE, (wr_ok != 0 && $countones(wr_ok) == 1) ? "ONE_DEPTH" : "SKEWED",
+                     (rd_ok != 0 && $countones(rd_ok) == 1) ? "ONE_DEPTH" : "SKEWED");
+        end
+    end
+    end endgenerate
     generate if (`MODE == 2) begin : g_tr
     integer fd;
     initial fd = $fopen(`VM_TRACE, "w");

@@ -6,6 +6,7 @@
 //     owner, every publish (tap owners + the row at all four x faces), final fault / drained.
 //   `MODE 2 (structure): random die inputs with the root idle (wr_v / rd_v held 0); every output bit of both designs is
 //     dumped each cycle (trace_ref.hex / trace_dut.hex) for check_vm_tiles.py (one constant latency per output bit).
+//   `MODE 3 (port depth): every field of the root's write / read port matched against the die-pin history (vm_env_body).
 //   `MUT_XBUS: SW -> SE write bus bits 10/11 swapped in the joined design (SE slice data) -- must FAIL mode 1.
 `ifndef MODE
 `define MODE 1
@@ -53,17 +54,20 @@ endmodule
 `define VM_CFG u.cfg
 `define VM_TRACE "trace_ref.hex"
 `define VM_ROOT u.u_mr.on
+`define VM_RT u.u_mr
 `include "vm_env_body.svh"
 `undef VM_ENV_NAME
 `undef VM_DUT
 `undef VM_CFG
 `undef VM_TRACE
 `undef VM_ROOT
+`undef VM_RT
 `define VM_ENV_NAME vm_env_t
 `define VM_DUT vm_joined
 `define VM_CFG u.u_sw.cfg
 `define VM_TRACE "trace_dut.hex"
 `define VM_ROOT u.u_sw.u_mr.on
+`define VM_RT u.u_sw.u_mr
 `include "vm_env_body.svh"
 
 module tb_vm_tiles;

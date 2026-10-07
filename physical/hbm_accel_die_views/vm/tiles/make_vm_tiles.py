@@ -8,7 +8,7 @@ return on the *_row buses, the published row (tap data) streams on the *_row bus
 of the monolithic wrapper (no VM function: f_su_* -> t_su_* / t_quant / t_router, q faces) keep their exact bit maps,
 carried on spare bus capacity (f_su_SW -> t_su_SE: 1,230 b direct SW->SE, 818 b via NW -> NE -> SE).
 Stages: die faces 3 in / 3 out (tiles <= 1 mm), every cross bus registered at both pins (1 + 1), slice command and
-read data registered at the macros.  Cycle cost vs monolithic: priced per path by the bench (tb_vm_tiles.sv).
+read data registered at the macros.  Every logical root port has ONE stage depth from its die pins (wr 5, rd 5; tb MODE 3).  Cycle cost vs monolithic: priced per path by the bench (tb_vm_tiles.sv).
     python3 make_vm_tiles.py            (writes hfd_vm_<t>.sv, <t>_face_stages.tcl, ot_hfd_vm_slice.sv here)"""
 from pathlib import Path
 D = Path(__file__).resolve().parent
@@ -77,13 +77,17 @@ def sw():
     for p, w in (('f_n_wr', W), ('f_n_row', R), ('f_e_wr', W), ('f_e_row', R)): cross_in(s, p, w)
     s.a('// configuration chain (monolithic: 772 bits from f_su_NE[0]; here relayed NE -> SE -> SW on the wr buses)')
     s.a('reg [771:0] cfg; always @(posedge clk) cfg <= {cfg[770:0], x_f_e_wr[1791]};')
+    s.a('// write port depth (coordinator vm_wr_skew_finding.md): wr_v / bank / addr / owner / data[2062:2048] reach the root over')
+    s.a('// f_su_NW (3 face stages in NW) + the NW -> SW wr bus (1 + 1) = 5; wr_data[2047:0] arrives on f_su_SW (3 face stages):')
+    s.a('// two more registers so every field of the logical write port has ONE depth (5) at the root (0 cycles: wr_v is at 5)')
+    s.a('reg [2047:0] wd0_f_su_SW, wd_f_su_SW; always @(posedge clk) begin wd0_f_su_SW <= i_f_su_SW; wd_f_su_SW <= wd0_f_su_SW; end')
     s.a('wire m_v, m_we, m_bank; wire [6:0] m_addr; wire [2815:0] m_wd; wire m_rd_v; wire [2815:0] m_rd;')
     s.a('wire wr_ready, wr_ACK_v, rd_ready, native_release, drained, fault; wire [3:0] tap_v; wire [191:0] wr_ACK_owner;')
     s.a('wire [767:0] tap_owner; wire [4*2063-1:0] tap_data;')
     s.a('ot_hfd_vm_root_x #(.ENABLE(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), .mem_cmd_bank(m_bank), '
         '.mem_cmd_addr(m_addr), .mem_wd(m_wd), .mem_rd_v(m_rd_v), .mem_rd(m_rd), '
         '.wr_v(x_f_n_wr[15]), .wr_ready(wr_ready), .wr_bank(x_f_n_wr[16]), .wr_addr(x_f_n_wr[23:17]), '
-        '.wr_data({x_f_n_wr[14:0], i_f_su_SW[2047:0]}), .wr_owner(x_f_n_wr[215:24]), .wr_ACK_v(wr_ACK_v), '
+        '.wr_data({x_f_n_wr[14:0], wd_f_su_SW[2047:0]}), .wr_owner(x_f_n_wr[215:24]), .wr_ACK_v(wr_ACK_v), '
         '.wr_ACK_ready(x_f_n_wr[216]), .wr_ACK_owner(wr_ACK_owner), .rd_v(x_f_e_wr[0]), .rd_ready(rd_ready), '
         '.rd_bank(x_f_e_wr[1]), .rd_addr(x_f_e_wr[8:2]), .rd_owner(x_f_e_wr[200:9]), .tap_v(tap_v), .tap_ready(4\'d15), '
         '.tap_data(tap_data), .tap_owner(tap_owner), .tap_ACK_v(cfg[3:0]), .tap_ACK_owner(cfg[771:4]), '
