@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.qwen_perpc_write_bridge.prebuild.v1",
+  "model_before_RTL": true,
+  "default_enable": 0,
+  "adoption": false,
+  "scope": "One PC native writeback request/completion between core service and actual receiving controller ledger, through actual hub528 API. No scheduler, descriptor, landing or full KVnew snapshot replacement.",
+  "clock_period_ns": {
+    "source_core": 1.1111111111111112,
+    "hub_stream": 0.8333333333333334,
+    "strip_ledger": 1.024
+  },
+  "shape": {
+    "replicas": 2,
+    "MAC_per_cycle": 0,
+    "native_write_bits": 289,
+    "packet_payload_bits": 510,
+    "hub_wire_bits": 528,
+    "outstanding_per_PC": 8,
+    "native_room_min_free": 3,
+    "TX_CDC_depth": 16,
+    "TX_CDC_width": 510,
+    "RX_CDC_depth": 8,
+    "RX_CDC_width": 523,
+    "ar_initial_credits": 4,
+    "x3_initial_credits": 2,
+    "packet_pipeline_FF_each_endpoint": 1024,
+    "CDC_memory_bits_each_endpoint": 12344,
+    "ownership_table_bits_each_endpoint": 216,
+    "source_issue_max_per_local_edge": 1,
+    "new_production_floorplan": "Not yet physical-qualified; these are additional endpoint queues, not fit into existing relay bay."
+  },
+  "format": {
+    "version": "[509:506]=1",
+    "op": "[505:502]=WRITE1/DONE2",
+    "epoch": "[501:494]8",
+    "PC": "[493:487]7",
+    "sequence": "[486:471]16",
+    "tag": "[470:462]9",
+    "sector": "[461:438]24",
+    "data": "[437:182]256",
+    "reserved": "[181:32]=0",
+    "CRC": "[31:0], polynomial04c11db7 initffffffff finalxorffffffff, body478bits MSBfirst"
+  },
+  "throughput": {
+    "hub_shared_source_max_flits_per_hub_edge": 1,
+    "native_measured_credit_restart_cycles": [
+      118,
+      120
+    ],
+    "wire_fourcredit_optimistic_flits_per_edge": [
+      0.03389830508474576,
+      0.03333333333333333
+    ],
+    "bridge_extra_boundary_bits_per_write": 1020,
+    "snapshot_full64lane_lowerbound": "Not supported:3648bits with no ready requires separately modeled issue inhibition or burst storage."
+  },
+  "latency_composition": {
+    "transport_request_cycles": [
+      54,
+      55
+    ],
+    "transport_reply_cycles": [
+      54,
+      55
+    ],
+    "native_credit_restart_includes_hub_endpoints": [
+      118,
+      120
+    ],
+    "request_codec_local_edges": 2,
+    "completion_codec_local_edges": 2,
+    "async_FIFO_visibility": "two Gray synchronizer edges plus registered empty, up to3 receiving edges per crossing; four request/reply crossings end-to-end; exact phases measured minimum fixture",
+    "native_PHY_completion": "17controller ticks+2core visibility per control owner, separate from packet path; no fixed end-to-end claim before concrete bench",
+    "token_rate_credit": 0
+  },
+  "flow": {
+    "source": "w_room only with>=3free ownership slots; previously advertised late w_v retained after stop. Reserve native slot until true tagged completion or explicit global fence.",
+    "sink": "native w_room sampled before two-edge registered delivery; stop drains received requests into canceled owned entries; already-issued pulse remains delivered to ledger.",
+    "epoch": "Only epoch_fence AND external global_quiescent AND local empty packet pipelines/CDC AND !integrityfault clears canceled ownership and changes epoch. No fake wd completions; ledger epoch_ready and source inhibition must be included in external global fence.",
+    "credit_domains": "Hub transport Gray, ar consumer credits, x3 skid credits, bridge ownership, ledger WBUF and controller completion remain distinct."
+  },
+  "physical_model": {
+    "memory_payload_bytes_each_endpoint": 1543.0,
+    "mux_cost": "TX FIFO16x510 mux; RX FIFO8x523 mux; ownership8-way tag/seq compare, completion select8x16. Actual synth before physical dispatch.",
+    "boundary_tracks": "528 wires each direction already priced relaygraph; endpoint local289bit service buses and clock crossings require new bay measurement.",
+    "routing_fit": "Unqualified; no route launch or die adoption from this functional model.",
+    "reliability": "CRC protects received packet corruption under faultmodel; mutable ownership/CDC/credit state not yet hardened. Existing native Gray credit corruption remains blocker; releaseTMR protects only reset rails."
+  },
+  "source_sha256": {
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "a6fc66baaf850607cb1ba7fe29d51fff735117d64af56b28467bee8c596b14ca"
+  }
+}
