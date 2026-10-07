@@ -63,6 +63,11 @@ module dsfd_capt_grp #(
     // ---- K2: kept copies of the constants + per-root quota precompute (t'+4)
     (* keep *) reg [KB-1:0] k2 [0:NH-1];
     always @(posedge ck[0]) for (i = 0; i < NH; i = i + 1) k2[i] <= kq;
+    // grp r7 (as capt_g2 g2b; capt_grp-48203c4d9-f SS -242: address multiply / adds / compare at 20-25 levels): one more constant stage K3 (the
+    // phase constants and go move one cycle later, the rows gain one stage R5 in front of the check, so every
+    // row-vs-phase relation is unchanged) and the address path split W1 / W1b / W2 with kept Kogge-Stone adds
+    (* keep *) reg [KB-1:0] k3 [0:NH-1];
+    always @(posedge ck[0]) for (i = 0; i < NH; i = i + 1) k3[i] <= k2[i];
     wire [7:0]  k_rhi = kq[15:8];
     wire [5:0]  k_lot = kq[7:2];
     wire [2:0]  k_np  = kq[36:34];
@@ -73,25 +78,27 @@ module dsfd_capt_grp #(
     generate for (g = 0; g < NR; g = g + 1) begin : g_r
         localparam integer H = g / (NR / NH);
         wire          rs_n = rst_h[H];
-        wire [KB-1:0] k = k2[H];
+        wire [KB-1:0] k = k3[H];
         wire          go = k[97];
         // held constants of the phase (updated by go at the K2 stage: visible from t'+5)
         reg [29:0] ob, ops; reg [2:0] np; reg [1:0] fmt; reg [15:0] rs; reg lo, hi, gate;
         always @(posedge ck[0]) if (go) {ob, ops, np, fmt, rs, lo, hi} <= {k[96:67], k[66:37], k[36:34], k[33:32],
                                                                           k[31:16], k[1], k[0]};
-        always @(posedge ck[0] or negedge rs_n) if (!rs_n) gate <= 1'b0; else gate <= k[98];
+        reg gate0;
+        always @(posedge ck[0] or negedge rs_n) if (!rs_n) begin gate0 <= 1'b0; gate <= 1'b0; end else begin gate0 <= k[98]; gate <= gate0; end
         // quota exactly as ot_dsrom_s81_phase_capture_profile for this root: the ctl sends lo_t = clamp(rows[7:0] -
         // 32 * tile, 0, 32), so (rows[7:0] > 2R) == (lo_t > 2g) for R = 16 * tile + g
-        reg [13:0] q2;
+        reg [13:0] q2; reg [9:0] rr; reg [3:0] pr;
         wire [9:0] rows_r = {1'b0, k_rhi, 1'b0} + 10'(k_lot > 6'(2 * g)) + 10'(k_lot > 6'(2 * g + 1));
-        always @(posedge ck[0]) q2 <= rows_r * positions;
+        always @(posedge ck[0]) begin rr <= rows_r; pr <= positions; q2 <= rr * pr; end
         // rows: pin (t) -> R1 bf16 RNE (t+1) -> R2 -> R3 -> R4 (t+4): check
-        reg v1, v2, v3, v4; reg [51:0] d1, d2, d3, d4; reg [15:0] bf1, bf2, bf3, bf4;
+        reg v1, v2, v3, v4, v5; reg [51:0] d1, d2, d3, d4, d5; reg [15:0] bf1, bf2, bf3, bf4, bf5;
         wire [51:0] d0 = fr[53 * g + 1 +: 52];
         wire [32:0] rb = {1'b0, d0[31:0]} + 33'h7FFF + {32'd0, d0[16]};
         always @(posedge ck[0] or negedge rs_n)
-            if (!rs_n) begin v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; end
-            else begin v1 <= fr[53 * g]; v2 <= v1; v3 <= v2; v4 <= v3; end
+            if (!rs_n) begin v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; v5 <= 1'b0; end
+            else begin v1 <= fr[53 * g]; v2 <= v1; v3 <= v2; v4 <= v3; v5 <= v4; end
+        always @(posedge ck[0]) begin d5 <= d4; bf5 <= bf4; end
 `ifdef S81PH_MUTANT_BF16_TRUNC
         always @(posedge ck[0]) begin d1 <= d0; bf1 <= d0[31:16]; d2 <= d1; bf2 <= bf1; d3 <= d2; bf3 <= bf2;
                                       d4 <= d3; bf4 <= bf3; end
@@ -104,34 +111,52 @@ module dsfd_capt_grp #(
         always @(posedge ck[0] or negedge rs_n)
             if (!rs_n) begin exp_q <= 14'd0; rcv <= 19'd0; end
             else if (go) begin exp_q <= q2; rcv <= 19'd0; end
-            else if (v4) rcv <= rcv + 19'd1;
+            else if (v5) rcv <= rcv + 19'd1;
         // check (R4)
-        wire [15:0] row = d4[47:32]; wire [2:0] pos = d4[50:48]; wire e = d4[51];
+        wire [15:0] row = d5[47:32]; wire [2:0] pos = d5[50:48]; wire e = d5[51];
 `ifdef S81PH_MUT_NOOVER
         wire over = 1'b0;
 `else
         wire over = rcv >= {5'd0, exp_q};
 `endif
-        wire bad1 = v4 && (e || pos > np || over);
-        // W1 (t+5): partial address, format compare
-        reg w1v, w1ok, w1bad; reg [30:0] s1; reg [32:0] m1; reg lt1; reg [31:0] f1; reg [15:0] b1;
+        wire bad1 = v5 && (e || pos > np || over);
+        // W1: partial products / low address half / split compare; constants sampled here only (carried along)
+        reg w1v, w1ok, w1bad; reg [16:0] s1lo; reg [13:0] obh; reg [32:0] pp01, pp2; reg hlt, heq, llt;
+        reg [31:0] f1; reg [15:0] b1; reg [1:0] fmt1; reg lo1, hi1;
+        wire [32:0] t0 = pos[0] ? {3'd0, ops} : 33'd0, t1 = pos[1] ? {2'd0, ops, 1'b0} : 33'd0;
+        wire [32:0] p01; wire p01c;
+        ot_hdc_ksadd_k #(.W(33)) u_p01 (.a(t0), .b(t1), .cin(1'b0), .s(p01), .cout(p01c));
         always @(posedge ck[0] or negedge rs_n)
             if (!rs_n) begin w1v <= 1'b0; w1ok <= 1'b0; w1bad <= 1'b0; end
-            else begin w1v <= v4; w1ok <= v4 && !bad1; w1bad <= bad1; end
+            else begin w1v <= v5; w1ok <= v5 && !bad1; w1bad <= bad1; end
         always @(posedge ck[0]) begin
-            s1 <= {1'b0, ob} + {15'd0, row};
-            m1 <= {30'd0, pos} * {3'd0, ops};
-            lt1 <= row < rs;
-            f1 <= d4[31:0]; b1 <= bf4;
+            s1lo <= {1'b0, ob[15:0]} + {1'b0, row}; obh <= ob[29:16];
+            pp01 <= p01; pp2 <= pos[2] ? {1'b0, ops, 2'b0} : 33'd0;
+            hlt <= row[15:8] < rs[15:8]; heq <= row[15:8] == rs[15:8]; llt <= row[7:0] < rs[7:0];
+            f1 <= d5[31:0]; b1 <= bf5; fmt1 <= fmt; lo1 <= lo; hi1 <= hi;
         end
-        // W2 (t+6): address, data select
+        // W1b: address halves, product, compare
+        reg w1bv, w1bok, w1bbad; reg [30:0] s1; reg [32:0] m1; reg lt1; reg [31:0] f2; reg [15:0] b2; reg [1:0] fmt2; reg lo2, hi2;
+        wire [32:0] mp; wire mpc;
+        ot_hdc_ksadd_k #(.W(33)) u_m (.a(pp01), .b(pp2), .cin(1'b0), .s(mp), .cout(mpc));
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin w1bv <= 1'b0; w1bok <= 1'b0; w1bbad <= 1'b0; end
+            else begin w1bv <= w1v; w1bok <= w1ok; w1bbad <= w1bad; end
+        always @(posedge ck[0]) begin
+            s1 <= {{1'b0, obh} + {14'd0, s1lo[16]}, s1lo[15:0]};
+            m1 <= mp; lt1 <= hlt | (heq & llt);
+            f2 <= f1; b2 <= b1; fmt2 <= fmt1; lo2 <= lo1; hi2 <= hi1;
+        end
+        // W2: address, data select
         reg w2v, w2ok, w2bad; reg [33:0] a2; reg [31:0] dt2;
+        wire [33:0] as; wire asc;
+        ot_hdc_ksadd_k #(.W(34)) u_a (.a({3'd0, s1}), .b({1'b0, m1}), .cin(1'b0), .s(as), .cout(asc));
         always @(posedge ck[0] or negedge rs_n)
             if (!rs_n) begin w2v <= 1'b0; w2ok <= 1'b0; w2bad <= 1'b0; end
-            else begin w2v <= w1v; w2ok <= w1ok; w2bad <= w1bad; end
+            else begin w2v <= w1bv; w2ok <= w1bok; w2bad <= w1bbad; end
         always @(posedge ck[0]) begin
-            a2 <= {3'd0, s1} + {1'b0, m1};
-            dt2 <= (fmt == 2'd1 || (fmt == 2'd0 && (lt1 ? lo : hi))) ? f1 : {b1, 16'b0};
+            a2 <= as;
+            dt2 <= (fmt2 == 2'd1 || (fmt2 == 2'd0 && (lt1 ? lo2 : hi2))) ? f2 : {b2, 16'b0};
         end
         // W3 (t+7): range, write
         wire range_error = |a2[33:19];
@@ -142,7 +167,7 @@ module dsfd_capt_grp #(
         always @(posedge ck[0]) begin w_a <= a2[18:0]; w_dt <= dt2; end
         wire vm_valid = w_ok && !gate;
         assign r_bad[g]  = w_bad;
-        assign r_done[g] = rcv == {5'd0, exp_q} && !(v1 || v2 || v3 || v4 || w1v || w2v || wv3);
+        assign r_done[g] = rcv == {5'd0, exp_q} && !(v1 || v2 || v3 || v4 || v5 || w1v || w1bv || w2v || wv3);
         // ---- pair packer + crossing (as ot_s81ph_cap_p)
         reg [50:0] h [0:3];
         reg [1:0] hr, hw;
