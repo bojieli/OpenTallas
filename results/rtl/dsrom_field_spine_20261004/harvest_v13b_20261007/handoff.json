@@ -1,0 +1,32 @@
+{
+  "source_commit": "806589cc7",
+  "status": "RUNNING_HOLD_ECO",
+  "adopted": false,
+  "r16": {
+    "last_completed": "pass1",
+    "ss_ps": 63.09,
+    "ff_ps": -33.9,
+    "drc": 0,
+    "accepted": false,
+    "live": "pass2 FF-only repair"
+  },
+  "r128": {
+    "last_completed": "pre-ECO",
+    "ss_ps": 16.72,
+    "ff_ps": -121.92,
+    "accepted": false,
+    "live": "pass1 FF-only repair"
+  },
+  "exact_record": "results/rtl/dsrom_field_spine_20261004/exactness_v13b.json",
+  "stale_exit": "jobs/c1r16_ek_eco.exit=9 belongs to 01:43 failed helper attempt. MANIFEST restarts at 01:43:59; runtime.json records live pass2. Do not interpret this stale exit as final.",
+  "pending": [
+    "Both final ECOs, route DRC and actual SS/FF >=15",
+    "Die-context STA before PQ adoption"
+  ],
+  "failure_evidence": "Original FAIL_FLOW terminal files, failed helper exit, and R16 pass1 miss retained unchanged.",
+  "integration": "Coordinator only; no central main merge or push, no duplicate launch, no running job modified.",
+  "validation": {
+    "harvest_hashes": "PASS",
+    "files": 13
+  }
+}

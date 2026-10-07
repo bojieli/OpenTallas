@@ -1,0 +1,96 @@
+{
+  "observed_utc": "2026-10-07T10:49:56.987723+00:00",
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/eco.log",
+      "sha256_at_observation": "53a89b3b9a909a0c954ada84146b6d1e7be6b8b65f08d2a8e4c330b52cb667ba",
+      "bytes": 171686,
+      "tail": [
+        "OT_ECO post_ws ss n/a ff -34.767467",
+        "OT_ECO done",
+        "{",
+        " \"ss_ps\": 63.09,",
+        " \"ff_ps\": -33.9,",
+        " \"drc\": 0,",
+        " \"cells_added\": 16087,",
+        " \"errors\": [],",
+        " \"pass\": 1,",
+        " \"session\": \"ff\",",
+        " \"window\": \"endpoints_below_hm 13222 fixable 13222 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15)\",",
+        " \"score\": -48.9",
+        "}OT_PASS 2 input /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass1/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base/6_final.odb spef /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass1/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base/6_final.spef",
+        "OT_SDC_MERGE lines 14120 shifted {}",
+        "OT_PASS 2 hold repair target 30.0 (post-route goal 18, acceptance 15)",
+        "OT_ECO session_mismatch: two-corner worst setup 40.67 / hold -240.22 vs sign-off SS 63.09 / FF -33.90 -> FF-only session"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass2/eco_ff.log",
+      "sha256_at_observation": "125426cc67cd5dfbeb4171a554204019b7735983ffaaf135934f4f473ff545cc",
+      "bytes": 297279,
+      "tail": [
+        "    20690 |       0 |   20648 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20700 |       0 |   20658 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20710 |       0 |   20668 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20720 |       0 |   20678 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20730 |       0 |   20688 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20740 |       0 |   20698 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20750 |       0 |   20708 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20760 |       0 |   20718 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20770 |       0 |   20728 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20780 |       0 |   20738 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20790 |       0 |   20748 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20800 |       0 |   20758 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20810 |       0 |   20768 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20820 |       0 |   20778 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20830 |       0 |   20788 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D",
+        "    20840 |       0 |   20798 |            0 |    +2.3% |  11.650 |   0.000 | u_sp.g_aq[0].u_aq/u_x.genblk1.g_line.line[12967]$_DFF_P_/D"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r128_ek/eco.log",
+      "sha256_at_observation": "c7c6500bffc7d9846ae7bf9111de59439436af415f6f4cb5664631827fdbcf15",
+      "bytes": 587,
+      "tail": [
+        "OT_PASS 1 input /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base/5_2_route.odb spef /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base/6_final.spef",
+        "OT_SDC_MERGE lines 47048 shifted {}",
+        "OT_PASS 1 hold repair target 25.0 (post-route goal 22, acceptance 15)",
+        "OT_ECO session_mismatch: two-corner worst setup -23.65 / hold -286.63 vs sign-off SS 16.72 / FF -121.92 -> FF-only session"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r128_ek/pass1/eco_ff.log",
+      "sha256_at_observation": "b147a5eb7a89f916b6083c504183d1aa415f18d0cefcf3126aefa97ded4b2e74",
+      "bytes": 76736,
+      "tail": [
+        "     6280 |       0 |   12498 |            0 |    +0.9% | -69.177 | -202017.266 | q_x[708]$_DFF_P_/D",
+        "     6290 |       0 |   12518 |            0 |    +0.9% | -69.148 | -201325.672 | q_f32[3021]$_DFF_P_/D",
+        "     6300 |       0 |   12538 |            0 |    +0.9% | -69.118 | -200634.297 | q_f32[331]$_DFF_P_/D",
+        "     6310 |       0 |   12558 |            0 |    +0.9% | -69.081 | -199943.266 | q_row[1102]$_DFF_P_/D",
+        "     6320 |       0 |   12578 |            0 |    +0.9% | -69.042 | -199252.641 | q_bf[143]$_DFF_P_/D",
+        "     6330 |       0 |   12598 |            0 |    +0.9% | -68.994 | -198562.438 | q_row[571]$_DFF_P_/D",
+        "     6340 |       0 |   12618 |            0 |    +0.9% | -68.963 | -197872.641 | q_f32[3786]$_DFF_P_/D",
+        "     6350 |       0 |   12638 |            0 |    +0.9% | -68.923 | -197183.203 | q_f32[3388]$_DFF_P_/D",
+        "     6360 |       0 |   12658 |            0 |    +0.9% | -68.885 | -196494.125 | q_f32[1335]$_DFF_P_/D",
+        "     6370 |       0 |   12678 |            0 |    +0.9% | -68.856 | -195805.453 | q_bf[672]$_DFF_P_/D",
+        "     6380 |       0 |   12698 |            0 |    +0.9% | -68.821 | -195117.047 | q_pos[115]$_DFF_P_/D",
+        "     6390 |       0 |   12718 |            0 |    +0.9% | -68.802 | -194428.922 | q_row[375]$_DFF_P_/D",
+        "     6400 |       0 |   12738 |            0 |    +0.9% | -68.776 | -193741.047 | q_bf[1770]$_DFF_P_/D",
+        "     6410 |       0 |   12758 |            0 |    +0.9% | -68.755 | -193053.422 | q_pos[372]$_DFF_P_/D",
+        "     6420 |       0 |   12778 |            0 |    +0.9% | -68.728 | -192366.000 | q_f32[3115]$_DFF_P_/D",
+        "     6430 |       0 |   12798 |            0 |    +0.9% | -68.674 | -191678.875 | q_x[271]$_DFF_P_/D"
+      ]
+    }
+  ],
+  "processes": [
+    "  46115    02:05:57 /bin/bash /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/eco_only.sh c1r16_ek",
+    "  46117    02:05:57 bash /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/hold_eco.sh /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek c1r16_ek physical/dsrom_field_spine/signoff_r16.sdc",
+    "2909600       53:37 bash /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/hold_eco.sh /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r128_ek c1r128_ek physical/dsrom_field_spine/signoff_r128.sdc",
+    "3102964       33:20 docker run --rm -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base:/in:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base:/inspef:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r128_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base:/ob:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r128_ek/pass1:/p -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/src:/src:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b:/cl:ro -e OT_MACROS= -e OT_CL=/cl -e OT_DB=/in/5_2_route.odb -e OT_OUT=/p/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r128_ek/base -e OT_HOLD_MARGIN=25.0 -e OT_SETUP_MARGIN=25 -e OT_SETUP_FILTER=40 -e OT_ACCEPT_SS=15 -e OT_ACCEPT_FF=15 -e OT_HOLD_CELLS=1 -e OT_RES_AWARE=1 -e OT_KEEP_CLOCK=0 -e OT_THREADS=16 -e OT_MAXL=M7 -e OT_MAX_BUF_PCT=10 -e OT_WINDOW_ONLY=0 -e OT_SESSION=ff -e OT_SDC=/p/eff_ff.sdc -e OT_SS_SLACK=/p/eff_ss.sdc.slack -e OT_SS_CRIT=/p/eff_ss.sdc.crit openroad/orfs:asap7lock bash -lc /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/hold_eco.tcl",
+    "3175656       24:53 docker run --rm -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass1/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base:/in:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass1/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base:/inspef:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base:/ob:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/eco_c1r16_ek/pass2:/p -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b/src:/src:ro -v /srv/opentallas-scratch/claude/dsrom-field-spine/v13b:/cl:ro -e OT_MACROS= -e OT_CL=/cl -e OT_DB=/in/6_final.odb -e OT_OUT=/p/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base -e OT_HOLD_MARGIN=30.0 -e OT_SETUP_MARGIN=40 -e OT_SETUP_FILTER=40 -e OT_ACCEPT_SS=15 -e OT_ACCEPT_FF=15 -e OT_HOLD_CELLS=1 -e OT_RES_AWARE=1 -e OT_KEEP_CLOCK=0 -e OT_THREADS=16 -e OT_MAXL=M7 -e OT_MAX_BUF_PCT=30 -e OT_WINDOW_ONLY=0 -e OT_SESSION=ff -e OT_SDC=/p/eff_ff.sdc -e OT_SS_SLACK=/p/eff_ss.sdc.slack -e OT_SS_CRIT=/p/eff_ss.sdc.crit openroad/orfs:asap7lock bash -lc /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/hold_eco.tcl"
+  ],
+  "images": [
+    "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+  ]
+}

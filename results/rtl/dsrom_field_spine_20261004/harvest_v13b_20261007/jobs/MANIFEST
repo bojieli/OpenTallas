@@ -1,0 +1,16 @@
+2026-10-06T13:36:35-07:00 START c1r16_ek ot-epyc1tb period=0.770 aq=ot_dsrom_aq12m
+2026-10-06T13:36:35-07:00 START c1r128_ek ot-epyc1tb period=0.770 aq=ot_dsrom_aq12m
+2026-10-06T13:52:45-07:00 END c1r16_ek exit=1 {"tag": "c1r16_ek", "verdict": "FAIL_FLOW", "error": "FileNotFoundError(2, 'No such file or directory')"}
+2026-10-06T13:58:13-07:00 END c1r128_ek exit=1 {"tag": "c1r128_ek", "verdict": "FAIL_FLOW", "error": "FileNotFoundError(2, 'No such file or directory')"}
+2026-10-06T13:58:40-07:00 START c1r16_ek ot-epyc1tb period=0.770 aq=ot_dsrom_aq12m
+2026-10-06T13:58:40-07:00 START c1r128_ek ot-epyc1tb period=0.770 aq=ot_dsrom_aq12m
+2026-10-06T20:54:13-07:00 RESTART-GRT c1r128_ek HOLD_SLACK_MARGIN 20
+2026-10-06T20:54:13-07:00 RESTART-GRT c1r16_ek HOLD_SLACK_MARGIN 20
+2026-10-06T23:19:51-07:00 KILLED regrt_h20 (GRT hold repair crawl at iteration 1230/1570); owner decision: no GRT hold, DRT, post-route hold ECO
+2026-10-06T23:19:52-07:00 RESTART-GRT-NOHOLD c1r128_ek HOLD_SLACK_MARGIN -1000
+2026-10-06T23:19:52-07:00 RESTART-GRT-NOHOLD c1r16_ek HOLD_SLACK_MARGIN -1000
+2026-10-07T00:55:23-07:00 ROUTE-END c1r16_ek exit=0
+2026-10-07T01:43:44-07:00 ECO-END c1r16_ek exit=9 tail: cannot open '/eco_two.log' for reading: No such file or directory
+2026-10-07T01:43:59-07:00 ECO-RESTART c1r16_ek with current closure-loop hold ECO helpers (stale copy chased SS hold)
+2026-10-07T01:54:46-07:00 STATUS: R16 routed SS +68.4/FF -82.3 (pre-ECO), ECO pass1 running (eco_only.sh, current loop helpers); R128 in DRT, then hold_eco.sh (same helpers). Verdict by hand at harvest: accept SS>=+15/FF>=+15 at 833 DRC 0.
+2026-10-07T02:56:19-07:00 ROUTE-END c1r128_ek exit=0
