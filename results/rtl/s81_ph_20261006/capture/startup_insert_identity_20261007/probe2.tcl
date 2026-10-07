@@ -1,3 +1,25 @@
+
+read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef
+read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef
+
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+
+read_db /input/6_final.odb
+read_sdc /input/6_final.sdc
+read_spef /input/6_final.spef
+set_propagated_clock [all_clocks]
+read_sdc /src/physical/s81_ph_views/common/signoff_unc60.sdc
+
+set patch_out {/case/candidate}
+set patches {
+  {g_r[12].u_x.w_st_r[0]$_DFF_P_/D} {HB3xp67_ASAP7_75t_R}
+}
+# Exact leaf-only buffer insertion. Timing after mutation is deliberately NOT
+# used as a verdict: the runner launches fresh SS and FF processes on the output.
 # Exact leaf-only buffer insertion. Timing after mutation is deliberately NOT
 # used as a verdict: the runner launches fresh SS and FF processes on the output.
 set block [ord::get_db_block]
@@ -63,21 +85,5 @@ foreach {endpoint masters} $patches {
     incr ordinal
   }
 }
-detailed_placement
-check_placement -verbose
-# Reuse original GRT guides for unaffected nets. Strip detailed wires because
-# this OpenROAD build fails connectivity with mixed kept/fresh detailed routing.
-foreach net [$block getNets] {
-  if {[$net getSigType] in {POWER GROUND}} continue
-  if {[$net getWire] ne "NULL"} {odb::dbWire_destroy [$net getWire]}
-}
-global_route -end_incremental -allow_congestion -resistance_aware
-detailed_route -output_drc $patch_out/drc.rpt -verbose 1
-filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
-check_placement -verbose
-extract_parasitics -ext_model_file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules
-write_spef $patch_out/6_final.spef
-write_db $patch_out/6_final.odb
-write_verilog $patch_out/6_final.v
-puts "S81_STARTUP_PATCH_WRITTEN cells_added=$ordinal fresh_corner_processes_required=1"
+puts "INSERT_ASSERTIONS_PASS"
 exit
