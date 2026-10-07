@@ -34,9 +34,9 @@ ITEMS = [
                    "all-reduce 2 traversals +4, all-gather +2",
      [("*.substage_hop0", 2, 0), ("*.substage_hop1", 2, 0), ("head.hop", 2, 0), ("token.return", 16, 0)]
      + [(k, 4, 0) for k in AR_] + [(k, 2, 0) for k in AG_]),
-    ("sel_xstg", "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end "
-                 "block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
-     [(k, 1, 0) for k in ("*.attn.idx.topk_local", "*.attn.cand.topk_local", "*.attn.gather")]),
+    ("sel_xstg", "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block "
+                 "-> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job",
+     [(k, 6, 0) for k in ("*.attn.idx.topk_local", "*.attn.cand.topk_local", "*.attn.gather")]),
     ("vm_bank_group", "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)", [(k, 8, 0) for k in MAT]),
     ("gather_root_v4", "Gather root v4: +6 cycles per phase", [(k, 6, 0) for k in MAT]),
     ("capture", "Capture tiles: VM write +3 a phase", [(k, 3, 0) for k in MAT]),
