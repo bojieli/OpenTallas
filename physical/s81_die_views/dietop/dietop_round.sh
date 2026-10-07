@@ -17,9 +17,6 @@ proc step {name body} { set t0 [clock milliseconds]
   if {[catch {uplevel 1 \$body} err]} { puts "OT_STEP_FAIL \$name \$err"; flush stdout; return 0 }
   puts "OT_TIME step=\$name s=[format %.1f [expr {([clock milliseconds]-\$t0)/1000.0}]]"; mem \$name; flush stdout; return 1 }
 set_thread_count $T
-read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef
-read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef
-foreach f {q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef elements.lef} { read_lef /work/\$f }
 step load { read_db /work/placed.odb }
 step coarse { set b [ord::get_db_block]; set p [expr {$TILE/15.0}]
   foreach ln {M2 M3} { odb::dbTrackGrid_destroy [\$b findTrackGrid [[ord::get_db_tech] findLayer \$ln]]

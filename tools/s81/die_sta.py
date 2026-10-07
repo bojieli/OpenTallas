@@ -110,7 +110,7 @@ def main():
             cells.append((mst, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
             rec['masters'][mst] = dict(view='interim', ports=len(ports))
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner))
-        (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [str(a.out / f'interim_{corner}.lib')]) + '\n')
+        (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
     # clocks: die domain sources (collective PLL pins) and the column roots (cfifo co)
     srcs = []
     for bid, cls, bits, eps in m['buses']:
