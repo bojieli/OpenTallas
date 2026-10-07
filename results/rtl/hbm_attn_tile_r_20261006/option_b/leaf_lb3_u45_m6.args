@@ -1,0 +1,1 @@
+ot_attn_hgrp_m6h1 util=45 pd=0.60 HM=0.03 --routing-layers M2 M6 --die-area 0 0 241.4 241.4 --core-area 2 2 239.4 239.4 --orfs-var IO_CONSTRAINTS=/src/physical/hbm_attn_tile_r/leaf_pins_lb.tcl --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl
