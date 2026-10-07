@@ -113,8 +113,8 @@ D['rates'] = dict(
         dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
-        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 mapping with half-rate BF is a candidate of at most %.1f AR, field phases unmeasured: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
-        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; 1792 candidate at most %.1f)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
+        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 mapping with half-rate BF: %.1f AR as a partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
+        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; 1792 sensitivity %.1f, no bound proven)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
         AR_us=V(ds['AR_us'], 'us', 'measured', CMP + ' ds_rom.AR_us'),
         MTP_step_us=V(ds['MTP_step_us'], 'us', 'measured', CMP + ' ds_rom.MTP_step_us'),
         II_us=V(ds['II_us'], 'us', 'measured', CMP + ' ds_rom.II_us (slowest stage busy + hop)'),

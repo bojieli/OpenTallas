@@ -20,7 +20,7 @@ Accessors (import tools/unified_composition as U):
     U.ledger()                     the whole record (dict)
     U.target('qwen_rom')           one target: lines, compositions, gates
     U.composition('hbm_ds', 'unified_candidate')
-    U.line('ds_rom', 'bf_half_rate_upper')
+    U.line('ds_rom', 'bf_half_rate_doubling')
     U.lines(status='gated-unknown')
 """
 from __future__ import annotations
@@ -299,10 +299,11 @@ def ds_rom():
           "priced-candidate", dict(unit="us", AR=round(var["full_shared"]["extra_hops_vs_composed"] * hop_us, 3),
                                    MTP_step=round(var["full_shared"]["extra_hops_vs_composed"] * hop_us, 3)),
           [src(f"{DS_MAP}/full_shared/inventory.json", "stages"), src(DS_LINKS, "hop.us")], "as above", "alternative"),
-        L("bf_half_rate_upper", "BF half-rate (owner 2026-10-07): BF16 field phases doubled", "priced-candidate",
+        L("bf_half_rate_doubling", "BF half-rate (owner 2026-10-07): BF16 field phases doubled", "priced-candidate",
           dict(unit="us", AR=bf_ar, MTP_step=bf_mtp), src(DS_LEDGER, "candidates[bf_half]"),
-          "upper bound for BF-dedicated pairs (q phases on q pairs stay full rate); a LOWER bound for shared pairs, where q "
-          "words on BF pairs (20.6 %%) also halve; zero added logic cycles (%s)" % DS_BFROOT, "alternative"),
+          "priced BF16-phase doubling only (q phases on q pairs unchanged); on shared pairs the q words on BF pairs (20.6 %%) "
+          "would also halve and are not priced. With the field phases of the 1792 geometry unmeasured, this proves no "
+          "overall bound in either direction; zero added logic cycles (%s)" % DS_BFROOT, "alternative"),
         L("return_station_plus1", "Spine return station +1 cycle a return crossing (sensitivity)", "priced-candidate",
           dict(unit="us", AR=round(max(v["conditional_AR_latency_delta_ns"] for v in ret["variants"]) / 1000, 3),
                MTP_step=round(max(tau * 1e6 / v["conditional_MTP_tok_s"] - tau * 1e6 / v["baseline_MTP_tok_s"] for v in ret["variants"]), 3)),
@@ -363,9 +364,12 @@ def ds_rom():
                        + rack["counts"]["table"] + rack["counts"]["draft"], rack["counts"]["head"], rack["counts"]["table"], rack["counts"]["draft"])),
             basis=[src(DS_GEOM, "variants[name=mixed221]", commit="77ffa0428"), src(f"{DS_MAP}/{name}/inventory.json", "stages, layer_dies", commit="2d811aafb")],
             adopted=False, closure=False,
-            status="priced-candidate (current physical integration basis; not an adopted rate)", bound=("upper bound on latency (lower bound on rate) for the BF16 doubling"
-                                              if name == "half_dedicated" else "rate is an UPPER bound: shared-pair q phases also halve"),
-            gated_by=gates, lines=[hops, "bf_half_rate_upper"],
+            status="priced-candidate (current physical integration basis; not an adopted rate)",
+            label="partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
+            bound="none proven",
+            caveat=("BF16 doubling priced; field phases at this geometry unmeasured" if name == "half_dedicated" else
+                    "BF16 doubling priced; shared-pair q-phase halving NOT priced (undercount); field phases unmeasured"),
+            gated_by=gates, lines=[hops, "bf_half_rate_doubling"],
             note="published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured")
     comps["option_B_2304_historical"] = dict(
         AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], tau=tau, stages=BFB["stages"], pairs_per_layer_die=BFB["pairs"],
@@ -384,11 +388,11 @@ def ds_rom():
         basis=[dict(name="actual1792_half_dedicated", commits=["77ffa0428", "2d811aafb"], stages=var["half_dedicated"]["stages"],
                     dies=var["half_dedicated"]["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
                     AR_tok_s=comps["actual1792_half_dedicated"]["AR_tok_s"], MTP_tok_s=comps["actual1792_half_dedicated"]["MTP_tok_s"],
-                    status="priced-candidate envelope; field phases unmeasured"),
+                    status="partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound", bound="none proven"),
                dict(name="actual1792_full_shared", commits=["77ffa0428", "2d811aafb"], stages=var["full_shared"]["stages"],
                     dies=var["full_shared"]["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
                     AR_tok_s=comps["actual1792_full_shared"]["AR_tok_s"], MTP_tok_s=comps["actual1792_full_shared"]["MTP_tok_s"],
-                    status="priced-candidate; rate upper bound")],
+                    status="partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound", bound="none proven")],
         not_basis=[dict(name="option_B_2304 (505a9b484)", status="numerical, legal-fit failed, not physically qualified"),
                    dict(name="option_A_2048 (f198.72)", status="numerical field measurement, unadopted, full-rate BF")])
     return dict(context="DeepSeek-V4.1 1M, S81 array, TP4", tau=tau, lines=lines, compositions=comps, gates=gates,
@@ -531,7 +535,7 @@ def ledger():
         basis="per user, same tau on both sides; both sides priced-candidate",
         ds_rom_published_over_hbm_unified=dict(AR=round(d["compositions"]["published"]["AR_tok_s"] / hu["AR_tok_s"], 4),
                                                MTP=round(d["compositions"]["published"]["MTP_tok_s"] / hu["MTP_tok_s"], 4)),
-        ds_rom_1792_half_dedicated_over_hbm_unified=dict(
+        ds_rom_1792_half_dedicated_over_hbm_unified=dict(note="partial-priced sensitivity (unmeasured field phases), no bound proven",
             AR=round(d["compositions"]["actual1792_half_dedicated"]["AR_tok_s"] / hu["AR_tok_s"], 4),
             MTP=round(d["compositions"]["actual1792_half_dedicated"]["MTP_tok_s"] / hu["MTP_tok_s"], 4)),
         stale=dict(record=src(CMP, "ratios"), AR=load(CMP)["ratios"]["ds_rom_over_hbm_ar"], MTP=load(CMP)["ratios"]["ds_rom_over_hbm_mtp"],
