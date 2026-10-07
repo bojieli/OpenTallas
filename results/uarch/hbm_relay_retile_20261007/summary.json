@@ -1,0 +1,1097 @@
+{
+  "status": "FAIL-incomplete-relay-geometry-and-capacity",
+  "selected": false,
+  "positive_scope": "26 of32full270bit resultleaves have jointlyreservedendpointboxes and independentwidth-awarecenterlinepaths",
+  "assumptions": {
+    "station_shape_um": [
+      20,
+      20
+    ],
+    "pin_location": "source d and sink q lie on endpoint-facing station edge; not yet hardened",
+    "minimum_endpoint_aisle_um": 12,
+    "maximum_straight_stage_um": 300,
+    "pitch_um": 0.08
+  },
+  "full_result_payload_bits": 8640,
+  "complete_leaves": 26,
+  "packing_failed_leaves": [
+    {
+      "bus": "rl_sm4",
+      "failures": [
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm4",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm15",
+      "failures": [
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm15",
+          "face": "S",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm20",
+      "failures": [
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm20",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm23",
+      "failures": [
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        },
+        {
+          "instance": "sm23",
+          "face": "N",
+          "side": "source",
+          "reason": "joint face-grid matching exhausted four phases under current obstacles; not an infeasibility proof"
+        }
+      ]
+    }
+  ],
+  "path_failed_groups": [
+    {
+      "bus": "rl_sm7",
+      "bits": [
+        140,
+        139,
+        138,
+        137,
+        136,
+        135,
+        134,
+        133,
+        132,
+        131,
+        130,
+        129,
+        128,
+        127,
+        126,
+        125,
+        124,
+        123,
+        122,
+        121,
+        120,
+        119,
+        118,
+        117,
+        116,
+        115,
+        114,
+        113,
+        112,
+        111,
+        110,
+        109,
+        108,
+        107,
+        106,
+        105,
+        104,
+        103,
+        102,
+        101,
+        100,
+        99,
+        98,
+        97,
+        96,
+        95,
+        94,
+        93,
+        92,
+        91,
+        90,
+        89,
+        88,
+        87,
+        86,
+        85,
+        84,
+        83,
+        82,
+        81,
+        80,
+        79,
+        78,
+        77
+      ],
+      "source_station": {
+        "box_um": [
+          5465.599999999999,
+          4606.84,
+          5485.599999999999,
+          4626.84
+        ],
+        "centre_um": [
+          5475.599999999999,
+          4616.84
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 58.17999999999938,
+        "assumed_endpoint_facing_pins": "d",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "sink_station": {
+        "box_um": [
+          8052.768,
+          3197.6,
+          8072.768,
+          3217.6
+        ],
+        "centre_um": [
+          8062.768,
+          3207.6
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 75.05199999999968,
+        "assumed_endpoint_facing_pins": "q",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "reason": "no obstacle-free channel path; change floorplan"
+    },
+    {
+      "bus": "rl_sm7",
+      "bits": [
+        12,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "source_station": {
+        "box_um": [
+          5433.2,
+          4606.84,
+          5453.2,
+          4626.84
+        ],
+        "centre_um": [
+          5443.2,
+          4616.84
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 33.2440000000006,
+        "assumed_endpoint_facing_pins": "d",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "sink_station": {
+        "box_um": [
+          8052.768,
+          3132.7999999999997,
+          8072.768,
+          3152.7999999999997
+        ],
+        "centre_um": [
+          8062.768,
+          3142.7999999999997
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 29.379999999999654,
+        "assumed_endpoint_facing_pins": "q",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "reason": "no obstacle-free channel path; change floorplan"
+    },
+    {
+      "bus": "rl_sm31",
+      "bits": [
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128
+      ],
+      "source_station": {
+        "box_um": [
+          24516.8,
+          19683.96,
+          24536.8,
+          19703.96
+        ],
+        "centre_um": [
+          24526.8,
+          19693.96
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 96.77200000000084,
+        "assumed_endpoint_facing_pins": "d",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "sink_station": {
+        "box_um": [
+          29472.328,
+          20628.8,
+          29492.328,
+          20648.8
+        ],
+        "centre_um": [
+          29482.328,
+          20638.8
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 84.82000000000335,
+        "assumed_endpoint_facing_pins": "q",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "reason": "no obstacle-free channel path; change floorplan"
+    },
+    {
+      "bus": "rl_sm31",
+      "bits": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "source_station": {
+        "box_um": [
+          24581.6,
+          19683.96,
+          24601.6,
+          19703.96
+        ],
+        "centre_um": [
+          24591.6,
+          19693.96
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 25.899999999997817,
+        "assumed_endpoint_facing_pins": "d",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "sink_station": {
+        "box_um": [
+          29472.328,
+          20726.0,
+          29492.328,
+          20746.0
+        ],
+        "centre_um": [
+          29482.328,
+          20736.0
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 58.15600000000268,
+        "assumed_endpoint_facing_pins": "q",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "reason": "no obstacle-free channel path; change floorplan"
+    },
+    {
+      "bus": "rl_sm31",
+      "bits": [
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192
+      ],
+      "source_station": {
+        "box_um": [
+          24549.2,
+          19683.96,
+          24569.2,
+          19703.96
+        ],
+        "centre_um": [
+          24559.2,
+          19693.96
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 70.51599999999962,
+        "assumed_endpoint_facing_pins": "d",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "sink_station": {
+        "box_um": [
+          29472.328,
+          20693.6,
+          29492.328,
+          20713.6
+        ],
+        "centre_um": [
+          29482.328,
+          20703.6
+        ],
+        "worst_pin_to_endpoint_facing_side_um": 38.04400000000169,
+        "assumed_endpoint_facing_pins": "q",
+        "packing": "joint-face-grid-matching",
+        "grid_phase_um": 0.0
+      },
+      "reason": "no obstacle-free channel path; change floorplan"
+    }
+  ],
+  "per_complete_leaf": [
+    {
+      "bus": "rl_sm0",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 18,
+      "max_unbalanced_stages": 22,
+      "skew_cycles": 4,
+      "balanced_register_bits": 5940
+    },
+    {
+      "bus": "rl_sm3",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 36,
+      "max_unbalanced_stages": 62,
+      "skew_cycles": 26,
+      "balanced_register_bits": 16740
+    },
+    {
+      "bus": "rl_sm1",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 31,
+      "max_unbalanced_stages": 40,
+      "skew_cycles": 9,
+      "balanced_register_bits": 10800
+    },
+    {
+      "bus": "rl_sm5",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 28,
+      "max_unbalanced_stages": 47,
+      "skew_cycles": 19,
+      "balanced_register_bits": 12690
+    },
+    {
+      "bus": "rl_sm2",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 31,
+      "max_unbalanced_stages": 40,
+      "skew_cycles": 9,
+      "balanced_register_bits": 10800
+    },
+    {
+      "bus": "rl_sm6",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 66,
+      "max_unbalanced_stages": 81,
+      "skew_cycles": 15,
+      "balanced_register_bits": 21870
+    },
+    {
+      "bus": "rl_sm8",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 40,
+      "max_unbalanced_stages": 47,
+      "skew_cycles": 7,
+      "balanced_register_bits": 12690
+    },
+    {
+      "bus": "rl_sm12",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 16,
+      "max_unbalanced_stages": 25,
+      "skew_cycles": 9,
+      "balanced_register_bits": 6750
+    },
+    {
+      "bus": "rl_sm11",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 38,
+      "max_unbalanced_stages": 51,
+      "skew_cycles": 13,
+      "balanced_register_bits": 13770
+    },
+    {
+      "bus": "rl_sm9",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 25,
+      "max_unbalanced_stages": 56,
+      "skew_cycles": 31,
+      "balanced_register_bits": 15120
+    },
+    {
+      "bus": "rl_sm13",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 21,
+      "max_unbalanced_stages": 28,
+      "skew_cycles": 7,
+      "balanced_register_bits": 7560
+    },
+    {
+      "bus": "rl_sm10",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 20,
+      "max_unbalanced_stages": 26,
+      "skew_cycles": 6,
+      "balanced_register_bits": 7020
+    },
+    {
+      "bus": "rl_sm14",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 39,
+      "max_unbalanced_stages": 54,
+      "skew_cycles": 15,
+      "balanced_register_bits": 14580
+    },
+    {
+      "bus": "rl_sm16",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 17,
+      "max_unbalanced_stages": 23,
+      "skew_cycles": 6,
+      "balanced_register_bits": 6210
+    },
+    {
+      "bus": "rl_sm19",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 58,
+      "max_unbalanced_stages": 74,
+      "skew_cycles": 16,
+      "balanced_register_bits": 19980
+    },
+    {
+      "bus": "rl_sm17",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 26,
+      "max_unbalanced_stages": 33,
+      "skew_cycles": 7,
+      "balanced_register_bits": 8910
+    },
+    {
+      "bus": "rl_sm21",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 55,
+      "max_unbalanced_stages": 71,
+      "skew_cycles": 16,
+      "balanced_register_bits": 19170
+    },
+    {
+      "bus": "rl_sm18",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 44,
+      "max_unbalanced_stages": 59,
+      "skew_cycles": 15,
+      "balanced_register_bits": 15930
+    },
+    {
+      "bus": "rl_sm22",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 47,
+      "max_unbalanced_stages": 63,
+      "skew_cycles": 16,
+      "balanced_register_bits": 17010
+    },
+    {
+      "bus": "rl_sm24",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 26,
+      "max_unbalanced_stages": 31,
+      "skew_cycles": 5,
+      "balanced_register_bits": 8370
+    },
+    {
+      "bus": "rl_sm28",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 20,
+      "max_unbalanced_stages": 33,
+      "skew_cycles": 13,
+      "balanced_register_bits": 8910
+    },
+    {
+      "bus": "rl_sm27",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 48,
+      "max_unbalanced_stages": 60,
+      "skew_cycles": 12,
+      "balanced_register_bits": 16200
+    },
+    {
+      "bus": "rl_sm25",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 24,
+      "max_unbalanced_stages": 28,
+      "skew_cycles": 4,
+      "balanced_register_bits": 7560
+    },
+    {
+      "bus": "rl_sm29",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 26,
+      "max_unbalanced_stages": 33,
+      "skew_cycles": 7,
+      "balanced_register_bits": 8910
+    },
+    {
+      "bus": "rl_sm26",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 20,
+      "max_unbalanced_stages": 24,
+      "skew_cycles": 4,
+      "balanced_register_bits": 6480
+    },
+    {
+      "bus": "rl_sm30",
+      "group_bits": [
+        2,
+        64,
+        64,
+        64,
+        64,
+        12
+      ],
+      "min_unbalanced_stages": 29,
+      "max_unbalanced_stages": 35,
+      "skew_cycles": 6,
+      "balanced_register_bits": 9450
+    }
+  ],
+  "endpoint_boxes": 360,
+  "assumed_reserved_endpoint_area_um2": 144000,
+  "modeled_completed_leaf_register_bits": 309420,
+  "optimistic_cut_overflow": [
+    {
+      "axis": "x",
+      "cut_um": 24597.928,
+      "corridor_um": [
+        3203.4,
+        3215.7999999999997
+      ],
+      "demand_tracks": 668,
+      "optimistic_track_upper_bound": 611,
+      "upper_bound_overflow": true,
+      "utilization_of_upper_bound": 1.09328968903437
+    },
+    {
+      "axis": "x",
+      "cut_um": 24599.764000000003,
+      "corridor_um": [
+        3203.4,
+        3215.7999999999997
+      ],
+      "demand_tracks": 668,
+      "optimistic_track_upper_bound": 611,
+      "upper_bound_overflow": true,
+      "utilization_of_upper_bound": 1.09328968903437
+    },
+    {
+      "axis": "x",
+      "cut_um": 24601.536,
+      "corridor_um": [
+        3203.4,
+        3215.7999999999997
+      ],
+      "demand_tracks": 668,
+      "optimistic_track_upper_bound": 611,
+      "upper_bound_overflow": true,
+      "utilization_of_upper_bound": 1.09328968903437
+    }
+  ],
+  "actions": [
+    "clear actual SM result pin bays at sm4/S, sm15/S, sm20/N and sm23/N; move intrusive KV/control/request stations without changing logical associations",
+    "repair rl_sm7 and rl_sm31 endpoint escape paths",
+    "reroute or widen overfull SE result corridor (668 tracks vs optimistic611; at least13.6um ideal or roughly25um for55% occupancy before additional traffic)",
+    "place all intermediate and balancing registers jointly, then bind stationRTL, exactness and real SS/FF",
+    "compose complete gather-tree and command/control joins; partial26leafcycles are not a tokenlatency or adoption result"
+  ],
+  "history": {
+    "preserved_variants": [
+      "escape12_any_box_failure.json",
+      "escape12_facing_pin_greedy_failure.json"
+    ],
+    "source_copies": "history/*.py.txt preserve exact historical tool bytes; source_sha256 tool entry matches corresponding archive"
+  },
+  "evidence_sha256": {
+    "result_leaf_probe.json": "4fce9851d1299aa9f2957355be6af35a98250fefc4b3fa7dbac0bfdeedc1406b",
+    "history/escape12_any_box_source.py.txt": "2eef6053fedff59fd0fd2a57d775f37e4eb1677a5642aaf00326d83991323524",
+    "history/escape12_facing_pin_greedy_failure.json": "b1ad8a731ae9c09408c82d4f2c1202e900a639863be73373a02341fb84d2030c",
+    "history/escape12_any_box_failure.json": "63267324a0dc734214489e5cd7bed9d5c664814834ec550881728b69019015ed",
+    "history/escape12_facing_pin_greedy_source.py.txt": "b97b1bbebc2ce7345188468c3be1735a6f55c3934a3021e441ea69654232c568"
+  }
+}
