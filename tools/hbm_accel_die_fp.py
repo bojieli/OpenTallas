@@ -364,6 +364,7 @@ R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padd
 # Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
 R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
 R24SM3VO = dict(R24SM3V, native_owner_bays=True)
+R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
 ADOPTED = R23
 
 
@@ -698,6 +699,19 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                     owner_bays.append(dict(sm=sm.name,box_um=[round(v,6) for v in box]))
                 m['native_owner_bays']=owner_bays
                 m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in owner_bays)
+                if variant.get('native_descriptor_bays'):
+                    descriptor_bays=[]
+                    for sm in (i for i in insts if i.kind=='sm'):
+                        x0,x1=1312.848,1441.152
+                        if sm.orient in ('MY','R180'):
+                            x0,x1=sm.w-x1,sm.w-x0
+                        if sm.orient in ('MX','R180'):
+                            y0,y1=sm.y+sm.h+2.16,sm.y+sm.h+66.96
+                        else:
+                            y0,y1=sm.y-66.96,sm.y-2.16
+                        descriptor_bays.append(dict(sm=sm.name,box_um=[round(sm.x+x0,6),round(y0,6),round(sm.x+x1,6),round(y1,6)]))
+                    m['native_descriptor_bays']=descriptor_bays
+                    m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in descriptor_bays)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
