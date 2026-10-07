@@ -785,7 +785,7 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh", "resume_patch.py",
+HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh", "resume_patch.py",
            "resume_check.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
@@ -1300,7 +1300,7 @@ def step(j, fleet):
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
             return
         if s == "ECO":
-            r = ssh(j["host"], f"cat {j['run']}/cl/eco/result.json 2>/dev/null", timeout=60)
+            r = ssh(j["host"], f"cat {eco_output(j)}/result.json 2>/dev/null", timeout=60)
             try:
                 res = json.loads(r.stdout)
             except Exception:  # noqa: BLE001
@@ -1393,6 +1393,10 @@ def hold_only(j, m, failed=(), benches_ok=True):
             and (j["spec"].get("hold_eco") or {}).get("enabled", True) is not False)
 
 
+def eco_output(j):
+    return (j.get("eco") or {}).get("out", f"{j['run']}/cl/eco")
+
+
 def eco_paths(j, m):
     """(routed pre-fill base holding 5_2_route.odb, sign-off ORFS base holding 6_final.sdc)"""
     v = j["spec"].get("verdict", {})
@@ -1418,9 +1422,13 @@ def start_hold_eco(j, fleet, m):
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
-    cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {{CL}}/eco {j['spec']['block']} {post}"
+    recovery = j.get("eco_overlay_recovery") or {}
+    out = recovery.get("out", f"{j['run']}/cl/eco")
+    if recovery:
+        env += f" ECO_GUARD={shlex.quote(recovery['guard'])}"
+    cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {out} {j['spec']['block']} {post}"
     ship_helpers(j["host"], j["run"])
-    j["eco"] = dict(tried=True, rb=rb, ob=ob, post_sdc=post_sdcs, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
+    j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_stage(j, st, cmd)
     fleet.launched(j["host"], 8, 32)
@@ -1437,11 +1445,15 @@ def eco_install_cmd(j):
     e, rb, ob, blk = j["eco"], j["eco"]["rb"], j["eco"]["ob"], j["spec"]["block"]
     cs = subst(j["spec"]["verdict"]["corner_sta"], j)
     he = j["spec"].get("hold_eco") or {}
-    lines = ["set -e", f"EB=$(ls -d {{CL}}/eco/orfs/results/asap7/*/base)"]
+    out = eco_output(j)
+    lines = ["set -e"]
+    if j.get("eco_overlay_recovery"):
+        lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
+    lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
     for b in sorted({rb, ob}):
         for f in ("6_final.odb", "6_final.spef", "6_final.v"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
-    lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {{CL}}/eco/corner_sta.json $c; done")
+    lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
     if he.get("reexport"):
         lines.append(he["reexport"])
     else:
@@ -1540,6 +1552,7 @@ def requeue_ssh_verdict(jobs):
 
 
 def requeue_hold_only(jobs):
+    jobs = [j for j in jobs if not j.get("eco_overlay_recovery")]  # explicit recovery is one-shot, including flow errors
     fid = "hold-eco-20261006"
     for j in jobs:   # first ECO attempts that died because the helper was not shipped to older run dirs (rc 127)
         e = j.get("eco") or {}
@@ -1858,6 +1871,43 @@ for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.
     save_job(j)
 
 
+def validate_overlay_recovery(j):
+    expected_failure = dict(ss_ps=-340500.58, ff_ps=-59.43, drc=0, cells_added=0, errors=[])
+    expected_pre = dict(ss_ps=190.49, ff_ps=-70.99)
+    e = j.get("eco") or {}
+    m = j.get("metrics") or {}
+    if (j["name"] != "hbglue_cl_8ddc70024" or j.get("commit_full") != "8ddc7002479798a1e3d5ce5875a163d672973e75"
+            or j["spec"]["source"]["commit"] != j["commit_full"] or j["status"] != "NEEDS_RTL"
+            or j.get("attempt") != 1 or j.get("eco_overlay_recovery") or j.get("eco_history")
+            or e.get("installed") or e.get("post_sdc") or not e.get("tried")
+            or e.get("result") != expected_failure or e.get("pre") != expected_pre
+            or {k: m.get(k) for k in expected_pre} != expected_pre or m.get("drc") != 0
+            or m.get("errors") or j.get("failed_checks") or j["spec"]["verdict"].get("post_sdc")
+            or m.get("post_sdc") != ["physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"]
+            or stage_list(j["spec"])[j["stage_idx"]]["kind"] != "verdict"):
+        raise ValueError("not the explicitly authorized, uninstalled hbglue missing-overlay ECO failure")
+
+
+@locked_job_command
+def cmd_recover_eco_overlays(a):
+    j = load_job(a.name)
+    validate_overlay_recovery(j)
+    pinned = json.loads((HERE / "evidence/reliability_20261006.json").read_text())["original_hbglue_hashes_verified"]
+    request = dict(job=j, original_hashes={k: pinned[k] for k in ("odb", "spef", "sdc")},
+                   post_sdc_hashes={j["metrics"]["post_sdc"][0]: pinned["post_sdc"]})
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "eco_recovery.py").read_text(), timeout=120, check=True)
+    recovery = json.loads(r.stdout)
+    recovery.update(requested=now_iso(), reason="owner-authorized one-shot correction of omitted measured overlays")
+    j["eco_overlay_recovery"] = recovery
+    j.setdefault("eco_history", []).append(j["eco"])
+    j["eco"] = {}              # only this named job's verdict can request one new ECO
+    j.update(status="READY", stage_key="verdict", attempt=2, errors=[], reason="explicit ECO overlay recovery queued")
+    event(j, f"one-shot ECO overlay recovery queued: {recovery['out']}; original failure and inputs preserved")
+    save_job(j)
+    ledger(j, f"ECO overlay recovery requested; original failed ECO retained; admission at verdict; {recovery['out']}")
+
+
 @locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
@@ -1896,6 +1946,7 @@ def main():
     r = sub.add_parser("retry"); r.add_argument("name")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
+    er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -1911,6 +1962,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "recover-eco-overlays":
+        cmd_recover_eco_overlays(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)

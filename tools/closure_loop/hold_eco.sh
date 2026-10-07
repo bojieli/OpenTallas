@@ -8,6 +8,7 @@ set -eo pipefail
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB)); EB=$OUT/orfs/results/asap7/$D/base
 [ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
+if [ -n "${ECO_GUARD:-}" ]; then python3 "$(dirname "$0")/eco_recovery.py" verify "$ECO_GUARD"; fi
 mkdir -p "$EB"
 cp $OB/6_final.sdc $EB/6_final.sdc
 DB=5_2_route.odb; [ -f $RB/$DB ] || DB=6_final.odb   # pre-fill route db; the tcl removes fillers otherwise
