@@ -2,6 +2,30 @@
 import hashlib,json,math
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def hierarchical_parent_join_model():
+    """Four literal quarters around the existing shared winner/retention body."""
+    return dict(default_enabled=False, quarters_per_rank=4, keys_per_quarter=16,
+        keys_per_rank=64, ranks_in_existing_model=4, quarters_across_ranks=16,
+        MACs_per_cycle_per_quarter=16*32*128, new_MACs_per_cycle=0,
+        key_bytes_per_cycle_per_quarter=1088, score_bytes_per_cycle_per_quarter=32,
+        key_boundary_bits_per_quarter=9077, score_boundary_bits_per_quarter=614,
+        query_bits_per_quarter=569, HBM_PC_ports_per_rank=128,
+        shared_selector_instances_per_rank=1, shared_replay_controller_instances_per_rank=1,
+        selector_line_memory=dict(quarters=4, words_per_quarter=256,
+            bits_per_word=16*(17+20), total_bits=4*256*16*(17+20),
+            source='ot_dsrom_reindex_chain.lm',
+            mutable_protection_qualification=False),
+        list_macros_per_quarter=16, list_macros_per_rank=64,
+        extra_registers=0, extra_cycles=0, added_token_latency_us=0,
+        scorer_latency='Existing100-cycle term once; accepted100..102 includes actual backpressure.',
+        gather_latency='Existing739 versus KC8738+1 retained; no extra scorer/replay charge.',
+        ready_relation='Perquarter ks_valid&ks_ready and sc_valid&sc_ready; shared replay waits real drained debts.',
+        area='Four reused literal NS4 quarters plus ONE unchanged shared chain. No physical fit against HBM20.57mm2 placeholder; measured mapped area still required.',
+        floorplan=dict(allocation_qualified=False, extra_channel_tracks_qualified=False,
+            cell_estimate_mm2=23.67273884544, footprint_at_50pct_mm2=47.34547769088,
+            estimate_scope='Existing four-quarter scorer/join estimate, not a mapped DSROM die allocation; excludes shared selector/protection/CTS/PG.'),
+        synthesis='Map literal quarter once, preserve attributes/port shape; link four copies to a separately synthesized unchanged shared chain, never duplicate winner or retention.',
+        numerical_gate_replay=False, physical_qualified=False, adopted=False)
 def native_quarter_join_model():
     """Wiring to the existing W11 scorer; no new engine or calendar stage."""
     source=ROOT/'rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv'
@@ -24,6 +48,23 @@ def native_quarter_join_model():
         R9_scope='R9 control/list/request/drain-header only; this join does not expand that pinned physical proof.',
         exact_qualified=False,mapping_qualified=False,clock_load_qualified=False,parent_qualified=False,
         build_rule='Port join only; no new scorer synthesis/P&R until its actual enclosing slot/channel and clock/calendar binding exists.')
+def io_margin_model():
+    """Owner margin-first boundary (2026-10-06): register-to-register ports, default off."""
+    ffa=.37908
+    inputs=dict(list_write=1+3+11+14,command=1+3+20+10+12,response=32*(1+16+4))
+    slices=dict(request=32*(2*(28+4+16)+2),drain_output=2*71+2)
+    status=2
+    ff=sum(inputs.values())+sum(slices.values())+status
+    measured_path=ROOT/'results/rtl/dsrom_reindex_parent_20261006/io_margin_gate/gather.json'
+    measured=json.loads(measured_path.read_text()) if measured_path.exists() else None
+    return dict(default_enabled=False,top='ot_dsrom_reindex_parent_physctx_margin',source='rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_io_margin.sv',
+        wrapped_files_unchanged=True,input_FF=inputs,skid_FF=slices,status_FF=status,added_FF=ff,added_FF_area_um2=round(ff*ffa,3),
+        added_cycles=dict(command_in=1,list_write_in=1,request_out=1,response_in=1,drain_out=1,
+            request_round_trip=2,gather_fixed_upper='command +1, each dependent request/response round trip +2, output +1'),
+        gather_cycles_baseline=739,gather_cycles_measured=(measured['worst_rank']['cycles'] if measured else None),
+        token_cost_bound_us=4*8*833.333/1e6,token_cost_basis='4 re-index layers x <=8 cycles at 1.2 GHz; < 0.01% of the 604 us token basis',
+        route_period_ps=770,signoff_period_ps=833.333,accept_SS_ps=40,accept_FF_ps=15,
+        rule='inputs flopped at the pin, outputs launched from flops, every valid/ready through a full register slice; no register in a one-cycle loop')
 def model():
     name='ot_sram_1r1w_512x128_m4_r2c2'
     path=ROOT/'physical/asap7_memory_macros'/name
@@ -44,6 +85,7 @@ def model():
     actual_cycles=measured['worst_rank']['cycles'] if source_matched else None
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
         MACs_per_cycle=0,rounding_and_reduction_changes=0,native_quarter_port_join=native_quarter_join_model(),
+        hierarchical_synthesis_join=hierarchical_parent_join_model(),io_margin=io_margin_model(),
         list_memory=dict(macro=name,macros_per_stack=banks,macro_json_sha256=hashlib.sha256((path/(name+'.json')).read_bytes()).hexdigest(),logical_bits=slots*entries*lbw,physical_bits=banks*512*128,
             code='SECDED35 per payload14+full logical entry address14; two independently masked64-bit fields per128-bit macro word',
             write_entries_per_cycle=1,write_logical_bytes_per_cycle=1.75,write_physical_bytes_per_cycle=8,read_entries_per_cycle=2,read_logical_bytes_per_cycle=3.5,read_physical_bytes_per_cycle=16,

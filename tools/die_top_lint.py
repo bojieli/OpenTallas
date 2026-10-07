@@ -282,9 +282,12 @@ CDC_LAYOUT = dict(
 assert len(CDC_LAYOUT['h']) == 613 and len(CDC_LAYOUT['c']) == 585
 
 
-def real_blocks(die):
+def real_blocks(die, m=None):
     """master -> dict(module, file, params, ports, binding{die port: [rtl pin names or None]}, kind)."""
     out = {}
+    V = (m or {}).get('variant') or {}
+    if die.startswith('s81r8'):
+        return real_blocks_r8(die)
     if die == 'qwen_rom':
         v, m, B = load_qwen()
         out['ot_hbm3e_phy'] = dict(module='ot_hbm3e_phy', file=QPHY_BB, kind='hard macro black box (v2 E/W PHY)', params={},
@@ -327,9 +330,9 @@ def real_blocks(die):
                                 kind='RTL (the slot is sized for this node; the die master dsfd_node is its placeholder)',
                                 params={}, ports=pm['ports'], binding=RETN_LAYOUT)
     else:
-        rp = {k_: dict(v_) for k_, v_ in H.real_ports().items()}
+        rp = {k_: dict(v_) for k_, v_ in H.real_ports(m).items()}
         for mst in ('ot_pdie_serdes', 'ot_pdie_ucie'):     # TF5: even tx / rx split of a narrower chain
-            rp[mst]['iox'] = SplitIO()
+            rp[mst].setdefault('iox', SplitIO())          # (r15 link_rtl: the generator's own iox binding)
         for mst, f, kind in (('ot_hbm3e_phy_v41x_aw30_e8p5', 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/'
                               'ot_hbm3e_phy_v41x_aw30_e8p5_bb.v', 'hard macro black box'),
                              ('ot_pdie_serdes', 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v',
@@ -342,12 +345,57 @@ def real_blocks(die):
         prm.update(DS=3, DG=3, DW=4, PIO=2)          # sm_r2 capture.json (the placed context's selection)
         pm = parse_module('rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv', 'ot_hbm_accel_sm_v', prm)
         lay = dict(SM_LAYOUT)
-        if TOP_FIX:          # TF7
+        if TOP_FIX or V.get('sm_rtl_w'):          # TF7 (r15 sm_rtl_w in the generator)
             lay['d'] = SM_LAYOUT['d'][:-1]
             lay['q'] = SM_LAYOUT['q'][:44]
+        if V.get('sm_desc'):                      # r15: the bulk-copy descriptor on the control leaf
+            lay['c'] = SM_LAYOUT['c'] + ['d_valid'] + _bus('d_base', 32) + _bus('d_lines', 24) + ['d_ready']
+        if V.get('clk_dom'):                      # r15: one clock net, one reset net per domain
+            lay['ck'] = ['clk']
+            lay['rst'] = ['rst_n']
         out['hfd_sm'] = dict(module='ot_hbm_accel_sm_v', file='rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv',
                              kind='RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)',
                              params=prm, ports=pm['ports'], binding=lay)
+    return out
+
+
+R8 = {}      # die -> built r8 model (real_blocks_r8 needs the generated glue port lists)
+
+
+def real_blocks_r8(die):
+    """S81 r8 (S81-DIE): q element, cfg ROM, PHY, links by their RTL / bb ports (r8 binding); the cfg sequencer
+    (hand RTL) and every generated glue master (results/.../r8/dsfd_glue.sv) by their own port lists."""
+    m = R8[die]
+    rp = S.real_ports_r8()
+    out = {}
+    files = {S.real_lef(S.Q_LEF)['name']: ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv', 'routed RTL (NB=2 receipt params)',
+                                            dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1,
+                                                 QP_CAP=0, QP_P1=1, QP_CSAM=10)),
+             'ot_rom_4096x72_m8': ('physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v',
+                                   'hard macro black box', {}),
+             'ot_hbm3e_phy_v41x_aw30_e8p5': ('physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/'
+                                             'ot_hbm3e_phy_v41x_aw30_e8p5_bb.v', 'hard macro black box', {}),
+             'ot_pdie_serdes': ('physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v',
+                                'placeholder hard macro black box', {}),
+             'ot_pdie_ucie': ('physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v',
+                              'placeholder hard macro black box', {})}
+    for mst, (f, kind, prm) in files.items():
+        pm = parse_module(f, mst, prm)
+        out[mst] = dict(module=mst, file=f, kind=kind, params=prm, ports=pm['ports'], binding=rp[mst])
+    used = {it.master for it in m['insts']}
+    for mst, prm in (('ot_dsrom_head_elem_A', dict(LV=8, PAD=0, JOIN=1, ROWS=32)),
+                     ('ot_dsrom_head_elem_B', dict(LV=6, PAD=2, JOIN=0, ROWS=128))):
+        if mst in used:
+            f = 'rtl/v41rom/ot_dsrom_head_elem.sv'
+            pm = parse_module(f, 'ot_dsrom_head_elem', prm)
+            out[mst] = dict(module='ot_dsrom_head_elem', file=f, kind='routed RTL, closed (recovery lever head)',
+                            params=prm, ports=pm['ports'], binding=rp[mst])
+    for mst in sorted(used):
+        if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
+            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL
+            pm = parse_module(f, mst)
+            out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
+                            binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
     return out
 
 
@@ -382,6 +430,8 @@ MESO = ('rtl/common/ot_meso_fifo.sv', 'ot_meso_fifo')
 
 # ------------------------------------------------------------------------------------------------ die models
 TOP_FIX = False
+VARIANT = ''        # hbm: --variant of tools/hbm_accel_die_fp.py ('' = its adopted default)
+CUR_M = {}          # the die model being linted (forwarded-clock map, variant)
 # Top-level instantiation fixes (--top-fix).  Each one changes only die-top connectivity / instance orientation, never a
 # block; the generators' adopted records are untouched (their owners port these, see FINDINGS.md).
 TOP_FIXES = {
@@ -450,6 +500,12 @@ def fix_hbm_links(m):
 def build(die, top_fix=False):
     global TOP_FIX
     TOP_FIX = top_fix
+    if die.startswith('s81r8'):
+        S.configure(die.split('_', 1)[1], 'r8')
+        m = S.build()
+        S.finalize_r8(m)
+        R8[die] = m
+        return m, S.port_widths(m, 1), S.masters(m, 1), 'tools/dsrom_s81_fulldie.py --gen r8'
     if die == 'qwen_rom':
         if top_fix:
             raise SystemExit('qwen_rom: no top fixes defined')
@@ -468,17 +524,24 @@ def build(die, top_fix=False):
             col.face('pll_serial', 1, 'E', 'M4', col.h * 0.25 + 20.0, 1)
         tool = 'tools/dsrom_s81_fulldie.py'
     else:
-        m = H.build(dict(H.ADOPTED, row1_flip=False) if top_fix else None)
+        # --top-fix: the 2026-10-06 lint tops of r14b (generator untouched then); default: the generator's variant
+        # (r15 fixes every TF in the generator itself)
+        m = H.build(dict(H.R14B, row1_flip=False) if top_fix else H.variant_arg(VARIANT))
         if top_fix:
             fix_clock_nets(m, die)
             fix_hbm_links(m)
         ports_w = H.port_widths(m, 1)
         M = H.masters(m, 1)
         tool = 'tools/hbm_accel_die_fp.py'
+    CUR_M.clear()
+    CUR_M.update(m)
     return m, ports_w, M, tool
 
 
 # ------------------------------------------------------------------------------------------------ DIRECTION MODEL
+R8_ACTIVE = [False]
+
+
 def flow(j, bits, down, first_up=True):
     """2-sided bundle, endpoint 0 upstream: bits [0, down) flow downstream, [down, bits) upstream."""
     up_, dn_ = ('out', 'in') if j == 0 else ('in', 'out')
@@ -491,6 +554,10 @@ def flow(j, bits, down, first_up=True):
 
 
 def dirs_s81(bid, cls, bits, eps, j, port):
+    if R8_ACTIVE[0]:                  # r8 convention: endpoint 0 drives every net; the PHY DFI bundle is complemented
+        if cls == 'phy_dfi':
+            return 'complement'
+        return [(0, bits, 'out' if j == 0 else 'in')]
     if cls in ('x_entry', 'x_chain', 'lane_ctl', 'ret_leaf', 'ret_tree', 'ret_root', 'x_root', 'hbm_read', 'band',
                'nv_local'):
         return [(0, bits, 'out' if j == 0 else 'in')]
@@ -547,27 +614,49 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
 
 
 def dirs_hbm(bid, cls, bits, eps, j, port):
+    V = CUR_M.get('variant') or {}
+    fc = CUR_M.get('fclk', {}).get(bid)
+    if fc:                  # r15 fwd: data bits + forwarded clocks (nd downstream, nu upstream) appended
+        base, nd, nu = fc
+        seg = dirs_hbm_base(bid, cls, base, eps, j, port, V)
+        if seg == 'complement':
+            raise KeyError(f'forwarded segment {bid} with a complement rule')
+        if nd:
+            seg = seg + [(base, base + nd, 'out' if j == 0 else 'in')]
+        if nu:
+            seg = seg + [(base + nd, base + nd + nu, 'in' if j == 0 else 'out')]
+        return seg
+    return dirs_hbm_base(bid, cls, bits, eps, j, port, V)
+
+
+def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
-               'attn_kv', 'attn_out', 'attn_operand', 'attn_input'):
+               'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
-    if cls == 'weight':
-        return flow(j, bits, bits if TOP_FIX else bits - 1)    # line + tag + valid down, ready back (TF7: no ready)
+    if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
+        return flow(j, bits, bits if (TOP_FIX or V.get('sm_rtl_w')) else bits - 1)
     if cls in ('weight_req', 'control_leaf', 'phy_dfi'):
-        return 'complement'
+        if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
+            return 'complement'
+        return [(0, bits, 'out' if j == 0 else 'in')]       # r15 rq_chain: station -> station, SM side upstream
     if cls == 'control':
+        w = H.W_CTL + (H.W_DESC if V.get('sm_desc') else 0)
         seg = []
-        n = bits // H.W_CTL
-        for s_ in range(n):
-            b0 = s_ * H.W_CTL
-            seg += flow(j, H.W_CTL, 42)
-            seg[-2:] = [(a + b0, b + b0, d) for a, b, d in seg[-2:]]
+        for s_ in range(bits // w):
+            b0 = s_ * w
+            part = flow(j, H.W_CTL, 42)                      # start / op / release_in down, busy / arrive / released up
+            if w > H.W_CTL:                                  # r15 sm_desc: d_valid / d_base / d_lines down, d_ready up
+                part += [(a + H.W_CTL, b + H.W_CTL, d) for a, b, d in flow(j, w - H.W_CTL, w - H.W_CTL - 1)]
+            seg += [(a + b0, b + b0, d) for a, b, d in part]
         return seg
     if cls == 'hub':
         return [(0, bits, 'out' if port.startswith('t_') else 'in')]
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
-        return flow(j, bits, (bits + 1) // 2 if TOP_FIX else min(512, bits))
+        return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
+    if cls == 'reset_tree':
+        return [(0, bits, 'out' if port.startswith('por') else 'in')]
     raise KeyError(f'no direction rule for HBM class {cls} ({bid})')
 
 
@@ -622,6 +711,7 @@ def lint_connectivity(die, m, real, ports_w):
         F[k]['bits'] += int(nbits)
         if len(F[k]['examples']) < 3:
             F[k]['examples'].append(bid)
+    top_ports = []
     bound = defaultdict(set)          # real inst -> rtl pin names bound
     pin_use = Counter()               # (inst, port) -> number of buses
     port_dirs = defaultdict(lambda: defaultdict(set))   # placeholder (master, port) -> bit-dir signatures
@@ -630,6 +720,9 @@ def lint_connectivity(die, m, real, ports_w):
         drv = np.zeros(bits, np.int32)
         ld = np.zeros(bits, np.int32)
         for j, (inst, port) in enumerate(eps):
+            if inst == 'TOP':                 # a die top input port drives this net
+                drv[:] += 1
+                continue
             pin_use[(inst, port)] += 1
             seg, pins = endpoint_dirs(die, real, by, bus, j)
             mst = by[inst].master
@@ -659,7 +752,8 @@ def lint_connectivity(die, m, real, ports_w):
                     add('width_port_wider_than_net', cls, f'{mst}.{port} ({pw} > {bits})', bid, pw - bits)
             if (~cov).sum():
                 add('undirected_bits', cls, f'{mst}.{port}', bid, int((~cov).sum()))
-        sig = ' + '.join(sorted({by[i].master + '.' + re.sub(r'[SN][WE]$|\d+$', '*', p) for i, p in eps}))
+        sig = ' + '.join(sorted({(by[i].master if i != 'TOP' else 'TOP') + '.' + re.sub(r'[SN][WE]$|\d+$', '*', p)
+                                 for i, p in eps}))
         for check, mask in (('undriven', (ld > 0) & (drv == 0)), ('unloaded', (drv > 0) & (ld == 0)),
                             ('multi_driven', drv > 1), ('floating', (drv == 0) & (ld == 0))):
             n = int(mask.sum())
@@ -667,6 +761,8 @@ def lint_connectivity(die, m, real, ports_w):
                 add(check, cls, sig, bid, n)
         if len(eps) == 1:
             add('single_endpoint_net', cls, sig, bid, bits)
+        if cls == 'top_in':
+            top_ports.append(bid)
     # duplicate port bindings
     for (inst, port), n in pin_use.items():
         if n > 1:
@@ -679,6 +775,10 @@ def lint_connectivity(die, m, real, ports_w):
         rb = real[it.master]
         got = bound.get(it.name, set())
         for p, (d, w) in rb['ports'].items():
+            if R8_ACTIVE[0] and it.master == 'ot_rom_4096x72_m8' and p == 'rd_out':
+                w = 48          # rd_out[71:48]: spare macro columns, no consumer by design (48-b cfg payload)
+            if R8_ACTIVE[0] and (it.master, p) in S.UNUSED_BY_DESIGN:
+                continue        # head element outputs ot_dsrom_head_bundle leaves unconnected (S.UNUSED_BY_DESIGN)
             if w == 1:
                 miss = [] if (p in got or f'{p}[0]' in got) else [p]
             else:
@@ -694,33 +794,61 @@ def lint_connectivity(die, m, real, ports_w):
         for p, sigs in pd.items():
             if len(sigs) > 1:
                 conflicting[f'{mst}.{p}'] = len(sigs)
+    LAST_TOP[:] = top_ports
     return F, unb, conflicting
+
+
+LAST_TOP = []
 
 
 # ------------------------------------------------------------------------------------------------ clock / reset / top I/O
 def clock_reset(die, m, real):
     by = {it.name: it for it in m['insts']}
     ck_ports = defaultdict(set)
+    rst_ports = defaultdict(set)
+    fwd_insts = set()
+    fcl = m.get('fclk', {})
     bundle_ck = set()        # Qwen: the tile field's clock / reset ride as bits of the corridor / tap / head chain words
     for bid, cls, bits, eps in m['buses']:
         for inst, port in eps:
-            if cls == 'clock_trunk':
+            if cls in ('clock_trunk', 'clock', 'col_clock', 'fclk') and inst != 'TOP':
                 ck_ports[inst].add(port)
+            if cls == 'reset_tree' or (R8_ACTIVE[0] and cls in ('reset', 'col_reset') and inst != 'TOP'):
+                rst_ports[inst].add('rst' if R8_ACTIVE[0] else port)
+            if bid in fcl:
+                fwd_insts.add(inst)
             if die == 'qwen_rom' and cls in ('corridor', 'tap', 'head_chain'):
                 bundle_ck.add(inst)
     rows = Counter()
     rst = Counter()
     for it in m['insts']:
         mst = it.master
-        if mst in real:
+        if mst in real and R8_ACTIVE[0]:
+            rows[(mst, 'real', 'clock_bound' if inst_has_ck(it.name, ck_ports) or mst == 'ot_hbm3e_phy_v41x_aw30_e8p5'
+                  else 'NO_CLOCK')] += 1
+        elif mst in real:
             rb = real[mst]
             has_clk = any(p in rb['ports'] for p in ('clk', 'wclk', 'fclk_i'))
             rows[(mst, 'real', 'has_clock_port' if has_clk else 'no_clock_port')] += 1
         else:
-            rows[(mst if not re.match(r'hfd_(stn|mcast|gath|cdist)_\d+$', mst) else re.sub(r'_\d+$', '_*', mst),
-                  'placeholder', 'clock_trunk' if inst_has_ck(it.name, ck_ports) else
-                  'clock_bits_in_data_bundle' if it.name in bundle_ck else 'NO_CLOCK')] += 1
-    return rows, ck_ports
+            fam = mst if not re.match(r'hfd_(stn|mcast|gath|cdist|meso)_r?\d+$', mst) else re.sub(r'_r?\d+$', '_*', mst)
+            if inst_has_ck(it.name, ck_ports):
+                ck = 'clock_trunk'
+            elif it.kind == 'waypoint' and it.name in fwd_insts:
+                ck = 'forwarded_clock'          # r15 fwd: fclk bits of its segments (ot_fwd_link_stage)
+            elif it.name in bundle_ck:
+                ck = 'clock_bits_in_data_bundle'
+            elif it.kind in ('serdes_slab', 'host_slab'):
+                ck = 'no_logic (reservation slab)'
+            else:
+                ck = 'NO_CLOCK'
+            rows[(fam, 'placeholder', ck)] += 1
+            if 'rst' in rst_ports.get(it.name, set()):
+                rst[(fam, 'reset_tree')] += 1
+    for it in m['insts']:
+        if it.master in real and 'rst' in rst_ports.get(it.name, set()):
+            rst[(it.master, 'reset_tree')] += 1
+    return rows, ck_ports, rst
 
 
 def inst_has_ck(name, ck_ports):
@@ -754,7 +882,7 @@ PIN_FIT_ERRORS = {}
 
 
 def real_lefs(die):
-    return (QPHY_LEF,) if die == 'qwen_rom' else (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF)
+    return (QPHY_LEF,) if die == 'qwen_rom' else (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
 def pin_table(die, m, M, ports_w, real):
@@ -826,7 +954,7 @@ def physical(die, m, M, ports_w, real):
             along = [y for _, y in D] if face in 'EW' else [x for x, _ in D]
             ep_geo[(bid, inst, port)] = (cx, cy, face, max(along) - min(along), it)
     for bid, cls, bits, eps in m['buses']:
-        if len(eps) < 2 or cls in ('clock_trunk', 'reset'):   # clock / reset nets are buffered trees (CTS / reset tree)
+        if len(eps) < 2 or cls in ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in'):  # CTS / reset trees
             continue
         for inst, port in eps:
             g = ep_geo.get((bid, inst, port))
@@ -834,6 +962,8 @@ def physical(die, m, M, ports_w, real):
                 continue
             cx, cy, face, span, it = g
             peers = [ep_geo[(bid, o, p)] for o, p in eps if (o, p) != (inst, port) and (bid, o, p) in ep_geo]
+            if R8_ACTIVE[0] and (inst, port) != eps[0] and (bid,) + tuple(eps[0]) in ep_geo:
+                peers = [ep_geo[(bid,) + tuple(eps[0])]]      # r8: a load faces its driver, the driver its loads
             if not peers:
                 continue
             px, py = min(((q[0], q[1]) for q in peers), key=lambda q: abs(q[0] - cx) + abs(q[1] - cy))
@@ -858,7 +988,7 @@ def physical(die, m, M, ports_w, real):
 def abut(die, m):
     """compute instances whose facing edge is within a channel of a hub / band / service block."""
     if die.startswith('s81'):
-        comp = {'q', 'bf', 'bf_nv', 'nvx', 'cfg', 'node'}
+        comp = {'q', 'bf', 'bf_nv', 'nvx', 'cfg', 'node', 'seq', 'sstn', 'rstg'}
         hubk = {'hub', 'band_blk', 'svc', 'ctrl'}
     elif die == 'qwen_rom':
         comp = {'tile', 'row_engine'}
@@ -893,6 +1023,20 @@ def abut(die, m):
 
 
 # ------------------------------------------------------------------------------------------------ meso / forwarded gap
+def gap_r8(m):
+    """r8: what is instantiated (stations, ot_fwd_link_stage slices, meso / ratio FIFOs) and the per-chain hops"""
+    st = [it for it in m['insts'] if it.kind == 'stn']
+    pd = m['pdir']
+    slices = sum(math.ceil(pd[it.master][p][1] / 512) for it in st for p in pd[it.master] if p.startswith('di'))
+    meso = sum(1 for it in m['insts'] if it.kind == 'cfifo') + sum(
+        len(m['glue'][it.master]['lanes']) for it in m['insts'] if it.kind == 'hend' and m['glue'][it.master]['kind'] == 'm2l')
+    ratio = sum(1 for it in m['insts'] if it.kind == 'hend' and m['glue'][it.master]['kind'] != 'm2l')
+    ch = m['chains']
+    return dict(stations=len(st), ot_fwd_link_stage_instantiated=slices, meso_fifos_instantiated=meso,
+                ratio_cdc_fifos_instantiated=ratio, chains=len(ch), max_hop_um=max(c['max_hop_um'] for c in ch),
+                hops_over_430p56=sum(c['max_hop_um'] > S.LINK_STAGE_UM for c in ch))
+
+
 def gap(die, m, ports_w):
     st = Counter()
     bits_stage = 0
@@ -912,8 +1056,18 @@ def gap(die, m, ports_w):
         n_fwd += 4 * math.ceil(b / 512)
         bits_stage += 4 * b
     fifo = Counter(it.master for it in m['insts'] if it.kind in ('fifo_blk', 'hub_fifo', 'link_fifo'))
+    meso = m.get('meso', [])
+    fcl = m.get('fclk', {})
     out = dict(waypoint_masters=dict(st), waypoints=len(wp_bits), forwarded_stage_bits=bits_stage,
                ot_fwd_link_stage_W512_needed=n_fwd, fifo_placeholders=dict(fifo))
+    if m.get('fclk') or m.get('meso'):          # HBM r15+ (fwd): forwarded clocks and the meso-FIFO census
+        out.update(
+            station_masters=len({it.master for it in m['insts'] if it.kind == 'waypoint'}),
+            forwarded_segments_with_fclk=len(fcl), forwarded_clock_wires=sum(a + b for _, a, b in fcl.values()),
+            meso_fifo_W512_slices=dict(total=sum(x['slices'] for x in meso),
+                                           in_stations=sum(x['slices'] for x in meso if x['where'] == 'station'),
+                                           in_receiving_blocks=sum(x['slices'] for x in meso if x['where'] != 'station'),
+                                           station_instances=len({x["inst"] for x in meso if x["where"] == "station"})))
     if die == 'qwen_rom':
         v, _, B = load_qwen()
         fa = B.fifo_accounting(v, m)
@@ -930,26 +1084,51 @@ def gap(die, m, ports_w):
     return out
 
 
+HBM_CDC_HOSTS = {           # HBM die: blocks whose abstract holds the CDC of their crossings (domains.sdc H* / X* / L*)
+    'hfd_svc_': 'async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)',
+    'hfd_su': 'ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages', 'hfd_sfu': 'ratio CDC 3:4 at the SFU hub ports',
+    'hfd_hc': 'ratio CDC 3:4 at the HC hub ports', 'hfd_quant': 'ratio CDC 3:4 at the quantiser hub ports',
+    'hfd_coll': 'core <-> pclk inside ot_hbm_accel_tu_endpoint'}
+_DOM = {'stream': 'stream_1p2', 'serial': 'serial_0p9', 'hbm': 'hbm', 'link': 'link'}
+
+
 def domain_crossings(m):
     """every non-clock bus whose endpoints sit in different clock DOMAINS (independent of region): each needs a
-    ratio / async FIFO or a CDC element at one end."""
+    ratio / async FIFO or a CDC element at one end.  HBM r15+: forwarded stations carry their source's clock (no
+    domain of their own), meso / launch stations are CDC elements on their region clock, and a crossing that ends in a
+    block holding the CDC (HBM_CDC_HOSTS) is listed as attributed."""
     by = {it.name: it for it in m['insts']}
+    clocked = m.get('clocked', {})
+    hbm = bool(m.get('fclk'))
     out = defaultdict(lambda: dict(buses=0, bits=0, examples=[]))
+    att = defaultdict(lambda: dict(buses=0, bits=0, examples=[], cdc=None))
     for bid, cls, nb, eps in m['buses']:
-        if cls in ('clock_trunk', 'reset'):
+        if cls in ('clock_trunk', 'reset', 'reset_tree'):
             continue
         if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
             continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
         if any(i in m.get('r18', {}).get('cdc_hosts', ()) for i, _ in eps):
             continue                 # Qwen r18: the serial block hosts the ratio FIFO at this port (both clocks pinned)
-        ds = [by[i].domain for i, _ in eps]
+        if hbm and any(by[i].kind == 'waypoint' and i in clocked for i, _ in eps):
+            continue                 # a meso / launch station: the FIFO / launch register is the crossing
+        ds = []
+        for i, _ in eps:
+            if hbm and by[i].kind == 'waypoint':
+                continue             # forwarded station: the clock of its source travels with the data
+            ds.append(_DOM.get(clocked.get(i), by[i].domain))
         if len(set(ds)) > 1:
-            r = out[f'{cls}|{"->".join(ds)}']
+            host = next((v for k, v in HBM_CDC_HOSTS.items() for i, _ in eps if hbm and by[i].master.startswith(k)), None)
+            r = (att if host else out)[f'{cls}|{"->".join(ds)}']
             r['buses'] += 1
             r['bits'] += nb
+            if host:
+                r['cdc'] = host
             if len(r['examples']) < 3:
                 r['examples'].append(bid)
-    return dict(out)
+    res = dict(out)
+    if hbm:
+        res = dict(unattributed=dict(out), attributed_to_block_cdc=dict(att))
+    return res
 
 
 def region_crossings(die, m):
@@ -987,6 +1166,66 @@ def region_crossings(die, m):
     return {f'{c}|{k}': dict(buses=out[(c, k)], bits=bits[(c, k)]) for c, k in out}
 
 
+# ------------------------------------------------------------------------------------------------ RTL interfaces (HBM)
+def interfaces(die, m, pw):
+    """Die ports of the placeholder masters that stand for an RTL top, against that RTL's ports (r15 coll_rtl /
+    attn_rtl): every RTL bit accounted for by a die port (or a block-internal fan-in / wrapper), no die bit without one."""
+    out = {}
+    V = m['variant']
+    tu = parse_module('rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv', 'ot_hbm_accel_tu_endpoint')['ports']
+    w = {p: d_w[1] for p, d_w in tu.items()}
+    die = {p: n for (ms, p), n in pw.items() if ms == 'hfd_coll'}
+    nl = len(m['links'])
+    q = [p for p in die if p.startswith('t_su')]
+    rows = dict(
+        su_delivery_and_inject_request=dict(rtl=w['del_flit'] + w['del_valid'] + w['inj_idx'] + w['inj_rd'],
+                                            die=sum(die[p] for p in q) - (len(q) - 1) * (w['inj_idx'] + w['inj_rd'])
+                                            if q else 0,
+                                            note='4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd '
+                                                 'broadcast to every quarter'),
+        su_inject_data=dict(rtl=w['inj_data'], die_per_quarter=sorted({die[p] for p in die if p.startswith('f_su')}),
+                            note='each quarter drives inj_data; the fan-in inside the block selects one'),
+        config_in=dict(rtl=w['rank'] + w['pf'] + w['go'], die=die.get('f_cmdproc')),
+        status_out=dict(rtl=w['fault'] + w['stat_credit_stall'], die=die.get('t_cmdproc')),
+        link_tx=dict(rtl=w['ph_tx_v'] + w['ph_tx_flit'] + w['rx_credit'],
+                     die=sum(n // 2 for p, n in die.items() if p.startswith('llk_'))),
+        link_rx=dict(rtl=w['ph_rx_v'] + w['ph_rx_flit'] + w['sw_cr_ret'],
+                     die=sum(n - n // 2 for p, n in die.items() if p.startswith('llk_'))),
+        clocks=dict(rtl='clk / rst_n / pclk / prst_n', die=sorted(p for p in die if p.startswith(('pll', 'por')))),
+        unmatched_die_ports=sorted(p for p in die if not p.startswith(('t_su', 'f_su', 'f_cmdproc', 't_cmdproc', 'llk_',
+                                                                        'pll', 'por'))),
+    )
+    for k_, r in rows.items():
+        if isinstance(r, dict) and 'die' in r and isinstance(r['die'], int):
+            r['match'] = r['die'] >= r['rtl'] if k_.startswith('link') else r['die'] == r['rtl']
+    rows['su_inject_data']['match'] = rows['su_inject_data']['die_per_quarter'] == [w['inj_data']]
+    rows['clocks']['match'] = bool(rows['clocks']['die'])
+    out['hfd_coll'] = dict(rtl='ot_hbm_accel_tu_endpoint', links=nl, checks=rows,
+                           pass_=all(r.get('match', True) for r in rows.values() if isinstance(r, dict))
+                           and not rows['unmatched_die_ports'])
+    at = parse_module('rtl/hbm_accel/ot_attn_tile_registered_parent.sv', 'ot_attn_tile_registered_parent')['ports']
+    aw = {p: d_w[1] for p, d_w in at.items()}
+    tdie = {p: n for (ms, p), n in pw.items() if ms == 'hfd_attn_tile'}
+    ld = sum(aw[p] for p in ('ld_v', 'ld_mode', 'ld_bank', 'ld_grp', 'ld_w', 'ld_w2v'))
+    qq = sum(aw[p] for p in ('iv', 'ibank', 'ib'))
+    oo = sum(aw[p] for p in ('ov', 'oy', 'oflt'))
+    trows = dict(packet_ld=dict(rtl=ld, die=tdie.get('k')), packet_query=dict(rtl=qq, die=tdie.get('q')),
+                 result=dict(rtl=oo, die=tdie.get('o')),
+                 wrapper_forward_ports={p: tdie[p] for p in ('ci', 'cf', 'ri', 'rf', 'i') if p in tdie},
+                 clocks=sorted(p for p in tdie if p in ('ck', 'rst')))
+    for k_ in ('packet_ld', 'packet_query', 'result'):
+        trows[k_]['match'] = trows[k_]['die'] is not None and trows[k_]['die'] - \
+            sum(m.get('fclk', {}).get(b, (0, 0, 0))[1] for b in []) >= trows[k_]['rtl']
+    fpk = {'ci', 'cf', 'ri', 'rf'}
+    trows['wrapper_note'] = ('ci / cf / ri / rf carry the 1,618 b packet (the parent\'s `launch` register, one tile hop '
+                             'each) and i the upstream result: tile die-wrapper ports, not ot_attn_tile_registered_parent '
+                             'ports (owner HBM-ATTN)') if fpk & set(tdie) else ''
+    out['hfd_attn_tile'] = dict(rtl='ot_attn_tile_registered_parent', checks=trows,
+                                pass_=all(trows[k_]['match'] for k_ in ('packet_ld', 'packet_query', 'result'))
+                                and trows['clocks'] == ['ck', 'rst'])
+    return out
+
+
 # ------------------------------------------------------------------------------------------------ Verilog emission
 def vid(n):
     return Q.esc(n)
@@ -1001,6 +1240,8 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
     for bus in m['buses']:
         bid, cls, bits, eps = bus
         for j, (inst, port) in enumerate(eps):
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             conns[inst].append((port, f'n_{bid}', bits, j, bus))
             if mst in real:
@@ -1068,10 +1309,14 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
         stubs.append('\n'.join(body))
     (out_dir / f'{top}_stubs.sv').write_text('\n'.join(stubs))
     # top
+    tops = [b[0] for b in m['buses'] if b[1] == 'top_in']
     V = [f'// die_top_lint: {die} die top (generator netlist, real blocks bound by RTL port, placeholders by stub)',
-         f'module {top} ();']
+         f'module {top} (' + ', '.join(tops) + ');']
+    V += [f'  input wire {p};' for p in tops]
     for bid, cls, bits, eps in m['buses']:
         V.append(f'  wire [{bits - 1}:0] n_{bid};')
+        if cls == 'top_in':
+            V.append(f'  assign n_{bid} = {bid};')
     nfl = 0
     for it in m['insts']:
         mst = it.master
@@ -1133,7 +1378,7 @@ def write_shells(real, path):
          '// the element owners\' lint scope).', '']
     done = set()
     for rb in real.values():
-        if rb['file'].endswith('_bb.v') or rb['module'] in done:
+        if rb['file'].endswith('_bb.v') or rb['module'] in done or rb['kind'].startswith('glue'):
             continue
         done.add(rb['module'])
         prm = ', '.join(f'parameter {k} = {v}' for k, v in rb['params'].items())
@@ -1152,10 +1397,13 @@ def write_shells(real, path):
     Path(path).write_text('\n'.join(V))
 
 
-def rtl_closure(tops):
+def rtl_closure(tops, extra=()):
     """module -> file over rtl/ and physical/ (first definition by sorted path, test benches excluded); recursive file
     list from the given top modules."""
     defs = {}
+    for rel in extra:
+        for mm in re.finditer(r'^\s*module\s+([A-Za-z_]\w*)', _strip((ROOT / rel).read_text()), re.M):
+            defs.setdefault(mm.group(1), rel)
     for f in sorted(list((ROOT / 'rtl').rglob('*.sv')) + list((ROOT / 'rtl').rglob('*.v'))):
         rel = f.relative_to(ROOT).as_posix()
         if '/test/' in rel or rel.split('/')[-1].startswith('tb'):
@@ -1191,7 +1439,9 @@ def rtl_closure(tops):
 # ------------------------------------------------------------------------------------------------ abstract list (HBM)
 def hbm_abstracts():
     m, pw, M, tool = build('hbm')
-    real = real_blocks('hbm')
+    real = real_blocks('hbm', m)
+    CUR_M['_by'] = {it.name: it for it in m['insts']}
+    CUR_M['_real'] = real
     cnt = Counter(it.master for it in m['insts'])
     first = {}
     for it in m['insts']:
@@ -1212,7 +1462,7 @@ def hbm_abstracts():
     rows = []
     fam = defaultdict(list)
     for mst, n in cnt.items():
-        f = re.sub(r'_\d+$', '_*', mst) if re.match(r'hfd_(stn|mcast|gath|cdist)_\d+$', mst) else \
+        f = re.sub(r'_r?\d+$', '_*', mst) if re.match(r'hfd_(stn|mcast|gath|cdist|meso)_r?\d+$', mst) else \
             ('hfd_svc_*' if mst.startswith('hfd_svc_') else mst)
         fam[f].append((mst, n))
     for f, lst in sorted(fam.items()):
@@ -1655,28 +1905,40 @@ def rom_readme(recs, out):
 
 
 # ------------------------------------------------------------------------------------------------ main
-def run_lint(die, out, top_fix=False):
+def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
-    real = real_blocks(die)
+    R8_ACTIVE[0] = die.startswith('s81r8')
+    real = real_blocks(die, m)
+    CUR_M['_by'] = {it.name: it for it in m['insts']}
+    CUR_M['_real'] = real
     F, unb, conflicting = lint_connectivity(die, m, real, pw)
-    ck_rows, ck_ports = clock_reset(die, m, real)
-    missing, away, spread = physical(die, m, M, pw, real)
-    ab = abut(die, m)
-    gp = gap(die, m, pw)
-    xr = region_crossings(die, m)
+    ck_rows, ck_ports, rst_rows = clock_reset(die, m, real)
+    mp = dict(m, buses=[(b[0], b[1], b[2], [e for e in b[3] if e[0] != 'TOP']) for b in m['buses']])
+    missing, away, spread = physical(die, mp, M, pw, real)
+    ab = abut(die, mp)
+    gp = gap(die, mp, pw) if not R8_ACTIVE[0] else gap_r8(mp)
+    xr = region_crossings(die, mp)
     out.mkdir(parents=True, exist_ok=True)
-    top = f'{die}_lint_top' + ('_fix' if top_fix else '')
+    top = f'{die}{tag}_lint_top' + ('_fix' if top_fix else '')
     em = emit_verilog(die, m, real, pw, out, top)
-    files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')])
+    extra = (S.GLUE_RTL, S.CFG7_RTL) if R8_ACTIVE[0] else ()
+    files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
+    if R8_ACTIVE[0]:
+        # die-level list: the q element by its interface shell, every glue master and primitive by its full RTL
+        qn = S.real_lef(S.Q_LEF)['name']
+        gl, _ = rtl_closure([v['module'] for k_, v in real.items() if v['kind'].startswith('glue')], extra)
+        (out / f'{die}_lint_top.f').write_text('\n'.join([str(ROOT / f_) for f_ in bb] + [f'{die}_lint_top_real_shells.sv'] + [str(ROOT / f_) for f_ in gl]
+                                                        + [f'{die}_lint_top_stubs.sv', f'{die}_lint_top.sv']) + '\n')
     # full-RTL file list (element interiors elaborate per instance: 24-65 GB on these dies) and the die-level list,
     # where each real RTL block is its exact interface shell (ports, widths, directions and parameters of the RTL)
     (out / f'{top}_fullrtl.f').write_text('\n'.join(bb + files + [f'{top}_stubs.sv', f'{top}.sv']) + '\n')
     write_shells(real, out / f'{top}_real_shells.sv')
-    (out / f'{top}.f').write_text('\n'.join(bb + [f'{top}_real_shells.sv', f'{top}_stubs.sv', f'{top}.sv']) + '\n')
+    if not R8_ACTIVE[0]:
+        (out / f'{top}.f').write_text('\n'.join(bb + [f'{top}_real_shells.sv', f'{top}_stubs.sv', f'{top}.sv']) + '\n')
     rec = dict(
         schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool,
-        generator_sha256=sha_gen(die, tool), generator_tag=gen_tag(tool, gen_root(die)),
+        generator_sha256=sha_gen(die, tool.split()[0]), generator_tag=gen_tag(tool.split()[0], gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
         qwen_recipe=QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
         lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
@@ -1691,14 +1953,16 @@ def run_lint(die, out, top_fix=False):
         placeholder_port_direction_conflicts=conflicting,
         clocking=[dict(master=k[0], view=k[1], clock=k[2], instances=n) for k, n in sorted(ck_rows.items())],
         clock_sources={i: sorted(p) for i, p in ck_ports.items() if any(x.startswith('pll') for x in p)},
-        top_ports=0,
+        reset=[dict(master=k[0], net=k[1], instances=n) for k, n in sorted(rst_rows.items())],
+        interfaces=interfaces(die, m, pw) if die == 'hbm' else {},
+        top_ports=list(LAST_TOP) if R8_ACTIVE[0] else 0,
         physical=dict(missing_pins=[dict(master=k[0], port=k[1], **v) for k, v in sorted(missing.items())],
                       face_away=[dict(master=k[0], port=k[1], orient=k[2], **v) for k, v in sorted(away.items())],
                       pin_spread=sorted(spread, key=lambda r: -r['span_um'])[:60],
                       pin_spread_count=len(spread),
                       abut_without_channel=[dict(compute=k[0], hub_kind=k[1], hub=k[2], **v) for k, v in sorted(ab.items())]),
-        meso_forwarded_gap=dict(gp, clock_region_crossings=xr, clock_domain_crossings=domain_crossings(m)),
-        block_shape=block_shape(die, m, real), counterparts=counterparts(die, m, pw),
+        meso_forwarded_gap=dict(gp, clock_region_crossings=xr, clock_domain_crossings=domain_crossings(mp)),
+        block_shape=block_shape(die, mp, real), counterparts=counterparts(die, m, pw),
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
@@ -1710,12 +1974,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
-    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom'])
+    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
+    ap.add_argument('--tag', default='', help='output name tag (e.g. _r15)')
+    ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r16g)')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
     a = ap.parse_args(argv)
+    global VARIANT
+    VARIANT = a.variant
     global QWEN_REF, QWEN_RECIPE
     QWEN_REF = a.qwen_ref
     QWEN_RECIPE = a.qwen_recipe
@@ -1725,7 +1993,7 @@ def main(argv=None):
         print(json.dumps(s, indent=1))
         return 0
     if a.mode == 'lint':
-        rec = run_lint(a.die, a.out, a.top_fix)
+        rec = run_lint(a.die, a.out, a.top_fix, a.tag)
         print(json.dumps(rec['census']))
     elif a.die == 'rom' or (a.die and a.die != 'hbm'):
         a.out.mkdir(parents=True, exist_ok=True)

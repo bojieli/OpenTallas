@@ -195,6 +195,8 @@ module tb_hdc_v41x_vec #(
     wire [NR*32-1:0]  res_data;
     wire dbg_emit, dbg_ret, dbg_res;
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
+    // Select the closed reducer top bundle replication without changing owner RTL.
+    defparam dut.u_red.ROGS = 2;
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT),
                       .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .CAPR(CAPR), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP), .ROUT(ROUT), .CTL12(CTL12),
                       .RSLICE(RSLICE)) dut (

@@ -28,6 +28,8 @@
 module ot_dsrom_window_attn_source_la #(
     parameter bit STREAM_LA = 0,
     parameter bit WINDOW_PIPELINE = 0,
+    parameter integer SPLIT_COLUMNS = 0,
+    parameter integer STAGE_MARGIN = 0,
     parameter bit REFILL_OWNER_SAFE = 0,
     parameter integer POS_W = 21, USER_W = 10, SEC_W = 30, HAW = 30, TAGW = 16,
     parameter bit RETAIN_L0 = 0,
@@ -95,7 +97,7 @@ module ot_dsrom_window_attn_source_la #(
     output wire [31:0] la_load_cycles
 );
     generate if (STREAM_LA && WINDOW_PIPELINE) begin : g_pipeline
-        ot_dsrom_window_source_pipeline #(.STREAM_LA(1), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE),
+        ot_dsrom_window_source_pipeline #(.SPLIT_COLUMNS(SPLIT_COLUMNS), .STAGE_MARGIN(STAGE_MARGIN), .STREAM_LA(1), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE),
             .POS_W(POS_W), .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .RETAIN_L0(RETAIN_L0),
             .WIN_STACK(WIN_STACK), .STREAM_II1(STREAM_II1), .REFILL_CREDITS(REFILL_CREDITS),
             .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),

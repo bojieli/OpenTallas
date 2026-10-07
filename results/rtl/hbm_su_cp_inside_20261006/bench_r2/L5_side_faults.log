@@ -1,0 +1,6 @@
+LOOP SIDE=1 OWN_IN=1 OWN_OUT=1 EXEC_IN=0 EXEC_OUT=1 OUT=1 SIDE_REPLAY=-1 PIN=0 REPLAY=0 FAULTS=1 tx=3000 done=2547 bad_frame=0 cp_fault=455 arb_fault_cycles=374 assoc_fault_cycles=0 timeouts=0 w2_leases=642 req=4168 rsp=4148 release_r_low_while_v=827 max_tx_cycles=98 sum_tx_cycles=139039 injected=455 detected=455 late=0 done_after_fault=0
+PASS
+- rtl/test/hbm_accel/su_cp_side_20261006/tb_su_cp_side_loop.sv:191: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2ms; walltime 12.161 s; speed 153.565 us/s
+- Verilator: cpu 12.161 s on 1 threads; alloced 1018 MB

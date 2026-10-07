@@ -1,0 +1,98 @@
+{
+  "status": "CONFIRMED_DISTINCT_TRANSPORT_VEHICLES",
+  "timestamp_UTC": "2026-10-06T10:50:44.928617+00:00",
+  "selected": {
+    "source": "b04e893e7",
+    "protected_leaf": "3f3c2b790",
+    "runtime_pid": 2318397,
+    "flags": {
+      "PROTECTED_STREAM4": 1,
+      "CDC_CONSUMER_JOIN": 1,
+      "LANDING_RSEL": 1,
+      "HBM_PULLIN": 0,
+      "kv_ideal": 0,
+      "early_go": 1,
+      "posted_wb": 1
+    },
+    "source_blobs": {
+      "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_full_numeric.sv": "a4875f8b47bbec11db9c2a2f82e4ff0985f2b240",
+      "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_full_transport_join.sv": "bd319e9b594215ccb91b775d90612c2c447ac1ea",
+      "rtl/hdc/kv/ot_qwen_s4_transport_context.sv": "6279ba1ea533999ca817ae53eb19b8c3a3a67aa5",
+      "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "bfc2df915438b0317663144c59b915a3b34634bd",
+      "rtl/hdc/kv/ot_qwen_s4_protected_cdc_consumer_join.sv": "678d8accd104555cb09ef211d2316f513b6acad6",
+      "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "3923edc5a5dbd65410addc26b6a45bda5a6636fb",
+      "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "eb0db1e31b9b2b517f1a9f2d508c717bee0dae1a"
+    },
+    "hierarchy": "ot_qwen_p0_full_numeric.u_join -> ot_qwen_p0_full_transport_join.u_transport -> ot_qwen_s4_transport_context.active.stack[0..3].u_link -> ot_qwen_s4_stack_transport.active.u_return",
+    "return_mechanism": "return_found chooses one PC; rt_frame carries one 288bit row/control frame; b_l_pop onehot",
+    "payload_bytes_per_rank_core_max": 128,
+    "scope": "bandwidth-narrow protected integration vehicle; not a demonstrated full-width protected successor of PC-parallel machine",
+    "measured_allrank": {
+      "core": 77825,
+      "layer": 2,
+      "fill": 288432,
+      "wrack_retired": 272,
+      "wrack_debt": 0,
+      "kv_fault": "0000"
+    },
+    "numeric_boundaries_passed": [
+      "L0 fourrank X",
+      "L1 fourrank X"
+    ]
+  },
+  "older": {
+    "source": "1d44fd09d",
+    "top": "ot_qwen_rom_rt_die_w12_stream4_tagged_ar",
+    "source_record": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/source.json",
+    "landing_source": "rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv",
+    "landing_sha": "f97ab5593d26b2861a5816774e50194b82ff7d4a4d1bdf528a187a9a321ad64e",
+    "mechanism": "independent per-PC queue heads presented/consumed in NPC loop; no shared one-row-per-stack return serialization",
+    "HBM_PULLIN": 16,
+    "kv_ideal": 0,
+    "early_go": 1,
+    "posted_wb": 1,
+    "observed_fill_sectors_per_rank": {
+      "0": 4718592,
+      "1": 4718592,
+      "2": 4718592,
+      "3": 4718592
+    },
+    "bytes_per_rank": 150994944,
+    "system_bytes": 603979776,
+    "terminal_cycles": 193955,
+    "reported_steady_fill_bytes_per_rank_core_approx": 3042,
+    "report_source": "CLAUDE QWEN-KV-RECONCILE 2026-10-06T10:47:58Z",
+    "protected_context_equivalence": false
+  },
+  "correction": {
+    "payload_MiB": 576,
+    "narrow_protected_P0_floor_us": 983.04,
+    "universal_Qwen_floor": false,
+    "older_parallel_result_not_invalidated": true,
+    "protected_fullwidth_rate_not_qualified": true,
+    "HBM_PULLIN_and_protection_differ": "two source configurations must not be silently treated as identical"
+  },
+  "recommendation": {
+    "owner": "Claude QWEN-KV-RECONCILE/QWEN-PHYS with Descartes producer source",
+    "implementation": "replace shared return aggregation with independent protected per-PC return lanes/seats mapped to the existing 128-PC root landing ports; reuse protected consumer_join/pc/ring and current R14 controller",
+    "preserve": [
+      "independent real CLK/HCLK",
+      "actual held l_v/l_pop",
+      "per-PC finite h_cred_ret",
+      "accepted write identity/tag/generation",
+      "explicit wd_accept and ACK debt",
+      "descriptor/GO ordinal fences",
+      "warm admission pause and accepted-debt drain",
+      "sticky fault propagation",
+      "released FP8 payload and golden order"
+    ],
+    "not_sufficient": "arbiter-only edit on existing single504bit sealed-record wire lane",
+    "physical_cost": "bind/price actual independent lanes and endpoint routing; 32 copies of a 504bit sealed lane would be16128 coded return bits/stack before controls, not a free1056-track duplex substitution",
+    "decision": "proposal only; no RTL/build/adoption until owner decision and priority admission"
+  },
+  "runtime_preserved": true,
+  "new_builds": 0,
+  "replays": 0,
+  "full_token_pass": false,
+  "physical_qualified": false
+}

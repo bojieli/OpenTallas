@@ -1,0 +1,17 @@
+{
+  "basis": "Inspection of pinned source a438d922; timing reasoning, not a new numerical gate",
+  "previous_bank0_last_input_edge": 22,
+  "previous_bank0_last_commit_edge": 24,
+  "next_bank0_first_capture_edge": 24,
+  "next_bank0_first_compare_edge": 25,
+  "next_bank0_first_commit_edge": 26,
+  "previous_vector_first_merge_capture_edge": 26,
+  "first_merge_reads": "old lane q before edge26 nonblocking assignments",
+  "unsafe_shortcut": "clearing lane valid_q on new first capture edge24 destroys previous result before held publication/merge capture",
+  "required_successor": "preserve protected held activation/publication/reset identity; prove actual retained control replicas after mapping and all merge/arithmetic violators; price actual FF/clock/load/addedcycles before changed body",
+  "new_RTL_written": false,
+  "new_gate_run": false,
+  "current_route_preserved": true,
+  "physical_closed": false,
+  "parent_qualified": false
+}

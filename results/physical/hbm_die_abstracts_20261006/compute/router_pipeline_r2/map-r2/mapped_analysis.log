@@ -1,0 +1,29 @@
+
+-- Executing script file `/work/analysis_flatten.ys' --
+
+1. Executing Verilog-2005 frontend: /work/results/asap7/carson_router_successor/base/1_2_yosys.v
+Parsing Verilog input from `/work/results/asap7/carson_router_successor/base/1_2_yosys.v' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_router_lane_local'.
+Generating RTLIL representation for module `\ot_hbm_router_merge6_cut'.
+Generating RTLIL representation for module `\ot_hbm_router_topk_successor'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_router_topk_successor
+Used module:     \ot_hbm_router_merge6_cut
+Used module:     \ot_hbm_router_lane_local
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_router_topk_successor
+Used module:     \ot_hbm_router_merge6_cut
+Used module:     \ot_hbm_router_lane_local
+Removed 0 unused modules.
+
+3. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_hbm_router_merge6_cut.
+Deleting now unused module ot_hbm_router_lane_local.
+<suppressed ~63 debug messages>
+
+4. Executing JSON backend.

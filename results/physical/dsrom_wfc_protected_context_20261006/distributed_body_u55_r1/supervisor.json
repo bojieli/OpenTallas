@@ -1,0 +1,22 @@
+{
+  "pid": 78098,
+  "start_ticks": "26215675",
+  "boot_id": "61274e16-7745-49f1-9bae-df70e3eb8702",
+  "utc": "2026-10-06T09:51:00.366558+00:00",
+  "argv": [
+    "python3",
+    "/srv/opentallas-scratch/codex/zeno-wfc-distributed-body-20261006/source/physical/dsrom_wfc_protected_context/run.py",
+    "--source",
+    "/srv/opentallas-scratch/codex/zeno-wfc-distributed-body-20261006/source",
+    "--output",
+    "/srv/opentallas-scratch/codex/zeno-wfc-distributed-body-20261006/u55-r1",
+    "--density",
+    "0.55",
+    "--body-clock-sdc",
+    "/srv/opentallas-scratch/codex/zeno-wfc-distributed-body-20261006/source/physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc",
+    "--distributed-command"
+  ],
+  "source_commit": "a4804e8bab72107539338979d5d63457915b1dd9",
+  "provider_main": "397e12e41",
+  "scope": "COND_BODY_DIAGNOSTIC SS60FF25; externalclocksource/fault/reset/engineIO unqualified no safe-reset/headline"
+}

@@ -1,0 +1,196 @@
+{
+ "ss": {
+  "endpoints": 74,
+  "groups": [
+   {
+    "cls": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 13,
+    "worst_ps": -60.0
+   },
+   {
+    "cls": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 15,
+    "worst_ps": -30.3
+   },
+   {
+    "cls": "_*_/D",
+    "n": 10,
+    "worst_ps": -30.3
+   },
+   {
+    "cls": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 5,
+    "worst_ps": -27.4
+   },
+   {
+    "cls": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 30,
+    "worst_ps": -2.5
+   },
+   {
+    "cls": "g_mul[*].u_mul.y[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -0.3
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].sel5c[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 8,
+    "worst_ps": -60.0,
+    "example": "g_col[1].g_bank[1].sel5c[0]$_DFF_P_/QN -> g_col[1].m5[10]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 5,
+    "worst_ps": -41.5,
+    "example": "g_col[3].g_bank[0].cap4[65]$_DFF_P_/QN -> g_col[3].m5[65]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].g_in.a_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 15,
+    "worst_ps": -30.3,
+    "example": "g_mul[8].g_in.a_q[19]$_DFF_P_/QN -> g_mul[8].u_mul.u_c1.g_r.r[70]$_DFF_PN0_/D"
+   },
+   {
+    "start": "res_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 5,
+    "worst_ps": -27.4,
+    "example": "res_q[137]$_DFF_P_/QN -> g_mul[4].g_in.a_q[9]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].u_rom/rd_out[*]",
+    "end": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 30,
+    "worst_ps": -2.5,
+    "example": "g_col[0].g_bank[2].u_rom/rd_out[244] -> g_col[0].g_bank[2].cap4[244]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/QN",
+    "end": "g_mul[*].u_mul.y[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -0.3,
+    "example": "g_mul[11].u_mul.u_c3.g_r.r[1]$_DFF_PN0_/QN -> g_mul[11].u_mul.y[6]$_DFF_PN0_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 156,
+  "groups": [
+   {
+    "cls": "res_q[*]$_DFF_P_/D",
+    "n": 131,
+    "worst_ps": -37.8
+   },
+   {
+    "cls": "ov2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -18.6
+   },
+   {
+    "cls": "od2[*]$_DFF_P_/D",
+    "n": 10,
+    "worst_ps": -17.4
+   },
+   {
+    "cls": "we2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -12.9
+   },
+   {
+    "cls": "od1[*]$_DFF_P_/D",
+    "n": 7,
+    "worst_ps": -10.4
+   },
+   {
+    "cls": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -5.8
+   },
+   {
+    "cls": "g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -2.4
+   },
+   {
+    "cls": "g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.4
+   },
+   {
+    "cls": "g_alvl[*].g_node[*].cq[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -0.7
+   }
+  ],
+  "paths": [
+   {
+    "start": "res_in[*]",
+    "end": "res_q[*]$_DFF_P_/D",
+    "n": 131,
+    "worst_ps": -37.8,
+    "example": "res_in[39] -> res_q[39]$_DFF_P_/D"
+   },
+   {
+    "start": "ov1$_DFF_P_/QN",
+    "end": "ov2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -18.6,
+    "example": "ov1$_DFF_P_/QN -> ov2$_DFF_P_/D"
+   },
+   {
+    "start": "od1[*]$_DFF_P_/QN",
+    "end": "od2[*]$_DFF_P_/D",
+    "n": 10,
+    "worst_ps": -17.4,
+    "example": "od1[451]$_DFF_P_/QN -> od2[451]$_DFF_P_/D"
+   },
+   {
+    "start": "we1$_DFF_P_/QN",
+    "end": "we2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -12.9,
+    "example": "we1$_DFF_P_/QN -> we2$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.y[*]$_DFF_PN0_/QN",
+    "end": "od1[*]$_DFF_P_/D",
+    "n": 7,
+    "worst_ps": -10.4,
+    "example": "g_mul[14].u_mul.y[5]$_DFF_PN0_/QN -> od1[453]$_DFF_P_/D"
+   },
+   {
+    "start": "res_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -5.8,
+    "example": "res_q[352]$_DFF_P_/QN -> g_mul[11].g_in.a_q[0]$_DFF_P_/D"
+   },
+   {
+    "start": "g_alvl[*].g_node[*].cq[*]$_DFF_P_/QN",
+    "end": "g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -2.4,
+    "example": "g_alvl[2].g_node[3].cq[42]$_DFF_P_/QN -> g_alvl[3].g_node[1].g_split.x1_q[42]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].u_r2/addr_q[*]$_DFF_P_/QN",
+    "end": "g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -2.4,
+    "example": "g_col[0].u_r2/addr_q[7]$_DFF_P_/QN -> g_col[0].g_bank[1].u_r3/a_q[7]$_DFF_P_/D"
+   },
+   {
+    "start": "g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/QN",
+    "end": "g_alvl[*].g_node[*].cq[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -0.7,
+    "example": "g_alvl[4].g_node[0].g_split.x1_q[10]$_DFF_P_/QN -> g_alvl[4].g_node[0].cq[10]$_DFF_P_/D"
+   }
+  ]
+ }
+}

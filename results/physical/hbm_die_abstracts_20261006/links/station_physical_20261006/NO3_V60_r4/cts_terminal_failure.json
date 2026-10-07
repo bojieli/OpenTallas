@@ -1,0 +1,18 @@
+{
+  "status": "ACTUAL_CTS_TIMING_FAIL_THEN_GRT_FLOW_FAIL",
+  "period_ps": 833.333333,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "SS_WNS_ps": -1680.78,
+  "FF_hold_WNS_ps": -193.555,
+  "setup_skew_ps": 98.2586,
+  "hold_skew_ps": 67.2692,
+  "stdcell_area_um2": 14190.4,
+  "actual_utilization": 0.826339,
+  "hold_buffers": 7190,
+  "route_failure": "5_1_grt DRT-0305 one_ nonspecialPOWER net",
+  "route_completed": false,
+  "LEF_LIB_exported": false,
+  "source_local_parent_open": true,
+  "structural_fix_selected": false
+}

@@ -2,7 +2,7 @@
 """Reuse the actual full-shape WINDOW golden/DRAM gate for the default-off pipeline.
 
 No native S81 wiring or golden-format changes. The original gate and vectors
-are reused; only the source parameter and three successor modules are added.
+are reused; only the source parameter and successor modules are added.
 """
 import argparse
 import json
@@ -10,7 +10,7 @@ from pathlib import Path
 import dsrom_s81_window_la as gate
 
 PIPELINE = [f'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_{name}_pipeline.sv'
-            for name in ('writer', 'stage', 'source')]
+            for name in ('writer', 'stage', 'source', 'row_merge')]
 
 
 def main():
@@ -20,12 +20,16 @@ def main():
     p.add_argument('--verilator', required=True)
     p.add_argument('--only', default='lf,lf_cold,lf_scan,lf_bg,lf_kg_p1,lf_kg_p2,lf_kgcon_p2')
     p.add_argument('--jobs', type=int, default=1)
+    p.add_argument('--stage-margin', type=int, default=0, choices=(0, 1),
+                   help='ot_dsrom_window_stage_pipeline MARGIN (default off)')
     a = p.parse_args()
     a.plan = json.dumps({0:['lf','lf_cold'], 20:['lf_scan','lf_bg'],
                         24:['lf','lf_kg_p1','lf_kg_p2','lf_kgcon_p2']})
     gate.SOURCES.extend(PIPELINE)
     for name in a.only.split(','):
         gate.CONFIGS[name]['WINDOW_PIPELINE'] = 1
+        if a.stage_margin:
+            gate.CONFIGS[name]['STAGE_MARGIN'] = 1
     gate.cmd_run(a)
     runs=json.loads((a.out/'runs.json').read_text())
     rows = runs['runs'] if isinstance(runs,dict) and 'runs' in runs else runs

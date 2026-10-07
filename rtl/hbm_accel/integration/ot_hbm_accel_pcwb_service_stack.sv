@@ -3,9 +3,15 @@
 // Model: hbm_pcwb_actual_parent_20261005 plus parent_implementation model_delta.
 // POR is cold whole-provider reset; warm reset cannot erase externally accepted debt.
 module ot_hbm_accel_pcwb_service_stack #(
- parameter integer ENABLE=0,CMD_MATCH_CUT=0,STACK=0,CRED=64,WQ=8
+ parameter integer ENABLE=0,P2_READ_RETURN=0,CMD_MATCH_CUT=0,STACK=0,CRED=64,WQ=8
 )(
  input wire service_clk,core_clk,por_n,
+ // Optional P2 service-domain export. owner_frame73 must be the ACTUAL
+ // accepted held source frame; never convert producer/transport/IRS into it.
+ input wire p2_owner_frame_valid,input wire [72:0] p2_owner_frame73,input wire [95:0] p2_credit_return,
+ output wire [31:0] p2_issue_v,p2_return_v,
+ output wire [511:0] p2_next_ordinal,p2_return_ordinal,
+ output wire [2335:0] p2_return_frame,output wire [8191:0] p2_return_data,
  input wire owner_v,output wire owner_r,
  input wire [63:0] producer,input wire [31:0] transport,irs_serial,
  input wire [6:0] rank,input wire [1:0] stack,
@@ -33,6 +39,7 @@ module ot_hbm_accel_pcwb_service_stack #(
 );
  import ot_gpu_w6_secded_pkg::*;
  generate if(!ENABLE)begin:off
+  assign p2_issue_v=0;assign p2_return_v=0;assign p2_next_ordinal=0;assign p2_return_ordinal=0;assign p2_return_frame=0;assign p2_return_data=0;
   assign owner_r=0;assign owner_held=0;assign held_producer=0;assign held_transport=0;
   assign held_irs_serial=0;assign held_rank=0;assign held_stack=0;assign row_r=0;assign sh_r=0;
   assign desc_r=0;assign ca_valid=0;assign ca_pc_lsb=0;assign ca_op=0;assign ca_bank=0;assign ca_row=0;
@@ -47,6 +54,26 @@ module ot_hbm_accel_pcwb_service_stack #(
   assign held_transport=frame_q[75:44];assign held_irs_serial=frame_q[43:12];
   assign held_rank=frame_q[11:5];assign held_stack=frame_q[4:3];
   wire [31:0] adapter_fault,pc_fault,wq_empty,wr_drained,landing_empty,landing_full;
+  wire [31:0] p2_issue_permit,p2_return_permit,p2_empty;
+  wire p2_drained,p2_fault;
+  wire [31:0] raw_phy_v,raw_phy_r;
+  assign phy_col_v=raw_phy_v & (P2_READ_RETURN?(phy_we|p2_issue_permit):32'hffffffff);
+  assign raw_phy_r=phy_col_r & (P2_READ_RETURN?(phy_we|p2_issue_permit):32'hffffffff);
+  assign p2_issue_v=P2_READ_RETURN?(phy_col_v&phy_col_r&~phy_we):32'd0;
+  assign p2_return_v=P2_READ_RETURN?rd_to_land:32'd0;
+  assign p2_return_data=P2_READ_RETURN?rd_return_data:8192'd0;
+  if(P2_READ_RETURN)begin:p2_binding
+   ot_hbm_pcwb_p2_return_bind #(.ENABLE(1)) u_return(
+    .clk(service_clk),.por_n(por_n),.bind_v(bind_owner),.bind_frame(p2_owner_frame73),
+    .issue_v(p2_issue_v),.return_v(p2_return_v),.freed(p2_credit_return),
+    .issue_permit(p2_issue_permit),.return_permit(p2_return_permit),
+    .next_ordinal(p2_next_ordinal),.return_ordinal(p2_return_ordinal),.return_frame(p2_return_frame),
+    .empty(p2_empty),.drained(p2_drained),.fault(p2_fault));
+  end else begin:p2_off
+   assign p2_issue_permit=0;assign p2_return_permit=0;assign p2_empty=0;
+   assign p2_drained=1;assign p2_fault=0;assign p2_next_ordinal=0;
+   assign p2_return_ordinal=0;assign p2_return_frame=0;
+  end
   wire [31:0] row_req,col_v,col_we,ctrl_wr_ack,raw_desc_r,wq_v,wq_r;
   wire [95:0] row_op,cred_ret;
   wire [31:0] row_grant;
@@ -66,8 +93,8 @@ module ot_hbm_accel_pcwb_service_stack #(
   wire [18:0] wb_row;wire [255:0] wb_data;
   wire all_column_drained=(queued==0);
   wire all_drained=all_column_drained&&(&wr_drained)&&(&wq_empty)&&
-    all_read_drained&&(&landing_empty)&&!(|pc_busy);
-  assign owner_r=!fault&&all_drained&&(!owner_held||frame_q[1])&&(stack==2'(STACK));
+    all_read_drained&&(&landing_empty)&&p2_drained&&!(|pc_busy);
+  assign owner_r=!fault&&all_drained&&(!owner_held||frame_q[1])&&(stack==2'(STACK))&&(!P2_READ_RETURN||p2_owner_frame_valid);
   wire bind_owner=owner_v&&owner_r;
   wire active=owner_held&&!fault&&!bind_owner;
   wire descriptor_safe=active&&frame_q[1]&&wb_fence&&(&wr_drained)&&(&wq_empty)&&all_column_drained;
@@ -80,7 +107,7 @@ module ot_hbm_accel_pcwb_service_stack #(
   // There is no ready override: the selected adapter reserves a real lease and PC WQ seat.
   wire writer_queue_ready=active&&adapter_wr_r[wb_pc];
   assign fence_ok=owner_held&&frame_q[1]&&!fault;
-  assign fault=frame_q[0]||frame_bad||read_bad||ca_fault||(|adapter_fault)||(|pc_fault);
+  assign fault=frame_q[0]||frame_bad||read_bad||p2_fault||ca_fault||(|adapter_fault)||(|pc_fault);
   always @* begin
    reg [191:0] pad;pad={52'b0,frame_q};frame_bad=0;
    for(integer w=0;w<3;w=w+1)begin
@@ -146,18 +173,26 @@ module ot_hbm_accel_pcwb_service_stack #(
    .ca_valid(ca_valid),.ca_pc_lsb(ca_pc_lsb),.ca_op(ca_op),.ca_bank(ca_bank),.ca_row(ca_row),.fault(ca_fault));
   for(genvar pc=0;pc<32;pc=pc+1)begin:channel
    wire [18:0] actual_col_row=col_we[pc]?col_row[pc*19+:19]:read_state[pc][32:14];
-   assign rd_return_r[pc]=active&&!landing_full[pc]&&read_state[pc][13:7]!=0;
+   assign rd_return_r[pc]=active&&!landing_full[pc]&&read_state[pc][13:7]!=0&&(!P2_READ_RETURN||p2_return_permit[pc]);
+   if(P2_READ_RETURN)begin:p2_landing
+    // SharedP2 already owns its coded service->core landing FIFO. Do not
+    // replicate the original raw64-seat landing or recover credit on return.
+    assign landing_full[pc]=0;assign landing_empty[pc]=p2_empty[pc];
+    assign cred_ret[pc*3+:3]=p2_credit_return[pc*3+:3];
+    assign read_v[pc]=0;assign read_data[pc*256+:256]=0;
+   end else begin:core_landing
    ot_hbm_accel_cdc_fifo #(.W(256),.AW(6)) u_landing(
     .wclk(service_clk),.wrst_n(por_n),.we(rd_to_land[pc]),.wdata(rd_return_data[pc*256+:256]),.full(landing_full[pc]),
     .rd_freed(cred_ret[pc*3+:3]),.rclk(core_clk),.rrst_n(por_n),.re(read_v[pc]&&read_r[pc]),
     .rdata(read_data[pc*256+:256]),.empty(landing_empty[pc]));
    assign read_v[pc]=!landing_empty[pc];
+   end
    ot_hbm_pcwb_prepaid_column #(.ENABLE(1),.PC(pc)) u_prepaid(
     .service_clk(service_clk),.por_n(por_n),.context_valid(active),.operation(held_producer),.phase(held_transport),.generation(held_irs_serial),
     .wr_v(wb_wq_v&&(wb_pc==5'(pc))),.wr_r(adapter_wr_r[pc]),.wr_bank(wb_bank),.wr_row(wb_row),.wr_col(wb_col),.wr_data(wb_data),
     .wq_v(wq_v[pc]),.wq_r(wq_r[pc]),.col_v(col_v[pc]),.col_we(col_we[pc]),.col_bank(col_bank[pc*5+:5]),
     .col_row(actual_col_row),.col_col(col_col[pc*5+:5]),.col_data(col_wdata[pc*256+:256]),
-    .phy_col_v(phy_col_v[pc]),.phy_col_r(phy_col_r[pc]),.phy_we(phy_we[pc]),.phy_bank(phy_bank[pc*5+:5]),
+    .phy_col_v(raw_phy_v[pc]),.phy_col_r(raw_phy_r[pc]),.phy_we(phy_we[pc]),.phy_bank(phy_bank[pc*5+:5]),
     .phy_row(phy_row[pc*19+:19]),.phy_col(phy_col[pc*5+:5]),.phy_data(phy_data[pc*256+:256]),.phy_receipt(phy_receipt[pc*199+:199]),
     .visible_v(visible_v[pc]),.visible_r(visible_r[pc]),.visible_receipt(visible_receipt[pc*199+:199]),
     .wr_visible_v(wr_visible_v[pc]),.wr_visible_r(active),.wr_visible_receipt(wr_visible_receipt[pc*199+:199]),

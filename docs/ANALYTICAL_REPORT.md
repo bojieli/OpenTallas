@@ -541,9 +541,19 @@ against the GPU golden, unless it is marked otherwise. Records:
 
 #### The two rates
 
-**Plain decoding.** One token is 194,498 cycles <!-- figure: 194498 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.token_cycles" tol="exact" name="STREAM4 AR token cycles" -->
-at 1.2 GHz, which is **6,169.7** tok/s per user. <!-- figure: 6169.7 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.tok_per_s" name="STREAM4 AR tok/s" -->
-The token is composed from measured layers:
+**Plain decoding.** In the closed configuration (owner decision, 2026-10-06) one token is 194,226 cycles <!-- figure: 194226 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
+at 1.2 GHz, which is **6,178.4** tok/s per user. <!-- figure: 6178.4 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+It is the measured full token, 193,955 cycles <!-- figure: 193955 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles_measured" tol="exact" name="Qwen ROM measured full token cycles" -->
+(36 layers and the head at P8191 on STREAM4), plus the adopted levers' measured cycles: slab MUL_LAT 7
++217 and KV landing Option M (KV_MAP=1) +54 on the cold first layer. The core context lever r5_f2ba adds 0
+cycles. The Option M die crossbar's +24 cycles are a modelled (not RTL) sensitivity only and are not
+composed. Records: `results/arch/three_machine_compose/compose.json` (`qwen_rom`) and
+`results/rtl/qwen_rom_closed_20261006/closure.json`.
+
+The DSpark verdict below was taken on the earlier layer composition, 194,498 cycles <!-- figure: 194498 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.token_cycles" tol="exact" name="STREAM4 AR token cycles" -->
+= 6,169.7 tok/s. <!-- figure: 6169.7 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.tok_per_s" name="STREAM4 AR tok/s" -->
+That composition is kept because the break-even algebra below uses it; it is 272 cycles (0.14%) above the
+closed token and does not change the verdict. It was composed from measured layers:
 
     T_AR = 7 + E + (L0_iso - 1) + 35 x L_chained + (H1 - 1) + 37
 
@@ -624,7 +634,7 @@ of it:
 | Qwen ROM, one-stack REAL_MEM | 14,574 | 24,320 (4) | 1.67 | 0.22 | 1.57× | `qwen_dspark_system_20261004/ctx8k` |
 | Qwen ROM, P255 | 4,338 | 12,520 (4) | 2.89 | 0.63 | 0.83× (τ 3.04) | `qwen_dspark_system_20261004/step_composed.json` |
 | Qwen HBM accelerator, TP4, 8K | 17,237 | 16,044 (4) | 0.93 | ~0 | 2.28× (τ 3.04) | `hbm_accel_qwen_chains_20261004` (main `2f4a6af49`) |
-| DS ROM array, 1M | 620.1 µs token | 748.9 µs (6) | 1.21 (token) | 0.04 | 2.77× (τ 3.89) | `dsrom_recovery_20261004/composition.json` |
+| DS ROM array, 1M | 597.0 µs token | 723.6 µs (6) | 1.21 (token) | 0.04 | 2.73× (τ 3.89) | `three_machine_compose/compose.json` (`ds_rom`), `dsrom_recovery_20261004/composition.json` |
 
 With the STREAM4 numbers:
 
@@ -715,8 +725,22 @@ verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_full
 
 #### Decision and scope
 
-- **The Qwen3-8B ROM operates in AR mode at 8K: 194,498 cycles = 6,169.7 tok/s
-  per user on STREAM4** (5,974.3 with the wire-stage bound).
+- **The Qwen3-8B ROM operates in AR mode at 8K.** The verdict above was taken on
+  the layer composition, 194,498 cycles = 6,169.7 tok/s per user on STREAM4.
+- **Closed configuration (owner decision, 2026-10-06).** The headline is the
+  measured full token, 193,955 cycles (36 layers and the head, next-token argmax
+  on all four ranks), plus the adopted levers' measured cycles: core r5_f2ba +0,
+  slab MUL_LAT 7 +217, and KV landing Option M (KV_MAP=1) +54 on the cold first
+  layer. That is 194,226 cycles <!-- figure: 194226 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
+  = **6,178.4** tok/s per user at 1.2 GHz. <!-- figure: 6178.4 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+  The Option M die crossbar adds a modelled (not RTL) +24 cycles, which gives
+  6,177.6 tok/s. <!-- figure: 6177.6 src="results/arch/three_machine_compose/compose.json#qwen_rom.modelled_sensitivity.AR_tok_s" name="Qwen ROM modelled-crossbar sensitivity" -->
+  The shipped KV path is the unprotected STREAM4 service; the protected
+  full-width transport was explored and not adopted. Blocks closed under the
+  prior Qwen bar (SS60 / FF25 slack at or above 0); the die-top route is not done
+  (`results/rtl/qwen_rom_closed_20261006/closure.json`). The wire-stage bounds
+  above (5,974.3 here; the r18g die bound in the three-machine table) predate the
+  closed die and are not headlines.
 - DSpark is built and exact on this datapath: verify, commit and rollback, KV
   multi-position commit, drafter layers, and ingest/Markov. It is switched off
   by default. It is not a headline.

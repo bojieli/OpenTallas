@@ -12,6 +12,7 @@ from collections import Counter
 import copy
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -43,7 +44,7 @@ def replay(candidates=(), mutate=None):
             mutate(g, p)
         saved.update(graph=g, patches=p.rows)
     args = SimpleNamespace(rec=A.REC, out=None, baseline="recovery", recovery=A.RECOVERY,
-                           window="s81", hop_tier="light_fec")
+                           window="s81", hop_tier="full_fec")
     record = A.compose(args, excluded_levers=("field", "su", "su_chains"),
                        candidates=candidates, graph_hook=hook, write_output=False)
     return record, saved["graph"], saved["patches"]
@@ -295,11 +296,18 @@ def build(su_path=None, field_path=None):
     base, f = records["baseline"], records["field_only"]
     hbm_path = ROOT / "results/rtl/dshbm_1m_allmeasured_20261004/composition.json"
     hbm = load(hbm_path)
+    canonical_path = A.RECOVERY / "composition.json"
+    canonical = load(canonical_path)
+    if (base["context"], base["position"]) != (hbm["context"], hbm["position"]):
+        raise ValueError("ROM and HBM workloads must match")
+    if canonical["info"]["hop_tier"] != base["info"]["hop_tier"]:
+        raise ValueError("decision gate must use the canonical full-FEC composition")
     target = 1e6/hbm["AR_tok_s"]
     inputs = dict(base["inputs"])
     inputs.update(base["tool_sha256"])
     for path in [field_path, OUT/"inputs/rt_m5a4.corner.json", OUT/"inputs/rt_m6a5.corner.json", OUT/"inputs/field_pq.json", OUT/"inputs/field_pq_variant_r93.json",
-                 OUT/"inputs/field_WIP_composition.json", A.RECOVERY/"su_chains/anatomy.json", hbm_path,
+                 OUT/"inputs/field_WIP_composition.json", A.RECOVERY/"su_chains/anatomy.json", hbm_path, canonical_path,
+                 A.FULL_FEC_LINKS, A.FULL_FEC_RACK,
                  ROOT/"tools/uarch_model.py",
                  A.RECOVERY/"su_chains/takeover/norm_join.json",
                  A.RECOVERY/"su_chains/takeover/transport_result.json",
@@ -312,7 +320,12 @@ def build(su_path=None, field_path=None):
         inputs[str(Path(su_path).resolve().relative_to(ROOT))] = sha(su_path)
     fetch = [e for e in hbm["path"] if e["node"].startswith("hbm:expert_fetch")]
     return dict(schema="opentallas.dsrom-recovery.matched-decision-gate.v1", inputs=inputs,
-        source_snapshot="cfa845b758ae3ebcf7089692c380aec2a45065d1; fixed adopted head/draft/router, WINDOW=s81, hop light_fec",
+        source_snapshot=f"{subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()}; current adopted levers, WINDOW=s81, hop full_fec",
+        composition_sha256=sha(canonical_path),
+        context=base["context"], position=base["position"],
+        composition_contract=dict(canonical_source=str(canonical_path.relative_to(ROOT)),
+            hop_tier=base["info"]["hop_tier"], window=base["info"]["window"]["mode"],
+            full_fec=base["info"]["full_fec"], adopted_levers=base["info"]["levers"]["applied"]),
         scenarios=result, measured_norm_subset=norm, selected_SU_physical=rejection,
         installed_attribution=dict(source="results/uarch/ds_recovery_attribution_20261005/attribution.json",
             evidence=load(ROOT/"results/uarch/ds_recovery_attribution_20261005/attribution.json"),

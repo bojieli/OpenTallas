@@ -32,7 +32,7 @@ os.environ.setdefault("HDC_V41_ARITH", "chunk8")
 F = np.float32
 D, HC = 5120, 4
 RTL = [ROOT / "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv",
-       ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_delay.sv"]
+       ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_delay.sv", ROOT / "rtl/hdc/v41x/ot_dsrom_su_add6.sv"]
 TB = ROOT / "rtl/test/tb_dsrom_su_hcpost.sv"
 
 

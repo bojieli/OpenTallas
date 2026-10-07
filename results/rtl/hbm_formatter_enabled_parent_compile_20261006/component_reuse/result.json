@@ -1,0 +1,30 @@
+{
+  "implementation_commit": "b196674fe",
+  "enrollment_sha256": "d261474fd76d0bfc57def27d6ee1455263f8ca1efa04024e0a94fea2f38b5090",
+  "enrollment_remote": "/srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/r8-component-enrollment-v4/models.json",
+  "enrolled_models": [
+    "Vot_hdc_v41x_exp_1",
+    "Vot_hdc_v41x_fdiv",
+    "Vot_dsrom_su_hcpost_lane_3",
+    "Vot_hdc_v41x_softplus_1",
+    "Vot_hdc_v41x_vec_lane_f",
+    "Vot_hdc_v41x_vec_lane_a",
+    "Vot_dsrom_su_hcpost_group_3",
+    "Vot_hbm_selected_c12___05Fot_hdc_v41x_exp_1",
+    "Vot_hdc_v41x_rsqrt_a",
+    "Vot_hdc_v41x_vec_lane_6"
+  ],
+  "rejected": {},
+  "tests_passed": 13,
+  "compiler_invoked": false,
+  "live_controller_pid": 287532,
+  "live_controller_preserved": true,
+  "parent_always_rebuilt": true,
+  "compiled_archives_present": false,
+  "next_source_required": [
+    "Gibbs df384 actual protected frame binding and element default",
+    "Gibbs 16e5 native norm input/publication flags and actual generated graph"
+  ],
+  "numerical": false,
+  "physical_qualified": false
+}

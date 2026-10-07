@@ -1,0 +1,123 @@
+{
+  "status": "ACTUAL_MAPPED_LOCAL_CONTROLS_AND_LIBRARY_LOADS_PASS",
+  "control_DFF_counts": {
+    "x_first": 32,
+    "c_first": 32,
+    "x_v": 32,
+    "c_v": 32,
+    "x_last": 32,
+    "c_last": 32,
+    "finished": 32
+  },
+  "rank_DFF_counts": {
+    "ge_q": 192,
+    "valid_q": 192
+  },
+  "mapped_FF": 93309,
+  "corners": {
+    "SS": {
+      "clock_sink_cap_fF": 41669.39682206345,
+      "clock_sink_pins": 93309,
+      "classes": {
+        "x_first": {
+          "pins_min": 9,
+          "pins_max": 9,
+          "cap_min_fF": 4.276953,
+          "cap_max_fF": 4.276953
+        },
+        "c_first": {
+          "pins_min": 5,
+          "pins_max": 5,
+          "cap_min_fF": 2.4070150000000003,
+          "cap_max_fF": 2.4070150000000003
+        },
+        "x_v": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.527811,
+          "cap_max_fF": 0.527811
+        },
+        "c_v": {
+          "pins_min": 32,
+          "pins_max": 32,
+          "cap_min_fF": 19.519298000000003,
+          "cap_max_fF": 19.519298000000003
+        },
+        "x_last": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.527811,
+          "cap_max_fF": 0.527811
+        },
+        "c_last": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.940205,
+          "cap_max_fF": 0.940205
+        },
+        "finished": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.433194,
+          "cap_max_fF": 0.553988
+        }
+      }
+    },
+    "FF": {
+      "clock_sink_cap_fF": 48699.3678300437,
+      "clock_sink_pins": 93309,
+      "classes": {
+        "x_first": {
+          "pins_min": 9,
+          "pins_max": 9,
+          "cap_min_fF": 5.0986650000000004,
+          "cap_max_fF": 5.0986650000000004
+        },
+        "c_first": {
+          "pins_min": 5,
+          "pins_max": 5,
+          "cap_min_fF": 2.8520950000000003,
+          "cap_max_fF": 2.8520950000000003
+        },
+        "x_v": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.623429,
+          "cap_max_fF": 0.623429
+        },
+        "c_v": {
+          "pins_min": 32,
+          "pins_max": 32,
+          "cap_min_fF": 23.156005,
+          "cap_max_fF": 23.156005
+        },
+        "x_last": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.623429,
+          "cap_max_fF": 0.623429
+        },
+        "c_last": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 1.08944,
+          "cap_max_fF": 1.08944
+        },
+        "finished": {
+          "pins_min": 1,
+          "pins_max": 1,
+          "cap_min_fF": 0.520474,
+          "cap_max_fF": 0.65693
+        }
+      }
+    }
+  },
+  "physical_closed": false,
+  "parent_qualified": false,
+  "wire_RC_included": false,
+  "propagated_clock": false,
+  "actual_mapped_cell_area_um2": 49127.9,
+  "mapped_source_commit": "9e74a6096",
+  "gated_RTL_commit": "03e7926ba",
+  "gated_RTL_unchanged": true
+}

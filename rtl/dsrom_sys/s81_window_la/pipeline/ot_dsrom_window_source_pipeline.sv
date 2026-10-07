@@ -27,7 +27,9 @@ module ot_dsrom_window_source_pipeline #(
     parameter bit RETAIN_L0 = 0,
     parameter integer WIN_STACK = 0, STREAM_II1 = 0, REFILL_CREDITS = 1,
     parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8, LA_ISSUE_PC = 0,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter integer SPLIT_COLUMNS = 0,
+    parameter integer STAGE_MARGIN = 0   // ot_dsrom_window_stage_pipeline MARGIN (default off)
 ) (
     input wire clk, rst_n,
     input wire retain_qk, retain_pv, retain_complete, retain_invalidate,
@@ -201,7 +203,7 @@ module ot_dsrom_window_source_pipeline #(
         wire [3:0] wb_req_m, wb_rsp_m, wb_rsp_lane_valid;
         wire [4*4224-1:0] wb_rsp_rows;
         ot_dsrom_window_stage_pipeline #(.POS_W(POS_W), .USER_W(USER_W), .NPC(NPC), .WTAGW(WTAGW), .BEATW(BEATW),
-            .MAX_CONTEXT(MAX_CONTEXT)) u_stage (
+            .MAX_CONTEXT(MAX_CONTEXT), .SPLIT_COLUMNS(SPLIT_COLUMNS), .MARGIN(STAGE_MARGIN)) u_stage (
             .clk(clk), .rst_n(rst_n), .job_v(stage_job), .job_user(j_user), .job_first(j_first),
             .job_count(j_count), .all_rows(all_rows), .sectors_landed(landed), .fault(stage_fault),
             .in_v(wl_rsp_v), .in_rdy(wl_rsp_rdy), .in_tag(wl_rsp_tag), .in_beat(wl_rsp_beat), .in_data(wl_rsp_data),
@@ -224,7 +226,7 @@ module ot_dsrom_window_source_pipeline #(
                 .rsp_fault(wb_rsp_fault),
                 .kv_v(kv_v), .kv_ready(kv_ready), .kv_m(kv_m), .kv_w(kv_w), .done(merge_done), .fault(merge_fault));
         end else begin : g_compat
-            ot_chip_v41x_attn_row_merge #(.POS_W(POS_W), .USER_W(USER_W)) u_merge (
+            ot_dsrom_window_row_merge_pipeline #(.POS_W(POS_W), .USER_W(USER_W)) u_merge (
                 .clk(clk), .rst_n(rst_n), .start_v(issue_v && issue_ready), .start_ready(merge_start_ready),
                 .start_user(j_user), .window_start_pos(j_first), .window_count(j_count),
                 .selected_count(10'd0), .published_source_count(POS_W'(0)),

@@ -1,0 +1,367 @@
+{
+  "status": "GENERATED_ROOT_PORT_ABI_MATCH",
+  "source_base": "c972fc6fa",
+  "root_parameter_ENABLE": 1,
+  "source_header_port_count": 88,
+  "cached_header_port_count": 88,
+  "mismatches": {},
+  "source_sha256": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+  "cached_header_sha256": "066db2059050b69a07b68b185439e9e4428066063cee124a42c1e571dd4a386c",
+  "ports": {
+    "clk_sm": {
+      "direction": "input",
+      "width": 1
+    },
+    "por_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "warm_req": {
+      "direction": "input",
+      "width": 1
+    },
+    "bind_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "bind_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "bind_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "bind_rank": {
+      "direction": "input",
+      "width": 7
+    },
+    "bind_base": {
+      "direction": "input",
+      "width": 32
+    },
+    "bind_span": {
+      "direction": "input",
+      "width": 32
+    },
+    "retire_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "retire_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "retire_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "held_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "retained": {
+      "direction": "output",
+      "width": 1
+    },
+    "warm_ack": {
+      "direction": "output",
+      "width": 1
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "activation_wr_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_wr_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "activation_wr_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "activation_wr_bank": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_wr_addr": {
+      "direction": "input",
+      "width": 7
+    },
+    "activation_wr_data": {
+      "direction": "input",
+      "width": 2063
+    },
+    "activation_wr_owner": {
+      "direction": "input",
+      "width": 192
+    },
+    "activation_ACK_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "activation_ACK_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_ACK_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "activation_ACK_owner": {
+      "direction": "output",
+      "width": 192
+    },
+    "activation_rd_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_rd_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "activation_rd_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "activation_rd_bank": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_rd_addr": {
+      "direction": "input",
+      "width": 7
+    },
+    "activation_rd_owner": {
+      "direction": "input",
+      "width": 192
+    },
+    "tap_v": {
+      "direction": "output",
+      "width": 4
+    },
+    "tap_r": {
+      "direction": "input",
+      "width": 4
+    },
+    "tap_data": {
+      "direction": "output",
+      "width": 8252
+    },
+    "tap_owner": {
+      "direction": "output",
+      "width": 768
+    },
+    "tap_frame": {
+      "direction": "output",
+      "width": 292
+    },
+    "tap_source_clk": {
+      "direction": "output",
+      "width": 4
+    },
+    "tap_ACK_v": {
+      "direction": "input",
+      "width": 4
+    },
+    "tap_ACK_r": {
+      "direction": "output",
+      "width": 4
+    },
+    "tap_ACK_owner": {
+      "direction": "input",
+      "width": 768
+    },
+    "tap_ACK_frame": {
+      "direction": "input",
+      "width": 292
+    },
+    "activation_release": {
+      "direction": "output",
+      "width": 1
+    },
+    "activation_release_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "activation_release_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "activation_release_owner": {
+      "direction": "output",
+      "width": 192
+    },
+    "su_pub_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "su_pub_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "su_pub_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "su_pub_addr": {
+      "direction": "input",
+      "width": 32
+    },
+    "su_pub_data": {
+      "direction": "input",
+      "width": 1024
+    },
+    "su_ACK_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "su_ACK_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "publication_ACK_addr": {
+      "direction": "output",
+      "width": 32
+    },
+    "publication_ACK_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "index_read_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "index_read_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "index_read_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "index_read_rank": {
+      "direction": "input",
+      "width": 7
+    },
+    "index_read_addr": {
+      "direction": "input",
+      "width": 32
+    },
+    "index_read_words": {
+      "direction": "input",
+      "width": 6
+    },
+    "index_read_tag": {
+      "direction": "input",
+      "width": 8
+    },
+    "index_rsp_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "index_rsp_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "index_rsp_data": {
+      "direction": "output",
+      "width": 1024
+    },
+    "index_rsp_tag": {
+      "direction": "output",
+      "width": 8
+    },
+    "index_rsp_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "index_rsp_rank": {
+      "direction": "output",
+      "width": 7
+    },
+    "sfu_source_owned": {
+      "direction": "input",
+      "width": 1
+    },
+    "sfu_enroll_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "sfu_enroll_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "sfu_enroll_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "sfu_base_word": {
+      "direction": "input",
+      "width": 32
+    },
+    "sfu_tag": {
+      "direction": "input",
+      "width": 32
+    },
+    "sfu_rx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "sfu_rx_r": {
+      "direction": "output",
+      "width": 1
+    },
+    "sfu_rx_data": {
+      "direction": "input",
+      "width": 1024
+    },
+    "sfu_rx_frame": {
+      "direction": "input",
+      "width": 73
+    },
+    "sfu_rx_index": {
+      "direction": "input",
+      "width": 4
+    },
+    "sfu_rx_last": {
+      "direction": "input",
+      "width": 1
+    },
+    "sfu_publication_done": {
+      "direction": "output",
+      "width": 1
+    },
+    "sfu_complete_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "sfu_complete_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "sfu_complete_frame": {
+      "direction": "output",
+      "width": 73
+    },
+    "sfu_complete_tag": {
+      "direction": "output",
+      "width": 32
+    },
+    "sfu_retained": {
+      "direction": "output",
+      "width": 1
+    },
+    "sfu_drained": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "scope": "Literal direction/width comparison with completed r2 root child; generated new parent elaboration and numerical gate still required",
+  "numerical_pass": false,
+  "elaboration_pass": false
+}

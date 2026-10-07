@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-10-06T09:41:50.911096+00:00",
+  "vector_prefix": "Vot_hdc_v41x_vec_a",
+  "terminal": {
+    "exit": 0,
+    "dangerous_diagnostics": [
+      "PINMISSING",
+      "PINMISSING"
+    ],
+    "real_model_header": true
+  },
+  "diagnostics_source": "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:112",
+  "diagnostics_classification": "parse-only module outside vector implementation closure and global compilation units; no generated child SV parent-exec reference",
+  "old_and_current_contract_sha256": "8925e960fdda674e3f028f5fd0f0810f33c0599fef3221baf5b04c2a38ba8d99",
+  "generation_dependency_signatures_verified": 10129,
+  "generated_cpp": 9981,
+  "generated_bytes": 10795675607,
+  "maximum_rss_kib": 263186680,
+  "elapsed": "2:55:07",
+  "next_live_frontend": 606413,
+  "next_component": "Vot_dsrom_su_hcpost_7",
+  "existing_controller": 282183,
+  "continuation_pid": 1642341,
+  "continuation_source_commit": "33e31834ad77b003cbb0771e2898505deb2f840c",
+  "continuation_implementation_commit": "2f125f890",
+  "continuation_root": "/srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/first-norm-continuation-r1",
+  "automatic_stages": [
+    "wait existing r8-models-cont terminal event",
+    "enroll actual successful exact matching child models",
+    "regenerate changed current parent and wrapper under fresh guard",
+    "compile objects and reuse exact existing ten real archives",
+    "link actual Bacon harness",
+    "run one norm testcase under fresh guard"
+  ],
+  "linked": false,
+  "norm_runtime_pass": false,
+  "SFU_execution_covered": false,
+  "formatter_execution_covered": false,
+  "physical_qualified": false
+}

@@ -263,12 +263,13 @@
     "restart": false
   },
   "current_physical_successors": {
-    "C17b": "live EPYC1 preserved; no new E1 jobs",
-    "C18": "live E2 comb shared partition supervisor2546022 source3c45 all105regions verified",
-    "C19": "live E2 receiver partition supervisor2562095 source3c45 all105regions verified"
+    "C17b": "terminal DPL0033; original failure retained",
+    "C18": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
+    "C19": "RETIRED superseded fd25 source; no current consumer; original logs/ODB/source preserved",
+    "C20": "TERMINAL08:27Z exit2 DPL0033; resized SS-1831.70ps/BC hold-6.77567ps; no CTS/extractedSSFF/routeDRC; source/gold/checkpoints retained"
   },
   "C18_actual_result": {
-    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
     "first_timing_driven_setup_estimate_ps": -2384.7242,
     "qualified": false,
     "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
@@ -283,10 +284,11 @@
     "head_slot_mm2": 1.32,
     "exact_replayed": false,
     "exact_retained_cycles": 62878,
-    "negative_controls_retained": true
+    "negative_controls_retained": true,
+    "retirement_record": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/superseded_source_retirement.json"
   },
   "C19_actual_result": {
-    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "stage": "SUPERSEDED_SOURCE_CANCELLED during placement; prior first timing estimate retained, no final qualification",
     "first_timing_driven_setup_estimate_ps": -2401.015,
     "qualified": false,
     "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
@@ -301,7 +303,8 @@
     "head_slot_mm2": 1.32,
     "exact_replayed": false,
     "exact_retained_cycles": 62878,
-    "negative_controls_retained": true
+    "negative_controls_retained": true,
+    "retirement_record": "results/rtl/dsrom_fh_capture_20261005/routes/shared_partition/superseded_source_retirement.json"
   },
   "C17_actual_result": {
     "observed_utc": "2026-10-06T03:24:48.756076+00:00",
@@ -332,5 +335,44 @@
     "qualification": false,
     "diagnosis": "Single-boundary grouping removes region violations. Initial legalizer leaves edge/padding violations; DPO then introduces site alignment/overlap problems. Need real legalized geometry, not a density waiver or fake cells.",
     "restart": false
+  },
+  "superseded_source_retirement": {
+    "reason": "OWNER superseded-source retirement: fd25 geometry affinity vehicles do not include current four-edge retirement/native endpoint dd6; no current terminal consumer found. Reclaim capacity for existing C20, not arbitrary runtime cutoff.",
+    "rss_reclaimed_GiB": 21.21615219116211,
+    "no_current_terminal_consumer": true,
+    "original_timing_failures_preserved": true,
+    "runtime_deadline": false
+  },
+  "C20_actual_result": {
+    "controller_pid": 212904,
+    "started": 1791267496.3686614,
+    "controller_sha256": "c196e4e8f6c32b8dce5244f1e9fd07599168ee2ef88dad146b74eb0f310f2b0a",
+    "source_commit": "dd6d7127bc812f830a6fbc31f11c156006f1c71a",
+    "source_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/wt-fault-native-r12",
+    "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C20_fault_retire_native",
+    "one_needed_physical_run": true,
+    "place_density": 0.6,
+    "NUM_CORES": 16,
+    "unchanged_admit_peak_GiB": 48,
+    "reuse": "all13 synth/floorplan objects; no synthesis/gold/model replay",
+    "scope": "conditional loaded head64SRAM/native fast capture/checkedreply/argmax, external provider parent-root transport scope retained",
+    "actual_stage": "3_5_place_dp",
+    "container": "fd03d66af60d",
+    "OpenROAD_pid": 218758,
+    "qualified": false,
+    "floorplan_only_SS_setup_ps": -32.1735,
+    "floorplan_only_hold_ps": -6.98575,
+    "not_final_timing": true,
+    "mapped_fault_relay_DFF_count": 16,
+    "mapped_local_veto_DFF_count": 69,
+    "mapped_packet_DFF_count": 18040,
+    "mapped_native_endpoint_DFF_count": 7066,
+    "retention_basis": "Actual mapped ASAP7 DFF masters in retained cells.tsv; original sequential flag misses escaped names, corrected report tool for later extraction",
+    "observation_boundary_scope": "Native receiving FF/pin loads internal and real; external parent protected transport/caller/root crossing remains Turing/Copernicus scope, no fullparent claim",
+    "terminal": true,
+    "controller_live": false,
+    "OpenROAD_live": false,
+    "container_live": false,
+    "failure_record": "results/rtl/dsrom_fh_capture_20261005/routes/C20_fault_retire_native/fullroute_failure.json"
   }
 }

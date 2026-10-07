@@ -1,0 +1,21 @@
+STATS ISO_P255 hbm_act=512 rd=4096 wr=136 refpb=452 violations=0 max_landing=16 rsp_tile_stall=674 fill_sectors=4096 wr_sectors=136 wr_lat_max=44
+PASS ISO_P255 "P":255,"fill_cycles":153,"fill_sectors":4096,"sectors_per_cycle":26.77,"tb_s_at_1p2ghz":1.028,"kv_ok_after_start":574,"su_drain_wait":509,"violations":0 : slices and token HBM codes exact
+STATS ISO_P256_tile_open hbm_act=512 rd=4352 wr=136 refpb=452 violations=0 max_landing=16 rsp_tile_stall=698 fill_sectors=4352 wr_sectors=136 wr_lat_max=44
+PASS ISO_P256_tile_open "P":256,"fill_cycles":154,"fill_sectors":4352,"sectors_per_cycle":28.26,"tb_s_at_1p2ghz":1.085,"kv_ok_after_start":574,"su_drain_wait":509,"violations":0 : slices and token HBM codes exact
+STATS ISO_P0 hbm_act=512 rd=256 wr=136 refpb=396 violations=0 max_landing=4 rsp_tile_stall=64 fill_sectors=256 wr_sectors=136 wr_lat_max=44
+PASS ISO_P0 "P":0,"fill_cycles":92,"fill_sectors":256,"sectors_per_cycle":2.78,"tb_s_at_1p2ghz":0.107,"kv_ok_after_start":510,"su_drain_wait":445,"violations":0 : slices and token HBM codes exact
+STATS ISO_P1023 hbm_act=768 rd=16384 wr=136 refpb=564 violations=0 max_landing=16 rsp_tile_stall=1317 fill_sectors=16384 wr_sectors=136 wr_lat_max=44
+PASS ISO_P1023 "P":1023,"fill_cycles":280,"fill_sectors":16384,"sectors_per_cycle":58.51,"tb_s_at_1p2ghz":2.247,"kv_ok_after_start":698,"su_drain_wait":633,"violations":0 : slices and token HBM codes exact
+STATS ISO_P4095 hbm_act=2304 rd=65536 wr=136 refpb=1020 violations=0 max_landing=16 rsp_tile_stall=2425 fill_sectors=65536 wr_sectors=136 wr_lat_max=44
+PASS ISO_P4095 "P":4095,"fill_cycles":792,"fill_sectors":65536,"sectors_per_cycle":82.75,"tb_s_at_1p2ghz":3.178,"kv_ok_after_start":1213,"su_drain_wait":1148,"violations":0 : slices and token HBM codes exact
+STATS ISO_P8191 hbm_act=4232 rd=131072 wr=136 refpb=1776 violations=0 max_landing=17 rsp_tile_stall=4009 fill_sectors=131072 wr_sectors=136 wr_lat_max=90
+PASS ISO_P8191 "P":8191,"fill_cycles":1460,"fill_sectors":131072,"sectors_per_cycle":89.78,"tb_s_at_1p2ghz":3.447,"kv_ok_after_start":2046,"su_drain_wait":1981,"violations":0 : slices and token HBM codes exact
+STATS ISO_P8191_posted hbm_act=4231 rd=131072 wr=136 refpb=1356 violations=0 max_landing=17 rsp_tile_stall=4009 fill_sectors=131072 wr_sectors=136 wr_lat_max=71
+PASS ISO_P8191_posted "P":8191,"fill_cycles":1460,"fill_sectors":131072,"sectors_per_cycle":89.78,"tb_s_at_1p2ghz":3.447,"kv_ok_after_start":1470,"su_drain_wait":0,"violations":0 : slices and token HBM codes exact
+STATS CHAIN_P8191_base hbm_act=8899 rd=262144 wr=272 refpb=7276 violations=0 max_landing=18 rsp_tile_stall=9182 fill_sectors=262144 wr_sectors=272 wr_lat_max=90
+PASS CHAIN_P8191_base "P":8191,"early_go":0,"posted_wb":0,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1460,"A_kv_ok_after_start":2046,"B_fill_cycles":1426,"B_fill_exposed_after_start":1426,"B_kv_ok_after_start":2028,"su_drain_wait":3944,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P8191_early_posted hbm_act=8463 rd=262144 wr=272 refpb=5116 violations=0 max_landing=18 rsp_tile_stall=8889 fill_sectors=262144 wr_sectors=272 wr_lat_max=71
+PASS CHAIN_P8191_early_posted "P":8191,"early_go":1,"posted_wb":1,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1460,"A_kv_ok_after_start":1470,"B_fill_cycles":1422,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P4095_early_posted hbm_act=4704 rd=131072 wr=272 refpb=4236 violations=0 max_landing=16 rsp_tile_stall=5172 fill_sectors=131072 wr_sectors=272 wr_lat_max=332
+PASS CHAIN_P4095_early_posted "P":4095,"early_go":1,"posted_wb":1,"attn_cycles":600,"mlp_cycles":3000,"A_fill_cycles":792,"A_kv_ok_after_start":802,"B_fill_cycles":750,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P8191_early_short_mlp hbm_act=8462 rd=262144 wr=272 refpb=3680 violations=0 max_landing=18 rsp_tile_stall=8941 fill_sectors=262144 wr_sectors=272 wr_lat_ma

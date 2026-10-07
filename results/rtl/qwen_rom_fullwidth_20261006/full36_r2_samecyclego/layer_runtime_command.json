@@ -1,0 +1,19 @@
+[
+  "/srv/opentallas-scratch2/claude/qwen-fullwidth-r2/full-r2/layer_test",
+  "--stages",
+  "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/stages.txt",
+  "/srv/opentallas-scratch2/claude/qwen-fullwidth-r2/full-r2/run_layer",
+  "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/x_preload.hex",
+  "--pos",
+  "8191",
+  "--token",
+  "24",
+  "--kv-dir",
+  "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1/history",
+  "--kv-ideal",
+  "0",
+  "--early-go",
+  "1",
+  "--posted-wb",
+  "1"
+]

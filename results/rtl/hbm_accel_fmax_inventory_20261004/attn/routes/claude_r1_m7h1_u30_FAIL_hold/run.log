@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_attn_hgrp_m7h1 top=ot_attn_hgrp_m7h1 purpose=signoff_target
+  synth: cells=386118 area=52693.195 um2 seq_area=13236.700 um2 macros=193062
+  pnr:   wirelength=806645 um vias=1724216 DRC=0 antenna_nets=0 Fmax=1207.90 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/scratch/claude/hbm-attn/routes/r1_m7h1_u30/physical.json

@@ -15,7 +15,13 @@ puts $pins "instance\tmaster_pin\tdirection\tsignal_type\tnet"
 set groups [dict create]
 set registers [dict create]
 set register_groups [dict create]
-foreach cell [all_registers -cells] {dict set registers [get_full_name $cell] $cell}
+foreach cell [all_registers -cells] {
+    # OpenDB escapes packed index brackets; STA's full names may omit those
+    # escapes. Match the same literal instance, retaining its original spelling
+    # in the inventory and its STA object in report_checks.
+    set key [string map [list "\\" ""] [get_full_name $cell]]
+    dict set registers $key $cell
+}
 set nets [dict create]
 set macros 0
 foreach inst [$block getInsts] {
@@ -27,10 +33,21 @@ foreach inst [$block getInsts] {
     if {$mn eq "ot_sram_1r1w_512x128_m4_r2c2"} {
         incr macros
         set class macro
+    } elseif {[string first "g_native_grant_receiver" $clean]>=0} {
+        set class native_permission_receiver
     } elseif {[string first "g_actual_native_load" $clean]>=0} {
         set class native_capture
         foreach tag {source_packet source_check held_reply held_check} {
             if {[string first $tag $clean]>=0} {set class native_$tag;break}
+        }
+        # Distributed CHECK_PIPE classes are measured separately so a new
+        # permission miss cannot disappear behind the global worst path.
+        foreach tag {g_request_bank g_reply_bank g_identity_bank u_check_reduce} {
+            if {[string first $tag $clean]>=0} {set class native_$tag;break}
+        }
+        # Slang may retain the output alias as the receiving register name.
+        foreach {tag kind} {captured_request_check source_check captured_reply_check held_check captured_request source_packet captured_reply held_reply} {
+            if {[string first $tag $clean]>=0} {set class native_$kind;break}
         }
     } elseif {[string first "g_retirement" $clean]>=0} {
         set class retire
@@ -44,9 +61,9 @@ foreach inst [$block getInsts] {
     set gn ""
     if {$group ne "NULL"} {set gn [$group getName]}
     set area [expr {double([$master getWidth])*[$master getHeight]/($dbu*$dbu)}]
-    set seq [dict exists $registers $name]
+    set seq [dict exists $registers $clean]
     puts $cells "$name\t$mn\t$area\t$gn\t$seq\t$class"
-    if {$seq} {dict lappend register_groups $class [dict get $registers $name]}
+    if {$seq} {dict lappend register_groups $class [dict get $registers $clean]}
     foreach it [$inst getITerms] {
         set mt [$it getMTerm]
         set net [$it getNet]

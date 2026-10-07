@@ -2,30 +2,37 @@ THREE-MACHINE COMPOSITION (per user, target context)
 
 machine                              AR tok/s  MTP tok/s  MTP@3.8879  note
 (links: FULL RS(544,514) FEC on every off-package link, owner 2026-10-06)
-DS ROM 1M (adopted levers)            1,673.8    4,900.4     4,581.0  tau 4.159; MTP physical_qualified=False
-  + all PENDING_SSFF (CONDITIONAL)    2,290.1    6,287.8     5,877.9  not a headline
-Qwen ROM 8K (P8191)                   6,187.0    6,187.0           -  193,955 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
-HBM accel DS 1M, wire floor           2,048.9    4,040.3     3,776.9  +25.914 us wire
-HBM accel DS 1M, wire median          2,004.3    3,998.1     3,737.4  +36.783 us wire
-HBM accel DS 1M, wire bound           1,979.1    3,973.8     3,714.8  +43.126 us wire
-full FEC vs light FEC (superseded) DS ROM dAR -64.1 tok/s (+22.049 us), dMTP -170.7 tok/s (+28.562 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
+DS ROM 1M (adopted levers)            1,650.7    4,836.9     4,521.6  tau 4.159; MTP physical_qualified=False
+  + all PENDING_SSFF (CONDITIONAL)    2,162.3    6,022.8     5,630.3  not a headline
+Qwen ROM 8K (P8191)                   6,178.4    6,178.4           -  194,226 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
+  KV (all 36 layers, FP8, in token) 576 MiB/token; landing 3,042 B/cyc/rank = 3.65 TB/s/die (91.3% peak), exposed 1363 cyc
+  + modelled costs (not RTL)          6,177.6                         +24 cyc (KV_MAP=1 die crossbar, cold layer); not a headline
+  physical                         CLOSED (owner decision 2026-10-06); prior Qwen bar (SS60/FF25 >= 0); die-top route NOT DONE
+  r18g die wire bound (PENDING)       5,782.3                         65 ps skew 5,700.9; GRT 11,534 overflow; not a headline
+HBM accel DS 1M, wire floor           1,999.7    3,993.7     3,733.4  +37.917 us wire
+HBM accel DS 1M, wire median          1,948.8    3,944.2     3,687.1  +50.983 us wire
+HBM accel DS 1M, wire bound           1,921.5    3,917.2     3,661.8  +58.269 us wire
+full FEC vs light FEC (superseded) DS ROM dAR -63.3 tok/s (+22.373 us), dMTP -168.1 tok/s (+28.885 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
 
-DS ROM / HBM (wire median): AR 0.8351x  MTP 1.2257x
+DS ROM / HBM (wire median): AR 0.8470x  MTP 1.2263x
 
 PER-LEVER DELTAS (adopted: headline minus headline-without; conditional: if-adopted minus headline)
 machine   lever                  class           dAR us  dAR tok/s  dMTP step  dMTP tok/s
-DS ROM    draft                  adopted          0.000        0.0    -27.546       154.0
-DS ROM    head                   adopted       -102.043      244.2   -690.094      2197.6
-DS ROM    router                 adopted        -11.966       32.9    -13.469        76.5
-DS ROM    su_hcpost              adopted        -15.730       43.0    -17.702       100.1
-DS ROM    su_routeract           adopted        -11.422       31.4    -12.856        73.1
-DS ROM    su_swiglu              adopted        -17.527       47.7    -20.617       116.2
-DS ROM    field_spine            conditional     -8.414       23.9     -9.937        58.1
-DS ROM    field_spine_pq         conditional   -106.620      363.6   -126.442       857.9
-DS ROM    su_norm                conditional    -41.657      125.4    -46.746       285.7
-DS ROM    su_softmax             conditional    -12.518       35.8    -14.071        82.6
+DS ROM    draft                  adopted          0.000        0.0    -27.546       150.1
+DS ROM    head                   adopted       -102.043      238.0   -685.974      2146.4
+DS ROM    router                 adopted        -12.099       32.3    -13.619        75.4
+DS ROM    su_hcpost              adopted        -16.133       42.8    -18.159       100.0
+DS ROM    su_norm                adopted        -43.073      109.6    -48.344       257.5
+DS ROM    su_routeract           adopted        -11.555       30.9    -13.006        72.1
+DS ROM    su_swiglu              adopted        -18.013       47.7    -21.175       116.2
+DS ROM    field_spine            conditional    -10.192       28.2    -12.040        68.7
+DS ROM    field_spine_pq         conditional   -130.457      453.0   -154.826      1062.2
+DS ROM    qelem_pq               conditional   -121.114      412.5   -143.785       971.3
+DS ROM    su_softmax             conditional    -12.885       35.9    -14.483        82.9
 DS ROM    field                  excluded     REJECT
 DS ROM    hop                    excluded     REJECT
 Qwen ROM  core_context           adopted         +0 cyc        0.0
+Qwen ROM  slab_mul_lat7          adopted       +217 cyc       -6.9
+Qwen ROM  kv_map_m               adopted        +54 cyc       -1.7
 HBM       joint_PQ_XMAP          exact          -36.416               -77.056
 HBM       paired_W2_PACK         exact           -6.133                 0.000

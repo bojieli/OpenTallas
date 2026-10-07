@@ -50,10 +50,10 @@
     "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
     "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
     "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
-    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "f0dcfe906acf77fc6768675421bf9cf5eee0d1a49371b4f99ceabcdf3633eed7",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "69e06924f0baaecf3d58d0b4d78bfc6876b5b0b2ef20df5a1afd58156bc06378",
     "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
     "results/uarch/hbm_attn_h16_context_20261005/model.json": "dce33b7398694efe5d64d833bb9705ec1c08b02f2089f7056e6560cb63bb5b30",
-    "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc": "65ab644e483c33b09d21f0e05d816273caa5c30801ce9a9eeb30f41576b7cc19",
+    "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc": "3968de9aacc1f25211a0590da7e104e4379eb0b077a7a6d5f850973516ccbfc2",
     "results/rtl/hbm_child_contract_20261005/child_reservations.json": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f"
   },
   "sized_context": {
@@ -241,6 +241,53 @@
     "live_producer_original_sink": true,
     "live_GU": false,
     "live_producer_new_protected_parent_gate": false
+  },
+  "station_CE_selector_handoff": {
+    "implementation": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_ce_tree.sv",
+    "parameter": "BALANCED_CE_SELECT",
+    "default": 0,
+    "owner_integration": "Gauss/Turing station only; no peer worktree changes or existing parent source replacement",
+    "actual_bank_scope": "native station payload cut2136payload+192owner+1valid=2329bits;37data W6words plus5repair words",
+    "packet_bits": 2329,
+    "data_words": 37,
+    "repair_words": 5,
+    "FF_bits": 3026,
+    "added_FF_bits": 0,
+    "added_state_or_memory_ports": 0,
+    "added_normal_edges": 0,
+    "added_CE_edges": 0,
+    "CE_repair_edges": 5,
+    "readyless_parent_contract_unchanged": true,
+    "linear_selector_mux_levels": 36,
+    "balanced_selector_leaves": 64,
+    "balanced_selector_mux_levels": 6,
+    "balanced_selector_node_allowance": 63,
+    "selector_index_width": 16,
+    "balanced_selector_cell_upper_um2": 208.02978000000002,
+    "selector_area_bound_is_not_mapped_or_station_fit": true,
+    "actual_propagated_clock_or_loaded_fanout": null,
+    "failed_source": "ac32ed3d6",
+    "failed_NO2_setup_ps": -1721.01,
+    "failed_NO3_setup_ps": -1735.69,
+    "mapped_pair": [
+      "_121746_",
+      "_118149_"
+    ],
+    "exact_mapped_register_src": "ot_hbm_w2_protected_bank_static.sv:76.2-104.5",
+    "mapped_word_bit_identity": null,
+    "association_limit": "both cells map to the protected bank sequential block; linear CE selection is inferred from the AO21 chain, not recovered word/bit attribution",
+    "CURRENT_flags": "normal/fault/repairing remain combinational from current code and all5repair words; no registered cached authorization",
+    "source_cut": "balance only the lowest-index correctable-stripe priority tree before selected snapshot capture; no CE correction/decode/encode waiver",
+    "gate_passed": true,
+    "gate_terminal": "results/rtl/w2_transaction_pipeline_20261005/ce_tree_full37_r2_PASS/terminal.json",
+    "current_source_sha256": "afe5be0c97c2d0645b8aaa07499e383095055433cb37e64acb6480056213d036",
+    "physical_qualified": false,
+    "headline_rate_credit": false,
+    "owner": "Gauss/Turing own station; central and peer station source untouched",
+    "optin": "Thread BALANCED_CE_SELECT=0 through station/native/frame defaults; ON selects ot_hbm_w2_protected_bank_ce_tree and ot_hbm_w2_protected_cut_ce_tree with BALANCED_CE_SELECT=1",
+    "alternative_static_consumption": "Apply only the balanced first-CE selector block to your static-expanded bank ON source; retain current codec equations and all sequential bytes. No codec replay is needed for an unchanged expansion.",
+    "current_flags": "Retain CURRENT normal/fault/repairing from live protected words and5repair words. Do not register normal or reuse a cached syndrome as authority.",
+    "remaining": "Gauss exact semantic word/bit reverse map of _121746_/_118149_ if preserved; source-local source association proven only to static bank sequential block. Measure changed fullshape station SS60/FF25; existing failures immutable."
   },
   "actual_caller_replacement_hook": {
     "schema": "opentallas.w2.actual-caller-replacement-hook.v1",
@@ -8886,5 +8933,237 @@
   "remaining_bindings": [
     "Claude SM/Franklin/Gibbs: actual pre-capture NC8/PIO2 caller port export/replacement hook, with the protected result stages and identity join replacing old stages once; post-capture rv/rop/rrow/rdata are not producer inputs",
     "Turing: existing retained-map floorplan continuation then actual region/CDC first-stage/CTS/receiver-load/SS60-FF25 extraction; external IO numbers remain budgets"
-  ]
+  ],
+  "station_CURRENT_registered_handoff": {
+    "owner": "Gauss station and Turing parent",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv",
+    "default_parameter": "REGISTERED_CURRENT=0",
+    "enabled_bank": "ot_hbm_w2_protected_bank_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "enabled_cut": "ot_hbm_w2_protected_cut_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "exact_mechanism": "per-stripe protected snapshot/check register; current equality fence; held parallel CE repair then recheck",
+    "changed_minimum_gate": "results/rtl/w2_transaction_pipeline_20261005/current_station_r1/terminal.json",
+    "targeted_fault_gate": "results/rtl/w2_transaction_pipeline_20261005/current_bank_r1/terminal.json",
+    "Gauss_next": "Use new bank/cut in own exact station source with defaults0. Static codec expansion only if needed, preserving four codecs and state machine; retain attrs. Map actual FF/area/current-check fanout against existing H55/V60 slot, bind SS60/FF25 and real receiver/forwarded clock. Fix native constantone POWER tie separately once changed source qualified. No unchanged density route.",
+    "Turing_next": "Consume NO2 15420/NO3 16646 source FF, quarter65358; four-stage serial publication added-edge upper68(56.6667ns), actual changed gate release90. Actual fit/loadedclock/old-calendar delta remain open; no cached owner/ready credit.",
+    "physical_qualified": false
+  },
+  "station_CHECK_registered_handoff": {
+    "controller_source_owner": "Codex",
+    "physical_vehicle_tie_mapping_route_owner": "Descartes",
+    "parent_cost_owner": "Turing",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv",
+    "parameters": {
+      "REGISTERED_CURRENT": 0,
+      "REGISTERED_CHECK": 0
+    },
+    "physical_selected_parameters": {
+      "REGISTERED_CURRENT": 1,
+      "REGISTERED_CHECK": 1
+    },
+    "bank_hook": "ot_hbm_w2_protected_bank_check_pipeline #(.WORDS(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "cut_hook": "ot_hbm_w2_protected_cut_check_pipeline #(.W(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "binding": "CHECK/VERIFY/EVAL/REPAIR phases0/1/2/3; exact216bit W6 checker-input mirror per stripe plus protected4bit verdict; CURRENT equality remains. Mirror/parity/verdict mutations fail closed. CE correction goes through CHECK and VERIFY again.",
+    "dependencies": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv"
+    ],
+    "gate": "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json",
+    "checker_checks": 36,
+    "parent_checks": 19,
+    "CE_edges": 7,
+    "added_load_edges_vs_R2": 1,
+    "NO2_source_FF_bits": 30396,
+    "NO3_source_FF_bits": 32774,
+    "quarter_source_FF_bits": 128718,
+    "quarter_added_source_FF_bits_vs_R2": 63360,
+    "chain_incremental_serial_edge_upper": 68,
+    "chain_incremental_latency_upper_ns": 56.66666666666667,
+    "slot_clock_binding": "Reuse actual NO2 core382.644x95.31/36469.79964um2 and current source-specific receiver/clock/POR contract SS60FF25. Map added FF/clock/check binding tracks; no copied R2 area/fanout/clock closure credit.",
+    "physical_next": "Descartes owns vehicle adaptation/static codec expansion/native tie implementation; replace bank/cut calls only and propagate new default0 REGISTERED_CHECK through station/frame top. Preserve four codecs/attributes/protected phase. One changed-source mapping/context route after actual fit/admission. No same-source geometry variants or gate replay.",
+    "parent_next": "Turing composes actual NO2/NO3 inventories and incremental VERIFY calendar; actual warm parent unchanged32macros/full73/owner192. Published calendar94/99 has shifted startup origin; no clean measured chain delta claimed.",
+    "rejected_parent": "results/physical/hbm_w2_current_station_20261006/r2/terminal_result.json",
+    "gate_passed": true,
+    "physical_qualified": false,
+    "controller_source_commit": "10ce270a1",
+    "controller_source_sha256": "75b147f18c0cb93980c9436469c548118fce889cab551957ec7a7d8613efda82",
+    "exact_vehicle_corrections": [
+      {
+        "file": "physical/hbm_w2_current_station_20261006/ot_hbm_native_station.sv",
+        "parameter_before": "parameter integer REGISTERED_CURRENT=0,MODE=0",
+        "parameter_after": "parameter integer REGISTERED_CURRENT=0,REGISTERED_CHECK=0,MODE=0",
+        "instances": [
+          {
+            "instance": "held.receipts[a].reserved.u_ack",
+            "kind": "cut",
+            "width": "W=192"
+          },
+          {
+            "instance": "held.inputs[k].u_cut",
+            "kind": "cut",
+            "width": "W=PW"
+          },
+          {
+            "instance": "held.u_permissions",
+            "kind": "bank",
+            "width": "WORDS=1"
+          }
+        ]
+      },
+      {
+        "file": "physical/hbm_w2_current_station_20261006/ot_hbm_native_frame_station.sv",
+        "parameter_before": "parameter integer REGISTERED_CURRENT=0,ENABLE=0",
+        "parameter_after": "parameter integer REGISTERED_CURRENT=0,REGISTERED_CHECK=0,ENABLE=0",
+        "instances": [
+          {
+            "instance": "held.u_frame_guard",
+            "kind": "bank",
+            "width": "WORDS=1"
+          },
+          {
+            "instance": "held.u_receipt",
+            "kind": "cut",
+            "width": "W=265"
+          }
+        ],
+        "child_instance": "held.u_native",
+        "child_before": "ot_hbm_native_station #(.REGISTERED_CURRENT(REGISTERED_CURRENT),",
+        "child_after": "ot_hbm_native_station #(.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK),"
+      }
+    ],
+    "exact_wrapper_replacements": {
+      "bank": {
+        "before": "ot_hbm_w2_protected_bank_current_pipeline #(.REGISTERED_CURRENT(REGISTERED_CURRENT),",
+        "after": "ot_hbm_w2_protected_bank_check_pipeline #(.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK),"
+      },
+      "cut": {
+        "before": "ot_hbm_w2_protected_cut_current_pipeline #(.REGISTERED_CURRENT(REGISTERED_CURRENT),",
+        "after": "ot_hbm_w2_protected_cut_check_pipeline #(.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK),"
+      }
+    },
+    "enrollment_correction": "Use CHECK controller source/hash above, retain legacy and CURRENT fallback dependencies, and add new CHECK static source to the manifest. Expand only encode64/raw64/check72 imports; preserve all other bytes. Existing prepare.py pins CURRENT source and checks current_station_r1; successor must instead check enabled station bodies against check_station_r2. Both physical flags=1, defaults=0. Keep instance names/widths/ports and clock/POR/ACK wiring.",
+    "vehicle_enabled_equivalence": {
+      "physical/hbm_w2_current_station_20261006/ot_hbm_native_station.sv": {
+        "accepted_source": "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/ot_hbm_native_station.sv",
+        "accepted_sha256": "d06a6485256c42c5a992e1d36355fb118b16fa9ed7cf8d9bdf5f4228b27c586f",
+        "verdict": "BYTE_IDENTICAL_ENABLED_BODY_NO_GATE_REPLAY"
+      },
+      "physical/hbm_w2_current_station_20261006/ot_hbm_native_frame_station.sv": {
+        "accepted_source": "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/ot_hbm_native_frame_station.sv",
+        "accepted_sha256": "b409ef04dc1f39e6d6ffb8dc5e256c43dd5847e4f6cd12f1fb7a7f601eabc3df",
+        "verdict": "BYTE_IDENTICAL_ENABLED_BODY_NO_GATE_REPLAY"
+      }
+    },
+    "active_map_distribution_review": {
+      "owner": "Descartes sole physical continuation",
+      "host": "ot-epyc1tb",
+      "controller_PID": 160281,
+      "run": "/srv/opentallas-scratch/codex/w2-check-station-f11de13f0/route-r1",
+      "mapped_netlist": "work/mapped.v",
+      "mapped_netlist_bytes": 19619348,
+      "method": "read-only mapped-cell connectivity; follow BUF/INV output trees, count terminal pin loads; no synthesis/STA/route run",
+      "large_roots": [
+        {
+          "net": "_089564_",
+          "driver": "_149620_",
+          "cell": "AND3x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 4056
+        },
+        {
+          "net": "_089565_",
+          "driver": "_149621_",
+          "cell": "OR3x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3669
+        },
+        {
+          "net": "_088332_",
+          "driver": "_148175_",
+          "cell": "NOR2x1_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3568
+        },
+        {
+          "net": "_088333_",
+          "driver": "_148176_",
+          "cell": "OR2x2_ASAP7_75t_R",
+          "mapped_terminal_pin_loads": 3429
+        }
+      ],
+      "critical_source_fact": "VERIFY local input_bad terminates at verdict registers; bank-wide fault/fatal branch and phase cases still gate all word state updates. Shared capture/hold distribution remains; registering checker depth did not remove this class.",
+      "mapped_mux_fact": "_088332_/_088333_ complementary guards feed next-state AO21/AND2 muxes, including out_data[1454] alias; _089564_/_089565_ similarly drive common capture/hold muxes.",
+      "association_limit": "mapped roots have no usable exact fault/phase public aliases in these excerpts; class association is source/mux structure, not a claim of identical old _059064_ net or6963fanout",
+      "R2_reference": {
+        "root": "_059064_",
+        "terminal_sinks": 6963,
+        "buffers": 523,
+        "postplace_buffer_tree": true
+      },
+      "current_counts_are_not_postplace_buffer_counts": true,
+      "source_local_candidate_if_new_path_confirms": "distribute protected per-stripe capture/freeze/phase control so global fault terminates at one fail-closed publication permission gate plus bounded per-stripe control inputs, not every datapath D hold mux; retain global current/input binding, owner/debt and all-stripes positive completion. Derive actual registered state/cycles before any RTL; no simple registered global broadcast or cached normal.",
+      "source_or_model_variant_implemented": false,
+      "active_route_touched": false,
+      "same_source_variant_launched": false
+    }
+  },
+  "RESULT_producer_binding_request_to_Gibbs": {
+    "owner": "Gibbs producer/parent; Codex disjoint consumer only after actual binding",
+    "SM_source": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv",
+    "existing_consumer_sequence": "actual native LSU LDG -> scoreboard-checked UFROMV from loaded lane -> RESULT from destination UR -> EXIT/drain; program/register allocation awaits actual producer binding",
+    "forbidden_source": "launch UR0=inputTOKEN is not numerical RESULT; no expected-data injection, constant result or callback",
+    "required_inputs": [
+      "exact native SRAM/selected-ID producer hierarchy and actual address/extent including byte vs word units",
+      "full job32/gen4/token17/pos20 identity and selected-ID representation/ordering",
+      "actual checked visibility/publication receipt authorizing the read and matched reverse receipt/retirement ownership",
+      "consumer launch PC/program, source module/ports and disjoint additive file ownership"
+    ],
+    "current_parent_unbound_hooks": [
+      "ot_ds_hbm_cluster20_integrated.u_shared installed_book_valid/result_published/source_reverse_done",
+      "u_normal_store source/consumer ports",
+      "u_formatter_provider publication_done/source_reverse_done"
+    ],
+    "parent_edits_owner": "Gibbs; Codex does not duplicate",
+    "implementation_status": "ACTUAL_LSU_UFROMV_RESULT_PROGRAM_SOURCE_IMPLEMENTED_DEFAULT_OFF",
+    "released_RESULT_kernel": false,
+    "program_source": "tools/gpu_sys/hbm_selected_result_program.py",
+    "model_function": "tools/uarch_model.py:hbm_native_selected_result_model",
+    "program_source_sha256": "585f2a0ac673bdb03830759752b60788b67a34c7a6ca8a1069505522e219854e",
+    "actual_sink": {
+      "byte_base": 458752,
+      "byte_limit": 460800,
+      "IDs_U32": 512,
+      "kind4_checked_rows": 32,
+      "final_row_byte": 460736,
+      "producer": "Gauss actual global512 merge/protected landing/checked sink writer"
+    },
+    "program_instructions": [
+      "UMOVI U4,0x70000",
+      "LDG V0,[U4],raw32,count1",
+      "UFROMV U5,V0,lane0",
+      "RESULT U5",
+      "EXIT"
+    ],
+    "program_words_hex": [
+      "2804000000070000",
+      "3800040000000000",
+      "2b05000000000000",
+      "3500050000000000",
+      "3200000000000000"
+    ],
+    "source_emit_API": "source_program(enable=False) returnsNone; explicit enable=True plus actual caller-allocated entry_pc required. CLI --enable --entry-pc <actual linked PC> --out <new output directory>. No expected payload input or result immediate.",
+    "source_only_validation": "instruction encoding/count1/address/raw32/UFROMV scoreboard use/defaultOFF/actualIMW14 boundary checked; no numerical RTL/CP integration PASS",
+    "parent_launch_locator": "dut.g_on.g_die[0].native_launch[0], launch_pc and actual_cp_frame; Gibbs owns disjoint actual launch coordination/parent edits",
+    "native_route": "real SM0 a_req/a_rsp -> u_shared existing p_req/p_rsp -> existing AW3 CDC -> same HBM bank; kind3 is arena-only and not used",
+    "required_postrelease_allocation_key": "actual persistent sink reservation for BYTE[0x70000,0x70800) under same full73 actual_cp_frame, retained after shared borrower release through native LSU return/RESULT/EXIT/CP completion",
+    "allocation_block_source": "ot_hbm_formatter_preinstall.sv RELEASE retires n=0 after borrower_release_ACK&&!gather_retained; source960625099 install_consumer clears n=0 after gather_released&&!gather_retained&&!formatter_retained. Old book/frame cannot authorize later native read.",
+    "allocation_source_owner": "Gibbs actual parent allocation/launch with Gauss producer; no copied bookvalid/shadow owner",
+    "CP_RESULT_contract": "SM emits fullU32 loaded ID. Original ot_ds_hbm_cmdproc20 END status3 for(res_q>>17)!=0; selected index IDs may20bits. Preserve refusal, no truncation or full-token result claim.",
+    "missing": [
+      "actual persistent postrelease sink reservation/identity authority",
+      "actual linked five-word instruction PC and deferred same-session native launch",
+      "actual native provider RTT/composed CP calendar for measured latency",
+      "Gauss live producer joined to consumer runtime"
+    ],
+    "new_engine_RTL": false,
+    "new_parent": false,
+    "numerical_qualified": false
+  }
 }
