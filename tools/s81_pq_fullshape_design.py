@@ -74,18 +74,23 @@ def verify_repo_inputs():
             raise SystemExit(f'repo input hash mismatch: {rel}')
 
 
+SNAP_PATHS = None   # current basis: {snapshot key: committed main path}, same SNAP_SHA hashes
+
+
 def load_snapshot(snap):
-    for line in (snap / 'SHA256SUMS').read_text().splitlines():
-        h, rel = line.split(None, 1)
-        if SNAP_SHA.get(rel) != h:
-            raise SystemExit(f'SHA256SUMS disagrees with the pinned snapshot hash: {rel}')
+    if SNAP_PATHS is None:
+        for line in (snap / 'SHA256SUMS').read_text().splitlines():
+            h, rel = line.split(None, 1)
+            if SNAP_SHA.get(rel) != h:
+                raise SystemExit(f'SHA256SUMS disagrees with the pinned snapshot hash: {rel}')
+    at = (lambda rel: snap / rel) if SNAP_PATHS is None else (lambda rel: SNAP_PATHS[rel])
     for rel, h in SNAP_SHA.items():
-        if sha(snap / rel) != h:
+        if sha(at(rel)) != h:
             raise SystemExit(f'snapshot hash mismatch: {rel}')
-    spec = importlib.util.spec_from_file_location('pq_parent_binding_snapshot', snap / 'pq_parent_binding.py')
+    spec = importlib.util.spec_from_file_location('pq_parent_binding_snapshot', at('pq_parent_binding.py'))
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    inv = {k: json.loads((snap / f'dsrom_s81_pq_parent_20261007/{k}_inventory.json').read_text()) for k in ('half', 'full')}
+    inv = {k: json.loads(at(f'dsrom_s81_pq_parent_20261007/{k}_inventory.json').read_text()) for k in ('half', 'full')}
     return mod, inv
 
 
@@ -114,6 +119,8 @@ def native_bus(phw):
     bw = re.search(r'parameter integer BW = ([^\n]+)', t)[1]
     BW = eval(bw.split('//')[0].strip().rstrip(')'), {}, dict(PHW=phw))
     src = re.search(r'wire \[BW-1:0\] bc_in = \{([^}]*)\};', t, re.S)[1]
+    if src.replace(' ', '') == 'bc_hr,bt_d':      # v11+: non-BF fields registered once more (bc_hr <= bc_h), then bt_d
+        src = re.search(r'wire \[BW-1025:0\] bc_h = \{([^}]*)\};', t, re.S)[1] + ', bt_d'
     dst = re.search(r'assign \{(f_cfg_go[^}]*)\} = bc;', t, re.S)[1]
     src = [s.strip() for s in src.split(',')]
     dst = [s.strip() for s in dst.split(',')]
@@ -126,7 +133,7 @@ def native_bus(phw):
     for f in fields:
         f['family'] = fam(f['port'])
     # mutual exclusion of the two beat families: one streamer head, family bit selects xs or xb valid
-    assert re.search(r'p1_xs_v <= s_adv && hw\[0\] && !h_fam;', t) and re.search(r'p1_xb_v <= s_adv && hw\[0\] && h_fam;', t)
+    assert re.search(r'p1_xs_v <= (s_adv\w*) && hw\[0\] && !h_fam;', t) and re.search(r'p1_xb_v <= s_adv\w* && hw\[0\] && h_fam;', t)
     return BW, fields, t
 
 
@@ -561,14 +568,146 @@ def design(snap=SNAP):
         dies=dies, staged_plan=staged, estimates=ESTIMATES, gated=gated)
 
 
+CUR = OUT / 'current_main'
+CURRENT = dict(
+    SPINE=CUR / 'inputs/rtl/ot_v41_spine_pqc_w17w10.d0178820d.sv',   # production native source (Codex native_elaboration)
+    GEOM=CUR / 'geometry_extract.json', GEN=ROOT / 'tools/dsrom_s81_fulldie.py',
+    REPO_SUMS=CUR / 'inputs/REPO_INPUTS.SHA256SUMS',
+    SNAP_PATHS={'pq_parent_binding.py': ROOT / 'tools/s81/pq_parent_binding.py',
+                'dsrom_s81_pq_parent_20261007/full_inventory.json':
+                    ROOT / 'results/uarch/dsrom_s81_pq_parent_20261007/full_inventory.json',
+                'dsrom_s81_pq_parent_20261007/half_inventory.json':
+                    ROOT / 'results/uarch/dsrom_s81_pq_parent_20261007/half_inventory.json'})
+STREAM = CUR / 'stream_stats.json'
+
+
+def spine_params(t):
+    return {k: int(re.search(r'parameter integer %s\s*=\s*(\d+)' % k, t)[1]) for k in ('RG', 'RPT', 'BST', 'GAP', 'GUARD')
+            if re.search(r'parameter integer %s\s*=\s*(\d+)' % k, t)}
+
+
+def current_extras(d):
+    """current-basis refinements: production spine parameters, mapping-derived credits / serial-lane cost, cycles"""
+    t = SPINE.read_text()
+    sp = spine_params(t)
+    hist_sp = spine_params((ROOT / 'rtl/v41die/ot_v41_spine_pqc_w17w10.sv').read_text())
+    st = json.loads(STREAM.read_text()) if STREAM.exists() else {}
+    lat, cr = d['latency'], d['credits']
+    rpt = sp.get('RPT', 0)
+    # cycles relative to the native production parent (v13b): its RPT repeaters on the root inputs and on the row writes
+    # are the long-wire stations the split replaces: root -> RWB is local (hr end block abuts the RWB), RWB -> VM keeps
+    # its own stations
+    rc = lat['rowcount_to_core']['cycles'] - rpt
+    rw = lat['rwb_to_vm']['cycles'] - rpt
+    added = lat['root_pipeline']['cycles'] + max(rc, rw, 0)
+    coef = d['cost']['AR_fraction_per_cycle_per_phase']
+    out = dict(spine_source=str(SPINE.relative_to(ROOT)), spine_sha256=sha(SPINE), spine_params=sp,
+               historical_spine_params=hist_sp,
+               cycles=dict(added_cycles_per_phase=added, vs_historical=added - d['cost']['added_cycles_per_phase'],
+                           AR_loss_fraction_est=round(added * coef, 5),
+                           rule='root CAM pipeline %d + max(rowcount %d, rwb->VM %d) - RPT %d (v13b already pays RPT on '
+                                'the root inputs and row writes; the split replaces those repeaters by placed stations)'
+                                % (lat['root_pipeline']['cycles'], lat['rowcount_to_core']['cycles'],
+                                   lat['rwb_to_vm']['cycles'], rpt),
+                           price_status='PARTIAL: per-phase delta x historical +1-return-cycle sensitivity; the 1,792 '
+                                        'per-token critical-phase list is not composed (mapping has %s compiled phases, '
+                                        'of which only the token-active subset is on the path)' % (
+                                            st.get('half', {}).get('phases'),)),
+               rwb_replica_groups=[dict(rwb=r['name'], regions=r['regions'], replica_copies=-(-r['regions'] // sp.get('RG', 16)))
+                                   for r in d['blocks']['rwb']['per_instance']])
+    for case in ('half', 'full'):
+        if case not in st:
+            continue
+        s = st[case]
+        burst = s['max_rows_region_phase']
+        depth = cr['vm_write']['depth_per_region']
+        out[case] = dict(mapping_sha256=s['mapping_sha256'], phases=s['phases'], bf_phases=s['bf_phases'],
+            vm_write=dict(max_rows_region_phase=burst, fifo_depth=max(depth, burst),
+                          holds_whole_region_phase_burst=max(depth, burst) >= burst,
+                          rule='a region emits <= %d rows a phase (root <= 1 row/cycle); a FIFO >= the burst absorbs it '
+                               'with zero drain, so no rate assumption on the 0.75/cycle VM side is needed' % burst),
+            serial_lane_W3=dict(bf_max_back_to_back=s['bf_max_back_to_back'],
+                                adjacent_valid_pairs=s['bf_adjacent_valid_pairs'],
+                                extra_cycles_at_phase_end_sum=s['bf_serial_extra_cycles_sum'],
+                                max_beat_delay=s.get('bf_serial_beat_delay_max'),
+                                rule='two lane cycles per valid BF beat, in order; idle native slots absorb the delay'))
+    out['budget_sheets'] = budget_sheets(d)
+    return out
+
+
+INSERTION = ROOT / 'results/rtl/budgets_20261006/measured_insertion.json'
+ANALOGUE = {'ret_root_r128': 'ot_s81ph_root_tile', 'rwb': 'dsfd_cfifo', 'pq_xbuf': 'ot_v41_rom_elem_q_qxpq_w10',
+            'pq_ctl': 'ot_v41_rom_elem_q_qxpq_w10', 'lane_station': 'dsfd_stnh_566x1'}
+
+
+def rwb_outline(w):
+    """pin-limited outline: ret_in on N, vm_write on S (width = the larger), cfg replica + rowcount + fault on W/E"""
+    f = w['faces']
+    wd = max(f['ret_in (from hr end block)'], f['vm_write_out']) / PIN_DENSITY
+    ht = max(f['cfg_replica_in'] / PIN_DENSITY, (f['rowcount_out (per tag)'] + 3) / PIN_DENSITY, w['area_um2_est'] / wd)
+    return dict(outline_um=[round(wd, 1), round(ht, 1)], cell_utilisation=round(w['cell_um2_est'] / (wd * ht), 3),
+                limiter='pins (%d on the N face): the block is pin-limited, not area-limited' % f['ret_in (from hr end block)'])
+
+
+def budget_sheets(d):
+    """per hardening-stage block: pins per face, face length the pins need at the r8 station pin density, area,
+    and the clock-insertion target (the measured SS/FF mean of the nearest measured analogue block; a target, not a
+    measurement of this block)"""
+    ins = json.loads(INSERTION.read_text())['blocks']
+    def tgt(k):
+        a = ins[ANALOGUE[k]]
+        return dict(analogue=ANALOGUE[k], ss_ps=a['ss']['mean'], ff_ps=a['ff']['mean'], source_commit=a['source_commit'])
+    b = d['blocks']
+    rows = []
+    def face_rows(faces):
+        return {f: dict(pins=n, face_um_needed=round(n / PIN_DENSITY, 1)) for f, n in faces.items()}
+    r = b['ret_root_r128']
+    rows.append(dict(stage=1, block='ret_root_r128', instances=128, outline_um_est=r['outline_um_est'],
+                     area_um2_est=r['area_um2_est'], faces=face_rows(r['faces']), pins=r['pins'],
+                     relay='abutting station on S and N faces; final segment <= 100 um', insertion_target=tgt('ret_root_r128')))
+    x = b['pq_core']['sub_blocks']['pq_xbuf']
+    xf = {'loader_write (N)': 1024 + 512 + 20 + 2 * 9 + 8, 'read_addr (W)': 4 * 7 + 2 * 7 + 6,
+          'read_data (S)': 4 * 256 + 2 * 256 + 20, 'parity_fault': 1, 'clk_rst': 2}
+    rows.append(dict(stage=1, block='pq_xbuf', instances=1, area_um2_est=x['area_um2_est'], macros=x['macros'],
+                     outline_um_est=[700, 330], faces=face_rows(xf), pins=sum(xf.values()),
+                     relay='macro outputs registered; abutting pq_ctl (no die wire)', insertion_target=tgt('pq_xbuf')))
+    for w in b['rwb']['per_instance'][:2]:
+        rows.append(dict(stage=1, block='rwb (N=%d)' % w['regions'], instances=sum(1 for z in b['rwb']['per_instance']
+                         if z['regions'] == w['regions']), area_um2_est=w['area_um2_est'],
+                         outline_um_est=[round(math.sqrt(w['area_um2_est']), 1)] * 2, faces=face_rows(w['faces']),
+                         pins=w['pins'], relay='hr end block abutting; VM face 1 station + ratio CDC',
+                         insertion_target=tgt('rwb'),
+                         note=rwb_outline(w)))
+    c = b['pq_core']
+    rows.append(dict(stage=2, block='pq_ctl', instances=1, area_um2_est=c['sub_blocks']['pq_ctl']['area_um2_est'],
+                     faces=face_rows({k: v for k, v in c['faces'].items()}), pins=c['pins'] + sum(xf.values()) - 3,
+                     relay='BST/lane registers at the W/E faces; VM read abutting', insertion_target=tgt('pq_ctl')))
+    lane = d['lanes']['union_W2']['bits'] + 2
+    rows.append(dict(stage=3, block='lane station / cfifo W%d' % (lane - 2), faces=face_rows({'in': lane, 'out': lane}),
+                     pins=2 * lane, relay='stations <= 215 um (cc reach)', insertion_target=tgt('lane_station')))
+    return dict(pin_density_per_um=round(PIN_DENSITY, 3), insertion_source=str(INSERTION.relative_to(ROOT)),
+                insertion_sha256=sha(INSERTION), rows=rows)
+
+
 def main():
+    global SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--basis', choices=['historical', 'current'], default='historical',
+                    help='historical: the d95b57661 inputs (pinned); current: current-main inputs (current_main/)')
     ap.add_argument('--snapshot', type=Path, default=SNAP)
-    ap.add_argument('--out', type=Path, default=OUT / 'reproduce/design.json')   # design.json = historical d95b57661 output
+    ap.add_argument('--out', type=Path)
     a = ap.parse_args()
+    if a.basis == 'current':
+        SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS = (CURRENT[k] for k in ('SPINE', 'GEOM', 'GEN', 'REPO_SUMS', 'SNAP_PATHS'))
+    out = a.out or (OUT / 'reproduce/design.json' if a.basis == 'historical' else CUR / 'design.json')
     d = design(a.snapshot)
-    a.out.parent.mkdir(parents=True, exist_ok=True)
-    a.out.write_text(json.dumps(d, indent=1, default=str) + '\n')
+    if a.basis == 'current':
+        d['sources']['snapshot'] = {k: str(v.relative_to(ROOT)) for k, v in SNAP_PATHS.items()}
+        d['sources']['snapshot_origin'] = 'committed on main (identical hashes to pq_snapshot_1117)'
+        d['sources']['stream_stats_sha256'] = sha(STREAM) if STREAM.exists() else None
+        d['current_basis'] = current_extras(d)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(d, indent=1, default=str) + '\n')
     p = d['problem']
     print(json.dumps(dict(storage=p['pq_storage']['bits'], ratio=p['storage_ratio'], native_bus=p['native_bus_bits'],
         union=d['lanes']['union_W2']['bits'], serial=d['lanes']['serial_W3']['bits'], pins=p['native_pins'],
