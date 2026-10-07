@@ -29,6 +29,7 @@ module ot_s81_bf_native #(
     parameter integer FRONT_PAR = 0,
     // Necessary baseline correction, opt-in until exact and SS/FF gates pass.
     parameter integer WAKE_REG = 1,
+    parameter integer HITFIX = 0,     // element x-need match from registered class offsets (default off)
     // BF16_PAIR (root decision 2026-09-30, option iii): BF16 rows on the standard pair.  A BF16 word (16 weights,
     // lane l = element b of golden chunk 16u + l) is held 4 cycles; 4 multipliers per macro take lanes 4k..4k+3 in
     // cycle k into 4 chunk chains (NCH >= 24 slots: slot = 4 x word-in-round + k); at the round b = 7 the 4 chunk
@@ -198,6 +199,7 @@ module ot_s81_bf_native #(
         .PP(PP),
         .FRONT_PAR(FRONT_PAR),
         .WAKE_REG(WAKE_REG),
+        .HITFIX(HITFIX),
         .BP(BP),
         .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX),
         .GRADUAL_RNE(GRADUAL_RNE),
