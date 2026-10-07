@@ -180,7 +180,10 @@ set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 if {[llength [dict get $win fixable]]} {
   if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 30] -verbose} err]} {
-    error "OT_ECO repair_timing failed: $err"
+    # the buffer cap (RSZ-0060) keeps what was inserted: continue and let the sign-off judge it (hfd_stn_r38 pass 2 died
+    # here at target +35); any other repair error stays fatal
+    if {![string match {*RSZ-0060*} $err]} { error "OT_ECO repair_timing failed: $err" }
+    puts "OT_ECO repair_timing hit the buffer cap (RSZ-0060): continuing with the cells inserted"
   }
 }
 # rev 3 SETUP GUARD (a): every SS path that now sits under the setup margin loses the ECO cells on it (they are removed
