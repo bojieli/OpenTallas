@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_48529891f/routes/hbm_idxq_b1_48529891f/work/orfs/results/asap7/opentallas_hfd_index_q_b1_asap7_hv_hbm_idxq_b1_48529891f/base",
+ "hold_ff": {
+  "paths_seen": 812,
+  "worst_slack_ps": -268.27,
+  "classes": [
+   {
+    "start_class": "kin[*]",
+    "end_class": "u_kp.gn.st[*].r[*]$_DFF_P_/D",
+    "worst_slack_ps": -268.27,
+    "paths": 217,
+    "max_levels": 10,
+    "example_start": "kin[10]",
+    "example_end": "u_kp.gn.st[0].r[9]$_DFF_P_/D"
+   },
+   {
+    "start_class": "a0i[*]",
+    "end_class": "u_a0.gn.st[*].r[*]$_DFF_P_/D",
+    "worst_slack_ps": -258.75,
+    "paths": 183,
+    "max_levels": 10,
+    "example_start": "a0i[528]",
+    "example_end": "u_a0.gn.st[0].r[527]$_DFF_P_/D"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "u_kp.gn.rv[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 89.05,
+    "paths": 6,
+    "max_levels": 22,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "u_kp.gn.rv[0]$_DFF_PN0_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "u_a0.gn.rv[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 286.33,
+    "paths": 6,
+    "max_levels": 24,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "u_a0.gn.rv[0]$_DFF_PN0_/RESETN"
+   },
+   {
+    "start_class": "u_kp.gn.st[*].r[*]$_DFF_P_/QN",
+    "end_class": "kout[*]",
+    "worst_slack_ps": 421.18,
+    "paths": 209,
+    "max_levels": 6,
+    "example_start": "u_kp.gn.st[5].r[432]$_DFF_P_/QN",
+    "example_end": "kout[433]"
+   },
+   {
+    "start_class": "u_a0.gn.st[*].r[*]$_DFF_P_/QN",
+    "end_class": "a0o[*]",
+    "worst_slack_ps": 429.0,
+    "paths": 190,
+    "max_levels": 6,
+    "example_start": "u_a0.gn.st[5].r[49]$_DFF_P_/QN",
+    "example_end": "a0o[50]"
+   },
+   {
+    "start_class": "u_kp.gn.rv[*]$_DFF_PN0_/QN",
+    "end_class": "kout[*]",
+    "worst_slack_ps": 436.93,
+    "paths": 1,
+    "max_levels": 4,
+    "example_start": "u_kp.gn.rv[5]$_DFF_PN0_/QN",
+    "example_end": "kout[0]"
+   }
+  ],
+  "errors": []
+ }
+}
