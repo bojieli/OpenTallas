@@ -91,7 +91,7 @@ def xform(inst, xy):
 
 def port_xy(d, inst, port):
     """die point of (instance, port): the generator / LEF anchor, else the outline centre (None flag)"""
-    a = d['ports'].get(inst[1], {}).get(port)
+    a = d['ports'].get(inst[1], {}).get(port.split('@', 1)[0])     # HBM r23: a sliced endpoint binds its base port
     if a:
         return xform(inst, a), True
     return (inst[5] + inst[7] / 2, inst[6] + inst[8] / 2), False
