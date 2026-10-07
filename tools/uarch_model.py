@@ -13494,6 +13494,12 @@ def s81_bf_root_phase_model():
     }
 
 
+def hbm_ha2_sender_capture_model():
+    """Default-off HA2 capture candidate with measured finite-flight bound."""
+    from ha2_sender_capture_model import model
+    return model()
+
+
 def hbm_su_divider_halfpair_model(serial_divides=1):
     """Prebuild bound for two alternating exact DIV31 cores, one beat per fast edge.
 
