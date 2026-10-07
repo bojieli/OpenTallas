@@ -242,9 +242,17 @@ foreach i [$block getInsts] {
 # the session then failed with a corrupted Tcl command name ('filler_plf') -- not safe to enable yet): nets driven by a macro output keep their detailed wires unless the ECO
 # touched them (a new / moved / resized cell on the net).  Qwen slab s14 (guide-preserving ECO): the re-route
 # re-detoured ROM -> capture-register nets, worst register-D setup +44.55 -> +4.66 while reg2reg stayed +122.  If DRT
-# rejects the kept wires, they are stripped and DRT runs again (logged).
+# rejects the kept wires, the shell retries from the original route in a fresh process (logged).
 set frozen {}
-if {[envd OT_FREEZE_MACRO_NETS 0]} {
+if {[envd OT_KEEP_UNTOUCHED 0]} {
+  # NARROW RE-ROUTE (OT_KEEP_UNTOUCHED=1): every signal/clock net the ECO did not touch keeps its detailed wires; only
+  # the dirty nets (a new / moved / resized cell on them) are re-routed.  The guide-preserving full re-route still moves
+  # untouched critical wires (ctl r6 SS +87.9 route -> +16.0 after a 6-cell repair).
+  foreach nt [$block getNets] {
+    if {[$nt getSigType] in {POWER GROUND} || [dict exists $dirty [$nt getName]]} continue
+    if {[$nt getWire] ne "NULL"} { lappend frozen $nt }
+  }
+} elseif {[envd OT_FREEZE_MACRO_NETS 0]} {
   foreach i [$block getInsts] {
     if {![[$i getMaster] isBlock]} continue
     foreach it [$i getITerms] {
@@ -263,17 +271,18 @@ foreach net [$block getNets] {
   if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }
-puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped, [dict size $fz] macro-output nets frozen"
+puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped, [dict size $fz] nets frozen"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
 if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
 # Preserve guides by default because fresh GRT has measured setup-regression
 # risk. An explicitly requested fallback is valid if the unchanged final
 # timing, DRC, IO and context checks pass; route strategy is not acceptance.
 set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
-if {$drt_err && [info exists fz] && [dict size $fz]} {
-  puts "OT_ECO macro-net freeze rejected by DRT ($err): frozen wires stripped, DRT again"
-  foreach nt $frozen { set w [$nt getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w } }
-  set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
+if {$drt_err && [dict size $fz]} {
+  # a second detailed_route in the same session is not safe (cmdproc_n: the session's Tcl state was corrupted after a
+  # DRT re-run, 'filler_plf'): stop here; hold_eco.sh re-runs this pass in a fresh process with the wires stripped
+  puts "OT_ECO freeze_rejected by DRT ($err): [dict size $fz] kept nets"
+  exit 3
 }
 if {$drt_err} {
   if {!$guides || !$allow_fresh} { error "OT_ECO detailed_route failed: $err" }
