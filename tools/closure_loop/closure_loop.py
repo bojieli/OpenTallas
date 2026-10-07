@@ -245,7 +245,9 @@ def stage_list(spec):
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
         base = cal["base"]
-        tail = (f"\nB=$(ls -d {base} 2>/dev/null | tail -1); [ -n \"$B\" ] || {{ echo 'calibrate: no ORFS base {base}'; exit 3; }}"
+        tail = (f"\nB=$(ls -d {base} 2>/dev/null | tail -1); [ -n \"$B\" ] || {{ echo 'calibrate: no ORFS base {base}'; "
+                f"bash {{CL}}/cal_classify.sh '{base}'; exit 3; }}"
+                f"\n[ -f \"$B/4_1_cts.odb\" ] || {{ echo \"calibrate: no 4_1_cts.odb under $B\"; bash {{CL}}/cal_classify.sh '{base}'; exit 4; }}"
                 f"\npython3 {{CL}}/ck_insertion.py --base \"$B\" --clock {cal.get('clock', 'ck')} --output {{CL}}/calib.json"
                 f" > {{CL}}/calib.env || exit 4\ncat {{CL}}/calib.env\nset -a; . {{CL}}/calib.env; set +a")
         if cal.get("sdc_cmd"):
@@ -721,7 +723,24 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl")
+HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh")
+
+# deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
+CAL_OWNER_ACTION = {
+    "cts_segv_macro_reg_sinks": "TritonCTS segfaults in separateMacroRegSinks (an inverter/forwarded-clock load on the root "
+                                "clock net): add PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl "
+                                "(or your flow's equivalent root-buffer PRE_CTS hook) to calibrate+route, re-drop as a new job",
+    "cts_segv": "OpenROAD segfault in CTS: reproduce on 3_place.odb, add a PRE_CTS workaround hook, re-drop",
+    "rsz_max_buffer": "CTS timing repair hit the buffer cap (RSZ-0060): the IO SDC insertion/budget is off for this block or "
+                      "a net has extreme fanout -- check the IO SDC (budget/calibrated), duplicate high-fanout drivers, re-drop",
+    "odb_dont_touch": "CTS must rewire a dont_touch instance (ODB-0370): do not dont_touch cells on clock/repair nets "
+                      "(or release them in PRE_CTS), re-drop",
+    "est_parasitics": "EST-0104 inconsistent parasitics state in CTS: a step hook (PRE_CTS/POST_PLACE tcl) leaves "
+                      "estimate_parasitics in a mixed state -- fix the hook, re-drop",
+    "nickname": "route label not [A-Za-z0-9_]: use {LABEL} (the loop now sanitises {NAME} too); re-drop",
+    "synth_or_place": "the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+    "flow_error": "ORFS error before CTS completed: see the CALIBRATE_FAIL detail, fix, re-drop",
+}
 
 
 def ship_helpers(host, run):
@@ -987,6 +1006,15 @@ def finish(j, status, reason, ledger_text):
 
 def crash(j, st, fleet, why):
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
+    m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
+    if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
+        j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
+                                                resource=False, cls=m.group(1), tail=tail[-1500:]))
+        act = CAL_OWNER_ACTION[m.group(1)]
+        finish(j, "NEEDS_HUMAN", f"calibrate {m.group(1)}: {act}"[:300],
+               f"NEEDS_HUMAN: calibrate failed, class {m.group(1)} (deterministic, not retried)\n"
+               f"detail: {m.group(2).strip()[:200]}\nOWNER ACTION ({j['spec'].get('owner')}): {act}")
+        return
     resource = bool(RESOURCE_RE.search(tail)) or why.startswith("LOST")
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:]))
