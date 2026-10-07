@@ -789,22 +789,22 @@
     },
     {
      "id": "bf_merge_ksplit",
-     "item": "BF16 phase merges + router K split (released binding 20261007, 86 stages, 2,048 pairs)",
-     "status": "priced-candidate",
+     "item": "BF16 phase merges + router K split, option A (f198.72, 2,048 pairs, 96 reprice stages): full-field same-frame measurement",
+     "status": "measured",
      "effect": {
       "unit": "us",
-      "AR": -47.789,
-      "MTP_step": null
+      "AR": -14.129,
+      "MTP_step": -13.991
      },
      "role": "info",
      "source": [
       {
-       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md",
-       "pointer": "bf_merge_ksplit (branch)",
-       "commit": "332983233 (origin/claude/dsrom-bf-double-20261007, not on main)"
+       "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
+       "pointer": "options.A_f198_2048 vs options.base_f198_2050",
+       "commit": "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
       }
      ],
-     "note": "field EXACT 19,056/19,056 regions on FULL-RATE BF; its gain under the half-rate 1792 geometry is unmeasured, so it is listed, never summed"
+     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs, 18 per region) pending per the coordinator. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
     },
     {
      "id": "field_phases_1792",
@@ -2003,6 +2003,12 @@
    "action": "regenerated (1,596.7 / 4,702.0) with a scope note on the 85-stage geometry and Qwen reopen"
   },
   {
+   "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md (branch claude/dsrom-bf-double-20261007)",
+   "claim": "bf_merge_ksplit AR 1,728.6 (+7.82 %), MTP +6.43 %",
+   "why": "BF16-phase-only figure; the full-field same-frame measurement is +2.33 % AR / +1.63 % MTP (option A, 1,645.8 vs base_f198 1,608.4)",
+   "action": "ledger line uses the full-field figure; +7.8 % marked superseded"
+  },
+  {
    "file": "results/arch/three_machine_compose/table.txt",
    "claim": "DS ROM / HBM AR 0.8193x MTP 1.1921x",
    "why": "HBM side excludes die closure costs",
@@ -2011,6 +2017,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "4f9bdf600e7c6ed55352f015b4942c47a5ff35cc86bd33bc659dccb1eb28d770"
+  "sha256": "51f8562361b5ac43929615e2600825eaf9eb2efc4e951560b3d18925d611dce9"
  }
 }

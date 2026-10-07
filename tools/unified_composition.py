@@ -73,6 +73,10 @@ H_CLKENT = "results/uarch/hbm_collective_clock_entry_20261007/model.json"
 FULLSYS = "results/rtl/fullsys_recheck_20261007/status.json"
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
 BF_BRANCH_COMMIT = "332983233"
+# bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07); record not on main
+BFA_FILE = "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json"
+BFA_COMMIT = "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
+BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96)
 
 
 def load(rel):
@@ -293,11 +297,17 @@ def ds_rom():
           dict(unit="us", AR=round(max(v["conditional_AR_latency_delta_ns"] for v in ret["variants"]) / 1000, 3),
                MTP_step=round(max(tau * 1e6 / v["conditional_MTP_tok_s"] - tau * 1e6 / v["baseline_MTP_tok_s"] for v in ret["variants"]), 3)),
           src(DS_RET, "variants"), "historical phase schedules; not the 1792 geometry", "candidate"),
-        L("bf_merge_ksplit", "BF16 phase merges + router K split (released binding 20261007, 86 stages, 2,048 pairs)", "priced-candidate",
-          dict(unit="us", AR=-round(1e6 / c["AR_tok_s"] - 1e6 / 1728.6, 3), MTP_step=None),
-          src("results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md", "bf_merge_ksplit (branch)", commit=BF_BRANCH_COMMIT + " (" + BF_BRANCH + ", not on main)"),
-          "field EXACT 19,056/19,056 regions on FULL-RATE BF; its gain under the half-rate 1792 geometry is unmeasured, "
-          "so it is listed, never summed", "info"),
+        L("bf_merge_ksplit", "BF16 phase merges + router K split, option A (f198.72, 2,048 pairs, 96 reprice stages): "
+          "full-field same-frame measurement", "measured",
+          dict(unit="us", AR=round(1e6 / BFA["AR"] - 1e6 / BFA["base_AR"], 3),
+               MTP_step=round(tau * 1e6 / BFA["MTP"] - tau * 1e6 / BFA["base_MTP"], 3)),
+          src(BFA_FILE, "options.A_f198_2048 vs options.base_f198_2050", commit=BFA_COMMIT),
+          "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR %.1f vs base_f198 %.1f "
+          "(+%.2f %%), MTP %.1f vs %.1f (+%.2f %%). Supersedes the +7.82 %% figure (BF16-phase-only, ledger.md on %s). "
+          "Option B (2,304 pairs, 18 per region) pending per the coordinator. Under the half-rate 1792 geometry its gain "
+          "is unmeasured, so it is listed, never summed"
+          % (BFA["AR"], BFA["base_AR"], 100 * (BFA["AR"] / BFA["base_AR"] - 1), BFA["MTP"], BFA["base_MTP"],
+             100 * (BFA["MTP"] / BFA["base_MTP"] - 1), BF_BRANCH), "info"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
         L("bf_half_physical", "BF half-rate clock root qualification", "gated-unknown", None,
@@ -455,6 +465,9 @@ STALE = [
          why="mislabelled status; stale HBM headline", action="Qwen AR -> analytical candidate; HBM cards show the unified closure-inclusive candidate; pre-closure kept for the waterfall"),
     dict(file="results/arch/energy_silicon_measured/README.md", claim="DS ROM 1,603.3 / 4,717.7 rows (record STALE vs the scoreboard on main)",
          why="--check failed at 449ebc571", action="regenerated (1,596.7 / 4,702.0) with a scope note on the 85-stage geometry and Qwen reopen"),
+    dict(file="results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md (branch claude/dsrom-bf-double-20261007)",
+         claim="bf_merge_ksplit AR 1,728.6 (+7.82 %), MTP +6.43 %", why="BF16-phase-only figure; the full-field same-frame "
+         "measurement is +2.33 % AR / +1.63 % MTP (option A, 1,645.8 vs base_f198 1,608.4)", action="ledger line uses the full-field figure; +7.8 % marked superseded"),
     dict(file="results/arch/three_machine_compose/table.txt", claim="DS ROM / HBM AR 0.8193x MTP 1.1921x",
          why="HBM side excludes die closure costs", action="not rewritten (pinned record); superseded by unified ledger ratios"),
 ]
