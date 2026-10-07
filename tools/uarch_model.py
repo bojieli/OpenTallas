@@ -13552,6 +13552,12 @@ def hbm_result_relay_stage_model():
     return model()
 
 
+def hbm_smh_front_s_hold_model():
+    """Price measured-endpoint hold repair without relaxing constraints."""
+    from hbm_smh_front_s_hold_model import model
+    return model()
+
+
 def hbm_smh_front_s_fifo_model():
     """Price the registered-nonempty SM request-sink candidate."""
     from hbm_smh_front_s_fifo_model import model
