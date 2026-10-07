@@ -3377,7 +3377,7 @@ def _hop_fix(m, P):
             # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
             # segment) at each non-glue end, the span between them at the reach as before
             pos = [Lp * (k + 1) / (n + 1) for k in range(n)]
-            if PIN_RELAY:
+            if PIN_RELAY and reg is None:      # die-level interfaces (field frames: q banks already abut the pins)
                 h0, h1 = not is_glue(d0.master), not is_glue(l0.master)
                 if (h0 or h1) and Lp > PIN_SEG:
                     s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
@@ -3417,6 +3417,14 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
+                if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
+                    for span, rows in ((300.0, 30), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows)
+                        if pl:
+                            pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                            rec['pad_fallback']['die'] = rec['pad_fallback'].get('die', 0) + 1
+                            break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
