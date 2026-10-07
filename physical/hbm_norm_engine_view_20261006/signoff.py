@@ -61,3 +61,4 @@ def main():
     m = dict(ss_ps=out['SS']['worst'].get('max'), ff_ps=out['FF']['worst'].get('min'), drc=drc)
     (run/'signoff.json').write_text(json.dumps(dict(out, metrics=m), indent=2)+'\n'); print(json.dumps(m))
 if __name__ == '__main__': main()
+# bump
