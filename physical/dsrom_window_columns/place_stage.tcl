@@ -18,6 +18,8 @@ foreach inst [$block getInsts] {
     lappend cells [list $inst $b $k]
 }
 if {[llength $cells]!=68} {error "WINDOW full shape requires 68 columns, found [llength $cells]"}
+# rtl_macro_placer has already placed these columns: release them so the explicit grid does not clash with its result
+foreach cell $cells { [lindex $cell 0] setPlacementStatus UNPLACED }
 foreach cell $cells {
     lassign $cell inst b k
     set x [expr {100.0+($b%2)*900.0+($k%4)*($maxw+32.0)}]
