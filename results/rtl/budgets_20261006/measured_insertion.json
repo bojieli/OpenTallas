@@ -394,26 +394,26 @@
    "budget": null
   },
   "hfd_svc_SW_s5": {
-   "job": "hbm_svc_SW_s5_2ec0ab4f9_r22",
-   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s5_2ec0ab4f9_r22",
+   "job": "hbm_svc_SW_s5_f84465b9b_s4",
+   "source_commit": "f84465b9bc78e137faf6a506c563c407d033cf67",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_f84465b9b_s4",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T05:41:26-07:00",
+   "measured_at": "2026-10-07T07:40:43-07:00",
    "ss": {
-    "mean": 816,
-    "min": 745,
-    "max": 1235
+    "mean": 846,
+    "min": 779,
+    "max": 1003
    },
    "ff": {
-    "mean": 535,
-    "min": 462,
-    "max": 953
+    "mean": 546,
+    "min": 485,
+    "max": 701
    },
    "boundary_n": 2509,
    "budget": {
-    "measured_ss": 816.0,
+    "measured_ss": 846.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -2049,22 +2049,22 @@
    }
   },
   "hfd_router": {
-   "job": "hbm_router_kneg_368f1f6d2_b",
-   "source_commit": "368f1f6d2bfa4cb4a544eb2a613443ae9ae64727",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_368f1f6d2_b",
+   "job": "hbm_router_k2_a2d8b481d",
+   "source_commit": "a2d8b481d7b45953b070a713c929460cd512e62f",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_k2_a2d8b481d",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T06:35:13-07:00",
+   "measured_at": "2026-10-07T07:38:38-07:00",
    "ss": {
-    "mean": 818,
-    "min": 686,
-    "max": 1017
+    "mean": 853,
+    "min": 744,
+    "max": 1053
    },
    "ff": {
-    "mean": 554,
-    "min": 459,
-    "max": 668
+    "mean": 566,
+    "min": 492,
+    "max": 679
    },
    "boundary_n": 1091,
    "budget": null
@@ -2204,7 +2204,49 @@
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
    }
+  },
+  "ot_dsrom_window_column_128": {
+   "job": "wcol128-m6-01a487c86",
+   "source_commit": "01a487c86cf2d34f84bc0b6d5999b810c339cd5d",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/wcol128-m6-01a487c86",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T07:42:59-07:00",
+   "ss": {
+    "mean": 192,
+    "min": 187,
+    "max": 198
+   },
+   "ff": {
+    "mean": 116,
+    "min": 111,
+    "max": 121
+   },
+   "boundary_n": 4739,
+   "budget": null
+  },
+  "ot_dsrom_window_column_256": {
+   "job": "wcol256-m6-01a487c86",
+   "source_commit": "01a487c86cf2d34f84bc0b6d5999b810c339cd5d",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/wcol256-m6-01a487c86",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T07:42:59-07:00",
+   "ss": {
+    "mean": 256,
+    "min": 251,
+    "max": 262
+   },
+   "ff": {
+    "mean": 162,
+    "min": 157,
+    "max": 168
+   },
+   "boundary_n": 9475,
+   "budget": null
   }
  },
- "updated": "2026-10-07T07:24:21-07:00"
+ "updated": "2026-10-07T07:42:59-07:00"
 }
