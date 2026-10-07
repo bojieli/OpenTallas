@@ -18,6 +18,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${SA[@]}" "${PA[@]}"
   --hold-margin-ns $HM --max-fanout 32 --slew-margin-percent 30 \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=$CORES \
   --sdc-append physical/dsrom_su_softmax_safe/route_io_false.sdc \
+  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --nickname-tag safe_$L --keep-workdir $O/work --output $O/physical.json --force "$@" > $O/run.log 2>&1
 rc=$?
 echo "rc=$rc" > $O/exit
