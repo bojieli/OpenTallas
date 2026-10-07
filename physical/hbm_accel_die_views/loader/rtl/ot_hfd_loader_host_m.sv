@@ -75,14 +75,17 @@ module ot_hfd_loader_host_m #(parameter integer ENABLE=0,ND=2)(
  for(genvar d=0;d<ND;d=d+1)begin:g_die
  wire lv,lr,lwe,lsv,lsr,lswe,sv,sr,ssv,ssr;
  wire[31:0] la,lst,sa;wire[255:0] ld,sd;wire[15:0] lt;wire[14:0] st;
+ wire lrh,lrm,srh,srm;
+ ot_hfd_rsync u_lrh(.clk(clk_host),.rst_n(rst_host_n),.q_n(lrh));ot_hfd_rsync u_lrm(.clk(clk_mem),.rst_n(rst_mem_n),.q_n(lrm));
+ ot_hfd_rsync u_srh(.clk(clk_host),.rst_n(rst_host_n),.q_n(srh));ot_hfd_rsync u_srm(.clk(clk_mem),.rst_n(rst_mem_n),.q_n(srm));
  ot_hfd_loader_m #(.ENABLE(1)) u_load(
- .clk_host(clk_host),.rst_host_n(rst_host_n),.clk_mem(clk_mem),.rst_mem_n(rst_mem_n),
+ .clk_host(clk_host),.rst_host_n(lrh),.clk_mem(clk_mem),.rst_mem_n(lrm),
  .s_awvalid(s_awvalid&&!wp&&ws==1+2*d),.s_awready(laready[2*d]),.s_awaddr({6'b0,s_awaddr[5:0]}),.s_wvalid(s_wvalid&&!wp&&ws==1+2*d),.s_wready(lwready[2*d]),.s_wdata(s_wdata),.s_bvalid(lbvalid[2*d]),.s_bready(s_bready&&wp&&wo==1+2*d),
  .s_arvalid(s_arvalid&&!rp&&rs==1+2*d),.s_arready(laready_r[2*d]),.s_araddr({6'b0,s_araddr[5:0]}),.s_rvalid(lrvalid[2*d]),.s_rready(s_rready&&rp&&ro==1+2*d),.s_rdata(lrdata[2*d*32+:32]),
  .m_arvalid(larv[d]),.m_arready(larr[d]),.m_araddr(lara[d*64+:64]),.m_arlen(larl[d*8+:8]),.m_arsize(),.m_arburst(),.m_rvalid(lr_v[d]),.m_rready(lr_r[d]),.m_rdata(lr_d),.m_rresp(lr_e),.m_rlast(lr_l),.irq(li[d]),
  .req_v(lv),.req_rdy(lr),.req_we(lwe),.req_addr(la),.req_wdata(ld),.req_wstrb(lst),.req_tag(lt),.rsp_v(lsv),.rsp_rdy(lsr),.rsp_tag({1'b0,rsp_tag[d*16+:15]}),.rsp_we(rsp_we[d]),.rsp_data(rsp_data[d*256+:256]));
  ot_hfd_store_m #(.ENABLE(1),.TW(15)) u_store(
- .clk_host(clk_host),.rst_host_n(rst_host_n),.clk_mem(clk_mem),.rst_mem_n(rst_mem_n),
+ .clk_host(clk_host),.rst_host_n(srh),.clk_mem(clk_mem),.rst_mem_n(srm),
  .s_awvalid(s_awvalid&&!wp&&ws==2+2*d),.s_awready(laready[2*d+1]),.s_awaddr({6'b0,s_awaddr[5:0]}),.s_wvalid(s_wvalid&&!wp&&ws==2+2*d),.s_wready(lwready[2*d+1]),.s_wdata(s_wdata),.s_bvalid(lbvalid[2*d+1]),.s_bready(s_bready&&wp&&wo==2+2*d),
  .s_arvalid(s_arvalid&&!rp&&rs==2+2*d),.s_arready(laready_r[2*d+1]),.s_araddr({6'b0,s_araddr[5:0]}),.s_rvalid(lrvalid[2*d+1]),.s_rready(s_rready&&rp&&ro==2+2*d),.s_rdata(lrdata[(2*d+1)*32+:32]),
  .m_awvalid(lawv[d]),.m_awready(lawr[d]),.m_awaddr(lawa[d*64+:64]),.m_awlen(lawl[d*8+:8]),.m_awsize(),.m_awburst(),.m_wvalid(lwv[d]),.m_wready(lwr[d]),.m_wdata(lwdata[d*256+:256]),.m_wstrb(lwstrb[d*32+:32]),.m_wlast(lwl[d]),.m_bvalid(lbv[d]),.m_bready(lbr[d]),.m_bresp(lb_e),.irq(si[d]),

@@ -29,3 +29,12 @@ module ot_hfd_oreg4 (input wire clk, input wire d, output reg q);
     reg s0, s1, s2;
     always @(posedge clk) begin s0 <= d; s1 <= s0; s2 <= s1; q <= s2; end
 endmodule
+// ot_hfd_rsync: a kept local reset synchroniser (views agent 2026-10-06, simplification rule 5: fanout replicas).
+// Asynchronous assert, release two clocks after the parent reset; one per engine so no single reset flop drives a
+// 1.4 mm view (ldm8: rst_s[1] -> 30 buffer levels -> -18 ps recovery even at the 2-cycle release multicycle).
+// Routed with SYNTH_KEEP_MODULES=ot_hfd_rsync so the equal copies are never merged.
+module ot_hfd_rsync (input wire clk, input wire rst_n, output wire q_n);
+    reg [1:0] s;
+    always @(posedge clk or negedge rst_n) if (!rst_n) s <= 2'b00; else s <= {s[0], 1'b1};
+    assign q_n = s[1];
+endmodule
