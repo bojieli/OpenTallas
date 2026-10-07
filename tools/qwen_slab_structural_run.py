@@ -30,14 +30,16 @@ SOURCES = ["rtl/physical/ot_qwen_slab_port_group.sv", "rtl/common/ot_meso_fifo.s
 MACRO = "physical/asap7_memory_macros/ot_rom_4096x266_m8"
 
 
-def pins(h):
-    """S4 pin ranges, given at H = 455.76 in the handoff and scaled with H on the 2.16 um lattice."""
+def pins(h, bw_m8=False):
+    """S4 pin ranges, given at H = 455.76 in the handoff and scaled with H on the 2.16 um lattice.
+    bw_m8 (die seam fix, owner 2026-10-06): bw_* / tw_* are placed on M8 over the whole left face by the
+    PRE_IO_PLACEMENT hook pins_bw_m8.tcl instead of the IO placer's left-face region."""
     k = h / 455.76
     r = lambda lo, hi: f"{share.snap(lo * k):g}-{share.snap(hi * k):g}"  # noqa: E731
     return ["--pin-region", f"^res_in=right:{r(2.16, 150)}",
             "--pin-region", f"^(o_|ov$|am_|fault$)=right:{r(306, 453)}",
             "--pin-region", f"^(p_|rst_n$|clk$)=right:{r(160, 296)}",
-            "--pin-region", "^(bw_|tw_)=left"]
+            *([] if bw_m8 else ["--pin-region", "^(bw_|tw_)=left"])]
 
 
 def command(a, out):
@@ -52,7 +54,7 @@ def command(a, out):
              "--macro-view", f"ot_rom_4096x266_m8={MACRO}", "--macro-place-halo", "2.16", "2.16",
              "--die-area", "0", "0", f"{share.W}", f"{h:g}",
              "--core-area", f"{share.EDGE}", f"{share.EDGE}", f"{share.W - share.EDGE:.3f}", f"{h - share.EDGE:.3f}",
-             *pins(h), "--routing-layers", "M2", "M7",
+             *pins(h, a.bw_m8), "--routing-layers", "M2", "M8" if a.bw_m8 else "M7",
              "--clock-port", "clk", "--clock-period-ns", "0.833333", "--clock-uncertainty-ns", "0.06",
              "--clock-uncertainty-hold-ns", "0.025", "--orfs-corner", "WC", "--hold-corners", "WC,BC",
              "--io-delay-fraction", "0.2", "--stages", "pnr", "--hold-margin-ns", f"{a.hold_margin_ns:g}",
@@ -64,6 +66,8 @@ def command(a, out):
              "--orfs-var", f"MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h{h:g}.tcl",
              "--orfs-var", "GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose -critical_nets_percentage 0",
              "--step-tcl", f"PRE_CTS={S}/pre_cts.tcl", "--step-tcl", f"POST_CTS={S}/post_plain.tcl"]
+    if a.bw_m8:
+        argv += ["--step-tcl", f"PRE_IO_PLACEMENT={S}/pins_bw_m8.tcl"]
     for st in ("GLOBAL_ROUTE", "DETAIL_ROUTE", "FILLCELL"):
         argv += ["--step-tcl", f"PRE_{st}={S}/pre_ref.tcl", "--step-tcl", f"POST_{st}={S}/post_plain.tcl"]
     if a.diamond:
@@ -111,6 +115,8 @@ def main():
     p.add_argument("--sdc", default="port_group_s2.sdc",
                    help="SDC file in physical/qwen_slab_structural (r10: port_group_s2_slew280.sdc carries the explicit "
                         "set_max_transition; --max-transition-ns only reaches the runner's own SDC, not SDC_FILE)")
+    p.add_argument("--bw-m8", action="store_true",
+                   help="die seam fix: bw_*/tw_* on M8 spread over the whole left face (pins_bw_m8.tcl), routing M2-M8")
     p.add_argument("--root", type=Path, required=True)
     p.add_argument("--name", required=True)
     a = p.parse_args()
