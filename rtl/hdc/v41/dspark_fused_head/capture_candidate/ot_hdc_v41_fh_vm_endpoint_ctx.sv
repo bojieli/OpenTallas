@@ -29,6 +29,8 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
  generate if(ENABLE && CHECK_PIPE && FPIPE>=2) begin : g_distributed_check
   // FPIPE=2 (SAFE): every endpoint input lands on a pin register first (+1 on request accept / reply capture /
   // publication and their payloads, uniformly); the checked permission then sees only registered inputs.
+  // guard_busy also covers an accepted request still in the pin register, so a parent gating its next request on
+  // guard_busy never presents a second request while the first is in flight.
   reg ra_q,rw_q,rc_q,pv_q;
   reg [31:0] ord_q; reg [46:0] own_q; reg [7:0] id_q; reg [3:0] we_q; reg [95:0] addr_q; reg [63:0] mask_q;
   reg [2047:0] data_q; reg [REP_BITS-1:0] rep_q;
@@ -37,14 +39,16 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
    else begin ra_q<=request_accept;rw_q<=request_warm;rc_q<=checked_reply_capture;pv_q<=published_reply_v;we_q<=head_we; end
    ord_q<=native_ordinal;own_q<=request_owner;id_q<=request_id;addr_q<=head_addr;mask_q<=head_mask;data_q<=head_data;rep_q<=checked_reply;
   end
+  wire guard_core_busy;
   ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN),.FPIPE(FPIPE)) u_guard(.fast_clk(fast_clk),.cold_n_in(cold_n),
    .request_accept(ra_q),.request_warm(rw_q),.checked_reply_capture(rc_q),.published_reply_v(pv_q),
    .native_ordinal(ord_q),.request_owner(own_q),.request_id(id_q),.head_we(we_q),.head_addr(addr_q),.head_mask(mask_q),
    .head_data(data_q),.checked_reply(rep_q),.bounds_fault(bounds_fault),.endpoint_fault(endpoint_fault),
    .captured_request(captured_request),.captured_request_check(captured_request_check),
    .captured_reply(captured_reply),.captured_reply_check(captured_reply_check),
-   .request_checked_v(request_checked_v),.reply_checked_v(reply_checked_v),.guard_busy(guard_busy),
+   .request_checked_v(request_checked_v),.reply_checked_v(reply_checked_v),.guard_busy(guard_core_busy),
    .head_ack_v(head_ack_v),.head_ack_id(head_ack_id),.head_ack_word(head_ack_word),.head_ack_mask(head_ack_mask));
+  assign guard_busy=guard_core_busy||ra_q;
  end else if(ENABLE && CHECK_PIPE) begin : g_distributed_check
   ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN),.FPIPE(FPIPE)) u_guard(.cold_n_in(cold_n),.*);
  end else if(ENABLE) begin : g_native_endpoints

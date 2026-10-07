@@ -1,0 +1,13 @@
+1
+endpoint_fpipe baseline ok PASS CHECK_PIPE identity/quarantine/reset/maskedX cases=9
+endpoint_fpipe age5 ok [96000] %Fatal: tb_fh_margin_checked_permission.sv:31: Assertion failed in tb_fh_checked_permission.take: grant before a
+endpoint_fpipe no_wide_veto ok [1096000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirr
+endpoint_fpipe drop_bank0 ok [1096000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirr
+endpoint_fpipe2 baseline UNEXPECTED [286000] %Fatal: tb_fh_margin_checked_permission.sv:53: Assertion failed in tb_fh_checked_permission: slot not released
+endpoint_fpipe2 pin_data_skip ok [116000] %Fatal: tb_fh_margin_checked_permission.sv:49: Assertion failed in tb_fh_checked_permission: masked X normaliza
+endpoint_fpipe2 no_wide_veto ok [286000] %Fatal: tb_fh_margin_checked_permission.sv:53: Assertion failed in tb_fh_checked_permission: slot not released
+endpoint_fpipe2 drop_bank0 ok [286000] %Fatal: tb_fh_margin_checked_permission.sv:53: Assertion failed in tb_fh_checked_permission: slot not released
+head_q_safe baseline UNEXPECTED [9000000] %Fatal: tb_fh_head_q.sv:77: Assertion failed in tb_fh_head_q: coverage writes=90 fused=410 iw=0 acks=0 leaf=25
+head_q_safe pin_wdata_skip ok [562000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 561
+head_q_safe fold_skip ok [12000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 11
+head_q_safe wok_mask ok [710000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 709
