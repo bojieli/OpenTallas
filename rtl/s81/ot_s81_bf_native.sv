@@ -42,6 +42,16 @@ module ot_s81_bf_native #(
     // uniformly, so cfg/go/stream alignment is unchanged) and busy/fault launched from a flop (+1); pv..ppos are
     // already element output flops. Block boundary is then register-to-register for the die IO budget.
     parameter integer PINREG = 0,
+    // HALF (BF SAFE variant B, 2026-10-07, default 0; requires PINREG): the UNCHANGED element runs at half rate on
+    // hclk = clk gated every other cycle (ot_hdc_cg latch + AND, enable = ph toggling on clk), so every element flop and
+    // every pin-capture flop launches and captures only on gated edges: element-internal paths get two clk periods
+    // (multicycle setup 2 / hold 1, physical/s81_native_bf/margin/signoff_half.sdc).  Protocol: hph (a clk flop, pin) is
+    // 1 in the clk cycle that ends on a gated edge; the inputs are sampled only at gated edges, so the driver holds
+    // every input (cfg, go, x beats) for the slow cycle; pv..ppos are re-launched from clk flops at the pins for
+    // exactly one clk cycle per slow cycle (the cycle after the gated edge), busy/fault every clk cycle.  Crossings
+    // (pin regs -> element, element -> output regs) are register to register.  Throughput: one element cycle per two
+    // clk cycles (BF column time x2); exact at transaction level (tools/s81/run_bf_half_exact.py).
+    parameter integer HALF = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -75,8 +85,45 @@ module ot_s81_bf_native #(
     output wire [NB-1:0]    perr,
     output wire [3*NB-1:0]  ppos,
     output wire         busy,
-    output wire         fault
+    output wire         fault,
+    output wire         hph           // HALF: 1 in the clk cycle that ends on a gated (element) edge; 1 when HALF = 0
 );
+    // HALF: element / pin-capture clock
+    wire eclk, pclk;
+    wire [NB-1:0] pv_e; wire [32*NB-1:0] pval_e; wire [16*NB-1:0] prow_e; wire [5*NB-1:0] pseg_e, pnseg_e;
+    wire [NB-1:0] perr_e; wire [3*NB-1:0] ppos_e;
+    if (HALF != 0) begin : g_half
+        reg ph;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) ph <= 1'b0;
+            else ph <= ~ph;
+        // !rst_n in the enable: the gated flops are clocked during reset (ot_hdc_cg contract)
+        ot_hdc_cg u_hcg (.clk(clk), .en(ph | !rst_n), .gclk(eclk));
+        assign pclk = eclk;
+        assign hph = ph;
+        // outputs: one clk cycle per slow cycle (the cycle after the gated edge, ph = 0 before the capturing edge)
+        reg [NB-1:0] o_pv; reg [32*NB-1:0] o_pval; reg [16*NB-1:0] o_prow; reg [5*NB-1:0] o_pseg, o_pnseg;
+        reg [NB-1:0] o_perr; reg [3*NB-1:0] o_ppos;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) o_pv <= {NB{1'b0}};
+`ifdef BF_HALF_MUTANT_PV
+            else o_pv <= pv_e;                      // negative control: pv not qualified to the slow cycle
+`else
+            else o_pv <= pv_e & {NB{~ph}};
+`endif
+        always @(posedge clk) if (!ph) begin
+            o_pval <= pval_e; o_prow <= prow_e; o_pseg <= pseg_e; o_pnseg <= pnseg_e; o_perr <= perr_e; o_ppos <= ppos_e;
+        end
+        assign pv = o_pv; assign pval = o_pval; assign prow = o_prow; assign pseg = o_pseg; assign pnseg = o_pnseg;
+        assign perr = o_perr; assign ppos = o_ppos;
+`ifndef SYNTHESIS
+        initial if (PINREG == 0) $fatal(1, "HALF requires PINREG");
+`endif
+    end else begin : g_full
+        assign eclk = clk; assign pclk = clk; assign hph = 1'b1;
+        assign pv = pv_e; assign pval = pval_e; assign prow = prow_e; assign pseg = pseg_e; assign pnseg = pnseg_e;
+        assign perr = perr_e; assign ppos = ppos_e;
+    end
     // pin-captured inputs (PINREG) or pass-through
     wire cfg_v_i;
     wire [4:0] cfg_a_i;
@@ -118,9 +165,12 @@ module ot_s81_bf_native #(
         reg [31:0] r_xb_u;
         reg [1023:0] r_xb_d;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; r_busy <= 1'b0; r_fault <= 1'b0; end
-            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; r_busy <= busy_e; r_fault <= fault_e; end
-        always @(posedge clk) begin
+            if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end
+            else begin r_busy <= busy_e; r_fault <= fault_e; end
+        always @(posedge pclk or negedge rst_n)
+            if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
+            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end
+        always @(posedge pclk) begin
             r_cfg_a <= cfg_a;
             r_cfg_d <= cfg_d;
             r_go_bf <= go_bf;
@@ -205,7 +255,7 @@ module ot_s81_bf_native #(
         .GRADUAL_RNE(GRADUAL_RNE),
         .INSTANCE(INSTANCE)
     ) u_elem (
-        .clk(clk),
+        .clk(eclk),
         .rst_n(rst_n),
         .cfg_v(cfg_v_i),
         .cfg_a(cfg_a_i),
@@ -227,13 +277,13 @@ module ot_s81_bf_native #(
         .xb_sv(xb_sv_i),
         .xb_u(xb_u_i),
         .xb_d(xb_d_i),
-        .pv(pv),
-        .pval(pval),
-        .prow(prow),
-        .pseg(pseg),
-        .pnseg(pnseg),
-        .perr(perr),
-        .ppos(ppos),
+        .pv(pv_e),
+        .pval(pval_e),
+        .prow(prow_e),
+        .pseg(pseg_e),
+        .pnseg(pnseg_e),
+        .perr(perr_e),
+        .ppos(ppos_e),
         .busy(busy_e),
         .fault(fault_e)
     );
