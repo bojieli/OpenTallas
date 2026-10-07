@@ -2254,16 +2254,7 @@ def tick(fleet):
             except Exception:  # noqa: BLE001
                 pass
         req.unlink(missing_ok=True)
-    try:
-        reevaluate_benches(all_jobs())
-        requeue_toolchain(all_jobs())
-        requeue_budget(all_jobs())
-        requeue_hold_only(all_jobs())
-        # migrate_overloaded() / checkpoint moves retired by OWNER 21:35 (memory-based admission)
-        requeue_ssh_verdict(all_jobs())
-        auto_requeue(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("auto_requeue error:\n" + traceback.format_exc())
+    schedule_recovery()
     # persistent pool, no per-tick barrier (2026-10-07): a job still being stepped (a source sync, a 30-min verdict check)
     # is skipped this tick instead of holding every other job until the next tick
     global _POOL
@@ -2278,6 +2269,29 @@ def tick(fleet):
             _INFLIGHT.add(x["name"])
         _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status()
+
+
+_RECOVERY_POOL = None
+_RECOVERY_FUTURE = None
+
+
+def recover_jobs():
+    # Historical log reads can wait on an unreachable host for minutes. They
+    # must neither block live dispatch nor suppress unrelated recovery classes.
+    for recover in (reevaluate_benches, requeue_toolchain, requeue_budget,
+                    requeue_hold_only, requeue_ssh_verdict, auto_requeue):
+        try:
+            recover(all_jobs())
+        except Exception:
+            log(f"{getattr(recover, '__name__', 'recovery')} error:\n" + traceback.format_exc())
+
+
+def schedule_recovery():
+    global _RECOVERY_POOL, _RECOVERY_FUTURE
+    if _RECOVERY_POOL is None:
+        _RECOVERY_POOL = ThreadPoolExecutor(max_workers=1)
+    if _RECOVERY_FUTURE is None or _RECOVERY_FUTURE.done():
+        _RECOVERY_FUTURE = _RECOVERY_POOL.submit(recover_jobs)
 
 
 _POOL = None
