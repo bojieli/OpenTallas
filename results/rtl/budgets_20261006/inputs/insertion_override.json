@@ -11,7 +11,9 @@
   "reason": "edge ck kept (see b0)"
  },
  "hfd_index_q_b3": {
-  "reason": "edge ck kept (see b0)"
+  "reason": "edge ck kept (see b0); correct FF output boundary model using routed clock leaf; hold uncertainty 50 ps unchanged",
+  "ff_min": 587.08,
+  "source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary"
  },
  "hfd_index_q_b5": {
   "reason": "edge ck kept (see b0)"
