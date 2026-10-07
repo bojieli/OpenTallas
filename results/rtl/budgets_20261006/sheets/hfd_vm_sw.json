@@ -24,14 +24,14 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 2882.4,
-   "min": 2882.4,
-   "max": 2882.4
+   "mean": 2593.6,
+   "min": 2593.6,
+   "max": 2593.6
   },
   "entry_target_ff_ps": {
-   "mean": 1528.5,
-   "min": 1528.5,
-   "max": 1528.5
+   "mean": 1375.6,
+   "min": 1375.6,
+   "max": 1375.6
   },
   "die_pad_ss_ps": {
    "mean": 0.0,
@@ -358,7 +358,7 @@
     "serial_0p9"
    ],
    "timing": "sync",
-   "length_um": 3198.1,
+   "length_um": 3196.2,
    "length_basis": "pins",
    "skew_class": "xdomain",
    "skew_ps": 150.0,
@@ -371,8 +371,8 @@
    "output_fraction_of_T": 0.301,
    "internal_input_ps": 642.6,
    "internal_output_ps": 701.6,
-   "as_planned_internal_input_ps": 393.1,
-   "as_planned_internal_output_ps": 452.1,
+   "as_planned_internal_input_ps": 393.3,
+   "as_planned_internal_output_ps": 452.3,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 603.6,
@@ -407,7 +407,7 @@
    "skew_class": "intra",
    "skew_ps": 57,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_sw<->w325_iv_SW",
+   "worst_instance": "hbm:hb_vm_sw<->w353_iv_SW",
    "also_cdc": false,
    "input_delay_ss_ps": 300.5,
    "output_delay_ss_ps": 241.5,
@@ -451,7 +451,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_sw<->w59_qa_SW",
+   "worst_instance": "hbm:hb_vm_sw<->w65_qa_SW",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
@@ -766,7 +766,7 @@
    "skew_class": "intra",
    "skew_ps": 57,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_sw<->w338_vr",
+   "worst_instance": "hbm:hb_vm_sw<->w366_vr",
    "also_cdc": false,
    "input_delay_ss_ps": 300.5,
    "output_delay_ss_ps": 241.5,
@@ -808,7 +808,7 @@
     "serial_0p9"
    ],
    "timing": "sync",
-   "length_um": 3558.9,
+   "length_um": 3393.2,
    "length_basis": "pins",
    "skew_class": "xdomain",
    "skew_ps": 150.0,
@@ -821,8 +821,8 @@
    "output_fraction_of_T": 0.301,
    "internal_input_ps": 642.6,
    "internal_output_ps": 701.6,
-   "as_planned_internal_input_ps": 388.9,
-   "as_planned_internal_output_ps": 447.9,
+   "as_planned_internal_input_ps": 406.0,
+   "as_planned_internal_output_ps": 465.0,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 603.6,
@@ -887,7 +887,7 @@
   "cdc": 0,
   "infeasible": 0,
   "fanout_flags": 0,
-  "max_length_um": 3558.9,
+  "max_length_um": 3393.2,
   "max_stages_needed": 6
  },
  "constants": {

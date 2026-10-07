@@ -5,7 +5,7 @@
   "waypoint"
  ],
  "dies": {
-  "hbm": 4
+  "hbm": 8
  },
  "size_um": [
   60.024,
@@ -71,7 +71,7 @@
     "hfd_stn_r18",
     "hfd_stn_r19"
    ],
-   "connections": 4,
+   "connections": 8,
    "dies": [
     "hbm"
    ],
@@ -84,7 +84,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w183_kv_NW<->w182_kv_NW",
+   "worst_instance": "hbm:w198_kv_NW<->w197_kv_NW",
    "also_cdc": false,
    "input_delay_ss_ps": 604.3,
    "output_delay_ss_ps": 545.3,
@@ -116,7 +116,7 @@
     "hfd_attn_tile",
     "hfd_stn_r19"
    ],
-   "connections": 4,
+   "connections": 8,
    "dies": [
     "hbm"
    ],
@@ -124,28 +124,28 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1669.8,
+   "length_um": 1670.2,
    "length_basis": "pins",
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w52_kv_SW<->w53_kv_SW",
+   "worst_instance": "hbm:w57_kv_SW<->w58_kv_SW",
    "also_cdc": false,
-   "input_delay_ss_ps": 603.8,
-   "output_delay_ss_ps": 544.8,
+   "input_delay_ss_ps": 603.9,
+   "output_delay_ss_ps": 544.9,
    "input_fraction_of_T": 0.725,
    "output_fraction_of_T": 0.654,
-   "internal_input_ps": 154.5,
-   "internal_output_ps": 213.5,
-   "as_planned_internal_input_ps": 154.5,
-   "as_planned_internal_output_ps": 213.5,
+   "internal_input_ps": 154.4,
+   "internal_output_ps": 213.4,
+   "as_planned_internal_input_ps": 154.4,
+   "as_planned_internal_output_ps": 213.4,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 491.0,
    "stages_needed": 4,
    "stages_planned": 4,
    "extra_stages_needed": 0,
-   "segment_after_stages_um": 417.5,
+   "segment_after_stages_um": 417.6,
    "input_min_delay_ff_ps": 79.0,
    "output_min_delay_ff_ps": -31.8,
    "die_fanout": 1,

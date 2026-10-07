@@ -28,14 +28,14 @@
   ],
   "n_regions": 5,
   "entry_target_ss_ps": {
-   "mean": 3642.8,
-   "min": 3304.6,
-   "max": 3729.7
+   "mean": 3355.9,
+   "min": 3015.8,
+   "max": 3442.8
   },
   "entry_target_ff_ps": {
-   "mean": 2024.4,
-   "min": 1807.2,
-   "max": 2079.6
+   "mean": 1872.2,
+   "min": 1654.3,
+   "max": 1927.5
   },
   "die_pad_ss_ps": {
    "mean": 760.3,
@@ -102,7 +102,7 @@
    "skew_class": "intra",
    "skew_ps": 57,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w338_vr<->hb_vm_sw",
+   "worst_instance": "hbm:w366_vr<->hb_vm_sw",
    "also_cdc": false,
    "input_delay_ss_ps": 527.7,
    "output_delay_ss_ps": 468.7,
@@ -147,7 +147,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w334_iv_NE<->w335_iv_NE",
+   "worst_instance": "hbm:w362_iv_NE<->w363_iv_NE",
    "also_cdc": false,
    "input_delay_ss_ps": 599.5,
    "output_delay_ss_ps": 540.5,

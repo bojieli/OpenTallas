@@ -24,14 +24,14 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 3260.7,
-   "min": 3260.7,
-   "max": 3260.7
+   "mean": 2973.8,
+   "min": 2973.8,
+   "max": 2973.8
   },
   "entry_target_ff_ps": {
-   "mean": 1778.3,
-   "min": 1778.3,
-   "max": 1778.3
+   "mean": 1626.2,
+   "min": 1626.2,
+   "max": 1626.2
   },
   "die_pad_ss_ps": {
    "mean": 379.0,
@@ -97,7 +97,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w340_vr<->w339_vr",
+   "worst_instance": "hbm:w368_vr<->w367_vr",
    "also_cdc": false,
    "input_delay_ss_ps": 565.1,
    "output_delay_ss_ps": 506.1,
@@ -141,7 +141,7 @@
    "skew_class": "intra",
    "skew_ps": 44,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w340_vr<->hb_router",
+   "worst_instance": "hbm:w368_vr<->hb_router",
    "also_cdc": false,
    "input_delay_ss_ps": 307.0,
    "output_delay_ss_ps": 248.0,

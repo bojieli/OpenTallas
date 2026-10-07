@@ -1,6 +1,6 @@
 # Budget sheets: summary (tools/budgets/budget_sheet.py)
 
-267 hardened masters. Sign-off 833.333 ps, SS 60 / FF 25 ps, accept +15/+15; skew terms intra (clock-plan region bound + 25, <= 90) / inter-region, meso, cross-domain 150 / forwarded-clock hop 0; wire 1.135 ps/um SS; reach 412 um intra, 359 um inter, 491 um forwarded.
+269 hardened masters. Sign-off 833.333 ps, SS 60 / FF 25 ps, accept +15/+15; skew terms intra (clock-plan region bound + 25, <= 90) / inter-region, meso, cross-domain 150 / forwarded-clock hop 0; wire 1.135 ps/um SS; reach 412 um intra, 359 um inter, 491 um forwarded.
 
 | master | kind | dies (instances) | size um | block insertion SS (grade) / target | die entry target SS | ports | max L um | max stages | infeasible | fanout flags |
 |---|---|---|---|---|---|---:|---:|---:|---:|---:|
@@ -179,92 +179,94 @@
 | dsfd_svc_pc | tile | s81 (in slab dsfd_svc):32 | 121 x 43 | 492.6 (target) / 492.6 | 4269.2..4269.2 | 14 | 0 | 1 | 0 | 0 |
 | dsfd_svc_stn | tile | s81 (in slab dsfd_svc):30 | 43 x 216 | 513.6 (target) / 513.6 | 4248.2..4248.2 | 14 | 430 | 1 | 0 | 0 |
 | dsfd_vm_bg | tile | s81 (in slab dsfd_sp_vm):4 | 1015 x 500 | 900 (target) / 900 | 979.2..979.2 | 18 | 0 | 1 | 0 | 0 |
-| hfd_attn_tile | attn_tile | hbm:64 | 1349 x 1350 | 900 (target) / 900 | 2881.6..3307.5 | 8 | 4525 | 11 | 0 | 0 |
-| hfd_barrier | spine | hbm:1 | 1400 x 37 | 626 (target) / 626 | 3155.7..3155.7 | 2 | 108 | 1 | 0 | 0 |
-| hfd_cdist_r14 | waypoint | hbm:4 | 111 x 216 | 563.9 (target) / 563.9 | 3217.2..3221.0 | 6 | 3724 | 9 | 0 | 0 |
-| hfd_cdist_r15 | waypoint | hbm:4 | 68 x 203 | 531.5 (target) / 531.5 | 3250.1..3253.4 | 5 | 3964 | 10 | 0 | 0 |
-| hfd_cmdproc | spine | hbm:1 | 1400 x 1404 | 900 (target) / 900 | 2881.7..2881.7 | 14 | 3380 | 6 | 0 | 0 |
-| hfd_coll | spine | hbm:1 | 1400 x 1404 | 900 (target) / 900 | - | 19 | 1962 | 4 | 0 | 0 |
-| hfd_gath_r10 | waypoint | hbm:2 | 167 x 315 | 628.3 (target) / 628.3 | 3155.2..3155.2 | 5 | 2434 | 6 | 0 | 0 |
-| hfd_gath_r24 | waypoint | hbm:2 | 110 x 110 | 525.1 (target) / 525.1 | 3256.0..3256.0 | 4 | 2464 | 6 | 0 | 0 |
-| hfd_gath_r25 | waypoint | hbm:2 | 167 x 315 | 628.3 (target) / 628.3 | 3153.3..3155.2 | 5 | 2654 | 6 | 0 | 0 |
-| hfd_gath_r8 | waypoint | hbm:8 | 81 x 82 | 500.6 (target) / 500.6 | 3280.5..3284.3 | 3 | 2406 | 6 | 0 | 0 |
-| hfd_gath_r9 | waypoint | hbm:2 | 110 x 110 | 525.1 (target) / 525.1 | 3257.9..3259.8 | 4 | 2436 | 6 | 0 | 0 |
-| hfd_hc | hub | hbm:4 | 551 x 5530 | 900 (target) / 900 | 852.9..853.6 | 2 | 446 | 1 | 0 | 0 |
+| hfd_attn_tile | attn_tile | hbm:64 | 1779 x 1350 | 900 (target) / 900 | 2594.1..3020.6 | 8 | 4525 | 11 | 0 | 0 |
+| hfd_barrier | spine | hbm:1 | 1400 x 37 | 626 (target) / 626 | 2868.8..2868.8 | 2 | 108 | 1 | 0 | 0 |
+| hfd_cdist_r14 | waypoint | hbm:4 | 111 x 216 | 563.9 (target) / 563.9 | 2930.0..2934.1 | 6 | 3724 | 9 | 0 | 0 |
+| hfd_cdist_r15 | waypoint | hbm:4 | 68 x 203 | 531.5 (target) / 531.5 | 2963.0..2966.5 | 5 | 3964 | 10 | 0 | 0 |
+| hfd_cmdproc | spine | hbm:1 | 1400 x 1404 | 900 (target) / 900 | 2594.8..2594.8 | 14 | 3483 | 6 | 0 | 0 |
+| hfd_coll | spine | hbm:1 | 1400 x 1404 | 900 (target) / 900 | - | 19 | 2080 | 4 | 0 | 0 |
+| hfd_gath_r10 | waypoint | hbm:2 | 167 x 315 | 628.3 (target) / 628.3 | 2867.8..2867.8 | 5 | 2434 | 6 | 0 | 0 |
+| hfd_gath_r24 | waypoint | hbm:2 | 110 x 110 | 525.1 (target) / 525.1 | 2968.8..2968.8 | 4 | 2464 | 6 | 0 | 0 |
+| hfd_gath_r25 | waypoint | hbm:2 | 167 x 315 | 628.3 (target) / 628.3 | 2866.2..2866.2 | 5 | 2654 | 6 | 0 | 0 |
+| hfd_gath_r8 | waypoint | hbm:8 | 81 x 82 | 500.6 (target) / 500.6 | 2993.3..2997.4 | 3 | 2406 | 6 | 0 | 0 |
+| hfd_gath_r9 | waypoint | hbm:2 | 110 x 110 | 525.1 (target) / 525.1 | 2972.9..2972.9 | 4 | 2436 | 6 | 0 | 0 |
+| hfd_hc | hub | hbm:4 | 551 x 5530 | 900 (target) / 900 | 343.3..344.0 | 2 | 446 | 1 | 0 | 0 |
 | hfd_host_slab | host_slab | hbm:1 | 594 x 16824 | 900 (target) / 900 | - | 0 | 0 | 0 | 0 | 0 |
-| hfd_index_q_b0 | hub | hbm:4 | 930 x 970 | 1186 (measured) / 1254 | 3017.7..3021.5 | 4 | 4530 | 11 | 0 | 0 |
-| hfd_index_q_b1 | hub | hbm:4 | 930 x 970 | 1132 (measured) / 1154 | 3071.7..3075.5 | 4 | 2 | 1 | 0 | 0 |
-| hfd_index_q_b2 | hub | hbm:4 | 930 x 960 | 1309 (measured) / 1402 | 2894.7..2898.5 | 7 | 2537 | 5 | 0 | 0 |
-| hfd_index_q_b3 | hub | hbm:4 | 930 x 970 | 1185 (measured) / 1298 | 3018.7..3022.5 | 6 | 1737 | 5 | 0 | 0 |
-| hfd_index_q_b4 | hub | hbm:4 | 930 x 830 | 900 (target) / 900 | 3303.7..3307.5 | 4 | 2 | 1 | 0 | 0 |
-| hfd_index_q_b5 | hub | hbm:4 | 930 x 829 | 1324 (measured) / 1354 | 2879.7..2883.5 | 4 | 4525 | 11 | 0 | 0 |
-| hfd_loader | spine | hbm:1 | 1400 x 238 | 900 (target) / 900 | 2881.7..2881.7 | 2 | 1608 | 4 | 0 | 0 |
-| hfd_mcast_r5 | waypoint | hbm:4 | 242 x 410 | 702.5 (target) / 702.5 | 3078.6..3081.0 | 4 | 2108 | 5 | 0 | 0 |
-| hfd_mcast_r6 | waypoint | hbm:8 | 467 x 121 | 635.6 (target) / 635.6 | 3145.5..3149.3 | 4 | 2108 | 5 | 0 | 0 |
-| hfd_mcast_r7 | waypoint | hbm:4 | 467 x 121 | 635.6 (target) / 635.6 | 3146.0..3149.3 | 3 | 1995 | 5 | 0 | 0 |
-| hfd_meso_r1 | waypoint | hbm:16 | 398 x 71 | 575.7 (target) / 575.7 | 3205.4..3209.2 | 2 | 1493 | 4 | 0 | 0 |
-| hfd_meso_r28 | waypoint | hbm:9 | 63 x 190 | 525 (target) / 525 | 1870.4..1873.5 | 2 | 1604 | 4 | 0 | 0 |
-| hfd_meso_r32 | waypoint | hbm:1 | 39 x 285 | 521.5 (target) / 521.5 | 1875.8..1875.8 | 2 | 1550 | 4 | 0 | 0 |
-| hfd_meso_r35 | waypoint | hbm:4 | 39 x 285 | 521.5 (target) / 521.5 | 3260.9..3260.9 | 2 | 1542 | 4 | 0 | 0 |
-| hfd_meso_r37 | waypoint | hbm:1 | 270 x 41 | 521 (target) / 521 | 3260.7..3260.7 | 2 | 1534 | 4 | 0 | 0 |
-| hfd_quant | spine | hbm:1 | 1400 x 359 | 900 (target) / 900 | 853.0..853.0 | 5 | 5583 | 9 | 0 | 0 |
-| hfd_router | spine | hbm:1 | 1400 x 326 | 900 (target) / 900 | 2881.7..2881.7 | 10 | 5342 | 9 | 0 | 0 |
-| hfd_serdes_slab | serdes_slab | hbm:2 | 5216 x 1726 | 900 (target) / 900 | - | 0 | 0 | 0 | 0 | 0 |
-| hfd_sfu | hub | hbm:4 | 797 x 5530 | 900 (target) / 900 | 852.9..853.6 | 4 | 546 | 1 | 0 | 0 |
-| hfd_sm | sm | hbm:32 | 2203 x 2074 | 900 (target) / 900 | 2881.1..2884.9 | 5 | 3615 | 9 | 0 | 0 |
+| hfd_index_q_b0 | hub | hbm:4 | 930 x 970 | 1186 (measured) / 1254 | 2730.8..2734.6 | 4 | 4530 | 11 | 0 | 0 |
+| hfd_index_q_b1 | hub | hbm:4 | 930 x 970 | 1132 (measured) / 1154 | 2784.8..2788.6 | 4 | 2 | 1 | 0 | 0 |
+| hfd_index_q_b2 | hub | hbm:4 | 930 x 960 | 1309 (measured) / 1402 | 2607.8..2611.6 | 7 | 2537 | 5 | 0 | 0 |
+| hfd_index_q_b3 | hub | hbm:4 | 930 x 970 | 1185 (measured) / 1298 | 2731.8..2735.6 | 6 | 1737 | 5 | 0 | 0 |
+| hfd_index_q_b4 | hub | hbm:4 | 930 x 830 | 900 (target) / 900 | 3016.8..3020.6 | 4 | 2 | 1 | 0 | 0 |
+| hfd_index_q_b5 | hub | hbm:4 | 930 x 829 | 1324 (measured) / 1354 | 2592.8..2596.6 | 4 | 4525 | 11 | 0 | 0 |
+| hfd_loader | spine | hbm:1 | 1400 x 238 | 900 (target) / 900 | 2594.8..2594.8 | 2 | 1608 | 4 | 0 | 0 |
+| hfd_mcast_r5 | waypoint | hbm:4 | 242 x 410 | 702.5 (target) / 702.5 | 2791.4..2793.6 | 5 | 2583 | 6 | 0 | 0 |
+| hfd_mcast_r6a | waypoint | hbm:8 | 467 x 121 | 635.6 (target) / 635.6 | 2858.3..2862.4 | 4 | 2108 | 5 | 0 | 0 |
+| hfd_mcast_r6b | waypoint | hbm:8 | 467 x 121 | 635.6 (target) / 635.6 | 2858.3..2860.5 | 4 | 2583 | 6 | 0 | 0 |
+| hfd_mcast_r7 | waypoint | hbm:4 | 467 x 121 | 635.6 (target) / 635.6 | 2858.9..2862.4 | 4 | 2471 | 6 | 0 | 0 |
+| hfd_meso_r1 | waypoint | hbm:16 | 398 x 71 | 575.7 (target) / 575.7 | 2918.2..2922.3 | 2 | 1493 | 4 | 0 | 0 |
+| hfd_meso_r28 | waypoint | hbm:9 | 63 x 190 | 525 (target) / 525 | 625.7..626.9 | 2 | 1604 | 4 | 0 | 0 |
+| hfd_meso_r32 | waypoint | hbm:1 | 39 x 285 | 521.5 (target) / 521.5 | 629.2..629.2 | 2 | 1549 | 4 | 0 | 0 |
+| hfd_meso_r35 | waypoint | hbm:4 | 39 x 285 | 521.5 (target) / 521.5 | 2972.1..2972.1 | 2 | 1542 | 4 | 0 | 0 |
+| hfd_meso_r37 | waypoint | hbm:1 | 270 x 41 | 521 (target) / 521 | 2973.8..2973.8 | 2 | 1534 | 4 | 0 | 0 |
+| hfd_quant | spine | hbm:1 | 1400 x 359 | 900 (target) / 900 | 343.4..343.4 | 5 | 5580 | 9 | 0 | 0 |
+| hfd_router | spine | hbm:1 | 1400 x 326 | 900 (target) / 900 | 2594.8..2594.8 | 10 | 5339 | 9 | 0 | 0 |
+| hfd_serdes_slab | serdes_slab | hbm:2 | 8651 x 1041 | 900 (target) / 900 | - | 0 | 0 | 0 | 0 | 0 |
+| hfd_sfu | hub | hbm:4 | 797 x 5530 | 900 (target) / 900 | 343.3..344.0 | 4 | 546 | 1 | 0 | 0 |
+| hfd_sm | sm | hbm:32 | 2203 x 2074 | 900 (target) / 900 | 2593.9..2598.0 | 7 | 3615 | 9 | 0 | 0 |
 | hfd_stn_r0 | waypoint | hbm:16 | 70 x 60 | 486.4 (target) / 486.4 | - | 2 | 2468 | 6 | 0 | 0 |
-| hfd_stn_r11 | waypoint | hbm:13 | 49 x 127 | 498.2 (target) / 498.2 | - | 2 | 1685 | 4 | 0 | 0 |
+| hfd_stn_r11 | waypoint | hbm:17 | 49 x 127 | 498.2 (target) / 498.2 | - | 2 | 1685 | 4 | 0 | 0 |
 | hfd_stn_r12 | waypoint | hbm:12 | 56 x 65 | 482 (target) / 482 | - | 2 | 1666 | 4 | 0 | 0 |
-| hfd_stn_r13 | waypoint | hbm:16 | 64 x 56 | 482 (target) / 482 | - | 2 | 1666 | 4 | 0 | 0 |
+| hfd_stn_r13 | waypoint | hbm:20 | 64 x 56 | 482 (target) / 482 | - | 2 | 1666 | 4 | 0 | 0 |
 | hfd_stn_r16 | waypoint | hbm:25 | 19 x 119 | 471.1 (target) / 471.1 | - | 2 | 1608 | 4 | 0 | 0 |
-| hfd_stn_r17 | waypoint | hbm:14 | 116 x 19 | 471 (target) / 471 | - | 2 | 1610 | 4 | 0 | 0 |
+| hfd_stn_r17 | waypoint | hbm:18 | 116 x 19 | 471 (target) / 471 | - | 2 | 1610 | 4 | 0 | 0 |
 | hfd_stn_r18 | waypoint | hbm:8 | 67 x 60 | 485 (target) / 485 | - | 2 | 1672 | 4 | 0 | 0 |
-| hfd_stn_r19 | waypoint | hbm:4 | 60 x 67 | 484.8 (target) / 484.8 | - | 2 | 1672 | 4 | 0 | 0 |
-| hfd_stn_r2 | waypoint | hbm:16 | 15 x 143 | 469.5 (target) / 469.5 | 3311.6..3315.4 | 2 | 1894 | 5 | 0 | 0 |
-| hfd_stn_r20 | waypoint | hbm:8 | 66 x 60 | 484.7 (target) / 484.7 | - | 2 | 1738 | 4 | 0 | 0 |
-| hfd_stn_r21 | waypoint | hbm:8 | 60 x 67 | 484.6 (target) / 484.6 | - | 2 | 1671 | 4 | 0 | 0 |
+| hfd_stn_r19 | waypoint | hbm:8 | 60 x 67 | 484.8 (target) / 484.8 | - | 2 | 1672 | 4 | 0 | 0 |
+| hfd_stn_r2 | waypoint | hbm:16 | 15 x 143 | 469.5 (target) / 469.5 | 3024.4..3028.5 | 2 | 1894 | 5 | 0 | 0 |
+| hfd_stn_r20 | waypoint | hbm:8 | 66 x 60 | 484.7 (target) / 484.7 | - | 2 | 4400 | 9 | 0 | 0 |
+| hfd_stn_r21 | waypoint | hbm:10 | 60 x 67 | 484.6 (target) / 484.6 | - | 2 | 1671 | 4 | 0 | 0 |
 | hfd_stn_r22 | waypoint | hbm:16 | 43 x 73 | 478.5 (target) / 478.5 | - | 2 | 1664 | 4 | 0 | 0 |
 | hfd_stn_r23 | waypoint | hbm:12 | 73 x 43 | 478.4 (target) / 478.4 | - | 2 | 1657 | 4 | 0 | 0 |
-| hfd_stn_r26 | waypoint | hbm:3 | 126 x 50 | 498.5 (target) / 498.5 | - | 2 | 2478 | 6 | 0 | 0 |
-| hfd_stn_r27 | waypoint | hbm:36 | 63 x 63 | 484.5 (target) / 484.5 | - | 2 | 1677 | 4 | 0 | 0 |
+| hfd_stn_r26 | waypoint | hbm:3 | 126 x 50 | 498.5 (target) / 498.5 | - | 2 | 1676 | 4 | 0 | 0 |
+| hfd_stn_r27 | waypoint | hbm:41 | 63 x 63 | 484.5 (target) / 484.5 | - | 2 | 1677 | 4 | 0 | 0 |
 | hfd_stn_r29 | waypoint | hbm:2 | 60 x 65 | 484.1 (target) / 484.1 | - | 2 | 1677 | 4 | 0 | 0 |
 | hfd_stn_r3 | waypoint | hbm:16 | 15 x 143 | 469.5 (target) / 469.5 | - | 2 | 1579 | 4 | 0 | 0 |
 | hfd_stn_r30 | waypoint | hbm:3 | 39 x 78 | 477.8 (target) / 477.8 | - | 2 | 1657 | 4 | 0 | 0 |
-| hfd_stn_r31 | waypoint | hbm:7 | 73 x 41 | 477.3 (target) / 477.3 | - | 2 | 1657 | 4 | 0 | 0 |
-| hfd_stn_r33 | waypoint | hbm:5 | 39 x 78 | 477.8 (target) / 477.8 | 3304.6..3729.7 | 2 | 2068 | 5 | 0 | 0 |
+| hfd_stn_r31 | waypoint | hbm:8 | 73 x 41 | 477.3 (target) / 477.3 | - | 2 | 1657 | 4 | 0 | 0 |
+| hfd_stn_r33 | waypoint | hbm:5 | 39 x 78 | 477.8 (target) / 477.8 | 3015.8..3442.8 | 2 | 2068 | 5 | 0 | 0 |
 | hfd_stn_r34 | waypoint | hbm:8 | 73 x 41 | 477.3 (target) / 477.3 | - | 2 | 1665 | 4 | 0 | 0 |
 | hfd_stn_r36 | waypoint | hbm:1 | 39 x 78 | 477.8 (target) / 477.8 | - | 2 | 1653 | 4 | 0 | 0 |
-| hfd_stn_r38 | waypoint | hbm:4 | 73 x 41 | 477.3 (target) / 477.3 | 3726.4..3730.2 | 2 | 168 | 1 | 0 | 0 |
-| hfd_stn_r39 | waypoint | hbm:4 | 50 x 121 | 497.3 (target) / 497.3 | - | 2 | 1693 | 4 | 0 | 0 |
-| hfd_stn_r4 | waypoint | hbm:16 | 121 x 52 | 498.5 (target) / 498.5 | - | 2 | 1693 | 4 | 0 | 0 |
-| hfd_su | hub | hbm:4 | 1406 x 5530 | 900 (target) / 900 | 852.9..853.6 | 15 | 5583 | 14 | 0 | 0 |
-| hfd_su_full | spine | hbm:1 | 346 x 348 | 730 (target) / 730 | 1023.0..1023.0 | 0 | 0 | 0 | 0 | 0 |
-| hfd_su_red | spine | hbm:1 | 1400 x 218 | 900 (target) / 900 | 853.0..853.0 | 0 | 0 | 0 | 0 | 0 |
-| hfd_svc_SE_s0 | svc | hbm:2 | 1017 x 259 | 1057 (measured) / 874.1 OVER | 2328.6..2328.6 | 7 | 2468 | 4 | 0 | 0 |
-| hfd_svc_SE_s1 | svc | hbm:2 | 1301 x 259 | 879 (measured) / 900 | 2506.6..2506.6 | 7 | 1700 | 3 | 0 | 0 |
-| hfd_svc_SE_s2 | svc | hbm:2 | 1062 x 259 | 758 (measured) / 883.8 | 2627.6..2627.6 | 7 | 176 | 1 | 0 | 0 |
-| hfd_svc_SE_s3 | svc | hbm:2 | 1382 x 259 | 919 (measured) / 919 | 2466.6..2466.6 | 10 | 1939 | 3 | 0 | 0 |
-| hfd_svc_SE_s4 | svc | hbm:2 | 1009 x 259 | 808 (measured) / 872.3 | 2349.6..2349.6 | 7 | 174 | 1 | 0 | 0 |
-| hfd_svc_SE_s5 | svc | hbm:2 | 1095 x 259 | 829 (measured) / 890.8 | 2328.6..2328.6 | 7 | 1698 | 3 | 0 | 0 |
-| hfd_svc_SE_s6 | svc | hbm:2 | 764 x 259 | 562 (measured) / 814.9 | 2595.6..2595.6 | 5 | 9 | 1 | 0 | 0 |
-| hfd_svc_SE_s7 | svc | hbm:2 | 870 x 259 | 631 (measured) / 840.8 | 2526.6..2526.6 | 5 | 174 | 1 | 0 | 0 |
-| hfd_svc_SW_s0 | svc | hbm:2 | 1017 x 259 | 874.1 (target) / 874.1 | 2354.5..2354.5 | 7 | 2466 | 4 | 0 | 0 |
-| hfd_svc_SW_s1 | svc | hbm:2 | 1306 x 259 | 900 (target) / 900 | 2328.6..2328.6 | 9 | 1937 | 3 | 0 | 0 |
-| hfd_svc_SW_s2 | svc | hbm:2 | 1057 x 259 | 882.7 (target) / 882.7 | 2345.9..2345.9 | 7 | 344 | 1 | 0 | 0 |
-| hfd_svc_SW_s3 | svc | hbm:2 | 1073 x 259 | 886.1 (target) / 886.1 | 2342.5..2342.5 | 8 | 1700 | 3 | 0 | 0 |
-| hfd_svc_SW_s4 | svc | hbm:2 | 786 x 259 | 820.4 (target) / 820.4 | 2407.6..2407.6 | 5 | 9 | 1 | 0 | 0 |
-| hfd_svc_SW_s5 | svc | hbm:2 | 1063 x 259 | 884 (target) / 884 | 2344.0..2344.0 | 7 | 344 | 1 | 0 | 0 |
-| hfd_svc_SW_s6 | svc | hbm:2 | 1062 x 259 | 883.8 (target) / 883.8 | 2344.2..2344.2 | 7 | 1700 | 3 | 0 | 0 |
-| hfd_svc_SW_s7 | svc | hbm:2 | 1136 x 259 | 899.4 (target) / 899.4 | 2328.6..2328.6 | 5 | 346 | 1 | 0 | 0 |
-| hfd_vm_ne | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2882.4..2882.4 | 17 | 2814 | 5 | 0 | 0 |
-| hfd_vm_nw | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2882.4..2882.4 | 18 | 2816 | 5 | 0 | 0 |
-| hfd_vm_se | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2882.4..2882.4 | 17 | 3557 | 6 | 0 | 0 |
-| hfd_vm_sw | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2882.4..2882.4 | 18 | 3559 | 6 | 0 | 0 |
+| hfd_stn_r38 | waypoint | hbm:4 | 73 x 41 | 477.3 (target) / 477.3 | 3439.5..3443.3 | 2 | 168 | 1 | 0 | 0 |
+| hfd_stn_r39 | waypoint | hbm:8 | 50 x 121 | 497.3 (target) / 497.3 | - | 2 | 1683 | 4 | 0 | 0 |
+| hfd_stn_r4 | waypoint | hbm:16 | 121 x 52 | 498.5 (target) / 498.5 | - | 2 | 1683 | 4 | 0 | 0 |
+| hfd_su | hub | hbm:4 | 1406 x 5530 | 900 (target) / 900 | 343.3..344.0 | 15 | 5580 | 14 | 0 | 0 |
+| hfd_su_full | spine | hbm:1 | 346 x 348 | 730 (target) / 730 | 513.4..513.4 | 0 | 0 | 0 | 0 | 0 |
+| hfd_su_red | spine | hbm:1 | 1400 x 218 | 900 (target) / 900 | 343.4..343.4 | 0 | 0 | 0 | 0 | 0 |
+| hfd_svc_SE_s0 | svc | hbm:2 | 1017 x 259 | 1057 (measured) / 874.1 OVER | 1875.0..1875.0 | 7 | 2468 | 4 | 0 | 0 |
+| hfd_svc_SE_s1 | svc | hbm:2 | 1301 x 259 | 879 (measured) / 900 | 2053.0..2053.0 | 7 | 1700 | 3 | 0 | 0 |
+| hfd_svc_SE_s2 | svc | hbm:2 | 1062 x 259 | 758 (measured) / 883.8 | 2174.0..2174.0 | 7 | 176 | 1 | 0 | 0 |
+| hfd_svc_SE_s3 | svc | hbm:2 | 1382 x 259 | 919 (measured) / 919 | 2013.0..2013.0 | 10 | 4400 | 7 | 0 | 0 |
+| hfd_svc_SE_s4 | svc | hbm:2 | 1009 x 259 | 808 (measured) / 872.3 | 1895.9..1895.9 | 7 | 174 | 1 | 0 | 0 |
+| hfd_svc_SE_s5 | svc | hbm:2 | 1095 x 259 | 829 (measured) / 890.8 | 1874.9..1874.9 | 7 | 1698 | 3 | 0 | 0 |
+| hfd_svc_SE_s6 | svc | hbm:2 | 764 x 259 | 562 (measured) / 814.9 | 2141.9..2141.9 | 5 | 9 | 1 | 0 | 0 |
+| hfd_svc_SE_s7 | svc | hbm:2 | 470 x 259 | 631 (measured) / 731.9 | 2072.9..2072.9 | 7 | 174 | 1 | 0 | 0 |
+| hfd_svc_SE_s8 | svc | hbm:2 | 400 x 259 | 708.5 (target) / 708.5 | 1995.4..1995.4 | 3 | 9 | 1 | 0 | 0 |
+| hfd_svc_SW_s0 | svc | hbm:2 | 1017 x 259 | 874.1 (target) / 874.1 | 1900.9..1900.9 | 7 | 2466 | 4 | 0 | 0 |
+| hfd_svc_SW_s1 | svc | hbm:2 | 1306 x 259 | 900 (target) / 900 | 1875.0..1875.0 | 9 | 1937 | 3 | 0 | 0 |
+| hfd_svc_SW_s2 | svc | hbm:2 | 1057 x 259 | 882.7 (target) / 882.7 | 1892.3..1892.3 | 7 | 344 | 1 | 0 | 0 |
+| hfd_svc_SW_s3 | svc | hbm:2 | 1073 x 259 | 886.1 (target) / 886.1 | 1888.9..1888.9 | 8 | 1700 | 3 | 0 | 0 |
+| hfd_svc_SW_s4 | svc | hbm:2 | 786 x 259 | 820.4 (target) / 820.4 | 1954.0..1954.0 | 5 | 9 | 1 | 0 | 0 |
+| hfd_svc_SW_s5 | svc | hbm:2 | 1063 x 259 | 884 (target) / 884 | 1890.4..1890.4 | 7 | 344 | 1 | 0 | 0 |
+| hfd_svc_SW_s6 | svc | hbm:2 | 1062 x 259 | 883.8 (target) / 883.8 | 1890.6..1890.6 | 7 | 1700 | 3 | 0 | 0 |
+| hfd_svc_SW_s7 | svc | hbm:2 | 1136 x 259 | 899.4 (target) / 899.4 | 1875.0..1875.0 | 5 | 346 | 1 | 0 | 0 |
+| hfd_vm_ne | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2593.6..2593.6 | 17 | 2816 | 5 | 0 | 0 |
+| hfd_vm_nw | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2593.6..2593.6 | 18 | 2818 | 5 | 0 | 0 |
+| hfd_vm_se | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2593.6..2593.6 | 17 | 3392 | 6 | 0 | 0 |
+| hfd_vm_sw | spine | hbm:1 | 700 x 1000 | 900 (target) / 900 | 2593.6..2593.6 | 18 | 3393 | 6 | 0 | 0 |
 | ot_dsrom_head_elem_A | hb_elem | s81_head:340 | 275 x 275 | 668.1 (target) / 668.1 | 307.2..307.2 | 10 | 1133 | 3 | 10 | 0 |
 | ot_dsrom_head_elem_B | hb_elem | s81_head:85 | 269 x 269 | 662.6 (target) / 662.6 | 312.7..312.7 | 6 | 755 | 2 | 1 | 0 |
-| ot_hbm3e_phy_v41x_aw30_e8p5 | phy | s81_layer:4, s81_layer1:1, s81_head:4, hbm:4 | 8500 x 1177 | 900 (target) / 900 | - | 14 | 9 | 1 | 0 | 0 |
-| ot_hbm_host_phy | link | hbm:1 | 261 x 1652 | 900 (target) / 900 | 1497.3..1497.3 | 1 | 1550 | 4 | 0 | 0 |
-| ot_pdie_serdes | link | s81_layer:6, s81_layer1:6, s81_head:6, hbm:9 | 250 x 2250 | 900 (target) / 900 | 1495.4..1498.5 | 3 | 1555 | 4 | 2 | 0 |
+| ot_hbm3e_phy_v41x_aw30_e8p5 | phy | s81_layer:4, s81_layer1:1, s81_head:4, hbm:4 | 8500 x 1177 | 900 (target) / 900 | - | 15 | 9 | 1 | 0 | 0 |
+| ot_hbm_host_phy | link | hbm:1 | 261 x 1652 | 900 (target) / 900 | 250.7..250.7 | 1 | 1546 | 4 | 0 | 0 |
+| ot_pdie_serdes | link | s81_layer:6, s81_layer1:6, s81_head:6, hbm:9 | 250 x 2250 | 900 (target) / 900 | 250.7..251.9 | 3 | 1521 | 4 | 2 | 0 |
 | ot_pdie_ucie | link | s81_layer:2, s81_layer1:2, s81_head:2 | 261 x 1652 | 900 (target) / 900 | - | 2 | 830 | 3 | 2 | 0 |
 | ot_rom_4096x72_m8 | cfg | s81_layer:14350, s81_layer1:14350, s81_head:10297 | 38 x 63 | 472.3 (target) / 472.3 | 633.1..731.2 | 3 | 333 | 1 | 0 | 0 |
 | ot_s81_cfg7_seq | seq | s81_layer:2050, s81_layer1:2050, s81_head:1471 | 35 x 60 | 469.5 (target) / 469.5 | 635.9..734.0 | 19 | 333 | 1 | 0 | 0 |

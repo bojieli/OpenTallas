@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.budgets.summary.v1",
- "masters": 267,
+ "masters": 269,
  "rows": [
   {
    "master": "dsfd_bf",
@@ -5259,13 +5259,13 @@
     "hbm": 64
    },
    "size_um": [
-    1349.112,
+    1778.52,
     1349.976
    ],
    "entry_ss": {
-    "mean": 2988.6,
-    "min": 2881.6,
-    "max": 3307.5
+    "mean": 2701.4,
+    "min": 2594.1,
+    "max": 3020.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5292,9 +5292,9 @@
     36.696
    ],
    "entry_ss": {
-    "mean": 3155.7,
-    "min": 3155.7,
-    "max": 3155.7
+    "mean": 2868.8,
+    "min": 2868.8,
+    "max": 2868.8
    },
    "lint_ss": 626.0,
    "lint_grade": "target",
@@ -5321,9 +5321,9 @@
     215.976
    ],
    "entry_ss": {
-    "mean": 3218.6,
-    "min": 3217.2,
-    "max": 3221.0
+    "mean": 2932.1,
+    "min": 2930.0,
+    "max": 2934.1
    },
    "lint_ss": 563.9,
    "lint_grade": "target",
@@ -5350,9 +5350,9 @@
     203.016
    ],
    "entry_ss": {
-    "mean": 3251.8,
-    "min": 3250.1,
-    "max": 3253.4
+    "mean": 2964.8,
+    "min": 2963.0,
+    "max": 2966.5
    },
    "lint_ss": 531.5,
    "lint_grade": "target",
@@ -5379,9 +5379,9 @@
     1403.976
    ],
    "entry_ss": {
-    "mean": 2881.7,
-    "min": 2881.7,
-    "max": 2881.7
+    "mean": 2594.8,
+    "min": 2594.8,
+    "max": 2594.8
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5392,7 +5392,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3380.3,
+   "max_length_um": 3483.3,
    "max_stages_needed": 6
   },
   {
@@ -5417,7 +5417,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1962.1,
+   "max_length_um": 2080.5,
    "max_stages_needed": 4
   },
   {
@@ -5433,9 +5433,9 @@
     315.336
    ],
    "entry_ss": {
-    "mean": 3155.2,
-    "min": 3155.2,
-    "max": 3155.2
+    "mean": 2867.8,
+    "min": 2867.8,
+    "max": 2867.8
    },
    "lint_ss": 628.3,
    "lint_grade": "target",
@@ -5462,9 +5462,9 @@
     110.136
    ],
    "entry_ss": {
-    "mean": 3256.0,
-    "min": 3256.0,
-    "max": 3256.0
+    "mean": 2968.8,
+    "min": 2968.8,
+    "max": 2968.8
    },
    "lint_ss": 525.1,
    "lint_grade": "target",
@@ -5491,9 +5491,9 @@
     315.336
    ],
    "entry_ss": {
-    "mean": 3154.2,
-    "min": 3153.3,
-    "max": 3155.2
+    "mean": 2866.2,
+    "min": 2866.2,
+    "max": 2866.2
    },
    "lint_ss": 628.3,
    "lint_grade": "target",
@@ -5520,9 +5520,9 @@
     82.056
    ],
    "entry_ss": {
-    "mean": 3282.2,
-    "min": 3280.5,
-    "max": 3284.3
+    "mean": 2995.0,
+    "min": 2993.3,
+    "max": 2997.4
    },
    "lint_ss": 500.6,
    "lint_grade": "target",
@@ -5549,9 +5549,9 @@
     110.136
    ],
    "entry_ss": {
-    "mean": 3258.9,
-    "min": 3257.9,
-    "max": 3259.8
+    "mean": 2972.9,
+    "min": 2972.9,
+    "max": 2972.9
    },
    "lint_ss": 525.1,
    "lint_grade": "target",
@@ -5578,9 +5578,9 @@
     5529.576
    ],
    "entry_ss": {
-    "mean": 853.1,
-    "min": 852.9,
-    "max": 853.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5632,9 +5632,9 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 3019.1,
-    "min": 3017.7,
-    "max": 3021.5
+    "mean": 2732.7,
+    "min": 2730.8,
+    "max": 2734.6
    },
    "lint_ss": 1186,
    "lint_grade": "measured",
@@ -5661,9 +5661,9 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 3073.1,
-    "min": 3071.7,
-    "max": 3075.5
+    "mean": 2786.7,
+    "min": 2784.8,
+    "max": 2788.6
    },
    "lint_ss": 1132,
    "lint_grade": "measured",
@@ -5690,9 +5690,9 @@
     959.976
    ],
    "entry_ss": {
-    "mean": 2896.1,
-    "min": 2894.7,
-    "max": 2898.5
+    "mean": 2609.7,
+    "min": 2607.8,
+    "max": 2611.6
    },
    "lint_ss": 1309,
    "lint_grade": "measured",
@@ -5719,9 +5719,9 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 3020.1,
-    "min": 3018.7,
-    "max": 3022.5
+    "mean": 2733.7,
+    "min": 2731.8,
+    "max": 2735.6
    },
    "lint_ss": 1185,
    "lint_grade": "measured",
@@ -5748,9 +5748,9 @@
     829.896
    ],
    "entry_ss": {
-    "mean": 3305.1,
-    "min": 3303.7,
-    "max": 3307.5
+    "mean": 3018.7,
+    "min": 3016.8,
+    "max": 3020.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5777,9 +5777,9 @@
     829.416
    ],
    "entry_ss": {
-    "mean": 2881.1,
-    "min": 2879.7,
-    "max": 2883.5
+    "mean": 2594.7,
+    "min": 2592.8,
+    "max": 2596.6
    },
    "lint_ss": 1324,
    "lint_grade": "measured",
@@ -5806,9 +5806,9 @@
     237.576
    ],
    "entry_ss": {
-    "mean": 2881.7,
-    "min": 2881.7,
-    "max": 2881.7
+    "mean": 2594.8,
+    "min": 2594.8,
+    "max": 2594.8
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5835,24 +5835,24 @@
     410.376
    ],
    "entry_ss": {
-    "mean": 3079.8,
-    "min": 3078.6,
-    "max": 3081.0
+    "mean": 2792.5,
+    "min": 2791.4,
+    "max": 2793.6
    },
    "lint_ss": 702.5,
    "lint_grade": "target",
    "lint_target_ss": 702.5,
    "lint_over_target": false,
-   "ports": 4,
-   "sync": 4,
+   "ports": 5,
+   "sync": 5,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2107.8,
-   "max_stages_needed": 5
+   "max_length_um": 2583.0,
+   "max_stages_needed": 6
   },
   {
-   "master": "hfd_mcast_r6",
+   "master": "hfd_mcast_r6a",
    "kinds": [
     "waypoint"
    ],
@@ -5864,9 +5864,9 @@
     120.936
    ],
    "entry_ss": {
-    "mean": 3146.8,
-    "min": 3145.5,
-    "max": 3149.3
+    "mean": 2859.9,
+    "min": 2858.3,
+    "max": 2862.4
    },
    "lint_ss": 635.6,
    "lint_grade": "target",
@@ -5879,6 +5879,35 @@
    "fanout_flags": 0,
    "max_length_um": 2107.8,
    "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_mcast_r6b",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    466.968,
+    120.936
+   ],
+   "entry_ss": {
+    "mean": 2859.5,
+    "min": 2858.3,
+    "max": 2860.5
+   },
+   "lint_ss": 635.6,
+   "lint_grade": "target",
+   "lint_target_ss": 635.6,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2583.0,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_mcast_r7",
@@ -5893,21 +5922,21 @@
     120.936
    ],
    "entry_ss": {
-    "mean": 3147.7,
-    "min": 3146.0,
-    "max": 3149.3
+    "mean": 2860.7,
+    "min": 2858.9,
+    "max": 2862.4
    },
    "lint_ss": 635.6,
    "lint_grade": "target",
    "lint_target_ss": 635.6,
    "lint_over_target": false,
-   "ports": 3,
-   "sync": 3,
+   "ports": 4,
+   "sync": 4,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1995.0,
-   "max_stages_needed": 5
+   "max_length_um": 2470.6,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_meso_r1",
@@ -5922,9 +5951,9 @@
     71.256
    ],
    "entry_ss": {
-    "mean": 3207.1,
-    "min": 3205.4,
-    "max": 3209.2
+    "mean": 2919.9,
+    "min": 2918.2,
+    "max": 2922.3
    },
    "lint_ss": 575.7,
    "lint_grade": "target",
@@ -5951,9 +5980,9 @@
     190.056
    ],
    "entry_ss": {
-    "mean": 1872.1,
-    "min": 1870.4,
-    "max": 1873.5
+    "mean": 626.4,
+    "min": 625.7,
+    "max": 626.9
    },
    "lint_ss": 525.0,
    "lint_grade": "target",
@@ -5980,9 +6009,9 @@
     285.096
    ],
    "entry_ss": {
-    "mean": 1875.8,
-    "min": 1875.8,
-    "max": 1875.8
+    "mean": 629.2,
+    "min": 629.2,
+    "max": 629.2
    },
    "lint_ss": 521.5,
    "lint_grade": "target",
@@ -5993,7 +6022,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1549.9,
+   "max_length_um": 1549.0,
    "max_stages_needed": 4
   },
   {
@@ -6009,9 +6038,9 @@
     285.096
    ],
    "entry_ss": {
-    "mean": 3260.9,
-    "min": 3260.9,
-    "max": 3260.9
+    "mean": 2972.1,
+    "min": 2972.1,
+    "max": 2972.1
    },
    "lint_ss": 521.5,
    "lint_grade": "target",
@@ -6038,9 +6067,9 @@
     41.016
    ],
    "entry_ss": {
-    "mean": 3260.7,
-    "min": 3260.7,
-    "max": 3260.7
+    "mean": 2973.8,
+    "min": 2973.8,
+    "max": 2973.8
    },
    "lint_ss": 521.0,
    "lint_grade": "target",
@@ -6067,9 +6096,9 @@
     358.536
    ],
    "entry_ss": {
-    "mean": 853.0,
-    "min": 853.0,
-    "max": 853.0
+    "mean": 343.4,
+    "min": 343.4,
+    "max": 343.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6080,7 +6109,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5583.3,
+   "max_length_um": 5580.2,
    "max_stages_needed": 9
   },
   {
@@ -6096,9 +6125,9 @@
     326.28
    ],
    "entry_ss": {
-    "mean": 2881.7,
-    "min": 2881.7,
-    "max": 2881.7
+    "mean": 2594.8,
+    "min": 2594.8,
+    "max": 2594.8
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6109,7 +6138,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5342.5,
+   "max_length_um": 5339.4,
    "max_stages_needed": 9
   },
   {
@@ -6121,8 +6150,8 @@
     "hbm": 2
    },
    "size_um": [
-    5215.944,
-    1725.816
+    8651.208,
+    1041.096
    ],
    "entry_ss": null,
    "lint_ss": 900.0,
@@ -6150,9 +6179,9 @@
     5529.576
    ],
    "entry_ss": {
-    "mean": 853.1,
-    "min": 852.9,
-    "max": 853.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6179,16 +6208,16 @@
     2073.576
    ],
    "entry_ss": {
-    "mean": 2882.8,
-    "min": 2881.1,
-    "max": 2884.9
+    "mean": 2595.6,
+    "min": 2593.9,
+    "max": 2598.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 5,
-   "sync": 5,
+   "ports": 7,
+   "sync": 7,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
@@ -6226,7 +6255,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 13
+    "hbm": 17
    },
    "size_um": [
     48.792,
@@ -6276,7 +6305,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 16
+    "hbm": 20
    },
    "size_um": [
     64.344,
@@ -6326,7 +6355,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 14
+    "hbm": 18
    },
    "size_um": [
     115.752,
@@ -6376,7 +6405,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 4
+    "hbm": 8
    },
    "size_um": [
     60.024,
@@ -6408,9 +6437,9 @@
     142.536
    ],
    "entry_ss": {
-    "mean": 3313.3,
-    "min": 3311.6,
-    "max": 3315.4
+    "mean": 3026.1,
+    "min": 3024.4,
+    "max": 3028.5
    },
    "lint_ss": 469.5,
    "lint_grade": "target",
@@ -6446,8 +6475,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1738.0,
-   "max_stages_needed": 4
+   "max_length_um": 4400.5,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_stn_r21",
@@ -6455,7 +6484,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 8
+    "hbm": 10
    },
    "size_um": [
     59.592,
@@ -6546,8 +6575,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2478.1,
-   "max_stages_needed": 6
+   "max_length_um": 1675.6,
+   "max_stages_needed": 4
   },
   {
    "master": "hfd_stn_r27",
@@ -6555,7 +6584,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 36
+    "hbm": 41
    },
    "size_um": [
     63.48,
@@ -6655,7 +6684,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 7
+    "hbm": 8
    },
    "size_um": [
     72.984,
@@ -6687,9 +6716,9 @@
     77.736
    ],
    "entry_ss": {
-    "mean": 3642.8,
-    "min": 3304.6,
-    "max": 3729.7
+    "mean": 3355.9,
+    "min": 3015.8,
+    "max": 3442.8
    },
    "lint_ss": 477.8,
    "lint_grade": "target",
@@ -6766,9 +6795,9 @@
     41.016
    ],
    "entry_ss": {
-    "mean": 3727.8,
-    "min": 3726.4,
-    "max": 3730.2
+    "mean": 3441.4,
+    "min": 3439.5,
+    "max": 3443.3
    },
    "lint_ss": 477.3,
    "lint_grade": "target",
@@ -6788,7 +6817,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 4
+    "hbm": 8
    },
    "size_um": [
     50.088,
@@ -6804,7 +6833,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1693.2,
+   "max_length_um": 1683.0,
    "max_stages_needed": 4
   },
   {
@@ -6829,7 +6858,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1693.2,
+   "max_length_um": 1683.0,
    "max_stages_needed": 4
   },
   {
@@ -6845,9 +6874,9 @@
     5529.576
    ],
    "entry_ss": {
-    "mean": 853.1,
-    "min": 852.9,
-    "max": 853.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6858,7 +6887,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5583.3,
+   "max_length_um": 5580.2,
    "max_stages_needed": 14
   },
   {
@@ -6874,9 +6903,9 @@
     347.736
    ],
    "entry_ss": {
-    "mean": 1023.0,
-    "min": 1023.0,
-    "max": 1023.0
+    "mean": 513.4,
+    "min": 513.4,
+    "max": 513.4
    },
    "lint_ss": 730.0,
    "lint_grade": "target",
@@ -6903,9 +6932,9 @@
     218.136
    ],
    "entry_ss": {
-    "mean": 853.0,
-    "min": 853.0,
-    "max": 853.0
+    "mean": 343.4,
+    "min": 343.4,
+    "max": 343.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6932,9 +6961,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2328.6,
-    "min": 2328.6,
-    "max": 2328.6
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 1057,
    "lint_grade": "measured",
@@ -6961,9 +6990,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2506.6,
-    "min": 2506.6,
-    "max": 2506.6
+    "mean": 2053.0,
+    "min": 2053.0,
+    "max": 2053.0
    },
    "lint_ss": 879,
    "lint_grade": "measured",
@@ -6974,7 +7003,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1700.0,
+   "max_length_um": 1699.6,
    "max_stages_needed": 3
   },
   {
@@ -6990,9 +7019,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2627.6,
-    "min": 2627.6,
-    "max": 2627.6
+    "mean": 2174.0,
+    "min": 2174.0,
+    "max": 2174.0
    },
    "lint_ss": 758,
    "lint_grade": "measured",
@@ -7003,7 +7032,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 175.9,
+   "max_length_um": 175.5,
    "max_stages_needed": 1
   },
   {
@@ -7019,9 +7048,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2466.6,
-    "min": 2466.6,
-    "max": 2466.6
+    "mean": 2013.0,
+    "min": 2013.0,
+    "max": 2013.0
    },
    "lint_ss": 919,
    "lint_grade": "measured",
@@ -7032,8 +7061,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1938.6,
-   "max_stages_needed": 3
+   "max_length_um": 4400.5,
+   "max_stages_needed": 7
   },
   {
    "master": "hfd_svc_SE_s4",
@@ -7048,9 +7077,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2349.6,
-    "min": 2349.6,
-    "max": 2349.6
+    "mean": 1895.9,
+    "min": 1895.9,
+    "max": 1895.9
    },
    "lint_ss": 808,
    "lint_grade": "measured",
@@ -7077,9 +7106,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2328.6,
-    "min": 2328.6,
-    "max": 2328.6
+    "mean": 1874.9,
+    "min": 1874.9,
+    "max": 1874.9
    },
    "lint_ss": 829,
    "lint_grade": "measured",
@@ -7106,9 +7135,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2595.6,
-    "min": 2595.6,
-    "max": 2595.6
+    "mean": 2141.9,
+    "min": 2141.9,
+    "max": 2141.9
    },
    "lint_ss": 562,
    "lint_grade": "measured",
@@ -7131,24 +7160,53 @@
     "hbm": 2
    },
    "size_um": [
-    870.048,
+    469.992,
     259.176
    ],
    "entry_ss": {
-    "mean": 2526.6,
-    "min": 2526.6,
-    "max": 2526.6
+    "mean": 2072.9,
+    "min": 2072.9,
+    "max": 2072.9
    },
    "lint_ss": 631,
    "lint_grade": "measured",
-   "lint_target_ss": 840.8,
+   "lint_target_ss": 731.9,
    "lint_over_target": false,
-   "ports": 5,
-   "sync": 5,
+   "ports": 7,
+   "sync": 7,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 173.9,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SE_s8",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    400.032,
+    259.176
+   ],
+   "entry_ss": {
+    "mean": 1995.4,
+    "min": 1995.4,
+    "max": 1995.4
+   },
+   "lint_ss": 708.5,
+   "lint_grade": "target",
+   "lint_target_ss": 708.5,
+   "lint_over_target": false,
+   "ports": 3,
+   "sync": 3,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 8.7,
    "max_stages_needed": 1
   },
   {
@@ -7164,9 +7222,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2354.5,
-    "min": 2354.5,
-    "max": 2354.5
+    "mean": 1900.9,
+    "min": 1900.9,
+    "max": 1900.9
    },
    "lint_ss": 874.1,
    "lint_grade": "target",
@@ -7193,9 +7251,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2328.6,
-    "min": 2328.6,
-    "max": 2328.6
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7222,9 +7280,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2345.9,
-    "min": 2345.9,
-    "max": 2345.9
+    "mean": 1892.3,
+    "min": 1892.3,
+    "max": 1892.3
    },
    "lint_ss": 882.7,
    "lint_grade": "target",
@@ -7251,9 +7309,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2342.5,
-    "min": 2342.5,
-    "max": 2342.5
+    "mean": 1888.9,
+    "min": 1888.9,
+    "max": 1888.9
    },
    "lint_ss": 886.1,
    "lint_grade": "target",
@@ -7280,9 +7338,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2407.6,
-    "min": 2407.6,
-    "max": 2407.6
+    "mean": 1954.0,
+    "min": 1954.0,
+    "max": 1954.0
    },
    "lint_ss": 820.4,
    "lint_grade": "target",
@@ -7309,9 +7367,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2344.0,
-    "min": 2344.0,
-    "max": 2344.0
+    "mean": 1890.4,
+    "min": 1890.4,
+    "max": 1890.4
    },
    "lint_ss": 884.0,
    "lint_grade": "target",
@@ -7338,9 +7396,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2344.2,
-    "min": 2344.2,
-    "max": 2344.2
+    "mean": 1890.6,
+    "min": 1890.6,
+    "max": 1890.6
    },
    "lint_ss": 883.8,
    "lint_grade": "target",
@@ -7367,9 +7425,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2328.6,
-    "min": 2328.6,
-    "max": 2328.6
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 899.4,
    "lint_grade": "target",
@@ -7396,9 +7454,9 @@
     1000.056
    ],
    "entry_ss": {
-    "mean": 2882.4,
-    "min": 2882.4,
-    "max": 2882.4
+    "mean": 2593.6,
+    "min": 2593.6,
+    "max": 2593.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7409,7 +7467,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2814.1,
+   "max_length_um": 2815.9,
    "max_stages_needed": 5
   },
   {
@@ -7425,9 +7483,9 @@
     1000.056
    ],
    "entry_ss": {
-    "mean": 2882.4,
-    "min": 2882.4,
-    "max": 2882.4
+    "mean": 2593.6,
+    "min": 2593.6,
+    "max": 2593.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7438,7 +7496,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2815.9,
+   "max_length_um": 2817.7,
    "max_stages_needed": 5
   },
   {
@@ -7454,9 +7512,9 @@
     1000.056
    ],
    "entry_ss": {
-    "mean": 2882.4,
-    "min": 2882.4,
-    "max": 2882.4
+    "mean": 2593.6,
+    "min": 2593.6,
+    "max": 2593.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7467,7 +7525,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3557.2,
+   "max_length_um": 3391.5,
    "max_stages_needed": 6
   },
   {
@@ -7483,9 +7541,9 @@
     1000.056
    ],
    "entry_ss": {
-    "mean": 2882.4,
-    "min": 2882.4,
-    "max": 2882.4
+    "mean": 2593.6,
+    "min": 2593.6,
+    "max": 2593.6
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7496,7 +7554,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3558.9,
+   "max_length_um": 3393.2,
    "max_stages_needed": 6
   },
   {
@@ -7577,8 +7635,8 @@
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 14,
-   "sync": 14,
+   "ports": 15,
+   "sync": 15,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
@@ -7598,9 +7656,9 @@
     1652.424
    ],
    "entry_ss": {
-    "mean": 1497.3,
-    "min": 1497.3,
-    "max": 1497.3
+    "mean": 250.7,
+    "min": 250.7,
+    "max": 250.7
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7611,7 +7669,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1549.9,
+   "max_length_um": 1545.6,
    "max_stages_needed": 4
   },
   {
@@ -7630,9 +7688,9 @@
     2250.216
    ],
    "entry_ss": {
-    "mean": 1497.1,
-    "min": 1495.4,
-    "max": 1498.5
+    "mean": 251.4,
+    "min": 250.7,
+    "max": 251.9
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7643,7 +7701,7 @@
    "cdc": 0,
    "infeasible": 2,
    "fanout_flags": 0,
-   "max_length_um": 1554.6,
+   "max_length_um": 1520.8,
    "max_stages_needed": 4
   },
   {

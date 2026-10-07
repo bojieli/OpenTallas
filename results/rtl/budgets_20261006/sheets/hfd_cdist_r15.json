@@ -27,14 +27,14 @@
   ],
   "n_regions": 4,
   "entry_target_ss_ps": {
-   "mean": 3251.8,
-   "min": 3250.1,
-   "max": 3253.4
+   "mean": 2964.8,
+   "min": 2963.0,
+   "max": 2966.5
   },
   "entry_target_ff_ps": {
-   "mean": 1772.0,
-   "min": 1771.3,
-   "max": 1772.6
+   "mean": 1619.8,
+   "min": 1619.1,
+   "max": 1620.5
   },
   "die_pad_ss_ps": {
    "mean": 370.4,
@@ -100,7 +100,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w169_cdNW0<->w168_cdNW1",
+   "worst_instance": "hbm:w183_cdNW0<->w182_cdNW1",
    "also_cdc": false,
    "input_delay_ss_ps": 571.7,
    "output_delay_ss_ps": 512.7,
@@ -144,7 +144,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w108_cdSE0<->sm8",
+   "worst_instance": "hbm:w117_cdSE0<->sm8",
    "also_cdc": false,
    "input_delay_ss_ps": 689.0,
    "output_delay_ss_ps": 630.0,
@@ -189,7 +189,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w108_cdSE0<->sm9",
+   "worst_instance": "hbm:w117_cdSE0<->sm9",
    "also_cdc": false,
    "input_delay_ss_ps": 623.3,
    "output_delay_ss_ps": 564.3,
@@ -234,7 +234,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w41_cdSW0<->sm2",
+   "worst_instance": "hbm:w44_cdSW0<->sm2",
    "also_cdc": false,
    "input_delay_ss_ps": 593.8,
    "output_delay_ss_ps": 534.8,
@@ -279,7 +279,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w41_cdSW0<->sm3",
+   "worst_instance": "hbm:w44_cdSW0<->sm3",
    "also_cdc": false,
    "input_delay_ss_ps": 677.7,
    "output_delay_ss_ps": 618.7,

@@ -8,7 +8,7 @@
   "hbm": 64
  },
  "size_um": [
-  1349.112,
+  1778.52,
   1349.976
  ],
  "tile_of": null,
@@ -35,24 +35,24 @@
   ],
   "n_regions": 12,
   "entry_target_ss_ps": {
-   "mean": 2988.6,
-   "min": 2881.6,
-   "max": 3307.5
+   "mean": 2701.4,
+   "min": 2594.1,
+   "max": 3020.6
   },
   "entry_target_ff_ps": {
-   "mean": 1596.5,
-   "min": 1528.1,
-   "max": 1800.9
+   "mean": 1444.3,
+   "min": 1375.8,
+   "max": 1648.8
   },
   "die_pad_ss_ps": {
-   "mean": 106.5,
+   "mean": 106.4,
    "min": 0.0,
    "max": 425.9
   },
   "internal_insertion": {
    "target_ss": 900.0,
    "target_ff": 594.0,
-   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1597.4, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1770.3, cap 900 = intra skew 90 / (2 x OCV 0.05))",
    "tolerance_ps": 100.0,
    "ss": 900.0,
    "ff": 594.0,
@@ -197,7 +197,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:at_SE_00<->at_SE_01",
+   "worst_instance": "hbm:at_SW_03<->at_SW_02",
    "also_cdc": false,
    "input_delay_ss_ps": 329.1,
    "output_delay_ss_ps": 270.1,
@@ -226,7 +226,6 @@
     "kv_rows"
    ],
    "neighbours": [
-    "hfd_stn_r18",
     "hfd_stn_r19"
    ],
    "connections": 4,
@@ -237,12 +236,12 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 2251.0,
+   "length_um": 909.4,
    "length_basis": "pins",
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:at_SE_00<->w118_kv_SE",
+   "worst_instance": "hbm:at_SE_00<->w129_kv_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
@@ -250,13 +249,13 @@
    "output_fraction_of_T": 0.221,
    "internal_input_ps": 514.8,
    "internal_output_ps": 573.8,
-   "as_planned_internal_input_ps": 263.3,
-   "as_planned_internal_output_ps": 322.3,
+   "as_planned_internal_input_ps": 370.3,
+   "as_planned_internal_output_ps": 429.3,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 491.0,
-   "stages_needed": 5,
-   "stages_planned": 7,
+   "stages_needed": 2,
+   "stages_planned": 4,
    "extra_stages_needed": 0,
    "segment_after_stages_um": 100.0,
    "input_min_delay_ff_ps": 43.4,
@@ -336,7 +335,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:at_NW_33<->w196_qa_NW",
+   "worst_instance": "hbm:at_NW_33<->w213_qa_NW",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
@@ -380,7 +379,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:at_SE_00<->at_SE_01",
+   "worst_instance": "hbm:at_SW_03<->at_SW_02",
    "also_cdc": false,
    "input_delay_ss_ps": 329.1,
    "output_delay_ss_ps": 270.1,
@@ -425,7 +424,7 @@
    "skew_class": "inter",
    "skew_ps": 150.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:at_SE_01<->at_SE_00",
+   "worst_instance": "hbm:at_SW_02<->at_SW_03",
    "also_cdc": false,
    "input_delay_ss_ps": 329.1,
    "output_delay_ss_ps": 270.1,

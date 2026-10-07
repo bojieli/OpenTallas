@@ -85,7 +85,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w118_kv_SE<->w117_kv_SE",
+   "worst_instance": "hbm:w128_kv_SE<->w127_kv_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 583.9,
    "output_delay_ss_ps": 524.9,
@@ -114,7 +114,6 @@
     "kv_rows"
    ],
    "neighbours": [
-    "hfd_attn_tile",
     "hfd_stn_r18",
     "hfd_stn_r19"
    ],
@@ -131,7 +130,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w182_kv_NW<->w183_kv_NW",
+   "worst_instance": "hbm:w197_kv_NW<->w198_kv_NW",
    "also_cdc": false,
    "input_delay_ss_ps": 604.3,
    "output_delay_ss_ps": 545.3,

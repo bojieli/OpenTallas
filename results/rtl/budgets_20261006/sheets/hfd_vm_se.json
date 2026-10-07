@@ -24,14 +24,14 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 2882.4,
-   "min": 2882.4,
-   "max": 2882.4
+   "mean": 2593.6,
+   "min": 2593.6,
+   "max": 2593.6
   },
   "entry_target_ff_ps": {
-   "mean": 1528.5,
-   "min": 1528.5,
-   "max": 1528.5
+   "mean": 1375.6,
+   "min": 1375.6,
+   "max": 1375.6
   },
   "die_pad_ss_ps": {
    "mean": 0.0,
@@ -226,7 +226,7 @@
     "serial_0p9"
    ],
    "timing": "sync",
-   "length_um": 3196.3,
+   "length_um": 3194.5,
    "length_basis": "pins",
    "skew_class": "xdomain",
    "skew_ps": 150.0,
@@ -239,8 +239,8 @@
    "output_fraction_of_T": 0.301,
    "internal_input_ps": 642.6,
    "internal_output_ps": 701.6,
-   "as_planned_internal_input_ps": 393.3,
-   "as_planned_internal_output_ps": 452.3,
+   "as_planned_internal_input_ps": 393.5,
+   "as_planned_internal_output_ps": 452.5,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 603.6,
@@ -407,7 +407,7 @@
    "skew_class": "intra",
    "skew_ps": 57,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_se<->w329_iv_SE",
+   "worst_instance": "hbm:hb_vm_se<->w357_iv_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 300.5,
    "output_delay_ss_ps": 241.5,
@@ -451,7 +451,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_se<->w122_qa_SE",
+   "worst_instance": "hbm:hb_vm_se<->w133_qa_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
@@ -628,7 +628,7 @@
     "serial_0p9"
    ],
    "timing": "sync",
-   "length_um": 3557.2,
+   "length_um": 3391.5,
    "length_basis": "pins",
    "skew_class": "xdomain",
    "skew_ps": 150.0,
@@ -641,8 +641,8 @@
    "output_fraction_of_T": 0.301,
    "internal_input_ps": 642.6,
    "internal_output_ps": 701.6,
-   "as_planned_internal_input_ps": 389.1,
-   "as_planned_internal_output_ps": 448.1,
+   "as_planned_internal_input_ps": 406.2,
+   "as_planned_internal_output_ps": 465.2,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 603.6,
@@ -813,7 +813,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_vm_se<->w82_xt_SE",
+   "worst_instance": "hbm:hb_vm_se<->w88_xt_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
@@ -842,7 +842,7 @@
   "cdc": 0,
   "infeasible": 0,
   "fanout_flags": 0,
-  "max_length_um": 3557.2,
+  "max_length_um": 3391.5,
   "max_stages_needed": 6
  },
  "constants": {

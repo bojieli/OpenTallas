@@ -8,8 +8,8 @@
   "hbm": 2
  },
  "size_um": [
-  5215.944,
-  1725.816
+  8651.208,
+  1041.096
  ],
  "tile_of": null,
  "clock": {
@@ -27,7 +27,7 @@
   "internal_insertion": {
    "target_ss": 900.0,
    "target_ff": 594.0,
-   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 3025.3, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 3026.0, cap 900 = intra skew 90 / (2 x OCV 0.05))",
    "tolerance_ps": 100.0,
    "ss": 900.0,
    "ff": 594.0,

@@ -91,6 +91,8 @@ def xform(inst, xy):
 
 def port_xy(d, inst, port):
     """die point of (instance, port): the generator / LEF anchor, else the outline centre (None flag)"""
+    if '@' in port and inst[1] not in d.get('real_masters', ()):     # HBM r23: a sliced generated endpoint -> base port
+        port = port.split('@', 1)[0]
     a = d['ports'].get(inst[1], {}).get(port)
     if a:
         return xform(inst, a), True

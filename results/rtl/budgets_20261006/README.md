@@ -144,3 +144,10 @@ every one.
   +1 hop each). HBM hardened blocks with an interface internal budget < 300 ps: 17 -> 1 (ot_pdie_serdes black box, 465 ps
   after the link relay; hfd_su a at 339.7 ps). Clock plan unchanged (relays are not clock-tree instances).
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER 2x hub): HBM on r23: SU / SFU / HC quarters x2 area (1406 / 797 / 551 um x 5530 um), die W 24.40 -> 27.16 mm; hub quarter E/W ports in <= 500 um windows. Clock plan: stream trunk 2.69 -> 2.88 ns SS, 7 SE-group w/e crossings at 150.5-150.9 ps (<= 0.9 ps over the 150 ps term: next plan pads them). HBM infeasible 0.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r23 (die 30.59 x 24.62 mm): 2x hub (SU / SFU / HC quarters 1406 / 797 / 551 um wide,
+  ports clustered in <= 500 um windows), attention tile 1778.5 x 1350.0 um (~54 % util, option-B power), mcast_r6 split into
+  hfd_mcast_r6a / r6b (half bus each), svc SE_s7 split into SE_s7 + SE_s8, SE_s1 centre ck. Clock plan method update: sibling
+  regions (SM group halves, scan-quadrant cuts, HUB-C cuts) share ONE trunk sink at their family root, and forwarded-clock
+  segments are not tree pairs: 37 regions, max intra 56.7 ps, max inter 58.5 ps (the wider die had 54 crossings at
+  150-160 ps with per-region trunk sinks). Stale sheet hfd_vm removed (split into hfd_vm_{sw,se,nw,ne} since r19).
+  HBM infeasible as planned: 0.

@@ -24,14 +24,14 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 2881.7,
-   "min": 2881.7,
-   "max": 2881.7
+   "mean": 2594.8,
+   "min": 2594.8,
+   "max": 2594.8
   },
   "entry_target_ff_ps": {
-   "mean": 1528.2,
-   "min": 1528.2,
-   "max": 1528.2
+   "mean": 1376.1,
+   "min": 1376.1,
+   "max": 1376.1
   },
   "die_pad_ss_ps": {
    "mean": 0.0,
@@ -97,7 +97,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_loader<->w311_host",
+   "worst_instance": "hbm:hb_loader<->w338_host",
    "also_cdc": false,
    "input_delay_ss_ps": 243.5,
    "output_delay_ss_ps": 184.5,
