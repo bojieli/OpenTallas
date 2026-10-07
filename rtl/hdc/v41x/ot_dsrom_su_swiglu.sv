@@ -33,7 +33,15 @@
 module ot_dsrom_su_swiglu_lane #(
     parameter integer LM = 5,
     parameter integer LA = 4,
-    parameter integer ROUTED = 1
+    parameter integer ROUTED = 1,
+    // IREG = 1 (CLAUDE S81-RERUN, owner MARGIN-FIRST, default off): every input (v, g, u, w, lim) is captured in a
+    // flop AT THE PIN before the PRE compare / clip, so the lane boundary is register-to-register.  The IO-cut routes
+    // r4 / r4_shared hid ~1.0 ns of port -> PRE -> p_g logic (results/rtl/dsrom_s81_fulldie_20261004/r9/deferred_hold);
+    // +1 cycle, values unchanged (a pure delay of the operand stream and its valid); the fault OR leaves through a flop.
+    parameter integer IREG = 0,
+    // ESUM = 1 (CLAUDE S81-RERUN, default off): the exp polynomial adds carry the sum | LZC cut (ot_dsrom_exp_f12
+    // ASUM; IREG m770 route: that stage was the lane's only SS miss, -10.18 ps at 0.833333 ns); +6 cycles
+    parameter integer ESUM = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -46,38 +54,54 @@ module ot_dsrom_su_swiglu_lane #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer D_EXP = 7 * LM + 6 * LA + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
+    localparam integer D_EXP = 7 * LM + 6 * (LA + ESUM) + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
     localparam integer D_DIV = 21;                    // ot_dsrom_fdiv_f12
     localparam integer KS = 1;
     localparam integer DEPTH = 1 + D_EXP + LA + D_DIV + LM + (ROUTED != 0 ? LM : 0);
+    // ---- IREG: pin registers (the valid keeps its reset)
+    wire        v_i;
+    wire [31:0] g_i, u_i, w_i, lim_i;
+    generate if (IREG != 0) begin : g_ireg
+        reg [31:0] r_g, r_u, r_w, r_lim;
+        reg        r_v;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) r_v <= 1'b0; else r_v <= v;
+        end
+        always @(posedge clk) begin
+            r_g <= g; r_u <= u; r_w <= w; r_lim <= lim;
+        end
+        assign v_i = r_v; assign g_i = r_g; assign u_i = r_u; assign w_i = r_w; assign lim_i = r_lim;
+    end else begin : g_noreg
+        assign v_i = v; assign g_i = g; assign u_i = u; assign w_i = w; assign lim_i = lim;
+    end endgenerate
 
     function automatic [31:0] okey(input [31:0] x);
         okey = x[31] ? ~x : {1'b1, x[30:0]};
     endfunction
     // ---- PRE: g' = min(g, lim), u' = clip(u, -lim, lim) (the SU lane's pre_a with amin, and its cclip)
-    wire [31:0] k_lim = okey(lim);
-    wire [31:0] c_lo = {1'b1, lim[30:0]};
+    wire [31:0] k_lim = okey(lim_i);
+    wire [31:0] c_lo = {1'b1, lim_i[30:0]};
     wire le_g, c_ge_lo, c_le_hi, c_lohi;
-    ot_hdc_kge #(.W(32), .K(KS)) u_leg (.a(k_lim), .b(okey(g)), .ge(le_g));
-    ot_hdc_kge #(.W(32), .K(KS)) u_cgl (.a(okey(u)), .b(okey(c_lo)), .ge(c_ge_lo));
-    ot_hdc_kge #(.W(32), .K(KS)) u_clh (.a(k_lim), .b(okey(u)), .ge(c_le_hi));
+    ot_hdc_kge #(.W(32), .K(KS)) u_leg (.a(k_lim), .b(okey(g_i)), .ge(le_g));
+    ot_hdc_kge #(.W(32), .K(KS)) u_cgl (.a(okey(u_i)), .b(okey(c_lo)), .ge(c_ge_lo));
+    ot_hdc_kge #(.W(32), .K(KS)) u_clh (.a(k_lim), .b(okey(u_i)), .ge(c_le_hi));
     ot_hdc_kge #(.W(32), .K(KS)) u_clo (.a(k_lim), .b(okey(c_lo)), .ge(c_lohi));
     reg [31:0] p_g, p_u, p_w;
     reg        p_v;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) p_v <= 1'b0; else p_v <= v;
+        if (!rst_n) p_v <= 1'b0; else p_v <= v_i;
     end
     always @(posedge clk) begin
-        p_g <= le_g ? g : lim;
-        p_u <= c_ge_lo ? (c_le_hi ? u : lim) : (c_lohi ? c_lo : lim);
-        p_w <= w;
+        p_g <= le_g ? g_i : lim_i;
+        p_u <= c_ge_lo ? (c_le_hi ? u_i : lim_i) : (c_lohi ? c_lo : lim_i);
+        p_w <= w_i;
     end
     // ---- s = g' / (exp(-g') + 1)
     wire [31:0] y_exp, den, y_div, g_d, u_d, w_d;
     wire f_e, f_den, f_div, f_m1, f_m2;
     wire [D_EXP:0] ve;
     ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(p_v), .vd(ve));
-    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(p_v), .x({~p_g[31], p_g[30:0]}),
+    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA), .ASUM(ESUM)) u_exp (.clk(clk), .rst_n(rst_n), .v(p_v), .x({~p_g[31], p_g[30:0]}),
                                                 .y(y_exp), .vo(), .fault(f_e));
     ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_den (clk, rst_n, ve[D_EXP], y_exp, 32'h3F800000, den, f_den);
     ot_hdc_delay #(.W(32), .D(D_EXP + LA)) u_gd (.clk(clk), .rst_n(rst_n), .d(p_g), .q(g_d));
@@ -108,7 +132,16 @@ module ot_dsrom_su_swiglu_lane #(
         if (!rst_n) fl <= 0;
         else fl <= {fl[DEPTH-1:0], 1'b0} | {{(DEPTH){1'b0}}, f_e | f_den | f_div | f_m1 | f_m2};
     end
-    assign fault = |fl;
+    generate if (IREG != 0) begin : g_oreg
+        // the OR over the fault pipe leaves through a flop at the pin (registered output boundary)
+        reg f_o;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) f_o <= 1'b0; else f_o <= |fl;
+        end
+        assign fault = f_o;
+    end else begin : g_nooreg
+        assign fault = |fl;
+    end endgenerate
 endmodule
 
 // BF16 round-to-nearest-even of a binary32 word (the SU lane's OUT rnd), as a binary32 word
@@ -125,7 +158,9 @@ module ot_dsrom_su_swiglu #(
     parameter integer NOUT = 23,
     parameter integer ROUTED = 1,
     parameter integer LM = 5,
-    parameter integer LA = 4
+    parameter integer LA = 4,
+    parameter integer IREG = 0,         // lanes' pin registers (ot_dsrom_su_swiglu_lane IREG), default off
+    parameter integer ESUM = 0          // lanes' exp sum | LZC cut (ot_dsrom_su_swiglu_lane ESUM), default off
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -151,7 +186,7 @@ module ot_dsrom_su_swiglu #(
     wire [W-1:0] av, af;
     genvar l, b;
     generate for (l = 0; l < W; l = l + 1) begin : g_l
-        ot_dsrom_su_swiglu_lane #(.LM(LM), .LA(LA), .ROUTED(ROUTED)) u (.clk(clk), .rst_n(rst_n), .v(vin[NIN]),
+        ot_dsrom_su_swiglu_lane #(.LM(LM), .LA(LA), .ROUTED(ROUTED), .IREG(IREG), .ESUM(ESUM)) u (.clk(clk), .rst_n(rst_n), .v(vin[NIN]),
             .g(gi[32*l +: 32]), .u(ui[32*l +: 32]), .w(wi[32*l +: 32]), .lim(lim), .a(a[32*l +: 32]), .vo(av[l]),
             .fault(af[l]));
     end endgenerate

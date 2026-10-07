@@ -1,0 +1,535 @@
+{
+ "schema": "opentallas.dsrom-s81.boundary-window.v1",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "unit": "su_norm_core16_xf_a",
+ "top": "ot_dsrom_su_norm",
+ "base": "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_xf_a/work/orfs/results/asap7/opentallas_ot_dsrom_su_norm_asap7_su_norm_core16_xf_a/base",
+ "wire_ps": 30.0,
+ "dff": {
+  "clkq_min_ff": 32.2,
+  "clkq_max_ss": 115.6,
+  "setup_ss": 28.6,
+  "hold_ff": 13.6
+ },
+ "clock_tree_path_ps": {
+  "ss": {
+   "min_clock_tree_path": 580.2652,
+   "max_clock_tree_path": 636.11041
+  },
+  "ff": {
+   "min_clock_tree_path": 354.22058,
+   "max_clock_tree_path": 397.77734
+  }
+ },
+ "groups": [
+  {
+   "kind": "in",
+   "port": "cos_t",
+   "bits": 128,
+   "ss_slack_ps": 786.964966,
+   "ff_slack_ps": -391.838287,
+   "req_min_ps": 391.84,
+   "max_arr_ps": 786.96,
+   "offset_window_ps": [
+    359.64,
+    641.36
+   ],
+   "feasible": true,
+   "P0_margin_ps": -359.64,
+   "P1_margin_ps": -5.42,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "eps",
+   "bits": 32,
+   "ss_slack_ps": 844.126587,
+   "ff_slack_ps": -398.767151,
+   "req_min_ps": 398.77,
+   "max_arr_ps": 844.13,
+   "offset_window_ps": [
+    366.57,
+    698.53
+   ],
+   "feasible": true,
+   "P0_margin_ps": -366.57,
+   "P1_margin_ps": -12.35,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "go",
+   "bits": 1,
+   "ss_slack_ps": 880.664795,
+   "ff_slack_ps": -292.270294,
+   "req_min_ps": 292.27,
+   "max_arr_ps": 880.66,
+   "offset_window_ps": [
+    260.07,
+    735.06
+   ],
+   "feasible": true,
+   "P0_margin_ps": -260.07,
+   "P1_margin_ps": 94.15,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "in_v",
+   "bits": 1,
+   "ss_slack_ps": 901.116882,
+   "ff_slack_ps": -390.671509,
+   "req_min_ps": 390.67,
+   "max_arr_ps": 901.12,
+   "offset_window_ps": [
+    358.47,
+    755.52
+   ],
+   "feasible": true,
+   "P0_margin_ps": -358.47,
+   "P1_margin_ps": -4.25,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "in_x",
+   "bits": 256,
+   "ss_slack_ps": 652.678772,
+   "ff_slack_ps": -381.632782,
+   "req_min_ps": 381.63,
+   "max_arr_ps": 652.68,
+   "offset_window_ps": [
+    349.43,
+    507.08
+   ],
+   "feasible": true,
+   "P0_margin_ps": -349.43,
+   "P1_margin_ps": -129.03,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "n_f",
+   "bits": 32,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "req_min_ps": "-inf",
+   "max_arr_ps": "inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "pre",
+   "bits": 128,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "req_min_ps": "-inf",
+   "max_arr_ps": "inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "rst_n",
+   "bits": 1,
+   "ss_slack_ps": 752.680603,
+   "ff_slack_ps": -378.752747,
+   "req_min_ps": 378.75,
+   "max_arr_ps": 752.68,
+   "offset_window_ps": [
+    346.55,
+    607.08
+   ],
+   "feasible": true,
+   "P0_margin_ps": -346.55,
+   "P1_margin_ps": -29.03,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "sin_t",
+   "bits": 128,
+   "ss_slack_ps": 946.524536,
+   "ff_slack_ps": -397.684082,
+   "req_min_ps": 397.68,
+   "max_arr_ps": 946.52,
+   "offset_window_ps": [
+    365.48,
+    800.92
+   ],
+   "feasible": true,
+   "P0_margin_ps": -365.48,
+   "P1_margin_ps": -11.26,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "wl_d",
+   "bits": 256,
+   "ss_slack_ps": 1206.704834,
+   "ff_slack_ps": -398.708588,
+   "req_min_ps": 398.71,
+   "max_arr_ps": 1206.7,
+   "offset_window_ps": [
+    366.51,
+    1061.1
+   ],
+   "feasible": true,
+   "P0_margin_ps": -366.51,
+   "P1_margin_ps": -12.29,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "wl_i",
+   "bits": 8,
+   "ss_slack_ps": 832.321167,
+   "ff_slack_ps": -362.359131,
+   "req_min_ps": 362.36,
+   "max_arr_ps": 832.32,
+   "offset_window_ps": [
+    330.16,
+    686.72
+   ],
+   "feasible": true,
+   "P0_margin_ps": -330.16,
+   "P1_margin_ps": 24.06,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "wl_v",
+   "bits": 1,
+   "ss_slack_ps": 854.888306,
+   "ff_slack_ps": -341.17157,
+   "req_min_ps": 341.17,
+   "max_arr_ps": 854.89,
+   "offset_window_ps": [
+    308.97,
+    709.29
+   ],
+   "feasible": true,
+   "P0_margin_ps": -308.97,
+   "P1_margin_ps": 45.25,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "fault",
+   "bits": 1,
+   "ss_slack_ps": -20.390522,
+   "ff_slack_ps": 420.451294,
+   "out_min_ps": 445.45,
+   "out_max_ps": 793.39,
+   "offset_window_ps": [
+    78.99,
+    406.85
+   ],
+   "feasible": true,
+   "P0_margin_ps": -78.99,
+   "P1_margin_ps": 9.07,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q_codes",
+   "bits": 256,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q_e",
+   "bits": 10,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q_i",
+   "bits": 8,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q_v",
+   "bits": 1,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q_y",
+   "bits": 512,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "r",
+   "bits": 32,
+   "ss_slack_ps": -107.973686,
+   "ff_slack_ps": 405.779175,
+   "out_min_ps": 430.78,
+   "out_max_ps": 880.97,
+   "offset_window_ps": [
+    166.57,
+    392.18
+   ],
+   "feasible": true,
+   "P0_margin_ps": -166.57,
+   "P1_margin_ps": -5.6,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "r_v",
+   "bits": 1,
+   "ss_slack_ps": -25.626778,
+   "ff_slack_ps": 419.823914,
+   "out_min_ps": 444.82,
+   "out_max_ps": 798.63,
+   "offset_window_ps": [
+    84.23,
+    406.22
+   ],
+   "feasible": true,
+   "P0_margin_ps": -84.23,
+   "P1_margin_ps": 8.45,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "ro",
+   "bits": 256,
+   "ss_slack_ps": -67.381104,
+   "ff_slack_ps": 389.291901,
+   "out_min_ps": 414.29,
+   "out_max_ps": 840.38,
+   "offset_window_ps": [
+    125.98,
+    375.69
+   ],
+   "feasible": true,
+   "P0_margin_ps": -125.98,
+   "P1_margin_ps": -22.09,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "ro_v",
+   "bits": 1,
+   "ss_slack_ps": -11.462276,
+   "ff_slack_ps": 411.994995,
+   "out_min_ps": 436.99,
+   "out_max_ps": 784.46,
+   "offset_window_ps": [
+    70.06,
+    398.39
+   ],
+   "feasible": true,
+   "P0_margin_ps": -70.06,
+   "P1_margin_ps": 0.62,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "y",
+   "bits": 256,
+   "ss_slack_ps": -180.328079,
+   "ff_slack_ps": 394.415802,
+   "out_min_ps": 419.42,
+   "out_max_ps": 953.33,
+   "offset_window_ps": [
+    238.93,
+    380.82
+   ],
+   "feasible": true,
+   "P0_margin_ps": -238.93,
+   "P1_margin_ps": -16.96,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "y_i",
+   "bits": 8,
+   "ss_slack_ps": -29.147129,
+   "ff_slack_ps": 401.131287,
+   "out_min_ps": 426.13,
+   "out_max_ps": 802.15,
+   "offset_window_ps": [
+    87.75,
+    387.53
+   ],
+   "feasible": true,
+   "P0_margin_ps": -87.75,
+   "P1_margin_ps": -10.25,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "y_v",
+   "bits": 1,
+   "ss_slack_ps": -71.375908,
+   "ff_slack_ps": 448.281128,
+   "out_min_ps": 473.28,
+   "out_max_ps": 844.38,
+   "offset_window_ps": [
+    129.98,
+    434.68
+   ],
+   "feasible": true,
+   "P0_margin_ps": -129.98,
+   "P1_margin_ps": 36.9,
+   "P0": false,
+   "P1": true
+  }
+ ],
+ "summary": {
+  "groups": 25,
+  "infeasible": [],
+  "common_offset": {
+   "in": {
+    "window_ps": [
+     366.57,
+     507.08
+    ],
+    "width_ps": 140.51,
+    "feasible": true
+   },
+   "out": {
+    "window_ps": [
+     238.93,
+     375.69
+    ],
+    "width_ps": 136.76,
+    "feasible": true
+   }
+  },
+  "P0_pass": false,
+  "P1_pass": false,
+  "P0_worst_margin_ps": -366.57,
+  "P1_worst_margin_ps": -129.03,
+  "P0_fail": [
+   "cos_t",
+   "eps",
+   "go",
+   "in_v",
+   "in_x",
+   "rst_n",
+   "sin_t",
+   "wl_d",
+   "wl_i",
+   "wl_v",
+   "fault",
+   "r",
+   "r_v",
+   "ro",
+   "ro_v",
+   "y",
+   "y_i",
+   "y_v"
+  ],
+  "P1_fail": [
+   "cos_t",
+   "eps",
+   "in_v",
+   "in_x",
+   "rst_n",
+   "sin_t",
+   "wl_d",
+   "r",
+   "ro",
+   "y",
+   "y_i"
+  ]
+ }
+}

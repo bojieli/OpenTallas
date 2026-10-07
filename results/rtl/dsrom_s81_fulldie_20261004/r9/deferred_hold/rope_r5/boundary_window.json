@@ -1,0 +1,256 @@
+{
+ "schema": "opentallas.dsrom-s81.boundary-window.v1",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "unit": "rope_r5",
+ "top": "ot_dsrom_su_qbank",
+ "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/rope_r5/work/orfs/results/asap7/opentallas_ot_dsrom_su_qbank_asap7_rope_r5/base",
+ "wire_ps": 30.0,
+ "dff": {
+  "clkq_min_ff": 32.2,
+  "clkq_max_ss": 115.6,
+  "setup_ss": 28.6,
+  "hold_ff": 13.6
+ },
+ "clock_tree_path_ps": {
+  "ss": {
+   "min_clock_tree_path": 854.21509,
+   "max_clock_tree_path": 957.70593
+  },
+  "ff": {
+   "min_clock_tree_path": 529.77448,
+   "max_clock_tree_path": 616.26813
+  }
+ },
+ "groups": [
+  {
+   "kind": "in",
+   "port": "cs",
+   "bits": 2048,
+   "ss_slack_ps": 584.768494,
+   "ff_slack_ps": -632.409058,
+   "req_min_ps": 632.41,
+   "max_arr_ps": 584.77,
+   "offset_window_ps": [
+    600.21,
+    439.17
+   ],
+   "feasible": false,
+   "P0_margin_ps": -600.21,
+   "P1_margin_ps": -518.54,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "fp4",
+   "bits": 1,
+   "ss_slack_ps": 1600.091675,
+   "ff_slack_ps": -586.104309,
+   "req_min_ps": 586.1,
+   "max_arr_ps": 1600.09,
+   "offset_window_ps": [
+    553.9,
+    1454.49
+   ],
+   "feasible": true,
+   "P0_margin_ps": -553.9,
+   "P1_margin_ps": -24.13,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "rst_n",
+   "bits": 1,
+   "ss_slack_ps": -3529.434326,
+   "ff_slack_ps": -566.887878,
+   "req_min_ps": 566.89,
+   "max_arr_ps": -3529.43,
+   "offset_window_ps": [
+    534.69,
+    -3675.03
+   ],
+   "feasible": false,
+   "P0_margin_ps": -3675.03,
+   "P1_margin_ps": -4632.74,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "v",
+   "bits": 1,
+   "ss_slack_ps": 1483.503662,
+   "ff_slack_ps": -500.528687,
+   "req_min_ps": 500.53,
+   "max_arr_ps": 1483.5,
+   "offset_window_ps": [
+    468.33,
+    1337.9
+   ],
+   "feasible": true,
+   "P0_margin_ps": -468.33,
+   "P1_margin_ps": 61.45,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "x",
+   "bits": 4096,
+   "ss_slack_ps": 1312.969482,
+   "ff_slack_ps": -643.20813,
+   "req_min_ps": 643.21,
+   "max_arr_ps": 1312.97,
+   "offset_window_ps": [
+    611.01,
+    1167.37
+   ],
+   "feasible": true,
+   "P0_margin_ps": -611.01,
+   "P1_margin_ps": -81.23,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "e",
+   "bits": 40,
+   "ss_slack_ps": -285.735321,
+   "ff_slack_ps": 559.457886,
+   "out_min_ps": 584.46,
+   "out_max_ps": 1058.74,
+   "offset_window_ps": [
+    344.34,
+    545.86
+   ],
+   "feasible": true,
+   "P0_margin_ps": -344.34,
+   "P1_margin_ps": -70.41,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "fault",
+   "bits": 1,
+   "ss_slack_ps": -706.401062,
+   "ff_slack_ps": 836.045349,
+   "out_min_ps": 861.05,
+   "out_max_ps": 1479.4,
+   "offset_window_ps": [
+    765.0,
+    822.45
+   ],
+   "feasible": true,
+   "P0_margin_ps": -765.0,
+   "P1_margin_ps": 89.21,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "q",
+   "bits": 1024,
+   "ss_slack_ps": -360.979584,
+   "ff_slack_ps": 558.949707,
+   "out_min_ps": 583.95,
+   "out_max_ps": 1133.98,
+   "offset_window_ps": [
+    419.58,
+    545.35
+   ],
+   "feasible": true,
+   "P0_margin_ps": -419.58,
+   "P1_margin_ps": -70.92,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "vo",
+   "bits": 1,
+   "ss_slack_ps": -663.593384,
+   "ff_slack_ps": 791.261719,
+   "out_min_ps": 816.26,
+   "out_max_ps": 1436.59,
+   "offset_window_ps": [
+    722.19,
+    777.66
+   ],
+   "feasible": true,
+   "P0_margin_ps": -722.19,
+   "P1_margin_ps": 132.02,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "y",
+   "bits": 2048,
+   "ss_slack_ps": -369.481232,
+   "ff_slack_ps": 558.646545,
+   "out_min_ps": 583.65,
+   "out_max_ps": 1142.48,
+   "offset_window_ps": [
+    428.08,
+    545.05
+   ],
+   "feasible": true,
+   "P0_margin_ps": -428.08,
+   "P1_margin_ps": -71.22,
+   "P0": false,
+   "P1": false
+  }
+ ],
+ "summary": {
+  "groups": 10,
+  "infeasible": [
+   "cs",
+   "rst_n"
+  ],
+  "common_offset": {
+   "in": {
+    "window_ps": [
+     611.01,
+     -3675.03
+    ],
+    "width_ps": -4286.04,
+    "feasible": false
+   },
+   "out": {
+    "window_ps": [
+     765.0,
+     545.05
+    ],
+    "width_ps": -219.95,
+    "feasible": false
+   }
+  },
+  "P0_pass": false,
+  "P1_pass": false,
+  "P0_worst_margin_ps": -3675.03,
+  "P1_worst_margin_ps": -4632.74,
+  "P0_fail": [
+   "cs",
+   "fp4",
+   "rst_n",
+   "v",
+   "x",
+   "e",
+   "fault",
+   "q",
+   "vo",
+   "y"
+  ],
+  "P1_fail": [
+   "cs",
+   "fp4",
+   "rst_n",
+   "x",
+   "e",
+   "q",
+   "y"
+  ]
+ }
+}

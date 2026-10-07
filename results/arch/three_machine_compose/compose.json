@@ -28,45 +28,45 @@
     "record": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
    },
    "light_fec_superseded": {
-    "AR_us": 584.054,
-    "AR_tok_s": 1712.2,
-    "MTP_step_us": 831.67,
-    "MTP_tok_s": 5000.8,
-    "MTP_tok_s_tau_published": 4674.8,
-    "II_us": 25.038,
-    "measured_share": 1.0001
+    "AR_us": 605.083,
+    "AR_tok_s": 1652.7,
+    "MTP_step_us": 855.288,
+    "MTP_tok_s": 4862.7,
+    "MTP_tok_s_tau_published": 4545.7,
+    "II_us": 25.556,
+    "measured_share": 0.9999
    },
    "delta_vs_light_fec": {
-    "AR_us": 22.373,
-    "AR_tok_s": -63.2,
-    "MTP_step_us": 28.885,
-    "MTP_tok_s": -167.9
+    "AR_us": 22.372,
+    "AR_tok_s": -59.0,
+    "MTP_step_us": 28.886,
+    "MTP_tok_s": -158.9
    },
    "rule": "OWNER 2026-10-06: full RS(544,514) on every off-package link (stage hops, token return, TP4 collectives, embed and draft links, all re-measured in RTL) + cable flight per hop class (results/arch/dsrom_s81_rack_20261006/rack.json); light FEC kept only as the superseded row"
   },
-  "AR_us": 606.427,
-  "AR_tok_s": 1649.0,
-  "MTP_step_us": 860.555,
-  "MTP_tok_s": 4832.9,
-  "MTP_tok_s_tau_published": 4517.9,
-  "II_us": 25.625,
-  "measured_share": 1.0001,
+  "AR_us": 627.455,
+  "AR_tok_s": 1593.7,
+  "MTP_step_us": 884.174,
+  "MTP_tok_s": 4703.8,
+  "MTP_tok_s_tau_published": 4397.2,
+  "II_us": 26.143,
+  "measured_share": 1.0,
   "tau": 4.159,
   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
   "tau_sensitivity": {
    "published": {
     "tau": 3.8879,
-    "MTP_tok_s": 4517.9,
+    "MTP_tok_s": 4397.2,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
    },
    "published_low": {
     "tau": 3.43,
-    "MTP_tok_s": 3985.8,
+    "MTP_tok_s": 3879.3,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
    },
    "published_high": {
     "tau": 4.31748,
-    "MTP_tok_s": 5017.1,
+    "MTP_tok_s": 4883.1,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
   },
@@ -81,8 +81,8 @@
     "delta": {
      "AR_us": 0.0,
      "AR_tok_s": 0.0,
-     "MTP_step_us": -27.546,
-     "MTP_tok_s": 149.9
+     "MTP_step_us": -27.545,
+     "MTP_tok_s": 142.1
     }
    },
    "head": {
@@ -91,9 +91,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
     "delta": {
      "AR_us": -102.043,
-     "AR_tok_s": 237.5,
-     "MTP_step_us": -685.886,
-     "MTP_tok_s": 2143.5
+     "AR_tok_s": 222.9,
+     "MTP_step_us": -683.296,
+     "MTP_tok_s": 2050.5
     }
    },
    "router": {
@@ -101,10 +101,10 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
     "delta": {
-     "AR_us": -12.099,
-     "AR_tok_s": 32.3,
-     "MTP_step_us": -13.619,
-     "MTP_tok_s": 75.3
+     "AR_us": -12.1,
+     "AR_tok_s": 30.1,
+     "MTP_step_us": -13.618,
+     "MTP_tok_s": 71.3
     }
    },
    "su_hcpost": {
@@ -113,9 +113,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json",
     "delta": {
      "AR_us": -16.133,
-     "AR_tok_s": 42.7,
-     "MTP_step_us": -18.159,
-     "MTP_tok_s": 99.8
+     "AR_tok_s": 39.9,
+     "MTP_step_us": -18.158,
+     "MTP_tok_s": 94.6
     }
    },
    "su_norm": {
@@ -123,10 +123,10 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
     "delta": {
-     "AR_us": -43.073,
-     "AR_tok_s": 109.4,
+     "AR_us": -43.074,
+     "AR_tok_s": 102.3,
      "MTP_step_us": -48.344,
-     "MTP_tok_s": 257.0
+     "MTP_tok_s": 243.8
     }
    },
    "su_routeract": {
@@ -135,9 +135,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json",
     "delta": {
      "AR_us": -11.555,
-     "AR_tok_s": 30.8,
-     "MTP_step_us": -13.006,
-     "MTP_tok_s": 71.9
+     "AR_tok_s": 28.8,
+     "MTP_step_us": -13.005,
+     "MTP_tok_s": 68.2
     }
    },
    "su_swiglu": {
@@ -146,9 +146,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
     "delta": {
      "AR_us": -18.013,
-     "AR_tok_s": 47.6,
+     "AR_tok_s": 44.4,
      "MTP_step_us": -21.175,
-     "MTP_tok_s": 116.0
+     "MTP_tok_s": 110.0
     }
    },
    "field_spine": {
@@ -156,19 +156,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine.json",
     "delta": {
-     "AR_us": -10.192,
-     "AR_tok_s": 28.2,
-     "MTP_step_us": -12.04,
-     "MTP_tok_s": 68.6
+     "AR_us": -10.209,
+     "AR_tok_s": 26.4,
+     "MTP_step_us": -12.061,
+     "MTP_tok_s": 65.1
     },
     "if_adopted": {
-     "AR_us": 596.235,
-     "AR_tok_s": 1677.2,
-     "MTP_step_us": 848.515,
-     "MTP_tok_s": 4901.5,
-     "MTP_tok_s_tau_published": 4582.0,
-     "II_us": 25.255,
-     "measured_share": 1.0001
+     "AR_us": 617.246,
+     "AR_tok_s": 1620.1,
+     "MTP_step_us": 872.113,
+     "MTP_tok_s": 4768.9,
+     "MTP_tok_s_tau_published": 4458.0,
+     "II_us": 25.772,
+     "measured_share": 1.0
     }
    },
    "field_spine_pq": {
@@ -176,19 +176,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json",
     "delta": {
-     "AR_us": -130.457,
-     "AR_tok_s": 452.0,
-     "MTP_step_us": -154.826,
-     "MTP_tok_s": 1060.3
+     "AR_us": -130.678,
+     "AR_tok_s": 419.3,
+     "MTP_step_us": -155.09,
+     "MTP_tok_s": 1000.6
     },
     "if_adopted": {
-     "AR_us": 475.97,
-     "AR_tok_s": 2101.0,
-     "MTP_step_us": 705.729,
-     "MTP_tok_s": 5893.2,
-     "MTP_tok_s_tau_published": 5509.1,
-     "II_us": 20.751,
-     "measured_share": 1.0001
+     "AR_us": 496.777,
+     "AR_tok_s": 2013.0,
+     "MTP_step_us": 729.084,
+     "MTP_tok_s": 5704.4,
+     "MTP_tok_s_tau_published": 5332.6,
+     "II_us": 21.26,
+     "measured_share": 1.0
     }
    },
    "qelem_pq": {
@@ -196,19 +196,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json",
     "delta": {
-     "AR_us": -121.114,
-     "AR_tok_s": 411.5,
-     "MTP_step_us": -143.785,
-     "MTP_tok_s": 969.5
+     "AR_us": -121.141,
+     "AR_tok_s": 381.4,
+     "MTP_step_us": -143.851,
+     "MTP_tok_s": 914.0
     },
     "if_adopted": {
-     "AR_us": 485.313,
-     "AR_tok_s": 2060.5,
-     "MTP_step_us": 716.77,
-     "MTP_tok_s": 5802.4,
-     "MTP_tok_s_tau_published": 5424.2,
-     "II_us": 21.09,
-     "measured_share": 1.0002
+     "AR_us": 506.314,
+     "AR_tok_s": 1975.1,
+     "MTP_step_us": 740.323,
+     "MTP_tok_s": 5617.8,
+     "MTP_tok_s_tau_published": 5251.6,
+     "II_us": 21.601,
+     "measured_share": 1.0
     }
    },
    "su_softmax": {
@@ -216,19 +216,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json",
     "delta": {
-     "AR_us": -12.885,
-     "AR_tok_s": 35.8,
-     "MTP_step_us": -14.483,
-     "MTP_tok_s": 82.8
+     "AR_us": -12.851,
+     "AR_tok_s": 33.4,
+     "MTP_step_us": -14.446,
+     "MTP_tok_s": 78.2
     },
     "if_adopted": {
-     "AR_us": 593.542,
-     "AR_tok_s": 1684.8,
-     "MTP_step_us": 846.072,
-     "MTP_tok_s": 4915.7,
-     "MTP_tok_s_tau_published": 4595.2,
-     "II_us": 25.305,
-     "measured_share": 1.0001
+     "AR_us": 614.604,
+     "AR_tok_s": 1627.1,
+     "MTP_step_us": 869.728,
+     "MTP_tok_s": 4782.0,
+     "MTP_tok_s_tau_published": 4470.2,
+     "II_us": 25.824,
+     "measured_share": 1.0
     }
    },
    "field": {
@@ -256,13 +256,13 @@
     "qelem_pq": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
    },
    "composed": {
-    "AR_us": 463.085,
-    "AR_tok_s": 2159.4,
-    "MTP_step_us": 691.245,
-    "MTP_tok_s": 6016.7,
-    "MTP_tok_s_tau_published": 5624.5,
-    "II_us": 20.431,
-    "measured_share": 1.0001
+    "AR_us": 483.925,
+    "AR_tok_s": 2066.4,
+    "MTP_step_us": 714.638,
+    "MTP_tok_s": 5819.7,
+    "MTP_tok_s_tau_published": 5440.4,
+    "II_us": 20.941,
+    "measured_share": 1.0
    },
    "note": "all PENDING_SSFF levers (alternatives resolved) flipped to ADOPT together; not a headline"
   }
@@ -502,21 +502,21 @@
   }
  },
  "ratios": {
-  "ds_rom_over_hbm_ar": 0.8462,
-  "ds_rom_over_hbm_mtp": 1.2253,
+  "ds_rom_over_hbm_ar": 0.8178,
+  "ds_rom_over_hbm_mtp": 1.1926,
   "hbm_row": "median",
   "by_wire_basis": {
    "floor": {
-    "ar": 0.8246,
-    "mtp": 1.2101
+    "ar": 0.797,
+    "mtp": 1.1778
    },
    "median": {
-    "ar": 0.8462,
-    "mtp": 1.2253
+    "ar": 0.8178,
+    "mtp": 1.1926
    },
    "bound": {
-    "ar": 0.8582,
-    "mtp": 1.2338
+    "ar": 0.8294,
+    "mtp": 1.2008
    }
   }
  },
@@ -567,7 +567,7 @@
    "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "48b20fb7033275a09559b912d839658fd4ef14f10161160ad492c02fc455c7e2"
   },
   "ds_rom_composition": {
-   "results/rtl/dsrom_recovery_20261004/composition.json": "f9775c407737e21dc078909e21334ab0f310961b7acab7c65fd6859b0e1d3923"
+   "results/rtl/dsrom_recovery_20261004/composition.json": "bea3645b2e04c9628f98960b3450fb778cb51fec6a09a52ba4e49a0c3bd9e062"
   },
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
