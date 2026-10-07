@@ -17,13 +17,13 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${SA[@]}" "${PA[@]}"
   --io-delay-fraction 0.2 --false-path-from rst_n --stages pnr --core-utilization 35 --place-density 0.55 \
   --hold-margin-ns $HM --max-fanout 32 --slew-margin-percent 30 \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=$CORES \
-  --sdc-append physical/dsrom_su_softmax_safe/route_io_false.sdc \
+  --sdc-append physical/dsrom_su_softmax_safe/route_io_false.sdc ${MC:+--sdc-append physical/dsrom_su_softmax_safe/mc2.sdc} \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --nickname-tag safe_$L --keep-workdir $O/work --output $O/physical.json --force "$@" > $O/run.log 2>&1
 rc=$?
 echo "rc=$rc" > $O/exit
 if [ $rc -eq 0 ] && [ -z "${CL_STOP_AFTER:-}" ] && [[ " $* " != *"--pnr-stop-after"* ]]; then
-  python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs --post-sdc physical/dsrom_su_softmax_safe/signoff_833.sdc --output $O/corner_sta.json > $O/sta.log 2>&1
+  python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs --post-sdc physical/dsrom_su_softmax_safe/signoff_833.sdc ${MC:+--post-sdc physical/dsrom_su_softmax_safe/mc2.sdc} --output $O/corner_sta.json > $O/sta.log 2>&1
   echo "corner_rc=$?" >> $O/exit
   bash physical/dsrom_su_softmax_safe/check_io.sh $O > $O/io_check.log 2>&1; echo "io_rc=$?" >> $O/exit
 fi

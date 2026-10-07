@@ -444,3 +444,34 @@ module ot_dsrom_su_softmax_exp_tile #(
     always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
     ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault));
 endmodule
+
+// SAFE half-rate backstop (owner 2026-10-07): two copies of the unchanged exp unit, each on a clock-gated half-rate domain
+// (even / odd cycles; ot_hdc_cg), fed and merged so the wrapper keeps II 1.  Every core-internal path gets two cycles
+// (multicycle-2 SDC on u_a.* / u_b.*).  Latency from x to y: 2 * DEPTH + 1 (DEPTH = the core's, 7 LM + 8 LA + 4 + NSPLIT + (NSPLIT == 2)).
+module ot_dsrom_su_softmax_exp_hr #(
+    parameter integer LM = 3, parameter integer LA = 6, parameter integer NSPLIT = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] x,
+    output reg  [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    localparam integer DEPTH = 7 * LM + 8 * LA + 4 + NSPLIT + ((NSPLIT == 2) ? 1 : 0);
+    reg ph; reg [31:0] xr; reg vr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin ph <= 1'b0; vr <= 1'b0; end else begin ph <= ~ph; vr <= v; end
+    always @(posedge clk) xr <= x;
+    wire gclk_a, gclk_b;
+    ot_hdc_cg u_cga (.clk(clk), .en(!ph | !rst_n), .gclk(gclk_a));    // edges at the end of even cycles
+    ot_hdc_cg u_cgb (.clk(clk), .en(ph | !rst_n), .gclk(gclk_b));     // odd cycles
+    wire [31:0] ya, yb; wire fa, fb;
+    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u_a (.clk(gclk_a), .rst_n(rst_n), .v(vr & ~ph), .x(xr), .y(ya), .vo(), .fault(fa));
+    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u_b (.clk(gclk_b), .rst_n(rst_n), .v(vr & ph), .x(xr), .y(yb), .vo(), .fault(fb));
+    always @(posedge clk) y <= ph ? yb : ya;      // sampled in the cycle after the core's update (ph odd: A's result, even: B's)
+    wire [2*DEPTH+1:0] vd;
+    ot_hdc_vline #(.D(2 * DEPTH + 1)) u_vl (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    assign vo = vd[2*DEPTH+1];
+    assign fault = fa | fb;
+endmodule
