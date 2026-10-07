@@ -98,6 +98,8 @@ def prepare(job, source, numerical_top, provider, output,
     if parallel_transport:
         if not cdc_consumer_join or landing_rsel != 1:
             raise ValueError('parallel protected P0 requires explicit corrected owner RSEL1 join')
+        params = [v for v in params if not v.startswith('-GSAME_CYCLE_GO=')]
+        params += ['-GSAME_CYCLE_GO=1']  # early-go: GO accepted with its own descriptor
         parallel_leaf = source/'rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv'
         if not parallel_leaf.is_file():
             raise FileNotFoundError('actual owner sector-protected RSEL1 leaf required: '+str(parallel_leaf))
@@ -127,6 +129,7 @@ def prepare(job, source, numerical_top, provider, output,
                 '--prefix', 'Vdie', '--mod-prefix', 'Vdie', '--threads', '1',
                 '--Mdir', str(obj), '-Wno-fatal', '-Wno-TIMESCALEMOD',
                 '-I/srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc',
+                '-I'+str(source/'rtl/hdc/kv'),  # ot_qwen_kv_map_m.svh (KV_MAP option M, default off)
                 *hierarchy, *params, *map(str, paths+configs)]
     # Compile this top only. VM_HIER_LIBS is supplied on make's command line,
     # pointing to completed archives, so no retained leaf Makefile is invoked.

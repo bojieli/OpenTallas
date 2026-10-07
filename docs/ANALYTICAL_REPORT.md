@@ -715,8 +715,22 @@ verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_full
 
 #### Decision and scope
 
-- **The Qwen3-8B ROM operates in AR mode at 8K: 194,498 cycles = 6,169.7 tok/s
-  per user on STREAM4** (5,974.3 with the wire-stage bound).
+- **The Qwen3-8B ROM operates in AR mode at 8K.** The verdict above was taken on
+  the layer composition, 194,498 cycles = 6,169.7 tok/s per user on STREAM4.
+- **Closed configuration (owner decision, 2026-10-06).** The headline is the
+  measured full token, 193,955 cycles (36 layers and the head, next-token argmax
+  on all four ranks), plus the adopted levers' measured cycles: core r5_f2ba +0,
+  slab MUL_LAT 7 +217, and KV landing Option M (KV_MAP=1) +54 on the cold first
+  layer. That is 194,226 cycles <!-- figure: 194226 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
+  = **6,178.4** tok/s per user at 1.2 GHz. <!-- figure: 6178.4 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+  The Option M die crossbar adds a modelled (not RTL) +24 cycles, which gives
+  6,177.6 tok/s. <!-- figure: 6177.6 src="results/arch/three_machine_compose/compose.json#qwen_rom.modelled_sensitivity.AR_tok_s" name="Qwen ROM modelled-crossbar sensitivity" -->
+  The shipped KV path is the unprotected STREAM4 service; the protected
+  full-width transport was explored and not adopted. Blocks closed under the
+  prior Qwen bar (SS60 / FF25 slack at or above 0); the die-top route is not done
+  (`results/rtl/qwen_rom_closed_20261006/closure.json`). The wire-stage bounds
+  above (5,974.3 here; the r18g die bound in the three-machine table) predate the
+  closed die and are not headlines.
 - DSpark is built and exact on this datapath: verify, commit and rollback, KV
   multi-position commit, drafter layers, and ingest/Markov. It is switched off
   by default. It is not a headline.

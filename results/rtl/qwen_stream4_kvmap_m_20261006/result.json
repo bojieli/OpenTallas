@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.qwen_stream4_kvmap_m.v1",
+ "lever": "STREAM4 KV stripe OPTION M (KV_MAP=1, default 0): stack = die quadrant of the sector destination tiles (V: r[1:0]; K: QK(g mod 48)), PC q = {r6, r[5:2]}, per-PC stream [K x4 if QK(g)=k][V] per tile g; per-stack descriptor n; rtl/hdc/kv/ot_qwen_kv_map_m.svh in ot_qwen_rt_kv_stream4_service / ot_qwen_hbm_stream4_ack / ot_qwen_hbm_stream4_cdc",
+ "decision": "coordinator/owner 2026-10-06: Option M (Claude decides design); die r19/r20 per-stack quadrant crossbar kept as built",
+ "bench": {
+  "top": "tb_qwen_rt_kv_stream4 (CDC variant, SYNC 2 RSEL 1 RNG 10, KVB_HPHASE 0)",
+  "host": "EPYC1 /srv/opentallas/scratch-overflow/claude/qwen-kvmap-m",
+  "KV_MAP_0": "15/15 PASS (logs/all_m0.log)",
+  "KV_MAP_1": "15/15 PASS, slices and token HBM codes exact (logs/all_m1.log)",
+  "negative_control": "KV_MAP=1 service with KV_MAP_HBM=0 backend: ISO_P8191 FAIL (timeout after 1,568 of 131,072 sectors: the service rejects every off-map landed sector) as expected (logs/iso_neg.log)"
+ },
+ "iso_p8191": {
+  "base": {
+   "fill_cycles": 1355,
+   "kv_ok_after_start": 1831,
+   "landing_span": 1290
+  },
+  "m": {
+   "fill_cycles": 1363,
+   "kv_ok_after_start": 1885,
+   "landing_span": 1298
+  },
+  "chain_early_posted_P8191": {
+   "base_B_fill_exposed": 0,
+   "m_B_fill_exposed": 0
+  },
+  "chain_short_mlp_P8191": {
+   "base_B_fill_exposed": 913,
+   "m_B_fill_exposed": 910
+  }
+ },
+ "landing_trace_m": {
+  "beats": 131072,
+  "slice_writes": 196592,
+  "beats_per_stack": [
+   32768,
+   32768,
+   32768,
+   32768
+  ],
+  "out_of_quadrant_writes": 0,
+  "note": "die binding QUAD_BLOCKS (tools/qwen_kv_landing_fabric.py placement_m, claude/qwen-die-rebuild-20261005)"
+ },
+ "landing_trace_base_out_of_quadrant_writes": 131062,
+ "fabric_model_on_m_trace": {
+  "status": "MODELLED (cycle model of the die r19 per-stack crossbar + 768 b row fabric on the measured KV_MAP=1 landing trace)",
+  "rows_768b_ins8_fifo64": {
+   "added_cycles_over_span": 24,
+   "fill_end": 1322,
+   "busiest_row_util": 0.856
+  },
+  "rows_768b_ins4_fifo64": {
+   "added_cycles_over_span": 657
+  }
+ },
+ "token_cost": "steady state (early_go + posted write-back, the token mode): fill fully hidden in both maps (exposed 0); cold first layer +8 cycles fill (+54 kv_ok in the isolated case); fabric +24 cycles inside the hidden fill window",
+ "source_commit": "6723e0593"
+}

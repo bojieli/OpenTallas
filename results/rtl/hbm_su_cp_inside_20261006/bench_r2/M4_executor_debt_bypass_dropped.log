@@ -1,0 +1,4 @@
+MISMATCH cyc=3984 new=005c0000004f64da0ec8c3d23f9ad0 orig_d=005c0000004f64da0ec8c3d23f9ad4 diff=000000000000000000000000000004
+EXACT OWN_IN=1 OWN_OUT=1 EXEC_IN=0 EXEC_OUT=1 OUT=1 checks=96025 mismatches=22 first=3984 launches=1682 native=549 leases=523 release_accepts=375 done=347 fault_cycles=52421 upsets=187 owner_changes=259 revokes=31 shared_faults=33 exec_faults=18 raw_cycles=326 resets=1324
+FAIL
+rtl/test/hbm_accel/su_cp_side_20261006/tb_su_cp_side_exact.sv:160: $finish called at 1013255000 (1ps)

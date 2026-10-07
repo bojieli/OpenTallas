@@ -1,0 +1,3 @@
+EXACT OWN_IN=1 OWN_OUT=1 EXEC_IN=0 EXEC_OUT=1 OUT=1 checks=384127 mismatches=0 first=-1 launches=6765 native=2312 leases=2089 release_accepts=1531 done=1430 fault_cycles=208039 upsets=773 owner_changes=1009 revokes=115 shared_faults=169 exec_faults=60 raw_cycles=1328 resets=5290
+PASS
+rtl/test/hbm_accel/su_cp_side_20261006/tb_su_cp_side_exact.sv:160: $finish called at 4052915000 (1ps)

@@ -9,7 +9,8 @@
 module ot_qwen_s4_numeric_memory #(
     parameter integer MEM_WORDS=36*131072,
     parameter integer PHASE=0,
-    parameter integer PULLIN=0
+    parameter integer PULLIN=0,
+    parameter integer KV_MAP=0 // 1: option-M quadrant-local KV stripe (ot_qwen_kv_map_m.svh); default off
 )(
     input wire hclk, rst_n,
     input wire [127:0] row_v,col_v,col_we,
@@ -55,21 +56,25 @@ module ot_qwen_s4_numeric_memory #(
 
     reg [255:0] mem [0:MEM_WORDS-1] /*verilator public_flat_rw*/;
 
+`include "ot_qwen_kv_map_m.svh"
     function automatic [16:0] p2l(input integer port, input [4:0] bk, input [4:0] cl);
         reg [9:0] j; reg [4:0] q; reg [1:0] k;
         begin
             j = {bk[4:2], cl, bk[1:0]}; q = 5'(port % 32); k = 2'(port / 32);
-            p2l = {j[0], q[4], j[9:1], q[3:0], k};
+            p2l = (KV_MAP != 0) ? m_p2l(port, j) : {j[0], q[4], j[9:1], q[3:0], k};
         end
     endfunction
     function automatic integer l2port(input [16:0] l);
-        l2port = integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+        l2port = (KV_MAP != 0) ? m_l2port(l) : integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+    endfunction
+    function automatic [9:0] l2j(input [16:0] l);
+        l2j = (KV_MAP != 0) ? m_l2j(l) : {l[14:6], l[16]};
     endfunction
     function automatic [4:0] l2bank(input [16:0] l);
-        reg [9:0] j; begin j = {l[14:6], l[16]}; l2bank = {j[9:7], j[1:0]}; end
+        reg [9:0] j; begin j = l2j(l); l2bank = {j[9:7], j[1:0]}; end
     endfunction
     function automatic [4:0] l2col(input [16:0] l);
-        reg [9:0] j; begin j = {l[14:6], l[16]}; l2col = j[6:2]; end
+        reg [9:0] j; begin j = l2j(l); l2col = j[6:2]; end
     endfunction
 
     longint now;

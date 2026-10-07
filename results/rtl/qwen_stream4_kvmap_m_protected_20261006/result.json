@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.qwen_stream4_kvmap_m_protected.v1",
+ "lever": "Option M KV stripe (KV_MAP=1, default 0) through the PROTECTED STREAM4 transport: ot_qwen_s4_protected_pc write/landing PC identity uses m_l2port (was hard-coded {sec[1:0],sec[15],sec[5:2]}); ot_qwen_hbm_stream4_cdc passes KV_MAP (KV_MAP_PC negative-control hook); full-width parallel path ot_qwen_s4_parallel_protected_pc / ot_qwen_p0_parallel_bank / ot_qwen_p0_parallel_transport_context (bank/column via l2j, per-stack descriptor n via m_n) and ot_qwen_s4_numeric_memory (p2l/l2port/l2j). full_build.py adds -I rtl/hdc/kv for ot_qwen_kv_map_m.svh.",
+ "default_off": "KV_MAP=0 everywhere; KV_MAP=0 results identical to base",
+ "bench_stream4_protected": {
+  "top": "tb_qwen_rt_kv_stream4 CDC variant, PROTECTED=1 SYNC2 RSEL1 RNG10 (Verilator 5.032, EPYC1 /srv/opentallas/scratch-overflow/claude/qwen-kvmap-prot)",
+  "KV_MAP_0": "13/13 completing cases PASS exact (ISO x7, CHAIN x5, NEG_not_e4m3)",
+  "KV_MAP_1": "13/13 completing cases PASS exact; ISO_P8191 fill 1,460 cycles vs 1,466 base",
+  "not_completing_both_maps": "NEG_wrong_position and NEG_P8192_beyond_map hang under PROTECTED=1 for BOTH maps (pre-existing protected-bench harness behaviour, unchanged by this lever; killed after >1 h)",
+  "negative_control": "KV_MAP=1 service+HBM with KV_MAP_PC=0 protected identity: ISO_P8191 never completes (timeout 1,800 s, rc 124): every off-map landing is rejected"
+ },
+ "bench_parallel_bank": {
+  "top": "tb_qwen_p0_parallel_bank (32 parallel protected PCs, RSEL1, LOCAL_WIRE_SPANS 14; Verilator 5.050, AGIdock /srv/opentallas-scratch/claude/tk-qwen-kvm-bank; synthetic seeded gold data)",
+  "KV_MAP_0": "PASS (rows128, simultaneous32, WR32, ACK32, debt0)",
+  "KV_MAP_1": "PASS (stimulus sectors m_p2l(pc, j), stack 0)",
+  "negative_control": "KV_MAP=1 stimulus, DUT KV_MAP=0: FAIL (healthy-state fault) as required"
+ },
+ "cycle_cost": "0 (identity/map functions are combinational on already-present sector fields)",
+ "not_done": "full-width token with KV_MAP=1 not run: the full build takes ot_qwen_rt_kv_stream4_service from the src4 snapshot (no KV_MAP); KV_MAP is not plumbed above the transport context (full_numeric/join/consumer) to keep that build valid",
+ "source_commit": "see git log"
+}

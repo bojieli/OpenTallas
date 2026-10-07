@@ -29,7 +29,13 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer PROTECTED = 0,
     parameter integer SYNC      = 2,
     parameter integer RSEL      = 0,       // ot_qwen_stream4_cdc_pc landing read select: 1 = r9 (closed route r9a)
-    parameter integer RNG       = 10
+    parameter integer RNG       = 10,
+    parameter integer KV_MAP    = 0,       // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh)
+    parameter integer KV_MAP_PC = -1,      // protected PC identity map (-1: = KV_MAP); a differing value is a negative control only
+    parameter integer CDC_MARGIN = 0,      // 1: ot_qwen_stream4_cdc_pc MARGIN (pin registers, credit landing) + the
+                                           //    receiver's per-PC landing queue (LCRED words, registered credit return)
+    parameter integer LCRED     = 6,
+    parameter integer CDC_NEG   = 0        // negative control only: MARGIN element without the receiver queue
 ) (
     input  wire                 clk,
     input  wire                 rst_n, // cold POR only
@@ -65,21 +71,29 @@ module ot_qwen_hbm_stream4_cdc #(
 
     reg [255:0] mem [0:MEM_WORDS-1] /*verilator public_flat_rw*/;
 
+`include "ot_qwen_kv_map_m.svh"
     function automatic [16:0] p2l(input integer port, input [4:0] bk, input [4:0] cl);
         reg [9:0] j; reg [4:0] q; reg [1:0] k;
         begin
             j = {bk[4:2], cl, bk[1:0]}; q = 5'(port % 32); k = 2'(port / 32);
-            p2l = {j[0], q[4], j[9:1], q[3:0], k};
+            p2l = (KV_MAP != 0) ? m_p2l(port, j) : {j[0], q[4], j[9:1], q[3:0], k};
         end
     endfunction
     function automatic integer l2port(input [16:0] l);
-        l2port = integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+        l2port = (KV_MAP != 0) ? m_l2port(l) : integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+    endfunction
+    function automatic [9:0] l2j(input [16:0] l);
+        l2j = (KV_MAP != 0) ? m_l2j(l) : {l[14:6], l[16]};
     endfunction
     function automatic [4:0] l2bank(input [16:0] l);
-        reg [9:0] j; begin j = {l[14:6], l[16]}; l2bank = {j[9:7], j[1:0]}; end
+        reg [9:0] j; begin j = l2j(l); l2bank = {j[9:7], j[1:0]}; end
     endfunction
     function automatic [4:0] l2col(input [16:0] l);
-        reg [9:0] j; begin j = {l[14:6], l[16]}; l2col = j[6:2]; end
+        reg [9:0] j; begin j = l2j(l); l2col = j[6:2]; end
+    endfunction
+    // per-stack descriptor n (option M: the stacks' windows differ for P < 8191)
+    function automatic [10:0] nstk(input integer sk, input [10:0] n);
+        nstk = (KV_MAP != 0) ? m_n(sk, n) : n;
     endfunction
 
     // ---- per-domain reset release of the common reset epoch ----
@@ -109,7 +123,7 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC-1:0] wr_v; wire [NPC*5-1:0] wr_bank, wr_col; wire [NPC*24-1:0] wr_sec;
     for (genvar sk = 0; sk < NSTK; sk = sk + 1) begin : stk
         ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ), .PULLIN(PULLIN)) u_ctl (
-            .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(PROTECTED?protected_n:dq_n),
+            .clk(hclk), .rst_n(h_rst_n), .desc_v((PROTECTED?protected_dv:desc_v_q) && desc_r), .desc_r(desc_rk[sk]), .desc_row(PROTECTED?protected_row:dq_row), .desc_n(nstk(sk, PROTECTED?protected_n:dq_n)),
             .go(PROTECTED?protected_go:go_q), .next_posted(1'b0), .row_v(row_v[sk*32 +: 32]), .row_op(row_op[sk*96 +: 96]),
             .row_bank(row_bank[sk*160 +: 160]), .row_row(row_row[sk*608 +: 608]),
             .col_v(col_v[sk*32 +: 32]), .col_bank(col_bank[sk*160 +: 160]), .col_col(col_col[sk*160 +: 160]),
@@ -127,7 +141,8 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC-1:0] h_wcon = col_v & col_we;
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
         if(PROTECTED)begin:protected_path
-        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+        ot_qwen_s4_protected_pc #(.MEM_WORDS(MEM_WORDS), .PC_ID(q), .TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC),
+            .KV_MAP(KV_MAP_PC < 0 ? KV_MAP : KV_MAP_PC)) u_cdc (
             .clk(clk), .por_n(rst_n), .warm_rst_n(warm_rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
@@ -138,9 +153,35 @@ module ot_qwen_hbm_stream4_cdc #(
             .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),
             .h_av(ap_v[q]), .h_atag(ap_tag[q]), .h_fault(h_fault_p[q]));
         end else begin:raw_path
-        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_cdc (
+        // landing as the element presents it (MARGIN: one-cycle pushes) and the credit it gets back
+        wire e_lv, e_cr; wire [16:0] e_sec; wire [7:0] e_row; wire [255:0] e_dat;
+        if (CDC_MARGIN != 0 && CDC_NEG == 0) begin : g_rx
+            // the receiver's landing queue (physically the landing crossbar's per-PC port, die qfd_kvc): LCRED words,
+            // the service's l_v / l_pop interface on its head, one registered credit per consumed word
+            reg [280:0] rq [0:LCRED-1];
+            reg [$clog2(LCRED):0] rn; reg [$clog2(LCRED)-1:0] rh, rt; reg cr;
+            wire take = rn != 0 && l_pop[q];
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin rn <= 0; rh <= 0; rt <= 0; cr <= 1'b0; end
+                else begin
+                    if (e_lv) begin rq[rt] <= {e_sec, e_row, e_dat}; rt <= (rt == LCRED-1) ? 0 : rt + 1'b1; end
+                    if (take) rh <= (rh == LCRED-1) ? 0 : rh + 1'b1;
+                    rn <= rn + e_lv - take;
+                    cr <= take;
+                    if (e_lv && rn == LCRED && !take) $error("CDC_MARGIN landing queue overflow PC %0d", q);
+                end
+            assign l_v[q] = rn != 0;
+            assign {l_sec[q*17 +: 17], l_row[q*8 +: 8], l_data[q*256 +: 256]} = rq[rh];
+            assign e_cr = cr;
+        end else begin : g_direct
+            assign l_v[q] = e_lv;
+            assign {l_sec[q*17 +: 17], l_row[q*8 +: 8], l_data[q*256 +: 256]} = {e_sec, e_row, e_dat};
+            assign e_cr = l_pop[q];
+        end
+        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG),
+                                 .MARGIN(CDC_MARGIN), .LCRED(LCRED)) u_cdc (
             .clk(clk), .c_arst_n(rst_n),
-            .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
+            .l_v(e_lv), .l_sec(e_sec), .l_row(e_row), .l_data(e_dat), .l_pop(e_cr),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
             .w_room(w_room[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
             .hclk(hclk), .h_arst_n(rst_n),
