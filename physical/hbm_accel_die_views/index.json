@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r17",
- "generator_sha256": "e32261b724542b127e06cea447f2a2d883871ca7869d747c8d6f11f5dd0ca7bd",
+ "generator_sha256": "33402880b1a2090a4f8cb9066c0d3423ece76baab74efe72a966d7197999dc82",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -66,11 +66,9 @@
     "ff": "hfd_barrier_ff.lib"
    },
    "check": {
-    "verdict": "MISMATCH",
-    "problems": [
-     "2 pins off the generator position (same face)"
-    ],
-    "positions": "2 pins off the generator position (same face)",
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
     "size_view": [
      1399.66,
      36.696
@@ -1030,14 +1028,13 @@
    "check": {
     "verdict": "MISMATCH",
     "problems": [
-     "size 1399.66 x 133.896 != 1399.656 x 326.28",
      "pins: 0 missing, 0 extra, 0 wrong face, 512 wrong layer",
-     "1606 pins off the generator position (same face)"
+     "835 pins off the generator position (same face)"
     ],
-    "positions": "1606 pins off the generator position (same face)",
+    "positions": "835 pins off the generator position (same face)",
     "size_view": [
      1399.66,
-     133.896
+     326.28
     ],
     "size_gen": [
      1399.656,

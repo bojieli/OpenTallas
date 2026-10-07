@@ -181,10 +181,10 @@ def routed_paths(m, grt_work):
         Ld = [med[b] for b in ids]
         Lh = [manh(b) for b in ids]
         out[p] = dict(segments=len(ids), routed_um=round(sum(Ls), 1), routed_mean_bundle_um=round(sum(Lm), 1),
-                      stages_430=sum(math.ceil(x / F.stage_um(m)) for x in Ls if x > 0),
-                      stages_430_mean_bundle=sum(math.ceil(x / F.stage_um(m)) for x in Lm if x > 0),
-                      stages_430_median_bundle=sum(math.ceil(x / F.stage_um(m)) for x in Ld if x > 0),
-                      stages_430_manhattan=sum(math.ceil(x / F.stage_um(m)) for x in Lh if x > 0),
+                      stages_430=sum(F.seg_stages(m, b_, x) for b_, x in zip(ids, Ls) if x > 0),
+                      stages_430_mean_bundle=sum(F.seg_stages(m, b_, x) for b_, x in zip(ids, Lm) if x > 0),
+                      stages_430_median_bundle=sum(F.seg_stages(m, b_, x) for b_, x in zip(ids, Ld) if x > 0),
+                      stages_430_manhattan=sum(F.seg_stages(m, b_, x) for b_, x in zip(ids, Lh) if x > 0),
                       routed_median_bundle_um=round(sum(Ld), 1), manhattan_um=round(sum(Lh), 1),
                       stages_504=sum(math.ceil(x / F.SS_REACH_UM) for x in Ls if x > 0),
                       longest_segment_um=round(max(Ls), 1))
