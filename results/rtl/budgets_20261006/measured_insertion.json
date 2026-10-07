@@ -1890,7 +1890,28 @@
    },
    "boundary_n": 7774,
    "budget": null
+  },
+  "ot_hdc_v41_fh_ctl": {
+   "job": "dshead-ctl-r4-a03404341",
+   "source_commit": "a034043413a31730512a6748d6c55f3e03e2f38b",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-r4-a03404341",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T03:01:57-07:00",
+   "ss": {
+    "mean": 424,
+    "min": 401,
+    "max": 518
+   },
+   "ff": {
+    "mean": 275,
+    "min": 257,
+    "max": 356
+   },
+   "boundary_n": 696,
+   "budget": null
   }
  },
- "updated": "2026-10-07T02:45:38-07:00"
+ "updated": "2026-10-07T03:01:57-07:00"
 }
