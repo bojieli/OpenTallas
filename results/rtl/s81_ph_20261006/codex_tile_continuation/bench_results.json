@@ -1,0 +1,37 @@
+[
+  {
+    "source_commit": "7ad89fba676d28dbe505bfc31e433b221ef88e4e",
+    "mode": "gold",
+    "remote": "/srv/opentallas-scratch2/scratch/codex/s81-tiles/7ad89fba6/gold",
+    "summary": "SUMMARY seed=1 frames/src=300 words=52383 cycles=36393 errors=0\nRESULT PASS\nSUMMARY seed=2 frames/src=300 words=53436 cycles=37816 errors=0\nRESULT PASS\nSUMMARY seed=3 frames/src=300 words=52691 cycles=37174 errors=0\nRESULT PASS\n",
+    "expected": "PASS"
+  },
+  {
+    "source_commit": "487315fbb629511408e48e60c409def54c3d0332",
+    "mode": "legacy",
+    "remote": "/srv/opentallas-scratch2/scratch/codex/s81-tiles/487315fbb/legacy",
+    "summary": "SUMMARY seed=1 frames/src=300 words=52352 cycles=36784 errors=0\nRESULT PASS\nSUMMARY seed=2 frames/src=300 words=52999 cycles=36659 errors=0\nRESULT PASS\nSUMMARY seed=3 frames/src=300 words=51815 cycles=36998 errors=0\nRESULT PASS\n",
+    "expected": "PASS"
+  },
+  {
+    "source_commit": "487315fbb629511408e48e60c409def54c3d0332",
+    "mode": "latency",
+    "remote": "/srv/opentallas-scratch2/scratch/codex/s81-tiles/487315fbb/latency",
+    "summary": "OD_LAT PASS words=300 legacy=4 margin=6 delta=2 II=1 malformed_fault=1\n",
+    "expected": "PASS"
+  },
+  {
+    "source_commit": "487315fbb629511408e48e60c409def54c3d0332",
+    "mode": "noatom",
+    "remote": "/srv/opentallas-scratch2/scratch/codex/s81-tiles/487315fbb/noatom",
+    "summary": "SUMMARY seed=1 frames/src=300 words=52776 cycles=2000001 errors=37641\nRESULT FAIL\n",
+    "expected": "FAIL"
+  },
+  {
+    "source_commit": "487315fbb629511408e48e60c409def54c3d0332",
+    "mode": "skid",
+    "remote": "/srv/opentallas-scratch2/scratch/codex/s81-tiles/487315fbb/skid",
+    "summary": "SUMMARY seed=1 frames/src=300 words=42088 cycles=2000001 errors=42430\nRESULT FAIL\n",
+    "expected": "FAIL"
+  }
+]

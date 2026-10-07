@@ -1,0 +1,12 @@
+{
+  "rc": 127,
+  "blocks": [
+    "dsfd_ctrl_pc",
+    "dsfd_svcio_od",
+    "dsfd_colt_lane"
+  ],
+  "error": "OCI runtime: exec: openroad: executable file not found in $PATH",
+  "correction": "Use /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init",
+  "provenance": "Tool output captured before correcting executable; no design or verdict files changed",
+  "note": "Initial scratch audit logs were reused during the executable fix; this diagnostic reconstructs the failed invocation from tool output."
+}
