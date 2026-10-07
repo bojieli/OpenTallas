@@ -3002,653 +3002,653 @@
     },
     "pq_qelem": {
      "L0.attn.a_proj": {
-      "total_cycles": 532,
-      "meas_cycles": 398,
+      "total_cycles": 561,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 134,
       "die_stage": 0,
       "exact": true,
-      "us": 0.443333,
-      "old_total_cycles": 478
+      "us": 0.4675,
+      "old_total_cycles": 507
      },
      "L0.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 0,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L0.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 0,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L0.attn.wq_b": {
-      "total_cycles": 490,
-      "meas_cycles": 343,
+      "total_cycles": 502,
+      "meas_cycles": 355,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 0,
       "exact": true,
-      "us": 0.408333,
-      "old_total_cycles": 423
+      "us": 0.418333,
+      "old_total_cycles": 435
      },
      "L0.ffn.down": {
-      "total_cycles": 1066,
-      "meas_cycles": 919,
+      "total_cycles": 1079,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 0,
       "exact": true,
-      "us": 0.888333,
-      "old_total_cycles": 999
+      "us": 0.899167,
+      "old_total_cycles": 1012
      },
      "L0.ffn.experts_gu": {
-      "total_cycles": 1211,
-      "meas_cycles": 1068,
+      "total_cycles": 1240,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 143,
       "die_stage": 0,
       "exact": true,
-      "us": 1.009167,
-      "old_total_cycles": 1148
+      "us": 1.033333,
+      "old_total_cycles": 1177
      },
      "L0.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 0,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L0.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 0,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "E1.wkv": {
-      "total_cycles": 781,
-      "meas_cycles": 634,
+      "total_cycles": 810,
+      "meas_cycles": 663,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 1,
       "exact": true,
-      "us": 0.650833,
-      "old_total_cycles": 714
+      "us": 0.675,
+      "old_total_cycles": 743
      },
      "L1.attn.a_proj": {
-      "total_cycles": 532,
-      "meas_cycles": 398,
+      "total_cycles": 561,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 134,
       "die_stage": 1,
       "exact": true,
-      "us": 0.443333,
-      "old_total_cycles": 478
+      "us": 0.4675,
+      "old_total_cycles": 507
      },
      "L1.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 1,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L1.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 1,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L1.attn.wq_b": {
-      "total_cycles": 490,
-      "meas_cycles": 354,
+      "total_cycles": 502,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 136,
+      "wire_cycles": 135,
       "die_stage": 1,
       "exact": true,
-      "us": 0.408333,
-      "old_total_cycles": 434
+      "us": 0.418333,
+      "old_total_cycles": 447
      },
      "L1.ffn.down": {
-      "total_cycles": 770,
-      "meas_cycles": 627,
+      "total_cycles": 783,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 143,
       "die_stage": 3,
       "exact": true,
-      "us": 0.641667,
-      "old_total_cycles": 707
+      "us": 0.6525,
+      "old_total_cycles": 720
      },
      "L1.ffn.experts_gu": {
-      "total_cycles": 981,
-      "meas_cycles": 842,
+      "total_cycles": 1010,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 139,
       "die_stage": 3,
       "exact": true,
-      "us": 0.8175,
-      "old_total_cycles": 922
+      "us": 0.841667,
+      "old_total_cycles": 951
      },
      "L1.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 1,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L1.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 1,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "L2.attn.a_proj": {
-      "total_cycles": 1409,
-      "meas_cycles": 1285,
+      "total_cycles": 1433,
+      "meas_cycles": 1309,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 124,
       "die_stage": 3,
       "exact": true,
-      "us": 1.174167,
-      "old_total_cycles": 1365
+      "us": 1.194167,
+      "old_total_cycles": 1389
      },
      "L2.attn.cmp.wk": {
-      "total_cycles": 354,
-      "meas_cycles": 230,
+      "total_cycles": 362,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 3,
       "exact": true,
-      "us": 0.295,
-      "old_total_cycles": 310
+      "us": 0.301667,
+      "old_total_cycles": 318
      },
      "L2.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 3,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L2.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 3,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L2.attn.wq_b": {
-      "total_cycles": 623,
-      "meas_cycles": 476,
+      "total_cycles": 636,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 3,
       "exact": true,
-      "us": 0.519167,
-      "old_total_cycles": 556
+      "us": 0.53,
+      "old_total_cycles": 569
      },
      "L2.ffn.down": {
-      "total_cycles": 741,
-      "meas_cycles": 594,
+      "total_cycles": 754,
+      "meas_cycles": 607,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 3,
       "exact": true,
-      "us": 0.6175,
-      "old_total_cycles": 674
+      "us": 0.628333,
+      "old_total_cycles": 687
      },
      "L2.ffn.experts_gu": {
-      "total_cycles": 759,
-      "meas_cycles": 616,
+      "total_cycles": 788,
+      "meas_cycles": 645,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 143,
       "die_stage": 4,
       "exact": true,
-      "us": 0.6325,
-      "old_total_cycles": 696
+      "us": 0.656667,
+      "old_total_cycles": 725
      },
      "L2.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 3,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L2.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 3,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "L3.attn.a_proj": {
-      "total_cycles": 541,
-      "meas_cycles": 398,
+      "total_cycles": 570,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 5,
       "exact": true,
-      "us": 0.450833,
-      "old_total_cycles": 478
+      "us": 0.475,
+      "old_total_cycles": 507
      },
      "L3.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 5,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L3.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 5,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L3.attn.wq_b": {
-      "total_cycles": 490,
-      "meas_cycles": 354,
+      "total_cycles": 502,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 136,
+      "wire_cycles": 135,
       "die_stage": 5,
       "exact": true,
-      "us": 0.408333,
-      "old_total_cycles": 434
+      "us": 0.418333,
+      "old_total_cycles": 447
      },
      "L3.ffn.down": {
-      "total_cycles": 1253,
-      "meas_cycles": 1106,
+      "total_cycles": 1266,
+      "meas_cycles": 1119,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 6,
       "exact": true,
-      "us": 1.044167,
-      "old_total_cycles": 1186
+      "us": 1.055,
+      "old_total_cycles": 1199
      },
      "L3.ffn.experts_gu": {
-      "total_cycles": 1659,
-      "meas_cycles": 1520,
+      "total_cycles": 1688,
+      "meas_cycles": 1549,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 139,
       "die_stage": 6,
       "exact": true,
-      "us": 1.3825,
-      "old_total_cycles": 1600
+      "us": 1.406667,
+      "old_total_cycles": 1629
      },
      "L3.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 5,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L3.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 5,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "L20.attn.a_proj": {
-      "total_cycles": 1119,
-      "meas_cycles": 995,
+      "total_cycles": 1143,
+      "meas_cycles": 1019,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 124,
       "die_stage": 37,
       "exact": true,
-      "us": 0.9325,
-      "old_total_cycles": 1075
+      "us": 0.9525,
+      "old_total_cycles": 1099
      },
      "L20.attn.cmp.wk": {
-      "total_cycles": 354,
-      "meas_cycles": 230,
+      "total_cycles": 362,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 37,
       "exact": true,
-      "us": 0.295,
-      "old_total_cycles": 310
+      "us": 0.301667,
+      "old_total_cycles": 318
      },
      "L20.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 37,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L20.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 37,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L20.attn.wq_b": {
-      "total_cycles": 623,
-      "meas_cycles": 476,
+      "total_cycles": 636,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 37,
       "exact": true,
-      "us": 0.519167,
-      "old_total_cycles": 556
+      "us": 0.53,
+      "old_total_cycles": 569
      },
      "L20.ffn.down": {
-      "total_cycles": 1066,
-      "meas_cycles": 919,
+      "total_cycles": 1079,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 37,
       "exact": true,
-      "us": 0.888333,
-      "old_total_cycles": 999
+      "us": 0.899167,
+      "old_total_cycles": 1012
      },
      "L20.ffn.experts_gu": {
-      "total_cycles": 1211,
-      "meas_cycles": 1068,
+      "total_cycles": 1240,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 143,
       "die_stage": 37,
       "exact": true,
-      "us": 1.009167,
-      "old_total_cycles": 1148
+      "us": 1.033333,
+      "old_total_cycles": 1177
      },
      "L20.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 37,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L20.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 37,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "L21.attn.a_proj": {
-      "total_cycles": 536,
-      "meas_cycles": 398,
+      "total_cycles": 565,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 38,
       "exact": true,
-      "us": 0.446667,
-      "old_total_cycles": 478
+      "us": 0.470833,
+      "old_total_cycles": 507
      },
      "L21.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 38,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L21.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 38,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L21.attn.wq_b": {
-      "total_cycles": 490,
-      "meas_cycles": 354,
+      "total_cycles": 498,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 136,
+      "wire_cycles": 131,
       "die_stage": 38,
       "exact": true,
-      "us": 0.408333,
-      "old_total_cycles": 434
+      "us": 0.415,
+      "old_total_cycles": 447
      },
      "L21.ffn.down": {
-      "total_cycles": 774,
-      "meas_cycles": 627,
+      "total_cycles": 787,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 39,
       "exact": true,
-      "us": 0.645,
-      "old_total_cycles": 707
+      "us": 0.655833,
+      "old_total_cycles": 720
      },
      "L21.ffn.experts_gu": {
-      "total_cycles": 981,
-      "meas_cycles": 842,
+      "total_cycles": 1010,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 139,
       "die_stage": 39,
       "exact": true,
-      "us": 0.8175,
-      "old_total_cycles": 922
+      "us": 0.841667,
+      "old_total_cycles": 951
      },
      "L21.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 38,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L21.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 38,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      },
      "L24.attn.a_proj": {
-      "total_cycles": 829,
-      "meas_cycles": 705,
+      "total_cycles": 853,
+      "meas_cycles": 729,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 124,
       "die_stage": 44,
       "exact": true,
-      "us": 0.690833,
-      "old_total_cycles": 785
+      "us": 0.710833,
+      "old_total_cycles": 809
      },
      "L24.attn.wo_a": {
-      "total_cycles": 902,
-      "meas_cycles": 755,
+      "total_cycles": 910,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 44,
       "exact": true,
-      "us": 0.751667,
-      "old_total_cycles": 835
+      "us": 0.758333,
+      "old_total_cycles": 843
      },
      "L24.attn.wo_b": {
-      "total_cycles": 487,
-      "meas_cycles": 340,
+      "total_cycles": 500,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 147,
       "die_stage": 44,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 420
+      "us": 0.416667,
+      "old_total_cycles": 433
      },
      "L24.attn.wq_b": {
-      "total_cycles": 623,
-      "meas_cycles": 476,
+      "total_cycles": 636,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 147,
       "die_stage": 44,
       "exact": true,
-      "us": 0.519167,
-      "old_total_cycles": 556
+      "us": 0.53,
+      "old_total_cycles": 569
      },
      "L24.ffn.down": {
-      "total_cycles": 1093,
-      "meas_cycles": 952,
+      "total_cycles": 1106,
+      "meas_cycles": 965,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 141,
       "die_stage": 45,
       "exact": true,
-      "us": 0.910833,
-      "old_total_cycles": 1032
+      "us": 0.921667,
+      "old_total_cycles": 1045
      },
      "L24.ffn.experts_gu": {
-      "total_cycles": 1437,
-      "meas_cycles": 1294,
+      "total_cycles": 1466,
+      "meas_cycles": 1323,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 143,
       "die_stage": 45,
       "exact": true,
-      "us": 1.1975,
-      "old_total_cycles": 1374
+      "us": 1.221667,
+      "old_total_cycles": 1403
      },
      "L24.ffn.router": {
-      "total_cycles": 619,
-      "meas_cycles": 495,
+      "total_cycles": 628,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 124,
       "die_stage": 44,
       "exact": true,
-      "us": 0.515833,
-      "old_total_cycles": 575
+      "us": 0.523333,
+      "old_total_cycles": 584
      },
      "L24.ffn.shared_gu": {
-      "total_cycles": 547,
-      "meas_cycles": 404,
+      "total_cycles": 576,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 143,
       "die_stage": 44,
       "exact": true,
-      "us": 0.455833,
-      "old_total_cycles": 484
+      "us": 0.48,
+      "old_total_cycles": 513
      }
     }
    }
@@ -6648,653 +6648,653 @@
     },
     "pq_qelem": {
      "L0.attn.a_proj": {
-      "total_cycles": 530,
-      "meas_cycles": 398,
+      "total_cycles": 559,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 132,
       "die_stage": 0,
       "exact": true,
-      "us": 0.441667,
-      "old_total_cycles": 478
+      "us": 0.465833,
+      "old_total_cycles": 507
      },
      "L0.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 0,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L0.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 0,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L0.attn.wq_b": {
-      "total_cycles": 489,
-      "meas_cycles": 343,
+      "total_cycles": 501,
+      "meas_cycles": 355,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 0,
       "exact": true,
-      "us": 0.4075,
-      "old_total_cycles": 423
+      "us": 0.4175,
+      "old_total_cycles": 435
      },
      "L0.ffn.down": {
-      "total_cycles": 1065,
-      "meas_cycles": 919,
+      "total_cycles": 1078,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 0,
       "exact": true,
-      "us": 0.8875,
-      "old_total_cycles": 999
+      "us": 0.898333,
+      "old_total_cycles": 1012
      },
      "L0.ffn.experts_gu": {
-      "total_cycles": 1210,
-      "meas_cycles": 1068,
+      "total_cycles": 1239,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 1.008333,
-      "old_total_cycles": 1148
+      "us": 1.0325,
+      "old_total_cycles": 1177
      },
      "L0.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 0,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L0.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "E1.wkv": {
-      "total_cycles": 780,
-      "meas_cycles": 634,
+      "total_cycles": 809,
+      "meas_cycles": 663,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 1,
       "exact": true,
-      "us": 0.65,
-      "old_total_cycles": 714
+      "us": 0.674167,
+      "old_total_cycles": 743
      },
      "L1.attn.a_proj": {
-      "total_cycles": 530,
-      "meas_cycles": 398,
+      "total_cycles": 559,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 132,
       "die_stage": 1,
       "exact": true,
-      "us": 0.441667,
-      "old_total_cycles": 478
+      "us": 0.465833,
+      "old_total_cycles": 507
      },
      "L1.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 1,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L1.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 1,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L1.attn.wq_b": {
-      "total_cycles": 489,
-      "meas_cycles": 354,
+      "total_cycles": 501,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 135,
+      "wire_cycles": 134,
       "die_stage": 1,
       "exact": true,
-      "us": 0.4075,
-      "old_total_cycles": 434
+      "us": 0.4175,
+      "old_total_cycles": 447
      },
      "L1.ffn.down": {
-      "total_cycles": 769,
-      "meas_cycles": 627,
+      "total_cycles": 782,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.640833,
-      "old_total_cycles": 707
+      "us": 0.651667,
+      "old_total_cycles": 720
      },
      "L1.ffn.experts_gu": {
-      "total_cycles": 980,
-      "meas_cycles": 842,
+      "total_cycles": 1009,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 3,
       "exact": true,
-      "us": 0.816667,
-      "old_total_cycles": 922
+      "us": 0.840833,
+      "old_total_cycles": 951
      },
      "L1.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 1,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L1.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 1,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "L2.attn.a_proj": {
-      "total_cycles": 1407,
-      "meas_cycles": 1285,
+      "total_cycles": 1431,
+      "meas_cycles": 1309,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 122,
       "die_stage": 3,
       "exact": true,
-      "us": 1.1725,
-      "old_total_cycles": 1365
+      "us": 1.1925,
+      "old_total_cycles": 1389
      },
      "L2.attn.cmp.wk": {
-      "total_cycles": 353,
-      "meas_cycles": 230,
+      "total_cycles": 361,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 123,
       "die_stage": 3,
       "exact": true,
-      "us": 0.294167,
-      "old_total_cycles": 310
+      "us": 0.300833,
+      "old_total_cycles": 318
      },
      "L2.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 3,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L2.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 3,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L2.attn.wq_b": {
-      "total_cycles": 622,
-      "meas_cycles": 476,
+      "total_cycles": 635,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 3,
       "exact": true,
-      "us": 0.518333,
-      "old_total_cycles": 556
+      "us": 0.529167,
+      "old_total_cycles": 569
      },
      "L2.ffn.down": {
-      "total_cycles": 740,
-      "meas_cycles": 594,
+      "total_cycles": 753,
+      "meas_cycles": 607,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 3,
       "exact": true,
-      "us": 0.616667,
-      "old_total_cycles": 674
+      "us": 0.6275,
+      "old_total_cycles": 687
      },
      "L2.ffn.experts_gu": {
-      "total_cycles": 758,
-      "meas_cycles": 616,
+      "total_cycles": 787,
+      "meas_cycles": 645,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 4,
       "exact": true,
-      "us": 0.631667,
-      "old_total_cycles": 696
+      "us": 0.655833,
+      "old_total_cycles": 725
      },
      "L2.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 3,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L2.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "L3.attn.a_proj": {
-      "total_cycles": 540,
-      "meas_cycles": 398,
+      "total_cycles": 569,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 5,
       "exact": true,
-      "us": 0.45,
-      "old_total_cycles": 478
+      "us": 0.474167,
+      "old_total_cycles": 507
      },
      "L3.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 5,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L3.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 5,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L3.attn.wq_b": {
-      "total_cycles": 489,
-      "meas_cycles": 354,
+      "total_cycles": 501,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 135,
+      "wire_cycles": 134,
       "die_stage": 5,
       "exact": true,
-      "us": 0.4075,
-      "old_total_cycles": 434
+      "us": 0.4175,
+      "old_total_cycles": 447
      },
      "L3.ffn.down": {
-      "total_cycles": 1252,
-      "meas_cycles": 1106,
+      "total_cycles": 1265,
+      "meas_cycles": 1119,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 6,
       "exact": true,
-      "us": 1.043333,
-      "old_total_cycles": 1186
+      "us": 1.054167,
+      "old_total_cycles": 1199
      },
      "L3.ffn.experts_gu": {
-      "total_cycles": 1658,
-      "meas_cycles": 1520,
+      "total_cycles": 1687,
+      "meas_cycles": 1549,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 6,
       "exact": true,
-      "us": 1.381667,
-      "old_total_cycles": 1600
+      "us": 1.405833,
+      "old_total_cycles": 1629
      },
      "L3.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 5,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L3.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 5,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "L20.attn.a_proj": {
-      "total_cycles": 1117,
-      "meas_cycles": 995,
+      "total_cycles": 1141,
+      "meas_cycles": 1019,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 122,
       "die_stage": 37,
       "exact": true,
-      "us": 0.930833,
-      "old_total_cycles": 1075
+      "us": 0.950833,
+      "old_total_cycles": 1099
      },
      "L20.attn.cmp.wk": {
-      "total_cycles": 353,
-      "meas_cycles": 230,
+      "total_cycles": 361,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 123,
       "die_stage": 37,
       "exact": true,
-      "us": 0.294167,
-      "old_total_cycles": 310
+      "us": 0.300833,
+      "old_total_cycles": 318
      },
      "L20.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 37,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L20.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 37,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L20.attn.wq_b": {
-      "total_cycles": 622,
-      "meas_cycles": 476,
+      "total_cycles": 635,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 37,
       "exact": true,
-      "us": 0.518333,
-      "old_total_cycles": 556
+      "us": 0.529167,
+      "old_total_cycles": 569
      },
      "L20.ffn.down": {
-      "total_cycles": 1065,
-      "meas_cycles": 919,
+      "total_cycles": 1078,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 37,
       "exact": true,
-      "us": 0.8875,
-      "old_total_cycles": 999
+      "us": 0.898333,
+      "old_total_cycles": 1012
      },
      "L20.ffn.experts_gu": {
-      "total_cycles": 1210,
-      "meas_cycles": 1068,
+      "total_cycles": 1239,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 1.008333,
-      "old_total_cycles": 1148
+      "us": 1.0325,
+      "old_total_cycles": 1177
      },
      "L20.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 37,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L20.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "L21.attn.a_proj": {
-      "total_cycles": 535,
-      "meas_cycles": 398,
+      "total_cycles": 564,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 137,
       "die_stage": 38,
       "exact": true,
-      "us": 0.445833,
-      "old_total_cycles": 478
+      "us": 0.47,
+      "old_total_cycles": 507
      },
      "L21.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 38,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L21.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 38,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L21.attn.wq_b": {
-      "total_cycles": 489,
-      "meas_cycles": 354,
+      "total_cycles": 497,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 135,
+      "wire_cycles": 130,
       "die_stage": 38,
       "exact": true,
-      "us": 0.4075,
-      "old_total_cycles": 434
+      "us": 0.414167,
+      "old_total_cycles": 447
      },
      "L21.ffn.down": {
-      "total_cycles": 773,
-      "meas_cycles": 627,
+      "total_cycles": 786,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 39,
       "exact": true,
-      "us": 0.644167,
-      "old_total_cycles": 707
+      "us": 0.655,
+      "old_total_cycles": 720
      },
      "L21.ffn.experts_gu": {
-      "total_cycles": 980,
-      "meas_cycles": 842,
+      "total_cycles": 1009,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 39,
       "exact": true,
-      "us": 0.816667,
-      "old_total_cycles": 922
+      "us": 0.840833,
+      "old_total_cycles": 951
      },
      "L21.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 38,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L21.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 38,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      },
      "L24.attn.a_proj": {
-      "total_cycles": 827,
-      "meas_cycles": 705,
+      "total_cycles": 851,
+      "meas_cycles": 729,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 122,
       "die_stage": 44,
       "exact": true,
-      "us": 0.689167,
-      "old_total_cycles": 785
+      "us": 0.709167,
+      "old_total_cycles": 809
      },
      "L24.attn.wo_a": {
-      "total_cycles": 901,
-      "meas_cycles": 755,
+      "total_cycles": 909,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 44,
       "exact": true,
-      "us": 0.750833,
-      "old_total_cycles": 835
+      "us": 0.7575,
+      "old_total_cycles": 843
      },
      "L24.attn.wo_b": {
-      "total_cycles": 486,
-      "meas_cycles": 340,
+      "total_cycles": 499,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 146,
       "die_stage": 44,
       "exact": true,
-      "us": 0.405,
-      "old_total_cycles": 420
+      "us": 0.415833,
+      "old_total_cycles": 433
      },
      "L24.attn.wq_b": {
-      "total_cycles": 622,
-      "meas_cycles": 476,
+      "total_cycles": 635,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 146,
       "die_stage": 44,
       "exact": true,
-      "us": 0.518333,
-      "old_total_cycles": 556
+      "us": 0.529167,
+      "old_total_cycles": 569
      },
      "L24.ffn.down": {
-      "total_cycles": 1092,
-      "meas_cycles": 952,
+      "total_cycles": 1105,
+      "meas_cycles": 965,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 45,
       "exact": true,
-      "us": 0.91,
-      "old_total_cycles": 1032
+      "us": 0.920833,
+      "old_total_cycles": 1045
      },
      "L24.ffn.experts_gu": {
-      "total_cycles": 1436,
-      "meas_cycles": 1294,
+      "total_cycles": 1465,
+      "meas_cycles": 1323,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 45,
       "exact": true,
-      "us": 1.196667,
-      "old_total_cycles": 1374
+      "us": 1.220833,
+      "old_total_cycles": 1403
      },
      "L24.ffn.router": {
-      "total_cycles": 617,
-      "meas_cycles": 495,
+      "total_cycles": 626,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 122,
       "die_stage": 44,
       "exact": true,
-      "us": 0.514167,
-      "old_total_cycles": 575
+      "us": 0.521667,
+      "old_total_cycles": 584
      },
      "L24.ffn.shared_gu": {
-      "total_cycles": 546,
-      "meas_cycles": 404,
+      "total_cycles": 575,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 44,
       "exact": true,
-      "us": 0.455,
-      "old_total_cycles": 484
+      "us": 0.479167,
+      "old_total_cycles": 513
      }
     }
    }
@@ -10294,653 +10294,653 @@
     },
     "pq_qelem": {
      "L0.attn.a_proj": {
-      "total_cycles": 529,
-      "meas_cycles": 398,
+      "total_cycles": 558,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 131,
       "die_stage": 0,
       "exact": true,
-      "us": 0.440833,
-      "old_total_cycles": 478
+      "us": 0.465,
+      "old_total_cycles": 507
      },
      "L0.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 0,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L0.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 0,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L0.attn.wq_b": {
-      "total_cycles": 487,
-      "meas_cycles": 343,
+      "total_cycles": 499,
+      "meas_cycles": 355,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 0,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 423
+      "us": 0.415833,
+      "old_total_cycles": 435
      },
      "L0.ffn.down": {
-      "total_cycles": 1063,
-      "meas_cycles": 919,
+      "total_cycles": 1076,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 0,
       "exact": true,
-      "us": 0.885833,
-      "old_total_cycles": 999
+      "us": 0.896667,
+      "old_total_cycles": 1012
      },
      "L0.ffn.experts_gu": {
-      "total_cycles": 1208,
-      "meas_cycles": 1068,
+      "total_cycles": 1237,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 0,
       "exact": true,
-      "us": 1.006667,
-      "old_total_cycles": 1148
+      "us": 1.030833,
+      "old_total_cycles": 1177
      },
      "L0.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 0,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L0.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 0,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "E1.wkv": {
-      "total_cycles": 778,
-      "meas_cycles": 634,
+      "total_cycles": 807,
+      "meas_cycles": 663,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 1,
       "exact": true,
-      "us": 0.648333,
-      "old_total_cycles": 714
+      "us": 0.6725,
+      "old_total_cycles": 743
      },
      "L1.attn.a_proj": {
-      "total_cycles": 529,
-      "meas_cycles": 398,
+      "total_cycles": 558,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 131,
       "die_stage": 1,
       "exact": true,
-      "us": 0.440833,
-      "old_total_cycles": 478
+      "us": 0.465,
+      "old_total_cycles": 507
      },
      "L1.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 1,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L1.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 1,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L1.attn.wq_b": {
-      "total_cycles": 487,
-      "meas_cycles": 354,
+      "total_cycles": 499,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 133,
+      "wire_cycles": 132,
       "die_stage": 1,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 434
+      "us": 0.415833,
+      "old_total_cycles": 447
      },
      "L1.ffn.down": {
-      "total_cycles": 767,
-      "meas_cycles": 627,
+      "total_cycles": 780,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 3,
       "exact": true,
-      "us": 0.639167,
-      "old_total_cycles": 707
+      "us": 0.65,
+      "old_total_cycles": 720
      },
      "L1.ffn.experts_gu": {
-      "total_cycles": 978,
-      "meas_cycles": 842,
+      "total_cycles": 1007,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 136,
       "die_stage": 3,
       "exact": true,
-      "us": 0.815,
-      "old_total_cycles": 922
+      "us": 0.839167,
+      "old_total_cycles": 951
      },
      "L1.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 1,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L1.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 1,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "L2.attn.a_proj": {
-      "total_cycles": 1406,
-      "meas_cycles": 1285,
+      "total_cycles": 1430,
+      "meas_cycles": 1309,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 121,
       "die_stage": 3,
       "exact": true,
-      "us": 1.171667,
-      "old_total_cycles": 1365
+      "us": 1.191667,
+      "old_total_cycles": 1389
      },
      "L2.attn.cmp.wk": {
-      "total_cycles": 351,
-      "meas_cycles": 230,
+      "total_cycles": 359,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 3,
       "exact": true,
-      "us": 0.2925,
-      "old_total_cycles": 310
+      "us": 0.299167,
+      "old_total_cycles": 318
      },
      "L2.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 3,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L2.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 3,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L2.attn.wq_b": {
-      "total_cycles": 620,
-      "meas_cycles": 476,
+      "total_cycles": 633,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 3,
       "exact": true,
-      "us": 0.516667,
-      "old_total_cycles": 556
+      "us": 0.5275,
+      "old_total_cycles": 569
      },
      "L2.ffn.down": {
-      "total_cycles": 738,
-      "meas_cycles": 594,
+      "total_cycles": 751,
+      "meas_cycles": 607,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 3,
       "exact": true,
-      "us": 0.615,
-      "old_total_cycles": 674
+      "us": 0.625833,
+      "old_total_cycles": 687
      },
      "L2.ffn.experts_gu": {
-      "total_cycles": 756,
-      "meas_cycles": 616,
+      "total_cycles": 785,
+      "meas_cycles": 645,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 4,
       "exact": true,
-      "us": 0.63,
-      "old_total_cycles": 696
+      "us": 0.654167,
+      "old_total_cycles": 725
      },
      "L2.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 3,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L2.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 3,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "L3.attn.a_proj": {
-      "total_cycles": 538,
-      "meas_cycles": 398,
+      "total_cycles": 567,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 5,
       "exact": true,
-      "us": 0.448333,
-      "old_total_cycles": 478
+      "us": 0.4725,
+      "old_total_cycles": 507
      },
      "L3.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 5,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L3.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 5,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L3.attn.wq_b": {
-      "total_cycles": 487,
-      "meas_cycles": 354,
+      "total_cycles": 499,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 133,
+      "wire_cycles": 132,
       "die_stage": 5,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 434
+      "us": 0.415833,
+      "old_total_cycles": 447
      },
      "L3.ffn.down": {
-      "total_cycles": 1250,
-      "meas_cycles": 1106,
+      "total_cycles": 1263,
+      "meas_cycles": 1119,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 6,
       "exact": true,
-      "us": 1.041667,
-      "old_total_cycles": 1186
+      "us": 1.0525,
+      "old_total_cycles": 1199
      },
      "L3.ffn.experts_gu": {
-      "total_cycles": 1656,
-      "meas_cycles": 1520,
+      "total_cycles": 1685,
+      "meas_cycles": 1549,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 136,
       "die_stage": 6,
       "exact": true,
-      "us": 1.38,
-      "old_total_cycles": 1600
+      "us": 1.404167,
+      "old_total_cycles": 1629
      },
      "L3.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 5,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L3.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 5,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "L20.attn.a_proj": {
-      "total_cycles": 1116,
-      "meas_cycles": 995,
+      "total_cycles": 1140,
+      "meas_cycles": 1019,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 121,
       "die_stage": 37,
       "exact": true,
-      "us": 0.93,
-      "old_total_cycles": 1075
+      "us": 0.95,
+      "old_total_cycles": 1099
      },
      "L20.attn.cmp.wk": {
-      "total_cycles": 351,
-      "meas_cycles": 230,
+      "total_cycles": 359,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 37,
       "exact": true,
-      "us": 0.2925,
-      "old_total_cycles": 310
+      "us": 0.299167,
+      "old_total_cycles": 318
      },
      "L20.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 37,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L20.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 37,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L20.attn.wq_b": {
-      "total_cycles": 620,
-      "meas_cycles": 476,
+      "total_cycles": 633,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 37,
       "exact": true,
-      "us": 0.516667,
-      "old_total_cycles": 556
+      "us": 0.5275,
+      "old_total_cycles": 569
      },
      "L20.ffn.down": {
-      "total_cycles": 1063,
-      "meas_cycles": 919,
+      "total_cycles": 1076,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 37,
       "exact": true,
-      "us": 0.885833,
-      "old_total_cycles": 999
+      "us": 0.896667,
+      "old_total_cycles": 1012
      },
      "L20.ffn.experts_gu": {
-      "total_cycles": 1208,
-      "meas_cycles": 1068,
+      "total_cycles": 1237,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 37,
       "exact": true,
-      "us": 1.006667,
-      "old_total_cycles": 1148
+      "us": 1.030833,
+      "old_total_cycles": 1177
      },
      "L20.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 37,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L20.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 37,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "L21.attn.a_proj": {
-      "total_cycles": 533,
-      "meas_cycles": 398,
+      "total_cycles": 562,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 135,
       "die_stage": 38,
       "exact": true,
-      "us": 0.444167,
-      "old_total_cycles": 478
+      "us": 0.468333,
+      "old_total_cycles": 507
      },
      "L21.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 38,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L21.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 38,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L21.attn.wq_b": {
-      "total_cycles": 487,
-      "meas_cycles": 354,
+      "total_cycles": 495,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 133,
+      "wire_cycles": 128,
       "die_stage": 38,
       "exact": true,
-      "us": 0.405833,
-      "old_total_cycles": 434
+      "us": 0.4125,
+      "old_total_cycles": 447
      },
      "L21.ffn.down": {
-      "total_cycles": 771,
-      "meas_cycles": 627,
+      "total_cycles": 784,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 39,
       "exact": true,
-      "us": 0.6425,
-      "old_total_cycles": 707
+      "us": 0.653333,
+      "old_total_cycles": 720
      },
      "L21.ffn.experts_gu": {
-      "total_cycles": 978,
-      "meas_cycles": 842,
+      "total_cycles": 1007,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 136,
       "die_stage": 39,
       "exact": true,
-      "us": 0.815,
-      "old_total_cycles": 922
+      "us": 0.839167,
+      "old_total_cycles": 951
      },
      "L21.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 38,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L21.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 38,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      },
      "L24.attn.a_proj": {
-      "total_cycles": 826,
-      "meas_cycles": 705,
+      "total_cycles": 850,
+      "meas_cycles": 729,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 121,
       "die_stage": 44,
       "exact": true,
-      "us": 0.688333,
-      "old_total_cycles": 785
+      "us": 0.708333,
+      "old_total_cycles": 809
      },
      "L24.attn.wo_a": {
-      "total_cycles": 899,
-      "meas_cycles": 755,
+      "total_cycles": 907,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 44,
       "exact": true,
-      "us": 0.749167,
-      "old_total_cycles": 835
+      "us": 0.755833,
+      "old_total_cycles": 843
      },
      "L24.attn.wo_b": {
-      "total_cycles": 484,
-      "meas_cycles": 340,
+      "total_cycles": 497,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 144,
       "die_stage": 44,
       "exact": true,
-      "us": 0.403333,
-      "old_total_cycles": 420
+      "us": 0.414167,
+      "old_total_cycles": 433
      },
      "L24.attn.wq_b": {
-      "total_cycles": 620,
-      "meas_cycles": 476,
+      "total_cycles": 633,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 144,
       "die_stage": 44,
       "exact": true,
-      "us": 0.516667,
-      "old_total_cycles": 556
+      "us": 0.5275,
+      "old_total_cycles": 569
      },
      "L24.ffn.down": {
-      "total_cycles": 1090,
-      "meas_cycles": 952,
+      "total_cycles": 1103,
+      "meas_cycles": 965,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 45,
       "exact": true,
-      "us": 0.908333,
-      "old_total_cycles": 1032
+      "us": 0.919167,
+      "old_total_cycles": 1045
      },
      "L24.ffn.experts_gu": {
-      "total_cycles": 1434,
-      "meas_cycles": 1294,
+      "total_cycles": 1463,
+      "meas_cycles": 1323,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 140,
       "die_stage": 45,
       "exact": true,
-      "us": 1.195,
-      "old_total_cycles": 1374
+      "us": 1.219167,
+      "old_total_cycles": 1403
      },
      "L24.ffn.router": {
-      "total_cycles": 616,
-      "meas_cycles": 495,
+      "total_cycles": 625,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 121,
       "die_stage": 44,
       "exact": true,
-      "us": 0.513333,
-      "old_total_cycles": 575
+      "us": 0.520833,
+      "old_total_cycles": 584
      },
      "L24.ffn.shared_gu": {
-      "total_cycles": 544,
-      "meas_cycles": 404,
+      "total_cycles": 573,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 140,
       "die_stage": 44,
       "exact": true,
-      "us": 0.453333,
-      "old_total_cycles": 484
+      "us": 0.4775,
+      "old_total_cycles": 513
      }
     }
    }
@@ -13938,653 +13938,653 @@
     },
     "pq_qelem": {
      "L0.attn.a_proj": {
-      "total_cycles": 527,
-      "meas_cycles": 398,
+      "total_cycles": 556,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 129,
       "die_stage": 0,
       "exact": true,
-      "us": 0.439167,
-      "old_total_cycles": 478
+      "us": 0.463333,
+      "old_total_cycles": 507
      },
      "L0.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L0.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L0.attn.wq_b": {
-      "total_cycles": 485,
-      "meas_cycles": 343,
+      "total_cycles": 497,
+      "meas_cycles": 355,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 0.404167,
-      "old_total_cycles": 423
+      "us": 0.414167,
+      "old_total_cycles": 435
      },
      "L0.ffn.down": {
-      "total_cycles": 1061,
-      "meas_cycles": 919,
+      "total_cycles": 1074,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 0,
       "exact": true,
-      "us": 0.884167,
-      "old_total_cycles": 999
+      "us": 0.895,
+      "old_total_cycles": 1012
      },
      "L0.ffn.experts_gu": {
-      "total_cycles": 1206,
-      "meas_cycles": 1068,
+      "total_cycles": 1235,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 0,
       "exact": true,
-      "us": 1.005,
-      "old_total_cycles": 1148
+      "us": 1.029167,
+      "old_total_cycles": 1177
      },
      "L0.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 0,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L0.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 0,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "E1.wkv": {
-      "total_cycles": 776,
-      "meas_cycles": 634,
+      "total_cycles": 805,
+      "meas_cycles": 663,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 1,
       "exact": true,
-      "us": 0.646667,
-      "old_total_cycles": 714
+      "us": 0.670833,
+      "old_total_cycles": 743
      },
      "L1.attn.a_proj": {
-      "total_cycles": 527,
-      "meas_cycles": 398,
+      "total_cycles": 556,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 129,
       "die_stage": 1,
       "exact": true,
-      "us": 0.439167,
-      "old_total_cycles": 478
+      "us": 0.463333,
+      "old_total_cycles": 507
      },
      "L1.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 1,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L1.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 1,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L1.attn.wq_b": {
-      "total_cycles": 485,
-      "meas_cycles": 354,
+      "total_cycles": 497,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 131,
+      "wire_cycles": 130,
       "die_stage": 1,
       "exact": true,
-      "us": 0.404167,
-      "old_total_cycles": 434
+      "us": 0.414167,
+      "old_total_cycles": 447
      },
      "L1.ffn.down": {
-      "total_cycles": 765,
-      "meas_cycles": 627,
+      "total_cycles": 778,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 3,
       "exact": true,
-      "us": 0.6375,
-      "old_total_cycles": 707
+      "us": 0.648333,
+      "old_total_cycles": 720
      },
      "L1.ffn.experts_gu": {
-      "total_cycles": 976,
-      "meas_cycles": 842,
+      "total_cycles": 1005,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 134,
       "die_stage": 3,
       "exact": true,
-      "us": 0.813333,
-      "old_total_cycles": 922
+      "us": 0.8375,
+      "old_total_cycles": 951
      },
      "L1.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 1,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L1.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 1,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "L2.attn.a_proj": {
-      "total_cycles": 1404,
-      "meas_cycles": 1285,
+      "total_cycles": 1428,
+      "meas_cycles": 1309,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 119,
       "die_stage": 3,
       "exact": true,
-      "us": 1.17,
-      "old_total_cycles": 1365
+      "us": 1.19,
+      "old_total_cycles": 1389
      },
      "L2.attn.cmp.wk": {
-      "total_cycles": 350,
-      "meas_cycles": 230,
+      "total_cycles": 358,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 120,
       "die_stage": 3,
       "exact": true,
-      "us": 0.291667,
-      "old_total_cycles": 310
+      "us": 0.298333,
+      "old_total_cycles": 318
      },
      "L2.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L2.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L2.attn.wq_b": {
-      "total_cycles": 618,
-      "meas_cycles": 476,
+      "total_cycles": 631,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.515,
-      "old_total_cycles": 556
+      "us": 0.525833,
+      "old_total_cycles": 569
      },
      "L2.ffn.down": {
-      "total_cycles": 736,
-      "meas_cycles": 594,
+      "total_cycles": 749,
+      "meas_cycles": 607,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 3,
       "exact": true,
-      "us": 0.613333,
-      "old_total_cycles": 674
+      "us": 0.624167,
+      "old_total_cycles": 687
      },
      "L2.ffn.experts_gu": {
-      "total_cycles": 754,
-      "meas_cycles": 616,
+      "total_cycles": 783,
+      "meas_cycles": 645,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 4,
       "exact": true,
-      "us": 0.628333,
-      "old_total_cycles": 696
+      "us": 0.6525,
+      "old_total_cycles": 725
      },
      "L2.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 3,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L2.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 3,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "L3.attn.a_proj": {
-      "total_cycles": 536,
-      "meas_cycles": 398,
+      "total_cycles": 565,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 5,
       "exact": true,
-      "us": 0.446667,
-      "old_total_cycles": 478
+      "us": 0.470833,
+      "old_total_cycles": 507
      },
      "L3.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 5,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L3.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 5,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L3.attn.wq_b": {
-      "total_cycles": 485,
-      "meas_cycles": 354,
+      "total_cycles": 497,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 131,
+      "wire_cycles": 130,
       "die_stage": 5,
       "exact": true,
-      "us": 0.404167,
-      "old_total_cycles": 434
+      "us": 0.414167,
+      "old_total_cycles": 447
      },
      "L3.ffn.down": {
-      "total_cycles": 1248,
-      "meas_cycles": 1106,
+      "total_cycles": 1261,
+      "meas_cycles": 1119,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 6,
       "exact": true,
-      "us": 1.04,
-      "old_total_cycles": 1186
+      "us": 1.050833,
+      "old_total_cycles": 1199
      },
      "L3.ffn.experts_gu": {
-      "total_cycles": 1654,
-      "meas_cycles": 1520,
+      "total_cycles": 1683,
+      "meas_cycles": 1549,
       "phases": 6,
       "mode": "pq",
       "wire_cycles": 134,
       "die_stage": 6,
       "exact": true,
-      "us": 1.378333,
-      "old_total_cycles": 1600
+      "us": 1.4025,
+      "old_total_cycles": 1629
      },
      "L3.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 5,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L3.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 5,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "L20.attn.a_proj": {
-      "total_cycles": 1114,
-      "meas_cycles": 995,
+      "total_cycles": 1138,
+      "meas_cycles": 1019,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 119,
       "die_stage": 37,
       "exact": true,
-      "us": 0.928333,
-      "old_total_cycles": 1075
+      "us": 0.948333,
+      "old_total_cycles": 1099
      },
      "L20.attn.cmp.wk": {
-      "total_cycles": 350,
-      "meas_cycles": 230,
+      "total_cycles": 358,
+      "meas_cycles": 238,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 120,
       "die_stage": 37,
       "exact": true,
-      "us": 0.291667,
-      "old_total_cycles": 310
+      "us": 0.298333,
+      "old_total_cycles": 318
      },
      "L20.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L20.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L20.attn.wq_b": {
-      "total_cycles": 618,
-      "meas_cycles": 476,
+      "total_cycles": 631,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 0.515,
-      "old_total_cycles": 556
+      "us": 0.525833,
+      "old_total_cycles": 569
      },
      "L20.ffn.down": {
-      "total_cycles": 1061,
-      "meas_cycles": 919,
+      "total_cycles": 1074,
+      "meas_cycles": 932,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 37,
       "exact": true,
-      "us": 0.884167,
-      "old_total_cycles": 999
+      "us": 0.895,
+      "old_total_cycles": 1012
      },
      "L20.ffn.experts_gu": {
-      "total_cycles": 1206,
-      "meas_cycles": 1068,
+      "total_cycles": 1235,
+      "meas_cycles": 1097,
       "phases": 4,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 37,
       "exact": true,
-      "us": 1.005,
-      "old_total_cycles": 1148
+      "us": 1.029167,
+      "old_total_cycles": 1177
      },
      "L20.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 37,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L20.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 37,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "L21.attn.a_proj": {
-      "total_cycles": 530,
-      "meas_cycles": 398,
+      "total_cycles": 559,
+      "meas_cycles": 427,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 132,
       "die_stage": 38,
       "exact": true,
-      "us": 0.441667,
-      "old_total_cycles": 478
+      "us": 0.465833,
+      "old_total_cycles": 507
      },
      "L21.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 38,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L21.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 38,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L21.attn.wq_b": {
-      "total_cycles": 485,
-      "meas_cycles": 354,
+      "total_cycles": 493,
+      "meas_cycles": 367,
       "phases": 1,
       "mode": "seq",
-      "wire_cycles": 131,
+      "wire_cycles": 126,
       "die_stage": 38,
       "exact": true,
-      "us": 0.404167,
-      "old_total_cycles": 434
+      "us": 0.410833,
+      "old_total_cycles": 447
      },
      "L21.ffn.down": {
-      "total_cycles": 769,
-      "meas_cycles": 627,
+      "total_cycles": 782,
+      "meas_cycles": 640,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 39,
       "exact": true,
-      "us": 0.640833,
-      "old_total_cycles": 707
+      "us": 0.651667,
+      "old_total_cycles": 720
      },
      "L21.ffn.experts_gu": {
-      "total_cycles": 976,
-      "meas_cycles": 842,
+      "total_cycles": 1005,
+      "meas_cycles": 871,
       "phases": 3,
       "mode": "pq",
       "wire_cycles": 134,
       "die_stage": 39,
       "exact": true,
-      "us": 0.813333,
-      "old_total_cycles": 922
+      "us": 0.8375,
+      "old_total_cycles": 951
      },
      "L21.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 38,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L21.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 38,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      },
      "L24.attn.a_proj": {
-      "total_cycles": 824,
-      "meas_cycles": 705,
+      "total_cycles": 848,
+      "meas_cycles": 729,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 119,
       "die_stage": 44,
       "exact": true,
-      "us": 0.686667,
-      "old_total_cycles": 785
+      "us": 0.706667,
+      "old_total_cycles": 809
      },
      "L24.attn.wo_a": {
-      "total_cycles": 897,
-      "meas_cycles": 755,
+      "total_cycles": 905,
+      "meas_cycles": 763,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 44,
       "exact": true,
-      "us": 0.7475,
-      "old_total_cycles": 835
+      "us": 0.754167,
+      "old_total_cycles": 843
      },
      "L24.attn.wo_b": {
-      "total_cycles": 482,
-      "meas_cycles": 340,
+      "total_cycles": 495,
+      "meas_cycles": 353,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 142,
       "die_stage": 44,
       "exact": true,
-      "us": 0.401667,
-      "old_total_cycles": 420
+      "us": 0.4125,
+      "old_total_cycles": 433
      },
      "L24.attn.wq_b": {
-      "total_cycles": 618,
-      "meas_cycles": 476,
+      "total_cycles": 631,
+      "meas_cycles": 489,
       "phases": 2,
       "mode": "pq",
       "wire_cycles": 142,
       "die_stage": 44,
       "exact": true,
-      "us": 0.515,
-      "old_total_cycles": 556
+      "us": 0.525833,
+      "old_total_cycles": 569
      },
      "L24.ffn.down": {
-      "total_cycles": 1088,
-      "meas_cycles": 952,
+      "total_cycles": 1101,
+      "meas_cycles": 965,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 136,
       "die_stage": 45,
       "exact": true,
-      "us": 0.906667,
-      "old_total_cycles": 1032
+      "us": 0.9175,
+      "old_total_cycles": 1045
      },
      "L24.ffn.experts_gu": {
-      "total_cycles": 1432,
-      "meas_cycles": 1294,
+      "total_cycles": 1461,
+      "meas_cycles": 1323,
       "phases": 5,
       "mode": "pq",
       "wire_cycles": 138,
       "die_stage": 45,
       "exact": true,
-      "us": 1.193333,
-      "old_total_cycles": 1374
+      "us": 1.2175,
+      "old_total_cycles": 1403
      },
      "L24.ffn.router": {
-      "total_cycles": 614,
-      "meas_cycles": 495,
+      "total_cycles": 623,
+      "meas_cycles": 504,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 119,
       "die_stage": 44,
       "exact": true,
-      "us": 0.511667,
-      "old_total_cycles": 575
+      "us": 0.519167,
+      "old_total_cycles": 584
      },
      "L24.ffn.shared_gu": {
-      "total_cycles": 542,
-      "meas_cycles": 404,
+      "total_cycles": 571,
+      "meas_cycles": 433,
       "phases": 1,
       "mode": "seq",
       "wire_cycles": 138,
       "die_stage": 44,
       "exact": true,
-      "us": 0.451667,
-      "old_total_cycles": 484
+      "us": 0.475833,
+      "old_total_cycles": 513
      }
     }
    }
@@ -14595,12 +14595,12 @@
   "results/rtl/dsrom_field_reprice_r8_20261006/regions/asbuilt_qelem10.json.gz": "f8d53e5e9a1f3ff79cd4dc0c61453df1d8290d80035882bf5fae95dd9965aebb",
   "results/rtl/dsrom_field_reprice_r8_20261006/regions/baseline.json.gz": "da0895bda6bfb995e3eb0517c730500be6f1e8a2f8f83ce22f70345c8f5ed64c",
   "results/rtl/dsrom_field_reprice_r8_20261006/regions/pq.json.gz": "0faed974b6c9288ee5dab55196efe7d63379b326cc6af28d7b58f27905264189",
-  "results/rtl/dsrom_field_reprice_r8_20261006/regions/pq_qelem_qm2.json.gz": "04981eb07206d301c354c110f5fb251bb59604abfd362225daa4529945a7ea86",
+  "results/rtl/dsrom_field_reprice_r8_20261006/regions/pq_qelem_qs3.json.gz": "7f4d2d6b3ca1a9368ff765d8677d760a8bb56c32c496c22aaa51219f5488c995",
   "results/rtl/dsrom_1m_allmeasured_20261004/field.json": "57e49af663cb5ace1235d12c13f5a95743d180e7395d7bbe90e9cef5d7ea297d",
   "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json": "2b322cd4e16660f489f46ec4227bbdee078286efd48452a9696f8dce5294bcaf",
   "results/rtl/dsrom_field_spine_20261004/field_baseline.json": "c0be4ad8aad3d39ceb3b78d0357b0ca3b289ad2b6f9fb9627ee2f99f64317a15",
   "results/rtl/dsrom_field_spine_20261004/field_pq.json": "8888faba2fe29aa6d946ab3218600aa23eddd855067c68d4b533bf169adca37e",
-  "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qm2.json": "846f11eaa3e20477b9e6d517276ee38430ad9d6b923c7d14457bab8ca71fafb8",
+  "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qs3_v13b.json": "5ea7b968bc022bb70905f52edd1e035d5b02f425d961882b68d10d197ec854c4",
   "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer_f157.68.json": "720a527f34cb7bb2af52b5580b6eb46d01623aee7a623d25fd1b743a88809d2e",
   "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f157.68.json": "db1fc365176879929fb689d931f43ccac6a735103ec21eca0fa8aa227aebf3b1",
   "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer_f183.60.json": "c93089c352a0d4158316172e9463ffa379610c4e3d6e737c76cc398a63c2bfcb",
@@ -14610,6 +14610,6 @@
   "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f216.00.json": "d823a3843fdb5d751ad6a5da19e50e1b78ea4d5705fc1b6ddb3d95ebffd0e839"
  },
  "tool_sha256": {
-  "tools/dsrom_field_reprice_r8.py": "c3e13f5526d137f0341f9fb2b3d3a5525a915768b1fbda9debe77f02f0a86315"
+  "tools/dsrom_field_reprice_r8.py": "7063c17a794b6b674c5d2401b3414c0715905564050be7a1574a9e3a3917dbf4"
  }
 }

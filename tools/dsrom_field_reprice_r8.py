@@ -327,8 +327,9 @@ CONFIGS = dict(asbuilt=("regions/asbuilt.json.gz", "results/rtl/dsrom_1m_allmeas
                baseline=("regions/baseline.json.gz", "results/rtl/dsrom_field_spine_20261004/field_baseline.json"),
                pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"),
                # PQ spine x DS q-element (2026-10-06, GAP 32 / GUARD 202 / GSLACK 32; tools/dsrom_combined_l20.py qelem-lever)
-               # (margin-first QM = 2 lanes + tree, 2026-10-06; the QM = 0 measurement: regions/pq_qelem.json.gz, field_pq_qelem.json)
-               pq_qelem=("regions/pq_qelem_qm2.json.gz", "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qm2.json"))
+               # (candidate SAFE QM = 5 / QS = 3 on the v13b spine, 2026-10-07, full S81 field EXACT; earlier measurements:
+               # QM = 2 regions/pq_qelem_qm2.json.gz + field_pq_qelem_qm2.json, QM = 0 regions/pq_qelem.json.gz + field_pq_qelem.json)
+               pq_qelem=("regions/pq_qelem_qs3.json.gz", "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qs3_v13b.json"))
 LEVER_CONFIG = dict(field_spine="baseline", field_spine_pq="pq", qelem_pq="pq_qelem")
 # SU hub traverse already charged (stages): fused 1.2 GHz units HUB_IN 33 / HUB_OUT 23; unfused wired SU (0.9 GHz)
 # BCAST 22 / RET 15 slow stages (tools/dsrom_1m_su.py, la6_inputs/dsrom_su_norm.py)

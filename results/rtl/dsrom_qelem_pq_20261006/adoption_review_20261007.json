@@ -1,0 +1,61 @@
+{
+  "status": "PENDING_SSFF",
+  "adopted": false,
+  "validation": "QS3 region replay: 78 nodes, 0 differ; all reprice inputs/tool and lever measurement hashes verified; all 3 levers remain PENDING_SSFF",
+  "geometry": "f183.60",
+  "baseline": {
+    "AR_us": 606.11,
+    "AR_tok_s": 1649.9,
+    "MTP_step_us": 860.198,
+    "MTP_tok_s": 4834.9,
+    "MTP_tok_s_tau_published": 4519.8,
+    "II_us": 25.616,
+    "measured_share": 1.0
+  },
+  "if_only_qelem_pq_adopted": {
+    "AR_us": 488.941,
+    "AR_tok_s": 2045.2,
+    "MTP_step_us": 720.775,
+    "MTP_tok_s": 5770.2,
+    "MTP_tok_s_tau_published": 5394.1,
+    "II_us": 21.166,
+    "measured_share": 1.0
+  },
+  "conditional_delta": {
+    "AR_us": -117.169,
+    "AR_tok_s": 395.3,
+    "MTP_step_us": -139.423,
+    "MTP_tok_s": 935.3
+  },
+  "claim_boundary": "Conditional analytical result on this branch snapshot; not current central main headline. Raw full-field measurement claim_boundary uses legacy wording timing-closed spine; that wording is not evidence of v13b physical closure.",
+  "pending": [
+    "QS3 final routed SS/FF, DRC and pin access",
+    "v13b R16 and R128 final ECO verdicts",
+    "Required die-context STA and integration",
+    "Coordinator recompose against current main; do not stack field_spine_pq and qelem_pq"
+  ],
+  "composition_note": "Existing reprice compose conditional_all chooses the faster overlapping field_spine_pq plus su_softmax from its published alternatives list. This separate scenario explicitly flips only qelem_pq.",
+  "inputs": {
+    "results/rtl/dsrom_field_reprice_r8_20261006/regions/asbuilt.json.gz": "7a6497c0f9c854388e50246d874d6db94e124fcb2a8306253d8fa44738104e3d",
+    "results/rtl/dsrom_field_reprice_r8_20261006/regions/asbuilt_qelem10.json.gz": "f8d53e5e9a1f3ff79cd4dc0c61453df1d8290d80035882bf5fae95dd9965aebb",
+    "results/rtl/dsrom_field_reprice_r8_20261006/regions/baseline.json.gz": "da0895bda6bfb995e3eb0517c730500be6f1e8a2f8f83ce22f70345c8f5ed64c",
+    "results/rtl/dsrom_field_reprice_r8_20261006/regions/pq.json.gz": "0faed974b6c9288ee5dab55196efe7d63379b326cc6af28d7b58f27905264189",
+    "results/rtl/dsrom_field_reprice_r8_20261006/regions/pq_qelem_qs3.json.gz": "7f4d2d6b3ca1a9368ff765d8677d760a8bb56c32c496c22aaa51219f5488c995",
+    "results/rtl/dsrom_1m_allmeasured_20261004/field.json": "57e49af663cb5ace1235d12c13f5a95743d180e7395d7bbe90e9cef5d7ea297d",
+    "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json": "2b322cd4e16660f489f46ec4227bbdee078286efd48452a9696f8dce5294bcaf",
+    "results/rtl/dsrom_field_spine_20261004/field_baseline.json": "c0be4ad8aad3d39ceb3b78d0357b0ca3b289ad2b6f9fb9627ee2f99f64317a15",
+    "results/rtl/dsrom_field_spine_20261004/field_pq.json": "8888faba2fe29aa6d946ab3218600aa23eddd855067c68d4b533bf169adca37e",
+    "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qs3_v13b.json": "5ea7b968bc022bb70905f52edd1e035d5b02f425d961882b68d10d197ec854c4",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer_f157.68.json": "720a527f34cb7bb2af52b5580b6eb46d01623aee7a623d25fd1b743a88809d2e",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f157.68.json": "db1fc365176879929fb689d931f43ccac6a735103ec21eca0fa8aa227aebf3b1",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer_f183.60.json": "c93089c352a0d4158316172e9463ffa379610c4e3d6e737c76cc398a63c2bfcb",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f183.60.json": "5e88db7581aded836b0da901947ff380c9b3a6c855cd37ea3b30b08e8ee8aacb",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer_f198.72.json": "1a82f6e97aac56fc8b914b6838f75e1c3b2382f5632b7b44ceb9ab33a7602c69",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f198.72.json": "834a019b3ebdebec64d83f830e311900710f48f231e95eba427528a286b9630c",
+    "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_f216.00.json": "d823a3843fdb5d751ad6a5da19e50e1b78ea4d5705fc1b6ddb3d95ebffd0e839",
+    "tools/dsrom_field_reprice_r8.py": "7063c17a794b6b674c5d2401b3414c0715905564050be7a1574a9e3a3917dbf4",
+    "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "958b992f07ae226bd6df047259cf932bb1fda4656020ae6e692f6cc37cc34190",
+    "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "e16416675df6488548e81aeb4332d307efb4dd453783c1e03285b10bf0d7ae93",
+    "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "2ac9f4281d2a47c71c8bc7480b8e88eb9f70cc15ea38a58d4c2e96352629db47"
+  }
+}
