@@ -4,15 +4,15 @@ module ot_rom_4096x266_m8(input clk, input ce_in, input [11:0] addr_in,
     reg [265:0] mem [0:4095];
     always @(posedge clk) if (ce_in) begin
 `ifdef EMBED_NEG_BAD_ADDR
-        rd_out <= mem[addr_in ^ 12'h001];
+        rd_out <= #0.739211 mem[addr_in ^ 12'h001];
 `else
-        rd_out <= mem[addr_in];
+        rd_out <= #0.739211 mem[addr_in];
 `endif
     end
 endmodule
 
 module tb_qwen_embed_code_bank;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #0.416667 clk=~clk;
     reg rst_n=0, i_v=0, o_cr=0;
     reg [11:0] i_addr=0;
     wire i_cr,o_v,fault;
@@ -30,6 +30,18 @@ module tb_qwen_embed_code_bank;
                 word[n*32+:32]=(32'h9e3779b9*(n+1)) ^ (32'h01010101*address) ^ (address<<(n%13));
         end
     endfunction
+    task reset_dut;
+        begin
+            @(negedge clk);rst_n=0;i_v=0;o_cr=0;
+            repeat(4)@(negedge clk);rst_n=1;
+        end
+    endtask
+    task require_fault;
+        begin
+            repeat(5)begin @(negedge clk);if(o_v)$fatal(1,"FAIL embed corrupted metadata published");end
+            if(!fault)$fatal(1,"FAIL embed metadata fault undetected");
+        end
+    endtask
     reg [511:0] w;
     initial begin
         for(i=0;i<4096;i=i+1) begin
@@ -53,7 +65,7 @@ module tb_qwen_embed_code_bank;
                 if(first_request<0) first_request=cycle;
             end
             if(o_cr) begin owed=owed-1;returned=returned+1;end
-            #1;
+            #0.01;
             if(i_cr) credits=credits+1;
             if(fault) begin $display("FAIL embed unexpected fault cycle=%0d",cycle);$fatal(1);end
             if(o_v) begin
@@ -77,7 +89,16 @@ module tb_qwen_embed_code_bank;
                 o_cr=1; @(negedge clk); o_cr=0;
                 repeat(3) @(negedge clk);
                 if(!fault) begin $display("FAIL embed duplicate credit undetected");$fatal(1);end
-                $display("PASS embed words=%0d cycles=%0d first_latency=%0d min_gap=%0d duplicate_credit=detected",received,cycle,first_response-first_request,min_gap);
+                if(first_response-first_request!=7 || min_gap!=2)$fatal(1,"FAIL embed protected timing contract");
+                reset_dut();i_v=1;i_addr=0;@(negedge clk);i_v=0;
+                @(negedge clk);dut.fifo[0]=dut.fifo[0]^12'd1;require_fault();
+                reset_dut();dut.credits=dut.credits^1;require_fault();
+                reset_dut();dut.phase=dut.phase^1;require_fault();
+                reset_dut();i_v=1;i_addr=0;@(negedge clk);i_v=0;
+                wait(dut.ce_q);@(negedge clk);dut.addr_q=dut.addr_q^1;require_fault();
+                reset_dut();dut.iv_q=1;require_fault();
+                reset_dut();dut.capture_en_q=16'h1;require_fault();
+                $display("PASS embed words=%0d cycles=%0d first_latency=%0d min_gap=%0d duplicate_credit=detected metadata_faults=6 SS_ROM_delay_ps=739.211",received,cycle,first_response-first_request,min_gap);
                 $finish;
             end
         end

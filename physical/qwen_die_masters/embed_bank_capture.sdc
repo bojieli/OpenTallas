@@ -5,5 +5,5 @@ set eb_rom_outputs [get_pins -hierarchical -quiet {u_lo/rd_out* u_hi/rd_out*}]
 if {[llength $eb_rom_outputs] != 532} {
   error "embedding bank needs exactly 532 real ROM output pins, got [llength $eb_rom_outputs]"
 }
-set_multicycle_path 2 -setup -from $eb_rom_outputs
-set_multicycle_path 1 -hold -from $eb_rom_outputs
+set_multicycle_path 2 -setup -through $eb_rom_outputs
+set_multicycle_path 1 -hold -through $eb_rom_outputs
