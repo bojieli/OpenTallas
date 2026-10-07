@@ -2582,7 +2582,28 @@
    },
    "boundary_n": 950,
    "budget": null
+  },
+  "hfd_sfu": {
+   "job": "hbm_sfu_quarter_r24_1ad3621a6",
+   "source_commit": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_quarter_r24_1ad3621a6",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T10:42:58-07:00",
+   "ss": {
+    "mean": 1766,
+    "min": 1721,
+    "max": 1990
+   },
+   "ff": {
+    "mean": 1233,
+    "min": 1195,
+    "max": 1423
+   },
+   "boundary_n": 4096,
+   "budget": null
   }
  },
- "updated": "2026-10-07T10:35:57-07:00"
+ "updated": "2026-10-07T10:42:58-07:00"
 }
