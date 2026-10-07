@@ -314,7 +314,10 @@ R22 = dict(R21, relay_all=True)
 # r23 (OWNER 2026-10-07): the hub transport gets ~2x area: SU / SFU / HC quarters x2 (registered transport tiles at
 #   ~55 % utilisation for the SU / attn / router agent), SFU between its consumers SU and HC as before; the centre
 #   channel (mid_ch) widens by the added quarter widths, so the die grows in x
-R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0)
+R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0,
+           fix_station_pins=('hfd_cdist_r14', 'hfd_cdist_r15', 'hfd_gath_r10', 'hfd_gath_r24', 'hfd_gath_r25', 'hfd_gath_r8',
+                             'hfd_gath_r9', 'hfd_meso_r28', 'hfd_meso_r32', 'hfd_stn_r2', 'hfd_stn_r34', 'hfd_stn_r18',
+                             'hfd_stn_r20'))
 ADOPTED = R23
 
 
@@ -594,8 +597,13 @@ def build(variant=None):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
     if variant.get('split_x_masters'):
         apply_splits_x(m, variant['split_x_masters'])
-    if variant.get('barrier_low'):
-        fix_ports_from_views(m, ['hfd_barrier'])
+    fixv = ['hfd_barrier'] if variant.get('barrier_low') else []
+    if variant.get('fix_station_pins'):     # r23: these station roles keep their committed view's pins (the hub
+        #   re-layout moved their generated pin plan; views with uniform pin runs only -- the r16h corner-rule views
+        #   (r11 / r19 / r21 / r23 / r26 / meso_r1) still match the generator and are not listed)
+        fixv += list(variant['fix_station_pins'])
+    if fixv:
+        fix_ports_from_views(m, fixv)
     if variant.get('vm_split'):
         split_vm(m)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
