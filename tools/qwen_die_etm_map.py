@@ -99,6 +99,10 @@ def main(argv=None):
     ap.add_argument('--assumed', type=Path, required=True, help='dir with qfd_elements_{ss,ff}.lib (assumed constants)')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--recipe', default='r20c')
+    ap.add_argument('--stubs', type=Path, default=None, help="die_top_lint's stubs (pin directions for --station-etm)")
+    ap.add_argument('--station-etm', type=Path, default=None,
+                    help='dir with cst/ot_qwen_die_station_cst_{ss,ff}.lib and chead/... (closed routes s2_cst_hm40 / '
+                         's2_chead_hm40): bound BY DIRECTION to qfd_cst_*, qfd_chead_* and the r21 relays qfd_rly*')
     a = ap.parse_args(argv)
     import die_top_lint as DTL
     DTL.QWEN_RECIPE = a.recipe
@@ -107,6 +111,7 @@ def main(argv=None):
     lef_text = a.lef.read_text()
     slabs = sorted(set(re.findall(r'^MACRO (qfd_port_tiles_\w+)$', lef_text, re.M)))
     bound = ['qfd_cdc'] + slabs
+    station_bound = {}
     for c in ('ss', 'ff'):
         cdc_t = (a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').read_text()
         slab_t = (a.etm / f'ot_qwen_slab_port_group_{c}.lib').read_text()
@@ -132,6 +137,29 @@ def main(argv=None):
                 return retarget(slab_b[src], {'clk': ck, 'bw_clk': ck})
             widths |= {w for w, idx in sp.values() if idx}
             cells.append(cell_text(s, sp, slab_src))
+        # stations / column heads / r21 relays: by direction -- every input bit <- the station's a_d[0] (setup/hold
+        # at its input flop), every output bit <- b_d[0] (clock->Q + drive), the clock pin <- clk
+        if a.station_etm is not None:
+            import qwen_die_element_lib as EL
+            sd = EL.stub_dirs(a.stubs)
+            for fam, pat in (('cst', r'qfd_cst_\w+|qfd_rly_\w+'), ('chead', r'qfd_chead_\w+')):
+                et = (a.station_etm / fam / f'ot_qwen_die_station_{fam}_{c}.lib').read_text()
+                eb = blocks(et)
+                for mst in sorted(set(re.findall(r'^MACRO (' + pat + r')$', lef_text, re.M))):
+                    mp = lef_ports(a.lef, mst)
+                    ckn = 'ck[0]' if mp.get('ck', (1, False))[1] else 'ck'
+
+                    def st_src(p, i, eb=eb, ckn=ckn, mst=mst):
+                        if p == 'ck':
+                            return eb['clk']
+                        dirs, _ = EL.bit_dirs(mst, p, i + 1, sd)
+                        src = eb['b_d[0]'] if dirs[i] == 'output' else eb['a_d[0]']
+                        return retarget(src, {'clk': ckn})
+                    widths |= {w for w, idx in mp.values() if idx}
+                    cells.append(cell_text(mst, mp, st_src))
+                    if mst not in bound:
+                        bound.append(mst)
+                    station_bound[mst] = f'ot_qwen_die_station {fam} (s2_{fam}_hm40 ETM, by pin direction)'
         hdr = header(cdc_t).replace(f'library (ot_qwen_stream4_cdc_pc_{c})', f'library (qfd_etm_{c})')
         (a.out / f'qfd_etm_{c}.lib').write_text(hdr + types(widths) + '\n' + '\n'.join(cells) + '\n}\n')
         # assumed library without the bound cells
@@ -143,10 +171,10 @@ def main(argv=None):
     rec = dict(schema='opentallas.qwen_die_element_views.v1', recipe=a.recipe,
                etm_bound=dict(qfd_cdc='ot_qwen_stream4_cdc_pc r11a (exact per bit)',
                               **{s: 'ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)'
-                                 for s in slabs}),
+                                 for s in slabs}, **station_bound),
                etm_generated_not_bound=['ot_qwen_rom_core r5b_f3ba (no die master carries its controller-cut ports)'],
                real_lib=['ot_hbm3e_phy (its own characterised .lib)'],
-               assumed_constants=[m for m in lef_all if m not in bound and m != 'ot_hbm3e_phy'])
+               assumed_constants=sorted({m for m in lef_all if m not in bound and m != 'ot_hbm3e_phy'}))
     (a.out / 'views.json').write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(dict(bound=len(bound), assumed=len(rec['assumed_constants'])), indent=1))
 
