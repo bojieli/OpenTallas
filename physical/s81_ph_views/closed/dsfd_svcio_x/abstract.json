@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svcio_x",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svcio_x.lef": "8c7df5fbb50538bc682b166093500ef3ca087cfb0aa31d95a1fcb6fc562cf459",
+    "dsfd_svcio_x_ff.lib": "bf76b7a2d15935995c3d26d97dc2ea6d91ba37ac8fcb5541f5f15345dc8d64c7",
+    "dsfd_svcio_x_ss.lib": "a39b3e719bd8ee4406721e168ddfba68c72aed46045b752f7b7d42202fd239a0"
+  },
+  "ok": true
+}
