@@ -388,7 +388,7 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/arch/v41_rack.json` | yes | `python3 tools/v41_rack_design.py` | path-only 3 | — |
 | `results/arch/arch_budget_v41.json` | yes | `python3 tools/arch_budget_v41.py` | none | — |
 | `results/arch/v41_hbm_switched.json` | yes | `python3 tools/arch_hbm_switched_v41.py` | none | — |
-| `results/arch/energy_silicon_measured/energy_silicon.json` | yes | `python3 tools/energy_silicon_measured.py  (inferred; the record names no command)` | path-only 9 | becd261a |
+| `results/arch/energy_silicon_measured/energy_silicon.json` | yes | `python3 tools/energy_silicon_measured.py  (inferred; the record names no command)` | path-only 9 | 60c6e117 |
 | `results/arch/sync_cost_table.json` | yes | `python3 tools/sync_cost_table.py` | current 5, stale 2 | — |
 | `results/gpu/blackwell_gather_designs.json` | yes | `./gather_designs 500 21 64 16  (steps, trials, GEMVs per trial, weight matrices)` | none | — |
 | `results/physical_abi3/asap7/signoff/energy_common_kv.json` | yes | `not recorded` | none | — |
