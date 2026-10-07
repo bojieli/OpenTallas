@@ -874,7 +874,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [6*NSEG-1:0] wd_q2 = nQ2_d;
 `endif
     wire [6*NSEG-1:0] nA_m = (wd_sea & nL0_d) | (~wd_sea & ((wd_sva & nB_s) | (~wd_sva & nA_s)));
+`ifdef WRD_MUTANT_L1
+    wire [6*NSEG-1:0] nB_m = (wd_seb & nL0_d) | (~wd_seb & ((wd_svb & wd_q2) | (~wd_svb & nB_s)));   // negative control: nB restarts at f(0)
+`else
     wire [6*NSEG-1:0] nB_m = (wd_seb & nL1_d) | (~wd_seb & ((wd_svb & wd_q2) | (~wd_svb & nB_s)));
+`endif
     wire [6*NSEG-1:0] nA_v = (WRD != 0) ? nA_m : nA_r;
     wire [6*NSEG-1:0] nB_v = (WRD != 0) ? nB_m : nB_r;
     wire [6*NSEG-1:0] nA = (WRT != 0) ? ((wsel_a & nA_v) | (~wsel_a & nA_s)) : nA_s;
@@ -1748,8 +1752,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         // the decision form reads exactly the registered candidate it replaces
         always @(negedge clk) if (rst_n && (nA_m !== nA_r || nB_m !== nB_r) && (|hp_a || |hp_b)) begin
 `ifndef WRD_MUTANT_NQ
+`ifndef WRD_MUTANT_L1
             $display("QX_CHECK FAIL: WRD decision form %h/%h != candidates %h/%h at %t", nA_m, nB_m, nA_r, nB_r, $time);
             $fatal(1);
+`endif
 `endif
         end
 `endif
