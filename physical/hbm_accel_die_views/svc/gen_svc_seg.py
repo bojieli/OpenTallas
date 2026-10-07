@@ -357,7 +357,7 @@ def build(pl):
                 k = int(u[2:]); fwd = g['fwd'][k]
                 decl.append(f'  wire [3:0] as{k}_sv, as{k}_kt; wire [1107:0] as{k}_sq; wire as{k}_wsv, as{k}_wt; '
                             f'wire [270:0] as{k}_wsq; wire [1098:0] as{k}_line;')
-                body.append(f'  ot_svs_asm #(.SLOT({ASM_SLOT.get(names[j], 2)})) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
+                body.append(f'  ot_svs_asm #(.SLOT({ASM_SLOT.get(names[j], 4)})) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
                             f'.wsq(as{k}_wsq), .k_take(as{k}_kt), .w_take(as{k}_wt), .line(as{k}_line));')
                 if fwd:
                     body.append(f'  wire fck{k}; ot_svc_fclk_buf u_fc{k} (.a(c), .y(fck{k}));')
