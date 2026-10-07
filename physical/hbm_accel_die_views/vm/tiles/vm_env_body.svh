@@ -13,7 +13,7 @@ module `VM_ENV_NAME (input wire clk, output reg [63:0] h, output integer nev, ou
     endtask
     function automatic [63:0] mix(input [63:0] a, input [63:0] b); mix = {a[62:0], a[63]} ^ b ^ (a >> 7); endfunction
     reg [63:0] lf; function automatic [63:0] nx(input [63:0] x); nx = {x[62:0], x[63] ^ x[62] ^ x[60] ^ x[59]}; endfunction
-    integer k, j, g, nw; reg [7:0] wa [0:63]; reg [2062:0] dat; reg [191:0] own; reg [7:0] ba;
+    integer k, j, g, nw, ri; reg [7:0] wa [0:63]; reg [191:0] wo [0:63]; reg [2062:0] dat; reg [191:0] own; reg [7:0] ba;
     initial begin
         h = 0; nev = 0; done = 0; fault_end = 0; lf = 64'h9e3779b97f4a7c15 ^ `SEED; nw = 0;
         if (`MODE == 1) begin force `VM_CFG = 772'd0; end
@@ -23,8 +23,9 @@ if (`MODE == 1) begin
             lf = nx(lf); lf = nx(lf);
             for (j = 0; j < 33; j = j + 1) begin lf = nx(lf); dat[j*63 +: 63] = lf[62:0]; end
             lf = nx(lf); own = {lf, nx(lf), nx(nx(lf))}; lf = nx(nx(nx(lf)));
+            if (`VM_DBG) $display("%m OP k=%0d nw=%0d st=%0d sticky=%0d t=%0t", k, nw, `VM_ROOT.state, `VM_ROOT.sticky, $time);
             if (nw == 0 || (lf[3:0] < 7 && nw < 64)) begin         // write
-                ba = lf[15:8]; wa[nw] = ba; nw = nw + 1;
+                ba = lf[15:8]; wa[nw] = ba; wo[nw] = own; nw = nw + 1;
                 @(negedge clk); f_su_SW = dat[2047:0]; f_su_NW[14:0] = dat[2062:2048]; f_su_NW[15] = 1; f_su_NW[16] = ba[7];
                 f_su_NW[23:17] = ba[6:0]; f_su_NW[215:24] = own; f_su_NW[216] = 0;
                 while (!t_su_SW[1] && !t_su_SW[5]) @(posedge clk);
@@ -37,7 +38,7 @@ if (`MODE == 1) begin
                     @(negedge clk); f_su_NW[216] = 0;
                 end
             end else begin                                          // read of a written row
-                ba = wa[lf[13:8] % nw];
+                ri = lf[13:8] % nw; ba = wa[ri]; own = wo[ri];   // a read presents the row's owner
                 @(negedge clk); f_su_SE[0] = 1; f_su_SE[1] = ba[7]; f_su_SE[8:2] = ba[6:0]; f_su_SE[200:9] = own;
                 while (t_su_SW[9:6] == 0 && !t_su_SW[5]) @(posedge clk);
                 if (t_su_SW[5]) fault_end = 1;

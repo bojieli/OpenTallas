@@ -16,6 +16,9 @@
 `ifndef NOPS
 `define NOPS 60
 `endif
+`ifndef VM_DBG
+`define VM_DBG 0
+`endif
 `ifndef KF
 `define KF 50
 `endif
@@ -49,15 +52,18 @@ endmodule
 `define VM_DUT hfd_vm
 `define VM_CFG u.cfg
 `define VM_TRACE "trace_ref.hex"
+`define VM_ROOT u.u_mr.on
 `include "vm_env_body.svh"
 `undef VM_ENV_NAME
 `undef VM_DUT
 `undef VM_CFG
 `undef VM_TRACE
+`undef VM_ROOT
 `define VM_ENV_NAME vm_env_t
 `define VM_DUT vm_joined
 `define VM_CFG u.u_sw.cfg
 `define VM_TRACE "trace_dut.hex"
+`define VM_ROOT u.u_sw.u_mr.on
 `include "vm_env_body.svh"
 
 module tb_vm_tiles;
