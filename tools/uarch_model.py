@@ -8092,6 +8092,7 @@ def main(argv=None):
     ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
                     help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
                          "assumed 3/40 x AR (reproduces records made before 2026-10-04)")
+    ap.add_argument("--s81-selector-quarter-retime", action="store_true", help="size exact existing-stage selector comparator retiming")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
@@ -8173,6 +8174,14 @@ def main(argv=None):
     if a.fec_fairness:
         from fec_class_fairness import policy
         payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_selector_quarter_retime:
+        from s81_selector_quarter_retime_model import model
+        payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)
@@ -13423,3 +13432,88 @@ def qwen_kvc_mapped_pc_model():
     """Full-width exact option-M mapper followed by landing decoder."""
     from uarch_model_qwen_kvc_mapped import model
     return model()
+
+
+def s81_bf_root_phase_model():
+    """Clock-only successor of pinned BF HALF=1; no adoption or timing credit."""
+    return {
+        'baseline_source': '61c1cf23054e140ea7b4371bb931b82b2383e9a7',
+        'default_off': True, 'adopted': False, 'physical_closed': False,
+        'scope': 'full native BF pair HALF=1, dedicated phase-clock root branch',
+        'added_cycles': 0, 'added_macs_per_cycle': 0,
+        'memory_bytes_per_cycle_delta': 0, 'boundary_bits_per_cycle_delta': 0,
+        'added_cells': {'INVx1_ASAP7_75t_R': 2},
+        'additional_phase_registers': 0, 'replicas': 1,
+        'fanout': {'first_inverter': 1, 'second_inverter': 1},
+        'added_internal_clock_nets': 2,
+        'routing': {'local_branch_max_span_um': 100, 'tracks_added': 2,
+                    'capacity_and_actual_wire_length': 'must measure after placement'},
+        'area_um2': None, 'area_status': 'two cells estimated; placement not measured',
+        'slot_fit': 'existing outline retained; verify legalization and actual utilization',
+        'latency': 'zero logical delta from HALF baseline; existing half-rate cost retained',
+        'physical_obligations': [
+            'keep phase register and both branch inverters within 100um of root ICG',
+            'generated divide-by-1 clock with propagated physical insertion',
+            'retain phase-to-ICG setup/hold and all phase-to-output crossings',
+            'fresh-session SS/FF >=15ps, DRC0, exact production clock protocol'],
+    }
+
+
+def hbm_su_divider_halfpair_model(serial_divides=1):
+    """Prebuild bound for two alternating exact DIV31 cores, one beat per fast edge.
+
+    This is a closure candidate, not a measured speed/area claim. The c12
+    composition already carries DDIV through M1, sigmoid/SiLU, softplus and
+    EGATE; selecting DDIV=64 prices each dependent divide at the same rounding
+    point. ROM designs do not select this HBM lane implementation.
+    """
+    assert isinstance(serial_divides, int) and serial_divides >= 0
+    fast_ghz = 1.2
+    depth = 64
+    old_full_area_um2 = 32015.784  # full31 d773c1033 mapped full-shape route
+    wrapper_ff = 2 * (65 + 34 + 34 + 1 + 2)
+    # Bound the extra pair by duplicating the ENTIRE measured full lane, not
+    # merely its two dividers; therefore no unmeasured leaf area subtraction.
+    cell_upper = 2 * old_full_area_um2 + wrapper_ff * .37908
+    corridor_um = 32
+    side_um = 400
+    tracks = int(corridor_um / .072)  # conservative >=72nm track pitch
+    return dict(schema='opentallas.hbm.su.divider_halfpair.prebuild.v1',
+        selected=False, adopted=False, default_parameter=dict(DDIV=21),
+        proposed_parameter=dict(DDIV=depth), MACs_per_cycle=0,
+        divides_per_fast_cycle=1, compute_intensity_divides_per_payload_byte=1/12,
+        memory_ports=dict(new_ports=0, bytes_per_fast_cycle=0),
+        boundary_bits_per_fast_cycle=dict(input=65, output=34, new_external_bits=0),
+        replicas=dict(cores_per_divider=2, divider_instances_per_full_lane=2,
+            input_capture_fanout=2, output_mux='34 parallel 2:1 muxes per divider',
+            demux='alternating physical clock gates; every input captured once',
+            added_wrapper_ff_bound=wrapper_ff),
+        clocks=dict(fast_ghz=fast_ghz, each_core_ghz=fast_ghz/2,
+            duty='one 50-percent-fast-clock high pulse every two fast periods',
+            phase0_master_edges=[1,2,5], phase1_master_edges=[3,4,7],
+            crossings='one fast input register; opposite-bank capture then output register',
+            setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            no_relaxation_of_fast_crossings=True),
+        area=dict(measured_full31_um2=old_full_area_um2,
+            conservative_cell_upper_um2=cell_upper,
+            source='EPYC3 full31 d773c1033 physical.json; not a divider-only estimate',
+            proposed_slot_um=[side_um,side_um], reserved_corridor_um=corridor_um,
+            planned_utilization_with_corridor=(cell_upper+corridor_um*side_um)/side_um**2,
+            target_utilization=.55, old_slot_um=[346.008,347.736],
+            old_slot_fit_with_corridor=False, proposed_slot_fit=(cell_upper+corridor_um*side_um)/side_um**2 <= .55),
+        routing=dict(bank_boundary_tracks_needed=2*(65+34)+2,
+            conservative_channel_track_capacity=tracks,
+            track_pitch_assumption_um=.072, requires_physical_validation=True),
+        latency=dict(divider_fast_cycles=depth, core_slow_cycles=31,
+            extra_vs_DDIV21=depth-21, extra_vs_DDIV31=depth-31,
+            serial_divides=serial_divides,
+            serial_chain_added_fast_cycles=serial_divides*(depth-21),
+            serial_chain_added_ns=serial_divides*(depth-21)/fast_ghz,
+            M1_and_SFU_both_divide_extra_cycles=2*(depth-21),
+            composed_by='tools/hbm_su_c12.py:set_c12 DDIV=64; controller H_MD/D_SIG/D_SP/D_EG',
+            per_design_selection={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+                'Qwen3-8B HBM':'conditional DDIV64','DeepSeek-V4.1 HBM':'conditional DDIV64'}),
+        adoption_gates=['small divider transaction scoreboard incl faults/reset/bubbles and negative',
+            'c12 controller/lane exact composition at DDIV64',
+            'full-lane physical shape SS>=15ps/FF>=15ps/DRC0 with generated clocks',
+            'expanded slot installed in die context and latency ledger recomposed'])
