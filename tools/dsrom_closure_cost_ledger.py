@@ -52,20 +52,30 @@ ITEMS = [
 
 # PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
+# CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)
+CANDIDATES = [
+    ("bf_half", "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, "
+                "exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase "
+                "share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes "
+                "first (variant A re-cut is the target)",
+     [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
+]
 
 
-def lever(items, pending=False):
-    src = ITEMS + (PENDING if pending else [])
+def lever(items, pending=False, extra=()):
+    src = ITEMS + (PENDING if pending else []) + list(extra)
     if pending and items is not None:
         items = list(items) + [it for it, _, _ in PENDING]
+    if extra and items is not None:
+        items = list(items) + [it for it, _, _ in extra]
     adds = [dict(item=it, nodes=n, cycles=c, frac=f, source=desc) for it, desc, rows in src for n, c, f in rows]
     return dict(schema="opentallas.dsrom-recovery.addcycles.v1", lever="s81_die_tiles", verdict="ADOPT", items=items,
                 note="S81 die integration + S81 tile closure costs (CLAUDE S81-RERUN), priced per operation on the measured "
                      "composition; the ledger is tools/dsrom_closure_cost_ledger.py", adds=adds)
 
 
-def compose(items, pending=False):
-    LEV.write_text(json.dumps(lever(items, pending), indent=1) + "\n")
+def compose(items, pending=False, extra=()):
+    LEV.write_text(json.dumps(lever(items, pending, extra), indent=1) + "\n")
     tmp = OUT / "tmp.json"
     subprocess.run([sys.executable, str(ROOT / "tools/dsrom_1m_allmeasured.py"), "--out", str(tmp)], check=True,
                    capture_output=True)
@@ -86,10 +96,14 @@ def main():
                          cum_mtp_pct=round(100 * (mtp / mtp0 - 1), 3)))
         prev = (ar, mtp)
     asis = compose([it for it, _, _ in ITEMS], pending=True)
+    cand = {c[0]: compose([it for it, _, _ in ITEMS], extra=[c]) for c in CANDIDATES}
     LEV.write_text(json.dumps(lever(None), indent=1) + "\n")      # all items (items = None)
     rec = dict(schema="opentallas.dsrom.closure_cost_ledger.v1", baseline=dict(ar_tok_s=ar0, mtp_tok_s=mtp0,
                basis="recovery composition without the S81 closure costs"), items=rows,
                total=dict(ar_tok_s=prev[0], mtp_tok_s=prev[1], ar_pct=rows[-1]["cum_ar_pct"], mtp_pct=rows[-1]["cum_mtp_pct"]),
+               candidates=[dict(item=it, description=d_, adds=a_, ar_tok_s=cand[it][0], mtp_tok_s=cand[it][1],
+                                ar_pct_vs_total=round(100 * (cand[it][0] / prev[0] - 1), 3),
+                                mtp_pct_vs_total=round(100 * (cand[it][1] / prev[1] - 1), 3)) for it, d_, a_ in CANDIDATES],
                pending_defect=[dict(item=it, description=d_, adds=a_) for it, d_, a_ in PENDING],
                as_is=dict(ar_tok_s=asis[0], mtp_tok_s=asis[1], ar_pct=round(100 * (asis[0] / ar0 - 1), 3),
                           mtp_pct=round(100 * (asis[1] / mtp0 - 1), 3), basis="every item + the PENDING-DEFECT all-gathers"))
@@ -101,6 +115,10 @@ def main():
                  f"{r['cum_ar_pct']:+.2f} | {r['cum_mtp_pct']:+.2f} |")
     L.append(f"| **TOTAL** | | **{prev[0]:,.1f}** (MTP {prev[1]:,.1f}) | | | **{rows[-1]['cum_ar_pct']:+.2f}** | "
              f"**{rows[-1]['cum_mtp_pct']:+.2f}** |")
+    for it, d_, a_ in CANDIDATES:
+        ar_, mt_ = cand[it]
+        L.append(f"| {it} (CANDIDATE, not adopted) | {d_} | {ar_:,.1f} | {100 * (ar_ / prev[0] - 1):+.2f} | "
+                 f"{100 * (mt_ / prev[1] - 1):+.2f} | | |")
     for it, d_, a_ in PENDING:
         L.append(f"| {it} (PENDING-DEFECT, not in the headline) | {d_} | | | | | |")
     L += ["", f"Measured as-is (PENDING-DEFECT included): AR {asis[0]:,.1f} ({100 * (asis[0] / ar0 - 1):+.2f} %), "
