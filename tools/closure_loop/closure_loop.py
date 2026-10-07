@@ -1563,6 +1563,15 @@ def migrate_overloaded(jobs, fleet):
         st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
         pre_cts = (j["status"] in ("RUNNING", "READY") and st["kind"] in ("bench", "calibrate")) or \
                   (j["status"] == "READY" and st["kind"] == "route") or j["status"] == "SYNC"
+        if not pre_cts and j["status"] == "RUNNING" and st["kind"] == "route":
+            # OWNER LOAD REBALANCE 2: a route on an overloaded host that has not reached CTS may be relaunched elsewhere
+            dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
+            if dm:
+                rb = dm.replace("/logs/", "/results/").rsplit("/", 1)[0]
+                r = ssh(j["host"], f"ls {rb}/4_1_cts.odb {rb}/3_place.odb >/dev/null 2>&1 && echo CTS; "
+                                   f"ls -d {rb.rsplit('/', 2)[0]} >/dev/null 2>&1 || echo NOBASE; "
+                                   f"ls {rb}/4_1_cts.odb >/dev/null 2>&1 || echo PRECTS", timeout=60)
+                pre_cts = r.returncode == 0 and "PRECTS" in r.stdout
         if not pre_cts:
             continue
         h, why = fleet.choose(j["spec"], exclude=[j["host"]])
@@ -1572,8 +1581,10 @@ def migrate_overloaded(jobs, fleet):
         if j["status"] == "RUNNING":
             kill_own_stage(j)
         cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-        if st["kind"] == "bench":
-            idx = j["stage_idx"]                         # re-run the interrupted bench, keep finished ones
+        if st["kind"] in ("bench", "route"):
+            idx = j["stage_idx"]                         # re-run the interrupted bench / pre-CTS route
+            if st["kind"] == "route" and cal is not None:
+                idx = cal                                # calibration is host-local (calib.env): redo it
         else:
             idx = cal if cal is not None else j["stage_idx"]
         j["hosts_tried"].append(h)
