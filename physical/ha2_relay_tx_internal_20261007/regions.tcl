@@ -20,9 +20,9 @@ foreach i [$b getInsts] {
  foreach n $candidates {
   set n [string map [list {\[} {[} {\]} {]}] $n]
   if {[regexp {u_(launch|tx)\.g_lane\[([01])\]} $n -> who lane]} {set owner $lane}
-  if {[regexp {(local_data|u_tx.send_data|u_launch.d_out)\[([0-9]+)\]} $n -> bus bit]} {set owner [expr {$bit/544}]}
-  if {[regexp {u_tx.send_tag\[([0-9]+)\]} $n -> bit]} {set owner [expr {$bit/16}]}
-  if {[regexp {(local_v|u_tx.send_v|u_launch.v_out)\[([01])\]} $n -> bus lane]} {set owner $lane}
+  if {[regexp {(local_data|send_data|u_tx.send_data|u_launch.d_out)\[([0-9]+)\]} $n -> bus bit]} {set owner [expr {$bit/544}]}
+  if {[regexp {(^|\.)send_tag\[([0-9]+)\]} $n -> prefix bit]} {set owner [expr {$bit/16}]}
+  if {[regexp {(local_v|send_v|u_tx.send_v|u_launch.v_out)\[([01])\]} $n -> bus lane]} {set owner $lane}
  }
  if {$owner>=0 && $owner<=1} {
   $groups($owner) addInst $i
