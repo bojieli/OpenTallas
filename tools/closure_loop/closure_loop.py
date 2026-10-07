@@ -59,7 +59,7 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 180                # load1 lags a launch: count own launches of the last 5 min as load
+PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
 TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -434,13 +434,14 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         pt, pr = self.own_pending(host)
         # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
         # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        eff = max(info["load1"], OWN_RUNNING_WEIGHT * self.own_running.get(host, 0))
+        eff = info["load1"]       # measured; only launches of the last 10 min are added (ramp allowance, pt)
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        if info["mem_gb"] - pr - res < ram + RAM_HEADROOM_GB:
+        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB)      # OWNER 21:35: peak + max(10% RAM, 32 GB)
+        if info["mem_gb"] - pr - res < ram + head:
             return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
-                           + f" < {ram}+{RAM_HEADROOM_GB}")
+                           + f" < {ram}+{head:.0f}")
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         return True, "ok"
@@ -491,7 +492,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if info is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - max(info["load1"], OWN_RUNNING_WEIGHT * self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
+            fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
             return min(fc, fr) + 0.5 * (fc + fr) / 2 + (0.05 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
         order.sort(key=score, reverse=True)
@@ -1007,6 +1008,18 @@ def write_status(fleet_note=""):
     L += ["", "## Recent terminal"]
     for r in done:
         L.append(f"- {r['name']} [{r['spec'].get('block', '?')}] {r['status']} {r.get('reason', '')[:200]}")
+    fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
+          "free RAM >= peak + max(10% RAM, 32 GB))"]
+    for h in hosts_table():
+        r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+        v = r.stdout.split()
+        if len(v) == 2:
+            ld = float(v[0])
+            fl.append(f"- {h['label']}: load1 {ld:.0f}/{h['cores']} threads (idle {max(0, 100 * (1 - ld / h['cores'])):.0f}%), "
+                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own running {sum(1 for x in act if x.get('host') == h['name'] and x['status'] == 'RUNNING')}")
+        else:
+            fl.append(f"- {h['label']}: unreachable")
+    L[3:3] = fl
     tmp = STATUS_MD.with_suffix(".tmp")
     tmp.write_text("\n".join(L) + "\n")
     os.replace(tmp, STATUS_MD)
@@ -1679,7 +1692,7 @@ def tick(fleet):
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
         requeue_hold_only(all_jobs())
-        migrate_overloaded(all_jobs(), fleet)
+        # migrate_overloaded() / checkpoint moves retired by OWNER 21:35 (memory-based admission)
         requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
