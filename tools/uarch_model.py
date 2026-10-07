@@ -8483,6 +8483,23 @@ def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
         required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
+def dsrom_fh_receipt_compare_model(split=False):
+    """Opt-in SAFE=2 head receipt comparator; same one-edge receipt contract."""
+    groups = 6 if split else 1
+    return dict(schema='opentallas.dsrom.fh.receipt-compare.v1',
+        opt_in_default=False, physical_SS_FF_qualified=False,
+        receipt_bits=48, input_bits_per_cycle=49, result_bits_per_cycle=1,
+        macs_per_cycle=0, memory_bytes_per_cycle=0,
+        compare_replicas=groups, compare_bits_per_replica=48 // groups,
+        state_bits=groups + 1, incremental_state_bits=groups - 1,
+        incremental_register_lower_bound_um2=(groups - 1) * DFF_UM2,
+        receipt_latency_cycles=1, added_token_latency_cycles=0,
+        incremental_boundary_bits_per_cycle=0,
+        routing='Six local 8-bit compares feed six flops, then a six-bit local reduction' if split else 'One 48-bit compare',
+        controller_slot_um=[300, 300], slot_fit_qualified=False,
+        qualification='Exact sampled equality and strict controller SS/FF/DRC required; no headline gain claimed')
+
+
 def dsrom_s81_native_head_terminal():
     """Additive ordered-root/argmax leaf; not an enrolled head-ROM producer."""
     fifo=16; owner=47; rows=32320

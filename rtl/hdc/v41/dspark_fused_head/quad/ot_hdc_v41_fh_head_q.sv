@@ -136,7 +136,7 @@ module ot_hdc_v41_fh_head_q #(
         .ep_ack_v(ep_ack_v),.ep_fault(ep_fault),.ep_guard_busy(ep_busy),.ep_request_checked_v(ep_rqv),.ep_reply_checked_v(ep_rpv),
         .ep_ack_id(ep_id),.ep_ack_word(ep_word),.ep_ack_mask(ep_mask),.q_lane_veto(q_lane_veto));
     end else begin : g_ctl
-        ot_hdc_v41_fh_ctl #(.W(W),.G(G),.AW(AW),.NW(NW),.RETURN_EXTRA(5+QPIN)) u_ctl (
+        ot_hdc_v41_fh_ctl #(.W(W),.G(G),.AW(AW),.NW(NW),.SAFE(SAFE),.RETURN_EXTRA(5+QPIN)) u_ctl (
             .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.native_cold_n(native_cold_n),
             .native_permission_capture(native_permission_capture),.commit_warm(commit_warm),.commit_debt(commit_debt),
             .commit_id(commit_id),.s3_v_in(s3_v_in),.a_tag_p_in(a_tag_p_in),.wr_en(wr_en),.wr_addr(wr_addr),

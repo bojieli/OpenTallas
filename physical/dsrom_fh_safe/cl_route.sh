@@ -45,7 +45,7 @@ set_false_path -from [get_ports {gid* hid}]";;
   for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \
     $D/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv $D/capture_candidate/ot_hdc_v41_fh_checked_permission.sv \
     $D/quad/ot_hdc_v41_fh_head_top.sv $D/quad/ot_hdc_v41_fh_ctl.sv; do args+=(--source $f); done
-  args+=(--param RETURN_EXTRA=6 --die-area 0 0 300 300
+  args+=(--param RETURN_EXTRA=6 --param SAFE=${CTL_SAFE:-1} --die-area 0 0 300 300
    --core-area 2 2 298 298 --core-utilization 30 --max-fanout 16);;
  ep) TOP=ot_hdc_v41_fh_ep_view
   args=(--source rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv --orfs-var SYNTH_HDL_FRONTEND=slang

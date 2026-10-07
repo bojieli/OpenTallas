@@ -53,7 +53,23 @@ module ot_hdc_v41_fh_retire_parent #(
         wire pipe_busy,pipe_fault;
         wire [PAYLOAD_BITS+8-1:0] retired;
         wire matching_ack, ack_seen;
-        if(SAFE) begin : g_ack_reg
+        if(SAFE>=2) begin : g_ack_split
+            // Same receipt edge as SAFE=1; no pin sees the full 48-bit compare.
+            // All slices sample the same expected tuple and av masks idle data.
+            reg av;
+            (* keep=1,dont_touch=1 *) reg [5:0] match_slice;
+            wire [47:0] received={ack_id,ack_word,ack_mask};
+            wire [47:0] expected={expected_id,expected_word,expected_mask};
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) av<=0; else av<=ack_v;
+            for(genvar k=0;k<6;k=k+1) begin : g_slice
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n) match_slice[k]<=0;
+                    else match_slice[k]<=received[k*8+:8]==expected[k*8+:8];
+            end
+            assign ack_seen=av;
+            assign matching_ack=av&&(&match_slice)&&debt&&sent;
+        end else if(SAFE) begin : g_ack_reg
             reg av,am;
             always @(posedge clk or negedge rst_n)
                 if(!rst_n) begin av<=0;am<=0; end

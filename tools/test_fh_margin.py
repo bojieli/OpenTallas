@@ -107,6 +107,15 @@ BENCH = {
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }
+# SAFE=2 changes only the receipt compare partition, with identical edge latency.
+BENCH['head_q_ack_split'] = dict(BENCH['head_q_lret3'],
+    params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=2', '-GHQ=1', '-GLRET=1'])
+BENCH['ack_split'] = dict(top='tb_fh_ack_split',
+    srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
+          f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/margin/tb_fh_ack_split.sv'],
+    mut={'skip_word_slice': (f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv',
+         'match_slice[k]<=received[k*8+:8]==expected[k*8+:8];',
+         "match_slice[k]<=k==2?1'b1:(received[k*8+:8]==expected[k*8+:8]);")})
 def run(name, b, mut, tmp):
     srcs = [ROOT / s for s in b['srcs']]; params = list(b.get('params', []))
     if mut:

@@ -1,0 +1,18 @@
+{
+  "status": "HANDOFF_NOT_PHYSICALLY_QUALIFIED",
+  "base": "81314d7473bc2579c05acef8874872ddd37aeab8",
+  "files": [
+    "physical/dsrom_fh_safe/cl_route.sh",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_retire_parent.sv",
+    "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_ctl.sv",
+    "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_head_q.sv",
+    "tools/test_fh_margin.py",
+    "tools/uarch_model.py",
+    "results/rtl/dsrom_fh_redesign_20261006/ack_split_model.json",
+    "rtl/hdc/v41/dspark_fused_head/margin/tb_fh_ack_split.sv"
+  ],
+  "component": "SAFE=2 receipt comparator partition; zero added cycles, +5 flops; default unchanged",
+  "tests": "Dedicated SAFE1-vs-SAFE2 bench passes 49 receipts, corrupted-slice mutant detected; parent bound test pending at transfer",
+  "remote": "/srv/opentallas-scratch2/scratch/claude/tk-ds-head/codex-acksplit-bound-20261007 on ot-epyc3",
+  "preservation": "Temporary index snapshot only; Claude index, branch and working files not changed"
+}
