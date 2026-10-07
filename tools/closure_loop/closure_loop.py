@@ -1300,7 +1300,7 @@ def start_hold_eco(j, fleet, m):
         event(j, f"hold ECO waiting for capacity: {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
-    env = f"HM={he.get('hold_margin_ps', 22)} SM={he.get('setup_margin_ps', 25)} KEEPCLK={he.get('keep_clock', 1)} " \
+    env = f"HM={he.get('hold_margin_ps', 22)} SM={he.get('setup_margin_ps', 25)} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post = " ".join(shlex.quote(p) for p in v.get("post_sdc", []))
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {{CL}}/eco {j['spec']['block']} {post}"
@@ -1428,12 +1428,12 @@ def requeue_hold_only(jobs):
     fid = "hold-eco-20261006"
     for j in jobs:   # first ECO attempts that died because the helper was not shipped to older run dirs (rc 127)
         e = j.get("eco") or {}
-        if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-helpers" not in j.get("fix_requeued", []):
-            j.setdefault("fix_requeued", []).append("hold-eco-helpers")
+        if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-reroute-clock" not in j.get("fix_requeued", []):
+            j.setdefault("fix_requeued", []).append("hold-eco-reroute-clock")
             j["eco"] = {}
             stl = stage_list(j["spec"])
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
-            event(j, "hold ECO re-run: helper scripts now shipped to existing run dirs")
+            event(j, "hold ECO re-run: helpers shipped; clock wires re-routed (DRT-0206 with kept clock wires); buffer cap 30 %")
             save_job(j)
     busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL or x["status"] == "CLOSED"}
     for j in jobs:

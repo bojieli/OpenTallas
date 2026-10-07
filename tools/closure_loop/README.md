@@ -97,11 +97,11 @@ clock plan.
   - input is the routed pre-fill `5_2_route.odb`, with the sign-off `6_final.sdc` plus `verdict.post_sdc` and the
     `verdict.macros` views
   - RCX parasitics on the SS and FF scenes, then `repair_timing -hold` to +22 ps while keeping setup >= +25 ps
-  - legalise, re-route the signal nets with the clock wires kept, fillers, re-extract, then sign off again with
+  - legalise, strip and re-route every signal and clock wire (keeping clock wires broke DRT once legalisation moved sinks), max 30 % buffers, fillers, re-extract, then sign off again with
     tools/w18/corner_sta.py
   - on a PASS (SS/FF >= +15, ECO DRC 0) the loop installs the ECO database in place of the route (originals kept
     as `*.pre_eco`), points the verdict's corner_sta at the ECO sign-off, re-exports the view (`hold_eco.reexport`,
     else hbm_fmax_attn_abstract.py when `<route>/view/<block>.lef` exists), and judges again
   - only a missed ECO goes NEEDS_RTL
-  - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, reexport, enabled}`
+  - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.

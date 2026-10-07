@@ -68,7 +68,7 @@ check_placement -verbose
 foreach net [[ord::get_db_block] getNets] {
   if {[$net getSigType] in {POWER GROUND}} continue
   # OT_KEEP_CLOCK=1: clock nets keep their detailed wires (m6light_b: re-routing the clock moved skew, FF +22 -> -4.7)
-  if {[envd OT_KEEP_CLOCK 1] && [$net getSigType] eq "CLOCK"} continue
+  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
 }
 global_route -allow_congestion

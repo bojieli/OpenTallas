@@ -1,7 +1,7 @@
 #!/bin/bash
 # closure-loop HOLD-ECO stage (run by closure_loop.py, cwd = the job's src snapshot):
 #   hold_eco.sh <route results base (5_2_route.odb)> <sign-off ORFS base (6_final.sdc)> <out dir> <block> [post-SDC (src-rel)...]
-# env HM (hold margin ps, default 22), SM (setup margin ps, 25), KEEPCLK (1), MACROS (src-rel macro view dirs), THREADS (8)
+# env HM (hold margin ps, default 22), SM (setup margin ps, 25), KEEPCLK (0), MACROS (src-rel macro view dirs), THREADS (8)
 # -> <out>/eco.log, <out>/orfs/results/asap7/<d>/base/6_final.{odb,spef,v,sdc}, <out>/corner_sta.json (tools/w18/corner_sta.py
 #    with the same post-SDCs), <out>/result.json {ss_ps, ff_ps, drc, cells_added}
 set -o pipefail
@@ -15,7 +15,7 @@ PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 docker run --rm -v $RB:/in:ro -v $EB:/out -v $PWD:/src:ro -v $(cd $(dirname $0) && pwd):/cl:ro \
   -e OT_DB=/in/$DB -e OT_SDC=/out/6_final.sdc -e OT_OUT=/out -e OT_POST_SDC="${PS# }" -e OT_MACROS="${MS# }" \
-  -e OT_HOLD_MARGIN=${HM:-22} -e OT_SETUP_MARGIN=${SM:-25} -e OT_KEEP_CLOCK=${KEEPCLK:-1} -e OT_THREADS=${THREADS:-8} \
+  -e OT_HOLD_MARGIN=${HM:-22} -e OT_SETUP_MARGIN=${SM:-25} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8} \
   -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-10} openroad/orfs:latest bash -lc \
   "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/hold_eco.tcl" > $OUT/eco.log 2>&1
 grep -q "OT_ECO done" $OUT/eco.log || { echo "ECO failed (no OT_ECO done)"; tail -20 $OUT/eco.log; exit 9; }
