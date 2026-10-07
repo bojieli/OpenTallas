@@ -70,6 +70,9 @@ FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are a
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
 WORKERS = 16
+# declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
+# (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
+OWN_RUNNING_WEIGHT = 0.6
 HM_DEFAULT_SINCE = "2026-10-06T20:40"
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -431,7 +434,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         pt, pr = self.own_pending(host)
         # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
         # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        eff = max(info["load1"], self.own_running.get(host, 0))
+        eff = max(info["load1"], OWN_RUNNING_WEIGHT * self.own_running.get(host, 0))
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
@@ -488,7 +491,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if info is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - max(info["load1"], self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
+            fc = (cfg["cap"] - max(info["load1"], OWN_RUNNING_WEIGHT * self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
             return min(fc, fr) + 0.5 * (fc + fr) / 2 + (0.05 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
         order.sort(key=score, reverse=True)
