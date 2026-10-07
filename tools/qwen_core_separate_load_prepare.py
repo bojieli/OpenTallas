@@ -13,6 +13,9 @@ def main():
     if enabled:
         original=C.core_text
         C.core_text=lambda *a,**k:S.apply(original(*a,**k))
+    # Production source archives carry physical/, not historical results/.
+    # Use the same retained parameter file as the full-controller gate.
+    C.RETAINED=C.ROOT/'physical/qwen_core_ctx/retained_screen_synth.ys'
     C.main()
     prep=out/'prepare.ys'
     if enabled:
