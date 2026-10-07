@@ -1,0 +1,234 @@
+{
+ "schema": "opentallas.dsrom-s81.boundary-window.v1",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "unit": "lane_r4_shared",
+ "top": "ot_dsrom_su_swiglu_lane",
+ "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/lane_r4_shared/work/orfs/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_lane_r4_shared/base",
+ "wire_ps": 30.0,
+ "dff": {
+  "clkq_min_ff": 32.2,
+  "clkq_max_ss": 115.6,
+  "setup_ss": 28.6,
+  "hold_ff": 13.6
+ },
+ "clock_tree_path_ps": {
+  "ss": {
+   "min_clock_tree_path": 305.5145,
+   "max_clock_tree_path": 355.71722
+  },
+  "ff": {
+   "min_clock_tree_path": 189.25691,
+   "max_clock_tree_path": 227.19856
+  }
+ },
+ "groups": [
+  {
+   "kind": "in",
+   "port": "g",
+   "bits": 32,
+   "ss_slack_ps": 36.643085,
+   "ff_slack_ps": -232.319351,
+   "req_min_ps": 232.32,
+   "max_arr_ps": 36.64,
+   "offset_window_ps": [
+    200.12,
+    -108.96
+   ],
+   "feasible": false,
+   "P0_margin_ps": -200.12,
+   "P1_margin_ps": -464.67,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "lim",
+   "bits": 32,
+   "ss_slack_ps": 55.292889,
+   "ff_slack_ps": -220.571045,
+   "req_min_ps": 220.57,
+   "max_arr_ps": 55.29,
+   "offset_window_ps": [
+    188.37,
+    -90.31
+   ],
+   "feasible": false,
+   "P0_margin_ps": -188.37,
+   "P1_margin_ps": -446.02,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "rst_n",
+   "bits": 1,
+   "ss_slack_ps": -175.678375,
+   "ff_slack_ps": -237.480728,
+   "req_min_ps": 237.48,
+   "max_arr_ps": -175.68,
+   "offset_window_ps": [
+    205.28,
+    -321.28
+   ],
+   "feasible": false,
+   "P0_margin_ps": -321.28,
+   "P1_margin_ps": -677.0,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "u",
+   "bits": 32,
+   "ss_slack_ps": 126.037109,
+   "ff_slack_ps": -212.158188,
+   "req_min_ps": 212.16,
+   "max_arr_ps": 126.04,
+   "offset_window_ps": [
+    179.96,
+    -19.56
+   ],
+   "feasible": false,
+   "P0_margin_ps": -179.96,
+   "P1_margin_ps": -375.28,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "v",
+   "bits": 1,
+   "ss_slack_ps": 1007.393311,
+   "ff_slack_ps": -221.121124,
+   "req_min_ps": 221.12,
+   "max_arr_ps": 1007.39,
+   "offset_window_ps": [
+    188.92,
+    861.79
+   ],
+   "feasible": true,
+   "P0_margin_ps": -188.92,
+   "P1_margin_ps": 0.34,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "w",
+   "bits": 32,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "req_min_ps": "-inf",
+   "max_arr_ps": "inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "a",
+   "bits": 32,
+   "ss_slack_ps": 242.022675,
+   "ff_slack_ps": 238.813721,
+   "out_min_ps": 263.81,
+   "out_max_ps": 530.98,
+   "offset_window_ps": [
+    -183.42,
+    225.21
+   ],
+   "feasible": true,
+   "P0_margin_ps": 183.42,
+   "P1_margin_ps": -1.98,
+   "P0": true,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "fault",
+   "bits": 1,
+   "ss_slack_ps": -8.465062,
+   "ff_slack_ps": 294.528442,
+   "out_min_ps": 319.53,
+   "out_max_ps": 781.47,
+   "offset_window_ps": [
+    67.07,
+    280.93
+   ],
+   "feasible": true,
+   "P0_margin_ps": -67.07,
+   "P1_margin_ps": 53.73,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "vo",
+   "bits": 1,
+   "ss_slack_ps": 263.612854,
+   "ff_slack_ps": 250.342224,
+   "out_min_ps": 275.34,
+   "out_max_ps": 509.39,
+   "offset_window_ps": [
+    -205.01,
+    236.74
+   ],
+   "feasible": true,
+   "P0_margin_ps": 205.01,
+   "P1_margin_ps": 9.54,
+   "P0": true,
+   "P1": true
+  }
+ ],
+ "summary": {
+  "groups": 9,
+  "infeasible": [
+   "g",
+   "lim",
+   "rst_n",
+   "u"
+  ],
+  "common_offset": {
+   "in": {
+    "window_ps": [
+     205.28,
+     -321.28
+    ],
+    "width_ps": -526.56,
+    "feasible": false
+   },
+   "out": {
+    "window_ps": [
+     67.07,
+     225.21
+    ],
+    "width_ps": 158.14,
+    "feasible": true
+   }
+  },
+  "P0_pass": false,
+  "P1_pass": false,
+  "P0_worst_margin_ps": -321.28,
+  "P1_worst_margin_ps": -677.0,
+  "P0_fail": [
+   "g",
+   "lim",
+   "rst_n",
+   "u",
+   "v",
+   "fault"
+  ],
+  "P1_fail": [
+   "g",
+   "lim",
+   "rst_n",
+   "u",
+   "a"
+  ]
+ }
+}

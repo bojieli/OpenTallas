@@ -46,6 +46,7 @@ import common as C  # noqa: E402
 SKIP_CLS = {'clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'}
 BLACKBOX_KINDS = {'phy', 'link', 'serdes_slab', 'host_slab', 'cfg'}     # macro pins: protocol of the macro, not a flop
 LINK_STAGE_UM = 430.56
+PIN_LAST_UM = 100.0     # HBM r19b pin-abutting station: last segment into the receiving pin
 FREQ = {'stream_1p2': 1.2, 'fwd': 1.2, 'serial_0p9': 0.9, 'hbm': 0.9766, 'link': 1.2}
 IN_FIXED_BLOCK = C.RCV_IN_PS + C.SETUP_SS_PS          # 71: what the receiving block needs inside
 OUT_FIXED_BLOCK = C.CLKQ_SS_PS + C.DRV_OUT_PS         # 130: what the launching block needs inside
@@ -90,7 +91,7 @@ def classify(d, ia, ib, reg, trees, plan_intra, fl=frozenset(), fbus=False):
     return 'intra', plan_intra.get(ra[1], C.SKEW_INTRA_PS)
 
 
-def budgets(L, skew, period, planned=1):
+def budgets(L, skew, period, planned=1, last_um=None):
     """as-planned feasibility on the floorplan length L; the delay budgets themselves on the segment after the stages
     the interface needs (L / stages_needed), i.e. what the block must close once the floorplan carries those stations"""
     avail = period - C.UNC_SETUP_PS - C.ACCEPT_PS
@@ -100,6 +101,8 @@ def budgets(L, skew, period, planned=1):
         # a staged path crosses the region boundary once: one hop at the inter reach, the rest at the intra reach
         st = 1 + math.ceil((L - reach) / C.reach_um(C.SKEW_INTRA_PS, period))
     seg = L / max(st, planned)
+    if last_um is not None:     # HBM r19b: a die station abuts this receiving pin (last segment <= last_um)
+        seg = min(seg, last_um)
     w0, w = C.WIRE_SS_PS_PER_UM * L, C.WIRE_SS_PS_PER_UM * seg
     fixed_in, fixed_out = C.CLKQ_SS_PS + C.DRV_OUT_PS + skew, C.RCV_IN_PS + C.SETUP_SS_PS + skew
     ind, outd = fixed_in + w, fixed_out + w
@@ -187,6 +190,7 @@ def main():
         fl = fwd_links(d)
         fb = set(d.get('fclk_buses', []))
         pb = set(d.get('path_buses', []))
+        ps_ = set(d.get('pin_stage_buses', []))      # HBM r19b: a station abuts the receiving pin (+1 hop)
         plan_intra = {r: v['intra_budget_ps'] for r, v in (plan or {}).get('regions', {}).items()}
         sink_ins = (plan or {}).get('sink_insertion', {})
         clk_port = defaultdict(list)
@@ -261,6 +265,8 @@ def main():
                     plan_st = 1 + math.ceil(max(0.0, L - 359.0) / 412.0)   # inter + intra reach (generator seg_stages)
                 else:
                     plan_st = max(1, math.ceil(L / LINK_STAGE_UM))
+                if bid in ps_:
+                    plan_st += 1
                 for me, port, peer, dirn in ((drv, eps[0][1], ld, 'out'), (ld, e[1], drv, 'in')):
                     pr = M[me[1]]['ports'].setdefault((port, dirn), dict(port=port, dir=dirn, bits=0, classes=set(), neighbours=set(),
                                                                        L=0.0, basis=set(), skew_cls=set(), skew=0.0, cdc=False,
@@ -279,7 +285,8 @@ def main():
                         pr['fanout'] = max(pr['fanout'], fan)
                     sev = C.WIRE_SS_PS_PER_UM * L / plan_st + skew
                     if pr['worst'] is None or sev > pr['worst'][0]:
-                        pr['worst'] = (sev, L, skew, kls, f'{name}:{me[0]}<->{peer[0]}', basis, plan_st)
+                        pr['worst'] = (sev, L, skew, kls, f'{name}:{me[0]}<->{peer[0]}', basis, plan_st,
+                                       PIN_LAST_UM if (bid in ps_ and dirn == 'in') else None)
                     pr['L'] = max(pr['L'], L)
                     pr['basis'].add(basis)
     # tiles (S81-PH slab compositions)
@@ -324,7 +331,7 @@ def main():
                 if kls == 'cdc':
                     pr['cdc'] = True
                 elif pr['worst'] is None or sev > pr['worst'][0]:
-                    pr['worst'] = (sev, L, skew, kls, e['what'], e.get('basis', 'composition'), 1)
+                    pr['worst'] = (sev, L, skew, kls, e['what'], e.get('basis', 'composition'), 1, None)
                     pr['L'] = max(pr['L'], L)
     # finalise
     summary, infeasible = [], []
@@ -345,8 +352,8 @@ def main():
                            note='different frequency domain: async / ratio FIFO; set_max_delay -datapath_only')
                 ports.append(row)
                 continue
-            sev, L, skew, kls, where, basis, plan_st = pr['worst']
-            b = budgets(L, skew, pr['period'], plan_st)
+            sev, L, skew, kls, where, basis, plan_st, last_ = pr['worst']
+            b = budgets(L, skew, pr['period'], plan_st, last_)
             row.update(timing='sync', length_um=round(L, 1), length_basis=basis, skew_class=kls, skew_ps=skew,
                        hold_io_ps=C.HOLD_IO_SKEW_PS, worst_instance=where, also_cdc=pr['cdc'], **b)
             if dirn == 'out' and pr['bits'] == 1 and pr['fanout'] > C.MAX_FANOUT_CTRL:

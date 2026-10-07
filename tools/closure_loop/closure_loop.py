@@ -886,7 +886,15 @@ def remote_ok(j, cmd):
 def bench_outcome(j, st, rc, ok_extra=True):
     """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
     (last 20000 lines), so ^FAIL matches any line."""
-    full = ssh(j["host"], f"tail -n 20000 {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; true", timeout=120).stdout
+    full = ""
+    for _ in range(4):  # an ssh hiccup returns an empty log and mis-judged benches (code-pair 10-07); fetch until it reads
+        r = ssh(j["host"], f"tail -n 20000 {j['run']}/cl/{j['stage_tag']}.log", timeout=180)
+        if r.returncode == 0 and r.stdout.strip():
+            full = r.stdout
+            break
+        time.sleep(15)
+    else:
+        raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
     if st["expect"] == "pass":
         return rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
     return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
@@ -1518,7 +1526,7 @@ BENCH_RE = re.compile(r"^(bench_\S+) expected (FAIL|PASS) but rc=(-?\d+)")
 def reevaluate_benches(jobs):
     """Fix bench-regex-multiline (2026-10-06): bench verdicts were taken on 20 log lines without re.M.  Re-judge every
     job that stopped on a bench verdict with the fixed rule; a bench that now passes resumes the job at the next stage."""
-    fid = "bench-regex-multiline-20261006"
+    fid = "bench-log-retry-20261007"  # was bench-regex-multiline-20261006; re-judge once more with the retried log fetch
     for j in jobs:
         m = BENCH_RE.match(j.get("reason") or "")
         if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
@@ -1534,7 +1542,7 @@ def reevaluate_benches(jobs):
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
             j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
             event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
-            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid} (MULTILINE regex over the whole log)")
+            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid}")
             experiment(j, f"running: resumed after {fid}")
         else:
             event(j, f"{st['key']} re-judged under {fid}: verdict stands")

@@ -1,0 +1,149 @@
+{
+ "slot": {
+  "elem_frame_h_um": 198.72,
+  "slot_h_um": 280.8,
+  "slots_per_column": 10,
+  "capacity": {
+   "elem_frame_h_um": 198.72,
+   "slot_h_um": 280.8,
+   "slots_per_column": 10,
+   "columns": 128,
+   "max_pairs_per_layer_die": 2050,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 383,
+   "extra_layer_dies": 59,
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 41057.3
+   }
+  }
+ },
+ "instances": {
+  "bf": 440,
+  "cfg": 14350,
+  "seq": 2050,
+  "q": 1610,
+  "sstn": 1280,
+  "qbank": 3220,
+  "node": 3972,
+  "cfifo": 128,
+  "hub": 8,
+  "phy": 4,
+  "ctrl": 4,
+  "svc": 4,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 384,
+  "rly": 30210,
+  "hend": 44,
+  "stn": 2709,
+  "hstn": 119,
+  "xstg": 8,
+  "lkck": 8
+ },
+ "placed_footprint_mm2": 473.32,
+ "legality_python": {
+  "instances": 60562,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "generated_pin_clashes": 0,
+ "forwarded": {
+  "stations": 2709,
+  "ot_fwd_link_stage_instances": 7521,
+  "chains": 86,
+  "max_hop_um": 430.3,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 276,
+  "ratio_cdc_fifos": 12
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 73,
+  "cycles": 161,
+  "x_trunk_stages": 58,
+  "column_slot_stages": 10,
+  "root_stages": 3,
+  "return_trunk_stages": 56,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 4,
+  "hop_fix": {
+   "classes": {
+    "x_lane": {
+     "hops": 1296,
+     "stations": 1296,
+     "max_um": 741.5,
+     "max_added": 1
+    },
+    "ret_leaf": {
+     "hops": 1496,
+     "stations": 1497,
+     "max_um": 864.5,
+     "max_added": 2
+    },
+    "col_ret": {
+     "hops": 84,
+     "stations": 84,
+     "max_um": 585.4,
+     "max_added": 1
+    },
+    "stat": {
+     "hops": 3,
+     "stations": 3,
+     "max_um": 451.2,
+     "max_added": 1
+    },
+    "pad_fallback": {
+     "hops": 0,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0,
+     "0": 2,
+     "1.08": 1
+    },
+    "lane": {
+     "hops": 66,
+     "stations": 66,
+     "max_um": 716.4,
+     "max_added": 1
+    },
+    "lane:no_fclk": {
+     "hops": 16,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0
+    }
+   },
+   "planned_hops": 2961,
+   "fwd_rt_add": 1,
+   "reach_um": {
+    "common_clock": 410.0,
+    "forwarded": 430.56
+   }
+  },
+  "q_bank_stages": 2,
+  "column_relays_x": 2,
+  "column_relays_return": 18,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ }
+}
+PLANRC=0

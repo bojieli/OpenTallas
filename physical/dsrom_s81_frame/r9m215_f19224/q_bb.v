@@ -1,0 +1,27 @@
+(* blackbox *) module ot_v41_rom_elem_q_qx_w10 (
+  output wire busy,
+  input wire cfg_v,
+  input wire clk,
+  output wire fault,
+  input wire go,
+  input wire rst_n,
+  input wire xs_v,
+  input wire [4:0] cfg_a,
+  input wire [47:0] cfg_d,
+  output wire [1:0] perr,
+  output wire [9:0] pnseg,
+  output wire [5:0] ppos,
+  output wire [31:0] prow,
+  output wire [9:0] pseg,
+  output wire [1:0] pv,
+  output wire [63:0] pval,
+  input wire [2:0] xs_b,
+  input wire [9:0] xs_e0,
+  input wire [9:0] xs_e1,
+  input wire [7:0] xs_p,
+  input wire [2:0] xs_pos,
+  input wire [255:0] xs_q0,
+  input wire [255:0] xs_q1,
+  input wire [1:0] xs_sv
+);
+endmodule

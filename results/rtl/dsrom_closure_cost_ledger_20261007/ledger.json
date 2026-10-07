@@ -1,0 +1,404 @@
+{
+ "schema": "opentallas.dsrom.closure_cost_ledger.v1",
+ "baseline": {
+  "ar_tok_s": 1675.0,
+  "mtp_tok_s": 4895.0,
+  "basis": "recovery composition without the S81 closure costs"
+ },
+ "items": [
+  {
+   "item": "s81_die",
+   "description": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     24,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     24,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     24,
+     0
+    ]
+   ],
+   "ar_tok_s": 1661.2,
+   "mtp_tok_s": 4862.6,
+   "ar_pct": -0.824,
+   "mtp_pct": -0.662,
+   "cum_ar_pct": -0.824,
+   "cum_mtp_pct": -0.662
+  },
+  {
+   "item": "meso_d8g1",
+   "description": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     4,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     4,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.9,
+   "mtp_tok_s": 4857.2,
+   "ar_pct": -0.138,
+   "mtp_pct": -0.111,
+   "cum_ar_pct": -0.961,
+   "cum_mtp_pct": -0.772
+  },
+  {
+   "item": "ctrl_status",
+   "description": "CTRL status chain: +1 cycle per column (HBM stream reads)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     1,
+     0
+    ],
+    [
+     "*.attn.pv",
+     1,
+     0
+    ],
+    [
+     "*.attn.scores",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.8,
+   "mtp_tok_s": 4857.0,
+   "ar_pct": -0.006,
+   "mtp_pct": -0.004,
+   "cum_ar_pct": -0.967,
+   "cum_mtp_pct": -0.776
+  },
+  {
+   "item": "collective_lane",
+   "description": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     50,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     348,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     113,
+     0
+    ]
+   ],
+   "ar_tok_s": 1619.0,
+   "mtp_tok_s": 4755.5,
+   "ar_pct": -2.399,
+   "mtp_pct": -2.09,
+   "cum_ar_pct": -3.343,
+   "cum_mtp_pct": -2.85
+  },
+  {
+   "item": "link_split",
+   "description": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     2,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     2,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1617.6,
+   "mtp_tok_s": 4752.2,
+   "ar_pct": -0.086,
+   "mtp_pct": -0.069,
+   "cum_ar_pct": -3.427,
+   "cum_mtp_pct": -2.917
+  },
+  {
+   "item": "sel_xstg",
+   "description": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     1,
+     0
+    ],
+    [
+     "*.attn.gather",
+     1,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1617.6,
+   "mtp_tok_s": 4752.1,
+   "ar_pct": 0.0,
+   "mtp_pct": -0.002,
+   "cum_ar_pct": -3.427,
+   "cum_mtp_pct": -2.919
+  },
+  {
+   "item": "vm_bank_group",
+   "description": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     8,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     8,
+     0
+    ]
+   ],
+   "ar_tok_s": 1613.3,
+   "mtp_tok_s": 4741.8,
+   "ar_pct": -0.266,
+   "mtp_pct": -0.217,
+   "cum_ar_pct": -3.684,
+   "cum_mtp_pct": -3.13
+  },
+  {
+   "item": "gather_root_v4",
+   "description": "Gather root v4: +6 cycles per phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     6,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     6,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     6,
+     0
+    ]
+   ],
+   "ar_tok_s": 1610.0,
+   "mtp_tok_s": 4734.2,
+   "ar_pct": -0.205,
+   "mtp_pct": -0.16,
+   "cum_ar_pct": -3.881,
+   "cum_mtp_pct": -3.285
+  },
+  {
+   "item": "capture",
+   "description": "Capture tiles: VM write +3 a phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     3,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     3,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     3,
+     0
+    ]
+   ],
+   "ar_tok_s": 1608.4,
+   "mtp_tok_s": 4730.4,
+   "ar_pct": -0.099,
+   "mtp_pct": -0.08,
+   "cum_ar_pct": -3.976,
+   "cum_mtp_pct": -3.363
+  },
+  {
+   "item": "selector",
+   "description": "Selector tiles: +20 a segment (mean; +15 max)",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     20,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     20,
+     0
+    ]
+   ],
+   "ar_tok_s": 1608.1,
+   "mtp_tok_s": 4729.2,
+   "ar_pct": -0.019,
+   "mtp_pct": -0.025,
+   "cum_ar_pct": -3.994,
+   "cum_mtp_pct": -3.387
+  },
+  {
+   "item": "collector",
+   "description": "Collector tiles: +2 a job",
+   "cycles": [
+    [
+     "*.attn.gather",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1608.1,
+   "mtp_tok_s": 4729.1,
+   "ar_pct": 0.0,
+   "mtp_pct": -0.002,
+   "cum_ar_pct": -3.994,
+   "cum_mtp_pct": -3.389
+  },
+  {
+   "item": "svc_io",
+   "description": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     2,
+     0
+    ],
+    [
+     "*.attn.pv",
+     2,
+     0
+    ],
+    [
+     "*.attn.scores",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1607.8,
+   "mtp_tok_s": 4728.6,
+   "ar_pct": -0.019,
+   "mtp_pct": -0.011,
+   "cum_ar_pct": -4.012,
+   "cum_mtp_pct": -3.399
+  },
+  {
+   "item": "softmax_safe_div",
+   "description": "Softmax SAFE divider: +29 on normalize",
+   "cycles": [
+    [
+     "*.attn.normalize",
+     29,
+     0
+    ]
+   ],
+   "ar_tok_s": 1605.4,
+   "mtp_tok_s": 4722.8,
+   "ar_pct": -0.149,
+   "mtp_pct": -0.123,
+   "cum_ar_pct": -4.155,
+   "cum_mtp_pct": -3.518
+  },
+  {
+   "item": "bf_rowfix",
+   "description": "BF rowfix: +1 per push (a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     1,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     1,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1604.8,
+   "mtp_tok_s": 4721.5,
+   "ar_pct": -0.037,
+   "mtp_pct": -0.028,
+   "cum_ar_pct": -4.191,
+   "cum_mtp_pct": -3.544
+  },
+  {
+   "item": "pq_qelem",
+   "description": "PQ q-element: decode stage +0.17 % node time (field phases)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.wo_a",
+     0,
+     0.0017
+    ]
+   ],
+   "ar_tok_s": 1603.5,
+   "mtp_tok_s": 4718.3,
+   "ar_pct": -0.081,
+   "mtp_pct": -0.068,
+   "cum_ar_pct": -4.269,
+   "cum_mtp_pct": -3.61
+  }
+ ],
+ "total": {
+  "ar_tok_s": 1603.5,
+  "mtp_tok_s": 4718.3,
+  "ar_pct": -4.269,
+  "mtp_pct": -3.61
+ },
+ "pending_defect": [],
+ "as_is": {
+  "ar_tok_s": 1603.5,
+  "mtp_tok_s": 4718.3,
+  "ar_pct": -4.269,
+  "mtp_pct": -3.61,
+  "basis": "every item + the PENDING-DEFECT all-gathers"
+ }
+}

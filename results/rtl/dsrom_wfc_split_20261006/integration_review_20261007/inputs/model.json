@@ -1,0 +1,223 @@
+{
+ "schema": "dsrom.s81.WFC.selected-parent-allocation.v1",
+ "selected_die_um": [
+  33000,
+  26000
+ ],
+ "reticle_mm2": 858,
+ "replicas_per_stage": 1,
+ "stages": 81,
+ "source_parent": "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv:u_ctrl",
+ "source_VM": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv:u_tile.vm",
+ "selected_WFC_gross_um": [
+  15182.64,
+  14031.36,
+  16197.84,
+  14480.640000000001
+ ],
+ "selected_WFC_core_um": [
+  15199.92,
+  14048.640000000001,
+  16180.56,
+  14463.36
+ ],
+ "halo_um": 17.28,
+ "selected_parent_region": "same S81 west spine between resizedVM and capture, keeps actual172.8um channels",
+ "source_shape_cell_budget_um2": 30385.50492,
+ "cell_cap_at50pct_um2": 203345.51039999956,
+ "additional_positive_CTS_PG_IO_repair_cell_reserve_um2": 40000,
+ "slot_area_mm2": 0.45610905600000096,
+ "prior_ctrl_cut_price_mm2": 0.08264,
+ "old_price_credit": 0,
+ "additional_price_mm2": 2.223674272000001,
+ "decision_prior_mm2": 839.239,
+ "decision_successor_mm2": 841.4626742720001,
+ "remaining_reticle_margin_mm2": 16.537325727999928,
+ "track_demand_model": 12929,
+ "track_capacity": {
+  "scope": "source grid perorientation analytical capacity; source port-family cut classification and actualGRT stillrequired",
+  "M6_M7_pitch_um": 0.064,
+  "M8_M9_pitch_um": 0.08,
+  "via_reserved_fraction": 0.05,
+  "M8_M9_hub_PG_reserved_fraction": 0.05,
+  "per_orientation_before_other_signal_claims": 16908,
+  "spine604p8_channel_unchanged": true,
+  "gaps172p8_unchanged": true,
+  "other_parent_route_claims_not_released": true,
+  "prior_far648_square_per_orientation": 16908
+ },
+ "clock": {
+  "WFC": "native u_ctrl.clk streaming1.2GHz833.333ps phase0",
+  "VM_parent": "sp_vm serial0.9GHz1111.111ps in actual selectedfloorplan",
+  "source_behavior": "native behavioral VM sameclk oneedge; not evidence of realcrossdomainmemory",
+  "source_phase_policy_ps": 0,
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "crossing": "actual3:4 transport required; existing source-owned related boundary must be bound; no assumed sameedgephase/no waivedpath"
+ },
+ "ports": {
+  "write_enable": "xa_we",
+  "write_address": "xa_waddr[14:0]",
+  "write_data": "xa_wdata[511:0]",
+  "read_enable": "xa_re",
+  "read_address": "xa_raddr[14:0]",
+  "read_return": "xa_rq[511:0]",
+  "read_bytes_per_cycle": 64,
+  "write_bytes_per_cycle": 64,
+  "address_bounds_bits": 19,
+  "write_precedence": "xa then later xb0..3, later NBA wins; preedge read"
+ },
+ "native_macro_evidence": {
+  "primitive": "ot_sram_1r1w_512x128_m4_r2c2",
+  "library_ss": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+  "library_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+  "SS_clock_pin_fF": 8.6838,
+  "FF_clock_pin_fF": 10.3732,
+  "SS_data_address_pin_fF": 0.5788,
+  "FF_data_address_pin_fF": 0.6837,
+  "SS_clkQ_ps_table_range": [
+   524.0725,
+   619.2032
+  ],
+  "SS_slew_axis_ps": [
+   5,
+   20,
+   80,
+   160,
+   320
+  ],
+  "SS_load_axis_fF": [
+   0.72,
+   2.88,
+   11.52,
+   23.04,
+   46.08
+  ],
+  "SS_clkQ_at20ps_slew_2p88fF_ps": 528.6025,
+  "scope": "actual committed macro library model, not measured new WFC loaded context",
+  "full_AW15_backend_source": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+  "DEPTH_GROUPS": 16,
+  "macro_count": 256,
+  "macro_area_each_um2": 5177.6323,
+  "macro_area_total_mm2": 1.3254738688,
+  "existing_VM_slot_mm2": 0.89234,
+  "minimum_macro_only_deficit_mm2": 0.43313386880000004,
+  "read_valid_registered_edges": 5,
+  "write_ACK_registered_edges": 4,
+  "read_owner_bits": 227,
+  "mutable_protection": "rawmacrobackend explicitly unprotected; not selected protectedmemoryqualification; real backend mustretain owner/protection/olddata/writeprecedence",
+  "FF_clkQ_at20ps_slew_2p88fF_ps": 349.7289
+ },
+ "allocation_qualified_geometry": true,
+ "actual_instance_overlap_count": 0,
+ "geometry_instance_count": 24355,
+ "physical_macro_binding_qualified": false,
+ "SS_FF_qualified": false,
+ "needed_VM_revision": "native256macros require >=1.3254738688mm2 plus realcodec/mux/transport/protection/CTS/PG, exceeds existing .89234mm2 VMbody by>=.4331338688mm2; extend existingVMslab/adjacentSUreposition with area priced, no copied32bankW11 substitution",
+ "sources_sha256": {
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+  "tools/dsrom_s81_fulldie.py": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
+  "results/uarch/dsrom_wfc_enclosing_stage_20261005/model.json": "0a3f4000123583dd75f91d4f6d5a2e8dd5a88a7b88c62f6eaaff00a58658cbb9"
+ },
+ "wires": {
+  "WFC_VM_bbox_gap_um": 172.8,
+  "WFC_VM_Manhattan_upper_um": 4257.360000000002,
+  "actual3p4_transport_source_binding_required": true,
+  "installed_pipeline_edges": 0,
+  "previous25cut_far_slot_superseded": true,
+  "no_wire_latency_credit_without_native_source_admission": true
+ },
+ "canonical_producer_allocation": {
+  "source_owner": "Copernicus",
+  "source": "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv",
+  "envelope_um": [
+   15199.92,
+   14048.640000000001,
+   15679.92,
+   14448.640000000001
+  ],
+  "shape_um": [
+   480,
+   400
+  ],
+  "macro_body_um2": 87126.11424,
+  "macro_halo_reserved_um2": 102430.68192,
+  "positive_logic_budget_um2": 30000,
+  "macro_plus_logic50pct_footprint_um2": 162430.68192,
+  "envelope_um2": 192000,
+  "spare_um2": 29569.31808,
+  "WFC_control_remaining_outline_um2": 214691.02079999913,
+  "control_cell_cap_at50pct_um2": 107345.51039999956,
+  "additional_slot_area_credit": 0,
+  "actual_producer_clock_loads_from_own_mapped_context": true,
+  "qualification": "geometry/model only; ownsourcegate/macroclkQ/CTS/SSFF/receivermapping mandatory; L19STAGE_HANDOFFnotHEADtoken_result"
+ },
+ "VM_finite_resize_decision": {
+  "existing_slot_area_mm2": 0.89234,
+  "successor_reserved_outline_um": [
+   1015.2,
+   2620.0800000000004
+  ],
+  "successor_reserved_area_mm2": 2.6599052160000003,
+  "delta_area_mm2": 1.7675652160000004,
+  "existing_real_macro_count": 256,
+  "primitive_LEF_width_um": 174.12,
+  "primitive_LEF_height_um": 29.736,
+  "native_source_count_preserved": true,
+  "macro_columns": 5,
+  "slot_rows": 64,
+  "slot_count": 320,
+  "positive_empty_protection_slots": 64,
+  "empty_slots_are_not_macro_instances": true,
+  "macro_gap_um": 10.8,
+  "macro_halo_um": 17.28,
+  "macro_occupied_envelope_width_um": 948.3600000000001,
+  "actual_256_macro_body_mm2": 1.3254738739200003,
+  "reserved_protection_slot_count_is_not_RTL_protection_evidence": true,
+  "source_non_drop_in_gaps": [
+   "olddataread/writecollision semantics",
+   "allnativewriterport/grant/visiblecompletion",
+   "mutableECC and codecarea",
+   "real3:4callerVMtransport"
+  ],
+  "admission": "ExistingVMphysicalslot insufficient. Resize SAMEspineVMslab with explicitpositive64slotprotection+channelreserve; protectedsourcebinding ownedZeno/Copernicus and nativeVMowner, no rawpayloadadoption",
+  "new_engine_build_before_source_model": false,
+  "actual_selected_parent_rect_um": [
+   15182.64,
+   11238.48,
+   16197.815999999999,
+   13858.536
+  ],
+  "source_macro_instance_inventory": "256 realv2 source macros +64 EMPTY positiveprotection reservations; no 320instance claim"
+ },
+ "prior_far_WFC_reservation_um": [
+  15182.64,
+  3510.0,
+  15865.2,
+  4192.56
+ ],
+ "core_shape_um": [
+  980.6399999999994,
+  414.71999999999935
+ ],
+ "composed_producer_plus_controller_plus_macro_cell_charge_um2": 187511.61916,
+ "2pct_area_margin_shortfall_mm2": 0.6226742720000722,
+ "owner_taller_slot_direction": {
+  "frame_owner": "Claude QELEM",
+  "generator_owner": "Claude S81-DIE",
+  "target_utilization": [
+   0.55,
+   0.6
+  ],
+  "old_dense76_to78pct_slot_fit_credit": false,
+  "prior_geometry_scope": "historicalS81 only; successorparent rebinds shape/ports/clocks/CTS-PG-route reserves",
+  "current_successor_binding_qualified": false,
+  "owned_WFC_cell_cap_kept_at50pct": true,
+  "positive_CTS_PG_IO_repair_cell_reserve_um2": 40000,
+  "if_packing_requires78pct": "Reject oldpacking; priceactualadditionaldies andtokenlatency withS81-DIE/COMPOSE",
+  "new_element_count_assumed": false,
+  "new_qelement_timing_runs": false,
+  "support_facts_record": "results/uarch/dsrom_s81_wfc_parent_allocation_20261006/taller_slot_support_facts_20261006.json"
+ }
+}

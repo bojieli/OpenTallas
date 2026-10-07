@@ -30,8 +30,15 @@ module ot_dsrom_head_elem #(
     parameter integer JOIN = 1,            // 1: logit join + argmax (A element)
     parameter integer ROWS = 32,           // rows the element holds (8192 >> LV)
     parameter [8:0] CUT = 9'b1_0111_1011,
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
-    parameter INSTANCE = ""
+    parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
+    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+    parameter INSTANCE = "",
+    // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
+    // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
+    parameter integer IOREG = 0,
+    // SAFE (default 0; redesign SAFE variant 2026-10-06): the argmax compare is registered (take decided in one
+    // cycle, applied in the next; logits arrive >= 64 cycles apart, a back-to-back key fails closed)
+    parameter integer SAFE = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -50,6 +57,24 @@ module ot_dsrom_head_elem #(
     output reg  [31:0]  best_key,
     output reg          fault
 );
+    // IOREG: inputs captured at the pins (+1, uniform: go and x move together, the x contract is unchanged)
+    wire go_e, b_v_e;
+    wire [16:0] row0_e;
+    wire [255:0] x_e;
+    wire [31:0] b_d_e;
+    generate if (IOREG) begin : g_pin
+        reg go_q, b_v_q;
+        reg [16:0] row0_q;
+        reg [255:0] x_q;
+        reg [31:0] b_d_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin go_q <= 1'b0; b_v_q <= 1'b0; end
+            else begin go_q <= go; b_v_q <= b_v; end
+        always @(posedge clk) begin row0_q <= row0; x_q <= x; b_d_q <= b_d; end
+        assign go_e = go_q; assign b_v_e = b_v_q; assign row0_e = row0_q; assign x_e = x_q; assign b_d_e = b_d_q;
+    end else begin : g_direct
+        assign go_e = go; assign b_v_e = b_v; assign row0_e = row0; assign x_e = x; assign b_d_e = b_d;
+    end endgenerate
     localparam integer XLEAD = 5;
     localparam integer NW = 8192;
     localparam integer NPHYS = NW + 7 * SK;
@@ -59,7 +84,7 @@ module ot_dsrom_head_elem #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin go_r <= 1'b0; run <= 1'b0; a <= 14'd0; end
         else begin
-            go_r <= go;
+            go_r <= go_e;
             if (go_r) begin run <= 1'b1; a <= 14'd0; end
             else if (run) begin a <= a + 14'd1; if (a == NPHYS - 1) run <= 1'b0; end
         end
@@ -119,7 +144,7 @@ module ot_dsrom_head_elem #(
     always @(posedge clk) begin
         for (wi = 0; wi < 256; wi = wi + 1) t_r[wi] <= sel_q[wi * RP / 256] ? cap1[wi] : cap0[wi];
         w_r <= t_r;
-        x_t <= x; x_r <= x_t;
+        x_t <= x_e; x_r <= x_t;
     end
 
     // ---------------- 16 multipliers, two systolic chunk chains --------------------------------------------------
@@ -140,7 +165,7 @@ module ot_dsrom_head_elem #(
         assign cs[l][0] = 32'd0;
         assign cv[l][0] = pl[5];
         for (s = 0; s < 8; s = s + 1) begin : g_s
-            ot_v41_fadd #(.CUT(CUT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
+            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
                                           .y(cs[l][s+1]), .err(ce[l][s]), .valid_out(cv[l][s+1]));
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) cerr[8*l + s] <= 1'b0;
@@ -151,7 +176,7 @@ module ot_dsrom_head_elem #(
     wire        n1_v;
     wire [31:0] n1_d;
     wire [1:0]  n1_e;
-    ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
+    ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
                                      .y(n1_d), .err(n1_e), .valid_out(n1_v));
 
     // ---------------- streaming pairwise tree: LV levels, then PAD (+0) levels -----------------------------------
@@ -169,10 +194,10 @@ module ot_dsrom_head_elem #(
                 if (!rst_n) have <= 1'b0;
                 else if (tv[k]) have <= !have;
             always @(posedge clk) if (tv[k] && !have) held <= td[k];
-            ot_v41_fadd #(.CUT(CUT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have), .a(held), .b(td[k]),
+            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have), .a(held), .b(td[k]),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end else begin : g_pad
-            ot_v41_fadd #(.CUT(CUT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
+            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end
     end endgenerate
@@ -198,22 +223,22 @@ module ot_dsrom_head_elem #(
             if (!rst_n) begin fa_w <= 1'b0; fa_r <= 1'b0; fb_w <= 2'd0; fb_r <= 2'd0; fa_n <= 2'd0; fb_n <= 3'd0; jerr <= 1'b0; end
             else begin
                 if (o_v) fa_w <= !fa_w;
-                if (b_v) fb_w <= fb_w + 2'd1;
+                if (b_v_e) fb_w <= fb_w + 2'd1;
                 if (pop) begin fa_r <= !fa_r; fb_r <= fb_r + 2'd1; end
                 fa_n <= fa_n + {1'b0, o_v} - {1'b0, pop};
-                fb_n <= fb_n + {2'd0, b_v} - {2'd0, pop};
-                jerr <= (o_v && !pop && fa_n == 2'd2) || (b_v && !pop && fb_n == 3'd4);   // overflow: fail closed
+                fb_n <= fb_n + {2'd0, b_v_e} - {2'd0, pop};
+                jerr <= (o_v && !pop && fa_n == 2'd2) || (b_v_e && !pop && fb_n == 3'd4);   // overflow: fail closed
             end
         always @(posedge clk) begin
             if (o_v) fa[fa_w] <= o_d;
-            if (b_v) fb[fb_w] <= b_d;
+            if (b_v_e) fb[fb_w] <= b_d_e;
         end
         reg        j_v;
         reg [31:0] j_a, j_b;
         always @(posedge clk or negedge rst_n) if (!rst_n) j_v <= 1'b0; else j_v <= pop;
         always @(posedge clk) if (pop) begin j_a <= fa[fa_r]; j_b <= fb[fb_r]; end
         wire [1:0] le;
-        ot_v41_fadd #(.CUT(CUT)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
+        ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
                                          .y(l_d), .err(le), .valid_out(l_v));
         // argmax: registered key, then compare (rows arrive in increasing id)
         reg        k_v, k_bad;
@@ -225,7 +250,7 @@ module ot_dsrom_head_elem #(
             if (!rst_n) begin k_v <= 1'b0; nrow <= 17'd0; end
             else begin
                 k_v <= l_v;
-                if (go) nrow <= row0; else if (l_v) nrow <= nrow + 17'd1;
+                if (go_e) nrow <= row0_e; else if (l_v) nrow <= nrow + 17'd1;
             end
         always @(posedge clk) if (l_v) begin
             k_key <= canon[31] ? ~canon : {1'b1, canon[30:0]};
@@ -234,26 +259,44 @@ module ot_dsrom_head_elem #(
         end
         reg have;
         wire take = !have || k_key > best_key || (k_key == best_key && k_row < best_row);
+        // SAFE: stage the key and its decision (u_v/u_take), apply one cycle later
+        wire        u_v, u_take, u_bad;
+        wire [31:0] u_key, u_bits;
+        wire [16:0] u_row;
+        reg         b2b;
+        if (SAFE) begin : g_safe_cmp
+            reg sv, st, sb;
+            reg [31:0] skey, sbits;
+            reg [16:0] srow;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin sv <= 1'b0; b2b <= 1'b0; end
+                else begin sv <= k_v && !go_e; b2b <= k_v && sv; end
+            always @(posedge clk) begin st <= take; sb <= k_bad; skey <= k_key; sbits <= k_bits; srow <= k_row; end
+            assign u_v = sv; assign u_take = st; assign u_bad = sb; assign u_key = skey; assign u_bits = sbits; assign u_row = srow;
+        end else begin : g_direct_cmp
+            assign u_v = k_v; assign u_take = take; assign u_bad = k_bad; assign u_key = k_key; assign u_bits = k_bits; assign u_row = k_row;
+            always @(posedge clk) b2b <= 1'b0;
+        end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; best_key <= 32'd0; best_row <= 17'd0; best_bits <= 32'd0; end
-            else if (go) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
-            else if (k_v) begin
+            else if (go_e) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
+            else if (u_v) begin
                 cnt <= cnt + 7'd1;
                 if (cnt == ROWS - 1) done <= 1'b1;
-                if (!k_bad && take) begin have <= 1'b1; best_key <= k_key; best_row <= k_row; best_bits <= k_bits; end
+                if (!u_bad && u_take) begin have <= 1'b1; best_key <= u_key; best_row <= u_row; best_bits <= u_bits; end
             end
         reg kerr;
-        always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= k_v && k_bad;
+        always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= (u_v && u_bad) || b2b;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) fault <= 1'b0;
-            else if (go) fault <= 1'b0;
+            else if (go_e) fault <= 1'b0;
             else if ((|cerr) || (|terr) || jerr || kerr) fault <= 1'b1;
     end else begin : g_nojoin
         assign l_v = 1'b0;
         assign l_d = 32'd0;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin fault <= 1'b0; done <= 1'b0; best_row <= 17'd0; best_bits <= 32'd0; best_key <= 32'd0; jerr <= 1'b0; end
-            else if (go) fault <= 1'b0;
+            else if (go_e) fault <= 1'b0;
             else if ((|cerr) || (|terr)) fault <= 1'b1;
     end
 endmodule
