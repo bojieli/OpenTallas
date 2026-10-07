@@ -12,22 +12,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def pin_slices():
-    """Exact orientation-specific proposed509-bit interface, no bit-zero proxy."""
-    roles = {'qfd_cst_s': {'a': 'a', 'b': 'b', 'tap': 't'},
-             'qfd_cst_n': {'b': 'a', 'a': 'b', 'tap': 't'},
-             'qfd_chead_e': {'w': 'a', 'e': 'b', 'n': 't', 's': 'c'},
-             'qfd_chead_w': {'e': 'a', 'w': 'b', 'n': 't', 's': 'c'}}
-    return {master: dict(parameters={'ENABLE_FULLWIDTH': 1, 'TAP': 1,
-                                    'SPLIT': int('chead' in master)},
-        ports={port: [dict(die_lo=0, width=508, rtl_port=role+'_d', rtl_lo=0),
-                      dict(die_lo=508, width=1, rtl_port=role+'_fault', rtl_lo=0)]
-               for port, role in mapping.items()},
-        scalars={'ck': 'clk', 'rst_n': 'rst_n'},
-        unconnected_output_branch_fault_tie=0)
-        for master, mapping in roles.items()}
-
-
 def model(stations=1536, heads=64, path_hops=None, die_height_um=None):
     if stations < 1 or heads < 0 or (path_hops is not None and path_hops < 1):
         raise ValueError('positive station/path counts required')
@@ -58,7 +42,6 @@ def model(stations=1536, heads=64, path_hops=None, die_height_um=None):
             reset='Cold POR only; source launch remains zero through pipeline fill; warm reset requires prior global drain'),
         payload_map=[dict(field='ib', lo=0, width=379), dict(field='ib_go', lo=379, width=1),
                      dict(field='xl', lo=380, width=128)],
-        exact_proposed_pin_slices=pin_slices(),
         proposed_bundle_map={leg:[dict(field='payload', lo=0, width=508, direction='forward'),
             dict(field='fault', lo=508, width=1, direction='reverse')] for leg in ['corridor','tap']},
         external_clock_reset=dict(clk_pins_per_instance=1, rst_n_pins_per_instance=1,
