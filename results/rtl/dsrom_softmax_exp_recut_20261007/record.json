@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.softmax_exp_recut_current.v1",
+  "passed": true,
+  "adopted": false,
+  "source_commit": "bd30aca4ae85a68de73ffea830c3a60a35418d3c",
+  "physical_evidence_commit": "e899af215674f5fd81f61c5a62a6679ac6d6f698",
+  "parameters": {
+    "LM": 11,
+    "LA": 11,
+    "NSPLIT": 2,
+    "ADDX": 0
+  },
+  "results_checked": 3862,
+  "independent_inputs": 3846,
+  "core_depth": 172,
+  "tile_latency": 173,
+  "II": 1,
+  "positive": "positive.json",
+  "negative": "safe_input_negative.json",
+  "negative_result": "EXP_EXACT_MISMATCH index2 got402df855 expected402df854",
+  "coverage": [
+    "directed clamp and finite FP32 extremes",
+    "near-ln2 reduction cancellation",
+    "seeded uniform and raw finite FP32",
+    "II1 with valid bubbles",
+    "reset abort20inflight and16postreset"
+  ],
+  "source_substitutions": false,
+  "arithmetic_reference": "commit-pinned hdc_golden.exp, SHA matches current golden",
+  "physical_scope": "SS123.11ps/FF16.70ps/DRC0 remains leaf evidence. I2R Infinity and Oport1e9 are not finite actual parent boundary budgets.",
+  "full_parent_numerical_gate": false,
+  "configuration_snapshot": false
+}
