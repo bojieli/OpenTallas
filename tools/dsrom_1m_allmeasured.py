@@ -63,6 +63,12 @@ RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-
 QELEM_DEFAULT = True
 QELEM_FIELD = ROOT / "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json"
 WAVE_PHYSICAL = ROOT / "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
+# CLAUDE WFC 2026-10-06: the split, margin-first, registered-boundary wavefront controller (ot_rom_pkg_ctrl_wfc) closed
+# physically (src + stg elements routed, die150 IO).  When its closure record is accepted the MTP figure is physically
+# qualified and the composition charges what the closed controller measures against the reference ot_rom_pkg_ctrl_wf
+# the wavefront rule was built on: the stage handoff (stage bench, cycles from a job's done to the next start) and the
+# done -> first outbound flit latency, added to every stage hop.
+WFC_CLOSURE = ROOT / "results/rtl/dsrom_wfc_split_20261006/closure.json"
 FULL_FEC_LINKS = REC / "links_full_fec.json"                  # OWNER 2026-10-06 full-FEC baseline (RTL)
 FULL_FEC_RACK = ROOT / "results/arch/dsrom_s81_rack_20261006/rack.json"   # hop classes (cable flight beyond 0.3 m)
 DEFAULT_HOP_TIER = "full_fec"   # OWNER 2026-10-06: full RS(544,514) on every off-package link; light_fec = history
@@ -75,8 +81,53 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def wfc_closure():
+    """Require block closure, exactness, and verified producer/receiver integration."""
+    if not WFC_CLOSURE.exists():
+        return None
+    c = json.loads(WFC_CLOSURE.read_text())
+    # Region block STA assumes 90 ps intra-region on every non-link port. The selected
+    # parent includes a 1.2/0.9 GHz VM crossing, so block acceptance alone cannot enable
+    # the WFC cost/physical-qualification lever. Integration must bind actual endpoints.
+    return c if (c.get("accepted") is True and c.get("exact") is True
+                 and c.get("integration_qualified") is True) else None
+
+
+def apply_wfc_hop(P, info):
+    """Closed WFC: + its measured done -> outbound-flit cycles (over the reference controller) on every stage hop."""
+    c = wfc_closure()
+    if c is None:
+        return None
+    d_s = c["charge"]["hop_delta_cycles"] / CLK
+    n_hops = 0
+    for n, nd in P.g.nodes.items():
+        if nd.get("kind") == "hop" and nd.get("hop_kind") in ("substage", "head", "stage"):
+            cur = nd["issue"] + nd["depth"] + nd["ctrl"]
+            row = P.rows.get(n, {})
+            P.put(n, cur + d_s, f"{row.get('source', 'stage hop')} + closed WFC {c['charge']['hop_delta_cycles']} cyc "
+                                 f"({rel(WFC_CLOSURE)})", cls=row.get("cls", "measured"))
+            n_hops += 1
+    info["hop_us"] = info.get("hop_us", M.HOP_US) + d_s * 1e6
+    return dict(record=rel(WFC_CLOSURE), sha256=sha(WFC_CLOSURE), hop_delta_cycles=c["charge"]["hop_delta_cycles"],
+                graph_hops_charged=n_hops, handoff_cycles=c["charge"]["handoff_cycles"],
+                measured_interval_overhead=c["charge"]["measured_interval_overhead"])
+
+
 def bind_wavefront_physical_verdict(rec):
     """Preserve modeled wavefront timing without granting failed hardware credit."""
+    c = wfc_closure()
+    if c is not None:       # the redesigned controller closed: physically qualified, its cycle cost charged
+        rec['MTP']['physical_qualified'] = True
+        rec['MTP']['qualified_headline_rate'] = rec['MTP']['MTP_tok_s']
+        rec['MTP']['wavefront_implementation'] = dict(
+            closure_record=rel(WFC_CLOSURE), closure_sha256=sha(WFC_CLOSURE), source_commit=c['source_commit'],
+            verdict=c['verdict'], elements={k: dict(route=v['route'], ss_setup_ps=v['ss_setup_ps'],
+                                                    ff_hold_ps=v['ff_hold_ps'], die150_ss_setup_ps=v['die150_ss_setup_ps'],
+                                                    drc=v['drc'], drv=v['drv']) for k, v in c['elements'].items()},
+            charge=c['charge'], implementation_adopted=True, superseded_rejection=rel(WAVE_PHYSICAL),
+            rule='MTP interval with the closed controller\'s measured handoff; its done -> outbound latency on every stage hop')
+        rec['inputs'][rel(WFC_CLOSURE)] = sha(WFC_CLOSURE)
+        return rec
     if not WAVE_PHYSICAL.exists():
         return rec
     decision = json.loads(WAVE_PHYSICAL.read_text())
@@ -666,6 +717,9 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     cdc_nodes = {}
     if "su_cdc" in recs:
         info["cdc"], cdc_nodes = apply_cdc(P, recs["su_cdc"])
+    wfc = apply_wfc_hop(P, info)
+    if wfc:
+        info["wfc"] = wfc
     if graph_hook is not None:
         graph_hook(g, P, base_patches, info)
     t, path = classify(g, P, base_patches)
@@ -700,7 +754,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         if s["hop"] == "token.return":          # the head stage: lm_head sweep is its occupancy (terminal overlaps)
             s["busy_us"] = max(s["busy_us"] - info.get("head", {}).get("argmax_drain_us", 0.0), head_occ)
     worst = max(segs, key=lambda s: s["busy_us"])
-    ii = worst["busy_us"] * (1 + wave["measured_interval_overhead"]) + hop_extra + ii_cable_us
+    ovh = wfc["measured_interval_overhead"] if wfc else wave["measured_interval_overhead"]
+    ii = worst["busy_us"] * (1 + ovh) + hop_extra + ii_cable_us
     verify = ar + M.WAVEFRONT["positions"] * ii
     dr = json.loads(DRAFT_REC.read_text())["result"]
     r_markov = dr["transfer_ratios"]["markov_over_head_macs_full"]
@@ -789,7 +844,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
                                        "on SU nodes as the model does; no CDC bench"),
         cdc_on_path_us=round(sum(cdc_nodes.get(p["node"], 0.0) for p in path) * 1e6, 3),
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
-        MTP=dict(rule="II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; "
+        MTP=dict(rule=("II = slowest stage busy x (1 + measured handoff " +
+                       (f"{wfc['handoff_cycles']} cyc, closed WFC" if wfc else "46/11271") + ") + measured hop; verify = AR + 5 II; ")+
                       "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} ({TP.tau_src('deepseek_v41', 5)})",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
