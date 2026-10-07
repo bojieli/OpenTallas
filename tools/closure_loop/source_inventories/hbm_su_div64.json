@@ -4,7 +4,8 @@
     "rtl"
   ],
   "extra_paths": [
-    "compiler/models/deepseek-v4.1-flash-reduced-v2"
+    "compiler/models/deepseek-v4.1-flash-reduced-v2",
+    "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json"
   ],
   "required_files": [
     "compiler/models/deepseek-v4.1-flash-reduced-v2/checkpoint_source.json",
@@ -12,6 +13,7 @@
     "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
     "compiler/models/deepseek-v4.1-flash-reduced-v2/tokenizer.json",
     "compiler/models/deepseek-v4.1-flash-reduced-v2/tokenizer_config.json",
+    "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
     "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
     "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_lane_c12.sv",
     "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_side_c12.sv",
@@ -41,6 +43,9 @@
     "rtl/test/tb_hbm_su_div64_sfu.sv",
     "rtl/test/tb_hdc_v41x_vec_c12.sv",
     "rtl/test/tb_hdc_v41x_vec_fields.svh",
+    "tools/closure_loop/prepare_su_vehicle.py",
+    "tools/closure_loop/source_archive.py",
+    "tools/closure_loop/source_inventories/hbm_su_div64.json",
     "tools/hbm_su_c12.py",
     "tools/hbm_su_div64.py",
     "tools/hdc_golden.py",
@@ -58,5 +63,17 @@
   "runtime_environment": {
     "OPENTALLAS_BUILD": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src/build"
   },
-  "scope": "SU random/vehicle campaign declared source inventory. Check runtime on EPYC2 before vehicle execution; checkpoint is not archived."
+  "scope": "SU random/vehicle declared inventory including actual prompt oracle. Before RTL compile, execute prepare_argv under measured target admission: validates runtime checkpoint and Python packages, then runs campaign vehicle_records including golden prefill. Checkpoint remains external.",
+  "runtime_python_packages": {
+    "numpy": null,
+    "tokenizers": "0.22.2"
+  },
+  "prepare_argv": [
+    "python3",
+    "tools/closure_loop/prepare_su_vehicle.py",
+    "--inventory",
+    "tools/closure_loop/source_inventories/hbm_su_div64.json",
+    "--out",
+    "FRESH_OUTPUT.json"
+  ]
 }
