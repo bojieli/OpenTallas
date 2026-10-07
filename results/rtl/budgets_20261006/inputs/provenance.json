@@ -10,9 +10,9 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "f70cc76e9ef893c8bbf9196b249a46abe8a5ea47",
+   "commit": "8980a7de802cefba4d9142e9c12b996e0bf0c61f",
    "generator": "tools/hbm_accel_die_fp.py",
-   "options": "ADOPTED = R19 (r18 + VM split into 4 quadrant tiles)",
+   "options": "ADOPTED = R19B (r19 + pin-abutting stations on the attention roots and index-key chain ends)",
    "via": "tools/die_top_lint.py build(hbm)",
    "publication_commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
    "source_binding": "commit matches source_commit embedded in die model and clock plan; publication_commit identifies the coordinator publication revision"
