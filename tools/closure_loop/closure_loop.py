@@ -245,7 +245,9 @@ def stage_list(spec):
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
         base = cal["base"]
-        tail = (f"\nB=$(ls -d {base} 2>/dev/null | tail -1); [ -n \"$B\" ] || {{ echo 'calibrate: no ORFS base {base}'; exit 3; }}"
+        tail = (f"\nB=$(ls -d {base} 2>/dev/null | tail -1); [ -n \"$B\" ] || {{ echo 'calibrate: no ORFS base {base}'; "
+                f"bash {{CL}}/cal_classify.sh '{base}'; exit 3; }}"
+                f"\n[ -f \"$B/4_1_cts.odb\" ] || {{ echo \"calibrate: no 4_1_cts.odb under $B\"; bash {{CL}}/cal_classify.sh '{base}'; exit 4; }}"
                 f"\npython3 {{CL}}/ck_insertion.py --base \"$B\" --clock {cal.get('clock', 'ck')} --output {{CL}}/calib.json"
                 f" > {{CL}}/calib.env || exit 4\ncat {{CL}}/calib.env\nset -a; . {{CL}}/calib.env; set +a")
         if cal.get("sdc_cmd"):
@@ -393,6 +395,7 @@ class Fleet:
         self.pending = {}      # host -> [(t, threads, ram)]
         self.probe_cache = {}
         self.tool_cache = {}
+        self.own_running = {}    # host -> declared threads of this loop's running stages
 
     def probe(self, host):
         c = self.probe_cache.get(host)
@@ -426,10 +429,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if info is None:
             return False, f"{cfg['label']} unreachable"
         pt, pr = self.own_pending(host)
-        if info["load1"] + pt + threads > cfg["cap"]:
-            return False, f"{cfg['label']} load {info['load1']:.0f}+{pt}+{threads} > cap {cfg['cap']}"
-        if info["mem_gb"] - pr < ram + RAM_HEADROOM_GB:
-            return False, f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB < {ram}+{RAM_HEADROOM_GB}"
+        # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
+        # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
+        eff = max(info["load1"], self.own_running.get(host, 0))
+        if eff + pt + threads > cfg["cap"]:
+            return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
+        res = cfg.get("reserve_ram_gb", 0)
+        if info["mem_gb"] - pr - res < ram + RAM_HEADROOM_GB:
+            return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
+                           + f" < {ram}+{RAM_HEADROOM_GB}")
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         return True, "ok"
@@ -469,15 +477,21 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         allh = [h["name"] for h in hosts_table()]
-        order = list(spec.get("hosts") or allh)
-        if ram <= SMALL_JOB_GB:      # small jobs may run on any host with the same toolchain (coordinator 2026-10-06)
-            order += [h for h in allh if h not in order]
-        order = [h for h in order if h not in exclude and self.compatible(h, spec)]
+        pref = set(spec.get("hosts") or [])
+        # the job's hosts list is a PREFERENCE (coordinator 2026-10-06 21:15); caps/toolchain/per-job limits still apply
+        order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
-        def frac(h):
-            info = self.probe(h)
-            return 9e9 if info is None else (info["load1"] + self.own_pending(h)[0]) / host_cfg(h)["cap"]
-        order.sort(key=frac)         # least loaded host first
+        def score(h):
+            """higher = better: free cores and free RAM after this job, both as fractions of the host; spillover-only
+            hosts (EPYC3, die-top) rank after every other host; listed hosts get a small preference"""
+            info, cfg = self.probe(h), host_cfg(h)
+            if info is None:
+                return -9e9
+            pt, pr = self.own_pending(h)
+            fc = (cfg["cap"] - max(info["load1"], self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
+            fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
+            return min(fc, fr) + 0.5 * (fc + fr) / 2 + (0.05 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+        order.sort(key=score, reverse=True)
         why = []
         for h in order:
             ok, msg = self.fits(h, threads, ram)
@@ -721,7 +735,24 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl")
+HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh")
+
+# deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
+CAL_OWNER_ACTION = {
+    "cts_segv_macro_reg_sinks": "TritonCTS segfaults in separateMacroRegSinks (an inverter/forwarded-clock load on the root "
+                                "clock net): add PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl "
+                                "(or your flow's equivalent root-buffer PRE_CTS hook) to calibrate+route, re-drop as a new job",
+    "cts_segv": "OpenROAD segfault in CTS: reproduce on 3_place.odb, add a PRE_CTS workaround hook, re-drop",
+    "rsz_max_buffer": "CTS timing repair hit the buffer cap (RSZ-0060): the IO SDC insertion/budget is off for this block or "
+                      "a net has extreme fanout -- check the IO SDC (budget/calibrated), duplicate high-fanout drivers, re-drop",
+    "odb_dont_touch": "CTS must rewire a dont_touch instance (ODB-0370): do not dont_touch cells on clock/repair nets "
+                      "(or release them in PRE_CTS), re-drop",
+    "est_parasitics": "EST-0104 inconsistent parasitics state in CTS: a step hook (PRE_CTS/POST_PLACE tcl) leaves "
+                      "estimate_parasitics in a mixed state -- fix the hook, re-drop",
+    "nickname": "route label not [A-Za-z0-9_]: use {LABEL} (the loop now sanitises {NAME} too); re-drop",
+    "synth_or_place": "the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+    "flow_error": "ORFS error before CTS completed: see the CALIBRATE_FAIL detail, fix, re-drop",
+}
 
 
 def ship_helpers(host, run):
@@ -987,6 +1018,15 @@ def finish(j, status, reason, ledger_text):
 
 def crash(j, st, fleet, why):
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
+    m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
+    if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
+        j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
+                                                resource=False, cls=m.group(1), tail=tail[-1500:]))
+        act = CAL_OWNER_ACTION[m.group(1)]
+        finish(j, "NEEDS_HUMAN", f"calibrate {m.group(1)}: {act}"[:300],
+               f"NEEDS_HUMAN: calibrate failed, class {m.group(1)} (deterministic, not retried)\n"
+               f"detail: {m.group(2).strip()[:200]}\nOWNER ACTION ({j['spec'].get('owner')}): {act}")
+        return
     resource = bool(RESOURCE_RE.search(tail)) or why.startswith("LOST")
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:]))
@@ -1496,16 +1536,86 @@ def auto_requeue(jobs):
             break
 
 
+def kill_own_stage(j):
+    """stop ONLY this loop's own stage process group and containers mounting this job's own run dir"""
+    if not (j.get("stage_tag") and j.get("host")):
+        return
+    run, t = j["run"], j["stage_tag"]
+    ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
+for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
+        timeout=300)
+
+
+def migrate_overloaded(jobs, fleet):
+    """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
+    jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
+    for j in jobs:
+        if j["status"] in TERMINAL or not j.get("host"):
+            continue
+        cfg = host_cfg(j["host"])
+        info = fleet.probe(j["host"])
+        if info is None:
+            continue
+        over = info["load1"] > cfg["cap"] or (cfg.get("spillover_only") and info["mem_gb"] < cfg.get("reserve_ram_gb", 0))
+        if not over:
+            continue
+        stl = stage_list(j["spec"])
+        st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
+        pre_cts = (j["status"] in ("RUNNING", "READY") and st["kind"] in ("bench", "calibrate")) or \
+                  (j["status"] == "READY" and st["kind"] == "route") or j["status"] == "SYNC"
+        if not pre_cts and j["status"] == "RUNNING" and st["kind"] == "route":
+            # OWNER LOAD REBALANCE 2: a route on an overloaded host that has not reached CTS may be relaunched elsewhere
+            dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
+            if dm:
+                rb = dm.replace("/logs/", "/results/").rsplit("/", 1)[0]
+                r = ssh(j["host"], f"ls {rb}/4_1_cts.odb {rb}/3_place.odb >/dev/null 2>&1 && echo CTS; "
+                                   f"ls -d {rb.rsplit('/', 2)[0]} >/dev/null 2>&1 || echo NOBASE; "
+                                   f"ls {rb}/4_1_cts.odb >/dev/null 2>&1 || echo PRECTS", timeout=60)
+                pre_cts = r.returncode == 0 and "PRECTS" in r.stdout
+        if not pre_cts:
+            continue
+        h, why = fleet.choose(j["spec"], exclude=[j["host"]])
+        if not h or host_cfg(h).get("spillover_only"):
+            continue
+        old = cfg["label"]
+        if j["status"] == "RUNNING":
+            kill_own_stage(j)
+        cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+        if st["kind"] in ("bench", "route"):
+            idx = j["stage_idx"]                         # re-run the interrupted bench / pre-CTS route
+            if st["kind"] == "route" and cal is not None:
+                idx = cal                                # calibration is host-local (calib.env): redo it
+        else:
+            idx = cal if cal is not None else j["stage_idx"]
+        j["hosts_tried"].append(h)
+        j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
+                 attempt=j["attempt"] + 1)
+        j.pop("wait_since", None)
+        fleet.launched(h, 0, 0)
+        event(j, f"LOAD REBALANCE: {old} over cap (load {info['load1']:.0f}, {info['mem_gb']} GB free); pre-CTS job "
+                 f"moved to {host_cfg(h)['label']} (resumes at {stl[idx]['key']})")
+        experiment(j, f"running: moved {old} -> {host_cfg(h)['label']}")
+        save_job(j)
+
+
 def tick(fleet):
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
+    own = {}
+    for x in all_jobs():
+        if x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL") and x.get("host"):
+            stl = stage_list(x["spec"])
+            st = stl[min(x.get("stage_idx", 0), len(stl) - 1)]
+            own[x["host"]] = own.get(x["host"], 0) + (8 if x["status"] == "ECO" else st.get("threads", 4) or 4)
+    fleet.own_running = own
     try:
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
         requeue_hold_only(all_jobs())
+        migrate_overloaded(all_jobs(), fleet)
         requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
