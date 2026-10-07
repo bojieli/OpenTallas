@@ -9,13 +9,15 @@ p=argparse.ArgumentParser()
 p.add_argument('--period-ps',type=float,required=True)
 p.add_argument('--l-max',type=float,required=True);p.add_argument('--l-min',type=float,required=True)
 p.add_argument('--l-ff-min',type=float,required=True)
+p.add_argument('--io-ref-period-ps',type=float,default=833.333)
 p.add_argument('--skew-ps',type=float,default=150.0);p.add_argument('--hold-io-ps',type=float,default=50.0)
 p.add_argument('--wire-ps',type=float,default=200.0);p.add_argument('--clkq-ps',type=float,default=100.0)
 p.add_argument('--clkq-min-ps',type=float,default=30.0);p.add_argument('--out',type=Path,required=True)
 a=p.parse_args()
-in_max=a.l_max+a.skew_ps+a.clkq_ps+a.wire_ps
+shift=a.period_ps-a.io_ref_period_ps
+in_max=a.l_max+a.skew_ps+a.clkq_ps+a.wire_ps+shift
 in_min=a.l_ff_min-a.hold_io_ps+a.clkq_min_ps
-out_max=a.wire_ps+25+a.skew_ps-a.l_min
+out_max=a.wire_ps+25+a.skew_ps-a.l_min+shift
 out_min=-(a.l_ff_min-a.hold_io_ps)
 a.out.write_text('\n'.join([
  f'# HA2 banked: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max}, FF min {a.l_ff_min}',
