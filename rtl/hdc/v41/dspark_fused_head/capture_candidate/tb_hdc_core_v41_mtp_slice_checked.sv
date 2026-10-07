@@ -34,7 +34,7 @@ module tb_hdc_core_v41_mtp_slice #(
     always @(negedge clk) hph <= ~hph;
     wire hclk = clk & hph;
     integer fcyc = 0, fcyc_start = -1;
-    always @(posedge `TBCLK) fcyc <= fcyc + 1;
+    always @(posedge clk) fcyc <= fcyc + 1;   // die clock
 `define TBCLK hclk
 `else
 `define TBCLK clk
