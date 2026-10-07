@@ -50,8 +50,10 @@ def main():
              reason='v13b: RG 16 -> 8 replica groups, RPT 2 repeater stages on broadcast / root inputs / row writes'),
         dict(item='added cycles per phase (vs the native production parent)', historical=h['cost']['added_cycles_per_phase'],
              current=cb['cycles']['added_cycles_per_phase'],
-             reason='the v13b parent already pays RPT=2 on its root inputs; in the split the hr end block abuts the RWB, '
-                    'so those repeaters are replaced, not added (the row-count path to the core stays 13 stations)'),
+             reason='root contract (tools/s81_root_contract.py): pipelined CAM +1 cycle per root pass, <= 4 passes on a '
+                    'row chain (was 3), + 2 in/out stations of the 142.56 um return strip (new); the v13b parent already '
+                    'pays RPT=2 on its root inputs, which the split replaces (row-count path to the core stays 13 '
+                    'stations)'),
         dict(item='AR loss estimate', historical=h['cost']['AR_loss_fraction_est'], current=cb['cycles']['AR_loss_fraction_est'],
              reason='same historical per-cycle sensitivity x the new per-phase delta; ' + cb['cycles']['price_status']),
         dict(item='VM write FIFO depth per region', historical=h['credits']['vm_write']['depth_per_region'],
@@ -77,6 +79,18 @@ def main():
              reason='generator drift is 5aba116fc only (an exact-rectangle pin kind for the HBM VM8 retile); the S81 '
                     'layer die has no such ports and every geometric field is identical (only generator hash / base '
                     'commit differ)'),
+        dict(item='root placement', historical='frame empty q position (design recommendation (1))',
+             current={k: cb['placement_pq_parent'][k] for k in ('root_rows', 'root_row_h_um', 'root_strip_w_um',
+                      'roots_per_die_mm2', 'root_cell_outline_um2', 'frame_spare_um', 'status')},
+             reason='pq_parent packing: mixed 1,792 frames are 9 fully occupied rows (4 BF full-width + 10 q half-width): '
+                    'no empty positions; roots move to a 164.16 um row in the first 6 tier channels; 1,792 pairs kept'),
+        dict(item='PQ core slot', historical=dict(slot='VM north 1015 x 795 (WFC child relocation)', est_mm2=h['per_die_area']['pq_core_mm2']),
+             current=dict(slot='449.28 x 1,728 um after the VM', slot_mm2=cb['placement_pq_parent']['core_slot_mm2'],
+                          fits=cb['placement_pq_parent']['core_fits']),
+             reason='pq_parent explicit core slot; capture-up / SU restack keeps the 25.61188 mm2 SU'),
+        dict(item='root storage per root', historical='16,768 native + 256 parity',
+             current='16,768 native + 256 parity + 128 bv shadow + 3 pipe/station parity = 17,155',
+             reason='root contract parity definition (bv protected by a kept shadow, not parity)'),
         dict(item='stages / layer dies / pins / lane widths / SRAM / roots', historical='unchanged', current='unchanged',
              reason='mappings reproduced byte-identically from 9a31097cd (half 8dfa6dae, full bf7863a4); inventories '
                     'and pq_parent_binding committed on main with the snapshot hashes'),

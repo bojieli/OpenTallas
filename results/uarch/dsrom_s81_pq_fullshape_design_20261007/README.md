@@ -173,3 +173,99 @@ The pins are listed in `current_main/inputs/REPO_INPUTS.SHA256SUMS`. Codex's inp
 | RWB | 427 / 267 | `dsfd_cfifo` |
 | PQ core | 620 / 373 | q-element |
 | Lane station | 140 / 74 | `dsfd_stnh_566x1` |
+
+## Modeled version label (5d914995f)
+
+"Current basis" means a modeled version: **main@e2a4ad579 with a calibration snapshot observed 2026-10-07T12:10:55-07:00**. It does not mean whatever main's mutable files say now.
+
+- **Calibration snapshot.** The closure-loop daemon rewrites `results/rtl/budgets_20261006/measured_insertion.json`. The basis reads a pinned copy instead: `current_main/inputs/calibration/measured_insertion.bb7c46846.json` (sha 4a72c6e5, from source commit bb7c46846).
+- **Generator.** `tools/dsrom_s81_fulldie.py` at e2a4ad579 is pinned as `current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py`.
+- **Recorded provenance.** `design.json.model_basis` and the comparison file record the source commit, path, sha256 and observation time.
+- **Geometry is PROVISIONAL** until the geometry owner commits the actual layout.
+
+Both bases reproduce byte-identically from a `git archive` of origin/main 10989fac4 overlaid with this branch's tools and results.
+
+## pq_parent packing update (provisional, folded into the current basis)
+
+This corrects design recommendation (1), which placed each root in an empty q element position. Mixed 1,792 frames have no such positions: each frame is 9 fully occupied rows (4 BF full-width + 10 q half-width).
+
+The pq_parent placement instead:
+- **Roots:** a 164.16 µm root row in the first 6 tier channels, one root per column (20/22/22/22/22/20 per tier). Frame spare drops from 241 to 77 µm; the die keeps 1,792 pairs and 512 BF.
+- **Root block:** 132.192 × 133.92 µm plus two 8.64 µm stations in a 142.56 µm strip. That is 2.996 mm² of reservation per die. The cell outline is 17,703 µm², 1.01× my estimate; the root with its protection bits lands at about 57.5 % utilisation.
+- **Core:** a 449.28 × 1,728 µm slot (0.776 mm²) after the VM. My 0.32 mm² estimate fits it.
+- **SU:** the capture-up / SU restack keeps the same 25.61188 mm² SU.
+
+Under the root contract below, the cycle cost becomes 18 per phase: CAM 4 + 2 stations + 14 row-count path − 2 RPT. The estimated AR loss is 0.56 %. This is still a **partial price**.
+
+## ROOT contract (`tools/s81_root_contract.py` → `current_main/root_contract/root_contract.json`)
+
+Codex /root/s81/pq_parent owns the RTL and the exact adapter proof. This tool owns the contract and its reference models.
+
+### Face: 141 pins
+
+| Group | Pins |
+|---|---|
+| Native | `clk`, `rst_n`; `tree_in[65:0]` = {e, d[32], tag[32], v} in the bit order of `ot_s81_pq_root_adapter`; `r_v`, `r_row[16]`, `r_pos[3]`, `r_fp32[32]`, `r_bf16[16]`, `r_e`; `fault` |
+| New: protection | `tree_par` and `r_par` (odd parity) |
+| From the adapter | `upstream_fault`, ORed into `fault` as the adapter already does |
+
+`busy` is not a root port. The draft's 67/71 count included it; the column busy stays on the column FIFO path.
+
+- **Registered faces:** an input station and an output station inside the strip, with at most buffering between pin and flop. The external input budget is ≤ 638 ps at 833.3 ps − 60 ps uncertainty − 15 ps acceptance.
+- **Flow:** valid-only in both directions with no ready, as in the native root.
+- **Fault:** sticky.
+
+### Parity: odd parity (an all-zero word fails)
+
+| Domain | Protection | Generated | Checked |
+|---|---|---|---|
+| Face in | 65 b + `tree_par` | Producer's last return register. This is not in RTL today: it is an obligation on the tree-return owner. | Input station; a bad word is dropped |
+| Queue | 128 entries × 1 parity bit, carried end-to-end | — | At head load |
+| Buffer | 128 × 1 parity bit | Carried from the queue; generated at stage A for adder results | At stage B on the hit read; stage B also re-checks the A→B register |
+| `bv` | 128-bit kept shadow copy | — | Every cycle |
+| Queue counters | Invariant (qw − qr) mod 128 = qc | — | Every cycle |
+| Face out | 68 b + `r_par` | Stage B from the output register's D inputs | RWB stage 0 |
+
+Root storage becomes **17,155 b** (16,768 native + 387 protection). The draft's "256 parity bits" was incomplete.
+
+**Unprotected (logic, disclosed):** the adder and tag-delay pipelines, `norm`, and the RNE incrementer.
+
+**Fail closed.**
+- Every fault cause is a sticky register bit, cleared only by `rst_n`.
+- The faulting word is never used or published.
+- From the next cycle, `r_v` is forced to 0; native roots keep publishing after a fault, but post-fault output is outside the golden contract.
+- The RWB ORs the root fault into the spine's `f_fault`. The spine then holds `ready` low and the controller aborts or replays the token.
+- A tag upset that turns a match into a miss strands the entry. Parity cannot catch that; the spine rows-left watchdog must (a system obligation).
+
+### Pipelined CAM
+
+**Stages.**
+- **I:** input station.
+- **FWFT queue:** registered head with `norm` precomputed on load.
+- **A, about 9 levels:** select the candidate (adder result first, else queue head), then compare its tag against all 128 entries. The comparisons use 8 kept copies of the candidate tag, each fanned out to 16 comparators. A registers `M_raw`, `fwd` and `complete`.
+- **B, about 16 levels:** fix up the match vector, pick the lowest hit and the lowest free slot on the current `bv`, do the one-hot read of `bd`/`bt`/`be`/`p`, check parity, apply RNE, and register the output. If B misses SS +15 ps, split the operand read into a stage C; that costs +1 cycle on the add path only and is safe.
+- **O:** output station.
+
+**Hazard rules H1–H5.**
+- **H1, insert-forward:** set the match bit of slot s iff `fwd` = sibling(B's candidate, A's candidate) and B inserted into s in the previous cycle.
+- **H2, remove-mask:** clear the match bit of the slot B removed in the previous cycle.
+- **H3:** the free-slot search uses the current `bv`, never the A-time view.
+- **H4:** H1–H3 are complete, because only one B decision can write between a candidate's A compare and its B decision.
+- **H5:** the parent tag and the operand order come from the candidate alone.
+
+**Equivalence.** Pairing and every published word are bit-identical to the native root. Output order and slot indices may differ; the VM writes by address and the spine counts rows, so order is not observable.
+
+**Latency.** +1 cycle per root pass, at most +4 on a row's chain, plus 2 stations. A word that completes at once takes 5 cycles from input to row out (native: 2).
+
+**Reset.** Valid bits, the shadow, counters, pipe valids and the cause register reset; the entry arrays do not, because parity is checked only on valid entries.
+
+### Executable checks (`--rtl`, about 1 s)
+
+- **Golden model vs native RTL.** The Python native-root model matches `ot_v41_ret_root` under Icarus cycle-exactly on 3 seeds × 120 rows. A model with adder latency 7 and a truncating model both fail that comparison.
+- **Pipelined vs golden.** On 12 seeds of randomised csum-tree cuts (input density 0.6, 0.9 and 1.0, adversarial back-to-back siblings), the pipelined model equals both the golden model and a csum reference per row. Peak occupancy is at most 33 of 128.
+- **Negatives, each detected:**
+  - no insert-forward: 23 rows lost;
+  - no remove-mask on an upstream duplicate: the row is published twice;
+  - stale free-slot search: 18 rows lost;
+  - truncating rounding: 61 mismatched.
+- **Fault injection.** Buffer, `bv`, queue-counter, queue-entry and face-parity upsets all fault with 0 wrong words published. With parity checking disabled, wrong words are published. Without suppression, 118 words are published after the fault, against 53 with it.
