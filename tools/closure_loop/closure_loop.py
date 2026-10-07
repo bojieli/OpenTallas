@@ -583,9 +583,11 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 TOOL_REF_HOST = "ot-epyc3"
 SMALL_JOB_GB = 40
+# image identity = its registry digest when it has one: the same image loaded into a different docker store reports a
+# different .Id (localhost overlay2 af971398 vs fleet containerd 16470cea, both openroad/orfs@sha256:16470cea)
 TOOLPROBE = r"""
-echo img_latest=$(docker image inspect openroad/orfs:latest --format '{{.Id}}' 2>/dev/null)
-echo img_asap7lock=$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}' 2>/dev/null)
+echo img_latest=$(docker image inspect openroad/orfs:latest --format '{{if .RepoDigests}}{{index .RepoDigests 0}}{{else}}{{.Id}}{{end}}' 2>/dev/null)
+echo img_asap7lock=$(docker image inspect openroad/orfs:asap7lock --format '{{if .RepoDigests}}{{index .RepoDigests 0}}{{else}}{{.Id}}{{end}}' 2>/dev/null)
 echo iverilog=$(iverilog -V 2>/dev/null | head -1)
 echo verilator=$(verilator --version 2>/dev/null | head -1)
 echo yosys=$(yosys -V 2>/dev/null | head -1)
