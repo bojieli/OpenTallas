@@ -1,0 +1,26 @@
+{
+  "baseline_commit": "6af5cdd82",
+  "reachable_smh_rtl_byte_identical_after_removing_unused_rejected_module": true,
+  "physical_tool_byte_identical": true,
+  "baseline_smh_sha256": "8213f041c0780fd2274211e34da527f239c07fa704e0f9b9a2c9424ebc915a51",
+  "baseline_exact_sequences": 15,
+  "baseline_controls": {
+    "mutbf_haz_haz1": {
+      "status": "pass",
+      "mismatching_ops": 0
+    },
+    "neg_mutbf_haz_haz0": {
+      "status": "fail",
+      "mismatching_ops": 6
+    },
+    "neg_flip_stress": {
+      "status": "fail",
+      "mismatching_ops": 13
+    },
+    "neg_mut_s1w_stress": {
+      "status": "fail",
+      "mismatching_ops": 13
+    }
+  },
+  "qualification": "Baseline evidence retained; these are not new full-shape simulation results. Candidate d3393aa88 campaign remains pinned and cannot authorize adoption."
+}

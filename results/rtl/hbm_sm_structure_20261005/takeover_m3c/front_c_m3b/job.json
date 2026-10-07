@@ -1,0 +1,63 @@
+{
+ "name": "hbm_smh_front_c_m3b_6af5cdd82",
+ "block": "ot_hbm_accel_smh_front_c",
+ "owner": "Claude:hbm-sm",
+ "purpose": "HBM SM element smh margin m3 piece ot_hbm_accel_smh_front_c (front_c): RTL 6af5cdd82 (branch claude/hbm-sm-structure-20261005); route 770 / sign-off 833, IO SDC at the calibrated insertion (--lat CK_SS_MEAN, --lat-ff CK_FF_MEAN); m3b: element-pin inputs land in flops with no logic; calibrate hold-neutral",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/hbm-sm-structure-20261005",
+  "commit": "6af5cdd82a94cdaec2abb5c88a3df0f69ac53d03"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "python3 tools/hbm_accel_smh_physical.py block --piece front_c --variant one --pd 0.55 --grt-allow --period 770 --skew 90 --die-skew 150 --hold-margin 0 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL}_cal --out {RUN}/routes/{LABEL}_cal --stop-after cts --lat-ff 100 && bash {RUN}/routes/{LABEL}_cal/run.sh",
+   "base": "{RUN}/routes/{LABEL}_cal/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "python3 tools/hbm_accel_smh_physical.py block --piece front_c --variant one --pd 0.55 --grt-allow --period 770 --skew 90 --die-skew 150 --hold-margin 25 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL} --out {RUN}/routes/{LABEL} --lat ${CK_SS_MEAN:-720} --lat-ff ${CK_FF_MEAN:-430} && bash {RUN}/routes/{LABEL}/run.sh",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/views {RUN}/record/route && cp {RUN}/routes/{LABEL}/views/* {RUN}/record/views/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/config.mk {RUN}/routes/{LABEL}/constraint.sdc {RUN}/routes/{LABEL}/geometry.json {RUN}/record/route/ && cp {CL}/calib.json {RUN}/record/route/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [],
+  "macros": [
+   "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "docker run --rm -v {SRC}:/src:ro -v {RUN}/routes/{LABEL}:/work openroad/orfs:asap7lock bash -lc 'mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract_$c.tcl || exit 1; done' > {RUN}/routes/{LABEL}/abstract_eco.log 2>&1"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/hbm_accel_smh_views/ot_hbm_accel_smh_front_c"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/hbm_sm_structure_20261005/routes_m3/front_c"
+  }
+ ],
+ "cycles_added": 2,
+ "merge_target": "claude/hbm-abstracts-20261006",
+ "no_bench_reason": "RTL benched before the drop: results/rtl/hbm_sm_structure_20261005/pq_seq_m3b/ (15 PQ sequences bit-exact through the whole element, transaction-level; negatives neg_flip / mut_s1w / HAZ=0 mutbf FAIL as required) at the same commit"
+}

@@ -649,6 +649,8 @@ module ot_hbm_accel_smh_oskid #(
     always @(posedge clk) if (push) mem[wp[1:0]] <= s_data;
 endmodule
 
+// REJECTED m3c candidate, retained for the directed liveness regression only.
+// Alternating ready can starve a slot indefinitely; front_s keeps the m3b FIFO.
 // The request port at the element pins (margin m3c): req_ready lands in a flop with NO logic and the request leaves
 // from a flop (front_s m3b: req_ready -> read pointer -75 ps, read pointer -> 4:1 select -> req_addr -31 ps; an element
 // input keeps ~100 ps beyond a bare capture flop).  Two request slots take turns on the pins: the slot shown in cycle t
@@ -1268,7 +1270,7 @@ module ot_hbm_accel_smh_front_s #(
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
     ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
-    ot_hbm_accel_smh_oreq #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+    ot_hbm_accel_smh_oskid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
         .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
     // response: stages 1 (pins) and 2 (north face) of m2's four
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(fp_v));
