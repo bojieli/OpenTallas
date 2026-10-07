@@ -73,3 +73,18 @@ python3 tools/closure_loop/closure_loop.py cancel <name>
 ```
 Job state lives in `~/.local/state/closure_loop/jobs/<name>.json` (events, metrics, calibration, publish result).
 The unit runs from `/home/ubuntu/wt-closure-loop`; `closure-loop.service` here is the installed copy.
+
+## Host capabilities and stage needs (2026-10-06)
+`hosts.json` gives each host its `caps` (EPYC1/2/3 and AGIdock: verilator, yosys, iverilog, orfs; PVE1: orfs only).
+Any bench or stage may set `"needs": [...]`. Defaults: bench = verilator + iverilog + yosys; calibrate, route,
+signoff and the failure summary = orfs; collect and export = none. All stages of a job run on one host, so the host
+must cover the UNION of the job's needs and match EPYC3's ORFS image digest. The loop never places a job on a host
+that lacks a need.
+
+## Budget check (2026-10-06)
+Calibrate stops a budget job (NEEDS_BUDGET) only when the measured SS insertion EXCEEDS the block's target
+(`internal_insertion.target_ss`). At or below the target, the measured insertion is accepted. The loop regenerates
+budget_route/signoff/ff.sdc from the measured SS/FF mean/min/max plus the sheet's per-edge budgets, and records the
+acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's measured insertion is collected in
+`results/rtl/budgets_20261006/measured_insertion.json` on main (published at most every 10 min) for the die
+clock plan.
