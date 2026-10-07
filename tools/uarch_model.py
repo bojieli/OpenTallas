@@ -13892,6 +13892,60 @@ def qwen_embedding_padded_ingress_model(address_bits=18):
     return m
 
 
+def s81_pq_return_delay_model(regions, selected_chain_counts):
+    """Size identity-function input delay stations on the unchanged standalone screen.
+
+    Counts must come from matched SS/FF front-return endpoint inventories. Cell
+    characterization is a prebuild bound; closure is measured after routing.
+    """
+    if regions not in (16, 128):
+        raise ValueError('Only measured R16/R128 screen vehicles are supported')
+    counts = {int(k): int(v) for k, v in selected_chain_counts.items()}
+    if any(k not in (3, 4) or v < 0 for k, v in counts.items()):
+        raise ValueError('Only characterized three/four-HB4 chains are supported')
+    endpoints = sum(counts.values())
+    if endpoints > 69*regions:
+        raise ValueError('Selected endpoints exceed actual return boundary width')
+    cells = sum(k*v for k, v in counts.items())
+    old_cells = 89698 if regions == 16 else 148012
+    core_area = 196407 if regions == 16 else s81_pq_r128_expanded_model()['geometry']['core_area_um2']
+    new_area = cells*.10206
+    return dict(schema='opentallas.s81.pq_return_delay.v1', adopted=False, physical_closed=False,
+        scope='Physical-only identity buffer station on d017 standalone registered screen; no production parent claim',
+        regions=regions, chain_counts=counts, selected_endpoints=endpoints,
+        MACs_per_cycle_delta=0,compute_intensity_delta=0,memory_bytes_per_cycle_delta=0,
+        boundary_bits_per_cycle=69*regions,boundary_bits_per_cycle_delta=0,
+        replica_count=endpoints, mux_count=0,demux_count=0,
+        fanout=dict(each_HB4_output=1,new_clock_sinks=0,source_buffer_loading='Must preserve original input buffer and check new first-cell capacitance'),
+        area=dict(cell='HB4xp67_ASAP7_75t_R',cell_count=cells,cell_area_um2=.10206,
+                  added_cell_um2=new_area,baseline_measured_cell_um2=old_cells,
+                  core_area_um2=core_area,projected_utilisation=(old_cells+new_area)/core_area,
+                  headroom_to_55pct_um2=.55*core_area-old_cells-new_area,
+                  fits_55pct=old_cells+new_area<=.55*core_area,
+                  parent_slot_assigned=False),
+        routing=dict(new_internal_nets=cells,new_external_tracks=0,per_link_wire_target_um=5,
+                     M3_cap_fF_per_um=.156,characterized_extra_cap_fF_per_net=.78,
+                     local_chain_tracks_per_endpoint=1,minimum_track_pitch_um=.036,
+                     minimum_station_track_capacity=int(5/.036),
+                     condition='Keep each chain beside its capture pin; actual legalization, congestion and wire RC must pass'),
+        clock=dict(period_ps=833.333,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+                   added_clock_domains=0,added_clock_exceptions=0,reference_clock_unchanged=True),
+        latency=dict(added_cycles=0,token_delta_ns=0,II_unchanged=True,qualification='Identity cells only; actual timing and topology must qualify'),
+        characterization=dict(three_HB4_min_FF_hold_gain_ps=117.875009,
+                              three_HB4_max_SS_setup_cost_ps=339.820038,
+                              four_HB4_min_FF_hold_gain_ps=156.516676,
+                              four_HB4_max_SS_setup_cost_ps=454.61435,
+                              input_slew_ps=[0,5,20],wire_cap_fF=[0,.2,.78],
+                              three_HB4_original_cap_max_fF=5.75,three_HB4_retained_cap_delta_limit_fF=.78,
+                              three_HB4_retained_wire_source='results/uarch/s81_pq_delay_chain_20261007/retained_wire_sweep/record.json',
+                              source='results/uarch/s81_pq_delay_chain_20261007/loaded_sweep/record.json',
+                              measured_route=False),
+        remaining=['Matched original SS/FF endpoint table and source hashes',
+                   'Real buffer topology positive/negative gate and source identity',
+                   'Routed SS/FF+15ps DRC0 including R2R holds outside return station',
+                   'Actual wire/clock energy and full production parent integration'])
+
+
 def ha2_truecredit_parent_clock_model():
     """Price the actual ring-delay/launch-register closure candidate; not adopted."""
     from tools.ha2_truecredit_parent_clock_model import model
