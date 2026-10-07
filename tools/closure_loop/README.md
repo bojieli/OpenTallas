@@ -202,3 +202,12 @@ is disabled for these three rebinds pending parent review.
 - localhost is a host (hosts.json): ORFS stages only, at most 24 loop threads in total (`max_loop_threads`) and
   MemAvailable >= job peak + 40 GB (`min_free_ram_gb`), so ssh stays responsive. Stages run directly, without ssh.
 - New jobs route at hold margin 10 ps (see "Hold margin" above).
+
+## Route-time hold corners (2026-10-07)
+- Route stages export `OT_ROUTE_HOLD_CORNERS=primary` and run `hold_corners_patch.py` on the job's snapshot (older
+  snapshots get the same code main's tools/run_abi3_physical.py now has): place-and-route repairs setup and hold at the
+  primary corner (WC) only. The recipes' one route SDC puts the virtual IO clock at the SS insertion, so at BC every
+  IO path showed a fake hold violation of about the SS-FF insertion difference (hfd_svc_SE_s6 route SDC: output hold
+  WC +106 / BC -121 ps) and the flow inserted thousands of hold buffers (SE_s6 7,531, SW_s4 5,939, ctrl_pc 11,732).
+  FF hold is closed by the post-route hold ECO against the exact FF sign-off constraints; sign-off is unchanged.
+  Spec `"route_hold_corners": "keep"` keeps the recipe's own `--hold-corners`; any other value is passed through.

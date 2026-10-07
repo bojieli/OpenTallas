@@ -831,7 +831,7 @@ def sync_source(j):
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "cal_classify.sh", "resume_patch.py", "resume_check.sh")
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -877,6 +877,16 @@ def launch_stage(j, st, cmd):
         # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
         hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
+    if st["kind"] == "route":
+        # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
+        # -- the route SDC's virtual IO clock sits at the SS insertion, so BC showed fake IO hold violations of about the
+        # SS-FF insertion difference (thousands of flow hold buffers); FF hold goes to the post-route hold ECO.  Spec
+        # "route_hold_corners": "keep" leaves the recipe's own --hold-corners; any other value is passed through.
+        rhc = j["spec"].get("route_hold_corners", "primary")
+        if rhc != "keep":
+            ship_helpers(j["host"], j["run"])
+            env += f"export OT_ROUTE_HOLD_CORNERS={shlex.quote(str(rhc))}\n" \
+                   f"python3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
     if j.get("resume") and st["kind"] == "route":
         env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
