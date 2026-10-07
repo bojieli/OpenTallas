@@ -98,13 +98,14 @@ def rng(bits):
 
 class Emit:
     def __init__(self, rec, fcm, mutant=False, margin=False, wchk=False, pin_stages=1, fdly=0, ldly=0, fwd_rc=False,
-                 plreg=False, rsplit=False):
+                 plreg=False, rsplit=False, onreg=False):
         self.rec, self.fcm, self.n = rec, fcm, 0
         self.wchk = wchk              # ot_meso_fifo WCHK=1 (chunked data-ring write, 0 cycles; see --wchk)
         self.pin_stages = pin_stages  # --margin drive(): registers per ck-domain output (1 = the pin register only)
         self.fdly = fdly              # forward-slice FDLY override (0 = the library default)
         self.ldly = ldly              # launch-slice LDLY override (0 = the library default)
         self.fwd_rc = fwd_rc          # forward slices re-captured at the output face (ot_hbm_stn_fwd RC=1, +1 cycle)
+        self.onreg = onreg            # meso: registered r_on / r_align per chunk (ot_meso_fifo ONREG=1, 0 cycles)
         self.plreg = plreg            # meso: registered read-pointer placement (ot_meso_fifo PLREG=1, 0 cycles)
         self.rsplit = rsplit          # meso: half-select readout flops (ot_meso_fifo RSPLIT=1, 0 cycles)
         self.margin = margin          # owner margin rule: register every face pin of a meso crossing (see --margin)
@@ -176,6 +177,7 @@ class Emit:
         ri = ', .RI(1), .RDREG(1), .NOBP(1), .CRDREG(1), .OBYP(1)' if self.margin else ''
         ri += ', .WCHK(1)' if self.wchk else ''
         ri += ', .PLREG(1)' if self.plreg else ''
+        ri += ', .ONREG(1)' if self.onreg else ''
         ri += ', .RSPLIT(1)' if self.rsplit else ''
         self.body.append(f'  ot_hbm_stn_meso #(.W({w}){ri}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
                          f'.ck(ck[0]), .rst_n(rst[0]), .d_o({wn}));')
@@ -492,10 +494,11 @@ def main(argv=None):
     ap.add_argument('--ldly', type=int, default=0, help='launch slices: LDLY kept inverter pairs (0 = library default)')
     ap.add_argument('--fwd-rc', action='store_true', help='forward and launch slices: second flop at the output face '
                     '(ot_hbm_stn_fwd / ot_hbm_stn_launch RC=1): +1 cycle per crossing, face-to-face wire becomes a full-period arc')
+    ap.add_argument('--onreg', action='store_true', help='meso FIFOs: registered r_on / r_align copies per chunk (ONREG=1, 0 cycles)')
     ap.add_argument('--plreg', action='store_true', help='meso FIFOs: registered read-pointer placement (PLREG=1, 0 cycles)')
     ap.add_argument('--rsplit', action='store_true', help='--margin meso FIFOs: half-select readout flops (RSPLIT=1, 0 cycles)')
     a = ap.parse_args(argv)
-    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly, fwd_rc=a.fwd_rc, plreg=a.plreg, rsplit=a.rsplit)
+    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly, fwd_rc=a.fwd_rc, plreg=a.plreg, rsplit=a.rsplit, onreg=a.onreg)
     fcm = fc_map()
     pdir = Path(a.ports)
     out = Path(a.out)
@@ -525,7 +528,7 @@ def main(argv=None):
                           launch=sum('ot_hbm_stn_launch' in l for l in E.body), outputs_mapped=len(E.map),
                           **({'wchk': True} if a.wchk else {}), **({'pin_stages': a.pin_stages} if a.pin_stages != 1 else {}),
                           **({'fdly': a.fdly} if a.fdly else {}), **({'ldly': a.ldly} if a.ldly else {}),
-                          **({'fwd_rc': True} if a.fwd_rc else {}), **({'plreg': True} if a.plreg else {}),
+                          **({'fwd_rc': True} if a.fwd_rc else {}), **({'plreg': True} if a.plreg else {}), **({'onreg': True} if a.onreg else {}),
                           **({'rsplit': True} if a.rsplit else {}))
     if a.master and (out / 'summary.json').exists():      # a partial emit updates the other masters' rows in place
         summary = {**json.loads((out / 'summary.json').read_text()), **summary}
