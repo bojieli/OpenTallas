@@ -37,6 +37,15 @@ Every line of the three targets carries a status, its effect on the single-user 
 | HBM DS 1M | unified, refill in the CDC only | 1,688.0 | 3,262.1 | The CDC rate cap is resolved by the II=1 refill (B′), measured in RTL on main at 9ead91a15; SS timing is unmeasured, with a risk on the 64:1 × 648-bit read-address path and a proposed function-preserving fix. The packet SRAM is still at II=3, which is gated: +30.78 µs AR / +172 µs MTP on 18,470 / 103,196 cycles of measured receive streaming. Refill latency: +1.02 µs. |
 | HBM DS 1M | unified, refill in both the CDC and the packet SRAM | 1,780.5 | 3,770.7 | Full line rate. +1.02 µs (2 cycles a pass × 610 passes) replaces the +2 × 265 SRAM term; ~60–100 µm² of logic, no added state. Recommended by the v2 design (2ae0d7d33, branch only). The full-rate credit contract is gated: the native credit producer is missing, and today a testbench preloads the credits. The 3-bank rotation (+12,093 µm²) is the fallback only. |
 
+**SM→SU result edge (all HBM DS rows).** Every HBM DS row has a die-view-only result edge until gate `sm_su_result_edge_native` closes (audit 8c8bb2af2, branch `claude/hbm-sm-su-result-contract-20261007` only). The published handoff (343 cycles a token, "stations gather a2 +1") is not a native edge: in the die view it ends in hfd_su's XOR exercise envelope, and in RTL it runs through the GPU-comparator memory model. Two alternatives are listed and not summed:
+
+| Alternative | Cycles a token | Status | Effect on the unified candidate | AR / MTP tok/s |
+|---|---:|---|---|---|
+| Proposed native edge (SU ingress FIFOs + relay slices) | 1,029 | priced candidate | +0.10% AR / +0.05% MTP | 1,780.5 / 3,770.8 |
+| RTL store-and-forward floor (applies if no native edge is built) | 132,520 | estimate | +19.7% AR / +10.0% MTP (+19.6% / +10.0% over the published 343) | 1,489.8 / 3,430.0 |
+
+The Qwen 8K HBM rows are unaffected.
+
 DS ROM / HBM, per user, both sides candidates:
 
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.

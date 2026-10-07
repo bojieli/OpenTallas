@@ -83,6 +83,10 @@ H_REFILL_COMMIT = "9ead91a15 (on origin/main; cited, not in this branch's base 4
 # v2 CDC design recommending the refill: branch claude/hbm-collective-cdc-design-v2-20261007 only
 H_CDC2 = "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json"
 H_CDC2_COMMIT = "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
+# SM -> SU result-contract audit (Claude, branch claude/hbm-sm-su-result-contract-20261007 8c8bb2af2 only)
+H_SMSU = "results/rtl/hbm_sm_su_result_contract_20261007/contract.json"
+H_SMSU_COMMIT = "8c8bb2af2 (on branch origin/claude/hbm-sm-su-result-contract-20261007 only)"
+H_SMSU_V = dict(published=343, native=1029, store_forward=132520)
 H_CDC_V = dict(ii3_AR_us=30.78, ii3_MTP_us=171.99, ii3_AR_pct=6.48, ii3_MTP_pct=16.37, ser_AR=18470, ser_MTP=103196,
                lat_us=1.017, lat_cycles=1220, rot_area_um2=12093.2)
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
@@ -519,6 +523,22 @@ def hbm_ds():
           dict(unit="us", AR=H_CDC_V["lat_us"], MTP_step=H_CDC_V["lat_us"]), src(H_CDC, "options.B_rotated_II1", commit=H_CDC_COMMIT),
           "v1 design (historical record kept); same latency, +%s um2; the v2 design keeps it only if the refill cannot close SS "
           "after the registered-address fix" % format(H_CDC_V["rot_area_um2"], ",.1f"), "alternative"),
+        L("sm_su_result_edge_native", "SM -> SU result handoff as a native edge (published as 343 cycles a token: hidden wire + 'stations gather a2 +1')",
+          "gated-unknown", None, src(H_SMSU, "summary", commit=H_SMSU_COMMIT),
+          "NOT a native edge today: in the die view the result tree ends in hfd_su's XOR exercise envelope, and in RTL the path "
+          "runs through the GPU-comparator memory model. Every HBM DS row is a die-view-only result edge until this gate "
+          "closes. Alternatives: sm_su_native_edge_proposed / sm_su_store_forward_floor", "gate"),
+        L("sm_su_native_edge_proposed", "Proposed native SM -> SU edge (SU ingress FIFOs + relay slices): %s cycles a token" % format(H_SMSU_V["native"], ","),
+          "priced-candidate", dict(unit="us", AR=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3),
+                                   MTP_step=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3)),
+          src(H_SMSU, "summary.native_cycles", commit=H_SMSU_COMMIT),
+          "increment over the published 343 cycles (+0.10 %% AR / +0.05 %% MTP step on the unified candidate); not summed (alternative)", "alternative"),
+        L("sm_su_store_forward_floor", "RTL-implemented store-and-forward floor through the GPU-comparator memory system: >= %s cycles a token" % format(H_SMSU_V["store_forward"], ","),
+          "priced-candidate", dict(unit="us", AR=round((H_SMSU_V["store_forward"] - H_SMSU_V["published"]) / CLK * 1e6, 3),
+                                   MTP_step=round((H_SMSU_V["store_forward"] - H_SMSU_V["published"]) / CLK * 1e6, 3)),
+          src(H_SMSU, "summary.store_forward_floor_cycles", commit=H_SMSU_COMMIT),
+          "ESTIMATE (floor) that applies if no native edge is built; effect = increment over the published 343 cycles (+19.63 %% AR / "
+          "+9.99 %% MTP step on the unified candidate; the full 132,520 cycles are 19.68 %% / 10.02 %%, contract.json impact); not summed (alternative)", "alternative"),
         L("su_reducer_safe", "SU reducer SAFE (+4 per reduction at 0.9 GHz)", "gated-unknown", None, src(H_LEDGER, "Pending"),
           "occurrences per token not bound", "gate"),
         L("su_c12_margin", "SU CP+c12 margin stage (+30 DS1M, measured exact) / RHALF (+176)", "gated-unknown", None,
@@ -569,6 +589,20 @@ def hbm_ds():
                                  + (" plus the packet-SRAM II=3 serialisation cost" if cname.endswith("cdc_only") else
                                     "; full rate also requires the native credit producer (gated)"),
                             record=[src(H_REFILL, "status", commit=H_REFILL_COMMIT), src(H_CDC2, "comparison", commit=H_CDC2_COMMIT)])
+    alt = {x["id"]: x["effect"] for x in lines if x["id"] in ("sm_su_native_edge_proposed", "sm_su_store_forward_floor")}
+    for cname, c_ in comps.items():
+        c_["result_edge"] = "die-view-only result edge until gate sm_su_result_edge_native closes"
+        gb = c_.setdefault("gated_by", [])
+        if "sm_su_result_edge_native" not in gb:
+            gb.append("sm_su_result_edge_native")
+    for cname in ("unified_candidate",):
+        c_ = comps[cname]
+        c_["sm_su_alternatives"] = {}
+        for k, e in alt.items():
+            a_, m_ = c_["AR_us"] + e["AR"], c_["MTP_step_us"] + e["MTP_step"]
+            c_["sm_su_alternatives"][k] = dict(AR_tok_s=tok_s_us(a_), MTP_tok_s=tok_s_us(m_, tau),
+                                              AR_pct=round(100 * e["AR"] / c_["AR_us"], 2),
+                                              MTP_step_pct=round(100 * e["MTP_step"] / c_["MTP_step_us"], 2))
     return dict(context="DeepSeek-V4.1 1M, HBM accelerator", tau=tau, lines=lines, compositions=comps, gates=gates,
                 physical_status="die views priced; no full-die closure")
 

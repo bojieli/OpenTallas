@@ -1872,6 +1872,59 @@
      "note": "v1 design (historical record kept); same latency, +12,093.2 um2; the v2 design keeps it only if the refill cannot close SS after the registered-address fix"
     },
     {
+     "id": "sm_su_result_edge_native",
+     "item": "SM -> SU result handoff as a native edge (published as 343 cycles a token: hidden wire + 'stations gather a2 +1')",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
+       "pointer": "summary",
+       "commit": "8c8bb2af2 (on branch origin/claude/hbm-sm-su-result-contract-20261007 only)"
+      }
+     ],
+     "note": "NOT a native edge today: in the die view the result tree ends in hfd_su's XOR exercise envelope, and in RTL the path runs through the GPU-comparator memory model. Every HBM DS row is a die-view-only result edge until this gate closes. Alternatives: sm_su_native_edge_proposed / sm_su_store_forward_floor"
+    },
+    {
+     "id": "sm_su_native_edge_proposed",
+     "item": "Proposed native SM -> SU edge (SU ingress FIFOs + relay slices): 1,029 cycles a token",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.572,
+      "MTP_step": 0.572
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
+       "pointer": "summary.native_cycles",
+       "commit": "8c8bb2af2 (on branch origin/claude/hbm-sm-su-result-contract-20261007 only)"
+      }
+     ],
+     "note": "increment over the published 343 cycles (+0.10 %% AR / +0.05 %% MTP step on the unified candidate); not summed (alternative)"
+    },
+    {
+     "id": "sm_su_store_forward_floor",
+     "item": "RTL-implemented store-and-forward floor through the GPU-comparator memory system: >= 132,520 cycles a token",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 110.147,
+      "MTP_step": 110.147
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
+       "pointer": "summary.store_forward_floor_cycles",
+       "commit": "8c8bb2af2 (on branch origin/claude/hbm-sm-su-result-contract-20261007 only)"
+      }
+     ],
+     "note": "ESTIMATE (floor) that applies if no native edge is built; effect = increment over the published 343 cycles (+19.63 %% AR / +9.99 %% MTP step on the unified candidate; the full 132,520 cycles are 19.68 %% / 10.02 %%, contract.json impact); not summed (alternative)"
+    },
+    {
      "id": "su_reducer_safe",
      "item": "SU reducer SAFE (+4 per reduction at 0.9 GHz)",
      "status": "gated-unknown",
@@ -1973,7 +2026,11 @@
       "commit": "8d485e23b"
      },
      "status": "priced-candidate",
-     "note": "STALE as a headline: gate + exact levers + full FEC + r05 floorplan wire, but NO die closure costs"
+     "note": "STALE as a headline: gate + exact levers + full FEC + r05 floorplan wire, but NO die closure costs",
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes",
+     "gated_by": [
+      "sm_su_result_edge_native"
+     ]
     },
     "r23_closure_published": {
      "AR_us": 571.141,
@@ -1985,7 +2042,11 @@
       "commit": "93b75a8fb"
      },
      "status": "priced-candidate",
-     "note": "closure-inclusive but light FEC and no lever credit"
+     "note": "closure-inclusive but light FEC and no lever credit",
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes",
+     "gated_by": [
+      "sm_su_result_edge_native"
+     ]
     },
     "closure_fec_no_lever_credit": {
      "AR_us": 603.616,
@@ -1997,6 +2058,7 @@
       "cdc_refill_ss_timing",
       "packet_sram_ii3_rate_cap",
       "credit_producer_native",
+      "sm_su_result_edge_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -2004,7 +2066,8 @@
       "die_clock_plan",
       "hbm_full_die"
      ],
-     "note": "conservative: r23 closure + r23 attention tile + full FEC + priced credit/SRAM costs"
+     "note": "conservative: r23 closure + r23 attention tile + full FEC + priced credit/SRAM costs",
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes"
     },
     "unified_candidate": {
      "AR_us": 561.067,
@@ -2017,6 +2080,7 @@
       "cdc_refill_ss_timing",
       "packet_sram_ii3_rate_cap",
       "credit_producer_native",
+      "sm_su_result_edge_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -2024,7 +2088,22 @@
       "die_clock_plan",
       "hbm_full_die"
      ],
-     "note": "as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)"
+     "note": "as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)",
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes",
+     "sm_su_alternatives": {
+      "sm_su_native_edge_proposed": {
+       "AR_tok_s": 1780.5,
+       "MTP_tok_s": 3770.8,
+       "AR_pct": 0.1,
+       "MTP_step_pct": 0.05
+      },
+      "sm_su_store_forward_floor": {
+       "AR_tok_s": 1489.8,
+       "MTP_tok_s": 3430.0,
+       "AR_pct": 19.63,
+       "MTP_step_pct": 9.99
+      }
+     }
     },
     "unified_candidate_refill_cdc_only": {
      "AR_us": 592.422,
@@ -2038,6 +2117,7 @@
       "cdc_refill_ss_timing",
       "packet_sram_ii3_rate_cap",
       "credit_producer_native",
+      "sm_su_result_edge_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -2057,7 +2137,8 @@
        "pointer": "comparison",
        "commit": "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
       }
-     ]
+     ],
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes"
     },
     "unified_candidate_refill_both": {
      "AR_us": 561.642,
@@ -2070,6 +2151,7 @@
      "gated_by": [
       "cdc_refill_ss_timing",
       "credit_producer_native",
+      "sm_su_result_edge_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -2089,13 +2171,15 @@
        "pointer": "comparison",
        "commit": "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
       }
-     ]
+     ],
+     "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes"
     }
    },
    "gates": [
     "cdc_refill_ss_timing",
     "packet_sram_ii3_rate_cap",
     "credit_producer_native",
+    "sm_su_result_edge_native",
     "su_reducer_safe",
     "su_c12_margin",
     "su_full_ddiv31",
@@ -2314,6 +2398,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "255062ffb4b8cf3067151e4b6e498b7584ac243dcea4df0715a93689450da31f"
+  "sha256": "2b55cca628167dbda9774d9fa22eac1ecf4ec68c743d6c0079f1919e95677fa3"
  }
 }
