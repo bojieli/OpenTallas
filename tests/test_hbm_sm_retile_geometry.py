@@ -57,3 +57,13 @@ def test_network_probe_preserves_all_result_associations():
         assert m['paths'][f'result_{sm.name}'][0] == bid
     assert len(m['buses']) == len({b[0] for b in m['buses']})
     assert m['network_probe'] is True
+
+
+def test_actual_result_capture_bays_are_reserved_before_tree_placement():
+    m = H.build(H.R24SM3, network_probe=True)
+    assert len(m['result_pin_bays']) == 32
+    for bay in m['result_pin_bays']:
+        a, b, c, d = bay['box_um']
+        for inst in m['insts']:
+            x, y, xx, yy = inst.box()
+            assert not (x < c and a < xx and y < d and b < yy), (bay['sm'], inst.name)
