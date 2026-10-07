@@ -31,10 +31,14 @@ def command(a):
   # (owner 2026-10-06): in max = ss+150+100, in min = ff-50, out max = 100-(ss-150), out min = -(ff+50)
   ss=a.ins_ss if a.ins_ss else 150.0; ff=a.ins_ff if a.ins_ff else 175.0
   io=lambda v: str(round(v/1000.0,4))
+  # --wc-only (BF rowfix closure 2026-10-07): ORFS repairs at the WC (SS) corner only, the route's hold IO follows the
+  # SS insertion (pass --ins-ff = --ins-ss); --hold-corners BC made ORFS CORNERS=BC, i.e. setup repaired at FF (bf_m2)
+  hc='WC' if a.wc_only else 'BC'
+  if a.hitfix: cmd+=['--param','HITFIX=1']
   cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
-   '--hold-corners','BC','--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',
+   '--hold-corners',hc,'--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',
    '--step-tcl','PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl','--step-tcl','PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl']
  else:
   cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2','--hold-corners','WC,BC']
@@ -50,6 +54,7 @@ def command(a):
  '--orfs-var','PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
  '--keep-heavy-artifacts','--nickname-tag',a.tag,
  '--keep-workdir',str(a.work),'--output',str(a.output)]
+ if a.extra: cmd+=a.extra.split()
  return cmd
 
 def main():
@@ -57,6 +62,7 @@ def main():
  p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55')
  p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
+ p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--extra',default='')
  a=p.parse_args()
  cmd=command(a)
  if a.print:

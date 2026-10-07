@@ -358,15 +358,18 @@ module ot_v41_rom_elem_w10 #(
 `else
                 r_dp[dc] <= xs_p - ((cfg_v_e && cfg_a_e == 5'(NSEG + dc)) ? cfg_d_e[8:1] : c_u0[dc]);
 `endif
+        wire [1:0] hk2;
         for (genvar hk = 0; hk < 2; hk = hk + 1) begin : g_hk
             wire [NSEG-1:0] cm;
             for (genvar fc = 0; fc < NSEG; fc = fc + 1) begin : g_cls
                 assign cm[fc] = (n_c == SW'(fc)) && (r_dp[fc] == {2'd0, n_q, n_j});
             end
-            (* keep *) wire hk_v = n_run && !fam && xs_v_e && (|cm) && xs_b_e == n_b && xs_pos_e == n_pos;
+            (* keep *) wire hk_v;
+            assign hk_v = n_run && !fam && xs_v_e && (|cm) && xs_b_e == n_b && xs_pos_e == n_pos;
+            assign hk2[hk] = hk_v;
         end
-        assign hit_q = g_hk[0].hk_v;
-        assign hit_s = g_hk[1].hk_v;
+        assign hit_q = hk2[0];
+        assign hit_s = hk2[1];
 `ifndef SYNTHESIS
 `ifndef W10_MUTANT_FRONT_PAIR
         // the registered-offset match equals the original adder match whenever the x boundary register is live
