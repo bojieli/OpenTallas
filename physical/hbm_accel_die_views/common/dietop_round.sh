@@ -25,6 +25,17 @@ out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close 
        'set_thread_count $::env(OT_THREADS)',
        head + 'source /work/place.tcl',
        'step placed { write_db /work/ckpt_placed.odb }',
+       'exit']
+open(dst, 'w').write('\n'.join(out))
+libs = [l for l in head.splitlines() if l.startswith(('read_liberty', 'define_corners'))]
+out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f',
+       '  regexp {VmRSS:\\s+(\\d+)} $s -> r; regexp {VmHWM:\\s+(\\d+)} $s -> h',
+       '  puts "OTMEM $tag rss_mb=[expr {$r/1024}] hwm_mb=[expr {$h/1024}] t=[clock seconds]"; flush stdout }',
+       'proc step {name body} { set t0 [clock milliseconds]',
+       '  if {[catch {uplevel 1 $body} err]} { puts "OT_STEP_FAIL $name $err"; flush stdout; return 0 }',
+       '  puts "OT_TIME step=$name s=[format %.1f [expr {([clock milliseconds]-$t0)/1000.0}]]"; mem $name; flush stdout; return 1 }',
+       'set_thread_count $::env(OT_THREADS)'] + libs + [
+       'read_db /work/ckpt_placed.odb',
        'step coarse { set b [ord::get_db_block]; set p [expr {%s/15.0}]' % tile,
        '  foreach ln {M2 M3} { odb::dbTrackGrid_destroy [$b findTrackGrid [[ord::get_db_tech] findLayer $ln]]',
        '    make_tracks $ln -x_offset 0.009 -x_pitch $p -y_offset 0.009 -y_pitch $p }',
@@ -45,11 +56,11 @@ out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close 
        '  step est { set_wire_rc -signal -layer M7; set_wire_rc -clock -layer M7; estimate_parasitics -global_routing }',
        '  puts "OT_PARASITICS global_route_estimate" }',
        sta]
-open(dst, 'w').write('\n'.join(out))
+open(dst.replace('dietop.tcl', 'dietop_b.tcl'), 'w').write('\n'.join(out))
 PY
 grep -c "" $D/dietop.tcl >/dev/null
 N=hfd_dietop_$(basename $D)
 date -u +%FT%TZ > $D/run.start
 docker run --rm --name $N --cpus=$T --memory=${M}g -e OT_THREADS=$T -v $D:/work -w /work openroad/orfs:asap7lock \
-  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/dietop.tcl > /work/dietop.log 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/dietop.tcl > /work/dietop.log 2>&1 && /usr/bin/time -v openroad -threads $T -no_init -exit /work/dietop_b.tcl > /work/dietop_b.log 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"
 echo $? > $D/run.exit; date -u +%FT%TZ > $D/run.end
