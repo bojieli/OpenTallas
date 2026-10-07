@@ -552,7 +552,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def toolchain(self, host):
         """ORFS image digests + bench tool versions of a host (cached 1 h)."""
         c = self.tool_cache.get(host)
-        if c and time.time() - c[0] < 3600:
+        if c and time.time() - c[0] < (3600 if c[1] else 15):
             return c[1]
         r = ssh(host, TOOLPROBE, timeout=60)
         info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
@@ -601,7 +601,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if ok:
                 return h, None
             why.append(msg)
-        return None, "; ".join(why)
+        return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
 
 
 TOOL_REF_HOST = "ot-epyc3"
