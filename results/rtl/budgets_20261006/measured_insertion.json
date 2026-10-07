@@ -655,24 +655,24 @@
    "budget": null
   },
   "hfd_hc": {
-   "job": "hbm_hc_quarter_01353018a",
-   "source_commit": "01353018a6761c43bfa05c659d8339be14fc48e8",
+   "job": "hbm_hc_quarter_r24_1ad3621a6",
+   "source_commit": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
    "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_01353018a",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_r24_1ad3621a6",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T20:15:05-07:00",
+   "measured_at": "2026-10-07T09:02:24-07:00",
    "ss": {
-    "mean": 4680,
-    "min": 4607,
-    "max": 5011
+    "mean": 1307,
+    "min": 1282,
+    "max": 1341
    },
    "ff": {
-    "mean": 3114,
-    "min": 3056,
-    "max": 3358
+    "mean": 898,
+    "min": 878,
+    "max": 926
    },
-   "boundary_n": 2049,
+   "boundary_n": 2048,
    "budget": null
   },
   "hfd_index_q_b1": {
@@ -2458,5 +2458,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T08:57:25-07:00"
+ "updated": "2026-10-07T09:02:24-07:00"
 }
