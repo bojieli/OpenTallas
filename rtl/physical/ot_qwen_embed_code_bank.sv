@@ -19,6 +19,7 @@ module ot_qwen_embed_code_bank #(
     input wire o_cr,
     output reg fault
 );
+    (* keep="true", dont_touch="true" *) reg fault_n;
     (* keep="true", dont_touch="true" *) reg iv_q, cr_q, iv_n, cr_n;
     (* keep="true", dont_touch="true" *) reg [11:0] ia_q, ia_n;
     always @(posedge clk) begin ia_q <= i_addr; ia_n <= ~i_addr; end
@@ -41,7 +42,7 @@ module ot_qwen_embed_code_bank #(
     always @(posedge clk) o_data <= capture_data;
     // Keep one enable per 32-bit capture lane, avoiding a 512-load enable.
     (* keep = "true", dont_touch = "true" *) reg [15:0] capture_en_q;
-    wire meta_bad = (iv_n != ~iv_q) || (cr_n != ~cr_q) ||
+    wire meta_bad = (fault_n != ~fault) || (iv_n != ~iv_q) || (cr_n != ~cr_q) ||
         (iv_q && ia_n != ~ia_q) || (wp_n != ~wp) || (rp_n != ~rp) ||
         (credits_n != ~credits) || (phase_n != ~phase) ||
         (valid_n != ~valid_pipe) || (ce_n != ~ce_q) ||
@@ -79,7 +80,7 @@ module ot_qwen_embed_code_bank #(
     (* keep="true", dont_touch="true" *) always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             wp <= 0; wp_n <= 3; rp <= 0; rp_n <= 3; phase <= 0; phase_n <= 1; credits <= OCRED; credits_n <= ~OCRED;
-            ce_q <= 0; ce_n <= 1; valid_pipe <= 0; valid_n <= 15; o_v <= 0; i_cr <= 0; fault <= 0;
+            ce_q <= 0; ce_n <= 1; valid_pipe <= 0; valid_n <= 15; o_v <= 0; i_cr <= 0; fault <= 0; fault_n <= 1;
         end else begin
             phase <= ~phase; phase_n <= phase;
             ce_q <= launch; ce_n <= ~launch;
@@ -89,7 +90,7 @@ module ot_qwen_embed_code_bank #(
             if (iv_q && !full && !fault && !bad) begin wp <= wp + 1'b1; wp_n <= ~(wp+2'd1); end
             if (launch) begin rp <= rp + 1'b1; rp_n <= ~(rp+2'd1); end
             credits <= next_credits; credits_n <= ~next_credits;
-            if (bad) fault <= 1;
+            if (bad) begin fault <= 1; fault_n <= 0; end
         end
     end
 endmodule
