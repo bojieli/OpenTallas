@@ -12981,3 +12981,75 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
                      serial_token_contribution="cold embedding only; die hops/stations and consumer credit return remain additive"),
         physical_closed=False, adopted=False, headline_credit=0,
         source="rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8")
+
+
+def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9):
+    """Exact shared-ROM alternative; no full-ROM replication or silent slot squeeze.
+
+    Conservatively store a complete row, then multicast bit-identical codes and
+    their BF16 scale to every compute die. Existing link technology parameters
+    are assumptions, not a new measured PHY claim. The 512-bit endpoint limits
+    bandwidth before the package's nominal 4.2 TB/s link roof.
+    """
+    import math
+    import json
+    from pathlib import Path
+    if compute_dies < 1 or clock_hz <= 0:
+        raise ValueError("positive die count and clock required")
+    bank = qwen_embedding_bank_closure_model()
+    tech = json.loads((Path(__file__).resolve().parents[1] / "configs/hardware/technology.json").read_text())
+    link = tech["links"]["rom_package_ucie"]
+    hop_cycles = math.ceil(link["hop_latency_s"]["value"] * clock_hz)
+    code_cycles = bank["latency"]["code_row_service_cycles"]
+    # No row-read/transport overlap credited. Scale is a separate parallel
+    # request, provisionally bounded by the same 18-cycle root-read envelope.
+    response_beats = math.ceil((4096 + 2) / 64)
+    fixed_endpoint_cycles = 6  # 2 request capture / 2 TX / 2 RX, proposed
+    service_cycles = 1 + hop_cycles + code_cycles + response_beats + hop_cycles + fixed_endpoint_cycles
+    old_handoff = (link["hop_latency_s"]["value"] + 4098 / link["bytes_s"]["value"]) * clock_hz
+    leaf_reservation = bank["replica_count"]["code_bank_pairs"] * 270 * 100.44 / 1e6
+    scale_reservation = bank["replica_count"]["scale_macros"] * bank["macro"]["area_um2"] / .60 / 1e6
+    phy_each = 10.0
+    shared_reservation = math.ceil((leaf_reservation + scale_reservation + compute_dies*phy_each + 20)/8)*8
+    base_compute_die = 821.3  # r21 area supplied by current die coordinator
+    compute_die = base_compute_die - 11.046 + phy_each
+    return dict(schema="opentallas.qwen.shared_embedding_die.proposal.v1", adopted=False,
+        exactness="identical released INT8 code bytes and BF16 row scale; no arithmetic, decode-order or tensor changes",
+        inventory=dict(compute_dies=compute_dies, embedding_dies=1,
+                       code_macro_count=4748, scale_macro_count=3,
+                       removed_full_ROM_copies=compute_dies-1),
+        area_mm2=dict(original_compute_die=base_compute_die,
+                      original_embedding_reservation=11.046,
+                      proposed_compute_die_before_receiver_logic=compute_die,
+                      extra_PHY_on_each_compute_die=phy_each,
+                      code_bank_frames=leaf_reservation, scale_macro_reservation=scale_reservation,
+                      embedding_PHY_reservation=compute_dies*phy_each,
+                      embedding_tree_buffer_clock_corridor_reservation=20,
+                      proposed_embedding_die=shared_reservation,
+                      reticle_limit=858,
+                      compute_receiver_logic_headroom=858-compute_die,
+                      fit="planned area envelope only; slot geometry/PDN/IR and protected buffers not yet implemented"),
+        service=dict(request_bytes=4, response_bytes=4098, response_beats=response_beats,
+                     simultaneous_receiver_count=compute_dies, link_hop_cycles=hop_cycles,
+                     link_hop_source="configs/hardware/technology.json: assumed rom_package_ucie, not routed PHY",
+                     endpoint_bytes_per_cycle=64, ROM_bytes_per_cycle=32,
+                     actual_bandwidth_upper_bytes_s=min(32*clock_hz,link['bytes_s']['value']),
+                     per_receiver_credit_slots=4,
+                     row_buffer_payload_bytes=4096,
+                     row_buffer_protected_bits=64*576,
+                     mutable_buffer_protection="64-bit SECDED words; metadata/credits require protected state before adoption",
+                     multicast="separate registered TX per die; launch only when all four have reserved credits; no combinational ready path",
+                     arbitration="single-user priority; independent request batching must not delay selected request"),
+        latency=dict(code_row_cycles=code_cycles, scale_root_bound_cycles=18,
+                     scale_bound_status="proposed; must route scale bank before adoption",
+                     endpoint_cycles=fixed_endpoint_cycles, endpoint_status="proposed registered stages",
+                     conservative_total_service_cycles=service_cycles,
+                     original_code_row_cycles=64,
+                     existing_model_handoff_cycles=old_handoff,
+                     total_delta_including_bank_vs_existing=math.ceil(service_cycles-64-old_handoff),
+                     bank_delta_already_priced=bank['latency']['extra_code_row_cycles'],
+                     additional_transport_delta_after_bank=math.ceil(service_cycles-64-old_handoff)-bank['latency']['extra_code_row_cycles'],
+                     die_station_hops="must add actual generated relay count; zero assumed credit forbidden",
+                     overlap_credit=0),
+        physical_closed=False, adopted_rate_tok_s=None,
+        remaining="route code/scale leaves and protected row buffer, exact multicast endpoint, package PHY contract, station counts, die floorplan/STA/DRC/IR")
