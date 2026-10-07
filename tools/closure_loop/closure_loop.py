@@ -861,6 +861,30 @@ def publish_measured():
     stamp.write_text(now_iso())
 
 
+def checkpoint_location(j):
+    """Bind resume work to its actual checkpoint, never merely to synced source."""
+    if not j.get("resume"):
+        return None
+    if j.get("checkpoint_affinity"):
+        return j["checkpoint_affinity"]
+    resume = j["resume"] if isinstance(j["resume"], dict) else {}
+    proof = resume.get("next_stage_dryrun") or {}
+    location = dict(host=resume.get("to_host") or proof.get("host") or j.get("host"),
+                    run=resume.get("run") or proof.get("run") or j.get("run"))
+    if not location["host"] or not location["run"]:
+        raise ValueError("checkpoint resume lacks a host/run binding")
+    j["checkpoint_affinity"] = location
+    return location
+
+
+def require_checkpoint_location(j):
+    location = checkpoint_location(j)
+    if location and (j.get("host"), j.get("run")) != (location["host"], location["run"]):
+        raise ValueError("checkpoint resume host/run changed without a verified full checkpoint transfer: "
+                         f"expected {location['host']}:{location['run']}")
+    return location
+
+
 @contextmanager
 def prepared_source_archive(source, commit):
     """Check declared dependencies before remote mutation; yield the exact checked tar."""
@@ -875,6 +899,7 @@ def prepared_source_archive(source, commit):
 
 
 def sync_source(j):
+    require_checkpoint_location(j)
     j["source_synced"] = False
     spec, host = j["spec"], j["host"]
     src = spec["source"]
@@ -1361,7 +1386,7 @@ def crash(j, st, fleet, why):
         return
     j["retries_used"] = 1
     j["attempt"] += 1
-    if resource:
+    if resource and not checkpoint_location(j):
         h, _ = fleet.choose(j["spec"], exclude=j["hosts_tried"])
         if h:
             event(j, f"{st['key']} crashed ({why}); resource-related -> retry once on {host_cfg(h)['label']}")
@@ -1422,11 +1447,12 @@ def failure_text(j):
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
+    require_checkpoint_location(j)
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
-        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
+        if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
@@ -1637,6 +1663,9 @@ def step(j, fleet):
         bench_par_decide(j, stl)
     if not bench_track(j, fleet, stl):
         return
+    if s == "QUEUED" and checkpoint_location(j):
+        require_checkpoint_location(j)
+        j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
         with FLEET_LOCK:
             h, why = fleet.choose(spec, exclude=[])
@@ -2153,6 +2182,7 @@ def migrate_checkpoint(j, dest):
     whole run dir (src snapshot + work/orfs results/logs/objects) to the same path on dest (tar keeps mtimes), patch
     the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
     relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
+    require_checkpoint_location(j)
     src = j["host"]
     if src == dest or (is_local(src) and is_local(dest)):
         raise ValueError("checkpoint migration requires a different host")
@@ -2186,8 +2216,16 @@ def migrate_checkpoint(j, dest):
         raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
     dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
     orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
-    chk = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600).stdout if orfs else ""
-    j["resume"] = dict(from_host=src, at=now_iso(), transfer_s=round(time.time() - t0), check=chk.strip()[-400:])
+    if not orfs:
+        raise RuntimeError("checkpoint transfer cannot be verified: missing ORFS checkpoint path")
+    check = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600)
+    chk = check.stdout
+    if check.returncode or not re.search(r"^RESUME_OK=1$", chk, re.M):
+        raise RuntimeError(f"checkpoint transfer resume check failed rc={check.returncode}: {chk[-400:]}")
+    j["resume"] = dict(from_host=src, to_host=dest, run=run, at=now_iso(),
+                       transfer_s=round(time.time() - t0), check=chk.strip()[-400:],
+                       checkpoint_transfer_verified=True)
+    j["checkpoint_affinity"] = dict(host=dest, run=run)
     j["hosts_tried"].append(dest)
     j.update(host=dest, status="READY", attempt=j["attempt"] + 1, wait=None)
     event(j, f"checkpoint moved in {j['resume']['transfer_s']} s; make dry-run: {' '.join(chk.split())[-200:]}")
@@ -2199,7 +2237,7 @@ def migrate_overloaded(jobs, fleet):
     """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
     jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
     for j in jobs:
-        if j["status"] in TERMINAL or not j.get("host"):
+        if j["status"] in TERMINAL or not j.get("host") or checkpoint_location(j):
             continue
         cfg = host_cfg(j["host"])
         info = fleet.probe(j["host"])
@@ -2272,7 +2310,7 @@ def handle_transient(j, fleet, ex):
     st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
     movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
                                                      and not j.get("stage_tag"))
-    if n >= 3 and movable and j.get("host"):
+    if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
         h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
         if h:
             event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
