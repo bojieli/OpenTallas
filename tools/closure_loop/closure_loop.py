@@ -1437,6 +1437,43 @@ def stop_main_for_bench(j):
             event(j, f"bench failed: could not stop {j.get('stage_key')}: {ex}")
 
 
+STUCK_S = 3 * 3600          # watchdog: no file under the job's run dir written for 3 h while a stage runs
+STUCK_CHECK_S = 1800
+
+
+def stuck_watchdog(j, st):
+    """STUCK-STAGE WATCHDOG (2026-10-07; hbm-norm-engine x2 sat 9.5 h in Yosys with no log growth): a running stage
+    whose run dir has had no file written for 3 h is stopped and re-run once (same host, next attempt); a second stuck
+    run ends NEEDS_HUMAN.  Checked every 30 min per job."""
+    now = time.time()
+    if now - j.get("wd_checked", 0) < STUCK_CHECK_S:
+        return
+    j["wd_checked"] = now
+    try:
+        started = dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+    except Exception:  # noqa: BLE001
+        return
+    if now - started < STUCK_S:
+        return
+    mins = STUCK_S // 60
+    r = ssh(j["host"], f"find {j['run']}/cl {j['run']}/routes {j['run']}/bench -newermt '-{mins} minutes' -type f "
+                       f"-print -quit 2>/dev/null; echo END", timeout=300)
+    if r.returncode or "END" not in r.stdout:
+        return                          # unreachable / slow: no verdict this time
+    if r.stdout.replace("END", "").strip():
+        return
+    kill_own_stage(j)
+    if j.get("wd_requeued"):
+        finish(j, "NEEDS_HUMAN", f"{st['key']} stuck twice: no file written under the run dir for {mins // 60} h",
+               f"NEEDS_HUMAN: {st['key']} stuck twice (no log growth for {mins // 60} h); stage stopped")
+        return
+    j["wd_requeued"] = now_iso()
+    j["attempt"] += 1
+    j["status"] = "READY"
+    event(j, f"watchdog: {st['key']} wrote no file for {mins // 60} h; stopped and re-run once")
+    ledger(j, f"WATCHDOG: {st['key']} stuck {mins // 60} h without log growth; re-run once (attempt {j['attempt']})")
+
+
 def step(j, fleet):
     spec = j["spec"]
     stl = stage_list(spec)
@@ -1493,6 +1530,7 @@ def step(j, fleet):
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
         if state in ("RUNNING", "STARTING"):
+            stuck_watchdog(j, st)
             return
         if state == "UNREACHABLE":
             j["unreachable"] = j.get("unreachable", 0) + 1

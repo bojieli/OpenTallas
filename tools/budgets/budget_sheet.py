@@ -219,8 +219,9 @@ def main():
         for r, l in per_region.items():
             have = [(x[0], x[1]) for x in l if x[0]]
             if have:
-                region_flop[(name, r)] = (round(max(i[0] + L_['ss'] for i, L_ in have), 1),
-                                          round(max(i[1] + L_['ff'] for i, L_ in have), 1))
+                e_ = ((plan or {}).get('regions', {}).get(r, {}) or {}).get('early_branch_ps', 0.0)   # early branch:
+                region_flop[(name, r)] = (round(max(i[0] + L_['ss'] for i, L_ in have) + e_, 1),          # flops stay
+                                          round(max(i[1] + L_['ff'] for i, L_ in have) + e_, 1))          # aligned
         for it in d['insts']:
             rec = M.setdefault(it[1], dict(master=it[1], kinds=set(), dies={}, size_um=[it[7], it[8]], ports={},
                                             clock=dict(ports=set(), regions=set(), domains=set(), entry_ss=[], entry_ff=[],
