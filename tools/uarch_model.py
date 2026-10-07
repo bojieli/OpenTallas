@@ -13890,3 +13890,9 @@ def qwen_embedding_padded_ingress_model(address_bits=18):
         limitations='Per-endpoint NLDM delta, below-table load extrapolation; placement/clock and routed delays remain unqualified')
     m['remaining'].insert(0,'Verify all ten fixed buffer stages per input in synthesis and final routed netlists')
     return m
+
+
+def ha2_truecredit_parent_clock_model():
+    """Price the actual ring-delay/launch-register closure candidate; not adopted."""
+    from tools.ha2_truecredit_parent_clock_model import model
+    return model()
