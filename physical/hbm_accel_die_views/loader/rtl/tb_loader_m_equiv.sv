@@ -154,6 +154,9 @@ module tb_loader_m_equiv;
     ldm_env #(.MARGIN(0), .SEED(`SEED)) a (.clk_host(clk_host), .clk_mem(clk_mem), .rst_n(rst_n), .mw_hash(mwa), .dw_hash(dwa), .mw_n(mna), .dw_n(dna));
     ldm_env #(.MARGIN(`MARGIN_B), .SEED(`SEED)) b (.clk_host(clk_host), .clk_mem(clk_mem), .rst_n(rst_n), .mw_hash(mwb), .dw_hash(dwb), .mw_n(mnb), .dw_n(dnb));
     integer i, bad = 0, st0 = 0, st1 = 0, st2 = 0, st3 = 0;
+`ifdef LDM_TMO
+    initial begin #(`LDM_TMO); $display("LDM_EQUIV TIMEOUT a.done=%0d b.done=%0d", a.done, b.done); $fatal(1, "FAIL"); end
+`endif
     initial begin
         repeat (5) @(posedge clk_host); rst_n = 1;
         wait (a.done && b.done);

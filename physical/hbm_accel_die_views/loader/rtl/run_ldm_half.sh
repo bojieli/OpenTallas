@@ -10,7 +10,7 @@ L=physical/hbm_accel_die_views/loader/rtl
 DEPS="physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hdc/ot_hdc_prefix.sv rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv rtl/gpu_sys/ot_gpu_cdc_fifo.sv rtl/link/ot_link_afifo.sv rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv rtl/hbm_accel/loader/ot_hbm_accel_loader.sv rtl/hbm_accel/loader/ot_hbm_accel_store.sv"
 run() { # name seed defines... -- files
   local n=$1 s=$2; shift 2; local defs=(); while [ "$1" != "--" ]; do defs+=("$1"); shift; done; shift
-  verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -DSEED=$s -DNPROG=$NPROG -DMARGIN_B=1 "${defs[@]}" --top-module tb_loader_m_equiv \
+  verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -DSEED=$s -DNPROG=$NPROG -DMARGIN_B=1 -DLDM_TMO=${LDM_TMO:-600000} "${defs[@]}" --top-module tb_loader_m_equiv \
     -Mdir $O/$n.$s.obj -o sim $DEPS "$@" $L/tb_loader_m_equiv.sv > $O/$n.$s.build 2>&1 || { echo "$n seed $s BUILD_FAILED"; grep -m5 -i error $O/$n.$s.build; return 2; }
   timeout 3600 $O/$n.$s.obj/sim > $O/$n.$s.log 2>&1; local rc=$?
   echo "$n seed $s rc=$rc $(grep LDM_EQUIV $O/$n.$s.log | tail -1)"
