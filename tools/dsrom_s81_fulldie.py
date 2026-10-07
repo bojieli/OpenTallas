@@ -3326,10 +3326,14 @@ def _hop_fix(m, P):
                     allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + SLOTS8 * SLOT_H8)]
                 else:
                     allowed = list(cor.values())
+                # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
+                # stations into each other: 41 / 49 / 49 overlaps, all hop-fix stations)
+                PAD = 2.16
                 for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
-                    pl = P.near(cx, cy, w_, h_, allowed, prev=cur, horiz=horiz,
+                    pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
                                 reach=R - 10.0, span=span, rows=rows)
                     if pl:
+                        pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
                         break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
