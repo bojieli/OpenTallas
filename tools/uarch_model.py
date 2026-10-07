@@ -13635,3 +13635,52 @@ def qwen_core_separate_load_schedule(contexts=(1, 8192)):
                 instruction_count=len(program), rows=rows,
                 program_sha256=hashlib.sha256(json.dumps(program, sort_keys=True,
                     separators=(',', ':')).encode()).hexdigest())
+
+
+def qwen_embedding_ingress_island_model(address_bits=18):
+    """Move existing embedding capture FFs into a separately hardened pin island.
+
+    Measured 860d3eb7c input holds fail by32.38/36.34ps; inserting another
+    same-clock input stage would not repair those first endpoints. This sizes
+    the existing capture state as its own small clock-tree/floorplan element.
+    No shorter insertion or closed timing is assumed before measurement.
+    """
+    if address_bits not in (12, 18):
+        raise ValueError('Only actual code12 and scale18 ingress shapes qualify')
+    rails = 2 * (address_bits + 2)
+    # Exact pinned ASAP7 SS areas: DFFHQN0.2916, DFFASRHQN0.37908,
+    # BUFx2 0.0729, BUFx12f0.26244, BUFx24 0.4374 square micrometres.
+    ff_area = 2*address_bits*0.2916 + 4*0.37908
+    reserved_hold_buffers = 6*rails
+    reserved_output_buffers = rails
+    area = ff_area + reserved_hold_buffers*0.0729 + rails*0.26244 + 4*0.4374
+    frame, core = 15.12, 10.8
+    return dict(schema='opentallas.qwen.embedding_ingress_island.v1', adopted=False,
+        address_bits=address_bits, MACs_per_cycle=0, compute_intensity_MAC_per_byte=0,
+        memory_port_bytes_per_cycle=0,
+        communication_intensity='One existing address/valid/credit capture every rising edge; no queue or added protocol',
+        boundary_bits_per_cycle=dict(inputs=address_bits+2,outputs=rails,clock=1,reset=1),
+        state=dict(moved_existing_FFs=rails,added_FFs=0,primary_shadow_separate=True),
+        replica_count=2374 if address_bits==12 else 3,
+        mux_demux_fanout=dict(new_muxes=0,new_demuxes=0,clock_sinks=rails,
+                             input_fanout=2,output_obligation_fF=80),
+        area=dict(FF_um2=ff_area,reserved_hold_buffers=reserved_hold_buffers,
+                  reserved_output_buffers=reserved_output_buffers,clock_buffer_reserve=4,
+                  reserved_cell_um2=area,frame_um=[frame,frame],core_um=[core,core],
+                  utilisation_ceiling=.60,planned_utilisation=area/core**2,
+                  slot_fit=area<=.60*core**2,
+                  leaf_slot='Inside existing logic strip above ROM: scale y70 and code y80; no die-area credit until legal placement'),
+        routing=dict(pin_pitch_um=.096,output_tracks=rails,usable_face_um=core,
+                     face_track_capacity=int(core/.096),planned_face_fit=rails<=int(core/.096),
+                     final_parent_wire_target_um=100,parent_pin_binding='OPEN until real island view'),
+        clock_plan=dict(domain='stream1p2',period_ps=833.333,setup_uncertainty_ps=60,
+                        hold_uncertainty_ps=25,input_transition_ps=150,
+                        local_clock_tree='One separately hardened island; capture FFs moved out of payload leaf CTS',
+                        interface_budget='Unchanged die 166.667ps outside plus150ps inter-region and50ps hold skew; reference actual valid_q clock arrival',
+                        measured_insertion_required=True,exceptions_added=[]),
+        latency=dict(moved_capture_cycles=1,added_cycles=0,leaf_cycles=7,II=2,
+                     composed_root_bound_cycles=19,shared_service_cycles=801),
+        remaining=['Island SS/FF+15ps/DRC0 under real IO',
+                   'Bind island LEF/LIB/clock and pin placement inside full leaf',
+                   'Full leaf reset-removal and reg-to-reg hold remain independently open'],
+        physical_closed=False,rate_credit=0)
