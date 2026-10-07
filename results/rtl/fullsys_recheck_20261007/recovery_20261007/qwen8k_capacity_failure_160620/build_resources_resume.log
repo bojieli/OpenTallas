@@ -1,0 +1,24 @@
+Command exited with non-zero status 2
+	Command being timed: "make -j 2 -f Vtb_hbm_integrated_minimum_parent_hier.mk hier_build OPT_SLOW=-O0 OPT_FAST=-O0 OPT_GLOBAL=-O0"
+	User time (seconds): 2628.42
+	System time (seconds): 105.01
+	Percent of CPU this job got: 199%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 22:50.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 259045868
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 121
+	Minor (reclaiming a frame) page faults: 114998343
+	Voluntary context switches: 1902
+	Involuntary context switches: 4522
+	Swaps: 0
+	File system inputs: 1512064
+	File system outputs: 10181848
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2

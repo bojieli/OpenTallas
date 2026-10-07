@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.fullsys_recheck.qwen_capacity_failure.v1",
+  "failure_utc": "2026-10-07T16:06:20Z",
+  "recorded_utc": "2026-10-07T16:41:04.556799+00:00",
+  "host": "ot-epyc3",
+  "remote_campaign": "/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k",
+  "result": "BUILD_CAPACITY_FAILURE_NOT_RTL_VERDICT",
+  "build_exit": 2,
+  "guard_available_GiB": 67,
+  "verilator_signal": 15,
+  "observed_make_parallelism": 2,
+  "maximum_reported_RSS_kB": 259045868,
+  "RSS_scope": "GNU time maximum child RSS; not concurrent process-tree total. Do not use as total memory reservation.",
+  "duplicate_launch_evidence": "build_resume.log terminates two vec_a hierMkArgs.f invocations, separately reported under .mk and .sv targets at generated hier.mk:269. Remote recovery owner additionally observed ordinary multi-target rule at line268.",
+  "retained_inventory_remote_owner_report": {
+    "objects": 200,
+    "archives": 20,
+    "files": 4601,
+    "bytes": 8057323364,
+    "previous_objects": 168,
+    "independent_inventory_receipt": "Not included; remote owner report only."
+  },
+  "source_pin": "recovered_source_manifest.json campaign lorentz-margin-qwen8k",
+  "scope": "Minimum retained stage. No numerical execution or exactness verdict from this failure.",
+  "recovery_plan": {
+    "status": "PROPOSED_NOT_LAUNCHED_BY_THIS_RECORD",
+    "preserve": "All source, generated hierarchy, objects, archives and historical logs.",
+    "order": "Existing DS recovery waiter retains priority; Qwen continuation waits for fsr/ds1m_recovery.done and independently passes measured admission.",
+    "parallelism": 1,
+    "reservation_basis": "Conservative447GiB measured campaign peak plus actual host headroom; use actual inventory for disk admission.",
+    "output": "Distinct continuation build/runtime/resource/admission records; do not overwrite this failure.",
+    "gate": "Build success alone is insufficient. Require base exactness, explicit successful wrong-release refusal and corrupt-gold mismatch failure, source/fixture pins, cycles."
+  },
+  "files": {
+    "build.exit": {
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "bytes": 2
+    },
+    "build_resources_resume.log": {
+      "sha256": "5a01dcfeaeff255eefff99f41861b1eb835d3b6a68173b49c1700b533463d5fa",
+      "bytes": 896
+    },
+    "build_resume.log": {
+      "sha256": "b4f6f9883745e3bb7499b21717d1101e9d05f03705f76f3076fb9ed8a6bce515",
+      "bytes": 86852
+    },
+    "memguard.log": {
+      "sha256": "bfdb00656f7b795cc3971cf530381870cc30591a5b872be55df4adcb3ab3a30c",
+      "bytes": 104
+    },
+    "qwen8k.done": {
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "bytes": 2
+    },
+    "recovered_source_manifest.json": {
+      "sha256": "1aa1774ff7a9408f18d092d44d9666e38c676a4d44e1a138a8c53d225aafc284",
+      "bytes": 86217
+    }
+  }
+}

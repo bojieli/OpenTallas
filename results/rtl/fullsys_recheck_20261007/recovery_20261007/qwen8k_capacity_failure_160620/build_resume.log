@@ -1,0 +1,604 @@
+make -f Vot_dsrom_su_norm_f.mk -C Vot_dsrom_su_norm_f VM_PREFIX=Vot_dsrom_su_norm_f
+make -f Vot_ds_hbm_simt_sm20_a.mk -C Vot_ds_hbm_simt_sm20_a VM_PREFIX=Vot_ds_hbm_simt_sm20_a
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_dsrom_su_norm_f'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_ds_hbm_simt_sm20_a'
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -x c++-header Vot_ds_hbm_simt_sm20_a__pch.h -o Vot_ds_hbm_simt_sm20_a__pch.h.fast.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.fast -c Vot_dsrom_su_norm_f_vm_classes_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -x c++-header Vot_ds_hbm_simt_sm20_a__pch.h -o Vot_ds_hbm_simt_sm20_a__pch.h.slow.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -c -o ot_ds_hbm_simt_sm20_a.o ot_ds_hbm_simt_sm20_a.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.fast -c Vot_ds_hbm_simt_sm20_a_vm_classes_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.fast -c Vot_ds_hbm_simt_sm20_a_vm_classes_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.fast -c Vot_ds_hbm_simt_sm20_a_vm_classes_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.fast -c Vot_ds_hbm_simt_sm20_a__Dpi.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.slow -c Vot_ds_hbm_simt_sm20_a_vm_classes_Slow_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.slow -c Vot_ds_hbm_simt_sm20_a_vm_classes_Slow_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.slow -c Vot_ds_hbm_simt_sm20_a_vm_classes_Slow_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_ds_hbm_simt_sm20_a__pch.h.slow -c Vot_ds_hbm_simt_sm20_a__Syms__Slow.cpp
+rm libot_ds_hbm_simt_sm20_a.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_ds_hbm_simt_sm20_a'
+make -f Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a.mk -C Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a VM_PREFIX=Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a'
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -x c++-header Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h -o Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.fast.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -x c++-header Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h -o Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -c -o ot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a.o ot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.fast -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a_vm_classes_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.fast -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a_vm_classes_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.fast -c Vot_dsrom_su_norm_f_vm_classes_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.fast -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a_vm_classes_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.fast -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__Dpi.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__ConstPool__0__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__0__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__1__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__2__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__3__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__4__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__5__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a___024root__6__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__pch.h.slow -c Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a__Syms__Slow.cpp
+rm libot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hbm_selected_c12___05Fot_hdc_v41x_softplus_a'
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.fast -c Vot_dsrom_su_norm_f_vm_classes_2.cpp
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_dsrom_su_hcpost_7__hierMkArgs.f
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_dsrom_su_hcpost_group_3/ot_dsrom_su_hcpost_group_3.sv:6:8: ... Location of module with timescale
+    6 | module ot_dsrom_su_hcpost_group_3 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_dsrom_su_hcpost.g_g[255].u.g_k[3].u.u_m4.u.u_k0'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.fast -c Vot_dsrom_su_norm_f__Dpi.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.slow -c Vot_dsrom_su_norm_f_vm_classes_Slow_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.slow -c Vot_dsrom_su_norm_f_vm_classes_Slow_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.slow -c Vot_dsrom_su_norm_f_vm_classes_Slow_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -DOT_KIND=1 -DOT_D=4096 -DOT_QUANT=0 -DOT_POSITION=8191   -include Vot_dsrom_su_norm_f__pch.h.slow -c Vot_dsrom_su_norm_f__Syms__Slow.cpp
+rm libot_dsrom_su_norm_f.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_dsrom_su_norm_f'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_a__hierMkArgs.f
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_lane_6/ot_hdc_v41x_vec_lane_6.sv:6:8: ... Location of module with timescale
+    6 | module ot_hdc_v41x_vec_lane_6 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:279:23: Operator VAR 'H_A' expects 16 bits on the Initial value, but Initial value's VARREF 'ALAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  279 |     localparam [15:0] H_A = ALAT;
+      |                       ^~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:23: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:35: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                   ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:50: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:65: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:80: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:97: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                                 ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:281:23: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  281 |                       H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:151:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  151 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:152:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  152 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:749:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_hdc_v41x_vec.u_cf'
+  749 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6b' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_exp.g_h[6].u_m....g_l6.u.u.u_k1'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:38: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:386:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                 : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_exp'
+  386 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:742:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_hdc_v41x_vec.g_lane[255].u_lane.g_sfu.g_vec.u_l4'
+  742 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:226:86: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                : ... note: In instance 'ot_hdc_v41x_vec.u_red'
+  226 |     always @(*) for (h = 0; h <= LC; h = h + 1) hit[h] = tv[h] && (tt[h][TAG-2 -: 4] == h);
+      |                                                                                      ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:255:72: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  255 |             for (b = 0; b < 32; b = b + 1) if ((32'd1 << b) < x) log2c = b + 1;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:262:60: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  262 |             for (b = 0; b < 32; b = b + 1) if (x[b]) log2f = b;
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:269:65: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  269 |             for (b = CW - 1; b >= 0; b = b - 1) if (x[b]) tzero = b;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:284:28: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  284 |             SFU_EXP: sfu_d = D_EXP;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:285:39: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  285 |             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:286:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  286 |             SFU_RSQRT: sfu_d = D_RSQ;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:287:29: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  287 |             SFU_SQRT: sfu_d = D_SQRT;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:288:31: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  288 |             SFU_SPSQRT: sfu_d = D_SP;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:289:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  289 |             SFU_EGATE: sfu_d = D_EG;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:331:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  331 |     wire [AW-1:0] ni_a = q_nin;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:332:32: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  332 |     wire [AW-1:0] ni_h = q_nin >> 1;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:349:36: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  349 |         s_ni <= (s1_cand && s1_ok) ? q_nout * q_nin : q_nin;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:350:36: Operator COND expects 32 or 24 bits on the Conditional False, but Conditional False's VARREF 'q_nout' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  350 |         s_no <= (s1_cand && s1_ok) ? 1 : q_nout;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:362:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  362 |     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:363:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  363 |     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:368:22: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_nvs' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  368 |     wire [4:0] c_L = log2c(c_nvs);
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:380:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'c_L' generates 5 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  380 |     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:399:73: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'c_ls' generates 4 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  399 |                     else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls);
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:18: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_gstr' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                  ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:42: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                                          ^~~~~
+%Warning-WIDTHCONCAT: rtl/hdc/ot_hdc_delay.sv:32:47: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                   : ... note: In instance 'ot_hdc_v41x_vec.u_rwe'
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                                               ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_cmp.g'
+                                                  : ... note: In instance 'ot_dsrom_su_hcpost_7.g_g[0].u'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_cmp.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_cmp.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_eadd.t'
+                                                  : ... note: In instance 'ot_dsrom_su_hcpost_7.g_g[0].u'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_eadd.t
+                    rtl/hdc/ot_hdc_fp32_f12.sv:205:10:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_fp32_f12.sv:41:59:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.__Vcellinp__u_k4__d
+                    rtl/hdc/ot_hdc_prefix.sv:59:17:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_rnd.t
+                    rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_rnd.t
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_esub.p'
+                                                  : ... note: In instance 'ot_dsrom_su_hcpost_7.g_g[0].u'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_esub.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_dsrom_su_hcpost_7.g_g[0].u.g_k[3].u.g_u_a44.u.u.u_esub.p
+%Warning-UNOPTFLAT: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:205:23: Signal unoptimizable: Circular combinational logic: 'ot_hdc_v41x_vec_a.u_red.g_tree[1].vd'
+  205 |         wire [ALAT:0] vd;
+      |                       ^~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:205:23:      Example path: ot_hdc_v41x_vec_a.u_red.g_tree[1].vd
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:216:23:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:193:22:      Example path: ot_hdc_v41x_vec_a.u_red.tv
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:226:5:      Example path: ALWAYS
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:224:17:      Example path: ot_hdc_v41x_vec_a.u_red.hit
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:230:5:      Example path: ALWAYS
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:229:22:      Example path: ot_hdc_v41x_vec_a.u_red.tap_v
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:244:20:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:240:20:      Example path: ot_hdc_v41x_vec_a.u_red.sval
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:252:29:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:252:24:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].in_v
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:257:19:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:257:14:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].pair
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:272:67:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_sfu.sv:17:23:      Example path: ot_hdc_v41x_vec_a.u_red.__Vcellinp__g_time[1].u_vd__v
+                    rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:271:23:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].vd
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:274:24:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:240:20:      Example path: ot_hdc_v41x_vec_a.u_red.sval
+%Warning-UNOPTFLAT: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:271:23: Signal unoptimizable: Circular combinational logic: 'ot_hdc_v41x_vec_a.u_red.g_time[1].vd'
+  271 |         wire [ALAT:0] vd;
+      |                       ^~
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:271:23:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].vd
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:274:24:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:240:20:      Example path: ot_hdc_v41x_vec_a.u_red.sval
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:252:29:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:252:24:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].in_v
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:257:19:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:257:14:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].pair
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:272:67:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_sfu.sv:17:23:      Example path: ot_hdc_v41x_vec_a.u_red.__Vcellinp__g_time[1].u_vd__v
+                    rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:271:23:      Example path: ot_hdc_v41x_vec_a.u_red.g_time[1].vd
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'ot_hdc_v41x_vec_a.u_red.g_out[0].u_bf.g_k.u.t'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[0].u_bf.g_k.u.t
+                    rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[0].u_bf.g_k.u.t
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_hdc_v41x_vec_a.u_red.g_out[0].u_ad.g_k.u.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[0].u_ad.g_k.u.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[0].u_ad.g_k.u.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_hdc_v41x_vec_a.u_red.g_out[127].u_ad.g_k.u.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[127].u_ad.g_k.u.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hdc_v41x_vec_a.u_red.g_out[127].u_ad.g_k.u.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 76.978 MB sources in 273 modules, into 3360.306 MB in 2383 C++ files needing 24.973 MB
+- Verilator: Walltime 1063.419 s (elab=16.847, cvt=986.319, bld=0.000); cpu 1063.325 s on 3 threads; allocated 78948.270 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_dsrom_su_hcpost_7__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.008 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.008 s on 3 threads; allocated 31.000 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_a__hierMkArgs.f
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_lane_6/ot_hdc_v41x_vec_lane_6.sv:6:8: ... Location of module with timescale
+    6 | module ot_hdc_v41x_vec_lane_6 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:279:23: Operator VAR 'H_A' expects 16 bits on the Initial value, but Initial value's VARREF 'ALAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  279 |     localparam [15:0] H_A = ALAT;
+      |                       ^~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:23: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:35: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                   ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:50: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:65: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:80: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:97: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                                 ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:281:23: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  281 |                       H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:151:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  151 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:152:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_hdc_v41x_vec.g_lane[0].u_lane'
+  152 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:749:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_hdc_v41x_vec.u_cf'
+  749 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6b' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_exp.g_h[6].u_m....g_l6.u.u.u_k1'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:38: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:386:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                 : ... note: In instance 'ot_hdc_v41x_vec.u_side.u_sp.u_exp'
+  386 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:742:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_hdc_v41x_vec.g_lane[255].u_lane.g_sfu.g_vec.u_l4'
+  742 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:226:86: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                : ... note: In instance 'ot_hdc_v41x_vec.u_red'
+  226 |     always @(*) for (h = 0; h <= LC; h = h + 1) hit[h] = tv[h] && (tt[h][TAG-2 -: 4] == h);
+      |                                                                                      ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:255:72: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  255 |             for (b = 0; b < 32; b = b + 1) if ((32'd1 << b) < x) log2c = b + 1;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:262:60: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  262 |             for (b = 0; b < 32; b = b + 1) if (x[b]) log2f = b;
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:269:65: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  269 |             for (b = CW - 1; b >= 0; b = b - 1) if (x[b]) tzero = b;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:284:28: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  284 |             SFU_EXP: sfu_d = D_EXP;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:285:39: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  285 |             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:286:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  286 |             SFU_RSQRT: sfu_d = D_RSQ;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:287:29: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  287 |             SFU_SQRT: sfu_d = D_SQRT;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:288:31: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  288 |             SFU_SPSQRT: sfu_d = D_SP;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:289:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_hdc_v41x_vec'
+  289 |             SFU_EGATE: sfu_d = D_EG;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:331:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  331 |     wire [AW-1:0] ni_a = q_nin;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:332:32: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  332 |     wire [AW-1:0] ni_h = q_nin >> 1;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:349:36: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  349 |         s_ni <= (s1_cand && s1_ok) ? q_nout * q_nin : q_nin;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:350:36: Operator COND expects 32 or 24 bits on the Conditional False, but Conditional False's VARREF 'q_nout' generates 16 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  350 |         s_no <= (s1_cand && s1_ok) ? 1 : q_nout;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:362:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  362 |     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:363:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  363 |     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:368:22: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_nvs' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  368 |     wire [4:0] c_L = log2c(c_nvs);
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:380:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'c_L' generates 5 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  380 |     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:399:73: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'c_ls' generates 4 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  399 |                     else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls);
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:18: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_gstr' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                  ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:42: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 24 bits.
+                                                            : ... note: In instance 'ot_hdc_v41x_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                                          ^~~~~
+%Warning-WIDTHCONCAT: rtl/hdc/ot_hdc_delay.sv:32:47: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                   : ... note: In instance 'ot_hdc_v41x_vec.u_rwe'
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                                               ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Error: Verilator threw signal 15. Suggest trying --debug --gdbbt
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_a__hierMkArgs.f
+make[1]: *** [/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vtb_hbm_integrated_minimum_parent_hier.mk:182: hier_launch_verilator] Error 143
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+make: *** [Vtb_hbm_integrated_minimum_parent_hier.mk:269: Vot_hdc_v41x_vec_a/Vot_hdc_v41x_vec_a.mk] Error 2
+make: *** Waiting for unfinished jobs....
+%Error: Verilator threw signal 15. Suggest trying --debug --gdbbt
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vot_hdc_v41x_vec_a__hierMkArgs.f
+make[1]: *** [/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/work/obj/Vtb_hbm_integrated_minimum_parent_hier.mk:182: hier_launch_verilator] Error 143
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k/src'
+make: *** [Vtb_hbm_integrated_minimum_parent_hier.mk:269: Vot_hdc_v41x_vec_a/ot_hdc_v41x_vec_a.sv] Error 2
