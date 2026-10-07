@@ -1,0 +1,7 @@
+# CLAUDE S81-PH tiles: closure-loop job history (ledger /tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md)
+r1 1df7cf9a9    capt_ctl NEEDS_RTL SS -5.78 (ratio CDC mem->sh, ser_clk 100 ps ahead) / FF -22.0 (outputs, BC-derived min delay); others cancelled
+r2 cd3337221-b  HM 0.050: capt_ctl SS -6.32 (balance hook skipped: port ckv[0]) / FF -14.6; colt_lane SS -4.32 (macro rd_out -> fwft ob) / FF -6.5
+r3 05a9f681f-c  capt: hook ODB-0370 (dont_touch inside the chain)          r4 89f05c376-d capt: EST-0104 (parasitics after the hook)
+r5 ee7d4fc82-e  capt_ctl / capt_grp (balance hook fixed, HM 0.070)
+   c3413659a-c  colt_lane lane FIFO with registered macro output; HM 0.090 -> RSZ-0060 (hold buffer cap) in CTS repair
+r6 (this commit) colt_lane HM 0.035 (+ the loop's automatic hold ECO)
