@@ -281,23 +281,23 @@
   {
    "item": "sel_xstg",
    "nodes": "*.attn.idx.topk_local",
-   "cycles": 1,
+   "cycles": 6,
    "frac": 0,
-   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
+   "source": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job"
   },
   {
    "item": "sel_xstg",
    "nodes": "*.attn.cand.topk_local",
-   "cycles": 1,
+   "cycles": 6,
    "frac": 0,
-   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
+   "source": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job"
   },
   {
    "item": "sel_xstg",
    "nodes": "*.attn.gather",
-   "cycles": 1,
+   "cycles": 6,
    "frac": 0,
-   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
+   "source": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job"
   },
   {
    "item": "vm_bank_group",
