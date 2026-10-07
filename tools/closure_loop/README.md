@@ -88,3 +88,20 @@ budget_route/signoff/ff.sdc from the measured SS/FF mean/min/max plus the sheet'
 acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's measured insertion is collected in
 `results/rtl/budgets_20261006/measured_insertion.json` on main (published at most every 10 min) for the die
 clock plan.
+
+## Hold margin and automatic hold ECO (2026-10-06)
+- Jobs ingested from 2026-10-06 20:40 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
+  to calibrate and route. Override it with spec `route_hold_margin_ns`, or with an inline `HM=` in the command.
+- HOLD-ECO: when a verdict is hold-only (SS >= +15, DRC 0, all checks and benches OK, FF < +15), the loop runs
+  `hold_eco.sh` / `hold_eco.tcl` before declaring NEEDS_RTL. The ECO is the hub recipe:
+  - input is the routed pre-fill `5_2_route.odb`, with the sign-off `6_final.sdc` plus `verdict.post_sdc` and the
+    `verdict.macros` views
+  - RCX parasitics on the SS and FF scenes, then `repair_timing -hold` to +22 ps while keeping setup >= +25 ps
+  - legalise, strip and re-route every signal and clock wire (keeping clock wires broke DRT once legalisation moved sinks), max 30 % buffers, fillers, re-extract, then sign off again with
+    tools/w18/corner_sta.py
+  - on a PASS (SS/FF >= +15, ECO DRC 0) the loop installs the ECO database in place of the route (originals kept
+    as `*.pre_eco`), points the verdict's corner_sta at the ECO sign-off, re-exports the view (`hold_eco.reexport`,
+    else hbm_fmax_attn_abstract.py when `<route>/view/<block>.lef` exists), and judges again
+  - only a missed ECO goes NEEDS_RTL
+  - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
+- Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
