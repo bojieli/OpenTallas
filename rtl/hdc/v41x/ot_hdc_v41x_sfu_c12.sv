@@ -783,6 +783,20 @@ module ot_hdc_v41x_ins #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) oh <= {{(N-1){1'b0}}, 1'b1};
                 else oh <= {oh[N-2:0], oh[N-1]};
+            // RING 2 (views agent 2026-10-07, SFU lane 67f177d39 oh -> m -24 ps over 304 endpoints, 10 levels): the slot
+            // pointer in one kept copy per 16-bit data chunk (reset and rotated identically), each driving only its chunk's
+            // write enables and read select.  0 cycles.
+            localparam integer CH = 16;
+            localparam integer NC = (RING >= 2) ? (W + CH - 1) / CH : 1;
+            wire [N-1:0] ohc [0:NC-1];
+            genvar c0;
+            for (c0 = 0; c0 < NC; c0 = c0 + 1) begin : g_ohc
+                (* keep *) reg [N-1:0] r;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) r <= {{(N-1){1'b0}}, 1'b1};
+                    else r <= {r[N-2:0], r[N-1]};
+                assign ohc[c0] = r;
+            end
             // rot(oh, k)[j] = oh[(j - k) mod N]: the slot k edges ahead
             function automatic [N-1:0] rot(input [N-1:0] x, input integer k);
                 integer j;
@@ -805,13 +819,18 @@ module ot_hdc_v41x_ins #(
                 cw = |(we & mv);
             end
             wire [N-1:0] rs = rot(oh, 1);            // slot read at this edge (due next cycle)
+            reg [N-1:0] rsc [0:NC-1];                // RING 2: per-chunk copies of rs
+            integer c2;
+            always @(*) for (c2 = 0; c2 < NC; c2 = c2 + 1) rsc[c2] = rot(ohc[c2], 1);
             reg [W-1:0] rd;
             reg         rdv;
-            integer i;
+            integer i, c1;
             always @(*) begin
                 rd = {W{1'b0}}; rdv = 1'b0;
                 for (i = 0; i < N; i = i + 1) begin
-                    rd = rd | (m[i] & {W{rs[i]}});
+                    if (RING >= 2) begin
+                        for (c1 = 0; c1 < W; c1 = c1 + 1) rd[c1] = rd[c1] | (m[i][c1] & rsc[c1 / CH][i]);
+                    end else rd = rd | (m[i] & {W{rs[i]}});
                     rdv = rdv | (mv[i] & rs[i]);
                 end
             end
@@ -821,7 +840,28 @@ module ot_hdc_v41x_ins #(
                     if (!rst_n) mv[j] <= 1'b0;
                     else if (we[j]) mv[j] <= 1'b1;
                     else if (rs[j]) mv[j] <= 1'b0;
-                if (RESET_DATA != 0) begin : g_rd
+                if (RING >= 2) begin : g_cw
+                    genvar c;
+                    for (c = 0; c < NC; c = c + 1) begin : g_c
+                        localparam integer LO = c * CH;
+                        localparam integer WC = (W - LO < CH) ? (W - LO) : CH;
+                        reg wec; reg [N-1:0] rr;
+                        integer k2;
+                        always @(*) begin
+                            wec = 1'b0;
+                            for (k2 = 0; k2 < K; k2 = k2 + 1) begin
+                                rr = rot(ohc[c], DEPTHS[16*k2 +: 16]);
+                                if (DEPTHS[16*k2 +: 16] != 0 && v && sel[k2]) wec = wec | rr[j];
+                            end
+                        end
+                        if (RESET_DATA != 0) begin : g_rd
+                            always @(posedge clk or negedge rst_n)
+                                if (!rst_n) m[j][LO +: WC] <= {WC{1'b0}}; else if (wec) m[j][LO +: WC] <= d[LO +: WC];
+                        end else begin : g_nd
+                            always @(posedge clk) if (wec) m[j][LO +: WC] <= d[LO +: WC];
+                        end
+                    end
+                end else if (RESET_DATA != 0) begin : g_rd
                     always @(posedge clk or negedge rst_n)
                         if (!rst_n) m[j] <= {W{1'b0}}; else if (we[j]) m[j] <= d;
                 end else begin : g_nd
