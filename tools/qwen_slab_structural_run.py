@@ -69,7 +69,8 @@ def command(a, out):
     if a.bw_m8:
         argv += ["--step-tcl", f"PRE_IO_PLACEMENT={S}/pins_bw_m8.tcl"]
     for st in ("GLOBAL_ROUTE", "DETAIL_ROUTE", "FILLCELL"):
-        argv += ["--step-tcl", f"PRE_{st}={S}/pre_ref.tcl", "--step-tcl", f"POST_{st}={S}/post_plain.tcl"]
+        pre = "pre_grt_bwm8.tcl" if (a.bw_m8 and st == "GLOBAL_ROUTE") else "pre_ref.tcl"
+        argv += ["--step-tcl", f"PRE_{st}={S}/{pre}", "--step-tcl", f"POST_{st}={S}/post_plain.tcl"]
     if a.diamond:
         argv += ["--orfs-var", "DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer"]
     if a.cts_derate is not None:
