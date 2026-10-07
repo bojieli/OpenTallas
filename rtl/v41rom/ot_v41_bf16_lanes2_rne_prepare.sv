@@ -27,7 +27,8 @@ module ot_v41_bf16_lanes2 #(
     // ot_v41_chain4 (PD = 1, ND = 4 kept forward-select copies: the routed BF HITFIX GRT SS worst -256 ps was one fwd5
     // register driving the operand mux of other lanes and the other macro, merged by synthesis); the 4-level pairwise
     // tree adders (feed-forward) use every stage cut (CUT 1_1111_1111).  The chains keep CUT (their LAT is the issue
-    // side's slot-revisit rule).
+    // side's slot-revisit rule).  RC = 2: as RC = 1 but the chunk chains are ot_v41_chain2u2 (unrolled by 2 on a
+    // half-rate gated clock, bit-exact, +3 cycles; multicycle 2/1 SDC on their hs_* registers).
     parameter integer RC = 0
 ) (
     input  wire              clk,
@@ -75,7 +76,11 @@ module ot_v41_bf16_lanes2 #(
         reg [PL-1:0] vp;
         always @(posedge clk or negedge rst_n) if (!rst_n) vp <= '0; else vp <= {vp[PL-2:0], v_r};
         assign pv[l] = vp[PL-1];
-        if (RC != 0) begin : g_c4
+        if (RC >= 2) begin : g_cu
+        ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(clk), .rst_n(rst_n), .v(pv[l]),
+            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+        end else if (RC != 0) begin : g_c4
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(clk), .rst_n(rst_n), .v(pv[l]),
             .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
             .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));

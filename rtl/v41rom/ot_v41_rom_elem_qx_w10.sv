@@ -1792,8 +1792,9 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [TG-1:0] bf_tree;
     if (BF16 != 0) begin : g_bf
         if (FAST != 0 && QBF != 0) begin : g_fq
-        // QBF: the BF view lanes (GRADUAL_RNE multiplier repair; QBF >= 2: lanes re-cut, see ot_v41_bf16_lanes2_rne_prepare.sv)
-        ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 2 ? 1 : 0)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
+        // QBF: the BF view lanes (GRADUAL_RNE multiplier repair; QBF >= 2: lanes re-cut, QBF >= 3: + unrolled chunk chains;
+        // see ot_v41_bf16_lanes2_rne_prepare.sv RC)
+        ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));

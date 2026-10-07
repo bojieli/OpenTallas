@@ -55,7 +55,8 @@ module ot_s81_bf_native #(
     // RECUT (BF re-cut A, 2026-10-07, default 0): the element is the DS q-element ot_v41_rom_elem_qx_w10 (its closed
     // walker / x-need / issue / segment-tree / chain / per-macro re-cuts: QTIMING_FIX QPIPE QZ QY QX 10, as routed for
     // the S81 q pairs) with BF16 = 1 under QBF (RECUT: 1 = as is, 2 = + BF lanes re-cut: 8-stage multiplier, chain4
-    // kept forward copies, fully cut tree adders), GRADUAL_RNE and the second-row decoder fix (built in).  Latency
+    // kept forward copies, fully cut tree adders; 3 = 2 + the BF lane chunk chains unrolled by 2 on a half-rate gated
+    // clock, ot_v41_chain2u2, multicycle 2/1 u2_mc.sdc), GRADUAL_RNE and the second-row decoder fix (built in).  Latency
     // changes (QPIPE boundary, split lanes, tree), values and per-lane order do not: exact at transaction level
     // (tools/s81/bf_txn_bench.py --variant recut).  Requires FAST = 1, PP = 1, BP = 0, HALF = 0.
     parameter integer RECUT = 0,
