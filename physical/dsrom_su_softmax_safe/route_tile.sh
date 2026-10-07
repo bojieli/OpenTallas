@@ -7,7 +7,7 @@ set -o pipefail
 L=${1:?label}; TOP=${2:?top}; PARS=${3:-}; shift 3
 S=${SRC:-.}; O=${OUT:?out}/$L; mkdir -p $O; cd $S
 HM=${HM:-0.035}; CORES=${CORES:-16}
-SRCS="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv"
+SRCS="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv"
 SA=(); for f in $SRCS; do SA+=(--source $f); done
 PA=(); for p in $PARS; do PA+=(--param $p); done
 echo "$(date -Is) START $(hostname) $TOP $PARS" >> $O/MANIFEST

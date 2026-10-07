@@ -45,6 +45,41 @@ module ot_dsrom_su_softmax_mul9 (
     ot_hdc_fp32_mul_f12 #(.CUTS(8'b11111111)) u (.*);
 endmodule
 
+// RECUT variants (owner 2026-10-07, exp tile -321 class): the f12r adder / multiplier with extra cuts, LAT 11 each
+// (add11 = input register + the f12r adder; mul11 = the f12r multiplier).
+module ot_dsrom_su_softmax_add11 (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire [1:0]  err,
+    output wire        valid_out
+);
+    reg        v_i;
+    reg [31:0] a_i, b_i;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) v_i <= 1'b0;
+        else v_i <= valid_in;
+    end
+    always @(posedge clk) begin a_i <= a; b_i <= b; end
+    ot_hdc_fp32_add_f12r u (.clk(clk), .rst_n(rst_n), .valid_in(v_i), .a(a_i), .b(b_i), .y(y), .err(err), .valid_out(valid_out));
+endmodule
+
+module ot_dsrom_su_softmax_mul11 (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire [1:0]  err,
+    output wire        valid_out
+);
+    ot_hdc_fp32_mul_f12r u (.*);
+endmodule
+
 module ot_dsrom_su_softmax_mul #(
     parameter integer LM = 5
 ) (
@@ -56,7 +91,13 @@ module ot_dsrom_su_softmax_mul #(
     output wire [31:0] y,
     output wire        fault
 );
-    generate if (LM == 9) begin : g_m9
+    generate if (LM == 11) begin : g_m11
+        wire [1:0] err;
+        wire       vo;
+        ot_dsrom_su_softmax_mul11 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                     .valid_out(vo));
+        assign fault = vo && (err != 2'd0);
+    end else if (LM == 9) begin : g_m9
         wire [1:0] err;
         wire       vo;
         ot_dsrom_su_softmax_mul9 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),

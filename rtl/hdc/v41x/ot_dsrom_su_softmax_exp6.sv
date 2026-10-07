@@ -33,7 +33,7 @@ module ot_dsrom_su_softmax_exp6 #(
     localparam integer T_R = T_R1 + LA;
     localparam integer T_P = T_R + 6 * (LM + LA);
     localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 4 + NSPLIT + TB
-    localparam integer AM = (LA == 9) ? 2 : 1;  // ot_dsrom_su_softmax_add mode
+    localparam integer AM = (LA == 11) ? 3 : (LA == 9) ? 2 : 1;  // ot_dsrom_su_softmax_add mode
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;

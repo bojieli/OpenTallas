@@ -69,6 +69,7 @@ module ot_dsrom_su_softmax #(
                                          //    out to every lane's divider, -55 ps at CTS)
     parameter integer DIVF12 = 1,        // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
     parameter integer MARGIN = 0,        // 1: the margin build (header)
+    parameter integer RECUT  = 0,        // 1: the exp units on the re-cut multiplier / adder (ELM must be 11): +2 cuts each
     parameter integer SAFE   = 0         // 3: exp units and dividers on half-rate clock-gated cores (2 * depth + 1 cycles); 1: exp units and dividers as tiles with registered inputs (+1 cycle each; needs EXP6 and DIVF12); 2: and the divider's steps in two stages (+29 cycles)
 ) (
     input  wire                 clk,
@@ -101,7 +102,7 @@ module ot_dsrom_su_softmax #(
     localparam integer LVI = $clog2(CPV);        // in-vector tree levels
     localparam integer NPV = 512 / LPH;
     localparam integer LH = $clog2(LPH);
-    localparam integer ELA_T = EXP6 ? ((ADD6 == 2) ? 9 : 6) : ELA;    // the exp's add latency
+    localparam integer ELA_T = EXP6 ? (RECUT ? 11 : ((ADD6 == 2) ? 9 : 6)) : ELA;    // the exp's add latency
     localparam integer D_EXP_CORE = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0);
     localparam integer D_EXP = (SAFE == 3) ? 2 * D_EXP_CORE + 1 : D_EXP_CORE + ((SAFE != 0) ? 1 : 0);   // SAFE 3: half-rate cores
     localparam integer NRD = (SAFE == 2) ? 2 : MARGIN;     // SAFE 2: the divider's steps in two stages (62 deep)
