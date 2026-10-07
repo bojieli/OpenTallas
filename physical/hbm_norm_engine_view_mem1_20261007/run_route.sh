@@ -15,7 +15,7 @@ srcargs=""; for s in $(cat $V/sources.f); do srcargs="$srcargs --source $s"; don
 echo "label=$lab sdc=$SDC die=${DW}x${DH} pd=${PD:-0.45} $*" > $W/args
 /srv/opentallas-scratch/admit.sh ${NEED:-80} -- python3 tools/run_abi3_physical.py --view asap7 --top ot_hbm_norm_engine_view $srcargs \
   --clock-port clk --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.05 \
-  --orfs-corner WC --hold-corners WC,BC --hold-margin-ns 0.01 --sdc-append $SDC --stages synth,pnr --macro-view $MAC=physical/asap7_memory_macros_v2/$MAC --macro-place-halo 4 4 \
+  --orfs-corner WC --hold-corners WC,BC --hold-margin-ns 0.01 --sdc-append $SDC --stages pnr --macro-view $MAC=physical/asap7_memory_macros_v2/$MAC --macro-place-halo 4 4 \
   --die-area 0 0 $((DW+4)) $((DH+4)) --core-area 2 2 $((DW+2)) $((DH+2)) --place-density ${PD:-0.45} \
   --orfs-var NUM_CORES=${CORES:-16} --orfs-var ADDER_MAP_FILE= --orfs-var PLACE_DENSITY_LB_ADDON= \
   --orfs-var "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks" --orfs-var "IO_PLACER_H=M4 M6" --orfs-var "IO_PLACER_V=M5 M7" \
