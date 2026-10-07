@@ -117,7 +117,7 @@ set ::ot_ss_ff_ratio [envd OT_SS_FF_RATIO 2.4]
 set win [ot_window $hm $filt $acc_ss pre $acc_ff]
 if {[envd OT_WINDOW_ONLY 0]} { puts "OT_ECO window_only"; exit }
 set nx 0
-foreach k {tight infeasible} { foreach ep [dict get $win $k] { set_false_path -hold -to $ep; incr nx } }
+foreach k {tight infeasible nodata} { foreach ep [dict get $win $k] { set_false_path -hold -to $ep; incr nx } }
 puts "OT_ECO filter: [llength [dict get $win fixable]] endpoints repaired, $nx excluded (tight/infeasible stay as they are)"
 
 # ---- snapshot, repair, legalise
