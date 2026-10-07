@@ -1,0 +1,4574 @@
+{
+  "status": "BLOCKED_UNBOUND_CLOCK_PINS",
+  "failure": "unbound clock sinks: clk_stream:hb_coll/clk_stream, clk_link:hb_coll/clk_link",
+  "selected": false,
+  "consumer_endpoints": 377,
+  "unbound_endpoints": 2,
+  "domains": {
+    "clk_stream": {
+      "period_ps": 833.3333333333334,
+      "root": [
+        "TOP",
+        "clk_stream"
+      ],
+      "sinks": 223
+    },
+    "clk_serial": {
+      "period_ps": 1111.111111111111,
+      "root": [
+        "TOP",
+        "clk_serial"
+      ],
+      "sinks": 99
+    },
+    "clk_hbm": {
+      "period_ps": 1024.0,
+      "root": [
+        "TOP",
+        "clk_hbm"
+      ],
+      "sinks": 34
+    },
+    "clk_link": {
+      "period_ps": 833.3333333333334,
+      "root": [
+        "TOP",
+        "clk_link"
+      ],
+      "sinks": 21
+    }
+  },
+  "inventory": [
+    {
+      "tree": "clk_stream",
+      "instance": "sm0",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15749.454
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm1",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12413.982
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm2",
+      "port": "ck",
+      "planned_xy_um": [
+        9045.54,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9078.942
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm3",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17401.854
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm4",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14066.381999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm5",
+      "port": "ck",
+      "planned_xy_um": [
+        9045.54,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10731.341999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm6",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        5771.52
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18792.894
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm7",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        5771.52
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15457.421999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm8",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 8328.198
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm9",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11663.238000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm10",
+      "port": "ck",
+      "planned_xy_um": [
+        27666.684,
+        2728.08
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14998.278000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm11",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9980.597999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm12",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13315.637999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm13",
+      "port": "ck",
+      "planned_xy_um": [
+        27666.684,
+        4380.48
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16650.678
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm14",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        5771.52
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11371.637999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm15",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        5771.52
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14706.678
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm16",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 34342.734
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm17",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31007.262
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm18",
+      "port": "ck",
+      "planned_xy_um": [
+        9045.54,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27672.221999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm19",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32951.693999999996
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm20",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29616.221999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm21",
+      "port": "ck",
+      "planned_xy_um": [
+        9045.54,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26281.181999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm22",
+      "port": "ck",
+      "planned_xy_um": [
+        2375.0280000000002,
+        18539.28
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31560.653999999995
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm23",
+      "port": "ck",
+      "planned_xy_um": [
+        5710.5,
+        18539.28
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28225.181999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm24",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26921.478
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm25",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30256.518
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm26",
+      "port": "ck",
+      "planned_xy_um": [
+        27666.684,
+        21321.36
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 33591.558000000005
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm27",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25530.438
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm28",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28865.478
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm29",
+      "port": "ck",
+      "planned_xy_um": [
+        27666.684,
+        19930.32
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32200.518
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm30",
+      "port": "ck",
+      "planned_xy_um": [
+        20996.604,
+        18539.28
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24139.397999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "sm31",
+      "port": "ck",
+      "planned_xy_um": [
+        24331.644,
+        18539.28
+      ],
+      "source": "planned-SM-top-clock-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27474.438
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_loader",
+      "port": "ck",
+      "planned_xy_um": [
+        14996.449405405416,
+        8726.375999999998
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9126.328594594583
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_router",
+      "port": "ck",
+      "planned_xy_um": [
+        14996.449405405416,
+        9379.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9779.872594594584
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_cmdproc",
+      "port": "ck",
+      "planned_xy_um": [
+        14996.449405405416,
+        11111.016000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11510.968594594586
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_vm_sw",
+      "port": "ck",
+      "planned_xy_um": [
+        14671.312,
+        13336.895999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14061.985999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_vm_se",
+      "port": "ck",
+      "planned_xy_um": [
+        15371.152,
+        13336.895999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13362.145999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_vm_nw",
+      "port": "ck",
+      "planned_xy_um": [
+        14671.312,
+        14336.975999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15062.065999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_vm_ne",
+      "port": "ck",
+      "planned_xy_um": [
+        15371.152,
+        14336.975999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14362.225999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_barrier",
+      "port": "ck",
+      "planned_xy_um": [
+        14905.236,
+        11199.6
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11690.766
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b0",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        7292.376
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13812.966
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b1",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        7292.43
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13813.02
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b2",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        8264.16
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14784.75
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b3",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        9225.36
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15745.95
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b4",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        10196.82
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16717.41
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SW_b5",
+      "port": "ck",
+      "planned_xy_um": [
+        9285.816,
+        11756.58
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17867.165999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_00",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20523.118
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_01",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18701.373999999996
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_02",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16879.629999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_03",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15057.885999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_10",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21916.318
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_11",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20094.574
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_12",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18272.83
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_13",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16451.086
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_20",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23309.517999999996
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_21",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21487.773999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_22",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19666.03
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_23",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17844.286
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_30",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24702.718
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_31",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22880.974
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_32",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21059.23
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SW_33",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19237.485999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b0",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        7292.376
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13062.198
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b1",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        7292.43
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13062.252
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b2",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        8264.16
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14033.982000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b3",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        9225.36
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14995.182000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b4",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        10196.82
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15966.642000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_SE_b5",
+      "port": "ck",
+      "planned_xy_um": [
+        20756.304,
+        11756.58
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17116.398
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_00",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14307.117999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_01",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16128.861999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_02",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17950.606
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_03",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        7671.603999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19772.35
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_10",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15700.318000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_11",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17522.061999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_12",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19343.806000000004
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_13",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        9064.804
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21165.550000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_20",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17093.518
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_21",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18915.262
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_22",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20737.006
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_23",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        10458.003999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22558.75
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_30",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18486.718
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_31",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20308.462
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_32",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22130.206000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_SE_33",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        11851.204
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23951.95
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b0",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        16763.76
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23284.35
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b1",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        16763.435999999998
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23284.025999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b2",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        15792.696
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22313.286
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b3",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        14830.776
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21351.366
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b4",
+      "port": "ck",
+      "planned_xy_um": [
+        8875.812,
+        13859.016000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20379.606
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NW_b5",
+      "port": "ck",
+      "planned_xy_um": [
+        9285.816,
+        12299.316
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18409.902000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_00",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25051.886
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_01",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23230.142
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_02",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21408.398
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_03",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19586.654
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_10",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26445.086
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_11",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24623.341999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_12",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22801.597999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_13",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20979.854
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_20",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27838.286
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_21",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26016.542
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_22",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24194.798000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_23",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22373.054
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_30",
+      "port": "ck",
+      "planned_xy_um": [
+        2544.8880000000004,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29231.486
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_31",
+      "port": "ck",
+      "planned_xy_um": [
+        4366.6320000000005,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27409.742
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_32",
+      "port": "ck",
+      "planned_xy_um": [
+        6188.376,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25587.998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NW_33",
+      "port": "ck",
+      "planned_xy_um": [
+        8010.120000000001,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23766.254
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b0",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        16763.76
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22533.582
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b1",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        16763.435999999998
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22533.257999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b2",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        15792.696
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21562.518000000004
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b3",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        14830.776
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20600.598
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b4",
+      "port": "ck",
+      "planned_xy_um": [
+        21166.308,
+        13859.016000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19628.838000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_index_NE_b5",
+      "port": "ck",
+      "planned_xy_um": [
+        20756.304,
+        12299.316
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17659.134000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_00",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18835.886
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_01",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20657.629999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_02",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22479.374000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_03",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        12200.372
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24301.118000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_10",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20229.086000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_11",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22050.83
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_12",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23872.574
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_13",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        13593.572
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25694.318
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_20",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21622.286
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_21",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23444.03
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_22",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25265.774000000005
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_23",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        14986.772
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27087.518000000004
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_30",
+      "port": "ck",
+      "planned_xy_um": [
+        22032.0,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23015.486000000004
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_31",
+      "port": "ck",
+      "planned_xy_um": [
+        23853.744,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 24837.230000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_32",
+      "port": "ck",
+      "planned_xy_um": [
+        25675.488,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26658.974000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "at_NE_33",
+      "port": "ck",
+      "planned_xy_um": [
+        27497.232,
+        16379.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28480.718
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w3_wl_sm4",
+      "port": "ck",
+      "planned_xy_um": [
+        4469.236,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13819.381999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w4_rq_sm4",
+      "port": "ck",
+      "planned_xy_um": [
+        3884.308,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14376.23
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w10_wl_sm5",
+      "port": "ck",
+      "planned_xy_um": [
+        8692.9,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9595.718
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w11_rq_sm5",
+      "port": "ck",
+      "planned_xy_um": [
+        7219.348,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11041.189999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w16_wl_sm6",
+      "port": "ck",
+      "planned_xy_um": [
+        1618.052,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16670.566
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w17_rq_sm6",
+      "port": "ck",
+      "planned_xy_um": [
+        4591.076,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13669.462
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w20_wl_sm7",
+      "port": "ck",
+      "planned_xy_um": [
+        5747.108,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12541.509999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w21_rq_sm7",
+      "port": "ck",
+      "planned_xy_um": [
+        7339.028,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10921.509999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w31_xmSW3",
+      "port": "ck",
+      "planned_xy_um": [
+        10620.94,
+        3062.8559999999998
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7838.317999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w32_xmSW2a",
+      "port": "ck",
+      "planned_xy_um": [
+        9183.220000000001,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9131.318
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w32_xmSW2b",
+      "port": "ck",
+      "planned_xy_um": [
+        9658.852,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 8655.685999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w33_xmSW1a",
+      "port": "ck",
+      "planned_xy_um": [
+        6681.94,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11632.598000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w33_xmSW1b",
+      "port": "ck",
+      "planned_xy_um": [
+        6681.94,
+        3047.7360000000003
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11762.198
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w34_xmSW0",
+      "port": "ck",
+      "planned_xy_um": [
+        1326.868,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16987.67
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w35_rgSW0",
+      "port": "ck",
+      "planned_xy_um": [
+        536.088,
+        3627.828
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18488.142
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w36_rgSW3",
+      "port": "ck",
+      "planned_xy_um": [
+        8039.928,
+        3174.228
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10530.702
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w37_rgSW1",
+      "port": "ck",
+      "planned_xy_um": [
+        3051.6240000000003,
+        3165.588
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15510.366
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w38_rgSW2",
+      "port": "ck",
+      "planned_xy_um": [
+        10843.176,
+        3744.468
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 8297.694
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w55_cdSW1",
+      "port": "ck",
+      "planned_xy_um": [
+        5613.384,
+        6189.588000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15972.606
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w56_cdSW0",
+      "port": "ck",
+      "planned_xy_um": [
+        5668.2480000000005,
+        2958.228
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12686.382
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w82_wl_sm12",
+      "port": "ck",
+      "planned_xy_um": [
+        23514.82,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11010.55
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w83_rq_sm12",
+      "port": "ck",
+      "planned_xy_um": [
+        22929.46,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10397.11
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w89_wl_sm13",
+      "port": "ck",
+      "planned_xy_um": [
+        27738.052,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15233.782
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w90_rq_sm13",
+      "port": "ck",
+      "planned_xy_um": [
+        26264.5,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13732.150000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w95_wl_sm14",
+      "port": "ck",
+      "planned_xy_um": [
+        20663.636,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 8159.365999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w96_rq_sm14",
+      "port": "ck",
+      "planned_xy_um": [
+        23636.66,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11104.310000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w99_wl_sm15",
+      "port": "ck",
+      "planned_xy_um": [
+        24792.692,
+        2892.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12288.421999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w100_rq_sm15",
+      "port": "ck",
+      "planned_xy_um": [
+        26384.18,
+        2864.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13851.830000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w110_xmSE0",
+      "port": "ck",
+      "planned_xy_um": [
+        19420.316,
+        3900.9359999999997
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7924.766
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w111_xmSE1a",
+      "port": "ck",
+      "planned_xy_um": [
+        19906.34,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7427.990000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w111_xmSE1b",
+      "port": "ck",
+      "planned_xy_um": [
+        19906.34,
+        3047.7360000000003
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7557.590000000001
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w112_xmSE2a",
+      "port": "ck",
+      "planned_xy_um": [
+        25261.412,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12783.062000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w112_xmSE2b",
+      "port": "ck",
+      "planned_xy_um": [
+        25261.412,
+        3047.7360000000003
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12912.662
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w113_xmSE3",
+      "port": "ck",
+      "planned_xy_um": [
+        27762.692,
+        2918.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15284.342
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w114_rgSE0",
+      "port": "ck",
+      "planned_xy_um": [
+        22001.328,
+        3174.228
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9779.070000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w115_rgSE3",
+      "port": "ck",
+      "planned_xy_um": [
+        29505.168,
+        3627.828
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17736.510000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w116_rgSE1",
+      "port": "ck",
+      "planned_xy_um": [
+        24489.3,
+        5898.936000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14991.75
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w117_rgSE2",
+      "port": "ck",
+      "planned_xy_um": [
+        26961.12,
+        4716.468
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16281.101999999999
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w132_cdSE1",
+      "port": "ck",
+      "planned_xy_um": [
+        24778.2,
+        4617.108
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13998.822
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w133_cdSE0",
+      "port": "ck",
+      "planned_xy_um": [
+        24713.399999999998,
+        2958.228
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12275.141999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w158_wl_sm20",
+      "port": "ck",
+      "planned_xy_um": [
+        4467.508,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32155.190000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w159_rq_sm20",
+      "port": "ck",
+      "planned_xy_um": [
+        3884.308,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32710.309999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w165_wl_sm21",
+      "port": "ck",
+      "planned_xy_um": [
+        8690.74,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27931.958
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w166_rq_sm21",
+      "port": "ck",
+      "planned_xy_um": [
+        7219.348,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29375.269999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w171_wl_sm22",
+      "port": "ck",
+      "planned_xy_um": [
+        1620.212,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35002.486000000004
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w172_rq_sm22",
+      "port": "ck",
+      "planned_xy_um": [
+        4591.076,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32003.541999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w175_wl_sm23",
+      "port": "ck",
+      "planned_xy_um": [
+        5749.268,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30873.43
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w176_rq_sm23",
+      "port": "ck",
+      "planned_xy_um": [
+        7339.028,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29255.589999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w184_xmNW3",
+      "port": "ck",
+      "planned_xy_um": [
+        10620.94,
+        20986.56
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25762.021999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w185_xmNW2a",
+      "port": "ck",
+      "planned_xy_um": [
+        9658.852,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26868.829999999994
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w185_xmNW2b",
+      "port": "ck",
+      "planned_xy_um": [
+        10134.484,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26393.197999999997
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w186_xmNW1a",
+      "port": "ck",
+      "planned_xy_um": [
+        6681.94,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29845.742
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w186_xmNW1b",
+      "port": "ck",
+      "planned_xy_um": [
+        7761.94,
+        19252.08
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26886.542
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w187_xmNW0",
+      "port": "ck",
+      "planned_xy_um": [
+        1326.868,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35200.814
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w188_rgNW0",
+      "port": "ck",
+      "planned_xy_um": [
+        536.088,
+        20680.788
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35541.102
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w189_rgNW3",
+      "port": "ck",
+      "planned_xy_um": [
+        8039.928,
+        19773.588
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27130.061999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w190_rgNW1",
+      "port": "ck",
+      "planned_xy_um": [
+        3051.6240000000003,
+        19717.428
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32062.206
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w191_rgNW2",
+      "port": "ck",
+      "planned_xy_um": [
+        5581.416,
+        17972.148
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27787.134
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w206_cdNW1",
+      "port": "ck",
+      "planned_xy_um": [
+        5733.048,
+        19693.668
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29357.022
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w207_cdNW0",
+      "port": "ck",
+      "planned_xy_um": [
+        5668.2480000000005,
+        21091.188000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30819.342
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w236_wl_sm28",
+      "port": "ck",
+      "planned_xy_um": [
+        23512.66,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29342.47
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w237_rq_sm28",
+      "port": "ck",
+      "planned_xy_um": [
+        22929.46,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28731.19
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w243_wl_sm29",
+      "port": "ck",
+      "planned_xy_um": [
+        27735.892,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 33565.702000000005
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w244_rq_sm29",
+      "port": "ck",
+      "planned_xy_um": [
+        26264.5,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32066.23
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w249_wl_sm30",
+      "port": "ck",
+      "planned_xy_um": [
+        20665.364,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26495.174000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w250_rq_sm30",
+      "port": "ck",
+      "planned_xy_um": [
+        23636.66,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29438.39
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w253_wl_sm31",
+      "port": "ck",
+      "planned_xy_um": [
+        24794.420000000002,
+        21226.296000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30624.230000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w254_rq_sm31",
+      "port": "ck",
+      "planned_xy_um": [
+        26384.18,
+        21198.216
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32185.91
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w262_xmNE0",
+      "port": "ck",
+      "planned_xy_um": [
+        19420.316,
+        21824.64
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25848.469999999998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w263_xmNE1a",
+      "port": "ck",
+      "planned_xy_um": [
+        19906.34,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25641.134
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w263_xmNE1b",
+      "port": "ck",
+      "planned_xy_um": [
+        19344.74,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 25079.534
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w264_xmNE2a",
+      "port": "ck",
+      "planned_xy_um": [
+        25261.412,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30996.206
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w264_xmNE2b",
+      "port": "ck",
+      "planned_xy_um": [
+        26341.412,
+        19252.08
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30197.006
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w265_xmNE3",
+      "port": "ck",
+      "planned_xy_um": [
+        28238.324,
+        21131.28
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 33973.118
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w266_rgNE0",
+      "port": "ck",
+      "planned_xy_um": [
+        22001.328,
+        19773.588
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26378.43
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w267_rgNE3",
+      "port": "ck",
+      "planned_xy_um": [
+        29505.168,
+        20680.788
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 34789.47
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w268_rgNE1",
+      "port": "ck",
+      "planned_xy_um": [
+        24489.3,
+        18172.08
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 27264.894
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w269_rgNE2",
+      "port": "ck",
+      "planned_xy_um": [
+        26961.12,
+        19592.148
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31156.782
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w286_cdNE1",
+      "port": "ck",
+      "planned_xy_um": [
+        24778.2,
+        19693.668
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29075.382
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w287_cdNE0",
+      "port": "ck",
+      "planned_xy_um": [
+        24713.399999999998,
+        21091.188000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30408.102
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w363_iv_SW",
+      "port": "ck",
+      "planned_xy_um": [
+        9478.056,
+        11749.732
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17668.078
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w366_iv_SW",
+      "port": "ck",
+      "planned_xy_um": [
+        13512.936,
+        12701.732
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14585.198
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w367_iv_SE",
+      "port": "ck",
+      "planned_xy_um": [
+        20602.920000000002,
+        11749.732
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16956.166000000005
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w370_iv_SE",
+      "port": "ck",
+      "planned_xy_um": [
+        16568.04,
+        12701.732
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13873.286000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w371_iv_NW",
+      "port": "ck",
+      "planned_xy_um": [
+        9478.056,
+        12299.684000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18218.03
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w374_iv_NW",
+      "port": "ck",
+      "planned_xy_um": [
+        13512.936,
+        13215.812
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15099.278
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w375_iv_NE",
+      "port": "ck",
+      "planned_xy_um": [
+        20602.920000000002,
+        12299.684000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17506.118000000002
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w378_iv_NE",
+      "port": "ck",
+      "planned_xy_um": [
+        16568.04,
+        13001.972000000002
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14173.526000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w379_vr",
+      "port": "ck",
+      "planned_xy_um": [
+        13433.448,
+        12083.684000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14046.638
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w381_vr",
+      "port": "ck",
+      "planned_xy_um": [
+        14087.284,
+        9236.136
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10545.254
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w382_ivp_SW",
+      "port": "ck",
+      "planned_xy_um": [
+        9433.56,
+        11821.036
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17783.878
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w383_ivp_SE",
+      "port": "ck",
+      "planned_xy_um": [
+        20608.128,
+        11821.036
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17032.678
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w384_ivp_NW",
+      "port": "ck",
+      "planned_xy_um": [
+        9433.56,
+        12268.156
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18230.998
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "w385_ivp_NE",
+      "port": "ck",
+      "planned_xy_um": [
+        20608.128,
+        12268.156
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17479.798000000003
+    },
+    {
+      "tree": "clk_stream",
+      "instance": "hb_coll",
+      "port": "clk_stream",
+      "planned_xy_um": null,
+      "source": "native-full-collective-unbound",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": null
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_quant",
+      "port": "ck",
+      "planned_xy_um": [
+        15021.05999999998,
+        15307.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15715.230000000021
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_red",
+      "port": "ck",
+      "planned_xy_um": [
+        15021.05999999998,
+        15884.64
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16291.95000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_full",
+      "port": "ck",
+      "planned_xy_um": [
+        15021.05999999998,
+        16320.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16728.27000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck0",
+      "planned_xy_um": [
+        11670.912,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10425.378
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck1",
+      "planned_xy_um": [
+        11670.912,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11116.578
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck2",
+      "planned_xy_um": [
+        11670.912,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11807.777999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck3",
+      "planned_xy_um": [
+        11670.912,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12498.978000000001
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck4",
+      "planned_xy_um": [
+        11670.912,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13190.178
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck5",
+      "planned_xy_um": [
+        11670.912,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13881.378
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck6",
+      "planned_xy_um": [
+        11670.912,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14572.578
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SW",
+      "port": "ck7",
+      "planned_xy_um": [
+        11670.912,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15263.778
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck0",
+      "planned_xy_um": [
+        18371.208,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9610.673999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck1",
+      "planned_xy_um": [
+        18371.208,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10301.873999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck2",
+      "planned_xy_um": [
+        18371.208,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10993.073999999997
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck3",
+      "planned_xy_um": [
+        18371.208,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11684.274
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck4",
+      "planned_xy_um": [
+        18371.208,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12375.473999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck5",
+      "planned_xy_um": [
+        18371.208,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13066.673999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck6",
+      "planned_xy_um": [
+        18371.208,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13757.873999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_SE",
+      "port": "ck7",
+      "planned_xy_um": [
+        18371.208,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14449.073999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck0",
+      "planned_xy_um": [
+        11670.912,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21141.113999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck1",
+      "planned_xy_um": [
+        11670.912,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20449.913999999997
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck2",
+      "planned_xy_um": [
+        11670.912,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19758.714
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck3",
+      "planned_xy_um": [
+        11670.912,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19067.514000000003
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck4",
+      "planned_xy_um": [
+        11670.912,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18376.314
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck5",
+      "planned_xy_um": [
+        11670.912,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17685.114
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck6",
+      "planned_xy_um": [
+        11670.912,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16993.914
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NW",
+      "port": "ck7",
+      "planned_xy_um": [
+        11670.912,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16302.714000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck0",
+      "planned_xy_um": [
+        18371.208,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20326.409999999996
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck1",
+      "planned_xy_um": [
+        18371.208,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19635.209999999995
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck2",
+      "planned_xy_um": [
+        18371.208,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18944.010000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck3",
+      "planned_xy_um": [
+        18371.208,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18252.809999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck4",
+      "planned_xy_um": [
+        18371.208,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17561.61
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck5",
+      "planned_xy_um": [
+        18371.208,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16870.41
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck6",
+      "planned_xy_um": [
+        18371.208,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16179.21
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_su_NE",
+      "port": "ck7",
+      "planned_xy_um": [
+        18371.208,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15488.01
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck0",
+      "planned_xy_um": [
+        10527.84,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11568.45
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck1",
+      "planned_xy_um": [
+        10527.84,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12259.65
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck2",
+      "planned_xy_um": [
+        10527.84,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12950.849999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck3",
+      "planned_xy_um": [
+        10527.84,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13642.050000000001
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck4",
+      "planned_xy_um": [
+        10527.84,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14333.25
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck5",
+      "planned_xy_um": [
+        10527.84,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15024.45
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck6",
+      "planned_xy_um": [
+        10527.84,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15715.65
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SW",
+      "port": "ck7",
+      "planned_xy_um": [
+        10527.84,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16406.85
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck0",
+      "planned_xy_um": [
+        19514.28,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10753.746
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck1",
+      "planned_xy_um": [
+        19514.28,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11444.945999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck2",
+      "planned_xy_um": [
+        19514.28,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12136.145999999997
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck3",
+      "planned_xy_um": [
+        19514.28,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12827.346
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck4",
+      "planned_xy_um": [
+        19514.28,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13518.545999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck5",
+      "planned_xy_um": [
+        19514.28,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14209.746
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck6",
+      "planned_xy_um": [
+        19514.28,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14900.945999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_SE",
+      "port": "ck7",
+      "planned_xy_um": [
+        19514.28,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15592.145999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck0",
+      "planned_xy_um": [
+        10527.84,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22284.185999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck1",
+      "planned_xy_um": [
+        10527.84,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21592.985999999997
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck2",
+      "planned_xy_um": [
+        10527.84,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20901.786
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck3",
+      "planned_xy_um": [
+        10527.84,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20210.586000000003
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck4",
+      "planned_xy_um": [
+        10527.84,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19519.386
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck5",
+      "planned_xy_um": [
+        10527.84,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18828.186
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck6",
+      "planned_xy_um": [
+        10527.84,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18136.986
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NW",
+      "port": "ck7",
+      "planned_xy_um": [
+        10527.84,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17445.786
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck0",
+      "planned_xy_um": [
+        19514.28,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21469.481999999996
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck1",
+      "planned_xy_um": [
+        19514.28,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20778.281999999996
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck2",
+      "planned_xy_um": [
+        19514.28,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20087.082000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck3",
+      "planned_xy_um": [
+        19514.28,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19395.881999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck4",
+      "planned_xy_um": [
+        19514.28,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18704.682
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck5",
+      "planned_xy_um": [
+        19514.28,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18013.482
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck6",
+      "planned_xy_um": [
+        19514.28,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17322.282
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_sfu_NE",
+      "port": "ck7",
+      "planned_xy_um": [
+        19514.28,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16631.082000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck0",
+      "planned_xy_um": [
+        9631.44,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12464.849999999999
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck1",
+      "planned_xy_um": [
+        9631.44,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13156.05
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck2",
+      "planned_xy_um": [
+        9631.44,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13847.25
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck3",
+      "planned_xy_um": [
+        9631.44,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14538.45
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck4",
+      "planned_xy_um": [
+        9631.44,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15229.65
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck5",
+      "planned_xy_um": [
+        9631.44,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15920.85
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck6",
+      "planned_xy_um": [
+        9631.44,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16612.05
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SW",
+      "port": "ck7",
+      "planned_xy_um": [
+        9631.44,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17303.25
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck0",
+      "planned_xy_um": [
+        20410.68,
+        6667.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11650.146
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck1",
+      "planned_xy_um": [
+        20410.68,
+        7359.12
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12341.346
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck2",
+      "planned_xy_um": [
+        20410.68,
+        8050.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13032.545999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck3",
+      "planned_xy_um": [
+        20410.68,
+        8741.52
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13723.746000000001
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck4",
+      "planned_xy_um": [
+        20410.68,
+        9432.72
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14414.946
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck5",
+      "planned_xy_um": [
+        20410.68,
+        10123.92
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15106.146
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck6",
+      "planned_xy_um": [
+        20410.68,
+        10815.119999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15797.346
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_SE",
+      "port": "ck7",
+      "planned_xy_um": [
+        20410.68,
+        11506.32
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 16488.546000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck0",
+      "planned_xy_um": [
+        9631.44,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 23180.585999999996
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck1",
+      "planned_xy_um": [
+        9631.44,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22489.386
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck2",
+      "planned_xy_um": [
+        9631.44,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21798.186
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck3",
+      "planned_xy_um": [
+        9631.44,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21106.986
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck4",
+      "planned_xy_um": [
+        9631.44,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20415.786
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck5",
+      "planned_xy_um": [
+        9631.44,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19724.586000000003
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck6",
+      "planned_xy_um": [
+        9631.44,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19033.386
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NW",
+      "port": "ck7",
+      "planned_xy_um": [
+        9631.44,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18342.186
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck0",
+      "planned_xy_um": [
+        20410.68,
+        17383.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 22365.881999999998
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck1",
+      "planned_xy_um": [
+        20410.68,
+        16692.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 21674.681999999997
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck2",
+      "planned_xy_um": [
+        20410.68,
+        16001.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20983.482000000004
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck3",
+      "planned_xy_um": [
+        20410.68,
+        15310.056
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20292.282
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck4",
+      "planned_xy_um": [
+        20410.68,
+        14618.856
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19601.082000000002
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck5",
+      "planned_xy_um": [
+        20410.68,
+        13927.656
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18909.882
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck6",
+      "planned_xy_um": [
+        20410.68,
+        13236.456
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18218.682
+    },
+    {
+      "tree": "clk_serial",
+      "instance": "hb_hc_NE",
+      "port": "ck7",
+      "planned_xy_um": [
+        20410.68,
+        12545.256000000001
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 17527.482000000004
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s0",
+      "port": "ck",
+      "planned_xy_um": [
+        1755.6,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 15041.826
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s1",
+      "port": "ck",
+      "planned_xy_um": [
+        2919.184,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13878.241999999998
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s2",
+      "port": "ck",
+      "planned_xy_um": [
+        4101.588,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12825.414
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s3",
+      "port": "ck",
+      "planned_xy_um": [
+        5166.7080000000005,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11760.294
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s4",
+      "port": "ck",
+      "planned_xy_um": [
+        6096.276,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10830.726
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s5",
+      "port": "ck",
+      "planned_xy_um": [
+        7021.044,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9905.958
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s6",
+      "port": "ck",
+      "planned_xy_um": [
+        8083.668,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 8843.334
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SW_s7",
+      "port": "ck",
+      "planned_xy_um": [
+        9186.128,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7611.297999999999
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s0",
+      "port": "ck",
+      "planned_xy_um": [
+        20799.888000000003,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6676.458000000002
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s1",
+      "port": "ck",
+      "planned_xy_um": [
+        21962.768,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 7839.338
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s2",
+      "port": "ck",
+      "planned_xy_um": [
+        23143.62,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 9149.766
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s3",
+      "port": "ck",
+      "planned_xy_um": [
+        24365.2,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 10241.77
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s4",
+      "port": "ck",
+      "planned_xy_um": [
+        25562.244,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 11568.39
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s5",
+      "port": "ck",
+      "planned_xy_um": [
+        26615.632,
+        1337.04
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 12492.202000000001
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s6",
+      "port": "ck",
+      "planned_xy_um": [
+        27544.02,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 13550.166000000001
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s7",
+      "port": "ck",
+      "planned_xy_um": [
+        28354.26,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14360.405999999999
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_SE_s8",
+      "port": "ck",
+      "planned_xy_um": [
+        28596.275999999998,
+        1466.616
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 14602.421999999999
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s0",
+      "port": "ck",
+      "planned_xy_um": [
+        1755.6,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 36419.322
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s1",
+      "port": "ck",
+      "planned_xy_um": [
+        2919.184,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35255.738
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s2",
+      "port": "ck",
+      "planned_xy_um": [
+        4101.588,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 33943.758
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s3",
+      "port": "ck",
+      "planned_xy_um": [
+        5166.7080000000005,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32878.638
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s4",
+      "port": "ck",
+      "planned_xy_um": [
+        6096.276,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31949.07
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s5",
+      "port": "ck",
+      "planned_xy_um": [
+        7021.044,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31024.301999999996
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s6",
+      "port": "ck",
+      "planned_xy_um": [
+        8083.668,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29961.678
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NW_s7",
+      "port": "ck",
+      "planned_xy_um": [
+        9186.128,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28988.793999999998
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s0",
+      "port": "ck",
+      "planned_xy_um": [
+        20799.888000000003,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 28053.954
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s1",
+      "port": "ck",
+      "planned_xy_um": [
+        21962.768,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 29216.834
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s2",
+      "port": "ck",
+      "planned_xy_um": [
+        23143.62,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 30268.109999999997
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s3",
+      "port": "ck",
+      "planned_xy_um": [
+        24365.2,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 31619.266
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s4",
+      "port": "ck",
+      "planned_xy_um": [
+        25562.244,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 32686.733999999997
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s5",
+      "port": "ck",
+      "planned_xy_um": [
+        26615.632,
+        22714.536
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 33869.698000000004
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s6",
+      "port": "ck",
+      "planned_xy_um": [
+        27544.02,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 34668.509999999995
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s7",
+      "port": "ck",
+      "planned_xy_um": [
+        28354.26,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35478.75
+    },
+    {
+      "tree": "clk_hbm",
+      "instance": "svc_NE_s8",
+      "port": "ck",
+      "planned_xy_um": [
+        28596.275999999998,
+        22584.96
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 35720.765999999996
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_S0",
+      "port": "ck",
+      "planned_xy_um": [
+        13769.663999999999,
+        4846.812
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6569.55
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_S1",
+      "port": "ck",
+      "planned_xy_um": [
+        14270.351999999999,
+        4846.812
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6068.862
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_S2",
+      "port": "ck",
+      "planned_xy_um": [
+        14771.039999999999,
+        4846.812
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 5568.174
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_S3",
+      "port": "ck",
+      "planned_xy_um": [
+        15271.728,
+        4846.812
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 5067.486
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_S4",
+      "port": "ck",
+      "planned_xy_um": [
+        15772.416,
+        4846.812
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 5126.741999999999
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_N0",
+      "port": "ck",
+      "planned_xy_um": [
+        14019.792,
+        19204.332000000002
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20676.942000000003
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_N1",
+      "port": "ck",
+      "planned_xy_um": [
+        14520.48,
+        19204.332000000002
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 20176.254
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_N2",
+      "port": "ck",
+      "planned_xy_um": [
+        15021.168,
+        19204.332000000002
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19675.566
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_N3",
+      "port": "ck",
+      "planned_xy_um": [
+        15521.856,
+        19204.332000000002
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19233.702
+    },
+    {
+      "tree": "clk_link",
+      "instance": "lk_host",
+      "port": "ck",
+      "planned_xy_um": [
+        30021.072,
+        11989.188
+      ],
+      "source": "LEF-clk-pin-center-explicit-ck-alias",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26517.774
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w316_lk_lk_S0",
+      "port": "ck",
+      "planned_xy_um": [
+        14210.116,
+        4877.255999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6159.541999999999
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w320_lk_lk_S1",
+      "port": "ck",
+      "planned_xy_um": [
+        14676.564,
+        5689.415999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6505.253999999998
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w325_lk_lk_S2",
+      "port": "ck",
+      "planned_xy_um": [
+        16358.884,
+        4877.255999999999
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 5743.6539999999995
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w329_lk_lk_S3",
+      "port": "ck",
+      "planned_xy_um": [
+        15677.94,
+        5598.696
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 5784.150000000001
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w333_lk_lk_S4",
+      "port": "ck",
+      "planned_xy_um": [
+        16178.628,
+        5950.776
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 6636.918000000001
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w337_lk_lk_N0",
+      "port": "ck",
+      "planned_xy_um": [
+        14426.004,
+        18154.8
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19221.197999999997
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w341_lk_lk_N1",
+      "port": "ck",
+      "planned_xy_um": [
+        14653.508,
+        17893.416
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18732.309999999998
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w345_lk_lk_N2",
+      "port": "ck",
+      "planned_xy_um": [
+        15427.380000000001,
+        18295.2
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 18360.221999999998
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w349_lk_lk_N3",
+      "port": "ck",
+      "planned_xy_um": [
+        15928.068000000001,
+        18759.6
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 19195.182
+    },
+    {
+      "tree": "clk_link",
+      "instance": "w362_host",
+      "port": "ck",
+      "planned_xy_um": [
+        29478.816,
+        12031.004
+      ],
+      "source": "generator-abstract-portal",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": 26017.334000000003
+    },
+    {
+      "tree": "clk_link",
+      "instance": "hb_coll",
+      "port": "clk_link",
+      "planned_xy_um": null,
+      "source": "native-full-collective-unbound",
+      "routed_pin_verified": false,
+      "entry_manhattan_um": null
+    }
+  ],
+  "modeled_added_token_cycles": 0,
+  "token_latency_scope": "clock-entry wiring alone; no phase or added pipeline adoption",
+  "launch_gate": "Do not launch this full-tree case until every clock endpoint has a defined pin. Planning CTS still cannot qualify routed physical closure.",
+  "power_gate": "External generation, receiver input capacitance and CTS buffer power are unmeasured; no zero-cost source assumption.",
+  "source_sha256": {
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_die_clock_pin_inventory.py": "ae867d7319bd49981c50a33ba7db31cef6f63c1b1f8997c1206e9fa534db4544",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_accel_die_fp.py": "07dba0d01c74837700268dcf776ed00a1ed8555b71241539c562ad666016600e",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_die_clock_inputs.py": "0e28cb73df3ea0c92ba8ca52a33ec2ed6b7c363cd120dbe0aa614e37ccdd3298",
+    "/home/ubuntu/OpenTallas/results/physical/hbm_smh_actual_pin_contract_20261007/contract.json": "ba6cfaabf0e6a087cb98f90baa475281e283d21642af6ccd77d25a69e9185627",
+    "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+    "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+    "physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy.lef": "e1543a20cbaae2766f004fd45edb7b26e8605ba4812c3feee444054696d2d1c3"
+  }
+}
