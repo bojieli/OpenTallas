@@ -588,8 +588,17 @@ The verify layer is 3.26× the AR layer (17,197 / 5,282). <!-- figure: 17197 src
 The acceptance length is τ = 3.1445 accepted tokens a step. <!-- figure: 3.1445 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#tau" name="DSpark tau third-party" -->
 τ is the published DSpark Qwen3-8B figure, truncated to three drafts
 (`results/speculative/third_party_acceptance_20261004/acceptance.json`); it is
-not measured here. The per-user rate is τ · f / S = **4,346.2** tok/s, <!-- figure: 4346.2 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.tok_s_upper" name="DSpark STREAM4 tok/s" -->
-which is **0.704×** of AR. <!-- figure: 0.704 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.speedup_vs_ar_upper" name="DSpark STREAM4 vs AR" -->
+not measured here. On the measured stages alone the per-user rate is τ · f / S = 4,346.2 tok/s, 0.704× of the
+AR token of the same vehicle (`qwen_rom_kv_fullbw_20261004/dspark_verdict.json`).
+The adopted r21 die relay stations (430.56 µm reach) add register stages that these measured components do not
+carry, and the AR headline already pays them. The step is charged the same deltas, priced, not simulated:
++96 cycles on each of its 1,003 ME ops (95 relay stages plus 1 for slab MUL_LAT 7), <!-- figure: 1003 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.relay_upper.me_ops" tol="exact" name="DSpark step ME ops" -->
++26 on each of its 96 hub–stack collectives, and +54 for the cold first layer. That is 98,838 cycles, <!-- figure: 98838 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.relay_upper.cycles" tol="exact" name="DSpark step relay cycles" -->
+for a step of 967,038. <!-- figure: 967038 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.step_upper" tol="exact" name="DSpark step with relays" -->
+The ME op counts are decoded from the program images the components ran.
+The published per-user rate is **3,902.0** tok/s, <!-- figure: 3902.0 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.tok_s_upper" name="DSpark STREAM4 tok/s" -->
+**0.705×** of the 5,537.3 tok/s AR headline. <!-- figure: 0.705 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.speedup_vs_ar_upper" name="DSpark STREAM4 vs AR" -->
+The relays cost both modes about the same share, so the verdict does not change.
 With the drafter ingest and Markov epilogue priced instead of measured (7,875
 cycles), the step was 801,075 cycles: 4,710.4 tok/s, 0.763× of AR. With a free
 draft (`D` = 0) the bound is still **0.969×** of AR. <!-- figure: 0.969 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#bound_if_draft_free.speedup_vs_ar_chained" name="DSpark free-draft bound" -->
@@ -632,7 +641,7 @@ of it:
 
 | Machine and path | AR layer | Verify layer (positions) | `V / L` | `rho` | DSpark or MTP vs AR | Record |
 |---|---:|---:|---:|---:|---:|---|
-| Qwen ROM, STREAM4 (this) | 5,282 | 17,197 (4) | 3.26 | 0.75 | 0.70× | `qwen_rom_kv_fullbw_20261004` |
+| Qwen ROM, STREAM4 (this; r21 relays charged to both modes) | 5,282 | 17,197 (4) | 3.26 | 0.75 | 0.70× | `qwen_rom_kv_fullbw_20261004`, `relays_r21/dspark_verdict_relays.json` |
 | Qwen ROM, one-stack REAL_MEM | 14,574 | 24,320 (4) | 1.67 | 0.22 | 1.57× | `qwen_dspark_system_20261004/ctx8k` |
 | Qwen ROM, P255 | 4,338 | 12,520 (4) | 2.89 | 0.63 | 0.83× (τ 3.04) | `qwen_dspark_system_20261004/step_composed.json` |
 | Qwen HBM accelerator, TP4, 8K | 17,237 | 16,044 (4) | 0.93 | ~0 | 2.28× (τ 3.04) | `hbm_accel_qwen_chains_20261004` (main `2f4a6af49`) |
@@ -685,6 +694,9 @@ deliver at least 1% per user after composition.
 
 Each lever was measured on the same STREAM4 verify vehicle at P8187, exact,
 or is an area estimate where it is marked as one (`dspark_verdict.json`).
+
+Ratios in this table are on the measured stages without the r21 relays. With the relays charged to both modes
+they are 0.705×, 0.738× and 0.695–0.746× (`dspark_verdict_relays.json`).
 
 | Lever | Verify layer | Positions (τ) | Step | DSpark ÷ AR | Verdict |
 |---|---:|---:|---:|---:|---|

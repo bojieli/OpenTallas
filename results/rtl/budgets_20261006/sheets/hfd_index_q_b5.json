@@ -27,14 +27,14 @@
   ],
   "n_regions": 4,
   "entry_target_ss_ps": {
-   "mean": 2690.9,
-   "min": 2689.5,
-   "max": 2693.3
+   "mean": 2594.7,
+   "min": 2592.8,
+   "max": 2596.6
   },
   "entry_target_ff_ps": {
-   "mean": 1427.0,
-   "min": 1426.4,
-   "max": 1427.9
+   "mean": 1376.0,
+   "min": 1375.3,
+   "max": 1376.8
   },
   "die_pad_ss_ps": {
    "mean": 0.0,
@@ -109,13 +109,13 @@
    "output_fraction_of_T": 0.325,
    "internal_input_ps": 428.1,
    "internal_output_ps": 487.1,
-   "as_planned_internal_input_ps": 146.5,
-   "as_planned_internal_output_ps": 205.5,
+   "as_planned_internal_input_ps": 174.8,
+   "as_planned_internal_output_ps": 233.8,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 414.7,
    "stages_needed": 11,
-   "stages_planned": 13,
+   "stages_planned": 14,
    "extra_stages_needed": 0,
    "segment_after_stages_um": 100.0,
    "input_min_delay_ff_ps": 43.4,
@@ -234,7 +234,7 @@
    "skew_class": "intra",
    "skew_ps": 86.7,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:hb_index_SW_b5<->w315_ivp_SW",
+   "worst_instance": "hbm:hb_index_SW_b5<->w369_ivp_SW",
    "also_cdc": false,
    "input_delay_ss_ps": 316.3,
    "output_delay_ss_ps": 257.3,

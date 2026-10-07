@@ -54,6 +54,15 @@ ITEMS = [
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 # CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)
 CANDIDATES = [
+    ("fh_half", "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF "
+                "EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 "
+                "(+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",
+     [("draft.head_occ", 8387, 0)]),
+    ("head_elem", "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT "
+                  "8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+     [("head.lm_head", 57, 0), ("draft.head_occ", 57, 0)]),
+    ("fused_head", "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT "
+                   "63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)", [("draft.head_occ", 25, 0)]),
     ("bf_half", "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, "
                 "exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase "
                 "share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes "
@@ -66,6 +75,12 @@ CANDIDATES = [
      [("*.attn.wo_a", 60, 0), ("*.attn.a_proj", 45, 0), ("*.ffn.router", 15, 0), ("*.attn.cmp.wk", 15, 0),
       ("*.attn.wq_b", 15, 0), ("*.attn.wo_b", 15, 0), ("*.ffn.shared_gu", 15, 0), ("*.ffn.experts_gu", 15, 0),
       ("*.ffn.down", 15, 0)]),
+    ("bf_unroll", "BF unroll-by-2 (ot_s81_bf_native RECUT=3, claude/dsrom-bf-rowfix-20261007 9cf64047e; exact record c394c0ace; "
+                  "closure-loop bf_unroll_9cf64047e): re-cut A + lane chains unrolled by 2 on a half-rate gated clock, latency "
+                  "only, lag per partial 4 / 8.8 / 18; upper bound +18 per field phase",
+     [("*.attn.wo_a", 72, 0), ("*.attn.a_proj", 54, 0), ("*.ffn.router", 18, 0), ("*.attn.cmp.wk", 18, 0),
+      ("*.attn.wq_b", 18, 0), ("*.attn.wo_b", 18, 0), ("*.ffn.shared_gu", 18, 0), ("*.ffn.experts_gu", 18, 0),
+      ("*.ffn.down", 18, 0)]),
 ]
 
 

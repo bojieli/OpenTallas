@@ -426,17 +426,17 @@
   "MTP_mode": "AR (DSpark OFF)",
   "MTP_tok_s": 5537.3,
   "dspark_reference": {
-   "tok_s": 4346.2,
-   "speedup_vs_ar": 0.704,
+   "tok_s": 3902.0,
+   "speedup_vs_ar": 0.705,
    "tau": 3.1445,
    "verdict": "AR_MODE",
-   "record": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+   "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json"
   },
   "physical_qualified_full_system": false,
   "inputs": {
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
    "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
-   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json": "3a8110ead991aac5eb4f861365686711abf5b30ef9e682b0ed1f37456ee3d9ae",
    "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
    "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
@@ -614,11 +614,11 @@
    "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "48b20fb7033275a09559b912d839658fd4ef14f10161160ad492c02fc455c7e2"
   },
   "ds_rom_composition": {
-   "results/rtl/dsrom_recovery_20261004/composition.json": "2c3a8d134de0638a67aca6d72ce264e47e8e3525b6b268e1835ed576d539209d"
+   "results/rtl/dsrom_recovery_20261004/composition.json": "5ee67a3e7072c2a2f1ef49329a55b13665c93b24deb34ce9643167d7b2f36cba"
   },
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
-  "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json": "3a8110ead991aac5eb4f861365686711abf5b30ef9e682b0ed1f37456ee3d9ae",
   "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
   "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
@@ -631,6 +631,6 @@
   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "2ab29e81e49f7dee47c28e56bcca207154eea37735f99a5b1c514db360ab11c8"
+  "tools/three_machine_compose.py": "6eeab78681fa7caf49ab2138b08eb6c632e10f34d37fa11ad13c27df8644c07a"
  }
 }

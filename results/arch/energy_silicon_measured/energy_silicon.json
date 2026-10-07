@@ -9,7 +9,7 @@
  "supersedes": "results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM rate, ASSUMED 10% power-gating residual)",
  "inputs": {
   "scoreboard": "results/arch/measured_scoreboard/scoreboard.json",
-  "scoreboard_commit": "60c6e1172",
+  "scoreboard_commit": "2758a0dc5",
   "element_power": "results/rtl/rom_stage_power_gating_20261004/verdict.json",
   "spine": "results/rtl/rom_stage_spine_gate_20261004/verdict.json",
   "registry": "results/external/registry.json",
@@ -769,10 +769,10 @@
      "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) + 22,487 r21 die relay stations at the measured 430.56 um reach (owner ADOPT 2026-10-07, -10.4%; results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json) = 216,713 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
     },
     "dspark": {
-     "value": 4346.2,
+     "value": 3902.0,
      "status": "partial",
-     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.dspark_tok_s_8k_stream4'] <- results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json (variants.baseline_np4.tok_s_upper)",
-     "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200; tau third-party 3.1445; 0.704x AR"
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.dspark_tok_s_8k_stream4'] <- results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json (variants.baseline_np4.tok_s_upper)",
+     "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200 measured, + 98,838 r21 relay stages (1,003 ME ops x 96 + 96 collectives x 26 + 54, the AR headline's per-op deltas) = 967,038; tau third-party 3.1445; 0.705x AR (pre-relay 4,346.2, 0.704x)"
     }
    },
    "silicon": {
@@ -825,13 +825,13 @@
      "note": ""
     },
     "dspark": {
-     "tok_s": 4346.2,
+     "tok_s": 3902.0,
      "rate_status": "partial",
      "static_w": 200.0,
-     "dynamic_w": 332.9,
-     "system_w": 532.9,
-     "J_per_token": 0.1226,
-     "tok_s_per_kW": 8156.13,
+     "dynamic_w": 298.9,
+     "system_w": 498.9,
+     "J_per_token": 0.1278,
+     "tok_s_per_kW": 7821.93,
      "status": "modelled",
      "unvalidated": [
       "Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
@@ -1155,14 +1155,14 @@
     },
     "rom_dspark": {
      "rate_label": "DSpark",
-     "per_user_tok_s": 4346.2,
+     "per_user_tok_s": 3902.0,
      "total_mm2": 20607.9,
      "logic_dies": 4,
-     "per_user_tok_s_per_1000mm2": 210.8997,
+     "per_user_tok_s_per_1000mm2": 189.3449,
      "replicas_at_ref_silicon": 1.0,
      "batch1_users_at_ref_silicon": 1.0,
-     "aggregate_b1_tok_s_integer_replicas": 4346.2,
-     "aggregate_b1_tok_s_fractional": 4346.2
+     "aggregate_b1_tok_s_integer_replicas": 3902.0,
+     "aggregate_b1_tok_s_fractional": 3902.0
     },
     "hbm_tp4_ar": {
      "rate_label": "AR",

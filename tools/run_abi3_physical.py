@@ -3266,6 +3266,13 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
+    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
+    if _ot_rhc and args.hold_corners:
+        # closure loop (2026-10-07): route-time repair corners; "primary" = --orfs-corner (or the first listed corner)
+        _ot_new = (args.orfs_corner or args.hold_corners.split(",")[0].strip()) if _ot_rhc == "primary" else _ot_rhc
+        print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: place-and-route repair corners {args.hold_corners} -> {_ot_new} "
+              f"(FF hold: post-route hold ECO; sign-off unchanged)", file=sys.stderr)
+        args.hold_corners = _ot_new
     previous = {}
     try:
         for option, override, env, callback in (

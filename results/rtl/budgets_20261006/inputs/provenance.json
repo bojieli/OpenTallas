@@ -10,9 +10,9 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "df439a33d8f9d7d2cab15a851e138bf72807aee2",
+   "commit": "6ec4d17de005f39027971d8aca826c3ba153eace",
    "generator": "tools/hbm_accel_die_fp.py",
-   "options": "ADOPTED = R21 (r20 + index b5 t_vm pin stations)",
+   "options": "ADOPTED = R23 (r22 + 2x hub, clustered hub pins, mcast_r6 a/b split, svc SE_s7/s8 split, attention tile 1778.5 x 1350 um, SE_s1 centre ck, stable station roles)",
    "via": "tools/die_top_lint.py build(hbm)",
    "publication_commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
    "source_binding": "commit matches source_commit embedded in die model and clock plan; publication_commit identifies the coordinator publication revision"
@@ -30,9 +30,9 @@
  },
  "cts_hbm_r18": {
   "host": "ot-epyc2",
-  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud19",
+  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud23f",
   "image": "openroad/orfs:asap7lock",
-  "result": "r19: 34 regions, 277 sinks, max intra 56.7, max inter 141.4, 0 violations"
+  "result": "r23: 37 regions (family roots), stream trunk 2.59 ns SS, max intra 56.7, max inter 58.5, 0 > 150"
  },
  "insertion_override": "inputs/insertion_override.json (HBM index_q b0-b3/b5: edge ck kept, measured insertion accepted, extra OCV on IO skew)"
 }

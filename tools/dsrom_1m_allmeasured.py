@@ -405,6 +405,12 @@ def apply_add_cycles(P, lever_dir):
             continue
         for ad in r["adds"]:
             key = ad["nodes"]
+            if key == "draft.head_occ":  # pseudo-node: per-position draft head occupancy (draft = 5 x head_occ ...)
+                if r.get("items") is not None and ad.get("item") not in r["items"]:
+                    continue
+                P.draft_head_occ_add_us = getattr(P, "draft_head_occ_add_us", 0.0) + ad.get("cycles", 0) / ad.get("clk_hz", CLK) * 1e6
+                out.append(dict(lever=r["lever"], item=ad.get("item"), nodes=key, count=1, cycles=ad.get("cycles", 0), frac=0.0))
+                continue
             names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
             assert names and all(n in P.g.nodes for n in names), (f, key)
             if r.get("items") is not None and ad.get("item") not in r["items"]:
@@ -750,6 +756,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     wave = json.loads(WAVE.read_text())["composition"]
     segs = stage_busy(g)
     head_occ = info.get("head", {}).get("stage_occupancy_us", M.WAVEFRONT["head_occ_us"])
+    head_occ += getattr(P, "draft_head_occ_add_us", 0.0)   # closure-cost ledger draft.head_occ adds
     for s in segs:
         if s["hop"] == "token.return":          # the head stage: lm_head sweep is its occupancy (terminal overlaps)
             s["busy_us"] = max(s["busy_us"] - info.get("head", {}).get("argmax_drain_us", 0.0), head_occ)

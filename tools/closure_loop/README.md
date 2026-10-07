@@ -191,3 +191,29 @@ proofs must match the audit snapshots. Rebound jobs retain their complete sheet
 on later calibration, check both SS/FF boundary maxima, and refuse a digest
 mismatch. Records remain component evidence; automatic integration-branch merge
 is disabled for these three rebinds pending parent review.
+
+## Launch immediately, in parallel (OWNER 2026-10-07 05:00)
+- Benches run in a PARALLEL TRACK beside calibrate -> route (same host, one bench at a time, `<bench>.a<n>b<k>` tags).
+  They gate adoption, not launch: the verdict waits until every bench has its expected verdict; a bench with the wrong
+  verdict stops the job's running stage (route / calibrate / ECO) and ends the job NEEDS_RTL; a bench that crashes is
+  retried once. Default for every job that had not started its first stage when this deployed; `"bench_first": true`
+  in the spec keeps the old order (benches, then calibrate/route).
+- Up to 3 routes per (block, source commit) (small + aggressive + half-rate variants together); was 1.
+- localhost is a host (hosts.json): ORFS stages only, at most 24 loop threads in total (`max_loop_threads`) and
+  MemAvailable >= job peak + 40 GB (`min_free_ram_gb`), so ssh stays responsive. Stages run directly, without ssh.
+- New jobs route at hold margin 10 ps (see "Hold margin" above).
+
+## Route-time hold corners (2026-10-07)
+- Route stages export `OT_ROUTE_HOLD_CORNERS=primary` and run `hold_corners_patch.py` on the job's snapshot (older
+  snapshots get the same code main's tools/run_abi3_physical.py now has): place-and-route repairs setup and hold at the
+  primary corner (WC) only. The recipes' one route SDC puts the virtual IO clock at the SS insertion, so at BC every
+  IO path showed a fake hold violation of about the SS-FF insertion difference (hfd_svc_SE_s6 route SDC: output hold
+  WC +106 / BC -121 ps) and the flow inserted thousands of hold buffers (SE_s6 7,531, SW_s4 5,939, ctrl_pc 11,732).
+  FF hold is closed by the post-route hold ECO against the exact FF sign-off constraints; sign-off is unchanged.
+  Spec `"route_hold_corners": "keep"` keeps the recipe's own `--hold-corners`; any other value is passed through.
+- localhost incident (2026-10-07 05:20): recipes pinning the BARE image ID `sha256:16470cea...` failed there (exit 125):
+  the same image has another ID in localhost's overlay2 store. localhost stages now export
+  `OPENTALLAS_ORFS_IMAGE=openroad/orfs@sha256:16470cea...` (the registry digest resolves everywhere; the image's Yosys /
+  OpenROAD binaries are byte-identical to the fleet's), and a job whose recipe hard-codes a bare ID is not placed there.
+  hosts.json `smoke_only` admits only spec `"smoke": true` jobs (terminal status SMOKE_OK, nothing published);
+  spec `host_require` pins a job to hosts.

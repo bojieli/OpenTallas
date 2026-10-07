@@ -146,6 +146,11 @@ COL_PITCH = COL_W + 8.64      # 1,143.936
 TIER_COLS = (8, 11, 13, 13, 11, 8)   # frames per tier and half: a Manhattan 'diamond' around the VM x root
 COLS, TIERS = max(TIER_COLS), len(TIER_COLS)
 CH = 259.2                    # tier channel
+CHS = None                    # --ch-heights (S81-RERUN v9, OWNER rule 3): per-channel heights (TIERS + 1), default CH each
+
+
+def chh(t):
+    return CHS[t] if CHS else CH
 MAX_GROUP = 4                 # columns per clock region (4 x 1,143.9 um <= 5.25 mm)
 
 
@@ -691,7 +696,7 @@ def buses(m):
         for t in range(TIERS):
             chain = f'T{half}{t}'
             crs = [cr for cr in m['cregions'] if cr['name'].startswith(f'cr_{half}{t}')]
-            cy = g['ch_y'][t] + CH - 4.32 - STN_H[1]
+            cy = g['ch_y'][t] + chh(t) - 4.32 - STN_H[1]
             # vertical leg in the VCH from the VM's y to the channel
             y0 = vm.y + vm.h / 2
             y1 = cy
@@ -1326,7 +1331,7 @@ def trunk_stages(m):
     rows = []
     for r, f in m['frames'].items():
         fb = by[m['fifo_of'][r]]
-        cy = g['ch_y'][f['tier']] + CH / 2
+        cy = g['ch_y'][f['tier']] + chh(f['tier']) / 2
         fx = fb.x + fb.w / 2
         trunk = abs(vm.x + vm.w - vx) + abs(cy - vy) + abs(fx - vx)
         inreg = abs((f['x'] + LANE_W) - fx) + abs(f['y'] - cy)
@@ -2096,7 +2101,7 @@ def where(m, x, y):
     if g['x_sp'] <= x < g['x_fe'] and g['y_f'] <= y < g['y_top']:
         return 'vch' if m['x_vch'] <= x < m['x_vch'] + VCH else 'spine'
     for t, c in enumerate(g['ch_y']):
-        if c <= y < c + CH and g['x_fw'] <= x < g['x_le']:
+        if c <= y < c + chh(t) and g['x_fw'] <= x < g['x_le']:
             return f'channel{t}'
     for r in m['regions']:
         a, b, c, e = r['rect']
@@ -2187,7 +2192,7 @@ def slot_geometry(elem_frame_h=None, field_margin=None):
         FIELD_MARGIN = float(field_margin)
     SLOT_H8 = round(up(ELEM_DY + ELEM_FRAME_H + 4.32, GY), 3)
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
-    avail = DIE[1] - 2 * band - 2 * FIELD_MARGIN - (TIERS + 1) * CH
+    avail = DIE[1] - 2 * band - 2 * FIELD_MARGIN - sum(chh(t) for t in range(TIERS + 1))
     SLOTS8 = int(avail // (TIERS * SLOT_H8))
     return SLOT_H8, SLOTS8
 
@@ -2604,11 +2609,11 @@ def build_r8(variant=None):
     assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     SLOT_H, SLOTS = slot_geometry()
-    field_h = TIERS * SLOTS * SLOT_H + (TIERS + 1) * CH
+    field_h = TIERS * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(TIERS + 1))
     y_f = up((H - field_h) / 2, GY)
-    ch_y = [y_f + t * (SLOTS * SLOT_H + CH) for t in range(TIERS + 1)]
-    tier_y = [c + CH for c in ch_y[:TIERS]]
-    y_top = ch_y[TIERS] + CH
+    ch_y = [y_f + t * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(t)) for t in range(TIERS + 1)]
+    tier_y = [c + chh(t) for t, c in enumerate(ch_y[:TIERS])]
+    y_top = ch_y[TIERS] + chh(TIERS)
 
     def col_x(half, c):
         return dn(x_sp - SPF - (c + 1) * COL_PITCH8 + 8.64, GX) if half == 'W' else up(x_fe + SPF + c * COL_PITCH8, GX)
@@ -2638,7 +2643,7 @@ def build_r8(variant=None):
                 for q in range(4):
                     insts.append(Inst(f'{g}a{q}', ra_['name'], x0 + 4.32 + q * HB_PITCH[0], yb + HB_PITCH[1],
                                       ra_['w'], ra_['h'], kind='hb_elem', region=f'frame_{r}', power_w=HEAD_ELEM_W['A']))
-            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                               CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
             continue
         pairs = list(range(*rng[r]))
@@ -2713,7 +2718,7 @@ def build_r8(variant=None):
             insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + 2 * LANE_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
                               NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
-        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
     # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
     x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
@@ -2821,7 +2826,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -2866,7 +2871,7 @@ def _corridors(m):
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
     for t, c in enumerate(g['ch_y']):
-        cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + CH - 4.32 - CF_WH[1] - 2.16)
+        cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
     return cor
 
 
@@ -3279,7 +3284,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else '') + ('w' if (CHS or VCH8 != 1209.6 or HC_CORR != 1209.6) else ''))
 
 
 def set_cc_reach(um):
@@ -4772,6 +4777,10 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--ch-heights', help='r9 (OWNER rule 3): comma list of the TIERS + 1 tier-channel heights in um '
+                    '(default 259.2 each)')
+    ap.add_argument('--vch-w', type=float, help='r9: VCH width in um (default 1209.6)')
+    ap.add_argument('--hc-corr', type=float, help='r9: HC crossing corridor height in um (default 1209.6)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
@@ -4794,8 +4803,12 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
-    global PIN_RELAY
+    global PIN_RELAY, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
+    CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
+    VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
+    HC_CORR = float(a.hc_corr) if getattr(a, 'hc_corr', None) else 1209.6
+    SPINE_W8 = SPINE_W + VCH8 - VCH
     LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8

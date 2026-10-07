@@ -1893,7 +1893,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>+ die relay stations at the measured 430.56 µm reach (r21 floorplan, 8,965 relays; per matrix op broadcast 41→77, in-block tree 20→21, block words 38→93, result 7→10 stages; link 46→72 a traversal), owner-approved 2026-10-07</td><td class="r m">+22,487</td><td class="r m">−641.1 (−10.4%)</td><td><span class="tag meas">priced on the measured token</span></td></tr>
       <tr class="sel"><td><b>Headline</b></td><td class="r m"><b>216,713</b></td><td class="r m"><b>5,537.3</b></td><td><span class="tag meas">composed from measured</span></td></tr>
       <tr><td>Sensitivity: + Option M die crossbar (cycle model on the measured landing trace)</td><td class="r m">+24</td><td class="r m">5,536.7</td><td><span class="tag mod">modelled, not RTL</span></td></tr>
-      <tr><td>DSpark speculation at τ 3.1445 (built, exact, off)</td><td class="r m">—</td><td class="r m">4,346.2 (0.70×)</td><td><span class="tag rtl">RTL stages</span>; τ third-party</td></tr>
+      <tr><td>DSpark speculation at τ 3.1445 (built, exact, off)</td><td class="r m">—</td><td class="r m">3,902.0 (0.705×)</td><td><span class="tag rtl">RTL stages</span> + the same r21 relay stages priced on its 1,003 matrix ops; τ third-party</td></tr>
     </tbody>
   </table></div>
   <p class="note"><b>Takeaway.</b> The headline is a measured token plus measured lever deltas and the die relay stations priced stage by stage on that token. The only modelled term is the Option M crossbar, worth 0.6 tok/s. Against GPUs at 8K the closed configuration is 18.52× eight H100s (TP-8, FP8) and 30.76× one H100 (results/arch/measured_scoreboard/scoreboard.json). Neither ratio is iso-area or iso-power.</p>

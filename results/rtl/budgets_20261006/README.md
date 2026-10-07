@@ -139,3 +139,15 @@ every one.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r19b: every attention root bus (tile row -> index band a0..a3) and index-key chain end (-> b0 k) ends in a die station abutting the receiving pin (budget PIN_LAST_UM 100 um, +1 hop): index b5 a3 internal input budget 113.6 -> 428.1 ps; all index-band interfaces >= 387.8 ps.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r20 (VM quadrant tiles with the centre M7 ck). Clock plan unchanged in outcome (34 regions, max inter 141.4, 0 > 150).
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r21: a station opposite each index b5 t_vm pin run (87.7 um): b5 t_vm internal output budget 247.7 -> 501.1 ps. Clock plan 36 regions, max inter 141.4, 0 > 150.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER three rules): HBM on r22: a relay station abuts every hardened-block pin of every
+  die interface whose pin segment exceeds 100 um (500 relay ends, list relay_ends_hbm.json; last segment <= 100 um,
+  +1 hop each). HBM hardened blocks with an interface internal budget < 300 ps: 17 -> 1 (ot_pdie_serdes black box, 465 ps
+  after the link relay; hfd_su a at 339.7 ps). Clock plan unchanged (relays are not clock-tree instances).
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER 2x hub): HBM on r23: SU / SFU / HC quarters x2 area (1406 / 797 / 551 um x 5530 um), die W 24.40 -> 27.16 mm; hub quarter E/W ports in <= 500 um windows. Clock plan: stream trunk 2.69 -> 2.88 ns SS, 7 SE-group w/e crossings at 150.5-150.9 ps (<= 0.9 ps over the 150 ps term: next plan pads them). HBM infeasible 0.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r23 (die 30.59 x 24.62 mm): 2x hub (SU / SFU / HC quarters 1406 / 797 / 551 um wide,
+  ports clustered in <= 500 um windows), attention tile 1778.5 x 1350.0 um (~54 % util, option-B power), mcast_r6 split into
+  hfd_mcast_r6a / r6b (half bus each), svc SE_s7 split into SE_s7 + SE_s8, SE_s1 centre ck. Clock plan method update: sibling
+  regions (SM group halves, scan-quadrant cuts, HUB-C cuts) share ONE trunk sink at their family root, and forwarded-clock
+  segments are not tree pairs: 37 regions, max intra 56.7 ps, max inter 58.5 ps (the wider die had 54 crossings at
+  150-160 ps with per-region trunk sinks). Stale sheet hfd_vm removed (split into hfd_vm_{sw,se,nw,ne} since r19).
+  HBM infeasible as planned: 0.

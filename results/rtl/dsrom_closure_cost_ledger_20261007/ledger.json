@@ -395,6 +395,56 @@
  },
  "candidates": [
   {
+   "item": "fh_half",
+   "description": "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 (+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",
+   "adds": [
+    [
+     "draft.head_occ",
+     8387,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4536.5,
+   "ar_pct_vs_total": 0.0,
+   "mtp_pct_vs_total": -3.841
+  },
+  {
+   "item": "head_elem",
+   "description": "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT 8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+   "adds": [
+    [
+     "head.lm_head",
+     57,
+     0
+    ],
+    [
+     "draft.head_occ",
+     57,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.2,
+   "mtp_tok_s": 4716.2,
+   "ar_pct_vs_total": -0.006,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "fused_head",
+   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)",
+   "adds": [
+    [
+     "draft.head_occ",
+     25,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4717.1,
+   "ar_pct_vs_total": 0.0,
+   "mtp_pct_vs_total": -0.013
+  },
+  {
    "item": "bf_half",
    "description": "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
    "adds": [
@@ -478,6 +528,61 @@
    "mtp_tok_s": 4683.3,
    "ar_pct_vs_total": -0.904,
    "mtp_pct_vs_total": -0.729
+  },
+  {
+   "item": "bf_unroll",
+   "description": "BF unroll-by-2 (ot_s81_bf_native RECUT=3, claude/dsrom-bf-rowfix-20261007 9cf64047e; exact record c394c0ace; closure-loop bf_unroll_9cf64047e): re-cut A + lane chains unrolled by 2 on a half-rate gated clock, latency only, lag per partial 4 / 8.8 / 18; upper bound +18 per field phase",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     72,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     54,
+     0
+    ],
+    [
+     "*.ffn.router",
+     18,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     18,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     18,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     18,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     18,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     18,
+     0
+    ],
+    [
+     "*.ffn.down",
+     18,
+     0
+    ]
+   ],
+   "ar_tok_s": 1585.7,
+   "mtp_tok_s": 4676.2,
+   "ar_pct_vs_total": -1.098,
+   "mtp_pct_vs_total": -0.88
   }
  ],
  "pending_defect": [],

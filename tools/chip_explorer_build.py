@@ -106,8 +106,8 @@ D['rates'] = dict(
         sens=V(dict(cycles=q['modelled_sensitivity']['cycles'], token_cycles=q['modelled_sensitivity']['token_cycles'], AR=q['modelled_sensitivity']['AR_tok_s']),
                'tok/s', 'analytical', CMP + ' qwen_rom.modelled_sensitivity (' + q['levers']['kv_map_m']['modelled_not_composed']['status'] + '; not a headline)'),
         AR_us=V(q['AR_us'], 'us', 'measured', CMP + ' qwen_rom.AR_us'),
-        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json (partial: tau third-party 3.1445)'),
-        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json'),
+        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json (partial: tau third-party 3.1445; r21 relays charged)'),
+        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
         AR=V(ds['AR_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.AR_tok_s (all-measured composition, recovery baseline + adopted levers, every off-package link on full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + ')'),
