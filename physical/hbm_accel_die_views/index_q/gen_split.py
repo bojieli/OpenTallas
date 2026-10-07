@@ -200,12 +200,15 @@ endmodule
     wire pick1 = ne[2*g+1] && (!ne[2*g] || last[g] == 1'b0);
     assign take[2*g] = ne[2*g] && !pick1;
     assign take[2*g+1] = pick1;
-    reg v; reg [527:0] d;
+    // views agent (s4_b2 SS -90.21: FIFO read pointer -> 4:1 read mux -> lane pick mux -> d, 19 levels; d -> t_su
+    // -17 over the wire): both FIFO heads and the pick are registered first (hq / pq), the pick mux runs the next
+    // cycle, and the lane leaves through a 2-stage pin chain (u_o): +3 cycles on each t_su row, transaction-exact
+    reg vq, pq, v; reg [527:0] hq0, hq1, d;
     always @(posedge c or negedge rn)
-      if (!rn) begin v <= 1'b0; last[g] <= 1'b1; end
-      else begin v <= ne[2*g] || ne[2*g+1]; if (ne[2*g] || ne[2*g+1]) last[g] <= pick1; end
-    always @(posedge c) d <= pick1 ? fd[2*g+1] : fd[2*g];
-    assign lv[g] = v; assign ld[g] = d;
+      if (!rn) begin vq <= 1'b0; v <= 1'b0; last[g] <= 1'b1; end
+      else begin vq <= ne[2*g] || ne[2*g+1]; v <= vq; if (ne[2*g] || ne[2*g+1]) last[g] <= pick1; end
+    always @(posedge c) begin hq0 <= fd[2*g]; hq1 <= fd[2*g+1]; pq <= pick1; d <= pq ? hq1 : hq0; end
+    ot_svc_vpipe #(.W(528), .N(2)) u_o (.ck(c), .rst_n(rn), .v(v), .d(d), .qv(lv[g]), .q(ld[g]));
   end endgenerate
   assign t_su = {ld[1], lv[1], ld[0], lv[0]};
 """
@@ -257,8 +260,9 @@ def main():
     # added-cycle ledger vs the one-slot MARGIN view (A_ST 8 + input reg + FIFO + lane = 11 regs per row; keys kf +
     # K_ST 16 + vm = 18): the split adds one zero-length face hop per band boundary crossed and re-sizes every chain
     # to its own distance
-    rows = {'a0': st['b0.a0'] + st['b1.a0'] + st['b2.r0'] + 2, 'a1': st['b2.r1'] + 2,
-            'a2': st['b3.a2'] + st['b2.r2'] + 2, 'a3': st['b5.a3'] + st['b4.a3'] + st['b3.a3'] + st['b2.r3'] + 2}
+    L = 5   # FIFO + lane: was 2 (FIFO, lane d); views agent: + head/pick register + 2-stage t_su pin chain
+    rows = {'a0': st['b0.a0'] + st['b1.a0'] + st['b2.r0'] + L, 'a1': st['b2.r1'] + L,
+            'a2': st['b3.a2'] + st['b2.r2'] + L, 'a3': st['b5.a3'] + st['b4.a3'] + st['b3.a3'] + st['b2.r3'] + L}
     keys = 2 + st['b0.kp'] + sum(st[f'b{i}.kp'] for i in (1, 2, 3, 4)) + st['b5.kp'] + 1
     led = dict(hop_um=HOP, bands=dict(zip(NAMES, [dict(y0_um=y, h_um=h) for y, h in zip(Y0, H)])), stages=st,
                regs=dict(rows=rows, keys=keys), margin_view_regs=dict(rows=11, keys=18),
