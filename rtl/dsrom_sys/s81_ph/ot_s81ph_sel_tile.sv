@@ -157,7 +157,7 @@ module dsfd_selt_q2 #(parameter integer DM = 4) (
 endmodule
 
 module dsfd_selt_c #(
-    parameter integer SEARCH_PIPE = 0,
+    parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer DM   = 4,
     parameter integer PACE = 2
 ) (
@@ -362,7 +362,7 @@ endmodule
 
 // composition reference (bench and die generator): lanes {NE, NW, SE, SW} as dsfd_bk_selector
 module ot_s81ph_sel_t #(
-    parameter integer SEARCH_PIPE = 0,
+    parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer SAFE = 0,              // 1: dsfd_selt_q2 quarter tiles
     parameter integer LSTG = 5,              // die stations on each lane from the slab face to its quarter tile
     parameter integer DM   = 4,

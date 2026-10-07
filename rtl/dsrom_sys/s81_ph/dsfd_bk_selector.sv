@@ -5,7 +5,7 @@
 // pins; vf is its forwarded clock (ck through the kept forwarding inverter: the first station captures on negedge vf =
 // posedge ck, one full cycle).  Function and word formats: ot_s81ph_sel.sv.
 module dsfd_bk_selector #(
-    parameter integer SEARCH_PIPE = 0,
+    parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer STG  = 6,
     parameter integer PACE = 2,
 `ifdef OT_S81PH_SEL_FLAT
