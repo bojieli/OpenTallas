@@ -8,6 +8,8 @@
   "fifo_rows": 64,
   "row_bits": 544,
   "storage_bits": 69632,
+  "launch_register_bits": 5458,
+  "peer_launch_pipeline_cycles": 1,
   "implementation": "existing synchronous ot_ha2_fifo; SRAM mapping not claimed",
   "port_bytes_per_cycle": {
     "write": 136.0,
@@ -32,7 +34,7 @@
     "issue_credit": 2,
     "queue_write_enable_width": 544
   },
-  "flop_area_floor_um2": 20304.6912,
+  "flop_area_floor_um2": 21896.244000000002,
   "floorplan_slot_fit": false,
   "routing_tracks_needed": 2182,
   "channel_capacity": null,
@@ -41,6 +43,8 @@
   "prior_half_reducer_measured_extra_cycles": 46,
   "conservative_extra_issue_span_cycles": 192,
   "conservative_extra_cycles_per_reduction": 240,
+  "latency_basis": "Two local sender stages measured on full-width192-row/injector component; issue-span estimate assumes sustained half-rate service, not a bound under arbitrary receiver stalls.",
+  "additional_contention_cycles": null,
   "composed_extra_token_cycles": 240,
   "exposed_owner_reductions": 1,
   "token_latency_us": 0.2,
