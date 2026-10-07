@@ -133,6 +133,47 @@
     "neg_take": false,
     "neg_x": false
    }
+  },
+  "head_elem_SAFE_SPLIT9": {
+   "rtl": "ot_dsrom_head_elem IOREG=1 SAFE=1 CUT=511 SPLIT9=1 (adder latency 11)",
+   "exact": {
+    "rows": [
+     21888,
+     22016
+    ],
+    "root4096_exact": 128,
+    "padded_root1024_exact": 128,
+    "logits_exact": 128,
+    "elements_complete": 4,
+    "result": {
+     "row": 21946,
+     "bits": 1098098008,
+     "fault": 0,
+     "cycle": 8414
+    },
+    "golden_bundle_argmax": 21946,
+    "exact": true,
+    "cycles": {
+     "first_A_root": 458,
+     "last_A_root": 8394,
+     "last_B_root": 8394,
+     "last_logit": 8409,
+     "result": 8414,
+     "rom_read_span": 8269,
+     "issue_offset": 2
+    },
+    "checkpoint_header_sha256": {
+     "model-00043-of-00048.safetensors": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54"
+    }
+   },
+   "baseline_result_cycle": 8357,
+   "delta_cycles": 57,
+   "delta_lm_head_pct": 0.68,
+   "negatives": {
+    "neg_take": false,
+    "neg_x": false
+   },
+   "fadd_split9_lockstep": "rtl/test/v41rom/tb_fadd_split9.sv PASS (150k adds, corners) / offset negative FAIL"
   }
  },
  "physical": {
@@ -148,6 +189,8 @@
    "dshead-elemA-safe-b529ca8c9",
    "dshead-elemB-safe-b529ca8c9",
    "dshead-glue-safe-351e67caa"
-  ]
+  ],
+  "flow_bug": "--hold-corners BC alone -> ORFS CORNERS=BC -> FF libs only: b529ca8c9/94abba0f2 jobs repaired setup at FF (elemB r1 SS -201 vs flow 0). Resubmitted with WC,BC: dshead-{quad,top,elemA,elemB}-ss-a318fdf47",
+  "glue": "adopted hbglue_cl_8ddc70024 (MARGIN=1) SS +74.53 / FF +18.70 DRC 0 (record 340fdb6c8); glue SAFE cancelled"
  }
 }
