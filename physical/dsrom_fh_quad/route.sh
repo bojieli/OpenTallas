@@ -19,7 +19,7 @@ for f in rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hd
 if [ $V = quad ]; then
  TOP=ot_hdc_v41_fh_quad
  args+=(--source $D/quad/ot_hdc_v41_fh_quad.sv)   # the lane leaf comes from its liberty/LEF (--macro-view)
- args+=(--macro-view $L=$H/leaf --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl
+ args+=(--macro-view $L=$H/leaf --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl --orfs-var PDN_TCL=/src/$H/pdn_quad.tcl
    --die-area 0 0 610 560 --core-area 2 2 608 558 --false-path-from gid --core-utilization 30)
  MAC=(--macro $H/leaf)
 else
@@ -32,7 +32,7 @@ else
 fi
 IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)
 OMAX=$(echo "(250-$ISS)/1000" | bc -l); OMIN=$(echo "-($IFF+50)/1000" | bc -l)
-STOP=(); [ $MODE = cal ] && STOP=(--pnr-stop-after cts)
+STOP=(); [ $MODE = cal ] && STOP=(--pnr-stop-after cts --orfs-var SKIP_CTS_REPAIR_TIMING=1)   # calibration: clock tree only
 FP="set_false_path -from [get_ports rst_n]"; [ $V = quad ] && FP="$FP
 set_false_path -from [get_ports gid*]"
 cat > $O/signoff_833.sdc <<S2
