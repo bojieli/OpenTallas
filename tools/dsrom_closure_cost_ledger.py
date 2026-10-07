@@ -50,6 +50,27 @@ ITEMS = [
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
 ]
 
+def su_xing_nodes():
+    """non-hop nodes with a dependency in the other clock domain (uarch_model SLOW_KINDS rule, as apply_cdc)"""
+    sys.path.insert(0, str(ROOT / "tools"))
+    import dsrom_1m_allmeasured as A
+    import uarch_model as u
+    _, g, _ = A.base_graph()
+    out = []
+    for n, nd in g.nodes.items():
+        if nd.get("kind") in ("hop", "join"):
+            continue
+        sl = nd["kind"] in u.SLOW_KINDS
+        if any((g.nodes[d]["kind"] in u.SLOW_KINDS) != sl for d in nd["deps"] if g.nodes[d]["kind"] != "join"):
+            out.append(n)
+    return sorted(out)
+
+
+ITEMS.append(("su_meso_d8g1", "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases "
+                              "exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast "
+                              "edge consumer", [(n, 3, 0) for n in su_xing_nodes()]))
+
+
 # PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 # CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)

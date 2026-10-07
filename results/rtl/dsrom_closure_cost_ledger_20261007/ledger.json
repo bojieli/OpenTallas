@@ -385,13 +385,40 @@
    "mtp_pct": -0.068,
    "cum_ar_pct": -4.281,
    "cum_mtp_pct": -3.622
+  },
+  {
+   "item": "su_meso_d8g1",
+   "description": "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer",
+   "cycles": [
+    [
+     "E1.knorm.sumsq",
+     3,
+     0
+    ],
+    [
+     "E14.knorm.sumsq",
+     3,
+     0
+    ],
+    [
+     "L0.attn.a_proj",
+     3,
+     0
+    ]
+   ],
+   "ar_tok_s": 1598.5,
+   "mtp_tok_s": 4706.1,
+   "ar_pct": -0.299,
+   "mtp_pct": -0.246,
+   "cum_ar_pct": -4.567,
+   "cum_mtp_pct": -3.859
   }
  ],
  "total": {
-  "ar_tok_s": 1603.3,
-  "mtp_tok_s": 4717.7,
-  "ar_pct": -4.281,
-  "mtp_pct": -3.622
+  "ar_tok_s": 1598.5,
+  "mtp_tok_s": 4706.1,
+  "ar_pct": -4.567,
+  "mtp_pct": -3.859
  },
  "candidates": [
   {
@@ -404,10 +431,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.3,
-   "mtp_tok_s": 4536.5,
+   "ar_tok_s": 1598.5,
+   "mtp_tok_s": 4525.8,
    "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -3.841
+   "mtp_pct_vs_total": -3.831
   },
   {
    "item": "head_elem",
@@ -424,8 +451,8 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.2,
-   "mtp_tok_s": 4716.2,
+   "ar_tok_s": 1598.4,
+   "mtp_tok_s": 4704.6,
    "ar_pct_vs_total": -0.006,
    "mtp_pct_vs_total": -0.032
   },
@@ -439,10 +466,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.3,
-   "mtp_tok_s": 4717.1,
+   "ar_tok_s": 1598.5,
+   "mtp_tok_s": 4705.6,
    "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -0.013
+   "mtp_pct_vs_total": -0.011
   },
   {
    "item": "bf_half",
@@ -469,10 +496,10 @@
      0.7748
     ]
    ],
-   "ar_tok_s": 1362.9,
-   "mtp_tok_s": 4124.0,
-   "ar_pct_vs_total": -14.994,
-   "mtp_pct_vs_total": -12.585
+   "ar_tok_s": 1358.9,
+   "mtp_tok_s": 4114.0,
+   "ar_pct_vs_total": -14.989,
+   "mtp_pct_vs_total": -12.582
   },
   {
    "item": "bf_recut",
@@ -524,10 +551,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1588.8,
-   "mtp_tok_s": 4683.3,
-   "ar_pct_vs_total": -0.904,
-   "mtp_pct_vs_total": -0.729
+   "ar_tok_s": 1583.6,
+   "mtp_tok_s": 4671.0,
+   "ar_pct_vs_total": -0.932,
+   "mtp_pct_vs_total": -0.746
   },
   {
    "item": "bf_unroll",
@@ -579,18 +606,18 @@
      0
     ]
    ],
-   "ar_tok_s": 1585.7,
-   "mtp_tok_s": 4676.2,
-   "ar_pct_vs_total": -1.098,
-   "mtp_pct_vs_total": -0.88
+   "ar_tok_s": 1580.6,
+   "mtp_tok_s": 4664.0,
+   "ar_pct_vs_total": -1.12,
+   "mtp_pct_vs_total": -0.895
   }
  ],
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1603.3,
-  "mtp_tok_s": 4717.7,
-  "ar_pct": -4.281,
-  "mtp_pct": -3.622,
+  "ar_tok_s": 1598.5,
+  "mtp_tok_s": 4706.1,
+  "ar_pct": -4.567,
+  "mtp_pct": -3.859,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }
