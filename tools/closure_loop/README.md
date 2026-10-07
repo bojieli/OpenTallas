@@ -12,6 +12,7 @@ sync source (git archive of the pinned commit -> <host base>/<job>/src, read-onl
  -> route -> [signoff] -> VERDICT: SS >= +15 ps, FF >= +15 ps at 833.333 (60/25 corners), DRC 0, every check OK
       CLOSED : collect -> export -> commit record + view on the job's branch (explicit paths)
                -> trial-merge the branch into merge_target in a scratch worktree -> push -> ledger
+      budget : (jobs with a `budget`) calibrate is a CHECK against the sheet -> NEEDS_BUDGET on deviation
       else   : path-class summary (path_summary.py: worst 10 classes per failing check, start/end, slack, levels)
                -> ledger -> NEEDS_RTL
  a stage crash -> retry ONCE (on another host if the crash is resource-related: OOM / ENOSPC / Killed / lost wrapper)
@@ -34,13 +35,14 @@ so a new source commit needs a new job name (`<block>-<sha9>`).
 | `hosts` | optional subset of hosts.json, in preference order (default EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock) |
 | `threads`, `peak_ram_gb` | route estimate, used for host choice and the load cap |
 | `source` | `branch`, `commit` (must be on `origin/<branch>`), optional `paths` (default tools rtl physical Makefile), `extra_paths` (result dirs your tools read) |
-| `stages.bench[]` | `{name, cmd, expect: pass|fail, fail_regex?, ok?, threads?, peak_ram_gb?}`. You need at least one `pass` and one `fail`, or a top-level `no_bench_reason` that names the bench record. A negative whose rc is 124/137/139/143, or whose log looks like OOM, counts as a crash, not a FAIL |
+| `stages.bench[]` | `{name, cmd, expect: pass|fail, fail_regex?, pass_regex? (MULTILINE, searched over the whole stage log), ok?, threads?, peak_ram_gb?}`. You need at least one `pass` and one `fail`, or a top-level `no_bench_reason` that names the bench record. A negative whose rc is 124/137/139/143, or whose log looks like OOM, counts as a crash, not a FAIL |
 | `stages.calibrate` | `{cmd, base, clock?, sdc_cmd?}`, or `{"enabled": false, "reason": "..."}`. `cmd` is the CTS-only run. For a route_view.sh / run_abi3_physical flow it is the route command, written so that `{LABEL}${CL_LABEL_SUFFIX}` (=`<label>_cal`) is the label and `$CL_STOP_AFTER` (=`--pnr-stop-after cts`) goes on the end. `base` is a glob of its ORFS `results/asap7/*/base`. `clock` is the clock name (default `ck`; spine/svc views use `core_clk`). `sdc_cmd` regenerates the IO SDC from the measurement, e.g. `physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN`, `make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX`, or the stations' `MARGIN=1 CKINS=$CK_SS_MAX CKFF="$CK_FF_MIN $CK_FF_MAX"` (stn_margin_sdc.py + io_min_delay.json from stn_io_min.py) |
 | `stages.route` | `{cmd, ok?, logs?}`. The route only counts as done if the wrapper exits 0 AND `ok` exits 0 (e.g. `grep -q '^rc=0' {RUN}/routes/{NAME}/exit`). `logs` are scanned for resource-crash signatures |
 | `stages.signoff`, `collect`, `export` | `{cmd, ok?}`, all optional. signoff runs before the verdict, collect/export only after CLOSED |
 | `verdict` | `corner_sta` (glob of a tools/w18/corner_sta.py JSON) + `drc_metrics` (glob of ORFS `5_2_route.json`), or `metrics_cmd` printing `{"ss_ps","ff_ps","drc"}`. `checks[]`: `{name, cmd}` must exit 0 (LEF check MATCH, pin access ...). `macros`, `post_sdc`, `summary_base`: inputs for the failure summary |
 | `record[]` | `{from: remote path (may use {RUN}), to: repo-relative path, exclude?}`, copied into the branch on CLOSED. The loop also writes `results/closure_loop/<name>/verdict.json` |
 | `merge_target` | branch to trial-merge the job branch into after CLOSED (`main`, a coordinator branch, or null) |
+| `budget` | optional `{master, clock?, domain_clock?[], on_deviation?: flag\|continue, sheets_ref?}`: close against the master's BUDGET SHEET (results/rtl/budgets_20261006/sheets/<master>.json at `sheets_ref`, default origin/main). At sync the loop generates `{CL}/budget_route.sdc`, `budget_signoff.sdc`, `budget_ff.sdc` with tools/budgets/make_block_sdc.py and exports `BUDGET_SDC`, `BUDGET_SDC_SIGNOFF`, `BUDGET_SDC_FF`, `BUDGET_SHEET`, `BUDGET_LINT_SS/FF`; use them in `sdc_cmd` / the route instead of `make_io_vclk*` at `$CK_*`. Calibrate stays a CHECK: a measured insertion off the sheet (or over the block's insertion target) by more than the sheet tolerance -> `NEEDS_BUDGET` (default) or a ledger flag (`continue`); `retry` of a NEEDS_BUDGET job continues after calibrate on the sheet SDC |
 | `cycles_added` | optional, copied into the verdict record for the recompose |
 
 Placeholders in every command: `{RUN}` (the job's run dir), `{SRC}` (`{RUN}/src`, the cwd of every stage), `{CL}`

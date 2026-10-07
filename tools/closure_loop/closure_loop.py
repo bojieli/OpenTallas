@@ -39,7 +39,10 @@ import os
 import re
 import shlex
 import shutil
+import threading
+from concurrent.futures import ThreadPoolExecutor
 import subprocess
+import tempfile
 import sys
 import time
 import traceback
@@ -56,13 +59,17 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 300                # load1 lags a launch: count own launches of the last 5 min as load
-TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "REFUSED", "CANCELLED", "INVALID"}
+PENDING_WINDOW_S = 180                # load1 lags a launch: count own launches of the last 5 min as load
+TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)", re.M)
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
+GIT_LOCK = threading.Lock()        # fetches into the shared object store
+PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
+WORKERS = 16
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
                   "summary": (2, 16)}
 
@@ -92,6 +99,11 @@ def ssh(host, script, timeout=120, check=False, input=None):
     if input is None:
         return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
     return sh(base + [script], timeout=timeout, check=check, input=input)
+
+
+def gfetch(*refs, timeout=600):
+    with GIT_LOCK:
+        return sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *refs], timeout=timeout)
 
 
 def git(*args, timeout=900, check=True, cwd=None):
@@ -143,11 +155,34 @@ def validate(spec: dict) -> list[str]:
             e.append("stages.calibrate is on by default: give cmd (the CTS-only run; route_view.sh jobs: the route "
                      "command with ${CL_LABEL_SUFFIX} on the label and $CL_STOP_AFTER appended) + base (glob of its "
                      "ORFS results/.../base) [+ clock, sdc_cmd], or {\"enabled\": false, \"reason\": \"...\"}")
+    for sk in ("calibrate", "route", "signoff"):
+        cmd = (st.get(sk) or {}).get("cmd", "") if isinstance(st, dict) else ""
+        dummy = {k: "x" for k in ("RUN", "SRC", "CL", "HOST", "BLOCK", "COMMIT", "THREADS", "RAW_NAME")}
+        dummy.update(NAME=label(spec["name"]), LABEL=label(spec["name"]))
+        for k, val in dummy.items():
+            cmd = cmd.replace("{" + k + "}", val)
+        cmd = cmd.replace("${CL_LABEL_SUFFIX}", "_cal").replace("$CL_LABEL_SUFFIX", "_cal")
+        for m in re.finditer(r"(?:route_view\.sh|stn_route\.sh\s+\S+\s+\S+)\s+(\S+)|--nickname-tag[ =](\S+)", cmd):
+            lab = (m.group(1) or m.group(2) or "").strip("'\"")
+            if lab and not re.fullmatch(r"[A-Za-z0-9_]*(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?[A-Za-z0-9_]*)*", lab):
+                e.append(f"stages.{sk}: route label '{lab}' is not [A-Za-z0-9_]+ (run_abi3_physical --nickname-tag "
+                         f"rejects it): use {{LABEL}}${{CL_LABEL_SUFFIX}}")
     v = spec.get("verdict", {})
     if not v.get("corner_sta") and not v.get("metrics_cmd"):
         e.append("verdict.corner_sta (glob of a tools/w18/corner_sta.py JSON) or verdict.metrics_cmd is required")
     if not v.get("drc_metrics") and not v.get("metrics_cmd") and v.get("drc") != "skip":
         e.append("verdict.drc_metrics (glob of ORFS 5_2_route.json) is required")
+    bud = spec.get("budget")
+    if bud is not None:
+        if not isinstance(bud, dict) or not bud.get("master"):
+            e.append("budget needs {master[, clock, domain_clock[], on_deviation flag|continue, sheets_ref]}")
+        elif bud.get("on_deviation", "flag") not in ("flag", "continue"):
+            e.append("budget.on_deviation must be flag or continue")
+        else:
+            try:
+                budget_files(bud, check_only=True)
+            except Exception as ex:  # noqa: BLE001
+                e.append(f"budget: {str(ex)[:300]}")
     for h in spec.get("hosts", []):
         if h not in [x["name"] for x in hosts_table()]:
             e.append(f"unknown host {h}")
@@ -168,7 +203,7 @@ def stage_list(spec):
     for b in st.get("bench", []):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
-                        expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"),
+                        expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
@@ -270,7 +305,7 @@ def experiment(j, status, register=False):
 
 def ingest():
     try:
-        git("fetch", "-q", "origin", "main", timeout=300, check=False)
+        gfetch("main", timeout=300)
     except subprocess.TimeoutExpired:
         pass
     keys = route_keys()
@@ -342,6 +377,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host])
 
     def fits(self, host, threads, ram):
+        with FLEET_LOCK:
+            return self._fits(host, threads, ram)
+
+    def _fits(self, host, threads, ram):
         cfg = host_cfg(host)
         if threads > cfg["max_job_threads"] or ram > cfg["max_job_ram_gb"]:
             return False, f"job {threads} thr / {ram} GB exceeds {cfg['label']} per-job limit"
@@ -358,10 +397,18 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return True, "ok"
 
     def launched(self, host, threads, ram):
+        with FLEET_LOCK:
+            self._launched(host, threads, ram)
+
+    def _launched(self, host, threads, ram):
         self.pending.setdefault(host, []).append((time.time(), threads, ram))
         self.probe_cache.pop(host, None)
 
     def choose(self, spec, exclude=()):
+        with FLEET_LOCK:
+            return self._choose(spec, exclude)
+
+    def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         order = spec.get("hosts") or [h["name"] for h in hosts_table()]
         why = []
@@ -387,19 +434,75 @@ echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
 """
 
 
+def label(name):
+    """Route label of a job: run_abi3_physical --nickname-tag (and ORFS design nicknames) accept [A-Za-z0-9_]+ only, so
+    {NAME} and {LABEL} in commands both expand to the job name with every other character as '_' ({RAW_NAME} = raw)."""
+    return re.sub(r"[^A-Za-z0-9_]", "_", name)
+
+
 def subst(text, j):
-    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
-             LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
+    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+             LABEL=label(j["name"]), RAW_NAME=j["name"],
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
         text = text.replace("{" + k + "}", v)
     return text
 
 
+# ------------------------------------------------------------------------------------------------ budget sheets
+BUDGET_SHEETS = "results/rtl/budgets_20261006/sheets"
+
+
+def budget_files(bud, check_only=False):
+    """budget SDCs of the job's master from its sheet at sheets_ref (default origin/main; tools/budgets/make_block_sdc.py
+    of the same ref): {name: text} + the sheet.  The SDC is generated HERE (localhost, from the published sheet), so
+    every job uses the same sheet whatever its own branch carries."""
+    ref = bud.get("sheets_ref", "origin/main")
+    with tempfile.TemporaryDirectory() as td:
+        arch = sh(["bash", "-c", f"git -C {REPO} archive {ref} tools/budgets {BUDGET_SHEETS}/{bud['master']}.json | tar -x -C {td}"],
+                  timeout=300)
+        sheet = Path(td) / BUDGET_SHEETS / f"{bud['master']}.json"
+        if arch.returncode or not sheet.exists():
+            raise ValueError(f"no budget sheet {bud['master']} at {ref} ({arch.stderr[-300:]})")
+        if check_only:
+            return {}
+        tool = Path(td) / "tools/budgets/make_block_sdc.py"
+        clk = bud.get("clock", "core_clk")
+        dc = sum((["--domain-clock", x] for x in bud.get("domain_clock", [])), [])
+        out = {}
+        for name, args in (("budget_route.sdc", ["sdc", "--route-mode", "route"] + dc),
+                           ("budget_signoff.sdc", ["sdc", "--route-mode", "signoff"] + dc), ("budget_ff.sdc", ["ff"])):
+            r = sh(["python3", str(tool), args[0], bud["master"], "--sheets", str(sheet.parent), "--clock", clk] + args[1:],
+                   timeout=120)
+            if r.returncode:
+                raise ValueError(f"make_block_sdc {name}: {r.stderr[-300:]}")
+            out[name] = r.stdout
+        out["budget_sheet.json"] = sheet.read_text()
+        out["_ref"] = git("rev-parse", ref).stdout.strip()
+        return out
+
+
+def budget_check(j):
+    """calibrate CHECK against the sheet (never a re-calibration): None if within tolerance, else the reason"""
+    bud = j["spec"].get("budget")
+    if not bud or not j.get("budget") or not j.get("calibration"):
+        return None
+    ins = j["budget"]["insertion"]
+    m = float(j["calibration"]["env"]["CK_SS_MEAN"])
+    tol = ins["tolerance_ps"]
+    why = []
+    if abs(m - ins["ss"]) > tol:
+        why.append(f"measured SS insertion {m:g} vs sheet {ins['ss']:g} ({ins['grade']}): {m - ins['ss']:+.0f} > {tol:g} ps")
+    if m - ins["target_ss"] > tol:
+        why.append(f"exceeds the block insertion TARGET {ins['target_ss']:g} by {m - ins['target_ss']:+.0f} ps")
+    j["budget"]["check"] = dict(measured_ss=m, ok=not why, reasons=why)
+    return "; ".join(why) or None
+
+
 def sync_source(j):
     spec, host = j["spec"], j["host"]
     src = spec["source"]
-    git("fetch", "-q", "origin", src["branch"], timeout=600, check=False)
+    gfetch(src["branch"], timeout=600)
     full = git("rev-parse", "--verify", f"{src['commit']}^{{commit}}").stdout.strip()
     anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"], timeout=120)
     if anc.returncode:
@@ -423,6 +526,15 @@ def sync_source(j):
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
+    if spec.get("budget"):
+        files = budget_files(spec["budget"])
+        for fn, text in files.items():
+            if not fn.startswith("_"):
+                ssh(host, f"cat > {run}/cl/{fn}", input=text, timeout=60, check=True)
+        sheet = json.loads(files["budget_sheet.json"])
+        j["budget"] = dict(master=spec["budget"]["master"], sheets_ref=files["_ref"],
+                           insertion=sheet["clock"]["internal_insertion"],
+                           entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
 def tag(st, j):
@@ -432,11 +544,16 @@ def tag(st, j):
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
-        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
-        LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
+        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+        LABEL=label(j["name"]), RAW_NAME=j["name"],
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
+        env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
+            ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
+            ("BUDGET_SHEET", "budget_sheet.json")))
+        env += f"export BUDGET_LINT_SS={j['budget']['insertion']['ss']}\nexport BUDGET_LINT_FF={j['budget']['insertion']['ff']}\n"
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
@@ -467,6 +584,15 @@ def remote_ok(j, cmd):
         return True, ""
     r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=300)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
+
+
+def bench_outcome(j, st, rc, ok_extra=True):
+    """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
+    (last 20000 lines), so ^FAIL matches any line."""
+    full = ssh(j["host"], f"tail -n 20000 {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; true", timeout=120).stdout
+    if st["expect"] == "pass":
+        return rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+    return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
 
 
 def stage_tail(j, st, n=40):
@@ -537,7 +663,7 @@ def publish(j, metrics):
     dry = spec.get("dry_run_git", False)
     out = {}
     for attempt in range(4):
-        git("fetch", "-q", "origin", branch, timeout=600)
+        gfetch(branch, timeout=600)
         wt_add(cwt, f"origin/{branch}", sparse)
         for r in spec.get("record", []):
             src = subst(r["from"], j)
@@ -583,11 +709,11 @@ def publish(j, metrics):
     wt_rm(cwt)
     if target:
         for attempt in range(4):
-            git("fetch", "-q", "origin", target, timeout=600)
+            gfetch(target, timeout=600)
             wt_add(mwt, f"origin/{target}", sparse)
             mref = out["branch_commit"] if dry else f"origin/{branch}"
             if not dry:
-                git("fetch", "-q", "origin", branch, timeout=600)
+                gfetch(branch, timeout=600)
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {branch} into {target} (closure-loop {j['name']}: {spec['block']} CLOSED)\n\n"
@@ -655,7 +781,7 @@ def finish(j, status, reason, ledger_text):
     event(j, f"{status}: {reason}")
     ledger(j, ledger_text)
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
-            "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
+            "NEEDS_BUDGET": "failed: NEEDS_BUDGET", "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
     experiment(j, f"{term} {reason[:120]}")
 
 
@@ -728,12 +854,56 @@ def failure_text(j):
     return "\n".join(lines)
 
 
+def launch_ready(j, fleet, spec, stl, st):
+    """READY at a remote stage: capacity check, optional host move, launch (caller holds FLEET_LOCK)."""
+    if True:
+        ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+        if not ok:
+            j.setdefault("wait_since", time.time())
+        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 600:
+            # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
+            h, _ = fleet.choose(spec, exclude=[j["host"]])
+            if h:
+                event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
+                j["hosts_tried"].append(h)
+                j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+                j.pop("wait_since", None)
+                cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+                j["stage_idx"] = cal if cal is not None else j["stage_idx"]
+                experiment(j, f"running: moved to {host_cfg(h)['label']}")
+                return
+        if not ok:
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, f"{st['key']} waiting for capacity: {why}")
+            return
+        j["wait"] = None
+        j.pop("wait_since", None)
+        if st["kind"] == "route":   # one route per (block, source commit): the key is taken when the route launches
+            keys, key = route_keys(), f"{spec['block']}@{spec['source']['commit'][:12]}"
+            if keys.get(key, j["name"]) != j["name"]:
+                finish(j, "REFUSED", f"one route per source commit: {key} already routed by job {keys[key]}",
+                       f"REFUSED: {key} already routed by job {keys[key]}")
+                return
+            keys[key] = j["name"]
+            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
+        launch_stage(j, st, st["cmd"])
+        fleet.launched(j["host"], st["threads"], st["ram"])
+        j["status"] = "RUNNING"
+        event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
+        experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
+        return
+
+
 def step(j, fleet):
     spec = j["spec"]
     stl = stage_list(spec)
     s = j["status"]
     if s == "QUEUED":
-        h, why = fleet.choose(spec, exclude=[])
+        with FLEET_LOCK:
+            h, why = fleet.choose(spec, exclude=[])
+            if h:   # claim capacity now so parallel job threads do not pick the same headroom
+                fleet.launched(h, 0, 0)
         if not h:
             if j.get("wait") != why:
                 j["wait"] = why
@@ -761,27 +931,8 @@ def step(j, fleet):
             return do_verdict(j, fleet, stl)
         if st["kind"] == "commit":
             return do_commit(j)
-        ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
-        if not ok:
-            if j.get("wait") != why:
-                j["wait"] = why
-                event(j, f"{st['key']} waiting for capacity: {why}")
-            return
-        j["wait"] = None
-        if st["kind"] == "route":   # one route per (block, source commit): the key is taken when the route launches
-            keys, key = route_keys(), f"{spec['block']}@{spec['source']['commit'][:12]}"
-            if keys.get(key, j["name"]) != j["name"]:
-                finish(j, "REFUSED", f"one route per source commit: {key} already routed by job {keys[key]}",
-                       f"REFUSED: {key} already routed by job {keys[key]}")
-                return
-            keys[key] = j["name"]
-            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        launch_stage(j, st, st["cmd"])
-        fleet.launched(j["host"], st["threads"], st["ram"])
-        j["status"] = "RUNNING"
-        event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
-        experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
-        return
+        with FLEET_LOCK:
+            return launch_ready(j, fleet, spec, stl, st)
     if s == "RUNNING":
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
@@ -797,14 +948,10 @@ def step(j, fleet):
             return crash(j, st, fleet, "LOST: stage wrapper gone without an rc file")
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
-            tail = stage_tail(j, st, 20)
-            if st["expect"] == "pass":
-                passed = rc == 0 and ok_extra
-            else:
-                looks_crash = rc in (124, 137, 139, 143) or bool(RESOURCE_RE.search(tail))
-                if looks_crash:
-                    return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
-                passed = rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], tail) is not None)
+            tail = stage_tail(j, st, 40)
+            if st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)):
+                return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
+            passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
                 finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
@@ -824,6 +971,19 @@ def step(j, fleet):
                     event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
                 except Exception:  # noqa: BLE001
                     return crash(j, st, fleet, "calibrate produced no calib.json")
+                dev = budget_check(j)
+                if dev:
+                    if j["spec"]["budget"].get("on_deviation", "flag") == "flag":
+                        finish(j, "NEEDS_BUDGET", dev[:200],
+                               f"NEEDS_BUDGET: {j['budget']['master']} block clock insertion off its budget sheet ({dev}). "
+                               "Re-plan the die entry target (tools/budgets) or fix the block tree, then retry; the IO SDC "
+                               "is NOT re-calibrated silently.")
+                        return
+                    event(j, f"BUDGET FLAG (continuing on the sheet SDC): {dev}")
+                    ledger(j, f"BUDGET FLAG {j['budget']['master']}: {dev} (on_deviation=continue)")
+                elif j.get("budget"):
+                    event(j, f"budget check OK: insertion {j['budget']['check']['measured_ss']:g} within "
+                             f"{j['budget']['insertion']['tolerance_ps']:g} ps of the sheet")
         j["stage_idx"] += 1
         j["status"] = "READY"
         return
@@ -868,7 +1028,8 @@ def do_verdict(j, fleet, stl):
 def do_commit(j):
     m = j["metrics"]
     try:
-        out = publish(j, m)
+        with PUBLISH_LOCK:
+            out = publish(j, m)
     except Exception as ex:  # noqa: BLE001
         finish(j, "NEEDS_HUMAN", f"publish failed: {str(ex)[:300]}", f"NEEDS_HUMAN: CLOSED but publish failed: {str(ex)[:400]}")
         return
@@ -883,14 +1044,77 @@ def do_commit(j):
 
 
 # ------------------------------------------------------------------------------------------------ commands
+FIXED_SIGNATURES = [
+    # (fix id, stage kind, regex over the crash log tail) -- a job that died on one of these is re-queued ONCE
+    ("label-sanitise-20261006", "calibrate", re.compile(r"nickname-tag|no ORFS base")),
+]
+
+
+BENCH_RE = re.compile(r"^(bench_\S+) expected (FAIL|PASS) but rc=(-?\d+)")
+
+
+def reevaluate_benches(jobs):
+    """Fix bench-regex-multiline (2026-10-06): bench verdicts were taken on 20 log lines without re.M.  Re-judge every
+    job that stopped on a bench verdict with the fixed rule; a bench that now passes resumes the job at the next stage."""
+    fid = "bench-regex-multiline-20261006"
+    for j in jobs:
+        m = BENCH_RE.match(j.get("reason") or "")
+        if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        stl = stage_list(j["spec"])
+        idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
+        if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
+            save_job(j)
+            continue
+        st = stl[idx]
+        if bench_outcome(j, st, int(m.group(3))):
+            j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
+            j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
+            event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
+            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid} (MULTILINE regex over the whole log)")
+            experiment(j, f"running: resumed after {fid}")
+        else:
+            event(j, f"{st['key']} re-judged under {fid}: verdict stands")
+        save_job(j)
+
+
+def auto_requeue(jobs):
+    live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
+                   for x in jobs if x["status"] not in TERMINAL}
+    for j in jobs:
+        if j["status"] not in ("NEEDS_HUMAN", "CANCELLED") or not j.get("crashes"):
+            continue
+        c = j["crashes"][-1]
+        stl = stage_list(j["spec"])
+        kind = next((x["kind"] for x in stl if x["key"] == c["stage"]), None)
+        for fid, k, rx in FIXED_SIGNATURES:
+            if kind != k or not rx.search(c.get("tail", "") + c.get("why", "")) or fid in j.get("fix_requeued", []):
+                continue
+            if (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
+                continue   # its owner already re-dropped it under another name
+            j.setdefault("fix_requeued", []).append(fid)
+            j["status"], j["retries_used"], j["attempt"], j["errors"], j["reason"] = "READY", 0, j["attempt"] + 1, [], None
+            j["stage_idx"] = next(i for i, x in enumerate(stl) if x["key"] == c["stage"])
+            event(j, f"auto re-queued after loop fix {fid} (died in {c['stage']} on that signature)")
+            ledger(j, f"REQUEUED automatically: loop fix {fid} (failed in {c['stage']}: {c.get('why', '')[:80]})")
+            experiment(j, f"running: re-queued after fix {fid}")
+            live_blocks.add((j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]))
+            save_job(j)
+            break
+
+
 def tick(fleet):
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
-    for j in all_jobs():
-        if j["status"] in TERMINAL:
-            continue
+    try:
+        reevaluate_benches(all_jobs())
+        auto_requeue(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("auto_requeue error:\n" + traceback.format_exc())
+    def one(j):
         try:
             step(j, fleet)
         except Exception as ex:  # noqa: BLE001
@@ -901,6 +1125,8 @@ def tick(fleet):
                 finish(j, "NEEDS_HUMAN", f"10 consecutive loop errors: {str(ex)[:200]}",
                        f"NEEDS_HUMAN: loop errors at {j['status']}: {str(ex)[:300]}")
         save_job(j)
+    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+        list(ex.map(one, [j for j in all_jobs() if j["status"] not in TERMINAL]))
     write_status()
 
 
@@ -950,8 +1176,12 @@ def cmd_validate(a):
 
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN",):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN jobs can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET"):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET jobs can be retried")
+    if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
+        j["budget"]["override"] = "human retry after NEEDS_BUDGET"
+        j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
+        j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
     j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
