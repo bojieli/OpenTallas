@@ -948,12 +948,12 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_tok_s_1m",
-   "label": "Per-user AR tok/s at 1M (all-measured composition, recovery baseline: as-built + adopted recovery levers)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "AR_tok_s",
+   "label": "Per-user AR tok/s at 1M (all-measured composition: as-built + adopted recovery levers, default q-element)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.AR_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (tools/three_machine_compose.py, ADOPT+exact levers only). That record carries the default-QELEM headline (owner go 2026-10-06, 3661e31c6: the as-built field with the closed QX 10 q-element at frame f183.60, +16 layer dies / +4 stage hops) on full FEC, so it supersedes the pre-QELEM recovery-composition 1,687.9 / 4,922.6; results/rtl/dsrom_recovery_20261004/composition.json is regenerated on the same default and agrees. Open: that frame needs 85 stages / 340 layer dies (info.r8_reprice), while the rack record results/arch/dsrom_s81_rack_20261006/rack.json and the energy/silicon rows still count S81 (324 layer dies); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)"
   },
   {
    "target": "ds_rom",
@@ -981,45 +981,45 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m",
-   "label": "Per-user MTP tok/s at 1M (all-measured composition, recovery baseline; wavefront verify + DSpark draft, adopted owner-blend tau)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.MTP_tok_s",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, default q-element; wavefront verify + DSpark draft, adopted owner-blend tau)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m_tau_published",
-   "label": "SENSITIVITY: DS ROM MTP tok/s at 1M at the published V4.1 tau 3.8879 (recovery baseline)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
+   "label": "SENSITIVITY: DS ROM MTP tok/s at 1M at the published V4.1 tau 3.8879",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.tau_sensitivity.published.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m_tau_published_low",
    "label": "SENSITIVITY: DS ROM MTP tok/s at 1M, published V4.1 range low (tau 3.43)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.tau_sensitivity.published_low.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m_tau_published_high",
    "label": "SENSITIVITY: DS ROM MTP tok/s at 1M, published V4.1 range high (tau 4.32)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.tau_sensitivity.published_high.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1069,12 +1069,12 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_us_1m",
-   "label": "AR token time at 1M (all-measured, recovery baseline)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "AR_us",
+   "label": "AR token time at 1M (all-measured composition, default q-element)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.AR_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)"
   },
   {
    "target": "ds_rom",
@@ -1091,12 +1091,12 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "verify_us_1m",
-   "label": "MTP verify time at 1M (all-measured, recovery baseline)",
+   "label": "MTP verify time at 1M (all-measured composition, default q-element)",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "verify = AR + 5 II of the composition behind results/arch/three_machine_compose/compose.json ds_rom (regenerated on the default q-element; the three-machine record does not carry verify_us); tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1113,12 +1113,12 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "wavefront_ii_us",
-   "label": "Wavefront interval (slowest stage busy + hop), recovery baseline",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.II_us",
+   "label": "Wavefront interval (slowest stage busy + hop), default q-element",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.II_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1279,11 +1279,11 @@
    "section": "terms",
    "key": "tau",
    "label": "DSpark tau (adopted 2026-10-05: owner 6-class workload blend, harmonic, greedy, gamma 5)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "MTP.tau",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.tau",
    "unit": "tokens/step",
    "status": "partial",
-   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1564,23 +1564,23 @@
    "target": "ds_rom",
    "section": "energy",
    "key": "dies_total",
-   "label": "Total dies (324 layer + 44 head/table)",
-   "path": "results/uarch/dsrom_c_recheck_20261004/model.json",
-   "pointer": "priced.S81_ragged_RD64_replicated.system.total_dies",
+   "label": "Total dies (340 layer + 12 head + 36 Engram table + 52 draft)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.total_dies",
    "unit": "dies",
    "status": "modelled",
-   "note": ""
+   "note": "Rack record results/arch/dsrom_s81_rack_20261006/rack.json counts: the adopted q-element frame f183.60 needs 85 stages x TP4 (was the S81 recheck 368 = 324 layer + 44 head/table, 8 head dies)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "stacks",
-   "label": "HBM stacks (W3 rule)",
+   "label": "HBM stacks (scenario C rule at 12 head dies)",
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.silicon.stacks",
    "unit": "stacks",
    "status": "modelled",
-   "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "ASSUMED rule: 4 on the 32 scan dies and each head die, 1 on every other layer die (rack record); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -1602,7 +1602,7 @@
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "At the composed AR (three_machine_compose ds_rom); 85 stages / 340 layer dies + 52 draft dies charged static (rack record); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -1624,7 +1624,7 @@
    "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "At the composed MTP rate (three_machine_compose ds_rom, tau 4.159); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -3432,12 +3432,12 @@
    "target": "ds_rom",
    "section": "terms",
    "key": "measured_share_allmeasured",
-   "label": "Measured share of the DS ROM AR path (all-measured, recovery baseline)",
-   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
-   "pointer": "measured_share",
+   "label": "Measured share of the DS ROM AR path (all-measured composition, default q-element)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.measured_share",
    "unit": "fraction",
    "status": "measured",
-   "note": "rest listed in still_modelled"
+   "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); rest listed in still_modelled"
   },
   {
    "target": "ds_rom",

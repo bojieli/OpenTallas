@@ -20,18 +20,18 @@
    "stream_1p2"
   ],
   "regions": [
-   "hbm:clk_stream:HUB-C.0"
+   "hbm:clk_stream:HUB-SP"
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 2690.8,
-   "min": 2690.8,
-   "max": 2690.8
+   "mean": 2691.5,
+   "min": 2691.5,
+   "max": 2691.5
   },
   "entry_target_ff_ps": {
-   "mean": 1426.9,
-   "min": 1426.9,
-   "max": 1426.9
+   "mean": 1427.2,
+   "min": 1427.2,
+   "max": 1427.2
   },
   "die_pad_ss_ps": {
    "mean": 0.0,
@@ -139,22 +139,22 @@
    "timing": "sync",
    "length_um": 980.7,
    "length_basis": "pins",
-   "skew_class": "inter",
-   "skew_ps": 150.0,
+   "skew_class": "intra",
+   "skew_ps": 44,
    "hold_io_ps": 50.0,
    "worst_instance": "hbm:hb_loader<->hb_cmdproc",
    "also_cdc": false,
-   "input_delay_ss_ps": 651.0,
-   "output_delay_ss_ps": 592.0,
-   "input_fraction_of_T": 0.781,
-   "output_fraction_of_T": 0.71,
-   "internal_input_ps": 107.3,
-   "internal_output_ps": 166.3,
-   "as_planned_internal_input_ps": 107.3,
-   "as_planned_internal_output_ps": 166.3,
+   "input_delay_ss_ps": 545.0,
+   "output_delay_ss_ps": 486.0,
+   "input_fraction_of_T": 0.654,
+   "output_fraction_of_T": 0.583,
+   "internal_input_ps": 213.3,
+   "internal_output_ps": 272.3,
+   "as_planned_internal_input_ps": 213.3,
+   "as_planned_internal_output_ps": 272.3,
    "feasible_input": true,
    "feasible_output": true,
-   "reach_um": 358.9,
+   "reach_um": 452.3,
    "stages_needed": 3,
    "stages_planned": 3,
    "extra_stages_needed": 0,

@@ -121,3 +121,15 @@ every one.
   - Capture ctl <-> group: 562 um with no station.
   - svc IO hub <-> die lane station: 611 um.
   - The svc quadrant station chains (430 um) fit the slab's measured region budget.
+
+## Update 2026-10-06 ~23:40 PT (CLAUDE HBM-ABSTRACTS coordinator): HBM re-planned on generator r18
+- HBM die model / clock plan regenerated on r18 (claude/hbm-abstracts-20261006): budget stage plan (common-clock staged
+  segments 1 + ceil((L - 359) / 412) hops), forwarded-clock hub chains (index b5 -> VM, VM -> router), regions HUB-SP /
+  HUB-V, barrier beside the cmdproc, svc bands SE_s0 / SE_s3 / SW_s0 / SW_s1 / SW_s7 with their ck at the band centre
+  (M7 area pin).  Clock-only CTS (EPYC2): 34 regions, max intra 56.7 ps, max inter 141.4 ps, 0 crossings > 150 ps.
+  HBM interfaces infeasible as planned: 23 -> 0.  S81 sheets unchanged.
+- `--insertion-override inputs/insertion_override.json`: index_q b0 / b1 / b2 / b3 / b5 keep their edge ck (R0 and
+  x-mirrored copies of one master cannot both carry an on-track centre M7 pin); their internal insertion TARGET is
+  re-planned to the measured SS max (1,154-1,402 ps), the die entry target follows (the tree delivers earlier by the
+  excess), and the extra OCV of the deeper tree, 0.05 x (target - 900), is added to the skew term of each of their
+  synchronous interfaces (+12.7..+25.1 ps).  The die skew budget (<= 56.7 ps) is unchanged.

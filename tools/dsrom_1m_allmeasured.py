@@ -342,6 +342,31 @@ def apply_levers(P, info, lever_dir, excluded=()):
     return dict(applied=applied, not_applied=skipped)
 
 
+def apply_add_cycles(P, lever_dir):
+    """Recovery baseline: cycle ADDITIONS (opentallas.dsrom-recovery.addcycles.v1, levers/*.json) on top of the measured
+    node times, for structural costs whose blocks are priced per operation rather than re-measured end to end (S81
+    die tiles, die-wide stations).  Record: {"verdict": "ADOPT", "adds": [{"nodes": "*.<suffix>" | name,
+    "cycles": n, "clk_hz": 1.2e9, "source": str}]}.  Applied after the r8 field re-price, so it stacks on it."""
+    out = []
+    for f in sorted((lever_dir / "levers").glob("*.json")):
+        r = json.loads(f.read_text())
+        if r.get("schema") != "opentallas.dsrom-recovery.addcycles.v1" or r.get("verdict") != "ADOPT":
+            continue
+        for ad in r["adds"]:
+            key = ad["nodes"]
+            names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
+            assert names and all(n in P.g.nodes for n in names), (f, key)
+            for n in names:
+                nd = P.g.nodes[n]
+                cur = nd["issue"] + nd["depth"] + nd["ctrl"]
+                row = P.rows.get(n, {})
+                P.put(n, cur + ad["cycles"] / ad.get("clk_hz", CLK), f"{row.get('source', 'model')} + {r['lever']}: "
+                      f"{ad['cycles']} cyc ({ad['source']})", cls=row.get("cls", "measured"),
+                      stream=nd.get("stream", False))
+            out.append(dict(lever=r["lever"], nodes=key, count=len(names), cycles=ad["cycles"]))
+    return out
+
+
 def apply_candidate(P, record):
     """Conditional decision study only; never changes a lever's adoption record.
 
@@ -630,6 +655,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         r8 = apply_r8_reprice(P, info, AD.FIELD_GEOM)
         if r8:
             info["r8_reprice"] = r8
+    if a.baseline == "recovery":
+        info["add_cycles"] = apply_add_cycles(P, a.recovery)
     if candidates:
         info["conditional_candidates"] = [dict(lever=r["lever"], nodes=apply_candidate(P, r)) for r in candidates]
     cdc_nodes = {}
@@ -652,8 +679,14 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     if tall:        # taller q-element frame: more layer dies -> more pipeline stages, each a full stage hop
         _, rk = full_fec_inputs()
         mean_cable = rk["hop_summary"]["stage_hop_extra_cycles"] / len(rk["stage_hops"]) / CLK * 1e6
-        info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
-        cable_us += tall * mean_cable
+        if rk["counts"]["stages"] == info["r8_reprice"]["stages"]:
+            # the rack record packs this frame's stage count (DS-RACK85): every stage hop's cable flight, the extra
+            # hops' included, is already in cable_us -- charge only the measured hop itself for the extra hops
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * hop_extra, 4)
+            info["r8_reprice"]["extra_stage_hops_cable"] = "in the rack record's per-hop classes (full_fec.cable_flight_us)"
+        else:   # rack packed at another stage count: the extra hops at the mean cable flight
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
+            cable_us += tall * mean_cable
     ar = t + (EXTRA_HOPS + tall) * hop_extra + cable_us
     # ---- MTP: wavefront verify with this composition's stage busy times (measured handoff rule) + DSpark draft
     wave = json.loads(WAVE.read_text())["composition"]

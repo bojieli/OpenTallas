@@ -32,7 +32,7 @@ so a new source commit needs a new job name (`<block>-<sha9>`).
 | `name` | unique, `[A-Za-z0-9._-]`; also the run dir name |
 | `block` | master/top. The loop allows **one route per (block, source commit)**: the key is taken when the route launches, and a retry after a crash is the only re-run |
 | `owner` | stream that owns the block (e.g. `Claude:hbm-views`) |
-| `hosts` | optional subset of hosts.json, in preference order (default EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock) |
+| `hosts` | optional hosts.json subset. The loop takes the LEAST-LOADED host that fits. A job with `peak_ram_gb` <= 40 may also go to any other host whose toolchain matches the reference host EPYC3 for the tools its commands use (ORFS image digest; asap7lock / iverilog / verilator / yosys only when mentioned). Every command snippet is checked with `bash -n` at drop time |
 | `threads`, `peak_ram_gb` | route estimate, used for host choice and the load cap |
 | `source` | `branch`, `commit` (must be on `origin/<branch>`), optional `paths` (default tools rtl physical Makefile), `extra_paths` (result dirs your tools read) |
 | `stages.bench[]` | `{name, cmd, expect: pass|fail, fail_regex?, pass_regex? (MULTILINE, searched over the whole stage log), ok?, threads?, peak_ram_gb?}`. You need at least one `pass` and one `fail`, or a top-level `no_bench_reason` that names the bench record. A negative whose rc is 124/137/139/143, or whose log looks like OOM, counts as a crash, not a FAIL |
@@ -73,3 +73,35 @@ python3 tools/closure_loop/closure_loop.py cancel <name>
 ```
 Job state lives in `~/.local/state/closure_loop/jobs/<name>.json` (events, metrics, calibration, publish result).
 The unit runs from `/home/ubuntu/wt-closure-loop`; `closure-loop.service` here is the installed copy.
+
+## Host capabilities and stage needs (2026-10-06)
+`hosts.json` gives each host its `caps` (EPYC1/2/3 and AGIdock: verilator, yosys, iverilog, orfs; PVE1: orfs only).
+Any bench or stage may set `"needs": [...]`. Defaults: bench = verilator + iverilog + yosys; calibrate, route,
+signoff and the failure summary = orfs; collect and export = none. All stages of a job run on one host, so the host
+must cover the UNION of the job's needs and match EPYC3's ORFS image digest. The loop never places a job on a host
+that lacks a need.
+
+## Budget check (2026-10-06)
+Calibrate stops a budget job (NEEDS_BUDGET) only when the measured SS insertion EXCEEDS the block's target
+(`internal_insertion.target_ss`). At or below the target, the measured insertion is accepted. The loop regenerates
+budget_route/signoff/ff.sdc from the measured SS/FF mean/min/max plus the sheet's per-edge budgets, and records the
+acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's measured insertion is collected in
+`results/rtl/budgets_20261006/measured_insertion.json` on main (published at most every 10 min) for the die
+clock plan.
+
+## Hold margin and automatic hold ECO (2026-10-06)
+- Jobs ingested from 2026-10-06 20:40 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
+  to calibrate and route. Override it with spec `route_hold_margin_ns`, or with an inline `HM=` in the command.
+- HOLD-ECO: when a verdict is hold-only (SS >= +15, DRC 0, all checks and benches OK, FF < +15), the loop runs
+  `hold_eco.sh` / `hold_eco.tcl` before declaring NEEDS_RTL. The ECO is the hub recipe:
+  - input is the routed pre-fill `5_2_route.odb`, with the sign-off `6_final.sdc` plus `verdict.post_sdc` and the
+    `verdict.macros` views
+  - RCX parasitics on the SS and FF scenes, then `repair_timing -hold` to +22 ps while keeping setup >= +25 ps
+  - legalise, strip and re-route every signal and clock wire (keeping clock wires broke DRT once legalisation moved sinks), max 30 % buffers, fillers, re-extract, then sign off again with
+    tools/w18/corner_sta.py
+  - on a PASS (SS/FF >= +15, ECO DRC 0) the loop installs the ECO database in place of the route (originals kept
+    as `*.pre_eco`), points the verdict's corner_sta at the ECO sign-off, re-exports the view (`hold_eco.reexport`,
+    else hbm_fmax_attn_abstract.py when `<route>/view/<block>.lef` exists), and judges again
+  - only a missed ECO goes NEEDS_RTL
+  - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
+- Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
