@@ -1,0 +1,40 @@
+{
+  "scope": "Actual native parent control with independently captured child-control replay, reduced real instruction subsequence; not native complete-parent or full program execution.",
+  "program_pcs": [
+    19,
+    20,
+    25
+  ],
+  "issue_edges": {
+    "SU": 10,
+    "ME": 95
+  },
+  "me_issue_su_progress": 64,
+  "me_issue_su_idle": 0,
+  "write_edges": {
+    "SU": [
+      31,
+      94
+    ],
+    "ME": [
+      586,
+      593
+    ]
+  },
+  "write_overlap": false,
+  "word_write_records": 640,
+  "me_drain_native_measured": true,
+  "negative": "Forged early idle triggers FIN edge162 at actual native ME age67 idle0 progress0; rejected against independent native replay and outstanding captured writes.",
+  "pins": {
+    "/tmp/qwen-vm-native-evidence-20261007/physical/trace.csv": "e435409e7730c2ea192fc745c1e5a81eaef569b88f7f2105b9678f45840628f4",
+    "/tmp/qwen-vm-parent-control-20261007/su/trace.csv": "edac697abc1fae11f517e9569eb1a5febd9c2460d1b860e2ec3e39f3c77f1831",
+    "/tmp/qwen-vm-parent-control-20261007/program.hex": "d55f8563d50a1ef6ff5c79f304ade9f970967c6f3333da1e4dfa0809b7830b47",
+    "/tmp/qwen-vm-parent-control-20261007/su.hex": "c46a55995dc72e78949fa52ddc90d8eb3f69ed155889405e6c4a0610bdb41793",
+    "/tmp/qwen-vm-native-status-20261007/physical/drain_control.json": "dbc3e2366bb1c680a592256a34dc8dcc9c8b094ffe8cd37c93a50a14c750d125"
+  },
+  "me_status_scope": "Native control/status tail replay only, W1 amax/rmax=0, numerical comparator outputs unobserved",
+  "native_me_idle_age": 500,
+  "native_me_final_progress": 8,
+  "end_fin_edge": 595,
+  "done_observed_edge": 596
+}
