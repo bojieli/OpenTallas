@@ -15,6 +15,7 @@
 // +NEG=1) must FAIL.
 module tb_ha2_tu_owner_banked;
  parameter integer MUT=0;
+ parameter integer PQ=0;
  localparam integer NC=8,PFMAX=384,LANES=16,FW=512,PWT=FW+33,NPT=8,INJ=2;
  localparam [7:0] RANK=8'd19;localparam integer J=19%8;
  reg clk=0;always #416666 clk=~clk;
@@ -24,7 +25,7 @@ module tb_ha2_tu_owner_banked;
  wire [NPT-1:0] p_r;
  wire dv,ddup,dis,dq;wire [15:0] dm;wire [FW-1:0] dd;
  wire rv,rdup,ris,rq;wire [15:0] rm;wire [FW-1:0] rd;
- ot_ha2_tu_owner_banked #(.MUTANT(MUT)) dut(.clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),
+ ot_ha2_tu_owner_banked #(.MUTANT(MUT),.PQREG(PQ)) dut(.clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),
   .h_v(hv),.h_d(hd),.p_v(dpv),.p_flit(dpd),.p_r(p_r),.r_v(dv),.r_m(dm),.r_d(dd),.dupe(ddup),.issue_o(dis),.quiet(dq));
  ot_ha2_tu_owner_adapter_item9_cuts #(.CUTS(0),.NC(NC),.PFMAX(PFMAX),.LANES(LANES),.INJ(INJ),.NPT(NPT),.SLOTREG(1)) ref_dut(
   .clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),.h_v(hv),.h_d(hd),.p_v(rpv),.p_flit(rpd),

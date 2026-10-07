@@ -32,7 +32,7 @@
 // emitted before dupe rises is still the exact sum of a complete slot.
 module ot_ha2_tu_owner_banked #(
  parameter integer NC=8,PFMAX=384,LANES=16,BF16=1,INJ=2,NPT=8,LAT=7,
- parameter integer QD=6,QO=4,MUTANT=0,
+ parameter integer QD=6,QO=4,MUTANT=0,PQREG=0,
  parameter integer FW=32*LANES,PWT=FW+33
 )(input wire clk,rst_n,active,arm,input wire [7:0] rank,input wire [15:0] pf,
  input wire [INJ-1:0] h_v,input wire [INJ*(32+FW)-1:0] h_d,
@@ -107,25 +107,46 @@ module ot_ha2_tu_owner_banked #(
   always @*begin h='0;for(integer e=0;e<QD;e=e+1)if(prp[p][e])h=h|pq[p][e];end
   assign phead[p]=h;
   assign pne[p]=pcnt[p]!=0;
-  assign povf[p]=pq_push[p]&&pcnt[p]==QD&&!pdeq[p];
+  // PQREG=1: the peer push is a registered decision. Stage A (pin flops + identity/range checks) registers the
+  // push strobe (one kept copy per 64-bit slice of the entry) and the new entry; stage B writes the entry and
+  // moves the pointer/count with those registers only, so the 526-bit write-enable fanout starts at a flop.
+  // Cost: +1 edge from pin to queue; the registered ready counts the push in flight.
+  localparam integer NSL=(EW+63)/64;
+  reg pushq;reg [EW-1:0] newq;wire [NSL-1:0] ens;
+  wire pushB=PQREG?pushq:pq_push[p];
+  assign povf[p]=pushB&&pcnt[p]==QD&&!pdeq[p];
   wire [7:0] c=pd_p[p*PWT+FW+16+:8];
   wire [NC-1:0] chot={{(NC-1){1'b0}},1'b1}<<c[LV-1:0];
-  always @(posedge clk)
-   for(integer e=0;e<QD;e=e+1)if(pq_push[p]&&pwp[p][e])
-    pq[p][e]<={pd_p[p*PWT+FW+:FLW],chot,pd_p[p*PWT+:FW]};
+  wire [EW-1:0] newd={pd_p[p*PWT+FW+:FLW],chot,pd_p[p*PWT+:FW]};
+  if(PQREG)begin:g_pqreg
+   always @(posedge clk or negedge rst_n)if(!rst_n)pushq<=0;else pushq<=pq_push[p]&&!arm_p;
+   always @(posedge clk)newq<=newd;
+   for(genvar sl=0;sl<NSL;sl=sl+1)begin:g_sl
+    ot_ha2_bk_kreg #(.W(1)) u_en(.clk(clk),.rst_n(rst_n),.d(pq_push[p]&&!arm_p),.q(ens[sl]));
+   end
+   always @(posedge clk)
+    for(integer e=0;e<QD;e=e+1)
+     for(integer sl=0;sl<NSL;sl=sl+1)
+      if(ens[sl]&&pwp[p][e])
+       for(integer b=sl*64;b<sl*64+64&&b<EW;b=b+1)pq[p][e][b]<=newq[b];
+  end else begin:g_pqplain
+   always @(posedge clk)
+    for(integer e=0;e<QD;e=e+1)if(pq_push[p]&&pwp[p][e])
+     pq[p][e]<=newd;
+  end
   always @(posedge clk or negedge rst_n)
    if(!rst_n)begin prp[p]<=1;pwp[p]<=1;pcnt[p]<=0;end
    else if(arm_p)begin prp[p]<=1;pwp[p]<=1;pcnt[p]<=0;end
    else begin
-    if(pq_push[p]&&!povf[p])pwp[p]<={pwp[p][QD-2:0],pwp[p][QD-1]};
+    if(pushB&&!povf[p])pwp[p]<={pwp[p][QD-2:0],pwp[p][QD-1]};
     if(pdeq[p])prp[p]<={prp[p][QD-2:0],prp[p][QD-1]};
-    pcnt[p]<=pcnt[p]+(pq_push[p]&&!povf[p])-pdeq[p];
+    pcnt[p]<=pcnt[p]+(pushB&&!povf[p])-pdeq[p];
    end
   // Registered ready: with pops at t-1 and t not yet seen, the queue plus the P
   // seat can hold two more items than this bound admits.
   always @(posedge clk or negedge rst_n)
    if(!rst_n)p_r[p]<=0;
-   else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+2)<=QD;
+   else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
  end
  // ---------------- own queue (up to INJ pushes per edge) ----------------------
  localparam integer OW=FLW+FW;
