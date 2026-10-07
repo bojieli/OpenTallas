@@ -28,13 +28,17 @@ module dsfd_svcio_q (input wire [0:0] ck, input wire [0:0] rst, input wire [514:
     wire unused_rst = rst[0];
 endmodule
 
-module dsfd_svcio_od (
+module dsfd_svcio_od #(parameter integer MARGIN=0) (
     input wire [0:0] ck, input wire [0:0] rst,
     input wire [3:0] od_v, input wire [2047:0] od_d, output wire [3:0] od_r,
     output reg [513:0] od, output wire [0:0] of, output reg [0:0] bad);
     wire rn; ot_s81ph_rsync u_rs (.ck(ck[0]), .rst(rst[0]), .rn(rn));
     wire m_v, m_bad; wire [511:0] m_d;
+    generate if (MARGIN) begin : g_margin
+        ot_s81ph_fmerge_margin #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(od_v), .s_d(od_d), .s_r(od_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+    end else begin : g_legacy
     ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(od_v), .s_d(od_d), .s_r(od_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+    end endgenerate
     always @(posedge ck[0]) od <= {m_d, m_v & rn, rn};
     always @(posedge ck[0] or negedge rn) if (!rn) bad <= 1'b0; else bad <= m_bad;
     ot_fwd_clk_inv u_of (.a(ck[0]), .y(of[0]));
@@ -69,7 +73,7 @@ module dsfd_svcio_x (
 endmodule
 
 // composition (same ports as ot_s81ph_svc_io NQ 4 + the forwarded clocks)
-module ot_s81ph_svc_io_t (
+module ot_s81ph_svc_io_t #(parameter integer OD_MARGIN=0) (
     input  wire ck, rst, input wire [514:0] q,
     output wire [513:0] od, output wire [513:0] xd, output wire [1025:0] ad, output wire fault,
     output wire [2059:0] q_q,
@@ -80,7 +84,7 @@ module ot_s81ph_svc_io_t (
     output wire of, output wire xf, output wire af);
     wire bad_od;
     dsfd_svcio_q  u_q  (.ck(ck), .rst(rst), .q(q), .q_q(q_q));
-    dsfd_svcio_od u_od (.ck(ck), .rst(rst), .od_v(od_v), .od_d(od_d), .od_r(od_r), .od(od), .of(of), .bad(bad_od));
+    dsfd_svcio_od #(.MARGIN(OD_MARGIN)) u_od (.ck(ck), .rst(rst), .od_v(od_v), .od_d(od_d), .od_r(od_r), .od(od), .of(of), .bad(bad_od));
     dsfd_svcio_ad u_ad (.ck(ck), .rst(rst), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
         .fi(bad_od), .ad(ad), .af(af), .fault(fault));
     dsfd_svcio_x  u_x  (.ck(ck), .rst(rst), .x_v(x_v), .x_d(x_d), .x_r(x_r), .xd(xd), .xf(xf));

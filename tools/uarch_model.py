@@ -12793,3 +12793,35 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def dsrom_s81_svcio_od_margin_price(exposed_frames=244, base_token_ns=None):
+    """OD-only r4 pin capture + staged selection, before candidate RTL.
+
+    244 = four source frames at each of 61 layers, an explicit scenario,
+    not an assertion about the native caller's frame count. No overlap credit.
+    The native caller must supply its exposed count before headline adoption.
+    """
+    n, w = 4, 512
+    # Original two-slot skid -> pin capture + three-slot queue; four masked
+    # source banks precede the OR/output stage. Control generously reserved.
+    ff = n * (2*w + w) + 256
+    area = ff*.2916 + n*w*.08748*4 + 512*.10206
+    delta_ns = 2*exposed_frames/1.2
+    return dict(schema='opentallas.s81.svcio_od_margin_price.v1',
+        master='dsfd_svcio_od', targets=['DeepSeek-V4.1 ROM'], MACs_per_cycle=0,
+        memory_ports=0, memory_bytes_per_cycle=0,
+        input_bits_per_cycle=4*513, output_bits_per_cycle=514,
+        payload_bytes_per_cycle=64, initiation_interval_cycles=1,
+        source_replicas=4, tiles_per_layer_die=4, select_replica_load=32,
+        added_register_bits=ff, gross_cell_growth_budget_um2=area,
+        slot_um=[216,129.6], added_area_fraction=area/(216*129.6),
+        added_internal_tracks=4*512, perimeter_track_capacity_floor=int(2*(216+129.6)/.096),
+        external_signal_tracks=4*513+4+514+3,
+        fit='incremental area < 11%; unchanged pins, M2-M7 route must validate internal congestion',
+        added_cycles_per_frame=2, exposed_frames=exposed_frames,
+        token_delta_ns=delta_ns, baseline_token_ns=base_token_ns,
+        conditional_rate_delta_pct=(None if base_token_ns is None else
+            100*(base_token_ns/(base_token_ns+delta_ns)-1)),
+        count_scope='scenario only; native exposed frame count is pending',
+        physical_closed=False, adopted=False)

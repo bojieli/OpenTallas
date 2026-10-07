@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.s81.svcio_od_margin_price.v1",
+  "master": "dsfd_svcio_od",
+  "targets": [
+    "DeepSeek-V4.1 ROM"
+  ],
+  "MACs_per_cycle": 0,
+  "memory_ports": 0,
+  "memory_bytes_per_cycle": 0,
+  "input_bits_per_cycle": 2052,
+  "output_bits_per_cycle": 514,
+  "payload_bytes_per_cycle": 64,
+  "initiation_interval_cycles": 1,
+  "source_replicas": 4,
+  "tiles_per_layer_die": 4,
+  "select_replica_load": 32,
+  "added_register_bits": 6400,
+  "gross_cell_growth_budget_um2": 2635.13088,
+  "slot_um": [
+    216,
+    129.6
+  ],
+  "added_area_fraction": 0.09413333333333335,
+  "added_internal_tracks": 2048,
+  "perimeter_track_capacity_floor": 7200,
+  "external_signal_tracks": 2573,
+  "fit": "incremental area < 11%; unchanged pins, M2-M7 route must validate internal congestion",
+  "added_cycles_per_frame": 2,
+  "exposed_frames": 244,
+  "token_delta_ns": 406.6666666666667,
+  "baseline_token_ns": null,
+  "conditional_rate_delta_pct": null,
+  "count_scope": "scenario only; native exposed frame count is pending",
+  "physical_closed": false,
+  "adopted": false
+}
