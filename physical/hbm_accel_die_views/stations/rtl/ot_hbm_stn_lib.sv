@@ -14,12 +14,25 @@
 `ifndef OT_STN_FDLY
 `define OT_STN_FDLY 6
 `endif
-module ot_hbm_stn_fwd #(parameter integer W = 512, parameter integer FDLY = `OT_STN_FDLY) (
+// RC=1 (views agent, fail-fast 2026-10-06; mcast_r6 Q1 fwd d -> b SS -265 ps: the capture flop sits at the input face and
+// its QN drives ~470 um of wire to the output face): a second falling-edge flop on the same received clock re-captures
+// the slice at the OUTPUT face pins, one full period later (+1 forwarded cycle per crossing).  The output relation is
+// unchanged (launch on the falling edge of fclk_i, fclk_o = its inversion through FDLY pairs), so the next station and
+// the SDC see the same interface; the face-to-face wire becomes a full-period flop-to-flop arc on one clock.
+module ot_hbm_stn_fwd #(parameter integer W = 512, parameter integer FDLY = `OT_STN_FDLY, parameter integer RC = 0) (
     input wire fclk_i, input wire [W-1:0] d_i, output wire fclk_o, output wire [W-1:0] d_o);
     wire v_unused;
     wire fc0;
+    wire [W-1:0] d1;
     ot_fwd_link_stage #(.W(W), .ENABLE(1)) u_stage (.fclk_i(fclk_i), .rst_n(1'b1), .i_v(1'b1), .i_d(d_i),
-                                                    .fclk_o(fc0), .o_v(v_unused), .o_d(d_o));
+                                                    .fclk_o(fc0), .o_v(v_unused), .o_d(d1));
+    generate if (RC) begin : g_rc
+        reg [W-1:0] rc;
+        always @(negedge fclk_i) rc <= d1;
+        assign d_o = rc;
+    end else begin : g_norc
+        assign d_o = d1;
+    end endgenerate
     genvar k;
     generate for (k = 0; k < 2*FDLY; k = k + 1) begin : g_dly
         wire y;
@@ -43,10 +56,21 @@ endmodule
 `ifndef OT_STN_LDLY
 `define OT_STN_LDLY 3
 `endif
-module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `OT_STN_LDLY) (
+// RC=1 (views agent, fail-fast 2026-10-06; gath_r25 Q1 u_lau5 r -> a2 SS -9.23, other launch slices +62..+98): a second
+// posedge register re-captures the slice at the output face (+1 cycle on the launch); the forwarded-clock relation of
+// the output is unchanged (launch on the rising edge of ck, fclk_o = ck through the kept inverters).
+module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `OT_STN_LDLY, parameter integer RC = 0) (
     input wire ck, input wire [W-1:0] d_i, output wire fclk_o, output wire [W-1:0] d_o);
     reg [W-1:0] r;
     always @(posedge ck) r <= d_i;
+    wire [W-1:0] r_o;
+    generate if (RC) begin : g_rc
+        reg [W-1:0] rc;
+        always @(posedge ck) rc <= r;
+        assign r_o = rc;
+    end else begin : g_norc
+        assign r_o = r;
+    end endgenerate
     wire ckn, ck2;
     ot_fwd_clk_inv u_inv0 (.a(ck), .y(ckn));
     ot_fwd_clk_inv u_inv1 (.a(ckn), .y(ck2));
@@ -64,7 +88,7 @@ module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `
     end else begin : g_delayed
         assign fclk_o = g_dly[2*LDLY-1].y;
     end endgenerate
-    assign d_o = r;
+    assign d_o = r_o;
 endmodule
 
 // terminate a forwarded slice into ck: write on the forwarded clock's falling edge (kept inverter), mesochronous
@@ -82,7 +106,8 @@ endmodule
 // (--margin): the credit-ring readout is registered too (N1_hfd_meso_r32: credit crossing SS +35.0 ps).  OBYP=1
 // (--margin): the readout flop is the FIFO's last register; the station's per-face pin-launch flop follows it
 // directly (the FIFO output register o_d goes): downstream crossing +2 cycles instead of +3.
-module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0, parameter integer OBYP = 0, parameter integer WCHK = 0) (
+// PLREG=1 / RSPLIT=1 (views agent, fail-fast 2026-10-06; mcast_r6 Q1 meso internals): see ot_meso_fifo.  Both 0 cycles.
+module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0, parameter integer OBYP = 0, parameter integer WCHK = 0, parameter integer PLREG = 0, parameter integer RSPLIT = 0) (
     input wire fclk_i, input wire [W-1:0] d_i, input wire ck, input wire rst_n, output wire [W-1:0] d_o);
     wire wclk;
     ot_fwd_clk_inv u_winv (.a(fclk_i), .y(wclk));
@@ -98,7 +123,7 @@ module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, pa
     always @(posedge wclk) wrs <= {wrs[0], rst_n};
     always @(posedge ck) rrs <= {rrs[0], rst_n};
     wire w_rdy, r_v, w_live, r_live, w_fault, r_fault;
-    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG), .OBYP(OBYP), .WCHK(WCHK)) u_fifo (
+    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG), .OBYP(OBYP), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT)) u_fifo (
         .wclk(wclk), .wrst_n(wrs[1]), .w_v(1'b1), .w_rdy(w_rdy), .w_d(w_d),
         .rclk(ck), .rrst_n(rrs[1]), .r_v(r_v), .r_rdy(1'b1), .r_d(d_o),
         .w_live(w_live), .r_live(r_live), .w_fault(w_fault), .r_fault(r_fault));
