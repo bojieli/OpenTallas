@@ -23,7 +23,9 @@
 module ot_v41_bterm5_w10 #(
     parameter integer TW = 8,
     parameter integer FPC = 4,        // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
-    parameter integer P0B = 0         // SAFE (owner fail-fast 2026-10-06, Z26b post-CTS at 770: p0_ws -> 222 ps of wire ->
+    parameter integer P0B = 0         // 2 (Z29b post-CTS at 730: the S1b copy sat beside the decode, the wire stayed in
+                                      // front of the product, pa_pm -156): the product and shift sum formed in S1b next
+                                      // to the decode, S2 a register-only wire stage.  SAFE (owner fail-fast 2026-10-06, Z26b post-CTS at 770: p0_ws -> 222 ps of wire ->
                                       // 4x4 product -> pa_pm -105.8): the decoded fields registered once more (S1b, +1
                                       // lane cycle) so the decode-to-product wire has its own stage; the 32-lane NaN OR
                                       // split 32 -> 8 there (8 -> 1 in S2)
@@ -43,7 +45,7 @@ module ot_v41_bterm5_w10 #(
     output wire [TW-1:0]     otag
 );
     localparam integer W = 42;
-    localparam integer LATENCY = 17 + P0B;
+    localparam integer LATENCY = 17 + (P0B != 0 ? 1 : 0);
     function automatic [7:0] e2m1(input [3:0] c);
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
@@ -94,11 +96,15 @@ module ot_v41_bterm5_w10 #(
     reg [3:0]         q0_xs [0:31], q0_ws [0:31], q0_xf [0:31], q0_wf [0:31];
     reg [31:0]        q0_nan;
     reg signed [10:0] q0_es;
+    reg [7:0]         q0_pm [0:31];     // P0B >= 2: the 4x4 product formed in S1b (next to the decode), S2 a wire stage
+    reg [4:0]         q0_sh [0:31];
     if (P0B != 0) begin : g_p0b
         always @(posedge clk) begin
             q0_es <= p0_es;
             for (i = 0; i < 32; i = i + 1) begin
                 q0_sg[i] <= p0_sg[i]; q0_xs[i] <= p0_xs[i]; q0_ws[i] <= p0_ws[i]; q0_xf[i] <= p0_xf[i]; q0_wf[i] <= p0_wf[i];
+                q0_pm[i] <= p0_xs[i] * p0_ws[i];
+                q0_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, p0_wf[i]} - 5'd2;
             end
             for (i = 0; i < 8; i = i + 1) q0_nan[i] <= |p0_nan[4*i +: 4];
             q0_nan[31:8] <= '0;
@@ -127,8 +133,8 @@ module ot_v41_bterm5_w10 #(
 `endif
         for (i = 0; i < 32; i = i + 1) begin
             pa_sg[i] <= q0_sg[i];
-            pa_pm[i] <= q0_xs[i] * q0_ws[i];
-            pa_sh[i] <= {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
+            pa_pm[i] <= (P0B >= 2) ? q0_pm[i] : q0_xs[i] * q0_ws[i];
+            pa_sh[i] <= (P0B >= 2) ? q0_sh[i] : {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
         end
     end
 
