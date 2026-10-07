@@ -686,7 +686,7 @@ def label(name):
 
 
 def subst(text, j):
-    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+    m = dict(RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
              LABEL=label(j["name"]), RAW_NAME=j["name"],
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
@@ -927,8 +927,14 @@ def tag(st, j):
 
 def launch_stage(j, st, cmd):
     t = tag(st, j)
+    if st["kind"] == "bench":
+        # Mutation benches must never write the route's source tree. One private
+        # tree per job attempt retains generated inputs shared by bench stages.
+        j["stage_source"] = f"{j['run']}/bench_src_a{str(j['attempt']).split('b')[0]}"
+    else:
+        j.pop("stage_source", None)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
-        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+        RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
         LABEL=label(j["name"]), RAW_NAME=j["name"],
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
@@ -972,6 +978,16 @@ def launch_stage(j, st, cmd):
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
+    if st["kind"] == "bench":
+        private = shlex.quote(j["stage_source"])
+        original = shlex.quote(f"{j['run']}/src")
+        env += (f"if [ ! -d {private} ]; then\n"
+                f"  test ! -e {private}.tmp || exit 9\n"
+                f"  cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
+                f"  mv {private}.tmp {private} || exit $?\nfi\n"
+                f"cd {private} || exit $?\n")
+        # A few legacy recipes spell {RUN}/src instead of using {SRC}.
+        cmd = cmd.replace("{RUN}/src", "{SRC}")
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
     # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
@@ -1413,6 +1429,8 @@ def _bview(j, e):
     """a job view addressing one bench-track stage (its own host / run / tag)"""
     v = dict(j)
     v.update(host=e["host"], run=e["run"], stage_tag=e["tag"])
+    if e.get("stage_source"):
+        v["stage_source"] = e["stage_source"]
     return v
 
 
@@ -1445,7 +1463,7 @@ def bench_track(j, fleet, stl):
             n = (e or {}).get("n", 0) + 1
             v = dict(j, attempt=f"{j['attempt']}b{n}")
             launch_stage(v, st, st["cmd"])
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
@@ -1563,6 +1581,8 @@ def step(j, fleet):
     if s == "READY":
         st = stl[j["stage_idx"]]
         j["stage_key"] = st["key"]
+        if st["kind"] in ("verdict", "collect", "export", "commit") and adoption_held(j):
+            return
         if st["kind"] == "verdict":
             if j.get("bench_par") and not benches_done(j, stl):
                 if j.get("wait") != "benches":
@@ -1691,7 +1711,22 @@ def step(j, fleet):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+def adoption_held(j):
+    """A live owner hold prevents adoption while physical evidence can finish."""
+    path = STATE / "adoption_holds" / f"{j['name']}.json"
+    if not path.exists():
+        return False
+    reason = json.loads(path.read_text())["reason"]
+    note = f"adoption hold: {reason}"
+    if j.get("wait") != note:
+        j["wait"] = note
+        event(j, note)
+    return True
+
+
 def do_verdict(j, fleet, stl):
+    if adoption_held(j):
+        return
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
     if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
@@ -1832,6 +1867,8 @@ def eco_install_cmd(j):
 
 
 def do_commit(j):
+    if adoption_held(j):
+        return
     m = j["metrics"]
     try:
         with PUBLISH_LOCK:
