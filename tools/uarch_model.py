@@ -13224,3 +13224,202 @@ def hbm_ha2_half_sender_model(hub_cycles=35, lanes=16, injectors=2,
         adoption_gates=['finite credit and negative controls',
             'transaction exact endpoint sender/reducer', 'SS15/FF15/DRC0 in context'],
         protection='Existing queue payload contract retained; overflow or reservation violations latch fault; no claimed mutable-memory reliability signoff')
+
+
+def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
+    """Size real embedding macros before physical bank RTL; no adoption credit.
+
+    A code bank is the existing 4096-word low/high macro pair (64 complete
+    vocabulary rows). Scale payload packs sixteen BF16 scales per macro word.
+    The frozen 11.046 mm2 reservation cannot contain this released payload.
+    """
+    import math
+    import hashlib
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    pinned = ["rtl/hdc/ot_qwen_rt_embed_rom.sv", "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+              "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib"]
+    if rows <= 0 or not 0 < utilisation <= 1:
+        raise ValueError("positive rows and utilisation in (0, 1] required")
+    pair_count = math.ceil(rows * 64 / 4096)
+    scale_macros = math.ceil(rows / (4096 * 16))
+    macro_area = 121.824 * 62.910
+    macro_count = 2 * pair_count + scale_macros
+    tree_levels = math.ceil(math.log(pair_count, 4)) if pair_count > 1 else 0
+    leaf_frame = (270.0, 100.44)
+    # Reserve a 4-way registered distribution/gather tree. A leaf accepts
+    # once per two fast edges so a macro capture can use a real two-cycle
+    # setup budget; the 739 ps SS macro clk->q is never replaced by a flop.
+    leaf_latency = 6
+    read_latency = 2 * tree_levels + leaf_latency
+    return dict(schema="opentallas.qwen.embedding_bank_closure.v1",
+        default_off=True, rows=rows, embedding_elements_per_row=4096,
+        source_sha256={f: hashlib.sha256((root/f).read_bytes()).hexdigest() for f in pinned},
+        payload_bytes=rows*4096+rows*2, MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, communication_intensity="one 64-byte selected code word per accepted read",
+        replica_count=dict(code_bank_pairs=pair_count, scale_macros=scale_macros),
+        macro=dict(name="ot_rom_4096x266_m8", width_um=121.824, height_um=62.910,
+                   area_um2=macro_area, code_payload_bits_per_pair=512,
+                   unused_bits_per_pair=20, ROM_ECC=False, SS_clk_to_q_min_ps=739.2103),
+        memory_port_bytes_per_cycle=dict(each_macro_peak=266/8, each_macro_scheduled=266/16,
+                                         selected_code_pair_payload=32),
+        boundary_bits_per_cycle=dict(leaf_request=1+12, leaf_response=1+512,
+                                     address_tree_root=1+24, response_tree_root=1+512),
+        replica_mux_demux_cost=dict(fanout_per_stage=4,
+            distribution_levels=tree_levels, gather_levels=tree_levels,
+            gather_muxes_upper_bound=math.ceil((pair_count-1)/3), mux_width_bits=512),
+        routing=dict(leaf_tracks=529, leaf_request_side_tracks=14, leaf_response_side_tracks=514,
+                     leaf_channel_capacity_tracks=600,
+                     capacity_basis="96.12 um usable side / 0.096 um conservative pitch x 60 percent",
+                     leaf_track_fit=True, die_channel_capacity_tracks=None,
+                     fit="leaf planned fit; die geometry must bind real stations and distribution tree"),
+        area=dict(macro_count=macro_count, raw_macro_mm2=macro_count*macro_area/1e6,
+                  min_reserved_mm2=macro_count*macro_area/1e6/utilisation,
+                  utilisation_target=utilisation, legacy_reservation_mm2=11.046,
+                  legacy_reservation_fit=macro_count*macro_area/1e6 <= 11.046,
+                  leaf_frame_um=list(leaf_frame), leaf_macro_utilisation=2*macro_area/(leaf_frame[0]*leaf_frame[1]),
+                  leaf_logic_and_clock_fit="OPEN until routed"),
+        latency=dict(leaf_cycles=leaf_latency, initiation_interval_cycles=2,
+                     root_read_cycles=read_latency,
+                     code_row_service_cycles=(64-1)*2+read_latency,
+                     baseline_one_cycle_row_cycles=64,
+                     extra_code_row_cycles=(64-1)*2+read_latency-64,
+                     scale_service="parallel independent ROM path; not yet physically composed",
+                     serial_token_contribution="cold embedding only; die hops/stations and consumer credit return remain additive"),
+        physical_closed=False, adopted=False, headline_credit=0,
+        source="rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8")
+
+
+def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
+                                     shared_die_station_hops=76, compute_die_station_hops=200,
+                                     compute_die_area_mm2=821.286):
+    """Exact shared-ROM alternative; no full-ROM replication or silent slot squeeze.
+
+    Conservatively store a complete row, then multicast bit-identical codes and
+    their BF16 scale to every compute die. Existing link technology parameters
+    are assumptions, not a new measured PHY claim. The 512-bit endpoint limits
+    bandwidth before the package's nominal 4.2 TB/s link roof.
+    """
+    import math
+    import json
+    from pathlib import Path
+    if compute_dies < 1 or clock_hz <= 0:
+        raise ValueError("positive die count and clock required")
+    bank = qwen_embedding_bank_closure_model()
+    tech = json.loads((Path(__file__).resolve().parents[1] / "configs/hardware/technology.json").read_text())
+    link = tech["links"]["rom_package_ucie"]
+    hop_cycles = math.ceil(link["hop_latency_s"]["value"] * clock_hz)
+    code_cycles = bank["latency"]["code_row_service_cycles"]
+    # No row-read/transport overlap credited. Scale is a separate parallel
+    # request, provisionally bounded by the same 18-cycle root-read envelope.
+    response_beats = math.ceil((4096 + 2) / 64)
+    fixed_endpoint_cycles = 6  # 2 request capture / 2 TX / 2 RX, proposed
+    station_cycles = 2 * (shared_die_station_hops + compute_die_station_hops)
+    service_cycles = 1 + hop_cycles + code_cycles + response_beats + hop_cycles + fixed_endpoint_cycles + station_cycles
+    # A single selected row is issued at a time. Reserve its complete65-beat
+    # response, so a long credit return cannot stall the latency-critical row.
+    credit_slots = 1 << math.ceil(math.log2(min(response_beats, 2*hop_cycles+station_cycles+fixed_endpoint_cycles)+2))
+    old_handoff = (link["hop_latency_s"]["value"] + 4098 / link["bytes_s"]["value"]) * clock_hz
+    leaf_reservation = bank["replica_count"]["code_bank_pairs"] * 270 * 100.44 / 1e6
+    scale_reservation = bank["replica_count"]["scale_macros"] * bank["macro"]["area_um2"] / .60 / 1e6
+    phy_each = 10.0
+    shared_reservation = math.ceil((leaf_reservation + scale_reservation + compute_dies*phy_each + 20)/8)*8
+    base_compute_die = compute_die_area_mm2  # r21 actual manifest; stationworker corrected double-counted clock/reset tracks
+    compute_die = base_compute_die - 11.046 + phy_each
+    return dict(schema="opentallas.qwen.shared_embedding_die.proposal.v1", adopted=False,
+        exactness="identical released INT8 code bytes and BF16 row scale; no arithmetic, decode-order or tensor changes",
+        inventory=dict(compute_dies=compute_dies, embedding_dies=1,
+                       code_macro_count=4748, scale_macro_count=3,
+                       removed_full_ROM_copies=compute_dies-1),
+        area_mm2=dict(original_compute_die=base_compute_die,
+                      original_embedding_reservation=11.046,
+                      proposed_compute_die_before_receiver_logic=compute_die,
+                      extra_PHY_on_each_compute_die=phy_each,
+                      code_bank_frames=leaf_reservation, scale_macro_reservation=scale_reservation,
+                      embedding_PHY_reservation=compute_dies*phy_each,
+                      embedding_tree_buffer_clock_corridor_reservation=20,
+                      proposed_embedding_die=shared_reservation,
+                      reticle_limit=858,
+                      compute_receiver_logic_headroom=858-compute_die,
+                      compute_reticle_fit_before_receiver_logic=compute_die <= 858,
+                      fit=("FAIL_RETICLE: shared embedding alone is insufficient after full-width station correction"
+                           if compute_die > 858 else "planned envelope only; slot geometry/PDN/IR and protected buffers not yet implemented")),
+        service=dict(request_bytes=4, response_bytes=4098, response_beats=response_beats,
+                     simultaneous_receiver_count=compute_dies, link_hop_cycles=hop_cycles,
+                     link_hop_source="configs/hardware/technology.json: assumed rom_package_ucie, not routed PHY",
+                     endpoint_bytes_per_cycle=64, ROM_bytes_per_cycle=32,
+                     actual_bandwidth_upper_bytes_s=min(32*clock_hz,link['bytes_s']['value']),
+                     per_receiver_credit_slots=credit_slots,
+                     receiver_protected_bits=credit_slots*576,
+                     credit_sizing_basis="reserve entire65-beat selected row or full round trip, whichever smaller; two skid seats; round up power of two; next row waits for returned credits",
+                     row_buffer_payload_bytes=4096,
+                     row_buffer_protected_bits=64*576,
+                     mutable_buffer_protection="64-bit SECDED words; metadata/credits require protected state before adoption",
+                     multicast="separate registered TX per die; launch only when all four have reserved credits; no combinational ready path",
+                     arbitration="single-user priority; independent request batching must not delay selected request"),
+        latency=dict(code_row_cycles=code_cycles, scale_root_bound_cycles=18,
+                     scale_bound_status="proposed; must route scale bank before adoption",
+                     endpoint_cycles=fixed_endpoint_cycles, endpoint_status="proposed registered stages",
+                     conservative_total_service_cycles=service_cycles,
+                     original_code_row_cycles=64,
+                     existing_model_handoff_cycles=old_handoff,
+                     total_delta_including_bank_vs_existing=math.ceil(service_cycles-64-old_handoff),
+                     bank_delta_already_priced=bank['latency']['extra_code_row_cycles'],
+                     additional_transport_delta_after_bank=math.ceil(service_cycles-64-old_handoff)-bank['latency']['extra_code_row_cycles'],
+                     shared_die_station_hops_each_direction=shared_die_station_hops,
+                     compute_die_station_hops_each_direction=compute_die_station_hops,
+                     added_station_cycles=station_cycles,
+                     station_basis="conservative300um pitch bounding-box allowance:76hops across128mm2 shared die,200 across <=60mm sum of compute die side lengths; replace only with generated measured counts",
+                     overlap_credit=0),
+        physical_closed=False, adopted_rate_tok_s=None,
+        remaining="route code/scale leaves and protected row buffer, exact multicast endpoint, package PHY contract, station counts, die floorplan/STA/DRC/IR")
+
+
+def qwen_kvc_decode_pc_model():
+    """Default-off Qwen per-PC landing decode physical cut, source-selected."""
+    from uarch_model_qwen_kvc_leaf import model
+    return model()
+
+
+def qwen_ctrl_pc_closure_model():
+    """Default-off full-feature Qwen r14 command cut; unchanged JEDEC clock."""
+    from uarch_model_qwen_ctrl_pc import model
+    return model()
+
+
+def qwen_final_pc_closure_composition(decode=False, controller=False, mapped_decode=False):
+    """Compose each new pipeline once against the common pinned r21 baseline.
+
+    Gross added edges are conservative until connected-token measurement exists;
+    no baseline CDC or controller latency is subtracted or credited. Per-leaf
+    percentages must never be added: select edge terms, sum, recompute rate.
+    """
+    import math
+    base = 216713
+    terms = {}
+    if decode and mapped_decode:
+        raise ValueError('mapped decoder replaces decoder; select one')
+    if mapped_decode:
+        terms['mapped_landing_decoder'] = qwen_kvc_mapped_pc_model()['added_token_cycles']
+    if decode:
+        terms['landing_decoder'] = 36 * qwen_kvc_decode_pc_model()['latency']['pipeline_edges']
+    if controller:
+        hbmedges = qwen_ctrl_pc_closure_model()['latency']['minimum_request_to_phy_added_edges']
+        terms['controller_boundary'] = 36 * math.ceil(hbmedges * 1024 / (2500 / 3))
+    extra = sum(terms.values())
+    return dict(default_OFF=True, adopted=False, physical_closed=False,
+        baseline_record='results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json',
+        baseline_cycles=base, selected_delta_cycles=terms, added_cycles=extra,
+        total_cycles=base + extra, clock_hz=1.2e9,
+        ar_tokens_per_second=1.2e9/(base + extra),
+        rate_cost_pct=100*(1-base/(base + extra)),
+        pricing_basis=('gross eight-edge mapped decoder' if mapped_decode else 'gross four-edge decoder') + ' plus selected three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap or removal credit',
+        exact_connected_latency_measured=False,
+        adoption_gate='connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing',
+        excluded_unpriced='row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages')
+
+
+def qwen_kvc_mapped_pc_model():
+    """Full-width exact option-M mapper followed by landing decoder."""
+    from uarch_model_qwen_kvc_mapped import model
+    return model()
