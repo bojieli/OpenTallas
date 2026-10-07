@@ -637,10 +637,14 @@ module ot_hdc_v41x_vred_top #(
     // RSL >= 1: busy is one register holding the same value: every term of busy_c is (or is implied by) a register,
     // so busy(t+1) is the OR of those registers' next values, formed here from their inputs
     generate if (RSL >= 1) begin : g_bq
-        wire bnext = v_in || (|vq[MLAT-1:0]) || ((RPAD > 0) ? vq[MLAT] : 1'b0) || (|vch[DCH-1:0]) || (|sb0) ||
+        // v_in enters at the last gate (kept split): with the die IO budget (0.2T + 150 ps at the pin) the pin
+        // reaches bq through one OR; the register terms form b_rest in-block (calibrated-IO sign-off 2026-10-06:
+        // v_in through the synthesised 8-level OR was -86.9 ps)
+        (* keep *) wire b_rest = (|vq[MLAT-1:0]) || ((RPAD > 0) ? vq[MLAT] : 1'b0) || (|vch[DCH-1:0]) || (|sb0) ||
                      (|rsl_next) || (|tb) || ((RTAP > 0) ? tap_vc : 1'b0) || (|bn) ||
                      ((ROUT > 0) ? (pk_v || tr_v || opk1 || otr1 || (opk ? (obf[TAG+33 + (TAG-11) -: 8] != 8'd0) : otr))
                                  : (pk_v ? (tap_t[TAG-11 -: 8] != 8'd0) : tr_v));
+        wire bnext = v_in || b_rest;
         reg bq;
         always @(posedge clk or negedge rst_n) if (!rst_n) bq <= 1'b0; else bq <= bnext;
         assign busy = bq;
