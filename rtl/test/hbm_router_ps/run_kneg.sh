@@ -1,8 +1,8 @@
 #!/bin/bash
 # run_kneg.sh <outdir> <pos|neg> [NV]: ot_gpu_router_topk_ps PIPESEL 1 with OT_ROUTER_KNEG (negedge key3 -> key4
-# copy) against the reference ot_gpu_router_topk, 4 seeds; neg = + OT_NEG_ROUTER_KNEG (key3n fed from key2), must FAIL.
+# copy; DEFS / NEGDEF select another variant, e.g. DEFS=-DOT_ROUTER_K2 NEGDEF=-DOT_NEG_ROUTER_K2) against the reference ot_gpu_router_topk, 4 seeds; neg = + OT_NEG_ROUTER_KNEG (key3n fed from key2), must FAIL.
 set -u; O=$1; M=$2; NV=${3:-1500}; mkdir -p $O
-D="-DOT_ROUTER_KNEG"; [ "$M" = neg ] && D="$D -DOT_NEG_ROUTER_KNEG"
+D="${DEFS:--DOT_ROUTER_KNEG}"; [ "$M" = neg ] && D="$D ${NEGDEF:--DOT_NEG_ROUTER_KNEG}"
 SRC="rtl/test/hbm_router_ps/tb_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk.sv"
 : > $O/rc_$M.txt
 for s in 1 2 3 4; do
