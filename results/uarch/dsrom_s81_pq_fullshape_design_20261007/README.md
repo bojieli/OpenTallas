@@ -120,3 +120,11 @@ Fallback: a tier-channel row of root blocks (+143 µm per tier). If that costs a
 - VM write sustain rate.
 - Synthesis screens replacing every area estimate.
 - Die-generator legality.
+
+## Reproducibility (added in 3b695b614 and later; the design record above is unchanged from d95b57661)
+
+`inputs/` holds byte-exact copies of the Codex snapshot files the tool reads. `inputs/SHA256SUMS` pins them, and `inputs/REPO_INPUTS.SHA256SUMS` pins every repository file the tool reads. The tool verifies both lists and fails closed on any mismatch.
+
+The default output is `reproduce/design.json`. `design.json` is kept as the historical d95b57661 output; it differs from the reproduced file only in the provenance keys `sources.snapshot` and `sources.snapshot_origin`.
+
+A clean `git archive` rerun outside the home directory reproduced `reproduce/design.json` byte-identically. Two tamper tests (one snapshot input, one RTL file) each exit 1. Details are in `reproducibility.json`.
