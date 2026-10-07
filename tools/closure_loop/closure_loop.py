@@ -56,7 +56,7 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 300                # load1 lags a launch: count own launches of the last 5 min as load
+PENDING_WINDOW_S = 180                # load1 lags a launch: count own launches of the last 5 min as load
 TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -143,6 +143,18 @@ def validate(spec: dict) -> list[str]:
             e.append("stages.calibrate is on by default: give cmd (the CTS-only run; route_view.sh jobs: the route "
                      "command with ${CL_LABEL_SUFFIX} on the label and $CL_STOP_AFTER appended) + base (glob of its "
                      "ORFS results/.../base) [+ clock, sdc_cmd], or {\"enabled\": false, \"reason\": \"...\"}")
+    for sk in ("calibrate", "route", "signoff"):
+        cmd = (st.get(sk) or {}).get("cmd", "") if isinstance(st, dict) else ""
+        dummy = {k: "x" for k in ("RUN", "SRC", "CL", "HOST", "BLOCK", "COMMIT", "THREADS", "RAW_NAME")}
+        dummy.update(NAME=label(spec["name"]), LABEL=label(spec["name"]))
+        for k, val in dummy.items():
+            cmd = cmd.replace("{" + k + "}", val)
+        cmd = cmd.replace("${CL_LABEL_SUFFIX}", "_cal").replace("$CL_LABEL_SUFFIX", "_cal")
+        for m in re.finditer(r"(?:route_view\.sh|stn_route\.sh\s+\S+\s+\S+)\s+(\S+)|--nickname-tag[ =](\S+)", cmd):
+            lab = (m.group(1) or m.group(2) or "").strip("'\"")
+            if lab and not re.fullmatch(r"[A-Za-z0-9_]*(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?[A-Za-z0-9_]*)*", lab):
+                e.append(f"stages.{sk}: route label '{lab}' is not [A-Za-z0-9_]+ (run_abi3_physical --nickname-tag "
+                         f"rejects it): use {{LABEL}}${{CL_LABEL_SUFFIX}}")
     v = spec.get("verdict", {})
     if not v.get("corner_sta") and not v.get("metrics_cmd"):
         e.append("verdict.corner_sta (glob of a tools/w18/corner_sta.py JSON) or verdict.metrics_cmd is required")
@@ -387,9 +399,15 @@ echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
 """
 
 
+def label(name):
+    """Route label of a job: run_abi3_physical --nickname-tag (and ORFS design nicknames) accept [A-Za-z0-9_]+ only, so
+    {NAME} and {LABEL} in commands both expand to the job name with every other character as '_' ({RAW_NAME} = raw)."""
+    return re.sub(r"[^A-Za-z0-9_]", "_", name)
+
+
 def subst(text, j):
-    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
-             LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
+    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+             LABEL=label(j["name"]), RAW_NAME=j["name"],
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
         text = text.replace("{" + k + "}", v)
@@ -432,8 +450,8 @@ def tag(st, j):
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
-        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
-        LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
+        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+        LABEL=label(j["name"]), RAW_NAME=j["name"],
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
@@ -763,11 +781,26 @@ def step(j, fleet):
             return do_commit(j)
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
+            j.setdefault("wait_since", time.time())
+        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 600:
+            # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
+            h, _ = fleet.choose(spec, exclude=[j["host"]])
+            if h:
+                event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
+                j["hosts_tried"].append(h)
+                j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+                j.pop("wait_since", None)
+                cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+                j["stage_idx"] = cal if cal is not None else j["stage_idx"]
+                experiment(j, f"running: moved to {host_cfg(h)['label']}")
+                return
+        if not ok:
             if j.get("wait") != why:
                 j["wait"] = why
                 event(j, f"{st['key']} waiting for capacity: {why}")
             return
         j["wait"] = None
+        j.pop("wait_since", None)
         if st["kind"] == "route":   # one route per (block, source commit): the key is taken when the route launches
             keys, key = route_keys(), f"{spec['block']}@{spec['source']['commit'][:12]}"
             if keys.get(key, j["name"]) != j["name"]:
@@ -883,11 +916,46 @@ def do_commit(j):
 
 
 # ------------------------------------------------------------------------------------------------ commands
+FIXED_SIGNATURES = [
+    # (fix id, stage kind, regex over the crash log tail) -- a job that died on one of these is re-queued ONCE
+    ("label-sanitise-20261006", "calibrate", re.compile(r"nickname-tag|no ORFS base")),
+]
+
+
+def auto_requeue(jobs):
+    live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
+                   for x in jobs if x["status"] not in TERMINAL}
+    for j in jobs:
+        if j["status"] not in ("NEEDS_HUMAN", "CANCELLED") or not j.get("crashes"):
+            continue
+        c = j["crashes"][-1]
+        stl = stage_list(j["spec"])
+        kind = next((x["kind"] for x in stl if x["key"] == c["stage"]), None)
+        for fid, k, rx in FIXED_SIGNATURES:
+            if kind != k or not rx.search(c.get("tail", "") + c.get("why", "")) or fid in j.get("fix_requeued", []):
+                continue
+            if j["status"] == "CANCELLED" and (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
+                continue   # its owner already re-dropped it under another name
+            j.setdefault("fix_requeued", []).append(fid)
+            j["status"], j["retries_used"], j["attempt"], j["errors"], j["reason"] = "READY", 0, j["attempt"] + 1, [], None
+            j["stage_idx"] = next(i for i, x in enumerate(stl) if x["key"] == c["stage"])
+            event(j, f"auto re-queued after loop fix {fid} (died in {c['stage']} on that signature)")
+            ledger(j, f"REQUEUED automatically: loop fix {fid} (failed in {c['stage']}: {c.get('why', '')[:80]})")
+            experiment(j, f"running: re-queued after fix {fid}")
+            live_blocks.add((j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]))
+            save_job(j)
+            break
+
+
 def tick(fleet):
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
+    try:
+        auto_requeue(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("auto_requeue error:\n" + traceback.format_exc())
     for j in all_jobs():
         if j["status"] in TERMINAL:
             continue
