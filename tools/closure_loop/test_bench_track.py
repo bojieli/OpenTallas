@@ -127,6 +127,15 @@ class Watchdog(unittest.TestCase):
         kill.assert_not_called()
 
 
+class BenchCrash(unittest.TestCase):
+    def test_positive_bench_bus_error_is_a_crash(self):
+        st = dict(expect="pass")
+        self.assertTrue(cl.bench_crashed(st, 1, "g++: internal compiler error: Bus error (program cc1plus)"))
+        self.assertTrue(cl.bench_crashed(st, 135, ""))
+        self.assertFalse(cl.bench_crashed(st, 1, "mismatch at word 7\nFAIL"))
+        self.assertFalse(cl.bench_crashed(st, 134, "compared=4000 errors=3 abort"))
+
+
 class Transient(unittest.TestCase):
     def test_classify(self):
         import subprocess
