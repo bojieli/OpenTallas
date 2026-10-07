@@ -22,8 +22,8 @@ def main():
     p.add_argument('--verilator', required=True)
     p.add_argument('--only', default='lf,lf_cold,lf_scan,lf_bg,lf_kg_p1,lf_kg_p2,lf_kgcon_p2')
     p.add_argument('--jobs', type=int, default=1)
-    p.add_argument('--ctl-leaf', type=int, default=0, choices=(0, 1, 2),
-                   help='1/2: source control leaf ot_dsrom_window_source_ctl with MARGIN 0/1')
+    p.add_argument('--ctl-leaf', type=int, default=0, choices=(0, 1, 2, 3),
+                   help='1/2/3: source control leaf ot_dsrom_window_source_ctl with MARGIN 0/1/2')
     p.add_argument('--mutant-late-payload', action='store_true',
                    help='negative control: the K-port request slice captures its payload one edge late (must FAIL)')
     a = p.parse_args()

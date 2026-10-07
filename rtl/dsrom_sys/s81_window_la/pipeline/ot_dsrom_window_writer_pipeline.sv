@@ -30,7 +30,14 @@ module ot_dsrom_window_writer_pipeline #(
     // 1: margin-first timing (takeover-ds 2026-10-06, default off).  Log-depth adders, the region/size
     // admission predicate registered one state early, and the issue's address-range predicate registered
     // with the address; the captured-vs-live region compare is a registered predicate.  Zero added cycles.
-    parameter bit MARGIN = 0
+    parameter bit MARGIN = 0,
+    // 1 (with MARGIN; takeover-ds 2026-10-07, default off): the metadata read is 4:1 -> 4:1 registered (CHECK0 added)
+    // and the identity compare reads a registered selection (CHECK2B added); command fields, codes and scale load
+    // every IDLE cycle (their accept-edge value is unchanged); the address-range predicate is formed from the
+    // registered checked address (ADDR4 added); the K-port request (address, data, strobe) is a register loaded
+    // before WC/WS; status-counter increments land one edge after their event; the live-region compare is two
+    // registered 30-bit equalities.  +4 cycles per command (CHECK0, CHECK2B, 2 x ADDR4).
+    parameter bit MARGIN2 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -109,7 +116,7 @@ module ot_dsrom_window_writer_pipeline #(
     localparam integer REGION_SECTORS = WINDOW_SLOTS * PITCH;
     localparam [2:0] IDLE = 0, WC = 1, WC_DONE = 2, WS = 3,
                      WS_DONE = 4, FR = 5, FR_DONE = 6;
-    reg [3:0] state;
+    reg [4:0] state;
     // Status arithmetic only: each carry describes the current lower bytes.
     // Update the predicate with the same event as its counter so each byte
     // increments locally, including full 32-bit wrap, without a serial carry.
@@ -130,6 +137,16 @@ module ot_dsrom_window_writer_pipeline #(
         end
     endfunction
     localparam [3:0] CHECK1=8, CHECK2=9, CHECK3=10, ADDR1=11, ADDR2=12, ADDR3=13;
+    localparam [4:0] CHECK0=14, CHECK2B=15, ADDR4=16;           // MARGIN2 only
+    // ---- MARGIN2 registers ----
+    (* keep *) reg [6:0] row_g, row_d;                          // kept copies of row[6:0]: group read / decode
+    (* keep *) reg [4:0] sec_k;                                 // kept copy of sec for the address adder
+    reg sq_active [0:31]; reg [POS_W-1:0] sq_tag [0:31]; reg [USER_W-1:0] sq_user [0:31]; reg [15:0] sq_blocks [0:31];
+    reg [7:0] gm2_active; reg [POS_W-1:0] gm2_tag [0:7]; reg [USER_W-1:0] gm2_user [0:7]; reg [15:0] gm2_blocks [0:7];
+    reg cr_active; reg [POS_W-1:0] cr_tag; reg [USER_W-1:0] cr_user; reg [15:0] cr_blocks;
+    reg [127:0] slot_oh2; reg [15:0] bidx_oh2; reg pz_q;
+    reg [255:0] ws_data, wd_q; reg [31:0] ws_strb, wstrb_q; reg req_q, inc_sw_q, inc_bw_q;
+    reg eqb_q, eqc_q;
     reg command_prime;
     reg [SEC_W-1:0] cfg_base, cfg_count;
     reg [SEC_W:0] cfg_end, user_plus, required_size, user_offset, slot_offset, row_base, checked_addr;
@@ -192,7 +209,7 @@ module ot_dsrom_window_writer_pipeline #(
             .s(ks_uoff), .cout());
         ot_hdc_ksadd_k #(.W(SEC_W+1)) u_row1 (.a({1'b0,cfg_base}), .b(user_offset), .cin(1'b0), .s(ks_row1), .cout());
         ot_hdc_ksadd_k #(.W(SEC_W+1)) u_row2 (.a(row_base), .b(slot_offset), .cin(1'b0), .s(ks_row2), .cout());
-        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_chk (.a(row_base), .b((SEC_W+1)'(sec)), .cin(1'b0), .s(ks_chk), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_chk (.a(row_base), .b((SEC_W+1)'(MARGIN2 ? sec_k : sec)), .cin(1'b0), .s(ks_chk), .cout());
         // Three-operand signed differences in 33 bits: one carry-save level, then one log-depth adder;
         // the result's sign bit is the comparison.  user_plus <= 1024, so no operand is truncated.
         wire [32:0] ga = {2'b0, cfg_count}, gb = ~{2'b0, user_plus << 11}, gc = ~{2'b0, user_plus << 7};
@@ -232,13 +249,37 @@ module ot_dsrom_window_writer_pipeline #(
                     (!config_matches || cfg_end[SEC_W] || checked_addr[SEC_W] || checked_addr >= cfg_end);
     wire admit_region_bad = MARGIN ? region_bad_q :
                     (cfg_end[SEC_W] || {1'b0,cfg_count} < required_size || !config_matches);
+    wire [SEC_W+1:0] cdiff;                                     // MARGIN2: checked_addr - cfg_end (sign = <)
+    ot_hdc_ksadd_k #(.W(SEC_W+2)) u_cdiff (.a({1'b0, checked_addr}), .b(~{1'b0, cfg_end}), .cin(1'b1), .s(cdiff), .cout());
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cm_q <= 1'b0; region_bad_q <= 1'b0; range_bad_q <= 1'b0; end
-        else if (MARGIN) begin
+        if (!rst_n) begin cm_q <= 1'b0; region_bad_q <= 1'b0; range_bad_q <= 1'b0; eqb_q <= 1'b0; eqc_q <= 1'b0; end
+        else if (MARGIN && MARGIN2) begin
+            eqb_q <= cfg_base == region_base_sector; eqc_q <= cfg_count == region_sector_count;
+            cm_q <= eqb_q && eqc_q;
+            if (state == CHECK2) region_bad_q <= cfg_end[SEC_W] || !cnt_ge_size || !cm_q;
+            if (state == ADDR4) range_bad_q <= cfg_end[SEC_W] || checked_addr[SEC_W] || !cdiff[SEC_W+1];
+        end else if (MARGIN) begin
             cm_q <= config_matches;
             if (state == CHECK2) region_bad_q <= cfg_end[SEC_W] || !cnt_ge_size || !config_matches;
             if (state == ADDR3) range_bad_q <= cfg_end[SEC_W] || ks_chk[SEC_W] || chk_ge_end;
         end
+    // MARGIN2 metadata read pipeline (no enable: row_g / row_d / bidx / codes are stable from the accept edge
+    // until the command ends, and the arrays only change at the edge after CHECK3 or WS_DONE).
+    integer sk;
+    always @(posedge clk) if (MARGIN2) begin
+        for (sk = 0; sk < 32; sk = sk + 1) begin
+            sq_active[sk] <= row_active[{sk[4:0], row_g[1:0]}]; sq_tag[sk] <= row_tag[{sk[4:0], row_g[1:0]}];
+            sq_user[sk] <= row_user[{sk[4:0], row_g[1:0]}]; sq_blocks[sk] <= block_valid[{sk[4:0], row_g[1:0]}];
+        end
+        for (sk = 0; sk < 8; sk = sk + 1) begin
+            gm2_active[sk] <= sq_active[{sk[2:0], row_g[3:2]}]; gm2_tag[sk] <= sq_tag[{sk[2:0], row_g[3:2]}];
+            gm2_user[sk] <= sq_user[{sk[2:0], row_g[3:2]}]; gm2_blocks[sk] <= sq_blocks[{sk[2:0], row_g[3:2]}];
+        end
+        cr_active <= gm2_active[row_d[6:4]]; cr_tag <= gm2_tag[row_d[6:4]];
+        cr_user <= gm2_user[row_d[6:4]]; cr_blocks <= gm2_blocks[row_d[6:4]];
+        slot_oh2 <= 128'h1 << row_d; bidx_oh2 <= 16'h1 << bidx;
+        pz_q <= poison_codes(codes);
+    end
     wire [4223:0] read_row = BANKED_STAGE ? '0 : stage[rslot];
     assign packed_valid = !BANKED_STAGE && stage_valid[pslot] && stage_tag[pslot] == packed_rrow &&
                           stage_user[pslot] == packed_ruser &&
@@ -324,10 +365,25 @@ module ot_dsrom_window_writer_pipeline #(
             $fatal(1, "packed window KV parameter contract failed");
     end
 `endif
+`ifndef SYNTHESIS
+    always @(posedge clk) if (MARGIN2 && rst_n && req_q != (state == WC || state == WS))
+        $fatal(1, "window writer MARGIN2: request register out of step with WC/WS");
+    always @(posedge clk) if (MARGIN2 && !MARGIN) $fatal(1, "window writer: MARGIN2 needs MARGIN");
+`endif
     always @(*) begin
         m_v = 0; m_addr = 0; m_len = 0; m_tag = 0; m_we = 0;
         m_wdata = 0; m_wstrb = 0;
-        if ((state == WC || state == WS || state == FR) && !addr_bad) begin
+        if (MARGIN2) begin
+            if (req_q && !addr_bad) begin
+                m_v[WIN_STACK] = 1'b1;
+                m_addr[WIN_STACK*HAW +: HAW] = HAW'(addr_wide);
+                m_len[WIN_STACK*4 +: 4] = 4'd1;
+                m_tag[WIN_STACK*TAGW +: TAGW] = TAGW'(sec);
+                m_we[WIN_STACK] = 1'b1;
+                m_wdata[WIN_STACK*256 +: 256] = wd_q;
+                m_wstrb[WIN_STACK*32 +: 32] = wstrb_q;
+            end
+        end else if ((state == WC || state == WS || state == FR) && !addr_bad) begin
             m_v[WIN_STACK] = 1'b1;
             m_addr[WIN_STACK*HAW +: HAW] = HAW'(addr_wide);
             m_len[WIN_STACK*4 +: 4] = 4'd1;
@@ -361,8 +417,18 @@ module ot_dsrom_window_writer_pipeline #(
             rows_fetched_carry <= 0; blocks_written_carry <= 0;
             sectors_read_carry <= 0; sectors_written_carry <= 0;
             row_active <= 0; row_valid <= 0; stage_valid <= 0; mc_v <= 1'b0;
+            req_q <= 1'b0; inc_sw_q <= 1'b0; inc_bw_q <= 1'b0; row_g <= 0; row_d <= 0; sec_k <= 0;
         end else begin
             mc_v <= 1'b0;
+            inc_sw_q <= 1'b0; inc_bw_q <= 1'b0;
+            if (MARGIN2 && inc_sw_q) begin
+                st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
+                sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+            end
+            if (MARGIN2 && inc_bw_q) begin
+                st_blocks_written <= stat_increment(st_blocks_written, blocks_written_carry);
+                blocks_written_carry <= stat_carry_after_increment(st_blocks_written);
+            end
             if (MARGIN && mc_v) for (mi = 0; mi < WINDOW_SLOTS; mi = mi + 1) if (mc_sel[mi]) begin
                 case (mc_kind)
                     MC_PRIME: begin
@@ -392,9 +458,18 @@ module ot_dsrom_window_writer_pipeline #(
                 fault <= 1'b1; fault_code[3] <= 1'b1;
             end
             if ((state == WC || state == WS || state == FR) && addr_bad) begin
-                fault <= 1'b1; fault_code[0] <= 1'b1; state <= IDLE;
+                fault <= 1'b1; fault_code[0] <= 1'b1; state <= IDLE; req_q <= 1'b0;
             end else case (state)
-                IDLE: begin
+                IDLE: if (MARGIN2) begin
+                    command_prime <= !blk_v;
+                    row <= blk_v ? blk_row : prime_row; row_g <= blk_v ? blk_row[6:0] : prime_row[6:0];
+                    row_d <= blk_v ? blk_row[6:0] : prime_row[6:0];
+                    user_id <= blk_v ? blk_user : prime_user;
+                    bidx <= blk_idx; sec <= {1'b0, blk_idx}; sec_k <= {1'b0, blk_idx};
+                    codes <= blk_codes; scale <= blk_scale;
+                    cfg_base <= region_base_sector; cfg_count <= region_sector_count;
+                    if (blk_v || prime_v) state <= CHECK0;
+                end else begin
                     if (blk_v || prime_v) begin
                         command_prime <= !blk_v;
                         row <= blk_v ? blk_row : prime_row;
@@ -405,14 +480,15 @@ module ot_dsrom_window_writer_pipeline #(
                         state <= CHECK1;
                     end
                 end
+                CHECK0: state <= CHECK1;                                 // MARGIN2: metadata read stage A
                 CHECK1: begin
                     cfg_end <= ks_cfg_end;
                     user_plus <= (SEC_W+1)'(user_id) + 1'b1;
                     check_payload_bad <= row >= POS_W'(MAX_CONTEXT) ||
-                        (!command_prime && (scale == 8'hff || poison_codes(codes)));
+                        (!command_prime && (scale == 8'hff || (MARGIN2 ? pz_q : poison_codes(codes))));
                     meta_active <= row_active[slot]; meta_tag <= row_tag[slot];
                     meta_user <= row_user[slot]; meta_blocks <= block_valid[slot];
-                    if (MARGIN) begin
+                    if (MARGIN && !MARGIN2) begin
                         for (mi = 0; mi < 8; mi = mi + 1) begin
                             gm_active[mi] <= row_active[{mi[2:0], slot[3:0]}];
                             gm_tag[mi] <= row_tag[{mi[2:0], slot[3:0]}];
@@ -427,10 +503,22 @@ module ot_dsrom_window_writer_pipeline #(
                 CHECK2: begin
                     required_size <= ks_size;
                     user_offset <= ks_uoff;
-                    slot_offset <= ((SEC_W+1)'(slot) << 4) + (SEC_W+1)'(slot);
+                    if (MARGIN2) begin
+                        slot_offset <= ((SEC_W+1)'(row_d) << 4) + (SEC_W+1)'(row_d);
+                        ws_data <= 256'(scale) << (8*bidx); ws_strb <= 32'h1 << bidx;
+                        state <= CHECK2B;
+                    end else begin
+                        slot_offset <= ((SEC_W+1)'(slot) << 4) + (SEC_W+1)'(slot);
+                        check_identity_bad <= !command_prime && bidx != 0 &&
+                            (!c_active || c_tag != row || c_user != user_id ||
+                             c_blocks != (16'h1 << bidx)-1);
+                        state <= CHECK3;
+                    end
+                end
+                CHECK2B: begin                                            // MARGIN2: identity compare
                     check_identity_bad <= !command_prime && bidx != 0 &&
-                        (!c_active || c_tag != row || c_user != user_id ||
-                         c_blocks != (16'h1 << bidx)-1);
+                        (!cr_active || cr_tag != row || cr_user != user_id ||
+                         cr_blocks != (16'h1 << bidx)-1);
                     state <= CHECK3;
                 end
                 CHECK3: begin
@@ -441,7 +529,7 @@ module ot_dsrom_window_writer_pipeline #(
                         state <= IDLE;
                     end else if (command_prime) begin
                         if (MARGIN) begin
-                            mc_v <= 1'b1; mc_kind <= MC_PRIME; mc_sel <= slot_oh; mc_row <= row; mc_user <= user_id;
+                            mc_v <= 1'b1; mc_kind <= MC_PRIME; mc_sel <= MARGIN2 ? slot_oh2 : slot_oh; mc_row <= row; mc_user <= user_id;
                         end else begin
                             row_user[slot] <= user_id; row_tag[slot] <= row;
                             row_active[slot] <= 1'b1; block_valid[slot] <= 16'hffff;
@@ -450,7 +538,7 @@ module ot_dsrom_window_writer_pipeline #(
                         state <= IDLE;
                     end else begin
                         if (MARGIN) begin
-                            mc_v <= 1'b1; mc_kind <= bidx == 0 ? MC_BLK0 : MC_BLKN; mc_sel <= slot_oh;
+                            mc_v <= 1'b1; mc_kind <= bidx == 0 ? MC_BLK0 : MC_BLKN; mc_sel <= MARGIN2 ? slot_oh2 : slot_oh;
                             mc_row <= row; mc_user <= user_id;
                         end else begin
                             if (bidx == 0) begin
@@ -464,25 +552,39 @@ module ot_dsrom_window_writer_pipeline #(
                 end
                 ADDR1: begin row_base <= ks_row1; state <= ADDR2; end
                 ADDR2: begin row_base <= ks_row2; state <= ADDR3; end
-                ADDR3: begin checked_addr <= ks_chk; state <= sec == 16 ? WS : WC; end
-                WC: if (grant) begin
-                    st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
-                    sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
-                    state <= WC_DONE;
+                ADDR3: begin checked_addr <= ks_chk; state <= MARGIN2 ? ADDR4 : (sec == 16 ? WS : WC); end
+                ADDR4: begin                                              // MARGIN2: range predicate + request
+                    wd_q <= sec == 16 ? ws_data : codes; wstrb_q <= sec == 16 ? ws_strb : 32'hffff_ffff;
+                    req_q <= 1'b1; state <= sec == 16 ? WS : WC;
                 end
-                WC_DONE: if (done_write) begin sec <= 5'd16; state <= ADDR3; end
+                WC: if (grant) begin
+                    if (MARGIN2) inc_sw_q <= 1'b1;
+                    else begin
+                        st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
+                        sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+                    end
+                    req_q <= 1'b0; state <= WC_DONE;
+                end
+                WC_DONE: if (done_write) begin sec <= 5'd16; sec_k <= 5'd16; state <= ADDR3; end
                 WS: if (grant) begin
-                    st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
-                    sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
-                    state <= WS_DONE;
+                    if (MARGIN2) inc_sw_q <= 1'b1;
+                    else begin
+                        st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
+                        sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+                    end
+                    req_q <= 1'b0; state <= WS_DONE;
                 end
                 WS_DONE: if (done_write) begin
                     if (MARGIN) begin
-                        mc_v <= 1'b1; mc_kind <= MC_DONE; mc_sel <= slot_oh; mc_bsel <= bidx_oh;
+                        mc_v <= 1'b1; mc_kind <= MC_DONE; mc_sel <= MARGIN2 ? slot_oh2 : slot_oh;
+                        mc_bsel <= MARGIN2 ? bidx_oh2 : bidx_oh;
                         mc_last <= bidx == 4'd15;
                     end else block_valid[slot][bidx] <= 1'b1;
-                    st_blocks_written <= stat_increment(st_blocks_written, blocks_written_carry);
-                    blocks_written_carry <= stat_carry_after_increment(st_blocks_written);
+                    if (MARGIN2) inc_bw_q <= 1'b1;
+                    else begin
+                        st_blocks_written <= stat_increment(st_blocks_written, blocks_written_carry);
+                        blocks_written_carry <= stat_carry_after_increment(st_blocks_written);
+                    end
                     if (!MARGIN && bidx == 4'd15) row_valid[slot] <= 1'b1;
                     state <= IDLE;
                 end

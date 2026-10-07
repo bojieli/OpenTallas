@@ -331,7 +331,7 @@ module ot_dsrom_window_source_pipeline #(
         wire all_rows, stage_fault, stage_job; wire [11:0] landed;
         wire [USER_W-1:0] sj_user, mg_user; wire [POS_W-1:0] sj_first, mg_first; wire [7:0] sj_count, mg_count;
         wire merge_start_v, merge_start_ready, merge_done, merge_fault;
-        ot_dsrom_window_source_ctl #(.MARGIN(CTL_LEAF == 2), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
+        ot_dsrom_window_source_ctl #(.MARGIN(CTL_LEAF >= 2 ? CTL_LEAF - 1 : 0), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
             .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
             .REFILL_CREDITS(REFILL_CREDITS), .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),
             .LA_ISSUE_PC(LA_ISSUE_PC), .MAX_CONTEXT(MAX_CONTEXT)) u_ctl (

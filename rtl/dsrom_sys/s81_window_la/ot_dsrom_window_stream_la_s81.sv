@@ -23,7 +23,11 @@ module ot_dsrom_window_stream_la_s81 #(
     // registered once (base adders split across two edges, +1 load cycle), the per-channel window
     // bounds are kept copies, the landed-beat poison flags are computed at the first edge and carried as
     // two bits (no 256-b data delay line), adders are log-depth, the population count is split in four.
-    parameter bit MARGIN = 0
+    parameter bit MARGIN = 0,
+    // 1 (with MARGIN; takeover-ds 2026-10-07): kept per-channel copies of run and of the registered start (the
+    // channel walkers no longer share one run / start net), and the landed-beat poison test is split across two
+    // edges (four 64-bit partial ORs, then the OR) inside the existing five-edge flag pipeline.  Zero cycles.
+    parameter bit MARGIN2 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -53,6 +57,20 @@ module ot_dsrom_window_stream_la_s81 #(
         begin
             poison_codes = 1'b0;
             for (z = 0; z < 32; z = z + 1) if (c[8*z +: 7] == 7'h7f) poison_codes = 1'b1;
+        end
+    endfunction
+    function poison_codes64(input [63:0] c);              // one quarter of poison_codes (MARGIN2)
+        integer z;
+        begin
+            poison_codes64 = 1'b0;
+            for (z = 0; z < 8; z = z + 1) if (c[8*z +: 7] == 7'h7f) poison_codes64 = 1'b1;
+        end
+    endfunction
+    function poison_scales64(input [63:0] s);             // one half of poison_scales (MARGIN2)
+        integer z;
+        begin
+            poison_scales64 = 1'b0;
+            for (z = 0; z < 8; z = z + 1) if (s[8*z +: 8] == 8'hff) poison_scales64 = 1'b1;
         end
     endfunction
     function poison_scales(input [127:0] s);
@@ -131,6 +149,17 @@ module ot_dsrom_window_stream_la_s81 #(
     end else begin : g_nl_plain
         assign nl_c = '0; assign shi1_c = '0;
     end endgenerate
+    // MARGIN2: per-channel copies of run and of the registered start, loaded from run's exact next value
+    wire run_next;
+    (* keep *) reg [NPC-1:0] run_c, start_c;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin run_c <= '0; start_c <= '0; end
+        else begin run_c <= {NPC{run_next}}; start_c <= {NPC{start}}; end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (MARGIN2 && rst_n && (run_c != {NPC{run}} || start_c != {NPC{start_q}}))
+        $fatal(1, "ot_dsrom_window_stream_la_s81: kept run/start copy diverged");
+`endif
+    generate if (!MARGIN2) begin : g_walk1
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             pdone <= '1; rv <= '0; ghi0 <= 0; ghi1 <= 0; j0 <= 0; j1 <= 0; nlast <= 0; hi_c <= 0;
@@ -162,6 +191,38 @@ module ot_dsrom_window_stream_la_s81 #(
                     Glo[q] <= gl1; Grel[q] <= Grel[q] + 1'b1; jq[q] <= q[4:0] ^ gl1 ^ ghn[4:0];
                 end else rv[q] <= 1'b0;
             end
+    end else begin : g_walk2
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            pdone <= '1; rv <= '0; ghi0 <= 0; ghi1 <= 0; j0 <= 0; j1 <= 0; nlast <= 0; hi_c <= 0;
+            for (q = 0; q < NPC; q = q + 1) begin Glo[q] <= 0; Grel[q] <= 0; jq[q] <= 0; raddr[q] <= 0; rtag[q] <= 0; end
+        end else begin
+            if (start_e && !run) begin
+                ghi0 <= shi0; ghi1 <= shi0 + 1'b1; j0 <= sa0[4:0]; j1 <= sa1[4:0];
+                nlast <= sa1[AW-3:5] - sa0[AW-3:5];
+            end
+            for (q = 0; q < NPC; q = q + 1)
+                if (start_c[q] && !run_c[q]) begin
+                    pdone[q] <= 1'b0; rv[q] <= 1'b0; hi_c[q] <= 1'b0;
+                    Glo[q] <= sa0[9:5]; Grel[q] <= 0; jq[q] <= q[4:0] ^ sa0[9:5] ^ shi0[4:0];
+                    ghi0_c[q] <= shi0; ghi1_c[q] <= shi1_c; j0_c[q] <= sa0[4:0]; j1_c[q] <= sa1[4:0];
+                    nlast_c[q] <= nl_c[4:0];
+                end else if (!rv[q] || req_rdy[q]) begin
+                    if (run_c[q] && !pdone[q]) begin
+                        gh = hi_c[q] ? ghi1_c[q] : ghi0_c[q];
+                        inw = (Grel[q] != 5'd0 || jq[q] >= j0_c[q]) && (Grel[q] != nlast_c[q] || jq[q] <= j1_c[q]);
+                        rv[q] <= inw;
+                        raddr[q] <= {gh, Glo[q], jq[q], 2'b00};
+                        rtag[q] <= {Grel[q], jq[q]} - {5'd0, j0_c[q]};
+                        if (Grel[q] == nlast_c[q]) pdone[q] <= 1'b1;
+                        gl1 = Glo[q] + 1'b1;
+                        ghn = (hi_c[q] || gl1 == 5'd0) ? ghi1_c[q] : ghi0_c[q];
+                        if (gl1 == 5'd0) hi_c[q] <= 1'b1;
+                        Glo[q] <= gl1; Grel[q] <= Grel[q] + 1'b1; jq[q] <= q[4:0] ^ gl1 ^ ghn[4:0];
+                    end else rv[q] <= 1'b0;
+                end
+        end
+    end endgenerate
     reg [NPC*AW-1:0] a_p; reg [NPC*TAGW-1:0] t_p;
     always @* for (q = 0; q < NPC; q = q + 1) begin a_p[q*AW +: AW] = raddr[q]; t_p[q*TAGW +: TAGW] = rtag[q]; end
     assign req_v = ISSUE_PC ? rv : v_c; assign req_addr = ISSUE_PC ? a_p : a_c;
@@ -186,6 +247,7 @@ module ot_dsrom_window_stream_la_s81 #(
     wire [23:0] x2_c [0:NPC-1], mm_c [0:NPC-1];
     wire [11:0] t4_c [0:NPC-1], k16d_c [0:NPC-1];
     reg [NPC-1:0] pc1, pc2, pc3, pc4, pc5, ps1, ps2, ps3, ps4, ps5;
+    reg [3:0] pca [0:NPC-1]; reg [1:0] psa [0:NPC-1]; integer pq;          // MARGIN2 partial poison ORs
     reg [3:0] nbp [0:3];
 `ifndef SYNTHESIS
     initial if (MARGIN && (ISSUE_PC == 0 || NPC != 32)) $fatal(1, "ot_dsrom_window_stream_la_s81: MARGIN needs ISSUE_PC=1, NPC=32");
@@ -223,7 +285,12 @@ module ot_dsrom_window_stream_la_s81 #(
                 rng4[p] <= rng3[p]; d4[p] <= d3[p];
                 k16_5[p] <= k16d_c[p] == 12'd16;                             // s - 17 slot == 16: the scale sector
                 rng5[p] <= rng4[p]; d5[p] <= d4[p];
-                if (MARGIN) begin
+                if (MARGIN && MARGIN2) begin
+                    for (pq = 0; pq < 4; pq = pq + 1) pca[p][pq] <= poison_codes64(rsp_data[p*256 + 64*pq +: 64]);
+                    for (pq = 0; pq < 2; pq = pq + 1) psa[p][pq] <= poison_scales64(rsp_data[p*256 + 64*pq +: 64]);
+                    pc2[p] <= |pca[p]; pc3[p] <= pc2[p]; pc4[p] <= pc3[p]; pc5[p] <= pc4[p];
+                    ps2[p] <= |psa[p]; ps3[p] <= ps2[p]; ps4[p] <= ps3[p]; ps5[p] <= ps4[p];
+                end else if (MARGIN) begin
                     pc1[p] <= poison_codes(rsp_data[p*256 +: 256]); ps1[p] <= poison_scales(rsp_data[p*256 +: 128]);
                     pc2[p] <= pc1[p]; pc3[p] <= pc2[p]; pc4[p] <= pc3[p]; pc5[p] <= pc4[p];
                     ps2[p] <= ps1[p]; ps3[p] <= ps2[p]; ps4[p] <= ps3[p]; ps5[p] <= ps4[p];
@@ -248,11 +315,12 @@ module ot_dsrom_window_stream_la_s81 #(
                           (k16_5[p] ? poison_scales(d5[p][127:0]) : poison_codes(d5[p]))));
     end
     reg [11:0] rem;                                       // sectors still to land
+    assign run_next = (start_e && !run) ? 1'b1 : (run && rem == {5'd0, nb_q}) ? 1'b0 : run;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 0; gnext <= 0; fault <= 0; landed <= 0; b <= 0; rem <= 0;
         end else if (start_e && !run) begin
-            run <= 1; gnext <= 0; landed <= 0; rem <= NSECT; b <= base_e;
+            run <= 1; gnext <= 0; landed <= 0; rem <= NSECT; b <= base_e;  // (run_next mirrors this block)
             if (base_e[4:0] != 0) fault <= 1'b1;
         end else if (run) begin
             if (grp_ok) gnext <= gnext + IW;
