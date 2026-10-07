@@ -1,0 +1,38 @@
+{
+  "tools/qwen_rom_fulldie_b3r2.py": {
+    "sha256": "9e770f8e849fcf997bccb85a9479ecbfaab862e5a88949a048c49212507ac816",
+    "bytes": 147573,
+    "mtime_ns": 1791350164834264645,
+    "matches_b80f96a51": false
+  },
+  "tools/die_top_lint.py": {
+    "sha256": "dd390f8d6cf5678d83e5be42761ed9f6d422f389f787ca72841842e506ea33e5",
+    "bytes": 114295,
+    "mtime_ns": 1791349495914034120,
+    "matches_b80f96a51": true
+  },
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": {
+    "sha256": "ce1dab0e3e61d6b9db8c432464b5ef09f79cc2dd4f2af434bdd0bc0468461be6",
+    "bytes": 5297,
+    "mtime_ns": 1791350433594211396
+  },
+  "results/rtl/qwen_rom_die_r17_20261005/drt_fulldie_m4m9_20261006/record.json": {
+    "sha256": "76009e72fc755c92427d1424c5d142fe64c05e03daf89a43bc17386e177bd268",
+    "bytes": 3456,
+    "mtime_ns": 1791347284169514272
+  },
+  "rtl/physical/ot_qwen_die_station.sv": {
+    "sha256": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "bytes": 2529,
+    "mtime_ns": 1791347605981326934,
+    "matches_b80f96a51": true
+  },
+  "generator_delta_snapshot": {
+    "base_commit": "b80f96a51c9f9cc1fe7e8a1f25a0ae3254af974c",
+    "base_sha256": "7f7ed977678b69012ec1887d7375dcc6b29b7ce48b8229dd8910e81486372b4a",
+    "observed_sha256": "9e770f8e849fcf997bccb85a9479ecbfaab862e5a88949a048c49212507ac816",
+    "matches_initial_observation": true,
+    "patch": "observed_generator_delta.patch",
+    "note": "Read-only capture of another worktree; not adopted or used to launch a job."
+  }
+}
