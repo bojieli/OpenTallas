@@ -27,8 +27,11 @@ proc ot_ser_balance {} {
   if {$bt eq "NULL"} { set bt [$blk findBTerm ckv] }
   if {$bt eq "NULL"} { error "ot_ser_balance: no ckv port" }
   set mst [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
+  # cap: a BUFx4 stage on the root is >= ~15 ps at WC, so never more than (goal - now) / 15 stages even if the
+  # latency report were not refreshed after an edit
+  set kmax [expr {int(($goal - $se) / 15.0)}]
   set k 0; set now $se
-  while {$now < $goal && $k < 16} {
+  while {$now < $goal && $k < $kmax} {
     set n [$bt getNet]
     set loads [$n getITerms]
     if {[llength $loads] == 0} { break }
