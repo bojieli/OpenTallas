@@ -1,0 +1,24 @@
+{
+  "submitted_utc": "2026-10-07T05:47:18.519245+00:00",
+  "source_branch": "codex/w2-gate-acceptance-20261006",
+  "source_commit": "d108b33de6991601b0f4e2bf48dabad85f4a027d",
+  "published_branch_head": "f1287949262d9966e844b9615072dae57bbd8fb5",
+  "validator": "/home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py",
+  "validator_sha256": "d4255f649a25f08fdf0c0fbc73404b94309ece80af2258d870390d812491e899",
+  "jobs": [
+    {
+      "name": "w2-rb-safe-no2-d108b33de-gate1",
+      "destination": "/tmp/claude-review-20261003/closure_jobs/w2-rb-safe-no2-d108b33de-gate1.json",
+      "sha256": "2c4e5208776e3c543e181f30bcf46172714bd989ba70a01d6267938be0697805",
+      "old_job_status": "CANCELLED",
+      "validation_exit": 0
+    },
+    {
+      "name": "w2-rb-safe-no3-d108b33de-gate1",
+      "destination": "/tmp/claude-review-20261003/closure_jobs/w2-rb-safe-no3-d108b33de-gate1.json",
+      "sha256": "ce5797989c58b7a7c3b3554436135927cfe6ad7b4fb4328cf83043b05dde748f",
+      "old_job_status": "CANCELLED",
+      "validation_exit": 0
+    }
+  ]
+}
