@@ -10,6 +10,11 @@ R=${R:?}; lab=$1; top=$2; W_=$3; H_=$4; shift 4
 W=$R/routes/$lab; mkdir -p $W; cd $R/${SRC:-src0}
 export OT_ORFS_NUM_CORES=${CORES:-8} NUM_CORES=${CORES:-8} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 echo "$top $W_ $H_ $SRCS $*" > $W/args; cat SOURCE_COMMIT > $W/SOURCE_COMMIT
+# The c12 SFU owns the successor ring delay; keep the historically pinned base delay unchanged.
+case " $SRCS " in *"rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"*)
+  case " $SRCS " in *"rtl/hdc/ot_hdc_delay_ring.sv"*) ;; *) SRCS="$SRCS rtl/hdc/ot_hdc_delay_ring.sv" ;; esac
+  ;;
+esac
 S=""; for s in $SRCS; do S="$S --source $s"; done
 /srv/opentallas-scratch/admit.sh ${NEED:-12} -- python3 tools/run_abi3_physical.py --view asap7 --top $top $S "$@" \
   --clock-period-ns ${CP:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
