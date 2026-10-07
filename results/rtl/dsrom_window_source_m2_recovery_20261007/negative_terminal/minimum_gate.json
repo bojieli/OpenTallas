@@ -1,0 +1,87 @@
+{
+  "status": "PASS_MINIMUM_PRODUCTION_MUTATION_GATE",
+  "source_commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a",
+  "adopted": false,
+  "hold_release_scope": "Numerical/exactness hold only; separate physical SS>=15 FF>=15 DRC0 and parent interface obligations remain",
+  "positive_campaigns": {
+    "ctl2": {
+      "cases": 344,
+      "verdict_counts": {
+        "PASS": 344
+      },
+      "shared_source_hash_mismatches": [],
+      "source_sha256": "d9fdd19b1e67d682acbcc587c944eb500bae160dcde9cca1544ac191fb804177"
+    },
+    "ctl3": {
+      "cases": 344,
+      "verdict_counts": {
+        "PASS": 344
+      },
+      "shared_source_hash_mismatches": [],
+      "source_sha256": "ffbf63c2b1b2e856d9c63f813f0b72a47761e69803fa0d8f6393fae21426e47b"
+    }
+  },
+  "minimum_vehicle": {
+    "module": "ot_dsrom_window_skid",
+    "production_instance": "ot_dsrom_window_source_ctl.g_margin.u_mreq",
+    "parameters": {
+      "W": 339,
+      "ZERO_IDLE": 1,
+      "PTR": 1
+    },
+    "width_basis": "HAW30+LEN4+TAG16+WE1+DATA256+STRB32",
+    "positive": {
+      "returncode": 0,
+      "accepted_and_checked_transactions": 687,
+      "stalled_cycles": 444,
+      "simultaneous_push_pop": 379
+    },
+    "negative": {
+      "returncode": 1,
+      "required_message": "REQUEST_PAYLOAD_MISMATCH transaction=0",
+      "mutation": "Exact pinned OT_WINDOW_CTL_MUTANT_LATE_PAYLOAD: ZERO_IDLE request slice captures previous-cycle payload",
+      "compile_succeeded": true
+    },
+    "source_sha256": {
+      "ot_dsrom_window_source_ctl.sv": "8a75b9ee1b82e9df278616cbc429292faa821c36d772fcd2ef31e78fcecc67ce",
+      "mutant_window_ctl_late_payload.sv": "c66459016ede4969a75f03f84052fe64cc01a94f6d838491edab3467ae11e15f"
+    },
+    "bench_sha256": "8a323e91787c2e9d03b7379e25b37330f3cc6b1e4d4fed113110649a8c8dfa93"
+  },
+  "broad_negative": {
+    "status": "INCONCLUSIVE_NO_VERDICT",
+    "cases": 344,
+    "simulator_returncode": 2,
+    "verdict": "NONE",
+    "preserved": "negative_terminal/record.json",
+    "interpretation": "Do not relabel these results as expected mismatch. Bench phase6 lacks the phase3/4 fault/time watchdog; exact stuck phase was not observed."
+  },
+  "validation": "Matched positive ctl2/ctl3 source hashes to harvested campaign, then exact controller/mutant bytes to recovered namespace; same bench/stimulus for positive and mutant.",
+  "commands": {
+    "positive": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_recovered_ctl_request_skid",
+      "-o",
+      "/tmp/window-request-skid-positive",
+      "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv",
+      "rtl/dsrom_sys/s81_window_la/tb_recovered_ctl_request_skid.sv"
+    ],
+    "late_payload": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_recovered_ctl_request_skid",
+      "-o",
+      "/tmp/window-request-skid-late_payload",
+      "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/mutant_window_ctl_late_payload.sv",
+      "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv",
+      "rtl/dsrom_sys/s81_window_la/tb_recovered_ctl_request_skid.sv"
+    ]
+  },
+  "logs_sha256": {
+    "positive.log": "2533325e3f56a11abed41bf4be6bfabe993a4c40585ac4b8024430d0666e69be",
+    "late_payload.log": "a14ca592fbf46d66127eff68129c2923add562ead577e8c61ee69f7ade914382"
+  }
+}
