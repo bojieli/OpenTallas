@@ -62,9 +62,23 @@ set wo 1e9
 foreach p [all_outputs] {{ set s [get_property $p slack_{check}]; if {{$s ne "INF" && $s < $wo}} {{ set wo $s }} }}
 puts "OT_WS_OUT $wo"
 set pr [find_timing_paths -path_delay {check} -from [all_registers -clock_pins] -to [all_registers -data_pins] -group_path_count 1]
-if {{[llength $pr]}} {{ puts "OT_WS_R2R [get_property [lindex $pr 0] slack]" }} else {{ puts "OT_WS_R2R INF" }}
+# find_timing_paths returns one worst path PER GROUP. Select the minimum
+# across groups; index 0 can be asynchronous even when core_clk is worse.
+set ot_worst INF
+foreach ot_path $pr {{
+    set ot_slack [get_property $ot_path slack]
+    if {{$ot_worst eq "INF" || $ot_slack < $ot_worst}} {{ set ot_worst $ot_slack }}
+}}
+puts "OT_WS_R2R $ot_worst"
 set pi [find_timing_paths -path_delay {check} -from [all_inputs] -to [all_registers -data_pins] -group_path_count 1]
-if {{[llength $pi]}} {{ puts "OT_WS_I2R [get_property [lindex $pi 0] slack]" }} else {{ puts "OT_WS_I2R INF" }}
+# find_timing_paths returns one worst path PER GROUP. Select the minimum
+# across groups; index 0 can be asynchronous even when core_clk is worse.
+set ot_worst INF
+foreach ot_path $pi {{
+    set ot_slack [get_property $ot_path slack]
+    if {{$ot_worst eq "INF" || $ot_slack < $ot_worst}} {{ set ot_worst $ot_slack }}
+}}
+puts "OT_WS_I2R $ot_worst"
 exit
 """
 
