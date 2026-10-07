@@ -1,0 +1,26 @@
+{
+  "status": "PRE_ROUTE_PREFLIGHT_PASS_ACTUAL_BPIN_OPEN",
+  "orientations": {
+    "ew": {
+      "pins": 130,
+      "source_sha256": "9ad8bb0b654ed9e2b3e9221b8fab7fdc9fcbf77e03d7881ff9c795506436abab"
+    },
+    "ns": {
+      "pins": 130,
+      "source_sha256": "a2eebdee5ea33b6ebfe3c300051f334a379d3043ae0f3ad303ebf229a5d2b9f4"
+    }
+  },
+  "input_window_um": 6.144,
+  "output_window_um": 6.144,
+  "outline_um": [
+    32.4,
+    32.4
+  ],
+  "actual_parent_IO_clock_binding": "OPEN",
+  "selected": false,
+  "source_sha256": {
+    "tools/hbm_result_delay_bank_physical.py": "a6b18085527dadaa955bfe089069c2f0aaa67ee57f71b919b857bfda2c313f2b",
+    "physical/hbm_result_delay_bank_20261007/screening.sdc": "ce508cfd43ee79b3e981d418f837e799254aeb821f57e6c121c007fbf5a4fbb9",
+    "rtl/hbm_accel/result_delay_bank_20261007/hfd_result_delay64x8.sv": "5f638baee776ec328462e9bfb69f035b6b40bf4344bd275eccccd068a4035b5e"
+  }
+}
