@@ -7,4 +7,5 @@ rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv
 rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter_item9_cuts.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
 rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv
+rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv
 rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked.sv

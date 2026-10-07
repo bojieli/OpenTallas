@@ -16,17 +16,24 @@
 module tb_ha2_tu_owner_banked;
  parameter integer MUT=0;
  parameter integer PQ=0;
+ parameter integer HALF=0;
  localparam integer NC=8,PFMAX=384,LANES=16,FW=512,PWT=FW+33,NPT=8,INJ=2;
  localparam [7:0] RANK=8'd19;localparam integer J=19%8;
  reg clk=0;always #416666 clk=~clk;
  reg rst_n=0,active=0,arm=0;reg [15:0] pf=64;
  reg [INJ-1:0] hv=0;reg [INJ*(32+FW)-1:0] hd=0;
  reg [NPT-1:0] rpv=0,dpv=0;reg [NPT*PWT-1:0] rpd=0,dpd=0;
- wire [NPT-1:0] p_r;
+ wire [NPT-1:0] p_r;wire [INJ-1:0] h_r;
  wire dv,ddup,dis,dq;wire [15:0] dm;wire [FW-1:0] dd;
  wire rv,rdup,ris,rq;wire [15:0] rm;wire [FW-1:0] rd;
- ot_ha2_tu_owner_banked #(.MUTANT(MUT),.PQREG(PQ)) dut(.clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),
-  .h_v(hv),.h_d(hd),.p_v(dpv),.p_flit(dpd),.p_r(p_r),.r_v(dv),.r_m(dm),.r_d(dd),.dupe(ddup),.issue_o(dis),.quiet(dq));
+ if(HALF)begin:g_half
+  ot_ha2_tu_owner_banked_half #(.MUTANT(MUT),.PQREG(PQ)) dut(.clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),
+   .h_v(hv),.h_d(hd),.h_r(h_r),.p_v(dpv),.p_flit(dpd),.p_r(p_r),.r_v(dv),.r_m(dm),.r_d(dd),.dupe(ddup),.issue_o(dis),.quiet(dq));
+ end else begin:g_full
+  assign h_r={INJ{1'b1}};
+  ot_ha2_tu_owner_banked #(.MUTANT(MUT),.PQREG(PQ)) dut(.clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),
+   .h_v(hv),.h_d(hd),.p_v(dpv),.p_flit(dpd),.p_r(p_r),.r_v(dv),.r_m(dm),.r_d(dd),.dupe(ddup),.issue_o(dis),.quiet(dq));
+ end
  ot_ha2_tu_owner_adapter_item9_cuts #(.CUTS(0),.NC(NC),.PFMAX(PFMAX),.LANES(LANES),.INJ(INJ),.NPT(NPT),.SLOTREG(1)) ref_dut(
   .clk(clk),.rst_n(rst_n),.active(active),.arm(arm),.rank(RANK),.pf(pf),.h_v(hv),.h_d(hd),.p_v(rpv),.p_flit(rpd),
   .r_v(rv),.r_m(rm),.r_d(rd),.dupe(rdup),.issue_o(ris),.quiet(rq));
@@ -82,6 +89,7 @@ module tb_ha2_tu_owner_banked;
   @(negedge clk);feeding=1;
   for(k=0;k<pfv;k=k+2)begin
    hv=0;
+   if(HALF)while(!(&h_r))@(negedge clk);
    for(integer i=0;i<2;i=i+1)if(k+i<pfv)begin
     hv[i]=1;
     for(integer l=0;l<LANES;l=l+1)od[32*l+:32]=rnd32(seed*977+(k+i)*13+l);
@@ -90,7 +98,7 @@ module tb_ha2_tu_owner_banked;
    @(negedge clk);
   end
   hv=0;
-  n=0;while(n<4000&&!(rn==ofv/2&&dn==ofv/2&&dq&&rq))begin @(negedge clk);n=n+1;end
+  n=0;while(n<(HALF?30000:4000)&&!(rn==ofv/2&&dn==ofv/2&&dq&&rq))begin @(negedge clk);n=n+1;end
   feeding=0;
  endtask
  integer neg=0,fails=0;
