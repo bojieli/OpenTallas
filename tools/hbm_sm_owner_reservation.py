@@ -8,14 +8,18 @@ from pathlib import Path
 import hbm_accel_die_fp as H
 
 
-def generate(descriptor=False, sm_readback=None, escape=False):
+def generate(descriptor=False, sm_readback=None, escape=False, u_corridors=False):
     old=H.build(H.R24SM3V,network_probe=True)
     if escape and not descriptor:
         raise ValueError('control escape reservations require descriptors')
-    m=H.build(H.R24SM3VOCE if escape else H.R24SM3VOC if descriptor else H.R24SM3VO,network_probe=True)
+    if u_corridors and not escape:
+        raise ValueError('U corridors require endpoint escape reservations')
+    m=H.build(H.R24SM3VOCEU if u_corridors else H.R24SM3VOCE if escape else H.R24SM3VOC if descriptor else H.R24SM3VO,network_probe=True)
     bays=m['native_owner_bays']
     descriptor_actual=None
     readback_sources=[]
+    if u_corridors:
+        readback_sources.append(H.ROOT/'results/uarch/hbm_sm_owner_reservation_20261007/control_u_successor/proposal.json')
     if sm_readback:
         if not descriptor:
             raise ValueError('SM descriptor readback requires descriptor reservations')
@@ -36,7 +40,7 @@ def generate(descriptor=False, sm_readback=None, escape=False):
             raise ValueError('actual descriptor BPin exceeds 100um candidate face bound')
         readback_sources.append(rb_path)
     collisions=[]
-    for r in bays+m.get('native_descriptor_bays',[])+m.get('native_control_escape_bays',[]):
+    for r in bays+m.get('native_descriptor_bays',[])+m.get('native_control_escape_bays',[])+m.get('native_control_u_corridors',[]):
         x0,y0,x1,y1=r['box_um']
         for i in m['insts']:
             if min(x1,i.x+i.w)>max(x0,i.x)+1e-6 and min(y1,i.y+i.h)>max(y0,i.y)+1e-6:
@@ -46,6 +50,8 @@ def generate(descriptor=False, sm_readback=None, escape=False):
         raise ValueError(dict(bay_collisions=collisions,legality=check))
     record=dict(status='RESERVATION_ONLY_PHYSICAL_MASTER_AND_CONTROL_PATHS_OPEN',selected=False,
         legality=check,bay_macro_collisions=collisions,bays=bays,
+        control_u_corridors=m.get('native_control_u_corridors',[]),
+        control_u_area_upper_um2=sum((r['box_um'][2]-r['box_um'][0])*(r['box_um'][3]-r['box_um'][1]) for r in m.get('native_control_u_corridors',[])),
         control_escape_bays=m.get('native_control_escape_bays',[]),
         control_escape_scope='macro keepout for planned flight portals; route corridor, not solid obstacle',
         control_escape_reserved_area_um2=64*40*48 if escape else 0,
@@ -71,13 +77,13 @@ def generate(descriptor=False, sm_readback=None, escape=False):
         source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(H.__file__)]+readback_sources})
     placement=dict(insts=[dict(name=i.name,master=i.master,x=i.x,y=i.y,w=i.w,h=i.h,orient=i.orient,
         kind=i.kind,box_um=i.box()) for i in m['insts']],buses=m['buses'],paths=m['paths'],geo=m['geo'],
-        result_pin_bays=m['result_pin_bays'],native_owner_bays=bays,native_descriptor_bays=m.get('native_descriptor_bays',[]),native_control_escape_bays=m.get('native_control_escape_bays',[]),legality=check)
+        result_pin_bays=m['result_pin_bays'],native_owner_bays=bays,native_descriptor_bays=m.get('native_descriptor_bays',[]),native_control_escape_bays=m.get('native_control_escape_bays',[]),native_control_u_corridors=m.get('native_control_u_corridors',[]),legality=check)
     return record,placement
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true');ap.add_argument('--sm-readback');ap.add_argument('--escape',action='store_true')
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true');ap.add_argument('--sm-readback');ap.add_argument('--escape',action='store_true');ap.add_argument('--u-corridors',action='store_true')
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    record,placement=generate(a.descriptor,a.sm_readback,a.escape)
+    record,placement=generate(a.descriptor,a.sm_readback,a.escape,a.u_corridors)
     (out/'model.json').write_text(json.dumps(record,indent=2)+'\n')
     with gzip.open(out/'placement.json.gz','wt') as f:json.dump(placement,f,separators=(',',':'))
     print(json.dumps(record['legality']))

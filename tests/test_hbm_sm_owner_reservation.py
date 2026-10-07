@@ -41,3 +41,13 @@ def test_control_escape_apertures_are_clear_macro_keepouts():
         box=(owners if b['role']=='owner' else adapters)[b['sm']]
         assert abs(x1-x0-40)<1e-6 and abs(y1-y0-48)<1e-6
         assert abs(x1-box[0])<1e-6 or abs(x0-box[2])<1e-6
+
+
+def test_control_u_corridors_move_waypoints_without_deleting_macros():
+    r,p=O.generate(True,escape=True,u_corridors=True)
+    assert len(r['control_u_corridors'])==18
+    assert len({b['sm'] for b in r['control_u_corridors']})==6
+    assert not r['bay_macro_collisions']
+    assert r['legality']['instances']==596
+    assert r['legality']['overlaps']==r['legality']['outside']==0
+    assert 587000<r['control_u_area_upper_um2']<589000
