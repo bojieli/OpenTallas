@@ -229,7 +229,7 @@ def phy_expr(b, ix):
 
 
 # views agent 2026-10-07: SE_s7 aggressive variant (SLOT 3: kept grant copies + one more line register, +1 cycle per line)
-ASM_SLOT = {'hfd_svc_SE_s7': 3}
+ASM_SLOT = {'hfd_svc_SE_s7': 4}
 
 
 def build(pl):
