@@ -44,6 +44,12 @@ module ot_dsrom_su_norm #(
                                         //    their first stage is fed from another unit (xo, the broadcast rh, u_xr)
     parameter integer MEMSPLIT = 0,     // 1: the per-lane x wait line / gain ROM are keep_hierarchy modules (host synthesis of wide
                                         //    engines); 0: the original in-lane arrays (existing views byte-identical)
+    parameter integer MEM = 0,          // 1: the x wait line and the gain ROM as two shared-address SRAMs (NV rows x N*32 bits,
+                                        //    N/8 ASAP7 ot_sram_1r1w_128x256_m1_r2c2 macros each) instead of N per-lane flop
+                                        //    arrays: every lane uses the same global index, so the N arrays are one wide
+                                        //    memory.  The macro read is issued one cycle earlier and its output registered
+                                        //    at the old xo / wo flops, so the operand timing is cycle-identical to MEM=0.
+                                        //    Needs NV <= 128, N a multiple of 8, LM + SXC >= 2.
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
     parameter integer BW = 9,           // broadcast wire stages (scalar tail -> lanes)
     parameter integer LM = 5,
@@ -138,6 +144,7 @@ module ot_dsrom_su_norm #(
     // (xo), so the multiplier sees registers only.
     wire        rb_v;
     reg  [31:0] rh;
+    wire [32:0] rbw;                    // BW - 1 pipeline stages, then the hold register rh (the BW-th stage)
     reg         sc_run;
     reg  [7:0]  sc_i;
     always @(posedge clk or negedge rst_n) begin
@@ -151,10 +158,21 @@ module ot_dsrom_su_norm #(
     wire        sc_go = rb_v || sc_run;
     wire [7:0]  sc_x  = rb_v ? 8'd0 : sc_i;
     wire [7:0]  sc_nx = rb_v ? 8'd1 : sc_run ? sc_i + 8'd1 : 8'd0;   // the index used in the next cycle
+    // MEM=1: the index sc_nx will have in the NEXT cycle (the macro read is issued a cycle ahead of the xo register);
+    // rb_v of the next cycle is rbw[32] now
+    wire        sc_run_n = rb_v ? (NV > 1) : (sc_run && sc_i != NV - 1);
+    wire [7:0]  sc_i_n   = rb_v ? 8'd1 : sc_run ? sc_i + 8'd1 : sc_i;
+`ifdef OT_SUN_MEM_MUT_LATE
+    wire [7:0]  sc_nn    = sc_nx;                                  // NEGATIVE CONTROL: read not issued ahead
+`else
+    wire [7:0]  sc_nn    = rbw[32] ? 8'd1 : sc_run_n ? sc_i_n + 8'd1 : 8'd0;
+`endif
     wire [DY:0] vy;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rst_n), .v(sc_go), .vd(vy));
     wire [7:0] yi_m, yi_o;
     ot_hdc_delay #(.W(8), .D(LMS)) u_yim (.clk(clk), .rst_n(rst_n), .d(sc_nx), .q(yi_m));   // gain read a cycle ahead (wo)
+    wire [7:0] yi_mm;                   // MEM=1: the gain read issued a cycle ahead of wo
+    ot_hdc_delay #(.W(8), .D(LMS > 1 ? LMS - 1 : 1)) u_yimm (.clk(clk), .rst_n(rst_n), .d(sc_nx), .q(yi_mm));
     ot_hdc_delay #(.W(8), .D(DY)) u_yio (.clk(clk), .rst_n(rst_n), .d(sc_x), .q(yi_o));
 
     wire [N-1:0]    lf;                 // lane faults
@@ -165,7 +183,29 @@ module ot_dsrom_su_norm #(
     wire [N*32-1:0] ybr;                // the RoPE's copy of yb
 
     genvar l, c, k, n;
+    wire [N*32-1:0] xl_all;             // MEM=1: the lanes' x, one wide write word
+    wire [N*32-1:0] xmq, wmq;           // MEM=1: the macros' read words (registered in the lanes as xo / wo)
     generate
+        if (MEM) begin : g_mem
+            // x wait line: written at xi on x_v (the lanes' mix outputs), read at sc_nn; gain ROM: written at wl_i on
+            // wl_v, read at yi_mm.  Read-before-write on a same-address collision, as the flop arrays.
+`ifdef OT_SUN_MEM_MUT_ADDR
+            wire [6:0] xwa = xi[6:0] + 7'd1;                       // NEGATIVE CONTROL: write address off by one
+`else
+            wire [6:0] xwa = xi[6:0];
+`endif
+            for (c = 0; c < N / 8; c = c + 1) begin : g_m
+                ot_sram_1r1w_128x256_m1_r2c2 u_x (.clk(clk), .r_ce_in(1'b1), .r_addr_in(sc_nn[6:0]),
+                    .rd_out(xmq[c * 256 +: 256]), .w_ce_in(x_v), .w_addr_in(xwa), .wd_in(xl_all[c * 256 +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+                ot_sram_1r1w_128x256_m1_r2c2 u_w (.clk(clk), .r_ce_in(1'b1), .r_addr_in(yi_mm[6:0]),
+                    .rd_out(wmq[c * 256 +: 256]), .w_ce_in(wl_v), .w_addr_in(wl_i[6:0]), .wd_in(wl_d[c * 256 +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            end
+        end else begin : g_nomem
+            assign xmq = {N*32{1'b0}};
+            assign wmq = {N*32{1'b0}};
+        end
         for (l = 0; l < N; l = l + 1) begin : g_lane
             wire [31:0] xl;
             wire [9:0] f;
@@ -181,7 +221,12 @@ module ot_dsrom_su_norm #(
             end
             // the x of the row waits here until the rstd comes back
             wire [31:0] xo;
-            if (MEMSPLIT) begin : g_xm
+            assign xl_all[l * 32 +: 32] = xl;
+            if (MEM) begin : g_xs
+                reg [31:0] xo_r;                // the macro output register
+                always @(posedge clk) xo_r <= xmq[l * 32 +: 32];
+                assign xo = xo_r;
+            end else if (MEMSPLIT) begin : g_xm
                 ot_dsrom_su_norm_mem #(.NV(NV)) u_xb (.clk(clk), .we(x_v), .wa(xi), .wd(xl), .ra(sc_nx), .q(xo));
             end else begin : g_xa
                 reg [31:0] xb [0:NV-1];
@@ -195,7 +240,11 @@ module ot_dsrom_su_norm #(
             ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xs, xs, sq[l * 32 +: 32], f[7]);
             // gain ROM and the scale y = bf16(w * (x * r))
             wire [31:0] wo;
-            if (MEMSPLIT) begin : g_wm
+            if (MEM) begin : g_ws
+                reg [31:0] wo_r;
+                always @(posedge clk) wo_r <= wmq[l * 32 +: 32];
+                assign wo = wo_r;
+            end else if (MEMSPLIT) begin : g_wm
                 ot_dsrom_su_norm_mem #(.NV(NV)) u_wr (.clk(clk), .we(wl_v), .wa(wl_i), .wd(wl_d[l * 32 +: 32]), .ra(yi_m), .q(wo));
             end else begin : g_wa
                 reg [31:0] wr [0:NV-1];
@@ -327,7 +376,6 @@ module ot_dsrom_su_norm #(
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
     assign r_v = rr_v;
     assign r = rr;
-    wire [32:0] rbw;                    // BW - 1 pipeline stages, then the hold register rh (the BW-th stage)
     ot_hdc_delay #(.W(33), .D(BW - 1), .RESET(1)) u_bw (.clk(clk), .rst_n(rst_n), .d({rr_v, rr}), .q(rbw));
     reg rbv;
     always @(posedge clk or negedge rst_n) if (!rst_n) rbv <= 1'b0; else rbv <= rbw[32];
