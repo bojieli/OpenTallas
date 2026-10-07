@@ -42,10 +42,11 @@ proc ot_ser_balance {} {
     foreach it $loads { $it disconnect; $it connect $nn }
     [$b findITerm A] connect $n
     [$b findITerm Y] connect $nn
-    set_dont_touch [get_cells ot_ser_bal_buf_$k]
     incr k
     set now [ot_lat_mean ser_clk]
   }
+  # dont_touch only once the chain is complete (each new stage re-hangs the previous one's input)
+  for {set i 0} {$i < $k} {incr i} { set_dont_touch [get_cells ot_ser_bal_buf_$i] }
   puts "ot_ser_balance: core_clk mean $ck ps, ser_clk mean $se -> $now ps with $k BUFx4 on the ckv root (goal $goal)"
 }
 if {[info procs repair_timing_helper] ne "" && [info procs ot_s_repair_timing_helper] eq ""} {
