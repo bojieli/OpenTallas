@@ -11,7 +11,7 @@
 // Actual caller root/cold POR feeds every station. Forwarded inverter roots
 // are exported; measured receiver routing/SSF closure remain OPEN.
 // Warm admission belongs to the publication parent; owed traffic drains here.
-module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)(
+module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0)(
  input wire clk_sm,por_n,warm_req,
  input wire tap_v,output wire tap_r,
  input wire [2062:0] tap_data,input wire [191:0] tap_owner,input wire [72:0] tap_frame,
@@ -42,23 +42,13 @@ module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)(
   localparam [0:0] HELD=(s==0);
   wire [F-1:0] ov,ready,ack;wire [F*2063-1:0] od;
   wire [F*192-1:0] oo,ao;wire [F*73-1:0] ofr,af;
-  if(STN_HALF)begin:half
-   ot_hbm_native_frame_station_rb_half #(.ENABLE(ENABLE),.NO(F)) u_station(
-    .clk_sm(clk_sm),.por_n(por_n),.release_held(HELD),.in_v(iv[s]&&!fault),.in_r(ir[s]),
-    .in_data(data[s*2063+:2063]),.in_owner(owner[s*192+:192]),.in_frame(frame[s*73+:73]),
-    .out_v(ov),.out_r(ready),.out_data(od),.out_owner(oo),.out_frame(ofr),
-    .ACK_v(ack),.ACK_owner(ao),.ACK_frame(af),
-    .release_v(rv[s]),.release_r(rr[s]),.release_owner(ro[s*192+:192]),.release_frame(rf[s*73+:73]),
-    .fclk_o(fclk_o[s]),.drained(empty[s]),.paused(stop[s]),.fault(failed[s]));
-  end else begin:full
-   ot_hbm_native_frame_station_rb #(.ENABLE(ENABLE),.NO(F)) u_station(
-    .clk_sm(clk_sm),.por_n(por_n),.release_held(HELD),.in_v(iv[s]&&!fault),.in_r(ir[s]),
-    .in_data(data[s*2063+:2063]),.in_owner(owner[s*192+:192]),.in_frame(frame[s*73+:73]),
-    .out_v(ov),.out_r(ready),.out_data(od),.out_owner(oo),.out_frame(ofr),
-    .ACK_v(ack),.ACK_owner(ao),.ACK_frame(af),
-    .release_v(rv[s]),.release_r(rr[s]),.release_owner(ro[s*192+:192]),.release_frame(rf[s*73+:73]),
-    .fclk_o(fclk_o[s]),.drained(empty[s]),.paused(stop[s]),.fault(failed[s]));
-  end
+  ot_hbm_native_frame_station_rb #(.ENABLE(ENABLE),.NO(F)) u_station(
+   .clk_sm(clk_sm),.por_n(por_n),.release_held(HELD),.in_v(iv[s]&&!fault),.in_r(ir[s]),
+   .in_data(data[s*2063+:2063]),.in_owner(owner[s*192+:192]),.in_frame(frame[s*73+:73]),
+   .out_v(ov),.out_r(ready),.out_data(od),.out_owner(oo),.out_frame(ofr),
+   .ACK_v(ack),.ACK_owner(ao),.ACK_frame(af),
+   .release_v(rv[s]),.release_r(rr[s]),.release_owner(ro[s*192+:192]),.release_frame(rf[s*73+:73]),
+   .fclk_o(fclk_o[s]),.drained(empty[s]),.paused(stop[s]),.fault(failed[s]));
   for(genvar t=0;t<2;t=t+1)begin:sm
    localparam integer I=s*2+t;
    assign sm_v[I]=ov[t]&&!fault&&!smj[I];assign ready[t]=sm_r[I]&&!fault&&!smj[I];

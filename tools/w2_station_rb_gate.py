@@ -151,9 +151,14 @@ def quarter_bench(out, tag, rb=True, mutant=None):
         if HALFV:
             files += [str(ROOT/Q/'ot_hbm_native_frame_station_rb_half.sv')]
     files = mutate(out, mutant, files)
-    if HALFV and rb:
-        d = out/('half_'+tag); d.mkdir(exist_ok=True)
-        files = [(lambda f: (lambda m: (m.write_text(Path(f).read_text().replace(CHAIN_DEF_OLD, CHAIN_DEF_OLD.replace('STN_HALF=0','STN_HALF=1'))), str(m))[1])(d/Path(f).name))(f) if f.endswith('ot_hbm_native_quarter_chain_rb.sv') else f for f in files]
+    if HALFV and rb:  # the chain instantiates the half-rate shell instead of the station (text swap in a copy)
+        d = out/('half_'+tag); d.mkdir(exist_ok=True); nf = []
+        for f in files:
+            if f.endswith('ot_hbm_native_quarter_chain_rb.sv'):
+                t = Path(f).read_text(); old = 'ot_hbm_native_frame_station_rb #('; assert t.count(old) == 1
+                m = d/Path(f).name; m.write_text(t.replace(old, 'ot_hbm_native_frame_station_rb_half #(')); f = str(m)
+            nf.append(f)
+        files = nf
     tb = (ROOT/Q/'tb_native_quarter_publication.sv').read_text()
     for old, new, _ in BENCH_EDITS + [CAL+(None,)]:
         assert tb.count(old) == 1, old
@@ -162,6 +167,8 @@ def quarter_bench(out, tag, rb=True, mutant=None):
         old = 'ot_hbm_native_quarter_chain #(.ENABLE(1)) chain('
         assert tb.count(old) == 1
         tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)) chain(')
+    if HALFV and rb:
+        tb = tb.replace('.u_station.held.', '.u_station.hs.u_core.held.')
     tbp = out/f'{tag}_tb.sv'; tbp.write_text(tb)
     vvp = out/f'{tag}.vvp'
     rc = run(['iverilog', '-g2012', '-s', 'tb_native_quarter_publication', '-o', str(vvp), *files, str(tbp)], out/f'{tag}.compile.log')
