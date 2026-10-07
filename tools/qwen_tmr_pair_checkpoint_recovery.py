@@ -55,8 +55,8 @@ exit
  completed=sorted('/work/'+str(f.relative_to(work)) for f in (work/rel).iterdir() if f.is_file())
  make=['make','DESIGN_CONFIG=/work/config.mk','WORK_HOME=/work','FLOW_VARIANT=base',f'NUM_CORES={a.threads}']
  ignore=[x for f in completed for x in ['-o',f]]
- commands={'dryrun_io':make+ignore+['-n','do-3_2_place_iop'],'dryrun_finish':make+ignore+['-n','finish'],'io':make+ignore+['do-3_2_place_iop'],'readback':['/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/work/recovery_readback.tcl'],'cts':make+ignore+['cts'],'finish':make+ignore+['finish']}
- record={'schema':'opentallas.qwen_tmr_checkpoint_recovery.v1','status':'PREPARED','original_orfs':str(old),'original_source':str(oldsrc),'source_sha256_unchanged':source,'resolver_sha256':sha(corrected),'original_hook_sha256':sha(oldhook),'original_config_sha256':sha(old/'config.mk'),'private_config_sha256':sha(work/'config.mk'),'upstream_sha256':upstream,'image_id':a.image_id,'runner_sha256':sha(Path(__file__)),'commands':commands,'original_artifacts_modified':False,'physical_signoff':False,'scope':'Correct resolver + persist actual postIO regions/retention; preserveRTL/SDC and completed synth/globalplace. Original failed run remains immutable.'}
+ commands={'dryrun_io':make+ignore+['-n','do-3_2_place_iop'],'io':make+ignore+['do-3_2_place_iop'],'readback':['/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/work/recovery_readback.tcl'],'dryrun_cts':make+ignore+['-n','cts'],'cts':make+ignore+['cts'],'dryrun_grt':make+ignore+['-n','do-5_1_grt'],'grt':make+ignore+['do-5_1_grt'],'dryrun_finish':make+ignore+['-n','finish'],'finish':make+ignore+['finish']}
+ record={'schema':'opentallas.qwen_tmr_checkpoint_recovery.v1','status':'PREPARED','original_orfs':str(old),'original_source':str(oldsrc),'source_sha256_unchanged':source,'resolver_sha256':sha(corrected),'original_hook_sha256':sha(oldhook),'original_config_sha256':sha(old/'config.mk'),'private_config_sha256':sha(work/'config.mk'),'upstream_sha256':upstream,'image_id':a.image_id,'runner_sha256':sha(Path(__file__)),'commands':commands,'original_artifacts_modified':False,'physical_signoff':False,'scope':'Stage each next-target dry-run immediately before execution so ORFS side-effect SDC files exist. Correct resolver + persist actual postIO regions/retention; preserveRTL/SDC and completed synth/globalplace. Original failed run remains immutable.'}
  receipt=out/'recovery.json'
  def save():receipt.write_text(json.dumps(record,indent=2)+'\n')
  save()
@@ -74,7 +74,7 @@ exit
   if r.returncode:return r.returncode
   text=(out/(stage+'.log')).read_text()
   if stage.startswith('dryrun'):
-   if re.search(r'(?:flow\.sh|yosys\.sh)\s+(?:1_|2_|3_1_)|\byosys\s+-',text):raise RuntimeError('Dry-run would redo completed upstream stage')
+   if re.search(r'(?:flow\.sh|yosys\.sh)\s+(?:1_|2_|3_1_)|\bdo-(?:1_|2_|3_1_)|\byosys\s+-',text):raise RuntimeError('Dry-run would redo completed upstream stage')
   if stage=='io' and 'TMR_RECOVERY_POSTIO_PERSISTED' not in text:raise RuntimeError('PostIO persistent DB marker missing')
   if stage=='readback' and ('TMR_RECOVERY_READBACK_PASS' not in text or 'TMR_ACTUAL_ODB_CLOCK_RESOLVER_PASS count=8' not in text):raise RuntimeError('Actual retained clock/region readback failed')
   for n,h in upstream.items():
