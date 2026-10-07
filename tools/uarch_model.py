@@ -13278,11 +13278,11 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
     macro_area = 121.824 * 62.910
     macro_count = 2 * pair_count + scale_macros
     tree_levels = math.ceil(math.log(pair_count, 4)) if pair_count > 1 else 0
-    leaf_frame = (270.0, 100.44)
+    leaf_frame = (270.0, 120.42)
     # Reserve a 4-way registered distribution/gather tree. A leaf accepts
     # once per two fast edges so a macro capture can use a real two-cycle
     # setup budget; the 739 ps SS macro clk->q is never replaced by a flop.
-    leaf_latency = 6
+    leaf_latency = 7
     read_latency = 2 * tree_levels + leaf_latency
     return dict(schema="opentallas.qwen.embedding_bank_closure.v1",
         default_off=True, rows=rows, embedding_elements_per_row=4096,
@@ -13323,7 +13323,7 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
 
 
 def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
-                                     shared_die_station_hops=76, compute_die_station_hops=200,
+                                     shared_die_station_hops=80, compute_die_station_hops=200,
                                      compute_die_area_mm2=821.286):
     """Exact shared-ROM alternative; no full-ROM replication or silent slot squeeze.
 
@@ -13352,7 +13352,7 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
     # response, so a long credit return cannot stall the latency-critical row.
     credit_slots = 1 << math.ceil(math.log2(min(response_beats, 2*hop_cycles+station_cycles+fixed_endpoint_cycles)+2))
     old_handoff = (link["hop_latency_s"]["value"] + 4098 / link["bytes_s"]["value"]) * clock_hz
-    leaf_reservation = bank["replica_count"]["code_bank_pairs"] * 270 * 100.44 / 1e6
+    leaf_reservation = bank["replica_count"]["code_bank_pairs"] * bank['area']['leaf_frame_um'][0] * bank['area']['leaf_frame_um'][1] / 1e6
     scale_reservation = bank["replica_count"]["scale_macros"] * bank["macro"]["area_um2"] / .60 / 1e6
     phy_each = 10.0
     shared_reservation = math.ceil((leaf_reservation + scale_reservation + compute_dies*phy_each + 20)/8)*8
@@ -13389,7 +13389,7 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
                      mutable_buffer_protection="64-bit SECDED words; metadata/credits require protected state before adoption",
                      multicast="separate registered TX per die; launch only when all four have reserved credits; no combinational ready path",
                      arbitration="single-user priority; independent request batching must not delay selected request"),
-        latency=dict(code_row_cycles=code_cycles, scale_root_bound_cycles=18,
+        latency=dict(code_row_cycles=code_cycles, scale_root_bound_cycles=bank["latency"]["root_read_cycles"],
                      scale_bound_status="proposed; must route scale bank before adoption",
                      endpoint_cycles=fixed_endpoint_cycles, endpoint_status="proposed registered stages",
                      conservative_total_service_cycles=service_cycles,
@@ -13401,7 +13401,7 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
                      shared_die_station_hops_each_direction=shared_die_station_hops,
                      compute_die_station_hops_each_direction=compute_die_station_hops,
                      added_station_cycles=station_cycles,
-                     station_basis="conservative300um pitch bounding-box allowance:76hops across128mm2 shared die,200 across <=60mm sum of compute die side lengths; replace only with generated measured counts",
+                     station_basis="conservative300um pitch bounding-box allowance:80hops across144mm2 shared die,200 across <=60mm sum of compute die side lengths; replace only with generated measured counts",
                      overlap_credit=0),
         physical_closed=False, adopted_rate_tok_s=None,
         remaining="route code/scale leaves and protected row buffer, exact multicast endpoint, package PHY contract, station counts, die floorplan/STA/DRC/IR")
