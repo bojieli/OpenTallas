@@ -4,9 +4,11 @@ machine                              AR tok/s  MTP tok/s  MTP@3.8879  note
 (links: FULL RS(544,514) FEC on every off-package link, owner 2026-10-06)
 DS ROM 1M (adopted levers)            1,675.0    4,895.0     4,575.9  tau 4.159; MTP physical_qualified=False
   + all PENDING_SSFF (CONDITIONAL)    2,204.6    6,113.9     5,715.3  not a headline
-Qwen ROM 8K (P8191)                   6,180.1    6,180.1           -  194,172 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
+Qwen ROM 8K (P8191)                   6,178.4    6,178.4           -  194,226 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
   KV (all 36 layers, FP8, in token) 576 MiB/token; landing 3,042 B/cyc/rank = 3.65 TB/s/die (91.3% peak), exposed 1363 cyc
-  r18g die wire bound (PENDING)       5,783.8                         65 ps skew 5,702.3; GRT 11,534 overflow; not a headline
+  + modelled costs (not RTL)          6,177.6                         +24 cyc (KV_MAP=1 die crossbar, cold layer); not a headline
+  physical                         CLOSED (owner decision 2026-10-06); prior Qwen bar (SS60/FF25 >= 0); die-top route NOT DONE
+  r18g die wire bound (PENDING)       5,782.3                         65 ps skew 5,700.9; GRT 11,534 overflow; not a headline
 HBM accel DS 1M, wire floor           1,999.7    3,993.7     3,733.4  +37.917 us wire
 HBM accel DS 1M, wire median          1,948.8    3,944.2     3,687.1  +50.983 us wire
 HBM accel DS 1M, wire bound           1,921.5    3,917.2     3,661.8  +58.269 us wire
@@ -31,5 +33,6 @@ DS ROM    field                  excluded     REJECT
 DS ROM    hop                    excluded     REJECT
 Qwen ROM  core_context           adopted         +0 cyc        0.0
 Qwen ROM  slab_mul_lat7          adopted       +217 cyc       -6.9
+Qwen ROM  kv_map_m               adopted        +54 cyc       -1.7
 HBM       joint_PQ_XMAP          exact          -36.416               -77.056
 HBM       paired_W2_PACK         exact           -6.133                 0.000
