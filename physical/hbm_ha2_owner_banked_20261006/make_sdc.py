@@ -10,6 +10,7 @@ p.add_argument('--period-ps',type=float,required=True)
 p.add_argument('--l-max',type=float,required=True);p.add_argument('--l-min',type=float,required=True)
 p.add_argument('--l-ff-min',type=float,required=True)
 p.add_argument('--io-ref-period-ps',type=float,default=833.333)
+p.add_argument('--route-ss-hold',action='store_true',help='route SDC: hold windows referenced to the SS insertion (the flow repairs hold at the SS corner; FF hold is signed off by signoff.py with the FF numbers)')
 p.add_argument('--skew-ps',type=float,default=150.0);p.add_argument('--hold-io-ps',type=float,default=50.0)
 p.add_argument('--wire-ps',type=float,default=200.0);p.add_argument('--clkq-ps',type=float,default=100.0)
 p.add_argument('--clkq-min-ps',type=float,default=30.0);p.add_argument('--out',type=Path,required=True)
@@ -19,6 +20,9 @@ in_max=a.l_max+a.skew_ps+a.clkq_ps+a.wire_ps+shift
 in_min=a.l_ff_min-a.hold_io_ps+a.clkq_min_ps
 out_max=a.wire_ps+25+a.skew_ps-a.l_min+shift
 out_min=-(a.l_ff_min-a.hold_io_ps)
+if a.route_ss_hold:
+    in_min=a.l_min-a.hold_io_ps+a.clkq_min_ps
+    out_min=-(a.l_min-a.hold_io_ps)
 a.out.write_text('\n'.join([
  f'# HA2 banked: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max}, FF min {a.l_ff_min}',
  f'create_clock -name clk -period {a.period_ps:.3f} [get_ports clk]',
