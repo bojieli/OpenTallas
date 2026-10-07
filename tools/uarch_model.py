@@ -13558,3 +13558,74 @@ def hbm_su_divider_halfpair_model(serial_divides=1):
             'c12 controller/lane exact composition at DDIV64',
             'full-lane physical shape SS>=15ps/FF>=15ps/DRC0 with generated clocks',
             'expanded slot installed in die context and latency ledger recomposed'])
+
+
+def qwen_core_separate_load_model(*, non_end_instructions, replicas=4):
+    """Split instruction issue from the next LOAD; no arithmetic or new state.
+
+    Count must come from the program being measured; a component count is not
+    a complete token schedule. Intrinsic bubbles are priced separately from altered readiness sampling.
+    External time-varying stalls can add further cycles; no token bound is claimed.
+    """
+    if not isinstance(non_end_instructions, int) or non_end_instructions < 0:
+        raise ValueError('non_end_instructions must be a nonnegative integer')
+    if not isinstance(replicas, int) or replicas < 1:
+        raise ValueError('replicas must be positive')
+    return dict(default_enabled=False, adopted=False, physical_signoff=False,
+        MACs_per_cycle=0, new_memory_ports=0, new_boundary_bits=0,
+        added_register_bits=0, replicas=replicas, new_mux_inputs=0,
+        intrinsic_bubble_cycles=non_end_instructions,
+        intrinsic_bubble_ns=non_end_instructions/1.2,
+        token_latency_delta_upper_cycles=None,
+        token_latency_delta_upper_ns=None,
+        token_composition_status="requires actual readiness trace; no universal bound",
+        measured_component_64=dict(no_stall_delta_cycles=64, periodic_ready_delta_cycles=71),
+        minimum_issue_interval_cycles=2, clock_hz=1200000000,
+        setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        added_register_cell_area_um2=0,
+        measured_predecessor_cell_area_um2=8277.71,
+        measured_predecessor_core_area_um2=24642.1,
+        new_external_routing_tracks=0, original_slot_unchanged=True,
+        successor_slot_fit_measured=False,
+        load_fanout='Existing NEXT and descriptor captures; issue cone removed from LOAD enable',
+        measured_failure='SU go to kvd_tiles D: SS -155.059418ps, 1578 failing endpoints from SU go and122 from ME taken',
+        remaining_obligations=['Actual selected token instruction count',
+          'Issue-side consumers and output-pin timing', 'Input hold at actual die budget',
+          'Full controller route at SS/FF and exact ordered-instruction gate'])
+
+
+def qwen_core_separate_load_schedule(contexts=(1, 8192)):
+    """Compose the candidate in the current analytical TP4 controller schedule.
+
+    No deployed-program identity or other uncomposed physical interface delay
+    is inferred from this analytical program. Exact fullshape RTL gates remain
+    separate; this is the model's before/after issue-spacing price.
+    """
+    import hashlib
+    import json
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    import hdc_isa as I
+    import hdc_program as P
+    shape = dict(Q.Q, NH=8, KV=2, FF=Q.Q['FF']//4, V=Q.Q['V']//4)
+    old = I.SU_WIDTH
+    try:
+        I.SU_WIDTH = 64
+        program = P.build_program(Q.capped_layout(6144, None, shape))
+    finally:
+        I.SU_WIDTH = old
+    rows = []
+    for context in contexts:
+        cycles = []
+        for gap in (1, 2):
+            k = dict(T.K, me_lat=T.K['me_lat'] + QWEN_SS['me_lat_extra'] + Q.SCALE_MUL_CYCLES,
+                     red_lv=7, seq_gap=gap)
+            _, total = T.simulate(program, context-1, groups=6144,
+                dyn_shape=dict(H=Q.Q['H'], half=Q.Q['HD']//2, HD=Q.Q['HD']), su_width=64, k=k)
+            cycles.append(total)
+        rows.append(dict(context=context, baseline_cycles=cycles[0], candidate_cycles=cycles[1],
+                         delta_cycles=cycles[1]-cycles[0], delta_ns=(cycles[1]-cycles[0])/1.2))
+    return dict(adopted=False, scope='current analytical TP4 program; deployed identity not inferred',
+                instruction_count=len(program), rows=rows,
+                program_sha256=hashlib.sha256(json.dumps(program, sort_keys=True,
+                    separators=(',', ':')).encode()).hexdigest())
