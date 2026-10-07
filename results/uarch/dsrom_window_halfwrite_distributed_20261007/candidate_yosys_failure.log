@@ -1,0 +1,5 @@
+
+-- Running command `read_verilog -sv rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv; chparam -set HALFWRITE 1 ot_dsrom_window_column_halfwrite; hierarchy -check -top ot_dsrom_window_column_halfwrite; proc; flatten; opt; memory_map; opt; write_json /tmp/window-halfwrite-generic-r2.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv
+rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv:4: ERROR: syntax error, unexpected TOK_REG, expecting TOK_ID or TOK_INTEGER or TOK_SIGNED or '['
