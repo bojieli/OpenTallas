@@ -659,6 +659,24 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     if network_probe:
         m['network_probe'] = True
         m['notes'].append('Unqualified network probe: old logical tree association, moved anchors; actual pin routes and timing require validation.')
+        if variant.get('sm_physical_grid'):
+            # Actual 27-piece top result pins from generator 2bd92cae4 +
+            # 1d11fbb3e, pins.tcl SHA256 53e4a2bf2cc8e736a9669d796115596c
+            # 5cf9e82c469fa92f255536cbe5f003e2. Reserve an outward 120um
+            # station bay before placing unrelated tree/request/KV stations.
+            bays = []
+            for sm in (i for i in insts if i.kind == 'sm'):
+                lo, hi = 1467.804, 1608.444
+                if sm.orient in ('MY', 'R180'):
+                    lo, hi = sm.w - hi, sm.w - lo
+                x0, x1 = sm.x + lo - 24, sm.x + hi + 24
+                if sm.orient in ('MX', 'R180'):
+                    box = [x0, sm.y + sm.h, x1, sm.y + sm.h + 120]
+                else:
+                    box = [x0, sm.y - 120, x1, sm.y]
+                bays.append(dict(sm=sm.name, box_um=box))
+            m['result_pin_bays'] = bays
+            m.setdefault('reserved_regions', []).extend(q['box_um'] for q in bays)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -1522,6 +1540,11 @@ def _router(m, B, P):
         for k_ in range(1, 40):
             for s_ in (1, -1):
                 tries.append((0, s_ * k_) if horizontal else (s_ * k_, 0))
+        if m.get('network_probe'):
+            # Pin bays can block both one-axis searches. Explore neighbouring
+            # two-dimensional slots without shrinking a real macro footprint.
+            tries += sorted(((i, j) for i in range(-12, 13) for j in range(-12, 13) if i and j),
+                            key=lambda ij: abs(ij[0]) + abs(ij[1]))
         for (i, j) in tries:
             x = dn(base[0] + i * (w + 8.64), GX)
             y = dn(base[1] + j * (h + 8.64), GY)

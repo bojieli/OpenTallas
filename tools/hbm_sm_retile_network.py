@@ -17,6 +17,7 @@ def generate():
       insts=[dict(name=i.name,master=i.master,x=i.x,y=i.y,w=i.w,h=i.h,
         orient=i.orient,kind=i.kind,box_um=i.box()) for i in m['insts']],
       buses=m['buses'],paths=m['paths'],geo=m['geo'],legality=check,
+      result_pin_bays=m.get('result_pin_bays', []),
       prior_split_placement_failure=['no room for the B half: w33_xmSW1',
         'no room for the B half: w186_xmNW1'],
       internal_tu_contract='W2/HA2 h_v/h_d/h_r stay inside hb_coll; no external sender bus or macro',
