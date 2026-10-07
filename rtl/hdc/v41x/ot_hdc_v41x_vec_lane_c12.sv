@@ -128,7 +128,7 @@ module ot_hdc_v41x_vec_lane #(
     // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
     // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
     localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
-    generate if ((OPR != 0 && OPR != 1) || (DDIV != 19 && DDIV != 21) || (SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (CAPR != 0 && CAPR != 1))
+    generate if ((OPR != 0 && OPR != 1) || (DDIV != 19 && DDIV != 21 && DDIV != 31) || (SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (CAPR != 0 && CAPR != 1))
         begin : g_bad_c12
         ot_hdc_v41x_vec_lane_c12_OPR_0_1_DDIV_19_21_SIDEX_0_3 u_trap ();
     end endgenerate
@@ -609,7 +609,10 @@ module ot_hdc_v41x_vec_lane #(
     wire           f_d1, c1;
     generate
         if (HAS_SFU != 0) begin : g_m1s
-            if (DDIV == 21) begin : g_d21
+            if (DDIV == 31) begin : g_d31
+                ot_hdc_fdiv    u_d1 (.clk(clk), .rst_n(rst_n), .v(o_div), .a(o_a), .b(o_bd), .y(div1_y), .vo(),
+                                        .fault(f_d1));
+            end else if (DDIV == 21) begin : g_d21
                 ot_dsrom_fdiv_f12 u_d1 (.clk(clk), .rst_n(rst_n), .v(o_div), .a(o_a), .b(o_bd), .y(div1_y), .vo(),
                                         .fault(f_d1));
             end else begin : g_d19
@@ -717,7 +720,10 @@ module ot_hdc_v41x_vec_lane #(
             ot_hdc_delay #(.W(32), .D(D_EXP + ALAT)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
             wire [ALAT:0] vdn;
             ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
-            if (DDIV == 21) begin : g_s21
+            if (DDIV == 31) begin : g_s31
+                ot_hdc_fdiv    u_div (.clk(clk), .rst_n(rst_n), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
+                                         .fault(f_div));
+            end else if (DDIV == 21) begin : g_s21
                 ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_n), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                          .fault(f_div));
             end else begin : g_s19

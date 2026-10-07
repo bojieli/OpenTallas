@@ -1,0 +1,35 @@
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 87311 cell flips.
+[INFO DPL-0384] End of flipping; objective is 2.439231e+09, improvement is 0.96 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          2488805.9 u ( 1104426.7,  1384379.2)
+Final HPWL             2436695.2 u ( 1068229.2,  1368465.9)
+Delta HPWL                  -2.1 % (      -3.3,       -1.1)
+
+Took 91 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 28819 instances
+[INFO DPL-0021] HPWL before          2436695.2 u
+[INFO DPL-0022] HPWL after           2436115.2 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 12 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 46319 um^2 15% utilization.
+write_db /work/results/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12s_asap7_su_red_ts4_pin/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12s_asap7_su_red_ts4_pin/base/3_place.sdc
+Elapsed time: 3:54.59[h:]min:sec. CPU time: user 285.33 sys 66.20 (149%). Peak memory: 3628516KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          234           3543 29b0f4bbf902840b30b4

@@ -69,8 +69,11 @@ def set_c12(VC):
     VC.D_OUT = 1 + P["opr"]                  # the E1 operand register (a constant stage on every element)
     VC.D_M1 = VC.D_STAGE = m
     VC.D_AD = a + P["opr"]
-    VC.D_RSTEP = a
-    VC.D_RED = 2 + m + 7 * a + P["rpad"] + P["rsl"] + P["rtap"] + P["rout"]
+    VC.D_RSTEP = a + P["ropi"]                # reducer op: the adder + ROPI operand register
+    VC.D_RED = 2 + m + 7 * (a + P["ropi"]) + P["rpad"] + P["rsl"] + P["rtap"] + P["rout"]
+    if P["rhalf"]:                            # half-rate reducer: two fast cycles a stage + pins (perf model only)
+        VC.D_RSTEP *= 2
+        VC.D_RED = 2 * VC.D_RED + 9
     d_exp = 7 * m + 8 * a + 4
     d_sig = d_exp + a + P["ddiv"]
     sx = P["sidex"]
