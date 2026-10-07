@@ -3,6 +3,7 @@
 `timescale 1ns/1ps
 module ot_hfd_actquant_m #(
     parameter integer MR = 0,       // views agent: 1 with MLAT 6 = L5 multiplier + rounding cut (_l6r)
+    parameter integer FREG = 1,     // views agent 2026-10-07: amax re-registered per multiplier (qm7 f_amax -> u_scale8 k1 +7.5 ps / 18 levels): +1 cycle
     parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
 ) (
     input  wire          clk,
@@ -16,7 +17,7 @@ module ot_hfd_actquant_m #(
     output reg  [511:0]  y,
     output reg           fault
 );
-    localparam integer LATENCY = 13 + MLAT + 4;
+    localparam integer LATENCY = 13 + MLAT + 4 + FREG;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
     localparam [30:0] FLOOR_FP4 = 31'h01c00000;   // float32(6 * 2^-126)
     localparam [31:0] INV_448   = 32'h3b124925;   // float32(1/448)
@@ -77,22 +78,31 @@ module ot_hfd_actquant_m #(
         if (!rst_n) f_v <= 1'b0; else f_v <= lv_v[5];
     end
     always @(posedge clk) begin f_amax <= gf ? lvl[5][30:0] : fl; f_fp4 <= lv_fp4[5]; f_nf <= lv_nf[5]; end
-    wire [30:0] amax = f_amax;
+    // FREG: amax re-registered once per multiplier (two kept copies, each next to its multiplier) with v / fp4 / nf
+    wire [30:0] a8, a4; wire m_v, m_fp4, m_nf;
+    generate if (FREG != 0) begin : g_fr
+        (* keep *) reg [30:0] r8; (* keep *) reg [30:0] r4; reg rv_, rf_, rn_;
+        always @(posedge clk or negedge rst_n) if (!rst_n) rv_ <= 1'b0; else rv_ <= f_v;
+        always @(posedge clk) begin r8 <= f_amax; r4 <= f_amax; rf_ <= f_fp4; rn_ <= f_nf; end
+        assign a8 = r8; assign a4 = r4; assign m_v = rv_; assign m_fp4 = rf_; assign m_nf = rn_;
+    end else begin : g_nfr
+        assign a8 = f_amax; assign a4 = f_amax; assign m_v = f_v; assign m_fp4 = f_fp4; assign m_nf = f_nf;
+    end endgenerate
 
     // ---- the scale product (5 stages)
     wire [31:0] prod8, prod4, prod;
     wire        pfault8, pfault4, pfault;
     generate if (MR != 0 && MLAT == 6) begin : g_mr
-        ot_hfd_qmul_l6r u_scale8 (clk, rst_n, f_v, {1'b0, amax}, INV_448, prod8, pfault8);
-        ot_hfd_qmul_l6r u_scale4 (clk, rst_n, f_v, {1'b0, amax}, INV_6, prod4, pfault4);
+        ot_hfd_qmul_l6r u_scale8 (clk, rst_n, m_v, {1'b0, a8}, INV_448, prod8, pfault8);
+        ot_hfd_qmul_l6r u_scale4 (clk, rst_n, m_v, {1'b0, a4}, INV_6, prod4, pfault4);
     end else begin : g_mq
-        ot_hdc_qmul_lat #(MLAT) u_scale8 (clk, rst_n, f_v, {1'b0, amax}, INV_448, prod8, pfault8);
-        ot_hdc_qmul_lat #(MLAT) u_scale4 (clk, rst_n, f_v, {1'b0, amax}, INV_6, prod4, pfault4);
+        ot_hdc_qmul_lat #(MLAT) u_scale8 (clk, rst_n, m_v, {1'b0, a8}, INV_448, prod8, pfault8);
+        ot_hdc_qmul_lat #(MLAT) u_scale4 (clk, rst_n, m_v, {1'b0, a4}, INV_6, prod4, pfault4);
     end endgenerate
     wire [MLAT:0] vl;
-    ot_hdc_vline #(.D(MLAT)) u_vl (.clk(clk), .rst_n(rst_n), .v(f_v), .vd(vl));
+    ot_hdc_vline #(.D(MLAT)) u_vl (.clk(clk), .rst_n(rst_n), .v(m_v), .vd(vl));
     wire p_fp4, p_nf;
-    ot_hdc_delay #(.W(2), .D(MLAT)) u_dp (.clk(clk), .rst_n(rst_n), .d({f_fp4, f_nf}), .q({p_fp4, p_nf}));
+    ot_hdc_delay #(.W(2), .D(MLAT)) u_dp (.clk(clk), .rst_n(rst_n), .d({m_fp4, m_nf}), .q({p_fp4, p_nf}));
     assign prod = p_fp4 ? prod4 : prod8;
     assign pfault = p_fp4 ? pfault4 : pfault8;
     // the elements, S0 -> E (5 tree + F + MLAT multiply registers, then E itself: aligned at E's input)
@@ -103,7 +113,7 @@ module ot_hfd_actquant_m #(
         assign s0_nz[zi] = |s0_x[32*zi +: 31];
         assign s0_fz[zi] = |s0_x[32*zi + 23 +: 8];
     end endgenerate
-    ot_hdc_delay #(.W(1024 + 64), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
+    ot_hdc_delay #(.W(1024 + 64), .D(7 + FREG + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;
