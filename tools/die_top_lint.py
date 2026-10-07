@@ -662,6 +662,15 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
 
 
 # ------------------------------------------------------------------------------------------------ connectivity lint
+def _binding(rb, port):
+    """rtl pin names of a die port; 'p[lo:hi]' (S81 generator port slice) = bits lo..hi of port p"""
+    mm = re.match(r'^(.+)\[(\d+):(\d+)\]$', port)
+    if mm:
+        names = rb['binding'].get(mm.group(1))
+        return None if names is None else names[int(mm.group(2)):int(mm.group(3)) + 1]
+    return rb['binding'].get(port)
+
+
 def endpoint_dirs(die, real, by, bus, j):
     """[(lo, hi, dir)] per net bit range for endpoint j, plus (rtl pin per net bit or None) for real endpoints."""
     bid, cls, bits, eps = bus
@@ -669,7 +678,7 @@ def endpoint_dirs(die, real, by, bus, j):
     mst = by[inst].master
     if mst in real:
         rb = real[mst]
-        names = rb['binding'].get(port)
+        names = _binding(rb, port)
         if names is None:
             return None, ('port_not_in_binding', port)
         names = list(names[:bits])
@@ -1324,7 +1333,7 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
             rb = real[mst]
             bitmap = defaultdict(dict)        # rtl port -> bit -> expr
             for port, net, bits, j, bus in conns.get(it.name, []):
-                names = rb['binding'].get(port)
+                names = _binding(rb, port)
                 if names is None:
                     continue
                 for i, pn in enumerate(names[:bits]):

@@ -27,6 +27,8 @@ module ot_hdc_v41_fh_fault_retire #(
     output wire retired_v,
     output wire [PACKET_BITS-1:0] retired_packet,
     output wire [63:0] lane_veto,
+    output wire [63:0] lane_veto_pre,   // the lane veto one register earlier (SAFE: the copy-1 level; lanes retiring
+                                        // locally register it beside their packet slice)
     output wire [3:0] write_veto,
     output wire fault,
     output wire busy
@@ -39,6 +41,7 @@ module ot_hdc_v41_fh_fault_retire #(
         assign lane_veto={64{f}};
         assign write_veto={4{f}};
         assign fault=f;
+        assign lane_veto_pre={64{f}};
         assign busy=1'b0;
     end else begin : g_cut
         localparam integer DEPTH=(MARGIN?6:4)+(SAFE?1:0);
@@ -117,6 +120,7 @@ module ot_hdc_v41_fh_fault_retire #(
         end else begin : g_direct_copy
             assign lane_veto=lane_v0; assign write_veto=write_v0; assign fault=fault_v0;
         end
+        assign lane_veto_pre=lane_v0;
         assign retired_v=valid_pipe[DEPTH-1];
         assign retired_packet=packet_pipe[DEPTH-1];
         assign busy=|valid_pipe;

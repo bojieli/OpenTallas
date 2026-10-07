@@ -1,0 +1,1436 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_split_physical.v1",
+ "block": "ot_rom_pkg_ctrl_wfc as one hardened WFC element (src = SOURCE 1, stg = SOURCE 0), full shape",
+ "period_ps": 833,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "io_fraction": 0.2,
+ "closure_rule": "SS setup and SS/FF hold >= 0 in incontext (IO at 20 % vs a virtual clock carrying the element's own measured min/max insertion: neighbours on the same die tree) and reg2reg; DRC 0, antenna 0, max slew/cap/fanout violators 0 at SS and FF on RCX parasitics. block (IO vs io_clk at the routed SDC's estimated insertion) is reported, not gating.",
+ "cases": {
+  "r2/stg_u45": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 45,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     299.7,
+     336.9
+    ],
+    "FF": [
+     183.9,
+     212.1
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -17.8,
+     "ss_hold_ps": 50.1,
+     "ff_setup_ps": 127.1,
+     "ff_hold_ps": -17.0,
+     "ss_failing": [
+      16,
+      0
+     ],
+     "ff_failing": [
+      0,
+      51
+     ],
+     "ss_worst_setup_path": [
+      "in_data[16]",
+      "rxw[7]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 2.6,
+     "ss_hold_ps": 50.1,
+     "ff_setup_ps": 271.8,
+     "ff_hold_ps": 7.7,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[4].ug/part[2]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 2.6,
+     "ss_hold_ps": 50.1,
+     "ff_setup_ps": 345.5,
+     "ff_hold_ps": 7.7,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[4].ug/part[2]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 8,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15863.3,
+   "macro_area_um2": 0,
+   "die_area_um2": 35566.2,
+   "utilization": 0.466198,
+   "artifacts_sha256": {
+    "6_final.odb": "008f521e9fec2a60dc7344be52571e23c912edc6dfeda588b646452014d8afb5",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "1e3bc85dfeb430f66dbff50405bb317bef46a89aa714bc305ebf9970d615d0e2"
+   },
+   "closed": false
+  },
+  "r2/stg_u55": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     272.1,
+     304.4
+    ],
+    "FF": [
+     167.3,
+     193.5
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": 1.8,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 125.2,
+     "ff_hold_ps": -32.2,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      430
+     ],
+     "ss_worst_setup_path": [
+      "in_data[16]",
+      "hdr_tok[18]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 6.0,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 292.8,
+     "ff_hold_ps": 10.0,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[24].ug/part[17]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 6.0,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 365.2,
+     "ff_hold_ps": 10.0,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[24].ug/part[17]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 8,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15784,
+   "macro_area_um2": 0,
+   "die_area_um2": 29230.1,
+   "utilization": 0.567644,
+   "artifacts_sha256": {
+    "6_final.odb": "d1b263d4bfd2fef599c0382ebe0884e3a18d9be74e27780fb9102707a636d751",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "eb920abf508c4b877d478ada6464a05b796d9d1b1fade43c1327c727a2e79c51"
+   },
+   "closed": false
+  },
+  "r2/stg_u60": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 60,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     269.5,
+     302.4
+    ],
+    "FF": [
+     165.8,
+     191.2
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -1.4,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 140.4,
+     "ff_hold_ps": -28.4,
+     "ss_failing": [
+      2,
+      0
+     ],
+     "ff_failing": [
+      0,
+      448
+     ],
+     "ss_worst_setup_path": [
+      "g_control_completion.v$_DFF_PN0_",
+      "txq_d[0][309]$_DFFE_PP_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": -1.4,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 274.4,
+     "ff_hold_ps": 10.5,
+     "ss_failing": [
+      2,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_control_completion.v$_DFF_PN0_",
+      "txq_d[0][309]$_DFFE_PP_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": -1.4,
+     "ss_hold_ps": 52.2,
+     "ff_setup_ps": 368.8,
+     "ff_hold_ps": 10.5,
+     "ss_failing": [
+      2,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_control_completion.v$_DFF_PN0_",
+      "txq_d[0][309]$_DFFE_PP_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15761.2,
+   "macro_area_um2": 0,
+   "die_area_um2": 26850.1,
+   "utilization": 0.618158,
+   "artifacts_sha256": {
+    "6_final.odb": "5a206f8620f1a18dbecf4f3a6134d5cf4538c450d23545de5e8e34df9a1946bc",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "48257e22f8bef95740dcc7260f9bb7563f3750a48d6ec7bcc8bedd07fa2be168"
+   },
+   "closed": false
+  },
+  "r2/src_u45": {
+   "inst": "src",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 45,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 1,
+    "XWORDS": 41,
+    "RXWORDS": 41,
+    "REC_SRAM": 1,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "CFG_Q": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     464.6,
+     533.4
+    ],
+    "FF": [
+     272.6,
+     333.9
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -97.8,
+     "ss_hold_ps": 32.5,
+     "ff_setup_ps": -18.6,
+     "ff_hold_ps": -66.2,
+     "ss_failing": [
+      92,
+      0
+     ],
+     "ff_failing": [
+      14,
+      713
+     ],
+     "ss_worst_setup_path": [
+      "in_data[19]",
+      "sww[11]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": -31.2,
+     "ss_hold_ps": 32.5,
+     "ff_setup_ps": 182.6,
+     "ff_hold_ps": -0.8,
+     "ss_failing": [
+      16,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "in_data[19]",
+      "sww[11]$_DFFE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 5.8,
+     "ss_hold_ps": 32.5,
+     "ff_setup_ps": 357.7,
+     "ff_hold_ps": -0.8,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "gsel_oh[5]$_DFF_PN0_",
+      "upos_hr[17]$_DFFE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 35,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 2,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 20273.7,
+   "macro_area_um2": 20710.5,
+   "die_area_um2": 90707,
+   "utilization": 0.464457,
+   "artifacts_sha256": {
+    "6_final.odb": "963bdf8c9ec7f515e92aaf0f83a72ceba29da9e8997ce918fdaa774d5e42c190",
+    "6_final.sdc": "970d432f576555e7f4e8207934ca947c73f5ffb80c4d9f7694d9dec1dd182759",
+    "6_final.spef": "6889cbfa570410d37ff04a924398b55546457f215cecd1a97fcb96bc7e082409"
+   },
+   "closed": false
+  },
+  "r2/src_u50": {
+   "inst": "src",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 50,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 1,
+    "XWORDS": 41,
+    "RXWORDS": 41,
+    "REC_SRAM": 1,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "CFG_Q": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     451.9,
+     507.2
+    ],
+    "FF": [
+     270.0,
+     318.3
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -32.3,
+     "ss_hold_ps": 31.0,
+     "ff_setup_ps": 12.7,
+     "ff_hold_ps": -64.0,
+     "ss_failing": [
+      40,
+      0
+     ],
+     "ff_failing": [
+      0,
+      715
+     ],
+     "ss_worst_setup_path": [
+      "in_data[38]",
+      "proto_fault$_DFF_PN0_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": -5.6,
+     "ss_hold_ps": 31.0,
+     "ff_setup_ps": 213.8,
+     "ff_hold_ps": -0.4,
+     "ss_failing": [
+      4,
+      0
+     ],
+     "ff_failing": [
+      0,
+      2
+     ],
+     "ss_worst_setup_path": [
+      "g_control_completion.v$_DFF_PN0_",
+      "txq_d[0][123]$_DFFE_PP_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": -5.6,
+     "ss_hold_ps": 31.0,
+     "ff_setup_ps": 327.1,
+     "ff_hold_ps": -0.4,
+     "ss_failing": [
+      4,
+      0
+     ],
+     "ff_failing": [
+      0,
+      2
+     ],
+     "ss_worst_setup_path": [
+      "g_control_completion.v$_DFF_PN0_",
+      "txq_d[0][123]$_DFFE_PP_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 37,
+      "capacitance": 0,
+      "fanout": 1
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 16,
+      "capacitance": 0,
+      "fanout": 1
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 20210.3,
+   "macro_area_um2": 20710.5,
+   "die_area_um2": 81753.7,
+   "utilization": 0.515603,
+   "artifacts_sha256": {
+    "6_final.odb": "5db0d6a6d27823897a247e11a01828adb3bf63095b73703cc053b66ec094752b",
+    "6_final.sdc": "970d432f576555e7f4e8207934ca947c73f5ffb80c4d9f7694d9dec1dd182759",
+    "6_final.spef": "3a35bce0e353bc12f39ff266a09a36b3981942128af4b4345c90c197abff991e"
+   },
+   "closed": false
+  },
+  "r2/src_u55": {
+   "inst": "src",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 1,
+    "XWORDS": 41,
+    "RXWORDS": 41,
+    "REC_SRAM": 1,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "CFG_Q": 1,
+    "PRECOMP": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-dea71c1bd",
+   "ctrl_sha256": "b15b4634853aa4b60c669bc321d510ac05d542a2b9958602093bccc075233106",
+   "insertion_ps": {
+    "SS": [
+     435.0,
+     496.7
+    ],
+    "FF": [
+     268.2,
+     312.4
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -59.4,
+     "ss_hold_ps": 28.4,
+     "ff_setup_ps": 38.4,
+     "ff_hold_ps": -48.0,
+     "ss_failing": [
+      51,
+      0
+     ],
+     "ff_failing": [
+      0,
+      715
+     ],
+     "ss_worst_setup_path": [
+      "in_data[18]",
+      "sww[11]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 8.2,
+     "ss_hold_ps": 28.4,
+     "ff_setup_ps": 233.6,
+     "ff_hold_ps": -2.2,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "gsel_oh[6]$_DFF_PN0_",
+      "upos_hr[4]$_DFFE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 8.2,
+     "ss_hold_ps": 28.4,
+     "ff_setup_ps": 301.9,
+     "ff_hold_ps": -2.2,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "gsel_oh[6]$_DFF_PN0_",
+      "upos_hr[4]$_DFFE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 64,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 8,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 20312.5,
+   "macro_area_um2": 20710.5,
+   "die_area_um2": 74423.1,
+   "utilization": 0.568858,
+   "artifacts_sha256": {
+    "6_final.odb": "6e6aa8b29e6daaeaeba8c1d31b246f62e67602e1a63e7444935ec1c0321c3027",
+    "6_final.sdc": "970d432f576555e7f4e8207934ca947c73f5ffb80c4d9f7694d9dec1dd182759",
+    "6_final.spef": "237345ab30acf9d4b39a1674038a0d2acda1927a049462ff79136bae9f4b3baa"
+   },
+   "closed": false
+  },
+  "r3/stg_u55": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-d7eecd4ce",
+   "ctrl_sha256": "7382b988e5f3ac3078c3f3741ce03b599fa55f3abaab7c66d5a6b9cc7738d0a0",
+   "insertion_ps": {
+    "SS": [
+     271.0,
+     310.0
+    ],
+    "FF": [
+     165.7,
+     199.4
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -34.7,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 112.2,
+     "ff_hold_ps": -29.7,
+     "ss_failing": [
+      50,
+      0
+     ],
+     "ff_failing": [
+      0,
+      496
+     ],
+     "ss_worst_setup_path": [
+      "in_data[16]",
+      "hdr_user[9]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 5.2,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 255.7,
+     "ff_hold_ps": 10.5,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[5].ug/part[15]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 5.2,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 377.0,
+     "ff_hold_ps": 10.5,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[5].ug/part[15]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 4,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15748.1,
+   "macro_area_um2": 0,
+   "die_area_um2": 29204.1,
+   "utilization": 0.566717,
+   "artifacts_sha256": {
+    "6_final.odb": "ad7f01a2029a0b67400439da7cf0be48fe66d78fb4407525ba8bb91795c8c1b9",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "66632a2943bcdde8ac8c9038466aca584d487431362d68b8b3c7de656fdad9be"
+   },
+   "closed": false
+  },
+  "r3/src_u55": {
+   "inst": "src",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 1,
+    "XWORDS": 41,
+    "RXWORDS": 41,
+    "REC_SRAM": 1,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "CFG_Q": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1
+   },
+   "orfs_var": [],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-d7eecd4ce",
+   "ctrl_sha256": "7382b988e5f3ac3078c3f3741ce03b599fa55f3abaab7c66d5a6b9cc7738d0a0",
+   "insertion_ps": {
+    "SS": [
+     435.4,
+     499.7
+    ],
+    "FF": [
+     268.0,
+     322.4
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -49.2,
+     "ss_hold_ps": 34.7,
+     "ff_setup_ps": 19.0,
+     "ff_hold_ps": -49.9,
+     "ss_failing": [
+      57,
+      0
+     ],
+     "ff_failing": [
+      0,
+      714
+     ],
+     "ss_worst_setup_path": [
+      "in_data[36]",
+      "proto_fault$_DFF_PN0_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": -3.1,
+     "ss_hold_ps": 34.7,
+     "ff_setup_ps": 239.5,
+     "ff_hold_ps": -0.8,
+     "ss_failing": [
+      1,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "g_wf.eng.ou[9]$_DFFE_PN0P_",
+      "g_wf.eng.g_pre.ring_ne_oi_q$_DFF_P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": -3.1,
+     "ss_hold_ps": 34.7,
+     "ff_setup_ps": 277.6,
+     "ff_hold_ps": -0.8,
+     "ss_failing": [
+      1,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1
+     ],
+     "ss_worst_setup_path": [
+      "g_wf.eng.ou[9]$_DFFE_PN0P_",
+      "g_wf.eng.g_pre.ring_ne_oi_q$_DFF_P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 38,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 3,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 20106.5,
+   "macro_area_um2": 20710.5,
+   "die_area_um2": 74360.4,
+   "utilization": 0.566228,
+   "artifacts_sha256": {
+    "6_final.odb": "5be9b6f682dd117c5593ea46bcebfada92523d1797d4a0a5a923c572b73397cd",
+    "6_final.sdc": "970d432f576555e7f4e8207934ca947c73f5ffb80c4d9f7694d9dec1dd182759",
+    "6_final.spef": "ad9863a4448be6962a45ce554d1469d5cfbd4155ef3676032a0ee1ecf0bdf6ba"
+   },
+   "closed": false
+  },
+  "r4/stg_u50sm": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 50,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1
+   },
+   "orfs_var": [
+    "SLEW_MARGIN=20",
+    "CAP_MARGIN=20"
+   ],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-d7eecd4ce",
+   "ctrl_sha256": "7382b988e5f3ac3078c3f3741ce03b599fa55f3abaab7c66d5a6b9cc7738d0a0",
+   "insertion_ps": {
+    "SS": [
+     272.5,
+     307.5
+    ],
+    "FF": [
+     168.5,
+     194.2
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -1.3,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 133.2,
+     "ff_hold_ps": -29.8,
+     "ss_failing": [
+      3,
+      0
+     ],
+     "ff_failing": [
+      0,
+      512
+     ],
+     "ss_worst_setup_path": [
+      "in_data[16]",
+      "rxw[12]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 12.4,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 298.6,
+     "ff_hold_ps": 9.9,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[4].ug/part[2]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": 12.4,
+     "ss_hold_ps": 51.7,
+     "ff_setup_ps": 394.5,
+     "ff_hold_ps": 9.9,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[4].ug/part[2]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15851.2,
+   "macro_area_um2": 0,
+   "die_area_um2": 32054.2,
+   "utilization": 0.518628,
+   "artifacts_sha256": {
+    "6_final.odb": "ed3335293351416d6e62373e596ed6c56caf4da2acc263fb0e9d3cd59a83178a",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "2c92eb26f686a30925d8150bbd7d767a8f51ac7c0d28858bd10e9f361e8b7db6"
+   },
+   "closed": true
+  },
+  "r4/stg_u55sm": {
+   "inst": "stg",
+   "route_period_ps": null,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1
+   },
+   "orfs_var": [
+    "SLEW_MARGIN=20",
+    "CAP_MARGIN=20"
+   ],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-d7eecd4ce",
+   "ctrl_sha256": "7382b988e5f3ac3078c3f3741ce03b599fa55f3abaab7c66d5a6b9cc7738d0a0",
+   "insertion_ps": {
+    "SS": [
+     270.7,
+     301.5
+    ],
+    "FF": [
+     166.6,
+     190.0
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": -52.0,
+     "ss_hold_ps": 51.6,
+     "ff_setup_ps": 80.9,
+     "ff_hold_ps": -30.6,
+     "ss_failing": [
+      74,
+      0
+     ],
+     "ff_failing": [
+      0,
+      550
+     ],
+     "ss_worst_setup_path": [
+      "in_data[16]",
+      "hdr_pos[6]$_DFFE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": -7.7,
+     "ss_hold_ps": 51.6,
+     "ff_setup_ps": 269.2,
+     "ff_hold_ps": 9.9,
+     "ss_failing": [
+      10,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[10].ug/part[9]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": null,
+     "ss_hold_ps": null,
+     "ff_setup_ps": null,
+     "ff_hold_ps": null,
+     "ss_failing": [
+      null,
+      null
+     ],
+     "ff_failing": [
+      null,
+      null
+     ],
+     "ss_worst_setup_path": null
+    },
+    "reg2reg": {
+     "ss_setup_ps": -7.7,
+     "ss_hold_ps": 51.6,
+     "ff_setup_ps": 347.4,
+     "ff_hold_ps": 9.9,
+     "ss_failing": [
+      10,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "uchk2$_DFF_PN0_",
+      "g_upos[10].ug/part[9]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 15815,
+   "macro_area_um2": 0,
+   "die_area_um2": 29204.1,
+   "utilization": 0.569125,
+   "artifacts_sha256": {
+    "6_final.odb": "22c66847275596b3126d72fa2c7ebe8c2d9d139992129c1a549ab3c52936a9db",
+    "6_final.sdc": "10a58bed52b54812191036433c133767ba8cabcb1c24f28456e76c47500cd4dd",
+    "6_final.spef": "f3644242e7efd95ce08768054e40f8cab895cbc7831316bff6b3d8de07e033f4"
+   },
+   "closed": false
+  }
+ },
+ "notes": [
+  "pre-margin-rule routes; r4/stg_u50sm closed at the 0 ps rule only"
+ ]
+}

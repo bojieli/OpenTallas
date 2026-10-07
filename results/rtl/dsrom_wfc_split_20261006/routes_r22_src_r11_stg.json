@@ -1,0 +1,372 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_split_physical.v1",
+ "block": "ot_rom_pkg_ctrl_wfc as one hardened WFC element (src = SOURCE 1, stg = SOURCE 0), full shape",
+ "period_ps": 833,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "io_fraction": 0.2,
+ "closure_rule": "SS setup and SS/FF hold >= 0 in incontext (IO at 20 % vs a virtual clock carrying the element's own measured min/max insertion: neighbours on the same die tree) and reg2reg; DRC 0, antenna 0, max slew/cap/fanout violators 0 at SS and FF on RCX parasitics. block (IO vs io_clk at the routed SDC's estimated insertion) is reported, not gating.",
+ "cases": {
+  "r22/src_u55": {
+   "inst": "src",
+   "route_period_ps": 770,
+   "die_skew_ps": 150,
+   "accepted_40_15_die150": false,
+   "accepted_15_15_region": true,
+   "margin_closed": false,
+   "util": 55,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 1,
+    "XWORDS": 41,
+    "RXWORDS": 41,
+    "REC_SRAM": 1,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "CFG_Q": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1,
+    "RDY_LT": 1,
+    "FANOUT_COPY": 1,
+    "MARGIN": 1,
+    "LINK_REG": 1,
+    "LINK_SEL": 1,
+    "VM_REG": 1,
+    "RD_PIPE": 1,
+    "SLEW_COPY": 1
+   },
+   "orfs_var": [
+    "SLEW_MARGIN=30",
+    "CAP_MARGIN=20",
+    "HOLD_SLACK_MARGIN=28"
+   ],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-region",
+   "ctrl_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+   "insertion_ps": {
+    "SS": [
+     451.2,
+     513.7
+    ],
+    "FF": [
+     269.3,
+     322.7
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": 54.3,
+     "ss_hold_ps": 78.8,
+     "ff_setup_ps": 145.8,
+     "ff_hold_ps": -85.2,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      1226
+     ],
+     "ss_worst_setup_path": [
+      "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+      "g_vm_reg.wd_q[366]$_DFF_P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 54.3,
+     "ss_hold_ps": 78.8,
+     "ff_setup_ps": 352.8,
+     "ff_hold_ps": 23.1,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+      "g_vm_reg.wd_q[366]$_DFF_P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": 54.3,
+     "ss_hold_ps": 48.0,
+     "ff_setup_ps": 261.8,
+     "ff_hold_ps": 3.2,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+      "g_vm_reg.wd_q[366]$_DFF_P_"
+     ]
+    },
+    "region": {
+     "ss_setup_ps": 54.3,
+     "ss_hold_ps": 78.8,
+     "ff_setup_ps": 273.1,
+     "ff_hold_ps": 23.1,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+      "g_vm_reg.wd_q[366]$_DFF_P_"
+     ]
+    },
+    "reg2reg": {
+     "ss_setup_ps": 54.3,
+     "ss_hold_ps": 78.8,
+     "ff_setup_ps": 352.8,
+     "ff_hold_ps": 23.1,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+      "g_vm_reg.wd_q[366]$_DFF_P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 25174,
+   "macro_area_um2": 20710.5,
+   "die_area_um2": 78190.7,
+   "utilization": 0.604621,
+   "artifacts_sha256": {
+    "6_final.odb": "7ecc5a10fb994d7d99396ff4aa20bbe5fe9260e697141a49bd0c253a73a1ac81",
+    "6_final.sdc": "86640eac139c758804f76284026741135602aa1ad7e869153904b2a46da5746d",
+    "6_final.spef": "53fe0702a6370f3c2ad7f912e813229e06789ba747101ecd8856073b6c650097"
+   },
+   "closed": true
+  },
+  "r11/stg_u50": {
+   "inst": "stg",
+   "route_period_ps": 770,
+   "die_skew_ps": 150,
+   "accepted_40_15_die150": true,
+   "accepted_15_15_region": true,
+   "margin_closed": true,
+   "util": 50,
+   "params": {
+    "WAVE": 1,
+    "WIN": 6,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "MAXU": 866,
+    "KVW": 32768,
+    "SEND_HIDDEN": 1,
+    "HID_DEST": 1,
+    "FWD_TOKEN": 1,
+    "SOURCE": 0,
+    "XWORDS": 46,
+    "RXWORDS": 41,
+    "UPOS_LWR": 1,
+    "CONTROL_PIPE": 1,
+    "PRECOMP": 1,
+    "IN_DEC": 1,
+    "TXQ_SLICE": 1,
+    "RDY_LT": 1,
+    "FANOUT_COPY": 1,
+    "MARGIN": 1,
+    "LINK_REG": 1,
+    "LINK_SEL": 1,
+    "VM_REG": 1,
+    "SLEW_COPY": 1
+   },
+   "orfs_var": [
+    "SLEW_MARGIN=30",
+    "CAP_MARGIN=20",
+    "HOLD_SLACK_MARGIN=28"
+   ],
+   "source_dir": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271",
+   "ctrl_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+   "insertion_ps": {
+    "SS": [
+     305.2,
+     350.2
+    ],
+    "FF": [
+     187.7,
+     221.3
+    ]
+   },
+   "timing": {
+    "block": {
+     "ss_setup_ps": 73.1,
+     "ss_hold_ps": 78.2,
+     "ff_setup_ps": 277.2,
+     "ff_hold_ps": 16.4,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_upos[24].ug/lo_r[2]$_DFF_P_",
+      "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+     ]
+    },
+    "incontext": {
+     "ss_setup_ps": 73.1,
+     "ss_hold_ps": 78.2,
+     "ff_setup_ps": 396.1,
+     "ff_hold_ps": 22.5,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_upos[24].ug/lo_r[2]$_DFF_P_",
+      "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+     ]
+    },
+    "die150": {
+     "ss_setup_ps": 73.1,
+     "ss_hold_ps": 68.8,
+     "ff_setup_ps": 307.0,
+     "ff_hold_ps": 15.7,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_upos[24].ug/lo_r[2]$_DFF_P_",
+      "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+     ]
+    },
+    "region": {
+     "ss_setup_ps": 73.1,
+     "ss_hold_ps": 68.8,
+     "ff_setup_ps": 319.4,
+     "ff_hold_ps": 15.7,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_upos[24].ug/lo_r[2]$_DFF_P_",
+      "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+     ]
+    },
+    "reg2reg": {
+     "ss_setup_ps": 73.1,
+     "ss_hold_ps": 78.2,
+     "ff_setup_ps": 396.1,
+     "ff_hold_ps": 22.5,
+     "ss_failing": [
+      0,
+      0
+     ],
+     "ff_failing": [
+      0,
+      0
+     ],
+     "ss_worst_setup_path": [
+      "g_upos[24].ug/lo_r[2]$_DFF_P_",
+      "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+     ]
+    }
+   },
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "drc_errors": 0,
+   "antenna_violating_nets": 0,
+   "stdcell_area_um2": 20100.8,
+   "macro_area_um2": 0,
+   "die_area_um2": 35941.7,
+   "utilization": 0.585065,
+   "artifacts_sha256": {
+    "6_final.odb": "c6bcb9bfe2b6481740e00e0a5a63a3ef85935434e2002bdb80afb0314f0ff142",
+    "6_final.sdc": "5029dc8b3ceeb7da0cb1c068f6748db81f483b562c79aa8c40b850f79fe9db0d",
+    "6_final.spef": "db29db780c6dcacf91bb753217a259d7d37722f85cc2d08d75a2e873876849fb"
+   },
+   "closed": true
+  }
+ },
+ "notes": [
+  "r22 src: r13 (fd8df673d driver, f316f0271 RTL) up to GRT, then FF-corner hold repair under the region IO SDC on 5_1_grt.odb (HM 32 ps, 60 ps repair-only pad on out_*, sign-off constraints unchanged) + SS repair_design, then ORFS 5_2..finish; post-DRT ECOs r15-r17 rejected (clock reroute broke SS / OpenROAD DRT connectivity + segfault)",
+  "stg: r11/stg_u50 unchanged (accepted 18:24)"
+ ]
+}
