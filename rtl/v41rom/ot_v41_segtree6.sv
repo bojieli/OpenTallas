@@ -49,6 +49,7 @@ module ot_v41_segtree6 #(
     input  wire                     clk,
     input  wire                     rst_n,
     input  wire                     ce,         // clock enable (QS >= 5: ungated clock + enable; 1 otherwise): every register holds while low
+    input  wire                     pclk,       // the adder / tag pipelines' clock (QS >= 5: the gated clock, whose edges are clk AND ce; else clk)
     input  wire                     in_v,
     input  wire [$clog2(NT)-1:0]    in_tree,
     input  wire [2:0]               in_pos,     // position (MTP) of the tree's nodes; leaves with its value
@@ -86,7 +87,7 @@ module ot_v41_segtree6 #(
     reg  [1:0] err;
     reg  sv;
     reg  [PW+LW+1:0] st;     // {tree, level, final, err}
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) if (!rst_n) sv <= 1'b0; else sv <= sv_a;
+    always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else if (ce) sv <= sv_a;
     always @(posedge clk) if (ce) begin sum <= sum_a; err <= err_a; st <= st_a; end
     // (2) registered count flags {qc == 0, qc == 1, qc == QD} and qr + 1, NQ kept copies of the flags (one per 8-bit
     // slice of the head value; copy 0 also loads the head's tree / final / error / position)
@@ -138,7 +139,7 @@ module ot_v41_segtree6 #(
     reg [NH-1:0] x_oh, x_above;
     reg [NT-1:0] x_toh;
     reg [2:0]    x_pos;
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else if (ce) x_v <= e_v;
     always @(posedge clk) if (ce) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above;
@@ -222,7 +223,7 @@ module ot_v41_segtree6 #(
     end
     // YF: the in-flight read from registers
     reg same_r;                                        // the x2 event (next cycle) is of the x1 event's tree
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) if (!rst_n) same_r <= 1'b0; else same_r <= x_v && e_t == x_t;
+    always @(posedge clk or negedge rst_n) if (!rst_n) same_r <= 1'b0; else if (ce) same_r <= x_v && e_t == x_t;
     wire [IW-1:0] yi_p = y_infl + 1'b1 - (y_add ? 1'b1 : 1'b0);
     wire [IW-1:0] yi_n = y_infl - (y_add ? 1'b1 : 1'b0);
 `ifdef ST7_MUTANT_YF
@@ -245,7 +246,7 @@ module ot_v41_segtree6 #(
 `else
     wire r_fw = hold && y_t == x_t && y_l == x_l;
 `endif
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) if (!rst_n) y_v <= 1'b0; else y_v <= x_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else if (ce) y_v <= x_v;
     always @(posedge clk) if (ce) begin
         y_t <= x_t; y_l <= x_l; y_f <= x_f; y_e <= x_e; y_d <= x_d; y_add <= x_add;
         y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
@@ -263,7 +264,7 @@ module ot_v41_segtree6 #(
     reg [31:0] z_h, z_d;
     reg        z_v;
     always @(posedge clk) if (ce) begin z_h <= u_held; z_d <= y_d; end
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) if (!rst_n) z_v <= 1'b0; else z_v <= pair | promote;
+    always @(posedge clk or negedge rst_n) if (!rst_n) z_v <= 1'b0; else if (ce) z_v <= pair | promote;
     wire [NZ-1:0] z_pair;
     for (genvar g = 0; g < NZ; g = g + 1) begin : g_zp
 `ifdef ST6_MUTANT_Z
@@ -280,17 +281,17 @@ module ot_v41_segtree6 #(
             add_b[b] <= z_pair[NZ / 2 + b / (32 / (NZ / 2))] ? z_d[b] : 1'b0;
         end
     end
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce)
-        if (!rst_n) add_v <= 1'b0; else add_v <= z_v;
-    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) add_v <= 1'b0; else if (ce) add_v <= z_v;
+    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(pclk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
                                      .y(sum_a), .err(err_a), .valid_out(sv_a));
-    ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 2)) u_t (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 2)) u_t (.clk(pclk), .rst_n(rst_n),
         .d({y_t, y_l + 1'b1, y_f, y_e | (pair && u_herr)}), .q(st_a));
-    always @(posedge clk or negedge rst_n) if (!rst_n || ce) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             qr <= 0; qr1 <= 1; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
             for (ti = 0; ti < NT; ti = ti + 1) infl[ti] <= '0;
-        end else begin
+        end else if (ce) begin
             if (in_v) qw <= qw + 1'b1;
             if (use_q) begin qr <= qr + 1'b1; qr1 <= qr1 + 1'b1; end
             qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);

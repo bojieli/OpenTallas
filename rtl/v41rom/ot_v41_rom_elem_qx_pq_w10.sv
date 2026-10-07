@@ -402,9 +402,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             else begin r_cfg_v <= cfg_v; r_go <= go; end
         always @(posedge clk) begin r_cfg_a <= cfg_a; r_cfg_d <= cfg_d; r_go_bf <= go_bf; r_go_tag <= go_tag; end
         assign go_tag_e = r_go_tag;
-        always @(posedge wclk or negedge rst_n) if (!rst_n || wen)
+        always @(posedge wclk or negedge rst_n)
             if (!rst_n) begin r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
-            else begin r_xs_v <= xs_v; r_xb_v <= xb_v; end
+            else if (wen) begin r_xs_v <= xs_v; r_xb_v <= xb_v; end
         always @(posedge wclk) if (wen) begin
             r_xs_p <= xs_p; r_xs_b <= xs_b; r_xs_sv <= xs_sv; r_xs_q0 <= xs_q0; r_xs_e0 <= xs_e0;
             r_xs_q1 <= xs_q1; r_xs_e1 <= xs_e1; r_xs_pos <= xs_pos; r_xb_pos <= xb_pos; r_xb_b <= xb_b;
@@ -1047,9 +1047,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end else begin : g_nwrt
                 assign d_hp = 1'b0; assign d_nr = '0;
             end
-            always @(posedge wclk or negedge rst_n) if (!rst_n || wen)
+            always @(posedge wclk or negedge rst_n)
                 if (!rst_n) begin d_run_s <= 1'b0; d_fam <= 1'b0; end
-                else if (go_e) begin
+                else if (wen) if (go_e) begin
 `ifdef W10_MUTANT_EMPTY_GO
                     d_run_s <= !go_bf_e;
 `else
@@ -1195,7 +1195,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // against a round state that stage B is about to advance.
     reg [3:0]    bm_r;
     reg [1023:0] xbd_r;
-    always @(posedge wclk or negedge rst_n) if (!rst_n || wen) if (!rst_n) bm_r <= 4'd0; else bm_r <= (go_e || FAST == 0) ? 4'd0 : bm;
+    always @(posedge wclk or negedge rst_n) if (!rst_n) bm_r <= 4'd0; else if (wen) bm_r <= (go_e || FAST == 0) ? 4'd0 : bm;
     always @(posedge wclk) if (wen) xbd_r <= xb_d_e;
     wire [3:0]    bmu = (FAST != 0) ? bm_r : bm;
     wire [1023:0] xbd = (FAST != 0) ? xbd_r : xb_d_e;
@@ -1215,7 +1215,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg          fw_v;
     reg [255:0]  fw_q0, fw_q1;
     reg [9:0]    fw_e0, fw_e1;
-    always @(posedge wclk or negedge rst_n) if (!rst_n || wen) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_q && !go_e;
+    always @(posedge wclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else if (wen) fw_v <= (FAST != 0) && hit_q && !go_e;
     always @(posedge wclk) if (wen) if (QTIMING_FIX != 0 || hit_q) begin fw_q0 <= xs_q0_e; fw_q1 <= xs_q1_e; fw_e0 <= xs_e0_e; fw_e1 <= xs_e1_e; end
     wire         qpush = (FAST != 0) ? fw_v : hit_q;
     wire [2:0] npush = qpush ? 3'd1 : bnum;
@@ -1419,9 +1419,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `else
     wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : issue ? qx_hz_is : qx_hz_hs;
 `endif
-    always @(posedge wclk or negedge rst_n) if (!rst_n || wen)
+    always @(posedge wclk or negedge rst_n)
         if (!rst_n) hazard_r <= 1'b0;
-        else hazard_r <= qx_hz_nx;
+        else if (wen) hazard_r <= qx_hz_nx;
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 5 && rst_n && hazard_r !== hazard) begin
         $display("QX_CHECK FAIL: hazard register %b != %b at %t", hazard_r, hazard, $time); $fatal(1);
@@ -1459,11 +1459,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `endif
 
 
-    always @(posedge wclk or negedge rst_n) if (!rst_n || wen) begin
+    always @(posedge wclk or negedge rst_n) begin
         if (!rst_n) begin
             n_run_s <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
             pp_last_v <= 1'b0; bp_hold <= 3'd0;
-        end else begin
+        end else if (wen) begin
             hz_v <= {hz_v[LAT-2:0], issue};
             pp_last_v <= issue; pp_last_b <= a_ctr[0];
             if (BP != 0) bp_hold <= (issue && w_bf) ? HOLDM1 : (bp_hold != 3'd0 ? bp_hold - 3'd1 : 3'd0);
@@ -1823,9 +1823,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg i1_bk;                              // PP: bank of the word
     reg i2_bk;
     reg         i2x_v;
-    always @(posedge wclk or negedge rst_n) if (!rst_n || wen) begin
+    always @(posedge wclk or negedge rst_n) begin
         if (!rst_n) begin i1_v <= 1'b0; i2x_v <= 1'b0; end
-        else begin i1_v <= issue; i2x_v <= i1_v; end
+        else if (wen) begin i1_v <= issue; i2x_v <= i1_v; end
     end
     // FP8 word of half h uses slice h on lane 0; FP4 uses slice 0 on lane 0 and slice 1 on lane 1
     wire use_hi = !w_fp4 && !w_bf && w_h;
@@ -1850,7 +1850,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // PP: one more stage (the ROM word is captured 2 cycles after its read starts)
     if (PP != 0) begin : g_i3
         reg i3_v;
-        always @(posedge wclk or negedge rst_n) if (!rst_n || wen) if (!rst_n) i3_v <= 1'b0; else i3_v <= i2x_v;
+        always @(posedge wclk or negedge rst_n) if (!rst_n) i3_v <= 1'b0; else if (wen) i3_v <= i2x_v;
         always @(posedge wclk) if (wen) begin
             i2_bf <= i2x_bf; i2_bk <= i2x_bk; i2_q0 <= i2x_q0; i2_e0 <= i2x_e0; i2_q1 <= i2x_q1; i2_e1 <= i2x_e1;
             i2_t <= i2x_t;
@@ -2417,7 +2417,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
     // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
-    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0)) u_tree (.clk((QS >= 5) ? wclk : gclk_mb), .rst_n(rst_mt), .ce((QS >= 5) ? wen_t : 1'b1), .in_v(b_v),
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0)) u_tree (.clk((QS >= 5) ? wclk : gclk_mb), .rst_n(rst_mt), .ce((QS >= 5) ? wen_t : 1'b1), .pclk(gclk_mb), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
