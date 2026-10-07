@@ -2376,11 +2376,11 @@
   "hfd_vm_se_s": {
    "job": "hbm_vm8_ses_654733cc5",
    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
-   "host": "ot-epyc2",
+   "host": "ot-epyc3",
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_ses_654733cc5",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T08:38:21-07:00",
+   "measured_at": "2026-10-07T15:11:38-07:00",
    "ss": {
     "mean": 532,
     "min": 348,
@@ -2668,5 +2668,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T13:40:31-07:00"
+ "updated": "2026-10-07T15:11:38-07:00"
 }
