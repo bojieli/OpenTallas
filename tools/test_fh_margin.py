@@ -73,7 +73,7 @@ BENCH = {
       f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
       f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
       f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv',
-      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_hquad.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
+      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_hquad.sv', f'{D}/quad/ot_hdc_v41_fh_ctl.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
       f'{D}/quad/tb_fh_head_q.sv'], mut={
       'half_wdata': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.wr_data_in(wr_data[32*L0+:256])', '.wr_data_in(wr_data[32*W*g+:256])'),
       'hid_index': (f'{D}/quad/ot_hdc_v41_fh_hquad.sv', '.lane_in({iw_e_x[LW-1] ^ hid, iw_e_x[LW-2:0]})', '.lane_in(iw_e_x[LW-1:0])'),
@@ -83,7 +83,7 @@ BENCH = {
       f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
       f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
       f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv',
-      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_hquad.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
+      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_hquad.sv', f'{D}/quad/ot_hdc_v41_fh_ctl.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
       f'{D}/quad/tb_fh_head_q.sv'], mut={
       'lret_depth': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.LRET(LRET?7:0)) u_hq', '.LRET(LRET?6:0)) u_hq'),
       'veto_skip': (f'{D}/quad/ot_hdc_v41_fh_hquad.sv', 'veto_q <= lane_veto_in;', 'veto_q <= 0;'),

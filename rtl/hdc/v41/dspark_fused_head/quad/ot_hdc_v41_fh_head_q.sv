@@ -116,6 +116,7 @@ module ot_hdc_v41_fh_head_q #(
     assign native_captured_request_check = 1'b0;
     assign native_captured_reply_check = 1'b0;
     assign result_capture = 1'b0;
+    generate if (!LRET) begin : g_top
     ot_hdc_v41_fh_head_top #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.FPIPE(FPIPE),.SAFE(SAFE),.HQ(HQ),.LRET(LRET),.RETURN_EXTRA(5+QPIN)) u_top (
         .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.commit_ack_v(commit_ack_v),
         .native_cold_n(native_cold_n),.native_request_ready(native_request_ready),.native_reply_capture(native_reply_capture),
@@ -134,6 +135,21 @@ module ot_hdc_v41_fh_head_q #(
         .q_o_addr(q_o_addr),.q_poison(q_poison),.q_group_fault(q_group_fault),
         .ep_ack_v(ep_ack_v),.ep_fault(ep_fault),.ep_guard_busy(ep_busy),.ep_request_checked_v(ep_rqv),.ep_reply_checked_v(ep_rpv),
         .ep_ack_id(ep_id),.ep_ack_word(ep_word),.ep_ack_mask(ep_mask),.q_lane_veto(q_lane_veto));
+    end else begin : g_ctl
+        ot_hdc_v41_fh_ctl #(.W(W),.G(G),.AW(AW),.NW(NW),.RETURN_EXTRA(5+QPIN)) u_ctl (
+            .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.native_cold_n(native_cold_n),
+            .native_permission_capture(native_permission_capture),.commit_warm(commit_warm),.commit_debt(commit_debt),
+            .commit_id(commit_id),.s3_v_in(s3_v_in),.a_tag_p_in(a_tag_p_in),.wr_en(wr_en),.wr_addr(wr_addr),
+            .ra_re(ra_re),.ra_addr(ra_addr),.go_fus(go_fus),.i_iaddr(i_iaddr),.busy_in(busy_in),.o_we1_in(o_we1_in),
+            .tv_in(tv_in),.ov1_in(ov1_in),.r_tag(r_tag),.r_v(r_v),.o_we(o_we),.fault(fault),
+            .q_rok(q_rok),.q_wok(q_wok),.q_rrow(q_rrow),.q_wrow(q_wrow),.q_rv_mid(q_rv_mid),.q_fsel_m(q_fsel_m),
+            .q_iwg_m(q_iwg_m),.q_iw_e(q_iw_e),.q_warm_word(q_o_addr[23:0]),.q_warm_mask(q_o_mask[15:0]),
+            .q_poison(q_poison),.q_group_fault(q_group_fault),
+            .ep_ack_v(ep_ack_v),.ep_fault(ep_fault),.ep_guard_busy(ep_busy),.ep_request_checked_v(ep_rqv),
+            .ep_reply_checked_v(ep_rpv),.ep_ack_id(ep_id),.ep_ack_word(ep_word),.ep_ack_mask(ep_mask),
+            .q_lane_veto(q_lane_veto));
+        assign {t_rqv, t_rpv, t_creq, t_crep, t_leaf, t_oa, t_om, t_od, t_am} = 0;
+    end endgenerate
     genvar g, hh;
     generate if (HQ) begin : g_halves
      for (g = 0; g < G; g = g + 1) begin : g_grp
