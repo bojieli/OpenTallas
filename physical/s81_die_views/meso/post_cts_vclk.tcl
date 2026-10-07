@@ -11,6 +11,7 @@ proc ot_ins {clk scene} {
   if {[regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $s -> lo hi]} { return [list $lo $hi] }
   return {}
 }
+proc ot_meso_vclk {} {
 foreach {c v outs} {wclk vw {w_rdy w_live w_fault} rclk vr {r_v r_d* r_live r_fault}} {
   set wc [ot_ins $c WC]; set bc [ot_ins $c BC]
   if {[llength $wc] == 0} { puts "meso post_cts: no $c latency"; continue }
@@ -19,3 +20,5 @@ foreach {c v outs} {wclk vw {w_rdy w_live w_fault} rclk vr {r_v r_d* r_live r_fa
   if {[llength $bc]} { set_output_delay -min [expr {$L - round([lindex $bc 1]) - 25}] -clock $v [get_ports $outs] }
   puts "meso post_cts: $c WC $wc BC $bc -> $v latency $L"
 }
+}
+if {![info exists ::ot_meso_pre]} { ot_meso_vclk }

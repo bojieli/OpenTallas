@@ -6,7 +6,11 @@
 # A hop is half-cycle by construction: the upstream station launches on its falling edge = this station's fi0 rising
 # edge (inverted forwarded clock, travelling beside the data), this station captures on the falling edge; so input and
 # output budgets are against vclk RISE with the capture/launch on core_clk FALL (T/2 paths).  The clock travels with
-# the data (same forwarded clock, no die clock-arrival difference): IO 0.2 T (clk->q + wire mismatch of the hop).
+# the data (same forwarded clock, no die clock-arrival difference).  The half period is split between the two stations
+# of a hop: output delay 90 ps = receiver setup ~30 + receiver/launcher insertion OCV ~10 + fclk-vs-data wire mismatch
+# ~50 (10 % of a 440 um wire); input delay 240 ps = the upstream station's own flop -> pin time (188 ps measured on
+# dsfd_stnh_512x1, closure loop -c: 416.7 - 60 - 166.7 - 2.1) + the 50 ps mismatch.  (-c used 0.2 T = 166.7 on BOTH
+# sides of the half period: output SS +2 ps by construction, input +150.)
 # fo0 is a forwarded clock, not a data output (false path as data).  Routed at 123 ps setup uncertainty (770 ps
 # effective), signed off at 60 ps (common/signoff_unc60.sdc).
 L=${1:?L}; O=${2:?out}
@@ -17,9 +21,9 @@ create_clock -name vclk -period 833.333
 set_clock_latency $L [get_clocks vclk]
 set_clock_uncertainty -setup 123 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
-set_input_delay 166.667 -clock vclk [get_ports {di*}]
+set_input_delay 240 -clock vclk [get_ports {di*}]
 set_input_delay -min 0 -clock vclk [get_ports {di*}]
-set_output_delay 166.667 -clock vclk [get_ports {do*}]
+set_output_delay 90 -clock vclk [get_ports {do*}]
 set_output_delay -min 0 -clock vclk [get_ports {do*}]
 set_false_path -to [get_ports {fo*}]
 set_max_fanout 32 [current_design]
