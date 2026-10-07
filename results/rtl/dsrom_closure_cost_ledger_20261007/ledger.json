@@ -8,30 +8,30 @@
  "items": [
   {
    "item": "s81_die",
-   "description": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)",
+   "description": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending",
    "cycles": [
     [
      "*.attn.a_proj",
-     24,
+     27,
      0
     ],
     [
      "*.attn.cmp.wk",
-     24,
+     27,
      0
     ],
     [
      "*.attn.wo_a",
-     24,
+     27,
      0
     ]
    ],
-   "ar_tok_s": 1661.2,
-   "mtp_tok_s": 4862.6,
-   "ar_pct": -0.824,
-   "mtp_pct": -0.662,
-   "cum_ar_pct": -0.824,
-   "cum_mtp_pct": -0.662
+   "ar_tok_s": 1659.5,
+   "mtp_tok_s": 4858.6,
+   "ar_pct": -0.925,
+   "mtp_pct": -0.744,
+   "cum_ar_pct": -0.925,
+   "cum_mtp_pct": -0.744
   },
   {
    "item": "meso_d8g1",
@@ -53,12 +53,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1658.9,
-   "mtp_tok_s": 4857.2,
-   "ar_pct": -0.138,
+   "ar_tok_s": 1657.2,
+   "mtp_tok_s": 4853.2,
+   "ar_pct": -0.139,
    "mtp_pct": -0.111,
-   "cum_ar_pct": -0.961,
-   "cum_mtp_pct": -0.772
+   "cum_ar_pct": -1.063,
+   "cum_mtp_pct": -0.854
   },
   {
    "item": "ctrl_status",
@@ -80,12 +80,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1658.8,
-   "mtp_tok_s": 4857.0,
+   "ar_tok_s": 1657.1,
+   "mtp_tok_s": 4853.0,
    "ar_pct": -0.006,
    "mtp_pct": -0.004,
-   "cum_ar_pct": -0.967,
-   "cum_mtp_pct": -0.776
+   "cum_ar_pct": -1.069,
+   "cum_mtp_pct": -0.858
   },
   {
    "item": "collective_lane",
@@ -107,12 +107,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1619.0,
-   "mtp_tok_s": 4755.5,
-   "ar_pct": -2.399,
-   "mtp_pct": -2.09,
-   "cum_ar_pct": -3.343,
-   "cum_mtp_pct": -2.85
+   "ar_tok_s": 1617.4,
+   "mtp_tok_s": 4751.6,
+   "ar_pct": -2.396,
+   "mtp_pct": -2.089,
+   "cum_ar_pct": -3.439,
+   "cum_mtp_pct": -2.93
   },
   {
    "item": "link_split",
@@ -134,12 +134,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1617.6,
-   "mtp_tok_s": 4752.2,
-   "ar_pct": -0.086,
-   "mtp_pct": -0.069,
-   "cum_ar_pct": -3.427,
-   "cum_mtp_pct": -2.917
+   "ar_tok_s": 1616.0,
+   "mtp_tok_s": 4748.4,
+   "ar_pct": -0.087,
+   "mtp_pct": -0.067,
+   "cum_ar_pct": -3.522,
+   "cum_mtp_pct": -2.995
   },
   {
    "item": "sel_xstg",
@@ -161,12 +161,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1617.4,
-   "mtp_tok_s": 4751.5,
+   "ar_tok_s": 1615.8,
+   "mtp_tok_s": 4747.7,
    "ar_pct": -0.012,
    "mtp_pct": -0.015,
-   "cum_ar_pct": -3.439,
-   "cum_mtp_pct": -2.932
+   "cum_ar_pct": -3.534,
+   "cum_mtp_pct": -3.009
   },
   {
    "item": "vm_bank_group",
@@ -188,12 +188,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1613.1,
-   "mtp_tok_s": 4741.3,
+   "ar_tok_s": 1611.5,
+   "mtp_tok_s": 4737.4,
    "ar_pct": -0.266,
-   "mtp_pct": -0.215,
-   "cum_ar_pct": -3.696,
-   "cum_mtp_pct": -3.14
+   "mtp_pct": -0.217,
+   "cum_ar_pct": -3.791,
+   "cum_mtp_pct": -3.22
   },
   {
    "item": "gather_root_v4",
@@ -215,12 +215,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1609.9,
-   "mtp_tok_s": 4733.6,
-   "ar_pct": -0.198,
-   "mtp_pct": -0.162,
-   "cum_ar_pct": -3.887,
-   "cum_mtp_pct": -3.297
+   "ar_tok_s": 1608.3,
+   "mtp_tok_s": 4729.8,
+   "ar_pct": -0.199,
+   "mtp_pct": -0.16,
+   "cum_ar_pct": -3.982,
+   "cum_mtp_pct": -3.375
   },
   {
    "item": "capture",
@@ -242,12 +242,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.3,
-   "mtp_tok_s": 4729.8,
+   "ar_tok_s": 1606.7,
+   "mtp_tok_s": 4726.0,
    "ar_pct": -0.099,
    "mtp_pct": -0.08,
-   "cum_ar_pct": -3.982,
-   "cum_mtp_pct": -3.375
+   "cum_ar_pct": -4.078,
+   "cum_mtp_pct": -3.453
   },
   {
    "item": "selector",
@@ -264,12 +264,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1607.9,
-   "mtp_tok_s": 4728.6,
+   "ar_tok_s": 1606.3,
+   "mtp_tok_s": 4724.8,
    "ar_pct": -0.025,
    "mtp_pct": -0.025,
-   "cum_ar_pct": -4.006,
-   "cum_mtp_pct": -3.399
+   "cum_ar_pct": -4.101,
+   "cum_mtp_pct": -3.477
   },
   {
    "item": "collector",
@@ -281,12 +281,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1607.9,
-   "mtp_tok_s": 4728.5,
+   "ar_tok_s": 1606.3,
+   "mtp_tok_s": 4724.7,
    "ar_pct": 0.0,
    "mtp_pct": -0.002,
-   "cum_ar_pct": -4.006,
-   "cum_mtp_pct": -3.401
+   "cum_ar_pct": -4.101,
+   "cum_mtp_pct": -3.479
   },
   {
    "item": "svc_io",
@@ -308,29 +308,34 @@
      0
     ]
    ],
-   "ar_tok_s": 1607.7,
-   "mtp_tok_s": 4728.0,
+   "ar_tok_s": 1606.1,
+   "mtp_tok_s": 4724.2,
    "ar_pct": -0.012,
    "mtp_pct": -0.011,
-   "cum_ar_pct": -4.018,
-   "cum_mtp_pct": -3.412
+   "cum_ar_pct": -4.113,
+   "cum_mtp_pct": -3.489
   },
   {
    "item": "softmax_safe_div",
-   "description": "Softmax SAFE divider: +29 on normalize",
+   "description": "Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold remains unqualified",
    "cycles": [
     [
+     "*.attn.exp",
+     1,
+     0
+    ],
+    [
      "*.attn.normalize",
-     29,
+     30,
      0
     ]
    ],
-   "ar_tok_s": 1605.2,
-   "mtp_tok_s": 4722.2,
-   "ar_pct": -0.156,
-   "mtp_pct": -0.123,
-   "cum_ar_pct": -4.167,
-   "cum_mtp_pct": -3.53
+   "ar_tok_s": 1603.4,
+   "mtp_tok_s": 4718.0,
+   "ar_pct": -0.168,
+   "mtp_pct": -0.131,
+   "cum_ar_pct": -4.275,
+   "cum_mtp_pct": -3.616
   },
   {
    "item": "bf_rowfix",
@@ -352,12 +357,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1604.6,
-   "mtp_tok_s": 4720.9,
-   "ar_pct": -0.037,
+   "ar_tok_s": 1602.9,
+   "mtp_tok_s": 4716.7,
+   "ar_pct": -0.031,
    "mtp_pct": -0.028,
-   "cum_ar_pct": -4.203,
-   "cum_mtp_pct": -3.557
+   "cum_ar_pct": -4.304,
+   "cum_mtp_pct": -3.642
   },
   {
    "item": "pq_qelem",
@@ -379,12 +384,12 @@
      0.0017
     ]
    ],
-   "ar_tok_s": 1603.3,
-   "mtp_tok_s": 4717.7,
+   "ar_tok_s": 1601.6,
+   "mtp_tok_s": 4713.5,
    "ar_pct": -0.081,
    "mtp_pct": -0.068,
-   "cum_ar_pct": -4.281,
-   "cum_mtp_pct": -3.622
+   "cum_ar_pct": -4.382,
+   "cum_mtp_pct": -3.708
   },
   {
    "item": "su_meso_d8g1",
@@ -406,36 +411,21 @@
      0
     ]
    ],
-   "ar_tok_s": 1598.5,
-   "mtp_tok_s": 4706.1,
-   "ar_pct": -0.299,
-   "mtp_pct": -0.246,
-   "cum_ar_pct": -4.567,
-   "cum_mtp_pct": -3.859
+   "ar_tok_s": 1596.7,
+   "mtp_tok_s": 4702.0,
+   "ar_pct": -0.306,
+   "mtp_pct": -0.244,
+   "cum_ar_pct": -4.675,
+   "cum_mtp_pct": -3.943
   }
  ],
  "total": {
-  "ar_tok_s": 1598.5,
-  "mtp_tok_s": 4706.1,
-  "ar_pct": -4.567,
-  "mtp_pct": -3.859
+  "ar_tok_s": 1596.7,
+  "mtp_tok_s": 4702.0,
+  "ar_pct": -4.675,
+  "mtp_pct": -3.943
  },
  "candidates": [
-  {
-   "item": "fh_half",
-   "description": "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 (+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",
-   "adds": [
-    [
-     "draft.head_occ",
-     8387,
-     0
-    ]
-   ],
-   "ar_tok_s": 1598.5,
-   "mtp_tok_s": 4525.8,
-   "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -3.831
-  },
   {
    "item": "head_elem",
    "description": "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT 8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
@@ -446,30 +436,30 @@
      0
     ],
     [
-     "draft.head_occ",
-     57,
+     "draft.total",
+     285,
      0
     ]
    ],
-   "ar_tok_s": 1598.4,
-   "mtp_tok_s": 4704.6,
+   "ar_tok_s": 1596.6,
+   "mtp_tok_s": 4700.4,
    "ar_pct_vs_total": -0.006,
-   "mtp_pct_vs_total": -0.032
+   "mtp_pct_vs_total": -0.034
   },
   {
    "item": "fused_head",
-   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)",
+   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 fixed cycles per gamma-5 draft, not a Markov-scaled head occupancy; ctl/ep/hquad views routing)",
    "adds": [
     [
-     "draft.head_occ",
-     25,
+     "draft.total",
+     125,
      0
     ]
    ],
-   "ar_tok_s": 1598.5,
-   "mtp_tok_s": 4705.6,
+   "ar_tok_s": 1596.7,
+   "mtp_tok_s": 4701.4,
    "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -0.011
+   "mtp_pct_vs_total": -0.013
   },
   {
    "item": "bf_half",
@@ -496,10 +486,10 @@
      0.7748
     ]
    ],
-   "ar_tok_s": 1358.9,
-   "mtp_tok_s": 4114.0,
-   "ar_pct_vs_total": -14.989,
-   "mtp_pct_vs_total": -12.582
+   "ar_tok_s": 1357.2,
+   "mtp_tok_s": 4109.7,
+   "ar_pct_vs_total": -15.0,
+   "mtp_pct_vs_total": -12.597
   },
   {
    "item": "bf_recut",
@@ -551,10 +541,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1583.6,
-   "mtp_tok_s": 4671.0,
-   "ar_pct_vs_total": -0.932,
-   "mtp_pct_vs_total": -0.746
+   "ar_tok_s": 1581.7,
+   "mtp_tok_s": 4666.5,
+   "ar_pct_vs_total": -0.939,
+   "mtp_pct_vs_total": -0.755
   },
   {
    "item": "bf_unroll",
@@ -606,18 +596,27 @@
      0
     ]
    ],
-   "ar_tok_s": 1580.6,
-   "mtp_tok_s": 4664.0,
-   "ar_pct_vs_total": -1.12,
-   "mtp_pct_vs_total": -0.895
+   "ar_tok_s": 1578.7,
+   "mtp_tok_s": 4659.5,
+   "ar_pct_vs_total": -1.127,
+   "mtp_pct_vs_total": -0.904
   }
  ],
+ "unpriced_candidates": [
+  {
+   "item": "fh_half",
+   "physical_adoption": false,
+   "measurement": "gold4 control 63,153 -> half 126,310 root/die cycles (five drafts)",
+   "reason": "The whole reduced gold4 core/memory/VM domain was slowed, not only the head. VOCAB4040, G4 x W16 is not a full-shape draft measurement. The previous 8,387 cycles per head position underpriced blocks and leaked into verification II. A whole-domain physical clock/CDC contract and full-shape composition are missing; no numerical candidate rate is published."
+  }
+ ],
+ "physical_adoption": false,
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1598.5,
-  "mtp_tok_s": 4706.1,
-  "ar_pct": -4.567,
-  "mtp_pct": -3.859,
+  "ar_tok_s": 1596.7,
+  "mtp_tok_s": 4702.0,
+  "ar_pct": -4.675,
+  "mtp_pct": -3.943,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }
