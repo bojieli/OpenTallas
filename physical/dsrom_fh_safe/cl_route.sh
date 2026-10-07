@@ -37,7 +37,7 @@ set_false_path -from [get_ports gid*]";;
   if [ $V = elemA ]; then P=(--param LV=8 --param PAD=0 --param JOIN=1 --param ROWS=32); else P=(--param LV=6 --param PAD=2 --param JOIN=0 --param ROWS=128); fi
   args=(--source rtl/v41rom/ot_dsrom_head_elem.sv --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv
    --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_dsrom_bmul3.sv --source physical/asap7_memory_macros/$M/${M}_bb.v
-   "${P[@]}" --param IOREG=1 --param SAFE=1 --param CUT=511 --param SPLIT9=1 --core-utilization 40 --macro-place-halo 3 3 --max-fanout 32
+   "${P[@]}" --param IOREG=1 --param SAFE=1 --param CUT=511 --param SPLIT9=1 --core-utilization ${EUTIL:-40} --macro-place-halo 3 3 --max-fanout 32
    --slew-margin-percent 30 --sdc-append physical/abi3/v41_w10_elem_pp_multicycle.sdc --macro-view $M=physical/asap7_memory_macros/$M)
   MAC=(--macro physical/asap7_memory_macros/$M)
   MC="set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]
