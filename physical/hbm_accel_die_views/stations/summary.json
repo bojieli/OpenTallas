@@ -60,7 +60,10 @@
   "outputs_mapped": 6189,
   "wchk": true,
   "pin_stages": 2,
-  "fdly": 10
+  "fdly": 10,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_mcast_r6": {
   "role": "mcast",
@@ -68,7 +71,10 @@
   "meso": 5,
   "launch": 0,
   "outputs_mapped": 6189,
-  "wchk": true
+  "wchk": true,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_mcast_r7": {
   "role": "mcast",
