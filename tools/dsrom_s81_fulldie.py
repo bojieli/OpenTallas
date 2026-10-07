@@ -2679,7 +2679,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', link_fix=LINK_FIX, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', link_fix=LINK_FIX, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3091,6 +3091,8 @@ def buses_r8(m):
 
 LANES_VCH, LANES_CORR = 26, 16
 VCH_INTERLEAVE = False          # --vch-interleave (S81-RERUN, default off): strided VCH lane order
+CORR_INTERLEAVE = False         # --corr-interleave (S81-RERUN v5, default off): strided HC-corridor lane order
+CORR_LANE_STRIDE = 5            # coprime with LANES_CORR (16)
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
                                 #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
@@ -3404,6 +3406,12 @@ def corr_y(m, tag):
     if tag not in d:
         d[tag] = len(d)
     i = d[tag] % LANES_CORR
+    if CORR_INTERLEAVE:
+        # S81-RERUN v4 GRT i50 (scan 1,212): 12 corridor tags took lanes 0..11 in order, so the heavy return / x chains
+        # (r0..r5 ~770 b, xup / xdn 566 b) packed the corridor's LOWER half (y 10.64-11.12 mm) where they cross the
+        # hc_s <-> hc_n hub lanes at the VCH east edge: 80 % of the overflow (x 16.5-17.5, y 10.5-11.0 mm).  Stride
+        # the lane index so successive chains alternate over the whole corridor height.
+        i = (i * CORR_LANE_STRIDE) % LANES_CORR
     c0, c1 = m['corridor']
     return c0 + 60.0 + (c1 - c0 - 120.0) * (i + 0.5) / LANES_CORR
 
@@ -4289,6 +4297,8 @@ def die_options(ap):
                     'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
     ap.add_argument('--vch-interleave', action='store_true', help='r9: strided VCH lane order (chains spread over '
                     'the whole VCH width; default off)')
+    ap.add_argument('--corr-interleave', action='store_true', help='r9: strided HC-corridor lane order (chains spread '
+                    'over the whole corridor height; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
     return ap
@@ -4300,6 +4310,8 @@ def apply_options(a):
     global VCH_INTERLEAVE, LINK_FIX
     VCH_INTERLEAVE = bool(a.vch_interleave)
     LINK_FIX = bool(a.link_fix)
+    global CORR_INTERLEAVE
+    CORR_INTERLEAVE = bool(a.corr_interleave)
     global REV, HEAD_DIES
     REV, HEAD_DIES = a.rev, a.head_dies
     configure(a.die, a.gen)
