@@ -52,9 +52,9 @@ out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close 
        '  puts "OT_TIME step=$name s=[format %.1f [expr {([clock milliseconds]-$t0)/1000.0}]]"; mem $name; flush stdout; return 1 }',
        'set_thread_count $::env(OT_THREADS)'] + libs + [
        'read_db /work/ckpt_placed.odb',
-       'puts "OT_TILE dbu=[[ord::get_db_block] getGCellTileSize]"',
        'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl',
        'set_routing_layers -signal M4-M9 -clock M4-M9',
+       'puts "OT_TILE dbu=[[ord::get_db_block] getGCellTileSize]"',
        'set_global_routing_layer_adjustment M4-M5 0.30',
        'set_global_routing_layer_adjustment M6-M9 0.146',
        'step grt { global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }',
