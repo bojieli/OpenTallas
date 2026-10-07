@@ -221,9 +221,9 @@ module ot_s81ph_sel_su_pp #(
     reg last_a;                               // 1: copy A ticked at the most recent fast edge
     always @(posedge clk or negedge rst_n) if (!rst_n) last_a <= 1'b0; else last_a <= en_q;
     wire [3:0] ga, gb; wire [7:0] ba, bb; wire [CB+9:0] aa, ab; wire oa, ob; wire [Q*CB-1:0] ea, eb;
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(QW), .XR(XR)) u_a (.clk(ck_a), .gs(gs), .bs(bs), .q(q), .g_out(ga),
+    ot_s81ph_native_sel_su #(.Q(Q), .CB(CB), .QW(QW), .XR(XR)) u_a (.clk(ck_a), .gs(gs), .bs(bs), .q(q), .g_out(ga),
         .res_b(ba), .res_above(aa), .res_ok(oa), .res_eq(ea));
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(QW), .XR(XR)) u_b (.clk(ck_b), .gs(gs), .bs(bs), .q(q), .g_out(gb),
+    ot_s81ph_native_sel_su #(.Q(Q), .CB(CB), .QW(QW), .XR(XR)) u_b (.clk(ck_b), .gs(gs), .bs(bs), .q(q), .g_out(gb),
         .res_b(bb), .res_above(ab), .res_ok(ob), .res_eq(eb));
 `ifdef S81PH_MUT_PPSEL
     wire sel_a = ~last_a;                     // mutant: the stale copy

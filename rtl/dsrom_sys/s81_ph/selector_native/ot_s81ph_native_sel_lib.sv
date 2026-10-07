@@ -1,18 +1,19 @@
+// Isolated S81 successor; historical V4.1x sources remain byte-identical.
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// Shared pieces of the V4.1x streaming-filter SELECT (ot_hdc_v41x_sel.sv):
-//   ot_hdc_v41x_sel_hist  256-bin histogram of one 8-bit digit per lane, W lanes a
+// Shared pieces of the V4.1x streaming-filter SELECT (ot_s81ph_native_sel.sv):
+//   ot_s81ph_native_sel_hist  256-bin histogram of one 8-bit digit per lane, W lanes a
 //                         beat, saturating bins, registered 16-group sums and the
 //                         registered 16 bins of one group (the two-step radix-16 walk)
-//   ot_hdc_v41x_sel_pack  compaction of the selected lanes of each beat and packing
+//   ot_s81ph_native_sel_pack  compaction of the selected lanes of each beat and packing
 //                         into full W-lane lines (partial line on a flush)
-//   ot_hdc_v41x_sel_su    the two-step (radix-16) threshold search over Q slices'
+//   ot_s81ph_native_sel_su    the two-step (radix-16) threshold search over Q slices'
 //                         histograms: the highest bucket b with count(>= b) >= q
 //   combinational helpers (popcount, prefix counts, compaction and rotate stages).
 // ---------------------------------------------------------------------------
 
 // popcount of N bits
-module ot_hdc_v41x_sel_popc #(
+module ot_s81ph_native_sel_popc #(
     parameter integer N  = 16,
     parameter integer OW = 5
 ) (
@@ -41,7 +42,7 @@ module ot_hdc_v41x_sel_popc #(
 endmodule
 
 // inclusive prefix counts (Kogge-Stone): y[OW*l +: OW] = popcount(x[l:0])
-module ot_hdc_v41x_sel_prefix #(
+module ot_s81ph_native_sel_prefix #(
     parameter integer N  = 16,
     parameter integer OW = 5
 ) (
@@ -72,7 +73,7 @@ endmodule
 
 // compaction stage S: lane j takes lane j + 2^S when that lane is valid (bit CE-1) and its shift
 // count has bit S set (bit ZB), else keeps its own lane when that is valid and does not move
-module ot_hdc_v41x_sel_cstage #(
+module ot_s81ph_native_sel_cstage #(
     parameter integer W  = 16,
     parameter integer CE = 40,
     parameter integer ZB = 37,
@@ -99,7 +100,7 @@ module ot_hdc_v41x_sel_cstage #(
 endmodule
 
 // rotate stage over N lanes: every lane moves 2^S up when `sh` is set
-module ot_hdc_v41x_sel_rstage #(
+module ot_s81ph_native_sel_rstage #(
     parameter integer N  = 32,
     parameter integer RE = 38,
     parameter integer S  = 0
@@ -129,7 +130,7 @@ endmodule
 //   gbin  registered bins of group `gsel` (one edge after the bins / gsel)
 //   busy  a beat is between the input and the bins
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_sel_hist #(
+module ot_s81ph_native_sel_hist #(
     parameter integer W  = 16,
     parameter integer CB = 11
 ) (
@@ -173,7 +174,7 @@ module ot_hdc_v41x_sel_hist #(
             for (gl = 0; gl < W; gl = gl + 1) begin : g_x
                 assign x[gl] = h1_hi[16*gl + (gb >> 4)] && h1_lo[16*gl + (gb & 15)];
             end
-            ot_hdc_v41x_sel_popc #(.N(W), .OW(HW)) u_pc (.x(x), .y(h2_d[HW*gb +: HW]));
+            ot_s81ph_native_sel_popc #(.N(W), .OW(HW)) u_pc (.x(x), .y(h2_d[HW*gb +: HW]));
         end
     endgenerate
     always @(posedge clk) h2 <= h2_d;
@@ -215,7 +216,7 @@ endmodule
 // complete (with or without a line).  One beat per edge; after a flush beat the next beat must
 // not arrive before o_fl.  o_bv pulses once per beat, PL = 2 + 2 ceil(log2(W)/2) edges after it.
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_sel_pack #(
+module ot_s81ph_native_sel_pack #(
     parameter integer W  = 16,
     parameter integer PW = 37
 ) (
@@ -238,7 +239,7 @@ module ot_hdc_v41x_sel_pack #(
 
     // stage 1: shift counts
     wire [W*(LW+1)-1:0] inc;
-    ot_hdc_v41x_sel_prefix #(.N(W), .OW(LW + 1)) u_pre (.x(i_sel), .y(inc));
+    ot_s81ph_native_sel_prefix #(.N(W), .OW(LW + 1)) u_pre (.x(i_sel), .y(inc));
     wire [W*CE-1:0] e_d;
     genvar gl, gr;
     generate
@@ -279,9 +280,9 @@ module ot_hdc_v41x_sel_pack #(
         for (gr = 0; gr < NCR; gr = gr + 1) begin : g_cst
             wire [W*CE-1:0] a0 = (gr == 0) ? s1_e : crf[W*CE*(gr == 0 ? 0 : gr - 1) +: W*CE];
             wire [W*CE-1:0] a1, a2;
-            ot_hdc_v41x_sel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr), .S(2 * gr)) u_c0 (.a(a0), .y(a1));
+            ot_s81ph_native_sel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr), .S(2 * gr)) u_c0 (.a(a0), .y(a1));
             if (2 * gr + 1 < LW) begin : g_c1
-                ot_hdc_v41x_sel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr + 1), .S(2 * gr + 1)) u_c1 (.a(a1), .y(a2));
+                ot_s81ph_native_sel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr + 1), .S(2 * gr + 1)) u_c1 (.a(a1), .y(a2));
             end else begin : g_c1n
                 assign a2 = a1;
             end
@@ -328,9 +329,9 @@ module ot_hdc_v41x_sel_pack #(
             wire [2*W*RE-1:0] a0 = (gr == 0) ? rin : rof[2*W*RE*(gr == 0 ? 0 : gr - 1) +: 2*W*RE];
             wire [LW-1:0]     f  = (gr == 0) ? frun : rff[LW*(gr == 0 ? 0 : gr - 1) +: LW];
             wire [2*W*RE-1:0] a1, a2;
-            ot_hdc_v41x_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr)) u_r0 (.a(a0), .sh(f[2 * gr]), .y(a1));
+            ot_s81ph_native_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr)) u_r0 (.a(a0), .sh(f[2 * gr]), .y(a1));
             if (2 * gr + 1 < LW) begin : g_r1
-                ot_hdc_v41x_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr + 1)) u_r1 (.a(a1), .sh(f[2 * gr + 1]), .y(a2));
+                ot_s81ph_native_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr + 1)) u_r1 (.a(a1), .sh(f[2 * gr + 1]), .y(a2));
             end else begin : g_r1n
                 assign a2 = a1;
             end
@@ -410,10 +411,11 @@ endmodule
 // eq: per-slice bin b count taken from the current bs one edge after res_b (exact once the
 // counts are static).
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_sel_su #(
+module ot_s81ph_native_sel_su #(
     parameter integer Q  = 4,
     parameter integer CB = 11,
-    parameter integer QW = 11                       // quota width
+    parameter integer QW = 11,                      // quota width
+    parameter integer XR = 0                        // CLAUDE S81-PH tiles: extra edges in the slice round trip (default 0)
 ) (
     input  wire                  clk,
     input  wire [Q*16*(CB+4)-1:0] gs,
@@ -483,6 +485,19 @@ module ot_hdc_v41x_sel_su #(
     reg [XW-1:0] acc_d1, acc_d2, acc_d3, acc_b1, acc_b2, acc_b3;
     reg [QW-1:0] q_d1, q_d2, q_d3, q_b1, q_b2, q_b3;
     reg [3:0]    g_d1, g_d2, g_d3, g_b1, g_b2, g_b3;
+    // the step-A results wait XR more edges when the slices sit XR edges further away (hardened tiles)
+    wire [XW-1:0] acc_e; wire [QW-1:0] q_e; wire [3:0] g_e;
+    generate if (XR == 0) begin : g_x0
+        assign acc_e = acc_d3; assign q_e = q_d3; assign g_e = g_d3;
+    end else begin : g_x
+        reg [XW+QW+4-1:0] xd [1:XR];
+        integer xi;
+        always @(posedge clk) begin
+            xd[1] <= {acc_d3, q_d3, g_d3};
+            for (xi = 2; xi <= XR; xi = xi + 1) xd[xi] <= xd[xi-1];
+        end
+        assign {acc_e, q_e, g_e} = xd[XR];
+    end endgenerate
     reg [Q*16*CB-1:0] bs_r;
     reg [16*SW-1:0]   sb_r;
     reg [16*XW-1:0]   u2_r, u3_r;
@@ -509,7 +524,7 @@ module ot_hdc_v41x_sel_su #(
         q_d1   <= qa;     q_d2   <= q_d1;   q_d3   <= q_d2;
         g_d1   <= g_out;  g_d2   <= g_d1;   g_d3   <= g_d2;
         bs_r   <= bs;
-        sb_r   <= sb_d;   acc_b1 <= acc_d3; q_b1 <= q_d3; g_b1 <= g_d3;
+        sb_r   <= sb_d;   acc_b1 <= acc_e;  q_b1 <= q_e;  g_b1 <= g_e;
         u2_r   <= u2_d;   acc_b2 <= acc_b1; q_b2 <= q_b1; g_b2 <= g_b1;
         u3_r   <= u3_d;   acc_b3 <= acc_b2; q_b3 <= q_b2; g_b3 <= g_b2;
     end

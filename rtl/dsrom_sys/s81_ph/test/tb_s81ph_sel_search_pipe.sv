@@ -10,7 +10,7 @@ module tb_s81ph_sel_search_pipe #(parameter integer QW=21);
  reg [CB-1:0] bins [0:Q-1][0:255];
  wire [3:0] g0,g1;
  wire [7:0] b0,b1; wire [20:0] a0,a1;wire ok0,ok1;wire [43:0] eq0,eq1;
- ot_hdc_v41x_sel_su #(.QW(QW),.XR(XR)) ref_s(.clk(clk),.gs(gs),.bs(bs0),.q(q),.g_out(g0),.res_b(b0),.res_above(a0),.res_ok(ok0),.res_eq(eq0));
+ ot_s81ph_native_sel_su #(.QW(QW),.XR(XR)) ref_s(.clk(clk),.gs(gs),.bs(bs0),.q(q),.g_out(g0),.res_b(b0),.res_above(a0),.res_ok(ok0),.res_eq(eq0));
  ot_s81ph_sel_su_pipe #(.QW(QW),.XR(XR)) dut_s(.clk(clk),.gs(gs),.bs(bs1),.q(q),.g_out(g1),.res_b(b1),.res_above(a1),.res_ok(ok1),.res_eq(eq1));
  reg [3:0] gd0[0:XR],gd1[0:XR];
  reg [29:0] expect_d[0:6];
