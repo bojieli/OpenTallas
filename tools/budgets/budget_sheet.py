@@ -129,9 +129,19 @@ def main():
     ap.add_argument('--die', action='append', required=True, help='NAME=model.json.gz[:plan.json]')
     ap.add_argument('--calib', help='measured block insertions {master: {ss_mean, ss_min, ss_max, ff_mean, ff_min, ff_max, source}}')
     ap.add_argument('--tiles', help='tile compositions (tools/budgets/tiles.py output)')
+    ap.add_argument('--insertion-override', help='{master: {target_ss?, reason}}: re-planned internal insertion target '
+                    '(default the measured ss_max); its die entry target follows the measured insertion (the die tree '
+                    'delivers earlier) and the extra OCV on its deeper tree, OCV x (ss_max - cap), is added to the skew '
+                    'term of every synchronous interface of that master (block-side budget, die skew budget unchanged)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     calib = json.loads(Path(a.calib).read_text()) if a.calib else {}
+    ovr = json.loads(Path(a.insertion_override).read_text()) if a.insertion_override else {}
+    ovr_extra = {}
+    for m_, o_ in ovr.items():
+        c_ = calib.get(m_, {})
+        ins_ = o_.get('target_ss', c_.get('ss_max', C.LINT_CAP_PS))
+        ovr_extra[m_] = round(C.OCV * max(0.0, ins_ - C.LINT_CAP_PS), 1)
     out = Path(a.out)
     (out / 'sheets').mkdir(parents=True, exist_ok=True)
     M = {}                     # master -> accumulated record
@@ -150,6 +160,13 @@ def main():
             base.update(ss=c['ss_mean'], ff=c['ff_mean'], ss_min=c.get('ss_min'), ss_max=c.get('ss_max'),
                         ff_min=c.get('ff_min'), ff_max=c.get('ff_max'), grade='measured', source=c['source'],
                         over_target=c['ss_mean'] > tgt + C.LINT_TOL_PS)
+            if master in ovr:       # re-planned target: the measured tree is accepted, its OCV priced on the IO skew
+                o_ = ovr[master]
+                t_ = o_.get('target_ss', c.get('ss_max', c['ss_mean']))
+                base.update(target_ss=t_, target_ff=o_.get('target_ff', c.get('ff_max', c['ff_mean'])), over_target=False,
+                            target_basis=f"RE-PLANNED: {o_.get('reason', '')} (measured SS {c['ss_min']}..{c['ss_max']}); "
+                                         f"IO skew +{ovr_extra[master]} ps (OCV x (target - cap {C.LINT_CAP_PS:.0f}))",
+                            replanned=True)
             return base
         base.update(ss=tgt, ff=base['target_ff'], ss_min=round(tgt * 0.95, 1), ss_max=round(tgt * 1.10, 1),
                     ff_min=round(base['target_ff'] * 0.95, 1), ff_max=round(base['target_ff'] * 1.10, 1),
@@ -230,6 +247,8 @@ def main():
                 ld = d['by'][e[0]]
                 L, basis = C.pin_dist(d, drv, eps[0][1], ld, e[1])
                 kls, skew = classify(d, drv, ld, reg, trees, plan_intra, fl, bid in fb)
+                if kls not in ('fwd', 'fwd-unlinked') and ovr_extra:
+                    skew = round(skew + ovr_extra.get(drv[1], 0.0) + ovr_extra.get(ld[1], 0.0), 1)
                 # planned die stations: S81 places every station as an instance (1 hop); the HBM die prices the
                 # wire stages of its path segments at ceil(L / 430.56) (hbm_accel_die_fp LINK_STAGE_UM)
                 if bid not in pb:
