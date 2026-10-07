@@ -162,6 +162,14 @@ def main():
             T.append(f'create_clock -name {n_} -period {per} [get_pins {{{pin}}}]')
         if lat:   # planned per-sink insertion (the die tree's skew); uncertainty = signoff 60 + 25 plan tolerance
             T.append(f'source /kit/latency_{corner}.tcl')
+            # a column clock is the stream trunk passed through its cfifo root: source latency = the trunk insertion
+            # at that cfifo's ck pin (the plan's column-sink values are relative to the column root)
+            ci = 0 if corner == 'ss' else 1
+            for n_, pin, per in srcs:
+                if n_.startswith('ck_col_'):
+                    root = pin.split('/')[0] + '/ck'
+                    if root in lat:
+                        T.append(f'set_clock_latency -source {lat[root][ci]:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'set_clock_groups -asynchronous ' + ' '.join(f'-group {{{n_}}}' for n_ in ('clk_serial', 'clk_hbm')
                                                             if any(s[0] == n_ for s in srcs)) if False else '',
