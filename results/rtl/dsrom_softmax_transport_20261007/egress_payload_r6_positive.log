@@ -1,0 +1,7 @@
+CAMPAIGN PASS epoch1 E40 BF32 packed56 E_with250chain_write_stall_stream_edges=1669 BF_no_extra_stall_stream_edges=606
+CAMPAIGN PASS epoch2 E8 BF32 packed24 E_with250chain_write_stall_stream_edges=612 BF_no_extra_stall_stream_edges=606
+FIRST_FAULT t2961252000 ackbad0 ackv0 ack80000001606f7f exp00000001e06f48 capbad1 integ1 fault0
+FIRST_FAULT t2976252000 ackbad0 ackv0 ack00000000000000 exp00000003606f48 capbad1 integ1 fault0
+FIRST_FAULT t2990419000 ackbad0 ackv0 ack00000000000000 exp00000003e06f48 capbad0 integ0 fault1
+FIRST_FAULT t3041252000 ackbad0 ackv0 ack00000000000000 exp00000002606f48 capbad0 integ1 fault1
+PASS egress actual destination SRAM rows=80 bytes=81920 fullstall_edges=58 II1_E_and_BF capture; SECDED single correction/double abort; coordinated queued abort

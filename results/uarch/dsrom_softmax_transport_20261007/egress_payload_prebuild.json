@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.softmax_egress_payload.v1",
+  "adopted": false,
+  "route_admitted": false,
+  "scope": "Minimum source capture/store -> protected CDC -> actual destination store -> protected visibility receipt; separate conservative banks, no numerical attention engine",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+  },
+  "capture": {
+    "E_bits": 8192,
+    "E_vectors": [
+      8,
+      40
+    ],
+    "BF16_bits": 4096,
+    "BF16_vectors": 32,
+    "initiation_interval": 1,
+    "E_region": [
+      72,
+      111
+    ],
+    "BF16_packed_region": [
+      112,
+      127
+    ],
+    "BF16_vectors_per_row": 2,
+    "encoder_lanes": 128,
+    "encoded_full_row_register_bits": 9216,
+    "encoded_half_row_register_bits": 4608,
+    "capture_to_actual_macro_write_edges": 1,
+    "half_pack_first_to_write_edges": 2
+  },
+  "banks": {
+    "source_instances": 36,
+    "destination_instances": 36,
+    "macro_bits": 32768,
+    "protected_row_bits": 9216,
+    "source_data_bytes_used_T640": 57344,
+    "destination_data_bytes_used_T640": 57344,
+    "raw_macro_area_mm2": 0.28019354112,
+    "macro_width_um": 94.824,
+    "macro_height_um": 41.04,
+    "clkq_SS_ps": 455.3205489475797,
+    "separate_banks": true,
+    "shared_bank_arbitration_implemented": false,
+    "placement_capacity_qualified": false,
+    "parent_9x4_bank_slot_mm2": 0.28446310656,
+    "conservative_two_slot_mm2": 0.56892621312
+  },
+  "transport": {
+    "data_packet_bits": 1083,
+    "fields": {
+      "kind": 1,
+      "epoch": 32,
+      "tag": 16,
+      "row": 7,
+      "beat": 3,
+      "payload": 1024
+    },
+    "receipt_packet_bits": 56,
+    "receipt_fields": {
+      "kind": 1,
+      "epoch": 32,
+      "tag": 16,
+      "row": 7
+    },
+    "depth": 64,
+    "data_codewords": 17,
+    "data_FIFO_array_bits": 78336,
+    "receipt_FIFO_array_bits": 4608,
+    "read_service_initiation_interval": 3,
+    "source_serial_service_interval": 4,
+    "T640_data_beats": 448,
+    "T128_data_beats": 192,
+    "T640_receipts": 56,
+    "T128_receipts": 24,
+    "finite_full_row_prefill": true,
+    "unilateral_reset_supported": false,
+    "reset": "coordinated cold abort in both domains",
+    "stream_GHz": 1.2,
+    "chain_GHz": 0.9,
+    "source_serial_service_ns": 3.3333333333333335,
+    "destination_CDC_service_ns": 3.333333333333333
+  },
+  "storage": {
+    "serial_row_components": 2,
+    "conservative_component_FF_bits_each": 23260,
+    "encoded_capture_FF_bits": 13824,
+    "CDC_array_only_bits": 82944,
+    "control_FF_bits": "record exact implemented inventory after elaboration",
+    "total_known_FF_floor_bits": 143288,
+    "excludes": [
+      "CDC protected pointers/head",
+      "endpoint controls",
+      "mapped combinational area",
+      "clock buffers"
+    ]
+  },
+  "order": [
+    "capture all E to actual source SRAM",
+    "drain typed E packets",
+    "destination commits complete rows in actual SRAM",
+    "return protected epoch/tag/row visibility receipts",
+    "allow BF16 capture only after all E destination commits (actual attention P.V engine remains external)",
+    "pack paired BF16 vectors",
+    "drain and commit BF16 rows",
+    "complete only after all destination receipts"
+  ],
+  "timing": {
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "physical_closure": false,
+    "serial_read_request_to_first_beat_edges": 6,
+    "serial_read_request_to_eighth_beat_edges": 34,
+    "macro_write_latency_edges_after_last_CDC_beat": 2,
+    "receipt_after_actual_write_only": true,
+    "composed_single_user_latency": "measured component edges will be reported; destination stalls are unbounded without parent service contract"
+  },
+  "omissions": [
+    "numeric exp and BF16 normalization",
+    "attention P.V computation and FP32 E -> BF16 adapter",
+    "configuration snapshot",
+    "production owner join",
+    "shared bank arbitration",
+    "SS/FF path closure and routing track capacity"
+  ]
+}
