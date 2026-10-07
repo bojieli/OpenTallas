@@ -13,6 +13,8 @@ set_load 3.898 [all_outputs]
 set_false_path -from [get_ports rst_n]
 set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]
 set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]
+# build the timing graph before querying arrivals (a cold get_property arrival segfaults OpenROAD 26Q3)
+set bf_w [sta::worst_slack_cmd max]
 set bf_n 0; set bf_amax 0.0; set bf_amin 0.0
 foreach bf_c [get_cells -quiet -hierarchical {g_pin.r_*}] {
   set bf_p [get_pins -quiet "[get_full_name $bf_c]/CLK"]
