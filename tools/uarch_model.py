@@ -35,6 +35,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import arch_budget_v41 as A  # noqa: E402
 
+def qwen_station_fullwidth_r22_model(**kwargs):
+    """Default-off508-bit station and exact external tile ABI; no rate credit."""
+    from uarch_model_qwen_station_r22 import model
+    return model(**kwargs)
+
+
 def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
