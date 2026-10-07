@@ -1,0 +1,25 @@
+POSTVERIFIED_ACK bank=3 decoded_unknown=1 merged_unknown=0 equality_result=x
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=1 checked_ACK_delta=1 reads=0 writes=1 progress=0 chased=0
+POSTVERIFIED_ACK bank=0 decoded_unknown=1 merged_unknown=0 equality_result=x
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=2 checked_ACK_delta=1 reads=0 writes=2 progress=0 chased=0
+POSTVERIFIED_ACK bank=1 decoded_unknown=1 merged_unknown=0 equality_result=x
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=3 checked_ACK_delta=1 reads=0 writes=3 progress=0 chased=0
+READ_SERVICE edges=9 words=xxxxxxxx decoded=xxxxxxxx raw=xxxxxxxx checks=00
+DETAIL macro=00000000 mask=00000000 part=00000000 sel=1 salt=0 group=0
+OTHER part1=00000000 part2=00000000 part3=00000000 bank=xxxxxxxx output=xxxxxxxx
+READ_MACRO_BASE base_word=384 bank0=00000000 bank1=00000000 bank2=00000000 bank3=40914576
+READ_SERVICE edges=9 words=xxxxxxxx decoded=xxxxxxxx raw=xxxxxxxx checks=76
+DETAIL macro=be916038 mask=be916038 part=be916038 sel=1 salt=0 group=0
+OTHER part1=00000000 part2=00000000 part3=00000000 bank=xxxxxxxx output=xxxxxxxx
+READ_MACRO_BASE base_word=0 bank0=be916038 bank1=00000000 bank2=00000000 bank3=00000000
+READ_SERVICE edges=9 words=xxxxxxxx decoded=xxxxxxxx raw=xxxxxxxx checks=00
+DETAIL macro=00000000 mask=00000000 part=00000000 sel=1 salt=0 group=0
+OTHER part1=00000000 part2=00000000 part3=00000000 bank=xxxxxxxx output=xxxxxxxx
+READ_MACRO_BASE base_word=128 bank0=00000000 bank1=c177f06a bank2=00000000 bank3=00000000
+FRAME steps=58 native=4 checked_ACK_delta=0 reads=3 writes=3 progress=0 chased=0
+CONFLICT got=xxxxxxxx,xxxxxxxx,xxxxxxxx expected=40914576,be916038,c177f06a
+FATAL: /tmp/qwen-vm-su-service-gate-20261007/inspect5.sv:87: captured SU conflict address returns mismatch
+       Time: 2260000 Scope: tb_qwen_su_service_gate
