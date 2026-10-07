@@ -82,7 +82,7 @@ def run(cmd, log):
 RELREG = False
 HALFV = False
 CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)('
-DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)'
+DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0'
 SAFEV = False
 
 
@@ -229,7 +229,10 @@ def main():
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
-    res['source_pins'] = {p: sha(ROOT/p) for p in [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]}
+    pin_paths = [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]
+    if HALFV:
+        pin_paths.append(Q+'/ot_hbm_native_frame_station_rb_half.sv')
+    res['source_pins'] = {p: sha(ROOT/p) for p in pin_paths}
     res['passed'] = (all(v['passed'] for v in res['bank'].values()) and all(v['passed'] for v in res['quarter'].values())
                      and res['veto']['rb']['passed']
                      and all(v['failed'] for v in res['negative_controls'].values()))
