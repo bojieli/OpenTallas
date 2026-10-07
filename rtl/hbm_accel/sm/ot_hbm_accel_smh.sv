@@ -577,6 +577,78 @@ module ot_hbm_accel_smh_csnk #(
     ot_hbm_accel_smv_chain #(.W(1), .D(PRK), .RST(1)) u_cr (.clk(clk), .rst_n(rst_n), .d(pop), .q(o_ret));
 endmodule
 
+// csrc with a REGISTERED element-pin input (margin m3b): the pin's valid and data land in flops with no logic
+// (front_s c2 route: d_valid -> fire -> credit adder -113 ps; the element pins keep only ~190 ps after the W13 die
+// budget).  The transfer the source saw at the pin (valid AND the ready it presented) is known one edge later, so the
+// ready it presents reserves the one unaccounted transfer: s_ready = (cred >= 2), and the channel carries one credit
+// more (DEPTH + 1 at both halves) for the same rate.  The landing flops are the first forward stage: the latency to the
+// face is unchanged.
+module ot_hbm_accel_smh_csrc_r #(
+    parameter integer W = 8,
+    parameter integer PS = 2,
+    parameter integer PR = 2,
+    parameter integer DEPTH = 10
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         o_v,
+    output wire [W-1:0] o_d,
+    input  wire         i_ret
+);
+    localparam integer CW = $clog2(DEPTH + 1);
+    reg  [CW-1:0] cred;
+    reg           vq, rq;
+    reg  [W-1:0]  dq;
+    wire          ret;
+    wire          fire_q = vq && rq;
+    assign s_ready = (cred >= 2);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cred <= DEPTH[CW-1:0]; vq <= 1'b0; rq <= 1'b0; end
+        else begin vq <= s_valid; rq <= s_ready; cred <= cred - fire_q + ret; end
+    always @(posedge clk) dq <= s_data;
+    ot_hbm_accel_smv_chain #(.W(1), .D(PS - 1), .RST(1)) u_fv (.clk(clk), .rst_n(rst_n), .d(fire_q), .q(o_v));
+    ot_hbm_accel_smv_chain #(.W(W), .D(PS - 1), .RST(0)) u_fd (.clk(clk), .rst_n(rst_n), .d(dq), .q(o_d));
+    ot_hbm_accel_smv_chain #(.W(1), .D(PR), .RST(1)) u_cr (.clk(clk), .rst_n(rst_n), .d(i_ret), .q(ret));
+endmodule
+
+// The request skid at the element pins (margin m3b), replacing ot_hbm_accel_smh_skid there: a 4-entry queue whose
+// read pointer is the only state the pin's ready touches (rp <= ready ? rp + 1 : rp, one mux level, 3 flops beside
+// the pin); the data leaves through a 4:1 select on rp (output path).  The write side sees the read pointer one edge
+// late (rpq), so its room is conservative by at most one entry.  front_s c2: req_ready -> pop -> 84 head / tail
+// enables -184 ps.  Same order and data, one transfer a cycle, +1 cycle from s to m as before.
+module ot_hbm_accel_smh_oskid #(
+    parameter integer W = 8
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         m_valid,
+    input  wire         m_ready,
+    output wire [W-1:0] m_data
+);
+    reg [2:0]   wp, rp, rpq;
+    reg [W-1:0] mem [0:3];
+    wire [2:0]  occ_w = wp - rpq;
+    assign s_ready = (occ_w != 3'd4);
+    assign m_valid = (wp != rp);
+    assign m_data = mem[rp[1:0]];
+    wire push = s_valid && s_ready;
+    wire [2:0] rp1 = rp + 3'd1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wp <= 3'd0; rp <= 3'd0; rpq <= 3'd0; end
+        else begin
+            if (push) wp <= wp + 3'd1;
+            rp <= (m_valid && m_ready) ? rp1 : rp;
+            rpq <= rp;
+        end
+    always @(posedge clk) if (push) mem[wp[1:0]] <= s_data;
+endmodule
+
 // ot_hbm_accel_smh_skid3 with every handshake PER COPY (margin m3): copy i (0 .. NS-1: the 32-bit slices; NS: the
 // source port; NS + 1: the sink port) takes its own s_valid_v[i] / m_ready_v[i] and drives its own s_ready_v[i] /
 // m_valid_v[i].  Chained slice to slice, two of these move a wide line with no signal fanning out across it.  All
@@ -702,7 +774,7 @@ module ot_hbm_accel_smh_front_n #(
     localparam integer OPX   = OPW + XW;
     initial if (SUB != 4 || RPT != 2) $fatal(1, "ot_hbm_accel_smh_front_n: the three-strip front assumes SUB 4, RPT 2");
     // op channel source: credits and the first stage at the pins, the second stage at the south face
-    ot_hbm_accel_smh_csrc #(.W(OPX), .PS(PIH - 1), .PR(PIH - 1), .DEPTH(CHD)) u_sch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csrc_r #(.W(OPX), .PS(PIH - 1), .PR(PIH - 1), .DEPTH(CHD + 1)) u_sch (.clk(clk), .rst_n(rst_n),
         .s_valid(start), .s_ready(start_ready), .s_data({op_rows, op_c, op_g, op_gs, op_fmt, op_xb}),
         .o_v(fs_v), .o_d(fs_d), .i_ret(fs_ret));
     // barrier: release_in landed at its pin, launched at the face; busy / arrive / released landed at the face,
@@ -828,7 +900,7 @@ module ot_hbm_accel_smh_front_c #(
     // ---------------- face halves of the channels and chains ----------------
     wire          h_start, h_pop;
     wire [OPX-1:0] h_opx;
-    ot_hbm_accel_smh_csnk #(.W(OPX), .PK(1), .PRK(1), .DEPTH(CHD)) u_sch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csnk #(.W(OPX), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_sch (.clk(clk), .rst_n(rst_n),
         .i_v(fs_v), .i_d(fs_d), .o_ret(fs_ret), .m_valid(h_start), .m_ready(h_pop), .m_data(h_opx));
     wire [OPW-1:0] h_op = h_opx[XW +: OPW];
     wire [XW-1:0]  h_xb = h_opx[XW-1:0];
@@ -845,7 +917,7 @@ module ot_hbm_accel_smh_front_c #(
     wire h_release;
     ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_prl (.clk(clk), .rst_n(rst_n), .d(fr_rl), .q(h_release));
     wire h_d_valid, h_d_ready; wire [55:0] h_d;
-    ot_hbm_accel_smh_csnk #(.W(56), .PK(1), .PRK(1), .DEPTH(CHD)) u_dch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csnk #(.W(56), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_dch (.clk(clk), .rst_n(rst_n),
         .i_v(fd_v), .i_d(fd_d), .o_ret(fd_ret), .m_valid(h_d_valid), .m_ready(h_d_ready), .m_data(h_d));
     wire h_req_v, h_req_ready; wire [31:0] h_req_addr; wire [9:0] h_req_tag;
     ot_hbm_accel_smh_csrc #(.W(42), .PS(PIH - 1), .PR(1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
@@ -1151,13 +1223,13 @@ module ot_hbm_accel_smh_front_s #(
     localparam integer CHD   = 2 * PIH + 3;
     initial if (SUB != 4 || RPT != 2) $fatal(1, "ot_hbm_accel_smh_front_s: the three-strip front assumes SUB 4, RPT 2");
     // descriptor channel source: credits and the first stage at the pins, the second at the north face
-    ot_hbm_accel_smh_csrc #(.W(56), .PS(PIH - 1), .PR(PIH - 1), .DEPTH(CHD)) u_dch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csrc_r #(.W(56), .PS(PIH - 1), .PR(PIH - 1), .DEPTH(CHD + 1)) u_dch (.clk(clk), .rst_n(rst_n),
         .s_valid(d_valid), .s_ready(d_ready), .s_data({d_base, d_lines}), .o_v(fd_v), .o_d(fd_d), .i_ret(fd_ret));
     // request channel sink (landing at the north face) and m2's registered skid beside the pins
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
     ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
-    ot_hbm_accel_smh_skid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+    ot_hbm_accel_smh_oskid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
         .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
     // response: stages 1 (pins) and 2 (north face) of m2's four
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(fp_v));
