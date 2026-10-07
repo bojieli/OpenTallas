@@ -76,7 +76,7 @@
     "baseline_one_cycle_row_cycles": 64,
     "extra_code_row_cycles": 81,
     "scale_service": "parallel independent ROM path; not yet physically composed",
-    "serial_token_contribution": "cold embedding only; die hops/stations and consumer credit return remain additive"
+    "serial_token_contribution": "one embedding fetch per generated token (no layer multiplier); die hops/stations and consumer credit return remain additive"
   },
   "physical_closed": false,
   "adopted": false,

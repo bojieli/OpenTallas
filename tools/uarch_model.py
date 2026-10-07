@@ -13317,7 +13317,7 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
                      baseline_one_cycle_row_cycles=64,
                      extra_code_row_cycles=(64-1)*2+read_latency-64,
                      scale_service="parallel independent ROM path; not yet physically composed",
-                     serial_token_contribution="cold embedding only; die hops/stations and consumer credit return remain additive"),
+                     serial_token_contribution="one embedding fetch per generated token (no layer multiplier); die hops/stations and consumer credit return remain additive"),
         physical_closed=False, adopted=False, headline_credit=0,
         source="rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8")
 
