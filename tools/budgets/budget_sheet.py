@@ -247,8 +247,9 @@ def main():
                 ld = d['by'][e[0]]
                 L, basis = C.pin_dist(d, drv, eps[0][1], ld, e[1])
                 kls, skew = classify(d, drv, ld, reg, trees, plan_intra, fl, bid in fb)
-                if kls not in ('fwd', 'fwd-unlinked') and ovr_extra:
-                    skew = round(skew + ovr_extra.get(drv[1], 0.0) + ovr_extra.get(ld[1], 0.0), 1)
+                ex_ = ovr_extra.get(drv[1], 0.0) + ovr_extra.get(ld[1], 0.0)
+                if kls not in ('fwd', 'fwd-unlinked') and ex_:
+                    skew = round(skew + ex_, 1)
                 # planned die stations: S81 places every station as an instance (1 hop); the HBM die prices the
                 # wire stages of its path segments at ceil(L / 430.56) (hbm_accel_die_fp LINK_STAGE_UM)
                 if bid not in pb:
