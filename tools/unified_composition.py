@@ -72,20 +72,23 @@ H_SRAM = "results/rtl/hbm_collective_full_20261007/storage_model.json"
 H_CLKIN = "results/uarch/hbm_die_clock_inputs_20261007/model.json"
 H_CLKENT = "results/uarch/hbm_collective_clock_entry_20261007/model.json"
 FULLSYS = "results/rtl/fullsys_recheck_20261007/status.json"
-# Claude CDC design (branch claude/hbm-collective-cdc-design-20261007 b49366616; not on main): packet-SRAM receive queue and
+# Claude CDC design (on branch claude/hbm-collective-cdc-design-20261007 only, b49366616; verified absent from origin/main 41cf0a266): packet-SRAM receive queue and
 # candidate protected CDC drain at II=3 (1/3 line rate per port); 3-bank rotation (option B) restores II=1
 H_CDC = "results/rtl/hbm_collective_cdc_design_20261007/options.json"
-H_CDC_COMMIT = "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+H_CDC_COMMIT = "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
 H_CDC_V = dict(ii3_AR_us=30.78, ii3_MTP_us=171.99, ii3_AR_pct=6.48, ii3_MTP_pct=16.37, ser_AR=18470, ser_MTP=103196,
                lat_us=1.017, lat_cycles=1220, rot_area_um2=12093.2)
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
-BF_BRANCH_COMMIT = "332983233"
-# bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07); record not on main
+BF_BRANCH_COMMIT = "a30252b68"   # ledger.md bf_merge_ksplit row; released binding 332983233; both on the branch only
+# bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07). The record is ON MAIN at ece40d827
+# (blob 2526ad8f, identical to codex/bf-evidence-only 4534a8e5f) but not in this branch's base 449ebc571, so its values
+# are pinned here as constants (reproducible from a git archive of this branch)
 BFA_FILE = "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json"
-BFA_COMMIT = "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
-BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96)
-# option B (mixed 2,304 pairs, 85 stages), Codex "DS ADOPT" 505a9b484 on origin/codex/restore-bf-pairs-20261007; not on main
-BFB_COMMIT = "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+BFA_COMMIT = "ece40d827 (on origin/main; blob 2526ad8f; values pinned as constants because this branch's base 449ebc571 predates it)"
+BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96, regions=19056, base_regions=20928)
+# option B (mixed 2,304 pairs, 85 stages): numbers in the same main record ece40d827; the "DS ADOPT" label commit 505a9b484 is on
+# branch origin/codex/restore-bf-pairs-20261007 only (absent from origin/main 41cf0a266)
+BFB_COMMIT = "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
 GEO_B = None
 BFB = dict(AR=1754.3, MTP=5098.3, base_AR=1603.3, base_MTP=4717.7, stages=85, pairs=2304, layer_dies=340, regions=18288,
            label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
@@ -103,9 +106,35 @@ def commit_of(rel):
     try:
         out = subprocess.check_output(["git", "log", "-1", "--format=%h", "--", rel], cwd=ROOT, text=True,
                                       stderr=subprocess.DEVNULL).strip()
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, OSError):
         out = ""
-    return out or "uncommitted (this delivery)"
+    return out or _ledger_commit(rel) or "uncommitted (this delivery)"
+
+
+@functools.lru_cache(maxsize=1)
+def _ledger_commits():
+    """file -> commit from the committed ledger, used when git history is unavailable (e.g. a `git archive` export)."""
+    try:
+        rec = json.loads((OUT / "ledger.json").read_text())
+    except (OSError, ValueError):
+        return {}
+    found = {}
+
+    def walk(x):
+        if isinstance(x, dict):
+            if "file" in x and "commit" in x and isinstance(x["file"], str):
+                found.setdefault(x["file"], x["commit"])
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(rec)
+    return found
+
+
+def _ledger_commit(rel):
+    return _ledger_commits().get(rel)
 
 
 def src(rel, pointer=None, commit=None):
@@ -319,11 +348,12 @@ def ds_rom():
           dict(unit="us", AR=round(1e6 / BFA["AR"] - 1e6 / BFA["base_AR"], 3),
                MTP_step=round(tau * 1e6 / BFA["MTP"] - tau * 1e6 / BFA["base_MTP"], 3)),
           src(BFA_FILE, "options.A_f198_2048 vs options.base_f198_2050", commit=BFA_COMMIT),
-          "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR %.1f vs base_f198 %.1f "
+          "measured exact (option A %s/%s region runs, base_f198 %s/%s, both bit-exact), UNADOPTED, FULL-RATE BF: AR %.1f vs base_f198 %.1f "
           "(+%.2f %%), MTP %.1f vs %.1f (+%.2f %%). Supersedes the +7.82 %% figure (BF16-phase-only, ledger.md on %s). "
           "Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain "
           "is unmeasured, so it is listed, never summed"
-          % (BFA["AR"], BFA["base_AR"], 100 * (BFA["AR"] / BFA["base_AR"] - 1), BFA["MTP"], BFA["base_MTP"],
+          % (format(BFA["regions"], ","), format(BFA["regions"], ","), format(BFA["base_regions"], ","), format(BFA["base_regions"], ","),
+             BFA["AR"], BFA["base_AR"], 100 * (BFA["AR"] / BFA["base_AR"] - 1), BFA["MTP"], BFA["base_MTP"],
              100 * (BFA["MTP"] / BFA["base_MTP"] - 1), BF_BRANCH), "info"),
         L("bf_merge_ksplit_option_B", "Option B (historical/numerical): BF16 phase merges + router K split on mixed slots, %d pairs "
           "(18 a region, 512 BF), %d reprice stages, %d layer dies, full-rate BF" % (BFB["pairs"], BFB["stages"], BFB["layer_dies"]),
@@ -533,7 +563,7 @@ def no_ecc():
         dict(target="qwen_rom", item="Relay stations (1,536) and column heads (64), 508-bit payload", protection="dual-fault replicas, default off", policy="candidate", source=s(Q_STATION, "replicas")),
         dict(target="ds_rom", item="S81 VM raw macro backend", protection="none (64 empty protection slots reserved, not RTL)", policy="GAP: mutable SRAM", source=s(DS_HBMB, "S81_r8_superseding_physical_binding.VM")),
         dict(target="hbm_ds", item="Collective packet SRAM", protection="protected full-depth candidate (default off, +2 queue cycles)", policy="candidate", source=s(H_SRAM, "queues")),
-        dict(target="hbm_ds", item="SM serial command/record path", protection="protection build in progress (uncommitted Codex work in the central checkout)", policy="GAP until committed", source=dict(file="tools/hbm_sm_serial_protection_model.py", pointer=None, commit="uncommitted (central checkout, Codex)")),
+        dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=dict(file="results/rtl/hbm_sm_command_20261007/protected_component.json", pointer="passed, selected", commit="65988656b (on origin/main; not in this branch's base 449ebc571)")),
         dict(target="all", item="Off-package links", protection="full RS(544,514) FEC", policy="compliant (owner 2026-10-06)", source=s(DS_LINKS, "decision")),
     ]
 
