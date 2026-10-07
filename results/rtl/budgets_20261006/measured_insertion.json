@@ -169,26 +169,26 @@
    }
   },
   "hfd_svc_SW_s7": {
-   "job": "hbm_svc_SW_s7_e8b5132fb_r18b",
-   "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b",
+   "job": "hbm_svc_SW_s7_2ec0ab4f9_r22",
+   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s7_2ec0ab4f9_r22",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T22:32:17-07:00",
+   "measured_at": "2026-10-07T05:41:27-07:00",
    "ss": {
-    "mean": 686,
-    "min": 660,
-    "max": 725
+    "mean": 668,
+    "min": 652,
+    "max": 699
    },
    "ff": {
-    "mean": 425,
-    "min": 404,
-    "max": 461
+    "mean": 417,
+    "min": 403,
+    "max": 451
    },
    "boundary_n": 1413,
    "budget": {
-    "measured_ss": 686.0,
+    "measured_ss": 668.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -294,26 +294,26 @@
    "budget": null
   },
   "hfd_svc_SW_s6": {
-   "job": "hbm_svc_SW_s6_e8b5132fb_r18b",
-   "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_e8b5132fb_r18b",
+   "job": "hbm_svc_SW_s6_2ec0ab4f9_r22",
+   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s6_2ec0ab4f9_r22",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T23:54:32-07:00",
+   "measured_at": "2026-10-07T05:41:27-07:00",
    "ss": {
-    "mean": 734,
-    "min": 658,
-    "max": 1012
+    "mean": 785,
+    "min": 742,
+    "max": 1009
    },
    "ff": {
-    "mean": 476,
-    "min": 434,
-    "max": 653
+    "mean": 502,
+    "min": 460,
+    "max": 728
    },
    "boundary_n": 1920,
    "budget": {
-    "measured_ss": 734.0,
+    "measured_ss": 785.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -404,26 +404,26 @@
    "budget": null
   },
   "hfd_svc_SW_s5": {
-   "job": "hbm_svc_SW_s5_d6f9d25a1_bud",
-   "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_d6f9d25a1_bud",
+   "job": "hbm_svc_SW_s5_2ec0ab4f9_r22",
+   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s5_2ec0ab4f9_r22",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T21:46:19-07:00",
+   "measured_at": "2026-10-07T05:41:26-07:00",
    "ss": {
-    "mean": 756,
-    "min": 737,
-    "max": 944
+    "mean": 816,
+    "min": 745,
+    "max": 1235
    },
    "ff": {
-    "mean": 474,
-    "min": 455,
-    "max": 619
+    "mean": 535,
+    "min": 462,
+    "max": 953
    },
    "boundary_n": 2509,
    "budget": {
-    "measured_ss": 756.0,
+    "measured_ss": 816.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -780,26 +780,26 @@
    "budget": null
   },
   "hfd_svc_SE_s0": {
-   "job": "hbm_svc_SE_s0_e8b5132fb_r18b",
-   "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
-   "host": "ot-pve1",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b",
+   "job": "hbm_svc_SE_s0_2ec0ab4f9_r22",
+   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_2ec0ab4f9_r22",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T23:48:13-07:00",
+   "measured_at": "2026-10-07T05:34:45-07:00",
    "ss": {
-    "mean": 696,
-    "min": 640,
-    "max": 766
+    "mean": 702,
+    "min": 678,
+    "max": 756
    },
    "ff": {
-    "mean": 423,
-    "min": 384,
-    "max": 485
+    "mean": 428,
+    "min": 406,
+    "max": 481
    },
    "boundary_n": 3963,
    "budget": {
-    "measured_ss": 696.0,
+    "measured_ss": 702.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -2013,5 +2013,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T05:28:47-07:00"
+ "updated": "2026-10-07T05:41:27-07:00"
 }
