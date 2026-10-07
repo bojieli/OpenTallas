@@ -1,0 +1,9 @@
+A 13 0
+C 27 e0 -0 -0
+C 29 e0 -0 -0
+C 31 e0 -0 -0
+C 33 e0 -0 -0
+F 76 fault
+[65000] %Fatal: tb_hbm_integrated_su_c12.sv:155: Assertion failed in TOP.tb_hdc_v41x_vec: actual drain/CPL identity mismatch
+%Error: /srv/opentallas-scratch2/scratch/claude/fullsys-recheck/wt-su/rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_su_c12.sv:155: Verilog $stop
+Aborting...
