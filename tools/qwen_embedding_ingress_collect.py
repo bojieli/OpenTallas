@@ -8,6 +8,15 @@ from qwen_embedding_parent_binding import sha,qualify,alias_bytes,APPROVED_TOPS
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def replace_export_alias(path, suffix, source_top, target_top):
+    # Docker may create read-only/root-owned files in our output directory.
+    # Replacing a directory entry needs no change to that file's ownership.
+    data=alias_bytes(path.read_bytes(),suffix,source_top,target_top)
+    temporary=path.with_name(path.name+'.alias.tmp')
+    with temporary.open('xb') as f:f.write(data)
+    temporary.replace(path)
+
+
 def held_route_inputs(state):
     """Read completed actual artifacts while preserving daemon adoption holds.
 
@@ -91,7 +100,7 @@ def collect(kind,state_path,out,source_top,held_route=False):
         path=view/(view.name+suffix)
         shutil.copyfile(path,raw/path.name)
         original_hashes[path.name]=sha(path)
-        path.write_bytes(alias_bytes(path.read_bytes(),suffix,source_top,view.name))
+        replace_export_alias(path,suffix,source_top,view.name)
         abstract['files'][path.name]=sha(path)
     abstract['identifier_alias']=dict(source_top=source_top,target_top=view.name,original_sha256=original_hashes)
     (view/'abstract.json').write_text(json.dumps(abstract,indent=2)+'\n')
