@@ -6,6 +6,7 @@ caller, so this module does not import a different checkout's cached compiler.
 import gzip
 import hashlib
 import json
+import os
 from pathlib import Path
 
 CANONICAL = 'results/uarch/dsrom_s81_released_binding_20261004/canonical'
@@ -14,6 +15,16 @@ HASHES = {
     'inventory.json': '0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480',
     'stage_map.json': '47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815',
     'matrix_map.jsonl.gz': '985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326',
+}
+
+
+# OT_DSROM_S81_RELEASE=20261007: the bf_merge_ksplit released binding (Claude bf-double, owner-adopted 2026-10-07;
+# tools/dsrom_bf_double_alloc.py --shared --pbf 2048 --ksplit gate, f198.72 frame: 2,048 pairs, 512 BF = 4 a region,
+# 86 stages).  Default: the 20261004 binding the pinned evidence was built on.
+RELEASES = {
+    '20261004': dict(dir=CANONICAL, hashes=HASHES, pairs=2417, bf=519, stages=81, matrices=46671),
+    '20261007': dict(dir='results/uarch/dsrom_s81_released_binding_20261007/canonical',
+                     hashes='manifest.json', pairs=2048, bf=512, stages=86, matrices=None),
 }
 
 
@@ -26,19 +37,25 @@ class CanonicalS81Execution:
             from dsrom_stage_program_join import StageProgramJoin
             stage_join_factory = StageProgramJoin
         self.owner = Path(owner).resolve()
-        base = self.owner / CANONICAL
+        rel = RELEASES[os.environ.get('OT_DSROM_S81_RELEASE', '20261004')]
+        canonical = rel['dir']
+        base = self.owner / canonical
+        hashes = rel['hashes'] if isinstance(rel['hashes'], dict) else \
+            json.loads((base / rel['hashes']).read_text())['sha256']
         raw = {}
-        for name, expected in HASHES.items():
+        for name, expected in hashes.items():
             raw[name] = (base / name).read_bytes()
             if hashlib.sha256(raw[name]).hexdigest() != expected:
                 raise ValueError(f'canonical S81 source changed: {name}')
         inventory = json.loads(raw['inventory.json'])
         stage_map = json.loads(raw['stage_map.json'])
-        if (inventory['pairs_per_rank_die'], inventory['BF_dual_pairs'], inventory['TP'],
-                len(stage_map['PHW_required_by_stage'])) != (2417,519,4,81):
-            raise ValueError('canonical S81 geometry mismatch')
+        geo = (inventory.get('pairs_per_rank_die', inventory.get('pairs_bf_stage')),
+               inventory.get('BF_dual_pairs', inventory.get('BF_pairs_TP4', 0) // max(1, 4 * inventory['stages'])),
+               inventory['TP'], len(stage_map['PHW_required_by_stage']))
+        if geo != (rel['pairs'], rel['bf'], 4, rel['stages']):
+            raise ValueError(f'canonical S81 geometry mismatch {geo}')
         matrices = [json.loads(line) for line in gzip.decompress(raw['matrix_map.jsonl.gz']).splitlines()]
-        if len(matrices) != 46671:
+        if rel['matrices'] is not None and len(matrices) != rel['matrices']:
             raise ValueError('canonical S81 fragment extent mismatch')
         source = self.owner / SOURCE
         demand_raw = (source / 'inputs/demand-r5.json.gz').read_bytes()
@@ -48,9 +65,9 @@ class CanonicalS81Execution:
         # The owner API checks literal node/template hashes and dimensions;
         # Popper's compiler supplies the same unique fragment key/CFG mapping.
         self.source = source_execution_factory(matrices, bindings, demand)
-        self.stage_join = stage_join_factory(matrices, stage_map, pairs=2417,
-                                             BF_pairs=519, stage_count=81)
-        self.input_sha256 = {str(Path(CANONICAL)/n): hashlib.sha256(b).hexdigest()
+        self.stage_join = stage_join_factory(matrices, stage_map, pairs=rel['pairs'],
+                                             BF_pairs=rel['bf'], stage_count=rel['stages'])
+        self.input_sha256 = {str(Path(canonical)/n): hashlib.sha256(b).hexdigest()
                              for n,b in raw.items()}
         self.input_sha256.update({str(Path(SOURCE)/n): hashlib.sha256(b).hexdigest()
                                  for n,b in [('inputs/demand-r5.json.gz',demand_raw),

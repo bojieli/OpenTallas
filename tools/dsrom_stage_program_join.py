@@ -32,8 +32,10 @@ def _source():
 
 class StageProgramJoin:
     def __init__(self, matrices, stage_map, *, pairs, BF_pairs, stage_count):
-        require((stage_count, pairs, BF_pairs) == (81, 2417, 519),
-                'selected S81 NP2417/BF519 required; S82 is historical')
+        # released S81 bindings: 20261004 (NP2417/BF519, 81 stages) and 20261007 bf_merge_ksplit (NP2048/BF512 = 4 a
+        # region on the flat is_bf map, 86 stages; tools/dsrom_bf_double_alloc.py)
+        require((stage_count, pairs, BF_pairs) in ((81, 2417, 519), (86, 2048, 512)),
+                'selected S81 NP2417/BF519 or NP2048/BF512 required; S82 is historical')
         self.stage_map = copy.deepcopy(stage_map)
         self.pairs, self.stages = pairs, stage_count
         phws = stage_map['PHW_required_by_stage']

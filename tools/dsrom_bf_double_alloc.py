@@ -36,15 +36,15 @@ class FlavourPool(S73.RaggedPool):
         self.pairs = self.np = pairs
         self.balance_raw = True
         self.bounds = [r * pairs // R for r in range(R + 1)]
-        self.bf = set()
+        # BF sites: the flat RTL map is_bf(p) = exists i < NBF: floor(i*NP/NBF) == p (rtl/v41die ot_v41_field*,
+        # NBF = nbf_reg * 128), which puts exactly nbf_reg BF pairs in every region for the frames used here
+        nb = nbf_reg * R if flavour == 'bf' else 0
+        self.bf = {i * pairs // nb for i in range(nb)} if nb else set()
         self.byreg = {}
         for r in range(R):
             ps = list(range(self.bounds[r], self.bounds[r + 1]))
             if flavour == 'bf':
-                n = len(ps)
-                bs = sorted({ps[(2 * j + 1) * n // (2 * nbf_reg)] for j in range(nbf_reg)})
-                assert len(bs) == nbf_reg, (r, bs)
-                self.bf.update(bs)
+                assert sum(p in self.bf for p in ps) == nbf_reg, (r, pairs, nbf_reg)
             # BF16-dedicated (half-rate BF): q never on a BF pair; shared (full-rate BF): q on every pair, as S81
             self.byreg[(r, 'q')] = [p for p in ps if p not in self.bf] if dedicated else ps
             self.byreg[(r, 'bf16')] = [p for p in ps if p in self.bf]

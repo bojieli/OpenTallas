@@ -114,7 +114,7 @@ def configure(die, gen='r7'):
 
 # --bf-per-region N (bf-double 2026-10-07; default None = the decision's 519/2417 share, spread die-wide): exactly N
 # BF pairs in every return region of a layer die, at the in-region positions tools/dsrom_bf_double_alloc.py binds
-# (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
+# (the flat RTL is_bf map floor(i*NP/NBF), NBF = N*128); 0 = the q-only die flavour.
 BF_PER_REGION = None
 
 
@@ -308,11 +308,11 @@ def region_bounds():
 
 def bf_sites():
     if BF_PER_REGION is not None and DIE_KIND == 'layer':
-        b, s = region_bounds(), set()
-        for r in range(ROOTS):
-            ps = list(range(b[r], b[r + 1]))
-            s.update(ps[(2 * j + 1) * len(ps) // (2 * BF_PER_REGION)] for j in range(BF_PER_REGION))
-        assert len(s) == BF_PAIRS == BF_PER_REGION * ROOTS
+        # the flat RTL map (ot_v41_field is_bf: floor(i*NP/NBF)), exactly N a region (tools/dsrom_bf_double_alloc.py)
+        nb, b = BF_PER_REGION * ROOTS, region_bounds()
+        s = {i * PAIRS // nb for i in range(nb)} if nb else set()
+        assert len(s) == BF_PAIRS == nb and all(sum(b[r] <= p < b[r + 1] for p in s) == BF_PER_REGION
+                                                 for r in range(ROOTS))
         return s
     nv = nv_sites()
     rest = [p for p in range(PAIRS) if p not in nv]
