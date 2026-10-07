@@ -975,10 +975,9 @@ def port_widths(m, k):
             if inst == 'TOP':
                 continue
             port, lo, hi = pslice(port)
-            if lo is not None:
-                n = (hi + 1) if k == 1 else max(1, math.ceil((hi + 1) / k))
+            nn = n if lo is None else ((hi + 1) if k == 1 else max(1, math.ceil((hi + 1) / k)))
             key = (by[inst].master, port)
-            w[key] = max(w.get(key, 0), n)
+            w[key] = max(w.get(key, 0), nn)
     return w
 
 
