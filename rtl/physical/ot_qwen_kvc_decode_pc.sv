@@ -5,7 +5,7 @@
 // The trusted expected-sector/count/window tuple comes from the PC sequencer.
 // No descriptor or map generation is claimed here. Invalid beats emit bad=1,
 // never a write; bad must veto publication before its transaction can retire.
-module ot_qwen_kvc_decode_pc #(parameter integer ENABLE=0)(
+module ot_qwen_kvc_decode_pc #(parameter integer ENABLE=0,CREDITS=8)(
  input wire clk, rst_n,
  input wire i_v, input wire [255:0] i_data,
  input wire [16:0] i_sec, i_expected,
@@ -29,7 +29,7 @@ module ot_qwen_kvc_decode_pc #(parameter integer ENABLE=0)(
  (* keep *) reg [7:0] row0, layer0;
  (* keep *) reg [10:0] count0, limit0;
  (* keep *) reg active0, done0;
- reg [3:0] credits;
+ reg [$clog2(CREDITS+1)-1:0] credits;
  reg v1, v2, bad1, bad2, drop2, isk1, isk2, tail1, tail2;
  reg [255:0] data1, data2;
  reg [8:0] kmod1, kdiv1;
@@ -42,11 +42,11 @@ module ot_qwen_kvc_decode_pc #(parameter integer ENABLE=0)(
  reg [1:0] sel02, sel12, n2;
  reg [3:0] lanes2;
  wire admit = (ENABLE != 0) && v0 && (credits != 0);
- wire credit_ok = cr0 && (credits < 8 || admit);
+ wire credit_ok = cr0 && (credits < CREDITS || admit);
  always @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
    v0<=0; cr0<=0; v1<=0; v2<=0; o_v<=0; i_cr<=0;
-   credits<=8; fault<=0;
+   credits<=CREDITS; fault<=0;
    data0<=0; sec0<=0; expected0<=0; pos0<=0; row0<=0; layer0<=0;
    count0<=0; limit0<=0; active0<=0; done0<=0;
    data1<=0; kmod1<=0; kdiv1<=0; d1<=0; h1<=0; pp1<=0; q1<=0;
