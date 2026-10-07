@@ -88,8 +88,6 @@ module tb_code_pair_margin #(parameter integer M2=0);
           if(rq[rq_r%256]!=={m_id,m_tag,m_beat,m_row,m_col}) $fatal(1,"receipt content/order mismatch cyc%0d",cyc);
           rq_r=rq_r+1; rcpt=rcpt+1;
         end
-        if(m_wr_r && m_wr_r_d) $fatal(1,"wr_r high two cycles in a row cyc%0d",cyc);
-        m_wr_r_d=m_wr_r;
         if(cyc>2 && m_rd_r!==2'b11) $fatal(1,"rd_r credit low in fault-free phase cyc%0d",cyc);
       end
       handshake_checks=handshake_checks+1;
@@ -151,6 +149,20 @@ module tb_code_pair_margin #(parameter integer M2=0);
     // Phase 1: populate every chosen row in both columns.
     for(integer i=0;i<nrows;i=i+1) for(integer c=0;c<2;c=c+1) write_row(rows[i],c,rnd256());
     $display("WRITE_RATE m2=%0d writes=%0d cycles=%0d", M2, nrows*2, cyc);
+    // Phase 1b: back-to-back write burst, consumer always ready (original: one accept per cycle)
+    begin : burst
+      integer acc; acc=0;
+      @(negedge clk); wr_v=1; wr_span_bound=1; wr_kind=0; visible_r=1;
+      for(integer i=0;i<64;i=i+1) begin
+        wr_row=rows[i%nrows]; wr_column=i%2; wr_owned.data=rnd256(); wr_owned.physical_tag=$urandom; wr_owned.beat=$urandom;
+        wr_owned.id.sector=$urandom;
+        #100; if(M2 ? m_wr_r : o_wr_r) acc=acc+1;
+        @(negedge clk);
+      end
+      wr_v=0; idle(14);
+      $display("BURST_RATE m2=%0d accepted=%0d of 64", M2, acc);
+      if(acc<63) $fatal(1,"write burst rate %0d/64 below the original's back-to-back rate", acc);
+    end
     // Phase 2: random mixed traffic, back-to-back II1 reads on both ports,
     // same-edge read/write, bubbles, denied reads, held receipts.
     for(integer t=0;t<6000;t=t+1) begin

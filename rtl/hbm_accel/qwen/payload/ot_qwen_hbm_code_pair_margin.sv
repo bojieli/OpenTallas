@@ -39,6 +39,38 @@ module ot_qwen_hbm_code_shadow_n #(parameter integer W=1)(
   always @(posedge clk) q<=d;
 endmodule
 
+// Receipt FIFO (MARGIN2): first-word-fall-through with a registered head and its next-state wires, so the
+// pins see flops and the credit counter can restore the original's back-to-back write rate.
+module ot_qwen_hbm_code_rcpt_fifo #(parameter integer W=1, DEPTH=4)(
+  input wire clk, por_n, push, pop, input wire [W-1:0] din,
+  output reg vld, output reg [W-1:0] dout,
+  output reg vld_n, output reg [W-1:0] dout_n, output reg ovf);
+  reg [W-1:0] mem [0:DEPTH-1];
+  reg [3:0] cnt, cnt_n;
+  reg [W-1:0] mem_n [0:DEPTH-1];
+  always @* begin
+    cnt_n=cnt; vld_n=vld; dout_n=dout; ovf=0;
+    for(integer i=0;i<DEPTH;i=i+1) mem_n[i]=mem[i];
+    if(!vld || pop) begin
+      if(cnt!=0) begin
+        dout_n=mem[0]; vld_n=1;
+        for(integer i=0;i<DEPTH-1;i=i+1) mem_n[i]=mem[i+1];
+        cnt_n=cnt-1;
+        if(push) begin if(cnt_n>=DEPTH) ovf=1; else begin mem_n[cnt_n]=din; cnt_n=cnt_n+1; end end
+      end else if(push) begin dout_n=din; vld_n=1; end
+      else vld_n=0;
+    end else if(push) begin
+      if(cnt>=DEPTH) ovf=1; else begin mem_n[cnt]=din; cnt_n=cnt+1; end
+    end
+  end
+  always @(posedge clk or negedge por_n)
+    if(!por_n) begin vld<=0; cnt<=0; end else begin vld<=vld_n; cnt<=cnt_n; end
+  always @(posedge clk) begin
+    dout<=dout_n;
+    for(integer i=0;i<DEPTH;i=i+1) mem[i]<=mem_n[i];
+  end
+endmodule
+
 module ot_qwen_hbm_code_bank_margin #(
   parameter integer BANK=0, DIST=0
 )(
@@ -256,8 +288,10 @@ module ot_qwen_hbm_code_pair_margin #(
     reg [$bits(metadata_t)-1:0] meta_a;
     wire [$bits(metadata_t)-1:0] meta_b, meta_next;
     metadata_t m;
-    assign m=meta_a;
-    wire metadata_same=(meta_a==meta_b);
+    wire [$bits(metadata_t)-1:0] fa_dout, fb_dout, fa_dn, fb_dn; wire fa_v, fb_v, fa_vn, fb_vn, fa_ovf, fb_ovf;
+    wire rc_push, rc_pop;
+    assign m=P ? fa_dout : meta_a;
+    wire metadata_same=P ? (fa_v==fb_v && fa_dout==fb_dout) : (meta_a==meta_b);
     wire metadata_bad=!metadata_same;
     // Duplicated sticky fault: every use sees the OR of both copies.
     reg fq_a; wire fq_b;
@@ -266,6 +300,7 @@ module ot_qwen_hbm_code_pair_margin #(
     // ---------------- request side (same-cycle handshakes) ----------------
     wire column_ok=(wr_column_i==12'(COLUMN_BASE)) || (wr_column_i==12'(COLUMN_BASE+1));
     wire format_ok=!wr_kind_i && column_ok && (wr_row_i<ROWS);
+    reg [3:0] occ;
     wire wr_acc_i=P ? (wrr_p && wr_span_bound_i && format_ok && !fault_int)
                     : (wr_span_bound_i && format_ok && !fault_int && (!c.visible || visible_r));
     assign wr_r=P ? wr_r_q : wr_acc_i;
@@ -449,9 +484,15 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     assign meta_next=write_fire ? {wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i} : meta_a;
     ot_qwen_hbm_code_shadow_r #(.W($bits(control_t))) u_ctl_b(.clk(clk),.por_n(por_n),.d(n),.q(ctl_b));
+    wire [$bits(metadata_t)-1:0] rc_din={wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i};
+    assign rc_push=P && write_fire; assign rc_pop=P && visible_v_q && visible_r;
+    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_a(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(rc_din),
+      .vld(fa_v),.dout(fa_dout),.vld_n(fa_vn),.dout_n(fa_dn),.ovf(fa_ovf));
+    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_b(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(rc_din),
+      .vld(fb_v),.dout(fb_dout),.vld_n(fb_vn),.dout_n(fb_dn),.ovf(fb_ovf));
     ot_qwen_hbm_code_shadow_r #(.W($bits(metadata_t))) u_meta_b(.clk(clk),.por_n(por_n),
       .d(write_fire ? {wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i} : meta_b),.q(meta_b));
-    wire detect=control_bad || (c.visible && metadata_bad) || (|request_bad) || format_bad ||
+    wire detect=control_bad || (P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
                 (|bank_err) || (|sel_err) || out_err || out_err7 || (|unc5) || (fq_a!=fq_b);
     ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || detect),.q(fq_b));
     always @(posedge clk or negedge por_n) begin
@@ -464,14 +505,16 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     // MARGIN2 registered interface: credits and valid at flops (pin side), fault flop at the pin
     wire fault_nx=fault_int || detect;
-    wire meta_same_nx=write_fire ? 1'b1 : metadata_same;
+    wire [3:0] occ_n=occ + {3'b0,wr_r_q} - {3'b0,(wrr_p && !write_fire)} - {3'b0,rc_pop};
+    wire meta_same_nx=P ? (fa_vn==fb_vn && fa_dn==fb_dn) : (write_fire ? 1'b1 : metadata_same);
     always @(posedge clk or negedge por_n)
-      if(!por_n) begin rd_r_q<=0; rrr_p<=0; wr_r_q<=0; wrr_p<=0; visible_v_q<=0; fault_q<=0; end
+      if(!por_n) begin rd_r_q<=0; rrr_p<=0; wr_r_q<=0; wrr_p<=0; visible_v_q<=0; fault_q<=0; occ<=0; end
       else if(P) begin
         rd_r_q<={2{!fault_nx}}; rrr_p<=rd_r_q;
-        wr_r_q<=!fault_nx && !wr_r_q && !n.visible;
+        occ<=occ_n;
+        wr_r_q<=!fault_nx && (occ_n<4'd4);
         wrr_p<=wr_r_q;
-        visible_v_q<=n.visible && !fault_nx && meta_same_nx;
+        visible_v_q<=fa_vn && fb_vn && !fault_nx && meta_same_nx;
         fault_q<=fault_nx;
       end
   end endgenerate
