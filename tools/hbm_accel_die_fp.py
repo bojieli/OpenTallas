@@ -362,7 +362,7 @@ R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.
 # external sender reservation is historical diagnostic geometry only.
 R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
 # Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
-R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True)
+R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
 R24SM3VO = dict(R24SM3V, native_owner_bays=True)
 ADOPTED = R23
 
@@ -1177,9 +1177,28 @@ def split_vm8(m):
                 pitch = max(1, round((hi - lo) / max(1, n_ - 1) / tr)) if n_ > 1 else 1
                 spec[p_] = ('face', n_, face, v['layer'], round((lo + hi) / 2, 4), pitch)
             order.append(p_)
+        if m['variant'].get('vm8_exact_pins'):
+            # Preserve each requested rectangle and bit identity. Ranges lose
+            # single-pin faces and the half-track origin of even-width groups.
+            text=(ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/io_place.tcl').read_text()
+            pattern=r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
+            exact=defaultdict(dict)
+            for port,bit,layer,x,y,w_,h_ in re.findall(pattern,text):
+                bit=int(bit);x,y,w_,h_=map(float,(x,y,w_,h_))
+                if bit in exact[port]:
+                    raise ValueError(f'duplicate VM requested pin: {q}/{h}/{port}[{bit}]')
+                exact[port][bit]=(f'{port}[{bit}]',layer,(x-w_/2,y-h_/2,x+w_/2,y+h_/2))
+            if set(exact)!=set(rec['ports']):
+                raise ValueError(f'VM requested pin port mismatch: {q}/{h}')
+            for port,v in rec['ports'].items():
+                if set(exact[port])!=set(range(v['bits'])):
+                    raise ValueError(f'VM requested pin bit mismatch: {q}/{h}/{port}')
+                spec[port]=('rects',[exact[port][b] for b in range(v['bits'])])
 
         def fn(mst, k=1, spec=spec, order=order):
             sp_ = dict(spec)
+            if k > 1 and any(v[0]=='rects' for v in sp_.values()):
+                raise ValueError('exact VM requested pins require full width k=1')
             if k > 1:
                 _bundle_pack(mst, sp_, order, k)
             mst.ports, mst.order = sp_, list(order)

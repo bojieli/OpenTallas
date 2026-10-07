@@ -44,3 +44,28 @@ def test_ordered_seam_join_rejects_bit_permutation():
     pins['s2n[0]'],pins['s2n[1]']=pins['s2n[1]'],pins['s2n[0]']
     with pytest.raises(ValueError,match='do not align'):
         V.seam_pin_join(bad)
+
+
+def test_exact_vm8_requested_pins_preserve_scalar_face_and_seam_origin():
+    import pytest
+    from budgets.extract_die import anchor
+    m=H.build(H.R24SM3V,network_probe=True);masters=H.masters(m);widths=H.port_widths(m,1)
+    count=0
+    for name in (f'hfd_vm_{q}_{h}' for q in ('sw','se','nw','ne') for h in ('s','n')):
+        master=masters[name]
+        rects=H.S.pin_rects(master,1,{p:widths.get((name,p),0) for p in master.order})
+        count+=len(rects)
+        assert all(spec[0]=='rects' for spec in master.ports.values())
+        assert len({r[0] for r in rects})==len(rects)
+        for _,_,(x0,y0,x1,y1) in rects:
+            assert -1e-6<=x0<x1<=master.w+1e-6
+            assert -1e-6<=y0<y1<=master.h+1e-6
+        with pytest.raises(ValueError,match='full width'):
+            H.S.pin_rects(master,2,{p:widths.get((name,p),0) for p in master.order})
+    assert count==146558
+    master=masters['hfd_vm_sw_s']
+    assert anchor(master,'rst')==pytest.approx([386.412,.096])
+    rects={p:r for p,_,r in H.S.pin_rects(master,1,{p:widths.get((master.name,p),0) for p in master.order})}
+    x0,y0,x1,y1=rects['s2n[0]']
+    assert (x0+x1)/2==pytest.approx(152.688)
+    assert (y0+y1)/2==pytest.approx(499.944)
