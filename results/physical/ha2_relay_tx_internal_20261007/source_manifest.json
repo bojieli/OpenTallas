@@ -1,0 +1,33 @@
+{
+  "scope": "Internal-only local D1 launch + TX, full INJ2 W544; not leaf or parent closure",
+  "physical_closed": false,
+  "source_sha256": {
+    "physical/ha2_relay_tx_internal_20261007/check_pins.tcl": "171f15ad2b1981ec4883a6c56820c7cdf800f402b455a1917957fbea9a3fda4f",
+    "physical/ha2_relay_tx_internal_20261007/config.mk": "cedff2939d4acb382fbcfa375ecd9a205450bafca789b287bf3229712291b2be",
+    "physical/ha2_relay_tx_internal_20261007/internal.sdc": "58654cbaf6c6539a2fb4055eed4f28bd71e10584e7f6913bba1e86c1579bdab0",
+    "physical/ha2_relay_tx_internal_20261007/inventory.tcl": "fc6538216f6efc7463696b70944fa188fc7690b86982d6bff0b28e1328fc751a",
+    "physical/ha2_relay_tx_internal_20261007/pins.json": "7fc5168a1ff8d96c4651b09fcde5429fcd32cf2b916ffb7bd83bfbc1a114d09d",
+    "physical/ha2_relay_tx_internal_20261007/pins.tcl": "5326aa9a85a42f5c683cabc9fe53d3f4b6f1daecec8ef9962d49e81179555c0c",
+    "physical/ha2_relay_tx_internal_20261007/regions.tcl": "fa2657e3c936340c0e597838af4f1ddfc887392f28d969ccf9c780ef2183f913",
+    "physical/ha2_relay_tx_internal_20261007/run.sh": "c6f1acc38b4f16dd8194230666d151cebea4287f6abde7d474c9b19618dd0114",
+    "physical/ha2_relay_tx_internal_20261007/timing_audit.tcl": "c0a1b45e872186911d5d1462e9b84643873ead72f91f3e1cf608d90a81f95fb7",
+    "physical/ha2_relay_tx_internal_20261007/wrapper.sv": "5c5dbab1e7f13744b1590909425078dd246bad7c676f9fca55dd7714eb0ac2cd",
+    "tools/ha2_relay_tx_physical_model.py": "264be4294174b8b8da581f939fa7f73269d78cbd5b5767883c3da5dbfbc3b123",
+    "tools/ha2_relay_tx_internal_prepare.py": "90e2fb7538e862dc021e923a786f734e7a2ebaaac289fa820654ace935ff6bd5",
+    "tools/ha2_relay_tx_internal_signoff.py": "b4c069250f8397d504673d470787b5e5246a533911c47f156fbc930d7ebf0ab1",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_launch_single.sv": "943b0a58334af374b4237b79f4a1ecbc6e785dcd113d895e0b05e182f59ac39b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_sender_capture.sv": "2ae276bdff594dbae2505d5be7b119082f6e2757eaeff07b7e43649b714cca14"
+  },
+  "exact_proof": "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/terminal.json",
+  "exact_proof_sha256": "5f64cc78927cb91278b12980928fb7f072bb21b23eab0ae3d55ae391d0bf7385",
+  "exact_proof_source_matches": 8,
+  "nominal_added_total_hub_cycles": 0,
+  "upstream_hub_depth_in_parent": 34,
+  "local_hub_stages": 1,
+  "modeled_register_bits": 2306,
+  "mapped_inventory_guard": "run.sh runs synthesis once, asserts full2306 FF inventory and55percent frame before make finish reuses objects",
+  "unqualified_external_ports": 2253,
+  "expected_total_signal_pins": 2254,
+  "model_ref": "results/uarch/ha2_relay_tx_physical_20261007/prebuild_unconditional.json"
+}
