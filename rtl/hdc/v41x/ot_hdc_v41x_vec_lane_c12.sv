@@ -718,7 +718,7 @@ module ot_hdc_v41x_vec_lane #(
             wire [31:0] y_exp, den, num_d, y_div;
             wire f_e, f_den, f_div;
             wire [D_EXP:0] ve;
-            wire [D_EXP:0] vs;                 // a sigmoid-chain element, along the exp
+            wire [D_EXP+DENR:0] vs;                 // a sigmoid-chain element, along the exp
             ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)), .vd(ve));
             ot_hdc_vline #(.D(D_EXP + DENR)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
             ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
@@ -736,7 +736,7 @@ module ot_hdc_v41x_vec_lane #(
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
             ot_hdc_delay #(.W(32), .D(D_EXP + DENR + ALAT), .RING(DRING)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
             wire [ALAT:0] vdn;
-            ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
+            ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP + DENR]), .vd(vdn));
             if (DDIV == 31) begin : g_s31
                 ot_hdc_fdiv    u_div (.clk(clk), .rst_n(rst_n), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                          .fault(f_div));
