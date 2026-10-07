@@ -197,3 +197,179 @@ def apply_start(text: str) -> str:
     text = _rep(text, "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end",
                 "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; end")
     return text
+
+
+def apply_nxreg(text: str) -> str:
+    """DEC_LA_NXREG (default 0; owner margin rule 2026-10-06): the issued instruction's data fields leave the core from
+    registers.  In the DEC_LA core every output field is fqd_<f>[la_nx], an 8:1 read of the decoded-field FIFO behind
+    the NEXT pointer (r5b_f3ba: every endpoint within 60 ps of SS sign-off is la_nx -> such a field -> output port).
+    Here each field is copied into nx_<f> on the LOAD edge that makes its entry NEXT (la_nx <= la_rd), from
+    fqd_<f>[la_rd], or from the entry's write data when that write lands on the same edge (data fields: la_we[la_rd];
+    control fields: pend1 && la_wr == la_rd).  The NEXT entry is never written while it is NEXT (FIFO depth 8), so
+    nx_<f> == fqd_<f>[la_nx] on every cycle after the first LOAD: cycle-identical, 0 added cycles."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_NXREG = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_NXREG = 0\n) (")
+    fields = sorted(set(re.findall(r"fqd_(\w+)\[la_nx\]", text)))
+    assert fields, "no fqd_*[la_nx] reads"
+    regs, upd = [], []
+    for f in fields:
+        m = re.search(r"\n    reg\s+(\[[^\]]*\]\s*)?fqd_%s\s*\[0:7\];" % re.escape(f), text)
+        assert m, f
+        w = (m.group(1) or "").strip()
+        dm = re.findall(r"if \(la_we\[lw\]\) fqd_%s\[lw\] <= (.*);\n" % re.escape(f), text)
+        cm = re.findall(r"\n\s+fqd_%s\[la_wr\]\s*<= (.*);" % re.escape(f), text)
+        assert len(dm) + len(cm) == 1, (f, dm, cm)
+        regs.append(f"    reg {w + ' ' if w else ''}nx_{f};")
+        if dm:
+            upd.append(f"            nx_{f} <= la_we[la_rd] ? ({dm[0]}) : fqd_{f}[la_rd];")
+        else:
+            upd.append(f"            nx_{f} <= (pend1 && la_wr == la_rd) ? ({cm[0]}) : fqd_{f}[la_rd];")
+    block = ("    // ---- DEC_LA_NXREG (tools/qwen_rom_core_issue_fallback_w12.py apply_nxreg): NEXT fields registered ----\n"
+             + "\n".join(regs) + "\n"
+             + "    always @(posedge clk) if (DEC_LA != 0 && DEC_LA_NXREG != 0 && load) begin\n"
+             + "\n".join(upd) + "\n    end\n")
+    text = _rep(text, "    `undef FP\n", block + "    `undef FP\n")
+    for f in fields:
+        text = text.replace(f"fqd_{f}[la_nx]", f"((DEC_LA_NXREG != 0) ? nx_{f} : fqd_{f}[la_nx])")
+    return text
+
+
+def apply_meif(text: str) -> str:
+    """DEC_LA_MEIF (default 0; coordinator decision 2026-10-06): every core <-> ME-spine handshake crosses a register.
+    The ME spine is a separate die element (the tree / spine datapath), so its interface leaves the core's hardened
+    block through flops: go and the issued fields are registered at the core's output pins (mq_*: captured on the issue
+    edge, held until the next ME issue; go stays raised until the ME's clock enable takes it), and ready / idle /
+    progress are registered at the input pins.  For the two cycles in which the registered status still predates
+    the ME's acceptance (go pending, then the acceptance edge), the core sees the ME as not ready, not idle and with
+    progress 0, so it never issues twice, never passes a wait / barrier / chase on stale status.  Values unchanged;
+    each ME handshake gains its register latency (measured on the token benches)."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_MEIF = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_MEIF = 0\n) (")
+    i = text.index(" u_me (")
+    j = text.index(");", i)
+    inst = text[i:j]
+    fields = re.findall(r"\.(i_\w+)\((me_\w+)\)", inst)
+    widths = {}
+    for _, n in fields:
+        m = re.search(r"\n\s*(?:output\s+)?(?:wire|reg)\s*(\[[^\]]+\])?\s*[^;\n]*\b%s\b[^;]*;" % n, text)
+        assert m, n
+        widths[n] = m.group(1) or ""
+    new = inst
+    for p, n in fields:
+        new = new.replace(f".{p}({n})", f".{p}(mq_{n[3:]})")
+    new = new.replace(".go(me_go)", ".go(me_go_pin)").replace(".ready(me_ready)", ".ready(me_ready_pin)") \
+             .replace(".idle(me_idle)", ".idle(me_idle_pin)").replace(".progress(me_progress)", ".progress(me_progress_pin)")
+    text = text[:i] + new + text[j:]
+    regs = "\n".join(f"    reg {widths[n] + ' ' if widths[n] else ''}mq_{n[3:]};" for _, n in fields)
+    caps = "\n".join(f"            mq_{n[3:]} <= {n};" for _, n in fields)
+    block = f"""    // ---- DEC_LA_MEIF (tools/qwen_rom_core_issue_fallback_w12.py apply_meif): registered ME interface ----
+    wire me_go_pin, me_ready_pin, me_idle_pin;
+    wire [15:0] me_progress_pin;
+{regs}
+    reg me_gop, me_tk_d, me_rdy_q, me_idl_q;
+    reg [15:0] me_prg_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin me_gop <= 1'b0; me_tk_d <= 1'b0; me_rdy_q <= 1'b0; me_idl_q <= 1'b1; me_prg_q <= 16'd0; end
+        else begin
+            me_gop <= me_go ? 1'b1 : (me_en ? 1'b0 : me_gop);       // raised until the ME's enabled clock takes it
+            me_tk_d <= me_gop && me_en;                              // the acceptance edge
+            me_rdy_q <= me_ready_pin; me_idl_q <= me_idle_pin; me_prg_q <= me_progress_pin;
+        end
+    always @(posedge clk) if (me_go) begin
+{caps}
+    end
+    wire me_ifhold = (DEC_LA_MEIF == 2) ? 1'b0 : (me_gop || me_tk_d);   // 2 = NEGATIVE CONTROL: stale status unmasked
+    generate if (DEC_LA_MEIF != 0) begin : g_meif
+        assign me_go_pin = me_gop;
+        assign me_ready = me_rdy_q && !me_ifhold;
+        assign me_idle = me_idl_q && !me_ifhold;
+        assign me_progress = me_ifhold ? 16'd0 : me_prg_q;
+    end else begin : g_nomeif
+        assign me_go_pin = me_go;
+        assign me_ready = me_ready_pin;
+        assign me_idle = me_idle_pin;
+        assign me_progress = me_progress_pin;
+    end endgenerate
+"""
+    # the original field nets keep driving mq_* only through the capture (MEIF) or directly (no MEIF): wire them through
+    passthru = "\n".join(f"    wire {widths[n] + ' ' if widths[n] else ''}mqw_{n[3:]} = (DEC_LA_MEIF != 0) ? mq_{n[3:]} : {n};"
+                         for _, n in fields)
+    # insert the block just before the u_me instance statement (after every declaration it needs)
+    k = text.rindex("\n", 0, text.rindex("\n", 0, i)) if False else text.rfind("\n    ", 0, i)
+    stmt_start = text.rfind(";", 0, i)
+    stmt_start = text.index("\n", stmt_start) + 1
+    text = text[:stmt_start] + block + passthru + "\n" + text[stmt_start:]
+    for _, n in fields:
+        text = text.replace(f"(mq_{n[3:]})", f"(mqw_{n[3:]})")
+    return text
+
+
+def apply_suif(text: str) -> str:
+    """DEC_LA_SUIF (default 0): the DEC_LA_MEIF treatment for the vector stream unit (SU_VEC: ot_hdc_vstream_rt u_su):
+    go and the issued fields from output-pin flops, ready / idle / progress / progress_rows registered at the input
+    pins and masked for the two stale cycles (the SU's clock is never gated, so go is taken on the next edge).
+    Measurement lever for the core re-cut (the cost of an SU kept outside the core block)."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_SUIF = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_SUIF = 0\n) (")
+    gi = text.index("generate if (SU_VEC != 0) begin : g_vsu")
+    i = text.index(" u_su (", gi)
+    j = text.index(");", i)
+    inst = text[i:j]
+    conns = re.findall(r"\.(i_\w+)\(((?:[^()]|\([^()]*\))*)\)", inst)
+    def width(expr):
+        if re.fullmatch(r"\w+", expr):
+            m = re.search(r"\n\s*(?:output\s+)?(?:wire|reg)\s*(\[[^\]]+\])?\s*[^;\n]*\b%s\b[^;]*;" % expr, text)
+            assert m, expr
+            return m.group(1) or ""
+        return ""                                                       # the 1-bit i_asrc expression
+    regs, caps, new = [], [], inst
+    for p, e in conns:
+        w = width(e.strip())
+        regs.append(f"    reg {w + ' ' if w else ''}sq_{p[2:]};\n    wire {w + ' ' if w else ''}sqw_{p[2:]} = (DEC_LA_SUIF != 0) ? sq_{p[2:]} : ({e});")
+        caps.append(f"            sq_{p[2:]} <= {e};")
+        new = new.replace(f".{p}({e})", f".{p}(sqw_{p[2:]})", 1)
+    new = new.replace(".go(su_go)", ".go(su_go_pin)").replace(".ready(su_ready)", ".ready(su_ready_pin)") \
+             .replace(".idle(su_idle)", ".idle(su_idle_pin)").replace(".progress(su_progress)", ".progress(su_progress_pin)") \
+             .replace(".progress_rows(su_rows)", ".progress_rows(su_rows_pin)")
+    text = text[:i] + new + text[j:]
+    block = (f"""    // ---- DEC_LA_SUIF (tools/qwen_rom_core_issue_fallback_w12.py apply_suif): registered SU interface ----
+    wire su_go_pin, su_ready_pin, su_idle_pin;
+    wire [15:0] su_progress_pin, su_rows_pin;
+""" + "\n".join(regs) + f"""
+    reg su_gop, su_rdy_q, su_idl_q; reg [15:0] su_prg_q, su_rws_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin su_gop <= 1'b0; su_rdy_q <= 1'b0; su_idl_q <= 1'b1; su_prg_q <= 16'd0; su_rws_q <= 16'd0; end
+        else begin su_gop <= su_go; su_rdy_q <= su_ready_pin; su_idl_q <= su_idle_pin; su_prg_q <= su_progress_pin; su_rws_q <= su_rows_pin; end
+    reg su_tk_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) su_tk_d <= 1'b0; else su_tk_d <= su_gop;
+    always @(posedge clk) if (su_go) begin
+""" + "\n".join(caps) + f"""
+    end
+    wire su_ifhold = (DEC_LA_SUIF == 2) ? 1'b0 : (su_gop || su_tk_d);   // 2 = NEGATIVE CONTROL: stale status unmasked
+    if (DEC_LA_SUIF != 0) begin : g_suif
+        assign su_go_pin = su_gop;
+        assign su_ready = su_rdy_q && !su_ifhold;
+        assign su_idle = su_idl_q && !su_ifhold;
+        assign su_progress = su_ifhold ? 16'd0 : su_prg_q;
+        assign su_rows = su_ifhold ? 16'd0 : su_rws_q;
+    end else begin : g_nosuif
+        assign su_go_pin = su_go;
+        assign su_ready = su_ready_pin;
+        assign su_idle = su_idle_pin;
+        assign su_progress = su_progress_pin;
+        assign su_rows = su_rows_pin;
+    end
+""")
+    # inside the g_vsu generate block, right before the instance statement
+    k = text.rfind("\n", 0, text.rfind("ot_hdc_vstream_rt #", 0, i))
+    text = text[:k + 1] + block + text[k + 1:]
+    return text
