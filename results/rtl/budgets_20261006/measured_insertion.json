@@ -2584,26 +2584,26 @@
    "budget": null
   },
   "hfd_sfu": {
-   "job": "hbm_sfu_quarter_r24_1ad3621a6",
-   "source_commit": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
+   "job": "hbm_sfu_quarter_r23_5b48044bf",
+   "source_commit": "5b48044bf8b8057a25df074d564427a85e225784",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_quarter_r24_1ad3621a6",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_quarter_r23_5b48044bf",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T10:42:58-07:00",
+   "measured_at": "2026-10-07T11:06:43-07:00",
    "ss": {
-    "mean": 1766,
-    "min": 1721,
-    "max": 1990
+    "mean": 3860,
+    "min": 3762,
+    "max": 4623
    },
    "ff": {
-    "mean": 1233,
-    "min": 1195,
-    "max": 1423
+    "mean": 2534,
+    "min": 2445,
+    "max": 3288
    },
    "boundary_n": 4096,
    "budget": null
   }
  },
- "updated": "2026-10-07T10:42:58-07:00"
+ "updated": "2026-10-07T11:06:43-07:00"
 }
