@@ -566,22 +566,22 @@
    "budget": null
   },
   "dsfd_coll_lane_e": {
-   "job": "s81ph-dsfd_coll_lane_e-34b3e75dd",
-   "source_commit": "34b3e75dd75e44918a63da02783149aa82ee6878",
+   "job": "s81ph-dsfd_coll_lane_e-46f583118",
+   "source_commit": "46f5831182b5559707325a1875fc1a2a7c4d6dda",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-34b3e75dd",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-46f583118",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T20:24:05-07:00",
+   "measured_at": "2026-10-07T00:18:15-07:00",
    "ss": {
-    "mean": 471,
-    "min": 436,
-    "max": 622
+    "mean": 573,
+    "min": 465,
+    "max": 816
    },
    "ff": {
-    "mean": 299,
-    "min": 269,
-    "max": 414
+    "mean": 379,
+    "min": 293,
+    "max": 587
    },
    "boundary_n": 3246,
    "budget": null
@@ -1503,7 +1503,49 @@
    },
    "boundary_n": 2063,
    "budget": null
+  },
+  "ot_dsrom_su_softmax_exp_tile": {
+   "job": "dsrom_softmax_safe_exp_d806a0254",
+   "source_commit": "d806a025405153bb486f230122ca409518abb578",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_exp_d806a0254",
+   "clock": "clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T00:25:04-07:00",
+   "ss": {
+    "mean": 355,
+    "min": 344,
+    "max": 365
+   },
+   "ff": {
+    "mean": 218,
+    "min": 210,
+    "max": 226
+   },
+   "boundary_n": null,
+   "budget": null
+  },
+  "ot_dsrom_su_softmax_div_tile": {
+   "job": "dsrom_softmax_safe_div_d806a0254",
+   "source_commit": "d806a025405153bb486f230122ca409518abb578",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div_d806a0254",
+   "clock": "clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T00:27:34-07:00",
+   "ss": {
+    "mean": 187,
+    "min": 180,
+    "max": 193
+   },
+   "ff": {
+    "mean": 113,
+    "min": 108,
+    "max": 117
+   },
+   "boundary_n": null,
+   "budget": null
   }
  },
- "updated": "2026-10-07T00:16:12-07:00"
+ "updated": "2026-10-07T00:27:34-07:00"
 }
