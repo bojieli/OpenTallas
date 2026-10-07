@@ -79,7 +79,7 @@ def channel_path(start, end, boxes, outline, clearance_um):
 def size_chain(*, path, data_bits, slice_bits, slice_area_um2,
                slice_width_um, slice_height_um, channel_tracks,
                period_ps, reverse_hops, consumer_cycles, transactions,
-               max_segment_um=300.0, endpoint_max_um=100.0):
+               max_segment_um=300.0, endpoint_max_um=100.0, flow_control="credit"):
     """Price a candidate before RTL. All cycles use the supplied same-clock domain.
 
     Pin-abutting first/last registers are required. The path joins their centres;
@@ -96,15 +96,21 @@ def size_chain(*, path, data_bits, slice_bits, slice_area_um2,
         if a[0]!=b[0] and a[1]!=b[1]:
             raise ValueError('channel path must be rectilinear')
         segments.append(abs(a[0]-b[0])+abs(a[1]-b[1]))
+    if flow_control not in ('credit','fixed_stream'):
+        raise ValueError('flow_control must be credit or fixed_stream')
+    if flow_control == 'fixed_stream' and (reverse_hops or consumer_cycles):
+        raise ValueError('fixed_stream has no reverse credit or receive service')
     # Keep a register at each turn: straight-line sampling cannot cut a corner.
     links=sum(math.ceil(s/max_segment_um) for s in segments)
     stations=links+1
     slices=math.ceil(data_bits/slice_bits)
-    depth=stations+reverse_hops+consumer_cycles+1
+    depth=stations+reverse_hops+consumer_cycles+1 if flow_control == "credit" else 0
     # One valid per independently captured slice; one credit-return bit per beat.
-    boundary_bits=data_bits+slices+1
+    boundary_bits=data_bits+slices+1 if flow_control == "credit" else data_bits
     return dict(schema='opentallas.hbm_relay_chain_model.v1', default_off=True,
-        status='sized-candidate-not-physical-or-protocol-qualified', MACs_per_cycle=0,
+        status='sized-candidate-not-physical-or-protocol-qualified', flow_control=flow_control,
+        fixed_stream_contract='data_bits includes packed valid/identity/fault; every bit and joined stream requires balanced latency'
+            if flow_control == 'fixed_stream' else None, MACs_per_cycle=0,
         compute_intensity=0, memory_bytes_per_cycle=0,
         boundary_bits_per_cycle=boundary_bits, data_bytes_per_cycle=data_bits/8,
         slices_per_station=slices, station_count=stations, replica_count=stations*slices,
@@ -117,17 +123,17 @@ def size_chain(*, path, data_bits, slice_bits, slice_area_um2,
         endpoint_max_design_um=endpoint_max_um,
         latency_cycles=stations, latency_ps=stations*period_ps,
         token_latency_ps=transactions*stations*period_ps,
-        credit_round_trip_cycles=stations+reverse_hops+consumer_cycles,
+        credit_round_trip_cycles=stations+reverse_hops+consumer_cycles if flow_control == "credit" else 0,
         required_receive_beats=depth, receive_storage_bits=depth*data_bits,
-        fanout_per_credit_counter=slices, mux_inputs_per_receive_slice=depth,
+        fanout_per_credit_counter=slices if flow_control == "credit" else 0, mux_inputs_per_receive_slice=depth,
         demux_outputs_per_receive_slice=depth,
         required_gates=['actual per-bit endpoint reach <= endpoint_max_design_um',
             'all placed slice boxes legal with reserved clock/reset/PDN channels',
             'source-pinned same-interface routed SS/FF station views',
-            'implemented valid/credit/identity/reset protocol exactness and negative control',
+            'implemented valid/identity/reset exactness and negative control; credit ownership where applicable',
             'real clock-domain and original-sink reference binding',
             'per-path token traversal counts composed in system model',
-            'receive FIFO area, routing, and SS/FF qualification'])
+            'receive FIFO area/routing/SS/FF qualification where credit applies; fixed-stream balanced joining otherwise'])
 
 
 def spatial_slices(source_pins, sink_pins, source_box, sink_box, *,
