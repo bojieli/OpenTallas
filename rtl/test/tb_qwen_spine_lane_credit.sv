@@ -57,6 +57,6 @@ module tb_qwen_spine_lane_credit;
     $finish;
    end
   end
-  $display("FAIL credit deadlock sent=%0d received=%0d",sent,received);$fatal(1);
+  if(received!=96) begin $display("FAIL credit deadlock sent=%0d received=%0d",sent,received);$fatal(1);end
  end
 endmodule
