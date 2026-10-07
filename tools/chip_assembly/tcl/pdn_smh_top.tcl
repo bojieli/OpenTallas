@@ -27,4 +27,5 @@ foreach inst [find_macros] {
 if {[llength [dict keys $blocks]] > 0} {
   define_pdn_grid -macro -cells [dict keys $blocks] -halo {1 1 1 1} -voltage_domains {CORE} -name {blocks}
   add_pdn_connect -grid {blocks} -layers {M6 M7}
+  add_pdn_connect -grid {blocks} -layers {M7 M8}   ;# (m3f) tiles / front strips expose M7 stripes
 }

@@ -1107,8 +1107,6 @@ def cmd_block(a):
                    f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        else:
-            extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
         sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
         (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
