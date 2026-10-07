@@ -1,52 +1,70 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r38_88136dcd2/routes/hbm_stn_r38_88136dcd2_cal/work/orfs/results/asap7/opentallas_hfd_stn_r38_asap7_hv_hbm_stn_r38_88136dcd2_cal/base",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_bud2/routes/hbm_stn_r38_88136dcd2_bud2_cal/work/orfs/results/asap7/opentallas_hfd_stn_r38_asap7_hv_hbm_stn_r38_88136dcd2_bud2_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
- "clock": "ck",
+ "clock": "core_clk",
  "parasitics": "placement-estimated",
  "ss": {
   "boundary": {
    "n": 512,
-   "mean": 131.2,
-   "min": 127.8,
-   "max": 136.2
+   "mean": 135.8,
+   "min": 131.0,
+   "max": 140.1
   },
   "all": {
    "n": 512,
-   "mean": 131.2,
-   "min": 127.8,
-   "max": 136.2
+   "mean": 135.8,
+   "min": 131.0,
+   "max": 140.1
   },
   "errors": []
  },
  "ff": {
   "boundary": {
    "n": 512,
-   "mean": 79.7,
-   "min": 76.2,
-   "max": 84.5
+   "mean": 80.7,
+   "min": 75.6,
+   "max": 86.2
   },
   "all": {
    "n": 512,
-   "mean": 79.7,
-   "min": 76.2,
-   "max": 84.5
+   "mean": 80.7,
+   "min": 75.6,
+   "max": 86.2
   },
   "errors": []
  },
  "env": {
-  "CK_SS_MEAN": 131,
-  "CK_SS_ALL_MEAN": 131,
-  "CK_SS_MIN": 128,
-  "CK_SS_ALL_MIN": 128,
-  "CK_SS_MAX": 136,
-  "CK_SS_ALL_MAX": 136,
-  "CK_FF_MEAN": 80,
-  "CK_FF_ALL_MEAN": 80,
+  "CK_SS_MEAN": 136,
+  "CK_SS_ALL_MEAN": 136,
+  "CK_SS_MIN": 131,
+  "CK_SS_ALL_MIN": 131,
+  "CK_SS_MAX": 140,
+  "CK_SS_ALL_MAX": 140,
+  "CK_FF_MEAN": 81,
+  "CK_FF_ALL_MEAN": 81,
   "CK_FF_MIN": 76,
   "CK_FF_ALL_MIN": 76,
-  "CK_FF_MAX": 84,
-  "CK_FF_ALL_MAX": 84
+  "CK_FF_MAX": 86,
+  "CK_FF_ALL_MAX": 86
+ },
+ "budget_accepted": {
+  "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it",
+  "sheet_ss": 477.3,
+  "sheet_grade": "target",
+  "target_ss": 477.3,
+  "measured": {
+   "ss": 136,
+   "ff": 81,
+   "ss_min": 131,
+   "ss_max": 140,
+   "ff_min": 76,
+   "ff_max": 86,
+   "grade": "measured",
+   "source": "closure-loop calibrate hbm_stn_r38_88136dcd2_bud2 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_bud2)",
+   "over_target": false
+  },
+  "sheets_ref": "5e98d59477e09aff5b9365ee25800f13a6f0c590"
  }
 }
