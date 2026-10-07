@@ -1779,8 +1779,52 @@
      "note": "+46 cycles x 265; not summed"
     },
     {
-     "id": "cdc_sram_ii3_rate_cap",
-     "item": "Packet-SRAM receive queue and candidate protected CDC drain at II=3 (1/3 line rate per port)",
+     "id": "cdc_refill_ii1",
+     "item": "Protected CDC II=1 refill (B prime): full line rate, +2 empty-start cycles a pass x 610 passes",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.017,
+      "MTP_step": 1.017
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "status, normal_timing",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      },
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/final_pass/record.json",
+       "pointer": "passed",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      },
+      {
+       "file": "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json",
+       "pointer": "comparison.Bprime_refill_II1",
+       "commit": "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
+      }
+     ],
+     "note": "RESOLVES the CDC rate cap: measured RTL on main (one full 545x64 protected CDC with the actual die reset entry, final_pass passed; status II1_REFILL_CANDIDATE_NOT_ADOPTED); recommended by the v2 design over the 3-bank rotation (0 added state bits, ~60-100 um2 of logic vs +12,093 um2). Latency +1.017 us a token. SS timing unmeasured (see cdc_refill_ss_timing); replaces the +2 x 265 collective_sram_protected term in the CDC compositions"
+    },
+    {
+     "id": "cdc_refill_ss_timing",
+     "item": "SS/FF timing of the CDC refill",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "physical_risk",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      }
+     ],
+     "note": "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving fix (registered head-pointer address) has been proposed (v2 design 2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only))"
+    },
+    {
+     "id": "packet_sram_ii3_rate_cap",
+     "item": "Packet-SRAM receive queue still drains at II=3 (1/3 line rate per port)",
      "status": "gated-unknown",
      "effect": null,
      "role": "gate",
@@ -1791,11 +1835,26 @@
        "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
       }
      ],
-     "note": "II=3 rate cap: +30.78 us AR / +172 us MTP unless the 3-bank rotation (II=1) lands for both the CDC and the packet SRAM; the rotation itself costs +2 cycles/pass (+1.02 us) and +12,093 um2. Basis: measured receive streaming 18,470 cycles a AR token, 103,196 a MTP step, tripled at II=3 (+6.48 % AR, +16.37 % MTP step on the gate). Not summed in unified_candidate; see compositions unified_candidate_ii3_cap / unified_candidate_ii1_rotation"
+     "note": "GATED until the same II=1 refill is applied to the packet SRAM: while it stays at II=3 the port is capped at a third of line rate even with the CDC refilled, +30.78 us AR / +172 us MTP on the measured receive streaming (18,470 cycles a AR token, 103,196 a MTP step; +6.48 % AR, +16.37 % MTP step on the gate)"
+    },
+    {
+     "id": "credit_producer_native",
+     "item": "Native credit producer for the full-rate credit contract",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "actual_credit_producer",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      }
+     ],
+     "note": "missing in the native RTL (today a testbench preload); full rate needs >= 159 credits in flight against the 159-cycle credit round trip, with an acknowledged grant/retirement protocol. The full-rate contract is gated on it"
     },
     {
      "id": "cdc_sram_ii1_rotation",
-     "item": "3-bank rotation (II=1) for the CDC and the packet SRAM: +2 cycles a pass x 610 passes",
+     "item": "3-bank rotation (II=1), fallback only",
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
@@ -1810,7 +1869,7 @@
        "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
       }
      ],
-     "note": "design-model recommendation, no RTL; +12,093.2 um2; replaces the +2 x 265 collective_sram_protected term in the both-ways compositions (it covers every TX and RX CDC pass of the 305 crossings)"
+     "note": "v1 design (historical record kept); same latency, +12,093.2 um2; the v2 design keeps it only if the refill cannot close SS after the registered-address fix"
     },
     {
      "id": "su_reducer_safe",
@@ -1935,7 +1994,9 @@
      "MTP_tok_s": 3526.2,
      "status": "priced-candidate",
      "gated_by": [
-      "cdc_sram_ii3_rate_cap",
+      "cdc_refill_ss_timing",
+      "packet_sram_ii3_rate_cap",
+      "credit_producer_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -1953,7 +2014,9 @@
      "tau": 4.159,
      "status": "priced-candidate",
      "gated_by": [
-      "cdc_sram_ii3_rate_cap",
+      "cdc_refill_ss_timing",
+      "packet_sram_ii3_rate_cap",
+      "credit_producer_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -1963,15 +2026,18 @@
      ],
      "note": "as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)"
     },
-    "unified_candidate_ii3_cap": {
+    "unified_candidate_refill_cdc_only": {
      "AR_us": 592.422,
      "MTP_step_us": 1274.955,
      "AR_tok_s": 1688.0,
      "MTP_tok_s": 3262.1,
      "tau": 4.159,
      "status": "priced-candidate",
-     "case": "II=3 rate cap stands (no rotation)",
+     "case": "refill lands for the CDC only; the packet SRAM stays at II=3 and caps the port",
      "gated_by": [
+      "cdc_refill_ss_timing",
+      "packet_sram_ii3_rate_cap",
+      "credit_producer_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -1979,22 +2045,31 @@
       "die_clock_plan",
       "hbm_full_die"
      ],
-     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes plus the II=3 serialisation cost",
-     "record": {
-      "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
-      "pointer": "options",
-      "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
-     }
+     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the refill's +2 cycles x 610 passes plus the packet-SRAM II=3 serialisation cost",
+     "record": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "status",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      },
+      {
+       "file": "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json",
+       "pointer": "comparison",
+       "commit": "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
+      }
+     ]
     },
-    "unified_candidate_ii1_rotation": {
+    "unified_candidate_refill_both": {
      "AR_us": 561.642,
      "MTP_step_us": 1102.965,
      "AR_tok_s": 1780.5,
      "MTP_tok_s": 3770.7,
      "tau": 4.159,
      "status": "priced-candidate",
-     "case": "3-bank rotation lands for both the CDC and the packet SRAM (II=1)",
+     "case": "refill lands for both the CDC and the packet SRAM (full line rate)",
      "gated_by": [
+      "cdc_refill_ss_timing",
+      "credit_producer_native",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -2002,16 +2077,25 @@
       "die_clock_plan",
       "hbm_full_die"
      ],
-     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes",
-     "record": {
-      "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
-      "pointer": "options",
-      "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
-     }
+     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the refill's +2 cycles x 610 passes; full rate also requires the native credit producer (gated)",
+     "record": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "status",
+       "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
+      },
+      {
+       "file": "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json",
+       "pointer": "comparison",
+       "commit": "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
+      }
+     ]
     }
    },
    "gates": [
-    "cdc_sram_ii3_rate_cap",
+    "cdc_refill_ss_timing",
+    "packet_sram_ii3_rate_cap",
+    "credit_producer_native",
     "su_reducer_safe",
     "su_c12_margin",
     "su_full_ddiv31",
@@ -2230,6 +2314,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "1e1ca7c52180ce6a265a7db8a7a5b861c618f5eb62dddf7444e1fbf6280b09e3"
+  "sha256": "255062ffb4b8cf3067151e4b6e498b7584ac243dcea4df0715a93689450da31f"
  }
 }

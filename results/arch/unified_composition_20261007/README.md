@@ -34,8 +34,8 @@ Every line of the three targets carries a status, its effect on the single-user 
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
 | HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
-| HBM DS 1M | unified, II=3 cap stands | 1,688.0 | 3,262.1 | packet-SRAM receive queue and candidate protected CDC drain at II=3, a third of line rate per port: +30.78 µs AR / +172 µs MTP on the measured receive streaming of 18,470 / 103,196 cycles. The rotation-latency term below is also included. Source: CDC design b49366616 (`claude/hbm-collective-cdc-design-20261007`, not on main). |
-| HBM DS 1M | unified, 3-bank rotation (II=1) | 1,780.5 | 3,770.7 | the rotation lands for both the CDC and the packet SRAM: +2 cycles a pass (+1.02 µs), replacing the +2 × 265 SRAM term; +12,093 µm² |
+| HBM DS 1M | unified, refill in the CDC only | 1,688.0 | 3,262.1 | The CDC rate cap is resolved by the II=1 refill (B′), measured in RTL on main at 9ead91a15; SS timing is unmeasured, with a risk on the 64:1 × 648-bit read-address path and a proposed function-preserving fix. The packet SRAM is still at II=3, which is gated: +30.78 µs AR / +172 µs MTP on 18,470 / 103,196 cycles of measured receive streaming. Refill latency: +1.02 µs. |
+| HBM DS 1M | unified, refill in both the CDC and the packet SRAM | 1,780.5 | 3,770.7 | Full line rate. +1.02 µs (2 cycles a pass × 610 passes) replaces the +2 × 265 SRAM term; ~60–100 µm² of logic, no added state. Recommended by the v2 design (2ae0d7d33, branch only). The full-rate credit contract is gated: the native credit producer is missing, and today a testbench preloads the credits. The 3-bank rotation (+12,093 µm²) is the fallback only. |
 
 DS ROM / HBM, per user, both sides candidates:
 
