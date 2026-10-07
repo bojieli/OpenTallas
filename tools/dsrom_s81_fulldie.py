@@ -2739,7 +2739,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3162,6 +3162,8 @@ HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
+HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
+                                #   the corridor inside the HC column (out of the VCH-edge lane)
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
                                 #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
@@ -3185,7 +3187,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else ''))
 
 
 def set_cc_reach(um):
@@ -3561,6 +3563,26 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         k_ = m.setdefault('_hb_lane', {}).setdefault(side, [0])
         # v2 GRT i50 (r9, 2fcb276fc): overflow 312 / 308 / 768 in the VCH west strip (x_vch + 0..410 um, M7 / M9 up
         # to 1.19) where the wide hub-bus lanes ran 12 um apart: lanes now HUB_LANE_PITCH apart
+        if side == 'hc' and HC_XFACE:
+            # S81-RERUN v7 (v6b GRT hotspot x 16.5-17.5 / y 10.5-12.0 mm): the hc_s <-> hc_n exchange crossed the
+            # corridor in a VCH-edge lane, on top of the corridor chains' turns.  It now runs face to face, straight
+            # across the corridor inside the HC column (hc_s N face -> hc_n S face), one x per direction, spread
+            # over the column width; its common-clock stations stand in the corridor.
+            xx = A.x + A.w * (0.3 if a_ == 'hc_s' else 0.7)
+            path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
+            L = _poly_len(path)
+            name = f'hb_{a_}_{b_}'
+            sts = CH8.run(name, [bits], path, [cor['hcc']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
+            prev = (A.name, pa)
+            for k, (it, s_, hop) in enumerate(sts):
+                it.kind, it.domain = 'hstn', A.domain
+                it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
+                CH8.bus(f'{name}_d{k}', 'hub', bits, [prev, (it.name, 'di')])
+                prev = (it.name, 'dq')
+            CH8.bus(f'{name}_d{len(sts)}', 'hub', bits, [prev, (Bk.name, pb)])
+            m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=len(sts),
+                                                          floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
+            return
         if side == 'sp':
             vx = m['x_vch'] + 30.0 + HUB_LANE_PITCH * k_[0]
         elif side == 'hc':
@@ -4552,14 +4574,17 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
+                    'inside the HC column, face to face (default off: a VCH-edge lane)')
     return ap
 
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     set_cc_reach(a.cc_reach_um)
-    global VCH_INTERLEAVE, LINK_FIX
+    global VCH_INTERLEAVE, LINK_FIX, HC_XFACE
     VCH_INTERLEAVE = bool(a.vch_interleave)
+    HC_XFACE = bool(getattr(a, 'hc_xface', False))
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
