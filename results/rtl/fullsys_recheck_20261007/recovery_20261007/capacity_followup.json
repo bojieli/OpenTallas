@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.fullsys_recheck.capacity_followup.v1",
+  "failure_utc": "2026-10-07T15:42:35Z",
+  "result": "BUILD_CAPACITY_FAILURE_NOT_RTL_VERDICT",
+  "guard_available_GiB": 61,
+  "DS1M_build_exit": 2,
+  "full_failure_log_remote": "lorentz-margin/work/build_o0_memguard_154235.log",
+  "measured_maximum_RSS_kB": 468774208,
+  "Qwen8K": "already launched by existing after.sh before queue termination; progressing with retained objects at -j2; kept alive",
+  "DS1M_next": "queued after Qwen8K via native admit_core guard, reserving measured447GiB peak plus actual10percent host headroom, and measured disk inventory; same sources and completed objects, distinct logs",
+  "runner": "runners/recover_ds_stage.sh",
+  "no_arbitrary_timeout": true,
+  "qualification": "one retained stage only, not complete token or system"
+}
