@@ -98,7 +98,7 @@ QWEN_R19 = dict(QWEN_R17B, r19=True)     # r18 + full tiles with KV slices + per
 QWEN_R20C = dict(QWEN_R19, tree_interleave=True)          # r19 + interleaved tree pins (both tile masters)
 QWEN_R20F1 = dict(QWEN_R20C, bw_wp=1)                     # r20c + a block-word waypoint in every corridor crossed
 QWEN_R20G = dict(QWEN_R20C, su_core_clock=True)          # r20c + SU64/SFU and VM on the 1.2 GHz core clock
-QWEN_R21 = dict(QWEN_R20C, slab_bw_m8=True, relay_pitch=300.0)  # r20c + slab words on M8 + relays on every > 350 um wire
+QWEN_R21 = dict(QWEN_R20C, slab_bw_m8=True, relay_pitch=430.56)  # r20c + slab words on M8 + relays at the measured 430.56 um reach
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref

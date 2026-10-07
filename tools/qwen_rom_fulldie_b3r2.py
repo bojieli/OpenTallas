@@ -282,7 +282,7 @@ def _io_south(v):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        for mn, port, centre in (('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 240.0),
+        for mn, port, centre in (('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
                                  ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
                                  ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)):
             M = o.get(mn)
@@ -340,6 +340,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     Not relayed: clock / reset trees, the tile tap and KV landing hops (<= 350 um by construction), CDC / HBM strip
     words (<= 350 um) and the DFI (417 um, HBM PHY interface timing, priced by the controller)."""
     import bisect
+    RMAX = max(RELAY_MAX_UM, pitch)   # a wire is relayed only when longer than the relay pitch
     pos = _pin_pos(v, m)
     by = {i.name: i for i in m['insts']}
     g = m['geo']
@@ -491,7 +492,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             continue
         P0, P1 = pos(*eps[0]), pos(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
-        if d <= RELAY_MAX_UM:
+        if d <= RMAX:
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         path = poly_of(cl, P0, P1)
@@ -549,7 +550,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def hops_of(pl):
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         return [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
-    # ---- pass 2: a bus whose relays could not keep <= RELAY_MAX_UM hops (crowded lane, a spine macro in the way)
+    # ---- pass 2: a bus whose relays could not keep <= RMAX hops (crowded lane, a spine macro in the way)
     # is re-placed by a breadth-first search over every free relay spot of the die: wires may cross any macro on
     # M8/M9, only the relays need free area, so the fewest-relay chain with every hop <= pitch is found exactly
     import numpy as np
@@ -602,7 +603,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     repaired, unrepaired = [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
-        if max(hs) <= RELAY_MAX_UM + 25.0:
+        if max(hs) <= RMAX + 25.0:
             continue
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
@@ -619,7 +620,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     lst = grid.get((gx, gy), [])
                     if r_ in lst:
                         lst.remove(r_)
-        D = RELAY_MAX_UM - max(W, H) / 2 + 26.0
+        D = RMAX - max(W, H) / 2 + 26.0
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
         ok_cache = {}
@@ -745,7 +746,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
-    m['r21_relays'] = dict(pitch_um=pitch, max_um=RELAY_MAX_UM, relays=len(insts), masters=len(masters_needed),
+    m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),

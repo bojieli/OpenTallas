@@ -247,7 +247,8 @@ def _qwen_relays(clk, cyc):
                 AR_tok_s=round(clk / (cyc + add), 1), delta_AR_tok_s=round(clk / (cyc + add) - clk / cyc, 1),
                 delta_pct=round(100 * (cyc / (cyc + add) - 1), 2),
                 alternatives=r.get("alternatives_priced_not_built"),
-                status="PRICED: composed into the headline when the r21 die-top route closes (GRT/DRT/STA pending)")
+                decision=r.get("decision"),
+                status="PRICED, PENDING OWNER REVIEW: not composed into the published headline (r21 die-top route GRT/DRT/STA pending)")
 
 
 def qwen_rom():

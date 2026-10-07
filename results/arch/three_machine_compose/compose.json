@@ -376,14 +376,14 @@
    },
    "r21_die_relays": {
     "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
-    "sha256": "ce1dab0e3e61d6b9db8c432464b5ef09f79cc2dd4f2af434bdd0bc0468461be6",
-    "relays": 14395,
+    "sha256": "34cab402846ca3f4dd74d8594131986656ee3aabb7f76040f6957fbb52c6c8cd",
+    "relays": 8965,
     "stages_r21": {
-     "bd": 101,
-     "tree": 38,
-     "tws": 116,
-     "ord": 13,
-     "link": 88
+     "bd": 77,
+     "tree": 21,
+     "tws": 93,
+     "ord": 10,
+     "link": 72
     },
     "stages_rtl": {
      "bd": 41,
@@ -392,26 +392,16 @@
      "ord": 7,
      "link": 46
     },
-    "delta_per_me_op": 162,
-    "delta_link_per_traversal": 42,
-    "cycles": 38178,
-    "token_cycles": 232404,
-    "AR_tok_s": 5163.4,
-    "delta_AR_tok_s": -1014.9,
-    "delta_pct": -16.43,
-    "alternatives": {
-     "pitch_350": {
-      "cycles_per_ar_token": 35070,
-      "delta_per_me_op": 150,
-      "delta_link": 35
-     },
-     "pitch_430_measured_reach": {
-      "cycles_per_ar_token": 22487,
-      "delta_per_me_op": 95,
-      "delta_link": 26
-     }
-    },
-    "status": "PRICED: composed into the headline when the r21 die-top route closes (GRT/DRT/STA pending)"
+    "delta_per_me_op": 95,
+    "delta_link_per_traversal": 26,
+    "cycles": 22487,
+    "token_cycles": 216713,
+    "AR_tok_s": 5537.3,
+    "delta_AR_tok_s": -641.1,
+    "delta_pct": -10.38,
+    "alternatives": null,
+    "decision": "coordinator 2026-10-06 23:10 PT: relay pitch = the measured 430.56 um corridor-gate reach (under the measured 504 um SS reach: every hop closes by measurement) instead of the owner fast rule ~300 um; PENDING OWNER REVIEW",
+    "status": "PRICED, PENDING OWNER REVIEW: not composed into the published headline (r21 die-top route GRT/DRT/STA pending)"
    }
   },
   "token_cycles": 194226,
@@ -433,7 +423,7 @@
    "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
    "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
-   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "ce1dab0e3e61d6b9db8c432464b5ef09f79cc2dd4f2af434bdd0bc0468461be6",
+   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "34cab402846ca3f4dd74d8594131986656ee3aabb7f76040f6957fbb52c6c8cd",
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
    "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
    "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
@@ -614,7 +604,7 @@
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
   "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
   "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
-  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "ce1dab0e3e61d6b9db8c432464b5ef09f79cc2dd4f2af434bdd0bc0468461be6",
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "34cab402846ca3f4dd74d8594131986656ee3aabb7f76040f6957fbb52c6c8cd",
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
   "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
   "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
@@ -624,6 +614,6 @@
   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "a69c08c6f9d60a6e3521fb0a140cf90de7781c982e3496e47200ebfe590fbeb8"
+  "tools/three_machine_compose.py": "008b6ac5f35b24ea0398e23e57d74d9a013a35c1a6e429239a3877d093f1a2b5"
  }
 }
