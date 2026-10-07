@@ -130,3 +130,14 @@ removed. The hbglue failure and cancellation race evidence are in
 ```
 python3 -m unittest discover -s tools/closure_loop -p test_reliability.py -v
 ```
+
+`recover-eco-overlays hbglue_cl_8ddc70024` is a narrowly scoped, one-shot recovery
+for the recorded missing-overlay failure (-340500.58/-59.43 ps, zero cells).
+It refuses other jobs, changed verdicts, installed ECOs, or a repeated request.
+It verifies the pinned original ODB/SPEF/SDC and measured overlay hashes, archives
+the failed state and original helper scripts, and hashes the entire failed ECO.
+The new output is `cl/eco-overlay-recovery-a2/candidate`; the old `cl/eco` remains
+untouched. The request resumes at verdict, retaining the original source and
+bench evidence. Admission, sign-off, conditional re-export, re-verdict and
+collection remain normal loop stages. Inputs are checked again before ECO and
+installation. Legacy automatic ECO requeues cannot repeat this explicit attempt.
