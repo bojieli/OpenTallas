@@ -914,8 +914,17 @@ def cmd_daemon(a):
     DROP.mkdir(parents=True, exist_ok=True)
     fleet = Fleet()
     log(f"closure-loop daemon up (pid {os.getpid()}, interval {a.interval}s, state {STATE})")
+    recon = None
+    last_recon = 0.0
     while True:
         t0 = time.time()
+        # hourly: reconcile the shared experiment register (reconcile.py; never kills anything), in the background
+        if (recon is None or recon.poll() is not None) and t0 - last_recon >= 3600:
+            last_recon = t0
+            out = open(STATE / "reconcile_last.json", "w")
+            recon = subprocess.Popen([sys.executable, str(HERE / "reconcile.py")], stdout=out,
+                                     stderr=subprocess.STDOUT)
+            log("register reconcile started (hourly)")
         tick(fleet)
         (STATE / "heartbeat").write_text(now_iso() + "\n")
         time.sleep(max(5, a.interval - (time.time() - t0)))
