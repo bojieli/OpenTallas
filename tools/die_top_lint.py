@@ -39,6 +39,7 @@ import hashlib
 import json
 import math
 import re
+import shlex
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -53,6 +54,7 @@ import hbm_accel_die_fp as H  # noqa: E402
 Q = S.Q          # main's qwen_rom_fulldie (esc, pin_rects); the Qwen DIE generator is loaded separately (load_qwen)
 
 OUT = 'results/rtl/die_top_lint_20261006'
+S81_OPTS = ''
 
 
 def sha(rel):
@@ -496,7 +498,11 @@ def build(die, top_fix=False):
     global TOP_FIX
     TOP_FIX = top_fix
     if die.startswith('s81r8'):
-        S.configure(die.split('_', 1)[1], 'r8')
+        if S81_OPTS:          # the die variant of a recorded case (tools/dsrom_s81_fulldie.py die options)
+            S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(
+                shlex.split(S81_OPTS) + ['--gen', 'r8', '--die', die.split('_', 1)[1]]))
+        else:
+            S.configure(die.split('_', 1)[1], 'r8')
         m = S.build()
         S.finalize_r8(m)
         R8[die] = m
@@ -1971,11 +1977,14 @@ def main(argv=None):
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
+    ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '
+                    '"--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave"')
     ap.add_argument('--tag', default='', help='output name tag (e.g. _r15)')
     ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r16g)')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
     a = ap.parse_args(argv)
-    global VARIANT
+    global VARIANT, S81_OPTS
+    S81_OPTS = a.s81_opts
     VARIANT = a.variant
     global QWEN_REF, QWEN_RECIPE
     QWEN_REF = a.qwen_ref

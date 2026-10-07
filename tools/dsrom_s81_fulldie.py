@@ -2668,14 +2668,18 @@ def build_r8(variant=None):
         for i, (kind, m_) in enumerate(stack):
             if side == 'W':
                 x, orient = x_lw, ('R0' if kind == 'serdes' else 'MY')
+                if LINK_FIX and kind == 'serdes':       # ck on the die-edge face: the ck relay takes the edge side
+                    x = dn(x_lw + LINK_COL - m_['w'], GX)
             else:
                 x, orient = up(x_le + LINK_COL - m_['w'], GX), ('MY' if kind == 'serdes' else 'R0')
+                if LINK_FIX and kind == 'serdes':
+                    x = up(x_le, GX)
             it = Inst(f'lk_{side}{i}', m_['name'], x, y, m_['w'], m_['h'], orient, kind='link', region='link',
                       domain='link')
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', link_fix=LINK_FIX, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3087,6 +3091,8 @@ def buses_r8(m):
 
 LANES_VCH, LANES_CORR = 26, 16
 VCH_INTERLEAVE = False          # --vch-interleave (S81-RERUN, default off): strided VCH lane order
+LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
+                                #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
 HUB_LANE_PITCH = 72.0           # r9 hub-bus lane spacing in the VCH (was 12 um: v2 GRT overflow in the VCH west strip)
 
@@ -3607,6 +3613,46 @@ def _hub_at(P, name, master, w, h, slab, side, y, cor):
     return Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind='hend', region='hub')
 
 
+LKCK_WH = (8.64, 8.64)        # LINK_FIX ck relay (one forwarded-clock buffer)
+
+
+def _lk_pin_xy(lk, pin):
+    """die coordinates of a real link-macro pin (orientations R0 / MY / MX / R180)"""
+    r = real_lef(SERDES_LEF if lk.master == real_lef(SERDES_LEF)['name'] else UCIE_LEF)
+    a, b, c, d = r['pins'][pin][1]
+    x, y = (a + c) / 2, (b + d) / 2
+    if lk.orient in ('MY', 'R180'):
+        x = r['w'] - x
+    if lk.orient in ('MX', 'R180'):
+        y = r['h'] - y
+    return lk.x + x, lk.y + y
+
+
+def link_span_y(lk, port):
+    """centre (die y) of a link macro's tx / rx pin span"""
+    r = real_lef(SERDES_LEF if lk.master == real_lef(SERDES_LEF)['name'] else UCIE_LEF)
+    ys = [_lk_pin_xy(lk, p_)[1] for p_ in r['pins'] if re.fullmatch(rf'{port}\[\d+\]', p_)]
+    return (min(ys) + max(ys)) / 2
+
+
+def link_ck_relay(m, P, lk, cor, nm):
+    """LINK_FIX: the forwarded-clock relay of a link macro, outside its ck pin on the ck face (SerDes: the die-edge
+    side of the link column, freed by moving the macro to the core side; UCIe: the edge corridor at the pin)"""
+    w, h = LKCK_WH[0] - SHAVE, LKCK_WH[1] - SHAVE
+    px, py = _lk_pin_xy(lk, 'clk')
+    west = abs(px - lk.x) < 1.0
+    if lk.master == real_lef(SERDES_LEF)['name']:
+        x = dn(px - 1.296 - w, GX) if west else up(px + 1.296, GX)
+        y = dn(py - h / 2, GY)
+        assert P.occ.free((x, y, x + w, y + h), 0.432), (nm, x, y)
+    else:
+        pl = P.near(px + (-1 if west else 1) * (w / 2 + 6.0), py + h / 2, w, h,
+                    [cor['edgeW'] if lk.name[3] == 'W' else cor['edgeE']], horiz=False, span=200.0, rows=8)
+        assert pl, nm
+        x, y = pl
+    return Inst(f'kc_{nm}', 'dsfd_lkck', x, y, w, h, 'R0', kind='lkck', region='link', domain='fwd')
+
+
 def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
     g, hub = m['geo'], m['hub']
     coll = hub['collective']
@@ -3621,6 +3667,10 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         ry = g['ch_y'][t] + rowl + 15.0 + 50.0 * (i % 2)
         ly = lk.y + lk.h / 2
         lx = lk.x + lk.w if side == 'W' else lk.x
+        if LINK_FIX:
+            ly_t, ly_r = link_span_y(lk, 'tx'), link_span_y(lk, 'rx')
+        else:
+            ly_t = ly_r = ly
         yy = cy + (i - 1.5) * 90.0
         cx = coll.x if side == 'W' else coll.x + coll.w
         nm = f'K{side}{i}'
@@ -3631,20 +3681,30 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             vx_, cy_ = vch_x(m, nm), corr_y(m, nm)
             sx_ = s14_x(m, 'E', nm)
             core = [(cx, yy), (vx_, yy), (vx_, cy_), (sx_, cy_), (sx_, ry)]
-        path = _dedup(core + [(edge[side], ry), (edge[side], ly), (lx, ly)])
+        path = _dedup(core + [(edge[side], ry), (edge[side], ly_t), (lx, ly_t)])
         nm = f'K{side}{i}'
         # tx: collective -> macro tx (raw 512); the macro's parallel clock is the chain's forwarded clock
-        sts = CH8.run(f'{nm}t', [512], path, allc, path[0])
+        # LINK_FIX: a station MUST stand at the path end = the centre of the macro's tx pin span
+        sts = CH8.run(f'{nm}t', [512], path, allc, path[0], forced=(_poly_len(path),) if LINK_FIX else ())
         chain_nets(CH8, f'{nm}t', (coll.name, f'tf{side}{i}', f'td{side}{i}'), [it for it, _, _ in sts], [512])
         tail = m['chain_tail'][f'{nm}t']
         # rx: macro rx -> stations back -> hub meso end beside the collective
         endn, w, h = end_spec('m2l', [512], 'raw')
         he = P.add(_hub_at(P, f'hl_{side}{i}', endn, w, h, coll, side, yy, cor))
-        rpath = _dedup(path[::-1][:-1] + [(he.x + he.w / 2, he.y + he.h / 2)])
-        rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly))
+        if LINK_FIX:      # the rx chain starts with a station at the centre of the rx pin span
+            rpath = _dedup([(lx, ly_r), (edge[side], ly_r)] + path[::-1][2:-1] + [(he.x + he.w / 2, he.y + he.h / 2)])
+            rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly_r), forced=(1.0,))
+        else:
+            rpath = _dedup(path[::-1][:-1] + [(he.x + he.w / 2, he.y + he.h / 2)])
+            rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly))
         rst = [it for it, _, _ in rs]
-        CH8.bus(f'{nm}_clk', 'fclk', 1, [(tail[0], tail[1]), (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
-                                                                                [(he.name, 'fi0')]))
+        ckd = (tail[0], tail[1])
+        if LINK_FIX:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
+            ck = P.add(link_ck_relay(m, P, lk, cor, nm))
+            CH8.bus(f'{nm}_ckf', 'fclk', 1, [ckd, (ck.name, 'fi')])
+            ckd = (ck.name, 'fo')
+        CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
+                                                                 [(he.name, 'fi0')]))
         CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
         if rst:
             CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
@@ -3661,7 +3721,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
 
 
 # ---------------------------------------------------------------------------------------- r8 ports / masters
-GLUE_PREFIX = ('dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+GLUE_PREFIX = ('dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
 
 
 def is_glue(master):
@@ -3831,6 +3891,10 @@ def _faces_r8(m, Mx, it, ports):
         outs = [x for j in range(n) for x in ((f'fo{j}', 1), (f'do{j}', ports[f'do{j}'][1]))]
         _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+    elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
+        for p_, at in (('fi', 2.16), ('fo', 6.48)):
+            f_ = _peer_face(m, it, p_)
+            Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
     elif kind == 'qbank':
         ef = 'N' if mst.endswith('_S') else 'S'
         df = 'S' if ef == 'N' else 'N'
@@ -3994,7 +4058,9 @@ def glue_rtl(m):
             continue
         ports = pdir[mst]
         body = []
-        if mst.startswith('dsfd_stn'):
+        if mst.startswith('dsfd_lkck'):
+            body.append('    assign fo = fi;   // forwarded-clock relay (a clock buffer; CTS sizes it)')
+        elif mst.startswith('dsfd_stn'):
             n = len([p_ for p_ in ports if p_.startswith('fi')])
             for j in range(n):
                 w = ports[f'di{j}'][1]
@@ -4202,6 +4268,40 @@ def _stn_lanes(m, it):
     return [pd[p_][1] for p_ in sorted(pd, key=_pnum) if p_.startswith('di')]
 
 
+def die_options(ap):
+    """die-variant options shared by main and tools/die_top_lint.py (--s81-opts)"""
+    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
+    ap.add_argument('--gen', default='r7', choices=['r7', 'r8'], help='r7: the 21fcf6469 die (default); r8: wired die')
+    ap.add_argument('--head-dies', type=int, default=12, help='head die: dies sharing the head content (default 12)')
+    ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
+    ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
+    ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
+    ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
+                    'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
+    ap.add_argument('--vch-interleave', action='store_true', help='r9: strided VCH lane order (chains spread over '
+                    'the whole VCH width; default off)')
+    ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
+                    'tx / rx station at the centre of its pin span (default off)')
+    return ap
+
+
+def apply_options(a):
+    """configure the module globals for the die variant in `a` (die_options)"""
+    set_cc_reach(a.cc_reach_um)
+    global VCH_INTERLEAVE, LINK_FIX
+    VCH_INTERLEAVE = bool(a.vch_interleave)
+    LINK_FIX = bool(a.link_fix)
+    global REV, HEAD_DIES
+    REV, HEAD_DIES = a.rev, a.head_dies
+    configure(a.die, a.gen)
+    if a.gen == 'r8':
+        if a.elem_h or a.field_margin is not None:
+            slot_geometry(a.elem_h, a.field_margin)
+        if a.pairs:
+            set_pairs(a.pairs)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
@@ -4218,30 +4318,9 @@ def main(argv=None):
     ap.add_argument('--out', type=Path)
     ap.add_argument('--psmt', type=Path, help='record: the PSM macro-current control directory (mode psmt)')
     ap.add_argument('--only', default='', help='record: case-name regex (cases built by the current floorplan)')
-    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
-    ap.add_argument('--gen', default='r7', choices=['r7', 'r8'], help='r7: the 21fcf6469 die (default); r8: wired die')
-    ap.add_argument('--head-dies', type=int, default=12, help='head die: dies sharing the head content (default 12)')
-    ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
-    ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
-    ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
-    ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
-    ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
-                    'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
-    ap.add_argument('--vch-interleave', action='store_true', help='r9: strided VCH lane order (chains spread over '
-                    'the whole VCH width; default off)')
+    die_options(ap)
     a = ap.parse_args(argv)
-    set_cc_reach(a.cc_reach_um)
-    global VCH_INTERLEAVE
-    if a.vch_interleave:
-        VCH_INTERLEAVE = True
-    global REV, HEAD_DIES
-    REV, HEAD_DIES = a.rev, a.head_dies
-    configure(a.die, a.gen)
-    if a.gen == 'r8':
-        if a.elem_h or a.field_margin is not None:
-            slot_geometry(a.elem_h, a.field_margin)
-        if a.pairs:
-            set_pairs(a.pairs)
+    apply_options(a)
     m = build()
     if a.gen == 'r8':
         finalize_r8(m)
