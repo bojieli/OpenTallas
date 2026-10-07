@@ -197,5 +197,5 @@
   ]
  },
  "default": "opt-in: applied only in the recovery baseline; the stream unit's softmax lowering is unchanged",
- "note": "Round-2 exact e54 and m65 records collected without replay; source pins match current RTL. LM6/LA5 routes active; no adoption before routed contextual SS60/FF25. Existing false-path-io boundary checks remain parent requirements."
+ "note": "round 5 MARGIN (2023def4e) exact (run_lph16_m5.json); route m5c (0.770 ns, die IO on vclk) running; adoption on routed sign-off SS >= +40 / FF >= +15 ps at 0.833 ns (owner 2026-10-06)"
 }
