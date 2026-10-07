@@ -28,6 +28,90 @@ def edit(text, reps):
 
 POLY = 0x04C11DB7
 
+# ---------------- views agent 2026-10-06 (DESIGN SIMPLIFICATION RULES 2/3/5): ldm8 SS -718 ps / 40,670 endpoints.
+# Classes: MREQ response -> tag decode -> ROB write enable (4,096 flops) in one cycle (cfg -> rob -674 / -718);
+# f_idx -> rob_v[f_idx] / rob[f_idx] 16:1 selects (f_idx -> rob_v -687, -> mp1_w -681); store retired -> rob[head]
+# -> data CDC FIFO write (-702).  Change: the response is registered at the engine (rq_*), the read-back is written
+# one cycle later from a registered one-hot slot enable (rw_*); the fold / retire pointer is a one-hot ring (f_oh /
+# h_oh) so a select is an AND-OR, and the store's ordered sector leaves through a registered output stage (o_*).
+# Transaction-exact (tb_loader_m_equiv: MREQ / DMA streams + every CSR except CYCLES); +2 cycles per read-back
+# response, +1 per stored sector, off the token path.
+LOAD_PIPE = [
+    ("""        wire fold_now = ms == M_VERIFY && rob_v[f_idx[VB-1:0]];""",
+     """        // response pipeline (views agent): rq_* = registered MREQ response, rw_* = registered read-back write
+        reg              rq_v, rq_we, rw_v;
+        reg [TW-1:0]     rq_tag;
+        reg [255:0]      rq_d, rw_d;
+        reg [VOUT-1:0]   rw_oh, f_oh;                 // f_oh: one-hot of f_idx[VB-1:0]
+        always @(posedge clk_mem) begin
+            rq_tag <= rsp_tag; rq_d <= rsp_data; rw_d <= rq_d; rw_oh <= VOUT'(1) << rq_tag[VB-1:0];
+            for (integer i = 0; i < VOUT; i = i + 1) if (rw_v && rw_oh[i]) rob[i] <= rw_d;
+        end
+        reg [255:0] f_sel;
+        always @* begin f_sel = 256'd0; for (integer i = 0; i < VOUT; i = i + 1) f_sel = f_sel | ({256{f_oh[i]}} & rob[i]); end
+        wire fold_now = ms == M_VERIFY && |(rob_v & f_oh);"""),
+    ("""            mp1_w <= rob[f_idx[VB-1:0]]; mp2_lo""", """            mp1_w <= f_sel; mp2_lo"""),
+    ("""                m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;""",
+     """                m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;
+                rq_v <= 0; rq_we <= 0; rw_v <= 0; f_oh <= VOUT'(1);"""),
+    ("""                if (rsp_v) begin
+                    if (rsp_we) w_ack <= w_ack_nx;
+                    else if (ms == M_VERIFY) begin
+                        rob[rsp_tag[VB-1:0]] <= rsp_data;
+                    end else m_fault <= 1;
+                end
+                w_out <= w_out + ((req_v && req_rdy && req_we) ? 8'd1 : 8'd0) - ((rsp_v && rsp_we) ? 8'd1 : 8'd0);
+                rob_v <= (rob_v | ((rsp_v && !rsp_we && ms == M_VERIFY) ? (VOUT'(1) << rsp_tag[VB-1:0]) : {VOUT{1'b0}}))
+                         & ~(fold_now ? (VOUT'(1) << f_idx[VB-1:0]) : {VOUT{1'b0}});""",
+     """                rq_v <= rsp_v; rq_we <= rsp_we;
+                rw_v <= rq_v && !rq_we && ms == M_VERIFY;
+                if (rq_v) begin
+                    if (rq_we) w_ack <= w_ack_nx;
+                    else if (ms != M_VERIFY) m_fault <= 1;
+                end
+                w_out <= w_out + ((req_v && req_rdy && req_we) ? 8'd1 : 8'd0) - ((rq_v && rq_we) ? 8'd1 : 8'd0);
+                rob_v <= (rob_v | (rw_v ? rw_oh : {VOUT{1'b0}})) & ~(fold_now ? f_oh : {VOUT{1'b0}});
+                if (fold_now) f_oh <= {f_oh[VOUT-2:0], f_oh[VOUT-1]};"""),
+    ("""                        w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;""",
+     """                        w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0; f_oh <= VOUT'(1);"""),
+]
+STORE_PIPE = [
+    (""" assign kv=active&&valid[head];""",
+     """ // views agent: one-hot retire ring h_oh, registered response (rq_*) / ROB write (rw_*), registered output stage o_*
+ reg[VOUT-1:0] h_oh,rw_oh;reg rq_v,rq_we,rw_v,o_v;reg[TW-1:0] rq_tag;reg[255:0] rq_d,rw_d,o_d,h_sel;
+ wire[VB-1:0] rqs=rq_tag[VB-1:0];
+ always @*begin h_sel=0;for(integer i=0;i<VOUT;i=i+1)h_sel=h_sel|({256{h_oh[i]}}&rob[i]);end
+ wire take=active&&|(valid&h_oh)&&(!o_v||krdy);
+ assign kv=o_v;"""),
+    (""" wire[255:0] ordered_data=rob[head];
+ assign kd=ordered_data;""", """ assign kd=o_d;"""),
+    (""" always @(posedge clk_mem)begin mp1_w<=ordered_data;""", """ always @(posedge clk_mem)begin
+ rq_tag<=rsp_tag;rq_d<=rsp_data;rw_d<=rq_d;rw_oh<=VOUT'(1)<<rqs;
+ for(integer i=0;i<VOUT;i=i+1)if(rw_v&&rw_oh[i])rob[i]<=rw_d;
+ if(take)o_d<=h_sel;
+ mp1_w<=o_d;"""),
+    (""" active<=0;fault<=0;base<=0;ra_q<=0;total<=0;issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;completion_v<=0;completion_d<=0;""",
+     """ active<=0;fault<=0;base<=0;ra_q<=0;total<=0;issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;completion_v<=0;completion_d<=0;
+ h_oh<=VOUT'(1);rq_v<=0;rq_we<=0;rw_v<=0;o_v<=0;"""),
+    (""" if(cv&&crdy)begin active<=1;base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;end""",
+     """ if(cv&&crdy)begin active<=1;base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;h_oh<=VOUT'(1);end"""),
+    (""" if(rsp_v&&rsp_rdy)begin
+ if(!active||rsp_we||!live[rs]||valid[rs]||tags[rs]!=rsp_tag)fault<=1;
+ else begin rob[rs]<=rsp_data;valid[rs]<=1;end
+ end
+ if(fold)begin retired<=retired_nx;valid[head]<=0;live[head]<=0;end""",
+     """ rq_v<=rsp_v&&rsp_rdy;rq_we<=rsp_we;rw_v<=0;
+ if(rq_v)begin
+ if(!active||rq_we||!live[rqs]||valid[rqs]||(rw_v&&rw_oh[rqs])||tags[rqs]!=rq_tag)fault<=1;
+ else rw_v<=1;
+ end
+ if(rw_v)valid<=valid|rw_oh;
+ if(fold)o_v<=0;
+ if(take)begin o_v<=1;retired<=retired_nx;valid<=(valid|(rw_v?rw_oh:'0))&~h_oh;live<=(live|(send?VOUT'(1)<<slot:'0))&~h_oh;h_oh<={h_oh[VOUT-2:0],h_oh[VOUT-1]};end"""),
+    (""" if(active&&retired==total&&!mp_busy)begin""", """ if(active&&retired==total&&!mp_busy&&!o_v)begin"""),
+]
+
+
 
 def _fold(s, w, n=256):
     """crc_fold(s, w) of the RTL (MSB-first shift, w[0] first) on Python ints"""
@@ -261,6 +345,7 @@ t = edit(t, [
     ("""                    M_CPL: if (!k_v) begin""", """                    M_CPL: if (!k_v && !mp_busy) begin"""),
 ])
 t = edit(t, LOAD_ARITH)
+t = edit(t, LOAD_PIPE)
 (OUT / 'ot_hfd_loader_m.sv').write_text(
     '// GENERATED by make_loader_m.py from rtl/hbm_accel/loader/ot_hbm_accel_loader.sv (margin-first CRC pipeline; see there)\n' + t)
 
@@ -294,6 +379,7 @@ t = edit(t, [
  if(active&&retired==total&&!mp_busy)begin"""),
 ])
 t = edit(t, STORE_ARITH)
+t = edit(t, STORE_PIPE)
 (OUT / 'ot_hfd_store_m.sv').write_text(
     '// GENERATED by make_loader_m.py from rtl/hbm_accel/loader/ot_hbm_accel_store.sv (margin-first CRC pipeline; see there)\n' + t)
 
@@ -304,6 +390,16 @@ t = edit(t, [
     (' ot_hbm_accel_loader #(.ENABLE(1)) u_load(', ' ot_hfd_loader_m #(.ENABLE(1)) u_load('),
     (' ot_hbm_accel_store #(.ENABLE(1),.TW(15)) u_store(', ' ot_hfd_store_m #(.ENABLE(1),.TW(15)) u_store('),
 ])
+# views agent: one kept reset synchroniser per engine (ot_hfd_rsync, common/ot_hfd_oreg1.sv): engine reset release
+# +2 cycles after the host's, nothing else changes
+t = t.replace(' ot_hfd_loader_m #(.ENABLE(1)) u_load(\n .clk_host(clk_host),.rst_host_n(rst_host_n),.clk_mem(clk_mem),.rst_mem_n(rst_mem_n),',
+              ' wire lrh,lrm,srh,srm;\n ot_hfd_rsync u_lrh(.clk(clk_host),.rst_n(rst_host_n),.q_n(lrh));ot_hfd_rsync u_lrm(.clk(clk_mem),.rst_n(rst_mem_n),.q_n(lrm));\n'
+              ' ot_hfd_rsync u_srh(.clk(clk_host),.rst_n(rst_host_n),.q_n(srh));ot_hfd_rsync u_srm(.clk(clk_mem),.rst_n(rst_mem_n),.q_n(srm));\n'
+              ' ot_hfd_loader_m #(.ENABLE(1)) u_load(\n .clk_host(clk_host),.rst_host_n(lrh),.clk_mem(clk_mem),.rst_mem_n(lrm),', 1)
+assert t.count('.rst_host_n(lrh)') == 1
+t = t.replace(' ot_hfd_store_m #(.ENABLE(1),.TW(15)) u_store(\n .clk_host(clk_host),.rst_host_n(rst_host_n),.clk_mem(clk_mem),.rst_mem_n(rst_mem_n),',
+              ' ot_hfd_store_m #(.ENABLE(1),.TW(15)) u_store(\n .clk_host(clk_host),.rst_host_n(srh),.clk_mem(clk_mem),.rst_mem_n(srm),', 1)
+assert t.count('.rst_host_n(srh)') == 1
 (OUT / 'ot_hfd_loader_host_m.sv').write_text(
     '// GENERATED by make_loader_m.py from rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv (margin engines; see there)\n' + t)
 print('ok')

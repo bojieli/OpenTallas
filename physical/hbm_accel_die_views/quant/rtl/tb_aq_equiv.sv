@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef DUTP
+`define DUTP .MLAT(5)
+`endif
 // Exactness of ot_hfd_actquant_m (margin-first port) against the original ot_hdc_actquant and ot_dsrom_actquant_f12:
 // identical random input stream (special values mixed in, random fp4, random valid gaps); the three output streams
 // (q, e, y, fault on vo) must agree item for item.
@@ -8,7 +11,7 @@ module tb_aq_equiv;
  wire vo0,vo1,vo2,f0,f1,f2; wire [255:0] q0,q1,q2; wire signed [9:0] e0,e1,e2; wire [511:0] y0,y1,y2;
  ot_hdc_actquant a0(.clk(clk),.rst_n(rst_n),.v(v),.fp4(fp4),.x(x),.vo(vo0),.q(q0),.e(e0),.y(y0),.fault(f0));
  ot_dsrom_actquant_f12 #(.MLAT(5)) a1(.clk(clk),.rst_n(rst_n),.v(v),.fp4(fp4),.x(x),.vo(vo1),.q(q1),.e(e1),.y(y1),.fault(f1));
- `DUT #(.MLAT(5)) a2(.clk(clk),.rst_n(rst_n),.v(v),.fp4(fp4),.x(x),.vo(vo2),.q(q2),.e(e2),.y(y2),.fault(f2));
+ `DUT #(`DUTP) a2(.clk(clk),.rst_n(rst_n),.v(v),.fp4(fp4),.x(x),.vo(vo2),.q(q2),.e(e2),.y(y2),.fault(f2));
  localparam W = 256+10+512+1;
  reg [W-1:0] Q0[0:200000], Q1[0:200000], Q2[0:200000]; integer n0=0,n1=0,n2=0, i, k, mism=0, cyc;
  always @(posedge clk) begin
