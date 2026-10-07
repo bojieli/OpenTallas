@@ -1,0 +1,35 @@
+{
+  "status": "model-before-RTL-unqualified",
+  "selected": false,
+  "clock_domains": [
+    "stream_1p2",
+    "link_1p2_independent_phase"
+  ],
+  "reset_entry": {
+    "state_bits": 4,
+    "replicas": 2,
+    "bits_per_replica": 2,
+    "asynchronous_assert": true,
+    "synchronous_release_edges": 2,
+    "startup_latency_per_domain_cycles": 2,
+    "per_token_added_cycles": 0,
+    "clock_pass_through": true
+  },
+  "area": {
+    "non_async_dff_lower_bound_um2": 1.1664,
+    "actual_async_set_cell_area_um2": null,
+    "output_gating_and_reset_buffers_um2": null
+  },
+  "memory_bytes_per_cycle": 0,
+  "MACs_per_cycle": 0,
+  "reset_boundary_bits": 4,
+  "clock_boundary_bits": 2,
+  "invariant": "context arm never resets queues; only cold POR drives domain reset entry",
+  "remaining_gates": [
+    "technology mapping preserves asynchronous assertion and synchronous release",
+    "cold reset coordination across the real dual-clock FIFO pair",
+    "recovery/removal timing and metastability qualification",
+    "actual parent clock entry, jitter and SS/FF timing",
+    "full collective numerical/CDC gate with the native payload ports"
+  ]
+}
