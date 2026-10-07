@@ -1,0 +1,31 @@
+{
+  "source_commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a",
+  "isolated_pinned_sources": 27,
+  "command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "ot_dsrom_window_source_ctl",
+    "-P",
+    "ot_dsrom_window_source_ctl.MARGIN=2",
+    "-tnull",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_row_codec.sv",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_stage4.sv",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_stream_la_s81.sv",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_writer_pipeline.sv",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv"
+  ],
+  "returncode": 0,
+  "controller_gate_restored": true,
+  "stage_margin_preserved": true,
+  "full_campaign": "Existing source-pinned remote positives344/344 and negative still progressing; not rerun",
+  "adopted": false,
+  "validation": {
+    "source_pin": "27/27 byte-identical to git4f5ec6f68",
+    "selection": "default, stage-margin, ctl-leaf3, ctl-leaf3 mutant all select expected sources and parameters",
+    "negative_definition_order": "mutant preprocessor definition precedes controller",
+    "minimum_elaboration": "Icarus full controller MARGIN2 six production sources PASS; inherited ksadd b width padding warning",
+    "unsupported_tool_attempt": "Icarus parsing whole campaign file list rejected existing unsupported bench/DRAM SystemVerilog syntax; minimum controller elaboration passed"
+  }
+}
