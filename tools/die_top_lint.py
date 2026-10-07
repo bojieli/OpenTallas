@@ -641,8 +641,8 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
                 part += [(a + H.W_CTL, b + H.W_CTL, d) for a, b, d in flow(j, w - H.W_CTL, w - H.W_CTL - 1)]
             seg += [(a + b0, b + b0, d) for a, b, d in part]
         return seg
-    if cls == 'hub':
-        return [(0, bits, 'out' if port.startswith('t_') else 'in')]
+    if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
+        return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':

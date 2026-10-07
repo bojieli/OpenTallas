@@ -1,0 +1,288 @@
+
+==========================================================================
+floorplan final report_tns
+--------------------------------------------------------------------------
+tns max 0.00
+
+==========================================================================
+floorplan final report_wns
+--------------------------------------------------------------------------
+wns max 0.00
+
+==========================================================================
+floorplan final report_worst_slack
+--------------------------------------------------------------------------
+worst slack max 215.25
+
+==========================================================================
+floorplan final report_clock_min_period
+--------------------------------------------------------------------------
+core_clk period_min = 617.75 fmax = 1618.77
+
+==========================================================================
+floorplan final report_checks -path_delay min
+--------------------------------------------------------------------------
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: g_on.fresh_bank[0]$_DFFE_PN1P_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        166.60  166.60 ^ input external delay
+   470  276.52    0.00    0.00  166.60 ^ rst_n (in)
+                                         rst_n (net)
+                  0.00    0.00  166.60 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                                166.60   data arrival time
+
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+ 92925 41496.70    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00    0.00 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                         42.84   67.84   library removal time
+                                 67.84   data required time
+-----------------------------------------------------------------------------
+                                 67.84   data required time
+                               -166.60   data arrival time
+-----------------------------------------------------------------------------
+                                 98.76   slack (MET)
+
+
+Startpoint: g_on.g_node[1].m/c3.pair[0].active.cut.hi[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_on.g_node[0].m/pick[0].bypass.d0[0]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: BC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+ 92925 37701.96    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00    0.00 ^ g_on.g_node[1].m/c3.pair[0].active.cut.hi[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.51   11.24   31.22   31.22 ^ g_on.g_node[1].m/c3.pair[0].active.cut.hi[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         g_on.g_node[1].m/_01640_ (net)
+                 11.24    0.00   31.22 ^ g_on.g_node[1].m/_09876_/A (INVx1_ASAP7_75t_R)
+     1    0.55    6.04    5.60   36.81 v g_on.g_node[1].m/_09876_/Y (INVx1_ASAP7_75t_R)
+                                         g_on.lvl[1][0] (net)
+                  6.04    0.00   36.81 v g_on.g_node[0].m/pick[0].bypass.d0[0]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                 36.81   data arrival time
+
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+ 92925 48049.39    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00    0.00 ^ g_on.g_node[0].m/pick[0].bypass.d0[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                          8.65   33.65   library hold time
+                                 33.65   data required time
+-----------------------------------------------------------------------------
+                                 33.65   data required time
+                                -36.81   data arrival time
+-----------------------------------------------------------------------------
+                                  3.16   slack (MET)
+
+
+
+==========================================================================
+floorplan final report_checks -path_delay max
+--------------------------------------------------------------------------
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: g_on.fresh_bank[0]$_DFFE_PN1P_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+Corner: BC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        166.60  166.60 ^ input external delay
+   470  378.08    0.00    0.00  166.60 ^ rst_n (in)
+                                         rst_n (net)
+                  0.00    0.00  166.60 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                                166.60   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                          0.00  833.00   clock source latency
+ 92925 37701.96    0.00    0.00  833.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00  833.00 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00  773.00   clock uncertainty
+                          0.00  773.00   clock reconvergence pessimism
+                          6.99  779.99   library recovery time
+                                779.99   data required time
+-----------------------------------------------------------------------------
+                                779.99   data required time
+                               -166.60   data arrival time
+-----------------------------------------------------------------------------
+                                613.39   slack (MET)
+
+
+Startpoint: g_on.beat_base[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+ 92925 41496.70    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00    0.00 ^ g_on.beat_base[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+    34   18.25  201.27  189.25  189.25 v g_on.beat_base[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+                                         g_on.g_lane[10].id[1] (net)
+                201.27    0.00  189.25 v _3067_/A (INVx1_ASAP7_75t_R)
+    38   19.89  306.92  206.17  395.42 ^ _3067_/Y (INVx1_ASAP7_75t_R)
+                                         g_on.beat_base[0] (net)
+                306.92    0.00  395.42 ^ _6096_/A1 (AO21x1_ASAP7_75t_R)
+    10    5.28   83.96   91.72  487.14 ^ _6096_/Y (AO21x1_ASAP7_75t_R)
+                                         _0411_ (net)
+                 83.96    0.00  487.14 ^ g_on.g_lane[10].u_lane/_3253_/A2 (AO21x1_ASAP7_75t_R)
+     1    0.52   16.93   41.40  528.53 ^ g_on.g_lane[10].u_lane/_3253_/Y (AO21x1_ASAP7_75t_R)
+                                         g_on.g_lane[10].u_lane/_0507_ (net)
+                 16.93    0.00  528.53 ^ g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                528.53   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                          0.00  833.00   clock source latency
+ 92925 29966.38    0.00    0.00  833.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00  833.00 ^ g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -60.00  773.00   clock uncertainty
+                          0.00  773.00   clock reconvergence pessimism
+                        -29.22  743.78   library setup time
+                                743.78   data required time
+-----------------------------------------------------------------------------
+                                743.78   data required time
+                               -528.53   data arrival time
+-----------------------------------------------------------------------------
+                                215.25   slack (MET)
+
+
+
+==========================================================================
+floorplan final report_checks -unconstrained
+--------------------------------------------------------------------------
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: g_on.fresh_bank[0]$_DFFE_PN1P_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+Corner: BC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        166.60  166.60 ^ input external delay
+   470  378.08    0.00    0.00  166.60 ^ rst_n (in)
+                                         rst_n (net)
+                  0.00    0.00  166.60 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                                166.60   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                          0.00  833.00   clock source latency
+ 92925 37701.96    0.00    0.00  833.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00  833.00 ^ g_on.fresh_bank[0]$_DFFE_PN1P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00  773.00   clock uncertainty
+                          0.00  773.00   clock reconvergence pessimism
+                          6.99  779.99   library recovery time
+                                779.99   data required time
+-----------------------------------------------------------------------------
+                                779.99   data required time
+                               -166.60   data arrival time
+-----------------------------------------------------------------------------
+                                613.39   slack (MET)
+
+
+Startpoint: g_on.beat_base[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+ 92925 41496.70    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00    0.00 ^ g_on.beat_base[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+    34   18.25  201.27  189.25  189.25 v g_on.beat_base[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+                                         g_on.g_lane[10].id[1] (net)
+                201.27    0.00  189.25 v _3067_/A (INVx1_ASAP7_75t_R)
+    38   19.89  306.92  206.17  395.42 ^ _3067_/Y (INVx1_ASAP7_75t_R)
+                                         g_on.beat_base[0] (net)
+                306.92    0.00  395.42 ^ _6096_/A1 (AO21x1_ASAP7_75t_R)
+    10    5.28   83.96   91.72  487.14 ^ _6096_/Y (AO21x1_ASAP7_75t_R)
+                                         _0411_ (net)
+                 83.96    0.00  487.14 ^ g_on.g_lane[10].u_lane/_3253_/A2 (AO21x1_ASAP7_75t_R)
+     1    0.52   16.93   41.40  528.53 ^ g_on.g_lane[10].u_lane/_3253_/Y (AO21x1_ASAP7_75t_R)
+                                         g_on.g_lane[10].u_lane/_0507_ (net)
+                 16.93    0.00  528.53 ^ g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                528.53   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                          0.00  833.00   clock source latency
+ 92925 29966.38    0.00    0.00  833.00 ^ clk (in)
+                                         clk (net)
+                  0.00    0.00  833.00 ^ g_on.g_lane[10].u_lane/x_q[5]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -60.00  773.00   clock uncertainty
+                          0.00  773.00   clock reconvergence pessimism
+                        -29.22  743.78   library setup time
+                                743.78   data required time
+-----------------------------------------------------------------------------
+                                743.78   data required time
+                               -528.53   data arrival time
+-----------------------------------------------------------------------------
+                                215.25   slack (MET)
+
+
+
+==========================================================================
+floorplan final report_power
+--------------------------------------------------------------------------
+Corner: WC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             2.02e-01   2.79e-02   2.90e-04   2.30e-01  59.7%
+Combinational          9.20e-02   6.30e-02   2.44e-04   1.55e-01  40.3%
+Clock                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  2.94e-01   9.09e-02   5.34e-04   3.86e-01 100.0%
+                          76.3%      23.6%       0.1%
+Corner: BC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             3.26e-01   4.99e-02   1.38e-05   3.76e-01  58.4%
+Combinational          1.56e-01   1.12e-01   1.57e-05   2.68e-01  41.6%
+Clock                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  4.82e-01   1.62e-01   2.95e-05   6.44e-01 100.0%
+                          74.9%      25.1%       0.0%

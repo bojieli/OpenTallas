@@ -140,30 +140,42 @@ module ot_hfd_store_m #(
  assign req_v=active&&issued!=total&&!live[slot];assign req_we=0;assign req_addr=ra_q;
  assign req_wdata=0;assign req_wstrb=0;assign req_tag=TW'(issued);
  assign rsp_rdy=1;
- assign kv=active&&valid[head];
+ // views agent: one-hot retire ring h_oh, registered response (rq_*) / ROB write (rw_*), registered output stage o_*
+ reg[VOUT-1:0] h_oh,rw_oh;reg rq_v,rq_we,rw_v,o_v;reg[TW-1:0] rq_tag;reg[255:0] rq_d,rw_d,o_d,h_sel;
+ wire[VB-1:0] rqs=rq_tag[VB-1:0];
+ always @*begin h_sel=0;for(integer i=0;i<VOUT;i=i+1)h_sel=h_sel|({256{h_oh[i]}}&rob[i]);end
+ wire take=active&&|(valid&h_oh)&&(!o_v||krdy);
+ assign kv=o_v;
  // kdata is a sector; no completion/ready is inferred from a timer.
- wire[255:0] ordered_data=rob[head];
- assign kd=ordered_data;
+ assign kd=o_d;
  wire fold=kv&&krdy;
  // CRC pipeline (memory): P1 the retired sector, P2 partials; mcrc is folded at P3
  reg mp1_v,mp2_v;reg[255:0] mp1_w;reg[31:0] mp2_lo,mp2_hi;
  always @(posedge clk_mem or negedge rst_mem_n)if(!rst_mem_n)begin mp1_v<=0;mp2_v<=0;end else begin mp1_v<=fold;mp2_v<=mp1_v;end
- always @(posedge clk_mem)begin mp1_w<=ordered_data;mp2_lo<=crc_lo(mp1_w);mp2_hi<=crc_hi(mp1_w);end
+ always @(posedge clk_mem)begin
+ rq_tag<=rsp_tag;rq_d<=rsp_data;rw_d<=rq_d;rw_oh<=VOUT'(1)<<rqs;
+ for(integer i=0;i<VOUT;i=i+1)if(rw_v&&rw_oh[i])rob[i]<=rw_d;
+ if(take)o_d<=h_sel;
+ mp1_w<=o_d;mp2_lo<=crc_lo(mp1_w);mp2_hi<=crc_hi(mp1_w);end
  wire mp_busy=mp1_v||mp2_v;
  assign crdy=!active&&!completion_v&&!fault;
  always @(posedge clk_mem or negedge rst_mem_n)if(!rst_mem_n)begin
  active<=0;fault<=0;base<=0;ra_q<=0;total<=0;issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;completion_v<=0;completion_d<=0;
+ h_oh<=VOUT'(1);rq_v<=0;rq_we<=0;rw_v<=0;o_v<=0;
  end else begin
  if(completion_v&&completion_rdy)completion_v<=0;
- if(cv&&crdy)begin active<=1;base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;end
+ if(cv&&crdy)begin active<=1;base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;h_oh<=VOUT'(1);end
  if(send)begin issued<=issued_nx;ra_q<=ra_nx;tags[slot]<=req_tag;live[slot]<=1;end
- if(rsp_v&&rsp_rdy)begin
- if(!active||rsp_we||!live[rs]||valid[rs]||tags[rs]!=rsp_tag)fault<=1;
- else begin rob[rs]<=rsp_data;valid[rs]<=1;end
+ rq_v<=rsp_v&&rsp_rdy;rq_we<=rsp_we;rw_v<=0;
+ if(rq_v)begin
+ if(!active||rq_we||!live[rqs]||valid[rqs]||(rw_v&&rw_oh[rqs])||tags[rqs]!=rq_tag)fault<=1;
+ else rw_v<=1;
  end
- if(fold)begin retired<=retired_nx;valid[head]<=0;live[head]<=0;end
+ if(rw_v)valid<=valid|rw_oh;
+ if(fold)o_v<=0;
+ if(take)begin o_v<=1;retired<=retired_nx;valid<=(valid|(rw_v?rw_oh:'0))&~h_oh;live<=(live|(send?VOUT'(1)<<slot:'0))&~h_oh;h_oh<={h_oh[VOUT-2:0],h_oh[VOUT-1]};end
  if(mp2_v)mcrc<=crc_s(mcrc)^mp2_lo^mp2_hi;
- if(active&&retired==total&&!mp_busy)begin active<=0;completion_v<=1;completion_d<={(fault||overflow1||overflow2)?4'd5:4'd0,retired,mcrc};end
+ if(active&&retired==total&&!mp_busy&&!o_v)begin active<=0;completion_v<=1;completion_d<={(fault||overflow1||overflow2)?4'd5:4'd0,retired,mcrc};end
  end
  end endgenerate
 endmodule

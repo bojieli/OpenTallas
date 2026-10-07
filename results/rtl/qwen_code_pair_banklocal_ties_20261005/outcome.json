@@ -1,0 +1,77 @@
+{
+  "variant": "pauli-code-banklocal-constant-ties-r3",
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch2/jobs/pauli-code-banklocal-constant-ties-r3",
+  "route_exit": 137,
+  "finish_exit": 137,
+  "last_stage": "do-5_2_route",
+  "route_flow_completed": false,
+  "corner_sta": null,
+  "capture_locality": null,
+  "drc_log_counts": [
+    51297,
+    29594,
+    26500,
+    17388,
+    14517,
+    13790,
+    12905,
+    12708,
+    12388,
+    12069,
+    11479,
+    11028,
+    10703,
+    10104,
+    9813,
+    9556,
+    8795,
+    20246,
+    8520,
+    6959,
+    6011,
+    5443,
+    5022,
+    4892,
+    3995,
+    17640,
+    8825,
+    7235,
+    6392,
+    6032,
+    4879,
+    3998
+  ],
+  "artifacts": {
+    "5_1_grt.sdc": {
+      "bytes": 881144,
+      "sha256": "c6bdc8b1f299c92f050534438563a2d1aa4eac62e266af4e4e95d2d27dd8b7b7"
+    },
+    "4_cts.odb": {
+      "bytes": 91223710,
+      "sha256": "71c3e0a89d5cd48758e83087b3dff1c45c551c4f45422fcba44a5d10fd8b2745"
+    },
+    "4_cts.sdc": {
+      "bytes": 881144,
+      "sha256": "c6bdc8b1f299c92f050534438563a2d1aa4eac62e266af4e4e95d2d27dd8b7b7"
+    },
+    "4_cts_ties.odb": {
+      "bytes": 92632003,
+      "sha256": "ac0f2390dfdc458aca6df707043141ab91fbe8267ab3ee6bea4d62d08931aa6f"
+    },
+    "5_1_grt.odb": {
+      "bytes": 256575576,
+      "sha256": "c8bdef6e06f72bc5b452776be96594405559efa512d06cc164d0b82fc75cf0b7"
+    },
+    "4_cts_ties.v": {
+      "bytes": 9161031,
+      "sha256": "f8a4cc632ae1b07b496d35c495b82cea7b597992e6688873c5e27ddf2c572990"
+    }
+  },
+  "rtl_changed": false,
+  "added_cycles": 0,
+  "added_state_bits": 0,
+  "adopted": false,
+  "verdict": "ROUTE_FLOW_FAILED",
+  "scope": "Same 20 analytical-calibrated macro views, 864x673.92 slot, 833.333ps SS60 FF25 and original IO; no headline/adoption credit."
+}

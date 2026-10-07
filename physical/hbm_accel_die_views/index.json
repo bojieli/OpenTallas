@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r16j",
- "generator_sha256": "672fdfbdc69e2a5c885fd532021173c352ee9c7bbe7c01bfdd01ab9cd30b32d4",
+ "round": "r18",
+ "generator_sha256": "ec6a6f2bfe9c8f37126922d5a2120089cb77a26cbeff6e6c7ad9d7f2805324fa",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -66,11 +66,9 @@
     "ff": "hfd_barrier_ff.lib"
    },
    "check": {
-    "verdict": "MISMATCH",
-    "problems": [
-     "2 pins off the generator position (same face)"
-    ],
-    "positions": "2 pins off the generator position (same face)",
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
     "size_view": [
      1399.66,
      36.696
@@ -239,7 +237,7 @@
   },
   "hfd_gath_r10": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r10",
    "lef": "hfd_gath_r10.lef",
@@ -262,9 +260,9 @@
     "die_top_io_pins": []
    },
    "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R1_hfd_gath_r10",
-    "SOURCE_COMMIT": "693b941a77566e053f8969561a0b288bce0d1548",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src24 master=hfd_gath_r10 top=physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R1_hfd_gath_r10/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R2_hfd_gath_r10",
+    "SOURCE_COMMIT": "fc57071992a00809da3f33b33c39a34bc2785e6f",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src25 master=hfd_gath_r10 top=physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R2_hfd_gath_r10/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.5",
     "exit": [
      "rc=0",
      "corner_rc=0",
@@ -273,25 +271,30 @@
      "signoff_corner_rc=0",
      "signoff_export_rc=0"
     ],
-    "ss_setup_ps": 58.75,
-    "ff_hold_ps": 28.68,
-    "drc": 170,
+    "ss_setup_ps": 56.91,
+    "ff_hold_ps": 35.79,
+    "drc": 0,
     "closes_signoff": true,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
     "margin": {
      "margin": true,
-     "ckins_ps": 458,
-     "route_sdc": ".views/R1_hfd_gath_r10/route.sdc",
-     "signoff_sdc": ".views/R1_hfd_gath_r10/signoff.sdc",
+     "ckins_ps": 0,
+     "route_sdc": ".views/R2_hfd_gath_r10/route.sdc",
+     "signoff_sdc": ".views/R2_hfd_gath_r10/signoff.sdc",
      "recipe": "bench/stn_margin_sdc.py"
     },
     "route_sta": {
-     "ss": -4.25,
-     "ff": 28.68
+     "ss": -6.09,
+     "ff": 35.79
     },
     "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 56.91,
+    "ff_hold_ps": 35.79,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
   "hfd_gath_r24": {
@@ -505,9 +508,9 @@
     "die_top_io_pins": []
    },
    "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M5_hfd_gath_r9",
-    "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_gath_r9 top=physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv DW=109.704 DH=110.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M5_hfd_gath_r9/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5/routes/hbm_stn_gath_r9_pa_fbf6b0da5",
+    "SOURCE_COMMIT": "fbf6b0da5cbbcb2afd95483e36182c40997774c0",
+    "args": "SRC=/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5/src master=hfd_gath_r9 top=physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv DW=109.704 DH=110.136 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/hbm_stn_gath_r9_pa_fbf6b0da5/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_FACES=N",
     "exit": [
      "rc=0",
      "corner_rc=0",
@@ -516,20 +519,20 @@
      "signoff_corner_rc=0",
      "signoff_export_rc=0"
     ],
-    "ss_setup_ps": 112.85,
+    "ss_setup_ps": 113.06,
     "ff_hold_ps": 23.2,
     "drc": 0,
     "closes_signoff": true,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
     "margin": {
      "margin": true,
      "ckins_ps": 230,
-     "route_sdc": ".views/M5_hfd_gath_r9/route.sdc",
-     "signoff_sdc": ".views/M5_hfd_gath_r9/signoff.sdc",
+     "route_sdc": ".views/hbm_stn_gath_r9_pa_fbf6b0da5/route.sdc",
+     "signoff_sdc": ".views/hbm_stn_gath_r9_pa_fbf6b0da5/signoff.sdc",
      "recipe": "bench/stn_margin_sdc.py"
     },
     "route_sta": {
-     "ss": 49.85,
+     "ss": 50.06,
      "ff": 23.2
     },
     "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv",
@@ -537,7 +540,7 @@
     "generator": "tools/hbm_die_station_gen.py"
    },
    "margin": {
-    "ss_setup_ps": 112.85,
+    "ss_setup_ps": 113.06,
     "ff_hold_ps": 23.2,
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
@@ -1002,6 +1005,16 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
+  "hfd_meso_r35": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_meso_r37": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
   "hfd_quant": {
    "kind": "quant",
    "status": "missing",
@@ -1020,13 +1033,13 @@
    "check": {
     "verdict": "MISMATCH",
     "problems": [
-     "size 1399.66 x 133.896 != 1399.656 x 326.28",
-     "2118 pins off the generator position (same face)"
+     "pins: 0 missing, 0 extra, 0 wrong face, 512 wrong layer",
+     "835 pins off the generator position (same face)"
     ],
-    "positions": "2118 pins off the generator position (same face)",
+    "positions": "835 pins off the generator position (same face)",
     "size_view": [
      1399.66,
-     133.896
+     326.28
     ],
     "size_gen": [
      1399.656,
@@ -1564,7 +1577,7 @@
   },
   "hfd_stn_r19": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 4,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19",
    "lef": "hfd_stn_r19.lef",
@@ -1587,9 +1600,9 @@
     "die_top_io_pins": []
    },
    "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R1_hfd_stn_r19",
-    "SOURCE_COMMIT": "693b941a77566e053f8969561a0b288bce0d1548",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src24 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R1_hfd_stn_r19/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+    "route": "ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25/routes/hbm_stn_r19_c50fcf0ba_k25",
+    "SOURCE_COMMIT": "c50fcf0bae9091deb13a8ed2e3940d6994f28ba0",
+    "args": "SRC=/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25/src master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/hbm_stn_r19_c50fcf0ba_k25/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E",
     "exit": [
      "rc=0",
      "corner_rc=0",
@@ -1598,25 +1611,30 @@
      "signoff_corner_rc=0",
      "signoff_export_rc=0"
     ],
-    "ss_setup_ps": 84.93,
-    "ff_hold_ps": 474.0,
-    "drc": 324,
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "drc": 0,
     "closes_signoff": true,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
     "margin": {
      "margin": true,
      "ckins_ps": 0,
-     "route_sdc": ".views/R1_hfd_stn_r19/route.sdc",
-     "signoff_sdc": ".views/R1_hfd_stn_r19/signoff.sdc",
+     "route_sdc": ".views/hbm_stn_r19_c50fcf0ba_k25/route.sdc",
+     "signoff_sdc": ".views/hbm_stn_r19_c50fcf0ba_k25/signoff.sdc",
      "recipe": "bench/stn_margin_sdc.py"
     },
     "route_sta": {
-     "ss": 21.93,
-     "ff": 474.0
+     "ss": 23.82,
+     "ff": 474.03
     },
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
   "hfd_stn_r2": {
@@ -2308,6 +2326,21 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
+  "hfd_stn_r33": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 5
+  },
+  "hfd_stn_r34": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_stn_r36": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
   "hfd_stn_r4": {
    "kind": "stations",
    "status": "closed",
@@ -2472,9 +2505,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 9,
-  "closed": 29,
-  "missing": 31,
+  "interim-not-closed": 7,
+  "closed": 31,
+  "missing": 36,
   "reservation": 2
  }
 }

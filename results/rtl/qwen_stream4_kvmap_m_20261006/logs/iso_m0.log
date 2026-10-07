@@ -1,0 +1,4 @@
+STATS ISO_P8191 hbm_act=4232 rd=131072 wr=136 refpb=1564 violations=0 max_landing=15 rsp_tile_stall=12378 fill_sectors=131072 wr_sectors=136 wr_lat_max=67
+PASS ISO_P8191 "P":8191,"fill_cycles":1355,"fill_sectors":131072,"sectors_per_cycle":96.73,"tb_s_at_1p2ghz":3.715,"kv_ok_after_start":1831,"su_drain_wait":1766,"violations":0 : slices and token HBM codes exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"ISO_P8191","pass":true,"P":8191,"fill_cycles":1355,"fill_sectors":131072,"sectors_per_cycle":96.73,"tb_s_at_1p2ghz":3.715,"kv_ok_after_start":1831,"su_drain_wait":1766,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}

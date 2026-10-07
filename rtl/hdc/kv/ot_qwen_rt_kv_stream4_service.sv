@@ -78,7 +78,8 @@ module ot_qwen_rt_kv_stream4_service #(
     parameter integer WBW      = 1,        // write-backs issued a cycle (distinct PCs)
     parameter integer LPCW     = $clog2(NPC),
     parameter integer IDW      = $clog2(NWR),
-    parameter integer TGW      = 1 + 2 + IDW   // tag: {write, generation[1:0], id}
+    parameter integer TGW      = 1 + 2 + IDW,  // tag: {write, generation[1:0], id}
+    parameter integer KV_MAP   = 0             // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh); NSTK 4
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -172,12 +173,17 @@ module ot_qwen_rt_kv_stream4_service #(
 
     // ---- stream fill state --------------------------------------------------------------------
     // landed beat j of port (stack k, PC q) -> layer-relative logical sector (ot_qwen_hbm_stream4_ack)
+`include "ot_qwen_kv_map_m.svh"
     function automatic [16:0] p2l(input integer port, input [9:0] j);
         reg [4:0] q; reg [1:0] k;
-        begin q = 5'(port % 32); k = 2'(port / 32); p2l = {j[0], q[4], j[9:1], q[3:0], k}; end
+        begin q = 5'(port % 32); k = 2'(port / 32);
+              p2l = (KV_MAP != 0) ? m_p2l(port, j) : {j[0], q[4], j[9:1], q[3:0], k}; end
     endfunction
     function automatic integer l2port(input [16:0] l);
-        l2port = integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+        l2port = (KV_MAP != 0) ? m_l2port(l) : integer'(l[1:0]) * 32 + integer'({l[15], l[5:2]});
+    endfunction
+    function automatic [10:0] npc(input integer port, input [10:0] n);   // this PC's sectors of a base-n window
+        npc = (KV_MAP != 0) ? m_n(port / 32, n) : n;
     endfunction
     function automatic [10:0] n_of(input [NW-1:0] p);    // sectors a PC streams for position p
         n_of = 11'(({7'd0, p[NW-1:4]} + 1) * SPT);
@@ -273,7 +279,7 @@ module ot_qwen_rt_kv_stream4_service #(
             if (l_v[pi]) begin
                 b_rd[pi] = 1'b1;
                 //: exactly the next sector of this PC's stream, of this layer's row, inside the window
-                if (!active || fill_done || c >= nfill || l_sec[pi*17 +: 17] != p2l(pi, c[9:0]) || l_row[pi*8 +: 8] != lyr)
+                if (!active || fill_done || c >= npc(pi, nfill) || l_sec[pi*17 +: 17] != p2l(pi, c[9:0]) || l_row[pi*8 +: 8] != lyr)
                     b_bad[pi] = 1'b1;
                 s = p2l(pi, c[9:0]);
                 b_sec[pi] = s;
@@ -499,7 +505,7 @@ module ot_qwen_rt_kv_stream4_service #(
     integer ci;
     always @(*) begin
         all_landed = 1'b1;
-        for (ci = 0; ci < NPC; ci = ci + 1) if (lcnt[ci] != nfill) all_landed = 1'b0;
+        for (ci = 0; ci < NPC; ci = ci + 1) if (lcnt[ci] != npc(ci, nfill)) all_landed = 1'b0;
     end
     // ---- notice: post the next layer's descriptor once this layer is retired ---------------
     wire layer_retired = !active || (fill_done && wb_all && w_valid == 0 && !tok_in);

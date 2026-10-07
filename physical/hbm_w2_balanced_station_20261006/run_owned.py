@@ -20,6 +20,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--run', type=Path, required=True)
 p.add_argument('--reuse-map', type=Path,
                help='Completed map from the same pinned source; never synthesize it twice')
+p.add_argument('--skip-preplacement-repair', action='store_true')
 p.add_argument('--core-width', type=float, default=440.0)
 p.add_argument('--core-height', type=float, default=110.0)
 p.add_argument('--place-density', type=float, default=0.60)
@@ -106,7 +107,13 @@ def synth(*args, **kwargs):
     work = args[3]
     if a.reuse_map:
         cached = a.reuse_map.resolve()
-        old = json.loads((cached.parent/'physical.json').read_text())
+        record_path=cached.parent/'completed_map.json'
+        if not record_path.exists():record_path=cached.parent/'physical.json'
+        old = json.loads(record_path.read_text())
+        if 'artifacts' in old:
+            assert old['terminal']=='PASS' and old['route_terminal'] is False
+            for name,digest in old['artifacts'].items():
+                assert driver.sha256_file(cached/name)==digest
         assert old['design']['parameters'] == manifest['parameters']
         for source in old['design']['sources']:
             assert driver.sha256_file(ROOT/source['path']) == source['sha256'], 'cached source differs'
@@ -201,6 +208,8 @@ argv += ['--source','rtl/common/ot_fwd_link_stage.sv',
          '--pin-region','^(fclk_o|out_.*|ACK_.*)$=top',
          '--purpose','signoff_target','--nickname-tag',a.tag,
          '--output',str(run/'physical.json')]
+if a.skip_preplacement_repair:
+    argv += ['--step-tcl','PRE_FLOORPLAN='+rel+'/skip_preplacement_repair.tcl']
 (run/'argv.json').write_text(json.dumps(argv, indent=2)+'\n')
 try:
     rc = persistent.launch(driver, argv, workdir=run/'work', receipt=run/'launch.json')

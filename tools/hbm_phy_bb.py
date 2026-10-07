@@ -95,7 +95,11 @@ def host_bb(out: Path):
     m = re.search(r'SIZE ([\d.]+) BY ([\d.]+)', UCIE_LEF.read_text())
     W, H = float(m.group(1)), float(m.group(2))          # the UCIe-class host shoreline macro's outline, unchanged
     bits = [('clk', 'input')] + [(f'{n}[{i}]' if w > 1 else n, d) for n, w, d in ports for i in range(w)]
-    pitch = 0.048 * int((H - 2.0) / len(bits) / 0.048)
+    # r13 die-context STA (measured): pins spread over the full 1652 um face put up to ~1.6 mm of unbuffered wire
+    # between the host link station and a PHY pin (w299_host b[1] -> s_awready 0.83 ns, setup -1.0 ns).  The pins
+    # sit in one cluster at the face centre (0.192 um = 4 M4 tracks), opposite the station chain's end.
+    pitch = 0.192
+    y0 = round((H / 2 - len(bits) * pitch / 2) / 0.048) * 0.048 + 0.024
     d = out / cell
     d.mkdir(parents=True, exist_ok=True)
     L = [f'# PIN-ACCURATE BLACK BOX written by tools/hbm_phy_bb.py: host PHY / controller digital interface (AXI4-Lite BAR',
@@ -103,7 +107,7 @@ def host_bb(out: Path):
          'VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', f'MACRO {cell}', f'  FOREIGN {cell} 0 0 ;', '  SYMMETRY X Y ;',
          f'  SIZE {W:.3f} BY {H:.3f} ;', '  CLASS BLOCK ;']
     for i, (n, dr) in enumerate(bits):
-        y = 0.528 + i * pitch
+        y = y0 + i * pitch
         L += [f'  PIN {n}', f'    DIRECTION {dr.upper()} ;', '    USE SIGNAL ;', '    SHAPE ABUTMENT ;', '    PORT',
               '      LAYER M4 ;', f'      RECT 0.000 {y:.3f} 0.192 {y + 0.024:.3f} ;', '    END', f'  END {n}']
     L += ['  OBS'] + [f'    LAYER M{k} ;\n    RECT 0 0 {W:.3f} {H:.3f} ;' for k in range(1, 8)] + ['  END', f'END {cell}', '', 'END LIBRARY', '']

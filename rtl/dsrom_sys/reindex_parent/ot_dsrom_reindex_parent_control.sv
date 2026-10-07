@@ -11,6 +11,7 @@ module ot_dsrom_reindex_parent_control #(
     parameter integer LMW  = 11,
     parameter integer DF   = 8,
     parameter integer LSW  = 3,          // list slots = 2^LSW (0: the as-built single list)
+    parameter integer SPLIT_COUNTERS = 0,
     localparam integer SLW = (LSW > 0) ? LSW : 1
 ) (
     input  wire                 clk,
@@ -88,7 +89,7 @@ module ot_dsrom_reindex_parent_control #(
         .r_re(lr_re),.r_slot(rd_slot),.r_pair(lr_addr),.r_mask(lr_mask),
         .r_even(lr_e),.r_odd(lr_o),.r_valid(read_valid),.corrected(),.fault(mfault),
         .active_count(list_count),.writer_pending(writer_pending));
-    ot_dsrom_reindex_kgctl_parent u_c(
+    ot_dsrom_reindex_kgctl_parent #(.SPLIT_COUNTERS(SPLIT_COUNTERS)) u_c(
         .clk(clk),.rst_n(rst_n),.memory_fault(live_fault),.drain_accept(drain_accept),.lr_mask(lr_mask),
         .lr_re(lr_re),.lr_addr(lr_addr),.lr_e(lr_e),.lr_o(lr_o),
         .cmd_v(command_valid&&command_ready),.cmd_base(command_base),.cmd_skip(command_skip),.cmd_n(command_n),

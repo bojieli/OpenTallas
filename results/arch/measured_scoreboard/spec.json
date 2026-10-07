@@ -12,6 +12,7 @@
   "qwen_rom.operating_mode_8k",
   "qwen_rom.actual_fulltoken_cycles_8k_stream4",
   "qwen_rom.ar_tok_s_8k_composed",
+  "qwen_rom.token_cycles_8k_composed",
   "qwen_rom.dspark_tok_s_8k_stream4",
   "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
   "ds_rom.ar_tok_s_1m",
@@ -3931,7 +3932,7 @@
    "pointer": "operating_mode",
    "unit": "verdict",
    "status": "measured",
-   "note": "Native STREAM4 tile, NEAR_HBM0, DSparkOFF; full36+HEAD process0/drained. Clock not SS/FF qualified; no MTP credit."
+   "note": "Native STREAM4 tile, NEAR_HBM0, DSparkOFF; full36+HEAD process0/drained. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
@@ -4117,7 +4118,7 @@
    "pointer": "actual_fulltoken_cycles",
    "unit": "cycles",
    "status": "measured",
-   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+   "note": "One actual selected plain-AR STREAM4 full-token run (base KV map, KV_MAP=0); no extrapolation or rerun. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
@@ -4128,7 +4129,7 @@
    "pointer": "current_KV_checks",
    "unit": "checks",
    "status": "measured",
-   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+   "note": "One actual selected plain-AR STREAM4 full-token run (base KV map, KV_MAP=0); no extrapolation or rerun. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
@@ -4139,7 +4140,7 @@
    "pointer": "next_token",
    "unit": "token",
    "status": "measured",
-   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+   "note": "One actual selected plain-AR STREAM4 full-token run (base KV map, KV_MAP=0); no extrapolation or rerun. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
@@ -4150,7 +4151,7 @@
    "pointer": "head_cycles",
    "unit": "cycles",
    "status": "measured",
-   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+   "note": "One actual selected plain-AR STREAM4 full-token run (base KV map, KV_MAP=0); no extrapolation or rerun. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "hbm_ds",
@@ -4387,23 +4388,154 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_composed",
-   "label": "Per-user AR tok/s at 8K: measured STREAM4 P8191 token (all 576 MiB FP8 KV in-token) + adopted closure cycles",
+   "label": "Per-user AR tok/s at 8K (Qwen ROM headline, closed configuration): measured STREAM4 P8191 token + adopted lever cycles",
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "qwen_rom.AR_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 cycles core r5_f2ba + 217 cycles slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20 ps) = 194,172 at 1.2 GHz; r18g die wire bound 5,783.8 PENDING (GRT not closed); MTP mode = AR (DSpark OFF); full-system SS/FF not qualified"
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) = 194,226 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "token_cycles_8k_composed",
-   "label": "Qwen ROM P8191 token cycles incl. adopted core-context cycles",
+   "label": "Qwen ROM P8191 token cycles incl. adopted lever cycles (core, slab, KV_MAP=1)",
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "qwen_rom.token_cycles",
    "unit": "cycles",
    "status": "composed_from_measured",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_modelled_sensitivity",
+   "label": "Qwen ROM AR tok/s with the adopted levers' modelled costs added (sensitivity, not a headline)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "qwen_rom.modelled_sensitivity.AR_tok_s",
+   "unit": "tok/s",
+   "status": "modelled",
+   "note": "headline + 24 cycles of the KV_MAP=1 die per-stack crossbar + 768-b row fabric (cycle model on the measured landing trace, not RTL), charged on the cold first layer"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_m_out_of_quadrant_writes",
+   "label": "KV_MAP=1 (Option M) slice writes outside the destination quadrant",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "measured.out_of_quadrant_writes_M",
+   "unit": "writes",
+   "status": "measured",
+   "note": "of 196,592 slice writes per P8191 window; each stack carries 25% of the beats"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_base_out_of_quadrant_writes",
+   "label": "Base map (KV_MAP=0) slice writes outside the destination quadrant",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "measured.out_of_quadrant_writes_base",
+   "unit": "writes",
+   "status": "measured",
+   "note": "the r19/r20 per-stack crossbar feeds only its own quadrant, so the base map would deliver 1/3 of the writes"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_base_in_quadrant_fraction",
+   "label": "Base map: fraction of slice writes the as-built quadrant crossbar can deliver",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "measured.in_quadrant_fraction_base",
+   "unit": "fraction",
+   "status": "measured"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_m_iso_fill_cycles",
+   "label": "ISO_P8191 KV fill cycles, KV_MAP=1 (base 1,355)",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "measured.iso_P8191_fill_cycles.M",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "steady layers fully hidden in early_go + posted mode in both maps (0 exposed)"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_m_cycles_composed",
+   "label": "KV_MAP=1 token cost composed in the headline (cold-layer KV-ready delta)",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "token_cost.cycles_composed",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "isolated ISO_P8191 kv_ok 1,885 vs 1,831; charged in full on the token's one exposed (cold) layer"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kvmap_m_crossbar_modelled_cycles",
+   "label": "KV_MAP=1 die per-stack crossbar cost (MODELLED, not RTL)",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "pointer": "token_cost.modelled_not_composed.cycles",
+   "unit": "cycles",
+   "status": "modelled",
+   "note": "cycle model of the r19 crossbar + 768-b row fabric on the measured KV_MAP=1 trace; inside the hidden fill window in steady layers"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "fullwidth_protected_L0_cycles",
+   "label": "Protected full-width KV transport: full-size L0 at P8191 (EXPLORED, NOT ADOPTED)",
+   "path": "results/rtl/qwen_rom_fullwidth_20261006/full36_r2_samecyclego/layer_runtime_terminal.json",
+   "pointer": "core_layer",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "exact on 4 dies (x and kvP), cold, SAME_CYCLE_GO=1 (ab52a7204); not part of the shipped configuration (owner 2026-10-06); no full token on this transport"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "physical",
+   "key": "die_r20c_grt_i50_overflow",
+   "label": "Die r20c bundled GRT (k=16, 50 iterations) final overflow",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/grt/r20c_k16_banded_i50/summary.json",
+   "pointer": "total.overflow",
+   "unit": "overflow",
+   "status": "measured",
+   "note": "NOT CLOSED (i5 7,266); die-top route not done"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "physical",
+   "key": "die_r19_ir_worst_interior_mv",
+   "label": "Die r19 IR, worst interior rail-to-rail (spine/hub window)",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json",
+   "pointer": "r19_ir_spine_hub.rail_to_rail_interior_mv",
+   "unit": "mV",
+   "status": "measured",
+   "note": "all four r19 interior windows <= 35 mV (tile 20.86, shoreline 20.01, slab 20.86); whole-window edge maxima exceed 35 mV"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "physical",
+   "key": "die_r20c_flat_pilot_peak_rss_kb",
+   "label": "Die r20c flat die-top route pilot: peak RSS when killed in GRT setup",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/pilot_r20c/flat_pilot.log",
+   "pointer": "regex:Maximum resident set size \\(kbytes\\): (\\d+)",
+   "unit": "kB",
+   "status": "measured",
+   "note": "killed by the 900 GB guard after 2:44; the representative region pilot was also killed (exit 137) in CUGR maze routing: no die-top or regional route completed"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "physical",
+   "key": "die_r20c_assumed_constant_masters",
+   "label": "Die r20c masters checked with assumed-constant timing views",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/element_views/views_r20c.json",
+   "pointer": "len:assumed_constants",
+   "unit": "masters",
+   "status": "measured",
+   "note": "incl. qfd_tile/_e, qfd_kvc/_n, qfd_hub, qfd_ctrl, spine slabs, IO; qfd_cdc and qfd_port_tiles_* carry ETMs of r11a / r11c"
   },
   {
    "target": "ds_rom",
@@ -4526,11 +4658,11 @@
    "key": "ar_over_h100_tp8_8k",
    "label": "Qwen ROM AR / 8x H100 TP8 FP8 AR (both 8K)",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_stream4",
+    "qwen_rom.ar_tok_s_8k_composed",
     "gpu_qwen.h100_tp8_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = AR on STREAM4 (operating mode)",
+   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
    "unit": "x",
    "section": "ratios"
   },
@@ -4539,11 +4671,11 @@
    "key": "ar_over_h100_tp1_8k",
    "label": "Qwen ROM AR / 1x H100 FP8 AR (both 8K)",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_stream4",
+    "qwen_rom.ar_tok_s_8k_composed",
     "gpu_qwen.h100_tp1_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area; ROM side = AR on STREAM4 (operating mode)",
+   "note": "not iso-area; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
    "unit": "x",
    "section": "ratios"
   },
@@ -4582,7 +4714,7 @@
     "qwen_rom.realmem_L0_P8191"
    ],
    "expr": "x0/x1",
-   "note": "STREAM4 not yet composed into a token",
+   "note": "isolated layers (the measured full token is 193,955 cycles)",
    "unit": "x",
    "section": "terms"
   },
@@ -4842,6 +4974,105 @@
   }
  ],
  "physical_blocks": [
+  {
+   "target": "qwen_rom",
+   "block": "Decode core in die context r5_f2ba (composed, adopted record)",
+   "path": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
+   "verdict": "closed (prior Qwen bar)",
+   "area": "6,944.73 um2 std cells",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+6.27 ps",
+   "ff": "+6.92 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Decode core r5b_f3ba (owner closure list; die ETM; +112 cyc/token)",
+   "path": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
+   "verdict": "closed (prior Qwen bar); superseded by r5_f2ba in the record",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+0.87 ps",
+   "ff": "+7.12 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Port/scale slab group r11c (MUL_LAT 7)",
+   "path": "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json",
+   "verdict": "closed (prior Qwen bar)",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+11.47 ps",
+   "ff": "+4.20 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "STREAM4 CDC per PC r11a",
+   "path": "results/rtl/qwen_stream4_cdc_20261005/r11/r11a_4face_m30/corner_sta.json",
+   "verdict": "closed (prior Qwen bar)",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+25.40 ps",
+   "ff": "+10.17 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "STREAM4 CDC margin route m1j",
+   "path": "results/rtl/qwen_stream4_cdc_20261005/margin_20261006/m1j_cdc_margin_u123_ioh80/VERDICT.json",
+   "verdict": "closed (prior Qwen bar); IO hold +36.5 / +30.2; internal hold +8.2 below the +15 margin rule",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+46.0 ps",
+   "ff": "+36.5 ps (input)"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Corridor station qfd_cst s2_cst_hm40 (1,536 copies)",
+   "path": "results/rtl/qwen_die_masters_20261006/station_margin_routes.json",
+   "verdict": "closed",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+73.7 ps",
+   "ff": "+26.3 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Column head qfd_chead s2_chead_hm40 (64 copies)",
+   "path": "results/rtl/qwen_die_masters_20261006/station_margin_routes.json",
+   "verdict": "closed",
+   "area": "-",
+   "route": "DRC 0",
+   "ir": "-",
+   "ss": "+51.3 ps",
+   "ff": "+30.7 ps"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Die tiles and 23 other die masters (assumed-constant timing views)",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/element_views/views_r20c.json",
+   "verdict": "accepted on assumed-constant views (not routed closures)",
+   "area": "-",
+   "route": "-",
+   "ir": "-",
+   "ss": "-",
+   "ff": "-"
+  },
+  {
+   "target": "qwen_rom",
+   "block": "Die r20c (legality / track / pin access PASS)",
+   "path": "results/rtl/qwen_rom_closed_20261006/closure.json",
+   "verdict": "die-top route NOT DONE (GRT i50 overflow 7,972; flat pilot >940 GB in GRT setup; no regional route completed)",
+   "area": "-",
+   "route": "GRT overflow 7,972",
+   "ir": "26.0 mV worst interior (r19)",
+   "ss": "-",
+   "ff": "-"
+  },
   {
    "target": "qwen_rom",
    "block": "HBM_STREAM ctl WR_EN=1 @1.024 ns",
@@ -5200,14 +5431,37 @@
   {
    "target": "qwen_rom",
    "lever": "STREAM4 4-stack KV fill",
-   "verdict": "selected functional path; full-token numerical PASS, physical unqualified",
+   "verdict": "SHIPPED KV path (unprotected 128-PC parallel landing); full-token numerical PASS; physical accepted at block level (owner 2026-10-06)",
    "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
-   "numbers": "193955cycles/full36+HEAD, all144 layer outputs/currentKV checks, token18/logit42282b99, drained/process0; no qualified rate/MTP credit",
+   "numbers": "193955cycles/full36+HEAD, all144 layer outputs/currentKV checks, token18/logit42282b99, drained/process0; MTP off (AR mode)",
    "figures": [
     "qwen_rom.stream4_L0_cycles_P8191",
     "qwen_rom.stream4_fill_TBps",
     "qwen_rom.stream4_fill_pct_peak",
-    "qwen_rom.ar_tok_s_8k_stream4"
+    "qwen_rom.ar_tok_s_8k_composed"
+   ]
+  },
+  {
+   "target": "qwen_rom",
+   "lever": "KV landing Option M (KV_MAP=1)",
+   "verdict": "ADOPT (exact 15/15; owner 2026-10-06)",
+   "path": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+   "numbers": "0 of 196,592 slice writes outside the quadrant (base map 131,062: the quadrant crossbar would deliver 1/3); 25% per stack; ISO fill 1,363 vs 1,355, steady fill hidden (0 exposed); +54 cycles composed (cold layer, measured); crossbar +24 MODELLED",
+   "figures": [
+    "qwen_rom.kvmap_m_out_of_quadrant_writes",
+    "qwen_rom.kvmap_base_out_of_quadrant_writes",
+    "qwen_rom.kvmap_m_cycles_composed",
+    "qwen_rom.kvmap_m_crossbar_modelled_cycles"
+   ]
+  },
+  {
+   "target": "qwen_rom",
+   "lever": "Protected full-width KV transport",
+   "verdict": "EXPLORED, NOT ADOPTED (owner 2026-10-06)",
+   "path": "results/rtl/qwen_rom_fullwidth_20261006/full36_r2_samecyclego/layer_runtime_terminal.json",
+   "numbers": "SAME_CYCLE_GO fix ab52a7204; full-size L0 P8191 exact on 4 dies in 6,188 cycles cold; full36_r1 runtime fault retained; no full token",
+   "figures": [
+    "qwen_rom.fullwidth_protected_L0_cycles"
    ]
   },
   {
@@ -5511,27 +5765,9 @@
  "open_items": [
   {
    "target": "qwen_rom",
-   "item": "Native STREAM4 multi-position tagged-row hook (qwen_stream4_wire_native_tagged_rows) for the combined die",
-   "owner": "Claude",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Combined DSpark VPOS/KVmp/near successor top join (sources b23d42ed5, 87b29eb8c)",
-   "owner": "Laplace (Codex)",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Near-HBM or STREAM4 with VPOS at 8K; SS/FF of VPOS/ARP/accept/mp-service; RTL drafter ingest+Markov; measured tau",
-   "owner": "Claude",
-   "path": "results/rtl/qwen_dspark_system_20261004/REPLAY.md"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Near-HBM row engine r7 P&R; full-die congestion b3r2b; tile/spine closure; tp_seq_w12 at 0.833 ns",
-   "owner": "unowned in records",
-   "path": "results/uarch/qwen_nearhbm_attn_rtl_20261003"
+   "item": "Qwen ROM CLOSED 2026-10-06; outside the closed claim: die-top flat/regional route (r20c GRT i50 overflow 7,972), routed closure of the 25 assumed-constant die masters, the +15/+15 margin rule (CDC internal hold +8.2)",
+   "owner": "owner decision (no work queued)",
+   "path": "results/rtl/qwen_rom_closed_20261006/closure.json"
   },
   {
    "target": "ds_rom",

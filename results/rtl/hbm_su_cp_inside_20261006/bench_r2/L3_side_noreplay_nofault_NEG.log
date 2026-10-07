@@ -1,0 +1,6 @@
+LOOP HANG tx=12 done=11
+FAIL
+- rtl/test/hbm_accel/su_cp_side_20261006/tb_su_cp_side_loop.sv:193: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 50ms; walltime 304.408 s; speed 164.258 us/s
+- Verilator: cpu 304.399 s on 1 threads; alloced 1018 MB

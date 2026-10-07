@@ -289,7 +289,18 @@ module ot_hfd_loader_m #(
             c_rdy = ms == M_IDLE;
             d_rdy = w_can && req_rdy;
         end
-        wire fold_now = ms == M_VERIFY && rob_v[f_idx[VB-1:0]];
+        // response pipeline (views agent): rq_* = registered MREQ response, rw_* = registered read-back write
+        reg              rq_v, rq_we, rw_v;
+        reg [TW-1:0]     rq_tag;
+        reg [255:0]      rq_d, rw_d;
+        reg [VOUT-1:0]   rw_oh, f_oh;                 // f_oh: one-hot of f_idx[VB-1:0]
+        always @(posedge clk_mem) begin
+            rq_tag <= rsp_tag; rq_d <= rsp_data; rw_d <= rq_d; rw_oh <= VOUT'(1) << rq_tag[VB-1:0];
+            for (integer i = 0; i < VOUT; i = i + 1) if (rw_v && rw_oh[i]) rob[i] <= rw_d;
+        end
+        reg [255:0] f_sel;
+        always @* begin f_sel = 256'd0; for (integer i = 0; i < VOUT; i = i + 1) f_sel = f_sel | ({256{f_oh[i]}} & rob[i]); end
+        wire fold_now = ms == M_VERIFY && |(rob_v & f_oh);
         // CRC pipeline (memory): P1 the retired read-back sector, P2 partials; vcrc is folded at P3
         reg         mp1_v, mp2_v;
         reg [255:0] mp1_w;
@@ -299,30 +310,31 @@ module ot_hfd_loader_m #(
             else begin mp1_v <= fold_now; mp2_v <= mp1_v; end
         end
         always @(posedge clk_mem) begin
-            mp1_w <= rob[f_idx[VB-1:0]]; mp2_lo <= crc_lo(mp1_w); mp2_hi <= crc_hi(mp1_w);
+            mp1_w <= f_sel; mp2_lo <= crc_lo(mp1_w); mp2_hi <= crc_hi(mp1_w);
         end
         wire mp_busy = mp1_v || mp2_v;
         always @(posedge clk_mem or negedge rst_mem_n) begin
             if (!rst_mem_n) begin
                 ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vin <= 0; wa_q <= 0; ra_q <= 0;
                 m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;
+                rq_v <= 0; rq_we <= 0; rw_v <= 0; f_oh <= VOUT'(1);
             end else begin
                 if (k_v && k_rdy) k_v <= 0;
                 if (mp2_v) vcrc <= crc_s(vcrc) ^ mp2_lo ^ mp2_hi;
                 // write acknowledgements / read-back data
-                if (rsp_v) begin
-                    if (rsp_we) w_ack <= w_ack_nx;
-                    else if (ms == M_VERIFY) begin
-                        rob[rsp_tag[VB-1:0]] <= rsp_data;
-                    end else m_fault <= 1;
+                rq_v <= rsp_v; rq_we <= rsp_we;
+                rw_v <= rq_v && !rq_we && ms == M_VERIFY;
+                if (rq_v) begin
+                    if (rq_we) w_ack <= w_ack_nx;
+                    else if (ms != M_VERIFY) m_fault <= 1;
                 end
-                w_out <= w_out + ((req_v && req_rdy && req_we) ? 8'd1 : 8'd0) - ((rsp_v && rsp_we) ? 8'd1 : 8'd0);
-                rob_v <= (rob_v | ((rsp_v && !rsp_we && ms == M_VERIFY) ? (VOUT'(1) << rsp_tag[VB-1:0]) : {VOUT{1'b0}}))
-                         & ~(fold_now ? (VOUT'(1) << f_idx[VB-1:0]) : {VOUT{1'b0}});
+                w_out <= w_out + ((req_v && req_rdy && req_we) ? 8'd1 : 8'd0) - ((rq_v && rq_we) ? 8'd1 : 8'd0);
+                rob_v <= (rob_v | (rw_v ? rw_oh : {VOUT{1'b0}})) & ~(fold_now ? f_oh : {VOUT{1'b0}});
+                if (fold_now) f_oh <= {f_oh[VOUT-2:0], f_oh[VOUT-1]};
                 case (ms)
                     M_IDLE: if (c_v) begin
                         m_base <= c_d[31:0]; m_n <= c_d[63:32]; m_ver <= c_d[64];
-                        w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;
+                        w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0; f_oh <= VOUT'(1);
                         vin <= 0; wa_q <= c_d[31:0]; ra_q <= c_d[31:0];
                         ms <= M_WRITE;
                     end

@@ -1,0 +1,57 @@
+{
+  "status": "PASS_FULLSHAPE_L0_P8191",
+  "output_comparisons": [
+    {
+      "path": "L0_die0_x.hex",
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die0_kvP.hex",
+      "exact": true,
+      "sha256": "e6751ad771fc6c10016ce1b8c53c1b904478e55182f84df84722d0c65fc45379"
+    },
+    {
+      "path": "L0_die1_x.hex",
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die1_kvP.hex",
+      "exact": true,
+      "sha256": "669452fe2b51e4b9af5aa27382bd8cd13cd0a3f1ffa83bc64b34d6b4635d86d6"
+    },
+    {
+      "path": "L0_die2_x.hex",
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die2_kvP.hex",
+      "exact": true,
+      "sha256": "22a9d80b262dfcf896e417c3ee50815b4cf71f39a3fbe6f49bf54edbc464ecac"
+    },
+    {
+      "path": "L0_die3_x.hex",
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die3_kvP.hex",
+      "exact": true,
+      "sha256": "114b552690c33234f6dc8f9a32480281297ac8d0d0ba196398253b7ae03ca08e"
+    }
+  ],
+  "failures": [],
+  "full_token_pass": false,
+  "layers_executed": 1,
+  "ranks": 4,
+  "position": 8191,
+  "physical_qualified": false,
+  "model_and_engine_archives_reused": true,
+  "next_layer_prefetch": false,
+  "scope": "Cold full-shape L0 only; actual clocks, faults, finite transport, warm and validated ACK drain; no overlap/fullhead/all36 claim",
+  "core_final_visible": 6188,
+  "core_layer": 6188,
+  "controller_rises": 5036
+}

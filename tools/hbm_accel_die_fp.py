@@ -67,8 +67,28 @@ LINK_STAGE_UM = 430.56          # corridor-gate closing pitch (S81 / Qwen die)
 SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
+
+
+def stage_um(m):
+    """die register-hop pitch of forwarded-clock station segments (430.56 um; forwarded reach 491 um)"""
+    return LINK_STAGE_UM
+
+
+REACH_INTER_UM, REACH_INTRA_UM = 359.0, 412.0       # budgets_20261006: SS reach at the 150 ps / 90 ps skew terms
+
+
+def seg_stages(m, bid, L):
+    """r17 (budget stage plan): register hops of one staged segment.  A forwarded-clock segment (station to station,
+    the clock travels with the data) at 430.56 um; a common-clock segment (hub nets, the first hop out of a clocked
+    source, the last hop into a block) as the budget prices a region-crossing path: one hop at the inter reach, the rest
+    at the intra reach (>= the intra-only count).  Rounds before r17: ceil(L / 430.56) everywhere."""
+    if L <= 0:
+        return 0
+    if not (m.get('variant') or {}).get('budget_stages') or bid in m.get('fclk', {}):
+        return math.ceil(L / LINK_STAGE_UM)
+    return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM)
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r16j'            # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments)
+FINAL_ROUND = 'r18'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -251,7 +271,24 @@ R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/in
 # (port_map), the PHY dfi bundle split by bit range (bus endpoint 'dfi@lo:hi'), cross buses between abutting bands,
 # one die clock leaf ck / rst per band.  Every other master keeps its pins.
 R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.json', host_bb=True)
-ADOPTED = R16J
+# r17 (2026-10-06 ~20:30, budgets coordinator: results/rtl/budgets_20261006 SUMMARY 'infeasible as planned'):
+#  budget_stages: common-clock staged segments (hub nets, first / last hop of a chain) get 1 + ceil((L - 359) / 412)
+#    register hops (inter reach 359 um, intra 412; at 430.56 they came out one short: su <-> router / cmdproc / vm /
+#    coll / index, vm <-> router, the last hop into the SM); forwarded station segments keep 430.56 (reach 491).
+#  hub_stage_all: the attention root buses tr_<q><r> (tile row -> index band, 1.7-4.5 mm) are staged paths (only the
+#    farthest row of a quadrant was).
+#  fwd_hub: index b5 -> VM (iv_<q>, 5.1-5.3 mm) and VM -> router (3.8 mm) cross clock regions by 198-268 / 197 ps:
+#    forwarded-clock station chains (first station clocked from the source region, last station a meso FIFO into the
+#    receiver's clock, endpoint pins unchanged), on new spine-side lanes 'iv' / 'rv'.
+#  spine_region: loader + router + cmdproc are one clock region HUB-SP (2.6 mm) apart from HUB-C (cmdproc <-> router /
+#    loader were split across HUB-C cuts at 197 ps).
+#  barrier_low: the barrier (only peer: cmdproc) moved into the cmdproc / coll gap, inside HUB-SP.
+#  The SM 3x3 grid (smh element) joins r17 when the SM view exports.
+R17 = dict(R16J, budget_stages=True, hub_stage_all=True, fwd_hub=True, spine_region=True, barrier_low=True)
+# r18 (2026-10-06 ~21:45, views agent handover): r17 + the band clock pins at the block centre (CK_CENTRE, M7 area pin)
+#   + gath_r9 / stn_r19 re-read from their re-routed views (index) + fwd hub chain station directions (die_top_lint).
+R18 = dict(R17, ck_centre=True)
+ADOPTED = R18
 
 
 def build(variant=None):
@@ -384,6 +421,13 @@ def build(variant=None):
         geo['hub_y'] = (hy0, hy1)
     geo['ew_y'] = dict(S=(hub['router'].y + hub['router'].h + SHAVE + hub['cmdproc'].y) / 2,
                        N=(hub['vm'].y + hub['vm'].h + SHAVE + hub['barrier'].y) / 2)
+    if variant.get('barrier_low'):      # r17: the barrier (whose only peer is the cmdproc) sits in the cmdproc / coll
+        #   gap, 4 mm closer to its peer and inside the cmdproc's clock region (r17 plan: barrier <-> cmdproc 198.7 ps
+        #   across HUB-C / HUB-SP); nothing else moves (ew_y keeps the pre-move N gap)
+        it, cp, co = hub['barrier'], hub['cmdproc'], hub['coll']
+        gap0, gap1 = cp.y + cp.h + SHAVE, co.y
+        it.y = up(gap0 + (gap1 - gap0 - it.h) / 2, GY)
+        assert gap0 + 20.0 <= it.y and it.y + it.h + 20.0 <= gap1, ('barrier_low does not fit', gap0, gap1, it.h)
     qh = dn((hh - HCH) / 2, GY)
     # r16 option cq_h: SU / SFU / HC quarters keep that height (r14b 3,080 um) on a taller hub band, at the hub edge
     # (cq_at='edge') or against the equator channel (cq_at='equator'); the scan quadrants use the full qh
@@ -512,6 +556,8 @@ def build(variant=None):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
     if variant.get('split_x_masters'):
         apply_splits_x(m, variant['split_x_masters'])
+    if variant.get('barrier_low'):
+        fix_ports_from_views(m, ['hfd_barrier'])
     return m
 
 
@@ -541,10 +587,69 @@ def _jsonable(o):
     return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
 
 
+CK_CENTRE = ('hfd_index_q_b0', 'hfd_index_q_b1', 'hfd_index_q_b2', 'hfd_index_q_b3', 'hfd_index_q_b5',
+             'hfd_svc_SE_s0', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0')
+
+
+def ck_centre(mst_, sp_):
+    """r18 (views agent REQUEST 20:25 / 21:30, measured insertion 927-1,324 ps > the 900 ps target with ck at a band
+    edge): the band's ck is an M7 area pin at the band centre (0.064 x 0.288 um on the M7 track between the 10.8 um PG
+    stripes: x = 5.4 + 10.8 k + 0.032 nearest the centre; y on the 0.048 grid); the die clock leaf drops onto it from
+    M8 (the die owns M8 / M9).  rst stays on its edge."""
+    if mst_.name not in CK_CENTRE or 'ck' not in sp_:
+        return
+    # r16 a_real (measured): the pin must sit on the M7 track lattice (x = 0.016 mod 0.064, block and die alike) or no
+    # origin is legal with the M5 pins (ot_mts); the instance origins of these masters are packed on x = 0 mod 1.728
+    # (lcm of site 0.054, M5 0.048, M7 0.064).  Among those tracks: the one nearest the centre that lies mid-way between
+    # the block's 10.8 um M7 PG stripes (VDD x = 1.0, VSS x = 6.4 mod 10.8): x mod 10.8 within 3.7 +- 0.4 or 9.1 +- 0.4.
+    best = None
+    k0 = round((mst_.w / 2 - 0.016) / 0.064)
+    for d in range(0, 400):
+        for kk in (k0 + d, k0 - d):
+            x = 0.016 + 0.064 * kk
+            r = x % 10.8
+            if abs(r - 3.7) <= 0.4 or abs(r - 9.1) <= 0.4:
+                best = x
+                break
+        if best is not None:
+            break
+    cx = round(best, 4)
+    cy = round(round(mst_.h / 2 / 0.048) * 0.048, 4)
+    sp_['ck'] = ('area', 'M7', cx, cy, 0.064, 0.288)
+
+
+def fix_ports_from_views(m, masters_):
+    """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
+    pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
+    fixed = m.setdefault('fixed_ports', {})
+    idx = json.loads((ROOT / 'physical/hbm_accel_die_views/index.json').read_text())['masters']
+    for mst in masters_:
+        v = idx[mst]
+        r = S.real_lef(f"{v['dir']}/{v['lef']}")
+        ports = defaultdict(list)
+        for pn, (layer, (x0, y0, x1, y1)) in r['pins'].items():
+            base = re.sub(r'\[\d+\]$', '', pn)
+            ports[base].append([pn if '[' in pn else f'{pn}[0]', layer, x0, y0, x1, y1])
+        rec = {}
+        for b, pins in ports.items():
+            q = pins[0]
+            face = 'W' if q[2] <= 0.01 else 'E' if q[4] >= r['w'] - 0.01 else 'S' if q[3] <= 0.01 else 'N'
+            rec[b] = dict(bits=len(pins), layer=q[1], face=face, pins=pins)
+        spec, order = _split_spec(rec)
+
+        def fn(mst_, k=1, spec=spec, order=order):
+            sp_ = dict(spec)
+            if k > 1:
+                _bundle_pack(mst_, sp_, order, k)
+            mst_.ports, mst_.order = sp_, list(order)
+        fixed[mst] = fn
+
+
 def apply_splits(m, specs, lattice=None):
     """r16i: replace each instance of a split parent by its bands (same slot, mirrored with the parent), move every
     parent-port bus end to the band that owns the port, give every band the parent's ck / rst nets, add the cross buses
     between abutting bands, and fix the band masters' pin plans to the split record (m['fixed_ports'])."""
+    V_ck = (m.get('variant') or {}).get('ck_centre')
     fixed = m.setdefault('fixed_ports', {})
     lattice = lattice or {}
     for parent, rel in specs.items():
@@ -559,6 +664,8 @@ def apply_splits(m, specs, lattice=None):
                 sp_ = dict(spec)
                 if k > 1:
                     _bundle_pack(mst, sp_, order, k)
+                if V_ck:
+                    ck_centre(mst, sp_)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
@@ -570,6 +677,8 @@ def apply_splits(m, specs, lattice=None):
             assert abs(it.h - Hp) < 0.01, (parent, it.h, Hp)
             names = {}
             mx = it.orient in ('MX', 'R180')
+            if V_ck and any(bn in CK_CENTRE for bn, _ in bands):    # r18: band origins on x = 0 mod 1.728 (M7 ck pin)
+                it.x = math.ceil(round(it.x * 1000) / 1728) * 1.728
             lat = lattice.get(parent, {})
             top = None
             for bn, b in (bands[::-1] if mx else bands):     # bottom-up in die y
@@ -661,6 +770,7 @@ def apply_splits_x(m, rel):
     port name (port_map), a bus on a port split by bit range (the svc PHY dfi bundle) becomes one bus per band whose
     real-macro end is the slice 'dfi@lo:hi', ck / rst reach every band, and the record's cross buses join abutting
     bands of each parent instance."""
+    V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
     fixed = m.setdefault('fixed_ports', {})
     for bn in sp['bands']:
@@ -673,6 +783,8 @@ def apply_splits_x(m, rel):
                     if t_[0] == 'xy':
                         sp_[pn] = ('face', len(t_[1]), 'S', 'M5', round(sum(t_[1]) / len(t_[1]), 4), 1)
                 _bundle_pack(mst, sp_, order, k)
+            if V_ck:
+                ck_centre(mst, sp_)
             mst.ports, mst.order = sp_, list(order)
         fixed[bn] = fn
     repl, pmap = {}, {}
@@ -695,7 +807,8 @@ def apply_splits_x(m, rel):
             nom = round((it.x + x0) * 1000)
             lo = nom if end is None else max(nom, end)
             xd = lo
-            while xd % 54 or (xd - nom) % 48:
+            m64 = 64 if ((m.get('variant') or {}).get('ck_centre') and bn in CK_CENTRE) else 1
+            while xd % 54 or (xd - nom) % 48 or xd % m64:
                 xd += 6
             end = xd + round(w * 1000)
             xx = xd / 1000.0
@@ -886,7 +999,8 @@ def _router(m, B, P):
             m.setdefault('clocked', {})[name] = dom
         return it
 
-    def chain(cid, cls, bits, src, dst, pts, path=None, fc=None, meso_end=False, dom='stream', local_src=False):
+    def chain(cid, cls, bits, src, dst, pts, path=None, fc=None, meso_end=False, dom='stream', local_src=False,
+              first_um=None):
         """src/dst = (inst, port); pts = polyline through channels; stations every <= WAYPOINT_UM along it.  dst None:
         leave the chain open and return (last endpoint, bus ids).  r15 fwd: fc = (downstream bits, upstream bits) adds
         the forwarded clocks (one per 512 b slice and direction) to every segment; meso_end: the last station is a meso
@@ -896,6 +1010,8 @@ def _router(m, B, P):
         seq = []
         acc = 0.0
         WAYPOINT_UM = m['variant'].get('wp_um', WP_DEFAULT)     # r13 option: station spacing (registered segment)
+        if first_um is not None:        # r17: the first station first_um from the source (inside its clock region)
+            acc = WAYPOINT_UM - first_um
         for (ax, ay), (bx, by) in zip(pts, pts[1:]):
             L = abs(bx - ax) + abs(by - ay)
             if L <= 0:
@@ -980,7 +1096,8 @@ def buses(m):
     sp_off, ed_off = {}, {}
     pos = 60.0
     for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('xt', 129), ('ct', 23), ('ef', 8)) + \
-            ((('qa', 38),) if m['variant'].get('attn_rtl') else ()):
+            ((('qa', 38),) if m['variant'].get('attn_rtl') else ()) + \
+            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()):
         sp_off[n_] = pos + nb * 1.2 / 2
         pos += nb * 1.2 + 40.0
     pos = 30.0
@@ -1388,6 +1505,46 @@ def buses(m):
                                                  clock='clk_link', where='inside the receiving hub block'))
     else:
         chain('host', 'host', 512, (ld.name, 'h'), (hl.name, 'io'), pts, path='host')
+    if V.get('hub_stage_all'):          # r17: every attention root bus is a staged path
+        for b_ in B:
+            if b_[1] == 'attn_root' and not any(b_[0] in ids for ids in P.values()):
+                P[f'attn_root_{b_[0][3:]}'] = [b_[0]]
+    if V.get('fwd_hub'):                # r17: forwarded-clock chains for the two region crossings > 150 ps
+        vm = hub['vm']
+        hy0_, hy1_ = g['hub_y']
+        drop = set()
+        for st in ('SW', 'SE', 'NW', 'NE'):
+            sc = m['scan'][st]
+            ix = sc['index']
+            side, half = st[0], st[1]
+            ye = (hy0_ + hy1_) / 2 + (-130.0 if side == 'S' else 130.0) + (-20.0 if half == 'W' else 20.0)
+            xi = xlane(half, 'iv', vm.x - g['spch'] / 2 if half == 'W' else vm.x + vm.w + g['spch'] / 2)
+            xc = (ix.x + ix.w + SHAVE + HCH / 2) if half == 'W' else (ix.x - HCH / 2)
+            iy = (ix.y + ix.h - 200.0) if side == 'S' else (ix.y + 200.0)
+            src = (ix.x + ix.w, iy) if half == 'W' else (ix.x, iy)
+            dst = _cxy(vm, 'W' if half == 'W' else 'E', 0.15 if side == 'S' else 0.25)
+            pts = [src, (xc, iy), (xc, ye), (xi, ye), (xi, dst[1]), dst]
+            drop.add(f'iv_{st}')
+            n0 = len(insts)
+            chain(f'iv_{st}', 'hub', 512, (ix.name, 't_vm'), (vm.name, f'i{st}'), pts, path=f'index_vm_{st}', fc=(512,),
+                  meso_end=True, local_src=True, first_um=HCH / 2 + 60.0)
+            w0 = insts[n0]          # the clocked first station: a sink of the index quarter's region
+            m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
+                                                         rect=[round(w0.x, 1), round(w0.y, 1), round(w0.x + w0.w, 1), round(w0.y + w0.h, 1)]))
+        rt = hub['router']
+        xr = xlane('W', 'rv', vm.x - g['spch'] / 2)
+        a0 = _cxy(vm, 'W', 0.05)
+        b0 = _cxy(rt, 'W', 0.5)
+        drop.add('hb_vm_router')
+        P.pop('hub_vm_router', None)
+        n0 = len(insts)
+        chain('vr', 'hub', 512, (vm.name, 't_router'), (rt.name, 'f_vm'), [a0, (xr, a0[1]), (xr, b0[1]), b0],
+              path='hub_vm_router', fc=(512,), meso_end=True, local_src=True)
+        w1 = insts[-1]              # the meso station into the router: a sink of the router's region
+        assert len(insts) > n0 and w1.master.startswith('hfd_meso')
+        m.setdefault('region_extra', []).append(dict(name='HUB-SP', clock='clk_stream',
+                                                     rect=[round(w1.x, 1), round(w1.y, 1), round(w1.x + w1.w, 1), round(w1.y + w1.h, 1)]))
+        B[:] = [b_ for b_ in B if b_[0] not in drop]
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)
@@ -1837,11 +1994,11 @@ def manhattan_paths(m):
             a, b = near(A, c(Bb)), near(Bb, c(A))
             a, b = near(A, b), near(Bb, a)
             ln = abs(a[0] - b[0]) + abs(a[1] - b[1])
-            segs.append(round(ln, 1))
+            segs.append((bid, round(ln, 1)))
             L += ln
         out[p] = dict(segments=len(ids), um=round(L, 1),
-                      stages_430=sum(math.ceil(s_ / LINK_STAGE_UM) for s_ in segs if s_ > 0),
-                      stages_504=sum(math.ceil(s_ / SS_REACH_UM) for s_ in segs if s_ > 0))
+                      stages_430=sum(seg_stages(m, b_, s_) for b_, s_ in segs if s_ > 0),
+                      stages_504=sum(math.ceil(s_ / SS_REACH_UM) for _, s_ in segs if s_ > 0))
     return out
 
 
@@ -2065,7 +2222,7 @@ def pdn_plan(m, cov=None):
 
 
 def clock_regions(m):
-    out = []
+    out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
         for h, cols in (('w', (0, 1)), ('e', (2, 3))):
             ss = [s for s in G['sms'] if s.sm['col'] in cols]
@@ -2076,7 +2233,22 @@ def clock_regions(m):
             out.append(dict(name=f'G{st}{h}', clock='clk_stream', rect=[round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
                             extent_um=round(max(x1 - x0, y1 - y0), 1), sms=[s.name for s in ss]))
     hb = m['hub']
-    cen = [hb[k] for k in hb if not k.startswith('index_')]
+    sp_ = (('loader', 'router', 'cmdproc') + (('barrier',) if m['variant'].get('barrier_low') else ())
+           if m['variant'].get('spine_region') else ())
+    if sp_:     # r17: loader + router + cmdproc in one region (their sync nets stayed inside one tree cut); listed
+        #         before HUB-C, whose rect contains them (sink_regions takes the first rect holding a sink)
+        sp = [hb[k] for k in sp_]
+        out.append(dict(name='HUB-SP', clock='clk_stream', rect=[round(min(i.x for i in sp), 1), round(min(i.y for i in sp), 1),
+                        round(max(i.x + i.w for i in sp), 1), round(max(i.y + i.h for i in sp), 1)]))
+        # HUB-V: the VM and the clocked stations at its faces (iv meso FIFOs, vr first station, x / query trunk roots)
+        # in one region: the plan's median cut of HUB-C put the VM and its west-channel stations in two cuts (197 ps)
+        vm = hb['vm']
+        xs = [it for it in m['insts'] if it.kind == 'waypoint' and it.name in m.get('clocked', {})
+              and vm.y - 900.0 <= it.y <= vm.y + vm.h and vm.x - 1100.0 <= it.x <= vm.x + vm.w + 1100.0]
+        bx = [vm] + xs
+        out.append(dict(name='HUB-V', clock='clk_stream', rect=[round(min(i.x for i in bx) - 1, 1), round(min(i.y for i in bx) - 1, 1),
+                        round(max(i.x + i.w for i in bx) + 1, 1), round(max(i.y + i.h for i in bx) + 1, 1)]))
+    cen = [hb[k] for k in hb if not k.startswith('index_') and k not in sp_]
     out.append(dict(name='HUB-C', clock='clk_stream + clk_serial', rect=[round(min(i.x for i in cen), 1), round(min(i.y for i in cen), 1),
                     round(max(i.x + i.w for i in cen), 1), round(max(i.y + i.h for i in cen), 1)]))
     for r in m['regions']:

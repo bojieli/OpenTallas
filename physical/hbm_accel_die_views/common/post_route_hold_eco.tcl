@@ -67,10 +67,12 @@ global_route -allow_congestion
 detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose
+# views agent: the routed ECO db is written BEFORE extraction (cmdproc cpss4/cpsn4 eco_pd: DRT clean, then the session
+# died in write_spef / read_spef with no 6_final.odb, losing the route); sign-off re-reads the db + this SPEF
+write_db $::env(OT_OUT)/6_final.odb
+write_verilog $::env(OT_OUT)/6_final.v
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef
 foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
-write_db $::env(OT_OUT)/6_final.odb
-write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"
