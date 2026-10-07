@@ -41,6 +41,27 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_recovery_does_not_duplicate_a_slow_worker(self):
+        pool = Mock()
+        slow = Mock()
+        slow.done.return_value = False
+        with patch.object(cl, "_RECOVERY_POOL", pool), patch.object(cl, "_RECOVERY_FUTURE", slow):
+            cl.schedule_recovery()
+            pool.submit.assert_not_called()
+            slow.done.return_value = True
+            cl.schedule_recovery()
+            pool.submit.assert_called_once_with(cl.recover_jobs)
+
+    def test_recovery_failure_does_not_skip_other_classes(self):
+        with patch.object(cl, "all_jobs", return_value=[]), patch.object(cl, "log"), \
+             patch.object(cl, "reevaluate_benches", side_effect=RuntimeError("network")), \
+             patch.object(cl, "requeue_toolchain") as toolchain, patch.object(cl, "requeue_budget") as budget, \
+             patch.object(cl, "requeue_hold_only") as hold, patch.object(cl, "requeue_ssh_verdict") as ssh, \
+             patch.object(cl, "auto_requeue") as auto:
+            cl.recover_jobs()
+        for check in (toolchain, budget, hold, ssh, auto):
+            check.assert_called_once_with([])
+
     def test_host_requirement_must_be_explicit_known_hosts(self):
         spec = dict(name="test", block="b", owner="o", source={"branch": "b", "commit": "c" * 40},
                     stages={"route": {"cmd": "true"}}, no_bench_reason="fixture")
