@@ -801,10 +801,10 @@
       {
        "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
        "pointer": "options.A_f198_2048 vs options.base_f198_2050",
-       "commit": "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
+       "commit": "ece40d827 (on origin/main; blob 2526ad8f; values pinned as constants because this branch's base 449ebc571 predates it)"
       }
      ],
-     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
+     "note": "measured exact (option A 19,056/19,056 region runs, base_f198 20,928/20,928, both bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
     },
     {
      "id": "bf_merge_ksplit_option_B",
@@ -816,7 +816,7 @@
       {
        "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
        "pointer": "options.B_mixed_2304",
-       "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+       "commit": "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
       },
       {
        "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -1042,7 +1042,7 @@
      "record": {
       "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
       "pointer": "options.B_mixed_2304",
-      "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+      "commit": "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
      },
      "legal_fit": {
       "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -1788,7 +1788,7 @@
       {
        "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
        "pointer": "options.A_credit_bound.cost_serialisation",
-       "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+       "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
       }
      ],
      "note": "II=3 rate cap: +30.78 us AR / +172 us MTP unless the 3-bank rotation (II=1) lands for both the CDC and the packet SRAM; the rotation itself costs +2 cycles/pass (+1.02 us) and +12,093 um2. Basis: measured receive streaming 18,470 cycles a AR token, 103,196 a MTP step, tripled at II=3 (+6.48 % AR, +16.37 % MTP step on the gate). Not summed in unified_candidate; see compositions unified_candidate_ii3_cap / unified_candidate_ii1_rotation"
@@ -1807,7 +1807,7 @@
       {
        "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
        "pointer": "options.B_rotated_II1",
-       "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+       "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
       }
      ],
      "note": "design-model recommendation, no RTL; +12,093.2 um2; replaces the +2 x 265 collective_sram_protected term in the both-ways compositions (it covers every TX and RX CDC pass of the 305 crossings)"
@@ -1983,7 +1983,7 @@
      "record": {
       "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
       "pointer": "options",
-      "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+      "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
      }
     },
     "unified_candidate_ii1_rotation": {
@@ -2006,7 +2006,7 @@
      "record": {
       "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
       "pointer": "options",
-      "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+      "commit": "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
      }
     }
    },
@@ -2158,12 +2158,12 @@
   {
    "target": "hbm_ds",
    "item": "SM serial command/record path",
-   "protection": "protection build in progress (uncommitted Codex work in the central checkout)",
-   "policy": "GAP until committed",
+   "protection": "protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false",
+   "policy": "GAP until selected and physically integrated",
    "source": {
-    "file": "tools/hbm_sm_serial_protection_model.py",
-    "pointer": null,
-    "commit": "uncommitted (central checkout, Codex)"
+    "file": "results/rtl/hbm_sm_command_20261007/protected_component.json",
+    "pointer": "passed, selected",
+    "commit": "65988656b (on origin/main; not in this branch's base 449ebc571)"
    }
   },
   {
@@ -2230,6 +2230,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "2f3cf54099d5cb6b8eb3f77fb7bbbe4a6d94b00f23c03db2619baf9ecab2d95a"
+  "sha256": "1e1ca7c52180ce6a265a7db8a7a5b861c618f5eb62dddf7444e1fbf6280b09e3"
  }
 }
