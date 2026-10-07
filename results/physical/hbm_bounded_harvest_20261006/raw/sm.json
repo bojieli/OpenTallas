@@ -1,0 +1,32 @@
+{
+  "observed_utc": "2026-10-07T05:24:40.393537+00:00",
+  "host": "known-grouse",
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/m2/front_m2d/flow.log",
+      "mode": "tail",
+      "size": 880217,
+      "text": "M1                   0             0            0.00%             0 /  0 /  0\nM2            11981392       3876440           32.35%             1 /  0 /  3\nM3            14454740       5805760           40.17%             0 /  1 /  1\nM4            11085523       1931174           17.42%             1 /  0 / 23\nM5            11383692       2631080           23.11%             0 /  0 /  0\nM6             8353051       1330749           15.93%             1 /  0 / 56\nM7             8886792       1244436           14.00%             0 /  0 /  0\n---------------------------------------------------------------------------------------\nTotal         66145190       16819639           25.43%             3 /  1 / 83\n\n[INFO GRT-0018] Total wirelength: 10178607 um\n[INFO GRT-0014] Routed nets: 321876\n[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.\nwrite_db /work/results/asap7/smh_front_one_front_m2d/base/5_1_grt-failed.odb\nError: global_route.tcl, 175 GRT-0116\nElapsed time: 1:58:22.52[h:]min:sec. CPU time: user 9415.54 sys 233.30 (135%). Peak memory: 9237772KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/smh_front_one_front_m2d/base/5_1_grt.odb] Error 2\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/m2/front_m2d/geometry.json",
+      "mode": "full",
+      "size": 214,
+      "sha256": "f9a063014f9ad78c9edfbcf615188668afb73e49b4f447db763dcb1c9fcde776",
+      "text": "{\n \"piece\": \"front\",\n \"variant\": \"one\",\n \"die\": [\n  432.0,\n  1114.56\n ],\n \"geom\": {\n  \"tile_w\": 319.68,\n  \"tile_h\": 509.76,\n  \"be_h\": 77.76,\n  \"front_w\": 432.0,\n  \"gap\": 8.64,\n  \"margin\": 8.64\n },\n \"pins\": 18777\n}\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/m2/front_m2d/config.mk",
+      "mode": "full",
+      "size": 2969,
+      "sha256": "76832e43b9fe12d8d44e715e56b7c96c4f76bc6b3e53ea88a62da68a6b074c92",
+      "text": "export DESIGN_NICKNAME = smh_front_one_front_m2d\nexport DESIGN_NAME = ot_hbm_accel_smh_front\nexport PLATFORM = asap7\nexport VERILOG_FILES = /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/v41rom/ot_v41_bterm.sv /src/rtl/v41rom/ot_v41_bterm2.sv /src/rtl/gpu/ot_gpu_fadd.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/gpu/ot_gpu_tree.sv /src/rtl/gpu/ot_gpu_issue.sv /src/rtl/gpu/ot_gpu_stack.sv /src/rtl/gpu/ot_gpu_tc_col.sv /src/rtl/gpu/ot_gpu_bd_col.sv /src/rtl/hdc/v41/ot_hdc_blockdot.sv /src/rtl/gpu/ot_gpu_bulk_copy.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/hdc/ot_hdc_sfu.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport SDC_FILE = /work/constraint.sdc\nexport DIE_AREA = 0 0 432.0 1114.56\nexport CORE_AREA = 1.08 1.08 430.92 1113.48\nexport SYNTH_REPEATABLE_BUILD = 1\nexport SYNTH_HIERARCHICAL = 0\nexport SYNTH_MEMORY_MAX_BITS = 65536\nexport LEC_CHECK = 0\nexport TNS_END_PERCENT = 100\nexport SETUP_SLACK_MARGIN = 0\nexport SKIP_REPORT_METRICS = 0\nexport REPORT_CLOCK_SKEW = 1\nexport CORNER = WC\nexport ADDER_MAP_FILE = \nexport ASAP7_USE_VT = RVT\nexport SLEW_MARGIN = 30\nexport CORNERS = WC BC\nexport WC_LIB_FILES = $(WC_NLDM_LIB_FILES) /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_ss.lib\nexport BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_ff.lib\nexport IO_CONSTRAINTS = /work/pins.tcl\nexport GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)\nexport ADDITIONAL_LEFS = /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.lef\nexport ADDITIONAL_LIBS = /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_ss.lib\nexport SYNTH_BLACKBOXES = ot_sram_1r1w_512x256_m1_r2c2\nexport MACRO_PLACEMENT_TCL = /work/macros.tcl\nexport PLACE_DENSITY = 0.55\nexport MIN_ROUTING_LAYER = M2\nexport MAX_ROUTING_LAYER = M7\nexport HOLD_SLACK_MARGIN = 25\nexport PDN_TCL = /src/tools/chip_assembly/tcl/pdn_smh_block.tcl\nexport MACRO_PLACE_HALO = 3 3\nexport PRE_CTS_TCL = /work/rt_hook.tcl\nexport PRE_GLOBAL_ROUTE_TCL = /work/rt_hook.tcl\nexport POST_TAPCELL_TCL = /work/hops.tcl\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/m2/tileW_m2d/flow.log",
+      "mode": "tail",
+      "size": 34896,
+      "text": "    Completing 10% with 586 violations.\n    elapsed time = 00:00:04, memory = 30653.34 (MB).\n    Completing 20% with 535 violations.\n    elapsed time = 00:00:08, memory = 30653.34 (MB).\n    Completing 30% with 520 violations.\n    elapsed time = 00:00:10, memory = 30786.76 (MB).\n    Completing 40% with 460 violations.\n    elapsed time = 00:00:15, memory = 31645.34 (MB).\n    Completing 50% with 395 violations.\n    elapsed time = 00:00:19, memory = 30653.34 (MB).\n    Completing 60% with 385 violations.\n    elapsed time = 00:00:21, memory = 31610.01 (MB).\n    Completing 70% with 327 violations.\n    elapsed time = 00:00:27, memory = 31704.85 (MB).\n    Completing 80% with 217 violations.\n    elapsed time = 00:00:31, memory = 30653.34 (MB).\n    Completing 90% with 148 violations.\n    elapsed time = 00:00:36, memory = 30728.75 (MB).\n"
+    }
+  ]
+}
