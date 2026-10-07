@@ -1,0 +1,18 @@
+{
+  "cancelled_jobs": [
+    "qfd_embed_scale_bank-9ebd7aa7a",
+    "qfd_embed_scale_bank-92aecc56a",
+    "qfd_embed_code_bank-92aecc56a"
+  ],
+  "reason": "9eb had invalid multicycle startpoint source;92 successors needed physical mutable protection preservation. Unconditional cancellation command accidentally cancelled92 jobs afterthey hadbegunrouting; ownerinformed.",
+  "progress_seconds_after_route_launch": {
+    "scale92": 22,
+    "code92": 27
+  },
+  "completed_objects_deleted": false,
+  "immutable_states": "../cancelled_jobs",
+  "successors": [
+    "qfd_embed_scale_bank-b84cd498e",
+    "qfd_embed_code_bank-b84cd498e"
+  ]
+}

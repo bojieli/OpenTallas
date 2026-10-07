@@ -1,0 +1,67 @@
+{
+  "source_commit": "b84cd498efce2c5e2a2d78880164cd9d34713f8e",
+  "source_sha256": {
+    "rtl/test/tb_qwen_embed_scale_bank.sv": "1c12a1aa8a429e126085def17a6e9a063951e9bb9276481b544fabce0caef000",
+    "rtl/physical/ot_qwen_embed_scale_bank.sv": "7ab0b37c1040584741d1b9f8f589b134adea42cdfcd73332139cf416216c2e67",
+    "rtl/test/tb_qwen_embed_code_bank.sv": "f8d69cda2af2140f237b9fdb466f805ef237224c71febee06e55917e2547435e",
+    "rtl/physical/ot_qwen_embed_code_bank.sv": "5de1bece61863e1beaefcfad39ab4e9403374e7362cb1f3f93939146310a1311"
+  },
+  "cases": [
+    {
+      "name": "scale_bank0",
+      "expected": "PASS",
+      "matched": true,
+      "returncode": 0,
+      "elapsed_s": 4.461221391800791
+    },
+    {
+      "name": "scale_bank1",
+      "expected": "PASS",
+      "matched": true,
+      "returncode": 0,
+      "elapsed_s": 4.479452032130212
+    },
+    {
+      "name": "scale_bank2",
+      "expected": "PASS",
+      "matched": true,
+      "returncode": 0,
+      "elapsed_s": 1.4732287619262934
+    },
+    {
+      "name": "scale_bad_address",
+      "expected": "FAIL",
+      "matched": true,
+      "returncode": 1,
+      "elapsed_s": 0.07239413540810347
+    },
+    {
+      "name": "scale_bad_lane",
+      "expected": "FAIL",
+      "matched": true,
+      "returncode": 1,
+      "elapsed_s": 0.0776147018186748
+    },
+    {
+      "name": "code_exact",
+      "expected": "PASS",
+      "matched": true,
+      "returncode": 0,
+      "elapsed_s": 0.41624639416113496
+    },
+    {
+      "name": "code_bad_address",
+      "expected": "FAIL",
+      "matched": true,
+      "returncode": 1,
+      "elapsed_s": 0.071412174962461
+    }
+  ],
+  "scale_rows": 151936,
+  "code_words": 4096,
+  "latency_cycles": 7,
+  "II": 2,
+  "macro_delay_ps": 739.211,
+  "payload": "generated deterministic mapping pattern only; exact released checkpoint payload mapping unchanged but full released checkpoint file not compared by thisbench",
+  "adopted": false
+}
