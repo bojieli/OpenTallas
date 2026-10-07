@@ -35905,7 +35905,8 @@
   "added_cycles": 0,
   "added_register_bits": 0,
   "added_logic_gates": 0,
-  "scope": "Exact planned pin geometry and existing packet aliases only; not routed timing evidence",
+  "scope": "Planned boundary portals and existing packet aliases only; not actual BPin centers or routed timing evidence",
+  "pin_rectangle_rule": "M5 0.024 x 0.192 um with force_to_die_boundary; export and read back actual boxes before final LEF binding",
   "complete": false,
   "adoption": false,
   "generator_variant": "R24SM3",
@@ -35915,9 +35916,9 @@
   ],
   "source_sha256": {
     "tools/die_top_lint.py": "cbd403b0d0ee89b0c1adab24d0c4fb7987238d1e2d727880e6bb2d6e050d4176",
-    "tools/hbm_accel_die_fp.py": "45a84079ab08eecf5d0fd4a28f4eda34f0e1756e59a56c06621c3af10db1b1bc",
+    "tools/hbm_accel_die_fp.py": "2ec1434269af802aa428e4706f66a84f1631a4ebc8e6eefe6b2e85cab2d0531d",
     "tools/hbm_accel_smh_physical.py": "c5c2bd8f1ca458baf3cf9fb8afd83a2e3677344e3311e0005ded44f4c0a3267d",
     "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c66cccc3859542f25b7a76020c0400bfe324dd9412b6c646302fdfef4613d8d5",
-    "tools/hbm_smh_actual_pin_contract.py": "cc242a7c476e1b91c639f3b52c2b3c446fc3f1b2114089aba2a731f3109ec9dd"
+    "tools/hbm_smh_actual_pin_contract.py": "3740b4b609a8fe154628c6d281dab93f653b12f3a76c4efbd06c6dc145502da2"
   }
 }
