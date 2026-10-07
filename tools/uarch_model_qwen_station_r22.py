@@ -112,5 +112,49 @@ def model(stations=1536, heads=64, path_hops=None, die_height_um=None):
             'Measure exact transaction/fault negatives and actual508bit station at SS/FF; then full die context'])
 
 
+def dual_fault_model(path_hops=None, tile_fault_latency=None):
+    m = model(path_hops=path_hops)
+    m['schema'] = 'opentallas.qwen_station_fullwidth_r22.dual_fault.v1'
+    for role, spec in m['exact_proposed_pin_slices'].items():
+        for port, slices in spec['ports'].items():
+            slices.append(dict(die_lo=509,width=1,rtl_port=slices[-1]['rtl_port']+'_n',rtl_lo=0))
+    for leg in m['proposed_bundle_map'].values():
+        leg.append(dict(field='fault_n',lo=509,width=1,direction='reverse'))
+    m['boundaries'].update(corridor_bits=510,tap_bits=510,extra_bits_per_boundary=187)
+    m['state'].update(corridor_FF=1022,head_FF=1532,relay_FF=512,
+        fault_complementary_rails=True,retention_gate='Each positive/complement rail must have a distinct mapped sequential driver',
+        coverage='Fault state only; original380-bit instruction/go storage has no installed integrity code')
+    delta=m['replicas']['stations']*3+m['replicas']['heads']*4
+    m['replicas']['total_FF']+=delta
+    area=delta*m['area']['FF_cell_um2']/1e6
+    prices=json.loads((ROOT/'results/rtl/qwen_rom_fulldie_20261003/k16_demand_r1/inputs/SS_cell_prices.json').read_text())
+    cap=prices['facts']['DFFASRHQNx1_ASAP7_75t_R']['SS']['pins']['CLK']['cap_fF']
+    m['area']['total_clock_pin_fF']+=delta*cap
+    m['area']['FF_total_mm2']+=area
+    m['area']['FF_and_logic_slot_proxy_mm2']+=3*area
+    m['area']['new_fault_FF_over_same_shape_ready_AND_station']=delta
+    m['geometry'].update(corridor_pin_span_um=510*.096,tap_pin_span_um=510*.096,routing_tracks_needed_per_corridor=510)
+    m['forward_control_protection']=dict(installed=False,raw_control_bits=380,
+        SECDED64_blocks=6,coded_bits=432,sidecar_bits=48,
+        prospective_signal_bus_bits=558,prospective_pin_span_um=558*.096,
+        decode_before_launch_required=True,tile_checker_installed=False,
+        note='No protection credit for forward control. Root token publication guard alone cannot undo corrupted operand addresses/mutable writes.')
+    depth=None if path_hops is None or tile_fault_latency is None else 2*path_hops+tile_fault_latency+1
+    m['root_publication_guard']=dict(installed=False,root_decode_cycles=1,
+        tile_fault_latency=tile_fault_latency,min_hold_cycles=depth,
+        result_ports=96,raw_word_bits=1+24+16+512,protected_word_bits=9*72,
+        payload_storage_bits_lower_bound=None if depth is None else 96*depth*648,
+        formula='96 ports * (2H + actual_tile_fault_latency +1 rootdecode) cycles *648 protectedbits per valid/address/mask/data word',
+        limitations='No buffering/ready contract at current result port. Maximum fault-lateness and all mutable write commit points must be bound before authoring guard.')
+    m['field_reset_contract']=dict(instances=3136,leaf_port='rst_n',cold_reset_only=True,
+        max_fanout=32,minimum_buffer_leaves=98,minimum_tree_levels=3,
+        asynchronous_assert_synchronous_release=True,release_sync_FF_per_clock_region=2,
+        release_and_launch_guard='Keep source go0 until every region reports reset-release and all forward pipeline stages are clean; no warm reset with accepted work',
+        installed=False,reset_root='Explicit external power-on/reset controller; source ABI not yet installed')
+    m['gates'].update(physical_route='diagnostic only; parallel exact/upset and mapped-retention gates',
+        full_token_adoption=False)
+    return m
+
+
 if __name__ == '__main__':
     print(json.dumps(model(), indent=2))
