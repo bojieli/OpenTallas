@@ -15,6 +15,22 @@ import sys, re
 src, dst, tile = sys.argv[1], sys.argv[2], sys.argv[3]
 t = open(src).read()
 head, tail = t.split('source /work/place.tcl', 1)
+# coarse GRT tile without re-pitching tracks in a live db (dbTrackGrid_destroy segfaults): the die is built on a
+# tracks file whose M2 / M3 (no die signal, no die pin) carry pitch tile / 15 from the start
+mt = '/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl'
+head = head.replace(f'source {mt}', 'source /work/make_tracks_coarse.tcl').replace(f'set ::env(MAKE_TRACKS) {mt}', 'set ::env(MAKE_TRACKS) /work/make_tracks_coarse.tcl')
+p_ = float(tile) / 15.0
+open(dst.replace('dietop.tcl', 'make_tracks_coarse.tcl'), 'w').write('\n'.join([
+    'make_tracks Pad -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+    'make_tracks M9 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+    'make_tracks M8 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+    'make_tracks M7 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064',
+    'make_tracks M6 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.016 -y_pitch 0.064',
+    'make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048',
+    'make_tracks M4 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.012 -y_pitch 0.048',
+    f'make_tracks M3 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.009 -y_pitch {p_:.3f}',
+    f'make_tracks M2 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.045 -y_pitch {p_:.3f}',
+    'make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036']) + '\n')
 sta = tail[tail.index('set_cmd_units'):]
 out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f',
        '  regexp {VmRSS:\\s+(\\d+)} $s -> r; regexp {VmHWM:\\s+(\\d+)} $s -> h',
@@ -36,10 +52,7 @@ out = ['proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close 
        '  puts "OT_TIME step=$name s=[format %.1f [expr {([clock milliseconds]-$t0)/1000.0}]]"; mem $name; flush stdout; return 1 }',
        'set_thread_count $::env(OT_THREADS)'] + libs + [
        'read_db /work/ckpt_placed.odb',
-       'step coarse { set b [ord::get_db_block]; set p [expr {%s/15.0}]' % tile,
-       '  foreach ln {M2 M3} { odb::dbTrackGrid_destroy [$b findTrackGrid [[ord::get_db_tech] findLayer $ln]]',
-       '    make_tracks $ln -x_offset 0.009 -x_pitch $p -y_offset 0.009 -y_pitch $p }',
-       '  puts "OT_TILE dbu=[$b getGCellTileSize]" }',
+       'puts "OT_TILE dbu=[[ord::get_db_block] getGCellTileSize]"',
        'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl',
        'set_routing_layers -signal M4-M9 -clock M4-M9',
        'set_global_routing_layer_adjustment M4-M5 0.30',
