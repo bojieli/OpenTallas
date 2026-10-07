@@ -66,6 +66,12 @@ GEOMS = {
     "r9m215f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
                           q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
                           label="S81-RERUN r9 MARGIN-FIRST: common-clock hops <= 215 um (FH 192.24)"),
+    # S81-RERUN v6 die case: + VCH / corridor interleave, link fix, a station on every hop over reach (budget sheets
+    # 2026-10-06: column relays / hub stations / forwarded stations), meso FIFOs DEPTH 8 (+1 cycle a crossing)
+    "r9m215v6f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
+                            opts="--vch-interleave --corr-interleave --link-fix --hop-fix --meso-d8",
+                            q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                            label="S81-RERUN v6: r9m215 + hop stations (budget sheets) + meso depth 8 (FH 192.24)"),
 }
 LAYER_PAIRS_TOTAL = 81 * 4 * 2417          # 783,108 layer-field pairs (S81 decision)
 TP = 4
@@ -101,6 +107,11 @@ def cmd_geometry(a):
     S.REV = g.get("rev", "r8")
     S.set_cc_reach(g.get("cc_reach"))
     S.Q_LEF = os.environ.get("OT_S81_Q_LEF", S.Q_LEF)
+    if g.get("opts"):                       # die options of a recorded case (tools/dsrom_s81_fulldie.py die_options)
+        import shlex
+        S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(
+            shlex.split(g["opts"]) + ["--gen", "r8", "--rev", g.get("rev", "r8"), "--die", a.die,
+                                     "--cc-reach-um", str(g.get("cc_reach") or 430.56)]))
     S.configure(a.die, "r8")
     S.slot_geometry(g["elem_h"])
     if a.die == "layer":
@@ -112,8 +123,11 @@ def cmd_geometry(a):
     fr, xs, rs = m["frames"], m.get("x_stages", {}), m.get("r_stages", {})
     frames = {}
     for r, f in fr.items():
-        comp = dict(x_trunk=xs.get(r, 0), entry_meso=2, slot_stations=f["last_slot"] + 1, column_return_reg=1,
-                    root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=2)
+        mc = 3 if getattr(S, "MESO_D8", False) else 2
+        comp = dict(x_trunk=xs.get(r, 0), entry_meso=mc, slot_stations=f["last_slot"] + 1, column_return_reg=1,
+                    root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=mc)
+        if m.get("hop_fix"):
+            comp["hop_fwd"] = m["hop_fix"].get("fwd_rt_add", 0)
         if f.get("bank_stages") is not None:          # r9: q-element boundary banks and column relays
             comp.update(q_banks=f.get("bank_stages", 0), column_relays_x=f.get("relay_x", 0),
                         column_relays_return=f.get("relay_ret", 0))

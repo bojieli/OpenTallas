@@ -159,6 +159,8 @@ STN_V = (86.4, 34.56)         # vertical-chain waypoint (pins N/S)
 MF = (125.28, 125.28)         # one meso / async FIFO slot (hub side)
 LINK_STAGE_UM = 430.56
 WAYPOINT_UM = 4 * LINK_STAGE_UM
+FWD_REACH = LINK_STAGE_UM       # --fwd-pitch (S81-RERUN v6, OWNER 2026-10-06): forwarded station reach; 300 um gives the
+                                #   routed stations clear SS margin (430 um pitch: dsfd_stn* SS -1.7..+2.8 ps)
 # element interfaces (physical contract + real q pins)
 XI, XO, CFGB, RET, XCTL = 266, 266, 54, 126, 17   # chained x in/out, cfg word, return word, lane control
 NODE_W = 66
@@ -2302,7 +2304,7 @@ class Placer:
 
     def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10):
         """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev`."""
-        reach = reach or LINK_STAGE_UM
+        reach = reach or FWD_REACH
         al = [0.0]
         for i in range(1, int(span / 4.32) + 1):
             al += [-4.32 * i, 4.32 * i]
@@ -2398,10 +2400,12 @@ class Chains:
         fi = 0
         while True:
             nxt = stops[fi] if fi < len(stops) else None
-            R_ = reach or LINK_STAGE_UM
+            R_ = reach or FWD_REACH
             if nxt is None and _mh(cur, end) <= R_ - 30.0 and L - pos <= R_ - 30.0:
                 break
             step = STEP9 if REV == 'r9' else STEP8
+            if FWD_REACH < LINK_STAGE_UM:
+                step = min(step, FWD_REACH - 5.0)
             if reach:                        # common-clock chains (CC_REACH): station step inside the shorter reach
                 step = min(step, reach - 5.0)
             if nxt is not None and nxt - pos <= step:
@@ -2732,7 +2736,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', link_fix=LINK_FIX, hop_fix=HOP_FIX, meso_d8=MESO_D8, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', link_fix=LINK_FIX, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -2928,7 +2932,7 @@ def buses_r8(m):
         ybot = cfi.y + cfi.h
         prev, k_ = (f'n{r}_{ids[root]}', 'o'), 0
         d = ytop - ybot + abs(sx - (rootn.x + rootn.w / 2))
-        nst = max(0, math.ceil(d / (LINK_STAGE_UM - 40.0)) - 1)
+        nst = max(0, math.ceil(d / (FWD_REACH - 40.0)) - 1)
         for i_ in range(nst):
             yy = dn(ytop - (i_ + 1) * (ytop - ybot) / (nst + 1) - RSTG_WH[1] / 2, GY)
             it = P.add(Inst(f'rg{r}_{i_}', 'dsfd_rstg', sx, yy, RSTG_WH[0] - SHAVE, RSTG_WH[1] - SHAVE, kind='rstg',
@@ -3177,7 +3181,8 @@ CC_REACH = LINK_STAGE_UM
 def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
-    return r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
+    return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else ''))
 
 
 def set_cc_reach(um):
@@ -4499,6 +4504,8 @@ def die_options(ap):
                     'over the whole corridor height; default off)')
     ap.add_argument('--hop-fix', action='store_true', help='r9: a station on every die hop longer than its reach '
                     '(pin anchors of a first build; default off)')
+    ap.add_argument('--fwd-pitch', type=float, help='r9: forwarded / every-hop station reach in um (OWNER v6: 300; '
+                    'default the 430.56 um stage)')
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
@@ -4514,6 +4521,10 @@ def apply_options(a):
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
     HOP_FIX, HOP_PLAN, MESO_D8 = bool(a.hop_fix), None, bool(a.meso_d8)
+    global FWD_REACH, HOP_R_FWD, HOP_R_CC
+    FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
+    if a.fwd_pitch:            # every hop on the die at or under the pitch
+        HOP_R_FWD = HOP_R_CC = float(a.fwd_pitch)
     global REV, HEAD_DIES
     REV, HEAD_DIES = a.rev, a.head_dies
     configure(a.die, a.gen)
