@@ -395,6 +395,7 @@ class Fleet:
         self.pending = {}      # host -> [(t, threads, ram)]
         self.probe_cache = {}
         self.tool_cache = {}
+        self.own_running = {}    # host -> declared threads of this loop's running stages
 
     def probe(self, host):
         c = self.probe_cache.get(host)
@@ -428,10 +429,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if info is None:
             return False, f"{cfg['label']} unreachable"
         pt, pr = self.own_pending(host)
-        if info["load1"] + pt + threads > cfg["cap"]:
-            return False, f"{cfg['label']} load {info['load1']:.0f}+{pt}+{threads} > cap {cfg['cap']}"
-        if info["mem_gb"] - pr < ram + RAM_HEADROOM_GB:
-            return False, f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB < {ram}+{RAM_HEADROOM_GB}"
+        # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
+        # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
+        eff = max(info["load1"], self.own_running.get(host, 0))
+        if eff + pt + threads > cfg["cap"]:
+            return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
+        res = cfg.get("reserve_ram_gb", 0)
+        if info["mem_gb"] - pr - res < ram + RAM_HEADROOM_GB:
+            return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
+                           + f" < {ram}+{RAM_HEADROOM_GB}")
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         return True, "ok"
@@ -471,15 +477,21 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         allh = [h["name"] for h in hosts_table()]
-        order = list(spec.get("hosts") or allh)
-        if ram <= SMALL_JOB_GB:      # small jobs may run on any host with the same toolchain (coordinator 2026-10-06)
-            order += [h for h in allh if h not in order]
-        order = [h for h in order if h not in exclude and self.compatible(h, spec)]
+        pref = set(spec.get("hosts") or [])
+        # the job's hosts list is a PREFERENCE (coordinator 2026-10-06 21:15); caps/toolchain/per-job limits still apply
+        order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
-        def frac(h):
-            info = self.probe(h)
-            return 9e9 if info is None else (info["load1"] + self.own_pending(h)[0]) / host_cfg(h)["cap"]
-        order.sort(key=frac)         # least loaded host first
+        def score(h):
+            """higher = better: free cores and free RAM after this job, both as fractions of the host; spillover-only
+            hosts (EPYC3, die-top) rank after every other host; listed hosts get a small preference"""
+            info, cfg = self.probe(h), host_cfg(h)
+            if info is None:
+                return -9e9
+            pt, pr = self.own_pending(h)
+            fc = (cfg["cap"] - max(info["load1"], self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
+            fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
+            return min(fc, fr) + 0.5 * (fc + fr) / 2 + (0.05 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+        order.sort(key=score, reverse=True)
         why = []
         for h in order:
             ok, msg = self.fits(h, threads, ram)
@@ -1524,16 +1536,75 @@ def auto_requeue(jobs):
             break
 
 
+def kill_own_stage(j):
+    """stop ONLY this loop's own stage process group and containers mounting this job's own run dir"""
+    if not (j.get("stage_tag") and j.get("host")):
+        return
+    run, t = j["run"], j["stage_tag"]
+    ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
+for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
+        timeout=300)
+
+
+def migrate_overloaded(jobs, fleet):
+    """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
+    jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
+    for j in jobs:
+        if j["status"] in TERMINAL or not j.get("host"):
+            continue
+        cfg = host_cfg(j["host"])
+        info = fleet.probe(j["host"])
+        if info is None:
+            continue
+        over = info["load1"] > cfg["cap"] or (cfg.get("spillover_only") and info["mem_gb"] < cfg.get("reserve_ram_gb", 0))
+        if not over:
+            continue
+        stl = stage_list(j["spec"])
+        st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
+        pre_cts = (j["status"] in ("RUNNING", "READY") and st["kind"] in ("bench", "calibrate")) or \
+                  (j["status"] == "READY" and st["kind"] == "route") or j["status"] == "SYNC"
+        if not pre_cts:
+            continue
+        h, why = fleet.choose(j["spec"], exclude=[j["host"]])
+        if not h or host_cfg(h).get("spillover_only"):
+            continue
+        old = cfg["label"]
+        if j["status"] == "RUNNING":
+            kill_own_stage(j)
+        cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+        if st["kind"] == "bench":
+            idx = j["stage_idx"]                         # re-run the interrupted bench, keep finished ones
+        else:
+            idx = cal if cal is not None else j["stage_idx"]
+        j["hosts_tried"].append(h)
+        j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
+                 attempt=j["attempt"] + 1)
+        j.pop("wait_since", None)
+        fleet.launched(h, 0, 0)
+        event(j, f"LOAD REBALANCE: {old} over cap (load {info['load1']:.0f}, {info['mem_gb']} GB free); pre-CTS job "
+                 f"moved to {host_cfg(h)['label']} (resumes at {stl[idx]['key']})")
+        experiment(j, f"running: moved {old} -> {host_cfg(h)['label']}")
+        save_job(j)
+
+
 def tick(fleet):
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
+    own = {}
+    for x in all_jobs():
+        if x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL") and x.get("host"):
+            stl = stage_list(x["spec"])
+            st = stl[min(x.get("stage_idx", 0), len(stl) - 1)]
+            own[x["host"]] = own.get(x["host"], 0) + (8 if x["status"] == "ECO" else st.get("threads", 4) or 4)
+    fleet.own_running = own
     try:
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
         requeue_hold_only(all_jobs())
+        migrate_overloaded(all_jobs(), fleet)
         requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
