@@ -85,7 +85,8 @@ module tb_qwen_embed_scale_bank;
         reset();i_v=1;i_row=BANK_ID*65536;@(negedge clk);i_v=0;
         wait(dut.valid_pipe[2]);@(negedge clk);dut.lane_pipe[2]=dut.lane_pipe[2]^1;require_fault();
         reset();o_cr=1;@(negedge clk);o_cr=0;require_fault();
-        $display("PASS scale bank=%0d rows=%0d latency=7 II=2 bounds=3 metadata_faults=3 duplicate_credit=detected SS_rom_delay_ps=739.211",BANK_ID,received);
+        reset();dut.fault_n=0;require_fault();
+        $display("PASS scale bank=%0d rows=%0d latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211",BANK_ID,received);
         $finish;
     end
 endmodule

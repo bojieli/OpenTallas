@@ -98,7 +98,8 @@ module tb_qwen_embed_code_bank;
                 wait(dut.ce_q);@(negedge clk);dut.addr_q=dut.addr_q^1;require_fault();
                 reset_dut();dut.iv_q=1;require_fault();
                 reset_dut();dut.capture_en_q=16'h1;require_fault();
-                $display("PASS embed words=%0d cycles=%0d first_latency=%0d min_gap=%0d duplicate_credit=detected metadata_faults=6 SS_ROM_delay_ps=739.211",received,cycle,first_response-first_request,min_gap);
+                reset_dut();dut.fault_n=0;require_fault();
+                $display("PASS embed words=%0d cycles=%0d first_latency=%0d min_gap=%0d duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",received,cycle,first_response-first_request,min_gap);
                 $finish;
             end
         end
