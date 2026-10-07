@@ -142,9 +142,12 @@ def main():
         sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', ', .RECUT(1)')
         muts = [('mutant_front_pair', ['+define+W10_MUTANT_FRONT_PAIR']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
-    out = {'variant': a.variant, 'cases': {}, 'pass': True, 'refreshed': refreshed,
-           'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-           'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain', '--', 'rtl', 'tools/s81'], cwd=ROOT, text=True).strip())}
+    try:
+        commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+        dirty = bool(subprocess.check_output(['git', 'status', '--porcelain', '--', 'rtl', 'tools/s81'], cwd=ROOT, text=True).strip())
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
+    out = {'variant': a.variant, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
     for name, defs in [('positive', [])] + muts:
         if a.only and name not in a.only:
             continue
