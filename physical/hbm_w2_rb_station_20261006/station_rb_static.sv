@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -153,7 +153,12 @@ function automatic [71:0] encode64(input [63:0] data);
   wire [NO-1:0] sent_eff=sent|pend|learned;
   // ---------------- reverse receipt seats A -------------------------------
   wire [NO-1:0] frame_bad;
-  wire ack_consume=C_normal&&cv&&active&&!P_fault;
+  // SAFE=1 (requires REL_REG): the permission update is a registered decision. The captured decision (action,
+  // target vector) is held in dec_v/tgt_q and applied to the C bank one edge later from registers only; no new
+  // decision, ACK consumption, offer or release is taken while a decision is in flight (busy), so the stale
+  // sent/acked/active the C bank still shows cannot be used twice. Cost: +1 edge per permission update.
+  reg dec_v;reg [8:0] tgt_q;wire busy=(SAFE!=0)&&dec_v;
+  wire ack_consume=C_normal&&cv&&active&&!P_fault&&!busy;
   for(genvar t=0;t<NO;t=t+1)begin:receipts
    assign frame_bad[t]=ackv_q[t]&&fne_q[t];
    assign A_in_v[t]=ackv_q[t]&&!fault_any&&!frame_bad[t];
@@ -194,13 +199,27 @@ function automatic [71:0] encode64(input [63:0] data);
   if(REL_REG)begin:relreg
    reg rel_q;
    always @(posedge clk_sm or negedge rst_n)if(!rst_n)rel_q<=0;else rel_q<=rel_ok_d&&!release_all;
-   assign release_all=rel_q&&C_normal&&cv&&active&&G_normal;
+   assign release_all=rel_q&&C_normal&&cv&&active&&G_normal&&!busy;
   end else begin:relcomb
    assign release_all=release_all_live;
   end
-  wire arm=C_normal&&cv&&!active&&!fault_any;
-  assign C_next=release_all?64'b0:arm?64'b1:{55'b0,na,ns,active};
-  assign C_load=C_normal&&(arm||release_all||ns!=sent||na!=acked);
+  wire arm=C_normal&&cv&&!active&&!fault_any&&!busy;
+  if(!SAFE)begin:plain_next assign C_next=release_all?64'b0:arm?64'b1:{55'b0,na,ns,active}; end
+  wire dec_cap=C_normal&&(arm||release_all||ns!=sent||na!=acked)&&!busy;
+  wire [8:0] tgt_d=release_all?9'b0:arm?9'b1:{na,ns,active};
+  if(SAFE)begin:safe_dec
+   always @(posedge clk_sm or negedge rst_n)
+    if(!rst_n)begin dec_v<=0;tgt_q<=0;end
+    else begin
+     if(dec_cap)begin dec_v<=1;tgt_q<=tgt_d;end
+     else if(dec_v&&C_normal&&C_q[8:0]==tgt_q)dec_v<=0;
+    end
+   assign C_load=dec_v&&C_normal&&(C_q[8:0]!=tgt_q);
+   assign C_next={55'b0,tgt_q};
+  end else begin:plain_dec
+   initial begin dec_v=0;tgt_q=0;end
+   assign C_load=dec_cap;
+  end
   assign P_out_r=release_all&&!fault_any;
   wire illegal=ack_bad||(|arr_bad);
   reg illegal_q;
@@ -224,11 +243,11 @@ function automatic [71:0] encode64(input [63:0] data);
   ot_hbm_w2_dr_reg #(.W(1)) u_rpend(.clk(clk_sm),.rst_n(rst_n),
    .d((rel_pend||rel_learned)&&!(R_in_r&&R_out_v)),.q(rel_pend),.bad(rp_bad));
   ot_hbm_w2_dr_reg #(.W(NO)) u_pend(.clk(clk_sm),.rst_n(rst_n),
-   .d((pend|learned)&{NO{!C_load}}),.q(pend),.bad(pend_bad));
+   .d((pend|learned)&{NO{!dec_cap}}),.q(pend),.bad(pend_bad));
   // ---------------- output flops ------------------------------------------
   wire [NO-1:0] ov_next;
   for(genvar t=0;t<NO;t=t+1)begin:offer
-   assign ov_next[t]=C_normal&&cv&&active&&!fault_any&&!sent_eff[t];
+   assign ov_next[t]=C_normal&&cv&&active&&!fault_any&&!sent_eff[t]&&!busy;
   end
   ot_hbm_w2_dr_reg #(.W(NO)) u_ov(.clk(clk_sm),.rst_n(rst_n),.d(ov_next),.q(ov),.bad(ov_bad));
   ot_hbm_w2_keep_reg #(.W(NO)) u_ovd(.clk(clk_sm),.rst_n(rst_n),.d(ov),.q(ov_d));

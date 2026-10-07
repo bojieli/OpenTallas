@@ -73,11 +73,15 @@ def sha(p):
 
 def run(cmd, log):
     with open(log, 'w') as f:
-        return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode
+        try:  # a negative control that hangs is detected by the watchdog (rc 124)
+            return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT, timeout=3600 if cmd[0] == 'vvp' else None).returncode
+        except subprocess.TimeoutExpired:
+            return 124
 
 
 RELREG = False
-DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0)'
+DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)'
+SAFEV = False
 
 
 def relreg(out, files):
@@ -89,7 +93,7 @@ def relreg(out, files):
         if f.endswith('ot_hbm_native_frame_station_rb.sv'):
             t = Path(f).read_text(); assert t.count(DEF_OLD) == 1
             d = out/('relreg_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
-            m = d/Path(f).name; m.write_text(t.replace(DEF_OLD, DEF_OLD.replace('REL_REG=0', 'REL_REG=1'))); f = str(m)
+            m = d/Path(f).name; m.write_text(t.replace(DEF_OLD, DEF_OLD.replace('REL_REG=0,SAFE=0', 'REL_REG=1,SAFE=%d' % (1 if SAFEV else 0)))); f = str(m)
         res.append(f)
     return res
 
@@ -170,9 +174,10 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG; RELREG = a.rel_reg
+    global RELREG, SAFEV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)

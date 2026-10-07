@@ -29,7 +29,12 @@ p.add_argument('--l-ff-max', type=float, default=330.0)
 p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
-a = p.parse_args()
+p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--hold-margin-ns', type=float, default=0.01)
+a, passthrough = p.parse_known_args()
+for k, e in (('l_max', 'CK_SS_MAX'), ('l_min', 'CK_SS_MIN'), ('l_ff_min', 'CK_FF_MIN'), ('l_ff_max', 'CK_FF_MAX')):
+    if os.environ.get(e):
+        setattr(a, k, float(os.environ[e]))  # measured insertion from the closure-loop calibrate stage
 run = a.run.resolve(); run.mkdir(parents=True, exist_ok=False)
 image = os.environ.get('OPENTALLAS_ORFS_IMAGE', 'openroad/orfs:asap7lock')
 os.environ.update(OT_ORFS_NUM_CORES=str(a.threads), OPENTALLAS_ORFS_IMAGE=image)
@@ -112,10 +117,10 @@ rel = str(HERE.relative_to(ROOT))
 argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--source', rel+'/bank_veto_static.sv', '--source', 'rtl/common/ot_fwd_link_stage.sv',
         '--source', rel+'/station_rb_static.sv',
-        '--param', 'ENABLE=1', '--param', f'NO={a.no}', '--param', 'REL_REG=1',
+        '--param', 'ENABLE=1', '--param', f'NO={a.no}', '--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}',
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
-        '--orfs-corner', 'WC', '--hold-corners', 'WC,BC', '--hold-margin-ns', '0.01',
+        '--orfs-corner', 'WC', '--hold-corners', 'WC,BC', '--hold-margin-ns', str(a.hold_margin_ns),
         '--die-area', '0', '0', str(a.core_width+4.104), str(a.core_height+4.32),
         '--core-area', '2.052', '2.16', str(a.core_width+2.052), str(a.core_height+2.16),
         '--place-density', str(a.place_density),
@@ -130,7 +135,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--pin-region', '^(clk_sm|por_n|release_held|in_.*|release_.*)$=bottom',
         '--pin-region', '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$=top',
         '--purpose', 'signoff_target', '--nickname-tag', f'{a.tag}_NO{a.no}',
-        '--output', str(run/'physical.json')]
+        '--output', str(run/'physical.json')] + passthrough
 (run/'argv.json').write_text(json.dumps(dict(argv=argv, period_ps=a.period_ps, insertion=[a.l_min, a.l_max, a.l_ff_min],
     density=a.place_density, core=[a.core_width, a.core_height], tie_map=tie_map,
     effective_driver_sha256=hashlib.sha256(code.encode()).hexdigest()), indent=2)+'\n')
