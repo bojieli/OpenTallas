@@ -70,6 +70,7 @@ FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are a
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
 WORKERS = 16
+HM_DEFAULT_SINCE = "2026-10-06T20:40"
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
@@ -705,7 +706,7 @@ def sync_source(j):
     gz.wait(); arch.wait()
     if put.returncode or arch.returncode:
         raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
-    for helper in ("path_summary.py", "ck_insertion.py"):
+    for helper in ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl"):
         ssh(host, f"cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
@@ -733,6 +734,10 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
+        # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
+        # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
+        env += f"export HM={j['spec'].get('route_hold_margin_ns', 0.035)}\n"
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
@@ -1177,6 +1182,42 @@ def step(j, fleet):
         j["stage_idx"] += 1
         j["status"] = "READY"
         return
+    if s in ("ECO", "ECO_INSTALL"):
+        state, rc = poll_stage(j)
+        if state in ("RUNNING", "STARTING", "UNREACHABLE"):
+            return
+        if s == "ECO":
+            r = ssh(j["host"], f"cat {j['run']}/cl/eco/result.json 2>/dev/null", timeout=60)
+            try:
+                res = json.loads(r.stdout)
+            except Exception:  # noqa: BLE001
+                res = None
+            j["eco"]["result"] = res
+            ok = bool(res) and rc == 0 and res["ss_ps"] >= SS_MIN and res["ff_ps"] >= FF_MIN and res["drc"] == 0 \
+                and not res.get("errors")
+            event(j, f"hold ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
+            if not ok:
+                ledger(j, f"HOLD-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
+                          f"after {res}")
+                m = j.get("metrics", {})
+                if not summarize_failure(j, fleet, m):
+                    text = failure_text(j)
+                    finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
+                return
+            st = dict(key="eco_install", kind="eco_install", threads=1, ram=4)
+            launch_stage(j, st, eco_install_cmd(j))
+            j["status"], j["stage_key"] = "ECO_INSTALL", "eco_install"
+            return
+        if rc != 0:
+            finish(j, "NEEDS_HUMAN", f"hold ECO passed but install/re-export failed (rc={rc})",
+                   f"NEEDS_HUMAN: hold ECO passed ({j['eco']['result']}) but install/re-export failed rc={rc}; see {j['run']}/cl")
+            return
+        j["eco"]["installed"] = now_iso()
+        ledger(j, f"HOLD-ECO installed: SS {j['eco']['pre']['ss_ps']:+.2f}/FF {j['eco']['pre']['ff_ps']:+.2f} -> "
+                  f"SS {j['eco']['result']['ss_ps']:+.2f}/FF {j['eco']['result']['ff_ps']:+.2f}, DRC {j['eco']['result']['drc']}, "
+                  f"{j['eco']['result'].get('cells_added')} cells; re-verdict")
+        j["status"] = "READY"          # stage_idx still points at the verdict: re-judged on the ECO sign-off
+        return
     if s == "SUMMARY":
         state, rc = poll_stage(j)
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
@@ -1201,6 +1242,8 @@ def do_verdict(j, fleet, stl):
         if not ok:
             failed.append(c["name"])
     j["checks"], j["failed_checks"] = checks, failed
+    if (j.get("eco") or {}).get("installed"):     # the post-route hold ECO replaced the route: its DRC counts
+        m["drc"], m["eco"] = j["eco"]["result"]["drc"], j["eco"]["result"]
     ss, ff, drc = m.get("ss_ps"), m.get("ff_ps"), m.get("drc")
     if ss is None or ff is None or drc is None:
         finish(j, "NEEDS_HUMAN", f"verdict inputs missing ({json.dumps(m)[:300]})",
@@ -1215,9 +1258,75 @@ def do_verdict(j, fleet, stl):
         j["status"] = "READY"
         experiment(j, f"running: collect/export/merge (SS {ss:+.1f} / FF {ff:+.1f})")
         return
+    if hold_only(j, m, failed, benches_ok) and start_hold_eco(j, fleet, m):
+        return
     if not summarize_failure(j, fleet, m):
         text = failure_text(j)
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
+
+
+def hold_only(j, m, failed=(), benches_ok=True):
+    return (m.get("ss_ps") is not None and m["ss_ps"] >= SS_MIN and m.get("drc") == 0 and m.get("ff_ps") is not None
+            and m["ff_ps"] < FF_MIN and not failed and benches_ok and not (j.get("eco") or {}).get("tried")
+            and (j["spec"].get("hold_eco") or {}).get("enabled", True) is not False)
+
+
+def eco_paths(j, m):
+    """(routed pre-fill base holding 5_2_route.odb, sign-off ORFS base holding 6_final.sdc)"""
+    v = j["spec"].get("verdict", {})
+    dm = (m.get("drc_metrics") or [None])[-1]
+    rb = dm.replace("/logs/", "/results/").rsplit("/", 1)[0] if dm else None
+    ob = None
+    if m.get("orfs_dir"):
+        r = ssh(j["host"], f"ls -d {m['orfs_dir']}/results/asap7/*/base | tail -1", timeout=60)
+        ob = r.stdout.strip() or None
+    return rb, ob or rb
+
+
+def start_hold_eco(j, fleet, m):
+    rb, ob = eco_paths(j, m)
+    if not rb:
+        return False
+    ok, why = fleet.fits(j["host"], 8, 32)
+    if not ok:
+        event(j, f"hold ECO waiting for capacity: {why}")
+        return True            # stays at the verdict stage; the next tick retries
+    v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
+    env = f"HM={he.get('hold_margin_ps', 22)} SM={he.get('setup_margin_ps', 25)} KEEPCLK={he.get('keep_clock', 1)} " \
+          f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+    post = " ".join(shlex.quote(p) for p in v.get("post_sdc", []))
+    cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {{CL}}/eco {j['spec']['block']} {post}"
+    j["eco"] = dict(tried=True, rb=rb, ob=ob, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
+    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
+    launch_stage(j, st, cmd)
+    fleet.launched(j["host"], 8, 32)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"hold-only miss (SS {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f}, DRC 0): post-route hold ECO launched on "
+             f"{rb}/5_2_route.odb")
+    experiment(j, "running: post-route hold ECO")
+    return True
+
+
+def eco_install_cmd(j):
+    """install the ECO result in place of the route (originals kept as *.pre_eco), point the verdict's corner_sta at
+    the ECO sign-off, and re-export the view (hold_eco.reexport, else hbm_fmax_attn_abstract when the route has view/)"""
+    e, rb, ob, blk = j["eco"], j["eco"]["rb"], j["eco"]["ob"], j["spec"]["block"]
+    cs = subst(j["spec"]["verdict"]["corner_sta"], j)
+    he = j["spec"].get("hold_eco") or {}
+    lines = ["set -e", f"EB=$(ls -d {{CL}}/eco/orfs/results/asap7/*/base)"]
+    for b in sorted({rb, ob}):
+        for f in ("6_final.odb", "6_final.spef", "6_final.v"):
+            lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
+    lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {{CL}}/eco/corner_sta.json $c; done")
+    if he.get("reexport"):
+        lines.append(he["reexport"])
+    else:
+        W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
+        macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
+        isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
+        lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
+                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; fi")
+    return "\n".join(lines)
 
 
 def do_commit(j):
@@ -1306,6 +1415,26 @@ def requeue_ssh_verdict(jobs):
             save_job(j)
 
 
+def requeue_hold_only(jobs):
+    fid = "hold-eco-20261006"
+    busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL or x["status"] == "CLOSED"}
+    for j in jobs:
+        m = j.get("metrics") or {}
+        if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, j.get("failed_checks") or []):
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        if j["spec"].get("block") in busy:
+            event(j, f"{fid}: hold-only, but block {j['spec']['block']} has a live or closed sibling job; not re-opened")
+            save_job(j)
+            continue
+        stl = stage_list(j["spec"])
+        j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
+        busy.add(j["spec"]["block"])
+        event(j, f"auto re-opened for loop fix {fid}: hold-only miss -> post-route hold ECO")
+        ledger(j, f"REQUEUED automatically: loop fix {fid} (hold-only: SS {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f})")
+        save_job(j)
+
+
 def requeue_budget(jobs):
     """NEEDS_BUDGET under the old +-tolerance rule whose measured insertion is <= the block target: accept it now"""
     fid = "budget-measured-below-target-20261006"
@@ -1358,6 +1487,7 @@ def tick(fleet):
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
+        requeue_hold_only(all_jobs())
         requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
