@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.dsrom-fh-redesign.v1",
+ "date": "2026-10-06",
+ "elements": {
+  "fused_head_endpoint_FPIPE": {
+   "rtl": "ot_hdc_v41_fh_checked_permission FPIPE=1 (MARGIN=1)",
+   "failing_class": "head_m2 post-CTS -1987 ps: reply-bank XNOR -> 129-bank OR -> endpoint fault -> warm ACK -> u_head.iw_issued (~2.5 ns comb)",
+   "change": "per-bank kept fault flop; wide bank OR only through the registered reduce (8 -> 4 -> 1), which also vetoes endpoint_fault; release age 5 -> 6 so the grant/commit waits for the registered check; head ACK launched from registers",
+   "exact": {
+    "bench": "tools/dsrom_fused_draft_head.py run --capture-cut --capture-return-extra 5 --fault-retire --checked-permission --margin --fpipe (gold4)",
+    "all_pass": true,
+    "tokx": 5,
+    "tokx_bad": 0,
+    "vm_mismatch": 0,
+    "fault": 0,
+    "cycles": 63083,
+    "baseline_margin_v2_cycles": 63073,
+    "delta_cycles": 10
+   },
+   "negatives": "component_gate.log endpoint_fpipe: age5, no_wide_veto, drop_bank0 FAIL"
+  },
+  "fused_head_quadrants": {
+   "rtl": "ot_hdc_v41_fh_head_q = ot_hdc_v41_fh_head_top + 4 x ot_hdc_v41_fh_quad (16 hardened lane leaves each)",
+   "change": "register regrouping only: every quadrant pin lands on / leaves an existing flop; one element replicated 4x (gid strap)",
+   "exact": "tb_fh_head_q: cycle lockstep with ot_hdc_v41_fh_macro_ctx MARGIN=1 HARD_LANE=1 FPIPE=1, 9,000 cycles (writes 3,770, fused 410, index writes 24, warm ACKs 20, fault cycles 1,976)",
+   "delta_cycles": 0,
+   "negatives": "fsel_skip, rh_depth, idx_group, wok_mask FAIL"
+  },
+  "head_elem_IOREG (dsfd_nvx successor)": {
+   "rtl": "ot_dsrom_head_elem IOREG=1",
+   "change": "go/row0/x/b_v/b_d captured at pin flops (+1 uniform); outputs from flops",
+   "exact": {
+    "rows": [
+     21888,
+     22016
+    ],
+    "root4096_exact": 128,
+    "padded_root1024_exact": 128,
+    "logits_exact": 128,
+    "elements_complete": 4,
+    "result": {
+     "row": 21946,
+     "bits": 1098098008,
+     "fault": 0,
+     "cycle": 8359
+    },
+    "golden_bundle_argmax": 21946,
+    "exact": true,
+    "cycles": {
+     "first_A_root": 407,
+     "last_A_root": 8343,
+     "last_B_root": 8343,
+     "last_logit": 8355,
+     "result": 8359,
+     "rom_read_span": 8248,
+     "issue_offset": 2
+    },
+    "checkpoint_header_sha256": {
+     "model-00043-of-00048.safetensors": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54"
+    }
+   },
+   "baseline_result_cycle": 8357,
+   "negatives": {
+    "neg_x": false,
+    "neg_bv": false
+   }
+  }
+ },
+ "physical": "pending: CTS calibration -> one route per view (quad, top, elem A, elem B)"
+}
