@@ -1,0 +1,634 @@
+{
+  "observed_utc": "2026-10-07T10:51:38.132848+00:00",
+  "route": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc",
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8",
+  "source_root_exists": true,
+  "files": {
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/SOURCE_COMMIT": {
+      "sha256": "553758cb7a1021df3847c54a5e0e79f5cce6de66bca244be269681bc2cb2894b",
+      "bytes": 10,
+      "original_bytes": 10,
+      "tail_only": false,
+      "saved_as": "route/SOURCE_COMMIT"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/args": {
+      "sha256": "3d7b59056b85854336d1ac75f0a87e39498c21ea0835a5b22ae2a6e7aa4ebdc6",
+      "bytes": 527,
+      "original_bytes": 527,
+      "tail_only": false,
+      "saved_as": "route/args"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/exit": {
+      "sha256": "b5f44f9f61511a93fef959c15f78fe0e9ab5e6032d212914fba4de83f20d5998",
+      "bytes": 17,
+      "original_bytes": 17,
+      "tail_only": false,
+      "saved_as": "route/exit"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/physical.json": {
+      "sha256": "0f8aef72caa630375a8e07caa541f0bc8cb9d198a5d82e19a18d37c3d64974d7",
+      "bytes": 10460,
+      "original_bytes": 10460,
+      "tail_only": false,
+      "saved_as": "route/physical.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/corner.log": {
+      "sha256": "b3a8d5483d87bc6c7d8be30f31f39dd33384072785c5337c97f6693bdad54826",
+      "bytes": 1110,
+      "original_bytes": 1110,
+      "tail_only": false,
+      "saved_as": "route/corner.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/ports/summary.json": {
+      "sha256": "5e038c9d9cb15ba886619b6a69212da8e9ef6814b83be4a6de65e9618def2793",
+      "bytes": 297,
+      "original_bytes": 297,
+      "tail_only": false,
+      "saved_as": "route/ports/summary.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/view/abstract.json": {
+      "sha256": "25d3d23fe1f936bd01204b9134abd131b9fc7dafb9cd3aba6056cd8bcaa6ebd5",
+      "bytes": 1916,
+      "original_bytes": 1916,
+      "tail_only": false,
+      "saved_as": "route/view/abstract.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/run.log": {
+      "sha256": "5f906bd8f564d52bb52fc501bf27f8c8d0864af5ade0fc878157ebd36487a4ea",
+      "bytes": 3412,
+      "original_bytes": 4227,
+      "tail_only": true,
+      "saved_as": "route/run.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/config.mk": {
+      "sha256": "818b25a705c22d5addc8510cb091f6c3d7a923eff894afe7951b1e0ea7ad570f",
+      "bytes": 2000,
+      "original_bytes": 2000,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/config.mk"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/constraint.sdc": {
+      "sha256": "dd6e8198c97e28d4690e543a893739ec54bf1bbb3a442a5dedaeb7221ec10b28",
+      "bytes": 427,
+      "original_bytes": 427,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/constraint.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/hooks/post_synth_inout_retype_post_synth.tcl": {
+      "sha256": "2ee78d86fa95ea214c596be406756043c01edde426f29a12c5245b9878d6d95f",
+      "bytes": 1405,
+      "original_bytes": 1405,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/post_synth_inout_retype_post_synth.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_4_floorplan_pdn.json": {
+      "sha256": "dae4dffaef7be783221a33ea557bb7d1d193cbde89967dfebb9aa021910e203e",
+      "bytes": 217,
+      "original_bytes": 217,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_4_floorplan_pdn.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_1_floorplan.json": {
+      "sha256": "513083e1f5f88318d4c59d5d245120666d5256e7fd91e1a901860dd1b0a1da6c",
+      "bytes": 2266,
+      "original_bytes": 2266,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_1_floorplan.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_3_place_gp.json": {
+      "sha256": "416f6efc7f6ba26ca9430dac49ae497b4725c7a861e3f5406d0986b2bdb186b9",
+      "bytes": 1911,
+      "original_bytes": 1911,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_3_place_gp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/1_synth.json": {
+      "sha256": "441ed4abb795e21484eebaf9e7adbac37d4263113d2a391bc9c1e700fcb520bb",
+      "bytes": 809,
+      "original_bytes": 809,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/1_synth.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_4_place_resized.json": {
+      "sha256": "fc2db5a2c0f3c7a9888ddf49334ca05191b48760e6379fd80b42d41b0e320b66",
+      "bytes": 2260,
+      "original_bytes": 2260,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_4_place_resized.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_1_place_gp_skip_io.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_1_place_gp_skip_io.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_2_place_iop.json": {
+      "sha256": "befc46f8875bb60cb97286acd086c05a2a1fb8d7e37c258a4eacb3d2c6dfadbb",
+      "bytes": 187,
+      "original_bytes": 187,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_2_place_iop.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_5_place_dp.json": {
+      "sha256": "d95ff6999fe59f307c19b30a242c998db733bfa7f27df2f9731f014197a0f154",
+      "bytes": 2862,
+      "original_bytes": 2862,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/3_5_place_dp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/4_1_cts.json": {
+      "sha256": "d07d54ef81650011f2110777e116538d151d9d5f76a654b3bba119326dd1d185",
+      "bytes": 2966,
+      "original_bytes": 2966,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/4_1_cts.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_2_floorplan_macro.json": {
+      "sha256": "6e3b4fadcb1830460ebbe5f5d7aa6e04e8e79402b306c0a23a6e6fc605c7e9a6",
+      "bytes": 172,
+      "original_bytes": 172,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_2_floorplan_macro.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_3_floorplan_tapcell.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/2_3_floorplan_tapcell.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/view/export_ss.tcl": {
+      "sha256": "295ed2c4b33dbfe53486782345643dcf75d36b711183aeb2ea459ca0e74cfe15",
+      "bytes": 1231,
+      "original_bytes": 1231,
+      "tail_only": false,
+      "saved_as": "route/view/export_ss.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/view/export_ff.tcl": {
+      "sha256": "6544d6c84963dc110b868a68a028bbf54d864c5453b408f3c923926899cfa246",
+      "bytes": 1196,
+      "original_bytes": 1196,
+      "tail_only": false,
+      "saved_as": "route/view/export_ff.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/4_1_cts.log": {
+      "sha256": "4001abe060fca15819956457075fc5a7effd96e435f54963639f01803a59117c",
+      "bytes": 1607,
+      "original_bytes": 195156,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/4_1_cts.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/5_1_grt.tmp.log": {
+      "sha256": "bc70c6095d935c39897baa8c36198ef83f2cfc93bb4edae67995735de3bc933c",
+      "bytes": 3745,
+      "original_bytes": 80591,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_hc_asap7_hv_q8hc/base/5_1_grt.tmp.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/rtl/macro_place.tcl": {
+      "sha256": "cb143620093f89982901661c2212b9163a1ad77b2da4ac847a54128700bea202",
+      "bytes": 7164,
+      "original_bytes": 7164,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/hc/rtl/macro_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/su/pdn_quarter.tcl": {
+      "sha256": "ea09a7d5ed9ed42957c620d32e7d68531db9493ad2d7a97bc770ad694befc851",
+      "bytes": 1546,
+      "original_bytes": 1546,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/su/pdn_quarter.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/.views/q8hc/io_place.tcl": {
+      "sha256": "34328a898f3d5798d0692e6e5d39757b85a4583df89c880a61fdfb108eb88ee0",
+      "bytes": 204907,
+      "original_bytes": 204907,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/.views/q8hc/io_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/.views/q8hc/hfd_hc.sv": {
+      "sha256": "2223904ecd644ab36ab1152d2063bd0577ace4f96720c34cc4745c47c7e22b66",
+      "bytes": 690866,
+      "original_bytes": 690866,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/.views/q8hc/hfd_hc.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane_ss.lib": {
+      "sha256": "0478fbe87be0f32310941ebd0e91f4850ec3f8c632b7d00bdf9d91324167dde2",
+      "bytes": 203943,
+      "original_bytes": 203943,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane_ss.lib"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane_ff.lib": {
+      "sha256": "38d384a4fb70fd420d25a9bef672852dc3c49111a0eda25f5b534a8d95527e6d",
+      "bytes": 204044,
+      "original_bytes": 204044,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane_ff.lib"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane.lef": {
+      "sha256": "b7ff21149dbbff13f3d42517711dc961a44f291fecea75b43b89906bf9b7420c",
+      "bytes": 464401,
+      "original_bytes": 464401,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane/ot_dsrom_su_hcpost_lane.lef"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/router/rtl/spec.json": {
+      "sha256": "2077700b9137f4cc71623d21af9119fc412f22c614bd8a51447aaba19ccc0cb5",
+      "bytes": 1942,
+      "original_bytes": 1942,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/spec.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/router/rtl/hfd_router.sv": {
+      "sha256": "1c375cab20b8d45f529eaec4acab1b85cdc65ab3da0b6c5aaf7506973f556427",
+      "bytes": 21742,
+      "original_bytes": 21742,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl": {
+      "sha256": "3316e8ed344d21d6ed3173c20d8c224cd86cb785bb0731ff544e13feb0e3cc9a",
+      "bytes": 282,
+      "original_bytes": 282,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/router/rtl/tb_hfd_router.sv": {
+      "sha256": "a10f18ed03a78936290870513bdaf13e9985736c6030266f4a58183c8dbdeacd",
+      "bytes": 9270,
+      "original_bytes": 9270,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/tb_hfd_router.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/router/rtl/hfd_router_wrap.json": {
+      "sha256": "9621c8ebf041c2bd30473c0eca13bab96292350129a6232adf79bb45906caf6e",
+      "bytes": 284,
+      "original_bytes": 284,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router_wrap.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/pre_cts_fclk_macro_buf.tcl": {
+      "sha256": "d0e2b13c8e756e15c36316283a1e45514ddffa6e67172170ac814fed50249f59",
+      "bytes": 1648,
+      "original_bytes": 1648,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pre_cts_fclk_macro_buf.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/ir_attn_round.sh": {
+      "sha256": "5dcb710fc56e21a67f9bae6d1012e95870cbb528a32ce93984ae102c9db5bb32",
+      "bytes": 1152,
+      "original_bytes": 1152,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/ir_attn_round.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/hold_eco.sh": {
+      "sha256": "c866b8f8e795f0cc1f512d7c8e1287237ddbd5fdec4ea8f427a8d27fd3ec3a06",
+      "bytes": 2983,
+      "original_bytes": 2983,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/hold_eco.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl": {
+      "sha256": "5de59570e0c0223ceddc577b997f47ef5e606891e383ede33b158f846a76a6d0",
+      "bytes": 2443,
+      "original_bytes": 2443,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/vclk_corner_true.sdc": {
+      "sha256": "960539927ed025225b5f33ad325365c231674d7c8f0df34653e5ff47e13d9623",
+      "bytes": 2951,
+      "original_bytes": 2951,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/vclk_latency.tcl": {
+      "sha256": "c1c475d9959c4008344840df444f42b3cb0358ec4b1c555585c269ef5ceb266c",
+      "bytes": 2684,
+      "original_bytes": 2684,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/vclk_latency.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/route_view.sh": {
+      "sha256": "f60c9b5780780c1507b3b6263617732eecbe5429657785bd998871f40d75b2b5",
+      "bytes": 5299,
+      "original_bytes": 5299,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/route_view.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_770.sdc": {
+      "sha256": "fd970753549502f7c13954f42528862de5a4f1afaa2e39777b93afaa70a37d89",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_770.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/pdn_view.tcl": {
+      "sha256": "58e4b292be0137c8466e5bcd6f5fae2160301d09d833411c259ea09c91fc3746",
+      "bytes": 1618,
+      "original_bytes": 1618,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pdn_view.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_m_770.sdc": {
+      "sha256": "02487afa59748311bb95ef4ba9e33401eb0787be4cb73c20d389187bcd4987fa",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_770.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/post_route_hold_eco.tcl": {
+      "sha256": "4359f4ec91c3d05efdf365b02f16c6afceb0e2cd60e3f30dbd89962ba7ff5d32",
+      "bytes": 4795,
+      "original_bytes": 4795,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/post_route_hold_eco.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/signoff_unc60.sdc": {
+      "sha256": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+      "bytes": 271,
+      "original_bytes": 271,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/signoff_unc60.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_m_350.sdc": {
+      "sha256": "73b9e283d0a8171a33ea5c1293aec67276190d1e0736c3023f0bc5fe838bf69f",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_350.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_145.sdc": {
+      "sha256": "fd54ab785926161108c1501ca0d9c74be78e5a5be6880d98b40c6e8efff1b009",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_145.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl": {
+      "sha256": "2ee78d86fa95ea214c596be406756043c01edde426f29a12c5245b9878d6d95f",
+      "bytes": 1405,
+      "original_bytes": 1405,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/view_hold_eco.sh": {
+      "sha256": "8f90a8983724976914d18e0cdab0139765a7a525d8fd787f204cb42a2f85dd96",
+      "bytes": 3265,
+      "original_bytes": 3265,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/view_hold_eco.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_350.sdc": {
+      "sha256": "5ad0d930d8b9d56c5e37c72b10c8d3ab7984b1c20aa2480f6267852e4c105721",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_350.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/die_round.sh": {
+      "sha256": "7a002e2a8a15ba14f9ab919f100ad9cf176922d0a40df2e977af244e1a6c81d1",
+      "bytes": 1606,
+      "original_bytes": 1606,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/die_round.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/load_per_bit.sdc": {
+      "sha256": "1d2a71e85ee7cf6621a85643053c50ef8eeba7f9da7a77ed27fee0387da75c65",
+      "bytes": 528,
+      "original_bytes": 528,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/load_per_bit.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/make_io_vclk.sh": {
+      "sha256": "80a08dfaef93465b2d92b3ca7251d4644f0afbae0315d84b1f3df7ba051e4ac3",
+      "bytes": 2414,
+      "original_bytes": 2414,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv": {
+      "sha256": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+      "bytes": 2463,
+      "original_bytes": 2463,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_1040.sdc": {
+      "sha256": "715e0c652eacd1d1527ac85c27adf7de3245afee2bd7b231a4115816677ab653",
+      "bytes": 1354,
+      "original_bytes": 1354,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_1040.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/ir_round.sh": {
+      "sha256": "a051c4ed5a0eff2d6aa158310dd536e66c2f5f8496974505916ba5d65d9fef6c",
+      "bytes": 827,
+      "original_bytes": 827,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/ir_round.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_m_145.sdc": {
+      "sha256": "b7894e79c356bf9952fe9aae5e0a73509c1bc4b794ef6e0285a0e70be1306271",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_145.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/make_io_vclk_ff.sh": {
+      "sha256": "caf7c11d804e2a3f3cf98235c4b2f278051a0f30504a32fca6b670af366f6bc5",
+      "bytes": 1801,
+      "original_bytes": 1801,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk_ff.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/sync_src.sh": {
+      "sha256": "324845ebd80caa7d79d35f8278af237efc0702fdf9565447258c200243ce2bfe",
+      "bytes": 1039,
+      "original_bytes": 1039,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/sync_src.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/wire_stage_fence.tcl": {
+      "sha256": "685e9ba3283b820ac3c3cc53ec029dd8deb6b2bfd8c9bf515becf2b8d77c4af7",
+      "bytes": 13240,
+      "original_bytes": 13240,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/wire_stage_fence.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_vclk_m_1040.sdc": {
+      "sha256": "38fbd6b6892266cdec89c689f79cd84a2ab1ceca302c09b148e020dc0e88033c",
+      "bytes": 1407,
+      "original_bytes": 1407,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_1040.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/face_chain_place.tcl": {
+      "sha256": "b9adfdd713f5a46fe32ae590e8cc1f91d5e2263261c949392754961f431922b1",
+      "bytes": 11908,
+      "original_bytes": 11908,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/face_chain_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/post_cts_vclk.tcl": {
+      "sha256": "c4d793622243c1f876c747004899bb05cc331274f04a25058a83641aa32c31d4",
+      "bytes": 203,
+      "original_bytes": 203,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/post_cts_vclk.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/make_io_vclk_margin.sh": {
+      "sha256": "2ed4064632f7fbf5b78dfa597a2541889a7ef6c009bc2f5aca9133f70d663c7c",
+      "bytes": 949,
+      "original_bytes": 949,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk_margin.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/smoke/hfd_gath_r8_stub.sv": {
+      "sha256": "53c334641396c69a41885e0704785bf12cb2e09c6d6f6fb040f0edc28a0759be",
+      "bytes": 369,
+      "original_bytes": 369,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/smoke/hfd_gath_r8_stub.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_quant.sdc": {
+      "sha256": "68bb65fdb0c7705bb0cc1a33510cbf8010cfcd20ea1e54cce887a0906a089e5b",
+      "bytes": 1951,
+      "original_bytes": 1951,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_quant.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/spine_io_min.json": {
+      "sha256": "4c69e63b0bbfc86a88a3e51eb3aba86a5591d31ef2332bbdba0e4a64c7674948",
+      "bytes": 10580,
+      "original_bytes": 10580,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/spine_io_min.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_s.sdc": {
+      "sha256": "6416c6be50da5b5e87d2261e7001a23eb5ab596c71798060175eba411e95eee2",
+      "bytes": 3038,
+      "original_bytes": 3038,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_s.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc": {
+      "sha256": "8eabd03ac7bd7f19cad51ca55d4b397b9761d22635cf71d903dde4715ac8ad39",
+      "bytes": 1108,
+      "original_bytes": 1108,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_n.sdc": {
+      "sha256": "7df62b87d865a63398f3da5dcd25b1d0f0a50096887dd7c83fab156b8cb1f0ee",
+      "bytes": 3600,
+      "original_bytes": 3600,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_n.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc": {
+      "sha256": "490d1bd1fd0606e9fdfefee16ac3477546a09b33cc7b9e0899bc3194b6ba0c97",
+      "bytes": 8187,
+      "original_bytes": 8187,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/common/io_min/io_min_hfd_vm.sdc": {
+      "sha256": "5f9130f68edf3ad5e1a798f85547378a11e91af76a1d78578545f454238ffdb9",
+      "bytes": 6660,
+      "original_bytes": 6660,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_min/io_min_hfd_vm.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/STATUS.md": {
+      "sha256": "57bb8d7296a40ad6b2c9c4e7ecd6a670f4499db6e816a03a4e0f856711aa7404",
+      "bytes": 9336,
+      "original_bytes": 9336,
+      "tail_only": false,
+      "saved_as": "context/hbm-abstracts/hub/STATUS.md"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/STATUS.md": {
+      "sha256": "e02efac7f41629bed3e8e251654079919f02728e19e7d63dd5cc104a948f325c",
+      "bytes": 68066,
+      "original_bytes": 68066,
+      "tail_only": false,
+      "saved_as": "context/hbm-abstracts/STATUS.md"
+    }
+  },
+  "missing": [
+    "corner_sta.json",
+    "corner_sta_833.json",
+    "check.json",
+    "io150.txt"
+  ],
+  "processes": [],
+  "host": "ot-epyc2"
+}
