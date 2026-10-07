@@ -56,10 +56,21 @@ endmodule
 `ifndef OT_STN_LDLY
 `define OT_STN_LDLY 3
 `endif
-module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `OT_STN_LDLY) (
+// RC=1 (views agent, fail-fast 2026-10-06; gath_r25 Q1 u_lau5 r -> a2 SS -9.23, other launch slices +62..+98): a second
+// posedge register re-captures the slice at the output face (+1 cycle on the launch); the forwarded-clock relation of
+// the output is unchanged (launch on the rising edge of ck, fclk_o = ck through the kept inverters).
+module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `OT_STN_LDLY, parameter integer RC = 0) (
     input wire ck, input wire [W-1:0] d_i, output wire fclk_o, output wire [W-1:0] d_o);
     reg [W-1:0] r;
     always @(posedge ck) r <= d_i;
+    wire [W-1:0] r_o;
+    generate if (RC) begin : g_rc
+        reg [W-1:0] rc;
+        always @(posedge ck) rc <= r;
+        assign r_o = rc;
+    end else begin : g_norc
+        assign r_o = r;
+    end endgenerate
     wire ckn, ck2;
     ot_fwd_clk_inv u_inv0 (.a(ck), .y(ckn));
     ot_fwd_clk_inv u_inv1 (.a(ckn), .y(ck2));
@@ -77,7 +88,7 @@ module ot_hbm_stn_launch #(parameter integer W = 512, parameter integer LDLY = `
     end else begin : g_delayed
         assign fclk_o = g_dly[2*LDLY-1].y;
     end endgenerate
-    assign d_o = r;
+    assign d_o = r_o;
 endmodule
 
 // terminate a forwarded slice into ck: write on the forwarded clock's falling edge (kept inverter), mesochronous

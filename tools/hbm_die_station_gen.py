@@ -189,6 +189,7 @@ class Emit:
         u = self.name('lau')
         w = len(obits)
         ld = f', .LDLY({self.ldly})' if self.ldly else ''
+        ld += ', .RC(1)' if self.fwd_rc else ''
         self.body.append(f'  ot_hbm_stn_launch #(.W({w}){ld}) {u} (.ck(ck[0]), .d_i({{{", ".join(reversed(self.mut(srcs)))}}}), '
                          f'.fclk_o({op}[{oclk}]), .d_o({rng([(op, i) for i in obits])}));')
         self.clk_out.append(((op, oclk), ('ck', 0), False))
@@ -476,8 +477,8 @@ def main(argv=None):
                     'register; each extra stage +1 cycle on that output, placed by common/face_chain_place.tcl)')
     ap.add_argument('--fdly', type=int, default=0, help='forward slices: FDLY kept inverter pairs (0 = library default)')
     ap.add_argument('--ldly', type=int, default=0, help='launch slices: LDLY kept inverter pairs (0 = library default)')
-    ap.add_argument('--fwd-rc', action='store_true', help='forward slices: second falling-edge flop at the output face '
-                    '(ot_hbm_stn_fwd RC=1): +1 forwarded cycle per crossing, face-to-face wire becomes a full-period arc')
+    ap.add_argument('--fwd-rc', action='store_true', help='forward and launch slices: second flop at the output face '
+                    '(ot_hbm_stn_fwd / ot_hbm_stn_launch RC=1): +1 cycle per crossing, face-to-face wire becomes a full-period arc')
     ap.add_argument('--plreg', action='store_true', help='meso FIFOs: registered read-pointer placement (PLREG=1, 0 cycles)')
     ap.add_argument('--rsplit', action='store_true', help='--margin meso FIFOs: half-select readout flops (RSPLIT=1, 0 cycles)')
     a = ap.parse_args(argv)
