@@ -2,6 +2,7 @@
 // same function bit for bit, +4 stages (F, G0, G2a, C2a) and two constant-operand scale multipliers; see the script.
 `timescale 1ns/1ps
 module ot_hfd_actquant_m #(
+    parameter integer MR = 0,       // views agent: 1 with MLAT 6 = L5 multiplier + rounding cut (_l6r)
     parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
 ) (
     input  wire          clk,
@@ -81,8 +82,13 @@ module ot_hfd_actquant_m #(
     // ---- the scale product (5 stages)
     wire [31:0] prod8, prod4, prod;
     wire        pfault8, pfault4, pfault;
-    ot_hdc_qmul_lat #(MLAT) u_scale8 (clk, rst_n, f_v, {1'b0, amax}, INV_448, prod8, pfault8);
-    ot_hdc_qmul_lat #(MLAT) u_scale4 (clk, rst_n, f_v, {1'b0, amax}, INV_6, prod4, pfault4);
+    generate if (MR != 0 && MLAT == 6) begin : g_mr
+        ot_hfd_qmul_l6r u_scale8 (clk, rst_n, f_v, {1'b0, amax}, INV_448, prod8, pfault8);
+        ot_hfd_qmul_l6r u_scale4 (clk, rst_n, f_v, {1'b0, amax}, INV_6, prod4, pfault4);
+    end else begin : g_mq
+        ot_hdc_qmul_lat #(MLAT) u_scale8 (clk, rst_n, f_v, {1'b0, amax}, INV_448, prod8, pfault8);
+        ot_hdc_qmul_lat #(MLAT) u_scale4 (clk, rst_n, f_v, {1'b0, amax}, INV_6, prod4, pfault4);
+    end endgenerate
     wire [MLAT:0] vl;
     ot_hdc_vline #(.D(MLAT)) u_vl (.clk(clk), .rst_n(rst_n), .v(f_v), .vd(vl));
     wire p_fp4, p_nf;
@@ -346,4 +352,12 @@ module ot_hfd_actquant_m #(
             else                           y[16*i +: 16] <= {ca_sgn[i], 8'd0, ca_sub[i]};
         end
     end
+endmodule
+
+// ot_hfd_qmul_l6r: ot_hdc_qmul_lat's interface around ot_hdc_fp32_mul_f12_l6r (views agent; MR = 1, MLAT = 6)
+module ot_hfd_qmul_l6r (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
+                       output wire [31:0] y, output wire fault);
+    wire [1:0] err; wire vo;
+    ot_hdc_fp32_mul_f12_l6r u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    assign fault = vo && (err != 2'd0);
 endmodule
