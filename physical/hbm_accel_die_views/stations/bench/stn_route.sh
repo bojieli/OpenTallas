@@ -11,8 +11,12 @@ V=physical/hbm_accel_die_views/stations/$m/$m.sdc
 SDCARG="--orfs-var SDC_FILE=/src/$V"
 if [ -n "${MARGIN:-}" ]; then
   mkdir -p $S/.views/$lab
+  if [ -n "${SDCFROM:-}" ]; then   # reuse a previous margin route's route/signoff SDC (same CKINS/CKFF)
+    cp $SDCFROM/route.sdc $S/.views/$lab/route.sdc; cp $SDCFROM/signoff.sdc $S/.views/$lab/signoff.sdc
+  else
   python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V ${CKINS:-0} route ${CKFF:-} > $S/.views/$lab/route.sdc
   python3 physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py $V ${CKINS:-0} signoff ${CKFF:-} > $S/.views/$lab/signoff.sdc
+  fi
   SDCARG="--orfs-var SDC_FILE=/src/.views/$lab/route.sdc"
   mkdir -p $O/$lab
   echo "{\"margin\": true, \"ckins_ps\": ${CKINS:-0}, \"route_sdc\": \".views/$lab/route.sdc\", \"signoff_sdc\": \".views/$lab/signoff.sdc\", \"recipe\": \"bench/stn_margin_sdc.py\"}" > $O/$lab/margin.json
