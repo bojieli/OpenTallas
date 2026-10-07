@@ -1,0 +1,3 @@
+RESET_INTERRUPTION fwd=7 ret=7 issued=83/64 received=23/0 hubquiet=10 fwdquiet=10 retquiet=10
+FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_reset.sv:68: RESET_PROTOCOL_FAULT epoch=1 tx=1 rx=0
+       Time: 2766000 Scope: tb_ha2_truecredit_reset.run_phase
