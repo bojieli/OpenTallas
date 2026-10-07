@@ -18,8 +18,11 @@ set_min_delay -ignore_clock_latency 0 -from [get_clocks hbm_clk] -to [get_clocks
 set ot_phy [get_ports {k_v* k_rdy* k_addr* k_len* k_tag* k_we* k_wdata* k_wstrb* k_wr_done* kr_v* kr_rdy* kr_tag* kr_beat* kr_data*}]
 unset_input_delay -clock vclk $ot_phy
 unset_output_delay -clock vclk $ot_phy
-set_input_delay [expr {900 * 0.2 + 150}] -clock vclk_h $ot_phy
-set_output_delay [expr {900 * 0.2 + 150}] -clock vclk_h $ot_phy
+# PHY ports: the PHY abstract abuts the tile in the SAME clock region (budget sheet dsfd_ctrl_pc: skew class intra,
+# 90 ps, L 0.2 um), so the die clock-arrival term is the intra-region 90 ps, not the 150 ps inter-region term (OWNER
+# clarification 2026-10-06 ~10:40).  da50ce55a with 150: SS +57 / FF -9.2, after hold ECO SS +10.2 / FF +23.1.
+set_input_delay [expr {900 * 0.2 + 90}] -clock vclk_h $ot_phy
+set_output_delay [expr {900 * 0.2 + 90}] -clock vclk_h $ot_phy
 set_input_delay -min 0 -clock vclk_h $ot_phy
 set_output_delay -min 0 -clock vclk_h $ot_phy
 # rst is the asynchronous die reset: every column synchronises it locally (2-flop async-assert / sync-release
