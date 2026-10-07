@@ -387,6 +387,17 @@ def sta_tcl(m, work, index):
         (work / f'{n}_ss.lib').write_bytes((d / v['lib']['ss']).read_bytes())
         (work / f'{n}_ff.lib').write_bytes((d / v['lib']['ff']).read_bytes())
         lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+    # OWNER 2026-10-06 ~19:20: the PHY black boxes are timed too (their interface Liberty: PHY-side pins launched /
+    # captured by PHY flops on the PHY clock pin)
+    phy_libs = {'ot_pdie_serdes': 'physical/hbm_accel_die_views/phy_bb/ot_pdie_serdes/ot_pdie_serdes_{c}.lib',
+                'ot_hbm_host_phy': 'physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy_{c}.lib',
+                'ot_hbm3e_phy_v41x_aw30_e8p5': 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_{c}.lib'}
+    for n, pat in phy_libs.items():
+        if any(it.master == n for it in m['insts']):
+            for c in ('ss', 'ff'):
+                (work / f'{n}_{c}.lib').write_bytes((ROOT / pat.format(c=c)).read_bytes())
+                lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
+            libs[n] = dict(phy_bb=True)
     timed = [it for it in m['insts'] if it.master in libs]
     by_master = defaultdict(list)
     for it in timed:

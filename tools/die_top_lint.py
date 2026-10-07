@@ -326,7 +326,11 @@ def real_blocks(die, m=None):
                              ('ot_pdie_serdes', 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v',
                               'placeholder hard macro black box'),
                              ('ot_pdie_ucie', 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v',
-                              'placeholder hard macro black box')):
+                              'placeholder hard macro black box'),
+                             ('ot_hbm_host_phy', 'physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy_bb.v',
+                              'pin-accurate host PHY black box (tools/hbm_phy_bb.py)')):
+            if mst not in rp:
+                continue
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind=kind, params={}, ports=pm['ports'], binding=rp[mst])
         prm = json.loads((ROOT / H.PORTMAP).read_text())['DS']['SM_parameters']

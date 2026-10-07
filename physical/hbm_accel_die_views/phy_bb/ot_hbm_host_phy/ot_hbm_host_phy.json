@@ -1,0 +1,211 @@
+{
+ "name": "ot_hbm_host_phy",
+ "kind": "host PHY black box (digital-facing)",
+ "width_um": 260.808,
+ "height_um": 1652.424,
+ "area_um2": 430965.399,
+ "signal_pins": 382,
+ "pitch_um": 4.32,
+ "face": "W",
+ "layer": "M4",
+ "clock": "clk (die-supplied PHY-side clock; the loader host clk_host)",
+ "ports": [
+  {
+   "name": "s_awvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "s_awready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "s_awaddr",
+   "width": 12,
+   "direction": "output"
+  },
+  {
+   "name": "s_wvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "s_wready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "s_wdata",
+   "width": 32,
+   "direction": "output"
+  },
+  {
+   "name": "s_wstrb",
+   "width": 4,
+   "direction": "output"
+  },
+  {
+   "name": "s_bvalid",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "s_bready",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "s_arvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "s_arready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "s_araddr",
+   "width": 12,
+   "direction": "output"
+  },
+  {
+   "name": "s_rvalid",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "s_rready",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "s_rdata",
+   "width": 32,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_arvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_arready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_araddr",
+   "width": 64,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_rvalid",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_rready",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_rdata",
+   "width": 64,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_rresp",
+   "width": 2,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_rlast",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_awvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_awready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_awaddr",
+   "width": 64,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_wvalid",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_wready",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_wdata",
+   "width": 64,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_wstrb",
+   "width": 8,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_bvalid",
+   "width": 1,
+   "direction": "input"
+  },
+  {
+   "name": "h_dma_bready",
+   "width": 1,
+   "direction": "output"
+  },
+  {
+   "name": "h_dma_bresp",
+   "width": 2,
+   "direction": "input"
+  }
+ ],
+ "derived_from": "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv",
+ "corners": {
+  "tt": {
+   "c2q": 0.218,
+   "setup": 0.05,
+   "hold": 0.05,
+   "slew": 0.02,
+   "proc": 1,
+   "temp": 25,
+   "volt": 0.7
+  },
+  "ss": {
+   "c2q": 0.295,
+   "setup": 0.07,
+   "hold": 0.03,
+   "slew": 0.03,
+   "proc": 1,
+   "temp": 100,
+   "volt": 0.63
+  },
+  "ff": {
+   "c2q": 0.15,
+   "setup": 0.035,
+   "hold": 0.065,
+   "slew": 0.015,
+   "proc": 1,
+   "temp": 0,
+   "volt": 0.77
+  }
+ },
+ "cdc": "on our side: ot_hbm_accel_loader_host clk_host -> clk_mem crossing (RTL)",
+ "bandwidth": "h_dma 64 b x 1.2 GHz = 9.6 GB/s"
+}

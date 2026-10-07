@@ -48,6 +48,9 @@ OUT = 'results/rtl/hbm_accel_die_floorplan_20261005'
 PHY_LEF = S.PHY_LEF
 SERDES_LEF = S.SERDES_LEF
 UCIE_LEF = S.UCIE_LEF
+# r16j (OWNER 2026-10-06 ~19:20): host PHY pin-accurate black box (tools/hbm_phy_bb.py): the loader host interface's
+# AXI4-Lite BAR target + 64-bit AXI host DMA, PHY directions, W face M4, the UCIe-class outline unchanged
+HOST_LEF = 'physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy.lef'
 SNAP_LIB = S.SNAP_LIB
 PLAT = S.PLAT
 SM_CTX = 'results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp/floorplan.json'
@@ -247,7 +250,7 @@ R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/in
 # svc/split/split.json, schema hbm_die_split_x.v1: SW = NW placed MX, SE = NE placed MX); band ports renamed by SM rank
 # (port_map), the PHY dfi bundle split by bit range (bus endpoint 'dfi@lo:hi'), cross buses between abutting bands,
 # one die clock leaf ck / rst per band.  Every other master keeps its pins.
-R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.json')
+R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.json', host_bb=True)
 ADOPTED = R16J
 
 
@@ -456,7 +459,7 @@ def build(variant=None):
     # ---- SerDes: centre of the S (5 macros) and N (4 macros) edges, in the widened mid channel between the PHY pairs
     #      (r2: from the E/W strips, which put the endpoint 11-16 mm from its farthest macro); reservation slab at the
     #      edge, the real ot_pdie_serdes pin macros on its core side.  Host UCIe + slab on the E strip.
-    rs, ru = S.real_lef(SERDES_LEF), S.real_lef(UCIE_LEF)
+    rs, ru = S.real_lef(SERDES_LEF), S.real_lef(HOST_LEF if variant.get('host_bb') else UCIE_LEF)
     links = []
     cxm = geo['cx']
     sd_w = dn(mid_ch - 2 * 64.8, GX)
@@ -554,31 +557,8 @@ def apply_splits(m, specs, lattice=None):
             spec, order = _split_spec(recs[bn]['ports'])
             def fn(mst, k=1, spec=spec, order=order):
                 sp_ = dict(spec)
-                if k > 1:       # bundled view: runs of one face packed apart (>= two bundled tracks between runs)
-                    byf = defaultdict(list)
-                    for pn in order:
-                        byf[sp_[pn][2]].append(pn)
-                    for f_, pns in byf.items():
-                        runs = []
-                        for pn in pns:
-                            t_ = sp_[pn]
-                            st_ = Q.TRK[t_[3]][1] * k * t_[5]
-                            n_ = max(1, math.ceil(t_[1] / k))
-                            runs.append([t_[4] - n_ * st_ / 2, n_ * st_, pn])
-                        along = mst.h if f_ in 'EW' else mst.w
-                        gap = 2 * Q.TRK['M4' if f_ in 'EW' else 'M5'][1] * k
-                        for r_ in runs:     # the clamp Q.pin_rects applies
-                            r_[0] = min(max(r_[0], gap), along - gap - r_[1])
-                        runs.sort()
-                        for a_, b_ in zip(runs, runs[1:]):          # push up
-                            b_[0] = max(b_[0], a_[0] + a_[1] + gap)
-                        if runs and runs[-1][0] + runs[-1][1] > along - gap:   # then down from the top
-                            runs[-1][0] = along - gap - runs[-1][1]
-                            for a_, b_ in zip(runs[-2::-1], runs[::-1]):
-                                a_[0] = min(a_[0], b_[0] - gap - a_[1])
-                        for r_ in runs:
-                            t_ = sp_[r_[2]]
-                            sp_[r_[2]] = t_[:4] + (round(r_[0] + r_[1] / 2, 4),) + t_[5:]
+                if k > 1:
+                    _bundle_pack(mst, sp_, order, k)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
@@ -634,6 +614,35 @@ def apply_splits(m, specs, lattice=None):
         m.setdefault('splits', {})[parent] = dict(record=rel, bands=[bn for bn, _ in bands], instances=sorted(repl))
 
 
+def _bundle_pack(mst, sp_, order, k):
+    """bundled view (k > 1): runs of one face packed apart (>= two bundled tracks between runs)."""
+    byf = defaultdict(list)
+    for pn in order:
+        byf[sp_[pn][2]].append(pn)
+    for f_, pns in byf.items():
+        runs = []
+        for pn in pns:
+            t_ = sp_[pn]
+            st_ = Q.TRK[t_[3]][1] * k * t_[5]
+            n_ = max(1, math.ceil(t_[1] / k))
+            runs.append([t_[4] - n_ * st_ / 2, n_ * st_, pn])
+        along = mst.h if f_ in 'EW' else mst.w
+        gap = 2 * Q.TRK['M4' if f_ in 'EW' else 'M5'][1] * k
+        for r_ in runs:     # the clamp Q.pin_rects applies
+            r_[0] = min(max(r_[0], gap), along - gap - r_[1])
+        runs.sort()
+        for a_, b_ in zip(runs, runs[1:]):          # push up
+            b_[0] = max(b_[0], a_[0] + a_[1] + gap)
+        if runs and runs[-1][0] + runs[-1][1] > along - gap:   # then down from the top
+            runs[-1][0] = along - gap - runs[-1][1]
+            for a_, b_ in zip(runs[-2::-1], runs[::-1]):
+                a_[0] = min(a_[0], b_[0] - gap - a_[1])
+        for r_ in runs:
+            t_ = sp_[r_[2]]
+            sp_[r_[2]] = t_[:4] + (round(r_[0] + r_[1] / 2, 4),) + t_[5:]
+
+
+
 def _xy_or_split_spec(ports):
     """_split_spec plus 'xy' ports (S-face M5 pins at explicit x, e.g. a svc band's PHY dfi slice)."""
     face_ports = {pn: v for pn, v in ports.items() if v['face'] != 'xy'}
@@ -663,6 +672,7 @@ def apply_splits_x(m, rel):
                 for pn, t_ in list(sp_.items()):
                     if t_[0] == 'xy':
                         sp_[pn] = ('face', len(t_[1]), 'S', 'M5', round(sum(t_[1]) / len(t_[1]), 4), 1)
+                _bundle_pack(mst, sp_, order, k)
             mst.ports, mst.order = sp_, list(order)
         fixed[bn] = fn
     repl, pmap = {}, {}
@@ -1425,7 +1435,7 @@ def clock_nets(m, B, coll):
 
 
 # ------------------------------------------------------------------------------------------------ abstracts
-def real_ports(m=None):
+def _real_ports0(m=None):
     phy = S.real_lef(PHY_LEF)
     dfi = sorted(phy['pins'], key=lambda p: (phy['pins'][p][1][0], p))
     sd = dict(io=S._bus('tx', 512) + S._bus('rx', 512), ck=['clk'])
@@ -1438,11 +1448,23 @@ def real_ports(m=None):
     return {phy['name']: dict(dfi=dfi), S.real_lef(SERDES_LEF)['name']: sd, S.real_lef(UCIE_LEF)['name']: sd}
 
 
+def _host_bind(out):
+    """host PHY black box: iox = every signal pin in LEF order (outputs and inputs of the AXI-Lite BAR target and the
+    64-bit host DMA, 381 b of the 512-b host chain; the rest are spare chain bits), ck = clk."""
+    hb = S.real_lef(HOST_LEF)
+    out[hb['name']] = dict(iox=[p for p in hb['pins'] if p != 'clk'], ck=['clk'])
+    return out
+
+
+def real_ports(m=None):
+    return _host_bind(_real_ports0(m))
+
+
 REAL = {}
 
 
 def _init_real():
-    for rel in (PHY_LEF, SERDES_LEF, UCIE_LEF):
+    for rel in (PHY_LEF, SERDES_LEF, UCIE_LEF, HOST_LEF):
         REAL[S.real_lef(rel)['name']] = rel
 
 
@@ -1608,6 +1630,8 @@ def masters(m, k=1):
             mst.face('phy', max(1, pw.get((mst.name, 'phy'), 1)), 'S', 'M5', mst.w / 2, 4)
     if k > 1:
         for name, ports in real_ports(m).items():
+            if name == 'ot_hbm_host_phy':     # bundle as many runs as the 512-b chain carries (spare bits)
+                ports = dict(ports, iox=ports['iox'] + [ports['iox'][-1]] * (pw.get((name, 'iox'), 0) * k - len(ports['iox'])))
             M[name] = S._real_master_bundled(REAL[name], k, ports)
     return M
 
@@ -2071,6 +2095,11 @@ def case_real(m, work):
     _init_real()
     for rel, nm in ((PHY_LEF, 'phy.lef'), (SERDES_LEF, 'serdes.lef'), (UCIE_LEF, 'ucie.lef')):
         (work / nm).write_text(S._lef_text(rel))
+    if m['variant'].get('host_bb'):      # host PHY black box macro appended to the link LEF the case already reads
+        ht = S._lef_text(HOST_LEF)
+        body = ht[ht.index('MACRO '):ht.rindex('END LIBRARY')]
+        ut = (work / 'ucie.lef').read_text()
+        (work / 'ucie.lef').write_text(ut[:ut.rindex('END LIBRARY')] + body + 'END LIBRARY\n')
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
     write_netlist(m, 1, work / 'die.v')
     W, H = m['geo']['W'], m['geo']['H']
