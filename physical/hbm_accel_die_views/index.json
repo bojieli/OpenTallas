@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r16i",
- "generator_sha256": "5fa898076eb279951c5aba0427694a4b61b51cb2512d8a74fd0a765216be6d26",
+ "round": "r16j",
+ "generator_sha256": "9364fce2236bb7ac5455155dd14bffaef07c56fcaf0b87cd632afd7d43bb8555",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -1509,9 +1509,11 @@
     "ff": "hfd_stn_r18_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "1041 pins off the generator position (same face)"
+    ],
+    "positions": "1041 pins off the generator position (same face)",
     "size_view": [
      66.936,
      60.456
@@ -1695,9 +1697,11 @@
     "ff": "hfd_stn_r20_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "1026 pins off the generator position (same face)"
+    ],
+    "positions": "1026 pins off the generator position (same face)",
     "size_view": [
      66.072,
      60.456
@@ -2381,25 +2385,85 @@
    "status": "missing",
    "instances": 1
   },
-  "hfd_svc_NE": {
+  "hfd_svc_SE_s0": {
    "kind": "svc",
    "status": "missing",
-   "instances": 1
+   "instances": 2
   },
-  "hfd_svc_NW": {
+  "hfd_svc_SE_s1": {
    "kind": "svc",
    "status": "missing",
-   "instances": 1
+   "instances": 2
   },
-  "hfd_svc_SE": {
+  "hfd_svc_SE_s2": {
    "kind": "svc",
    "status": "missing",
-   "instances": 1
+   "instances": 2
   },
-  "hfd_svc_SW": {
+  "hfd_svc_SE_s3": {
    "kind": "svc",
    "status": "missing",
-   "instances": 1
+   "instances": 2
+  },
+  "hfd_svc_SE_s4": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s5": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s6": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s7": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s0": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s1": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s2": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s3": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s4": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s5": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s6": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s7": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
   },
   "hfd_vm": {
    "kind": "vm",
@@ -2410,7 +2474,7 @@
  "counts": {
   "interim-not-closed": 9,
   "closed": 29,
-  "missing": 19,
+  "missing": 31,
   "reservation": 2
  }
 }

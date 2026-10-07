@@ -65,7 +65,7 @@ SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r16i'            # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands)
+FINAL_ROUND = 'r16j'            # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -242,7 +242,13 @@ IDXQ_LAT = {'hfd_index_q_b1:R0': 0.27, 'hfd_index_q_b4:R0': 1.62, 'hfd_index_q_b
 R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/index_q/split/split.json'},
             split_lattice={'hfd_index_q': IDXQ_LAT},
             spine_slots={'su_red': (1399.656, 218.136), 'su_full': (346.008, 347.736)})
-ADOPTED = R16I
+# r16j (2026-10-06 18:40, OWNER: blocks <= ~1 mm hardened leaves joined by registered hops): the four stream services
+# hfd_svc_{SW,SE,NW,NE} (8500 x 259 um) replaced by 8 x-band segment masters per family (svcidx split record
+# svc/split/split.json, schema hbm_die_split_x.v1: SW = NW placed MX, SE = NE placed MX); band ports renamed by SM rank
+# (port_map), the PHY dfi bundle split by bit range (bus endpoint 'dfi@lo:hi'), cross buses between abutting bands,
+# one die clock leaf ck / rst per band.  Every other master keeps its pins.
+R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.json')
+ADOPTED = R16J
 
 
 def build(variant=None):
@@ -501,6 +507,8 @@ def build(variant=None):
         m['child_reservations'] = allocations(m)
     if variant.get('split_masters'):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
+    if variant.get('split_x_masters'):
+        apply_splits_x(m, variant['split_x_masters'])
     return m
 
 
@@ -624,6 +632,97 @@ def apply_splits(m, specs, lattice=None):
             if getattr(v_, 'name', None) in repl:
                 hub[k_] = next(i for i in new_insts if i.name == repl[v_.name][bands[-1][0]])
         m.setdefault('splits', {})[parent] = dict(record=rel, bands=[bn for bn, _ in bands], instances=sorted(repl))
+
+
+def _xy_or_split_spec(ports):
+    """_split_spec plus 'xy' ports (S-face M5 pins at explicit x, e.g. a svc band's PHY dfi slice)."""
+    face_ports = {pn: v for pn, v in ports.items() if v['face'] != 'xy'}
+    spec, order = _split_spec(face_ports)
+    for pn, v in ports.items():
+        if v['face'] == 'xy':
+            pins = sorted(v['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+            spec[pn] = ('xy', [round((q[2] + q[4]) / 2, 4) for q in pins])
+            order.append(pn)
+    return spec, order
+
+
+def apply_splits_x(m, rel):
+    """r16j: x-axis split (hbm_die_split_x.v1).  Each instance of a split parent is replaced by its bands in the same
+    slot (same orientation; MY / R180 mirror the band x), parent-port bus ends move to the owning band under its band
+    port name (port_map), a bus on a port split by bit range (the svc PHY dfi bundle) becomes one bus per band whose
+    real-macro end is the slice 'dfi@lo:hi', ck / rst reach every band, and the record's cross buses join abutting
+    bands of each parent instance."""
+    sp = json.loads((ROOT / rel).read_text())
+    fixed = m.setdefault('fixed_ports', {})
+    for bn in sp['bands']:
+        rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+        spec, order = _xy_or_split_spec(rec['ports'])
+        def fn(mst, k=1, spec=spec, order=order):
+            sp_ = dict(spec)
+            if k > 1:       # bundled view: an xy port becomes one S-face M5 run centred on its pins
+                for pn, t_ in list(sp_.items()):
+                    if t_[0] == 'xy':
+                        sp_[pn] = ('face', len(t_[1]), 'S', 'M5', round(sum(t_[1]) / len(t_[1]), 4), 1)
+            mst.ports, mst.order = sp_, list(order)
+        fixed[bn] = fn
+    repl, pmap = {}, {}
+    new_insts = []
+    for it in m['insts']:
+        par = sp['parents'].get(it.master)
+        if par is None:
+            new_insts.append(it)
+            continue
+        names = {}
+        mirror_x = it.orient in ('MY', 'R180')
+        for j, bn in enumerate(par['bands']):
+            b = sp['bands'][bn]
+            x0, w = b['x0_um'], b['w_um']
+            xx = it.x + (it.w - x0 - w if mirror_x else x0)
+            nm = f'{it.name}_s{j}'
+            new_insts.append(Inst(nm, bn, round(xx, 4), it.y, w, b['h_um'], it.orient, kind=it.kind, region=it.region,
+                                  domain=it.domain))
+            names[bn] = nm
+        repl[it.name] = names
+        pm = defaultdict(list)
+        for bn, ports in par['port_map'].items():
+            for bp, v in ports.items():
+                if v['parent_port'] != '<new>':
+                    pm[v['parent_port']].append((names[bn], bp, v['parent_bits'][0], v['parent_bits'][1]))
+        pmap[it.name] = pm
+    m['insts'] = new_insts
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        hit = [(i, e) for i, e in enumerate(eps) if e[0] in repl]
+        if not hit:
+            nb.append((bid, cls, bits, eps))
+            continue
+        split = [e for _, e in hit if e[1] not in ('ck', 'rst') and len(pmap[e[0]][e[1]]) > 1]
+        if split:
+            assert len(split) == 1 and len(eps) == 2, (bid, eps)
+            (pi, pp), = split
+            other = next(e for e in eps if e[0] != pi)
+            for bi, bp, lo, hi in sorted(pmap[pi][pp], key=lambda t: t[2]):
+                nb.append((f'{bid}_{bi.rsplit("_", 1)[1]}', cls, hi - lo + 1, [(other[0], f'{other[1]}@{lo}:{hi}'), (bi, bp)]))
+            continue
+        e2 = []
+        for inst, port in eps:
+            if inst not in repl:
+                e2.append((inst, port))
+            elif port in ('ck', 'rst'):
+                e2 += [(nm, port) for nm in repl[inst].values()]
+            else:
+                (bi, bp, lo, hi), = pmap[inst][port]
+                e2.append((bi, bp))
+        nb.append((bid, cls, bits, e2))
+    for inst, names in repl.items():
+        fam = next(par for par in sp['parents'] if names.get(sp['parents'][par]['bands'][0]))
+        for j, x in enumerate(sp['cross']):
+            fb, fp = x['frm'].split('.')
+            tb, tp = x['to'].split('.')
+            if fb in names and tb in names:
+                nb.append((f'{inst}_x{j}', 'hub', x['bits'], [(names[fb], fp), (names[tb], tp)]))
+    m['buses'] = nb
+    m.setdefault('splits', {})['svc_x'] = dict(record=rel, instances=sorted(repl))
 
 
 # ------------------------------------------------------------------------------------------------ station masters
@@ -1486,6 +1585,8 @@ def masters(m, k=1):
             for (want, pt), nd, s0, nn in zip(lst, need, starts, n):
                 mst.face(pt, nn, face, layer, s0 + nd / 2, pitch)
     for st in m['groups']:
+        if f'hfd_svc_{st}' not in M:      # r16j: svc split into x-band segment masters (fixed pin plans)
+            continue
         mst = M[f'hfd_svc_{st}']
         if k == 1:
             ph = S.real_lef(PHY_LEF)
@@ -1555,7 +1656,14 @@ def write_netlist(m, k, path, top='hfd_die'):
         V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
             mst = by[inst].master
-            if mst in rp and port in rp[mst]:
+            if '@' in port:         # r16j: slice lo:hi of a real or bundled port (svc band <- PHY dfi range)
+                base, rng = port.split('@')
+                lo, hi = map(int, rng.split(':'))
+                if mst in rp and base in rp[mst]:
+                    conns[inst].append((rp[mst][base][lo:hi + 1], net))
+                else:
+                    conns[inst].append(('slice', base, lo // k, n, net))
+            elif mst in rp and port in rp[mst]:
                 conns[inst].append((rp[mst][port][:n], net))
             else:
                 conns[inst].append((port, net, n))
@@ -1571,6 +1679,10 @@ def write_netlist(m, k, path, top='hfd_die'):
                         bus_bits[mm.group(1)][int(mm.group(2))] = f'{net}[{i}]'
                     else:
                         parts.append(f'.{Q.esc(pn)}({net}[{i}])')
+            elif c[0] == 'slice':
+                _, base, off, n, net = c
+                for i in range(n):
+                    bus_bits[base].setdefault(off + i, f'{net}[{i}]')
             else:
                 port, net, n = c
                 parts.append(f'.{port}({net})')

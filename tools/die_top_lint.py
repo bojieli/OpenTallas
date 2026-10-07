@@ -656,10 +656,14 @@ def endpoint_dirs(die, real, by, bus, j):
     mst = by[inst].master
     if mst in real:
         rb = real[mst]
+        lo = 0
+        if '@' in port:         # HBM r16j: slice lo:hi of a real port (svc band <- PHY dfi range)
+            port, rng = port.split('@')
+            lo = int(rng.split(':')[0])
         names = rb['binding'].get(port)
         if names is None:
             return None, ('port_not_in_binding', port)
-        names = list(names[:bits])
+        names = list(names[lo:lo + bits])
         seg, pins = [], []
         for i in range(bits):
             pn = names[i] if i < len(names) else None
