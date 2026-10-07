@@ -1,0 +1,79 @@
+{
+  "status": "candidate-unbound-reservation",
+  "selected": false,
+  "source_sha256": "90d53849e876b31c30b19220e66d878fb83e0fdfa607d378279fde6f8180e257",
+  "slot": {
+    "instance": "hb_w2_sender",
+    "box_um": [
+      14663.376,
+      17226.0,
+      15063.384,
+      17627.736
+    ],
+    "area_um2": 160697.613888,
+    "target_utilization": 0.55,
+    "cell_budget_um2": 88383.6876384,
+    "storage_bits": 69632,
+    "storage_flop_lower_bound_um2": 21896,
+    "cell_budget_after_storage_um2": 66487.6876384,
+    "domain": "stream_1p2",
+    "MACs_per_cycle": 0,
+    "input_bits_per_cycle": 1090,
+    "output_bits_per_cycle": 1090,
+    "fifo_write_bytes_per_cycle": 136,
+    "fifo_read_bytes_per_cycle": 136,
+    "capture_added_cycles": 1,
+    "additional_latency": "relay hops pending placed boundary contract"
+  },
+  "tracks": {
+    "layer": "M6",
+    "pitch_um": 0.064,
+    "tracks_per_bit": 2,
+    "face_capacity_bits": 3138,
+    "payload_bits_both_directions": 2180,
+    "feedback_spare_bits": 958,
+    "scope": "local face capacity only; shared die corridor occupancy unproven"
+  },
+  "legality": {
+    "instances": 562,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+  },
+  "changed_existing_instances": [],
+  "die_area_delta_um2": 0,
+  "actual_sm": {
+    "width_um": 3075.84,
+    "height_um": 1131.84,
+    "rejected_4x2_outline_um": [
+      37578.384,
+      20863.44
+    ],
+    "legal_outline_limit_um": [
+      33000,
+      26000
+    ],
+    "candidate_3x3_group_um": [
+      10264.392,
+      4173.191999999999
+    ],
+    "candidate_3x3_outline_um": [
+      30904.992,
+      23637.023999999998
+    ],
+    "active_sms_per_group": 8,
+    "empty_sites_per_group": 1,
+    "total_sms": 32,
+    "candidate_outline_fits": true,
+    "additional_dies_for_capacity": 0,
+    "scope": "sizing only; HBM PHY clearance, complete legal placement, network remapping and latency remain required"
+  },
+  "remaining_gates": [
+    "full sender cell inventory including mux/control/capture and physical repair",
+    "actual wrapper pins, clock/reset and credit boundary mapped to die nets",
+    "shared corridor capacity and hop/round-trip/token composition",
+    "source-pinned exactness/negative gates and admitted SS/FF route with DRC0",
+    "SM 3x3 physical remapping preserves all eight SM identities and actual ports"
+  ]
+}
