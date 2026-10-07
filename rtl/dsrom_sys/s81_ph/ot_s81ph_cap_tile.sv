@@ -198,7 +198,7 @@ module dsfd_capt_grp #(
                 if (vm_valid && !crdy) hovf <= 1'b1;
             end
         wire cv; wire [102:0] cd;
-        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
             .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rsv_h[H]), .r_v(cv), .r_rdy(1'b1),
             .r_d(cd), .w_live(), .r_live());
         reg [1:0] ov; reg [101:0] od;
