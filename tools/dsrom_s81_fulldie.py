@@ -3271,6 +3271,7 @@ def _hop_fix(m, P):
     by = {it.name: it for it in m['insts']}
     B = m['buses']
     plan = HOP_PLAN
+    cor = _corridors(m)
     fclk_of = {}
     for i, (bid, cls, bits, eps) in enumerate(B):
         if cls == 'fclk':
@@ -3317,8 +3318,15 @@ def _hop_fix(m, P):
                 if not fwd:              # relays / hub stations: faces chosen after placement -> square box
                     w_ = h_ = max(w_, h_)
                 pl = None
-                for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60)):
-                    pl = P.near(cx, cy, w_, h_, [(EDGE, EDGE, W - EDGE, H - EDGE)], prev=cur, horiz=horiz,
+                # v6b: stations only in the die's channels (v6 placed them anywhere on the die: 41-54 PA overlaps,
+                # and the corridor / VCH crossing got denser); frame relays inside their frame
+                if reg is not None and not fwd:
+                    f_ = m['frames'][int(reg.split('_')[1])]
+                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + SLOTS8 * SLOT_H8)]
+                else:
+                    allowed = list(cor.values())
+                for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
+                    pl = P.near(cx, cy, w_, h_, allowed, prev=cur, horiz=horiz,
                                 reach=R - 10.0, span=span, rows=rows)
                     if pl:
                         break
