@@ -1188,6 +1188,11 @@ def step(j, fleet):
 def do_verdict(j, fleet, stl):
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
+    if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
+        j["verdict_ssh_fail"] = j.get("verdict_ssh_fail", 0) + 1
+        if j["verdict_ssh_fail"] < 20:
+            event(j, f"verdict: ssh to {j['host']} failed, retrying next tick")
+            return
     j["metrics"] = m
     checks, failed = {}, []
     for c in v.get("checks", []):
@@ -1289,6 +1294,18 @@ def requeue_toolchain(jobs):
         save_job(j)
 
 
+def requeue_ssh_verdict(jobs):
+    fid = "verdict-ssh-retry-20261006"
+    for j in jobs:
+        if j["status"] == "NEEDS_HUMAN" and fid not in j.get("fix_requeued", []) and \
+                re.search(r"verdict inputs missing.*(kex_exchange|Connection reset)", j.get("reason") or ""):
+            j.setdefault("fix_requeued", []).append(fid)
+            j.update(status="READY", reason=None, errors=[])
+            event(j, f"auto re-queued after loop fix {fid} (transient ssh failure at the verdict)")
+            ledger(j, f"REQUEUED automatically: loop fix {fid} (ssh reset while reading the verdict)")
+            save_job(j)
+
+
 def requeue_budget(jobs):
     """NEEDS_BUDGET under the old +-tolerance rule whose measured insertion is <= the block target: accept it now"""
     fid = "budget-measured-below-target-20261006"
@@ -1341,6 +1358,7 @@ def tick(fleet):
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
+        requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
