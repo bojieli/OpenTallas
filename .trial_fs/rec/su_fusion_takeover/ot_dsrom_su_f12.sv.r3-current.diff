@@ -1,0 +1,59 @@
+--- route-r3/rtl/hdc/v41x/ot_dsrom_su_f12.sv
++++ current/rtl/hdc/v41x/ot_dsrom_su_f12.sv
+@@ -4,7 +4,8 @@
+ // originals in rtl/hdc/v41x/ot_hdc_v41x_sfu.sv are unchanged).  Same function bit for bit; only register boundaries
+ // move and integer adders become keep-prefix (ot_hdc_kadd / ot_hdc_kinc K 1, rtl/hdc/ot_hdc_prefix.sv), for the
+ // 1.2 GHz build (rtl/hdc/ot_hdc_fastfp_lat_f12.sv):
+-//   ot_dsrom_exp_f12   ot_hdc_v41x_exp with n = rint(x log2e) over two stages (shift | round + sign): DEPTH + 1
++//   ot_dsrom_exp_f12   ot_hdc_v41x_exp with n = rint(x log2e) over two stages (shift | round + sign) and the two
++//                      range-reduction adds on the 6-stage f12 adder (ot_dsrom_add_f12_l6): DEPTH + 1 + 2 (6 - LA)
+ //   ot_dsrom_fdiv_f12  ot_hdc_v41x_fdiv with the operand normalisation over two stages (leading one | shift),
+ //                      keep-prefix trial subtractions and 3*mb, and the round / encode over two stages: DEPTH 21
+ // Equivalence to the originals: tools/dsrom_su_swiglu.py runs the fused benches against the golden; the lane bench
+@@ -24,10 +25,12 @@
+ );
+     localparam integer T_N = 1 + LM + 2;        // n registered (1.2 GHz: shift | round + sign, two stages)
+     localparam integer T_K = T_N + 1;           // table products registered
+-    localparam integer T_R1 = T_K + LA;
+-    localparam integer T_R = T_R1 + LA;
++    localparam integer LR = 6;                  // r = (x - n ln2_hi) - n ln2_lo: the 6-stage f12 adder (routed: these two
++                                                //   adders' compare -> align stage was the lane's only 1.2 GHz miss)
++    localparam integer T_R1 = T_K + LR;
++    localparam integer T_R = T_R1 + LR;
+     localparam integer T_P = T_R + 6 * (LM + LA);
+-    localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 5: 72 at LM 5 / LA 4
++    localparam integer DEPTH = T_P + 1;         // 7 LM + 6 LA + 2 LR + 5: 76 at LM 5 / LA 4
+     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
+     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
+     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
+@@ -340,9 +343,9 @@
+ 
+     wire [31:0] r1, r, xc_d, lo_d;
+     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
+-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+-    ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
+-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
++    ot_dsrom_add_f12_l6 a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
++    ot_hdc_delay #(.W(32), .D(LR)) d_lo (clk, rst_n, a_lo, lo_d);
++    ot_dsrom_add_f12_l6 a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+ 
+     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
+     wire [31:0] rd [0:6];
+@@ -565,6 +568,17 @@
+     end
+ endmodule
+ 
++
++// ot_dsrom_add_f12_l6: the f12 binary32 adder (rtl/hdc/ot_hdc_fp32_f12.sv ot_hdc_fp32_add_f12) with six cuts: the
++// LAT-5 _l5x cut set plus a cut between the magnitude compare and the alignment (CUTS bit 0).  Same function, one
++// more register; ot_hdc_qadd_lat's port order and fault convention.
++module ot_dsrom_add_f12_l6 (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
++                            output wire [31:0] y, output wire fault);
++    wire [1:0] err;
++    wire vo;
++    ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
++    assign fault = vo && (err != 2'd0);
++endmodule
+ 
+ // ---------------------------------------------------------------------------
+ // ot_dsrom_actquant_f12: rtl/hdc/v41/ot_hdc_actquant.sv (FP8 E4M3 / FP4 E2M1 + E8M0 activation quantiser, one

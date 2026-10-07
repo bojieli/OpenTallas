@@ -1,0 +1,148 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "router",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 833.0,
+  "ss_setup_wns_ps": 65.6,
+  "ff_hold_wns_ps": 5.4,
+  "closes": true,
+  "cell_area_um2": 31944.44466,
+  "ss_fmax_prelayout_hz": 1303124708,
+  "worst_start": "g_t2.u.g_lvl[2].g_n[0].u.c[241]$_DFF_P_",
+  "worst_end": "g_t2.u.g_lvl[2].g_n[0].u.u0.q[57]$_DFF_P_",
+  "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock",
+  "record": "results/rtl/dsrom_recovery_20261004/router/screen.json"
+ },
+ "nodes": {
+  "*.ffn.top6": {
+   "us": 0.0,
+   "source": "covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
+   "cls": "measured"
+  },
+  "*.ffn.top6_order": {
+   "us": 0.03667,
+   "source": "ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
+   "cls": "measured"
+  }
+ },
+ "measurement": {
+  "old": {
+   "unit": "one ot_hdc_select (K 6, 1 score/cycle)",
+   "cycles": 403,
+   "us": 0.33583,
+   "record": "results/rtl/dsrom_1m_allmeasured_20261004/su_runs/select.json"
+  },
+  "new": {
+   "unit": "ot_hdc_select_tree K 6 W 64 NB 8 ORDER 1",
+   "cycles": 44,
+   "us": 0.03667,
+   "latency_after_last_beat": 38,
+   "beats": 6,
+   "record": "results/rtl/dsrom_recovery_20261004/router/select_tree.json"
+  },
+  "layers_exact": 40,
+  "layers": 40,
+  "random_segments": 4000,
+  "saving_us_per_layer": 0.29916
+ },
+ "default": "opt-in: applied only in the recovery baseline; the as-built ot_hdc_select is unchanged",
+ "note": "composed (recovery baseline, this lever alone, main 2026-10-04 after merge): AR 721.672 -> 709.706 us, 1,385.7 -> 1,409.0 tok/s (+1.68%); MTP 2,565.1 -> 2,585.5 tok/s (+0.80%, II bound by the head stage); r1 screen failed FF hold -3.3 ps on an output copy register (router/screen_r1_fail_hold.json), r2 removes it (-1 cycle)",
+ "physical_cost": {
+  "area_um2_per_element": {
+   "cells": 31944.44466,
+   "placed": 63888.9,
+   "placed_basis": "cell area / 0.5 logic density (head-die sizing rule)"
+  },
+  "area_mm2_per_die": 0.066,
+  "area_mm2_total": 21.38,
+  "area_total_basis": "one select tree on each of the 324 S81 layer dies (+0.06 mm2 on each layer-class draft die); the replaced ot_hdc_select is not credited",
+  "dies_added": 0,
+  "ss_wns_ps": 65.6,
+  "ff_hold_wns_ps": 5.4,
+  "slack_basis": "pre-layout (ORFS yosys/abc WC, OpenSTA SS setup 60 ps / FF hold 25 ps, ideal clock), router/screen.json; not routed",
+  "grt_overflow": 0,
+  "worst_window_use_cap": 1.0,
+  "congestion_basis": "S81 full-die method in context: layer die + select_tree slab between gather and SU (2,113-bit score bus from the gather, 64-bit ids to the SU), GRT k16 i50, 4 x 4 GCell windows M2-M9 baseline-subtracted, at the S81 r7 PG coverage (rl: hub 0.044) and at hub 0.088 (rl88, the coverage the SU-south IR window needs) -- rl_b_k16_i50, rl88_b_k16_i50",
+  "grt_cases": {
+   "rl_b_k16_i50": {
+    "overflow": 0,
+    "worst": 1.0,
+    "over_1": 0,
+    "baseline_subtracted": true,
+    "worst_where": [
+     1.0,
+     "M9",
+     32303,
+     12049,
+     "frame_95"
+    ],
+    "grt_s": 115,
+    "case": "rl_b_k16_i50"
+   },
+   "rl88_b_k16_i50": {
+    "overflow": 0,
+    "worst": 1.0,
+    "over_1": 0,
+    "baseline_subtracted": true,
+    "worst_where": [
+     1.0,
+     "M9",
+     32303,
+     12049,
+     "frame_95"
+    ],
+    "grt_s": 123,
+    "case": "rl88_b_k16_i50"
+   }
+  },
+  "real": {
+   "legality": {
+    "instances": 24356,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "track_assert": "PASS",
+   "pins_checked": 5690585,
+   "pin_access": "FAIL",
+   "pin_access_examples": [
+    "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e100/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1000/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+   ],
+   "case": "rl_a_real"
+  },
+  "ir_mv": {
+   "rl_c_spine": {
+    "rail_to_rail_interior_mv": 32.19,
+    "pass_interior": true,
+    "budget_mv": 35.0
+   },
+   "rl_c_spine_sel": {
+    "rail_to_rail_interior_mv": 47.84,
+    "pass_interior": false,
+    "budget_mv": 35.0
+   },
+   "rl_c_spine_sel_hub0088": {
+    "rail_to_rail_interior_mv": 30.82,
+    "pass_interior": true,
+    "budget_mv": 35.0
+   },
+   "rl_c_spine_sel_hub0128": {
+    "rail_to_rail_interior_mv": 29.11,
+    "pass_interior": true,
+    "budget_mv": 35.0
+   },
+   "rs_c_spine_sel": {
+    "rail_to_rail_interior_mv": 47.84,
+    "pass_interior": false,
+    "budget_mv": 35.0
+   }
+  },
+  "ir_note": "rs_c_spine_sel is the unmodified S81 layer die on the same window (control): the select tree adds no IR; the S81 die itself exceeds 35 mV there at hub coverage 0.044 and passes at 0.088",
+  "s81_rerun_needed": true,
+  "s81_rerun_why": "new spine slab and a 2,113-bit bus in the hub (the S81 hub-congestion region); the in-context GRT/IR evidence here passes (IR needs hub PG 0.088, a baseline finding); the sign-off rerun with field/hop is SCHEDULED (Codex item 10)",
+  "source": "tools/dsrom_recovery_physcost.py levers"
+ }
+}

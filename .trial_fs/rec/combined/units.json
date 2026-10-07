@@ -1,0 +1,1891 @@
+{
+ "schema": "opentallas.dsrom-combined.units.v1",
+ "generated_utc": "2026-10-06T07:03:23Z",
+ "row_sources": {
+  "su_hcpost": {
+   "kind": "committed, RTL pins current",
+   "files": [
+    "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   ]
+  },
+  "su_norm": {
+   "kind": "fresh",
+   "files": [
+    "../run/norm/run_hc_dpi_N1024_la6.json",
+    "../run/norm/run_hc_rtl_N64_la6.json",
+    "../run/norm/run_kv_dpi_N512_la6.json",
+    "../run/norm/run_kv_rtl_N64_la6.json",
+    "../run/norm/run_q_dpi_N256_la6.json",
+    "../run/norm/run_q_rtl_N64_la6.json"
+   ]
+  },
+  "su_softmax": {
+   "kind": "committed, RTL pins current",
+   "files": [
+    "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   ]
+  },
+  "su_swiglu": {
+   "kind": "committed, RTL pins current",
+   "files": [
+    "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
+    "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   ]
+  },
+  "su_routeract": {
+   "kind": "committed, RTL pins current",
+   "files": [
+    "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   ]
+  }
+ },
+ "rows": [
+  {
+   "unit": "su_hcpost",
+   "case": "L20.attn.hc_post",
+   "l20": true,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L20.ffn.hc_post",
+   "l20": true,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L0.attn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L0.ffn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L3.attn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L3.ffn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L24.attn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "L24.ffn.hc_post",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress000",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress001",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress002",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress003",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress004",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress005",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress006",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress007",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress008",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress009",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress010",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress011",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress012",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress013",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress014",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress015",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress016",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress017",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress018",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress019",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress020",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress021",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress022",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress023",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress024",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress025",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress026",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress027",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress028",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress029",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress030",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_hcpost",
+   "case": "stress031",
+   "l20": false,
+   "exact": true,
+   "cycles": 103,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L20.attn.hc_pre_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L20.ffn.hc_pre_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L0.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L0.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L3.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L3.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L24.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L24.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "head.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 321,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L20.attn.hc_pre_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L20.ffn.hc_pre_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L0.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L0.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L3.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L3.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L24.attn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "L24.ffn.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "head.hc_pre_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.hc",
+   "case": "stress.hc.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 460,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_hc_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L20.attn.kv_norm_rope",
+   "l20": true,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L0.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L3.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L24.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 279,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_kv_dpi_N512_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L20.attn.kv_norm_rope",
+   "l20": true,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L0.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L3.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "L24.attn.kv_norm_rope",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.kv",
+   "case": "stress.kv.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 293,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_kv_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L20.attn.q_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L0.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L3.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L24.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 285,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "dpi",
+   "run": "../run/norm/run_q_dpi_N256_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L20.attn.q_norm",
+   "l20": true,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L0.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L3.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "L24.attn.q_norm",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.0",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.1",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.2",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.3",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.4",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_norm.q",
+   "case": "stress.q.5",
+   "l20": false,
+   "exact": true,
+   "cycles": 312,
+   "errors": {
+    "err_y": 0,
+    "err_ro": 0,
+    "err_q": 0
+   },
+   "fp": "rtl",
+   "run": "../run/norm/run_q_rtl_N64_la6.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "L20.attn.softmax_T640",
+   "l20": true,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "L0.attn.softmax_T128",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 61,
+    "attn.exp": 116,
+    "attn.den": 35,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "L3.attn.softmax_T640",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "L24.attn.softmax_T640",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress0_T640",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress1_T128",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 61,
+    "attn.exp": 116,
+    "attn.den": 35,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress2_T640",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress3_T128",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 61,
+    "attn.exp": 116,
+    "attn.den": 35,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress4_T640",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 93,
+    "attn.exp": 148,
+    "attn.den": 50,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_softmax",
+   "case": "stress5_T128",
+   "l20": false,
+   "exact": true,
+   "cycles": {
+    "attn.max": 61,
+    "attn.exp": 116,
+    "attn.den": 35,
+    "attn.sink": 14,
+    "attn.normalize": 131
+   },
+   "errors": {
+    "err_max": 0,
+    "err_es": 0,
+    "err_den": 0,
+    "err_e": 0,
+    "err_o": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L0.swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 240,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L0.shared_swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 190,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L3.swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 240,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L3.shared_swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 190,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L20.swiglu",
+   "l20": true,
+   "exact": true,
+   "cycles": 240,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L20.shared_swiglu",
+   "l20": true,
+   "exact": true,
+   "cycles": 190,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L24.swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 240,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L24.shared_swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 190,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "random.swiglu",
+   "l20": false,
+   "exact": true,
+   "cycles": 250,
+   "errors": {
+    "a_errors": 0,
+    "q_errors": 0,
+    "rope_errors": null
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L0.z_quant",
+   "l20": false,
+   "exact": true,
+   "cycles": 76,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L3.z_quant",
+   "l20": false,
+   "exact": true,
+   "cycles": 76,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L20.z_quant",
+   "l20": true,
+   "exact": true,
+   "cycles": 76,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "L24.z_quant",
+   "l20": false,
+   "exact": true,
+   "cycles": 76,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "random.qfp8",
+   "l20": false,
+   "exact": true,
+   "cycles": 82,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_swiglu",
+   "case": "random.qfp4",
+   "l20": false,
+   "exact": true,
+   "cycles": 82,
+   "errors": {
+    "a_errors": null,
+    "q_errors": 0,
+    "rope_errors": 0
+   },
+   "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+  },
+  {
+   "unit": "su_routeract.impl0",
+   "case": "L20.die",
+   "l20": true,
+   "exact": true,
+   "cycles": 224,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl0",
+   "case": "all_layers_all_dies",
+   "l20": false,
+   "exact": true,
+   "cycles": 224,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl0",
+   "case": "all_layers_bubbles30",
+   "l20": false,
+   "exact": true,
+   "cycles": 224,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl0",
+   "case": "stress",
+   "l20": false,
+   "exact": true,
+   "cycles": 224,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl0",
+   "case": "stress_bubbles30",
+   "l20": false,
+   "exact": true,
+   "cycles": 224,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl1",
+   "case": "L20.die",
+   "l20": true,
+   "exact": true,
+   "cycles": 132,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl1",
+   "case": "all_layers_all_dies",
+   "l20": false,
+   "exact": true,
+   "cycles": 132,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl1",
+   "case": "all_layers_bubbles30",
+   "l20": false,
+   "exact": true,
+   "cycles": 132,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl1",
+   "case": "stress",
+   "l20": false,
+   "exact": true,
+   "cycles": 132,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  },
+  {
+   "unit": "su_routeract.impl1",
+   "case": "stress_bubbles30",
+   "l20": false,
+   "exact": true,
+   "cycles": 132,
+   "errors": 0,
+   "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+  }
+ ],
+ "missing_units": [],
+ "n_rows": 145,
+ "n_bad": 0,
+ "n_l20": 16,
+ "l20_units": [
+  "su_hcpost",
+  "su_norm",
+  "su_routeract",
+  "su_softmax",
+  "su_swiglu"
+ ],
+ "all_exact": true
+}
