@@ -389,7 +389,7 @@ def real_blocks_r8(die):
                             params=prm, ports=pm['ports'], binding=rp[mst])
     for mst in sorted(used):
         if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
-            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL.replace('/r8/', f'/{S.REV}/')
+            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/')
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
@@ -1920,7 +1920,7 @@ def run_lint(die, out, top_fix=False, tag=''):
     out.mkdir(parents=True, exist_ok=True)
     top = f'{die}{tag}_lint_top' + ('_fix' if top_fix else '')
     em = emit_verilog(die, m, real, pw, out, top)
-    extra = (S.GLUE_RTL, S.CFG7_RTL) if R8_ACTIVE[0] else ()
+    extra = (S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/'), S.CFG7_RTL) if R8_ACTIVE[0] else ()
     files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
     if R8_ACTIVE[0]:

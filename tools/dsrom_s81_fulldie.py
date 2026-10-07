@@ -3112,7 +3112,8 @@ CC_REACH = LINK_STAGE_UM
 
 def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
-    return REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
+    r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
+    return r + ('k' if LINK_FIX else '')        # --link-fix records apart (r9m215k)
 
 
 def set_cc_reach(um):
