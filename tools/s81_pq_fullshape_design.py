@@ -38,6 +38,8 @@ SPINE = ROOT / 'rtl/v41die/ot_v41_spine_pqc_w17w10.sv'
 RET = ROOT / 'rtl/v41rom/ot_v41_ret.sv'
 MACROS = ROOT / 'physical/asap7_memory_macros_v2/index.json'
 GEOM = OUT / 'geometry_extract.json'
+GEN = OUT / 'inputs/pinned/tools/dsrom_s81_fulldie.py'   # exact generator of GEOM (main's copy drifts)
+REPO_SUMS = OUT / 'inputs/REPO_INPUTS.SHA256SUMS'
 SENS = ROOT / 'results/uarch/dsrom_spine_return_station_20261007/sensitivity.json'
 RSTORE = ROOT / 'results/uarch/dsrom_return_storage_hbm_20261003/model.json'
 MAP = ROOT / 'results/uarch/dsrom_s81_mixed1792_mapping_20261007'
@@ -66,7 +68,7 @@ def sha(p):
 
 # ------------------------------------------------------------------------------------------------ sources
 def verify_repo_inputs():
-    for line in (OUT / 'inputs/REPO_INPUTS.SHA256SUMS').read_text().splitlines():
+    for line in REPO_SUMS.read_text().splitlines():
         h, rel = line.split(None, 1)
         if sha(ROOT / rel) != h:
             raise SystemExit(f'repo input hash mismatch: {rel}')
@@ -296,8 +298,8 @@ def stations(d):
 
 def geometry():
     g = json.loads(GEOM.read_text())
-    if g['generator_sha256'] != sha(ROOT / g['generator']):
-        g['generator_note'] = 'generator changed since the extract; re-run --geometry-build before adoption'
+    if g['generator_sha256'] != sha(GEN):
+        raise SystemExit('geometry extract was not built by the pinned generator ' + str(GEN))
     hub = {i['n']: i for i in g['hub_and_ends']}
     vm, ga = hub['sp_vm'], hub['sp_gather']
     wfc = next(r for r in g['regions'] if r['name'] == 'wfc_selected_child')['rect']
