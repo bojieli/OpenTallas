@@ -21,4 +21,4 @@ ot_place {g_col[1].g_bank[3].u_rom} 142.776 1226.232 R0
 ot_place {g_col[0].g_bank[4].u_rom} 2.16 1158.840 R0
 ot_place {g_col[1].g_bank[4].u_rom} 142.776 1158.840 R0
 ot_place {g_kv[0].u_kv} 2.16 1113.264 R0
-ot_place {g_kv[1].u_kv} 169.992 1113.264 R0
+ot_place {g_kv[1].u_kv} 169.884 1113.264 R0
