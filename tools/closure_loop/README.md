@@ -32,7 +32,7 @@ so a new source commit needs a new job name (`<block>-<sha9>`).
 | `name` | unique, `[A-Za-z0-9._-]`; also the run dir name |
 | `block` | master/top. The loop allows **one route per (block, source commit)**: the key is taken when the route launches, and a retry after a crash is the only re-run |
 | `owner` | stream that owns the block (e.g. `Claude:hbm-views`) |
-| `hosts` | optional subset of hosts.json, in preference order (default EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock) |
+| `hosts` | optional hosts.json subset. The loop takes the LEAST-LOADED host that fits. A job with `peak_ram_gb` <= 40 may also go to any other host whose toolchain matches the reference host EPYC3 for the tools its commands use (ORFS image digest; asap7lock / iverilog / verilator / yosys only when mentioned). Every command snippet is checked with `bash -n` at drop time |
 | `threads`, `peak_ram_gb` | route estimate, used for host choice and the load cap |
 | `source` | `branch`, `commit` (must be on `origin/<branch>`), optional `paths` (default tools rtl physical Makefile), `extra_paths` (result dirs your tools read) |
 | `stages.bench[]` | `{name, cmd, expect: pass|fail, fail_regex?, pass_regex? (MULTILINE, searched over the whole stage log), ok?, threads?, peak_ram_gb?}`. You need at least one `pass` and one `fail`, or a top-level `no_bench_reason` that names the bench record. A negative whose rc is 124/137/139/143, or whose log looks like OOM, counts as a crash, not a FAIL |

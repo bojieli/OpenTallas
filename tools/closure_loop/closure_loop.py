@@ -167,12 +167,38 @@ def validate(spec: dict) -> list[str]:
             if lab and not re.fullmatch(r"[A-Za-z0-9_]*(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?[A-Za-z0-9_]*)*", lab):
                 e.append(f"stages.{sk}: route label '{lab}' is not [A-Za-z0-9_]+ (run_abi3_physical --nickname-tag "
                          f"rejects it): use {{LABEL}}${{CL_LABEL_SUFFIX}}")
+    snippets = []
+    if isinstance(st, dict):
+        for b in st.get("bench", []):
+            snippets += [(f"bench {b.get('name')}", b.get("cmd")), (f"bench {b.get('name')} ok", b.get("ok"))]
+        for k in ("calibrate", "route", "signoff", "collect", "export"):
+            x = st.get(k) or {}
+            snippets += [(k, x.get("cmd")), (f"{k} ok", x.get("ok")), (f"{k} sdc_cmd", x.get("sdc_cmd"))]
+    vv = spec.get("verdict", {})
+    snippets += [("verdict metrics_cmd", vv.get("metrics_cmd"))] + [(f"check {c.get('name')}", c.get("cmd")) for c in vv.get("checks", [])]
+    for where, cmd in snippets:
+        if not cmd:
+            continue
+        r = sh(["bash", "-n"], input=cmd, timeout=30)
+        if r.returncode:
+            e.append(f"{where}: bash -n syntax error: {(r.stderr or r.stdout).strip()[-300:]}")
     v = spec.get("verdict", {})
     if not v.get("corner_sta") and not v.get("metrics_cmd"):
         e.append("verdict.corner_sta (glob of a tools/w18/corner_sta.py JSON) or verdict.metrics_cmd is required")
     if not v.get("drc_metrics") and not v.get("metrics_cmd") and v.get("drc") != "skip":
         e.append("verdict.drc_metrics (glob of ORFS 5_2_route.json) is required")
     bud = spec.get("budget")
+    if bud is None and has_sheet(spec.get("block", "")):
+        e.append(f"block {spec['block']} has a budget sheet ({BUDGET_SHEETS}/{spec['block']}.json on origin/main): budget is "
+                 f"the default -- add \"budget\": {{\"master\": \"{spec['block']}\"}} and take the IO SDCs from "
+                 f"$BUDGET_SDC (route) / $BUDGET_SDC_SIGNOFF / $BUDGET_SDC_FF, or opt out with "
+                 f"\"budget\": {{\"enabled\": false, \"reason\": \"...\"}}")
+    if isinstance(bud, dict) and bud.get("enabled") is False:
+        if not bud.get("reason"):
+            e.append("budget.enabled false needs a reason")
+        bud = None
+    elif isinstance(bud, dict) and isinstance(st, dict) and "BUDGET_SDC" not in json.dumps(st):
+        e.append("budget is set but no stage command uses $BUDGET_SDC / $BUDGET_SDC_SIGNOFF / $BUDGET_SDC_FF")
     if bud is not None:
         if not isinstance(bud, dict) or not bud.get("master"):
             e.append("budget needs {master[, clock, domain_clock[], on_deviation flag|continue, sheets_ref]}")
@@ -355,6 +381,7 @@ class Fleet:
     def __init__(self):
         self.pending = {}      # host -> [(t, threads, ram)]
         self.probe_cache = {}
+        self.tool_cache = {}
 
     def probe(self, host):
         c = self.probe_cache.get(host)
@@ -408,18 +435,63 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         with FLEET_LOCK:
             return self._choose(spec, exclude)
 
+    def toolchain(self, host):
+        """ORFS image digests + bench tool versions of a host (cached 1 h)."""
+        c = self.tool_cache.get(host)
+        if c and time.time() - c[0] < 3600:
+            return c[1]
+        r = ssh(host, TOOLPROBE, timeout=60)
+        info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
+        self.tool_cache[host] = (time.time(), info)
+        return info
+
+    def compatible(self, host, spec):
+        """the host's toolchain matches the reference host's for every tool the job's commands use"""
+        ref, mine = self.toolchain(TOOL_REF_HOST), self.toolchain(host)
+        if not ref or not mine:
+            return False
+        return all(mine.get(k) == ref.get(k) for k in job_tools(spec))
+
     def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
-        order = spec.get("hosts") or [h["name"] for h in hosts_table()]
+        allh = [h["name"] for h in hosts_table()]
+        order = list(spec.get("hosts") or allh)
+        if ram <= SMALL_JOB_GB:      # small jobs may run on any host with the same toolchain (coordinator 2026-10-06)
+            order += [h for h in allh if h not in order]
+        order = [h for h in order if h not in exclude and self.compatible(h, spec)]
+
+        def frac(h):
+            info = self.probe(h)
+            return 9e9 if info is None else (info["load1"] + self.own_pending(h)[0]) / host_cfg(h)["cap"]
+        order.sort(key=frac)         # least loaded host first
         why = []
         for h in order:
-            if h in exclude:
-                continue
             ok, msg = self.fits(h, threads, ram)
             if ok:
                 return h, None
             why.append(msg)
         return None, "; ".join(why)
+
+
+TOOL_REF_HOST = "ot-epyc3"
+SMALL_JOB_GB = 40
+TOOLPROBE = r"""
+echo img_latest=$(docker image inspect openroad/orfs:latest --format '{{.Id}}' 2>/dev/null)
+echo img_asap7lock=$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}' 2>/dev/null)
+echo iverilog=$(iverilog -V 2>/dev/null | head -1)
+echo verilator=$(verilator --version 2>/dev/null | head -1)
+echo yosys=$(yosys -V 2>/dev/null | head -1)
+"""
+
+
+def job_tools(spec):
+    t = json.dumps(spec.get("stages", {})) + json.dumps(spec.get("verdict", {}))
+    need = {"img_latest"}
+    for key, rx in (("img_asap7lock", r"asap7lock"), ("iverilog", r"\b(iverilog|vvp)\b"), ("verilator", r"\bverilator\b"),
+                    ("yosys", r"\byosys\b")):
+        if re.search(rx, t):
+            need.add(key)
+    return need
 
 
 # ------------------------------------------------------------------------------------------------ remote ops
@@ -482,9 +554,20 @@ def budget_files(bud, check_only=False):
         return out
 
 
+def active_budget(spec):
+    b = spec.get("budget")
+    return b if isinstance(b, dict) and b.get("enabled", True) is not False and b.get("master") else None
+
+
+def has_sheet(block):
+    if not block:
+        return False
+    return sh(["git", "-C", str(REPO), "cat-file", "-e", f"origin/main:{BUDGET_SHEETS}/{block}.json"], timeout=60).returncode == 0
+
+
 def budget_check(j):
     """calibrate CHECK against the sheet (never a re-calibration): None if within tolerance, else the reason"""
-    bud = j["spec"].get("budget")
+    bud = active_budget(j["spec"])
     if not bud or not j.get("budget") or not j.get("calibration"):
         return None
     ins = j["budget"]["insertion"]
@@ -526,7 +609,7 @@ def sync_source(j):
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
-    if spec.get("budget"):
+    if active_budget(spec):
         files = budget_files(spec["budget"])
         for fn, text in files.items():
             if not fn.startswith("_"):
