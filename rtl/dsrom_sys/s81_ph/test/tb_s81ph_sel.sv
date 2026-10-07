@@ -6,7 +6,7 @@
 // Checked per segment: every out beat (quarter, lane valids, indices, -inf flags, last) in order, the selected count,
 // the overflow / replay count, no fault; at most one vd word every PACE cycles.  Directed fail-closed cases: k
 // mismatch, orphan beat, qslot collision -> FAULT word with the right bit.  Mutants: +define+OT_S81PH_MUT1/2/3.
-module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0);
+module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_RETIME = 0);
     localparam integer Q = 4, W = 16, IW = 20, K = 512, AW = 8, EW = 37, PACE = 2;
     reg clk = 0, rst_n = 0;
     always #0.4166 clk = ~clk;
@@ -33,7 +33,7 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0);
     // ---------------- DUT
     reg  [514:0] d_in [0:Q-1];      // index = input lane (0 SW, 1 SE, 2 NW, 3 NE)
     wire [513:0] vd; wire vf;
-    dsfd_bk_selector #(.SEARCH_PIPE(SEARCH_PIPE)) u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
+    dsfd_bk_selector #(.CMP_RETIME(CMP_RETIME), .SEARCH_PIPE(SEARCH_PIPE)) u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
         .vd(vd), .vf(vf));
 
     // ---------------- segment description

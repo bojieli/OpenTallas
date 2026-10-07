@@ -191,7 +191,7 @@ module ot_s81ph_native_sel_slice #(
                     hi_match <= ik[15:8] == c_Bt;
                 end
                 wire ge_lo = cmp_gt[1] || (cmp_eq[1] && (cmp_gt[0] || cmp_eq[0]));
-                wire ge = cmp_gt[3] || (cmp_eq[3] && cmp_gt[2]) || (cmp_eq[3] && cmp_eq[2] && ge_lo);
+                wire ge = cmp_gt[3] || (cmp_eq[3] && cmp_gt[2]);
                 assign i1_s_d[gl] = i0_lv[gl] && ge;
                 assign i1_fm_d[gl] = i0_lv[gl] && ge && hi_match;
             end

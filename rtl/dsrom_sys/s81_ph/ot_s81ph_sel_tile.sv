@@ -66,6 +66,7 @@ module ot_s81ph_sel_mem2 (
 endmodule
 
 module dsfd_selt_q #(
+    parameter integer CMP_RETIME = 0,
     parameter integer DM = 4,                // landing FIFO depth at the control = initial credits
     parameter integer SAFE = 0               // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
 ) (
@@ -102,7 +103,7 @@ module dsfd_selt_q #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MREG(SAFE)) u_s (
+    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
@@ -144,7 +145,7 @@ module dsfd_selt_q #(
 endmodule
 
 // SAFE quarter tile master (same ports as dsfd_selt_q)
-module dsfd_selt_q2 #(parameter integer DM = 4) (
+module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,
     input  wire [514:0]          lane,
@@ -153,7 +154,7 @@ module dsfd_selt_q2 #(parameter integer DM = 4) (
     output wire [`SELT_SB-1:0]   t_s,
     output wire [`SELT_OB-1:0]   t_o
 );
-    dsfd_selt_q #(.DM(DM), .SAFE(1)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(
@@ -380,6 +381,7 @@ endmodule
 
 // composition reference (bench and die generator): lanes {NE, NW, SE, SW} as dsfd_bk_selector
 module ot_s81ph_sel_t #(
+    parameter integer CMP_RETIME = 0,
     parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer SAFE = 0,              // 1: dsfd_selt_q2 quarter tiles
     parameter integer LSTG = 5,              // die stations on each lane from the slab face to its quarter tile
@@ -399,7 +401,7 @@ module ot_s81ph_sel_t #(
         integer h;
         always @(*) st[0] = lanes[515 * g +: 515];
         always @(posedge ck) for (h = 1; h <= LSTG; h = h + 1) st[h] <= st[h-1];
-        dsfd_selt_q #(.DM(DM), .SAFE(SAFE)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
+        dsfd_selt_q #(.DM(DM), .SAFE(SAFE), .CMP_RETIME(CMP_RETIME)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
             .t_s(ts[SB * g +: SB]), .t_o(to[OB * g +: OB]));
     end endgenerate
     dsfd_selt_c #(.SEARCH_PIPE(SEARCH_PIPE), .DM(DM), .PACE(PACE)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),
