@@ -88,6 +88,14 @@ def port_dirs():
             seg, _ = L.endpoint_dirs('hbm', real, by, bus, j)
             if seg is None:
                 continue
+            if '@' in port:           # r23: a sliced endpoint (station split): bus bit i -> port bit idx[i]
+                base, idx = H.port_base(port), H.port_idx(port)
+                w = pw.get((mst, base), max(idx) + 1)
+                cur = pdir[mst].setdefault(base, ['?'] * w)
+                for a, b, d in seg:
+                    for i in range(a, b):
+                        cur[idx[i]] = d if cur[idx[i]] in ('?', d) else 'x'
+                continue
             w = pw.get((mst, port), bits)
             cur = pdir[mst].setdefault(port, ['?'] * w)
             if bits < w:

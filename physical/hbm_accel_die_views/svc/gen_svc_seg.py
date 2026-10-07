@@ -35,7 +35,7 @@ HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off re
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
 CUTS = {'SW': [1017.024, 2322.96, 3379.968, 4452.96, 5238.96, 6301.968, 7363.968],
-        'SE': [1017.024, 2318.016, 3379.968, 4761.984, 5770.992, 6865.968, 7629.984]}
+        'SE': [1017.024, 2318.016, 3379.968, 4761.984, 5770.992, 6865.968, 7629.984, 8100.0]}   # r23: SE_s7 split at the 8,088-8,234 um free gap (coordinator 2026-10-07)
 FAM = {'SW': ['hfd_svc_SW', 'hfd_svc_NW'], 'SE': ['hfd_svc_SE', 'hfd_svc_NE']}
 PHY_BB = 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v'
 Y_LO, Y_MID, Y_HI = 5.0, 130.0, 254.0

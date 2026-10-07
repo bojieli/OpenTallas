@@ -38,6 +38,8 @@ module hfd_svc_SE_seg (
   wire [557:0] xl5;
   wire [549:0] xr6;
   wire [53:0] xl6;
+  wire [51:0] xr7;
+  wire [277:0] xl7;
   hfd_svc_SE_s0 u_s0 (.ck(ck), .rst(rst), .l0(lsm12), .q0(qsm12), .l1(lsm8), .q1(qsm8), .phy(phy[3625:0]), .eo(xr0), .ei(xl0));
   hfd_svc_SE_s1 u_s1 (.l2(lsm13), .q2(qsm13), .phy(phy[7831:3626]), .ck(ck), .rst(rst), .wi(xr0), .wo(xl0), .eo(xr1), .ei(xl1));
   hfd_svc_SE_s2 u_s2 (.l3(lsm9), .q3(qsm9), .phy(phy[10319:7832]), .ck(ck), .rst(rst), .wi(xr1), .wo(xl1), .eo(xr2), .ei(xl2));
@@ -45,6 +47,7 @@ module hfd_svc_SE_seg (
   hfd_svc_SE_s4 u_s4 (.l5(lsm10), .q5(qsm10), .phy(phy[16017:13530]), .ck(ck), .rst(rst), .wi(xr3), .wo(xl3), .eo(xr4), .ei(xl4));
   hfd_svc_SE_s5 u_s5 (.l6(lsm15), .q6(qsm15), .phy(phy[18505:16018]), .ck(ck), .rst(rst), .wi(xr4), .wo(xl4), .eo(xr5), .ei(xl5));
   hfd_svc_SE_s6 u_s6 (.phy(phy[20371:18506]), .ck(ck), .rst(rst), .wi(xr5), .wo(xl5), .eo(xr6), .ei(xl6));
-  hfd_svc_SE_s7 u_s7 (.l7(lsm11), .q7(qsm11), .phy(phy[22237:20372]), .ck(ck), .rst(rst), .wi(xr6), .wo(xl6));
+  hfd_svc_SE_s7 u_s7 (.l7(lsm11), .q7(qsm11), .phy(phy[21615:20372]), .ck(ck), .rst(rst), .wi(xr6), .wo(xl6), .eo(xr7), .ei(xl7));
+  hfd_svc_SE_s8 u_s8 (.phy(phy[22237:21616]), .ck(ck), .rst(rst), .wi(xr7), .wo(xl7));
 endmodule
 `default_nettype wire
