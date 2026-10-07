@@ -327,15 +327,6 @@
    "quadrant": 3
   },
   {
-   "inst": "u_io",
-   "master": "dsfd_svc_io",
-   "xy": [
-    6987.408,
-    1447.176
-   ],
-   "orient": "R0"
-  },
-  {
    "inst": "u_stn_q0[0]",
    "master": "dsfd_svc_stn",
    "xy": [
@@ -604,6 +595,42 @@
     1231.176
    ],
    "orient": "R0"
+  },
+  {
+   "inst": "u_io.u_q",
+   "master": "dsfd_svcio_q",
+   "xy": [
+    8121.168,
+    1447.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_io.u_ad",
+   "master": "dsfd_svcio_ad",
+   "xy": [
+    7851.6,
+    1447.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_io.u_x",
+   "master": "dsfd_svcio_x",
+   "xy": [
+    7400.16,
+    1447.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_io.u_od",
+   "master": "dsfd_svcio_od",
+   "xy": [
+    6990.192,
+    1447.176
+   ],
+   "orient": "R0"
   }
  ],
  "station_chains": [
@@ -820,5 +847,6 @@
   "clocks": "ck (stream 1.2 GHz) to every tile; rst async",
   "status": "hs (ctrl st) -> die (unchanged)"
  },
- "cost": "rd / rq +1 cks each way (credit round trip +2); quadrant link +1 cks per station each way (Q0 / Q1 / Q2 chains 15/10/5 stations)"
+ "cost": "rd / rq +1 cks each way (credit round trip +2); quadrant link +1 cks per station each way (Q0 / Q1 / Q2 chains 15/10/5 stations)",
+ "io_hub": "r3: four tiles at their pin groups (rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv, composition ot_s81ph_svc_io_t); u_io.u_od.bad -> u_io.u_ad.fi (die net, flop both ends); svc fault = u_io.u_ad.fault"
 }

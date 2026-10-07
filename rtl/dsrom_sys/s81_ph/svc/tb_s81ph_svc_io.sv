@@ -11,7 +11,11 @@ module tb_s81ph_svc_io;
     reg [514:0] q; wire [513:0] od, xd; wire [1025:0] ad; wire fault; wire [515*NQ-1:0] q_q;
     reg [NQ-1:0] od_v, a0_v; reg [512*NQ-1:0] od_d, a0_d; wire [NQ-1:0] od_r, a0_r;
     reg a1_v, x_v; reg [511:0] a1_d, x_d; wire a1_r, x_r;
-    ot_s81ph_svc_io #(.NQ(NQ)) dut (.ck(ck), .rst(rst), .q(q), .od(od), .xd(xd), .ad(ad), .fault(fault), .q_q(q_q),
+`ifdef SVCIO_TILED
+    ot_s81ph_svc_io_t dut (
+`else
+    ot_s81ph_svc_io #(.NQ(NQ)) dut (
+`endif.ck(ck), .rst(rst), .q(q), .od(od), .xd(xd), .ad(ad), .fault(fault), .q_q(q_q),
         .od_v(od_v), .od_d(od_d), .od_r(od_r), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
         .x_v(x_v), .x_d(x_d), .x_r(x_r));
     integer seed, NF, errs = 0, cyc = 0;

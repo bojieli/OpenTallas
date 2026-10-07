@@ -1,0 +1,7 @@
+run_g_1.log: SUMMARY seed=1 frames/src=300 words=52352 cycles=36784 errors=0 RESULT PASS
+run_g_2.log: SUMMARY seed=2 frames/src=300 words=52999 cycles=36659 errors=0 RESULT PASS
+run_g_3.log: SUMMARY seed=3 frames/src=300 words=51815 cycles=36998 errors=0 RESULT PASS
+run_m1.log: SUMMARY seed=1 frames/src=300 words=51115 cycles=2000001 errors=36521 RESULT FAIL
+run_m2.log: SUMMARY seed=1 frames/src=300 words=52369 cycles=2000001 errors=50184 RESULT FAIL
+DONE
+# XDEF=+define+SVCIO_TILED (ot_s81ph_svc_io_t: 4 tiles), Verilator 5.032 EPYC2; m1 = S81PH_SVC_MUT_NOATOM, m2 = S81PH_SVC_MUT_SKID

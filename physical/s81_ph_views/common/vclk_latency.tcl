@@ -13,9 +13,9 @@
 #   output min delay       = L - (BC max insertion + 25 ps)                (with the 25 ps hold uncertainty: the receiver
 #                            captures <= 50 ps after our latest BC leaf: the owner's FF insertion + 50 ps hold IO term)
 # Input hold is a die-context check (io sdc: set_false_path -hold from the inputs), as in the su_swiglu re-route.
-proc ot_clk_ins {scene} {
+proc ot_clk_ins {scene {clk core_clk}} {
   sta::redirect_string_begin
-  set rc [catch {if {$scene eq ""} { report_clock_latency -clock core_clk } else { report_clock_latency -clock core_clk -scenes $scene }}]
+  set rc [catch {if {$scene eq ""} { report_clock_latency -clock $clk } else { report_clock_latency -clock $clk -scenes $scene }}]
   set s [sta::redirect_string_end]
   if {!$rc && [regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $s -> lo hi]} { return [list $lo $hi] }
   return {}
@@ -31,7 +31,24 @@ proc ot_vclk_from_insertion {{force 0}} {
   set ::ot_vclk_L_done $L
   if {[llength $bc]} {
     set omin [expr {$L - round([lindex $bc 1]) - 25}]
-    set_output_delay -min $omin -clock vclk [all_outputs]
+    # outputs timed against a second virtual clock (vclk_h: the ctrl tiles' PHY ports, hbm_clk domain) keep their own
+    # FF model below; a vclk min delay on them would be a bogus hbm_clk -> vclk hold check (ctrl_pc FF -9.7 on k_*)
+    set ot_oc {}; set ot_oh {}
+    foreach ot_p [all_outputs] {
+      set ot_n [get_full_name $ot_p]
+      if {[llength [get_clocks -quiet vclk_h]] && [regexp {^(k_v|k_addr|k_len|k_tag|k_we|k_wdata|k_wstrb|kr_rdy|phy_rst_n)(\[|$)} $ot_n]} { lappend ot_oh $ot_p } else { lappend ot_oc $ot_p }
+    }
+    if {[llength $ot_oc]} { set_output_delay -min $omin -clock vclk $ot_oc }
+    if {[llength $ot_oh]} {
+      unset_output_delay -clock vclk $ot_oh
+      set hw [ot_clk_ins WC hbm_clk]; set hb [ot_clk_ins BC hbm_clk]
+      if {[llength $hw] && [llength $hb]} {
+        set Lh [expr {round(([lindex $hw 0] + [lindex $hw 1]) / 2.0)}]
+        set_clock_latency $Lh [get_clocks vclk_h]
+        set_output_delay -min [expr {$Lh - round([lindex $hb 1]) - 25}] -clock vclk_h $ot_oh
+        puts "ot_vclk_from_insertion: hbm_clk WC $hw BC $hb -> vclk_h latency $Lh, [llength $ot_oh] PHY outputs min delay [expr {$Lh - round([lindex $hb 1]) - 25}]"
+      }
+    }
     puts "ot_vclk_from_insertion: core_clk WC $lo .. $hi, BC $bc ps -> vclk latency $L ps, output min delay $omin ps"
   } else {
     puts "ot_vclk_from_insertion: core_clk $lo .. $hi ps (no per-scene report) -> vclk latency $L ps"
