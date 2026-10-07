@@ -130,11 +130,17 @@ FAMILY_ROOTS = [True]
 # HBM VM early branch (OWNER 2026-10-07, VM-split fallback): the VM region's trunk tap arrives EARLY_PS earlier than the
 # tree's padded root instant; every HUB-V sink gets that much die pad (the VM tiles' deeper trees use it, the face
 # stations take it as die-side delay).  Applied when the region root pad covers it.
-EARLY_PS = {'clk_stream:HUB-V': 300.0}
+# HBM hub early branch (coordinator 2026-10-07, r23 2x hub): the hub quarters hfd_su / hfd_sfu / hfd_hc are 5.53 mm tall
+# against the 900 ps block-insertion target; the serial trunk taps every HUB-C sub-region 500 ps early (prefix key: the
+# key applies to the region and to its '.'-suffixed sub-regions).
+EARLY_PS = {'clk_stream:HUB-V': 300.0, 'clk_serial:HUB-C': 500.0}
 
 
 def early_ps(r):
-    return EARLY_PS.get(r, 0.0)     # HBM: sibling regions share their family root point (see clock_nets)
+    for k_, v_ in EARLY_PS.items():     # HBM: sibling regions share their family root point (see clock_nets)
+        if r == k_ or r.startswith(k_ + '.'):
+            return v_
+    return 0.0
 
 
 def clock_nets(d, trees, groups, group):
@@ -349,18 +355,18 @@ class Forest:
                 tt = t[len('REGION:'):].split(':')[0]
                 pad[t[len('REGION:'):]] = (tree_max[tt][0] - a1, tree_max[tt][1] - a2)
         self.tree_lift = defaultdict(float)
-        for r_ in list(pad):         # early branches: the trunk taps these regions EARLY_PS[r] earlier (their sinks
-            e_ = early_ps(r_)          # get that much die pad for deeper block trees; flop alignment unchanged)
-            if e_:
-                p1_, p2_ = pad[r_]
-                lift = max(0.0, e_ - p1_)       # the root pad does not cover it: every OTHER region of the tree is
-                tt_ = r_.split(':')[0]          # padded `lift` later (the tree's flop instant moves by `lift`)
-                if lift:
-                    for o_ in list(pad):
-                        if o_ != r_ and o_.split(':')[0] == tt_:
-                            pad[o_] = (pad[o_][0] + lift, pad[o_][1] + lift * 0.53)
-                    self.tree_lift[tt_] += lift
-                pad[r_] = (max(0.0, p1_ - e_), max(0.0, p2_ - e_ * 0.53))
+        for tt_ in sorted({r_.split(':')[0] for r_ in pad}):   # early branches: the trunk taps these regions
+            early = {r_: early_ps(r_) for r_ in pad if r_.split(':')[0] == tt_ and early_ps(r_)}   # EARLY_PS[r] earlier
+            if not early:              # (their sinks get that much die pad for deeper block trees; flop alignment unchanged)
+                continue
+            lift = max(0.0, max(e_ - pad[r_][0] for r_, e_ in early.items()))   # the root pads do not cover it: the
+            if lift:                   # whole tree's flop instant moves by `lift` (every region padded `lift` later)
+                for o_ in list(pad):
+                    if o_.split(':')[0] == tt_:
+                        pad[o_] = (pad[o_][0] + lift, pad[o_][1] + lift * 0.53)
+                self.tree_lift[tt_] += lift
+            for r_, e_ in early.items():
+                pad[r_] = (max(0.0, pad[r_][0] - e_), max(0.0, pad[r_][1] - e_ * 0.53))
         self.pad = pad
         if 'htop' in self.cases:
             sj, par, ass, aff = self.cases['htop']
