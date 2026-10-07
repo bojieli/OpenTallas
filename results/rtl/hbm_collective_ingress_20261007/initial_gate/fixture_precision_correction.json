@@ -1,0 +1,8 @@
+{
+ "scope": "This note corrects the initial receipt's requested-clock metadata; source snapshot is authoritative.",
+ "requested_clock_period_ps": 833.333334,
+ "initial_timescale": "1ns/1ps",
+ "actual_simulated_clock_period_ps": 834,
+ "independent_phase_ps": 137,
+ "status": "Initial pathfinding only. Rounding at 1ps precision makes both half periods417ps. A separate final run uses1fs precision and the same traffic/fault checks. No initial run is credited as exact833.333ps evidence."
+}
