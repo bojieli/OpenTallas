@@ -23,22 +23,22 @@
    "budget": null
   },
   "dsfd_ctrl_pc": {
-   "job": "s81ph-dsfd_ctrl_pc-da50ce55a",
-   "source_commit": "da50ce55acbbe2d2cba0872f4d1ce2185dea9a73",
+   "job": "s81ph-dsfd_ctrl_pc-91478d7e6",
+   "source_commit": "91478d7e656b3ecc7a1a38a0cacbb3867b0255f0",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-da50ce55a",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-91478d7e6",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T20:21:07-07:00",
+   "measured_at": "2026-10-06T21:15:42-07:00",
    "ss": {
-    "mean": 345,
-    "min": 326,
-    "max": 356
+    "mean": 342,
+    "min": 324,
+    "max": 351
    },
    "ff": {
-    "mean": 224,
-    "min": 209,
-    "max": 236
+    "mean": 222,
+    "min": 205,
+    "max": 231
    },
    "boundary_n": 625,
    "budget": null
@@ -684,22 +684,22 @@
    "budget": null
   },
   "dsfd_colt_lane": {
-   "job": "s81ph-dsfd_colt_lane-cd3337221-b",
-   "source_commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-cd3337221-b",
+   "job": "s81ph-dsfd_colt_lane-c25065335-d",
+   "source_commit": "c25065335cd805661252dc94ab3becdf0dcf2a35",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-c25065335-d",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T20:15:05-07:00",
+   "measured_at": "2026-10-06T21:04:28-07:00",
    "ss": {
-    "mean": 485,
-    "min": 460,
-    "max": 523
+    "mean": 516,
+    "min": 498,
+    "max": 551
    },
    "ff": {
-    "mean": 315,
-    "min": 295,
-    "max": 350
+    "mean": 332,
+    "min": 321,
+    "max": 365
    },
    "boundary_n": 1035,
    "budget": null
@@ -957,5 +957,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-06T20:51:44-07:00"
+ "updated": "2026-10-06T21:15:42-07:00"
 }
