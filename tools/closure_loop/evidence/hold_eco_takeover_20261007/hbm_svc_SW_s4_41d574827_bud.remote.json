@@ -1,0 +1,46 @@
+{
+  "directory": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/cl/eco-r2",
+  "files": {
+    "pass1/result.json": {
+      "sha256": "21a3b89a9fb7e4ecce2e11c2051b767f635b6922fba0579526112ae2f6a89291",
+      "data": {
+        "ss_ps": 95.47,
+        "ff_ps": 22.16,
+        "drc": 0,
+        "cells_added": 3394,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "score": 7.16
+      }
+    },
+    "result.json": {
+      "sha256": "21a3b89a9fb7e4ecce2e11c2051b767f635b6922fba0579526112ae2f6a89291",
+      "data": {
+        "ss_ps": 95.47,
+        "ff_ps": 22.16,
+        "drc": 0,
+        "cells_added": 3394,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "score": 7.16
+      }
+    },
+    "pass1/eff_ss.sdc.slack": {
+      "sha256": "486d641230de8d445dfa2965f3e9f83714c78393ef3e95a0c81ad33a860f90ea",
+      "line_count": 9760,
+      "macro_addr_pins": []
+    }
+  },
+  "log_excerpt": [
+    "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/6_final.spef",
+    "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+    "OT_ECO route guides from the db: 1",
+    "}OT_ECO chosen pass1"
+  ],
+  "eco_log_sha256": "2c272cd737272426f34d0d33be22e0573791f20adb5ec4faaf7373bed2ec644a"
+}

@@ -129,8 +129,16 @@ set block [ord::get_db_block]
 # was the fresh global route, not the hold buffers.  (Keeping untouched WIRES instead fails in DRT: 1,300-2,800
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
+set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
-if {$guides} { global_route -start_incremental }
+if {$guides} {
+  puts "OT_ECO route_strategy incremental_original_guides"
+  global_route -start_incremental
+} elseif {$allow_fresh} {
+  puts "OT_ECO route_strategy fresh_global reason missing_original_guides explicit_opt_in 1"
+} else {
+  error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
+}
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 if {[llength [dict get $win fixable]]} {
@@ -161,11 +169,13 @@ foreach net [$block getNets] {
 puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
 if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
+# Preserve guides by default because fresh GRT has measured setup-regression
+# risk. An explicitly requested fallback is valid if the unchanged final
+# timing, DRC, IO and context checks pass; route strategy is not acceptance.
 if {[catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]} {
-  # a db whose guides came from an earlier ECO pass can carry a guide DRT rejects (capt_x pass 2: DRT-0218 'Guide is
-  # not connected to design'): fall back to a fresh resistance-aware global route for this pass
-  if {!$guides} { error "OT_ECO detailed_route failed: $err" }
-  puts "OT_ECO guide re-route failed ($err): fresh global route"
+  if {!$guides || !$allow_fresh} { error "OT_ECO detailed_route failed: $err" }
+  puts "OT_ECO guide re-route failed ($err): explicitly requested fresh global route"
+  puts "OT_ECO route_strategy fresh_global reason rejected_guides explicit_opt_in 1"
   foreach net [$block getNets] {
     if {[$net getSigType] in {POWER GROUND}} continue
     set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
