@@ -4,12 +4,106 @@
  "owner": "Claude:qwen-elements (branch claude/qwen-elements-final-20261007)",
  "mandate": "OWNER 2026-10-07 07:00 PT QWEN ROM REOPENED: every r21 die master routed with a real view at SS >= +15 / FF >= +15 / DRC 0 at 833.333 ps with die-context IO budgets; core r5_f2ba and CDC internal hold fixed; every added cycle priced into the Qwen record",
  "bar": "route 770 ps over-constrained; sign-off 833.333 ps, 60 / 25 ps uncertainty, SS setup / FF hold; IO 0.2 T outside + 90 ps same clock region / 150 ps die wire to another region, hold allowance 50 ps, referenced to the block's measured boundary-register clock arrival; closure-loop verdict (post-route hold ECO on hold-only misses)",
- "record_base": {"qwen_rom_ar_tok_s": 5537.3, "cycles_per_ar_token": 216713, "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json"},
+ "record_base": {
+  "qwen_rom_ar_tok_s": 5537.3,
+  "cycles_per_ar_token": 216713,
+  "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json"
+ },
  "masters": {
-  "qfd_tile / qfd_tile_e": {"rtl": "rtl/physical/ot_qwen_rom_tile_die.sv (ot_qwen_rom_tile_w12 + landing hop + ot_qwen_kv_land_merge NSRC 2)", "jobs": ["qfd_tile-5a3bb1721", "qfd_tile_e-5a3bb1721"], "bench": "rtl/test/tb_qwen_rom_tile_die.sv PASS / NEG FAIL", "status": "routing"},
-  "qfd_lst_v / _v_split / _h_e+_h_w / _c / _c_split": {"rtl": "rtl/physical/ot_qwen_die_link_stn.sv", "jobs": ["qfd_lst_v-5a3bb1721", "qfd_lst_v_split-5a3bb1721", "qfd_lst_h-5a3bb1721", "qfd_lst_c-5a3bb1721", "qfd_lst_c_split-5a3bb1721"], "bench": "rtl/test/tb_qwen_die_link_stn.sv SHAPE 0/1/2 PASS / NEG FAIL", "status": "routing"},
-  "qfd_io_xfifo": {"rtl": "rtl/physical/ot_qwen_die_io_xfifo.sv (5 x ot_qwen_die_cdc_ch)", "jobs": ["qfd_io_xfifo-cf1004f35"], "bench": "rtl/test/tb_qwen_die_cdc_ch.sv PASS (2.0/2.7 and 2.7/1.8 ns) / NEG FAIL", "status": "routing"},
-  "qfd_cdc (internal hold +8.2)": {"rtl": "unchanged ot_qwen_stream4_cdc_pc MARGIN 1 (m1j)", "jobs": ["cdc_eco-5a3bb1721", "cdc_hm25-5a3bb1721"], "status": "routing"},
-  "decode core (r5_f2ba +6.27 / +6.92, no die skew)": {"rtl": "DEC_LA FB3+BOUND+AMQ+NXREG+MEIF+SUIF+PINREG (claude/qwen-core-m3-20261006)", "jobs": ["core_p-5a3bb1721", "core_pu-5a3bb1721"], "bench": "5 x 8K exact proof + PINREG 2 negative running on ot-epyc1tb (/srv/opentallas-scratch/claude/qwen-elements/core_proof)", "status": "routing"}
+  "qfd_tile / qfd_tile_e": {
+   "rtl": "rtl/physical/ot_qwen_rom_tile_die.sv (ot_qwen_rom_tile_w12 + landing hop + ot_qwen_kv_land_merge NSRC 2)",
+   "jobs": [
+    "qfd_tile-b3ac8745e",
+    "qfd_tile_e-b3ac8745e"
+   ],
+   "bench": "rtl/test/tb_qwen_rom_tile_die.sv PASS / NEG FAIL",
+   "status": "routing",
+   "landing_word": "984 b = 3 slots x 281 + rr_n 7 + tail_lm 128 (die-top accepted for r22)"
+  },
+  "qfd_lst_v / _v_split / _h_e+_h_w / _c / _c_split": {
+   "rtl": "rtl/physical/ot_qwen_die_link_stn.sv",
+   "jobs": [
+    "qfd_lst_v-5a3bb1721",
+    "qfd_lst_v_split-5a3bb1721",
+    "qfd_lst_h-5a3bb1721",
+    "qfd_lst_c-5a3bb1721",
+    "qfd_lst_c_split-5a3bb1721"
+   ],
+   "bench": "rtl/test/tb_qwen_die_link_stn.sv SHAPE 0/1/2 PASS / NEG FAIL",
+   "status": "routing"
+  },
+  "qfd_io_xfifo": {
+   "rtl": "rtl/physical/ot_qwen_die_io_xfifo.sv (5 x ot_qwen_die_cdc_ch)",
+   "jobs": [
+    "qfd_io_xfifo-cf1004f35"
+   ],
+   "bench": "rtl/test/tb_qwen_die_cdc_ch.sv PASS (2.0/2.7 and 2.7/1.8 ns) / NEG FAIL",
+   "status": "routing"
+  },
+  "qfd_cdc (internal hold +8.2)": {
+   "rtl": "unchanged ot_qwen_stream4_cdc_pc MARGIN 1 (m1j)",
+   "jobs": [
+    "cdc_eco-5a3bb1721",
+    "cdc_hm25-5a3bb1721"
+   ],
+   "status": "routing"
+  },
+  "decode core (r5_f2ba +6.27 / +6.92, no die skew)": {
+   "rtl": "DEC_LA FB3+BOUND+AMQ+NXREG+MEIF+SUIF+PINREG (claude/qwen-core-m3-20261006)",
+   "jobs": [
+    "core_p-5a3bb1721",
+    "core_pu-5a3bb1721"
+   ],
+   "bench": "5 x 8K exact proof + PINREG 2 negative running on ot-epyc1tb (/srv/opentallas-scratch/claude/qwen-elements/core_proof)",
+   "status": "routing"
+  },
+  "qfd_hub": {
+   "rtl": "rtl/physical/ot_qwen_die_hub.sv (ot_qwen_die_hub_top)",
+   "jobs": [
+    "qfd_hub-172d343d8"
+   ],
+   "bench": "rtl/test/tb_qwen_die_hub.sv PASS 2400 ar + 2400 x3 words / NEG FAIL",
+   "status": "routing"
+  },
+  "qfd_io_collective": {
+   "rtl": "rtl/rom/ot_rom_oneshot_die_m.sv (MARGIN engine, N 4, DEPTH 32, ADD_LAT 7) in a 760.32 um frame",
+   "jobs": [
+    "qfd_io_collective-7c8f1a3c1"
+   ],
+   "bench": "tools/qwen_coll_margin_bench.py 10/10 PASS (MARGIN 0 and 1), mutant FAIL 5 exact cases",
+   "status": "routing"
+  },
+  "qfd_io_serdes / qfd_io_ucie": {
+   "status": "hard PHY IP (die-top agreed 2026-10-07): characterised macro class like ot_hbm3e_phy; digital boundary = routed qfd_io_xfifo"
+  }
+ },
+ "deferred": {
+  "qfd_kvc / qfd_kvc_n": "the landing crossbar is the landing adapter + slice map of ot_qwen_rt_kv_stream4_service (behavioural); needs a per-row / per-PC slice RTL design (die-top accepted slicing); not started",
+  "qfd_ctrl": "ot_hbm_r14_stream_stack + per-PC KV service, 247 x 12,141 um: per-PC slices needed; not started",
+  "qfd_sp_tree_top": "ot_qwen_me_sptree_w12 at the die cut (6 band words in, 512 b out) does not match the token RTL parameterisation (GT 6144 / TCUT 7 / SMIN 7 gives 48 inputs and 48 result positions a lane); needs the die-cut spec",
+  "qfd_sp_vector_memory / qfd_sp_su64_sfu / qfd_sp_constants_sequencer": "composites of token-RTL pieces never cut physically (VM arrays, vstream SW64 + SFU, core + VP sequencer + constant ROM); frames 0.78 x 0.93-2.8 mm exceed the 1 mm block rule; not started (the decode core inside the sequencer is routed: core_p / core_pu)",
+  "qfd_io_embedding_rom": "4,751 ROM macros per die (ot_qwen_rt_embed_rom organisation) in a 7.06 x 1.56 mm reservation: macro-array sub-blocks needed; not started"
+ },
+ "pricing": {
+  "base_cycles_per_ar_token": 216713,
+  "items": {
+   "tile landing hop 2 cycles a tile": {
+    "cycles": 32,
+    "basis": "<= 32 extra landing-latency cycles on the cold first layer (KV_MAP=1 cold-layer KV-ready is the exposed term); later layers prefetch"
+   },
+   "collective engine MARGIN": {
+    "cycles": 1241,
+    "basis": "+17 cycles fixed latency per collective (bench 70 -> 87), 73 collectives per AR token, no overlap credited"
+   },
+   "xfifo CDC on the collective path": {
+    "cycles": 0,
+    "basis": "the collective already crossed the IO clock domains in the r21 record's io class; credit faces add no steady-state cycles (pending measurement)"
+   },
+   "core PINREG": {
+    "cycles": "pending (exact proof running)"
+   }
+  },
+  "total_known_cycles": 1273,
+  "ar_tok_s_after_known": 5504.9
  }
 }
