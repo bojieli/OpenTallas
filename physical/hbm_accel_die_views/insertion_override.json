@@ -1,0 +1,28 @@
+{
+ "hfd_index_q_b0": {
+  "reason": "edge ck kept: R0 + x-mirrored copies cannot both take an on-track centre M7 ck pin (r16b); coordinator 2026-10-06 23:20 re-plan"
+ },
+ "hfd_index_q_b1": {
+  "reason": "edge ck kept (see b0); FF / hold side from the measured insertion (views agent: b1 hold -268 came from the 900 ps sheet FF model); ff_min = routed output leaf (2026-10-07 coordinator: b1 FF -166 on kout)",
+  "ff_min": 540,
+  "source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf"
+ },
+ "hfd_index_q_b2": {
+  "reason": "edge ck kept (see b0)"
+ },
+ "hfd_index_q_b3": {
+  "reason": "edge ck kept (see b0)"
+ },
+ "hfd_index_q_b5": {
+  "reason": "edge ck kept (see b0)"
+ },
+ "hfd_svc_SE_s3": {
+  "target_ss": 919,
+  "target_ff": 600,
+  "ss": 919,
+  "ss_min": 880,
+  "ss_max": 919,
+  "source": "views agent 2026-10-06: centre-ck re-route calibration 919 ps (coordinator: re-plan, die pad 107 ps absorbs +19)",
+  "reason": "centre ck measured 919 vs 900 target: re-planned instead of a split (coordinator 23:50)"
+ }
+}

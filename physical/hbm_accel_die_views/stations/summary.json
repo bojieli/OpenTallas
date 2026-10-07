@@ -36,7 +36,10 @@
   "launch": 5,
   "outputs_mapped": 2160,
   "wchk": true,
-  "ldly": 7
+  "ldly": 7,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_gath_r8": {
   "role": "gather",
@@ -60,7 +63,10 @@
   "outputs_mapped": 6189,
   "wchk": true,
   "pin_stages": 2,
-  "fdly": 10
+  "fdly": 10,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_mcast_r6": {
   "role": "mcast",
@@ -68,7 +74,10 @@
   "meso": 5,
   "launch": 0,
   "outputs_mapped": 6189,
-  "wchk": true
+  "wchk": true,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_mcast_r7": {
   "role": "mcast",
@@ -76,7 +85,10 @@
   "meso": 5,
   "launch": 0,
   "outputs_mapped": 4126,
-  "wchk": true
+  "wchk": true,
+  "pin_stages": 2,
+  "plreg": true,
+  "rsplit": true
  },
  "hfd_meso_r1": {
   "role": "meso",
@@ -240,5 +252,45 @@
   "meso": 0,
   "launch": 0,
   "outputs_mapped": 2063
+ },
+ "hfd_stn_r33": {
+  "role": "launch",
+  "fwd": 0,
+  "meso": 0,
+  "launch": 1,
+  "outputs_mapped": 512,
+  "wchk": true
+ },
+ "hfd_stn_r34": {
+  "role": "forward",
+  "fwd": 1,
+  "meso": 0,
+  "launch": 0,
+  "outputs_mapped": 512,
+  "wchk": true
+ },
+ "hfd_stn_r36": {
+  "role": "forward",
+  "fwd": 1,
+  "meso": 0,
+  "launch": 0,
+  "outputs_mapped": 512,
+  "wchk": true
+ },
+ "hfd_meso_r35": {
+  "role": "meso",
+  "fwd": 0,
+  "meso": 1,
+  "launch": 0,
+  "outputs_mapped": 512,
+  "wchk": true
+ },
+ "hfd_meso_r37": {
+  "role": "meso",
+  "fwd": 0,
+  "meso": 1,
+  "launch": 0,
+  "outputs_mapped": 512,
+  "wchk": true
  }
 }

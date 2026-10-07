@@ -674,7 +674,8 @@
     "hfd_svc_SE_s4",
     "hfd_svc_SE_s5",
     "hfd_svc_SE_s6",
-    "hfd_svc_SE_s7"
+    "hfd_svc_SE_s7",
+    "hfd_svc_SE_s8"
    ],
    "port_map": {
     "hfd_svc_SE_s0": {
@@ -976,6 +977,29 @@
       "parent_port": "phy",
       "parent_bits": [
        20372,
+       21615
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s8": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       21616,
        22237
       ]
      },
@@ -1005,7 +1029,8 @@
     "hfd_svc_SE_s4",
     "hfd_svc_SE_s5",
     "hfd_svc_SE_s6",
-    "hfd_svc_SE_s7"
+    "hfd_svc_SE_s7",
+    "hfd_svc_SE_s8"
    ],
    "port_map": {
     "hfd_svc_SE_s0": {
@@ -1307,6 +1332,29 @@
       "parent_port": "phy",
       "parent_bits": [
        20372,
+       21615
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s8": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       21616,
        22237
       ]
      },
@@ -2111,7 +2159,7 @@
   },
   "hfd_svc_SE_s7": {
    "x0_um": 7629.984,
-   "w_um": 870.048,
+   "w_um": 469.992,
    "h_um": 259.176,
    "ports": {
     "l7": {
@@ -2125,7 +2173,7 @@
      "face": "N"
     },
     "phy": {
-     "bits": 1866,
+     "bits": 1244,
      "direction": "inout",
      "face": "xy"
     },
@@ -2146,6 +2194,48 @@
     },
     "wo": {
      "bits": 54,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 52,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 278,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s8": {
+   "x0_um": 8100.0,
+   "w_um": 400.032,
+   "h_um": 259.176,
+   "ports": {
+    "phy": {
+     "bits": 622,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 52,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 278,
      "direction": "output",
      "face": "W"
     }
@@ -2570,6 +2660,24 @@
    "chains": [
     "c_is28",
     "c_wd7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s7.eo",
+   "to": "hfd_svc_SE_s8.wi",
+   "bits": 52,
+   "chains": [
+    "c_is31"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s8.wo",
+   "to": "hfd_svc_SE_s7.ei",
+   "bits": 278,
+   "chains": [
+    "c_rs31"
    ]
   }
  ]

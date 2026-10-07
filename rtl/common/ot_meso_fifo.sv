@@ -73,9 +73,14 @@ module ot_meso_fifo #(
                                      // slot data no longer waits on w_send (the writer state / credit net); validity
                                      // stays in the slot's v bits, so the reader takes exactly the same words.  Same
                                      // latency.  Default off.
-    parameter bit OBYP     = 0       // NOBP && RDREG only: the readout flop is the FIFO's last register -- r_d / r_v come
+    parameter bit OBYP     = 0,      // NOBP && RDREG only: the readout flop is the FIFO's last register -- r_d / r_v come
                                      // straight from it (o_d bypassed, -1 period), so the consumer's own register (a
                                      // station's per-face pin-launch flop) is the next stage
+    parameter bit PLREG    = 0,      // data ring: the read-pointer placement value is a flop (see ot_meso_ring PLREG);
+                                     // same words, same cycles.  Default off.
+    parameter bit RSPLIT   = 0       // RDREG only, data ring: the readout flop is split into two half-select flops
+                                     // (slots 0..DEPTH/2-1 / DEPTH/2..DEPTH-1, one AO level each) ORed after them;
+                                     // same cycle.  Default off.
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -99,6 +104,7 @@ module ot_meso_fifo #(
     localparam int AW = $clog2(DEPTH);
     initial begin
         if (OBYP && !(NOBP && RDREG)) $error("ot_meso_fifo: OBYP needs NOBP and RDREG");
+        if (RSPLIT && !RDREG) $error("ot_meso_fifo: RSPLIT needs RDREG");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_LO + 2 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH)
             $error("ot_meso_fifo: need GUARD_LO+2 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH");
@@ -131,7 +137,7 @@ module ot_meso_fifo #(
         // credit ring rclk -> wclk
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
-        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG), .WCHK(WCHK)) u_data (
+        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT)) u_data (
             .tclk(wclk), .t_v(w_send), .t_d(w_d),
             .rclk(rclk), .r_align(r_align), .r_on(r_on),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
@@ -339,7 +345,15 @@ module ot_meso_ring #(
     parameter int GUARD_HI = 4,
     parameter bit RDREG    = 0,      // readout flops: r_d / r_v / r_lap_ok captured at the consuming rclk edge (r_v,
                                      // r_lap_ok masked by r_on of that cycle), presented one period later
-    parameter bit WCHK     = 0       // chunked write (see ot_meso_fifo WCHK): ot_meso_wch per 64 bits
+    parameter bit WCHK     = 0,      // chunked write (see ot_meso_fifo WCHK): ot_meso_wch per 64 bits
+    parameter bit PLREG    = 0,      // placement value from a flop: rp_place = f(g3, n3) and g3 / n3 are plain copies of
+                                     // g2 / n2 one edge later, so a flop loaded with f(g2, n2) holds exactly rp_place at
+                                     // every edge (pure retiming, same cycles).  The pointer-decode logic (Gray ->
+                                     // binary, add, late compare) then sits before that flop and the broadcast to the
+                                     // DEPTH-slot selects of every 64-bit chunk starts at a register (mcast_r6 Q1:
+                                     // g3 -> 4 levels -> 400 um of buffers -> dsel di, SS -95 ps).  The synchroniser
+                                     // (async_reg g1 g2 / n0 n1 n2) is unchanged.
+    parameter bit RSPLIT   = 0       // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -420,7 +434,33 @@ module ot_meso_ring #(
     // di the one-hot slot index; both are placed and advanced with rp, so they add no latency.  A crossing arc is
     // then slot flop -> AND -> OR tree -> the reader's next-state select.
     localparam int NS = 2 * DEPTH;
-    wire [PW-1:0] rp_place = gb + PW'(PLACE) - PW'(late);
+    wire [PW-1:0] rp_place_c = gb + PW'(PLACE) - PW'(late);
+    wire [PW-1:0] rp_place;
+    if (PLREG) begin : g_plreg
+        logic [PW-1:0] gb2;
+        always_comb begin
+            gb2[PW-1] = g2[PW-1];
+            for (int i = PW - 2; i >= 0; i--) gb2[i] = gb2[i+1] ^ g2[i];
+        end
+        logic [PW-1:0] pl_q;
+`ifdef OT_MESO_MUTANT_PLREG
+        always_ff @(posedge rclk) pl_q <= rp_place_c;        // MUTANT: one edge late (the un-retimed value registered)
+`else
+        always_ff @(posedge rclk) pl_q <= gb2 + PW'(PLACE) - PW'(g2 != n2);
+`endif
+        assign rp_place = pl_q;
+`ifndef SYNTHESIS
+        // retiming proof in every bench: the flop equals the combinational placement at every edge once g/n are
+        // defined (x-initial: both sides hold the same arbitrary power-up words after 4 edges)
+        int pl_n = 0;
+        always @(posedge rclk) begin
+            if (pl_n < 4) pl_n <= pl_n + 1;
+            else if (pl_q !== rp_place_c) $display("PLREG_MISMATCH %m t=%0t q=%0d c=%0d", $time, pl_q, rp_place_c);
+        end
+`endif
+    end else begin : g_plcomb
+        assign rp_place = rp_place_c;
+    end
     logic [NS-1:0] oh;
     always_ff @(posedge rclk) begin
         if (r_align) begin
@@ -446,7 +486,7 @@ module ot_meso_ring #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG), .SPLIT(RSPLIT)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
                                                       .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
     end
     logic r_v_c, r_lap_c;
@@ -515,7 +555,7 @@ endmodule
 // One chunk of the data-ring read: its own one-hot copy of the slot index (placed and advanced with rp), then a
 // one-hot AND-OR of the DEPTH slots.  Kept hierarchy keeps the replicated index registers from being merged.
 (* keep_hierarchy *)
-module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0) (
+module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0, parameter bit SPLIT = 0) (
     input  logic                    clk,
     input  logic                    align,
     input  logic                    on,
@@ -533,7 +573,23 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         y_c = '0;
         for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{di[i]}});
     end
-    if (REG) begin : g_reg
+    if (REG && SPLIT) begin : g_split
+        // SPLIT: the crossing arc is slot -> one AO22 level -> a half-select flop (mcast_r6 Q1: m -> AO22 -> AO221 ->
+        // y_q -63.9 ps against the 356.667 ps crossing bound); the two halves are ORed in rclk after the flops, the
+        // same edge the single readout flop would present (one-hot di: at most one half is non-zero)
+        logic [W-1:0] ya_c, yb_c, ya_q, yb_q;
+        always_comb begin
+            ya_c = '0; yb_c = '0;
+            for (int i = 0; i < DEPTH / 2; i++) ya_c = ya_c | (sd[i*W +: W] & {W{di[i]}});
+            for (int i = DEPTH / 2; i < DEPTH; i++) yb_c = yb_c | (sd[i*W +: W] & {W{di[i]}});
+        end
+        always_ff @(posedge clk) begin ya_q <= ya_c; yb_q <= yb_c; end
+`ifdef OT_MESO_MUTANT_RSPLIT
+        assign y = ya_q;                                    // MUTANT: upper half-select dropped
+`else
+        assign y = ya_q | yb_q;
+`endif
+    end else if (REG) begin : g_reg
         // the crossing's capture flop sits next to the select (RDREG): the arc is slot -> AND-OR -> this flop
         logic [W-1:0] y_q;
         always_ff @(posedge clk) y_q <= y_c;

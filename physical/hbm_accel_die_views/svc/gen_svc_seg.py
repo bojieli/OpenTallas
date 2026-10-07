@@ -35,7 +35,7 @@ HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off re
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
 CUTS = {'SW': [1017.024, 2322.96, 3379.968, 4452.96, 5238.96, 6301.968, 7363.968],
-        'SE': [1017.024, 2318.016, 3379.968, 4761.984, 5770.992, 6865.968, 7629.984]}
+        'SE': [1017.024, 2318.016, 3379.968, 4761.984, 5770.992, 6865.968, 7629.984, 8100.0]}   # r23: SE_s7 split at the 8,088-8,234 um free gap (coordinator 2026-10-07)
 FAM = {'SW': ['hfd_svc_SW', 'hfd_svc_NW'], 'SE': ['hfd_svc_SE', 'hfd_svc_NE']}
 PHY_BB = 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v'
 Y_LO, Y_MID, Y_HI = 5.0, 130.0, 254.0
@@ -353,7 +353,7 @@ def build(pl):
                 k = int(u[2:]); fwd = g['fwd'][k]
                 decl.append(f'  wire [3:0] as{k}_sv, as{k}_kt; wire [1107:0] as{k}_sq; wire as{k}_wsv, as{k}_wt; '
                             f'wire [270:0] as{k}_wsq; wire [1098:0] as{k}_line;')
-                body.append(f'  ot_svs_asm #(.SLOT(1)) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
+                body.append(f'  ot_svs_asm #(.SLOT(2)) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
                             f'.wsq(as{k}_wsq), .k_take(as{k}_kt), .w_take(as{k}_wt), .line(as{k}_line));')
                 if fwd:
                     body.append(f'  wire fck{k}; ot_svc_fclk_buf u_fc{k} (.a(c), .y(fck{k}));')

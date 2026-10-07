@@ -1,0 +1,1192 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1588]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1585]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1584]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1583]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1582]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1581]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1580]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1579]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1578]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1577]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1576]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1575]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1574]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1573]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1572]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1571]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1570]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1569]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1568]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1567]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1566]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1565]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1564]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1563]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1562]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1561]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1560]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1559]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1558]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1557]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1556]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1555]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1554]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1553]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1552]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1551]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1550]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1549]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1548]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1547]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1546]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1545]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1544]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1543]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1542]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1541]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1540]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1539]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1538]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1537]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1536]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1535]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1534]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1533]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1532]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1531]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1530]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1529]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1528]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1527]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1526]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1525]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1524]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1523]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1522]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1521]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1520]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1519]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1518]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1517]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1516]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1515]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1514]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1513]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1512]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1511]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1510]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1509]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1508]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1507]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1506]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1505]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1504]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1503]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1502]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1501]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1500]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1499]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1498]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1497]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1496]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1495]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1494]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1493]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1492]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1491]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1490]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1489]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1488]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1487]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1486]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1485]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1484]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1483]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1482]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1481]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1480]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1479]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1478]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1477]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1476]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1475]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1474]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1473]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1472]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1471]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1470]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1469]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1468]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1467]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1466]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1465]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1464]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1463]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1462]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1461]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1460]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1459]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1458]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1457]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1456]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1455]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1454]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1453]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1452]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1451]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1450]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1449]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1448]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1447]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1446]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1445]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1444]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1443]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1442]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1441]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1440]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1439]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1438]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1437]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1436]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1435]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1434]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1433]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1432]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1431]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1430]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1429]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1428]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1427]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1426]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1425]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1424]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1423]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1422]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1421]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1420]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1419]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1418]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1417]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1416]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1415]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1414]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1413]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1412]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1411]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1410]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1409]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1408]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1407]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1406]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1405]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1404]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1403]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1402]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1401]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1400]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1399]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1398]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1397]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1396]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1395]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1394]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1393]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1392]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1391]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1390]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1389]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1388]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1387]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1386]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1385]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1384]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1383]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1382]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1381]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1380]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1379]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1378]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1377]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1376]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1375]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1374]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1373]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1372]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1371]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1370]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1369]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1368]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1367]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1366]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1365]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1364]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1363]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1362]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1361]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1360]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1359]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1358]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1357]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1356]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1355]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1354]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1353]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1352]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1351]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1350]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1349]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1348]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1347]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1346]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1345]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1344]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1343]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1342]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1341]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1340]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1339]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1338]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1337]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1336]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1335]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1334]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1333]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1332]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1331]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1330]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1329]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1328]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1327]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1326]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1325]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1324]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1323]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1322]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1321]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1320]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1319]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1318]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1317]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1316]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1315]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1314]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1313]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1312]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1311]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1310]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1309]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1308]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1307]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1306]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1305]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1304]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1303]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1302]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1301]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1300]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1299]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1298]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1297]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1296]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1295]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1294]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1293]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1292]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1291]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1290]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1289]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1288]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1287]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1286]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1285]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1284]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1283]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1282]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1281]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1280]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1279]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1278]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1277]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1276]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1275]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1274]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1273]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1272]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1271]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1270]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1269]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1268]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1267]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1266]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1265]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1264]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1263]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1262]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1261]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1260]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1259]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1258]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1257]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1256]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1255]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1254]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1253]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1252]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1251]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1250]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1249]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1248]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1247]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1246]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[1244]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[966]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[963]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[962]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[961]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[960]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[959]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[958]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[957]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[956]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[955]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[954]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[953]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[952]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[951]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[950]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[949]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[948]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[947]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[946]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[945]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[944]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[943]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[942]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[941]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[940]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[939]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[938]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[937]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[936]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[935]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[934]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[933]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[932]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[931]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[930]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[929]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[928]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[927]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[926]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[925]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[924]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[923]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[922]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[921]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[920]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[919]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[918]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[917]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[916]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[915]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[914]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[913]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[912]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[911]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[910]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[909]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[908]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[907]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[906]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[905]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[904]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[903]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[902]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[901]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[900]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[899]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[898]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[897]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[896]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[895]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[894]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[893]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[892]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[891]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[890]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[889]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[888]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[887]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[886]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[885]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[884]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[883]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[882]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[881]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[880]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[879]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[878]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[877]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[876]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[875]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[874]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[873]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[872]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[871]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[870]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[869]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[868]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[867]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[866]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[865]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[864]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[863]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[862]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[861]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[860]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[859]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[858]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[857]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[856]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[855]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[854]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[853]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[852]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[851]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[850]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[849]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[848]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[847]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[846]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[845]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[844]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[843]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[842]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[841]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[840]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[839]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[838]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[837]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[836]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[835]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[834]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[833]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[832]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[831]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[830]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[829]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[828]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[827]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[826]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[825]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[824]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[823]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[822]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[821]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[820]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[819]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[818]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[817]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[816]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[815]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[814]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[813]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[812]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[811]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[810]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[809]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[808]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[807]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[806]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[805]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[804]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[803]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[802]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[801]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[800]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[799]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[798]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[797]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[796]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[795]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[794]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[793]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[792]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[791]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[790]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[789]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[788]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[787]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[786]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[785]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[784]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[783]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[782]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[781]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[780]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[779]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[778]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[777]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[776]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[775]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[774]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[773]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[772]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[771]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[770]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[769]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[768]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[767]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[766]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[765]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[764]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[763]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[762]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[761]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[760]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[759]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[758]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[757]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[756]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[755]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[754]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[753]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[752]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[751]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[750]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[749]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[748]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[747]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[746]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[745]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[744]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[743]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[742]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[741]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[740]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[739]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[738]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[737]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[736]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[735]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[734]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[733]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[732]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[731]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[730]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[729]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[728]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[727]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[726]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[725]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[724]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[723]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[722]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[721]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[720]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[719]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[718]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[717]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[716]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[715]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[714]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[713]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[712]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[711]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[710]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[709]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[708]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[707]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[706]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[705]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[704]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[703]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[702]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[701]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[700]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[699]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[698]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[697]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[696]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[695]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[694]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[693]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[692]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[691]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[690]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[689]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[688]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[687]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[686]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[685]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[684]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[683]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[682]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[681]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[680]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[679]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[678]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[677]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[676]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[675]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[674]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[673]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[672]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[671]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[670]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[669]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[668]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[667]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[666]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[665]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[664]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[663]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[662]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[661]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[660]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[659]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[658]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[657]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[656]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[655]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[654]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[653]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[652]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[651]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[650]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[649]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[648]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[647]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[646]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[645]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[644]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[643]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[642]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[641]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[640]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[639]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[638]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[637]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[636]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[635]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[634]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[633]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[632]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[631]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[630]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[629]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[628]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[627]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[626]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[625]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[624]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[622]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[344]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[341]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[340]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[339]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[338]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[337]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[336]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[335]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[334]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[333]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[332]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[331]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[330]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[329]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[328]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[327]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[326]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[325]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[324]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[323]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[322]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[321]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[320]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[319]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[318]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[317]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[316]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[315]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[314]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[313]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[312]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[311]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[310]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[309]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[308]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[307]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[306]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[305]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[304]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[303]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[302]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[301]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[300]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[299]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[298]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[297]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[296]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[295]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[294]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[293]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[292]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[291]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[290]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[289]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[288]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[287]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[286]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[285]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[284]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[283]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[282]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[281]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[280]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[279]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[278]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[277]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[276]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[275]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[274]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[273]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[272]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[271]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[270]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[269]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[268]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[267]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[266]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[265]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[264]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[263]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[262]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[261]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[260]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[259]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[258]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[257]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[256]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[255]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[254]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[253]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[252]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[251]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[250]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[249]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[248]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[247]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[246]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[245]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[244]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[243]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[242]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[241]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[240]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[239]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[238]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[237]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[236]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[235]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[234]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[233]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[232]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[231]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[230]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[229]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[228]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[227]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[226]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[225]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[224]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[223]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[222]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[221]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[220]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[219]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[218]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[217]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[216]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[215]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[214]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[213]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[212]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[211]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[210]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[209]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[208]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[207]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[206]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[205]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[204]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[203]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[202]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[201]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[200]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[199]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[198]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[197]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[196]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[195]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[194]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[193]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[192]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[191]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[190]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[189]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[188]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[187]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[186]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[185]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[184]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[183]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[182]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[181]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[180]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[179]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[178]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[177]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[176]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[175]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[174]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[173]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[172]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[171]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[170]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[169]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[168]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[167]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[166]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[165]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[164]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[163]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[162]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[161]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[160]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[159]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[158]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[157]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[156]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[155]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[154]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[153]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[152]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[151]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[150]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[149]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[148]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[147]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[146]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[145]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[144]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[143]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[142]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[141]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[140]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[139]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[138]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[137]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[136]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[135]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[134]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[133]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[132]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[131]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[130]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[129]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[128]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[127]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[126]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[125]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[124]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[123]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[122]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[121]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[120]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[119]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[118]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[117]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[116]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[115]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[114]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[113]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[112]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[111]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[110]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[109]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[108]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[107]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[106]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[105]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[104]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[103]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[102]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[101]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[100]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[99]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[98]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[97]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[96]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[95]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[94]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[93]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[92]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[91]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[90]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[89]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[88]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[87]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[86]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[85]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[84]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[83]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[82]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[81]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[80]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[79]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[78]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[77]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[76]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[75]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[74]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[73]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[72]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[71]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[70]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[69]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[68]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[67]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[66]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[65]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[64]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[63]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[62]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[61]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[60]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[59]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[58]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[57]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[56]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[55]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[54]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[53]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[52]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[51]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[50]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[49]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[48]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[47]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[46]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[45]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[44]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[43]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[42]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[41]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[40]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[39]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[38]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[37]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[36]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[35]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[34]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[33]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[32]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[31]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[30]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[29]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[28]'.
+[WARNING STA-0440] set_input_delay not allowed on output port 'phy[27]'.
+[WARNING STA-0440] message limit (1000) reached. This message will no longer print.
+OT_CORNER ff
+OT_WS 2.3517465752576072e-11
+OT_TNS 0.0
+Startpoint: u_rs.rst_s[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: c_wd7_1.gn.rv[1]$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck[0] (in)
+  24.82   24.82 ^ wire11276/Y (BUFx12f_ASAP7_75t_R)
+  30.70   55.52 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.62   77.14 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.65   98.79 ^ clkbuf_1_1_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.00  119.79 ^ clkbuf_1_1_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.92  141.71 ^ clkbuf_1_1_3_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  24.43  166.14 ^ clkbuf_3_7_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.13  187.28 ^ clkbuf_3_7_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.84  210.12 ^ clkbuf_3_7_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  27.85  237.97 ^ clkbuf_5_28_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  260.37 ^ clkbuf_7_112_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  19.46  279.83 ^ clkbuf_leaf_156_ck[0]/Y (BUFx24_ASAP7_75t_R)
+   4.40  284.23 ^ u_rs.rst_s[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  39.20  323.43 v u_rs.rst_s[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  14.44  337.88 v hold13865/Y (BUFx2_ASAP7_75t_R)
+  14.16  352.03 v hold12603/Y (BUFx2_ASAP7_75t_R)
+   6.33  358.37 ^ _9052_/Y (INVx4_ASAP7_75t_R)
+  29.18  387.55 ^ hold12604/Y (BUFx2_ASAP7_75t_R)
+  32.91  420.46 ^ place7034/Y (BUFx5_ASAP7_75t_R)
+  47.40  467.86 ^ place7033/Y (BUFx6f_ASAP7_75t_R)
+   8.28  476.14 ^ c_wd7_1.gn.rv[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         476.14   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck[0] (in)
+  25.72   25.72 ^ wire11276/Y (BUFx12f_ASAP7_75t_R)
+  31.91   57.63 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.32   79.95 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  102.24 ^ clkbuf_1_1_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.64  123.88 ^ clkbuf_1_1_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.67  146.55 ^ clkbuf_1_1_3_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  26.01  172.56 ^ clkbuf_3_5_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.89  194.45 ^ clkbuf_3_5_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.45  216.91 ^ clkbuf_3_5_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  28.15  245.06 ^ clkbuf_5_23_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  25.42  270.47 ^ clkbuf_7_92_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.58  292.05 ^ clkbuf_leaf_81_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  32.85  324.90 ^ wire11277/Y (BUFx12f_ASAP7_75t_R)
+   8.18  333.08 ^ c_wd7_1.gn.rv[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  358.08   clock uncertainty
+  -4.84  353.24   clock reconvergence pessimism
+  26.63  379.87   library removal time
+         379.87   data required time
+---------------------------------------------------------
+         379.87   data required time
+        -476.14   data arrival time
+---------------------------------------------------------
+          96.27   slack (MET)
+
+
+Startpoint: u_pc28.bd[122]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: c_rs28_0.gn.st[0].r[122]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck[0] (in)
+  24.82   24.82 ^ wire11276/Y (BUFx12f_ASAP7_75t_R)
+  30.70   55.52 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.62   77.14 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.65   98.79 ^ clkbuf_1_1_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.00  119.79 ^ clkbuf_1_1_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.92  141.71 ^ clkbuf_1_1_3_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  24.46  166.17 ^ clkbuf_3_4_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.06  187.23 ^ clkbuf_3_4_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.91  211.13 ^ clkbuf_3_4_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  235.80 ^ clkbuf_5_19_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.17  256.97 ^ clkbuf_7_78_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.56  279.53 ^ clkbuf_leaf_133_ck[0]/Y (BUFx24_ASAP7_75t_R)
+   2.36  281.90 ^ u_pc28.bd[122]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  37.26  319.16 ^ u_pc28.bd[122]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  15.21  334.37 ^ hold16298/Y (BUFx2_ASAP7_75t_R)
+  11.19  345.56 v _7369_/Y (INVx2_ASAP7_75t_R)
+   6.03  351.58 v c_rs28_0.gn.st[0].r[122]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         351.58   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck[0] (in)
+  25.72   25.72 ^ wire11276/Y (BUFx12f_ASAP7_75t_R)
+  31.91   57.63 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.32   79.95 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  102.24 ^ clkbuf_1_1_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.64  123.88 ^ clkbuf_1_1_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.67  146.55 ^ clkbuf_1_1_3_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  25.99  172.54 ^ clkbuf_3_4_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.69  194.23 ^ clkbuf_3_4_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  24.69  218.92 ^ clkbuf_3_4_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  26.78  245.71 ^ clkbuf_5_16_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  26.12  271.83 ^ clkbuf_7_65_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  26.42  298.25 ^ clkbuf_leaf_117_ck[0]/Y (BUFx24_ASAP7_75t_R)
+   2.27  300.52 ^ c_rs28_0.gn.st[0].r[122]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  325.52   clock uncertainty
+  -7.79  317.73   clock reconvergence pessimism
+  10.34  328.07   library hold time
+         328.07   data required time
+---------------------------------------------------------
+         328.07   data required time
+        -351.58   data arrival time
+---------------------------------------------------------
+          23.52   slack (MET)
+
+
+Startpoint: c_wl7_5.gn.st[3].r[256]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: eo[535] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck[0] (in)
+  24.82   24.82 ^ wire11276/Y (BUFx12f_ASAP7_75t_R)
+  30.70   55.52 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.62   77.14 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.65   98.79 ^ clkbuf_1_1_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.00  119.79 ^ clkbuf_1_1_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.92  141.71 ^ clkbuf_1_1_3_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  24.43  166.14 ^ clkbuf_3_7_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  21.13  187.28 ^ clkbuf_3_7_1_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.84  210.12 ^ clkbuf_3_7_2_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  27.81  237.93 ^ clkbuf_5_31_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.58  261.51 ^ clkbuf_7_126_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.56  284.08 ^ clkbuf_leaf_86_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  27.64  311.72 ^ wire11278/Y (BUFx12f_ASAP7_75t_R)
+   5.94  317.66 ^ c_wl7_5.gn.st[3].r[256]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.08  356.74 ^ c_wl7_5.gn.st[3].r[256]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  39.21  395.95 ^ hold22281/Y (HB4xp67_ASAP7_75t_R)
+   6.61  402.56 v _9060_/Y (INVx1_ASAP7_75t_R)
+  19.46  422.02 v output2658/Y (BUFx2_ASAP7_75t_R)
+   4.30  426.32 v eo[535] (out)
+         426.32   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+ 330.00  330.00   clock network delay (ideal)
+  50.00  380.00   inter-clock uncertainty
+   0.00  380.00   clock reconvergence pessimism
+  15.00  395.00   output external delay
+         395.00   data required time
+---------------------------------------------------------
+         395.00   data required time
+        -426.32   data arrival time
+---------------------------------------------------------
+          31.32   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 23.517466
+OT_WS_OUT 31.317532
+OT_WS_R2R 96.266716
+OT_WS_I2R 128.102005

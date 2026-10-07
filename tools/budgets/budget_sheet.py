@@ -46,6 +46,7 @@ import common as C  # noqa: E402
 SKIP_CLS = {'clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'}
 BLACKBOX_KINDS = {'phy', 'link', 'serdes_slab', 'host_slab', 'cfg'}     # macro pins: protocol of the macro, not a flop
 LINK_STAGE_UM = 430.56
+PIN_LAST_UM = 100.0     # HBM r19b pin-abutting station: last segment into the receiving pin
 FREQ = {'stream_1p2': 1.2, 'fwd': 1.2, 'serial_0p9': 0.9, 'hbm': 0.9766, 'link': 1.2}
 IN_FIXED_BLOCK = C.RCV_IN_PS + C.SETUP_SS_PS          # 71: what the receiving block needs inside
 OUT_FIXED_BLOCK = C.CLKQ_SS_PS + C.DRV_OUT_PS         # 130: what the launching block needs inside
@@ -90,7 +91,7 @@ def classify(d, ia, ib, reg, trees, plan_intra, fl=frozenset(), fbus=False):
     return 'intra', plan_intra.get(ra[1], C.SKEW_INTRA_PS)
 
 
-def budgets(L, skew, period, planned=1):
+def budgets(L, skew, period, planned=1, last_um=None):
     """as-planned feasibility on the floorplan length L; the delay budgets themselves on the segment after the stages
     the interface needs (L / stages_needed), i.e. what the block must close once the floorplan carries those stations"""
     avail = period - C.UNC_SETUP_PS - C.ACCEPT_PS
@@ -100,6 +101,8 @@ def budgets(L, skew, period, planned=1):
         # a staged path crosses the region boundary once: one hop at the inter reach, the rest at the intra reach
         st = 1 + math.ceil((L - reach) / C.reach_um(C.SKEW_INTRA_PS, period))
     seg = L / max(st, planned)
+    if last_um is not None:     # HBM r19b: a die station abuts this receiving pin (last segment <= last_um)
+        seg = min(seg, last_um)
     w0, w = C.WIRE_SS_PS_PER_UM * L, C.WIRE_SS_PS_PER_UM * seg
     fixed_in, fixed_out = C.CLKQ_SS_PS + C.DRV_OUT_PS + skew, C.RCV_IN_PS + C.SETUP_SS_PS + skew
     ind, outd = fixed_in + w, fixed_out + w
@@ -129,9 +132,19 @@ def main():
     ap.add_argument('--die', action='append', required=True, help='NAME=model.json.gz[:plan.json]')
     ap.add_argument('--calib', help='measured block insertions {master: {ss_mean, ss_min, ss_max, ff_mean, ff_min, ff_max, source}}')
     ap.add_argument('--tiles', help='tile compositions (tools/budgets/tiles.py output)')
+    ap.add_argument('--insertion-override', help='{master: {target_ss?, reason}}: re-planned internal insertion target '
+                    '(default the measured ss_max); its die entry target follows the measured insertion (the die tree '
+                    'delivers earlier) and the extra OCV on its deeper tree, OCV x (ss_max - cap), is added to the skew '
+                    'term of every synchronous interface of that master (block-side budget, die skew budget unchanged)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     calib = json.loads(Path(a.calib).read_text()) if a.calib else {}
+    ovr = json.loads(Path(a.insertion_override).read_text()) if a.insertion_override else {}
+    ovr_extra = {}
+    for m_, o_ in ovr.items():
+        c_ = calib.get(m_, {})
+        ins_ = o_.get('target_ss', c_.get('ss_max', C.LINT_CAP_PS))
+        ovr_extra[m_] = round(C.OCV * max(0.0, ins_ - C.LINT_CAP_PS), 1)
     out = Path(a.out)
     (out / 'sheets').mkdir(parents=True, exist_ok=True)
     M = {}                     # master -> accumulated record
@@ -150,6 +163,16 @@ def main():
             base.update(ss=c['ss_mean'], ff=c['ff_mean'], ss_min=c.get('ss_min'), ss_max=c.get('ss_max'),
                         ff_min=c.get('ff_min'), ff_max=c.get('ff_max'), grade='measured', source=c['source'],
                         over_target=c['ss_mean'] > tgt + C.LINT_TOL_PS)
+            if master in ovr:       # re-planned target: the measured tree is accepted, its OCV priced on the IO skew
+                o_ = ovr[master]
+                for k_ in ('ss', 'ff', 'ss_min', 'ss_max', 'ff_min', 'ff_max', 'source'):   # newer measurement
+                    if k_ in o_:
+                        base[k_] = o_[k_]
+                t_ = o_.get('target_ss', c.get('ss_max', c['ss_mean']))
+                base.update(target_ss=t_, target_ff=o_.get('target_ff', c.get('ff_max', c['ff_mean'])), over_target=False,
+                            target_basis=f"RE-PLANNED: {o_.get('reason', '')} (measured SS {c['ss_min']}..{c['ss_max']}); "
+                                         f"IO skew +{ovr_extra[master]} ps (OCV x (target - cap {C.LINT_CAP_PS:.0f}))",
+                            replanned=True)
             return base
         base.update(ss=tgt, ff=base['target_ff'], ss_min=round(tgt * 0.95, 1), ss_max=round(tgt * 1.10, 1),
                     ff_min=round(base['target_ff'] * 0.95, 1), ff_max=round(base['target_ff'] * 1.10, 1),
@@ -167,6 +190,12 @@ def main():
         fl = fwd_links(d)
         fb = set(d.get('fclk_buses', []))
         pb = set(d.get('path_buses', []))
+        ps_ = set(d.get('pin_stage_buses', []))      # HBM r19b: a station abuts the receiving pin (+1 hop)
+        rl_ = {(r[0], r[1]) for r in d.get('relay_ends', [])}     # HBM r22: relay abutting (bus, block instance) pin
+        relay_out = set()
+        rlc_ = defaultdict(int)
+        for r in d.get('relay_ends', []):
+            rlc_[r[0]] += 1
         plan_intra = {r: v['intra_budget_ps'] for r, v in (plan or {}).get('regions', {}).items()}
         sink_ins = (plan or {}).get('sink_insertion', {})
         clk_port = defaultdict(list)
@@ -190,8 +219,9 @@ def main():
         for r, l in per_region.items():
             have = [(x[0], x[1]) for x in l if x[0]]
             if have:
-                region_flop[(name, r)] = (round(max(i[0] + L_['ss'] for i, L_ in have), 1),
-                                          round(max(i[1] + L_['ff'] for i, L_ in have), 1))
+                e_ = ((plan or {}).get('regions', {}).get(r, {}) or {}).get('early_branch_ps', 0.0)   # early branch:
+                region_flop[(name, r)] = (round(max(i[0] + L_['ss'] for i, L_ in have) + e_, 1),          # flops stay
+                                          round(max(i[1] + L_['ff'] for i, L_ in have) + e_, 1))          # aligned
         for it in d['insts']:
             rec = M.setdefault(it[1], dict(master=it[1], kinds=set(), dies={}, size_um=[it[7], it[8]], ports={},
                                             clock=dict(ports=set(), regions=set(), domains=set(), entry_ss=[], entry_ff=[],
@@ -230,6 +260,9 @@ def main():
                 ld = d['by'][e[0]]
                 L, basis = C.pin_dist(d, drv, eps[0][1], ld, e[1])
                 kls, skew = classify(d, drv, ld, reg, trees, plan_intra, fl, bid in fb)
+                ex_ = ovr_extra.get(drv[1], 0.0) + ovr_extra.get(ld[1], 0.0)
+                if kls not in ('fwd', 'fwd-unlinked') and ex_:
+                    skew = round(skew + ex_, 1)
                 # planned die stations: S81 places every station as an instance (1 hop); the HBM die prices the
                 # wire stages of its path segments at ceil(L / 430.56) (hbm_accel_die_fp LINK_STAGE_UM)
                 if bid not in pb:
@@ -238,6 +271,15 @@ def main():
                     plan_st = 1 + math.ceil(max(0.0, L - 359.0) / 412.0)   # inter + intra reach (generator seg_stages)
                 else:
                     plan_st = max(1, math.ceil(L / LINK_STAGE_UM))
+                if bid in ps_:
+                    plan_st += 1
+                if d.get('relay_rule'):   # HBM r22 rule: a relay at every hardened-block end of a > 100 um pin segment
+                    for it_, pt_ in ((drv, eps[0][1]), (ld, e[1])):
+                        if L > PIN_LAST_UM and it_[2] not in ('waypoint', 'phy') and cls not in ('phy_dfi',):
+                            rl_.add((bid, it_[0]))
+                            relay_out.add((bid, it_[0], pt_))
+                    rlc_[bid] = sum(1 for r_ in relay_out if r_[0] == bid)
+                plan_st += rlc_.get(bid, 0)
                 for me, port, peer, dirn in ((drv, eps[0][1], ld, 'out'), (ld, e[1], drv, 'in')):
                     pr = M[me[1]]['ports'].setdefault((port, dirn), dict(port=port, dir=dirn, bits=0, classes=set(), neighbours=set(),
                                                                        L=0.0, basis=set(), skew_cls=set(), skew=0.0, cdc=False,
@@ -256,9 +298,12 @@ def main():
                         pr['fanout'] = max(pr['fanout'], fan)
                     sev = C.WIRE_SS_PS_PER_UM * L / plan_st + skew
                     if pr['worst'] is None or sev > pr['worst'][0]:
-                        pr['worst'] = (sev, L, skew, kls, f'{name}:{me[0]}<->{peer[0]}', basis, plan_st)
+                        pr['worst'] = (sev, L, skew, kls, f'{name}:{me[0]}<->{peer[0]}', basis, plan_st,
+                                       PIN_LAST_UM if ((bid in ps_ and dirn == 'in') or (bid, me[0]) in rl_) else None)
                     pr['L'] = max(pr['L'], L)
                     pr['basis'].add(basis)
+        if d.get('relay_rule'):
+            (out / f'relay_ends_{name}.json').write_text(json.dumps(sorted(list(r) for r in relay_out), indent=0) + '\n')
     # tiles (S81-PH slab compositions)
     tiles = json.loads(Path(a.tiles).read_text()) if a.tiles else {}
     for tm, t in tiles.get('tiles', {}).items():
@@ -301,7 +346,7 @@ def main():
                 if kls == 'cdc':
                     pr['cdc'] = True
                 elif pr['worst'] is None or sev > pr['worst'][0]:
-                    pr['worst'] = (sev, L, skew, kls, e['what'], e.get('basis', 'composition'), 1)
+                    pr['worst'] = (sev, L, skew, kls, e['what'], e.get('basis', 'composition'), 1, None)
                     pr['L'] = max(pr['L'], L)
     # finalise
     summary, infeasible = [], []
@@ -322,8 +367,8 @@ def main():
                            note='different frequency domain: async / ratio FIFO; set_max_delay -datapath_only')
                 ports.append(row)
                 continue
-            sev, L, skew, kls, where, basis, plan_st = pr['worst']
-            b = budgets(L, skew, pr['period'], plan_st)
+            sev, L, skew, kls, where, basis, plan_st, last_ = pr['worst']
+            b = budgets(L, skew, pr['period'], plan_st, last_)
             row.update(timing='sync', length_um=round(L, 1), length_basis=basis, skew_class=kls, skew_ps=skew,
                        hold_io_ps=C.HOLD_IO_SKEW_PS, worst_instance=where, also_cdc=pr['cdc'], **b)
             if dirn == 'out' and pr['bits'] == 1 and pr['fanout'] > C.MAX_FANOUT_CTRL:

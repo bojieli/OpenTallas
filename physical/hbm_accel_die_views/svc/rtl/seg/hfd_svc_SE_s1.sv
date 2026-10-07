@@ -79,7 +79,7 @@ module hfd_svc_SE_s1 (
   assign ar1_kcv = 1'b0; assign ar1_kcd = 40'd0;
   assign ar1_icv = 1'b0; assign ar1_icd = 40'd0;
   ot_svs_arb #(.S(1), .KVI(-1), .IKI(-1)) u_ar1 (.ck(c), .rn(rn), .sv(ar1_sv), .sd(ar1_sd), .rq_take(ar1_take), .kvc_v(ar1_kcv), .kvc_d(ar1_kcd), .kv_take(ar1_kt), .ikc_v(ar1_icv), .ikc_d(ar1_icd), .ik_take(ar1_it), .done({dn7_o, dn6_o, dn5_o, dn4_o}), .iss_v(ar1_iv), .iss_d(ar1_id));
-  ot_svs_asm #(.SLOT(1)) u_as2 (.ck(c), .rn(rn), .sv(as2_sv), .sq(as2_sq), .wsv(as2_wsv), .wsq(as2_wsq), .k_take(as2_kt), .w_take(as2_wt), .line(as2_line));
+  ot_svs_asm #(.SLOT(2)) u_as2 (.ck(c), .rn(rn), .sv(as2_sv), .sq(as2_sq), .wsv(as2_wsv), .wsq(as2_wsq), .k_take(as2_kt), .w_take(as2_wt), .line(as2_line));
   wire fck2; ot_svc_fclk_buf u_fc2 (.a(c), .y(fck2));
   assign l2 = {fck2, fck2, fck2, as2_line};
   ot_svs_lane u_ln4 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln4_wr_v), .wr_tag(ln4_wr_tag), .wr_beat(ln4_wr_beat), .wr_data(ln4_wr_data), .w_room(ln4_w_room), .o_v(ln4_v), .o_d(ln4_d), .room_q(ln4_rq));

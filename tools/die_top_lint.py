@@ -660,14 +660,14 @@ def endpoint_dirs(die, real, by, bus, j):
     mst = by[inst].master
     if mst in real:
         rb = real[mst]
-        lo = 0
-        if '@' in port:         # HBM r16j: slice lo:hi of a real port (svc band <- PHY dfi range)
-            port, rng = port.split('@')
-            lo = int(rng.split(':')[0])
+        idx = None
+        if '@' in port:         # HBM r16j / r23: bit slice(s) of a real port (svc band <- PHY dfi range; split station)
+            idx = H.port_idx(port)
+            port = H.port_base(port)
         names = rb['binding'].get(port)
         if names is None:
             return None, ('port_not_in_binding', port)
-        names = list(names[lo:lo + bits])
+        names = [names[i] if i < len(names) else None for i in idx] if idx else list(names[:bits])
         seg, pins = [], []
         for i in range(bits):
             pn = names[i] if i < len(names) else None
@@ -1935,7 +1935,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         generator_sha256=sha_gen(die, tool.split()[0]), generator_tag=gen_tag(tool.split()[0], gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
         qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
-        lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
+        lint_tool_sha256=sha('tools/die_top_lint.py'), variant=H._jsonable(m.get('variant')) if die == 'hbm' else m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
                     real_instances=sum(it.master in real for it in m['insts']),

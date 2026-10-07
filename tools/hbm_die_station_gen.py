@@ -97,12 +97,16 @@ def rng(bits):
 
 
 class Emit:
-    def __init__(self, rec, fcm, mutant=False, margin=False, wchk=False, pin_stages=1, fdly=0, ldly=0):
+    def __init__(self, rec, fcm, mutant=False, margin=False, wchk=False, pin_stages=1, fdly=0, ldly=0, fwd_rc=False,
+                 plreg=False, rsplit=False):
         self.rec, self.fcm, self.n = rec, fcm, 0
         self.wchk = wchk              # ot_meso_fifo WCHK=1 (chunked data-ring write, 0 cycles; see --wchk)
         self.pin_stages = pin_stages  # --margin drive(): registers per ck-domain output (1 = the pin register only)
         self.fdly = fdly              # forward-slice FDLY override (0 = the library default)
         self.ldly = ldly              # launch-slice LDLY override (0 = the library default)
+        self.fwd_rc = fwd_rc          # forward slices re-captured at the output face (ot_hbm_stn_fwd RC=1, +1 cycle)
+        self.plreg = plreg            # meso: registered read-pointer placement (ot_meso_fifo PLREG=1, 0 cycles)
+        self.rsplit = rsplit          # meso: half-select readout flops (ot_meso_fifo RSPLIT=1, 0 cycles)
         self.margin = margin          # owner margin rule: register every face pin of a meso crossing (see --margin)
         self.body, self.sdc, self.map = [], [], {}
         self.clk_in, self.clk_out = [], []        # (port, idx) forwarded clock inputs / outputs
@@ -153,6 +157,7 @@ class Emit:
         w = len(ibits)
         src = self.mut([(ip, i) for i in ibits])
         fd = f', .FDLY({self.fdly})' if self.fdly else ''
+        fd += ', .RC(1)' if self.fwd_rc else ''
         self.body.append(f'  ot_hbm_stn_fwd #(.W({w}){fd}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(src)}), '
                          f'.fclk_o({op}[{oclk}]), .d_o({rng([(op, i) for i in obits])}));')
         self.clk_in.append((ip, iclk))
@@ -170,6 +175,8 @@ class Emit:
         self.body.append(f'  wire [{w - 1}:0] {wn};')
         ri = ', .RI(1), .RDREG(1), .NOBP(1), .CRDREG(1), .OBYP(1)' if self.margin else ''
         ri += ', .WCHK(1)' if self.wchk else ''
+        ri += ', .PLREG(1)' if self.plreg else ''
+        ri += ', .RSPLIT(1)' if self.rsplit else ''
         self.body.append(f'  ot_hbm_stn_meso #(.W({w}){ri}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
                          f'.ck(ck[0]), .rst_n(rst[0]), .d_o({wn}));')
         self.clk_in.append((ip, iclk))
@@ -182,6 +189,7 @@ class Emit:
         u = self.name('lau')
         w = len(obits)
         ld = f', .LDLY({self.ldly})' if self.ldly else ''
+        ld += ', .RC(1)' if self.fwd_rc else ''
         self.body.append(f'  ot_hbm_stn_launch #(.W({w}){ld}) {u} (.ck(ck[0]), .d_i({{{", ".join(reversed(self.mut(srcs)))}}}), '
                          f'.fclk_o({op}[{oclk}]), .d_o({rng([(op, i) for i in obits])}));')
         self.clk_out.append(((op, oclk), ('ck', 0), False))
@@ -469,8 +477,12 @@ def main(argv=None):
                     'register; each extra stage +1 cycle on that output, placed by common/face_chain_place.tcl)')
     ap.add_argument('--fdly', type=int, default=0, help='forward slices: FDLY kept inverter pairs (0 = library default)')
     ap.add_argument('--ldly', type=int, default=0, help='launch slices: LDLY kept inverter pairs (0 = library default)')
+    ap.add_argument('--fwd-rc', action='store_true', help='forward and launch slices: second flop at the output face '
+                    '(ot_hbm_stn_fwd / ot_hbm_stn_launch RC=1): +1 cycle per crossing, face-to-face wire becomes a full-period arc')
+    ap.add_argument('--plreg', action='store_true', help='meso FIFOs: registered read-pointer placement (PLREG=1, 0 cycles)')
+    ap.add_argument('--rsplit', action='store_true', help='--margin meso FIFOs: half-select readout flops (RSPLIT=1, 0 cycles)')
     a = ap.parse_args(argv)
-    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly)
+    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly, fwd_rc=a.fwd_rc, plreg=a.plreg, rsplit=a.rsplit)
     fcm = fc_map()
     pdir = Path(a.ports)
     out = Path(a.out)
@@ -499,7 +511,9 @@ def main(argv=None):
                           meso=sum('ot_hbm_stn_meso' in l for l in E.body),
                           launch=sum('ot_hbm_stn_launch' in l for l in E.body), outputs_mapped=len(E.map),
                           **({'wchk': True} if a.wchk else {}), **({'pin_stages': a.pin_stages} if a.pin_stages != 1 else {}),
-                          **({'fdly': a.fdly} if a.fdly else {}), **({'ldly': a.ldly} if a.ldly else {}))
+                          **({'fdly': a.fdly} if a.fdly else {}), **({'ldly': a.ldly} if a.ldly else {}),
+                          **({'fwd_rc': True} if a.fwd_rc else {}), **({'plreg': True} if a.plreg else {}),
+                          **({'rsplit': True} if a.rsplit else {}))
     if a.master and (out / 'summary.json').exists():      # a partial emit updates the other masters' rows in place
         summary = {**json.loads((out / 'summary.json').read_text()), **summary}
     (out / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
