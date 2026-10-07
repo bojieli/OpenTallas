@@ -1,0 +1,7 @@
+RED_SAFE cycles=20000 events=4050 mismatches=0 busy_low_while_ref_busy=0 busy_end ref=1 dut=1
+RED_SAFE PASS
+RED_SAFE cycles=4000 events=745 mismatches=1652 busy_low_while_ref_busy=0 busy_end ref=1 dut=1
+[8007000] %Fatal: tb_red_safe.sv:63: Assertion failed in tb_red_safe: RED_SAFE FAIL
+# pos: tb_red_safe NCYC 20000 seed 1 (Verilator 5.050, EPYC2), DUT = 16 x slice64_c12s + top1024_c12s vs reference c12m reducer, outputs compared at +4 cycles: PASS
+# neg: +define+OT_NEG_RED_PREG (top tags one stage short), NCYC 4000: FAIL (1652 mismatching cycles) as required
+# cycle cost: +4 per reduction (slice in +1, slice out +1, top lv_in +1, top out +1); throughput unchanged
