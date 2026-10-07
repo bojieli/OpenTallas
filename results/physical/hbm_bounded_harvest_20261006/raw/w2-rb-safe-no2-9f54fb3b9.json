@@ -1,0 +1,120 @@
+{
+ "name": "w2-rb-safe-no2-9f54fb3b9",
+ "spec": {
+  "name": "w2-rb-safe-no2-9f54fb3b9",
+  "block": "ot_hbm_native_frame_station_rb_NO2_SAFE",
+  "owner": "Claude:tk-hbm-w2",
+  "purpose": "W2 rb station SAFE (registered permission decision, REL_REG, margin hold model), route 730 / sign-off 833.333, in parallel with r4",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-hbm-w2-20261006",
+   "commit": "9f54fb3b996c3d2950f839d36e6a4741f58f2b1a",
+   "paths": [
+    "tools",
+    "rtl/common",
+    "physical/hbm_w2_rb_station_20261006",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter",
+    "rtl/hbm_accel/integrated_20261005",
+    "rtl/gpu/w6",
+    "rtl/test/hbm_accel/w2_rb_veto_20261006",
+    "physical/hbm_w2_check_station_20261006"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_gate_safe",
+     "cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --out {RUN}/gate",
+     "expect": "pass",
+     "ok": "python3 -c \"import json,sys;sys.exit(not json.load(open('{RUN}/gate/terminal.json'))['passed'])\"",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "neg_frame_check_removed",
+     "cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --neg-only S3_frame_check_removed --out {RUN}/neg_s3",
+     "expect": "fail",
+     "fail_regex": "(?m)^FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "cmd": "python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME} --no 2 --safe --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.035 --threads 16 --tag tk_W2_safe ",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "clk_sm",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME} --no 2 --safe --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.035 --threads 16 --tag tk_W2_safe",
+    "ok": "test -s {RUN}/routes/{NAME}/terminal.json && grep -q DRIVER_RETURNED {RUN}/routes/{NAME}/terminal.json && grep -q '\"exit_code\": 0' {RUN}/routes/{NAME}/terminal.json",
+    "logs": [
+     "{RUN}/routes/{NAME}/launch.json"
+    ]
+   },
+   "signoff": {
+    "cmd": "python3 physical/hbm_w2_rb_station_20261006/signoff.py --run {RUN}/routes/{NAME}",
+    "ok": "test -s {RUN}/routes/{NAME}/signoff.json"
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/signoff.json {RUN}/routes/{NAME}/argv.json {RUN}/record/ && cp {RUN}/gate/terminal.json {RUN}/record/gate_terminal.json && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "metrics_cmd": "python3 -c \"import json,glob;d=json.load(open('{RUN}/routes/{NAME}/signoff.json'));a=d['accept'];drc=None\nfor f in glob.glob('{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json'):\n drc=json.load(open(f)).get('detailedroute__route__drc_errors',drc)\nprint(json.dumps(dict(ss_ps=a['SS_setup_ps'],ff_ps=a['FF_hold_ps'],drc=drc)))\"",
+   "checks": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/w2_rb_safe_20261006/no2"
+   }
+  ],
+  "cycles_added": 15,
+  "merge_target": "claude/takeover-hbm-w2-20261006"
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/w2-rb-safe-no2-9f54fb3b9.json",
+ "created": "2026-10-06T21:02:17-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 0,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {
+  "bench_exact_gate_safe": {
+   "expect": "pass",
+   "rc": 1,
+   "ok": false,
+   "tail": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-9f54fb3b9/gate FAIL\n"
+  }
+ },
+ "hosts_tried": [
+  "ot-agidock128"
+ ],
+ "events": [
+  "2026-10-06T21:02:17-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/w2-rb-safe-no2-9f54fb3b9.json",
+  "2026-10-06T21:02:49-07:00 source 9f54fb3b996c synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-9f54fb3b9/src",
+  "2026-10-06T21:04:35-07:00 launched bench_exact_gate_safe (attempt 1) on ot-agidock128",
+  "2026-10-06T21:05:45-07:00 NEEDS_RTL: bench_exact_gate_safe expected PASS but rc=1",
+  "2026-10-06T21:06:12-07:00 bench_exact_gate_safe re-judged under bench-regex-multiline-20261006: verdict stands"
+ ],
+ "updated": "2026-10-06T21:06:12-07:00",
+ "wait": null,
+ "host": "ot-agidock128",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-9f54fb3b9",
+ "commit_full": "9f54fb3b996c3d2950f839d36e6a4741f58f2b1a",
+ "stage_key": "bench_exact_gate_safe",
+ "stage_tag": "bench_exact_gate_safe.a1",
+ "stage_started": "2026-10-06T21:04:35-07:00",
+ "unreachable": 0,
+ "reason": "bench_exact_gate_safe expected PASS but rc=1",
+ "fix_requeued": [
+  "bench-regex-multiline-20261006"
+ ]
+}

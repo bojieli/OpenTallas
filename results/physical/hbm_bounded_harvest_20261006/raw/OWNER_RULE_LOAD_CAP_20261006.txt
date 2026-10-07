@@ -1,0 +1,47 @@
+CLAUDE FLEET RULE 2026-10-06 (binding for all Claude agents): over-subscription makes every job slower. EPYC1 hit load 397 on 128 cores (3.1x).
+1. Before launching, check `uptime` and `free -g` on the target. Launch only if load1 + your job's threads <= 1.2 x cores (EPYC1/EPYC2 154, PVE1 34, AGIdock 77) and free RAM >= your job's peak + 32 GB. Otherwise wait (background until-loop) or use another host.
+2. KILL YOUR OWN superseded routes now: any pre-margin-rule (833 ps target) route of a block that now has a margin version running can't be adopted under the +60/+15 rule. Keep a pre-margin route only if it is the ONLY route of that block, or it's in detailed route with < 2 h left.
+3. 2 variants per block when the host is loaded, 3-4 only when the fleet is under the cap.
+4. AGIdock has ~60 idle cores but little RAM: use it for jobs <= 20 GB (GRT-only, small views, benches). ORFS global routing uses ~1 core: don't reserve 16 threads for it.
+5. EPYC2 scratch on /srv/opentallas-scratch2 only.
+
+UPDATE (owner discussion, 2026-10-06): VARIANT LIMIT = 2 per block (one main config + one alternate). This replaces the "3-4 variants" wording in every earlier rule. Margin-first designs shouldn't need setting sweeps. A third run only after both fail, and then with an RTL fix, not a parameter sweep. Kill excess variants now, keeping the two most advanced margin versions per block.
+
+UPDATE 2 (OWNER, 2026-10-06; supersedes the 2-variant limit and the +60 acceptance line):
+- ONE variant per block. Kill alternates now, keeping the single most advanced margin-version route per block.
+- Design target: +60 ps planned SS slack (route at <= 770 ps, sign off at 833.333). ACCEPT at SS >= +40 ps (and FF >= +15) as closed.
+- If a route lands below +40: do NOT re-sweep settings or squeeze the route. Change the RTL: pipeline more, split the block into more/smaller blocks, add kept copies. Then exact bench, then one route.
+- Never close by squeezing the last picoseconds; that is fragile at die scale.
+
+NEW HOST 2026-10-06: ot-epyc3 (84.32.49.237; ssh alias ot-epyc3, user ubuntu). 64 cores / 128 threads, 1.1 TB RAM. Cap: load1 <= 154.
+DISK RULE ON EPYC3: ALL work on NVMe. /srv/opentallas -> /srv/opentallas-scratch/opentallas (NVMe 2.9 TB); /srv/opentallas-scratch2 (NVMe 2.9 TB); docker data-root on NVMe. Nothing under / or /home except code checkouts < 5 GB.
+RESERVED: ot-epyc3 is the die-top host (Qwen die-top detailed-route pilot first, then S81 and HBM die-top). Other agents may use it only for jobs <= 16 threads while no die-top run is active, and must yield.
+Same toolchain as EPYC2: Verilator 5.032, Yosys 0.52, Icarus 12, openroad/orfs:asap7lock sha256:16470cea...
+
+MESSAGING CODEX (2026-10-06): Codex agents (Kant, Turing, Socrates, Carson, Gibbs, Mencius, Zeno, Fermat, ...) do NOT read handoff files unless their main thread is told. A file alone is NOT delivery. For anything a Codex agent must act on: write your CLAUDE_TO_<NAME>_*.txt file AND append ONE line to /tmp/claude-review-20261003/CLAUDE_TO_CODEX_DELIVERY_QUEUE.txt:
+  <ISO time> | <to NAME> | <file name> | <one-sentence ask>
+The main Claude session types queued lines into Codex's tmux pane hourly and marks them DELIVERED. Never type into Codex's tmux pane yourself.
+
+MESSAGING CODEX, REVISED (OWNER, 2026-10-06; replaces the queue rule above):
+1. Claude makes ALL technical/design decisions on its own items. NEVER ask a Codex agent to decide anything and never wait on a Codex reply. If a fix touches Codex-owned RTL, implement it yourself as a default-off parameter in your branch, with an exact bench, and send Codex a NOTICE.
+2. Notices to Codex are delivered IMMEDIATELY: SendMessage to "main" with one line starting "CODEX NOTICE:" and the addressee. The main session types it into Codex's pane right away. Don't use the queue file or the hourly cron for this. Never type into Codex's tmux pane yourself.
+
+TOKEN THRIFT (OWNER, 2026-10-06; Claude now also carries Codex's streams): wait on long runs with ONE background until-loop per job, which exits on the terminal file/rc (one notification). No polling loops, no repeated status checks, and read only log tails/summaries, never whole logs. Terse STATUS and messages. When a phase ends and your context is very large, finish with a crisp report rather than continuing indefinitely; the main session starts a fresh agent for the next phase.
+
+CODEX WIND-DOWN (2026-10-06 ~08:45): Codex is near its rate limit and stopped new work; Claude takeover agents own its streams. Send "CODEX NOTICE:" ONLY if Codex must stop or avoid something (e.g. don't touch X). FYI-only notices: write the file and log it; don't send.
+
+CLAUDE ONLY (OWNER, 2026-10-06 ~09:00): ALL Codex agents are fully stopped. Claude is the only agent in this project. Do not send any notices to Codex. Take over anything you depend on that a Codex agent owned (preserve its scratch/objects; no blind deletion).
+MAXIMISE USE OF COMPUTE: the fleet has free capacity (EPYC1 ~60/128, AGIdock ~11/64, EPYC3 ~2/128). Launch your next independent route/bench as soon as it's ready, under the 1.2 x cores cap. EPYC3: until the Qwen die-top pilot starts, any agent may use up to 64 threads / 400 GB there (NVMe paths only). Once the pilot is running it has priority, and others must not launch new EPYC3 jobs.
+
+LOAD REBALANCE (14:20): EPYC2 is at 226/128 (1.76x) while EPYC3 is at 18/128 and EPYC1 at 74/128. NO NEW LAUNCHES ON EPYC2 until it's below 154. New routes go to EPYC3 first (NVMe paths /srv/opentallas-scratch*, toolchain + ORFS image identical), then EPYC1. A job on EPYC2 that hasn't reached CTS yet may be killed and relaunched on EPYC3 if it was started in the last hour.
+
+CLOSURE LOOP HOSTS (2026-10-06 ~19:50): the loop balances load across hosts (a job waiting 10 min or more migrates to a host with room). In job JSON, list ALL allowed hosts (EPYC3, EPYC1, EPYC2, PVE1 / AGIdock if it fits in memory); don't restrict to EPYC3 only. EPYC3 is at ~146, EPYC1/2 at ~40.
+
+TOOLCHAIN PARITY (2026-10-06 20:20): all 5 hosts now run ORFS image openroad/orfs:asap7lock = sha256:16470cea... (AGIdock had a different build, 826792fc, until 20:20; it's kept as asap7lock-agidock-old-826792fc). Verilator 5.032 / Yosys 0.52 / Icarus 12 on EPYC1/2/3 + AGIdock; PVE1 is ORFS-only (no Verilator/Yosys). A closure verdict from AGIdock ORFS runs before 20:20 used the old image: re-sign it on the fleet image before adopting it.
+
+LOAD REBALANCE 2 (21:15): EPYC3 is at 298/128 (2.3x) with 110 GB free while EPYC2 is at 26/128 with 888 GB free (PVE1 and AGIdock nearly idle). NO NEW LAUNCHES ON EPYC3 by any agent or the closure loop until it's below 154. EPYC3 is the die-top host: the Qwen die-top GRT/DRT needs its memory. Use EPYC2 first, then EPYC1 / PVE1 (ORFS only) / AGIdock (small jobs). Jobs on EPYC3 not yet past CTS may be relaunched on EPYC2.
+
+OWNER (2026-10-06 ~21:35): LOAD IS NOT THE LIMIT, MEMORY IS. Replaces the 1.2x-cores load cap and LOAD REBALANCE 2:
+- Admit jobs while load1 <= ~3x cores (EPYC 384, PVE1 84, AGIdock 192) AND free RAM >= job peak + 10% of host RAM (min 32 GB). Never risk OOM: memory headroom is the hard rule.
+- PRIORITY: element/block closure routes first. The Qwen die-top route is PAUSED; EPYC3's 500 GB reserve is lifted, so EPYC3 takes element jobs too.
+- Keep queues full so work continues through usage-limit outages.

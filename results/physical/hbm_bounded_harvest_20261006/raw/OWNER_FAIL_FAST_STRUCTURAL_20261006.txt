@@ -1,0 +1,6 @@
+OWNER DIRECTIVE (2026-10-06 ~21:00): if the CURRENT route of a redesigned block misses (SS < +15 or FF < +15 after the automatic hold ECO), the NEXT step is an AGGRESSIVE structural fix that accepts a performance penalty. No more minimal attempts. Pick whatever closes fastest:
+- more pipeline stages on every path in the failing classes, plus everything within 100 ps of them (+1..+3 cycles OK);
+- split the block further (<= ~0.5 mm leaves) with registered hops;
+- narrow or halve a datapath and run it 2x longer (II 2), or put a non-critical unit on a slower / half-rate clock with a registered CDC;
+- convert long combinational reductions and shift-register delay lines into pipelined trees / SRAM FIFOs.
+Price the cost (cycles, then % of AR/MTP) in the block record and report it. A few % of headline per block is acceptable; flag anything above ~3% to the main session BEFORE adopting it. Keep exactness transaction-level and the negative controls failing.
