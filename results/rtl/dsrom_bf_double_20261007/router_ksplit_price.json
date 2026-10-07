@@ -1,0 +1,163 @@
+{
+ "schema": "opentallas.dsrom.bf-double.merge-price.v1",
+ "tool": "tools/dsrom_bf_double_price.py",
+ "geometry": "f183.60",
+ "wire": "tools/dsrom_field_reprice_r8 wire_fn (per region, composition frame)",
+ "base": "/tmp/claude-1000/bfx/sub_base_f198",
+ "merged": "/tmp/claude-1000/bfx/sub_k",
+ "bindings": {
+  "base": "results/uarch/dsrom_bf_double_binding_20261007/base_f198",
+  "merged": "results/uarch/dsrom_bf_double_binding_20261007/shared4_f198"
+ },
+ "all_exact": true,
+ "nodes": {
+  "L0.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 507,
+    "meas": 385,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -130
+  },
+  "L1.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 507,
+    "meas": 389,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -130
+  },
+  "L2.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 507,
+    "meas": 389,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -130
+  },
+  "L3.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 510,
+    "meas": 389,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -127
+  },
+  "L20.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 510,
+    "meas": 388,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -127
+  },
+  "L21.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 510,
+    "meas": 388,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -127
+  },
+  "L24.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 511,
+    "meas": 389,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": -126
+  }
+ },
+ "per_layer_delta_cycles": {
+  "L0.ffn.router": -130,
+  "L1.ffn.router": -130,
+  "L2.ffn.router": -130,
+  "L8.ffn.router": -130,
+  "L14.ffn.router": -130,
+  "L3.ffn.router": -127,
+  "L4.ffn.router": -127,
+  "L5.ffn.router": -127,
+  "L6.ffn.router": -127,
+  "L7.ffn.router": -127,
+  "L9.ffn.router": -127,
+  "L10.ffn.router": -127,
+  "L11.ffn.router": -127,
+  "L12.ffn.router": -127,
+  "L13.ffn.router": -127,
+  "L15.ffn.router": -127,
+  "L16.ffn.router": -127,
+  "L17.ffn.router": -127,
+  "L18.ffn.router": -127,
+  "L19.ffn.router": -127,
+  "L20.ffn.router": -127,
+  "L21.ffn.router": -127,
+  "L22.ffn.router": -127,
+  "L23.ffn.router": -127,
+  "L25.ffn.router": -127,
+  "L26.ffn.router": -127,
+  "L27.ffn.router": -127,
+  "L29.ffn.router": -127,
+  "L30.ffn.router": -127,
+  "L31.ffn.router": -127,
+  "L33.ffn.router": -127,
+  "L34.ffn.router": -127,
+  "L35.ffn.router": -127,
+  "L37.ffn.router": -127,
+  "L38.ffn.router": -127,
+  "L39.ffn.router": -127,
+  "L24.ffn.router": -126,
+  "L28.ffn.router": -126,
+  "L32.ffn.router": -126,
+  "L36.ffn.router": -126
+ },
+ "measured": "field vehicle RTL (Verilator, 2-state), bit-exact per region; FP8 a_proj phase from the as-built qelem10 regions (unchanged by the merge)"
+}

@@ -62,6 +62,7 @@ def main():
             tot, ok = RP.seq_cycles(phs, lambda r: W[r])
             tab.setdefault(f"L{L}.{n}", {})[tag] = dict(total=tot, meas=RP.seq_cycles_noloc(phs), phases=len(phs),
                                                        exact=ok)
+    tab = {k: v for k, v in tab.items() if "merged" in v}     # nodes the merged run measured
     for k, v in tab.items():
         v["delta_cycles"] = v["merged"]["total"] - v["base"]["total"]
     # representative layer -> every layer of its type (tools/dsrom_1m_measure.TYPES)
