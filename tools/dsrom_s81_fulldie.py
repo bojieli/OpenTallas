@@ -86,8 +86,9 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN
     DIE_KIND, GEN = die, gen
+    HOP_PLAN = None                  # --hop-fix plans are per die
     # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
     CFG_LEF = CFG_LEF_V2 if gen == 'r8' else CFG_LEF_V1
     REAL_FILES.clear()
@@ -2446,7 +2447,59 @@ class Chains:
         return out
 
 
+def MESO_P():
+    return ", .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)" if MESO_D8 else ''
+
+
+HOP_FWD_CLS = ('lane',)
+HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in', 'fclk', 'phy_dfi',
+            'hbm_read')
+
+
+def _anchor(Mx, it, port):
+    """die coordinates of a port's anchor (generated face centre) on a placed instance; None for real macros"""
+    p = Mx.ports.get(port) if Mx is not None else None
+    if not p or p[0] != 'face':
+        return None
+    _, _, face, _, c, _ = p
+    ax, ay = {'N': (c, Mx.h), 'S': (c, 0.0), 'E': (Mx.w, c), 'W': (0.0, c)}[face]
+    if it.orient in ('MY', 'R180'):
+        ax = it.w - ax
+    if it.orient in ('MX', 'R180'):
+        ay = it.h - ay
+    return it.x + ax, it.y + ay
+
+
+def hop_plan(m):
+    """pass 1 of --hop-fix: every driver -> load hop (pin anchors) over its reach"""
+    M = masters(m, 1)
+    by = {it.name: it for it in m['insts']}
+    plan = {}
+    for bid, cls, bits, eps in m['buses']:
+        if cls in HOP_SKIP or len(eps) < 2 or eps[0][0] == 'TOP':
+            continue
+        d = by[eps[0][0]]
+        a = _anchor(M.get(d.master), d, eps[0][1]) or (d.x + d.w / 2, d.y + d.h / 2)
+        R = HOP_R_FWD if cls in HOP_FWD_CLS else HOP_R_CC
+        for e in eps[1:]:
+            if e[0] == 'TOP':
+                continue
+            l_ = by[e[0]]
+            b = _anchor(M.get(l_.master), l_, e[1]) or (l_.x + l_.w / 2, l_.y + l_.h / 2)
+            L = _mh(a, b)
+            if L > R:
+                plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
+    return plan
+
+
 def build_r8(variant=None):
+    global HOP_PLAN
+    if HOP_FIX and HOP_PLAN is None:
+        HOP_PLAN = {}
+        m0 = build_r8(variant)
+        finalize_r8(m0)
+        HOP_PLAN = hop_plan(m0)
+        RLY_FACES.clear()
     variant = dict(variant or {})
     W, H = DIE
     insts, regions, notes = [], [], []
@@ -2679,7 +2732,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', link_fix=LINK_FIX, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', link_fix=LINK_FIX, hop_fix=HOP_FIX, meso_d8=MESO_D8, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3034,6 +3087,8 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    if HOP_FIX and HOP_PLAN:
+        _hop_fix(m, P)
     # ---------------- clocks, resets, top ports
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
@@ -3093,6 +3148,13 @@ LANES_VCH, LANES_CORR = 26, 16
 VCH_INTERLEAVE = False          # --vch-interleave (S81-RERUN, default off): strided VCH lane order
 CORR_INTERLEAVE = False         # --corr-interleave (S81-RERUN v5, default off): strided HC-corridor lane order
 CORR_LANE_STRIDE = 5            # coprime with LANES_CORR (16)
+HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): stations on every die hop over its reach,
+                                #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
+HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
+HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
+HOP_R_FWD = 540.0               # forwarded hop: fwd_hop2_v11 closed 440 um at +374 ps SS (1.135 ps/um)
+MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
+                                #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
                                 #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
@@ -3115,7 +3177,7 @@ CC_REACH = LINK_STAGE_UM
 def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
-    return r + ('k' if LINK_FIX else '')        # --link-fix records apart (r9m215k)
+    return r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
 
 
 def set_cc_reach(um):
@@ -3193,6 +3255,140 @@ def _bank_nets(m):
                         if f'b{f_}{inst[1:]}' in by:
                             add.append((f'b{f_}{inst[1:]}', 'ck' if cls == 'col_clock' else 'rs'))
             B[i] = (bid, cls, bits, eps + add)
+
+
+def _hop_fix(m, P):
+    """pass 2 of --hop-fix: on every planned hop, stations at equal spacing on the anchor-to-anchor L path.
+    Field (column) common-clock buses: column relays (dsfd_rly, column clock / reset); hub common-clock buses: hub
+    stations (dsfd_hstn, the driver's domain clock); forwarded lanes: forwarded stations on the lane AND its fclk."""
+    by = {it.name: it for it in m['insts']}
+    B = m['buses']
+    plan = HOP_PLAN
+    fclk_of = {}
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        if cls == 'fclk':
+            for e in eps[1:]:
+                fclk_of[(eps[0][0], e[0], e[1])] = i
+    col_ck = {b[0]: i for i, b in enumerate(B) if b[1] in ('col_clock', 'col_reset')}
+    W, H = DIE
+    rec = defaultdict(lambda: dict(hops=0, stations=0, max_um=0.0, max_added=0))
+    added_frame = defaultdict(lambda: defaultdict(int))
+    fwd_add = defaultdict(int)
+    new = []
+    for i in range(len(B)):
+        bid, cls, bits, eps = B[i]
+        if cls in HOP_SKIP or len(eps) < 2:
+            continue
+        keep = [eps[0]]
+        for e in eps[1:]:
+            key = (eps[0][0], eps[0][1], e[0], e[1])
+            if key not in plan:
+                keep.append(e)
+                continue
+            L, a, b, _ = plan[key]
+            fwd = cls in HOP_FWD_CLS
+            R = HOP_R_FWD if fwd else HOP_R_CC
+            n = math.ceil(L / (R - 20.0) - 1e-9) - 1
+            d0, l0 = by[eps[0][0]], by[e[0]]
+            reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
+            if fwd:
+                fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
+                fi_ = fclk_of.get((eps[0][0], e[0], fport)) if fport else None
+                if fi_ is None:
+                    keep.append(e)
+                    rec[cls + ':no_fclk']['hops'] += 1
+                    continue
+                fdrv = B[fi_][3][0]
+            path = [a, (b[0], a[1]), b]
+            Lp = _poly_len(path)
+            prev, cur = eps[0], a
+            fprev = fdrv if fwd else None
+            for k in range(n):
+                (cx, cy), dch = _poly_at(path, Lp * (k + 1) / (n + 1))
+                horiz = dch in 'EW'
+                if fwd:
+                    w_, h_ = stn_dims([bits], horiz)
+                else:
+                    w_, h_ = stn_dims([bits], True)
+                pl = None
+                for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60)):
+                    pl = P.near(cx, cy, w_, h_, [(EDGE, EDGE, W - EDGE, H - EDGE)], prev=cur, horiz=horiz,
+                                reach=R - 10.0, span=span, rows=rows)
+                    if pl:
+                        break
+                assert pl, (bid, e, k)
+                nm = f'g_{bid}_{e[0]}_{k}'
+                if fwd:
+                    it = P.add(Inst(nm, stn_master([bits], horiz), pl[0], pl[1], w_, h_,
+                                    {'E': 'R0', 'W': 'MY', 'N': 'R0', 'S': 'MX'}[dch], kind='stn', region='link',
+                                    domain='fwd', power_w=bits * FLOP_CLK_W * 1.5))
+                    new.append((f'{bid}_g{k}_{e[0]}', cls, bits, [prev, (it.name, 'di0')]))
+                    new.append((f'{B[fi_][0]}_g{k}_{e[0]}', 'fclk', 1, [fprev, (it.name, 'fi0')]))
+                    prev, fprev = (it.name, 'do0'), (it.name, 'fo0')
+                elif reg is not None:
+                    it = P.add(Inst(nm, f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly', region=reg,
+                                    power_w=bits * FLOP_CLK_W * 1.5))
+                    r_ = reg.split('_')[1]
+                    for cb, pn in ((f'ck_col_{r_}', 'ck'), (f'rs_col_{r_}', 'rs')):
+                        j = col_ck[cb]
+                        B[j] = (B[j][0], B[j][1], B[j][2], B[j][3] + [(it.name, pn)])
+                    new.append((f'{bid}_g{k}_{e[0]}', cls, bits, [prev, (it.name, 'i')]))
+                    prev = (it.name, 'o')
+                else:
+                    dom_ = d0.domain if d0.domain in HSTN_DOM else (l0.domain if l0.domain in HSTN_DOM else 'stream_1p2')
+                    it = P.add(Inst(nm, 'dsfd_hstn%s_%d' % ('h' if horiz else 'v', bits), pl[0], pl[1], w_, h_,
+                                    kind='hstn', region='hub', domain=dom_, power_w=bits * FLOP_CLK_W * 1.5))
+                    new.append((f'{bid}_g{k}_{e[0]}', cls, bits, [prev, (it.name, 'di')]))
+                    prev = (it.name, 'dq')
+                cur = (it.x + it.w / 2, it.y + it.h / 2)
+                by[it.name] = it
+            new.append((f'{bid}_g{n}_{e[0]}', cls, bits, [prev, e]))
+            if fwd:
+                fl = [x for x in B[fi_][3][1:] if x != (e[0], fport)]
+                B[fi_] = (B[fi_][0], 'fclk', 1, [B[fi_][3][0]] + fl)
+                new.append((f'{B[fi_][0]}_g{n}_{e[0]}', 'fclk', 1, [fprev, (e[0], fport)]))
+                fwd_add[bid[:1]] = max(fwd_add[bid[:1]], n)
+            elif reg is not None:
+                fr_ = int(reg.split('_')[1])
+                xk = 'x' if cls in ('x_lane', 'x_ctl', 'go', 'cfg', 'hb_x', 'hb_ctl') else 'r'
+                added_frame[fr_][(xk, cls)] = max(added_frame[fr_][(xk, cls)], n)
+            q = rec[cls]
+            q['hops'] += 1
+            q['stations'] += n
+            q['max_um'] = max(q['max_um'], L)
+            q['max_added'] = max(q['max_added'], n)
+        B[i] = (bid, cls, bits, keep)
+    B[:] = [b for b in B if len(b[3]) > 1 or b[1] in ('col_clock', 'col_reset')] + new
+    # inserted relays: faces toward their driver and load
+    by = {it.name: it for it in m['insts']}
+    nets_in, nets_out = {}, {}
+    for bid, cls, bits, eps in B:
+        for e in eps[1:]:
+            nets_in[e] = eps[0]
+        nets_out[eps[0]] = eps[1:]
+    cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+    for it in m['insts']:
+        if it.kind != 'rly' or not it.name.startswith('g_'):
+            continue
+        a = by[nets_in[(it.name, 'i')][0]]
+        b = by[nets_out[(it.name, 'o')][0][0]]
+
+        def fc(q):
+            dx, dy = q[0] - (it.x + it.w / 2), q[1] - (it.y + it.h / 2)
+            return ('E' if dx > 0 else 'W') if abs(dx) * it.h > abs(dy) * it.w else ('N' if dy > 0 else 'S')
+        fi, fo = fc(cen(a)), fc(cen(b))
+        if fo == fi:
+            fo = dict(N='S', S='N', E='W', W='E')[fi]
+        bits = int(it.master.split('_')[2])
+        it.master = f'dsfd_rly_{bits}_{fi}{fo}'
+        RLY_FACES[it.master] = (fi, fo)
+    for r, d in added_frame.items():
+        f = m['frames'][r]
+        f['relay_x'] = f.get('relay_x', 0) + max([v for (k, _), v in d.items() if k == 'x'] or [0])
+        f['relay_ret'] = f.get('relay_ret', 0) + sum(v for (k, _), v in d.items() if k == 'r')
+    m['hop_fix'] = dict(classes={k: dict(v, max_um=round(v['max_um'], 1)) for k, v in rec.items()},
+                        planned_hops=len(plan), fwd_rt_add=fwd_add.get('r', 0) + fwd_add.get('x', 0),
+                        reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD))
 
 
 def _col_relays(m, P):
@@ -4148,7 +4344,7 @@ def glue_rtl(m):
                      '    assign co = ck;          // column clock-tree root (option C region root)',
                      '    assign rs = rsync;',
                      '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
-                     '    ot_meso_fifo #(.W(564), .ENABLE(1\'b1)) u_x (.wclk(xf[0]), .wrst_n(xd[0]), .w_v(xd[1]), .w_rdy(wr), '
+                     f'    ot_meso_fifo #(.W(564), .ENABLE(1\'b1){MESO_P()}) u_x (.wclk(xf[0]), .wrst_n(xd[0]), .w_v(xd[1]), .w_rdy(wr), '
                      '.w_d(xd[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
                      '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
                      '    // lane stream {x0 283 | x1 266 | cc 15}; xs_v, go and cfg_go qualified by the FIFO valid',
@@ -4183,7 +4379,7 @@ def glue_rtl(m):
                         wr, wv, wd = f'wrs{j}', "1'b1", f'di{j}[{pw - 1}:0]'
                     body.append(f'    wire rv{j}, rl{j}, wf{j}, rf{j}; wire [{pw - 1}:0] rq{j};')
                     if kind == 'm2l':
-                        body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1)) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
+                        body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1){MESO_P()}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
                                     f'.w_v({wv}), .w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), '
                                     f'.r_rdy(1\'b1), .r_d(rq{j}), .w_live(), .r_live(rl{j}), .w_fault(wf{j}), .r_fault(rf{j}));')
                     else:
@@ -4215,8 +4411,10 @@ def plan_record_r8(m):
     ch = m['chains']
     fr = m['frames']
     xs, rs = m.get('x_stages', {}), m.get('r_stages', {})
-    rt = {r: xs.get(r, 0) + 2 + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + 2
-          + f.get('bank_stages', 0) + f.get('relay_x', 0) + f.get('relay_ret', 0) for r, f in fr.items()}
+    mc = 3 if MESO_D8 else 2
+    hf = m.get('hop_fix', {}).get('fwd_rt_add', 0)
+    rt = {r: xs.get(r, 0) + mc + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + mc
+          + f.get('bank_stages', 0) + f.get('relay_x', 0) + f.get('relay_ret', 0) + hf for r, f in fr.items()}
     far = max(rt, key=rt.get)
     stn = [it for it in m['insts'] if it.kind == 'stn']
     slices = sum(math.ceil(w / 512) for it in stn for w in _stn_lanes(m, it))
@@ -4244,7 +4442,7 @@ def plan_record_r8(m):
                        over_examples=over[:10], meso_fifos=meso, ratio_cdc_fifos=ratio),
         field_round_trip_cycles=dict(farthest_frame=far, cycles=rt[far], x_trunk_stages=xs.get(far),
                                      column_slot_stages=fr[far]['last_slot'] + 1, root_stages=fr[far].get('ret_stages'),
-                                     return_trunk_stages=rs.get(far), meso_crossings=2, crossing_cycles_each=2,
+                                     return_trunk_stages=rs.get(far), meso_crossings=2, crossing_cycles_each=mc, hop_fix=m.get('hop_fix'),
                                      q_bank_stages=fr[far].get('bank_stages', 0),
                                      column_relays_x=fr[far].get('relay_x', 0),
                                      column_relays_return=fr[far].get('relay_ret', 0),
@@ -4299,6 +4497,9 @@ def die_options(ap):
                     'the whole VCH width; default off)')
     ap.add_argument('--corr-interleave', action='store_true', help='r9: strided HC-corridor lane order (chains spread '
                     'over the whole corridor height; default off)')
+    ap.add_argument('--hop-fix', action='store_true', help='r9: a station on every die hop longer than its reach '
+                    '(pin anchors of a first build; default off)')
+    ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
     return ap
@@ -4310,8 +4511,9 @@ def apply_options(a):
     global VCH_INTERLEAVE, LINK_FIX
     VCH_INTERLEAVE = bool(a.vch_interleave)
     LINK_FIX = bool(a.link_fix)
-    global CORR_INTERLEAVE
+    global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
+    HOP_FIX, HOP_PLAN, MESO_D8 = bool(a.hop_fix), None, bool(a.meso_d8)
     global REV, HEAD_DIES
     REV, HEAD_DIES = a.rev, a.head_dies
     configure(a.die, a.gen)
