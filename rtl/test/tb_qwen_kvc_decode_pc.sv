@@ -98,6 +98,7 @@ module tb_qwen_kvc_decode_pc;
   while(got<sent) begin
    @(negedge clk); o_cr=pending>0; if(o_cr) pending=pending-1;
   end
+  @(negedge clk);o_cr=0;
   repeat(4) @(negedge clk);
   if(fault) fail("legal stream credit fault");
   // Invalid credit cannot mint a token; reset isolates this negative traffic.

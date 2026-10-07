@@ -8,7 +8,7 @@ def model():
     # 128 independent PCs. Decode expands one 32-byte beat to <=2 compact writes.
     # Input includes the expected sector from the separately required stream sequencer.
     inp = 256 + 17*2 + 13 + 8*2 + 11*2 + 2
-    out = 256 + 11*2 + 7*2 + 2*2 + 2 + 1 + 1 + 1 + 4
+    out = 256 + 11*2 + 7*2 + 2*2 + 2 + 1 + 1 + 1 + 1 + 4
     state = inp + 3*out + 64
     area = state*unified.DFF_UM2 + 12000  # logic, clock/hold and pin-driver reservation
     return dict(schema='opentallas.qwen_kvc_leaf.v1', model_precedes_rtl=True,
