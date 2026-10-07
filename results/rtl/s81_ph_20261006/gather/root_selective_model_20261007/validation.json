@@ -1,0 +1,31 @@
+{
+  "status": "MODELED_ONE_A1_PLAN_AND_FIVE_TESTS_PASS_PHYSICAL_PENDING",
+  "source_sha256": {
+    "tools/s81_root_selective_model.py": "9d453ec4663a9319c9e185a14917266211ff3514f6c7079992e98eb59599962b",
+    "tools/s81_root_selective_patch.py": "04e706d5746cad0f25642ff28b0002678ab330cff0f576a3abfcd36ea84fbf7f",
+    "tools/test_s81_root_selective_patch.py": "0b4f213855c194a7e77e563a1b36272cabb283a51e6c1208f118e725be47ca3c",
+    "physical/s81_ph_views/gather/root_selective_patch.tcl": "23a170e5ce8710f24ec68ebc486a3914ccea9bc149b5f383ee7a20dfcbdcf6a5"
+  },
+  "actual_queries": {
+    "ss_rc": 0,
+    "ff_rc": 0,
+    "targets": 963,
+    "through_a1_ss_rc": 0,
+    "through_a1_ff_rc": 0
+  },
+  "first_predicted_slack_ps": {
+    "ss_rise": 536.5686176561665,
+    "ss_fall": 576.8979196065974,
+    "ff_rise": 64.77599450958483,
+    "ff_fall": 48.62224319051547
+  },
+  "limitations": [
+    "Full fresh extracted SS/FF and DRC required; this is no closure verdict.",
+    "Source clock-q ratios anchored to measured old delay; new source wire capacitance assumes old wire retained.",
+    "AOI conditional arcs use worst resulting slack across every matching A1 arc.",
+    "Existing late B timing path is unchanged logically; placement and routing can still perturb it.",
+    "Receiver D-pin screen is preliminary and not a selected bulk patch; actual FF capacitance ranges and upstream load changes need verification.",
+    "HB1-HB3 were not selected for first A1 patch: rounded source load enters or borders the characterized source-flop load floor.",
+    "HB4 new input loading uses nominal capacitance; actual slew, corner capacitance and route load remain fresh-STA gates."
+  ]
+}

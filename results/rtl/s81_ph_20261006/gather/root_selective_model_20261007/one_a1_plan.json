@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.s81.root_selective_patch.v1",
+  "source_model": "tools/s81_root_selective_model.py",
+  "original_sha256": {
+    "6_final.odb": "72dfd17b1c0b7c243150dad92cfa18eb3a3b8f83055680a9f184769f31ce41af",
+    "6_final.sdc": "c3c72945dfae0869ad778974d5a0aff2130fe22401f51a581e15fc0b12417e15",
+    "6_final.spef": "a55fe6b4ea3bbbf2a3ca283778bf9b4a41a31a0f8715b3ce4b232ed945b9c253"
+  },
+  "cycles_added": 0,
+  "area_added_um2": 0.10206,
+  "patches": [
+    {
+      "endpoint": "_130070_/A1",
+      "expected_master": "AOI21x1_ASAP7_75t_R",
+      "cells": [
+        "HB4xp67_ASAP7_75t_R"
+      ],
+      "baseline_ss_ps": 646.09
+    }
+  ],
+  "timed_endpoints": [
+    "u_root.r2_w[13]$_DFF_P_/D"
+  ],
+  "purpose": "First actual selective early-A1 hold experiment; preserves late-B setup logic, original clocks/SDC and all other low pins as unresolved.",
+  "candidate_scope": "One HB4, not whole-design closure. Fresh full-design and target SS/FF+DRC required."
+}

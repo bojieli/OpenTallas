@@ -8115,6 +8115,7 @@ def main(argv=None):
     ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
                     help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
                          "assumed 3/40 x AR (reproduces records made before 2026-10-04)")
+    ap.add_argument("--s81-root-selective-hold", action="store_true", help="price selective root hold repair from measured corner paths")
     ap.add_argument("--s81-capture-startup-delay", action="store_true", help="screen exact capture startup hold cells against pinned SS/FF libraries")
     ap.add_argument("--s81-selector-quarter-retime", action="store_true", help="size exact existing-stage selector comparator retiming")
     ap.add_argument("--s81-collective-gearbox-pipeline", action="store_true", help="price the two-cycle partitioned collective gearbox")
@@ -8200,6 +8201,14 @@ def main(argv=None):
     if a.fec_fairness:
         from fec_class_fairness import policy
         payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_root_selective_hold:
+        from s81_root_selective_model import build
+        payload = json.dumps(build(), indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)
