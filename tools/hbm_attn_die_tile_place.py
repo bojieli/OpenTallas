@@ -51,7 +51,7 @@ class Plan:
         self.banks = []                                     # (name, orient, x, y, w, h)
 
     def free(self, box):
-        if box[0] < 0 or box[1] < 0 or box[2] > TW or box[3] > TH:
+        if box[0] < 0 or box[1] < 0 or box[2] > CW_ or box[3] > CH_:
             return False
         return not any(overlap(box, b, 1.5) for b in self.boxes)
 
