@@ -13,6 +13,35 @@ import unittest
 HERE = pathlib.Path(__file__).resolve().parent
 
 
+class FFOnlySelection(unittest.TestCase):
+    def test_default_session_never_invokes_two_corner_repair(self):
+        source = (HERE / "hold_eco.sh").read_text()
+        defaults = source[source.index("ECO_SESSION=${"):source.index("RB=$1;")]
+        selection = source[source.index("  SESSION=ff"):source.index("  L=$P/eco_$SESSION.log")]
+        with tempfile.TemporaryDirectory() as tmp:
+            script = r'''
+set -eo pipefail
+unset ECO_SESSION
+''' + defaults + r'''
+P=$1
+OUT=$1
+mkdir -p "$P/orfs"
+EB=$P/orfs
+ECO_ENV=()
+orun() { printf '%s\n' "$*" >> "$P/calls"; }
+''' + selection + r'''
+test "$SESSION" = ff
+test "$(wc -l < "$P/calls")" = 1
+grep -q 'OT_SESSION=ff' "$P/calls"
+grep -q 'OT_SS_SLACK=/p/eff_ss.sdc.slack' "$P/calls"
+grep -q 'OT_SS_CRIT=/p/eff_ss.sdc.crit' "$P/calls"
+! grep -q 'OT_SESSION=two' "$P/calls"
+'''
+            result = subprocess.run(["bash", "-c", script, "test", tmp],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
 @unittest.skipUnless(shutil.which("tclsh"), "tclsh required")
 class MacroPinCoverage(unittest.TestCase):
     def run_tcl(self, script, cwd):

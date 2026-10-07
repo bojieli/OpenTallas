@@ -5,18 +5,21 @@
 #     below; a pass that routes to SS >= ACC_SS and FF >= HM ends the ECO), ALLOW (3), SM (setup margin ps kept by repair_timing, 40), FILT (endpoint filter: repair only
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
-#     ACC_SS / ACC_FF (acceptance line, 15 / 15), WINDOW_ONLY (1: endpoint window report only, no ECO), MACROS (src-rel macro view dirs), THREADS (8), BUF (max buffer %, 30)
+#     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (ff by default; auto for legacy two-corner detection),
+#     WINDOW_ONLY (1: endpoint window report only, no ECO), MACROS (src-rel macro view dirs), THREADS (8), BUF (max buffer %, 30)
 # per pass k (<out>/pass<k>/):
 #   1. both corners' EFFECTIVE sign-off SDC from the current db (hold_eco_corner.tcl, one single-corner session each,
 #      exactly corner_sta.py's read order), merged for a two-corner session (hold_eco_sdc.py)
-#   2. hold_eco.tcl: two-corner session if it reproduces sign-off (SS max / FF min within 1 ps), else FF-only session
-#      with the SS session's per-endpoint slacks and critical nets; endpoint filter; repair; resistance-aware re-route
+#   2. hold_eco.tcl: FF-only session with the SS session's per-endpoint slacks and critical nets;
+#      endpoint filter; repair; resistance-aware re-route (legacy auto selection is opt-in)
 #   3. sign-off: tools/w18/corner_sta.py with the same post-SDCs
 #   stop at the first pass that meets ACC_SS and FF >= HM; every pass starts from the original route, the next with a
 #   larger hold allowance; the best pass is kept.
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps, ff_ps, drc, cells_added, pass, session, window}
 set -eo pipefail
+ECO_SESSION=${ECO_SESSION:-ff}
+case "$ECO_SESSION" in ff|auto) ;; *) echo "ECO_SESSION must be ff or auto"; exit 2 ;; esac
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB))
 CLD=$(cd $(dirname $0) && pwd)
@@ -63,11 +66,18 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
            -e OT_RES_AWARE=${RESAWARE:-1} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8}
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0})
-  # two-corner session on the merge, kept only if it reproduces sign-off; else the FF-only session
-  SESSION=two
-  orun $P/eco_two.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=two -e OT_SDC=/p/merged.sdc -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true
-  if grep -q "OT_ECO session_mismatch" $P/eco_two.log; then
-    SESSION=ff; grep "OT_ECO session_mismatch" $P/eco_two.log | tee -a $OUT/eco.log
+  # Default FF-only: matching the worst SS/FF margins does not prove that
+  # every SS hold endpoint is irrelevant to a two-corner repair. Keep the
+  # legacy automatic selection available only by explicit request.
+  SESSION=ff
+  if [ "$ECO_SESSION" = auto ]; then
+    SESSION=two
+    orun $P/eco_two.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=two -e OT_SDC=/p/merged.sdc -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true
+    if grep -q "OT_ECO session_mismatch" $P/eco_two.log; then
+      SESSION=ff; grep "OT_ECO session_mismatch" $P/eco_two.log | tee -a $OUT/eco.log
+    fi
+  fi
+  if [ "$SESSION" = ff ]; then
     rm -f $EB/pre_eco.spef
     orun $P/eco_ff.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=ff -e OT_SDC=/p/eff_ff.sdc \
       -e OT_SS_SLACK=/p/eff_ss.sdc.slack -e OT_SS_CRIT=/p/eff_ss.sdc.crit || true
