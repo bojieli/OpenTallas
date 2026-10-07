@@ -150,6 +150,7 @@ module tb_code_pair_margin #(parameter integer M2=0);
     compare_on=1; cyc=0;
     // Phase 1: populate every chosen row in both columns.
     for(integer i=0;i<nrows;i=i+1) for(integer c=0;c<2;c=c+1) write_row(rows[i],c,rnd256());
+    $display("WRITE_RATE m2=%0d writes=%0d cycles=%0d", M2, nrows*2, cyc);
     // Phase 2: random mixed traffic, back-to-back II1 reads on both ports,
     // same-edge read/write, bubbles, denied reads, held receipts.
     for(integer t=0;t<6000;t=t+1) begin
