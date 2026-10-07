@@ -12,16 +12,22 @@ set_global_routing_layer_adjustment M2-M7 0.25
 set_routing_layers -signal M2-M7 -clock M4-M7
 global_route -start_incremental
 foreach {endpoint masters} $patches {
-  set inst_name [string range $endpoint 0 end-2]
-  set sink [$block findInst $inst_name]
-  if {$sink eq "NULL"} {error "Missing literal startup sink $endpoint"}
-  set d [$sink findITerm D]
-  if {$d eq "NULL"} {error "No data terminal $endpoint"}
   set pins {}
   foreach p [get_pins -hierarchical */D] {
     if {[get_full_name $p] eq $endpoint} {lappend pins $p}
   }
   if {[llength $pins] != 1} {error "STA/ODB endpoint identity mismatch $endpoint"}
+  # STA prints brackets without the escapes retained by OpenDB. Resolve the
+  # unique literal STA pin directly, without rewriting or globbing its name.
+  if {![llength [info commands sta::sta_to_db_pin]]} {error "STA/ODB pin mapping unavailable"}
+  set d [sta::sta_to_db_pin [lindex $pins 0]]
+  if {$d eq "NULL" || $d eq ""} {error "No mapped data terminal $endpoint"}
+  set sink [$d getInst]
+  if {$sink eq "NULL" || [$sink findITerm D] ne $d ||
+      [[$sink getMaster] getName] ne "DFFHQNx1_ASAP7_75t_R"} {
+    error "Mapped endpoint is not the original startup data terminal $endpoint"
+  }
+  puts "S81_STARTUP_IDENTITY sta=$endpoint odb=[$sink getName] pin=D"
   foreach master $masters {
     set original [$d getNet]
     set name s81_startup_hold_$ordinal

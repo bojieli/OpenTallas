@@ -3,6 +3,7 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 import s81_capture_startup_patch as patch
 
@@ -53,6 +54,39 @@ class PreparationTest(unittest.TestCase):
         duplicate['patches'].append(copy.deepcopy(duplicate['patches'][0]))
         with self.assertRaises(ValueError):
             patch.validate(duplicate)
+
+    def test_exact_sta_to_odb_identity(self):
+        body = (patch.ROOT / 'physical/s81_ph_views/capture/startup_pin_patch.tcl').read_text()
+        resolver = body.split('foreach {endpoint masters} $patches {', 1)[1].split('  foreach master $masters {', 1)[0]
+        fixture = r'''
+namespace eval sta {}
+set endpoint {g_r[12].u_x.w_st_r[0]$_DFF_P_/D}
+proc get_pins {args} {return $::pin_list}
+proc get_full_name {p} {return $::endpoint}
+proc sta::sta_to_db_pin {p} {return dbterm}
+proc dbterm {op} {if {$op eq "getInst"} {return dbinst}; error "Unexpected operation"}
+proc dbinst {op args} {
+  switch $op {
+    findITerm {return $::dterm}
+    getMaster {return dbmaster}
+    getName {return {g_r\[12\].u_x.w_st_r\[0\]$_DFF_P_}}
+    default {error "Unexpected operation"}
+  }
+}
+proc dbmaster {op} {return $::master}
+'''
+        for pins, dterm, master, success in [
+                ('p0', 'dbterm', 'DFFHQNx1_ASAP7_75t_R', True),
+                ('p0 p1', 'dbterm', 'DFFHQNx1_ASAP7_75t_R', False),
+                ('', 'dbterm', 'DFFHQNx1_ASAP7_75t_R', False),
+                ('p0', 'otherterm', 'DFFHQNx1_ASAP7_75t_R', False),
+                ('p0', 'dbterm', 'INVx1_ASAP7_75t_R', False)]:
+            source = fixture + f'\nset pin_list {{{pins}}}\nset dterm {dterm}\nset master {master}\n'
+            source += 'set rc [catch {\n' + resolver + '\n} msg]\nputs "RESULT $rc $msg"\n'
+            result = subprocess.run(['tclsh'], input=source, text=True, capture_output=True, check=True)
+            self.assertIn('RESULT ' + ('0' if success else '1'), result.stdout)
+            if success:
+                self.assertIn('S81_STARTUP_IDENTITY', result.stdout)
 
 
 if __name__ == '__main__':
