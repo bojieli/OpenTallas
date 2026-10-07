@@ -1,0 +1,35 @@
+{
+  "status": "COMPONENT_REPAIR_PASS_FULL_DIE_BLOCKED",
+  "parent_branch": "claude/s81-rerun-20261006",
+  "base_commit": "bac833b4ae6b95a86cf58a8867b241035ad597b1",
+  "opt_in": "OT_S81_CTRL_JOINS=1 (component use only; CLI intentionally rejects physical generation)",
+  "reproduction": [
+    "python3 tools/s81_ctrl_join_model.py",
+    "python3 tools/test_s81_ctrl_join.py"
+  ],
+  "changes": [
+    "Four stack joins: rd=8896, rq=10912, rk=32, wd=32; reciprocal endpoint directions.",
+    "Reuse literal registered tile pin coordinates and existing 32-PC response/request packing.",
+    "Executable service-PC bank consumes every controller interface bit and exposes every existing quadrant-side port.",
+    "Unified-model entry point reports physical pin fit separately from unknown routed capacity and token exposure."
+  ],
+  "limitations": [
+    "Not a complete dsfd_svc replacement: no quadrant engines or IO behavior invented.",
+    "The pinned tiled tree has dsfd_ctrl but no executable dsfd_svc top. Its composition lists regions rather than RTL quadrant instances. Parent must supply that assembly before enabling full-die generation.",
+    "Full-die functionality, SS/FF receiver arrivals, capacity and timing closure are not claimed.",
+    "The inherited +1 service cycle each direction and +2 credit round trip appear in tile composition, not explicitly in the selected unified token traversal model. No token rate assigned.",
+    "No P&R or whole-array simulation was run."
+  ],
+  "preservation": [
+    "Current v6 remote and its source markers untouched.",
+    "Existing source pins and failure records untouched.",
+    "PHY ckh -> phy[12808] -> clk retained; falling forwarded receiver capture retained.",
+    "No existing RTL edited; unrelated generator functions verified by AST equality."
+  ],
+  "validation_history": [
+    "Initial test harness asserted the placement function name _pins_r8; actual name _faces_r8. Corrected harness assertion; no RTL failure or geometry rejection.",
+    "One-PC baseline PASS; intentional dropped-valid mutation FAIL retained in checks.json.",
+    "Old-width, missing-request and reversed-request negative controls rejected; missing full service top remains BLOCKED."
+  ],
+  "integration": "Cherry-pick this single commit into parent work. Do not merge unfinished Claude branch. Keep default off until actual service top and exposed traversal accounting are supplied."
+}

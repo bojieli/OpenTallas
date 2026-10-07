@@ -35,6 +35,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import arch_budget_v41 as A  # noqa: E402
 
+def dsrom_s81_ctrl_service_join_model():
+    """Pinned existing interface fit; unknown token/receiver costs stay unknown."""
+    from s81_ctrl_join_model import model
+    return model()
+
+
 def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model

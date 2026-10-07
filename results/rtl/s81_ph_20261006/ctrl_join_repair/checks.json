@@ -1,0 +1,49 @@
+{
+  "assembled_die": "BLOCKED_MISSING_SERVICE_TOP",
+  "changed_functions": [
+    "_faces_r8",
+    "buses_r8",
+    "main",
+    "pin_rects"
+  ],
+  "component_checks": "PASS",
+  "negatives": [
+    "old_rd_width",
+    "missing_rq",
+    "reverse_rq",
+    "drop_valid",
+    "missing_service_top"
+  ],
+  "one_pc_mechanism": {
+    "baseline": {
+      "exit_code": 0,
+      "stdout": "ONE_PC_COMPLETE_PORTS_PASS\n"
+    },
+    "drop_valid": {
+      "exit_code": 1,
+      "stdout": "FATAL: /tmp/s81-join-8um63cy5/tb.sv:20: complete port transfer mismatch\n       Time: 86000 Scope: tb\n"
+    }
+  },
+  "source_sha256": {
+    "24f79a4b81ae63a2cb8832162d5b8ff93b18d8c7:tools/s81_ph_boundary_bindings.py": "c4072ac7772421529fd53235f2d6267454e968e52307a4fff088af7b9edec2c6",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ctrl/composition.json": "345a46e9d8c92763813fb0d17b83e586020bf04beb6ac0bf56be9d0b03787d34",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ports/contract/dsfd_ctrl_pc/ports.json": "ffeaf3263d82a4519d92b1e4cc09bba69ca97e5a0b792008ab34fb1e07f8cf10",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ports/contract/dsfd_svc_pc/ports.json": "bfb5240c1b42fdb88d2b55caea00cf7cb355c94dd075340bbb2fd2a159053fc7",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/svc/composition.json": "b6d12407da84562237470b1a55ab78473ea13a627a7ac10806e3e63165636e6e",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_pc.sv": "96b42b157f00f9a4c262a7cf86e9e8a1f8c9568bd0ce4c22f7c07b5192d4ad58",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv": "6c745aba73a9cde8c5d57a27d3e8d6733c5eef6622708cecae5388b5caabd28c",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv": "dcf7ee45a3542f3e7cedff9e9ffe8ebdcc93646d312bb62523fcf605708db60f",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv": "35423053fa9132cb006b4b810b375cdea2df618b3989d17a8051c0e3527daa1b",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/dsrom_s81_fulldie.py": "503fca566c395ef38d8cf9958fd5ebaea8cd2d6015f9370fe32ab07659706837",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/dsrom_s81_unified_components.py": "5e2b321331d2ed2550e05abd20fc25aafc0bcfad71e361982ba506f5d0e3ada9",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/uarch_model.py": "edbad3b74200e1d2692ba9f6343e97a872cda2ddfb202cc2bdd9199be40574d4",
+    "tools/dsrom_s81_fulldie.py": "3fe8830763a20ca5419edf0eaa4efec69dfedb9343f99692fc82bce8af5c7392",
+    "tools/s81_ctrl_join.py": "3ce921b6c6deb261a6a38d3ccf2195ce5768ca29ffeeefb7f703a7bc2df15029",
+    "tools/s81_ctrl_join_model.py": "681d9e653df3c00e459b81da31208f119c65947ef05d644b49469e2db986eeaf",
+    "tools/test_s81_ctrl_join.py": "32ef6d581e3434127d8f8059d308817bbc57ee2a2ba7d6f5a6b6d95a563f9db1",
+    "tools/uarch_model.py": "9b700688773c8dbc61eada726a496f3bd6c1e1499f64f8a17e28d5cb5b0f05cc"
+  },
+  "timing": "UNQUALIFIED",
+  "unrelated_generator_functions_unchanged": true
+}

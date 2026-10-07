@@ -1,0 +1,92 @@
+{
+  "PCs_per_stack": 32,
+  "added_cycles_from_wiring": 0,
+  "added_demuxes": 0,
+  "added_muxes": 0,
+  "blockers": [
+    "Pinned tree has no executable dsfd_svc top or quadrant-to-PC composition; do not replace it with an empty slab.",
+    "Unified model has no explicit selected ctrl/service traversal binding; inherited composition cost is not measured per-token latency.",
+    "SS/FF die-context timing and routed channel capacity remain unmeasured."
+  ],
+  "default_enabled": false,
+  "delay_budgets_ps": null,
+  "endpoint_capacity": {
+    "ctrl": {
+      "face": "N",
+      "geometric_M5_track_sites": 2522,
+      "grid_pitch_um": 0.048,
+      "height_um": 248.376,
+      "interface_max_x_um": 106.776,
+      "interface_min_x_um": 17.328,
+      "note": "2522 grid centres fit the outline; not a routed capacity or spare-pin authorization",
+      "occupied_pin_pitch_um": 0.096,
+      "physical_routing_capacity": null,
+      "registered_interface_pins": 621,
+      "required_signal_tracks": 621,
+      "two_track_pin_spacing_demand": 1242,
+      "width_um": 121.068
+    },
+    "svc": {
+      "face": "S",
+      "geometric_M5_track_sites": 2522,
+      "grid_pitch_um": 0.048,
+      "height_um": 43.2,
+      "interface_max_x_um": 106.776,
+      "interface_min_x_um": 17.328,
+      "note": "2522 grid centres fit the outline; not a routed capacity or spare-pin authorization",
+      "occupied_pin_pitch_um": 0.096,
+      "physical_routing_capacity": null,
+      "registered_interface_pins": 621,
+      "required_signal_tracks": 621,
+      "two_track_pin_spacing_demand": 1242,
+      "width_um": 121.068
+    }
+  },
+  "exposed_token_delta_cycles": null,
+  "inherited_credit_round_trip_cycles": 2,
+  "inherited_price_source": "rd / rq +1 cks each way (credit round trip +2); quadrant link +1 cks per station each way (Q0 / Q1 / Q2 chains 15/10/5 stations)",
+  "inherited_service_register_cycles_each_way": 1,
+  "interface_bits_per_PC": 621,
+  "missing_v6_bits_per_die": 44032,
+  "missing_v6_bits_per_stack": 11008,
+  "new_MACs": 0,
+  "new_area_um2": 0,
+  "new_flops": 0,
+  "new_memories": 0,
+  "new_tile_pins": 0,
+  "per_die_interface_bits": 79488,
+  "per_stack_bits": {
+    "rd": 8896,
+    "rk": 32,
+    "rq": 10912,
+    "wd": 32
+  },
+  "per_stack_bits_per_cycle": {
+    "ctrl_to_svc": 8960,
+    "svc_to_ctrl": 10912
+  },
+  "per_stack_data_bytes_per_cycle": 1024,
+  "receiver_arrivals_ps": null,
+  "schema": "opentallas.s81.ctrl_join_model.v1",
+  "signal_fanout": 1,
+  "source_sha256": {
+    "24f79a4b81ae63a2cb8832162d5b8ff93b18d8c7:tools/s81_ph_boundary_bindings.py": "c4072ac7772421529fd53235f2d6267454e968e52307a4fff088af7b9edec2c6",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ctrl/composition.json": "345a46e9d8c92763813fb0d17b83e586020bf04beb6ac0bf56be9d0b03787d34",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ports/contract/dsfd_ctrl_pc/ports.json": "ffeaf3263d82a4519d92b1e4cc09bba69ca97e5a0b792008ab34fb1e07f8cf10",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/ports/contract/dsfd_svc_pc/ports.json": "bfb5240c1b42fdb88d2b55caea00cf7cb355c94dd075340bbb2fd2a159053fc7",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:physical/s81_ph_views/svc/composition.json": "b6d12407da84562237470b1a55ab78473ea13a627a7ac10806e3e63165636e6e",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_pc.sv": "96b42b157f00f9a4c262a7cf86e9e8a1f8c9568bd0ce4c22f7c07b5192d4ad58",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv": "6c745aba73a9cde8c5d57a27d3e8d6733c5eef6622708cecae5388b5caabd28c",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv": "dcf7ee45a3542f3e7cedff9e9ffe8ebdcc93646d312bb62523fcf605708db60f",
+    "3f0455126529d8b595e7be43a606274dff73cbc6:rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv": "35423053fa9132cb006b4b810b375cdea2df618b3989d17a8051c0e3527daa1b",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/dsrom_s81_fulldie.py": "503fca566c395ef38d8cf9958fd5ebaea8cd2d6015f9370fe32ab07659706837",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/dsrom_s81_unified_components.py": "5e2b321331d2ed2550e05abd20fc25aafc0bcfad71e361982ba506f5d0e3ada9",
+    "bac833b4ae6b95a86cf58a8867b241035ad597b1:tools/uarch_model.py": "edbad3b74200e1d2692ba9f6343e97a872cda2ddfb202cc2bdd9199be40574d4"
+  },
+  "stacks": 4,
+  "status": "PIN_FIT_PASS_SERVICE_TOP_MISSING",
+  "timing_closure": false,
+  "token_composition": "Use actual exposed PC traversals * existing one-cycle service cut in each direction; overlap/credit waits unknown. Do not add a second register or claim a rate.",
+  "unified_token_model_explicitly_binds_this_link": false
+}

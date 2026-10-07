@@ -167,6 +167,11 @@ NODE_W = 66
 LANE_X = XI + XCTL + 3       # one lane's bits from its region FIFO (chained x + lane control)
 SVC_HUB_BITS = dict(q=512, ao=512, ix=512)
 HBM_RD_BITS = 8192 + 544 + 128   # controller -> scan service: kr_data + kr_tag + kr_beat (the PHY's read side)
+# Component-only repair; model evidence predates these edits. No physical adoption.
+CTRL_JOINS = os.environ.get('OT_S81_CTRL_JOINS', '0') == '1'
+if CTRL_JOINS:
+    HBM_RD_BITS = 8896
+
 LINK_BITS = 1024
 CLK_BITS = 3
 
@@ -973,8 +978,9 @@ def pin_rects(mst, k, wmap):
     xy = {p: s for p, s in mst.ports.items() if s[0] == 'xy'}
     for port, spec in xy.items():
         n = wmap.get(port, len(spec[1]))
+        y0 = mst.h - 0.192 if len(spec) > 2 and spec[2] == 'N' else 0.0
         for i, x in enumerate(spec[1][:n]):
-            out.append((f'{port}[{i}]', 'M5', (x - 0.012, 0.0, x + 0.012, 0.192)))
+            out.append((f'{port}[{i}]', 'M5', (x - 0.012, y0, x + 0.012, y0 + 0.192)))
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
     rest.ports = {p: s for p, s in mst.ports.items() if s[0] != 'xy'}
     rest.order = [p for p in mst.order if p in rest.ports]
@@ -3092,7 +3098,12 @@ def buses_r8(m):
     npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
-        bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+        if CTRL_JOINS:
+            from s81_ctrl_join import joins
+            for join in joins(st, m['ctrls'][st].name, m['svcs'][st].name):
+                bus(*join)
+        else:
+            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     # ---------------- clocks, resets, top ports
@@ -4193,12 +4204,29 @@ def _faces_r8(m, Mx, it, ports):
             Mx.order.append('phy')
         else:
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
-        _lay(Mx, 'N', P_(['rd']), 'M5')
+        if CTRL_JOINS:
+            if _LAY_K[0] != 1:
+                raise ValueError('S81 join pins require the literal k=1 tile contract')
+            from s81_ctrl_join import pin_xs
+            for port, xs in pin_xs().items():
+                Mx.ports[port] = ('xy', xs, 'N')
+                Mx.order.append(port)
+        else:
+            _lay(Mx, 'N', P_(['rd']), 'M5')
         _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
     else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
         faces = defaultdict(list)
+        joined = {}
+        if CTRL_JOINS and kind == 'svc':
+            if _LAY_K[0] != 1:
+                raise ValueError('S81 join pins require the literal k=1 tile contract')
+            from s81_ctrl_join import pin_xs
+            joined = pin_xs()
+            for port, xs in joined.items():
+                Mx.ports[port] = ('xy', xs, 'S')
+                Mx.order.append(port)
         for p_ in sorted(ports):
-            if p_ == 'phy':
+            if p_ == 'phy' or p_ in joined:
                 continue
             faces[_peer_face(m, it, p_)].append(p_)
         for f, lst in faces.items():
@@ -4587,6 +4615,9 @@ def main(argv=None):
     die_options(ap)
     a = ap.parse_args(argv)
     apply_options(a)
+    if CTRL_JOINS:
+        from s81_ctrl_join import require_service_top
+        require_service_top()
     m = build()
     if a.gen == 'r8':
         finalize_r8(m)

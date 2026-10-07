@@ -1,0 +1,490 @@
+{
+  "buses": [
+    [
+      "dfi_SW",
+      "phy_dfi",
+      22238,
+      [
+        [
+          "ctrl_SW",
+          "phy"
+        ],
+        [
+          "phy_SW",
+          "dfi"
+        ]
+      ]
+    ],
+    [
+      "rd_SW",
+      "hbm_read",
+      8896,
+      [
+        [
+          "ctrl_SW",
+          "rd"
+        ],
+        [
+          "svc_SW",
+          "rd"
+        ]
+      ]
+    ],
+    [
+      "rq_SW",
+      "hbm_read",
+      10912,
+      [
+        [
+          "svc_SW",
+          "rq"
+        ],
+        [
+          "ctrl_SW",
+          "rq"
+        ]
+      ]
+    ],
+    [
+      "rk_SW",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_SW",
+          "rk"
+        ],
+        [
+          "svc_SW",
+          "rk"
+        ]
+      ]
+    ],
+    [
+      "wd_SW",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_SW",
+          "wd"
+        ],
+        [
+          "svc_SW",
+          "wd"
+        ]
+      ]
+    ],
+    [
+      "dfi_SE",
+      "phy_dfi",
+      22238,
+      [
+        [
+          "ctrl_SE",
+          "phy"
+        ],
+        [
+          "phy_SE",
+          "dfi"
+        ]
+      ]
+    ],
+    [
+      "rd_SE",
+      "hbm_read",
+      8896,
+      [
+        [
+          "ctrl_SE",
+          "rd"
+        ],
+        [
+          "svc_SE",
+          "rd"
+        ]
+      ]
+    ],
+    [
+      "rq_SE",
+      "hbm_read",
+      10912,
+      [
+        [
+          "svc_SE",
+          "rq"
+        ],
+        [
+          "ctrl_SE",
+          "rq"
+        ]
+      ]
+    ],
+    [
+      "rk_SE",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_SE",
+          "rk"
+        ],
+        [
+          "svc_SE",
+          "rk"
+        ]
+      ]
+    ],
+    [
+      "wd_SE",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_SE",
+          "wd"
+        ],
+        [
+          "svc_SE",
+          "wd"
+        ]
+      ]
+    ],
+    [
+      "dfi_NW",
+      "phy_dfi",
+      22238,
+      [
+        [
+          "ctrl_NW",
+          "phy"
+        ],
+        [
+          "phy_NW",
+          "dfi"
+        ]
+      ]
+    ],
+    [
+      "rd_NW",
+      "hbm_read",
+      8896,
+      [
+        [
+          "ctrl_NW",
+          "rd"
+        ],
+        [
+          "svc_NW",
+          "rd"
+        ]
+      ]
+    ],
+    [
+      "rq_NW",
+      "hbm_read",
+      10912,
+      [
+        [
+          "svc_NW",
+          "rq"
+        ],
+        [
+          "ctrl_NW",
+          "rq"
+        ]
+      ]
+    ],
+    [
+      "rk_NW",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_NW",
+          "rk"
+        ],
+        [
+          "svc_NW",
+          "rk"
+        ]
+      ]
+    ],
+    [
+      "wd_NW",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_NW",
+          "wd"
+        ],
+        [
+          "svc_NW",
+          "wd"
+        ]
+      ]
+    ],
+    [
+      "dfi_NE",
+      "phy_dfi",
+      22238,
+      [
+        [
+          "ctrl_NE",
+          "phy"
+        ],
+        [
+          "phy_NE",
+          "dfi"
+        ]
+      ]
+    ],
+    [
+      "rd_NE",
+      "hbm_read",
+      8896,
+      [
+        [
+          "ctrl_NE",
+          "rd"
+        ],
+        [
+          "svc_NE",
+          "rd"
+        ]
+      ]
+    ],
+    [
+      "rq_NE",
+      "hbm_read",
+      10912,
+      [
+        [
+          "svc_NE",
+          "rq"
+        ],
+        [
+          "ctrl_NE",
+          "rq"
+        ]
+      ]
+    ],
+    [
+      "rk_NE",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_NE",
+          "rk"
+        ],
+        [
+          "svc_NE",
+          "rk"
+        ]
+      ]
+    ],
+    [
+      "wd_NE",
+      "hbm_read",
+      32,
+      [
+        [
+          "ctrl_NE",
+          "wd"
+        ],
+        [
+          "svc_NE",
+          "wd"
+        ]
+      ]
+    ]
+  ],
+  "port_directions": {
+    "ctrl_SW": {
+      "phy": [
+        "inout",
+        22238
+      ],
+      "rd": [
+        "output",
+        8896
+      ],
+      "rq": [
+        "input",
+        10912
+      ],
+      "rk": [
+        "output",
+        32
+      ],
+      "wd": [
+        "output",
+        32
+      ]
+    },
+    "phy_SW": {
+      "dfi": [
+        "inout",
+        22238
+      ]
+    },
+    "svc_SW": {
+      "rd": [
+        "input",
+        8896
+      ],
+      "rq": [
+        "output",
+        10912
+      ],
+      "rk": [
+        "input",
+        32
+      ],
+      "wd": [
+        "input",
+        32
+      ]
+    },
+    "ctrl_SE": {
+      "phy": [
+        "inout",
+        22238
+      ],
+      "rd": [
+        "output",
+        8896
+      ],
+      "rq": [
+        "input",
+        10912
+      ],
+      "rk": [
+        "output",
+        32
+      ],
+      "wd": [
+        "output",
+        32
+      ]
+    },
+    "phy_SE": {
+      "dfi": [
+        "inout",
+        22238
+      ]
+    },
+    "svc_SE": {
+      "rd": [
+        "input",
+        8896
+      ],
+      "rq": [
+        "output",
+        10912
+      ],
+      "rk": [
+        "input",
+        32
+      ],
+      "wd": [
+        "input",
+        32
+      ]
+    },
+    "ctrl_NW": {
+      "phy": [
+        "inout",
+        22238
+      ],
+      "rd": [
+        "output",
+        8896
+      ],
+      "rq": [
+        "input",
+        10912
+      ],
+      "rk": [
+        "output",
+        32
+      ],
+      "wd": [
+        "output",
+        32
+      ]
+    },
+    "phy_NW": {
+      "dfi": [
+        "inout",
+        22238
+      ]
+    },
+    "svc_NW": {
+      "rd": [
+        "input",
+        8896
+      ],
+      "rq": [
+        "output",
+        10912
+      ],
+      "rk": [
+        "input",
+        32
+      ],
+      "wd": [
+        "input",
+        32
+      ]
+    },
+    "ctrl_NE": {
+      "phy": [
+        "inout",
+        22238
+      ],
+      "rd": [
+        "output",
+        8896
+      ],
+      "rq": [
+        "input",
+        10912
+      ],
+      "rk": [
+        "output",
+        32
+      ],
+      "wd": [
+        "output",
+        32
+      ]
+    },
+    "phy_NE": {
+      "dfi": [
+        "inout",
+        22238
+      ]
+    },
+    "svc_NE": {
+      "rd": [
+        "input",
+        8896
+      ],
+      "rq": [
+        "output",
+        10912
+      ],
+      "rk": [
+        "input",
+        32
+      ],
+      "wd": [
+        "input",
+        32
+      ]
+    }
+  }
+}
