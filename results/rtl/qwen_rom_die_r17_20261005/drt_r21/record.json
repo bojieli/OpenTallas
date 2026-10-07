@@ -66,6 +66,21 @@
    "wirelength_um": 2227173225,
    "vias": 26636687,
    "note": "pre-PDN floorplan (the r21 PDN with 12,299 macro grids is still running); CONVERGED: 0 overflow on every layer"
+  },
+  "pdn": {
+   "host": "ot-epyc3 cases/r21_pdn",
+   "wall": "6:00:14",
+   "peak_rss_gb": 114.6,
+   "special_shapes": 28108319,
+   "verdict": "OT_PDN PASS; PSM-0040 all shapes on VDD and VSS connected (12,299 macro grids incl. every relay)"
+  },
+  "drt_nopdn_9p6": {
+   "guides": "GRT i30 converged (0 overflow), pre-PDN, 9.6 um gcells",
+   "threads": 64,
+   "guard_gb": 900,
+   "track_assignment": "done",
+   "peak_rss_gb": 312.1,
+   "result": "iteration 0 had not reached 10% after 2:05 h; stopped. A 9.6 um gcell makes every DRT worker a ~67 um clip with ~800 tracks a layer, so the maze workers are very slow. Re-run at a 2.4 um GRT tile on the PDN floorplan (pdn_t2p4)."
   }
  },
  "relay_cost": "relays_r21/relay_token_cost.json: +22,487 cycles / AR token, -10.4%, PRICED, PENDING OWNER REVIEW (not in the published headline)",
@@ -88,5 +103,48 @@
    "ff_ps": 4.2
   },
   "verdict": "SS +44.55 at 833.333 (>= +40); FF +4.57 is below the +15 hold line but not worse than the frozen r11c view (+4.20); ETM extracted (reproduces -18.78 @770 / +4.57) and bound to every qfd_port_tiles_* die master"
+ },
+ "slab_hold_eco": {
+  "tool": "closure-loop hold ECO rev 2 (tools/closure_loop/hold_eco.sh @ claude/closure-loop-20261006 ed76a6256), FF-only session, guide-preserving re-route, goal +18",
+  "s14": {
+   "pre": {
+    "ss": 44.55,
+    "ff": 4.57
+   },
+   "pass1": {
+    "ss": 4.66,
+    "ff": 7.37,
+    "cells": 1460,
+    "drc": 0
+   },
+   "pass2": {
+    "ss": -157.76,
+    "ff": 21.18,
+    "cells": 11288,
+    "drc": 0
+   },
+   "chosen": "pass1",
+   "verdict": "ECO MISS: hold +7.37 at the cost of 40 ps setup; pass 2 reaches +21.18 hold but SS -157.76"
+  },
+  "r11c": {
+   "pre": {
+    "ss": 11.47,
+    "ff": 4.2
+   },
+   "pass1": {
+    "ss": -50.28,
+    "ff": 7.65,
+    "cells": 1430,
+    "drc": 0
+   },
+   "pass2": {
+    "ss": -191.18,
+    "ff": 5.06,
+    "cells": 11359,
+    "drc": 0
+   },
+   "verdict": "ECO MISS"
+  },
+  "conclusion": "~1,500 FF endpoints below the goal, all fixable by window, but every buffer costs setup: the slab hold class needs an RTL / boundary change (closure-loop rule: ECO miss -> NEEDS_RTL); the die STA keeps the pre-ECO s14 view (SS +44.55 / FF +4.57)"
  }
 }
