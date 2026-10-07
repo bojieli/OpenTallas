@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r19b",
- "generator_sha256": "621dacc811d8e3d4ed624eaa501d89761dcd3b0de579d3936e2a847184f3d928",
+ "generator_sha256": "986c530ffa9ef1db78de18a656f4204c3ee2688efc35e851f8777ea7047f75ad",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -1117,18 +1117,16 @@
    "lef": "hfd_serdes_slab.lef",
    "lib": null,
    "check": {
-    "verdict": "MISMATCH",
-    "problems": [
-     "size 2462.376 x 3656.856 != 8651.208 x 1041.096"
-    ],
+    "verdict": "MATCH",
+    "problems": [],
     "positions": "exact",
     "size_view": [
      2462.376,
      3656.856
     ],
     "size_gen": [
-     8651.208,
-     1041.096
+     2462.376,
+     3656.856
     ],
     "die_top_io_pins": []
    }
@@ -2051,7 +2049,7 @@
   "hfd_stn_r27": {
    "kind": "stations",
    "status": "closed",
-   "instances": 41,
+   "instances": 27,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
    "lef": "hfd_stn_r27.lef",
    "lib": {
@@ -2298,7 +2296,7 @@
   },
   "hfd_stn_r31": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
    "lef": "hfd_stn_r31.lef",
@@ -2307,9 +2305,11 @@
     "ff": "hfd_stn_r31_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "1 pins off the generator position (same face)"
+    ],
+    "positions": "1 pins off the generator position (same face)",
     "size_view": [
      72.984,
      41.016
@@ -2751,8 +2751,8 @@
   }
  },
  "counts": {
-  "interim-not-closed": 4,
-  "closed": 39,
+  "interim-not-closed": 5,
+  "closed": 38,
   "missing": 38,
   "reservation": 2
  }
