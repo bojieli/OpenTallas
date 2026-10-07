@@ -174,11 +174,16 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--neg-only', default=None, help='run one chain mutant only (exit 1 = rejected)')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
     global RELREG, SAFEV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
+    if a.neg_only:  # single negative control: exit 1 when the mutant is (correctly) rejected, 0 if it slips through
+        r = quarter_bench(out, 'neg_only', True, a.neg_only)
+        print('NEG_ONLY', a.neg_only, 'REJECTED' if not r['passed'] else 'ACCEPTED'); print('FAIL' if not r['passed'] else 'PASS')
+        raise SystemExit(1 if not r['passed'] else 0)
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)
     res['bank']['small_STAGE1_DIST0'] = bank_bench(out, 'bank_s1d0', 1, 0)
