@@ -741,7 +741,13 @@ module ot_hdc_v41x_ins #(
     parameter integer K = 2,                 // depth choices
     parameter [16*K-1:0] DEPTHS = {16'd3, 16'd0},   // choice k = DEPTHS[16k +: 16]
     parameter integer DMAX = 3,              // max over DEPTHS
-    parameter integer RESET_DATA = 0
+    parameter integer RESET_DATA = 0,
+    // RING (CLAUDE HBM-ABSTRACTS views agent, default off): the line as a timing wheel of DMAX slots.  An item loaded at
+    // edge e with depth p goes to slot (e + p) mod DMAX and is read into the output register at edge e + p - 1, the
+    // cycle the shift line presents it in r[1]; a slot still holding an item due in the same cycle is the shift line's
+    // collision (rv[p+1] set), the new item wins in both.  Needs every non-zero depth >= 2.  Same vo / q / coll / busy
+    // as the shift line for valid items (q while vo = 0 is not defined by either form).
+    parameter integer RING = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -770,6 +776,70 @@ module ot_hdc_v41x_ins #(
     generate
         if (DMAX == 0) begin : g_wire
             assign vo = v; assign q = d; assign coll = 1'b0; assign busy = 1'b0;
+        end else if (RING != 0) begin : g_ring
+            localparam integer N = DMAX;
+            initial if (canbe(1) || DMAX < 2) $error("ot_hdc_v41x_ins RING: depth 1 not supported");
+            reg [N-1:0] oh;                          // one-hot slot of the current edge e (slot e mod N)
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) oh <= {{(N-1){1'b0}}, 1'b1};
+                else oh <= {oh[N-2:0], oh[N-1]};
+            // rot(oh, k)[j] = oh[(j - k) mod N]: the slot k edges ahead
+            function automatic [N-1:0] rot(input [N-1:0] x, input integer k);
+                integer j;
+                begin
+                    for (j = 0; j < N; j = j + 1) rot[j] = x[(j - (k % N) + N) % N];
+                end
+            endfunction
+            reg [W-1:0] m [0:N-1];
+            reg [N-1:0] mv;
+            reg [W-1:0] qr;
+            reg         qv;
+            // write enables: the chosen depth's slot
+            reg [N-1:0] we;
+            reg         cw;
+            integer k;
+            always @(*) begin
+                we = {N{1'b0}};
+                for (k = 0; k < K; k = k + 1)
+                    if (DEPTHS[16*k +: 16] != 0 && v && sel[k]) we = we | rot(oh, DEPTHS[16*k +: 16]);
+                cw = |(we & mv);
+            end
+            wire [N-1:0] rs = rot(oh, 1);            // slot read at this edge (due next cycle)
+            reg [W-1:0] rd;
+            reg         rdv;
+            integer i;
+            always @(*) begin
+                rd = {W{1'b0}}; rdv = 1'b0;
+                for (i = 0; i < N; i = i + 1) begin
+                    rd = rd | (m[i] & {W{rs[i]}});
+                    rdv = rdv | (mv[i] & rs[i]);
+                end
+            end
+            genvar j;
+            for (j = 0; j < N; j = j + 1) begin : g_s
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) mv[j] <= 1'b0;
+                    else if (we[j]) mv[j] <= 1'b1;
+                    else if (rs[j]) mv[j] <= 1'b0;
+                if (RESET_DATA != 0) begin : g_rd
+                    always @(posedge clk or negedge rst_n)
+                        if (!rst_n) m[j] <= {W{1'b0}}; else if (we[j]) m[j] <= d;
+                end else begin : g_nd
+                    always @(posedge clk) if (we[j]) m[j] <= d;
+                end
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) qv <= 1'b0; else qv <= rdv;
+            if (RESET_DATA != 0) begin : g_qrd
+                always @(posedge clk or negedge rst_n) if (!rst_n) qr <= {W{1'b0}}; else qr <= rd;
+            end else begin : g_qnd
+                always @(posedge clk) qr <= rd;
+            end
+            wire now = v && has(0, sel);
+            assign vo = now || qv;
+            assign q  = now ? d : qr;
+            assign coll = cw || (now && qv);
+            assign busy = qv || (|mv);
         end else begin : g_line
             reg [W-1:0] r  [1:DMAX];
             reg         rv [1:DMAX];

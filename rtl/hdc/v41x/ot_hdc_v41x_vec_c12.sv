@@ -191,7 +191,9 @@ module ot_hdc_v41x_vec #(
     parameter integer CTL12 = 0,        // c12 controller: pipelined set-up, registered emit-loop conditions
     // CLAUDE HBM-ABSTRACTS hub margin (2026-10-06, default off): see rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
     parameter integer GSH = 0,          // lanes register the gather word's shift: every gather fetch one deeper
-    parameter integer KIMM = 0          // imm3 travels to the lanes as its order key okey(imm3)
+    parameter integer KIMM = 0,         // imm3 travels to the lanes as its order key okey(imm3)
+    parameter integer DENR = 0,         // lanes register the sigmoid denominator operand: sigmoid / SiLU one deeper
+    parameter integer DRING = 0         // lanes' SFU delay lines as ring buffers (0 cycles)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -309,9 +311,9 @@ module ot_hdc_v41x_vec #(
     endfunction
     // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 8 ALAT + 4, sigmoid exp + ALAT + 19, rsqrt
     // 1 + 9 MLAT + 3 ALAT, sqrt 31, sqrt(softplus) exp + 11 MLAT + 10 ALAT + 50, gate 33 + sigmoid
-    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + DDIV,
+    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + DDIV, D_SIG = D_SIG0 + DENR,
                        D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX,
-                       D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG + SIDEX;
+                       D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG0 + SIDEX;
     localparam [15:0] H_A = ALAT;
     localparam [15:0] H_R = ALAT;                        // a reducer TREE / TIME level
     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
@@ -918,7 +920,7 @@ module ot_hdc_v41x_vec #(
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
                                .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT),
-                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM)) u_lane (
+                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),

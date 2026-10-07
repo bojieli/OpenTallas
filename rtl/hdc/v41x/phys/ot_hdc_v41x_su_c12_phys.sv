@@ -23,7 +23,9 @@ module ot_su12_lane #(
     parameter integer SIDEX = 4,
     parameter integer CAPR = 1,
     parameter integer GSH = 0,          // CLAUDE HBM-ABSTRACTS hub lane margin (default off): gather shift register
-    parameter integer KIMM = 0          // ... and imm3 in order-key form (rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv)
+    parameter integer KIMM = 0,         // ... and imm3 in order-key form (rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv)
+    parameter integer DENR = 0,         // views agent SFU lane fail-fast (default off): sigmoid den operand register
+    parameter integer DRING = 0         // ... and the SFU delay lines as ring buffers
 ) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
@@ -62,7 +64,7 @@ module ot_su12_lane #(
     // the lane with LEAF = 1: its own register is the broadcast tree's last stage (claude/w11-su d734e304);
     // b_q above stands for the tree's stage BCAST_STAGES - 1
     ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1), .MLAT(MLAT), .ALAT(ALAT), .OPR(OPR),
-                           .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM)) u (
+                           .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING)) u (
         .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit),
         .bank(r_bank), .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb),
         .krow(r_krow), .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst),
@@ -106,7 +108,7 @@ module ot_su12_light #(parameter integer GSH = 0, parameter integer KIMM = 0) (
         .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0));
 endmodule
 
-module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0) (
+module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0, parameter integer DENR = 0, parameter integer DRING = 0) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
     input  wire emit, input wire bank, input wire [23:0] o_v, i_v, no, ni, input wire [3:0] ls, lvw,
@@ -124,7 +126,7 @@ module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0) (
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
 );
-    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1), .GSH(GSH), .KIMM(KIMM)) u (.clk(clk), .rst_n(rst_n),
+    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING)) u (.clk(clk), .rst_n(rst_n),
         .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank), .o_v(o_v), .i_v(i_v), .no(no), .ni(ni),
         .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase), .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair),
         .dst(dst), .srcs(srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
