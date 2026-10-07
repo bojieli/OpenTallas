@@ -13546,6 +13546,12 @@ def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
     return model(hops=hops, depth=depth, replicas=replicas)
 
 
+def hbm_result_relay_stage_model():
+    """Size all physical result-relay replicas before stage implementation."""
+    from hbm_result_relay_model import hbm_result_relay_stage_model as model
+    return model()
+
+
 def hbm_smh_front_s_fifo_model():
     """Price the registered-nonempty SM request-sink candidate."""
     from hbm_smh_front_s_fifo_model import model
