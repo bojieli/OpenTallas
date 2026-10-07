@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.dsrom_qs_recovery.v1",
+  "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803",
+  "gate": "results/rtl/dsrom_qelem_pq_20261006/qx10qs4_recovery_gate.json",
+  "gate_sha256": "469202f26b4fd7304c1ac6c4799535d2b44030aa26672a9821fc09ec1dbc3718",
+  "verdict": "PASS",
+  "source_hashes_match_pinned_commit": true,
+  "claim_boundary": "QX exactness gate only. Physical closure, PQ field equivalence and die-context adoption are separate gates.",
+  "history": "qx10qs4.json remains FAIL due to undetected weak current-q2 mutant neg_qs4nq. This source-pinned run explicitly uses replacement restart-value mutation neg_qs4l1 and decode-shift mutation neg_qs4sb, both caught, plus four positive seeds and nan_sparse.",
+  "remote_run": "ot-agidock128:/srv/opentallas-scratch/codex/dspq-recovery/e1fbc25c1",
+  "snapshot_commit_note": "gate git_commit identifies a clean git repository initialized from git archive of source_commit; all recorded source hashes checked against source_commit."
+}
