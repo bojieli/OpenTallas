@@ -31,7 +31,9 @@ module hfd_cmdproc_n (
     reg [63:0] i_f_barrier; always @(posedge clk) i_f_barrier <= i0_f_barrier;
     reg [32:0] i0_f_coll; always @(posedge clk) i0_f_coll <= f_coll;
     reg [32:0] i_f_coll; always @(posedge clk) i_f_coll <= i0_f_coll;
-    reg [146:0] i_xl; always @(posedge clk) i_xl <= xl;
+    reg [146:0] i0_xl; always @(posedge clk) i0_xl <= xl;
+    reg [146:0] i1_xl; always @(posedge clk) i1_xl <= i0_xl;
+    reg [146:0] i_xl; always @(posedge clk) i_xl <= i1_xl;
     reg [15:0] i_xt; always @(posedge clk) i_xt <= xt;
     wire [0:0] w_cpN_clk;
     wire [0:0] w_cpN_rst_n;
@@ -79,7 +81,7 @@ module hfd_cmdproc_n (
     assign w_cpN_res_v = cfg[31:16];
     assign w_cpN_res_data = cfg[543:32];
     assign w_cpN_cpl_rdy = 1'd1;
-    ot_hfd_cmdproc20_m #(.TW(17), .PW(20), .CONTEXT_POSITIONS(1048576), .ENABLE(1), .NSM(16), .NCMD(256)) u_cpN (.clk(w_cpN_clk), .rst_n(w_cpN_rst_n), .cmd_we(w_cpN_cmd_we), .cmd_addr(w_cpN_cmd_addr), .cmd_wdata(w_cpN_cmd_wdata), .db_v(w_cpN_db_v), .db_rdy(w_cpN_db_rdy), .db_token(w_cpN_db_token), .db_pos(w_cpN_db_pos), .db_job(w_cpN_db_job), .db_generation(w_cpN_db_generation), .cpl_position(w_cpN_cpl_position), .cpl_job(w_cpN_cpl_job), .cpl_generation(w_cpN_cpl_generation), .launch_v(w_cpN_launch_v), .launch_pc(w_cpN_launch_pc), .launch_token(w_cpN_launch_token), .launch_pos(w_cpN_launch_pos), .sm_done(w_cpN_sm_done), .sm_fault(w_cpN_sm_fault), .res_v(w_cpN_res_v), .res_data(w_cpN_res_data), .cpl_v(w_cpN_cpl_v), .cpl_rdy(w_cpN_cpl_rdy), .cpl_token(w_cpN_cpl_token), .cpl_status(w_cpN_cpl_status), .cpl_cycles(w_cpN_cpl_cycles), .st_kernels(w_cpN_st_kernels), .st_busy(w_cpN_st_busy));
+    ot_hfd_cmdproc20_m #(.TW(17), .PW(20), .CONTEXT_POSITIONS(1048576), .ENABLE(1), .NSM(16), .NCMD(256), .RDREG(2)) u_cpN (.clk(w_cpN_clk), .rst_n(w_cpN_rst_n), .cmd_we(w_cpN_cmd_we), .cmd_addr(w_cpN_cmd_addr), .cmd_wdata(w_cpN_cmd_wdata), .db_v(w_cpN_db_v), .db_rdy(w_cpN_db_rdy), .db_token(w_cpN_db_token), .db_pos(w_cpN_db_pos), .db_job(w_cpN_db_job), .db_generation(w_cpN_db_generation), .cpl_position(w_cpN_cpl_position), .cpl_job(w_cpN_cpl_job), .cpl_generation(w_cpN_cpl_generation), .launch_v(w_cpN_launch_v), .launch_pc(w_cpN_launch_pc), .launch_token(w_cpN_launch_token), .launch_pos(w_cpN_launch_pos), .sm_done(w_cpN_sm_done), .sm_fault(w_cpN_sm_fault), .res_v(w_cpN_res_v), .res_data(w_cpN_res_data), .cpl_v(w_cpN_cpl_v), .cpl_rdy(w_cpN_cpl_rdy), .cpl_token(w_cpN_cpl_token), .cpl_status(w_cpN_cpl_status), .cpl_cycles(w_cpN_cpl_cycles), .st_kernels(w_cpN_st_kernels), .st_busy(w_cpN_st_busy));
     for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpN_db_rdy
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_db_rdy[k]), .q());
     end

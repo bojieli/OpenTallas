@@ -1,14 +1,15 @@
 {
  "master": "hfd_loader",
- "note": "ot_hfd_loader_host_m (ENABLE 1, ND 2): ot_hbm_accel_loader_host with every CRC-32 fold pipelined (make_loader_m.py; the unchanged host: tapeout_hbm_loader_20261004 clock_r2_final not_met, host SS -3,672 ps at 1.0 ns; ld3 -4,229 ps at the store CRC); exact vs the unchanged host (tb_loader_m_equiv.sv). Host AXI-lite slave s_*, host master h_* and DMA h_dma_* on the host link (rx 243 of 256 b used, rest of the DMA inputs on the cfg chain; tx 176 of 256 b); request slot 0 -> cmdproc program-store word t_cmdproc[72:0]; clk_host and clk_mem both on the die clock; memory AXI m_* and rsp_* have no die net (cfg chain / folded).",
+ "note": "ot_hfd_loader_host_m (ENABLE 1, ND 2): ot_hbm_accel_loader_host with every CRC-32 fold pipelined (make_loader_m.py; the unchanged host: tapeout_hbm_loader_20261004 clock_r2_final not_met, host SS -3,672 ps at 1.0 ns; ld3 -4,229 ps at the store CRC); exact vs the unchanged host (tb_loader_m_equiv.sv). Host AXI-lite slave s_*, host master h_* and DMA h_dma_* on the host link (rx 243 of 256 b used, rest of the DMA inputs on the cfg chain; tx 176 of 256 b); request slot 0 -> cmdproc program-store word t_cmdproc[72:0]; clk_host and clk_mem both on the die clock; memory AXI m_* and rsp_* have no die net (cfg chain / folded). HALF RATE (views agent 2026-10-06, 30c5fa080 SS -863): ot_hfd_loader_half SHARED 1 = the core on ck/2 with handshake gating.",
  "instances": [
   {
    "name": "ld",
-   "module": "ot_hfd_loader_host_m",
-   "file": "physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_host_m.sv",
+   "module": "ot_hfd_loader_half",
+   "file": "physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_half.sv",
    "params": {
     "ENABLE": 1,
-    "ND": 2
+    "ND": 2,
+    "SHARED": 1
    },
    "bind": {
     "clk_host": "clk",

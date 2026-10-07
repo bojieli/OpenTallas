@@ -24,7 +24,9 @@ module ot_hfd_cmdproc20_m #(
     parameter integer ENABLE = 0,
     parameter integer NSM    = 2,
     parameter integer NCMD   = 256,
-    parameter integer RDREG  = 1
+    parameter integer RDREG  = 1        // 2 (views agent fail-fast 2026-10-06; cmdproc_s cmem b_rd_out -> cmd_q SS -14.65): an
+                                        // unconditional capture register at the macro pins (cmd_r) and one more state
+                                        // (S_RD2) before cmd_q: the same word, +1 cycle per command fetch
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -76,13 +78,19 @@ generate if (ENABLE == 0) begin : g_off
     assign cpl_v = 1'b0;
 end else begin : g_on
     localparam integer CB = $clog2(NCMD);
-    localparam [2:0] S_IDLE = 3'd0, S_FETCH = 3'd1, S_EXEC = 3'd2, S_WAIT = 3'd3, S_CPL = 3'd4, S_RD = 3'd5;
+    localparam [2:0] S_IDLE = 3'd0, S_FETCH = 3'd1, S_EXEC = 3'd2, S_WAIT = 3'd3, S_CPL = 3'd4, S_RD = 3'd5, S_RD2 = 3'd6;
     // command memory: SRAM macro (port A write, port B read at FETCH; NCMD <= 512)
     wire [63:0]  cmd_m;             // macro read word (valid from the cycle after FETCH until the next read)
     reg  [63:0]  cmd_q;             // RDREG: registered read word (S_RD)
     wire [63:0]  cmd = (RDREG != 0) ? cmd_q : cmd_m;
     reg  [2:0]   st;
-    always @(posedge clk) if (st == S_RD) cmd_q <= cmd_m;
+    if (RDREG == 2) begin : g_rd2
+        reg [63:0] cmd_r;                // capture at the macro pins, every cycle (no logic between b_rd_out and it)
+        always @(posedge clk) cmd_r <= cmd_m;
+        always @(posedge clk) if (st == S_RD2) cmd_q <= cmd_r;   // cmd_r = the word cmd_m held at the S_RD edge
+    end else begin : g_rd1
+        always @(posedge clk) if (st == S_RD) cmd_q <= cmd_m;
+    end
     reg  [CB-1:0] cp;
     ot_sram_2rw_512x64_m4_r2c2 u_cmem (.clk(clk),
         .a_ce_in(cmd_we), .a_we_in(1'b1), .a_addr_in(9'(cmd_addr)), .a_wd_in(cmd_wdata), .a_w_mask_in({64{1'b1}}),
@@ -118,7 +126,8 @@ end else begin : g_on
                     end
                 end
                 S_FETCH: begin cp <= cp + 1'b1; st <= (RDREG != 0) ? S_RD : S_EXEC; end   // u_cmem reads cmem[cp] at this edge
-                S_RD: st <= S_EXEC;                                          // RDREG: cmd_q <= read word
+                S_RD: st <= (RDREG == 2) ? S_RD2 : S_EXEC;                   // RDREG: cmd_q <= read word (RDREG 2: cmd_r)
+                S_RD2: st <= S_EXEC;                                         // RDREG 2: cmd_q <= cmd_r
                 S_EXEC: begin
                     if (c_op == 4'd1 && c_mask != 0) begin
                         launch_v <= c_mask; launch_pc <= cmd[31:0]; waiting <= c_mask;

@@ -12,3 +12,4 @@ set fc_ps(xl) 1
 set fc_ps(xt) 1
 set fc_psi(cNE) 4
 set fc_psi(cNW) 4
+set fc_psi(xl) 3
