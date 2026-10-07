@@ -18,10 +18,12 @@ headroom=max(32*2**30,math.ceil(memtotal/10))
 need=peak+max(0,headroom-admit_core.RESERVE)
 inventory=sum(p.stat().st_size for p in w.rglob('*') if p.is_file())
 while True:
- if shutil.disk_usage(w).free>=2*inventory+headroom and admit_core.try_admit(need):break
+ if shutil.disk_usage(w).free>=2*inventory and admit_core.try_admit(need):break
  time.sleep(30)
 (d/'ds1m_recovery_admission.json').write_text(json.dumps(dict(time=time.time(),measured_peak_bytes=peak,host_headroom_bytes=headroom,guard_request_bytes=need,guard_file=admit_core.__file__,actual_build_inventory_bytes=inventory,disk_free_bytes=shutil.disk_usage(w).free),indent=2)+'\n')
 PY
+admission_rc=$?
+if [ "$admission_rc" -ne 0 ]; then exit "$admission_rc"; fi
 cd "$W/obj"
 TMPDIR=$W/tmp /usr/bin/time -v -o "$W/build_resources_recovery.log" make -j 6 -f Vtb_hbm_integrated_minimum_parent_hier.mk hier_build OPT_SLOW=-O0 OPT_FAST=-O0 OPT_GLOBAL=-O0 > "$W/build_recovery.log" 2>&1
 rc=$?
