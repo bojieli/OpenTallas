@@ -35,8 +35,16 @@
 //    PREP/COMMIT -> CHECK/VERIFY/EVAL -> verdict pipeline -> ov flop).
 //  * Rail and copy checks are registered per term before the sticky OR.
 //  * Cold POR: one kept release copy per bank (all sample the same stage-0
-//    flop, so every copy releases on the same edge).
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3)(
+//    flop, so every copy releases on the same edge). The copies take their
+//    asynchronous reset from that stage-0 flop (assert async through it,
+//    release synchronous per domain), so por_n drives two flops, not NO+8.
+//  * REL_REG=1 (r4, default off): the release decision is registered (rel_q =
+//    every release term held last edge, cleared by the release itself); the
+//    fire needs rel_q plus the live shallow terms (active, C/G/P normal and
+//    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
+//    until the release, and a release clears active and rel_q on the same edge.
+//    Cost: +1 edge per release.
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -72,7 +80,7 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3)(
   // Kept per-bank release copies (same rs[0] source: same release edge).
   wire [NO+5:0] rsc;
   for(genvar k=0;k<NO+6;k=k+1)begin:rsc_copy
-   ot_hbm_w2_keep_reg #(.W(1)) u_rsc(.clk(clk_sm),.rst_n(por_n),.d(rs[0]),.q(rsc[k]));
+   ot_hbm_w2_keep_reg #(.W(1)) u_rsc(.clk(clk_sm),.rst_n(rs[0]),.d(rs[0]),.q(rsc[k]));
   end
   wire rst_p=rsc[0],rst_c=rsc[1],rst_g=rsc[2],rst_r=rsc[3],rst_s=rsc[4],rst_e=rsc[5];
   // ---------------- input pin capture (no logic before the flop) ----------
@@ -178,7 +186,16 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3)(
   end
   // ---------------- permissions C, frame guard G, receipt R ----------------
   wire source_release_r=receipt_room&&G_normal&&!fault_any;
-  wire release_all=C_normal&&cv&&active&&source_release_r&&((acked&ALL)==ALL);
+  wire rel_ok_d=C_normal&&cv&&active&&source_release_r&&((acked&ALL)==ALL)&&!fault_any;
+  wire release_all_live=C_normal&&cv&&active&&source_release_r&&((acked&ALL)==ALL);
+  wire release_all;
+  if(REL_REG)begin:relreg
+   reg rel_q;
+   always @(posedge clk_sm or negedge rst_n)if(!rst_n)rel_q<=0;else rel_q<=rel_ok_d&&!release_all;
+   assign release_all=rel_q&&C_normal&&cv&&active&&G_normal;
+  end else begin:relcomb
+   assign release_all=release_all_live;
+  end
   wire arm=C_normal&&cv&&!active&&!fault_any;
   assign C_next=release_all?64'b0:arm?64'b1:{55'b0,na,ns,active};
   assign C_load=C_normal&&(arm||release_all||ns!=sent||na!=acked);

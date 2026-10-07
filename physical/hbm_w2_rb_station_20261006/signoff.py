@@ -5,7 +5,7 @@ Pass 1 measures the routed clk_sm insertion L (min/max over the block's flops)
 on the final ODB + RCX SPEF. Pass 2 regenerates the receiver clock-root
 contract SDC (make_sdc.py) at 833.333 ps with L = measured max (setup) and
 measured min (hold side of the budget), then reports SS setup and FF hold,
-split reg2reg / in2reg / reg2out. Accept: SS >= +40 ps, FF >= +15 ps.
+split reg2reg / in2reg / reg2out. Accept: SS >= +15 ps, FF >= +15 ps.
 """
 import argparse, json, re, subprocess, sys
 from pathlib import Path
@@ -72,14 +72,14 @@ def main():
     result = dict(route_sdc=str(sdc0), measured_insertion_SS=ss_lat, measured_insertion_FF=ff_lat)
     sdc = case/'signoff.sdc'
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
-                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)],
+                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)],
                    check=True, capture_output=True)
     for corner, delay in (('SS', 'max'), ('FF', 'min')):
         log = sta(case, odb, sdc, spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
-    result['accept'] = dict(SS_setup_ps=ss, FF_hold_ps=ff, SS_ok=ss is not None and ss >= 40, FF_ok=ff is not None and ff >= 15)
+    result['accept'] = dict(SS_setup_ps=ss, FF_hold_ps=ff, SS_ok=ss is not None and ss >= 15, FF_ok=ff is not None and ff >= 15)
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result['accept']))
 

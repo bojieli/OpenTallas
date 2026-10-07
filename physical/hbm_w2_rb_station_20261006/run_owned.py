@@ -25,6 +25,7 @@ p.add_argument('--period-ps', type=float, default=770.0)
 p.add_argument('--l-max', type=float, default=510.0)
 p.add_argument('--l-min', type=float, default=440.0)
 p.add_argument('--l-ff-min', type=float, default=280.0)
+p.add_argument('--l-ff-max', type=float, default=330.0)
 p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
@@ -77,7 +78,7 @@ def station_stat(text):
 driver.parse_stat = station_stat
 sdc = run/'station.sdc'
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
-                '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min),
+                '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min), '--l-ff-max', str(a.l_ff_max),
                 '--io-ref-period-ps', '833.333',
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
@@ -111,7 +112,7 @@ rel = str(HERE.relative_to(ROOT))
 argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--source', rel+'/bank_veto_static.sv', '--source', 'rtl/common/ot_fwd_link_stage.sv',
         '--source', rel+'/station_rb_static.sv',
-        '--param', 'ENABLE=1', '--param', f'NO={a.no}',
+        '--param', 'ENABLE=1', '--param', f'NO={a.no}', '--param', 'REL_REG=1',
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
         '--orfs-corner', 'WC', '--hold-corners', 'WC,BC', '--hold-margin-ns', '0.01',

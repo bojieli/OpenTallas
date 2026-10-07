@@ -32,6 +32,8 @@ p.add_argument('--period-ps', type=float, required=True)
 p.add_argument('--l-max', type=float, required=True, help='SS clk_sm insertion, latest flop (setup: input side)')
 p.add_argument('--l-min', type=float, required=True, help='SS clk_sm insertion, earliest flop (setup: output side)')
 p.add_argument('--l-ff-min', type=float, required=True, help='FF clk_sm insertion, earliest flop (hold side)')
+p.add_argument('--l-ff-max', type=float, default=None, help='FF clk_sm insertion, latest flop: approved IO hold model (inputs launched at FF max insertion + clk->Q FF + wire credit, hold uncertainty 50)')
+p.add_argument('--wire-credit-ps', type=float, default=0.0, help='0.112 ps/um x minimum die wire to the neighbour pin (stn_io_min.py)')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--hold-skew-ps', type=float, default=50.0)
 p.add_argument('--io-ref-period-ps', type=float, default=None, help='sign-off period the IO windows refer to (default: --period-ps)')
@@ -47,7 +49,8 @@ a = p.parse_args()
 # outputs are captured externally up to SKEW before our earliest SS flop.
 shift = a.period_ps - (a.io_ref_period_ps if a.io_ref_period_ps else a.period_ps)
 in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps + shift
-in_min = a.l_ff_min - a.hold_skew_ps + a.clkq_min_ps
+in_min = (a.l_ff_max + 32.2 + a.wire_credit_ps) if a.l_ff_max else a.l_ff_min - a.hold_skew_ps + a.clkq_min_ps
+hold_unc = a.hold_skew_ps if a.l_ff_max else 25
 out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min + shift
 out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest FF flop
 L = a.l_max
@@ -66,7 +69,7 @@ lines = [
     '}',
     'create_generated_clock -name forwarded_port -source $prev -master_clock $master -divide_by 1 [get_ports fclk_o]',
     'set_clock_uncertainty -setup 60 [all_clocks]',
-    'set_clock_uncertainty -hold 25 [all_clocks]',
+    f'set_clock_uncertainty -hold {hold_unc:g} [all_clocks]',
     'set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y [delete_from_list [all_inputs] [get_ports clk_sm]]',
     'foreach p [all_inputs] {',
     ' if {[get_full_name $p] eq "clk_sm"} {continue}',

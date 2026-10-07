@@ -62,6 +62,7 @@ CHAIN_MUTANTS = {
  'S4_held_release_ignored': (STATION, '&&(held_p||!rv);', '&&(!rv);'),
  'S6_cross_bank_veto_removed': (STATION, '  assign fault_any=fault_x;', '  assign fault_any=1\'b0;'),
  'S7_ack_frame_stage_skipped': (STATION, '   ackv_q<=ackv_p;acko_q<=acko_p;', '   ackv_q<=ACK_v;acko_q<=ACK_owner;'),
+ 'S8_rel_q_decision_removed': (STATION, 'rel_q<=rel_ok_d&&!release_all;', "rel_q<=1'b1;"),
  'S5_learned_send_not_recorded': (STATION, '    if(learned[t]||pend[t])ns[t]=1;', '    if(1\'b0)ns[t]=1;'),
 }
 
@@ -75,16 +76,34 @@ def run(cmd, log):
         return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode
 
 
+RELREG = False
+DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0)'
+
+
+def relreg(out, files):
+    """REL_REG=1 variant of the station (default flipped in a copy; mutants keep their edit)."""
+    if not RELREG:
+        return files
+    res = []
+    for f in files:
+        if f.endswith('ot_hbm_native_frame_station_rb.sv'):
+            t = Path(f).read_text(); assert t.count(DEF_OLD) == 1
+            d = out/('relreg_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
+            m = d/Path(f).name; m.write_text(t.replace(DEF_OLD, DEF_OLD.replace('REL_REG=0', 'REL_REG=1'))); f = str(m)
+        res.append(f)
+    return res
+
+
 def mutate(out, name, files):
     """Return file list with at most one mutated copy written under out/name."""
     if name is None:
-        return files
+        return relreg(out, files)
     path, old, new = {**BANK_MUTANTS, **CHAIN_MUTANTS}[name]
     text = (ROOT/path).read_text()
     assert text.count(old) == 1, (name, old)
     d = out/name; d.mkdir(exist_ok=True)
     m = d/Path(path).name; m.write_text(text.replace(old, new))
-    return [str(m) if f == str(ROOT/path) else f for f in files]
+    return relreg(out, [str(m) if f == str(ROOT/path) else f for f in files])
 
 
 def bank_bench(out, tag, stage, dist, mutant=None, red=1):
@@ -151,7 +170,9 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
+    global RELREG; RELREG = a.rel_reg
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)
@@ -166,6 +187,8 @@ def main():
         r = bank_bench(out, 'neg_'+name, 0, 1, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     for name in CHAIN_MUTANTS:
+        if name == 'S8_rel_q_decision_removed' and not RELREG:
+            continue
         r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
