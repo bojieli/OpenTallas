@@ -43,7 +43,7 @@ def command(a):
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
    '--hold-corners',hc,'--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',
-   '--step-tcl','PRE_CTS=physical/s81_bf_root_phase/pre_cts.tcl','--step-tcl','PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl']
+   '--step-tcl','PRE_CTS=physical/s81_bf_root_phase/pre_cts.tcl','--step-tcl','POST_CTS=physical/s81_bf_root_phase/check_placement.tcl','--step-tcl','PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl']
  else:
   cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2','--hold-corners','WC,BC']
  cmd+=['--clock-uncertainty-ns','.060',

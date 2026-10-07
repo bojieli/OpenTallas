@@ -27,9 +27,6 @@ foreach inst [concat $inversions $phases] {
   set span [expr {(abs($x-$gx)+abs($y-$gy))/double($dbu)}]
   if {$span>100.0} {error "BF_ROOT_PHASE legalization moved [$inst getName] $span um from ICG"}
   $inst setPlacementStatus FIRM
-  # FIRM preserves physical locality. CTS must still disconnect/reconnect clock
-  # pins; dont_touch here caused ODB-0370 on the first inverter's A pin.
-  # Generated-clock and post-CTS/route census checks fail if CTS loses the branch.
-  unset_dont_touch [get_cells [$inst getName]]
+  set_dont_touch [get_cells [$inst getName]]
 }
 puts "BF_ROOT_PHASE_LOCALIZED 1 phase FF + 2 inverters within 100um of actual ICG"

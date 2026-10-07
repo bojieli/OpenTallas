@@ -1,4 +1,4 @@
-# POST_DETAIL_ROUTE: fresh physical placement evidence, no legalization or edits.
+# POST_CTS and POST_DETAIL_ROUTE: fresh placement evidence, no edits.
 set b [ord::get_db_block]
 set dbu [$b getDbUnitsPerMicron]
 set gates {}; set branch {}
