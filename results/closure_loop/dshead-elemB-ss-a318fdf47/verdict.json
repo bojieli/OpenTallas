@@ -1,0 +1,151 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "dshead-elemB-ss-a318fdf47",
+ "block": "ot_dsrom_head_elem_B",
+ "owner": "Claude:tk-ds-head (fused-head design agent)",
+ "source_branch": "claude/takeover-ds-head-20261006",
+ "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 91.75,
+  "ff_ps": 19.13,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_elemB.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47/routes/dshead_elemB_ss_a318fdf47/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47/routes/dshead_elemB_ss_a318fdf47/work/orfs/logs/asap7/opentallas_ot_dsrom_head_elem_asap7_dshead_elemB_ss_a318fdf47/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)",
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 291,
+    "mean": 533.9,
+    "min": 514.0,
+    "max": 571.2
+   },
+   "all": {
+    "n": 25862,
+    "mean": 527.4,
+    "min": 508.1,
+    "max": 571.2
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 291,
+    "mean": 338.8,
+    "min": 325.0,
+    "max": 375.0
+   },
+   "all": {
+    "n": 25862,
+    "mean": 332.1,
+    "min": 316.8,
+    "max": 375.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 534,
+   "CK_SS_ALL_MEAN": 527,
+   "CK_SS_MIN": 514,
+   "CK_SS_ALL_MIN": 508,
+   "CK_SS_MAX": 571,
+   "CK_SS_ALL_MAX": 571,
+   "CK_FF_MEAN": 339,
+   "CK_FF_ALL_MEAN": 332,
+   "CK_FF_MIN": 325,
+   "CK_FF_ALL_MIN": 317,
+   "CK_FF_MAX": 375,
+   "CK_FF_ALL_MAX": 375
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "IOREG +1, SAFE argmax +1, CUT=511 + SPLIT9 adder latency 11 (skew follows); bundle bench EPYC1 fh/nvx_split9",
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T04:23:08-07:00",
+ "job_spec": {
+  "name": "dshead-elemB-ss-a318fdf47",
+  "block": "ot_dsrom_head_elem_B",
+  "owner": "Claude:tk-ds-head (fused-head design agent)",
+  "purpose": "DS ROM head SAFE view (elemB) per owner SAFE directive 2026-10-06: route 730 ps, sign-off 833.333, IO at the calibrated insertion r2: setup timed at SS in the flow (--hold-corners WC,BC; dshead-elemB-safe-b529ca8c9 ran BC-only)",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "a318fdf478cdce66e0b03d9d357fec14106713dd"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "bash physical/dsrom_fh_safe/cl_route.sh elemB {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "bash physical/dsrom_fh_safe/cl_route.sh elemB {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_elemB.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_elemB.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+   ]
+  },
+  "hold_eco": {
+   "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_dsrom_head_elem --post-sdc physical/dsrom_fh_safe/gen/signoff_elemB.sdc --macro physical/asap7_memory_macros/ot_rom_4096x274_m8 --out {RUN}/routes/{LABEL}/view"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_fh_safe/closed/elemB"
+   }
+  ],
+  "cycles_added": "IOREG +1, SAFE argmax +1, CUT=511 + SPLIT9 adder latency 11 (skew follows); bundle bench EPYC1 fh/nvx_split9",
+  "merge_target": "main",
+  "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)",
+  "budget": {
+   "enabled": false,
+   "reason": "budget sheet ot_dsrom_head_elem_A/B names the die abstract's ports (bbits/bd...), not the RTL's; IO from the calibrated insertion by the owner model instead"
+  }
+ }
+}

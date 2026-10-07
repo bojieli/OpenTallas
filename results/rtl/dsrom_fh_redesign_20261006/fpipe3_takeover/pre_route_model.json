@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.dsrom.fh.endpoint-fpipe3.v1",
+  "parameter": "FPIPE=3",
+  "default": 2,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "replicas": 1,
+  "input_bits_per_cycle": 3570,
+  "output_bits_per_cycle": 4151,
+  "extra_declared_register_bits": 12603,
+  "extra_register_area_proxy_um2": 3675.0348000000004,
+  "slot_um": [
+    480,
+    480
+  ],
+  "slot_area_um2": 230400,
+  "slots_added": 0,
+  "boundary_bits_added": 0,
+  "added_input_cycles": 1,
+  "added_output_cycles": 1,
+  "normalization_lanes": 64,
+  "data_bits_per_enable": 32,
+  "normalization": "Registered per-lane enables; each gates 32 local data bits",
+  "routing": "Existing boundary widths unchanged; one new local register boundary before normalization and at outputs",
+  "routing_capacity_qualified": false,
+  "physical_closed": false,
+  "composed_latency": "Gold4 FPIPE3 pending; do not multiply two edges by every streamed beat: one-outstanding checked transactions",
+  "exactness_record": "results/rtl/dsrom_fh_redesign_20261006/fpipe3_takeover/record.json",
+  "adoption": false
+}

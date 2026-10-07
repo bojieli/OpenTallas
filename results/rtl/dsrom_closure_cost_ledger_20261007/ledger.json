@@ -143,30 +143,30 @@
   },
   {
    "item": "sel_xstg",
-   "description": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
+   "description": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job",
    "cycles": [
     [
      "*.attn.cand.topk_local",
-     1,
+     6,
      0
     ],
     [
      "*.attn.gather",
-     1,
+     6,
      0
     ],
     [
      "*.attn.idx.topk_local",
-     1,
+     6,
      0
     ]
    ],
-   "ar_tok_s": 1617.6,
-   "mtp_tok_s": 4752.1,
-   "ar_pct": 0.0,
-   "mtp_pct": -0.002,
-   "cum_ar_pct": -3.427,
-   "cum_mtp_pct": -2.919
+   "ar_tok_s": 1617.4,
+   "mtp_tok_s": 4751.5,
+   "ar_pct": -0.012,
+   "mtp_pct": -0.015,
+   "cum_ar_pct": -3.439,
+   "cum_mtp_pct": -2.932
   },
   {
    "item": "vm_bank_group",
@@ -188,12 +188,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1613.3,
-   "mtp_tok_s": 4741.8,
+   "ar_tok_s": 1613.1,
+   "mtp_tok_s": 4741.3,
    "ar_pct": -0.266,
-   "mtp_pct": -0.217,
-   "cum_ar_pct": -3.684,
-   "cum_mtp_pct": -3.13
+   "mtp_pct": -0.215,
+   "cum_ar_pct": -3.696,
+   "cum_mtp_pct": -3.14
   },
   {
    "item": "gather_root_v4",
@@ -215,12 +215,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1610.0,
-   "mtp_tok_s": 4734.2,
-   "ar_pct": -0.205,
-   "mtp_pct": -0.16,
-   "cum_ar_pct": -3.881,
-   "cum_mtp_pct": -3.285
+   "ar_tok_s": 1609.9,
+   "mtp_tok_s": 4733.6,
+   "ar_pct": -0.198,
+   "mtp_pct": -0.162,
+   "cum_ar_pct": -3.887,
+   "cum_mtp_pct": -3.297
   },
   {
    "item": "capture",
@@ -242,12 +242,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.4,
-   "mtp_tok_s": 4730.4,
+   "ar_tok_s": 1608.3,
+   "mtp_tok_s": 4729.8,
    "ar_pct": -0.099,
    "mtp_pct": -0.08,
-   "cum_ar_pct": -3.976,
-   "cum_mtp_pct": -3.363
+   "cum_ar_pct": -3.982,
+   "cum_mtp_pct": -3.375
   },
   {
    "item": "selector",
@@ -264,12 +264,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.1,
-   "mtp_tok_s": 4729.2,
-   "ar_pct": -0.019,
+   "ar_tok_s": 1607.9,
+   "mtp_tok_s": 4728.6,
+   "ar_pct": -0.025,
    "mtp_pct": -0.025,
-   "cum_ar_pct": -3.994,
-   "cum_mtp_pct": -3.387
+   "cum_ar_pct": -4.006,
+   "cum_mtp_pct": -3.399
   },
   {
    "item": "collector",
@@ -281,12 +281,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.1,
-   "mtp_tok_s": 4729.1,
+   "ar_tok_s": 1607.9,
+   "mtp_tok_s": 4728.5,
    "ar_pct": 0.0,
    "mtp_pct": -0.002,
-   "cum_ar_pct": -3.994,
-   "cum_mtp_pct": -3.389
+   "cum_ar_pct": -4.006,
+   "cum_mtp_pct": -3.401
   },
   {
    "item": "svc_io",
@@ -308,12 +308,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1607.8,
-   "mtp_tok_s": 4728.6,
-   "ar_pct": -0.019,
+   "ar_tok_s": 1607.7,
+   "mtp_tok_s": 4728.0,
+   "ar_pct": -0.012,
    "mtp_pct": -0.011,
-   "cum_ar_pct": -4.012,
-   "cum_mtp_pct": -3.399
+   "cum_ar_pct": -4.018,
+   "cum_mtp_pct": -3.412
   },
   {
    "item": "softmax_safe_div",
@@ -325,12 +325,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1605.4,
-   "mtp_tok_s": 4722.8,
-   "ar_pct": -0.149,
+   "ar_tok_s": 1605.2,
+   "mtp_tok_s": 4722.2,
+   "ar_pct": -0.156,
    "mtp_pct": -0.123,
-   "cum_ar_pct": -4.155,
-   "cum_mtp_pct": -3.518
+   "cum_ar_pct": -4.167,
+   "cum_mtp_pct": -3.53
   },
   {
    "item": "bf_rowfix",
@@ -352,12 +352,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1604.8,
-   "mtp_tok_s": 4721.5,
+   "ar_tok_s": 1604.6,
+   "mtp_tok_s": 4720.9,
    "ar_pct": -0.037,
    "mtp_pct": -0.028,
-   "cum_ar_pct": -4.191,
-   "cum_mtp_pct": -3.544
+   "cum_ar_pct": -4.203,
+   "cum_mtp_pct": -3.557
   },
   {
    "item": "pq_qelem",
@@ -379,26 +379,26 @@
      0.0017
     ]
    ],
-   "ar_tok_s": 1603.5,
-   "mtp_tok_s": 4718.3,
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4717.7,
    "ar_pct": -0.081,
    "mtp_pct": -0.068,
-   "cum_ar_pct": -4.269,
-   "cum_mtp_pct": -3.61
+   "cum_ar_pct": -4.281,
+   "cum_mtp_pct": -3.622
   }
  ],
  "total": {
-  "ar_tok_s": 1603.5,
-  "mtp_tok_s": 4718.3,
-  "ar_pct": -4.269,
-  "mtp_pct": -3.61
+  "ar_tok_s": 1603.3,
+  "mtp_tok_s": 4717.7,
+  "ar_pct": -4.281,
+  "mtp_pct": -3.622
  },
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1603.5,
-  "mtp_tok_s": 4718.3,
-  "ar_pct": -4.269,
-  "mtp_pct": -3.61,
+  "ar_tok_s": 1603.3,
+  "mtp_tok_s": 4717.7,
+  "ar_pct": -4.281,
+  "mtp_pct": -3.622,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }

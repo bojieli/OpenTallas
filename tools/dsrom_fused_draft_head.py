@@ -296,6 +296,8 @@ def sources(fused, sink=True):
 
 
 def cmd_run(a):
+    if a.safe_level != 1 and not a.safe:
+        raise ValueError("--safe-level requires --safe")
     fused = not a.as_built_core
     srcs, defs, C = sources(fused)
     if a.capture_cut:
@@ -323,7 +325,7 @@ def cmd_run(a):
         defs = defs + ["+define+OT_FH_MARGIN=1"]
     if a.fpipe or a.safe:
         if not a.margin: raise ValueError("--fpipe/--safe require --margin")
-        defs = defs + [f"+define+OT_FH_FPIPE={2 if a.safe else 1}"] + (["+define+OT_FH_SAFE=1"] if a.safe else [])
+        defs = defs + [f"+define+OT_FH_FPIPE={a.fpipe_level or (2 if a.safe else 1)}"] + ([f"+define+OT_FH_SAFE={a.safe_level}"] if a.safe else [])
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
@@ -459,6 +461,8 @@ def main():
     r.add_argument("--margin", action="store_true", help="Default-off margin-first head (OT_FH_MARGIN: zero-cycle trees, five-deep retirement, staged checked endpoint); pair with --capture-return-extra 5")
     r.add_argument("--fpipe", action="store_true", help="Default-off registered endpoint fault aggregation (OT_FH_FPIPE: per-bank fault flops, registered reduce, release age 6, registered head ACK); needs --margin")
     r.add_argument("--safe", action="store_true", help="Default-off SAFE head: FPIPE=2 endpoint pin stage + retirement SAFE (+1 stage, registered receipt compare / sink busy); needs --margin")
+    r.add_argument("--safe-level", type=int, choices=(1, 2), default=1, help="retirement SAFE level (2: split registered receipt comparison); requires --safe")
+    r.add_argument("--fpipe-level", type=int, default=0, help="override the endpoint FPIPE level (3: two input stages + registered outputs)")
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
     r.add_argument("--jobs", type=int, default=8)

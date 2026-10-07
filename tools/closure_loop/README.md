@@ -90,7 +90,9 @@ acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's me
 clock plan.
 
 ## Hold margin and automatic hold ECO (2026-10-06)
-- Jobs ingested from 2026-10-06 20:40 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
+- Jobs created from 2026-10-07 04:17 get `HM=0.010` (10 ps; coordinator: 35 ps + the 50 ps FF IO hold uncertainty
+  overloaded CTS/GRT hold repair, RSZ-0060 buffer-cap deaths); the post-route hold ECO carries hold to +18.
+- Jobs ingested from 2026-10-06 20:40 to 2026-10-07 04:17 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
   to calibrate and route. Override it with spec `route_hold_margin_ns`, or with an inline `HM=` in the command.
 - HOLD-ECO: when a verdict is hold-only (SS >= +15, DRC 0, all checks and benches OK, FF < +15), the loop runs
   `hold_eco.sh` / `hold_eco.tcl` before declaring NEEDS_RTL. The ECO is the hub recipe:
@@ -121,9 +123,11 @@ Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Cause
   GRT around the repair re-guides only the touched nets, every wire is stripped, DRT routes on the original guides.
   The same no-ECO control then reproduces SS +70.18 / FF -4.20 exactly; with the ECO (293 cells) SS +73.02 / FF -4.20 ->
   +6.51 in one pass (the 2nd pass closes the residue). Keeping untouched WIRES does not work with this DRT ('pin not
-  visited' on untouched nets), nor does keeping clock wires (checkConnectivity). Original guides are required:
-  missing or rejected guides fail the pass. A fresh global route is not an accepted fallback (owner takeover,
-  2026-10-07; `svc_SE_s6` eco-r3 passed timing only after that fallback).
+  visited' on untouched nets), nor does keeping clock wires (checkConnectivity). Guide preservation is the preferred
+  tested strategy, not an acceptance requirement. Missing/rejected guides fail the pass by default; an explicit
+  `ALLOW_FRESH_GRT=1` (job `hold_eco.allow_fresh_grt: true`) permits fresh resistance-aware GRT. The result records
+  the strategy and fallback reason in `route_strategy`. All unchanged strict timing, DRC, IO and context checks
+  still apply. Historical `svc_SE_s6` eco-r3 is not rejected merely because it used fresh GRT.
 - post-route hold GOAL +18 (coordinator 2026-10-07: margin over the +15 line for die context; was a +22 pre-route
   target that routed to anything); the repair aims +18 + an allowance (3 ps, then adds 1.5 times the previous pass's shortfall, capped at 20 ps)
   because the new buffers' nets are unrouted during the repair; acceptance stays +15. Only endpoints with SS setup > 2.4 x deficit + 40 ps are repaired (a ps of FF hold delay costs ~2.4 ps at
