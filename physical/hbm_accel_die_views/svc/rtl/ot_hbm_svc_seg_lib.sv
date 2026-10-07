@@ -159,7 +159,7 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     .bdata(wsq[255:0]), .full(full[4]), .tag(t10), .data(dt[4]), .take(w_take));
   assign tg[4] = t10;
   reg [2:0] lr;
-  reg lv; reg [9:0] lt; reg [1087:0] ld;
+  reg lv, lv2; reg [9:0] lt; reg [1087:0] ld;
   wire [4:0] cand;                        // merge candidates: assembler full flags (SLOT 0) or slot valids (SLOT 1)
   wire [9:0] fx = {cand, cand};
   wire [4:0] rot = fx >> lr;
@@ -170,7 +170,31 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
   always @(posedge ck or negedge rn)
     if (!rn) begin lv <= 1'b0; lr <= 3'd0; end
     else begin lv <= any; if (any) lr <= (sel == 3'd4) ? 3'd0 : sel + 3'd1; end
-  generate if (SLOT) begin : gs
+  generate if (SLOT == 2) begin : gs2
+    // views agent (SE_s7 70a27c406: lr -> rot -> off -> mod-5 sel -> 5:1 x 1088 mux -> ld, 25 levels, -267.6 ps over
+    // 400 endpoints): SLOT 1 plus a REGISTERED one-hot grant: the arbitration (5-bit) lands in gq, the slot data are
+    // read one cycle later by an AND-OR over gq (a drained slot is refilled no earlier than the edge that reads it, so
+    // the read sees the granted line).  +1 cycle per K/W line, same order (round robin over slot valids).
+    reg [4:0] sv_q, gq; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
+    wire [4:0] fill = full & ~sv_q;
+    wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
+    assign cand = sv_q;
+    assign k_take = fill[3:0];
+    assign w_take = fill[4];
+    always @(posedge ck or negedge rn)
+      if (!rn) begin sv_q <= 5'd0; gq <= 5'd0; end
+      else begin sv_q <= (sv_q & ~drain) | fill; gq <= drain; end
+    for (p = 0; p < 5; p = p + 1) begin : gsl
+      always @(posedge ck) if (fill[p]) begin st[p] <= tg[p]; sd[p] <= dt[p][1087:0]; end
+    end
+    reg [1087:0] dsel; reg [9:0] tsel; integer q;
+    always @* begin
+      dsel = 1088'd0; tsel = 10'd0;
+      for (q = 0; q < 5; q = q + 1) begin dsel = dsel | ({1088{gq[q]}} & sd[q]); tsel = tsel | ({10{gq[q]}} & st[q]); end
+    end
+    always @(posedge ck or negedge rn) if (!rn) lv2 <= 1'b0; else lv2 <= |gq;
+    always @(posedge ck) if (|gq) begin lt <= tsel; ld <= dsel; end
+  end else if (SLOT) begin : gs
     reg [4:0] sv_q; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
     wire [4:0] fill = full & ~sv_q;
     wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
@@ -192,7 +216,7 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     assign w_take = any && (sel == 3'd4);
     always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
   end endgenerate
-  assign line = {ld, lt, lv};
+  assign line = {ld, lt, (SLOT == 2) ? lv2 : lv};
 endmodule
 
 // KV (KV = 1) / index-key (KV = 0) assembler at its port

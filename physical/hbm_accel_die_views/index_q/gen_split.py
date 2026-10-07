@@ -35,6 +35,11 @@ PAR = {  # parent pin centroids (um, parent coordinates)
     't_su': (930.0, 2764.7), 't_vm': (930.0, 5479.7)}
 
 
+# views agent 2026-10-07: hbm_idxq_b1_e8b5132fb_r18b SS -75.99 (a0i -> first a0 stage) / -75.70 (kin -> first kp stage),
+# 13 levels of wire buffers between the input pin and the first chain register: +2 stages on both b1 chains
+EXTRA = {'b1.kp': 2, 'b1.a0': 2}
+
+
 def hops(d):
     return max(1, math.ceil(d / HOP))
 
@@ -63,6 +68,8 @@ def plan():
     st['b3.a3'] = hops(H[3]) + 1
     st['b4.a3'] = hops(H[4]) + 1
     st['b5.a3'] = hops(xa3 + (PAR['a3'][1] - Y0[5])) + 1
+    for k, e in EXTRA.items():                               # fail-fast extra stages (views agent, measured misses)
+        st[k] += e
     return st
 
 

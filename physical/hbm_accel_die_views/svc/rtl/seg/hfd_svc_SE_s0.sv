@@ -84,10 +84,10 @@ module hfd_svc_SE_s0 (
   assign ar0_kcv = 1'b0; assign ar0_kcd = 40'd0;
   assign ar0_icv = 1'b0; assign ar0_icd = 40'd0;
   ot_svs_arb #(.S(0), .KVI(-1), .IKI(-1)) u_ar0 (.ck(c), .rn(rn), .sv(ar0_sv), .sd(ar0_sd), .rq_take(ar0_take), .kvc_v(ar0_kcv), .kvc_d(ar0_kcd), .kv_take(ar0_kt), .ikc_v(ar0_icv), .ikc_d(ar0_icd), .ik_take(ar0_it), .done({dn3_o, dn2_o, dn1_o, dn0_o}), .iss_v(ar0_iv), .iss_d(ar0_id));
-  ot_svs_asm #(.SLOT(1)) u_as0 (.ck(c), .rn(rn), .sv(as0_sv), .sq(as0_sq), .wsv(as0_wsv), .wsq(as0_wsq), .k_take(as0_kt), .w_take(as0_wt), .line(as0_line));
+  ot_svs_asm #(.SLOT(2)) u_as0 (.ck(c), .rn(rn), .sv(as0_sv), .sq(as0_sq), .wsv(as0_wsv), .wsq(as0_wsq), .k_take(as0_kt), .w_take(as0_wt), .line(as0_line));
   wire fck0; ot_svc_fclk_buf u_fc0 (.a(c), .y(fck0));
   assign l0 = {fck0, fck0, fck0, as0_line};
-  ot_svs_asm #(.SLOT(1)) u_as1 (.ck(c), .rn(rn), .sv(as1_sv), .sq(as1_sq), .wsv(as1_wsv), .wsq(as1_wsq), .k_take(as1_kt), .w_take(as1_wt), .line(as1_line));
+  ot_svs_asm #(.SLOT(2)) u_as1 (.ck(c), .rn(rn), .sv(as1_sv), .sq(as1_sq), .wsv(as1_wsv), .wsq(as1_wsq), .k_take(as1_kt), .w_take(as1_wt), .line(as1_line));
   assign l1 = as1_line;
   ot_svs_lane u_ln0 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln0_wr_v), .wr_tag(ln0_wr_tag), .wr_beat(ln0_wr_beat), .wr_data(ln0_wr_data), .w_room(ln0_w_room), .o_v(ln0_v), .o_d(ln0_d), .room_q(ln0_rq));
   ot_svs_lane u_ln1 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln1_wr_v), .wr_tag(ln1_wr_tag), .wr_beat(ln1_wr_beat), .wr_data(ln1_wr_data), .w_room(ln1_w_room), .o_v(ln1_v), .o_d(ln1_d), .room_q(ln1_rq));

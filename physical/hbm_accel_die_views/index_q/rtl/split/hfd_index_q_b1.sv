@@ -15,10 +15,10 @@ module hfd_index_q_b1 (
   always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
   wire rn = rst_s[1];
   wire kpv; wire [511:0] kpq;
-  ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
+  ot_svc_vpipe #(.W(512), .N(6)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
   assign kout = {kpq, kpv};
   wire u_a0_v; wire [527:0] u_a0_q;
-  ot_svc_vpipe #(.W(528), .N(4)) u_a0 (.ck(c), .rst_n(rn), .v(a0i[0]), .d(a0i[528:1]), .qv(u_a0_v), .q(u_a0_q));
+  ot_svc_vpipe #(.W(528), .N(6)) u_a0 (.ck(c), .rst_n(rn), .v(a0i[0]), .d(a0i[528:1]), .qv(u_a0_v), .q(u_a0_q));
   assign a0o = {u_a0_q, u_a0_v};
 endmodule
 `default_nettype wire
