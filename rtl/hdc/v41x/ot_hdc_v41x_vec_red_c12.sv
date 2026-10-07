@@ -47,7 +47,8 @@ module ot_hdc_v41x_vec_red #(
     parameter integer ROGS = 4,         // ROUT bundle copies: one per ROGS slots (1, 2 or 4; ROUT >= 1 only)
     parameter integer SL = 64,          // lanes a slice (capped at N), a power of two >= 8
     parameter integer ROPI = 0,         // margin: op operand registers (+1 a reducer op)
-    parameter integer RKC = 0           // margin: top keeps copies of the tap-hit sources / tap tag (no added cycle)
+    parameter integer RKC = 0,          // margin: top keeps copies of the tap-hit sources / tap tag (no added cycle)
+    parameter integer RHALF = 0         // HALF RATE (default off): see the g_half branch below
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -82,16 +83,81 @@ module ot_hdc_v41x_vec_red #(
     wire [NS*SW-1:0] lv;
     wire [NS-1:0]    sf;
     genvar s;
-    generate for (s = 0; s < NS; s = s + 1) begin : g_sl
+    generate if (RHALF == 0) begin : g_full
+    for (s = 0; s < NS; s = s + 1) begin : g_sl
         ot_hdc_v41x_vred_slice #(.SL(S), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL), .ROPI(ROPI)) u_s (.clk(clk), .rst_n(rst_n),
             .v_in(v_in), .x_in(x_in[S*32*s +: S*32]), .live_in(live_in[S*s +: S]), .mx_in(mx_in), .sq_in(sq_in),
             .lv_o(lv[SW*s +: SW]), .fault_o(sf[s]));
-    end endgenerate
+    end
     ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL),
                            .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S), .ROPI(ROPI), .RKC(RKC)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
         .span_in(span_in), .l_in(l_in), .last_in(last_in), .nres_in(nres_in), .rnd_in(rnd_in), .rbase_in(rbase_in),
         .rsh_in(rsh_in), .meta_in(meta_in), .lv_in(lv), .sfault_in(sf), .o_we(o_we), .o_addr(o_addr), .o_data(o_data),
         .o_meta(o_meta), .o_ev(o_ev), .busy(busy), .fault(fault));
+    end else begin : g_half
+    // HALF RATE (Claude:hbm-su 2026-10-07; = the ot_hdc_v41x_vred_*_c12h physical vehicles): a kept register at every
+    // slice / top port and the unchanged slices and top on the clock gated every other cycle (ot_hdc_v41x_vred_hgate);
+    // event / status outputs leave fast registers and pulse once.  CONTRACT: v_in only in a ph = 1 cycle (the
+    // controller's RHALF issue rule); a beat in a ph = 0 cycle raises fault.  Latency 2 x (core + 4) + 1.
+`ifdef OT_NEG_RED_HALF
+        localparam integer TD = 2;
+`else
+        localparam integer TD = 3;
+`endif
+        wire gclk, ph;
+        ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+        reg            p_v;
+        reg [N*32-1:0] p_x;
+        reg [N-1:0]    p_live;
+        reg            p_mx, p_sq;
+        always @(posedge gclk or negedge rst_n) if (!rst_n) p_v <= 1'b0; else p_v <= v_in;
+        always @(posedge gclk) begin p_x <= x_in; p_live <= live_in; p_mx <= mx_in; p_sq <= sq_in; end
+        wire [NS*SW-1:0] c_lv;
+        wire [NS-1:0]    c_sf;
+        for (s = 0; s < NS; s = s + 1) begin : g_sl
+            ot_hdc_v41x_vred_slice #(.SL(S), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL), .ROPI(ROPI)) u_s (.clk(gclk), .rst_n(rst_n),
+                .v_in(p_v), .x_in(p_x[S*32*s +: S*32]), .live_in(p_live[S*s +: S]), .mx_in(p_mx), .sq_in(p_sq),
+                .lv_o(c_lv[SW*s +: SW]), .fault_o(c_sf[s]));
+        end
+        reg [NS*SW-1:0] q_lv, t_lv;          // slice out pin, top lv_in pin
+        reg [NS-1:0]    q_sf, t_sf;
+        always @(posedge gclk) begin q_lv <= c_lv; t_lv <= q_lv; end
+        always @(posedge gclk or negedge rst_n) if (!rst_n) begin q_sf <= 0; t_sf <= 0; end else begin q_sf <= c_sf; t_sf <= q_sf; end
+        localparam integer TW = 1 + 4 + 1 + 3 + 1 + 8 + 1 + AW + 5 + MW;
+        reg [TW-1:0] tg [0:TD-1];
+        reg [TD-1:0] tvv;
+        integer it;
+        always @(posedge gclk) begin
+            tg[0] <= {mx_in, lt_in, span_in, l_in, last_in, nres_in, rnd_in, rbase_in, rsh_in, meta_in};
+            for (it = 1; it < TD; it = it + 1) tg[it] <= tg[it-1];
+        end
+        always @(posedge gclk or negedge rst_n) if (!rst_n) tvv <= 0; else tvv <= {tvv[TD-2:0], v_in};
+        wire t_mx, t_span, t_last, t_rnd; wire [3:0] t_lt; wire [2:0] t_l; wire [7:0] t_nres; wire [AW-1:0] t_rbase;
+        wire [4:0] t_rsh; wire [MW-1:0] t_meta;
+        assign {t_mx, t_lt, t_span, t_l, t_last, t_nres, t_rnd, t_rbase, t_rsh, t_meta} = tg[TD-1];
+        wire [N/8-1:0] c_we; wire [N/8*AW-1:0] c_addr; wire [N/8*32-1:0] c_data; wire [MW-1:0] c_meta; wire c_ev, c_busy, c_fault;
+        ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL),
+                               .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S), .ROPI(ROPI), .RKC(RKC)) u_t (.clk(gclk), .rst_n(rst_n),
+            .v_in(tvv[TD-1]), .mx_in(t_mx), .lt_in(t_lt), .span_in(t_span), .l_in(t_l), .last_in(t_last), .nres_in(t_nres),
+            .rnd_in(t_rnd), .rbase_in(t_rbase), .rsh_in(t_rsh), .meta_in(t_meta), .lv_in(t_lv), .sfault_in(t_sf),
+            .o_we(c_we), .o_addr(c_addr), .o_data(c_data), .o_meta(c_meta), .o_ev(c_ev), .busy(c_busy), .fault(c_fault));
+        reg [N/8*AW-1:0] g_addr; reg [N/8*32-1:0] g_data; reg [MW-1:0] g_meta;
+        reg [N/8-1:0] g_we; reg g_ev, g_fault, g_busy;
+        always @(posedge gclk) begin g_addr <= c_addr; g_data <= c_data; g_meta <= c_meta; end
+        always @(posedge gclk or negedge rst_n)
+            if (!rst_n) begin g_we <= 0; g_ev <= 1'b0; g_fault <= 1'b0; g_busy <= 1'b0; end
+            else begin g_we <= c_we; g_ev <= c_ev; g_fault <= c_fault; g_busy <= c_busy | p_v | (|tvv); end
+        reg [N/8-1:0] f_we; reg f_ev, f_fault, f_busy;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin f_we <= 0; f_ev <= 1'b0; f_fault <= 1'b0; f_busy <= 1'b0; end
+            else begin
+                f_we <= g_we & {(N/8){~ph}}; f_ev <= g_ev & ~ph; f_fault <= (g_fault & ~ph) | (v_in & ~ph);
+                f_busy <= g_busy | v_in | p_v | (|tvv);
+            end
+        assign o_we = f_we; assign o_ev = f_ev; assign fault = f_fault; assign busy = f_busy;
+        assign o_addr = g_addr; assign o_data = g_data; assign o_meta = g_meta;
+    end endgenerate
+
 endmodule
 
 // ---------------------------------------------------------------------------
@@ -725,4 +791,15 @@ module ot_hdc_v41x_vsq #(
 );
     /* verilator no_inline_module */
     ot_hdc_qmul_lat #(MLAT) u (clk, rst_n, v, x, x, y, fault);
+endmodule
+
+// half-rate clock gate (RHALF; the HBM loader half-rate template): en flop toggling, latched while the clock is low,
+// ANDed with it, so a gated edge IS a fast edge; ph = 1 in the fast cycle that ends on a gated edge
+(* keep_hierarchy *)
+module ot_hdc_v41x_vred_hgate (input wire clk, input wire rst_n, output wire gclk, output wire ph);
+    reg en_q, en_l;
+    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= ~en_q;
+    always @(*) if (!clk) en_l = en_q;
+    assign gclk = clk & en_l;
+    assign ph = en_q;
 endmodule

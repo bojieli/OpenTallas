@@ -199,7 +199,11 @@ module ot_hdc_v41x_vec #(
     parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
     parameter integer ROPI = 0,         // c12 reducer margin: op operand registers (every reducer op ALAT + 1)
     parameter integer RKC = 0,          // c12 reducer margin: kept copies of the tap-hit sources / tap tag (no cycle)
-    parameter integer CTL12 = 0         // c12 controller: pipelined set-up, registered emit-loop conditions
+    parameter integer CTL12 = 0,        // c12 controller: pipelined set-up, registered emit-loop conditions
+    parameter integer RHALF = 0,        // HALF-RATE reducer (default off): reduction beats issue only so that they
+                                        // retire in a ph = 1 cycle (one beat per two cycles at a fixed phase), and the
+                                        // reducer depths double (+ the pin stages); the reducer instance runs RHALF
+    parameter integer RHPAR = 0         // RHALF: the emit -> retire parity offset (a_dS counts from emit)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -533,9 +537,11 @@ module ot_hdc_v41x_vec #(
         if (pst == 2'd1 && sst == 3'd5) r_nvs <= r_wl + {r_wh, 8'd0};
     end
     // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 7 ALAT, TREE ALAT lt)
-    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
-                      + H_R[9:0] * c_lt;
-    wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, c_L} : 10'd0);
+    // RHALF: every reducer stage takes two fast cycles, plus 4 pin stages (x 2) and the fast event register
+    localparam [9:0] RHM = (RHALF != 0) ? 10'd2 : 10'd1, RHO = (RHALF != 0) ? 10'd9 : 10'd0;
+    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+                      + H_R[9:0] * c_lt);
+    wire [9:0] c_dR = c_dT + RHM * (10'd1 + (c_span ? H_R[9:0] * {5'd0, c_L} : 10'd0));
     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
     // offset terms: stream s (A, B, C, D, O), bit k of the lane index
     wire [AW-1:0] so_s [0:4];
@@ -642,15 +648,15 @@ module ot_hdc_v41x_vec #(
             r2_wqs <= wqs_w; r2_wqc <= wqc_w;
             r2_nslot <= ONE_CW << c_nsh; r2_ostep <= c_ostep; r2_rstep <= s_wnf ? {AW{1'b0}} : q_rso << c_nsh;
             // c_dT = c_dS + the constant stages + H_R * c_lt, in two steps
-            r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT;
-            r2_lth <= H_R[9:0] * c_lt;
+            r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+            r2_lth <= RHM * (H_R[9:0] * c_lt);
         end
         if (pst == 2'd1 && sst == 4'd8) r2_dT <= r2_dTa + r2_lth;
         if (pst == 2'd1 && sst == 4'd8) r2_wq <= wq_w;
         if (pst == 2'd1 && sst == 4'd9 && s_wnf) r2_nvs <= wsum_w;
         if (pst == 2'd1 && sst == S2_LR) r2_L <= c2_L;
         if (pst == 2'd1 && sst == S2_LR + 4'd1) begin
-            r2_dR <= r2_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, r2_L} : 10'd0);
+            r2_dR <= r2_dT + RHM * (10'd1 + (c_span ? H_R[9:0] * {5'd0, r2_L} : 10'd0));
             r2_bad <= (red_on && scalar_c) || s_flatbad || (c_span && r2_L > LV) || (c_gather && !r2_gpow);
         end
     end
@@ -747,8 +753,20 @@ module ot_hdc_v41x_vec #(
                 (a_chsrc == CH_RES)  ? !dr[7] :
                 (!dx[7] || (x_seq == a_chseq && x_cnt >= need));
     wire ch_ok = (CTL12 != 0) ? ch_r : ch_c;
-    wire emit = a_v && (a_started || ck_ok) && ch_ok;
+    // RHALF issue rule: a reduction beat emits only in a cycle whose retire lands in a ph = 1 cycle (hph = the
+    // reducer's ph, both leave reset together); hok_r is that condition for THIS cycle, registered a cycle ahead.
+    reg  hph, hok_r;
+    wire emit = a_v && (a_started || ck_ok) && ch_ok && (RHALF == 0 || hok_r);
     wire promote = (pst == 2'd3) && (!a_v || (emit && last_v));
+    wire [1:0] n_ared = promote ? q_red : a_red;
+    wire       n_ads0 = promote ? p_dS[0] : a_dS[0];
+`ifdef OT_NEG_RHALF_NOGATE
+    wire       n_hok = 1'b1;     // NEGATIVE CONTROL: no issue rule -> back-to-back beats reach the half-rate reducer
+`else
+    wire       n_hok = (n_ared == RED_NONE) || ((~hph ^ n_ads0 ^ RHPAR[0]) == 1'b1);
+`endif
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hph <= 1'b0; hok_r <= 1'b1; end else begin hph <= ~hph; hok_r <= n_hok; end
 
     // ---- CTL12: the next cycle's conditions, registered ------------------------------------------
     // The row-end / last-vector flags of the current vector (with the next position i_v + S, o_v + nslot kept
@@ -941,7 +959,15 @@ module ot_hdc_v41x_vec #(
             ot_hdc_v41x_ckreg #(.W(6), .R(1)) u_r (.clk(clk), .rst_n(rst_n), .d({n_pst, n_av, n_st, n_ck, n_chq[gk * 4 / KC]}),
                                                  .q({kp, kav, kst, kck, kch}));
             ot_hdc_v41x_ckreg #(.W(2), .R(0)) u_c (.clk(clk), .rst_n(rst_n), .d({n_wr, n_ol}), .q({kwr, kol}));
-            wire kem = kav && (kst || kck) && kch;
+            wire kho;
+            if (RHALF != 0) begin : g_kh
+                reg kh;
+                always @(posedge clk or negedge rst_n) if (!rst_n) kh <= 1'b1; else kh <= n_hok;
+                assign kho = kh;
+            end else begin : g_kn
+                assign kho = 1'b1;
+            end
+            wire kem = kav && (kst || kck) && kch && kho;
             assign EMIT[gk] = kem;
             assign WRAPS[gk] = kwr;
             assign STRT[gk] = kst;
@@ -1366,7 +1392,7 @@ module ot_hdc_v41x_vec #(
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE), .ROPI(ROPI), .RKC(RKC)) u_red (.clk(clk), .rst_n(rst_n),
+                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE), .ROPI(ROPI), .RKC(RKC), .RHALF(RHALF)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),

@@ -278,14 +278,7 @@ endmodule
 // Results: same values, order and faults (transaction level); o_we / o_ev pulse for one fast cycle with the data
 // held stable around it.  Latency 2 x (core + 4) + 1 fast cycles (tb_red_half measures it).
 // ---------------------------------------------------------------------------
-(* keep_hierarchy *)
-module ot_hdc_v41x_vred_hgate (input wire clk, input wire rst_n, output wire gclk, output wire ph);
-    reg en_q, en_l;
-    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= ~en_q;
-    always @(*) if (!clk) en_l = en_q;     // clock-gate latch: transparent while the clock is low
-    assign gclk = clk & en_l;              // gated edge = the fast edge that ends a ph = 1 cycle
-    assign ph = en_q;
-endmodule
+// ot_hdc_v41x_vred_hgate: in rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv (shared with the RHALF reducer)
 
 module ot_hdc_v41x_vred_slice64_c12h (
     input  wire          clk,
