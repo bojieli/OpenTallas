@@ -2540,7 +2540,8 @@ def hop_plan(m):
             l_ = by[e[0]]
             b = _anchor(M.get(l_.master), l_, e[1]) or (l_.x + l_.w / 2, l_.y + l_.h / 2)
             L = _mh(a, b)
-            if L > R:
+            hard = PIN_RELAY and not (is_glue(d.master) and is_glue(l_.master))
+            if L > R or (hard and L > PIN_SEG):
                 plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
     return plan
 
@@ -2785,7 +2786,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3207,6 +3208,8 @@ CORR_LANE_STRIDE = 5            # coprime with LANES_CORR (16)
 HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): stations on every die hop over its reach,
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
+PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
+PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
@@ -3241,7 +3244,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else ''))
 
 
 def set_cc_reach(um):
@@ -3366,10 +3369,22 @@ def _hop_fix(m, P):
                 fdrv = B[fi_][3][0]
             path = [a, (b[0], a[1]), b]
             Lp = _poly_len(path)
+            # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
+            # segment) at each non-glue end, the span between them at the reach as before
+            pos = [Lp * (k + 1) / (n + 1) for k in range(n)]
+            if PIN_RELAY:
+                h0, h1 = not is_glue(d0.master), not is_glue(l0.master)
+                if (h0 or h1) and Lp > PIN_SEG:
+                    s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
+                    s1 = Lp - min(PIN_SEG - 10.0, Lp / 2) if h1 else Lp
+                    mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1)
+                    pos = ([s0] if h0 else []) + [s0 + (s1 - s0) * (k + 1) / (mid + 1) for k in range(mid)] \
+                        + ([s1] if h1 and s1 > s0 + 1.0 else [])
+                    n = len(pos)
             prev, cur = eps[0], a
             fprev = fdrv if fwd else None
             for k in range(n):
-                (cx, cy), dch = _poly_at(path, Lp * (k + 1) / (n + 1))
+                (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
                 w_, h_ = stn_dims([bits], horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
@@ -4720,6 +4735,8 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
+                    'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
                     'selector / collector buses (+1 cycle; default off)')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
@@ -4740,6 +4757,8 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    global PIN_RELAY
+    PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
