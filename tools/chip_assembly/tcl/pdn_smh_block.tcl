@@ -6,7 +6,10 @@ add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 global_connect
 set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}
 
-define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M6}
+# (m3f) power exposed on M7 stripes: the pieces route signals up to M7, so an M6 pin under an M7-bloated abstract
+# can't take the parent's via (element top PDN-0006 "VSS on M6 is blocked by obstructions on M7"); the parent drops
+# M8 straps onto these M7 stripes
+define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M7}
 add_pdn_ring -grid {top} -layers {M5 M6} -widths {0.12 0.288} -spacings {0.072 0.096} \
   -core_offset {0.3}
 add_pdn_stripe -grid {top} -layer {M1} -width {0.018} -pitch {0.54} -offset {0} -followpins
@@ -17,7 +20,9 @@ add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {1
   -offset {2.0} -extend_to_core_ring
 add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
+add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {0.096} -pitch {21.6} -offset {3.0}
 add_pdn_connect -grid {top} -layers {M5 M6}
+add_pdn_connect -grid {top} -layers {M6 M7}
 
 source $::env(SCRIPTS_DIR)/util.tcl
 set mems {}

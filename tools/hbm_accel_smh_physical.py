@@ -39,10 +39,11 @@ RTL = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_
        "rtl/gpu/ot_gpu_bd_col.sv", "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bulk_copy.sv",
        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
-       "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv", "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+       "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
        "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
        "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
-       "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
        SRAM_X + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v", SRAM_R + "/ot_sram_1r1w_512x256_m1_r2c2_bb.v"]
 GRID = 8.64          # macro / die quantum: a multiple of every routing pitch (0.048 0.064 0.08) and the 0.27 row
 PITCH = 0.096        # abutting pin slot (two M4 / M5 tracks)
@@ -191,7 +192,11 @@ def front_pins(g, hcore):
         for (ln, i), y in qy.items():
             pins.append((f"qin{suffix}[{ln * P['QLW'] + i}]", "M4", "", xedge, y))
     # element pins: north = x-write, op channel, barrier; south = NoC, results
-    north = (["clk", "rst_n", "start", "start_ready", "busy", "arrive", "release_in", "released", "xw_en"]
+    # the clock enters on the west edge in the channel between the two tile rows (near mid-height: the tree root
+    # is mid-block, so the pin-to-root wire is short); the element top routes it there through the channel
+    ygap = round(bh + gap + (P["NP"] - 1) * (th + gap) - gap / 2, 3)
+    pins.append(("clk", "M4", "", 0.0, round(round((ygap - 0.012) / 0.048) * 0.048 + 0.012, 3)))
+    north = (["rst_n", "start", "start_ready", "busy", "arrive", "release_in", "released", "xw_en"]
              + bits("op_rows", P["RW"] + 1) + bits("op_c", 16) + bits("op_g", 8) + ["op_gs"] + bits("op_fmt", 2)
              + bits("op_xb", P["XW"]) + bits("xw_addr", P["XW"]) + bits("xw_grp", 7) + bits("xw_data", 2048))
     south = (["d_valid", "d_ready", "req_v", "req_ready", "rsp_v", "rv", "fault"] + bits("d_base", 32)
@@ -206,36 +211,216 @@ def front_pins(g, hcore):
     return pins
 
 
+# ---------------- (margin m3) the front as three strips ----------------
+STRIPS = ("front_s", "front_c", "front_n")      # south to north
+
+
+def strip_cuts(g):
+    """The two strip cuts (front coordinates, on the 8.64 um grid): between the lowest row bundle of a tile row (its
+    leaf 1) and that tile row's x-write bundle, so every bundle's pins stay in one strip.  front_s holds tile row 1's
+    leaf-1 bundle and the result lanes, front_c tile row 1's x write and leaf 0, tile row 0's leaf 1, front_n tile row 0's
+    x write and leaf 0."""
+    th, bh, gap = g["tile_h"], g["be_h"], g["gap"]
+    n = P["RPT"] * P["RBW"] + P["BBW"]
+    y0 = round((th - n * PITCH) / 2 / 0.048) * 0.048 + 0.012
+    cuts = []
+    for p in (P["NP"] - 1, 0):
+        ty = bh + gap + (P["NP"] - 1 - p) * (th + gap)
+        row_top = ty + y0 + (P["RBW"] - 1) * PITCH
+        b_bot = ty + y0 + P["RBW"] * PITCH
+        c = qd(b_bot)
+        assert row_top + 0.02 < c < b_bot - 0.02, (row_top, c, b_bot)
+        cuts.append(round(c, 3))
+    return cuts
+
+
+def strip_span(g, hcore, strip):
+    cs, cn = strip_cuts(g)
+    return {"front_s": (0.0, cs), "front_c": (cs, cn), "front_n": (cn, hcore)}[strip]
+
+
+def face_ports(strip, side):
+    """Face port names in pin order; side 'n' = the strip's north face, 's' = its south face."""
+    opx = (P["RW"] + 1) + 16 + 8 + 1 + 2 + P["XW"]
+    if (strip, side) in (("front_n", "s"), ("front_c", "n")):
+        r0, pz = ("fi_row0", "fi_pbz") if strip == "front_n" else ("fo_row0", "fo_pbz")
+        return (["fs_v"] + bits("fs_d", opx) + ["fs_ret"] + bits("fx_b", P["BBW"]) + ["fr_rl"] + bits(r0, P["RBW"])
+                + bits(pz, 3))
+    if (strip, side) in (("front_c", "s"), ("front_s", "n")):
+        r3 = "fo_row3" if strip == "front_c" else "fi_row3"
+        return (["fd_v"] + bits("fd_d", 56) + ["fd_ret", "fq_v"] + bits("fq_d", 42) + ["fq_ret", "fp_v"]
+                + bits("fp_d", 1098) + ["fsv"] + bits(r3, P["RBW"]))
+    return []
+
+
+def trk(y):
+    return round(round((y - 0.012) / 0.048) * 0.048 + 0.012, 3)
+
+
+def strip_pins(g, hcore, strip):
+    """A strip's pins: its share of the front's W / E tile-facing pins (renamed per bundle), its element pins (N for
+    front_n, S for front_s), the face pins (same x on both sides of a face), clk / rst_n on the W edge in the widest gap."""
+    lo, hi = strip_span(g, hcore, strip)
+    h = round(hi - lo, 3)
+    fw = g["front_w"]
+    pins, wy = [], []
+    for name, layer, _, x, y in front_pins(g, hcore):
+        if name == "clk":
+            continue
+        if layer == "M4":
+            if not (lo < y < hi):
+                continue
+            m = re.match(r"(rout|bout)_(l|r)\[(\d+)\]", name)
+            if m:
+                k, sd, i = m.group(1), m.group(2), int(m.group(3))
+                wdt = P["RBW"] if k == "rout" else P["BBW"]
+                name = f"{k}_{sd}{i // wdt}[{i % wdt}]"
+            pins.append((name, layer, "", x, round(y - lo, 3)))
+            if x == 0.0:
+                wy.append(y - lo)
+        else:
+            if strip == "front_n" and y > 0:
+                pins.append((name, layer, "", x, h))
+            elif strip == "front_s" and y == 0.0:
+                pins.append((name, layer, "", x, 0.0))
+    for side, y in (("n", h), ("s", 0.0)):
+        names = face_ports(strip, side)
+        if not names:
+            continue
+        sp = math.floor(min(0.096, (fw - 4.0) / len(names)) / 0.048) * 0.048
+        x0 = round((fw - len(names) * sp) / 2 / 0.048) * 0.048 + 0.012
+        for k, nm in enumerate(names):
+            pins.append((nm, "M5", "", round(x0 + k * sp, 3), y))
+    # clk (and rst_n, when the strip has no north element row) mid-way in the widest W-edge gap
+    ys = sorted([0.0] + wy + [h])
+    a, b = max(zip(ys, ys[1:]), key=lambda t: t[1] - t[0])
+    pins.append(("clk", "M4", "", 0.0, trk((a + b) / 2)))
+    if strip != "front_n":
+        pins.append(("rst_n", "M4", "", 0.0, trk((a + b) / 2 + 4.8)))
+    return pins, h
+
+
+def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50):
+    """Strip constraints: element pins carry the die budget (as the m2 front), face and tile-facing ports the abutting
+    budget (300 ps outside + the intra-element skew), the ring multicycle on front_c."""
+    elem = {"front_n": ("start op_* xw_* release_in", "start_ready busy arrive released"),
+            "front_s": ("d_valid d_base* d_lines* req_ready rsp_*", "d_ready req_v req_addr* req_tag* rv rrow* rdata* fault"),
+            "front_c": ("", "")}[strip]
+    nbr = {"front_n": ("fs_ret fi_*", "rout_* bout_* fs_v fs_d* fx_b* fr_rl"),
+           "front_c": ("fs_v fs_d* fx_b* fr_rl fd_v fd_d* fq_ret fp_* fsv", "rout_* bout_* fs_ret fo_* fd_ret fq_v fq_d*"),
+           "front_s": ("qin_* fd_ret fq_v fq_d* fi_*", "rout_* fd_v fd_d* fq_ret fp_* fsv")}[strip]
+    base = sdc_block(lat, element_io=False, ring=(strip == "front_c"), nbr_in=nbr[0], lat_ff=lat_ff, period=period,
+                     skew=skew, die_skew=die_skew, hold_io=hold_io)
+    base = base.replace("set nbr_out [all_outputs]", f"set nbr_out [get_ports {{{nbr[1]}}}]")
+    if elem[0]:
+        add = ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min) plus the die term, referenced",
+               "# like every port to the block's own clock insertion (nbr_clk)",
+               f"set elem_in [get_ports {{{elem[0]}}}]",
+               f"set elem_out [get_ports {{{elem[1]}}}]",
+               "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
+               "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+               "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
+               "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out"]
+        base = base.replace(f"set nbr_in [get_ports {{{nbr[0]}}}]", "\n".join(add) + f"\nset nbr_in [get_ports {{{nbr[0]}}}]")
+    return base
+
+
+STRIP_HOPS = {
+    "front_c": r"""ot_pin_place_auto {.*} 14
+# central channel between the ring columns, bottom to top: line skid, s1, issue (+ op channel sink), bulk-copy
+# control (+ descriptor channel sink, request channel credits)
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 170 200
+ot_place {^s1_(w|cv|ct)} 152 272 202 220
+ot_place {^(u_issue\.|u_sch\.(?!u_)|pop_r|fmt_q|xb_q|g_f1\[)} 152 272 222 241
+ot_place {^(u_bc\.(outstanding|g_lookahead\.((?!g_sram)|g_sram\.(oq_n|oq_wp|oq_rp|res|rd_v|u_rok_c)))|u_dch\.(?!u_)|u_rch\.cred)} 152 272 243 285
+# hop H of the tile-row-0 rows above the ring, of the tile-row-1 rows below it
+ot_place {^g_h\[0\]\.} 60 200 456 486
+ot_place {^g_h\[2\]\.} 232 372 456 486
+ot_place {^g_h\[1\]\.} 60 200 16 40
+ot_place {^g_h\[3\]\.} 232 372 16 40
+# retire landing -> issue; response stage beside the ring's write pins
+ot_place {^u_sv\.g_s\[1\]} 170 210 150 166
+ot_place {^u_prd\.g_s\[1\]} 100 330 42 66
+# tile row 1's x write: landed at the north face, M in the W / E edge strips between the row-bundle pin fields
+ot_place {^g_bs\[0\]\.u_bm[dv]} 4 50 282 438
+ot_place {^g_bs\[1\]\.u_bm[dv]} 382 428 282 438
+""",
+    "front_n": r"""ot_pin_place_auto {.*} 14
+# op channel credits beside the start pin
+ot_place {^u_sch\.(cred|rq|u_cr\.g_s\[1\])} 108 124 330 338
+""",
+    "front_s": r"""ot_pin_place_auto {.*} 14
+# descriptor channel credits beside d_valid / d_ready; request channel sink beside the request skid
+ot_place {^u_dch\.(cred|rq|u_cr\.g_s\[1\])} 128 140 16 24
+ot_place {^u_rsk\.(rp|rpq)} 140 160 16 24
+ot_place {^u_rsk\.} 120 200 26 40
+ot_place {^u_rch\.(?!u_)} 120 200 42 66
+""",
+}
+
+
 # ---------------- ORFS config ----------------
-def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*"):
-    s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock 833 ps, 60 / 25 ps uncertainty",
-         "set clk_period 833",
+def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None, period=833,
+              skew=0, die_skew=150, hold_io=50, io_ref=False):
+    lat_ff = lat_ff if lat_ff is not None else round(0.6 * float(lat))
+    s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock {period} ps (sign-off 833: run.sh rewrites the",
+         "# period of the routed SDC), 60 / 25 ps uncertainty",
+         f"set clk_period {period}",
          "create_clock -name core_clk -period $clk_period [get_ports clk]",
          "create_clock -name nbr_clk -period $clk_period",
+         "# the neighbour's flop sits at this block's own clock insertion, in each corner.  One SDC serves both corners",
+         "# and STA reads -min / -max latency as early / late (a setup check captures an output at the EARLY latency),",
+         "# so nbr_clk carries the SS insertion alone; the FF hold check at an output port, where the neighbour",
+         f"# captures {lat} - {lat_ff} ps earlier than SS, takes that difference in the output min delay (dlo below).",
+         "# At SS the output hold holds by construction (same insertion both sides); input hold at FF is checked by",
+         "# the parent on the real pair.",
          f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
+         f"set dlo {float(lat) - float(lat_ff):g}",
+         "# (margin rule, clarified 2026-10-06) setup: abutting ports between pieces of one element (one clock region)",
+         "# budget the region pair skew + 25 (skew); the element pins cross a die wire to another region (die_skew).",
+         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io), closed by hold repair.",
+         f"set skew {skew}",
+         f"set die_skew {die_skew}",
+         f"set hold_io {hold_io}",
          "set_clock_uncertainty -setup 60 [all_clocks]",
          "set_clock_uncertainty -hold 25 [all_clocks]",
          "set_false_path -from [get_ports rst_n]"]
     for st in static_inputs:
         s.append(f"set_false_path -from [get_ports {{{st}}}]   ;# static strap: a tie cell in the parent")
     if element_io:
-        s += ["# element pins: the W13 die budget (ot_hbm_accel_sm_v_die_budget.sdc), unchanged",
+        s += ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min), referenced like every port",
+              "# to the block's own clock insertion (nbr_clk): the parent balances this block's internal flops with",
+              "# the hub's.  The element top keeps the binding ideal-clock die budget and reports it unchanged.",
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
-              "set_input_delay -max 473 -clock core_clk $elem_in",
-              "set_input_delay -min [expr $clk_period * 0.2] -clock core_clk $elem_in",
-              "set_output_delay -max 323 -clock core_clk $elem_out",
-              "set_output_delay -min [expr $clk_period * 0.2] -clock core_clk $elem_out",
+              "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+              "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
+              "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
               "set nbr_out [get_ports {rout_* bout_*}]"]
     else:
         s += [f"set nbr_in [get_ports {{{nbr_in}}}]",
               "set nbr_out [all_outputs]"]
-    s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
-          "set_input_delay -max 300 -clock nbr_clk $nbr_in",
-          "set_input_delay -min 30 -clock nbr_clk $nbr_in",
-          "set_output_delay -max 300 -clock nbr_clk $nbr_out",
-          "set_output_delay -min 50 -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
+    if io_ref:
+        s += ["# abutting ports (m2g, 2026-10-06): the neighbour piece's flop sits on the same element clock tree, so its",
+              "# clock arrives at THIS block's insertion in EVERY corner.  Reference the abutting port delays to a register",
+              "# clock pin of this block (-reference_pin: the propagated arrival at that pin, per corner) instead of nbr_clk",
+              "# with the SS insertion as a fixed source latency: the latter made FF input hold optimistic by lat - lat_ff and",
+              "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
+              "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
+              "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_input_delay -min [expr 30 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
+              "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
+              "set_load 2.0 [all_outputs]",
+              "set_max_fanout 32 [current_design]"]
+    else:
+        s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
+          "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
+          "set_input_delay -min [expr 30 - $hold_io] -clock nbr_clk $nbr_in",
+          "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
+          "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
           "set_max_fanout 32 [current_design]"]
     if ring:
@@ -268,6 +453,518 @@ def config_mk(name, nick, die, macros, extra):
     return "\n".join(lines) + "\n"
 
 
+HOPS = r"""# front hop flops, FIRM (tools/hbm_accel_smh_physical.py); asap7 has no tapcells, rows alternate orientation
+set ::ot_blk [ord::get_db_block]
+set ::ot_rows {}
+# cut_rows splits a row around the macros: one entry per y
+set ::ot_ry [dict create]
+foreach r [$::ot_blk getRows] { dict set ::ot_ry [lindex [$r getOrigin] 1] [$r getOrient] }
+foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [dict get $::ot_ry $y]] }
+# every flop of re whose D or Q reaches a port (through buffers / inverters) is placed FIRM at its pin: W / E pins
+# in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
+# pin's x.  Run before any other FIRM placement in the strips.
+proc ::ot_net_port {net dir} {
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} { return [lindex $bts 0] }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            set out [$it isOutputSignal]
+            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+            set inst [$it getInst]
+            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+            foreach o [$inst getITerms] {
+                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+            }
+            break
+        }
+        set net $nx
+    }
+    return ""
+}
+proc ::ot_flop_port {inst} {
+    set qn "NULL"; set dn "NULL"
+    foreach it [$inst getITerms] {
+        set mt [[$it getMTerm] getName]
+        if {[$it isOutputSignal]} { set qn [$it getNet] } elseif {$mt eq "D"} { set dn [$it getNet] }
+    }
+    set bt [::ot_net_port $qn q]
+    if {$bt eq ""} { set bt [::ot_net_port $dn d] }
+    return $bt
+}
+# first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
+# clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+proc ::ot_skip {c w2 y dir sw} {
+    if {![dict exists $::ot_occ $y]} { return $c }
+    set ivs [dict get $::ot_occ $y]
+    set moved 1
+    while {$moved} {
+        set moved 0
+        foreach iv $ivs {
+            lassign $iv a b
+            if {$dir > 0} {
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+            } else {
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+            }
+        }
+    }
+    return $c
+}
+proc ::ot_pin_place_auto {re depth} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set die [$::ot_blk getDieArea]
+    set dw [$die xMax]; set dh [$die yMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set dp [expr {int(round($depth / 0.054)) * $sw}]
+    # the row-end boundary cells (PHY_EDGE_ROW_*, inserted by the tapcell step) sit at both ends of every row
+    set capw 0
+    foreach i [$::ot_blk getInsts] {
+        if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
+    }
+    set m0 [expr {$m0 + $capw}]
+    set ::ot_occ [dict create]
+    foreach i [$::ot_blk getInsts] {
+        if {[[$i getMaster] isBlock] || ![$i isPlaced]} { continue }
+        set bb [$i getBBox]
+        dict lappend ::ot_occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+    }
+    set E [dict create W {} E {} S {} N {}]
+    set skip 0
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set bt [::ot_flop_port $i]
+        if {$bt eq ""} { incr skip; continue }
+        set bb [$bt getBBox]
+        set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
+        dict lappend E $e [list [expr {($e eq "W" || $e eq "E") ? $py : $px}] $i]
+    }
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set placed 0
+    foreach e {W E} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        if {$e eq "W"} { set lo $m0; set hi [expr {$m0 + $dp}] } else { set hi [expr {$dw - $m0}]; set lo [expr {$hi - $dp}] }
+        set cur [lrepeat $nr [expr {$e eq "W" ? $lo : $hi}]]
+        foreach f $fl {
+            lassign $f py inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]; set h [[$inst getMaster] getHeight]
+            for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+                set m [expr {($a + $b) / 2}]
+                if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+            }
+            set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+            set done 0
+            for {set s 0} {$s < $nr && !$done} {incr s} {
+                foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                    if {$r < 0 || $r >= $nr} { continue }
+                    set c [lindex $cur $r]
+                    set rr [lindex $rows $r]
+                    set c [::ot_skip $c $w2 [lindex $rr 0] [expr {$e eq "W" ? 1 : -1}] $sw]
+                    if {$e eq "W"} {
+                        if {$c + $w2 > $hi} { continue }
+                        set x $c; lset cur $r [expr {$c + $w2}]
+                    } else {
+                        if {$c - $w2 < $lo} { continue }
+                        set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
+                    }
+                    place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                    set done 1; incr placed; break
+                }
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+        }
+    }
+    foreach e {S N} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        set er {}
+        foreach r $rows {
+            set y [lindex $r 0]
+            if {($e eq "S" && $y >= $m0 && $y < $m0 + $dp) || ($e eq "N" && $y + 270 <= $dh - $m0 && $y + 270 > $dh - $m0 - $dp)} { lappend er $r }
+        }
+        if {$e eq "N"} { set er [lreverse $er] }
+        set ne [llength $er]
+        if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
+        set cur [lrepeat $ne [expr {$m0 + $dp}]]
+        set k 0
+        foreach f $fl {
+            lassign $f px inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]
+            set done 0
+            for {set t 0} {$t < $ne && !$done} {incr t} {
+                set r [expr {($k + $t) % $ne}]
+                set c [lindex $cur $r]
+                set x [expr {$px - $w / 2}]
+                set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
+                if {$x < $c} { set x $c }
+                set rr [lindex $er $r]
+                set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                lset cur $r [expr {$x + $w2}]
+                set done 1; incr placed
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+            incr k
+        }
+    }
+    puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
+}
+proc ::ot_place {re xlo xhi ylo yhi} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set x0 [expr {int(round(1.08 * $dbu))}]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set names {}
+    set occ {}
+    set rh [expr {int(round(0.27 * $dbu))}]
+    foreach i [$::ot_blk getInsts] {
+        set n [$i getName]
+        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]] &&
+            [$i getPlacementStatus] ne "FIRM"} { lappend names $i; continue }
+        if {[$i isPlaced] || [$i getPlacementStatus] eq "FIRM"} {
+            # any placed cell or macro whose box crosses the window (a macro starting below ylo counts too:
+            # front_m2c DPL-0033, u_bmd flops placed over the ring macro whose yMin lay under the window)
+            set bb [$i getBBox]
+            set hl [expr {[[$i getMaster] isBlock] ? int(round(3.0 * $dbu)) : 0}]   ;# MACRO_PLACE_HALO 3 3
+            if {[$bb yMax] + $hl > $ylo * $dbu && [$bb yMin] - $hl <= $yhi * $dbu + $rh &&
+                [$bb xMax] + $hl > $xlo * $dbu - $sw && [$bb xMin] - $hl < $xhi * $dbu + $sw} {
+                lappend occ [list [expr {[$bb xMin] - $hl}] [expr {[$bb xMax] + $hl}] [expr {[$bb yMin] - $hl}] [expr {[$bb yMax] + $hl}]]
+            }
+        }
+    }
+    set names [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $names]
+    set rows {}
+    set par 0
+    foreach r $::ot_rows {
+        set y [lindex $r 0]
+        if {$y < $ylo * $dbu || $y > $yhi * $dbu} { continue }
+        if {$par % 2 == 0} { lappend rows $r }
+        incr par
+    }
+    set k 0
+    set n [llength $names]
+    foreach r $rows {
+        set y [lindex $r 0]
+        set busy {}
+        foreach iv $occ { if {[lindex $iv 2] < $y + $rh && [lindex $iv 3] > $y} { lappend busy $iv } }
+        set x [expr {$x0 + (int($xlo * $dbu) - $x0 + $sw - 1) / $sw * $sw}]
+        while {$k < $n} {
+            set inst [lindex $names $k]
+            set w [[$inst getMaster] getWidth]
+            set w2 [expr {$w + 12 * $sw}]   ;# room for the resizer to upsize a FIRM flop in place
+            if {$x + $w2 > int($xhi * $dbu)} { break }
+            set hit 0
+            foreach iv $busy {
+                if {$x < [lindex $iv 1] + $sw && $x + $w2 > [lindex $iv 0] - $sw} { set hit [lindex $iv 1]; break }
+            }
+            if {$hit} { set x [expr {$x0 + ($hit + $sw - $x0 + $sw - 1) / $sw * $sw}]; continue }
+            place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double($y) / $dbu}]] -orientation [lindex $r 1] -status FIRM
+            set x [expr {$x + $w2}]
+            incr k
+        }
+    }
+    if {$k < $n} { error "ot_place $re: placed $k of $n in ($xlo $xhi $ylo $yhi)" }
+    puts "ot_place $re: $n flops"
+}
+proc ::ot_port_y {inst} {
+    set net "NULL"
+    foreach it [$inst getITerms] { if {[$it isOutputSignal]} { set net [$it getNet]; break } }
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} {
+            set bb [[lindex $bts 0] getBBox]
+            return [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            if {[$it isOutputSignal]} { continue }
+            set m [[$it getInst] getMaster]
+            if {[regexp {^(BUF|INV|HB)} [$m getName]]} {
+                foreach o [[$it getInst] getITerms] { if {[$o isOutputSignal]} { set nx [$o getNet] } }
+                break
+            }
+        }
+        set net $nx
+    }
+    return ""
+}
+# flops matching re, each at the row nearest its port pin, FIRM, in a strip xw wide xoff from the side's edge
+proc ::ot_pin_place {re side xoff xw} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set dw [[$::ot_blk getDieArea] xMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set xoff [expr {round($xoff / 0.054) * 0.054}]; set xw [expr {round($xw / 0.054) * 0.054}]
+    if {$side eq "W"} {
+        set lo [expr {$m0 + int(round($xoff * $dbu))}]; set hi [expr {$lo + int(round($xw * $dbu))}]
+    } else {
+        set hi [expr {$dw - $m0 - int(round($xoff * $dbu))}]; set lo [expr {$hi - int(round($xw * $dbu))}]
+    }
+    set fl {}
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set y [::ot_port_y $i]
+        if {$y eq ""} { error "ot_pin_place $re: no port for [$i getName]" }
+        lappend fl [list $y $i]
+    }
+    set fl [lsort -integer -index 0 $fl]
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set cur [lrepeat $nr [expr {$side eq "W" ? $lo : $hi}]]
+    set k 0
+    foreach e $fl {
+        lassign $e py inst
+        set w [[$inst getMaster] getWidth]
+        set w2 [expr {$w + 12 * $sw}]
+        set h [[$inst getMaster] getHeight]
+        # nearest row (row centre to pin y)
+        set best 0; set bd 1e18
+        for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+            set m [expr {($a + $b) / 2}]
+            if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+        }
+        set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+        set done 0
+        for {set s 0} {$s < $nr && !$done} {incr s} {
+            foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                if {$r < 0 || $r >= $nr} { continue }
+                set c [lindex $cur $r]
+                if {$side eq "W"} {
+                    if {$c + $w2 > $hi} { continue }
+                    set x $c; lset cur $r [expr {$c + $w2}]
+                } else {
+                    if {$c - $w2 < $lo} { continue }
+                    set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
+                }
+                set rr [lindex $rows $r]
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                set done 1; incr k; break
+            }
+        }
+        if {!$done} { error "ot_pin_place $re: no room for [$inst getName]" }
+    }
+    puts "ot_pin_place $re: $k flops ($side strip [expr {double($lo)/$dbu}] .. [expr {double($hi)/$dbu}])"
+}
+# (round 10) r9b post-CTS -623 ps: the issue (234 um2, 628 flops) was spread over 300 x 400 um (u_issue.oh at x 23,
+# its consumers at x 267), the bulk copy's request half sat at the south pins 450 um from its ring half (hf_c -> used
+# -230), and the far-row x-write O stage packed into y 230-265 against pins spanning y 242-440 (-584).
+# Every row / x-write output flop now sits at its own pin's row (the bundle leaves through a 14 um edge strip); the
+# issue with the start channel's sink and the bulk copy's control are FIRM, compact, in the central channel next to
+# the line skid and s1 they talk to every cycle.
+# (margin m1) every flop that reaches a pin sits at it: the O stages in the W / E strips, the element-pin landing
+# and launch registers (x-write wl, response chain stage 0, request skid head, result outputs) in the N / S rows
+ot_pin_place_auto {.*} 14
+# central channel (x 148.4 .. 276.5 between the ring columns), bottom to top: line skid, s1, issue, bulk-copy control
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 470 500
+ot_place {^s1_(w|cv|ct)} 152 272 502 520
+ot_place {^(u_issue\.|u_sch\.(?!u_)|pop_r|fmt_q|xb_q|g_f1\[)} 152 272 522 541
+ot_place {^u_bc\.(outstanding|g_lookahead\.((?!g_sram)|g_sram\.(oq_n|oq_wp|oq_rp|res|rd_v|u_rok_c)))} 152 272 543 575
+ot_place {^g_h\[0\]\.} 60 200 770 800
+ot_place {^g_h\[2\]\.} 232 372 770 800
+ot_place {^g_h\[1\]\.} 60 200 330 360
+ot_place {^g_h\[3\]\.} 232 372 330 360
+# retire chain (column 0's aligned valid -> issue) from the back-end edge up into the central channel
+ot_place {^u_sv\.g_s\[0\]} 170 210 180 200
+ot_place {^u_sv\.g_s\[1\]} 170 210 320 340
+ot_place {^u_sv\.g_s\[2\]} 170 210 450 465
+# x-write bundle of the far row (row 1): A above the ring block, M beside it (inside the edge strip)
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 18 200 805 870
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 414 805 870
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 18 62 470 660
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 370 414 470 660
+# response chain (south pins -> ring block): four stages
+ot_place {^u_prd\.g_s\[0\]} 100 330 20 50
+ot_place {^u_prd\.g_s\[1\]} 100 330 110 140
+ot_place {^u_prd\.g_s\[2\]} 100 330 200 230
+ot_place {^u_prd\.g_s\[3\]} 100 330 290 320
+# the request skid beside the south pins
+ot_place {^u_rsk\.} 120 200 3 12
+"""
+
+
+PIN_HDR = r"""# piece port flops at their pins, FIRM (tools/hbm_accel_smh_physical.py; margin rule: every boundary flop -> pin)
+set ::ot_blk [ord::get_db_block]
+set ::ot_rows {}
+set ::ot_ry [dict create]
+foreach r [$::ot_blk getRows] { dict set ::ot_ry [lindex [$r getOrigin] 1] [$r getOrient] }
+foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [dict get $::ot_ry $y]] }
+"""
+PIN_TCL = PIN_HDR + r"""# every flop of re whose D or Q reaches a port (through buffers / inverters) is placed FIRM at its pin: W / E pins
+# in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
+# pin's x.  Run before any other FIRM placement in the strips.
+proc ::ot_net_port {net dir} {
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} { return [lindex $bts 0] }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            set out [$it isOutputSignal]
+            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+            set inst [$it getInst]
+            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+            foreach o [$inst getITerms] {
+                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+            }
+            break
+        }
+        set net $nx
+    }
+    return ""
+}
+proc ::ot_flop_port {inst} {
+    set qn "NULL"; set dn "NULL"
+    foreach it [$inst getITerms] {
+        set mt [[$it getMTerm] getName]
+        if {[$it isOutputSignal]} { set qn [$it getNet] } elseif {$mt eq "D"} { set dn [$it getNet] }
+    }
+    set bt [::ot_net_port $qn q]
+    if {$bt eq ""} { set bt [::ot_net_port $dn d] }
+    return $bt
+}
+# first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
+# clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+proc ::ot_skip {c w2 y dir sw} {
+    if {![dict exists $::ot_occ $y]} { return $c }
+    set ivs [dict get $::ot_occ $y]
+    set moved 1
+    while {$moved} {
+        set moved 0
+        foreach iv $ivs {
+            lassign $iv a b
+            if {$dir > 0} {
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+            } else {
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+            }
+        }
+    }
+    return $c
+}
+proc ::ot_pin_place_auto {re depth} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set die [$::ot_blk getDieArea]
+    set dw [$die xMax]; set dh [$die yMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set dp [expr {int(round($depth / 0.054)) * $sw}]
+    # the row-end boundary cells (PHY_EDGE_ROW_*, inserted by the tapcell step) sit at both ends of every row
+    set capw 0
+    foreach i [$::ot_blk getInsts] {
+        if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
+    }
+    set m0 [expr {$m0 + $capw}]
+    set ::ot_occ [dict create]
+    foreach i [$::ot_blk getInsts] {
+        if {[[$i getMaster] isBlock] || ![$i isPlaced]} { continue }
+        set bb [$i getBBox]
+        dict lappend ::ot_occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+    }
+    set E [dict create W {} E {} S {} N {}]
+    set skip 0
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set bt [::ot_flop_port $i]
+        if {$bt eq ""} { incr skip; continue }
+        set bb [$bt getBBox]
+        set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
+        dict lappend E $e [list [expr {($e eq "W" || $e eq "E") ? $py : $px}] $i]
+    }
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set placed 0
+    foreach e {W E} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        if {$e eq "W"} { set lo $m0; set hi [expr {$m0 + $dp}] } else { set hi [expr {$dw - $m0}]; set lo [expr {$hi - $dp}] }
+        set cur [lrepeat $nr [expr {$e eq "W" ? $lo : $hi}]]
+        foreach f $fl {
+            lassign $f py inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]; set h [[$inst getMaster] getHeight]
+            for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+                set m [expr {($a + $b) / 2}]
+                if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+            }
+            set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+            set done 0
+            for {set s 0} {$s < $nr && !$done} {incr s} {
+                foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                    if {$r < 0 || $r >= $nr} { continue }
+                    set c [lindex $cur $r]
+                    set rr [lindex $rows $r]
+                    set c [::ot_skip $c $w2 [lindex $rr 0] [expr {$e eq "W" ? 1 : -1}] $sw]
+                    if {$e eq "W"} {
+                        if {$c + $w2 > $hi} { continue }
+                        set x $c; lset cur $r [expr {$c + $w2}]
+                    } else {
+                        if {$c - $w2 < $lo} { continue }
+                        set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
+                    }
+                    place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                    set done 1; incr placed; break
+                }
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+        }
+    }
+    foreach e {S N} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        set er {}
+        foreach r $rows {
+            set y [lindex $r 0]
+            if {($e eq "S" && $y >= $m0 && $y < $m0 + $dp) || ($e eq "N" && $y + 270 <= $dh - $m0 && $y + 270 > $dh - $m0 - $dp)} { lappend er $r }
+        }
+        if {$e eq "N"} { set er [lreverse $er] }
+        set ne [llength $er]
+        if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
+        set cur [lrepeat $ne [expr {$m0 + $dp}]]
+        set k 0
+        foreach f $fl {
+            lassign $f px inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]
+            set done 0
+            for {set t 0} {$t < $ne && !$done} {incr t} {
+                set r [expr {($k + $t) % $ne}]
+                set c [lindex $cur $r]
+                set x [expr {$px - $w / 2}]
+                set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
+                if {$x < $c} { set x $c }
+                set rr [lindex $er $r]
+                set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                lset cur $r [expr {$x + $w2}]
+                set done 1; incr placed
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+            incr k
+        }
+    }
+    puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
+}
+ot_pin_place_auto {.*} 16
+"""
+
+
 RUN = r"""#!/bin/bash
 # {label}: route, abstract, sign-off corner STA.  Host-side paths; the container sees /src (sources) and /work.
 set -u
@@ -275,20 +972,24 @@ W={work}
 S={src}
 NEED={need}
 CORES={cores}
-IMG=openroad/orfs:latest
+IMG=openroad/orfs:asap7lock
 cd $W
 echo "start $(date -Is)" > $W/status
-/srv/opentallas-scratch/admit.sh $NEED -- docker run --rm --name {cname} -v $S:/src:ro -v $W:/work \
+{admit}docker run --rm --name {cname} -v $S:/src:ro -v $W:/work \
   -w /OpenROAD-flow-scripts/flow $IMG bash -lc "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; \
   source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work \
-  FLOW_VARIANT=base NUM_CORES=$CORES finish" > $W/flow.log 2>&1
+  FLOW_VARIANT=base NUM_CORES=$CORES {make_extra}{target}" > $W/flow.log 2>&1
 echo "flow_rc=$?" >> $W/status
 B=$(ls -d $W/results/asap7/*/base | head -1)
 if [ -f $B/6_final.odb ]; then
   docker run --rm -v $S:/src:ro -v $W:/work $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl" > $W/abstract.log 2>&1
   echo "abstract_rc=$?" >> $W/status
-  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {macro_args} --output $W/corner_sta.json) > $W/corner.log 2>&1
+  # sign-off at 833 ps: the routed SDC with the (over-constrained) route period put back to 833
+  sed -E 's/-period [0-9.]+/-period 833.0000/g' $B/6_final.sdc > $B/6_signoff.sdc
+  # later consumers of 6_final.sdc (the closure loop's post-route hold ECO) sign off at 833 too; the route SDC is kept
+  [ -f $B/6_final_route.sdc ] || cp $B/6_final.sdc $B/6_final_route.sdc; cp $B/6_signoff.sdc $B/6_final.sdc
+  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {macro_args} --sdc-name 6_signoff.sdc --output $W/corner_sta.json) > $W/corner.log 2>&1
   echo "corner_rc=$?" >> $W/status
 fi
 echo "end $(date -Is)" >> $W/status
@@ -316,10 +1017,11 @@ def write_abstract(work: Path, name, macros, view_name):
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
 
 
-def run_sh(work: Path, label, src, need, cores, macros):
+def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=True, make_extra=""):
     margs = " ".join(f"--macro {m}" for m in macros)
     txt = RUN.format(label=label, work=work, src=src, need=need, cores=cores, cname=f"claude-smh-{label}",
-                     macro_args=margs)
+                     macro_args=margs, target=target, make_extra=make_extra,
+                     admit="/srv/opentallas-scratch/admit.sh $NEED -- " if admit else "")
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
                       '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
@@ -332,8 +1034,24 @@ def cmd_block(a):
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
-    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M6", "HOLD_SLACK_MARGIN": a.hold_margin,
+    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": a.max_layer, "HOLD_SLACK_MARGIN": a.hold_margin,
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_block.tcl", "MACRO_PLACE_HALO": "3 3"}
+    if getattr(a, "io_ref", False):
+        # OpenROAD buffer_ports segfaults (Sim::findDisabledEdges) on the canonical SDC's -reference_pin under the
+        # WC + BC corners; the port flops sit at the pins (no port buffer needed), so skip port buffering.
+        extra["DONT_BUFFER_PORTS"] = "1"
+    if getattr(a, "hold_buffer_pct", None):
+        # hold repair to the sign-off target (FF >= +15 after the 25 ps uncertainty needs ORFS hold margin ~25) inserts
+        # more hold buffers than repair_timing's default cap (20 % of instances: RSZ-0060 on be m2g at 21 % utilization):
+        # wrap ORFS's repair_timing_helper before CTS / global route to raise -max_buffer_percent.
+        (work / "rt_hook.tcl").write_text(
+            "# raise repair_timing's buffer cap (tools/hbm_accel_smh_physical.py --hold-buffer-pct)\n"
+            "if {[info commands ::ot_rth_orig] eq \"\"} { rename ::repair_timing_helper ::ot_rth_orig }\n"
+            f"proc ::repair_timing_helper {{args}} {{ ::ot_rth_orig {{*}}$args -max_buffer_percent {a.hold_buffer_pct} }}\n")
+        extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
+        extra["PRE_GLOBAL_ROUTE_TCL"] = "/work/rt_hook.tcl"
+    if a.grt_allow:
+        extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
         pins = tile_pins(w, h, a.variant)
@@ -359,7 +1077,7 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",))
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     elif a.piece == "be":
         w, h = g["tile_w"], g["be_h"]
         pins = be_pins(w, h, a.variant)
@@ -367,7 +1085,31 @@ def cmd_block(a):
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*")
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+    elif a.piece in STRIPS:
+        pos, die, hcore = floorplan(g)
+        pins, h = strip_pins(g, hcore, a.piece)
+        w = g["front_w"]
+        name = "ot_hbm_accel_smh_" + a.piece
+        tcl = None
+        macros = []
+        if a.piece == "front_c":
+            macros = [SRAM_R]
+            mw, mh = 96.552, 69.66
+            ch = 120.0
+            xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
+            y0 = qd(h / 2 - 2.5 * (mh + 4.32))
+            tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
+                   "  if {![[$ot_inst getMaster] isBlock]} { continue }",
+                   "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
+                   "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
+                   f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+                   f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
+                   f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
+                   "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
+        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -375,15 +1117,28 @@ def cmd_block(a):
         macros = [SRAM_R]
         name = "ot_hbm_accel_smh_front"
         mw, mh = 96.552, 69.66
+        # the 2 x 5 ring macros: slice mb in row mb, group 0 left (MY: pins on its right edge) and group 1 right (R0:
+        # pins on its left edge), both facing a central channel where the bulk copy's queue and control sit
+        ch = 120.0
+        xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
+        y0 = qd(h / 2 - 2.5 * (mh + 4.32))
         tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
-               f"  set x {qd((w - mw) / 2)}",
-               f"  set y [expr {{{qd(h / 2 - 5 * (mh + 4.32))} + ($gg * 5 + $mb) * {q(mh + 4.32)}}}]",
-               "  place_macro -macro_name [$ot_inst getName] -location [list $x $y] -orientation R0",
+               f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+               f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
+               f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_block(a.lat, element_io=True, ring=True)
+        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
+        # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
+        (work / "hops.tcl").write_text(HOPS)
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
+    if a.piece in ("tile", "be") and a.pin_flops:
+        # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
+        (work / "hops.tcl").write_text(PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n"))
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     die = (round(w, 3), round(h, 3))
     (work / "pins.tcl").write_text(pin_tcl(pins))
     if tcl:
@@ -392,7 +1147,13 @@ def cmd_block(a):
     nick = f"smh_{a.piece}_{a.variant}_{a.label}"
     (work / "config.mk").write_text(config_mk(name, nick, die, macros, extra))
     write_abstract(work, name, macros, name)
-    run_sh(work, a.label, a.src, a.need, a.cores, macros)
+    if a.top_param:
+        # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
+        (work / "config.mk").write_text((work / "config.mk").read_text() + "export VERILOG_TOP_PARAMS = "
+                                        + " ".join(" ".join(x.split("=", 1)) for x in a.top_param) + "\n")
+    mx = " ".join(f"{k}={v}" for k, v in (x.split("=", 1) for x in (a.make_var or [])))
+    run_sh(work, a.label, a.src, a.need, a.cores, macros, target=a.stop_after or "finish", admit=not a.no_admit,
+           make_extra=(mx + " ") if mx else "")
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
@@ -400,7 +1161,7 @@ def cmd_block(a):
 
 VIEWS = "physical/hbm_accel_smh_views"
 PIECES = ["ot_hbm_accel_smh_tile_e", "ot_hbm_accel_smh_tile_w", "ot_hbm_accel_smh_be_e", "ot_hbm_accel_smh_be_w",
-          "ot_hbm_accel_smh_front"]
+          "ot_hbm_accel_smh_front_n", "ot_hbm_accel_smh_front_c", "ot_hbm_accel_smh_front_s"]   # (m3) front strips
 
 
 def cmd_top(a):
@@ -417,17 +1178,19 @@ def cmd_top(a):
         for p in range(P["NP"]):
             xy[f"t:{c}:{p}"] = pos[("tile", c, p)]
         xy[f"b:{c}"] = pos[("be", c)]
-    xy["f"] = pos["front"]
+    for st in STRIPS:                                     # (m3) the front as three strips
+        xy[st] = (pos["front"][0], round(pos["front"][1] + strip_span(g, hcore, st)[0], 3))
     tcl = ["set ot_n 0", "array set ot_xy {"] + [f"  {{{k}}} {{{round(v[0], 3)} {round(v[1], 3)}}}" for k, v in xy.items()] + [
            "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
            "  if {![[$ot_inst getMaster] isBlock]} { continue }",
            "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
-           "  if {[regexp {g_c\\[(\\d+)\\]\\.g_p\\[(\\d+)\\]\\.g_t[ew]\\.u_t} $n -> c p]} { set k t:$c:$p } \\",
-           "  elseif {[regexp {g_c\\[(\\d+)\\]\\.g_be_[ew]\\.u_be} $n -> c]} { set k b:$c } \\",
-           "  elseif {[regexp {g_fd\\.u_front} $n]} { set k f } else { error \"no slot for $n\" }",
+           "  if {[regexp {g_c\\[(\\d+)\\]\\.g_p\\[(\\d+)\\]\\.(?:genblk\\d+\\.)?g_t[ew]\\.u_t} $n -> c p]} { set k t:$c:$p } \\",
+           "  elseif {[regexp {g_c\\[(\\d+)\\]\\.(?:genblk\\d+\\.)?g_be_[ew]\\.u_be} $n -> c]} { set k b:$c } \\",
+           "  elseif {[regexp {g_fd\\.u_fn} $n]} { set k front_n } elseif {[regexp {g_fd\\.u_fc} $n]} { set k front_c } \\",
+           "  elseif {[regexp {g_fd\\.u_fs} $n]} { set k front_s } else { error \"no slot for $n\" }",
            "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($k) -orientation R0",
            "  incr ot_n", "}",
-           f"if {{$ot_n != {P['NC'] * P['NP'] + P['NC'] + 1}}} {{ error \"macro_place: placed $ot_n\" }}",
+           f"if {{$ot_n != {P['NC'] * P['NP'] + P['NC'] + len(STRIPS)}}} {{ error \"macro_place: placed $ot_n\" }}",
            "puts \"ot macro_place: $ot_n pieces\""]
     (work / "macros.tcl").write_text("\n".join(tcl) + "\n")
     # element pins straight above / below the front's own N / S pins
@@ -436,6 +1199,8 @@ def cmd_top(a):
     for name, layer, _, x, y in front_pins(g, hcore):
         if layer == "M5":
             pins.append((name, "M5", "", round(fx + x, 3), die[1] if y > 0 else 0.0))
+    # the element clock: north edge over the front's west corner (the front's own clock pin is mid-height west)
+    pins.append(("clk", "M5", "", round(round((fx + 4.0 - 0.012) / 0.048) * 0.048 + 0.012, 3), die[1]))
     (work / "pins.tcl").write_text(pin_tcl(pins))
     sdc = ["# ot_hbm_accel_smh element: clock 833 ps, 60 / 25 ps; the W13 die budget on the element pins, unchanged",
            "set clk_period 833",
@@ -450,7 +1215,7 @@ def cmd_top(a):
     sdc += (ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_sm_v_die_budget.sdc").read_text().splitlines()
     (work / "constraint.sdc").write_text("\n".join(sdc) + "\n")
     views = [f"{VIEWS}/{n}" for n in PIECES]
-    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M9", "HOLD_SLACK_MARGIN": "20",
+    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M4", "MAX_ROUTING_LAYER": "M9", "HOLD_SLACK_MARGIN": "20",
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_top.tcl", "MACRO_PLACE_HALO": "0.5 0.5",
              "CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -macro_clustering_size 1 "
                          "-macro_clustering_max_diameter 20",
@@ -468,24 +1233,47 @@ def cmd_top(a):
     print(f"wrote {work}: element die {die}, {len(xy)} pieces, {len(pins)} pins")
 
 
-GEOM = dict(tile_w=q(319), tile_h=q(509), be_h=q(77), front_w=q(233), gap=GRID, margin=GRID)
+# front 432 um wide (round 4; was 233): the ring macros as a compact 5 x 2 block facing a central channel
+GEOM = dict(tile_w=q(319), tile_h=q(509), be_h=q(77), front_w=q(432), gap=GRID, margin=GRID)
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("block")
-    b.add_argument("--piece", choices=("tile", "be", "front"), required=True)
+    b.add_argument("--piece", choices=("tile", "be", "front") + STRIPS, required=True)
     b.add_argument("--variant", default="toE", choices=("toE", "toW", "one"))
     b.add_argument("--label", required=True)
     b.add_argument("--out", required=True)
     b.add_argument("--geom", default=None)
     b.add_argument("--pd", default="0.60")
-    b.add_argument("--lat", default="250", help="neighbour clock insertion carried by the virtual clock (ps)")
+    b.add_argument("--max-layer", default="M7", help="top signal layer inside a hardened piece (M2-M7 default: the "
+                   "bundle pin fields need the extra tracks; the parent keeps M7/M8 for the abutment hops)")
+    b.add_argument("--lat", default="720", help="the block's own measured clock insertion (ps): the parent balances "
+                   "internal flops, so a neighbour's flop sits at the same latency relative to this block's pin")
+    b.add_argument("--lat-ff", default=None, help="the block's FF clock insertion (ps; default 0.6 x --lat)")
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
     b.add_argument("--need", default="40")
     b.add_argument("--hold-margin", default="10", help="ORFS hold repair margin (ps); sign-off stays 25 ps at FF")
+    b.add_argument("--grt-allow", action="store_true", help="global route may finish with overflow and leave it "
+                   "to detailed route (sign-off still requires zero DRC)")
     b.add_argument("--cores", default="16")
+    b.add_argument("--period", default="833", help="route clock period (ps); sign-off is always 833 (margin rule: "
+                   "route at ~770 for +60 ps at 833)")
+    b.add_argument("--skew", default="0", help="setup budget on abutting piece ports (ps): the element's region pair "
+                   "skew + 25 (90 until the element top measures it)")
+    b.add_argument("--die-skew", default="150", help="setup budget on the element pins (cross a die wire, ps)")
+    b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
+    b.add_argument("--pin-depth", default="16", help="tile / be: edge strip depth (um) for the W / E port flops")
+    b.add_argument("--hold-buffer-pct", default=None, help="raise repair_timing -max_buffer_percent at CTS / GRT")
+    b.add_argument("--io-ref", action="store_true", help="abutting port delays referenced to a register clock pin of "
+                   "the block (per-corner insertion) instead of nbr_clk with the SS insertion as source latency")
+    b.add_argument("--stop-after", default=None, choices=("cts",), help="ORFS make target to stop at (closure-loop "
+                   "calibrate: a CTS-only run)")
+    b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
+                   "loop does its own admission)")
+    b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
+    b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)
