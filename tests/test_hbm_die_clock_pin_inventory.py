@@ -22,3 +22,15 @@ def test_full_retiled_inventory_fails_closed_on_new_collective(tmp_path):
     p.write_text(json.dumps(contract))
     with pytest.raises(ValueError,match='dimensions'):
         C.generate(p)
+
+
+def test_actual_clock_bpin_replaces_only_planned_anchor(tmp_path):
+    p=tmp_path/'sm.json';rb=tmp_path/'readback.json'
+    p.write_text(json.dumps(dict(die_um=[3075.84,1131.84],packets={'ck':[
+        dict(real_pin='clk',direction='input',xy_um=[1325.916,1131.84])]})))
+    rb.write_text(json.dumps(dict(die_um=[0,0,3075.84,1131.84],pins=[dict(name='clk',direction='INPUT',boxes=[
+        dict(layer='M5',rect_um=[1325.904,1131.648,1325.928,1131.84])])])) )
+    d,r=C.generate(p,rb)
+    assert d['ports']['hfd_sm']['ck']==pytest.approx([1325.916,1131.744])
+    assert sum(i['source']=='actual-SM-floorplan-BPin-center' for i in r['inventory'])==32
+    assert r['unbound_endpoints']==2 and r['selected'] is False

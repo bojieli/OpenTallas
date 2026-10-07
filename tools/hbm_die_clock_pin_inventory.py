@@ -15,7 +15,7 @@ from budgets.extract_die import anchor
 from budgets import clock_plan as P
 
 
-def generate(sm_contract):
+def generate(sm_contract, sm_readback=None):
     contract_path=Path(sm_contract)
     sm=json.loads(contract_path.read_text())
     m=I.apply(H.build(H.R24SM3,network_probe=True))
@@ -42,6 +42,20 @@ def generate(sm_contract):
     if len(clk)!=1 or clk[0]['real_pin']!='clk' or clk[0]['direction']!='input':
         raise ValueError('SM clock pin contract is not an input singleton')
     ports['hfd_sm']['ck']=clk[0]['xy_um']
+    readback_sources=[]
+    if sm_readback:
+        rb_path=Path(sm_readback);rb=json.loads(rb_path.read_text())
+        if rb['die_um'] != [0,0,*sm['die_um']]:
+            raise ValueError('SM clock BPin readback dimensions do not match')
+        matches=[p for p in rb['pins'] if p['name']=='clk']
+        if len(matches)!=1 or matches[0]['direction']!='INPUT' or len(matches[0]['boxes'])!=1:
+            raise ValueError('SM actual clock BPin must be one input rectangle')
+        box=matches[0]['boxes'][0]
+        x0,y0,x1,y1=box['rect_um']
+        if box['layer']!='M5' or not (0<=x0<x1<=sm['die_um'][0] and 0<=y0<y1<=sm['die_um'][1]):
+            raise ValueError('SM actual clock BPin is outside the real die or wrong layer')
+        ports['hfd_sm']['ck']=[(x0+x1)/2,(y0+y1)/2]
+        readback_sources.append(rb_path)
     # Old reduced collective portals do not bind the new native two-clock top.
     for pin in ('clk_stream','clk_link'):
         ports.get('hfd_coll',{}).pop(pin,None)
@@ -53,7 +67,7 @@ def generate(sm_contract):
         strict_clock_pins=True,real_masters=[],
         clock_pin_scope='planned portals only; routed BPin readback and receiver clock loads remain required',
         source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in
-            [Path(__file__),Path(H.__file__),Path(I.__file__),contract_path]+lef_sources})
+            [Path(__file__),Path(H.__file__),Path(I.__file__),contract_path]+lef_sources+readback_sources})
     d['by']={i[0]:i for i in d['insts']}
     trees,_=P.plan_groups(d)
     inventory=[]
@@ -65,7 +79,7 @@ def generate(sm_contract):
                 planned_xy_um=list(xy) if bound else None,
                 source=('native-full-collective-unbound' if inst=='hb_coll' else
                     'LEF-clk-pin-center-explicit-ck-alias' if d['by'][inst][1] in real_clock_masters else
-                    'planned-SM-top-clock-portal' if d['by'][inst][1]=='hfd_sm' else
+                    ('actual-SM-floorplan-BPin-center' if sm_readback else 'planned-SM-top-clock-portal') if d['by'][inst][1]=='hfd_sm' else
                     'generator-abstract-portal'),
                 routed_pin_verified=False,
                 entry_manhattan_um=sum(abs(a-b) for a,b in zip(root,xy)) if bound else None))
@@ -90,9 +104,9 @@ def generate(sm_contract):
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--sm-contract',required=True);ap.add_argument('--out',required=True)
+    ap.add_argument('--sm-contract',required=True);ap.add_argument('--sm-readback');ap.add_argument('--out',required=True)
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    d,r=generate(a.sm_contract)
+    d,r=generate(a.sm_contract,a.sm_readback)
     with gzip.open(out/'die_model_hbm.json.gz','wt') as f: json.dump(d,f,separators=(',',':'))
     (out/'inventory.json').write_text(json.dumps(r,indent=2)+'\n')
     print(json.dumps({k:r[k] for k in ('status','consumer_endpoints','unbound_endpoints','failure')}))
