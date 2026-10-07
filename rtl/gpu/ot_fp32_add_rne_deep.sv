@@ -37,7 +37,10 @@ module ot_optreg #(
 endmodule
 
 module ot_fp32_add_rne_deep #(
-    parameter integer SPLIT = 3'b111
+    parameter integer SPLIT = 3'b111,
+    parameter integer KS = 0                 // 1: stage-3 sum / difference and stage-5 round increment as kept Kogge-Stone
+                                             // adders (rtl/hdc/ot_hdc_prefix.sv: ABC re-ripples a behavioural add in
+                                             // context, S81-PH tile_m2 s2 -> s3 MAJ chain -162 ps); same function
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -155,8 +158,15 @@ module ot_fp32_add_rne_deep #(
     end
 
     // -- stage 3: the add or subtract, and the add's single-bit renormalize --
-    wire [27:0] s3_sum = s2_big + s2_small;
-    wire [27:0] s3_dif = s2_big - s2_small;
+    wire [27:0] s3_sum, s3_dif;
+    generate if (KS != 0) begin : g_ks3
+        wire unused_c0, unused_c1;
+        ot_hdc_ksadd_k #(.W(28)) u_sum (.a(s2_big), .b(s2_small), .cin(1'b0), .s(s3_sum), .cout(unused_c0));
+        ot_hdc_ksadd_k #(.W(28)) u_dif (.a(s2_big), .b(~s2_small), .cin(1'b1), .s(s3_dif), .cout(unused_c1));
+    end else begin : g_b3
+        assign s3_sum = s2_big + s2_small;
+        assign s3_dif = s2_big - s2_small;
+    end endgenerate
     wire [27:0] s3_arith = s2_sub ? s3_dif : s3_sum;
     wire        s3_carry = !s2_sub && s3_sum[27];
     wire [26:0] s3_shifted = {s3_sum[27:2], s3_sum[1] | s3_sum[0]};
@@ -221,7 +231,13 @@ module ot_fp32_add_rne_deep #(
     // -- stage 5a: round to nearest even ---------------------------------------
     wire [24:0] s5_trunc = {1'b0, s4_val[26:3]};
     wire        s5_inc = s4_val[2] && ((|s4_val[1:0]) || s4_val[3]);
-    wire [24:0] s5_round_c = s5_trunc + {24'd0, s5_inc};
+    wire [24:0] s5_round_c;
+    generate if (KS != 0) begin : g_ks5
+        wire unused_c5;
+        ot_hdc_inc_k #(.W(25)) u_rnd (.a(s5_trunc), .inc(s5_inc), .y(s5_round_c), .co(unused_c5));
+    end else begin : g_b5
+        assign s5_round_c = s5_trunc + {24'd0, s5_inc};
+    end endgenerate
     wire        u_v;
     wire [1+1+1+2+32+8+25-1:0] q5;
     ot_optreg #(.W(1), .EN(S5), .RST(1)) u_v5 (.clk(clk), .rst_n(rst_n), .d(s4_v), .q(u_v));

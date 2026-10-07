@@ -1,0 +1,16 @@
+== run_g1.log
+requests 4000/4000 responses 4000/4000 rk 1917/1917 wd 1149/1149 errors 0
+TB_SVC_PC PASS
+== run_g2.log
+requests 4000/4000 responses 4000/4000 rk 1866/1866 wd 1136/1136 errors 0
+TB_SVC_PC PASS
+== run_m1.log
+q 3000/3000 od 2061/3000 a0 1725/3000 errors 3772 cycles 120000
+TB_SVC_STN FAIL
+== run_s1.log
+q 3000/3000 od 3000/3000 a0 3000/3000 errors 0 cycles 7540
+TB_SVC_STN PASS
+== run_s2.log
+q 3000/3000 od 3000/3000 a0 3000/3000 errors 0 cycles 7572
+TB_SVC_STN PASS
+# g1/g2 dsfd_svc_pc seeds 1/7, m1 = S81PH_SVCPC_MUT_DROP (FAIL required); s1/s2 = 15-station dsfd_svc_stn chain seeds 1/5, m1 (stn) = S81PH_SKID2_MUT_NOSLOT (FAIL required; the last m1 overwrote the pc mutant log: pc mutant result FAIL errors 2010)

@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_colt_mrg",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_colt_mrg.lef": "0009cefdd4364ea3cca6c9eef5f33ba71f2d66b2d5725b9a81466f621a28677c",
+    "dsfd_colt_mrg_ff.lib": "76bb596e27078f4dba037870f2932fbb7da8be0ba98e0a37305ed7d0228296f7",
+    "dsfd_colt_mrg_ss.lib": "ac6360a89854630b532e380f94b08ec4796efe8bf2854445e80fe502c3ed9414"
+  },
+  "ok": true
+}

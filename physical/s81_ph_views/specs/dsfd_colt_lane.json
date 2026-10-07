@@ -1,0 +1,67 @@
+{
+ "master": "dsfd_colt_lane",
+ "w_um": 432.0,
+ "h_um": 129.6,
+ "domain": "stream_1p2",
+ "orients": [
+  "R0",
+  "MY"
+ ],
+ "note": "collector lane tile; W face = die lane, E face = stream to the merger (die stations); the two SRAM macros along the S edge (tiles/place_macros_tile.tcl), pins above them",
+ "ports": [
+  [
+   "c_in",
+   515,
+   "input",
+   "W",
+   "M4",
+   2,
+   0.66
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.95
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.97
+  ],
+  [
+   "t_w",
+   513,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.66
+  ],
+  [
+   "t_f",
+   4,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.93
+  ],
+  [
+   "f_cr",
+   1,
+   "input",
+   "E",
+   "M4",
+   1,
+   0.97
+  ]
+ ]
+}

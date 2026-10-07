@@ -413,7 +413,8 @@ endmodule
 module ot_hdc_v41x_sel_su #(
     parameter integer Q  = 4,
     parameter integer CB = 11,
-    parameter integer QW = 11                       // quota width
+    parameter integer QW = 11,                      // quota width
+    parameter integer XR = 0                        // CLAUDE S81-PH tiles: extra edges in the slice round trip (default 0)
 ) (
     input  wire                  clk,
     input  wire [Q*16*(CB+4)-1:0] gs,
@@ -483,6 +484,19 @@ module ot_hdc_v41x_sel_su #(
     reg [XW-1:0] acc_d1, acc_d2, acc_d3, acc_b1, acc_b2, acc_b3;
     reg [QW-1:0] q_d1, q_d2, q_d3, q_b1, q_b2, q_b3;
     reg [3:0]    g_d1, g_d2, g_d3, g_b1, g_b2, g_b3;
+    // the step-A results wait XR more edges when the slices sit XR edges further away (hardened tiles)
+    wire [XW-1:0] acc_e; wire [QW-1:0] q_e; wire [3:0] g_e;
+    generate if (XR == 0) begin : g_x0
+        assign acc_e = acc_d3; assign q_e = q_d3; assign g_e = g_d3;
+    end else begin : g_x
+        reg [XW+QW+4-1:0] xd [1:XR];
+        integer xi;
+        always @(posedge clk) begin
+            xd[1] <= {acc_d3, q_d3, g_d3};
+            for (xi = 2; xi <= XR; xi = xi + 1) xd[xi] <= xd[xi-1];
+        end
+        assign {acc_e, q_e, g_e} = xd[XR];
+    end endgenerate
     reg [Q*16*CB-1:0] bs_r;
     reg [16*SW-1:0]   sb_r;
     reg [16*XW-1:0]   u2_r, u3_r;
@@ -509,7 +523,7 @@ module ot_hdc_v41x_sel_su #(
         q_d1   <= qa;     q_d2   <= q_d1;   q_d3   <= q_d2;
         g_d1   <= g_out;  g_d2   <= g_d1;   g_d3   <= g_d2;
         bs_r   <= bs;
-        sb_r   <= sb_d;   acc_b1 <= acc_d3; q_b1 <= q_d3; g_b1 <= g_d3;
+        sb_r   <= sb_d;   acc_b1 <= acc_e;  q_b1 <= q_e;  g_b1 <= g_e;
         u2_r   <= u2_d;   acc_b2 <= acc_b1; q_b2 <= q_b1; g_b2 <= g_b1;
         u3_r   <= u3_d;   acc_b3 <= acc_b2; q_b3 <= q_b2; g_b3 <= g_b2;
     end

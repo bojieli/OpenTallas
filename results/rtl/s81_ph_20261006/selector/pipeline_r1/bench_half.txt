@@ -1,0 +1,5 @@
+== h2: SELT_PIPE PASS rc=0  RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 289 mean 159 ref_holds 20
+== hm: SELT_PIPE FAIL rc=1  RESULT FAIL segments 32 out_beats 639 replays 6 errors 8048 tail_minus_ref max 327 mean 161 ref_holds 20
+== ht: SELT_PIPE FAIL rc=1  RESULT FAIL segments 32 out_beats 639 replays 6 errors 571 tail_minus_ref max 289 mean 159 ref_holds 20
+== h3: SELT_PIPE FAIL rc=1  RESULT FAIL segments 32 out_beats 639 replays 6 errors 9327 tail_minus_ref max 327 mean 161 ref_holds 20
+# SEARCH_PIPE 2 = half-rate search units (ot_s81ph_sel_ctl_half, XRH = XR/2-1); tail_minus_ref mean 159 cycles/segment (native SEARCH_PIPE 0: 91, SEARCH_PIPE 1: 127); XRH = XR/2-2 FAILED (ties case), XRH 1/2 both PASS

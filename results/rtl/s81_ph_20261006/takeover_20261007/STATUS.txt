@@ -1,0 +1,38 @@
+S81 physical / collective takeover, 2026-10-07
+
+Owner scope: wt-s81-ph and wt-s81-coll only. No central merge, die-generator change, Qwen ROM work, deletion or duplicate launch.
+Existing tools/_s81ph_gen.py and .orig left untracked and untouched.
+Flow correction: d57297ce4 (physical), cca343d93 (collective). Seven mock-stage regression checks PASS. Existing pinned jobs retain their original recipes; never patch a progressing snapshot.
+Fresh-label rule: the wrapper now refuses any existing run evidence with rc 73 before writing args or run.log. For a future failure preserve its directory and create a distinct successor attempt; do not replay a superseded recipe.
+
+HARVESTED EXPORTS (already committed by closure loop; integrated by branch fast-forward):
+s81ph-dsfd_capt_ctl-48203c4d9-f | CLOSED SS +138.68 / FF +15.23 ps DRC 0 | record claude/s81-placeholders-20261006 ae1910896 (13 files) | no merge target
+s81ph-dsfd_capt_g2-fda73a869 | CLOSED SS +60.22 / FF +18.90 ps DRC 0 | record claude/s81-placeholders-20261006 185dc234e (13 files) | no merge target
+s81ph-dsfd_coll_ck-752a48488 | CLOSED SS +9592.12 / FF +31.29 ps DRC 0 | record claude/s81-placeholders-20261006 4e96a26dc (6 files) | no merge target
+s81ph-dsfd_colt_lane-7345266ce-e | CLOSED SS +47.24 / FF +21.73 ps DRC 0 | record claude/s81-placeholders-20261006 096b63d10 (13 files) | no merge target
+s81ph-dsfd_colt_mrg-cd3337221-b | CLOSED SS +54.28 / FF +22.00 ps DRC 0 | record claude/s81-placeholders-20261006 e0e889bd0 (13 files) | no merge target
+s81ph-dsfd_ctrl_ctr-34b3e75dd | CLOSED SS +243.73 / FF +32.32 ps DRC 0 | record claude/s81-placeholders-20261006 49c695301 (13 files) | no merge target
+s81ph-dsfd_ctrl_pc-e87322073 | CLOSED SS +54.28 / FF +18.37 ps DRC 0 | record claude/s81-placeholders-20261006 75546f775 (13 files) | no merge target
+s81ph-dsfd_svc_pc-752a48488 | CLOSED SS +220.00 / FF +20.11 ps DRC 0 | record claude/s81-placeholders-20261006 d1b41d2b3 (13 files) | no merge target
+s81ph-dsfd_svc_stn-da50ce55a | CLOSED SS +41.39 / FF +24.01 ps DRC 0 | record claude/s81-placeholders-20261006 c1b49428b (13 files) | no merge target
+s81ph-dsfd_svcio_ad-d12b194f0 | CLOSED SS +36.93 / FF +18.49 ps DRC 0 | record claude/s81-placeholders-20261006 e4b44bc1f (13 files) | no merge target
+s81ph-dsfd_svcio_od-e87322073 | CLOSED SS +31.46 / FF +20.40 ps DRC 0 | record claude/s81-placeholders-20261006 61409112a (13 files) | no merge target
+s81ph-dsfd_svcio_q-093da5918 | CLOSED SS +22.64 / FF +20.36 ps DRC 0 | record claude/s81-placeholders-20261006 e2706d313 (13 files) | no merge target
+s81ph-dsfd_svcio_x-093da5918 | CLOSED SS +198.18 / FF +17.15 ps DRC 0 | record claude/s81-placeholders-20261006 a8cdf63f0 (13 files) | no merge target
+
+LIVE JOBS: see status_s81.txt for stage and jobs.json for pinned source/bench outcomes. Eight existing jobs, no new launches.
+s81ph-dsfd_capt_grp-fda73a869 | ot-epyc2
+s81ph-dsfd_coll_core-a53f40362 | ot-epyc2
+s81ph-dsfd_coll_lane_e-a53f40362 | ot-epyc2
+s81ph-dsfd_coll_lane_w-a53f40362 | ot-epyc2
+s81ph-dsfd_selt_q-cd3337221-b | ot-epyc2
+s81ph-dsfd_selt_q2-89fd33a58-safe | ot-epyc2
+s81ph-dsfd_vm_bg-37f7479aa | ot-epyc1tb
+s81ph-dsfd_vm_bg-936ce0365 | ot-epyc2
+
+Collective a53f40362 lane_w exact_main PASS, NOREORDER expected FAIL (1215 errors), AG256/1024 regression PASS with REFRACE and NOREORDER negative failures. Reuse the three active jobs.
+
+ONE FRESH STRUCTURAL FAILURE: selt_c cd3337221-b, SS -541.05 / FF +19.43 ps, DRC 0. Source-pinned path summary and selector_preflight.json retained. Candidate pipeline estimate +7 search edges; composed segment/token cost and exactness are NOT established. No RTL candidate implemented or submitted.
+HOLD SPECIALIST: capt_x 501831f78-safe SS +42.31 / FF -11.62; root_tile 34b3e75dd SS +17.00 / FF +8.92, both DRC 0. No hold work performed here.
+OUTSTANDING: harvest eight jobs; finish selector model/cycle contract, then exact candidate and one route; retain old VM 37f7479aa live run as evidence (not cancelled/restarted here). Die generator belongs Linnaeus.
+Other NEEDS_RTL/NEEDS_HUMAN rows in jobs.json are retained historical recipes with closed or active successors; not relaunched.
