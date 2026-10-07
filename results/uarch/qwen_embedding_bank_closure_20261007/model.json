@@ -3,6 +3,11 @@
   "default_off": true,
   "rows": 151936,
   "embedding_elements_per_row": 4096,
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rt_embed_rom.sv": "54deba0a76c99ef5046d10d8a1af4cff550c7c7550fd293411510a607afeae33",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805"
+  },
   "payload_bytes": 622633728,
   "MACs_per_cycle": 0,
   "compute_intensity_MAC_per_byte": 0,

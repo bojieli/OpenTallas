@@ -12933,6 +12933,11 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
     The frozen 11.046 mm2 reservation cannot contain this released payload.
     """
     import math
+    import hashlib
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    pinned = ["rtl/hdc/ot_qwen_rt_embed_rom.sv", "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+              "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib"]
     if rows <= 0 or not 0 < utilisation <= 1:
         raise ValueError("positive rows and utilisation in (0, 1] required")
     pair_count = math.ceil(rows * 64 / 4096)
@@ -12948,6 +12953,7 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
     read_latency = 2 * tree_levels + leaf_latency
     return dict(schema="opentallas.qwen.embedding_bank_closure.v1",
         default_off=True, rows=rows, embedding_elements_per_row=4096,
+        source_sha256={f: hashlib.sha256((root/f).read_bytes()).hexdigest() for f in pinned},
         payload_bytes=rows*4096+rows*2, MACs_per_cycle=0,
         compute_intensity_MAC_per_byte=0, communication_intensity="one 64-byte selected code word per accepted read",
         replica_count=dict(code_bank_pairs=pair_count, scale_macros=scale_macros),
