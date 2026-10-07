@@ -96,7 +96,7 @@ def main():
     inv=json.loads((args.canonical/'inventory.json').read_text())
     geo=(inv['stages'],inv.get('pairs_per_rank_die',inv.get('pairs_bf_stage')),
          inv.get('BF_dual_pairs',inv.get('BF_pairs_TP4',0)//max(1,4*inv['stages'])))
-    if geo not in ((81,2417,519),(86,2048,512)):   # released 20261004 / 20261007 (bf_merge_ksplit)
+    if geo not in ((81,2417,519),(77,2304,512)):   # released 20261004 / 20261007 (bf_merge_ksplit)
         raise ValueError('selected S81 allocation required')
     source=ROOT/'results/uarch/dsrom_native_weight_address_join_20261002'
     demand_path=source/'inputs/demand-r5.json.gz'

@@ -50,107 +50,20 @@ ITEMS = [
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
 ]
 
+# bf_merge_ksplit (ADOPTED, owner via coordinator 2026-10-07): the measured full-field per-node deltas of the mixed-slot
+# release (tools/dsrom_bf_merge_mixed_price.py; every one of 18,288 field regions bit-exact)
+_BFM = json.loads((ROOT / "results/rtl/dsrom_bf_double_20261007/mixed_full_field_price.json").read_text())
+ITEMS.append(("bf_merge_ksplit", "BF16 phase merges + router K split on the mixed-slot S81 die (release "
+              "results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the "
+              "flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 "
+              "merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the "
+              "as-built field, every node (q phases included); wire ESTIMATED at f183.60",
+              [(n, d, 0) for n, d in _BFM["adds"]]))
+
 # PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 # CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)
 CANDIDATES = [
-    ("bf_merge", "BF16 phase merges (claude/dsrom-bf-double-20261007, tools/dsrom_bf_double_alloc.py --shared: 4 BF pairs a "
-                 "region, BF16 x-group pair avoidance; full-rate BF, no die change: f183.60 2,304 pairs/512 BF, 77 vs 78 "
-                 "allocator stages): wo_a 4 -> 2 phases (-1,162 cyc a layer), a_proj BF16 sub-phases L2-type 4 -> 3 "
-                 "(-636), L20 3 -> 2 (-635); MEASURED field vehicle qelem10, every region bit-exact (merge_price.json)",
-     [("L0.attn.wo_a", -1162, 0),
-     ("L1.attn.wo_a", -1162, 0),
-     ("L2.attn.a_proj", -636, 0),
-     ("L2.attn.wo_a", -1162, 0),
-     ("L3.attn.wo_a", -1162, 0),
-     ("L4.attn.wo_a", -1162, 0),
-     ("L5.attn.wo_a", -1162, 0),
-     ("L6.attn.wo_a", -1162, 0),
-     ("L7.attn.wo_a", -1162, 0),
-     ("L8.attn.a_proj", -636, 0),
-     ("L8.attn.wo_a", -1162, 0),
-     ("L9.attn.wo_a", -1162, 0),
-     ("L10.attn.wo_a", -1162, 0),
-     ("L11.attn.wo_a", -1162, 0),
-     ("L12.attn.wo_a", -1162, 0),
-     ("L13.attn.wo_a", -1162, 0),
-     ("L14.attn.a_proj", -636, 0),
-     ("L14.attn.wo_a", -1162, 0),
-     ("L15.attn.wo_a", -1162, 0),
-     ("L16.attn.wo_a", -1162, 0),
-     ("L17.attn.wo_a", -1162, 0),
-     ("L18.attn.wo_a", -1162, 0),
-     ("L19.attn.wo_a", -1162, 0),
-     ("L20.attn.a_proj", -635, 0),
-     ("L20.attn.wo_a", -1162, 0),
-     ("L21.attn.wo_a", -1162, 0),
-     ("L22.attn.wo_a", -1162, 0),
-     ("L23.attn.wo_a", -1162, 0),
-     ("L24.attn.wo_a", -1162, 0),
-     ("L25.attn.wo_a", -1162, 0),
-     ("L26.attn.wo_a", -1162, 0),
-     ("L27.attn.wo_a", -1162, 0),
-     ("L28.attn.wo_a", -1162, 0),
-     ("L29.attn.wo_a", -1162, 0),
-     ("L30.attn.wo_a", -1162, 0),
-     ("L31.attn.wo_a", -1162, 0),
-     ("L32.attn.wo_a", -1162, 0),
-     ("L33.attn.wo_a", -1162, 0),
-     ("L34.attn.wo_a", -1162, 0),
-     ("L35.attn.wo_a", -1162, 0),
-     ("L36.attn.wo_a", -1162, 0),
-     ("L37.attn.wo_a", -1162, 0),
-     ("L38.attn.wo_a", -1162, 0),
-     ("L39.attn.wo_a", -1162, 0)]),
-    ("bf_merge_ksplit", "bf_merge + router (gate) BF16 K split 2 -> 3 golden-aligned segments [2048, 2048, 1024] (--ksplit gate; L*.ffn.router -130 cyc, 637 -> 507, MEASURED exact every region, router_ksplit_price.json, 86 stages at f198.72 as bf_merge). BF16 phase merges (claude/dsrom-bf-double-20261007, tools/dsrom_bf_double_alloc.py --shared: 4 BF pairs a "
-                 "region, BF16 x-group pair avoidance; full-rate BF, no die change: f183.60 2,304 pairs/512 BF, 77 vs 78 "
-                 "allocator stages): wo_a 4 -> 2 phases (-1,162 cyc a layer), a_proj BF16 sub-phases L2-type 4 -> 3 "
-                 "(-636), L20 3 -> 2 (-635); MEASURED field vehicle qelem10, every region bit-exact (merge_price.json)",
-     [("L0.attn.wo_a", -1162, 0),
-     ("L1.attn.wo_a", -1162, 0),
-     ("L2.attn.a_proj", -636, 0),
-     ("L2.attn.wo_a", -1162, 0),
-     ("L3.attn.wo_a", -1162, 0),
-     ("L4.attn.wo_a", -1162, 0),
-     ("L5.attn.wo_a", -1162, 0),
-     ("L6.attn.wo_a", -1162, 0),
-     ("L7.attn.wo_a", -1162, 0),
-     ("L8.attn.a_proj", -636, 0),
-     ("L8.attn.wo_a", -1162, 0),
-     ("L9.attn.wo_a", -1162, 0),
-     ("L10.attn.wo_a", -1162, 0),
-     ("L11.attn.wo_a", -1162, 0),
-     ("L12.attn.wo_a", -1162, 0),
-     ("L13.attn.wo_a", -1162, 0),
-     ("L14.attn.a_proj", -636, 0),
-     ("L14.attn.wo_a", -1162, 0),
-     ("L15.attn.wo_a", -1162, 0),
-     ("L16.attn.wo_a", -1162, 0),
-     ("L17.attn.wo_a", -1162, 0),
-     ("L18.attn.wo_a", -1162, 0),
-     ("L19.attn.wo_a", -1162, 0),
-     ("L20.attn.a_proj", -635, 0),
-     ("L20.attn.wo_a", -1162, 0),
-     ("L21.attn.wo_a", -1162, 0),
-     ("L22.attn.wo_a", -1162, 0),
-     ("L23.attn.wo_a", -1162, 0),
-     ("L24.attn.wo_a", -1162, 0),
-     ("L25.attn.wo_a", -1162, 0),
-     ("L26.attn.wo_a", -1162, 0),
-     ("L27.attn.wo_a", -1162, 0),
-     ("L28.attn.wo_a", -1162, 0),
-     ("L29.attn.wo_a", -1162, 0),
-     ("L30.attn.wo_a", -1162, 0),
-     ("L31.attn.wo_a", -1162, 0),
-     ("L32.attn.wo_a", -1162, 0),
-     ("L33.attn.wo_a", -1162, 0),
-     ("L34.attn.wo_a", -1162, 0),
-     ("L35.attn.wo_a", -1162, 0),
-     ("L36.attn.wo_a", -1162, 0),
-     ("L37.attn.wo_a", -1162, 0),
-     ("L38.attn.wo_a", -1162, 0),
-     ("L39.attn.wo_a", -1162, 0),
-     ("*.ffn.router", -130, 0)]),
     ("fh_half", "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF "
                 "EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 "
                 "(+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",

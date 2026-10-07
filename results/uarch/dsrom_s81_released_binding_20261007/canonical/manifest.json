@@ -1,9 +1,11 @@
 {
  "schema": "opentallas.dsrom.s81-release.manifest.v1",
- "tool": "tools/dsrom_bf_double_alloc.py --shared --pbf 2048 --ksplit gate",
+ "tool": "tools/dsrom_bf_double_alloc.py --shared --pbf 2304 --ksplit gate",
+ "die": "mixed-slot S81 die: 128 regions x 18 pairs; column slots [BF,q,q,BF,q,q,BF,q,BF,q,q] (BF f198.72 280.8 um, q f183.60 265.68 um)",
+ "field_exactness": "qelem10 field vehicle, 18,288 / 18,288 regions bit-exact (ot-epyc1tb, 2026-10-07)",
  "sha256": {
-  "inventory.json": "8f4b17fc271c87ce8a52700d1d729890715ebfa18da4c0aaf3efa72028044cfb",
-  "stage_map.json": "14fe20977895e746779ef1d2e094070d6d790a5456e3a17ae3dff595aa91e3de",
-  "matrix_map.jsonl.gz": "bef503ccc137c9e9287148daff0836edde2af01a28dd8d04fd1c6b89c9d350dd"
+  "inventory.json": "d50c2f4c9db7cef78dcda7fbaf0f57dead90f7fc71dd0ac0f77c1c9e22e10299",
+  "stage_map.json": "7c875e47a1662f8874ff1df2af87ec1c914fb0f6be4f2a391bc22600488660fe",
+  "matrix_map.jsonl.gz": "171bc7653df2063da3687805430eacef474bc762ec2609f9a0ded840c13298c1"
  }
 }

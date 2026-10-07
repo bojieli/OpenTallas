@@ -385,480 +385,42 @@
    "mtp_pct": -0.068,
    "cum_ar_pct": -4.281,
    "cum_mtp_pct": -3.622
-  }
- ],
- "total": {
-  "ar_tok_s": 1603.3,
-  "mtp_tok_s": 4717.7,
-  "ar_pct": -4.281,
-  "mtp_pct": -3.622
- },
- "candidates": [
-  {
-   "item": "bf_merge",
-   "description": "BF16 phase merges (claude/dsrom-bf-double-20261007, tools/dsrom_bf_double_alloc.py --shared: 4 BF pairs a region, BF16 x-group pair avoidance; full-rate BF, no die change: f183.60 2,304 pairs/512 BF, 77 vs 78 allocator stages): wo_a 4 -> 2 phases (-1,162 cyc a layer), a_proj BF16 sub-phases L2-type 4 -> 3 (-636), L20 3 -> 2 (-635); MEASURED field vehicle qelem10, every region bit-exact (merge_price.json)",
-   "adds": [
-    [
-     "L0.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L1.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L2.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L2.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L3.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L4.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L5.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L6.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L7.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L8.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L8.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L9.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L10.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L11.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L12.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L13.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L14.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L14.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L15.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L16.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L17.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L18.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L19.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L20.attn.a_proj",
-     -635,
-     0
-    ],
-    [
-     "L20.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L21.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L22.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L23.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L24.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L25.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L26.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L27.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L28.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L29.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L30.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L31.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L32.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L33.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L34.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L35.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L36.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L37.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L38.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L39.attn.wo_a",
-     -1162,
-     0
-    ]
-   ],
-   "ar_tok_s": 1715.7,
-   "mtp_tok_s": 4991.6,
-   "ar_pct_vs_total": 7.011,
-   "mtp_pct_vs_total": 5.806
   },
   {
    "item": "bf_merge_ksplit",
-   "description": "bf_merge + router (gate) BF16 K split 2 -> 3 golden-aligned segments [2048, 2048, 1024] (--ksplit gate; L*.ffn.router -130 cyc, 637 -> 507, MEASURED exact every region, router_ksplit_price.json, 86 stages at f198.72 as bf_merge). BF16 phase merges (claude/dsrom-bf-double-20261007, tools/dsrom_bf_double_alloc.py --shared: 4 BF pairs a region, BF16 x-group pair avoidance; full-rate BF, no die change: f183.60 2,304 pairs/512 BF, 77 vs 78 allocator stages): wo_a 4 -> 2 phases (-1,162 cyc a layer), a_proj BF16 sub-phases L2-type 4 -> 3 (-636), L20 3 -> 2 (-635); MEASURED field vehicle qelem10, every region bit-exact (merge_price.json)",
-   "adds": [
+   "description": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60",
+   "cycles": [
+    [
+     "E1.wkv",
+     -2,
+     0
+    ],
     [
      "L0.attn.wo_a",
      -1162,
      0
     ],
     [
-     "L1.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L2.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L2.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L3.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L4.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L5.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L6.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L7.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L8.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L8.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L9.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L10.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L11.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L12.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L13.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L14.attn.a_proj",
-     -636,
-     0
-    ],
-    [
-     "L14.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L15.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L16.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L17.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L18.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L19.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L20.attn.a_proj",
-     -635,
-     0
-    ],
-    [
-     "L20.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L21.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L22.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L23.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L24.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L25.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L26.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L27.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L28.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L29.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L30.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L31.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L32.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L33.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L34.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L35.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L36.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L37.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L38.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "L39.attn.wo_a",
-     -1162,
-     0
-    ],
-    [
-     "*.ffn.router",
-     -130,
+     "L0.ffn.down",
+     -13,
      0
     ]
    ],
-   "ar_tok_s": 1728.6,
-   "mtp_tok_s": 5021.0,
-   "ar_pct_vs_total": 7.815,
-   "mtp_pct_vs_total": 6.429
-  },
+   "ar_tok_s": 1754.3,
+   "mtp_tok_s": 5098.3,
+   "ar_pct": 9.418,
+   "mtp_pct": 8.067,
+   "cum_ar_pct": 4.734,
+   "cum_mtp_pct": 4.153
+  }
+ ],
+ "total": {
+  "ar_tok_s": 1754.3,
+  "mtp_tok_s": 5098.3,
+  "ar_pct": 4.734,
+  "mtp_pct": 4.153
+ },
+ "candidates": [
   {
    "item": "fh_half",
    "description": "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 (+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",
@@ -869,10 +431,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.3,
-   "mtp_tok_s": 4536.5,
+   "ar_tok_s": 1754.3,
+   "mtp_tok_s": 4887.3,
    "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -3.841
+   "mtp_pct_vs_total": -4.139
   },
   {
    "item": "head_elem",
@@ -889,10 +451,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.2,
-   "mtp_tok_s": 4716.2,
-   "ar_pct_vs_total": -0.006,
-   "mtp_pct_vs_total": -0.032
+   "ar_tok_s": 1754.1,
+   "mtp_tok_s": 5096.5,
+   "ar_pct_vs_total": -0.011,
+   "mtp_pct_vs_total": -0.035
   },
   {
    "item": "fused_head",
@@ -904,10 +466,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.3,
-   "mtp_tok_s": 4717.1,
+   "ar_tok_s": 1754.3,
+   "mtp_tok_s": 5097.7,
    "ar_pct_vs_total": 0.0,
-   "mtp_pct_vs_total": -0.013
+   "mtp_pct_vs_total": -0.012
   },
   {
    "item": "bf_half",
@@ -934,10 +496,10 @@
      0.7748
     ]
    ],
-   "ar_tok_s": 1362.9,
-   "mtp_tok_s": 4124.0,
-   "ar_pct_vs_total": -14.994,
-   "mtp_pct_vs_total": -12.585
+   "ar_tok_s": 1560.7,
+   "mtp_tok_s": 4638.1,
+   "ar_pct_vs_total": -11.036,
+   "mtp_pct_vs_total": -9.027
   },
   {
    "item": "bf_recut",
@@ -989,10 +551,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1588.8,
-   "mtp_tok_s": 4683.3,
-   "ar_pct_vs_total": -0.904,
-   "mtp_pct_vs_total": -0.729
+   "ar_tok_s": 1737.0,
+   "mtp_tok_s": 5058.4,
+   "ar_pct_vs_total": -0.986,
+   "mtp_pct_vs_total": -0.783
   },
   {
    "item": "bf_unroll",
@@ -1044,18 +606,18 @@
      0
     ]
    ],
-   "ar_tok_s": 1585.7,
-   "mtp_tok_s": 4676.2,
-   "ar_pct_vs_total": -1.098,
-   "mtp_pct_vs_total": -0.88
+   "ar_tok_s": 1733.4,
+   "mtp_tok_s": 5050.1,
+   "ar_pct_vs_total": -1.191,
+   "mtp_pct_vs_total": -0.945
   }
  ],
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1603.3,
-  "mtp_tok_s": 4717.7,
-  "ar_pct": -4.281,
-  "mtp_pct": -3.622,
+  "ar_tok_s": 1754.3,
+  "mtp_tok_s": 5098.3,
+  "ar_pct": 4.734,
+  "mtp_pct": 4.153,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }

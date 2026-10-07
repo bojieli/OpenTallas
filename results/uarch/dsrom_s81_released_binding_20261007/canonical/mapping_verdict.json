@@ -1,7 +1,7 @@
 {
   "adopted": false,
   "all_numbers": "MODEL_UNVALIDATED until the field phases are measured",
-  "bf_stages": 86,
+  "bf_stages": 77,
   "counts": {
     "declarations": 46591,
     "placed": 46591
@@ -12,10 +12,10 @@
   "ksplit_bf16_aliases": [
     "gate"
   ],
-  "layer_dies": 344,
+  "layer_dies": 308,
   "q_stages": 0,
   "schema": "opentallas.dsrom.bf-double.allocation.v1",
-  "source_pin": "ee5545d4412cd509c010695bc4e6e255d0707de9",
-  "stages": 86,
+  "source_pin": "33298323392c356974d186bdfe284e6430896f3d",
+  "stages": 77,
   "tool": "tools/dsrom_bf_double_alloc.py"
 }

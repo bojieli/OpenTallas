@@ -662,6 +662,1406 @@
    "cycles": 0,
    "frac": 0.0017,
    "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "E1.wkv",
+   "cycles": -2,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L0.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L0.ffn.down",
+   "cycles": -13,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L0.ffn.experts_gu",
+   "cycles": -4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L0.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L1.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L1.ffn.down",
+   "cycles": 418,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L1.ffn.experts_gu",
+   "cycles": -4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L1.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L2.attn.a_proj",
+   "cycles": -648,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L8.attn.a_proj",
+   "cycles": -648,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L14.attn.a_proj",
+   "cycles": -648,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L2.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L8.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L14.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L2.ffn.down",
+   "cycles": 869,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L8.ffn.down",
+   "cycles": 869,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L14.ffn.down",
+   "cycles": 869,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L2.ffn.experts_gu",
+   "cycles": 1084,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L8.ffn.experts_gu",
+   "cycles": 1084,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L14.ffn.experts_gu",
+   "cycles": 1084,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L2.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L8.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L14.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.attn.a_proj",
+   "cycles": -639,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.ffn.down",
+   "cycles": -400,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.ffn.experts_gu",
+   "cycles": -8,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L20.ffn.router",
+   "cycles": -130,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L21.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L22.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L23.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L25.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L26.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L27.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L29.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L30.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L31.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L33.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L34.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L35.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L37.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L38.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L39.attn.a_proj",
+   "cycles": 5,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L21.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L22.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L23.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L25.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L26.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L27.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L29.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L30.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L31.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L33.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L34.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L35.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L37.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L38.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L39.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L21.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L22.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L23.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L25.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L26.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L27.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L29.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L30.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L31.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L33.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L34.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L35.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L37.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L38.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L39.ffn.down",
+   "cycles": 414,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L21.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L22.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L23.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L25.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L26.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L27.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L29.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L30.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L31.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L33.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L34.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L35.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L37.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L38.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L39.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L21.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L22.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L23.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L25.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L26.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L27.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L29.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L30.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L31.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L33.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L34.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L35.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L37.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L38.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L39.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L24.attn.a_proj",
+   "cycles": -8,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L28.attn.a_proj",
+   "cycles": -8,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L32.attn.a_proj",
+   "cycles": -8,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L36.attn.a_proj",
+   "cycles": -8,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L24.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L28.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L32.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L36.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L24.ffn.down",
+   "cycles": -863,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L28.ffn.down",
+   "cycles": -863,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L32.ffn.down",
+   "cycles": -863,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L36.ffn.down",
+   "cycles": -863,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L24.ffn.experts_gu",
+   "cycles": -1092,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L28.ffn.experts_gu",
+   "cycles": -1092,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L32.ffn.experts_gu",
+   "cycles": -1092,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L36.ffn.experts_gu",
+   "cycles": -1092,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L24.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L28.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L32.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L36.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L3.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L4.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L5.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L6.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L7.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L9.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L10.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L11.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L12.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L13.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L15.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L16.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L17.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L18.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L19.attn.wo_a",
+   "cycles": -1162,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L3.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L4.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L5.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L6.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L7.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L9.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L10.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L11.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L12.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L13.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L15.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L16.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L17.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L18.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L19.attn.wq_b",
+   "cycles": -3,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L3.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L4.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L5.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L6.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L7.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L9.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L10.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L11.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L12.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L13.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L15.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L16.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L17.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L18.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L19.ffn.down",
+   "cycles": -430,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L3.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L4.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L5.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L6.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L7.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L9.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L10.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L11.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L12.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L13.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L15.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L16.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L17.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L18.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L19.ffn.experts_gu",
+   "cycles": -542,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L3.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L4.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L5.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L6.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L7.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L9.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L10.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L11.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L12.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L13.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L15.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L16.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L17.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L18.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
+  },
+  {
+   "item": "bf_merge_ksplit",
+   "nodes": "L19.ffn.router",
+   "cycles": -127,
+   "frac": 0,
+   "source": "BF16 phase merges + router K split on the mixed-slot S81 die (release results/uarch/dsrom_s81_released_binding_20261007: 2,304 pairs = 18 a region, 512 BF = 4 a region on the flat is_bf map, BF slots f198.72 + q slots f183.60, 77 allocator stages): wo_a 4 -> 2 phases, a_proj BF16 merged, router 3 golden-aligned K segments; MEASURED full field (qelem10 vehicle, 18,288 regions exact) vs the as-built field, every node (q phases included); wire ESTIMATED at f183.60"
   }
  ]
 }

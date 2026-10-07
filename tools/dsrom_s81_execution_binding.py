@@ -19,12 +19,12 @@ HASHES = {
 
 
 # OT_DSROM_S81_RELEASE=20261007: the bf_merge_ksplit released binding (Claude bf-double, owner-adopted 2026-10-07;
-# tools/dsrom_bf_double_alloc.py --shared --pbf 2048 --ksplit gate, f198.72 frame: 2,048 pairs, 512 BF = 4 a region,
-# 86 stages).  Default: the 20261004 binding the pinned evidence was built on.
+# tools/dsrom_bf_double_alloc.py --shared --pbf 2304 --ksplit gate, mixed-slot die: 2,304 pairs, 512 BF = 4 a region,
+# 77 stages).  Default: the 20261004 binding the pinned evidence was built on.
 RELEASES = {
     '20261004': dict(dir=CANONICAL, hashes=HASHES, pairs=2417, bf=519, stages=81, matrices=46671),
     '20261007': dict(dir='results/uarch/dsrom_s81_released_binding_20261007/canonical',
-                     hashes='manifest.json', pairs=2048, bf=512, stages=86, matrices=None),
+                     hashes='manifest.json', pairs=2304, bf=512, stages=77, matrices=None),
 }
 
 
