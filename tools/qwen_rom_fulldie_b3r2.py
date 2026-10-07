@@ -65,7 +65,8 @@ def _isa_bits():
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
-             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False):
+             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
+             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -87,13 +88,30 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.FIFO = (v.FIFO[0], v.FIFO[1] + sf_extra_h)
     bw_mm2 = PORT_GROUPS * BW_FIFO_BITS * FIFO_MM2_PER_BIT
     v.SPINE_BLOCKS = [(n, (a + bw_mm2) if n == 'port_tiles' else a, d, s) for n, a, d, s in v.SPINE_BLOCKS]
+    if su_core_clock:
+        # r20g (coordinator 2026-10-06): the measured token cycles run the SU64/SFU and the vector memory on the 1.2 GHz
+        # core clock (one clock in the RTL: ot_qwen_rom_core's u_su / VM ports), so the die puts them in the stream domain
+        v.SPINE_BLOCKS = [(n, a, 'stream_1p2' if n in ('su64_sfu', 'vector_memory') else d, s)
+                          for n, a, d, s in v.SPINE_BLOCKS]
     # r17: the band slab is 8 routed port-group elements (ot_qwen_slab_port_group, 777.576 x slab_group_h um each,
     # BW_FIFO=0) stacked in its column plus the 8 block-word meso FIFOs (meso_d4_v7, own element); default 0 keeps
     # the b3r16 area-derived slab (8 x 342.9 um)
     v.SLAB_GROUP_H = slab_group_h
     v.CDC = cdc
     v.STRIP_SPAN = strip_span or r18
-    v.R18 = r18
+    v.R18 = r18 or r19
+    v.R19 = r19
+    v.CORR_M9_ADJ = corr_m9_adj
+    if r19:
+        v.TILE_SLOT = (v.KV_TILE_W, v.TILE_SLOT[1])
+        v.TILE_BODY_W = v.KV_TILE_W - v.CORR
+    if corr_um:
+        # r20e: a wider corridor (tree-word M9 legs crowd the corridors); the tile body keeps its width, the slot grows
+        body = v.TILE_BODY_W
+        v.CORR = corr_um
+        v.STATION = (corr_um, v.STATION[1])
+        v.TILE_SLOT = (round(body + corr_um, 6), v.TILE_SLOT[1])
+    r18 = r18 or r19
     if r18:
         if not (cdc and slab_group_h):
             raise ValueError('r18 builds on the r17 die (--slab-group-h and --cdc)')
@@ -168,13 +186,17 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['spread_pins'] = spread or b3r6
     m['b3r2']['b3r6_channel_pins'] = b3r6
     if tree_cols:
-        _tree_cols(v, tree_cols)
+        _tree_cols(v, tree_cols, interleave=tree_interleave)
     m['b3r2']['b3r7_tree_pin_columns'] = tree_cols
+    m['b3r2']['r20_tree_pin_interleave'] = tree_interleave
+    m['b3r2']['r20_corridor_m9_adjustment'] = corr_m9_adj
+    m['b3r2']['r20e_corridor_um'] = corr_um
     m['b3r2']['b3r8_bw_align'] = bw_align
     m['b3r2']['b3r9_east_mirror'] = east_mirror
     m['b3r2']['b3r10_bw_edge'] = bw_edge
     if slab_obs_top != 7 or m6_strip:
         _slab_entry(v, slab_obs_top, m6_strip)
+    m['b3r2']['r21_slab_bw_m8'] = slab_bw_m8
     m['b3r2']['b3r15_slab_obs_top'] = slab_obs_top
     m['b3r2']['b3r15_m6_strip_um'] = m6_strip
     if io_faces:
@@ -182,9 +204,602 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r11_io_faces'] = io_faces
     m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
+    m['b3r2']['r20f_bw_waypoint_every_cols'] = bw_wp
+    m['b3r2']['r20g_su_vm_core_clock'] = su_core_clock
+    if bw_wp:
+        _bw_waypoints(v, m, bw_wp)
     if r18:
         _r18_post(v, m)
+    if slab_bw_m8:
+        _slab_bw_m8(v)            # outermost: after every other slab-pin rule (io_faces, r18)
+    if relay_pitch:
+        _io_south(v)
+        _relays(v, m, relay_pitch)
+    m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     return v, m
+
+
+BWP_H = 60.48       # r20f block-word waypoint frame height: 512 M4 face pins at 2 tracks (49.2 um) + margins, on GY
+
+
+def _bw_waypoints(v, m, every):
+    """r20f: block-word waypoints.  A block word (root tile -> its band slab in the spine) is a chain of registered
+    hops through waypoint stations in the corridors of its root row, one every `every` tile columns (5 x 319.68 =
+    1,598 um <= 4 x 430.56, the link waypoint rule), so a congested global route cannot detour it (r18j i50: the
+    worst word 81 routed stages against 64 at i5 / floorplan).  The stations stack downward from the corridor station
+    of that row; the hops keep the bus class (tree_spine) and the word's name on the first hop (bword_<b>), the rest
+    bwseg_<b>_<k>."""
+    col_x, row_y = m['col_x'], m['geo']['row_y']
+    st_y = v.dn((v.TILE_SLOT[1] - v.STATION[1]) / 2, v.GY)
+    slot_n, insts, out = {}, [], []
+    for bid, cl, bits, eps in m['buses']:
+        if not bid.startswith('bword_'):
+            out.append((bid, cl, bits, eps))
+            continue
+        b = bid[len('bword_'):]
+        (root, rp), (slab, sp) = eps
+        c, r = map(int, root.split('_')[1:])
+        west = c < v.COLS // 2
+        cols = [c + every * k for k in range(1, v.COLS) if c + every * k < v.COLS // 2] if west else \
+            [c - every * k for k in range(1, v.COLS) if c - every * k >= v.COLS // 2]
+        prev = (root, rp)
+        for k, cc in enumerate(cols):
+            n = slot_n.get((cc, r), 0)
+            slot_n[(cc, r)] = n + 1
+            # stacked downward from the corridor station of the row (the word's pins sit at the tile's mid height)
+            y = v.dn(row_y[r] + st_y - 2.16 - (n + 1) * (BWP_H + 2.16), v.GY)
+            if y < row_y[r] + 2.16:
+                raise ValueError(f'bw waypoints: corridor {cc} row {r} below its station is full ({n + 1})')
+            name = f'bwp_{b}_{k}'
+            insts.append(v.Inst(name, 'qfd_bwp_e' if west else 'qfd_bwp_w', col_x(cc) + v.TILE_BODY_W, y, v.CORR - v.SHAVE, BWP_H - v.SHAVE,
+                                kind='waypoint', region='corridor'))
+            out.append((bid if k == 0 else f'bwseg_{b}_{k}', cl, bits, [prev, (name, 'w' if west else 'e')]))
+            prev = (name, 'e' if west else 'w')
+        out.append((bid if not cols else f'bwseg_{b}_{len(cols)}', cl, bits, [prev, (slab, sp)]))
+    m['insts'] += insts
+    m['buses'] = out
+    m['b3r2']['r20f_bw_waypoints'] = dict(stations=len(insts), every_cols=every,
+                                          max_per_corridor_slot=max(slot_n.values()) if slot_n else 0)
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        for mn, flow in (('qfd_bwp_e', 'eastbound: in w, out e'), ('qfd_bwp_w', 'westbound: in e, out w')):
+            w = v.Master(mn, v.CORR - v.SHAVE, BWP_H - v.SHAVE, 3, 'block-word waypoint: one registered 512-b '
+                         f'tree-word hop (512 flops) in a corridor, standard cells M1-M3, die routing above ({flow})')
+            w.face('w', v.TREE_BITS, 'W', 'M4', w.h / 2, 2)
+            w.face('e', v.TREE_BITS, 'E', 'M4', w.h / 2, 2)
+            o[mn] = w
+        return o
+    v.masters = masters
+
+
+def _io_south(v):
+    """r21: the IO-band words that cross another IO element (SerDes words over the UCIe macro, the embedding word
+    beside the collective) leave on the S face of their element, at the end toward the peer, so their relays sit in
+    the corridors of the top tile row instead of over an IO macro (the band has no free area between its elements)."""
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        for mn, port, centre in (('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
+                                 ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
+                                 ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)):
+            M = o.get(mn)
+            if M is None or port not in M.ports:
+                continue
+            bits = M.ports[port][1]
+            c = centre if centre is not None else M.w - 20.0 - bits * 0.048
+            if centre == -1.0:
+                c = M.w - 60.0 - M.ports['o'][1] * 0.048 - 40.0     # beside the word, west of it
+            mx = any(it.master == mn and it.orient in ('MX', 'R180') for it in model['insts'])
+            M.ports[port] = ('face', bits, 'N' if mx else 'S', 'M5', c, 1)
+        # spine blocks whose words sat as area pins inside the body (a relay can only be beside a macro): the tree
+        # top's port-slab words, its result word and done to its E face (the vertical channel), the sequencer's
+        # collective / embedding-address / done words to its W face (the channel), the VM's tree-result word to E
+        moves = (('qfd_sp_tree_top', ['bw0', 'bw1', 'bw2', 'bw3', 'bw4', 'bw5', 'r', 'md'], 'E'),
+                 ('qfd_sp_constants_sequencer', ['cd', 'ea', 'md'], 'W'),
+                 ('qfd_sp_vector_memory', ['tr'], 'E'))
+        for mn, ports, face in moves:
+            M = o.get(mn)
+            if M is None:
+                continue
+            ps = [q for q in ports if q in M.ports]
+            used = [(s[4] - s[1] * 0.048 * s[5] / 2 - 2, s[4] + s[1] * 0.048 * s[5] / 2 + 2)
+                    for q, s in M.ports.items() if s[0] == 'face' and s[2] == face and q not in ps]
+            y = 20.0
+            for q in ps:
+                bits = M.ports[q][1]
+                span = bits * 0.048 + 4.0
+                while any(a_ < y + span and y < b_ for a_, b_ in used):
+                    y += 10.0
+                M.ports[q] = ('face', bits, face, 'M4', y + span / 2, 1)
+                used.append((y, y + span))
+                y += span + max(10.0, (M.h - 40.0) / max(1, len(ps)) - span)
+        return o
+    v.masters = masters
+
+
+# ------------------------------------------------------------------------------------------------ r21 die relays
+RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi')
+RELAY_V_H = 30.24      # relay frame height with N/S faces only (vertical run): 512 flops + clock leaf, M1-M3
+RELAY_MAX_UM = 350.0   # owner fast rule 2026-10-06: every die wire > ~350 um gets relay registers ...
+RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
+
+
+def _relays(v, m, pitch=RELAY_PITCH_UM):
+    """r21 (owner fast rule 2026-10-06): relay registers on every die wire longer than ~350 um, at <= `pitch` um along
+    a rectilinear path.  A relay is one registered hop of the bus (the closed station family, ot_qwen_die_station
+    TAP=0 at the bus width: qfd_cst SS +73.7 / FF +26.3, qfd_chead SS +51.3), standard cells M1-M3 only (OBS M1-M3),
+    so the corridor's M4-M9 stay open over it; its upstream port `a` faces the previous point, `b` the next one.
+    Paths: inside a tile array, along the bus's own corridor (corridor class) or an L through the corridor nearest the
+    two pins (tree words), relays at every corridor crossed and at <= pitch along the corridor; a word leaving the
+    array turns in the array's edge corridor nearest its far end; elsewhere (spine / IO band / channels) an L,
+    vertical first, with each relay in the nearest free spot.  Link hops (forwarded-clock link stations) get a
+    forwarded clock per relay hop; every other relay takes its source's region clock (stream) or domain clock.
+    Not relayed: clock / reset trees, the tile tap and KV landing hops (<= 350 um by construction), CDC / HBM strip
+    words (<= 350 um) and the DFI (417 um, HBM PHY interface timing, priced by the controller)."""
+    import bisect
+    RMAX = max(RELAY_MAX_UM, pitch)   # a wire is relayed only when longer than the relay pitch
+    pos = _pin_pos(v, m)
+    by = {i.name: i for i in m['insts']}
+    g = m['geo']
+    COLS = v.COLS
+    cx_list = [m['col_x'](c) + v.TILE_BODY_W + v.CORR / 2 for c in range(COLS)]
+    corr_x0 = [m['col_x'](c) + v.TILE_BODY_W for c in range(COLS)]
+    fields = [r['rect'] for r in m['regions'] if r['kind'] == 'tile_field']
+    fw, fe = fields[0], fields[1]
+
+    def in_field(x, y):
+        return any(a - 1 <= x <= c + v.CORR + 1 and b - 1 <= y <= d + 1 for a, b, c, d in fields)
+
+    def side_cols(x):
+        return range(0, COLS // 2) if x < (fw[2] + fe[0]) / 2 else range(COLS // 2, COLS)
+
+    # occupancy: per corridor (sorted y intervals) and a coarse grid of every instance rect
+    BK = 250.0
+    grid = {}
+
+    def add_rect(r):
+        for gx in range(int(r[0] // BK), int(r[2] // BK) + 1):
+            for gy in range(int(r[1] // BK), int(r[3] // BK) + 1):
+                grid.setdefault((gx, gy), []).append(r)
+
+    def free(r, gap=0.0):
+        if r[0] < 0 or r[1] < 0 or r[2] > m['die']['w'] or r[3] > m['die']['h']:
+            return False
+        for gx in range(int((r[0] - gap) // BK), int((r[2] + gap) // BK) + 1):
+            for gy in range(int((r[1] - gap) // BK), int((r[3] + gap) // BK) + 1):
+                for q in grid.get((gx, gy), ()):
+                    if q[0] < r[2] + gap - 1e-6 and r[0] < q[2] + gap - 1e-6 and q[1] < r[3] + gap - 1e-6 and r[1] < q[3] + gap - 1e-6:
+                        return False
+        return True
+    for it in m['insts']:
+        add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    die_top = g['y_io']
+
+    def corr_of(x):
+        j = min(range(COLS), key=lambda c: abs(cx_list[c] - x))
+        return j if abs(cx_list[j] - x) < 1.0 else None
+
+    def place(x, y, w, h, corr, tol=None):
+        """lower-left corner of a free w x h frame nearest (x, y): inside corridor `corr` (x fixed) when given."""
+        if corr is not None:
+            ccs = [corr] if tol is not None else sorted(side_cols(cx_list[corr]), key=lambda c: abs(c - corr))[:5]
+            for cc in ccs:
+                x0 = corr_x0[cc]
+                for k in range(0, 400 if tol is None else int(tol / v.GY) + 1):
+                    for sgn in ((1,) if k == 0 else (1, -1)):
+                        y0 = v.dn(y - h / 2 + sgn * k * v.GY, v.GY)
+                        r = (x0, y0, x0 + w, y0 + h)
+                        if y0 >= g['y0'] and y0 + h <= die_top and free(r):
+                            return x0, y0
+            return None
+        for ring in range(0, 160 if tol is None else int(tol / (4 * v.GY)) + 1):
+            st = ring * 4 * v.GY
+            cands = [(0, 0)] if ring == 0 else \
+                [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+            for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
+                x0 = v.dn(x - w / 2 + dx, v.GX)
+                y0 = v.dn(y - h / 2 + dy, v.GY)
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None:
+                    continue           # never over a tile body
+                if free((x0, y0, x0 + w, y0 + h)):
+                    return x0, y0
+        return None
+
+    corr_used = {}
+
+    def load(c, ya, yb):
+        ya, yb = sorted((ya, yb))
+        yb = max(yb, ya + 1.0)
+        return sum(max(0.0, min(b_, yb) - max(a_, ya)) for a_, b_ in corr_used.get(c, ())) / (yb - ya)
+
+    def poly_of(cl, P0, P1):
+        f0, f1 = in_field(*P0), in_field(*P1)
+        if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0):
+            return [P0, P1]
+        if f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
+            xm = (P0[0] + P1[0]) / 2
+            lo, hi = sorted((P0[0], P1[0]))
+            cs = [c for c in side_cols(P0[0]) if lo - 170.0 <= cx_list[c] <= hi + 170.0] or \
+                [min(side_cols(P0[0]), key=lambda c: abs(cx_list[c] - xm))]
+            xc = cx_list[min(cs, key=lambda c: load(c, P0[1], P1[1]) + abs(cx_list[c] - xm) / 2000.0)]
+            return [P0, (xc, P0[1]), (xc, P1[1]), P1]
+        if f0 != f1:
+            Pf, Po = (P0, P1) if f0 else (P1, P0)
+            cs = sorted(side_cols(Pf[0]), key=lambda c: abs(cx_list[c] - Po[0]))[:4]
+            xc = cx_list[min(cs, key=lambda c: load(c, Pf[1], Po[1]) + abs(cx_list[c] - Po[0]) / 2000.0)]
+            path = [Pf, (xc, Pf[1]), (xc, Po[1]), Po]
+            return path if f0 else path[::-1]
+        return [P0, (P0[0], P1[1]), P1]
+
+    def candidates(path):
+        """(arc, x, y, corr) points a relay may take along the path."""
+        out, s = [], 0.0
+        for (xa, ya), (xb, yb) in zip(path, path[1:]):
+            L = abs(xb - xa) + abs(yb - ya)
+            if L < 1e-6:
+                continue
+            horiz = abs(yb - ya) < 1e-6
+            if horiz and in_field(xa, ya) and in_field(xb, yb):
+                lo, hi = sorted((xa, xb))
+                for c in range(COLS):
+                    if lo - 1.0 <= cx_list[c] <= hi + 1.0 and in_field(cx_list[c], ya):
+                        out.append((s + abs(cx_list[c] - xa), cx_list[c], ya, c, 'h'))
+            else:
+                n = max(1, int(L // 20.0))
+                cr = corr_of(xa) if not horiz else None
+                for i in range(1, n + 1):
+                    f = i / n
+                    x, y = xa + (xb - xa) * f, ya + (yb - ya) * f
+                    out.append((s + L * f, x, y, cr if in_field(x, y) else None, 'v' if not horiz else 'o'))
+            s += L
+        return sorted(set(out), key=lambda q: (q[0], q[1], q[2], -1 if q[3] is None else q[3], q[4])), s
+
+    masters_needed = {}
+    regs = m['clock_regions']
+
+    def region_of(cx, cy):
+        for k, r in enumerate(regs):
+            a, b_, c, d = r['rect']
+            if a <= cx <= c and b_ <= cy <= d:
+                return k
+        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
+                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+    ck_add = {}
+    stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
+    stage_of = {}
+    order = {'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
+    buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
+    keep = {}
+    def relay_frame(bits, cl):
+        """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
+        take the face span (a link-spine relay is vertical flow only, N/S faces)."""
+        span1 = bits * 0.048 + 4.0
+        if bits <= 512:
+            return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
+        w = max(v.up(span1, v.GX), v.CORR) - v.SHAVE
+        if cl == 'link_spine' and span1 > BWP_H:
+            return w, RELAY_V_H - v.SHAVE
+        return w, max(v.up(span1, v.GY), BWP_H) - v.SHAVE
+
+    plans = {}
+    for idx, (bid, cl, bits, eps) in buses:
+        if cl in RELAY_SKIP or len(eps) != 2:
+            keep[idx] = [(bid, cl, bits, eps)]
+            continue
+        P0, P1 = pos(*eps[0]), pos(*eps[1])
+        d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
+        if d <= RMAX:
+            keep[idx] = [(bid, cl, bits, eps)]
+            continue
+        path = poly_of(cl, P0, P1)
+        cands, L = candidates(path)
+        span1 = bits * 0.048 + 4.0
+        span2 = bits * 0.096 + 4.0
+
+        def frame(c, bits=bits, span1=span1, span2=span2):
+            if c[3] is not None:       # corridor lane: full corridor width, faces at 1 track up to 512 b
+                if bits <= 512:
+                    return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
+                return v.CORR - v.SHAVE, max(v.up(min(span2, max(span1, BWP_H)), v.GY), BWP_H) - v.SHAVE
+            return relay_frame(bits, cl)
+
+        def _try(c, tol):
+            w, h = frame(c)
+            sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
+            return None if sp is None else (sp[0], sp[1], w, h)
+        frames, s_last, ycur = [], 0.0, None
+        while L - s_last > pitch:
+            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + pitch]
+            if not reach:
+                nxt = [c for c in cands if c[0] > s_last + 1.0]
+                if not nxt:
+                    break
+                reach = nxt[:1]
+            if ycur is not None:      # a horizontal run keeps the height of its previous relay (no zig-zag)
+                reach = [(c[0], c[1], ycur, c[3], c[4]) if c[4] == 'h' and abs(ycur - c[2]) < 400.0 else c
+                         for c in reach]
+            got = None
+            for tol in (20.0, 80.0, 200.0):
+                for c in reach[::-1]:
+                    sp = _try(c, tol)
+                    if sp is not None:
+                        got = (c, sp)
+                        break
+                if got is not None:
+                    break
+            if got is None:
+                c = reach[-1]
+                sp = _try(c, None)
+                if sp is None:
+                    raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
+                got = (c, sp)
+            x0, y0, w, h = got[1]
+            add_rect((x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE))
+            cc_ = corr_of(x0 + w / 2)
+            if cc_ is not None:
+                corr_used.setdefault(cc_, []).append((y0, y0 + h))
+            frames.append((x0, y0, w, h))
+            ycur = y0 + h / 2 if got[0][4] == 'h' else None
+            s_last = got[0][0]
+        plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=frames, d=d)
+
+    def hops_of(pl):
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        return [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
+    # ---- pass 2: a bus whose relays could not keep <= RMAX hops (crowded lane, a spine macro in the way)
+    # is re-placed by a breadth-first search over every free relay spot of the die: wires may cross any macro on
+    # M8/M9, only the relays need free area, so the fewest-relay chain with every hop <= pitch is found exactly
+    import numpy as np
+    from scipy.spatial import cKDTree
+    site_cache = {}
+    grid0 = {}
+    for it in m['insts']:              # sites ignore relays (ok() re-checks every site against the live grid)
+        r_ = (it.x, it.y, it.x + it.w, it.y + it.h)
+        for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+            for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                grid0.setdefault((gx, gy), []).append(r_)
+
+    def free0(r):
+        if r[0] < 0 or r[1] < 0 or r[2] > m['die']['w'] or r[3] > m['die']['h']:
+            return False
+        for gx in range(int(r[0] // BK), int(r[2] // BK) + 1):
+            for gy in range(int(r[1] // BK), int(r[3] // BK) + 1):
+                for q in grid0.get((gx, gy), ()):
+                    if q[0] < r[2] - 1e-6 and r[0] < q[2] - 1e-6 and q[1] < r[3] - 1e-6 and r[1] < q[3] - 1e-6:
+                        return False
+        return True
+
+    def sites(w, h):
+        """lower-left corners where a w x h relay frame fits: every corridor slot (32.4 um steps) and a 21.6 um grid
+        over the free area outside the tile arrays."""
+        key = (round(w, 3), round(h, 3))
+        if key in site_cache:
+            return site_cache[key]
+        pts = []
+        if w <= v.CORR + 1e-6:
+            for c in range(COLS):
+                x0 = corr_x0[c]
+                y = v.up(g['y0'], v.GY)
+                while y + h <= die_top:
+                    if free0((x0, y, x0 + w, y + h)):
+                        pts.append((x0, y))
+                    y = round(y + 15 * v.GY, 6)
+        step = 21.6
+        for x in np.arange(0.0, m['die']['w'] - w, step):
+            for y in np.arange(0.0, m['die']['h'] - h, step):
+                x0, y0 = v.up(float(x), v.GX), v.up(float(y), v.GY)
+                if in_field(x0 + w / 2, y0 + h / 2) and y0 + h <= die_top + 1.0:
+                    continue
+                if free0((x0, y0, x0 + w, y0 + h)):
+                    pts.append((x0, y0))
+        arr = np.array(pts) if pts else np.zeros((0, 2))
+        site_cache[key] = (arr, cKDTree(arr + np.array([w / 2, h / 2])) if len(arr) else None)
+        return site_cache[key]
+
+    repaired, unrepaired = [], []
+    for idx, pl in sorted(plans.items()):
+        hs = hops_of(pl)
+        if max(hs) <= RMAX + 25.0:
+            continue
+        bits = pl['bits']
+        w, h = relay_frame(bits, pl['cl'])
+        W, H = w + v.SHAVE, h + v.SHAVE
+        arr, tree = sites(W, H)
+        if tree is None:
+            unrepaired.append(pl['bid'])
+            continue
+        # free the bus's own pass-1 relays for its search
+        own = [(f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE) for f in pl['frames']]
+        for r_ in own:
+            for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+                for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                    lst = grid.get((gx, gy), [])
+                    if r_ in lst:
+                        lst.remove(r_)
+        D = RMAX - max(W, H) / 2 + 26.0
+        P0, P1 = pl['P0'], pl['P1']
+        ctr = arr + np.array([W / 2, H / 2])
+        ok_cache = {}
+
+        def ok(i):
+            if i not in ok_cache:
+                x0, y0 = arr[i]
+                ok_cache[i] = free((x0, y0, x0 + W, y0 + H))
+            return ok_cache[i]
+        def bfs(De):
+            start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
+            par = {i: -1 for i in start}
+            front, hit = start, None
+            while front and hit is None and len(par) < 400000:
+                for i in front:
+                    if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De:
+                        hit = i
+                        break
+                if hit is not None:
+                    break
+                nxt = []
+                for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
+                    for j in nb:
+                        if j not in par and ok(j):
+                            par[j] = i
+                            nxt.append(j)
+                nxt.sort(key=lambda j: abs(ctr[j][0] - P1[0]) + abs(ctr[j][1] - P1[1]))
+                front = nxt[:4000]
+            return hit, par, start
+        hit, par, start = bfs(D)
+        if hit is None:
+            # end hops only: the measured closing span (430.56 um, corridor gate +11.9 ps at SS) when the pin's
+            # neighbourhood is full
+            hit, par, start = bfs(430.0 - max(W, H) / 2)
+        if hit is None:
+            unrepaired.append(f"{pl['bid']} (start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f})")
+            for r_ in own:
+                add_rect(r_)
+            continue
+        chain = [hit]
+        while par[chain[-1]] != -1:
+            chain.append(par[chain[-1]])
+        chain = chain[::-1]
+        frames = []
+        for i in chain:
+            x0, y0 = arr[i]
+            r_ = (x0, y0, x0 + W, y0 + H)
+            if not free(r_):
+                break
+            add_rect(r_)
+            frames.append((float(x0), float(y0), w, h))
+        if len(frames) != len(chain):
+            for f in frames:
+                pass
+            unrepaired.append(pl['bid'] + ' (self-overlap)')
+        old = len(pl['frames'])
+        pl['frames'] = frames
+        repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))
+    # ---- emit relays and hops
+    for idx, pl in sorted(plans.items()):
+        bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
+        link = cl in ('link_spine', 'link_channel')
+        dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        prev, hops = eps[0], []
+        for k, (x0, y0, w, h) in enumerate(pl['frames']):
+            here = pts[k + 1]
+
+            def face(o):
+                dx, dy = o[0] - here[0], o[1] - here[1]
+                if abs(dx) >= abs(dy):
+                    return 'E' if dx > 0 else 'W'
+                return 'N' if dy > 0 else 'S'
+            fi, fo = face(pts[k]), face(pts[k + 2])
+            if fi == fo:
+                # both neighbours on one side: the output takes the other axis toward its peer
+                dx, dy = pts[k + 2][0] - here[0], pts[k + 2][1] - here[1]
+                if fi in 'NS':
+                    fo = 'E' if dx >= 0 else 'W'
+                else:
+                    fo = 'N' if dy >= 0 else 'S'
+            mn = f'qfd_rly{"f" if link else ""}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+            masters_needed[mn] = (bits, fi, fo, w, h, link)
+            nm = f'rly_{bid}_{k}'
+            ccx, ccy = x0 + w / 2, y0 + h / 2
+            reg = 'corridor' if corr_of(ccx) is not None and in_field(ccx, ccy) else next(
+                (r_['kind'] for r_ in m['regions'] if r_['rect'][0] <= ccx <= r_['rect'][2]
+                 and r_['rect'][1] <= ccy <= r_['rect'][3] and r_['kind'] != 'tile_field'), 'hub')
+            insts.append(v.Inst(nm, mn, x0, y0, w, h, kind='relay', region=reg, domain=dom))
+            by[nm] = insts[-1]
+            hop = bid if k == 0 else f'{bid}__r{k}'
+            hops.append((hop, cl, bits, [prev, (nm, 'a')]))
+            if link:
+                fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
+            elif dom == 'stream_1p2':
+                ck_add.setdefault(f'clk_r{region_of(ccx, ccy)}', []).append((nm, 'ck'))
+            else:
+                ck_add.setdefault({'serial_0p9': 'clk_serial', 'link_serdes': 'clk_serdes',
+                                   'link_ucie': 'clk_ucie'}.get(dom, f'clk_{dom}'), []).append((nm, 'ck'))
+            prev = (nm, 'b')
+        n = len(pl['frames'])
+        last = bid if not n else f'{bid}__r{n}'
+        hops.append((last, cl, bits, [prev, eps[1]]))
+        if link and n:
+            fck_drop.add(f'fck_{bid}')
+            fck_new.append((f'fck_{last}', 'clock_trunk', 1, [(prev[0], 'fck_b'), (eps[1][0], f'fck_{eps[1][1]}')]))
+        keep[idx] = hops
+        stage_of[bid] = n + 1
+        s = stats.setdefault(cl, dict(buses=0, relays=0, relay_bits=0, max_hop_um=0.0, max_stages=0))
+        s['buses'] += 1
+        s['relays'] += n
+        s['relay_bits'] += n * bits
+        s['max_stages'] = max(s['max_stages'], n)
+        s['max_hop_um'] = round(max(s['max_hop_um'], max(hops_of(pl))), 1)
+        worst.append((bid, cl, round(pl['d'], 1), n))
+    m['insts'] += insts
+    B = [h for idx in range(len(m['buses'])) for h in keep[idx]]
+    B = [b for b in B if b[0] not in fck_drop]
+    for j, (bid, cl, bits, eps) in enumerate(B):
+        if bid in ck_add:
+            B[j] = (bid, cl, bits, eps + ck_add.pop(bid))
+    missing = sorted(ck_add)
+    m['buses'] = B + fck_new
+    m['r21_stage_of'] = stage_of
+    # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
+    m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
+                          classes=stats, clock_nets_missing=missing, repaired=len(repaired),
+                          repaired_examples=repaired[:20], unrepaired=unrepaired,
+                          relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
+                          relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        for mn, (bits, fi, fo, w, h, link) in masters_needed.items():
+            M = v.Master(mn, w, h, 3, f'die relay: one registered {bits}-b hop (ot_qwen_die_station TAP=0 family), '
+                         f'standard cells M1-M3, in {fi} out {fo}')
+            for port, f in (('a', fi), ('b', fo)):
+                along = w if f in 'NS' else h
+                pitch_tr = 2 if bits * 0.096 + 2.0 <= along else 1
+                M.face(port, bits, f, 'M5' if f in 'NS' else 'M4', along / 2, pitch_tr)
+            if link:
+                M.area('fck_a', 1, w / 2 - 0.8, h / 2, 1)
+                M.area('fck_b', 1, w / 2 + 0.8, h / 2, 1)
+            else:
+                M.area('ck', 1, w / 2, h / 2, 1)
+            o[mn] = M
+        return o
+    v.masters = masters
+    return m['r21_relays']
+
+
+def _pin_pos(v, m):
+    """(inst, port) -> die position of the port's pin centroid (instance orientation applied)."""
+    M = v.masters(m, 1)
+    pw = v.port_widths(m, 1)
+    cen = {}
+    for name, mst in M.items():
+        acc = {}
+        for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}):
+            a = acc.setdefault(nm.split('[')[0], [0.0, 0.0, 0])
+            a[0] += (r[0] + r[2]) / 2
+            a[1] += (r[1] + r[3]) / 2
+            a[2] += 1
+        cen[name] = {p: (a[0] / a[2], a[1] / a[2]) for p, a in acc.items()}
+    by = {i.name: i for i in m['insts']}
+
+    def pos(inst, port):
+        i = by[inst]
+        c = cen.get(i.master, {}).get(port.lstrip('*'))
+        if c is None:
+            return (i.cx, i.cy)
+        x, y = c
+        if i.orient in ('MY', 'R180'):
+            x = i.w - x
+        if i.orient in ('MX', 'R180'):
+            y = i.h - y
+        return (i.x + x, i.y + y)
+    return pos
 
 
 # ------------------------------------------------------------------------------------------------ r18 (die-top lint)
@@ -221,16 +836,16 @@ def _r18_post(v, m):
             continue                   # replaced below
         B.append((bid, cl, bits, eps))
     m['buses'] = B
-    # ---- sp_xfifo: in the spine channel, below the hub, clear of the link waypoints
+    # ---- the serial blocks host the decision-C X1/X2/X3 ratio FIFOs at their stream-side ports (r18f: a separate
+    # channel cluster sp_xfifo concentrated 18.5k crossing pins in the channel beside the hub, i5 overflow 16,408
+    # with M8/M9 1.22-1.27 there); SU64 and VM get the stream clock beside their serial one
+    hosts = {'sp_su64_sfu', 'sp_vector_memory'}
     hub = m['hub']
     lv = sorted(i.y + i.h for i in m['insts'] if i.kind == 'link_station' and abs(i.x - g['x_vch']) < 140
                 and i.y + i.h <= hub.y)
     y0 = v.up(max(lv) + 15.0, v.GY)
     y1 = v.dn(hub.y - 30.0, v.GY)
-    xf = v.Inst('sp_xfifo', 'qfd_sp_xfifo', v.up(g['x_vch'] + XF_GAP, v.GX), y0,
-                v.dn(v.VCH - 2 * XF_GAP, v.GX) - v.SHAVE, y1 - y0 - v.SHAVE, kind='xfifo', region='hub', domain='cdc')
-    m['insts'].append(xf)
-    by[xf.name] = xf
+    xf = None
     iox = m['io']['xfifo']
     # ---- new buses (Q9, Q10, Q11)
     m['buses'] += [('emb_a', 'io', 24, [('sp_constants_sequencer', 'ea'), ('io_embedding_rom', 'a')]),
@@ -247,7 +862,12 @@ def _r18_post(v, m):
             B.append((bid, cl, bits, eps))
             continue
         (a, pa), (b, pb) = eps
-        X = iox if (a in io_side and b in io_side) or {a, b} & io_side and 'sp_constants_sequencer' in (a, b) else xf
+        if {a, b} & hosts and not {a, b} & io_side:
+            B.append((bid, cl, bits, eps))
+            xing.append(dict(bus=bid, cls=cl, bits=bits, src=a, dst=b, fifo=(set((a, b)) & hosts).pop() + ' (host)',
+                             domains=[by[a].domain, by[b].domain]))
+            continue
+        X = iox
         B.append((bid, cl, bits, [(a, pa), (X.name, f'i_{bid}')]))
         B.append((bid + '_x', cl, bits, [(X.name, f'o_{bid}'), (b, pb)]))
         xing.append(dict(bus=bid, cls=cl, bits=bits, src=a, dst=b, fifo=X.name,
@@ -270,13 +890,14 @@ def _r18_post(v, m):
             per.setdefault(region_of(it), []).append((it.name, 'ck'))
         elif it.kind == 'cdc':
             per.setdefault(region_of(it), []).append((it.name, 'clk'))
-    per.setdefault(region_of(xf), []).append((xf.name, 'ck'))
+    for h in sorted(hosts):
+        per.setdefault(region_of(by[h]), []).append((h, 'ckx'))
     per.setdefault(region_of(iox), []).append((iox.name, 'ck'))
     CK = [('clk_root', 'clock_trunk', 1, [('io_collective', 'pll_stream'), ('hub_el', 'ck')])]
     for k in sorted(per):
         CK.append((f'clk_r{k}', 'clock_trunk', 1, [('hub_el', f'pll_r{k}')] + per[k]))
     ser = [(i.name, 'ck') for i in m['insts'] if i.domain == 'serial_0p9' and i.name != 'io_collective']
-    CK.append(('clk_serial', 'clock_trunk', 1, [('io_collective', 'pll_serial')] + ser + [(xf.name, 'cks'), (iox.name, 'cks')]))
+    CK.append(('clk_serial', 'clock_trunk', 1, [('io_collective', 'pll_serial')] + ser + [(iox.name, 'cks')]))
     CK.append(('clk_ucie', 'clock_trunk', 1, [('io_collective', 'pll_ucie'), ('io_ucie', 'ck'), (iox.name, 'cku')]))
     CK.append(('clk_serdes', 'clock_trunk', 1, [('io_collective', 'pll_serdes'), ('io_serdes', 'ck'), (iox.name, 'ckd')]))
     RS = []
@@ -293,9 +914,9 @@ def _r18_post(v, m):
             CK.append((f'fck_{bid}', 'clock_trunk', 1, [(eps[0][0], f'fck_{eps[0][1]}'), (eps[1][0], f'fck_{eps[1][1]}')]))
     m['buses'] += CK + RS
     m['r18'] = dict(crossings=xing, clock_nets=len(CK), region_nets=len(per), reset_nets=len(RS),
-                    sp_xfifo=[round(xf.x, 3), round(xf.y, 3), round(xf.w, 3), round(xf.h, 3)],
+                    cdc_hosts=sorted(hosts),
                     io_xfifo=[round(iox.x, 3), round(iox.y, 3), round(iox.w, 3), round(iox.h, 3)],
-                    fifo_bits=dict(sp=sum(x['bits'] for x in xing if x['fifo'] == 'sp_xfifo'),
+                    fifo_bits=dict(hosts=sum(x['bits'] for x in xing if x['fifo'].endswith('(host)')),
                                    io=sum(x['bits'] for x in xing if x['fifo'] == 'io_xfifo')))
     # ---- Q8: role variants (flow direction differs by instance)
     mid = g['mid']
@@ -309,7 +930,7 @@ def _r18_post(v, m):
     _r18_masters(v, m)
 
 
-R18_CK = ('ck', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
+R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
 
 
 def _r18_masters(v, m):
@@ -340,14 +961,9 @@ def _r18_masters(v, m):
         if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
             hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
         vm = out['qfd_sp_vector_memory']
-        if 'em' in vm.ports:
-            vm.ports['em'] = ('face', v.IO_BITS, 'E', 'M4', vm.h / 2 + 60, 2)
-        if 'xw' in vm.ports:           # both head chains now leave through the channel CDC cluster
-            vm.ports['xw'] = ('face', vm.ports['xw'][1], 'E', 'M4', vm.h / 2 + 130, 1)
-        xf = next(i for i in model['insts'] if i.name == 'sp_xfifo')
-        if 'qfd_sp_xfifo' not in out:
-            out['qfd_sp_xfifo'] = v.Master('qfd_sp_xfifo', xf.w, xf.h, 3, 'decision-C X1/X2/X3 ratio CDC FIFO cluster '
-                                           '(ot_ratio_cdc_fifo 3:4, depth 4), std cells M1-M3, die routing above')
+        if 'em' in vm.ports:           # the embedding ROM is in the IO band to the north (left of the hub)
+            vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
+        xf = None
         iox = model['io']['xfifo']
         out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
                                        'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
@@ -355,7 +971,14 @@ def _r18_masters(v, m):
         # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
         # faces and staggered cluster groups), the rest in the free intervals from the top
         byn = {i.name: i for i in model['insts']}
-        for X in (xf, iox):
+        # r18i: the IO link words spread over the IO band height (r18g i50: every collective / UCIe / SerDes / CDC
+        # group stacked in the top 180 um of the band, M6-M8 1.05-1.07 at the die's north edge)
+        for mst_, port_, yc_ in (('qfd_io_collective', 'ur', 1000.0), ('qfd_io_collective', 'sr', 1350.0),
+                                 ('qfd_io_collective', 'sd', 300.0), ('qfd_io_ucie', 'r', 1000.0),
+                                 ('qfd_io_serdes', 'r', 1350.0)):
+            if mst_ in out and port_ in out[mst_].ports and out[mst_].ports[port_][0] == 'face':
+                out[mst_].ports[port_] = out[mst_].ports[port_][:4] + (yc_,) + out[mst_].ports[port_][5:]
+        for X in (iox,):
             M = out[X.master]
             want = []
             for bid, cl, nb, eps in model['buses']:
@@ -371,7 +994,7 @@ def _r18_masters(v, m):
                     yc = None
                     pm = out.get(ot.master)
                     pspec = pm.ports.get(eps[1 - j][1].lstrip('*')) if pm is not None else None
-                    if X is xf and pspec is not None and pspec[0] == 'face' and \
+                    if pspec is not None and pspec[0] == 'face' and \
                             pspec[2] == ('W' if face == 'E' else 'E'):
                         yc = ot.y + pspec[4] - X.y
                         if not (span / 2 + 1.0 <= yc <= along - span / 2 - 1.0):
@@ -873,6 +1496,13 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
     def masters(model, k=1, port_bits=None):
         by = {i.name: i for i in model['insts']}
         out = base(model, k, port_bits)
+        if 'qfd_tile_e' in out:
+            # r19: the east-array tile = the (wrapped) west tile with the landing in / out faces swapped
+            t, te = out['qfd_tile'], out['qfd_tile_e']
+            te.ports = {k_: v_ for k_, v_ in t.ports.items()}
+            te.order = list(t.order)
+            te.ports['li'] = ('face',) + t.ports['li'][1:2] + ('E',) + t.ports['li'][3:]
+            te.ports['lo'] = ('face',) + t.ports['lo'][1:2] + ('W',) + t.ports['lo'][3:]
         hub = out['qfd_hub']
         if 'lsw' not in hub.ports:
             hub.face('lsw', v.LINK_TRACKS, 'W', 'M4', hub.h / 8, 1)
@@ -1177,22 +1807,28 @@ def _io_faces(v):
 TREE_COL_UM = 9.24          # one GRT gcell (the k16 GRT grid pitch, gcell_over.txt x step)
 
 
-def _tree_cols(v, ncols):
+def _tree_cols(v, ncols, interleave=False):
     """b3r7: the tile's four tree-word area pins (t_out, n_a, n_b, n_y; 32 bundled M8 pins each) laid out as ncols
     sub-columns one gcell apart instead of one 82 um stack at one x.  b3r5's per-gcell dump: 13.1k of the 19.4k
     M9 overflow sits over the tile bodies at the tree-pin x (column offsets 246-292 um), 7-8 M9 tracks a gcell
-    carrying a 32-wire word that leaves one x."""
+    carrying a 32-wire word that leaves one x.
+    interleave (r20): the four ports' sub-columns interleave across the body (port i, sub-column j at
+    x = 10 + (4 j + i) gcells) instead of four 6-gcell groups: r18j i50 / r19 i5 M9 overflow is 1-gcell-wide vertical
+    lines of tree words (tree nets 57k of 60k blamed gcell-hits) at the pin-group x and in the corridor."""
+    stride = 4 if interleave else 1
     base_masters, base_rects = v.masters, v.pin_rects
 
     def masters(model, k=1, port_bits=None):
         out = base_masters(model, k, port_bits)
-        t = out['qfd_tile']
-        for i, pn in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
+        # r20: the r19 east-array variant qfd_tile_e copies the tile's ports BEFORE this wrapper ran, so it kept the
+        # one-stack b3r5 tree pins (x 100: r19 i5 M9 33.8k, the 'li/lo' swap is its only intended difference)
+        for t, i, pn in [(out[tn], i, pn) for tn in ('qfd_tile', 'qfd_tile_e') if tn in out
+                         for i, pn in enumerate(('t_out', 'n_a', 'n_b', 'n_y'))]:
             spec = t.ports[pn]
             if spec[0] == 'area' and len(spec) == 5:
                 # x 10 + 60 i (was 40 + 60 i): the ncols sub-columns stay inside the 260.9 um body
-                x = 10.0 + 60.0 * i
-                if x + (ncols - 1) * TREE_COL_UM + 0.4 * k > min(x + 60.0, t.w - 2.0) - 1e-6:
+                x = 10.0 + (TREE_COL_UM * i if interleave else 60.0 * i)
+                if x + (ncols - 1) * stride * TREE_COL_UM + 0.4 * k > (t.w - 2.0 if interleave else min(x + 60.0, t.w - 2.0)) - 1e-6:
                     raise ValueError(f'tree pin columns: {ncols} do not fit')
                 t.ports[pn] = ('area', spec[1], x, spec[3], spec[4], ncols)
         return out
@@ -1224,10 +1860,44 @@ def _tree_cols(v, ncols):
             step = pp * k * pitch
             y = off * k + round((yc - per * step / 2 - off * k) / (pp * k)) * pp * k + ri * step
             hw = 0.020 * k
-            xx = x + ci * TREE_COL_UM
+            xx = x + ci * stride * TREE_COL_UM
             out.append((nm, layer, (xx, y - hw, xx + 0.4 * k, y + hw)))
         return out
     v.masters, v.pin_rects = masters, pin_rects
+
+
+def _slab_bw_m8(v):
+    """r21 seam fix (owner 2026-10-06): the band slabs' block-word pins move from the M6 strip (b3r15 option B) to
+    M8 at the array-facing face, one word per port-group slot (the slab is a stack of port-group elements, each
+    with its bw_/tw_ pins on M8 spread over its whole array face: pins_bw_m8.tcl), the words in their root order.
+    r20c 0-iteration full-die GRT: the east slabs' M6 strip funnelled every east block word through one gcell
+    column at the seam with the first east tile column (tile OBS M1-M7), 2D capacity 1-2."""
+    base_masters = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base_masters(model, k, port_bits)
+        xv = model['geo']['x_vch']
+        for name, b in out.items():
+            if not name.startswith('qfd_port_tiles'):
+                continue
+            west = next(it.x < xv for it in model['insts'] if it.master == name)
+            b.m6_strip = None
+            bws = sorted((p_ for p_, s in b.ports.items() if p_.startswith('bw') and s[0] == 'area'),
+                         key=lambda p_: (b.ports[p_][3], int(p_[2:])))
+            if not bws:
+                continue
+            slot = b.h / len(bws)
+            step_tr = max(2, int((slot - 16.0) / (0.08 * k * v.TREE_BITS)))
+            inst = next(it for it in model['insts'] if it.master == name)
+            rx = model.get('b3r8_root_x', {}).get(inst.name, {})
+            for q, p_ in enumerate(bws):
+                # the face towards the word's root (a fragment in the far spine column takes words of both arrays)
+                i = int(p_[2:])
+                from_west = rx[i] < inst.cx if i in rx else west
+                x = 0.2 if from_west else b.w - 0.6
+                b.ports[p_] = ('area', b.ports[p_][1], x, slot * (q + 0.5), step_tr)
+        return out
+    v.masters = masters
 
 
 def _slab_entry(v, obs_top=7, strip=0.0):
@@ -1330,10 +2000,14 @@ def clock_regions(v, m):
             # r18: no row engines; the strip third = the CDC frames of that third of the stack (+ the concentrator)
             cds = m['cdcs'][st]
             n = len(cds)
+            kv = m['lfifos'][st]
             for k in range(3):
-                parts = cds[k * n // 3:(k + 1) * n // 3] + ([m['lfifos'][st]] if k == 1 else [])
-                R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min(i.x for i in parts),
-                         min(i.y for i in parts), max(i.x + i.w for i in parts), max(i.y + i.h for i in parts)]))
+                # the third's CDC frames and the same y-slice of the stack-tall KV concentrator (a 12 mm element:
+                # it is three regions inside, meso FIFOs between its slices, AREA in its frame)
+                parts = cds[k * n // 3:(k + 1) * n // 3]
+                y0_, y1_ = min(i.y for i in parts), max(i.y + i.h for i in parts)
+                R.append(dict(name=f'creg_strip_{st}_{k}', kind='strip', rect=[min([i.x for i in parts] + [kv.x]), y0_,
+                         max([i.x + i.w for i in parts] + [kv.x + kv.w]), y1_]))
             continue
         for k in range(3):
             parts = res[2 * k:2 * k + 2] + ([m['lfifos'][st]] if k == 1 else [])
@@ -1435,11 +2109,18 @@ def bword_stages(v, m, pitch=None):
         if bid.startswith('pfrag_'):
             frag[eps[0][0]] = eps[1][0]
     per = []
+    seg = {bid: eps for bid, cl, bits, eps in m['buses'] if bid.startswith(('bword_', 'bwseg_'))}
     for bid, cl, bits, eps in m['buses']:
         if not bid.startswith('bword_'):
             continue
         root, slab = eps[0][0], eps[1][0]
         legs = [(root, slab)]
+        b, k = bid[len('bword_'):], 1
+        while f'bwseg_{b}_{k}' in seg:          # r20f waypoint chain
+            a_, z_ = seg[f'bwseg_{b}_{k}'][0][0], seg[f'bwseg_{b}_{k}'][1][0]
+            legs.append((a_, z_))
+            slab = z_
+            k += 1
         if slab in frag:
             legs.append((slab, frag[slab]))
             slab = frag[slab]
@@ -1523,6 +2204,105 @@ def wire_bound_8k(v, m, comp='results/rtl/qwen_dspark_system_20261004/ctx8k/step
                 status='bound: floorplan stage counts at the 430.56 um corridor-gate pitch (no routed-path STA); the '
                        'hub<->stack delta assumes the REAL_MEM measurement carries the r2 46-stage link; F2 bound '
                        'is 0 once the column-FIFO prefetch is measured')
+
+
+def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json'):
+    """Registered-stage counts of the die paths every ME op / layer pass waits on, from the die's buses (one register
+    boundary per die hop: each element port is registered, r21 relays add hops), against the stages the measured
+    token RTL carries (k_AR0 wire_stages): bd = x / instruction broadcast VM -> head chain -> corridor -> tap,
+    tree = the in-block split tree (leaf t_out -> block root, all levels), tws = block word -> slab (-> primary) ->
+    tree top, ord = tree-top result -> VM; link = hub <-> stack (two traversals a layer pass)."""
+    st = m.get('r21_stage_of', {})
+    S = lambda bid: st.get(bid, 1)
+    B = {b[0]: b for b in m['buses']}
+    # ---- bd
+    head = {}
+    for side, cols in (('W', range(31, -1, -1)), ('E', range(32, v.COLS))):
+        acc = 0
+        for c in cols:
+            acc += S(f'head_{c}')
+            head[c] = acc
+    bd = 0
+    for c in range(v.COLS):
+        acc_s, acc_n = head[c], head[c]
+        for r in range(11, -1, -1):
+            acc_s += S(f'cor_{c}_{r}')
+            bd = max(bd, acc_s + S(f'tap_{c}_{r}'))
+        for r in range(12, v.ROWS):
+            acc_n += S(f'cor_{c}_{r}')
+            bd = max(bd, acc_n + S(f'tap_{c}_{r}'))
+    # ---- in-block tree: longest leaf -> root
+    import re as _re
+    tree = 0
+    blocks = {}
+    for bid in B:
+        mm = _re.match(r'tree_(\d+)_(\d+)_(\d+)([ab])$', bid)
+        if mm:
+            blocks.setdefault(int(mm[1]), []).append(bid)
+    for nb, legs in blocks.items():
+        out_t = {}
+        for bid in sorted(legs, key=lambda b: int(b.split('_')[2])):
+            # the original 2-endpoint bus: source output -> host input (relayed buses keep their first hop name)
+            src = B[bid][3][0]
+            last = f'{bid}__r{S(bid) - 1}' if S(bid) > 1 else bid
+            dst = B[last][3][1]
+            t0 = out_t.get(src[0], 0) if src[1] == 'n_y' else 0
+            out_t[dst[0]] = max(out_t.get(dst[0], 0), t0 + S(bid))
+        tree = max(tree, max(out_t.values()))
+    # ---- block words to the tree top
+    prim, frag = {}, {}
+    for bid, b in B.items():
+        if bid.startswith('pword_'):
+            prim[b[3][0][0]] = bid
+        if bid.startswith('pfrag_'):
+            frag[b[3][0][0]] = bid
+    tws = 0
+    for bid, b in B.items():
+        if not _re.match(r'bword_\d+$', bid):
+            continue
+        last = f'{bid}__r{S(bid) - 1}' if S(bid) > 1 else bid
+        slab = B[last][3][1][0]
+        n = S(bid)
+        if slab in frag:
+            fb = frag[slab]
+            n += S(fb)
+            fl = f'{fb}__r{S(fb) - 1}' if S(fb) > 1 else fb
+            slab = B[fl][3][1][0]
+        n += S(prim[slab])
+        tws = max(tws, n)
+    ordv = S('tt_res')
+    # ---- hub <-> stack: the longest chain of link hops a traversal takes (hub -> leg -> corner -> channel -> FIFO)
+    lk = {}
+    for bid in B:
+        mm = _re.match(r'lnk([vh])_(\d)(\w?)_?(\w+)$', bid)
+    link_chains = {}
+    for bid in B:
+        if bid.startswith(('lnkv_', 'lnkh_')) and '__r' not in bid:
+            si = bid[5]
+            link_chains.setdefault(si, []).append(bid)
+    link = 0
+    for si, bids in link_chains.items():
+        vs = sum(S(b) for b in bids if b.startswith('lnkv_'))
+        hs = {}
+        for b in bids:
+            if b.startswith('lnkh_'):
+                hs.setdefault(b[5:7], 0)
+                hs[b[5:7]] += S(b)
+        link = max(link, vs + max(hs.values() or [0]))
+    rtl = json.loads((ROOT / ar_job).read_text())['wire_stages']
+    f2 = latency()
+    ops = f2['me_ops_on_token_path']
+    ls = v.link_stages(m)
+    cur = dict(bd=bd, tree=tree, tws=tws, ord=ordv, link=link)
+    base = dict(bd=rtl['bd'], tree=rtl['nws'] * 4, tws=rtl['tws'], ord=rtl['ord'], link=ls['r2_model_total_stages'])
+    d_op = sum(cur[k] - base[k] for k in ('bd', 'tree', 'tws', 'ord'))
+    d_link = cur['link'] - base['link']
+    per_token = ops * d_op + 2 * 36 * d_link
+    return dict(schema='opentallas.qwen-rom-relay-token-cost.v1', stages_r21=cur, stages_rtl=base,
+                me_ops_per_ar_token=ops, delta_per_me_op=d_op, delta_link_per_traversal=d_link,
+                cycles_per_ar_token=per_token,
+                basis='one register boundary per die hop (element ports registered); r21 relays add hops; the measured '
+                      'token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)')
 
 
 def write_def_regions(v, m, path):
@@ -1766,7 +2546,7 @@ def _cdc_arg(t):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k'])
+    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k', 'relaycost'])
     ap.add_argument('--window', default='tile_field')
     ap.add_argument('--vdd-pitch', type=float, default=63.64,
                     help='per-net bump pitch: 63.64 = 45 um array, every core bump power (the IR PASS cases ir_*_align_b45)')
@@ -1797,6 +2577,20 @@ def main(argv=None):
     ap.add_argument('--slab-pg', type=float, default=None, help='r17: M8/M9 PG coverage per net over the band slabs '
                     '(default: the tile-field coverage)')
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
+    ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
+                    'fabric from per-stack landing crossbars (KV reconciliation)')
+    ap.add_argument('--su-core-clock', action='store_true', help='r20g: SU64/SFU and the vector memory on the 1.2 GHz core '
+                    'clock (as the measured token RTL)')
+    ap.add_argument('--bw-wp', type=int, default=0, help='r20f: block-word waypoint every N tile columns (0: off)')
+    ap.add_argument('--ir-guard', type=float, default=0.0, help='r21: IR window guard band (um) of continuing grid / bumps')
+    ap.add_argument('--relay-pitch', type=float, default=0.0, help='r21: relay registers on every die wire > 350 um '
+                    'at this pitch (um; 0: off)')
+    ap.add_argument('--slab-bw-m8', action='store_true', help='r21: band-slab block-word pins on M8 at the array face, '
+                    'one word per port-group slot (seam fix)')
+    ap.add_argument('--corr-um', type=float, default=None, help='r20e: corridor width (um, on 0.432)')
+    ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
+    ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
+                    'the tile body')
     ap.add_argument('--r18', action='store_true', help='r18: die-top lint Q1-Q14 (no row engines, CDC clusters, clock '
                     'nets, role variants)')
     ap.add_argument('--strip-span', action='store_true', help='r17d: strip/CDC/controller PG regions per stack span')
@@ -1826,7 +2620,15 @@ def main(argv=None):
                     io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
-                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18)
+                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
+                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch)
+    if a.mode == 'relaycost':
+        rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
+        if a.out:
+            a.out.write_text(json.dumps(rec, indent=1) + '\n')
+        print(json.dumps({k: rec[k] for k in ('stages_r21', 'stages_rtl', 'delta_per_me_op', 'delta_link_per_traversal',
+                                              'cycles_per_ar_token')}, indent=1))
+        return 0
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:
@@ -1847,6 +2649,11 @@ def main(argv=None):
     if work.exists() and any(work.iterdir()):
         raise SystemExit('refuse existing output')
     if a.mode == 'grt':
+        if a.r18:
+            # clock / reset / forwarded-clock nets are built by CTS / the reset tree on reserved shielded tracks, not
+            # by the signal router: a 1-bit net is one k-bundled wire (16 tracks), so 150 region / link clock nets
+            # converging on the hub root read as ~2,400 tracks there (r18e i5: M9 1.35 around the hub)
+            m = dict(m, buses=[b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')])
         man = v.case_grt(m, work, a.k, a.tag, a.iters)
         (work / 'run.tcl').write_text((work / 'run.tcl').read_text().replace('mem done', GCELL_OVER_TCL + 'mem done'))
         man.update(b3r2=record(v, m), producer=__file__)
@@ -1855,7 +2662,7 @@ def main(argv=None):
     elif a.mode == 'ir':
         v.INST_W_PER_MM2 = {kv.split('=')[0]: float(kv.split('=')[1]) for kv in a.inst_density}
         # the IR PASS recipe of the b2 floorplan (cases ir_*_align_b45): bump-aligned straps, every core bump power
-        man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch)
+        man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch, guard=a.ir_guard)
         man['b3r2'] = dict(producer=__file__, band=a.band, die=m['die'])
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('window', 'power_w', 'bump_sites')}))
