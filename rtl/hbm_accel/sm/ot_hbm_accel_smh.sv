@@ -51,8 +51,9 @@ module ot_hbm_accel_smh #(
     parameter integer PIO  = 2,
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
-    parameter integer BD_PREFIX = 0,    // opt-in kept-prefix rounding, same latency
-    parameter integer RPT  = 2          // leaves (rows) per hardened tile
+    parameter integer RPT  = 2,         // leaves (rows) per hardened tile
+    parameter integer REQCR = 1         // 1 (production): request port with ready latency 2 (req_ready captured raw;
+                                        // see front_s); 0: the m3b same-cycle port (bench comparison only)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -239,20 +240,20 @@ module ot_hbm_accel_smh #(
                 assign sg2[j*5 +: 5] = SG2;
             end
             if (DEF != 0 && c < NL) begin : g_tw
-                ot_hbm_accel_smh_tile_w #(.BD_PREFIX(BD_PREFIX)) u_t (
+                ot_hbm_accel_smh_tile_w u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
                 .gout(t_go[T*SUB*GLW +: SUB*GLW]));
             end else if (DEF != 0) begin : g_te
-                ot_hbm_accel_smh_tile_e #(.BD_PREFIX(BD_PREFIX)) u_t (
+                ot_hbm_accel_smh_tile_e u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
                 .gout(t_go[T*SUB*GLW +: SUB*GLW]));
             end else begin : g_tp
                 ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW),
-                                        .XD(XD), .NBEAT(NBEAT), .TCK(TCK), .BD_PREFIX(BD_PREFIX), .A1B(A1B), .A2B(A2B)) u_t (
+                                        .XD(XD), .NBEAT(NBEAT), .TCK(TCK), .A1B(A1B), .A2B(A2B)) u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
@@ -1379,7 +1380,6 @@ module ot_hbm_accel_smh_tile #(
     parameter integer XD  = 128,
     parameter integer NBEAT = 13,
     parameter integer TCK = 1,
-    parameter integer BD_PREFIX = 0,
     parameter integer NMG = 32,             // mask bits per one-hot replica
     parameter integer A1B = 9,              // strap bits of the block-dot field offset (its low 11 - A1B bits are 0)
     parameter integer A2B = 7               // strap bits of the BF16 field offset
@@ -1466,7 +1466,7 @@ module ot_hbm_accel_smh_tile #(
         end
         wire gv, gf; wire [31:0] gy; wire [TAGW-1:0] gt;
         ot_hbm_accel_smh_leaf #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
-                                .NMG(NMG), .BD_PREFIX(BD_PREFIX), .A1B(A1B), .A2B(A2B)) u_leaf (
+                                .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_leaf (
             .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]),
             .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
@@ -1510,7 +1510,6 @@ module ot_hbm_accel_smh_leaf #(
     parameter integer XD  = 128,
     parameter integer NBEAT = 13,
     parameter integer TCK = 1,
-    parameter integer BD_PREFIX = 0,
     parameter integer NMG = 32,
     parameter integer A1B = 9,
     parameter integer A2B = 7
@@ -1558,8 +1557,18 @@ module ot_hbm_accel_smh_leaf #(
     reg  [WSW-1:0] w3;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c3v <= 2'b00;
-        else c3v <= c_l[CW-1:CW-2];
-    always @(posedge clk) begin c3d <= c_l[CW-3:0]; w3 <= w_l; end
+        else c3v <= r0v;
+    always @(posedge clk) begin c3d <= r0d; w3 <= r0w; end
+    // (margin m3) E3b: the row pipeline one register deeper, in step with the x-store read address registered once
+    // more at the macro pins (r1x / r1a below): +1 cycle on every row read; the x write gets the same +1 at the macro
+    // inputs (wce2 / wa2 / wd2 / wm2), so the write-before-read margin is unchanged
+    reg  [1:0]     c3bv;
+    reg  [CW-3:0]  c3bd;
+    reg  [WSW-1:0] w3b;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) c3bv <= 2'b00;
+        else c3bv <= c3v;
+    always @(posedge clk) begin c3bd <= c3d; w3b <= w3; end
     // ---- x write: the slice by strap rotation, masks by strap thermometer; two registered stages ----
     // W1: rotate by the offset's high bits (a[10:6]), latch the beat's one-hot at g / g + 1 per mask group;
     // W2 (= E3 level): rotate by the low bits, per-bit masks, per-macro write enables.  The rotation is a shifter
@@ -1569,8 +1578,24 @@ module ot_hbm_accel_smh_leaf #(
     wire [10:0]   a1 = {xs_a1, {G1S{1'b0}}};
     wire [10:0]   a2 = {xs_a2, {G2S{1'b0}}};
     wire [4095:0] dd = {b_d, b_d};
-    wire [4095:0] blk_h = dd >> {a1[10:RH], {RH{1'b0}}};
-    wire [4095:0] bf_h  = dd >> {a2[10:RH], {RH{1'b0}}};
+    // (round 5) W0: rotate by a[10:8]; W1: by a[7:6]; W2: by a[5:0] (each stage <= 8:1 / 4:1 / 64:1 muxes)
+    localparam integer RM = 8;
+    wire [4095:0] blk_0 = dd >> {a1[10:RM], {RM{1'b0}}};
+    wire [4095:0] bf_0  = dd >> {a2[10:RM], {RM{1'b0}}};
+    reg  [NBK+(1<<RM)-2:0] blk0;
+    reg  [NBF+(1<<RM)-2:0] bf0;
+    reg            we0;
+    reg  [XW-1:0]  wa0;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) we0 <= 1'b0;
+        else we0 <= b_en;
+    always @(posedge clk) begin
+        blk0 <= blk_0[NBK+(1<<RM)-2:0];
+        bf0  <= bf_0[NBF+(1<<RM)-2:0];
+        wa0  <= b_a;
+    end
+    wire [NBK+(1<<RM)-2:0] blk_h = blk0 >> {a1[RM-1:RH], {RH{1'b0}}};
+    wire [NBF+(1<<RM)-2:0] bf_h  = bf0 >> {a2[RM-1:RH], {RH{1'b0}}};
     reg  [NBK+(1<<RH)-2:0] blk1;
     reg  [NBF+(1<<RH)-2:0] bf1;
     reg            we1;
@@ -1590,11 +1615,11 @@ module ot_hbm_accel_smh_leaf #(
     end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) we1 <= 1'b0;
-        else we1 <= b_en;
+        else we1 <= we0;
     always @(posedge clk) begin
         blk1 <= blk_h[NBK+(1<<RH)-2:0];
         bf1  <= bf_h[NBF+(1<<RH)-2:0];
-        wa1  <= b_a;
+        wa1  <= wa0;
     end
     wire [NBK+(1<<RH)-2:0] blk_l = blk1 >> a1[RH-1:0];
     wire [NBF+(1<<RH)-2:0] bf_l  = bf1 >> a2[RH-1:0];
@@ -1685,20 +1710,16 @@ module ot_hbm_accel_smh_leaf #(
     end endgenerate
     generate
         if (TCK != 0) begin : g_k
-            if (BD_PREFIX != 0) begin : g_prefix
-            ot_hbm_accel_bd_col_prefix #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
-                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
-                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+            ot_hbm_accel_smh_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (   // bterm3: +7 cycles
+                .clk(clk), .rst_n(rst_n), .v(jv_b), .first(jfirst), .last(jlast), .fp4(jfp4), .tag(jtag),
+                .wq(jw[0 +: LBS*256]), .we(jw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
-            end else begin : g_legacy
-            ot_hbm_accel_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
-                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
-                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
-                .ov(bov), .y(by), .otag(btag), .fault(bfault));
-            end
-            ot_hbm_accel_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
-                .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
-                .w(iw[LBS*266 +: LSB*16]), .x(ix[LBS*266 +: LSB*16]),
+            ot_hbm_accel_smh_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (   // +3 cycles (tile context)
+                .clk(clk), .rst_n(rst_n), .v(jv_f), .first(jfirst), .last(jlast), .tag(jtag),
+                .w(jw[LBS*266 +: LSB*16]), .x(jx[LBS*266 +: LSB*16]),
+`ifdef OT_SMH_MUT_BFDLY
+                .ov(fov_r), .y(fy_r), .otag(ftag_r), .fault(ffault_r));
+`else
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
 `endif
         end else begin : g_o
@@ -1833,21 +1854,21 @@ endmodule
 // the bundle pins on opposite edges, so each needs its own master name in the parent.  _e: row bundles enter west and
 // leave east (tiles right of the front) / results leave east (back ends left of the front); _w: the mirror.
 // ---------------------------------------------------------------------------
-module ot_hbm_accel_smh_tile_e #(parameter integer BD_PREFIX = 0) (
+module ot_hbm_accel_smh_tile_e (
     input  wire clk, input wire rst_n,
     input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
     input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
     input  wire [99:0] gin, output wire [199:0] gout
 );
-    ot_hbm_accel_smh_tile #(.BD_PREFIX(BD_PREFIX)) u (.*);
+    ot_hbm_accel_smh_tile u (.*);
 endmodule
-module ot_hbm_accel_smh_tile_w #(parameter integer BD_PREFIX = 0) (
+module ot_hbm_accel_smh_tile_w (
     input  wire clk, input wire rst_n,
     input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
     input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
     input  wire [99:0] gin, output wire [199:0] gout
 );
-    ot_hbm_accel_smh_tile #(.BD_PREFIX(BD_PREFIX)) u (.*);
+    ot_hbm_accel_smh_tile u (.*);
 endmodule
 module ot_hbm_accel_smh_be_e (
     input  wire clk, input wire rst_n, input wire [199:0] gin, input wire [137:0] qin, output wire [183:0] qout
