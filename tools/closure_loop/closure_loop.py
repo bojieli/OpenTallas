@@ -1119,7 +1119,7 @@ def launch_ready(j, fleet, spec, stl, st):
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
-        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 600:
+        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
