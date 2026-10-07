@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.hbm.sfu.source_audit.v1",
+  "job": "hbm_sfu_lane_f244ad7e3_r2",
+  "source_commit": "f244ad7e3bf9349fd0571641feeefcafb593b90d",
+  "pristine_sfu_sha256": "fa42033b4895f9daf19835e16ed436f24ec7de21e1646249efb40a47b86cf0f3",
+  "negative_sfu_sha256": "06ea2a654fbb788d0f8fedfb18f161c5cf8def8381a42270af32bd47fc01074d",
+  "negative_started": "2026-10-07T08:30:01-07:00",
+  "canonicalize_started": "2026-10-07T08:04:36-07:00",
+  "canonicalize_pid": 1193683,
+  "source_mutation_scope": "Negative modifies route source during parallel bench. Original canonicalizer parsed SFU before mutation; process still deriving pre-parsed AST when observed. No completed canonical RTLIL yet at snapshot.",
+  "mutation_conclusion": "Continue original progressing job, retain adoption hold. Restoration hash still pending at snapshot.",
+  "independent_rtl_defect": "DENR=1 truncated sigmoid valid line and selected out-of-range vs[D_EXP+DENR]; divider valid began from old tap. Corrected width and tap in4c1216b21.",
+  "successor": "hbm_sfu_lane_denrv_4c1216b21",
+  "successor_commit": "4c1216b217dcfcf00d531a0d64e59f024472db98",
+  "successor_lint": "PASS full SFU physical master, GSH1 KIMM1 DENR1 DRING2, no warnings",
+  "successor_negative_isolation": "Explicit separate negative_src tree in job; route source untouched.",
+  "cycle_delta_vs_existing_DENR1": 0,
+  "adoption": "Original job superseded for adoption. Corrected successor requires exactness and SS/FF/DRC closure.",
+  "files": {
+    "live_snapshot.json": "2fbdf26f9fb25c676de4a43dccec2291204f86485a764ff8ec0860e24549e766",
+    "sfu_lint_after_denr_fix.log": "9259340f3f855505b186731f5fa9808a79e5c233f7085fc644d3c93dfbdd8fac",
+    "canonicalize_snapshot.log": "0423125ebaf7e80f88c214585d71cdd31b4c599c03153c3fa85bdb1f5e75f218",
+    "combined_lint_before_denr_fix.log": "1771965a9e998ea69f0ff52dcf9534125d98fd16b245472a969c65d1dc268295"
+  }
+}
