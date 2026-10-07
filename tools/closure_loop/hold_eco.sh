@@ -4,10 +4,11 @@
 # env HM (hold margin ps, default 22), SM (setup margin ps, 25), KEEPCLK (0), MACROS (src-rel macro view dirs), THREADS (8)
 # -> <out>/eco.log, <out>/orfs/results/asap7/<d>/base/6_final.{odb,spef,v,sdc}, <out>/corner_sta.json (tools/w18/corner_sta.py
 #    with the same post-SDCs), <out>/result.json {ss_ps, ff_ps, drc, cells_added}
-set -o pipefail
+set -eo pipefail
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB)); EB=$OUT/orfs/results/asap7/$D/base
-rm -rf $OUT; mkdir -p $EB
+[ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
+mkdir -p "$EB"
 cp $OB/6_final.sdc $EB/6_final.sdc
 DB=5_2_route.odb; [ -f $RB/$DB ] || DB=6_final.odb   # pre-fill route db; the tcl removes fillers otherwise
 echo "ECO input $RB/$DB"
