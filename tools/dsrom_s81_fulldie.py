@@ -3156,7 +3156,7 @@ HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): station
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
-HOP_R_FWD = 540.0               # forwarded hop: fwd_hop2_v11 closed 440 um at +374 ps SS (1.135 ps/um)
+HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
@@ -4523,6 +4523,7 @@ def apply_options(a):
     HOP_FIX, HOP_PLAN, MESO_D8 = bool(a.hop_fix), None, bool(a.meso_d8)
     global FWD_REACH, HOP_R_FWD, HOP_R_CC
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
+    HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, 410.0
     if a.fwd_pitch:            # every hop on the die at or under the pitch
         HOP_R_FWD = HOP_R_CC = float(a.fwd_pitch)
     global REV, HEAD_DIES
