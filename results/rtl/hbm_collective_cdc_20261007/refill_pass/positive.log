@@ -1,0 +1,49 @@
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 11.0 (stable)
+Compile cleanup...
+ ...      815 functors (net_fun pool=524288 bytes)
+                278 logic
+                  0 bufif
+                  0 resolv
+                 71 signals
+ ...      697 filters (net_fil pool=524288 bytes)
+ ...     2019 opcodes (49152 bytes)
+ ...      210 nets
+ ...      815 vvp_nets (1048544 bytes)
+ ...        0 arrays (0 words)
+ ...        5 memories
+                  5 logic (2138 words)
+                  0 real (0 words)
+ ...       51 scopes
+ ... 0.008154 seconds, 16344.0/8312.0/5468.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+CDC_PROGRESS edges=128 writes=70 reads=11 fault=0 wb=70 rb=10 hp=2 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=256 writes=122 reads=120 fault=0 wb=122 rb=120 hp=1 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=384 writes=175 reads=173 fault=0 wb=47 rb=45 hp=1 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=512 writes=227 reads=225 fault=0 wb=99 rb=97 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=640 writes=279 reads=278 fault=0 wb=23 rb=22 hp=1 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=768 writes=332 reads=330 fault=0 wb=76 rb=74 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=896 writes=384 reads=383 fault=0 wb=0 rb=127 hp=0 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=1024 writes=437 reads=435 fault=0 wb=53 rb=51 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1152 writes=489 reads=488 fault=0 wb=105 rb=104 hp=0 reset=11 por=00 inv=0 inr=1
+PASS_II1 longest_consecutive_retirement=50
+PASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double
+ ...execute Postsim callbacks
+ ... 3.86197 seconds, 16344.0/8368.0/5468.0 KBytes size/rss/shared
+Event counts:
+        5566 time steps (pool=113)
+       35010 thread schedule events
+       28790 assign events
+             ...assign(vec4) pool=9362
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=128
+             ...assign(word/r) pool=204
+       50409 other events (pool=4096)
