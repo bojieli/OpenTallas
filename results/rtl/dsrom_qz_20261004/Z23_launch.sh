@@ -104,6 +104,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
  --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param QTIMING_FIX=1 \
  --param QPIPE=1 --param QP_XS=1 --param QP_CAP=$CAP --param QP_P1=1 --param QP_CSAM=10 \
- --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
+ --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
  --pnr-stop-after $STOP --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns $(python3 -c "print(round(${PER:-0.770}-0.106,3))") --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 "${EXTRA[@]}" > $J/launch.log 2>&1
