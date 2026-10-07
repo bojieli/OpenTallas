@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.dsrom_qs_recovery.v1",
+  "source_commit": "cc7e9b2a9ba6ade27a1edf02ff0ab40352bf295c",
+  "route_job": "dsrom-qelem-qs4r-cc7e9b2a9",
+  "gate": "results/rtl/dsrom_qelem_pq_20261006/qx10qs4_cc7_recovery_gate.json",
+  "gate_sha256": "7c1827f5cdf93948c5a35f8c7e147d00018e97269b490c3b164577c0838209f2",
+  "verdict": "PASS",
+  "source_hashes_match_pinned_commit": true,
+  "source_files_checked": 37,
+  "claim_boundary": "Exact-source QS4 QX gate: five positives and existing strong WRT_MUTANT_SB negative. Physical closure, field equivalence and die-context adoption remain separate gates.",
+  "history": "qx10qs4.json remains FAIL on weak WRD_MUTANT_NQ control. The later QS4 recovery gate at e1fbc25c1 checked strong l1 and sb controls but differed in optional QS5 source. This additional run binds the exact cc7 route source using its existing strong sb control; it does not assert byte identity between cc7 and e1.",
+  "remote_run": "ot-agidock128:/srv/opentallas-scratch/codex/dspq-recovery/cc7e9b2a9",
+  "snapshot_commit_note": "gate git_commit identifies clean repository initialized from git archive of source_commit; all source hashes independently checked against source_commit git blobs."
+}
