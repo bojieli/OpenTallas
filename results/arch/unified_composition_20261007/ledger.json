@@ -1,0 +1,2016 @@
+{
+ "schema": "opentallas.unified-composition.v1",
+ "date": "2026-10-07",
+ "rule": "status: measured = committed RTL/physical measurement composed as recorded; priced-candidate = an analytic price of a committed design/candidate (or a measured component not admitted at SS/FF); gated-unknown = a cost that is not bound and is never summed. A numerical component PASS is not physical adoption.",
+ "targets": {
+  "qwen_rom": {
+   "clock_hz": 1200000000.0,
+   "context": "P8191, TP4, 4 dies, STREAM4 KV",
+   "lines": [
+    {
+     "id": "stream4_token",
+     "item": "Measured STREAM4 full token at P8191 (36 layers + head, 4 ranks, all 576 MiB FP8 KV landed)",
+     "status": "measured",
+     "effect": {
+      "unit": "cycles",
+      "AR": 193955
+     },
+     "role": "base",
+     "source": [
+      {
+       "file": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+       "pointer": null,
+       "commit": "756e8c54f"
+      }
+     ],
+     "note": "RTL token; KV transport unprotected (see no-ECC inventory)"
+    },
+    {
+     "id": "core_context",
+     "item": "Decode core r5_f2ba in die context",
+     "status": "measured",
+     "effect": {
+      "unit": "cycles",
+      "AR": 0
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
+       "pointer": null,
+       "commit": "819ed256e"
+      }
+     ],
+     "note": "closed under the prior Qwen bar (SS60/FF25 >= 0), not re-qualified at the 10-07 rule"
+    },
+    {
+     "id": "slab_mul_lat7",
+     "item": "Slab MUL_LAT 7 (217 matrix ops a token)",
+     "status": "measured",
+     "effect": {
+      "unit": "cycles",
+      "AR": 217
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json",
+       "pointer": null,
+       "commit": "64a571da9"
+      }
+     ],
+     "note": "ADOPT (closed SS60 +11.47 / FF25 +4.20 ps, 0 slew/DRC)"
+    },
+    {
+     "id": "kv_map_m",
+     "item": "KV landing Option M (KV_MAP=1), cold-layer KV-ready",
+     "status": "measured",
+     "effect": {
+      "unit": "cycles",
+      "AR": 54
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+       "pointer": null,
+       "commit": "c148ca60a"
+      }
+     ],
+     "note": "isolated P8191 bench, exact 15/15"
+    },
+    {
+     "id": "die_relays_430um",
+     "item": "r21 die relay stations at the measured 430.56 um reach (8,965 relays)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 22487
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+       "pointer": "cycles_per_ar_token",
+       "commit": "60c6e1172"
+      }
+     ],
+     "note": "owner-approved 2026-10-07; priced as +95 per ME op x 217 ops + 26 per link traversal on the measured token; r21 floorplan stage counts, not a routed die"
+    },
+    {
+     "id": "kv_crossbar_model",
+     "item": "Option M die crossbar (cycle model on the measured landing trace)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 24
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/arch/three_machine_compose/compose.json",
+       "pointer": "qwen_rom.levers.kv_map_m.modelled_not_composed",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "modelled, not RTL"
+    },
+    {
+     "id": "ctrl_shift",
+     "item": "Controller SHIFT successor (oldest-first write queue, registered bank eligibility)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 144
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/rtl/qwen_ctrl_shift_20261007/model.json",
+       "pointer": "latency.composed_worst_case_token_cycles",
+       "commit": "95f7e75c1"
+      },
+      {
+       "file": "results/rtl/qwen_ctrl_shift_20261007/qualification.json",
+       "pointer": "status",
+       "commit": "95f7e75c1"
+      }
+     ],
+     "note": "EXACT_CANDIDATE_PHYSICAL_UNMEASURED: exact all 32 PCs; worst-case +144 cycles a token (3 request->PHY edges); predecessor SS -110.94 / FF -34.80 ps; physical unmeasured; added mutable state unprotected (blocks production adoption)"
+    },
+    {
+     "id": "forwarded_clocks",
+     "item": "Direction-owned forwarded link clocks (217 primitives, 442 directional clock nets)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 0
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/uarch/qwen_link_forwarded_graph_20261007/graph_prebuild_model.json",
+       "pointer": "latency",
+       "commit": "3267a11f5"
+      }
+     ],
+     "note": "same registered-hop count as r21 (0 added stage cycles); area proxy 67795 um2; active graph simulated=False, adopted=False"
+    },
+    {
+     "id": "link_credit_rtt",
+     "item": "Link credit capacity vs the forwarded-path transport round trip",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/qwen_link_forwarded_graph_20261007/graph_prebuild_model.json",
+       "pointer": "paths[].transport_credit_roundtrip_cycles",
+       "commit": "3267a11f5"
+      }
+     ],
+     "note": "registered path [54, 55] stations, credit RTT [108, 110] cycles; the historical 8-credit abstract does not sustain it. Per-traversal stall unknown until endpoint credit capacity/service is composed"
+    },
+    {
+     "id": "vm_me_service",
+     "item": "Native VM ME bank service (captured W1 source slots, protected bank)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/qwen_rom_vm_me_service_20261007/model.json",
+       "pointer": "serialized_reference",
+       "commit": "46d889a23"
+      }
+     ],
+     "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable); ready_for_new_bank_RTL=False"
+    },
+    {
+     "id": "vm_su_service",
+     "item": "VM SU/reducer bank service obligations",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/qwen_rom_vm_su_service_20261007/model.json",
+       "pointer": "scope",
+       "commit": "9789baddc"
+      }
+     ],
+     "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound"
+    },
+    {
+     "id": "vm_recovery",
+     "item": "Qwen VM bank recovery / native schedule binding",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/qwen_rom_vm_recovery_20261007/disposition.json",
+       "pointer": "status",
+       "commit": "f7741bdc8"
+      }
+     ],
+     "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved"
+    },
+    {
+     "id": "die_top_route",
+     "item": "Full-die detailed route, SS/FF, DRC and IR of the reopened Qwen die (directive 14)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/qwen_rom_closed_20261006/closure.json",
+       "pointer": "physical",
+       "commit": "c148ca60a"
+      }
+     ],
+     "note": "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed"
+    },
+    {
+     "id": "routed_masters",
+     "item": "Real routed views for previously assumed masters",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "docs/OWNER_DIRECTIVES_2026_10_07.md",
+       "pointer": null,
+       "commit": "161e1ddd5"
+      }
+     ],
+     "note": "interim views cannot establish closure; relay masters qfd_cst / qfd_chead closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change"
+    },
+    {
+     "id": "protected_kv_transport",
+     "item": "Protected KV transport (HBM->die landing)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/qwen_rom_closed_20261006/closure.json",
+       "pointer": "kv_path.protected_full_width_transport",
+       "commit": "c148ca60a"
+      }
+     ],
+     "note": "shipped STREAM4 landing has no transport protection; protected full-width path has no full token (full36_r1 FAIL retained); cost unknown"
+    }
+   ],
+   "compositions": {
+    "measured_lines_only": {
+     "cycles": 194226,
+     "AR_tok_s": 6178.4,
+     "status": "measured",
+     "note": "measured token + measured levers, no die relay stations (not a design point)"
+    },
+    "published": {
+     "cycles": 216713,
+     "AR_tok_s": 5537.3,
+     "status": "priced-candidate",
+     "record": {
+      "file": "results/arch/three_machine_compose/compose.json",
+      "pointer": "qwen_rom.token_cycles",
+      "commit": "8d485e23b"
+     },
+     "note": "three_machine_compose headline: measured lines + owner-adopted priced relays; physical closure reopened 2026-10-07, so this is a candidate composition, not a closed rate"
+    },
+    "unified_candidate": {
+     "cycles": 216881,
+     "AR_tok_s": 5533.0,
+     "status": "priced-candidate",
+     "gated_by": [
+      "link_credit_rtt",
+      "vm_me_service",
+      "vm_su_service",
+      "vm_recovery",
+      "die_top_route",
+      "routed_masters",
+      "protected_kv_transport"
+     ],
+     "note": "published + every priced candidate cost (crossbar model, controller SHIFT worst case, forwarded clocks 0)"
+    }
+   },
+   "gates": [
+    "link_credit_rtt",
+    "vm_me_service",
+    "vm_su_service",
+    "vm_recovery",
+    "die_top_route",
+    "routed_masters",
+    "protected_kv_transport"
+   ],
+   "dspark": {
+    "published": {
+     "record": {
+      "file": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
+      "pointer": null,
+      "commit": "881ad1384"
+     },
+     "tok_s": 3902.0,
+     "speedup_vs_ar": 0.705,
+     "verdict": "AR_MODE",
+     "ar_cycles": 216713,
+     "status": "priced-candidate",
+     "note": "RTL verify/draft stages + r21 relay stages priced on 1,003 ME ops / 96 link traversals; tau third-party 3.1445"
+    },
+    "reevaluated": {
+     "record": {
+      "file": "results/arch/unified_composition_20261007/qwen_dspark/dspark_ctrlshift_candidate.json",
+      "pointer": null,
+      "commit": "uncommitted (this delivery)"
+     },
+     "tok_s": 3901.4,
+     "speedup_vs_ar": 0.705,
+     "best": {
+      "np": 3,
+      "tok_s_lower": 4127.9,
+      "tok_s_upper": 3847.5,
+      "speedup_vs_ar_lower": 0.746,
+      "speedup_vs_ar_upper": 0.695
+     },
+     "verdict": "AR_MODE",
+     "ar_cycles": 216857,
+     "ar_tok_s": 5533.6,
+     "status": "priced-candidate",
+     "inputs_changed": [
+      "controller SHIFT worst case +144 on AR and +144 per DSpark step (charged once a step, like Option M's +54)",
+      "forwarded clocks: 0 added stage cycles (same relay hops)"
+     ],
+     "command": "same as dspark_verdict_relays.sh with --ar-cycles 216857 --extra-per-step 198"
+    },
+    "gated_inputs": {
+     "vm_service": "gated: per-ME-op cost unknown.  Any per-ME-op addition y lowers the DSpark ratio, because a step issues 1003 ME ops for 3.1445 tokens (319 a token) against 217 a token for AR; the AR_MODE verdict is robust to it",
+     "link_credit": {
+      "note": "gated: per-traversal credit stall x unknown.  AR crosses the link 72 times a token, a step 96 times for 3.1445 tokens, so link stalls hurt AR more per token",
+      "break_even_stall_cycles_per_traversal_equal_payload": 2190,
+      "break_even_if_verify_stall_scales_with_np": null,
+      "reading": "DSpark reaches AR only if each link traversal stalls >= 2190 cycles and the verify traversal (np=4 positions) stalls no more than an AR one; if the stall scales with payload the threshold is never reached"
+     },
+     "die_route_and_masters": "gated: affects AR and the step through the same ME-op and link counts",
+     "tau": "third-party 3.1445 (no Qwen DSpark acceptance measured on the target workload mix)"
+    },
+    "verdict": "AR_MODE holds: the re-evaluation with the newer priced inputs gives 3901.4 tok/s (0.705x); every gated per-ME-op cost moves the ratio down; only an unmeasured link-credit stall above ~2190 cycles a traversal could move it up"
+   },
+   "physical_status": "REOPENED 2026-10-07 (owner directive 14): no full-die route, SS/FF, DRC or IR"
+  },
+  "ds_rom": {
+   "context": "DeepSeek-V4.1 1M, S81 array, TP4",
+   "tau": 4.159,
+   "lines": [
+    {
+     "id": "recovery_composition",
+     "item": "Recovery all-measured composition (adopted levers, full RS(544,514) FEC) before S81 closure costs",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 597.015,
+      "MTP_step": 849.642
+     },
+     "role": "base",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "baseline",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "rounded tok/s basis; measured share 0.9999"
+    },
+    {
+     "id": "closure_s81_die",
+     "item": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, ",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 5.576,
+      "MTP_step": 6.365
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[s81_die]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "die/geometry pricing; DRT/SS/FF pending"
+    },
+    {
+     "id": "closure_meso_d8g1",
+     "item": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.836,
+      "MTP_step": 0.952
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[meso_d8g1]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_ctrl_status",
+     "item": "CTRL status chain: +1 cycle per column (HBM stream reads)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.036,
+      "MTP_step": 0.035
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[ctrl_status]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_collective_lane",
+     "item": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 refer",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 14.812,
+      "MTP_step": 18.288
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[collective_lane]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_link_split",
+     "item": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, ",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.536,
+      "MTP_step": 0.59
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[link_split]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "die/geometry pricing; DRT/SS/FF pending"
+    },
+    {
+     "id": "closure_sel_xstg",
+     "item": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.077,
+      "MTP_step": 0.129
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[sel_xstg]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_vm_bank_group",
+     "item": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 1.651,
+      "MTP_step": 1.905
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[vm_bank_group]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_gather_root_v4",
+     "item": "Gather root v4: +6 cycles per phase",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 1.235,
+      "MTP_step": 1.411
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[gather_root_v4]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_capture",
+     "item": "Capture tiles: VM write +3 a phase",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.619,
+      "MTP_step": 0.707
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[capture]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_selector",
+     "item": "Selector tiles: +20 a segment (mean; +15 max)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.155,
+      "MTP_step": 0.224
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[selector]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_collector",
+     "item": "Collector tiles: +2 a job",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.0,
+      "MTP_step": 0.019
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[collector]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_svc_io",
+     "item": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.078,
+      "MTP_step": 0.093
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[svc_io]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_softmax_safe_div",
+     "item": "Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold re",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 1.048,
+      "MTP_step": 1.157
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[softmax_safe_div]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_bf_rowfix",
+     "item": "BF rowfix: +1 per push (a field phase)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 0.195,
+      "MTP_step": 0.243
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[bf_rowfix]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "closure_pq_qelem",
+     "item": "PQ q-element: decode stage +0.17 % node time (field phases)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.506,
+      "MTP_step": 0.599
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[pq_qelem]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "die/geometry pricing; DRT/SS/FF pending"
+    },
+    {
+     "id": "closure_su_meso_d8g1",
+     "item": "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cd",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 1.916,
+      "MTP_step": 2.158
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[su_meso_d8g1]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
+    },
+    {
+     "id": "geometry_note",
+     "item": "Published composition geometry: f183.60 (85 stages, 340 layer dies, 440 dies total)",
+     "status": "measured",
+     "effect": null,
+     "role": "info",
+     "source": [
+      {
+       "file": "results/arch/dsrom_s81_rack_20261006/rack.json",
+       "pointer": "geometry",
+       "commit": "06e988e07"
+      }
+     ],
+     "note": "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping"
+    },
+    {
+     "id": "actual1792_half_dedicated_hops",
+     "item": "Actual 1792 mapping, BF-dedicated half-rate (120 stages: 40 BF + 80 q): +35 stage hops",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 29.488,
+      "MTP_step": 29.488
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json",
+       "pointer": "stages",
+       "commit": "2d811aafb"
+      },
+      {
+       "file": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+       "pointer": "hop.us",
+       "commit": "b063d6402"
+      }
+     ],
+     "note": "each added stage = one measured full-FEC board hop 0.8367 us + 0.0058 us cable; capacity PASS, metadata only"
+    },
+    {
+     "id": "actual1792_full_shared_hops",
+     "item": "Actual 1792 mapping, shared BF pairs (98 stages, gate K-split alias): +13 stage hops",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 10.953,
+      "MTP_step": 10.953
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/full_shared/inventory.json",
+       "pointer": "stages",
+       "commit": "2d811aafb"
+      },
+      {
+       "file": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+       "pointer": "hop.us",
+       "commit": "b063d6402"
+      }
+     ],
+     "note": "as above"
+    },
+    {
+     "id": "bf_half_rate_upper",
+     "item": "BF half-rate (owner 2026-10-07): BF16 field phases doubled",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 110.519,
+      "MTP_step": 127.479
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "candidates[bf_half]",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "upper bound for BF-dedicated pairs (q phases on q pairs stay full rate); a LOWER bound for shared pairs, where q words on BF pairs (20.6 %) also halve; zero added logic cycles (physical/s81_bf_root_phase/model.json)"
+    },
+    {
+     "id": "return_station_plus1",
+     "item": "Spine return station +1 cycle a return crossing (sensitivity)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.55,
+      "MTP_step": 0.659
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_spine_return_station_20261007/sensitivity.json",
+       "pointer": "variants",
+       "commit": "2d811aafb"
+      }
+     ],
+     "note": "historical phase schedules; not the 1792 geometry"
+    },
+    {
+     "id": "bf_merge_ksplit",
+     "item": "BF16 phase merges + router K split (released binding 20261007, 86 stages, 2,048 pairs)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": -47.789,
+      "MTP_step": null
+     },
+     "role": "info",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md",
+       "pointer": "bf_merge_ksplit (branch)",
+       "commit": "332983233 (origin/claude/dsrom-bf-double-20261007, not on main)"
+      }
+     ],
+     "note": "field EXACT 19,056/19,056 regions on FULL-RATE BF; its gain under the half-rate 1792 geometry is unmeasured, so it is listed, never summed"
+    },
+    {
+     "id": "field_phases_1792",
+     "item": "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/provenance.json",
+       "pointer": "variants.*.full_token_latency",
+       "commit": "2d811aafb"
+      }
+     ],
+     "note": "'unpriced until matching field phase measurements and new geometry timing are composed'"
+    },
+    {
+     "id": "bf_half_physical",
+     "item": "BF half-rate clock root qualification",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "physical/s81_bf_root_phase/model.json",
+       "pointer": "physical_obligations",
+       "commit": "8be556c2e"
+      },
+      {
+       "file": "results/physical/s81_bf_root_phase_hierarchy_fix_20261007/record.json",
+       "pointer": null,
+       "commit": "uncommitted (this delivery)"
+      }
+     ],
+     "note": "phase-clock root branch: physical_closed=false; calibration hierarchy failure preserved at 449ebc571"
+    },
+    {
+     "id": "s81_die_closure",
+     "item": "S81 die DRT / SS / FF / IR at the final mixed-BF/PQ geometry",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[s81_die].description",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "global-route feasibility only"
+    },
+    {
+     "id": "native_token",
+     "item": "Native end-to-end S81 token (connected RTL)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "docs/PROGRAM_PLAN_2026_10_05.md",
+       "pointer": null,
+       "commit": "60c6e1172"
+      }
+     ],
+     "note": "no native end-to-end S81 token yet"
+    },
+    {
+     "id": "mtp_physical",
+     "item": "MTP path physical qualification",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/arch/three_machine_compose/compose.json",
+       "pointer": "ds_rom.MTP_physical_qualified",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "MTP_physical_qualified=false"
+    },
+    {
+     "id": "fused_head_half",
+     "item": "Fused-head half-rate domain (fh_half)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "unpriced_candidates",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "whole-domain clock/CDC contract and full-shape composition missing"
+    }
+   ],
+   "compositions": {
+    "published": {
+     "AR_us": 626.279,
+     "MTP_step_us": 884.524,
+     "AR_tok_s": 1596.7,
+     "MTP_tok_s": 4702.0,
+     "tau": 4.159,
+     "geometry": "f183.60, 85 stages, 440 dies",
+     "status": "priced-candidate",
+     "record": {
+      "file": "results/arch/three_machine_compose/compose.json",
+      "pointer": "ds_rom",
+      "commit": "8d485e23b"
+     },
+     "note": "closure-cost ledger TOTAL on the historical 85-stage full-rate-BF geometry"
+    },
+    "actual1792_half_dedicated": {
+     "AR_us": 766.286,
+     "MTP_step_us": 1041.491,
+     "AR_tok_s": 1305.0,
+     "MTP_tok_s": 3993.3,
+     "tau": 4.159,
+     "stages": 120,
+     "layer_dies": 480,
+     "dies_total": 580,
+     "status": "priced-candidate",
+     "bound": "upper bound on latency (lower bound on rate) for the BF16 doubling",
+     "gated_by": [
+      "field_phases_1792",
+      "bf_half_physical",
+      "s81_die_closure",
+      "native_token",
+      "mtp_physical",
+      "fused_head_half"
+     ],
+     "lines": [
+      "actual1792_half_dedicated_hops",
+      "bf_half_rate_upper"
+     ],
+     "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+    },
+    "actual1792_full_shared": {
+     "AR_us": 747.751,
+     "MTP_step_us": 1022.956,
+     "AR_tok_s": 1337.3,
+     "MTP_tok_s": 4065.7,
+     "tau": 4.159,
+     "stages": 98,
+     "layer_dies": 392,
+     "dies_total": 492,
+     "status": "priced-candidate",
+     "bound": "rate is an UPPER bound: shared-pair q phases also halve",
+     "gated_by": [
+      "field_phases_1792",
+      "bf_half_physical",
+      "s81_die_closure",
+      "native_token",
+      "mtp_physical",
+      "fused_head_half"
+     ],
+     "lines": [
+      "actual1792_full_shared_hops",
+      "bf_half_rate_upper"
+     ],
+     "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+    }
+   },
+   "gates": [
+    "field_phases_1792",
+    "bf_half_physical",
+    "s81_die_closure",
+    "native_token",
+    "mtp_physical",
+    "fused_head_half"
+   ],
+   "mapping_1792": {
+    "half_dedicated": {
+     "stages": 120,
+     "bf_stages": 40,
+     "q_stages": 80,
+     "layer_dies": 480,
+     "BF_dedicated": true,
+     "ROM_ECC": false,
+     "extra_hops_vs_composed": 35
+    },
+    "full_shared": {
+     "stages": 98,
+     "bf_stages": 98,
+     "q_stages": 0,
+     "layer_dies": 392,
+     "BF_dedicated": false,
+     "ROM_ECC": false,
+     "extra_hops_vs_composed": 13
+    }
+   },
+   "physical_status": "not closed; numerical component PASS is not physical adoption"
+  },
+  "hbm_ds": {
+   "context": "DeepSeek-V4.1 1M, HBM accelerator",
+   "tau": 4.159,
+   "lines": [
+    {
+     "id": "matched_gate",
+     "item": "Matched reference gate (measured RTL nodes, light-FEC TU budget)",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 474.808,
+      "MTP_step": 1050.638
+     },
+     "role": "base",
+     "source": [
+      {
+       "file": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+       "pointer": "gate",
+       "commit": "aeb1381af"
+      }
+     ],
+     "note": "corrected+wg+fused_su0.9"
+    },
+    {
+     "id": "die_wire_r16j",
+     "item": "Die wire stages, r16j wire-priced (r13 GRT wire record)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 62.568,
+      "MTP_step": 62.568
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/headline_with_closure_r23.json",
+       "pointer": "pre_closure",
+       "commit": "93b75a8fb"
+      }
+     ],
+     "note": "same die traversals on the AR walk and the verify walk"
+    },
+    {
+     "id": "closure_00",
+     "item": "r17 budget stage plan (wire stages 430->budget reach)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.102,
+      "MTP_step": 1.102
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 0",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_01",
+     "item": "stations meso crossings (+3, priced as us)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 2.939,
+      "MTP_step": 2.939
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 1",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_02",
+     "item": "stations gather a2 +1",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.286,
+      "MTP_step": 0.286
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 2",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_03",
+     "item": "stations cdist b +2",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.572,
+      "MTP_step": 0.572
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 3",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_04",
+     "item": "barrier view faces +4",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.143,
+      "MTP_step": 1.143
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 4",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_05",
+     "item": "collective SU faces +6",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.325,
+      "MTP_step": 1.325
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 5",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_06",
+     "item": "endpoint<->SerDes faces +4",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.017,
+      "MTP_step": 1.017
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 6",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_07",
+     "item": "VM faces +6",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.455,
+      "MTP_step": 1.455
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 7",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_08",
+     "item": "router faces W4/E3 +5",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.167,
+      "MTP_step": 0.167
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 8",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_09",
+     "item": "cmdproc issue faces +2",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.572,
+      "MTP_step": 0.572
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 9",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_10",
+     "item": "svc segments +15/expert fetch",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.5,
+      "MTP_step": 0.5
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 10",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_11",
+     "item": "index_q keys +10/scan",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.067,
+      "MTP_step": 0.067
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 11",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_12",
+     "item": "index_q rows +4/attn step",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.133,
+      "MTP_step": 0.133
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 12",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_13",
+     "item": "fwd chain index b5->VM (stages+meso)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.12,
+      "MTP_step": 0.12
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 13",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_14",
+     "item": "fwd chain VM->router (stages+meso)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.567,
+      "MTP_step": 0.567
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 14",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_15",
+     "item": "VM quadrant tiles (+2/x load, +2/barrier)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.057,
+      "MTP_step": 1.057
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 15",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_16",
+     "item": "cmdproc +3/command",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.858,
+      "MTP_step": 0.858
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 16",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_17",
+     "item": "loader ck/2 (off token path)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.0,
+      "MTP_step": 0.0
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 17",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_18",
+     "item": "r19b pin-abutting stations (attn roots into index bands, index-key ends; +1 hop each)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.034,
+      "MTP_step": 0.034
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 18",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_19",
+     "item": "SM m2 structural redesign (SM stream: +7.988 us DS 1M AR = +1.816% of ITS 439.9 us base; NOT inside the r16j wire baseline)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 7.988,
+      "MTP_step": 7.988
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 19",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_20",
+     "item": "SM m3 over m2 (front strips + tileW macro registers: +0.062% of 439.9 us = 0.273 us)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.273,
+      "MTP_step": 0.273
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 20",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_21",
+     "item": "r21 index b5 t_vm pin stations (+1 hop per index scan, 8 scans)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.007,
+      "MTP_step": 0.007
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 21",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_22",
+     "item": "r22 relay stations abutting every hardened-block pin of a > 100 um die segment (500 relay ends, +1 hop each; OWNER 2026-10-07 rule 1)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 4.602,
+      "MTP_step": 4.602
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 22",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_23",
+     "item": "r22 credit handshakes (SM weight_req ready: SM REQ_CREDIT + svc credit FIFO sized to the round trip)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.0,
+      "MTP_step": 0.0
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 23",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_24",
+     "item": "r23 2x hub area + attention tile 1778.5 x 1350 um + mcast_r6 a/b split + svc SE_s7/s8 split + VM early clock branch (die 30.59 mm wide; r23c GRT i5 wire record)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 6.99,
+      "MTP_step": 6.99
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 24",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "closure_25",
+     "item": "attention tile r23 outline (attn agent: +1 root->quad broadcast, +2 quad->o result per tile on the critical path; +2 per tile chain hop i->o; 40 attention steps x (3 + 2 ",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.367,
+      "MTP_step": 0.367
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "row 25",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)"
+    },
+    {
+     "id": "full_fec",
+     "item": "Full RS(544,514) FEC on every switch crossing (owner 2026-10-06)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 29.89,
+      "MTP_step": 29.89
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/arch/three_machine_compose/compose.json",
+       "pointer": "hbm_ds.full_fec",
+       "commit": "8d485e23b"
+      }
+     ],
+     "note": "305 crossings x 98.0 ns; NOT in the r23 closure headline; draft crossings not charged (HBM-favourable)"
+    },
+    {
+     "id": "lever_joint_PQ_XMAP",
+     "item": "Exact HBM lever joint_PQ_XMAP",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": -36.416,
+      "MTP_step": -77.056
+     },
+     "role": "lever",
+     "source": [
+      {
+       "file": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+       "pointer": null,
+       "commit": "5f5ae3881"
+      }
+     ],
+     "note": "exact on minimum components (eight minimum-component P1/P6 sequences, not a full-token execution); SS/FF not admitted"
+    },
+    {
+     "id": "lever_paired_W2_PACK",
+     "item": "Exact HBM lever paired_W2_PACK",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": -6.133,
+      "MTP_step": 0.0
+     },
+     "role": "lever",
+     "source": [
+      {
+       "file": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+       "pointer": null,
+       "commit": "5f5ae3881"
+      }
+     ],
+     "note": "exact on minimum components (simultaneous three-lever L20 P1 minimum component; forty-layer exposure remains modeled, not actual full-token execution); SS/FF not admitted"
+    },
+    {
+     "id": "ha2_truecredit",
+     "item": "HA2 true-credit endpoint (measured +8 cycles a transaction, 7+7 hops)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.767,
+      "MTP_step": 1.767
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/uarch/ha2_truecredit_20261007/model_measured_endpoint.json",
+       "pointer": "endpoint_measurement",
+       "commit": "efe3c292a"
+      }
+     ],
+     "note": "x 265 exposed owner reductions a token (ledger convention); composed_token_latency_cycles=null in the record; parametric hops, not placed pins"
+    },
+    {
+     "id": "collective_sram_protected",
+     "item": "Full-depth protected collective packet SRAM (+2 queue cycles vs async head)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 0.442,
+      "MTP_step": 0.442
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_full_20261007/storage_model.json",
+       "pointer": "timing",
+       "commit": "e9cbc1c4e"
+      }
+     ],
+     "note": "x 265 collective terms (assumption); default-off candidate"
+    },
+    {
+     "id": "ha2_half_rate_credit",
+     "item": "HA2 half-rate own-partial credit (alternative if it is the variant that closes)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 10.16,
+      "MTP_step": 10.16
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "Conditional",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "+46 cycles x 265; not summed"
+    },
+    {
+     "id": "su_reducer_safe",
+     "item": "SU reducer SAFE (+4 per reduction at 0.9 GHz)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "Pending",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "occurrences per token not bound"
+    },
+    {
+     "id": "su_c12_margin",
+     "item": "SU CP+c12 margin stage (+30 DS1M, measured exact) / RHALF (+176)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/fullsys_recheck_20261007/status.json",
+       "pointer": "results[3..5]",
+       "commit": "05b0756ee"
+      }
+     ],
+     "note": "per-stage cost measured; stages per token not composed; RHPAR 0 Qwen8K contract fault retained"
+    },
+    {
+     "id": "su_full_ddiv31",
+     "item": "su_full DDIV 31 (+10 per divide-class op)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md",
+       "pointer": "Conditional",
+       "commit": "5ed9c4da4"
+      }
+     ],
+     "note": "only if hbm_su_full31 is the closing route; op count not composed"
+    },
+    {
+     "id": "vm_alignment",
+     "item": "VM write alignment / real publication path",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/audit.json",
+       "pointer": "VM_write_alignment",
+       "commit": "b13575546"
+      }
+     ],
+     "note": "BLOCKED in the r19c audit"
+    },
+    {
+     "id": "die_clock_plan",
+     "item": "Die clock inputs, CTS and shared clock corridors",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/hbm_die_clock_inputs_20261007/model.json",
+       "pointer": "entry_routing",
+       "commit": "148467f54"
+      }
+     ],
+     "note": "candidate structural wiring only; collective reset entry adds 0 cycles a token (results/uarch/hbm_collective_clock_entry_20261007/model.json)"
+    },
+    {
+     "id": "hbm_full_die",
+     "item": "Full-die detailed route / SS / FF / IR",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_accel_die_views_20261006/headline_with_closure_r23.json",
+       "pointer": null,
+       "commit": "93b75a8fb"
+      }
+     ],
+     "note": "die views only"
+    }
+   ],
+   "compositions": {
+    "three_machine_published": {
+     "AR_us": 513.132,
+     "AR_tok_s": 1948.8,
+     "MTP_tok_s": 3944.2,
+     "record": {
+      "file": "results/arch/three_machine_compose/compose.json",
+      "pointer": "hbm_ds.rows.median",
+      "commit": "8d485e23b"
+     },
+     "status": "priced-candidate",
+     "note": "STALE as a headline: gate + exact levers + full FEC + r05 floorplan wire, but NO die closure costs"
+    },
+    "r23_closure_published": {
+     "AR_us": 571.141,
+     "AR_tok_s": 1750.9,
+     "MTP_tok_s": 3626.1,
+     "record": {
+      "file": "results/rtl/hbm_accel_die_views_20261006/headline_with_closure_r23.json",
+      "pointer": "with_closure",
+      "commit": "93b75a8fb"
+     },
+     "status": "priced-candidate",
+     "note": "closure-inclusive but light FEC and no lever credit"
+    },
+    "closure_fec_no_lever_credit": {
+     "AR_us": 603.616,
+     "MTP_step_us": 1179.446,
+     "AR_tok_s": 1656.7,
+     "MTP_tok_s": 3526.2,
+     "status": "priced-candidate",
+     "gated_by": [
+      "su_reducer_safe",
+      "su_c12_margin",
+      "su_full_ddiv31",
+      "vm_alignment",
+      "die_clock_plan",
+      "hbm_full_die"
+     ],
+     "note": "conservative: r23 closure + r23 attention tile + full FEC + priced credit/SRAM costs"
+    },
+    "unified_candidate": {
+     "AR_us": 561.067,
+     "MTP_step_us": 1102.39,
+     "AR_tok_s": 1782.3,
+     "MTP_tok_s": 3772.7,
+     "tau": 4.159,
+     "status": "priced-candidate",
+     "gated_by": [
+      "su_reducer_safe",
+      "su_c12_margin",
+      "su_full_ddiv31",
+      "vm_alignment",
+      "die_clock_plan",
+      "hbm_full_die"
+     ],
+     "note": "as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)"
+    }
+   },
+   "gates": [
+    "su_reducer_safe",
+    "su_c12_margin",
+    "su_full_ddiv31",
+    "vm_alignment",
+    "die_clock_plan",
+    "hbm_full_die"
+   ],
+   "physical_status": "die views priced; no full-die closure"
+  }
+ },
+ "ratios": {
+  "basis": "per user, same tau on both sides; both sides priced-candidate",
+  "ds_rom_published_over_hbm_unified": {
+   "AR": 0.8959,
+   "MTP": 1.2463
+  },
+  "ds_rom_1792_half_dedicated_over_hbm_unified": {
+   "AR": 0.7322,
+   "MTP": 1.0585
+  },
+  "stale": {
+   "record": {
+    "file": "results/arch/three_machine_compose/compose.json",
+    "pointer": "ratios",
+    "commit": "8d485e23b"
+   },
+   "AR": 0.8193,
+   "MTP": 1.1921,
+   "why": "HBM side without die closure costs"
+  }
+ },
+ "no_ecc_inventory": [
+  {
+   "target": "qwen_rom",
+   "item": "Weight and configuration ROM",
+   "protection": "none",
+   "policy": "compliant (owner 2026-10-02 ROM no-ECC)",
+   "source": {
+    "file": "AGENTS.md",
+    "pointer": null,
+    "commit": "161e1ddd5"
+   }
+  },
+  {
+   "target": "ds_rom",
+   "item": "Weight ROM (4096-row macros, 1792-pair mapping)",
+   "protection": "none (ROM_ECC=false)",
+   "policy": "compliant",
+   "source": {
+    "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json",
+    "pointer": "ROM_ECC",
+    "commit": "2d811aafb"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "STREAM4 KV transport, 128 pseudo-channel parallel landing (HBM -> die)",
+   "protection": "none",
+   "policy": "GAP: HBM/link protection is retained by policy; protected full-width transport not adopted",
+   "source": {
+    "file": "results/rtl/qwen_rom_closed_20261006/closure.json",
+    "pointer": "kv_path.shipped",
+    "commit": "c148ca60a"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "Spine lane: 32x1536 payload FIFO, 32x32 tag FIFO, split/tag/valid pipeline, pointers/credits, fault/commit registers",
+   "protection": "none (fault-free bench only)",
+   "policy": "GAP: mutable state",
+   "source": {
+    "file": "results/rtl/qwen_spine_lane_20261007/mutable_protection_blocker.json",
+    "pointer": "unprotected",
+    "commit": "fae456c84"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)",
+   "protection": "none",
+   "policy": "GAP: blocks production adoption",
+   "source": {
+    "file": "results/rtl/qwen_ctrl_shift_20261007/runtime_protection_gate.json",
+    "pointer": "state_breakdown",
+    "commit": "95f7e75c1"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "Finite VM banks (ME/SU service)",
+   "protection": "excluded from the service models (owner tags, protection/checks not sized)",
+   "policy": "GAP: protected bank not bound",
+   "source": {
+    "file": "results/uarch/qwen_rom_vm_su_service_20261007/model.json",
+    "pointer": "source_frame_storage_lower_bound_bits.excluded",
+    "commit": "9789baddc"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "Forwarded-link opaque 16 control bits per stream",
+   "protection": "integrity binding missing",
+   "policy": "GAP (adoption gate)",
+   "source": {
+    "file": "results/uarch/qwen_link_forwarded_graph_20261007/graph_prebuild_model.json",
+    "pointer": "endpoint_adoption_gates",
+    "commit": "3267a11f5"
+   }
+  },
+  {
+   "target": "qwen_rom",
+   "item": "Relay stations (1,536) and column heads (64), 508-bit payload",
+   "protection": "dual-fault replicas, default off",
+   "policy": "candidate",
+   "source": {
+    "file": "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json",
+    "pointer": "replicas",
+    "commit": "c0e718a26"
+   }
+  },
+  {
+   "target": "ds_rom",
+   "item": "S81 VM raw macro backend",
+   "protection": "none (64 empty protection slots reserved, not RTL)",
+   "policy": "GAP: mutable SRAM",
+   "source": {
+    "file": "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json",
+    "pointer": "S81_r8_superseding_physical_binding.VM",
+    "commit": "378e5890a"
+   }
+  },
+  {
+   "target": "hbm_ds",
+   "item": "Collective packet SRAM",
+   "protection": "protected full-depth candidate (default off, +2 queue cycles)",
+   "policy": "candidate",
+   "source": {
+    "file": "results/rtl/hbm_collective_full_20261007/storage_model.json",
+    "pointer": "queues",
+    "commit": "e9cbc1c4e"
+   }
+  },
+  {
+   "target": "hbm_ds",
+   "item": "SM serial command/record path",
+   "protection": "protection build in progress (uncommitted Codex work in the central checkout)",
+   "policy": "GAP until committed",
+   "source": {
+    "file": "tools/hbm_sm_serial_protection_model.py",
+    "pointer": null,
+    "commit": "uncommitted (central checkout, Codex)"
+   }
+  },
+  {
+   "target": "all",
+   "item": "Off-package links",
+   "protection": "full RS(544,514) FEC",
+   "policy": "compliant (owner 2026-10-06)",
+   "source": {
+    "file": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+    "pointer": "decision",
+    "commit": "b063d6402"
+   }
+  }
+ ],
+ "stale_claims": [
+  {
+   "file": "docs/INTEGRATED_PHYSICAL_PLAN.md",
+   "claim": "'Qwen ROM CLOSED (owner decision, 2026-10-06)' with 5,537.3 tok/s as a closed headline",
+   "why": "Qwen ROM reopened 2026-10-07 (directive 14); 216,713 includes priced (not routed) relays",
+   "action": "relabelled as a candidate composition; history kept"
+  },
+  {
+   "file": "docs/PROGRAM_PLAN_2026_10_05.md",
+   "claim": "Qwen row 'CLOSED'; DS 1,675.0 / 4,895.0 'all measured'; HBM 2,173.7 / 4,683.2; ratios 0.77x / 1.05x / 1.24x / 2.49-2.57x",
+   "why": "DS pre-closure and on the 85-stage geometry; HBM before die closure costs; Qwen reopened",
+   "action": "2026-10-07 status note added above the table; rows kept as dated history"
+  },
+  {
+   "file": "docs/ARCHITECTURE_ATLAS.html",
+   "claim": "'Qwen ROM headline - closed configuration' (sec. 1 list, sec. 8 finding, Table 8-4 'composed from measured')",
+   "why": "reopened; relay term priced",
+   "action": "relabelled 'candidate configuration'; relay row already says priced"
+  },
+  {
+   "file": "docs/ANALYTICAL_REPORT.md",
+   "claim": "'Qwen ROM closed headline' 5,537.3 in sec. Qwen; DS/HBM ratio text",
+   "why": "reopened; candidate",
+   "action": "qualified as candidate; unified ledger cited; DSpark re-evaluation added"
+  },
+  {
+   "file": "tools/chip_explorer_build.py",
+   "claim": "Qwen AR status 'measured'; HBM DS cards show 1,948.8 / 3,944.2 (no die closure costs); DS without 1792 caveat",
+   "why": "mislabelled status; stale HBM headline",
+   "action": "Qwen AR -> analytical candidate; HBM cards show the unified closure-inclusive candidate; pre-closure kept for the waterfall"
+  },
+  {
+   "file": "results/arch/energy_silicon_measured/README.md",
+   "claim": "DS ROM 1,603.3 / 4,717.7 rows (record STALE vs the scoreboard on main)",
+   "why": "--check failed at 449ebc571",
+   "action": "regenerated (1,596.7 / 4,702.0) with a scope note on the 85-stage geometry and Qwen reopen"
+  },
+  {
+   "file": "results/arch/three_machine_compose/table.txt",
+   "claim": "DS ROM / HBM AR 0.8193x MTP 1.1921x",
+   "why": "HBM side excludes die closure costs",
+   "action": "not rewritten (pinned record); superseded by unified ledger ratios"
+  }
+ ],
+ "tool": {
+  "file": "tools/unified_composition.py",
+  "sha256": "4f9bdf600e7c6ed55352f015b4942c47a5ff35cc86bd33bc659dccb1eb28d770"
+ }
+}

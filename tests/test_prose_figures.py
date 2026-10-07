@@ -178,7 +178,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # ahead of the layer composition the DSpark verdict uses (302 -> 305) (1419 -> 1422).
     # DS-RACK85: docs/HEADLINE_BUNDLE.md binds the measured DS energy record (ROM 6.48 J, HBM accelerator 5.77 J
     # at batch 1, AR) beside the superseded power-scenario model (199 -> 201) (1422 -> 1424).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1424
+    # Unified candidate composition 2026-10-07 (results/arch/unified_composition_20261007/ledger.json): ANALYTICAL_REPORT
+    # carried 308 on main (three unpinned) and binds the DSpark re-evaluation (+2) (305 -> 310); INTEGRATED_PHYSICAL_PLAN
+    # (unlisted -> 11) and PROGRAM_PLAN_2026_10_05 (unlisted -> 4) bind the unified candidate figures (1424 -> 1444).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1444
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

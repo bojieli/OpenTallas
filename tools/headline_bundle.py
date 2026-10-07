@@ -737,10 +737,10 @@ HEADLINES: list[dict[str, Any]] = [
          claim="V4.1 ROM array energy per token at 1M, batch 1, AR, measured energy record (85 stages, stage PG at "
                "the measured element residual; scoreboard ds_rom.j_per_token_ar_b1_pg) (J)",
          binding=B(ESM, "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token"),
-         printed=[at(DEPLOY, "spends 6.76 J per token at batch 1 in AR"),
-                  at("Static power decides array energy at low batch", "6.76 J per token at batch 1 in AR"),
-                  at("Energy per token, batch 1 (both static-dominated)", "measured energy record 6.76 vs 5.77 J"),
-                  at(S101, "6.76 J for the array (85 stages")]),
+         printed=[at(DEPLOY, "spends 6.79 J per token at batch 1 in AR"),
+                  at("Static power decides array energy at low batch", "6.79 J per token at batch 1 in AR"),
+                  at("Energy per token, batch 1 (both static-dominated)", "measured energy record 6.79 vs 5.77 J"),
+                  at(S101, "6.79 J for the array (85 stages")]),
     dict(id="v41.energy_hbm_accel_1m_measured", section="DeepSeek-V4.1 energy", cls="model",
          claim="DS HBM accelerator energy per token at 1M, batch 1, AR, measured energy record (scoreboard "
                "hbm_ds.accel_ar_J_per_token) (J)",

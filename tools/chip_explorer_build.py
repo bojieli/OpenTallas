@@ -93,11 +93,14 @@ q = cmpj['qwen_rom']; ds = cmpj['ds_rom']; hb = cmpj['hbm_ds']
 qlv = q['levers']; qcore = qlv['core_context']
 q_lever_txt = ' + '.join('%s %+d' % (k, v['delta']['cycles']) for k, v in qlv.items() if v['cls'] == 'adopted')
 hrow = hb['rows']['median']
+UCL = 'results/arch/unified_composition_20261007/ledger.json'   # unified candidate composition (2026-10-07)
+ucl = J(R / UCL)['targets']
+uq, uds, uh = ucl['qwen_rom']['compositions'], ucl['ds_rom']['compositions'], ucl['hbm_ds']['compositions']
 qb = qhws['bases']
 D['rates'] = dict(
     qwen=dict(
-        AR=V(q['AR_tok_s'], 'tok/s', 'measured', CMP + ' qwen_rom.AR_tok_s (composed from measured: %s measured cycles + adopted levers %s at 1.2 GHz)' % (format(q['token_cycles_measured'], ','), q_lever_txt)),
-        MTP=V(q['MTP_tok_s'], 'tok/s', 'measured', CMP + ' qwen_rom.MTP_tok_s; operating mode AR (DSpark OFF)'),
+        AR=V(q['AR_tok_s'], 'tok/s', 'analytical', CMP + ' qwen_rom.AR_tok_s (CANDIDATE: %s measured cycles + adopted levers %s at 1.2 GHz; the relay term is priced, and Qwen physical closure was reopened 2026-10-07; unified candidate %.1f in %s)' % (format(q['token_cycles_measured'], ','), q_lever_txt, uq['unified_candidate']['AR_tok_s'], UCL)),
+        MTP=V(q['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' qwen_rom.MTP_tok_s; operating mode AR (DSpark OFF; re-evaluated 2026-10-07 in ' + UCL + ')'),
         cycles=V(q['token_cycles'], 'cycles', 'measured', CMP + ' qwen_rom.token_cycles'),
         cycles_measured=V(q['token_cycles_measured'], 'cycles', 'measured', QT + ' total_cycles'),
         core_ctx=V(qcore['delta']['cycles'], 'cycles', 'measured', CMP + ' qwen_rom.levers.core_context (%s, SS %+.2f / FF %+.2f ps, %s)' % (qcore['variant'], qcore['ss_ps'], qcore['ff_ps'], qcore['verdict'])),
@@ -110,8 +113,8 @@ D['rates'] = dict(
         dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
-        AR=V(ds['AR_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.AR_tok_s (all-measured composition, recovery baseline + adopted levers, every off-package link on full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + ')'),
-        MTP=V(ds['MTP_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false)'),
+        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 mapping with half-rate BF is a candidate of at most %.1f AR, field phases unmeasured: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
+        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; 1792 candidate at most %.1f)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
         AR_us=V(ds['AR_us'], 'us', 'measured', CMP + ' ds_rom.AR_us'),
         MTP_step_us=V(ds['MTP_step_us'], 'us', 'measured', CMP + ' ds_rom.MTP_step_us'),
         II_us=V(ds['II_us'], 'us', 'measured', CMP + ' ds_rom.II_us (slowest stage busy + hop)'),
@@ -130,6 +133,10 @@ D['rates'] = dict(
         gate_AR=V(hb['basis']['gate_AR_tok_s'], 'tok/s', 'analytical', MREF + ' gate (matched reference, before die wire)'),
         gate_MTP=V(hb['basis']['gate_MTP_tok_s'], 'tok/s', 'analytical', MREF + ' gate'),
         wire_us=V(hrow['wire_added_us'], 'us', 'analytical', CMP + ' hbm_ds.rows.median.wire_added_us (from ' + HWS + ')'),
+        AR_unified=V(uh['unified_candidate']['AR_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.unified_candidate (matched gate + r16j die wire + r23 die closure ledger + full FEC + exact levers + priced true-credit/protected-SRAM; candidate, gated items listed)'),
+        MTP_unified=V(uh['unified_candidate']['MTP_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.unified_candidate.MTP_tok_s'),
+        AR_no_lever=V(uh['closure_fec_no_lever_credit']['AR_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.closure_fec_no_lever_credit'),
+        closure_us=V(round(uh['unified_candidate']['AR_us'] - hrow['AR_us'], 3), 'us', 'analytical', UCL + ' unified_candidate.AR_us minus the pre-closure median row'),
         levers_us=V(round(hb['basis']['gate_AR_us'] - hb['levers_AR_us'], 3), 'us', 'analytical', CMP + ' hbm_ds.levers (joint_PQ_XMAP -36.416 + paired_W2_PACK -6.133; exact on minimum components, SS/FF not admitted)'),
     ),
     hbm_qwen=dict(
@@ -486,7 +493,7 @@ D['fused_chains'] = V([
 D['spec_table'] = V([
     ['Qwen3-8B ROM, 8K, STREAM4', 'none: compute-bound, KV fill hidden', 5282, '17,197 (4)', 3.26, 0.70],
     ['Qwen3-8B HBM accelerator, TP4, 8K', 'weight stream', 17237, '16,044 (4)', 0.93, 2.28],
-    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '623.7 us/token', '755.6 us (6)', 1.21, 2.75],
+    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '626.3 us/token', '758.5 us (6)', 1.21, 2.75],
 ], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row = ' + CMP + ' ds_rom (default q-element) at the published tau 3.8879, verify from ' + DSC + '.')
 assert D['spec_table']['v'][2][2] == f"{ds['AR_us']:.1f} us/token" and D['spec_table']['v'][2][3] == f"{dsc['MTP']['verify_us']:.1f} us (6)", 'Table 8-14a DS row is stale against ' + CMP
 assert D['spec_table']['v'][2][5] == round(ds['MTP_tok_s_tau_published'] / ds['AR_tok_s'], 2), 'Table 8-14a DS speculative ratio is stale'

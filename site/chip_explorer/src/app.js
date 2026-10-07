@@ -122,8 +122,8 @@ function renderHero(){
         kpi('With pending levers', R.ds.AR_cond, 'tok/s AR', fmt(val(R.ds.MTP_cond), 1) + ' MTP if every PENDING_SSFF lever closes') +
         kpi('Pipeline', DATA.ds_system.stages, 'stages', fmt0(val(DATA.ds_system.layer_dies)) + ' layer dies + ' + val(DATA.ds_system.head_dies) + ' head + ' + val(DATA.ds_system.draft_added) + ' draft', 0);
   } else {
-    k = kpi('DeepSeek 1M, AR', R.hbm_ds.AR, 'tok/s', 'wire median; floor ' + fmt(val(R.hbm_ds.AR_floor)) + ', bound ' + fmt(val(R.hbm_ds.AR_bound))) +
-        kpi('DeepSeek 1M, MTP', R.hbm_ds.MTP, 'tok/s', 'τ 4.159, same as the ROM') +
+    k = kpi('DeepSeek 1M, AR (candidate)', R.hbm_ds.AR_unified, 'tok/s', 'with die closure costs; ' + fmt(val(R.hbm_ds.AR_no_lever)) + ' without lever credit; pre-closure ' + fmt(val(R.hbm_ds.AR))) +
+        kpi('DeepSeek 1M, MTP (candidate)', R.hbm_ds.MTP_unified, 'tok/s', 'τ 4.159, same as the ROM') +
         kpi('Qwen 8K, TP4', R.hbm_qwen.AR, 'tok/s', 'TP2 ' + fmt(val(R.hbm_qwen.AR_tp2)) + ' tok/s (wire median)') +
         kpi('DS die (r14b)', DATA.dies.hbm_ds.area, 'mm²', 'Qwen tile die ' + fmt(val(DATA.dies.hbm_qwen.area)) + ' mm²');
   }
@@ -136,7 +136,7 @@ function renderCompareStrip(){
   if (!state.compare){ s.innerHTML = ''; return; }
   const R = DATA.rates;
   const card = (name, rows) => `<div class="card"><h3>${esc(name)}</h3><dl style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:8px 0 0">${rows.map(r => `<dt class="eyebrow" style="align-self:center">${esc(r[0])}</dt><dd class="num" style="margin:0">${vs(r[1], r[2] == null ? 1 : r[2])} ${esc(r[1] && r[1].unit || '')} ${pill(st(r[1]))}</dd>`).join('')}</dl></div>`;
-  s.innerHTML = `<div class="cmp3">${card('Qwen ROM, 8K', [['AR', R.qwen.AR], ['MTP', R.qwen.MTP], ['Die', DATA.dies.qwen_rom.area]])}${card('DeepSeek ROM array, 1M', [['AR', R.ds.AR], ['MTP', R.ds.MTP], ['Die', DATA.ds_system.die_mm2]])}${card('HBM accelerator', [['DS AR', R.hbm_ds.AR], ['DS MTP', R.hbm_ds.MTP], ['Qwen TP4', R.hbm_qwen.AR], ['DS die', DATA.dies.hbm_ds.area]])}</div>`;
+  s.innerHTML = `<div class="cmp3">${card('Qwen ROM, 8K', [['AR', R.qwen.AR], ['MTP', R.qwen.MTP], ['Die', DATA.dies.qwen_rom.area]])}${card('DeepSeek ROM array, 1M', [['AR', R.ds.AR], ['MTP', R.ds.MTP], ['Die', DATA.ds_system.die_mm2]])}${card('HBM accelerator', [['DS AR', R.hbm_ds.AR_unified], ['DS MTP', R.hbm_ds.MTP_unified], ['Qwen TP4', R.hbm_qwen.AR], ['DS die', DATA.dies.hbm_ds.area]])}</div>`;
 }
 
 /* ================================================================ 1. ARRAY */
@@ -659,7 +659,7 @@ function rackTables(){
   const tot = k => racks.reduce((a, r) => a + r[k], 0);
   const linkBW = d === 'ds' ? `stage hop ${vs(DATA.links.ds_stage, 0)} GB/s ${pill(st(DATA.links.ds_stage))}` : d === 'hbm' ? `switch fabric ${vs(RD.fabric_tbps, 1)} Tb/s ${pill(st(RD.fabric_tbps))}` : `all-reduce link ${vs(DATA.links.qwen_ar, 0)} GB/s ${pill(st(DATA.links.qwen_ar))}`;
   const ctx = d === 'ds' ? `One user's token crosses all ${racks.length} racks: ${vs(R.ds.AR, 0)} tok/s AR, ${vs(R.ds.MTP, 0)} tok/s MTP per user; all users together saturate at ~${vs(RD.sat_tok_s, 0)} tok/s ${pill(st(RD.sat_tok_s))}. Model system power ${val(RD.system_kw).ar} kW AR, ${val(RD.system_kw).mtp} kW MTP ${pill(st(RD.system_kw))} (the rack sums charge every layer die at the busiest die's saturated power).`
-    : d === 'hbm' ? `${vs(R.hbm_ds.AR, 0)} tok/s AR, ${vs(R.hbm_ds.MTP, 0)} tok/s MTP per user at 1M. Model system power ${val(RD.system_kw).ar} kW at AR ${pill(st(RD.system_kw))}; the rack sum charges every die its in-phase peak.`
+    : d === 'hbm' ? `${vs(R.hbm_ds.AR_unified, 0)} tok/s AR, ${vs(R.hbm_ds.MTP_unified, 0)} tok/s MTP per user at 1M (candidate, with die closure costs). Model system power ${val(RD.system_kw).ar} kW at AR ${pill(st(RD.system_kw))}; the rack sum charges every die its in-phase peak.`
     : `${vs(R.qwen.AR, 0)} tok/s per user at 8K on ${val(RD.system_kw).ar} kW ${pill(st(RD.system_kw))}.`;
   const nv = val(DATA.racks.nvl72);
   $('rackTable').innerHTML = `<thead><tr><th>Rack</th><th>Holds</th><th class="n">OU</th><th class="n">Pkgs</th><th class="n">Dies</th><th class="n">Chips kW</th><th class="n">Prov. kW</th><th class="n">kg</th></tr></thead><tbody>${rows}${racks.length > 1 ? `<tr><td><b>Total</b></td><td></td><td class="n">${tot('used_ou')}</td><td class="n">${tot('packages')}</td><td class="n">${fmt0(tot('dies'))}</td><td class="n">${fmt(tot('chips_kw'), 1)}</td><td class="n">${fmt(tot('prov_kw'), 1)}</td><td class="n">${fmt0(tot('kg'))}</td></tr>` : ''}
@@ -1030,7 +1030,7 @@ function renderWaterfall(){
     rows.push({ label: 'levers', parts: [{ t0: t - lv, d: lv, c: 'lever', name: 'exact levers −' + fmt(lv, 3) + ' µs' }] }); t -= lv;
     rows.push({ label: 'die wire', parts: [{ t0: t, d: wi, c: 'wire', name: 'die wire stages +' + fmt(wi, 3) + ' µs (median bundle)' }] }); t += wi; total = t;
     legendKeys = ['sm', 'su', 'attn', 'du', 'hbm', 'coll', 'tail', 'lever', 'wire'];
-    $('wfLede').innerHTML = `The HBM accelerator's DeepSeek token at 1M by layer, split by unit in path order (the matched-reference gate), then the exact levers removed and the die wire added. Total ${fmt(total, 3)} µs = ${fmt(val(DATA.rates.hbm_ds.AR), 1)} tok/s. ${pill('analytical')}`;
+    $('wfLede').innerHTML = `The HBM accelerator's DeepSeek token at 1M by layer, split by unit in path order (the matched-reference gate), then the exact levers removed and the die wire added. Total ${fmt(total, 3)} µs = ${fmt(val(DATA.rates.hbm_ds.AR), 1)} tok/s before die closure; the die closure costs add ${fmt(val(DATA.rates.hbm_ds.closure_us), 3)} µs (${fmt(val(DATA.rates.hbm_ds.AR_unified), 1)} tok/s candidate). ${pill('analytical')}`;
   }
   const H = 30 + rows.length * (rowH + gap) + 30;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -1141,7 +1141,7 @@ function renderCompare(){
     ['Qwen3-8B · ROM, 8K', R.qwen.AR, R.qwen.MTP, null, 'MTP mode is plain decoding (DSpark off)'],
     ['Qwen3-8B · HBM accel. TP4, 8K', R.hbm_qwen.AR, R.hbm_qwen.MTP, null, 'MTP not composed on this basis'],
     ['DeepSeek-V4.1 · ROM array, 1M', R.ds.AR, R.ds.MTP, [R.ds.AR_cond, R.ds.MTP_cond], 'outline: with every pending lever'],
-    ['DeepSeek-V4.1 · HBM accel., 1M', R.hbm_ds.AR, R.hbm_ds.MTP, null, 'wire median; same τ'],
+    ['DeepSeek-V4.1 · HBM accel., 1M', R.hbm_ds.AR_unified, R.hbm_ds.MTP_unified, null, 'candidate with die closure costs; same τ'],
   ];
   const W = 1000, lab = 250, x0 = lab + 10, x1 = W - 90, rh = 70; const H = 30 + rows.length * rh + 10;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
