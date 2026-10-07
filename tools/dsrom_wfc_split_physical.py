@@ -204,10 +204,18 @@ def cmd_prep(a):
         apply = HOOK_APPLY.format(skew=a.die_skew, spread=SPREAD_PS,
                                   imax=round(io0 + a.die_skew + SPREAD_PS, 1), imin=round(io0 - a.die_skew - SPREAD_PS, 1))
         if a.link_hold_pad:
-            # hold by repair: the stage-link inputs (in_*, the inter-region crossing) repaired against an extra
-            # hold pad (r11 src routed FF hold -5.2 / -4.7 ps die150 / region on in_data -> u_rx.pd)
+            # r12 (superseded): an extra -reference_pin min delay on in_* changed nothing (identical netlist)
             apply += ("set_input_delay -min {:.1f} -clock core_clk -reference_pin $wfc_refp [get_ports {{in_*}}]\n"
                       .format(io0 - a.die_skew - SPREAD_PS - a.link_hold_pad))
+        if a.link_hold_abs_min is not None:
+            # hold by repair on the stage-link inputs (in_*, the inter-region crossing): an ABSOLUTE min input delay
+            # (ps after the ideal edge) at the FF die-model arrival minus a pad, so the POST_CTS hold repair buffers
+            # them at BC (r11 src routed FF hold -4.7 ps region on in_data -> u_rx.pd: arrival lmin_FF - 150 + 166.6
+            # = 288.1 ps).  WC is over-padded (in_* setup slack ~380 ps at SS); the GRT stage stays hold-lax.
+            apply += ("set wfc_lk [get_ports {{in_*}}]\nunset_input_delay -clock core_clk $wfc_lk\n"
+                      "set_input_delay -max {:.1f} -clock core_clk -reference_pin $wfc_refp $wfc_lk\n"
+                      "set_input_delay -min {:.1f} -clock core_clk $wfc_lk\n"
+                      .format(io0 + a.die_skew + SPREAD_PS, a.link_hold_abs_min))
         (case / "wfc_io_apply.tcl").write_text(apply)
         (case / "wfc_io_restore.tcl").write_text(HOOK_RESTORE.format(io=io0, olax=round(io0 + 400, 1)))
         (case / "wfc_post_cts.tcl").write_text(HOOK_POST_CTS.format())
@@ -242,7 +250,7 @@ echo "end $(date -Is)" >> $W/status
     (case / "run.sh").write_text(run)
     (case / "run.sh").chmod(0o755)
     (case / "case.json").write_text(json.dumps(dict(inst=a.inst, params=params, util=a.util, macros=macros,
-                                                     route_period_ps=rp, die_skew_ps=a.die_skew, link_hold_pad_ps=a.link_hold_pad,
+                                                     route_period_ps=rp, die_skew_ps=a.die_skew, link_hold_pad_ps=a.link_hold_pad, link_hold_abs_min_ps=a.link_hold_abs_min,
                                                      orfs_var=a.orfs_var, src=str(src),
                                                      ctrl_sha256=sha(src / CTRL)), indent=1) + "\n")
     print(case / "run.sh")
@@ -493,6 +501,7 @@ def main():
     p.add_argument("--route-period", type=int, default=None, help="over-constrained route period ps (signoff stays 833)")
     p.add_argument("--die-skew", type=int, default=0, help="ps: io_clk min/max source latency widened by this (die150 budget)")
     p.add_argument("--link-hold-pad", type=int, default=0, help="ps: extra hold pad on the stage-link inputs in_* in the POST_CTS repair")
+    p.add_argument("--link-hold-abs-min", type=float, default=None, help="ps: absolute min input delay on in_* in the POST_CTS hold repair")
     s = sub.add_parser("sta")
     s.add_argument("--case", type=Path, required=True)
     s.add_argument("--macros", action="store_true")
