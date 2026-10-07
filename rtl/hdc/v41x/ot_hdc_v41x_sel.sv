@@ -150,7 +150,7 @@ module ot_hdc_v41x_sel #(
     endgenerate
 
     ot_hdc_v41x_sel_ctl #(.Q(Q), .K(K), .KW(KW), .CB(CB)) u_ctl (
-        .clk(clk), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r),
+        .clk(clk), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs({2*Q{1'b0}}),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
         .s_ovf(s_ovf),
@@ -167,12 +167,18 @@ module ot_hdc_v41x_sel_ctl #(
     parameter integer Q  = 4,
     parameter integer K  = 512,
     parameter integer KW = $clog2(K + 1),
-    parameter integer CB = KW + 1
+    parameter integer CB = KW + 1,
+    // CLAUDE S81-PH tiles (defaults = the native unit): XD extra edges each way between the control and the slices
+    // (the waits and holdoffs grow by the round trip), PERM 1: slice i serves quarter qs[2i +: 2] (tie quotas in
+    // quarter order)
+    parameter integer XD   = 0,
+    parameter integer PERM = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
     input  wire [KW-1:0]           k_in,
     input  wire                    k_ld,
+    input  wire [2*Q-1:0]          qs,
     input  wire [Q*16*(CB+4)-1:0]  s_gc,
     input  wire [Q*16*(CB+4)-1:0]  s_gf,
     input  wire [Q*16*CB-1:0]      s_bc,
@@ -202,8 +208,11 @@ module ot_hdc_v41x_sel_ctl #(
 );
     localparam integer XW   = CB + 10;              // search sums
     localparam integer QC   = KW + 1;               // coarse quota width
-    localparam integer WAIT = 13;                   // search latency after the counts settle
-    localparam integer HOLD = 26;                   // fine results ignored after a bucket change
+    localparam integer XR   = 2 * XD;               // round trip added by the tile hops
+    localparam integer WAIT = 13 + XR;              // search latency after the counts settle
+    localparam integer HOLD = 26 + 2 * XR;          // fine results ignored after a bucket change
+    localparam integer HC0  = 20 + 2 * XR, HF0 = 36 + 2 * XR, CLRW = 20 + 2 * XR;
+    localparam integer TW   = (XD == 0) ? 6 : 8;    // wait / hold counter width
     localparam integer KI   = K;
     localparam [QC-1:0] KQ  = KI[QC-1:0];
     localparam [XW-1:0] QINV = {XW{1'b1}};          // a quota no count reaches
@@ -226,15 +235,15 @@ module ot_hdc_v41x_sel_ctl #(
     wire [XW-1:0] cres_above, fres_above;
     wire          cres_ok, fres_ok;
     wire [Q*CB-1:0] cres_eq, fres_eq;
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(QC)) u_cs (
+    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(QC), .XR(XR)) u_cs (
         .clk(clk), .gs(s_gc), .bs(s_bc), .q(kq), .g_out(c_cg),
         .res_b(cres_b), .res_above(cres_above), .res_ok(cres_ok), .res_eq(cres_eq));
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(XW)) u_fs (
+    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(XW), .XR(XR)) u_fs (
         .clk(clk), .gs(s_gf), .bs(s_bf), .q(qf), .g_out(c_fg),
         .res_b(fres_b), .res_above(fres_above), .res_ok(fres_ok), .res_eq(fres_eq));
 
     reg  [2:0]    st;
-    reg  [5:0]    wcnt, hold_c, hold_f;
+    reg  [TW-1:0] wcnt, hold_c, hold_f;
     reg           kseen, hf_seen, bs_done;
     reg  [7:0]    bs, ls;
     reg  [QC-1:0] m, t;
@@ -250,17 +259,30 @@ module ot_hdc_v41x_sel_ctl #(
     reg  [Q*QC-1:0] rem_d;
     reg  [CB+2:0]   pre;
     integer i;
-    always @(*) begin
-        pre = 0;
-        for (i = 0; i < Q; i = i + 1) begin
-            rem_d[QC*i +: QC] = ({{(CB+3-QC){1'b0}}, t} > pre) ? t - pre[QC-1:0] : {QC{1'b0}};
-            pre = pre + {3'b000, eq[CB*i +: CB]};
+    integer j;
+    generate if (PERM == 0) begin : g_rq
+        always @(*) begin
+            pre = 0;
+            for (i = 0; i < Q; i = i + 1) begin
+                rem_d[QC*i +: QC] = ({{(CB+3-QC){1'b0}}, t} > pre) ? t - pre[QC-1:0] : {QC{1'b0}};
+                pre = pre + {3'b000, eq[CB*i +: CB]};
+            end
         end
-    end
+    end else begin : g_rqp
+        // ties of the slices serving lower quarters
+        always @(*) begin
+            for (i = 0; i < Q; i = i + 1) begin
+                pre = 0;
+                for (j = 0; j < Q; j = j + 1)
+                    if (qs[2*j +: 2] < qs[2*i +: 2]) pre = pre + {3'b000, eq[CB*j +: CB]};
+                rem_d[QC*i +: QC] = ({{(CB+3-QC){1'b0}}, t} > pre) ? t - pre[QC-1:0] : {QC{1'b0}};
+            end
+        end
+    end endgenerate
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= C_CLR; wcnt <= 6'd20; c_T <= 0; c_Bt <= 0; c_fclr <= 1'b0; c_ing <= 1'b0; c_stop <= 1'b0;
+            st <= C_CLR; wcnt <= CLRW[TW-1:0]; c_T <= 0; c_Bt <= 0; c_fclr <= 1'b0; c_ing <= 1'b0; c_stop <= 1'b0;
             c_p2 <= 1'b0; c_p3 <= 1'b0; c_rep <= 1'b0; c_st <= 0; c_rem <= 0; c_hclr <= 1'b0; rep_req <= 1'b0;
             ovf <= 1'b0; kq <= 0; qf <= QINV; hold_c <= 0; hold_f <= 0; kseen <= 1'b0; hf_seen <= 1'b0;
             bs_done <= 1'b0; bs <= 0; ls <= 0; m <= 0; t <= 0; eq <= 0;
@@ -272,12 +294,12 @@ module ot_hdc_v41x_sel_ctl #(
             case (st)
                 C_ING: begin
                     if (k_ld && !kseen) begin
-                        kseen <= 1'b1; kq <= kin_c; hold_c <= 6'd20; hold_f <= 6'd36;
+                        kseen <= 1'b1; kq <= kin_c; hold_c <= HC0[TW-1:0]; hold_f <= HF0[TW-1:0];
                     end
                     // the running bound
                     if (use_c) begin
                         if (cres_b > c_Bt) begin
-                            c_Bt <= cres_b; c_fclr <= 1'b1; hold_f <= HOLD; qf <= QINV;
+                            c_Bt <= cres_b; c_fclr <= 1'b1; hold_f <= HOLD[TW-1:0]; qf <= QINV;
                         end else if (cres_b == c_Bt)
                             qf <= {{(XW-QC){1'b0}}, kq} - cab;
                     end
@@ -287,7 +309,7 @@ module ot_hdc_v41x_sel_ctl #(
                     if (&st_last) begin st <= C_FL; c_ing <= 1'b0; c_stop <= 1'b1; hf_seen <= 1'b0; bs_done <= 1'b0; end
                 end
                 C_FL: begin
-                    if ((&st_hfin) && !hf_seen) begin hf_seen <= 1'b1; wcnt <= WAIT; end
+                    if ((&st_hfin) && !hf_seen) begin hf_seen <= 1'b1; wcnt <= WAIT[TW-1:0]; end
                     if (hf_seen && wcnt == 0 && !bs_done) begin
                         bs_done <= 1'b1; bs <= cres_b; m <= kq - cab[QC-1:0];
                     end
@@ -297,7 +319,7 @@ module ot_hdc_v41x_sel_ctl #(
                     end
                 end
                 C_P2: begin
-                    if (&st_done2) begin st <= C_W2; wcnt <= WAIT + 1; end   // + res_eq's edge
+                    if (&st_done2) begin st <= C_W2; wcnt <= WAIT[TW-1:0] + 1'b1; end   // + res_eq's edge
                 end
                 C_W2: begin
                     if (wcnt == 0) begin
@@ -308,7 +330,7 @@ module ot_hdc_v41x_sel_ctl #(
                     st <= C_P3; c_rem <= rem_d; c_st <= {bs, ls}; c_p3 <= 1'b1; rep_req <= c_rep;
                 end
                 C_P3: begin
-                    if (&st_emitted) begin st <= C_CLR; c_hclr <= 1'b1; wcnt <= 6'd20; end
+                    if (&st_emitted) begin st <= C_CLR; c_hclr <= 1'b1; wcnt <= CLRW[TW-1:0]; end
                 end
                 default: begin                     // C_CLR: the slices clear; stale search results drain
                     c_T <= 0; c_Bt <= 0; qf <= QINV; kseen <= 1'b0; c_rep <= 1'b0; c_stop <= 1'b0; ovf <= 1'b0;

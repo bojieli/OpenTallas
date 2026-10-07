@@ -23,6 +23,7 @@ module ot_s81ph_link_ep #(
     parameter integer FLIT_BYTES     = 69,
     parameter integer TX_STAGES      = 2,     // >= 2
     parameter integer CHANNEL_CYCLES = 60,    // used only to derive the ACK timeout (as ct)
+    parameter integer CHANNEL_CYCLES_B = CHANNEL_CYCLES,   // CLAUDE S81-PH coll v2: second timeout basis, chosen by the static pin ch_b (one lane tile master serves UCIe and board lanes)
     parameter integer RX_STAGES      = 3,     // >= 3
     parameter integer CREDITS        = 512,
     parameter integer SEQW           = 10,
@@ -39,6 +40,7 @@ module ot_s81ph_link_ep #(
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
+    input  wire                     ch_b,      // static: 1 = ACK timeout from CHANNEL_CYCLES_B
     input  wire                     in_valid,
     output wire                     in_ready,
     input  wire [FLIT_BYTES*8-1:0]  in_data,
@@ -77,8 +79,10 @@ module ot_s81ph_link_ep #(
     localparam integer RVW  = 1 + SEQW + CW;
     localparam integer RFW  = RVW + 32;
     localparam integer RTT  = 2 * CHANNEL_CYCLES + TX_STAGES + RX_STAGES + 6;
+    localparam integer RTTB = 2 * CHANNEL_CYCLES_B + TX_STAGES + RX_STAGES + 6;
     localparam integer ATO  = (ACK_TIMEOUT == 0) ? (RTT + 2 * KEEPALIVE + 32) : ACK_TIMEOUT;
-    localparam integer TW   = $clog2(ATO + 2);
+    localparam integer ATOB = (ACK_TIMEOUT == 0) ? (RTTB + 2 * KEEPALIVE + 32) : ACK_TIMEOUT;
+    localparam integer TW   = $clog2(((ATOB > ATO) ? ATOB : ATO) + 2);
     localparam integer RCW  = $clog2(MAX_RETRY + 2);
     localparam integer KW   = $clog2(KEEPALIVE + 1);
     localparam [SEQW-1:0] HALF = {1'b1, {(SEQW-1){1'b0}}};
@@ -87,10 +91,15 @@ module ot_s81ph_link_ep #(
     localparam [31:0]     PLAST32 = CREDITS - 1;
     localparam [31:0]     CRED32  = CREDITS;
     localparam [31:0]     ATO32   = ATO - 1;
+    localparam [31:0]     ATOB32  = ATOB - 1;
     localparam [31:0]     MR32    = MAX_RETRY;
     localparam [PW-1:0]   PLAST  = PLAST32[PW-1:0];
     localparam [CW:0]     CRED_W = CRED32[CW:0];
-    localparam [TW-1:0]   ATO_W  = ATO32[TW-1:0];
+    localparam [TW-1:0]   ATO_WA = ATO32[TW-1:0];
+    localparam [TW-1:0]   ATO_WB = ATOB32[TW-1:0];
+    reg ch_b_q;                                // static pin, registered
+    always @(posedge clk) ch_b_q <= ch_b;
+    wire [TW-1:0]         ATO_W  = ch_b_q ? ATO_WB : ATO_WA;
     localparam [RCW-1:0]  MR_W   = MR32[RCW-1:0];
     localparam integer    HB   = FPW / 2;           // CRC split point
 

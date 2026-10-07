@@ -42,7 +42,7 @@ module tb_s81ph_link_ep;
     generate for (g = 0; g < 2; g = g + 1) begin : g_dut
         ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH), .CREDITS(CR),
             .SEQW(SQ), .PHY_NUM(PN), .PHY_DEN(PD), .SRAM(SR)) u (
-            .clk(clk), .rst_n(rst_n),
+            .clk(clk), .rst_n(rst_n), .ch_b(1'b0),
             .in_valid(iv[g]), .in_ready(rdy_dut[g]), .in_data(id[g]), .in_last(il[g]),
             // ep g receives link 1-g
             .out_valid(ov_dut[1-g]), .out_ready(ordy[1-g]), .out_data(od_dut[1-g]), .out_last(ol_dut[1-g]),

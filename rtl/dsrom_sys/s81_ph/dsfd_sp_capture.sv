@@ -5,7 +5,31 @@
 // fault}); t_vm (serial domain) = per root {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0} x 128 | status 64.  ck/rst stream, ckv/rsv serial.
 // Every die input is captured in a flop at the pin; every die output is launched from a flop.
 // ---------------------------------------------------------------------------------------------------------------
+// CORE 2 (default, redesign pass 2026-10-06): the tiled capture ot_s81ph_cap_t (8 x dsfd_capt_grp + dsfd_capt_ctl,
+// ot_s81ph_cap_tile.sv); the die places the tiles and this module is the composition reference.  CORE 0/1: the
+// single-view cores (dsfd_sp_capture_v1).
+`ifdef S81PH_CAP_CORE1
 module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 1) (
+`else
+module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 2) (
+`endif
+    input wire [0:0] ck,
+    input wire [0:0] rst,
+    input wire [0:0] ckv,
+    input wire [0:0] rsv,
+    input wire [6946:0] f_gather,
+    output wire [13375:0] t_vm
+);
+    generate if (CORE == 2) begin : g_t
+        ot_s81ph_cap_t #(.NT(8), .LD(LD)) u_t (.ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]),
+            .f_gather(f_gather), .t_vm(t_vm));
+    end else begin : g_v
+        dsfd_sp_capture_v1 #(.LD(LD), .CORE(CORE)) u_v (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather),
+            .t_vm(t_vm));
+    end endgenerate
+endmodule
+
+module dsfd_sp_capture_v1 #(parameter integer LD = 4, parameter integer CORE = 1) (
     input wire [0:0] ck,
     input wire [0:0] rst,
     input wire [0:0] ckv,

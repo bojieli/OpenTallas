@@ -1,0 +1,124 @@
+{
+ "slab": "dsfd_sp_capture",
+ "outline_um": [
+  1036.8,
+  345.6
+ ],
+ "generator_change": "G6 again: 1015.176 x 302.4 -> 1036.8 x 345.6 (tiles + the 21.6-um channel); the gather t_capture pins re-plan to the tiles f_row x (root r -> tile r // 16, bits [53 (r % 16) +: 53] of its f_row)",
+ "tiles": [
+  {
+   "inst": "u_g0",
+   "master": "dsfd_capt_grp",
+   "x": 0.0,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    0,
+    15
+   ]
+  },
+  {
+   "inst": "u_g1",
+   "master": "dsfd_capt_grp",
+   "x": 118.8,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    16,
+    31
+   ]
+  },
+  {
+   "inst": "u_g2",
+   "master": "dsfd_capt_grp",
+   "x": 237.6,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    32,
+    47
+   ]
+  },
+  {
+   "inst": "u_g3",
+   "master": "dsfd_capt_grp",
+   "x": 356.4,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    48,
+    63
+   ]
+  },
+  {
+   "inst": "u_g4",
+   "master": "dsfd_capt_grp",
+   "x": 561.6,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    64,
+    79
+   ]
+  },
+  {
+   "inst": "u_g5",
+   "master": "dsfd_capt_grp",
+   "x": 680.4,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    80,
+    95
+   ]
+  },
+  {
+   "inst": "u_g6",
+   "master": "dsfd_capt_grp",
+   "x": 799.2,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    96,
+    111
+   ]
+  },
+  {
+   "inst": "u_g7",
+   "master": "dsfd_capt_grp",
+   "x": 918.0,
+   "y": 21.6,
+   "orient": "R0",
+   "roots": [
+    112,
+    127
+   ]
+  },
+  {
+   "inst": "u_ctl",
+   "master": "dsfd_capt_ctl",
+   "x": 475.2,
+   "y": 21.6,
+   "orient": "R0"
+  }
+ ],
+ "hops": [
+  {
+   "what": "u_ctl t_k[99 t +: 99] -> u_g<t> f_k; u_g<t> t_sb -> u_ctl f_sb[2 t +: 2]",
+   "length_um_max": 562.0,
+   "stations": 0,
+   "kind": "pin-to-pin in the S channel (flop at both pins; <= 504 um SS reach at 1.2 GHz)"
+  },
+  {
+   "what": "gather t_capture -> tile f_row / ctl f_ctl",
+   "kind": "abutment through the channel"
+  },
+  {
+   "what": "tile t_vm / ctl t_st -> VM (serial)",
+   "kind": "abutment (N face), as G3"
+  }
+ ],
+ "clock": "ck and ckv per tile, own CTS trees",
+ "schema": "opentallas.s81_ph.tiles.v1",
+ "generator": "tools/s81_ph/s81_ph_tiles_plan.py"
+}

@@ -35,7 +35,8 @@ module ot_s81ph_coll_core #(
     parameter integer SRAM = 1,
     parameter integer QD = 8,                  // pass-through input queues (VM credits)
     parameter integer QD0 = 16,                // engine input queue (covers the VM credit round trip)
-    parameter integer TRACE = 0
+    parameter integer TRACE = 0,
+    parameter integer EXT = 0                  // CLAUDE S81-PH coll v2: 1 = the 8 links live in lane tiles (x_* ports)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -48,7 +49,17 @@ module ot_s81ph_coll_core #(
     output reg  [2099:0]     t_vm,
     output reg               fault,
     output reg  [1:0]        rank,
-    output reg               eng_en
+    output reg               eng_en,
+    // EXT = 1: lane tile interfaces (the link endpoint's in_* / out_* streams; skids in the tiles), lane faults
+    output wire [7:0]        x_lo_v,
+    input  wire [7:0]        x_lo_r,
+    output wire [8*552-1:0]  x_lo_d,
+    output wire [7:0]        x_lo_l,
+    input  wire [7:0]        x_li_v,
+    output wire [7:0]        x_li_r,
+    input  wire [8*552-1:0]  x_li_d,
+    input  wire [7:0]        x_li_l,
+    input  wire [23:0]       x_lflt         // per lane {meso end fault, gearbox fault, endpoint fault}
 );
     localparam integer W = FB * 8;                         // 552
     localparam integer FFW = SEQW + 1 + W + 32;            // 595
@@ -90,6 +101,8 @@ module ot_s81ph_coll_core #(
     wire [W-1:0] ep_id [0:7];
     wire [W-1:0] ep_od [0:7];
     generate for (l = 0; l < 8; l = l + 1) begin : g_link
+      if (EXT == 0) begin : g_int
+
         wire          ftv, rtv, frv, rrv;
         wire [FFW-1:0] ft, fr;
         wire [RFW-1:0] rt, rr;
@@ -97,7 +110,7 @@ module ot_s81ph_coll_core #(
         wire [511:0]  bt;
         ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(l == 0 || l == 4 ? CH_UCIE : CH_BOARD),
             .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM)) u_ep (
-            .clk(clk), .rst_n(rst_n),
+            .clk(clk), .rst_n(rst_n), .ch_b(1'b0),
             .in_valid(ep_iv[l]), .in_ready(ep_ir[l]), .in_data(ep_id[l]), .in_last(ep_il[l]),
             .out_valid(ep_ov[l]), .out_ready(ep_or[l]), .out_data(ep_od[l]), .out_last(ep_ol[l]),
             .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
@@ -108,6 +121,13 @@ module ot_s81ph_coll_core #(
             .beat_rx_v(lr[0] && lr[513]), .beat_rx(lr[512:1]), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rr),
             .locked(gb_lock[l]), .fault(gb_flt[l]));
         assign lane_tx[l*512 +: 512] = bt;
+        assign x_lo_v[l] = 1'b0; assign x_lo_d[l*W +: W] = {W{1'b0}}; assign x_lo_l[l] = 1'b0; assign x_li_r[l] = 1'b0;
+      end else begin : g_ext
+        assign x_lo_v[l] = ep_iv[l]; assign ep_ir[l] = x_lo_r[l]; assign x_lo_d[l*W +: W] = ep_id[l]; assign x_lo_l[l] = ep_il[l];
+        assign ep_ov[l] = x_li_v[l]; assign x_li_r[l] = ep_or[l]; assign ep_od[l] = x_li_d[l*W +: W]; assign ep_ol[l] = x_li_l[l];
+        assign ep_flt[l] = x_lflt[3*l]; assign gb_flt[l] = x_lflt[3*l+1]; assign gb_lock[l] = 1'b1;
+        assign lane_tx[l*512 +: 512] = 512'd0;
+      end
     end endgenerate
 
     // ------------------------------------------------------------------ engine (RANK 0, runtime relabel)
@@ -275,7 +295,7 @@ module ot_s81ph_coll_core #(
             if (pt_push) rr <= (pt_l == 4) ? 0 : pt_l + 1'b1;
             for (integer i = 0; i < 6; i = i + 1)
                 qc[i] <= qc[i] - (oq_push ? {1'b0, qf[i]} : 5'd0) + (q_pop[i] ? 5'd1 : 5'd0);
-            for (integer i = 0; i < 8; i = i + 1) if (lane_rx[i*515 + 514]) lane_flt[i] <= 1'b1;
+            for (integer i = 0; i < 8; i = i + 1) if (EXT ? x_lflt[3*i+2] : lane_rx[i*515 + 514]) lane_flt[i] <= 1'b1;
             fv_flt <= fv_flt | {|lane_flt, mq_flt, oq_flt, |q_flt, e_flt, |gb_flt, |ep_flt,
                                 |sk_flt_v};
             if (|fv_flt) fault <= 1'b1;
