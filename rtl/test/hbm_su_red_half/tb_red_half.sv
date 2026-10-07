@@ -60,8 +60,10 @@ module tb_red_half;
                 void'(rq.pop_front()); void'(rcq.pop_front());
             end
         end
-        if (rf && !rf_q) rfr = rfr + 1; rf_q = rf;
-        if (df && !df_q) dfr = dfr + 1; df_q = df;
+        // fault: the reference holds it one fast cycle per affected (undilated) cycle, the DUT pulses once per slow
+        // cycle, so the COUNTS of fault cycles match one to one (runs do not: a reference run of k cycles is k pulses)
+        if (rf) rfr = rfr + 1;
+        if (df) dfr = dfr + 1;
     end
     integer k, kd = 0;
     reg [32767:0] tx; reg [1023:0] tl;
@@ -82,9 +84,9 @@ module tb_red_half;
             if (rs[SW-1]) nbeat = nbeat + 1;
             cyc = cyc + 1;
         end
-        $display("RED_HALF cycles=%0d beats=%0d ref_events=%0d dut_events=%0d left=%0d mismatches=%0d latency_2x_offset=%0d latency_var=%0d fault_runs ref=%0d dut=%0d busy_end ref=%0d dut=%0d",
+        $display("RED_HALF cycles=%0d beats=%0d ref_events=%0d dut_events=%0d left=%0d mismatches=%0d latency_2x_offset=%0d latency_var=%0d fault_cycles ref=%0d dut=%0d busy_end ref=%0d dut=%0d",
                  cyc, nbeat, nev, ndev, rq.size(), mism, lat, latbad, rfr, dfr, rb, db);
-        if (mism != 0 || nev == 0 || ndev != nev || rq.size() != 0 || latbad != 0 || rfr != dfr || rb || db) $fatal(1, "RED_HALF FAIL");
+        if (mism != 0 || nev == 0 || ndev != nev || rq.size() != 0 || latbad != 0 || rfr != dfr || rb != db) $fatal(1, "RED_HALF FAIL");
         $display("RED_HALF PASS");
         $finish;
     end
