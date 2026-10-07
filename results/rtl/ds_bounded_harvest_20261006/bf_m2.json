@@ -1,0 +1,85 @@
+{
+  "observed_utc": "2026-10-07T05:21:51.610719+00:00",
+  "run": "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2",
+  "source_root": "/srv/opentallas-scratch/claude/tk-ds-head/src_201d27ef0",
+  "files": {
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/MANIFEST": {
+      "sha256": "fafaae46e375999c4556fca3c0ee8c9c9feb6e10337e7dc698c356aa58d144da",
+      "text": "2026-10-07T01:26:49+00:00 START known-grouse \n"
+    },
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs/constraint.sdc": {
+      "sha256": "ac785ca0f960ba7cdc3e105037397287dc8dd184474b900d8d6452b055c07102",
+      "text": "set clk_period 770\ncreate_clock -name core_clk -period $clk_period [get_ports clk]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset non_clock_inputs [all_inputs -no_clocks]\nset_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs\nset_input_delay -min 506 -clock core_clk $non_clock_inputs\nset_input_delay -max 1282 -clock core_clk $non_clock_inputs\nset_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]\nset_output_delay -min -606 -clock core_clk [all_outputs]\nset_output_delay -max -782 -clock core_clk [all_outputs]\nset_load 3.898 [all_outputs]\nset_max_fanout 32 [current_design]\nset_max_transition 250 [current_design]\nset_false_path -from [get_ports rst_n]\n# Physical PP ROM read/capture: alternate banks, capture two edges after read.\nset_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]\nset_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]\n"
+    },
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs/config.mk": {
+      "sha256": "69dbbc25b09903d3060b495eeb517d086b5a2b57a314b268032c1a5dfbbe109a",
+      "text": "export DESIGN_NICKNAME = opentallas_ot_s81_bf_native_asap7_s81_bf_margin2\nexport DESIGN_NAME = ot_s81_bf_native\nexport PLATFORM = asap7\nexport VERILOG_FILES = /src/rtl/s81/ot_s81_bf_native.sv /src/rtl/common/ot_prefix.sv /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/v41rom/ot_v41_bf16_lanes.sv /src/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv /src/rtl/v41rom/ot_v41_bmul2.sv /src/rtl/v41rom/ot_v41_bterm.sv /src/rtl/v41rom/ot_v41_bterm2_w10.sv /src/rtl/v41rom/ot_v41_chain.sv /src/rtl/v41rom/ot_v41_chain2.sv /src/rtl/v41rom/ot_v41_fadd.sv /src/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv /src/rtl/v41rom/ot_v41_segtree.sv /src/rtl/v41rom/ot_v41_segtree2.sv /src/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv /src/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v /src/physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport SDC_FILE = /work/constraint.sdc\nexport DIE_AREA = 0 0 1002.89 190.08\nexport CORE_AREA = 2.16 2.16 1000.73 187.92\nexport PLACE_DENSITY = 0.6\nexport PLACE_DENSITY_LB_ADDON = 0.05\nexport SYNTH_REPEATABLE_BUILD = 1\nexport SYNTH_HIERARCHICAL = 0\nexport SYNTH_MEMORY_MAX_BITS = 65536\nexport LEC_CHECK = 0\nexport TNS_END_PERCENT = 100\nexport HOLD_SLACK_MARGIN = 0\nexport SETUP_SLACK_MARGIN = 0\nexport SKIP_REPORT_METRICS = 0\nexport REPORT_CLOCK_SKEW = 1\nexport VERILOG_TOP_PARAMS = PINREG 1\nexport CORNER = WC\nexport ADDER_MAP_FILE = \nexport ASAP7_USE_VT = RVT\nexport NUM_CORES = 16\nexport PDN_TCL = /src/physical/abi3/w10_wake_pdn.tcl\nexport PLACE_DENSITY_LB_ADDON = \nexport SYNTH_SCRIPT = /src/physical/s81_native_bf/synth.tcl\nexport SLEW_MARGIN = 20\nexport HOLD_SLACK_MARGIN = 20\nexport CORNERS = BC\nexport BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib\nexport ADDITIONAL_LEFS = /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef\nexport ADDITIONAL_LIBS = /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib\nexport SYNTH_BLACKBOXES = ot_rom_4096x274_m8\nexport MACRO_PLACE_HALO = 5.4 5.4\nexport GDS_ALLOW_EMPTY = (fakeram.*|ot_rom_4096x274_m8)\nexport PRE_CTS_TCL = /work/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl\nexport PRE_GLOBAL_ROUTE_TCL = /work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl\nexport POST_MACRO_PLACE_TCL = /work/hooks/post_macro_place_place.tcl\n"
+    }
+  },
+  "log_tails": {
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/4_1_cts.log": {
+      "mtime_ns": 1791339892168874632,
+      "size": 549637,
+      "tail": "[INFO DPL-0500] Runtime: 50.10s\nPlacement Analysis\n---------------------------------\ntotal displacement      41291.8 u\naverage displacement        0.1 u\nmax displacement           15.4 u\noriginal HPWL         2374008.3 u\nlegalized HPWL        2409553.2 u\ndelta HPWL                    1 %\n\nTook 50 seconds: detailed_placement\nestimate_parasitics -placement\nTook 14 seconds: estimate_parasitics -placement\nReport metrics stage 4, cts final...\n\n==========================================================================\ncts final report_design_area\n--------------------------------------------------------------------------\nDesign area 102744 um^2 55% utilization.\nwrite_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/4_1_cts.odb\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/4_cts.sdc\nElapsed time: 12:38.59[h:]min:sec. CPU time: user 1014.96 sys 182.41 (157%). Peak memory: 4915380KB.\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n4_1_cts                   .odb          758           4800 177d50c054dc3a8a08b1"
+    },
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/5_1_grt.log": {
+      "mtime_ns": 1791348843157781402,
+      "size": 150073,
+      "tail": "Repair antennas...\n[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.\n[INFO ANT-0002] Found 0 net violations.\n[INFO ANT-0001] Found 0 pin violations.\nEstimate parasitics...\nestimate_parasitics -global_routing\nTook 17 seconds: estimate_parasitics -global_routing\nReport metrics stage 5, global route...\n\n==========================================================================\nglobal route report_design_area\n--------------------------------------------------------------------------\nDesign area 103051 um^2 56% utilization.\n[INFO FLW-0007] clock core_clk period 770.000000\n[INFO FLW-0008] Clock core_clk period 713.303\n[INFO FLW-0009] Clock core_clk slack 19.155\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/updated_clks.sdc\n[INFO FLW-0011] Path endpoint path count 100663\nwrite_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/5_1_grt.odb\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/5_1_grt.sdc\nElapsed time: 2:29:10.19[h:]min:sec. CPU time: user 16036.33 sys 297.16 (182%). Peak memory: 10143952KB.\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n5_1_grt                   .odb         8950           9906 14f875cc514bc60020dd\n5_1_grt                   .sdc                             e1499261d07599808f6e"
+    },
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_s81_bf_margin2/base/5_2_route.tmp.log": {
+      "mtime_ns": 1791350510030620965,
+      "size": 14424,
+      "tail": "     M1    1702977\n     M2    2925640\n     M3     590198\n     M4     109851\n     M5      60468\n     M6      28305\n     M7          0\n     M8          0\n     M9          0\n------------------\n       5417439\n\n\n[INFO DRT-0195] Start 1st optimization iteration.\n    Completing 10% with 131482 violations.\n    elapsed time = 00:00:55, memory = 34821.51 (MB).\n    Completing 20% with 114369 violations.\n    elapsed time = 00:02:36, memory = 38627.59 (MB).\n    Completing 30% with 103240 violations.\n    elapsed time = 00:03:12, memory = 38738.69 (MB).\n    Completing 40% with 98703 violations.\n    elapsed time = 00:04:42, memory = 37945.67 (MB).\n    Completing 50% with 85155 violations.\n    elapsed time = 00:05:58, memory = 38664.19 (MB)."
+    },
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/route.log": {
+      "mtime_ns": 1791336409926346502,
+      "size": 0,
+      "tail": ""
+    }
+  },
+  "source_sha256": {
+    "physical/abi3/w10_wake_pdn.tcl": "ccfb2a247310f235fcb5d845b7c2745163ba180974c08578361b0d9c5668f3f3",
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "a283603bb491073a454f91dac30fa98687366aa2ef2d493eea6512771d876e6d",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": "51204e69cef7398a0f30a125d53bef197696a51cb587cf499e1d41845226e669",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "1b5b203f3b36184bce55d3203925c53b885618708dcc4732f0a0acb156436443",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "fcfbe440dee6ec96a6e02c0160132e7bbc3be7c80008bbb5e9ffef57a8bdfd09",
+    "physical/s81_native_bf/synth.tcl": "afa908d2843993831cfdda0ae8255e7498c94e9f6d0431dd49957cab91a95ecc",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/s81/ot_s81_bf_native.sv": "cb3f4d1b1ba2b0040b34ce38bd6cb6ebc45520bffedc1aa463c16b1fbe79fa2e",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv": "f5d76c5ac689e4aac774a098e5f08f75ceac3552c456a48d5bc2af419dd1eabe",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv": "308532d2b6a1ab6aa9170e4a692dda9e1ca6a1ae0a60d0a071ba5c3b353222b3",
+    "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv": "2bf1f96455fe42b6b14bd9c1ffa3f79da3021ff0ca9f975644b3d5b555da8cf6",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79",
+    "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+  },
+  "markers": {
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/DONE": false,
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/terminal.exit": false,
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/route.exit": false,
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2/m5d.rc": false,
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2.terminal": false,
+    "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2.rc": false
+  },
+  "processes": [
+    "1777371    03:55:01  0.0  2024 bash src_201d27ef0/physical/s81_native_bf/margin/route_m2.sh /srv/opentallas-scratch/claude/tk-ds-head/src_201d27ef0 /srv/opentallas-scratch/claude/tk-ds-head/bf_m2",
+    "1777379    03:55:01  0.0 58708 python3 tools/s81/run_bf_native_physical.py --margin --work /srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work --output /srv/opentallas-scratch/claude/tk-ds-head/bf_m2/physical.json --util 45 --tag s81_bf_margin2 --ins-ss 1032 --ins-ff 556",
+    "1855519    03:45:05  0.0 18600 docker run --rm -v /srv/opentallas-scratch/claude/tk-ds-head/src_201d27ef0:/src:ro -v /srv/opentallas-scratch/claude/tk-ds-head/bf_m2/work/orfs:/work -w /OpenROAD-flow-scripts/flow sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+  ],
+  "host": "ot-epyc3",
+  "identity_checks": {}
+}

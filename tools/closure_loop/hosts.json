@@ -1,0 +1,87 @@
+{
+ "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted.",
+ "hosts": [
+  {
+   "name": "ot-epyc3",
+   "label": "EPYC3",
+   "cores": 128,
+   "cap": 384,
+   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 400,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133
+  },
+  {
+   "name": "ot-epyc1tb",
+   "label": "EPYC1",
+   "cores": 128,
+   "cap": 384,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133
+  },
+  {
+   "name": "ot-epyc2",
+   "label": "EPYC2",
+   "cores": 128,
+   "cap": 384,
+   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133
+  },
+  {
+   "name": "ot-pve1",
+   "label": "PVE1",
+   "cores": 28,
+   "cap": 84,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 16,
+   "max_job_ram_gb": 120,
+   "min_free_disk_gb": 100,
+   "caps": [
+    "orfs"
+   ],
+   "ram_gb": 235
+  },
+  {
+   "name": "ot-agidock128",
+   "label": "AGIdock",
+   "cores": 64,
+   "cap": 192,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 16,
+   "max_job_ram_gb": 40,
+   "min_free_disk_gb": 60,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 125
+  }
+ ]
+}

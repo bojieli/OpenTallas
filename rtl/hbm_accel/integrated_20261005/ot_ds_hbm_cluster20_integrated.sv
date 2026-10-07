@@ -708,7 +708,6 @@ end else begin:g_on
         assign su_new_request_permit=SU_PIN_MARGIN?m_su_new_request_permit:d_su_new_request_permit;
         assign su_association_fault=SU_PIN_MARGIN?m_su_association_fault:d_su_association_fault;
         if(SU_PIN_MARGIN)begin:g_su_cp_margin
-         initial if(SU_PROVIDER_ADAPTER)$fatal(1,"SU_PIN_MARGIN CP context carries the association; the provider adapter is not defined with it");
          ot_hbm_integrated_su_cp_context #(.ENABLE(1),.SU_ENABLE(SU_ENABLE),.SU_REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.SU_REGISTERED_STATUS(SU_REGISTERED_STATUS),.SU_REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.SU_BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.SU_FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.SU_FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.SU_PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.SU_CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.SU_OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY),.SU_PIN_MARGIN(1),.SU_RELEASE_REPLAY(SU_RELEASE_REPLAY)) u_su_cp_margin(
           .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
           .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
@@ -724,7 +723,25 @@ end else begin:g_on
         end
         // Response valid/ready and captured provider requests are unchanged.
         // New requests use the live veto; admitted execution holds the grant.
-        if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
+        // SU_PIN_MARGIN+SU_PROVIDER_ADAPTER: the margin CP context carries the one
+        // association, so the provider hookup takes its pin outputs (no second
+        // association) and gates NEW requests with the live raw grant
+        // (ot_hbm_integrated_su_provider_margin, LIVE_GRANT_GUARD=1).
+        if(SU_PROVIDER_ADAPTER&&SU_PIN_MARGIN)begin:g_su_provider_margin
+        ot_hbm_integrated_su_provider_margin #(.ENABLE(SU_ENABLE),.LIVE_GRANT_GUARD(1)) u_su_provider(
+         .raw_grant(su_owned),.ext_exec_owned(m_su_executor_owned),.ext_new_request_permit(m_su_new_request_permit),.ext_fault(m_su_association_fault),
+         .exec_owned(d_su_executor_owned),.new_request_permit(d_su_new_request_permit),.fault(d_su_association_fault),
+         .exec_req_v(su_req_v),.exec_req_r(su_req_rdy),.exec_req(su_request),
+         .provider_req_v(su_provider_req_v),.provider_req_r(p_req_rdy[1]&&!sfu_route&&!norm_route),.provider_req(su_provider_req),
+         .provider_rsp_v(p_rsp_v[1]&&!sfu_route&&!norm_route),.provider_rsp_r(su_provider_rsp_r),
+         .provider_rsp({p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]}),
+         .exec_rsp_v(su_rsp_v),.exec_rsp_r(su_rsp_rdy),.exec_rsp(su_response),
+         .held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos),.owner_frame(su_provider_frame),
+         .held_selected_pc(su_pc),.selected_pc(su_executor_pc),
+         .exec_done(su_exec_done),.exec_fault(su_exec_fault),.retired_original_ops(su_retired),
+         .caller_exec_done(su_caller_done),.caller_exec_fault(su_caller_fault),.caller_retired_original_ops(su_caller_retired));
+        end else if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
+        initial if(SU_OWNER_VETO_POLARITY||SU_CONTROL_TAIL_CUT)$fatal(1,"the unregistered provider adapter's association has no owner-veto/control-tail parameters");
         ot_hbm_integrated_su_provider_adapter #(.ENABLE(SU_ENABLE),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_provider(
          .clk_sm(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),
          .qualified_owned_terms(su_owned_frontier_terms),.exec_owned(d_su_executor_owned),
@@ -742,8 +759,10 @@ end else begin:g_on
         ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY&&!SU_PIN_MARGIN),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_association(
          .clk(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),.qualified_owned_terms(su_owned_frontier_terms),
          .exec_owned(d_su_executor_owned),.new_request_permit(d_su_new_request_permit),.fault(d_su_association_fault));
-        assign su_provider_req_v=su_req_v&&su_new_request_permit;assign su_provider_req=su_request;
-        assign su_req_rdy=p_req_rdy[1]&&su_new_request_permit&&!sfu_route&&!norm_route;
+        // SU_PIN_MARGIN: the pin permit is 3 edges late; NEW requests also need the live grant.
+        wire su_live_permit=su_new_request_permit&&(!SU_PIN_MARGIN||su_owned);
+        assign su_provider_req_v=su_req_v&&su_live_permit;assign su_provider_req=su_request;
+        assign su_req_rdy=p_req_rdy[1]&&su_live_permit&&!sfu_route&&!norm_route;
         assign su_rsp_v=p_rsp_v[1]&&!sfu_route&&!norm_route;assign su_provider_rsp_r=su_rsp_rdy;
         assign su_response={p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]};
         assign su_provider_frame={su_pos,su_token,su_gen,su_job};assign su_executor_pc=su_pc;

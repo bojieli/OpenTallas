@@ -31,7 +31,14 @@ module ot_dsrom_window_stage_pipeline #(
     parameter integer WTAGW = 13,
     parameter integer BEATW = 4,
     parameter integer MAX_CONTEXT = 1048576,
-    parameter integer SPLIT_COLUMNS = 0
+    parameter integer SPLIT_COLUMNS = 0,
+    // MARGIN = 1 (default off): register-to-register boundary and wire staging for the 1.9 mm parent
+    // (OWNER_RULE_MARGIN_FIRST 2026-10-06).  Request: pin register -> per-bank kept copy -> per-column kept
+    // address/valid register (+3 cycles).  Response: per-bank column-output register before the lane mux
+    // (+1 cycle).  Write: two-entry input FIFO with a registered in_rdy (+1 cycle) and per-bank kept copies
+    // of the accepted beats before the column OR trees (+1 cycle; acc_* still coincides with the FF write).
+    // all_rows is registered (+1 cycle, cleared by job_v).  Bytes, order and checks are unchanged.
+    parameter integer MARGIN = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -80,7 +87,16 @@ module ot_dsrom_window_stage_pipeline #(
     generate for (s = 0; s < 128; s = s + 1) begin : g_slot
         assign slot_done[s] = &landed[s*PITCH +: PITCH];
     end endgenerate
-    assign all_rows = &(slot_done | ~in_job);
+    wire all_rows_c = &(slot_done | ~in_job);
+    generate if (MARGIN) begin : g_all_rows_q
+        reg all_rows_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) all_rows_q <= 1'b0;
+            else all_rows_q <= job_v ? 1'b0 : all_rows_c;
+        assign all_rows = all_rows_q;
+    end else begin : g_all_rows_c
+        assign all_rows = all_rows_c;
+    end endgenerate
     // Five elastic decode stages; every stage holds data and original identity.
     // Readiness is derived from current occupancy and an actual downstream take.
     reg [NPC-1:0] dv [0:4];
@@ -108,8 +124,19 @@ module ot_dsrom_window_stage_pipeline #(
     reg [WTAGW-1:0] at [0:NPC-1];
     reg [BEATW-1:0] ab [0:NPC-1];
     reg [255:0] ad [0:NPC-1];
-    assign acc_v = av;
-    assign in_rdy = dr[0];
+    // Write-side source of decode stage 0: the input pins (MARGIN = 0) or a two-entry FIFO whose
+    // in_rdy is a flop (MARGIN = 1).
+    wire [NPC-1:0] h_v;
+    wire [WTAGW-1:0] h_tag [0:NPC-1];
+    wire [BEATW-1:0] h_beat [0:NPC-1];
+    wire [255:0] h_data [0:NPC-1];
+    // Accepted-beat report: av coincides with the column registers' physical FF write.
+    reg [NPC-1:0] av2;
+    reg [WTAGW-1:0] at2 [0:NPC-1];
+    reg [BEATW-1:0] ab2 [0:NPC-1];
+    reg [255:0] ad2 [0:NPC-1];
+    wire [NPC-1:0] avw = MARGIN ? av2 : av;
+    assign acc_v = avw;
     generate for (genvar p=0; p<NPC; p=p+1) begin : g_decode
         assign b_tag[p]=dt[4][p]; assign b_beat[p]=db[4][p];
         assign b_data[p]=dd[4][p]; assign b_sec[p]=ds[4][p];
@@ -119,11 +146,45 @@ module ot_dsrom_window_stage_pipeline #(
         for (genvar z=0; z<4; z=z+1) begin : g_rdy
             assign dr[z][p] = !dv[z][p] || dr[z+1][p];
         end
-        assign acc_tag[p*WTAGW +: WTAGW]=at[p];
-        assign acc_beat[p*BEATW +: BEATW]=ab[p];
-        assign acc_data[p*256 +: 256]=ad[p];
-        wire [WTAGW+2:0] sec_raw = {1'b0,in_tag[p*WTAGW +: WTAGW],2'b00} +
-                                                   (WTAGW+3)'(in_beat[p*BEATW +: BEATW]);
+        assign acc_tag[p*WTAGW +: WTAGW]=MARGIN ? at2[p] : at[p];
+        assign acc_beat[p*BEATW +: BEATW]=MARGIN ? ab2[p] : ab[p];
+        assign acc_data[p*256 +: 256]=MARGIN ? ad2[p] : ad[p];
+        if (MARGIN) begin : g_in_fifo
+            reg [WTAGW-1:0] ft [0:1];
+            reg [BEATW-1:0] fb [0:1];
+            reg [255:0] fd [0:1];
+            reg wp, rp, rdy_q;
+            reg [1:0] occ;
+            wire push = in_v[p] && rdy_q;
+            wire pop = (occ != 2'd0) && dr[0][p];
+            wire [1:0] occ_n = occ + {1'b0,push} - {1'b0,pop};
+            always @(posedge clk) if (push) begin
+                ft[wp] <= in_tag[p*WTAGW +: WTAGW]; fb[wp] <= in_beat[p*BEATW +: BEATW];
+                fd[wp] <= in_data[p*256 +: 256];
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin wp <= 1'b0; rp <= 1'b0; occ <= 2'd0; rdy_q <= 1'b1; end
+                else begin
+                    if (push) wp <= ~wp;
+                    if (pop) rp <= ~rp;
+                    occ <= occ_n; rdy_q <= occ_n < 2'd2;
+                end
+            assign in_rdy[p] = rdy_q;
+            assign h_v[p] = occ != 2'd0;
+            assign h_tag[p] = ft[rp]; assign h_beat[p] = fb[rp]; assign h_data[p] = fd[rp];
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) av2[p] <= 1'b0;
+                else begin
+                    av2[p] <= av[p];
+                    if (av[p]) begin at2[p] <= at[p]; ab2[p] <= ab[p]; ad2[p] <= ad[p]; end
+                end
+        end else begin : g_in_pins
+            assign in_rdy[p] = dr[0][p];
+            assign h_v[p] = in_v[p];
+            assign h_tag[p] = in_tag[p*WTAGW +: WTAGW]; assign h_beat[p] = in_beat[p*BEATW +: BEATW];
+            assign h_data[p] = in_data[p*256 +: 256];
+        end
+        wire [WTAGW+2:0] sec_raw = {1'b0,h_tag[p],2'b00} + (WTAGW+3)'(h_beat[p]);
         wire [23:0] mult = dx[1][p] + ({12'd0,ds[1][p]} << 4);
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin
@@ -131,10 +192,10 @@ module ot_dsrom_window_stage_pipeline #(
                 av[p]<=0;
             end else begin
                 if (dr[0][p]) begin
-                    dv[0][p]<=in_v[p];
-                    if (in_v[p]) begin
-                        dt[0][p]<=in_tag[p*WTAGW +: WTAGW]; db[0][p]<=in_beat[p*BEATW +: BEATW];
-                        dd[0][p]<=in_data[p*256 +: 256]; ds[0][p]<=sec_raw[11:0];
+                    dv[0][p]<=h_v[p];
+                    if (h_v[p]) begin
+                        dt[0][p]<=h_tag[p]; db[0][p]<=h_beat[p];
+                        dd[0][p]<=h_data[p]; ds[0][p]<=sec_raw[11:0];
                         bad[0][p]<=sec_raw>=NSECT;
                     end
                 end
@@ -175,7 +236,7 @@ module ot_dsrom_window_stage_pipeline #(
     wire [1:0] pc2 [0:15]; wire [2:0] pc4 [0:7];
     wire [3:0] pc8 [0:3]; wire [4:0] pc16 [0:1]; wire [5:0] nwrite;
     generate
-        for(genvar x=0;x<16;x=x+1) assign pc2[x]={1'b0,av[2*x]}+{1'b0,av[2*x+1]};
+        for(genvar x=0;x<16;x=x+1) assign pc2[x]={1'b0,avw[2*x]}+{1'b0,avw[2*x+1]};
         for(genvar x=0;x<8;x=x+1) assign pc4[x]={1'b0,pc2[2*x]}+{1'b0,pc2[2*x+1]};
         for(genvar x=0;x<4;x=x+1) assign pc8[x]={1'b0,pc4[2*x]}+{1'b0,pc4[2*x+1]};
         for(genvar x=0;x<2;x=x+1) assign pc16[x]={1'b0,pc8[2*x]}+{1'b0,pc8[2*x+1]};
@@ -189,10 +250,29 @@ module ot_dsrom_window_stage_pipeline #(
     reg [POS_W-1:0] owner_first0;
     reg [POS_W:0] owner_end0;
     reg [USER_W-1:0] owner_user0;
+    // Effective request (r_*): the pins (MARGIN = 0) or a three-register global chain whose edge matches
+    // the per-column address registers (MARGIN = 1).  a_* are the pin registers.
+    wire r_v; wire [USER_W-1:0] r_user; wire [POS_W-1:0] r_first; wire [3:0] r_mask;
+    reg a_v; reg [USER_W-1:0] a_user; reg [POS_W-1:0] a_first; reg [3:0] a_mask;
+    generate if (MARGIN) begin : g_req_chain
+        reg g_v, q_v;
+        reg [USER_W-1:0] g_user, q_user; reg [POS_W-1:0] g_first, q_first; reg [3:0] g_mask, q_mask;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin a_v <= 1'b0; g_v <= 1'b0; q_v <= 1'b0; end
+            else begin a_v <= req_v; g_v <= a_v; q_v <= g_v; end
+        always @(posedge clk) begin
+            a_user <= req_user; a_first <= req_first_row; a_mask <= req_mask;
+            g_user <= a_user; g_first <= a_first; g_mask <= a_mask;
+            q_user <= g_user; q_first <= g_first; q_mask <= g_mask;
+        end
+        assign r_v = q_v; assign r_user = q_user; assign r_first = q_first; assign r_mask = q_mask;
+    end else begin : g_req_pins
+        assign r_v = req_v; assign r_user = req_user; assign r_first = req_first_row; assign r_mask = req_mask;
+    end endgenerate
     // Accepted-request witnesses share the payload's two read edges. Capture
     // the preedge owner/completion state; a later job or landing cannot change
     // this request's validity. No permission is reused for another request.
-    always @(posedge clk) if (req_v) begin
+    always @(posedge clk) if (r_v) begin
         owner_first0 <= j_first;
         owner_end0 <= {1'b0, j_first} + (POS_W+1)'(j_count);
         owner_user0 <= j_user;
@@ -200,33 +280,71 @@ module ot_dsrom_window_stage_pipeline #(
     reg  [USER_W-1:0] user1;
     reg  [POS_W-1:0] first1;
     reg  [3:0] mask1;
-    wire prefix_mask = req_mask == 4'b0001 || req_mask == 4'b0011 ||
-                       req_mask == 4'b0111 || req_mask == 4'b1111;
+    wire prefix_mask = r_mask == 4'b0001 || r_mask == 4'b0011 ||
+                       r_mask == 4'b0111 || r_mask == 4'b1111;
+    // MARGIN response stage: per-bank column-output registers and the matching control edge.
+    reg [ROWB-1:0] bq1 [0:3];
+    reg [3:0] bqv1;
+    reg v2, bad2; reg [USER_W-1:0] user2; reg [POS_W-1:0] first2; reg [3:0] mask2;
     generate for (genvar b = 0; b < 4; b = b + 1) begin : g_bank
-        wire [1:0] lane = 2'(b) - req_first_row[1:0];
-        wire [POS_W:0] wanted = {1'b0, req_first_row} + (POS_W+1)'(lane);
+        wire [1:0] lane = 2'(b) - r_first[1:0];
+        wire [POS_W:0] wanted = {1'b0, r_first} + (POS_W+1)'(lane);
         wire [4:0] raddr = wanted[6:2];
         reg [POS_W:0] wanted0;
         reg [3:0] complete_group0;
-        always @(posedge clk) if (req_v) wanted0 <= wanted;
+        always @(posedge clk) if (r_v) wanted0 <= wanted;
         for (genvar group=0; group<4; group=group+1) begin : g_read_complete
             wire [4:0] slot_row = 5'(8*group) + 5'(raddr[2:0]);
-            always @(posedge clk) if (req_v)
+            always @(posedge clk) if (r_v)
                 complete_group0[group] <= slot_done[{slot_row, 2'(b)}];
         end
         wire ok0 = wanted0 < (POS_W+1)'(MAX_CONTEXT) &&
                    wanted0 >= {1'b0, owner_first0} && wanted0 < owner_end0 &&
                    user0 == owner_user0 && complete_group0[wanted0[6:5]];
+        // Per-bank kept copy of the pin-registered request (MARGIN), placed toward the bank.
+        wire m_v; wire [POS_W-1:0] m_first;
+        // Per-bank write staging (MARGIN): kept copies of the final decode registers' payload and slot.
+        wire [255:0] w_data [0:NPC-1];
+        wire [4:0] w_row [0:NPC-1];
+        if (MARGIN) begin : g_m
+            ot_dsrom_window_keep_reg #(.W(1), .RESET(1)) u_mv (.clk(clk), .rst_n(rst_n), .d(a_v), .q(m_v));
+            ot_dsrom_window_keep_reg #(.W(POS_W), .RESET(0)) u_mf (.clk(clk), .rst_n(rst_n), .d(a_first), .q(m_first));
+            for (genvar p=0;p<NPC;p=p+1) begin : g_wcopy
+                ot_dsrom_window_keep_reg #(.W(256+5), .RESET(0)) u_w (.clk(clk), .rst_n(rst_n),
+                    .d({b_slot[p][6:2], b_data[p]}), .q({w_row[p], w_data[p]}));
+            end
+        end else begin : g_nm
+            assign m_v = 1'b0; assign m_first = '0;
+            for (genvar p=0;p<NPC;p=p+1) begin : g_wdirect
+                assign w_data[p] = b_data[p]; assign w_row[p] = b_slot[p][6:2];
+            end
+        end
+        wire [1:0] m_lane = 2'(b) - m_first[1:0];
+        wire [POS_W:0] m_wanted = {1'b0, m_first} + (POS_W+1)'(m_lane);
         for (genvar k = 0; k < PITCH; k = k + 1) begin : g_col
             localparam integer CWID = (k < 16) ? 256 : 128;
             wire [CWID-1:0] q;
+            wire [NPC-1:0] chosen_c;
             wire [NPC-1:0] chosen;
             wire [CWID-1:0] data_tree [0:2*NPC-2];
             reg [CWID-1:0] wd;
             reg [31:0] row_we;
             for (genvar p=0;p<NPC;p=p+1) begin : g_choose
-                assign chosen[p]=acc[p] && b_slot[p][1:0]==2'(b) && b_col[p]==5'(k);
-                assign data_tree[NPC-1+p]=b_data[p][CWID-1:0] & {CWID{chosen[p]}};
+                assign chosen_c[p]=acc[p] && b_slot[p][1:0]==2'(b) && b_col[p]==5'(k);
+                assign data_tree[NPC-1+p]=w_data[p][CWID-1:0] & {CWID{chosen[p]}};
+            end
+            // Column read address/valid: the pins (MARGIN = 0) or a per-column kept register (MARGIN = 1).
+            wire col_v; wire [4:0] col_addr;
+            if (MARGIN) begin : g_cm
+                reg [NPC-1:0] chosen_q;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) chosen_q <= '0; else chosen_q <= chosen_c;
+                assign chosen = chosen_q;
+                ot_dsrom_window_keep_reg #(.W(1), .RESET(1)) u_cv (.clk(clk), .rst_n(rst_n), .d(m_v), .q(col_v));
+                ot_dsrom_window_keep_reg #(.W(5), .RESET(0)) u_ca (.clk(clk), .rst_n(rst_n), .d(m_wanted[6:2]), .q(col_addr));
+            end else begin : g_cp
+                assign chosen = chosen_c;
+                assign col_v = r_v; assign col_addr = raddr;
             end
             for (genvar p=0;p<NPC-1;p=p+1) begin : g_or
                 assign data_tree[p]=data_tree[2*p+1] | data_tree[2*p+2];
@@ -235,7 +353,7 @@ module ot_dsrom_window_stage_pipeline #(
             for (genvar r=0;r<32;r=r+1) begin : g_row
                 wire [NPC-1:0] matching;
                 for (genvar p=0;p<NPC;p=p+1) begin : g_match
-                    assign matching[p]=chosen[p] && b_slot[p][6:2]==5'(r);
+                    assign matching[p]=chosen[p] && w_row[p]==5'(r);
                 end
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) row_we[r]<=0; else row_we[r]<=|matching;
@@ -245,11 +363,11 @@ module ot_dsrom_window_stage_pipeline #(
                 if(CWID==256) begin : g_payload
                     (* keep_hierarchy = "yes" *) ot_dsrom_window_column_256 u_column (
                         .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
-                        .read_v(req_v), .read_addr(raddr), .read_data(q));
+                        .read_v(col_v), .read_addr(col_addr), .read_data(q));
                 end else begin : g_scale
                     (* keep_hierarchy = "yes" *) ot_dsrom_window_column_128 u_column (
                         .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
-                        .read_v(req_v), .read_addr(raddr), .read_data(q));
+                        .read_v(col_v), .read_addr(col_addr), .read_data(q));
                 end
             end else begin : g_flat
                 reg [CWID-1:0] mem [0:31];
@@ -261,13 +379,13 @@ module ot_dsrom_window_stage_pipeline #(
                 reg [1:0] rh;
                 reg read_v;
                 for (genvar group=0;group<4;group=group+1) begin : g_read
-                    always @(posedge clk) if (req_v) rq[group]<=mem[8*group+raddr[2:0]];
+                    always @(posedge clk) if (col_v) rq[group]<=mem[8*group+col_addr[2:0]];
                 end
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) read_v<=0;
                     else begin
-                        read_v<=req_v;
-                        if(req_v) rh<=raddr[4:3];
+                        read_v<=col_v;
+                        if(col_v) rh<=col_addr[4:3];
                         if(read_v) q_flat<=rq[rh];
                     end
                 assign q=q_flat;
@@ -281,16 +399,25 @@ module ot_dsrom_window_stage_pipeline #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) bank_qv[b]<=0;
             else if(v0) bank_qv[b]<=ok0;
+        if (MARGIN) begin : g_bq1
+            always @(posedge clk) bq1[b] <= bank_q[b];
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) bqv1[b] <= 1'b0; else bqv1[b] <= bank_qv[b];
+        end
     end endgenerate
     // lanes (stage4's second register: bank order -> chronological lanes)
+    wire [POS_W-1:0] first_l = MARGIN ? first2 : first1;
+    wire [3:0] mask_l = MARGIN ? mask2 : mask1;
+    wire [3:0] qv_l = MARGIN ? bqv1 : bank_qv;
     wire [3:0] lane_ok;
     generate for (genvar l = 0; l < 4; l = l + 1) begin : g_lane
-        wire [1:0] bank = first1[1:0] + 2'(l);
-        assign lane_ok[l] = mask1[l] && bank_qv[bank];
+        wire [1:0] bank = first_l[1:0] + 2'(l);
+        wire [ROWB-1:0] row_l = MARGIN ? bq1[bank] : bank_q[bank];
+        assign lane_ok[l] = mask_l[l] && qv_l[bank];
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin rsp_rows[l*ROWB +: ROWB] <= '0; rsp_valid_mask[l] <= 1'b0; end
             else begin
-                rsp_rows[l*ROWB +: ROWB] <= lane_ok[l] ? bank_q[bank] : '0;
+                rsp_rows[l*ROWB +: ROWB] <= lane_ok[l] ? row_l : '0;
                 rsp_valid_mask[l] <= lane_ok[l];
             end
     end endgenerate
@@ -305,6 +432,7 @@ module ot_dsrom_window_stage_pipeline #(
             j_user<=0; j_first<=0; j_count<=0; landed<=0; sectors_landed<=0; fault<=0;
             v0<=0; bad0<=0; user0<=0; first0<=0; mask0<=0;
             v1<=0; bad1<=0; user1<=0; first1<=0; mask1<=0;
+            v2<=0; bad2<=0; user2<=0; first2<=0; mask2<=0;
             rsp_v<=0; rsp_user<=0; rsp_first_row<=0; rsp_mask<=0; rsp_fault<=0;
         end else begin
             if(job_v) begin
@@ -315,19 +443,26 @@ module ot_dsrom_window_stage_pipeline #(
             end
             if ((|duplicates) || (|(bf & b_bad))) fault<=1'b1;
             // read path (stage4)
-            v0<=req_v; v1<=v0;
+            v0<=r_v; v1<=v0; v2<=v1;
             if(v0) begin user1<=user0; first1<=first0; mask1<=mask0; bad1<=bad0; end
-            if (req_v) begin
-                user0 <= req_user; first0 <= req_first_row; mask0 <= req_mask;
+            if(v1) begin user2<=user1; first2<=first1; mask2<=mask1; bad2<=bad1; end
+            if (r_v) begin
+                user0 <= r_user; first0 <= r_first; mask0 <= r_mask;
                 bad0 <= !prefix_mask ||
-                    ({1'b0, req_first_row} + (POS_W+1)'(req_mask[3] ? 3 : req_mask[2] ? 2 : req_mask[1] ? 1 : 0)) >=
+                    ({1'b0, r_first} + (POS_W+1)'(r_mask[3] ? 3 : r_mask[2] ? 2 : r_mask[1] ? 1 : 0)) >=
                     (POS_W+1)'(MAX_CONTEXT);
             end
-            rsp_v <= v1; rsp_user <= user1; rsp_first_row <= first1; rsp_mask <= mask1;
-            rsp_fault <= v1 && (bad1 || ((mask1 & ~lane_ok) != 0));
+            if (MARGIN) begin
+                rsp_v <= v2; rsp_user <= user2; rsp_first_row <= first2; rsp_mask <= mask2;
+                rsp_fault <= v2 && (bad2 || ((mask2 & ~lane_ok) != 0));
+            end else begin
+                rsp_v <= v1; rsp_user <= user1; rsp_first_row <= first1; rsp_mask <= mask1;
+                rsp_fault <= v1 && (bad1 || ((mask1 & ~lane_ok) != 0));
+            end
         end
     end
 `ifndef SYNTHESIS
+    initial if (MARGIN != 0 && MARGIN != 1) $fatal(1, "ot_dsrom_window_stage_pipeline MARGIN must be 0 or 1");
     initial if (POS_W < 21 || USER_W < 10 || MAX_CONTEXT != 1048576 || WTAGW < 10)
         $fatal(1, "ot_dsrom_window_stage_pipeline parameter contract failed");
 `endif
@@ -389,4 +524,22 @@ module ot_dsrom_window_column_256 (
     output wire [255:0] read_data
 );
     ot_dsrom_window_column #(.WIDTH(256)) u_logic (.*);
+endmodule
+
+// Kept register: one instance per physical copy.  The hierarchy boundary stops synthesis from merging
+// identical copies (a plain (* keep *) reg does not stop opt_merge), so each copy can sit at its load.
+(* keep_hierarchy = "yes" *)
+module ot_dsrom_window_keep_reg #(
+    parameter integer W = 1,
+    parameter integer RESET = 0
+) (
+    input wire clk, rst_n,
+    input wire [W-1:0] d,
+    output reg [W-1:0] q
+);
+    generate if (RESET) begin : g_r
+        always @(posedge clk or negedge rst_n) if (!rst_n) q <= '0; else q <= d;
+    end else begin : g_n
+        always @(posedge clk) q <= d;
+    end endgenerate
 endmodule

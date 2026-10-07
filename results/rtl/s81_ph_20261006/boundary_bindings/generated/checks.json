@@ -1,0 +1,93 @@
+{
+  "assembled_die_compatibility": "FAIL",
+  "assembly_conflicts": {
+    "NE": {
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ]
+    },
+    "NW": {
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ]
+    },
+    "SE": {
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ]
+    },
+    "SW": {
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ]
+    }
+  },
+  "binding_checks": "PASS",
+  "negative_controls": {
+    "borrow_transmitter_insertion": {
+      "errors": [
+        "dsfd_ctrl_pc.k_v: receiver_clock_arrival_ps"
+      ],
+      "rejected": true
+    },
+    "invent_budget": {
+      "errors": [
+        "dsfd_ctrl_pc: unmeasured budget"
+      ],
+      "rejected": true
+    },
+    "invent_closure": {
+      "errors": [
+        "dsfd_ctrl_pc: missing receiver evidence cannot authorize timing"
+      ],
+      "rejected": true
+    },
+    "phy_on_core": {
+      "errors": [
+        "dsfd_ctrl_pc.k_v: clock_domain"
+      ],
+      "rejected": true
+    },
+    "relax_uncertainty": {
+      "errors": [
+        "dsfd_ctrl_pc: policy changed"
+      ],
+      "rejected": true
+    },
+    "reverse_rq": {
+      "errors": [
+        "dsfd_ctrl_pc.rq: dir"
+      ],
+      "rejected": true
+    },
+    "wrong_od_edge": {
+      "errors": [
+        "OD capture polarity"
+      ],
+      "rejected": true
+    },
+    "zero_width": {
+      "errors": [
+        "dsfd_ctrl_pc.cks: bits"
+      ],
+      "rejected": true
+    }
+  },
+  "timing_qualification": "BLOCKED"
+}

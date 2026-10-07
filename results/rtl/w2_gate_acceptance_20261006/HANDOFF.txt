@@ -1,0 +1,34 @@
+Source: codex/w2-gate-acceptance-20261006 @ d108b33de, based on pinned W2 206a3037e.
+Worktree: /home/ubuntu/wt-codex-w2-gate-acceptance-20261006.
+Source changes: gate and focused tests only. Prior packaging commits unchanged.
+
+Negative credit now requires compile success, simulator assertion exit1, no pass
+marker, and the expected assertion for that mutant. --neg-only writes terminal
+with outcome REJECTED/SURVIVED/INFRASTRUCTURE_FAILURE/UNEXPECTED_ASSERTION; exit
+1/0/2 distinguishes intended rejection, survival, and gate failure respectively.
+S6 now uses its actual cross-bank veto bench even through --neg-only.
+
+S8 event monitor is applied to the positive bench too. No test-only mutant flag
+changes the bound or assertion. It arms on actual tap acceptance and waits for
+all eight SM accepts with ready-high consumers. Positive: 80 edges, PASS19.
+S8: explicit assertion at 352 edges, mask03, compile0/runtime1; no external timeout.
+Actual malformed-SV compile: exit2, no runtime, no rejection credit. Standalone
+S3: exact expected assertion and NEGATIVE_REJECTED marker matches successor spec.
+Seven classifier/CLI focused tests cover timeout, signal, missing tool, wrong
+assertion, missing arm, conflicting pass marker, and compile failures.
+
+Calendar matches prior SAFE source exactly: tap16, allSM96, lastSMACK124,
+quarterACK213, parentRelease218, warmACK220. RTL latency added0, hardware/clocks
+unchanged. This is fixture evidence, not complete gate or physical acceptance.
+Generated testbenches, mutant/REL_REG source copies, logs and source hashes are
+retained. Compiled vvp images are local scratch, not committed. SHA256SUMS covers
+recorded evidence except this handoff. Initial unrelated sparse discovery error
+is noted in review.json; focused test invocation succeeds.
+
+New specs: physical/hbm_w2_safe_gate_successor_20261006/no2.json and no3.json,
+both pinned to d108b33de; separate _cal/CTS flow retained. Both validator checks
+PASS. Specs are outside watched directories and merge_target=null.
+NEXT: parent review/publish this source branch; let old 206a jobs terminate
+naturally. Only then admit fixed-source specs through closure-loop after checking
+reservations and source availability. Full changed gate campaign remains pending.
+No duplicate campaign, cancellation, live edit, source push or main merge here.

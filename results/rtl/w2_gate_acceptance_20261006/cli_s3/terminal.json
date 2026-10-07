@@ -1,0 +1,57 @@
+{
+  "expected": "FAIL",
+  "failed": true,
+  "outcome": "REJECTED",
+  "expected_assertion": "wrong full73 receipt fabricated retirement",
+  "matched_assertions": [
+    "wrong full73 receipt fabricated retirement"
+  ],
+  "compile_exit": 0,
+  "runtime_exit": 1,
+  "passed": false,
+  "pass_marker": false,
+  "assertions": [
+    "wrong full73 receipt fabricated retirement"
+  ],
+  "progress_armed": true,
+  "calendar": {
+    "TAP_ACCEPT": 16,
+    "ALL_SM": 96,
+    "LAST_SM_ACK": 124,
+    "QUARTER_ACK": 213,
+    "PARENT_RELEASE": 218,
+    "WARM_ACK": 220
+  },
+  "summary": [
+    "FATAL: /home/ubuntu/wt-codex-w2-gate-acceptance-20261006/results/rtl/w2_gate_acceptance_20261006/cli_s3/neg_only_tb.sv:274: wrong full73 receipt fabricated retirement"
+  ],
+  "tb_sha256": "4d13f319da1f24e3a9725ae90fc567d5f77f818ba8c6030a334ec0977f784f0b",
+  "source_pins": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "2a15dbd9eda2bf5a96d7bda4e4d74e28b3c5c4f4b5889bc1351cebe7d20aa2dd",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/sources.f": "13c5668f0293f2217f37a63fe349f4a5cf2173427f6e8225ba153b06bf154c3b",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+    "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+    "tools/w2_station_rb_gate.py": "2ddd23aea88fabe5bfe1a99dd3d43a5d88d1901a4947aa3c5c31d21f129ea203"
+  },
+  "progress_contract": {
+    "event": "tap acceptance to all eight SM accepts",
+    "max_edges": 352,
+    "rtl_cycles_added": 0
+  }
+}

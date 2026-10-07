@@ -1,7 +1,10 @@
 `timescale 1ps/1fs
 // Changed32-PC topology gate, not another per-PC codec qualification.
 // Actual released sectors are stimulus; no PHY/fulltoken claim is made.
-module tb_qwen_p0_parallel_bank;
+// KV_MAP: sector map of the stimulus (0 base, 1 option M via ot_qwen_kv_map_m.svh; stack 0, PC_BASE 0).
+// KV_MAP_DUT: the DUT's PC identity map (-1: = KV_MAP); a differing value is the negative control,
+// which must fail (identity rejects every landing; the watchdog fatals).
+module tb_qwen_p0_parallel_bank #(parameter integer KV_MAP=0, KV_MAP_DUT=-1);
     reg clk=0,hclk=0,por=0,warm=1;
     always begin #416.666 clk=1;#416.667 clk=0;end
     always #512 hclk=~hclk;
@@ -14,7 +17,9 @@ module tb_qwen_p0_parallel_bank;
     wire [543:0] l_sec;wire [255:0] l_row;wire [8191:0] l_data,h_cdata;
     wire [287:0] wd_tag,h_ctag;wire [95:0] h_cred;
     wire [767:0] h_wsec,h_csec;
-    ot_qwen_p0_parallel_bank #(.ENABLE(1),.LANDING_RSEL(1),.LOCAL_WIRE_SPANS(14)) dut(.*);
+    ot_qwen_p0_parallel_bank #(.ENABLE(1),.LANDING_RSEL(1),.LOCAL_WIRE_SPANS(14),
+        .KV_MAP(KV_MAP_DUT<0?KV_MAP:KV_MAP_DUT)) dut(.*);
+    initial begin repeat(200000)@(negedge clk); $fatal(1,"watchdog: parallel bank did not complete"); end
     // Module cold/warm names are explicit: warm never resets accepted owners.
     // The aliases are inputs, not tied control/ready substitutes.
     wire por_n=por,warm_rst_n=warm;
@@ -22,8 +27,9 @@ module tb_qwen_p0_parallel_bank;
     integer taken[0:31],acked[0:31],credits[0:31],captured[0:31];
     integer max_parallel=0,total=0;
     bit sample_faults=0;
+`include "ot_qwen_kv_map_m.svh"
     function automatic [16:0] sec(input integer pc,input integer j);
-        sec=17'(((j&1)<<16)|((pc>>4)<<15)|((j>>1)<<6)|((pc&15)<<2));
+        sec=(KV_MAP!=0)?m_p2l(pc,10'(j)):17'(((j&1)<<16)|((pc>>4)<<15)|((j>>1)<<6)|((pc&15)<<2));
     endfunction
     always @(posedge clk)if(sample_faults)begin
         if(|c_fault||(|h_fault))$fatal(1,"parallel healthy state fault");
@@ -96,7 +102,7 @@ module tb_qwen_p0_parallel_bank;
         for(integer p=0;p<32;p=p+1)
             if(taken[p]!=4||acked[p]!=1||captured[p]!=1||credits[p]!=4)$fatal(1,"PC%0d missing row/WR/ACK/credit",p);
         if(max_parallel!=32)$fatal(1,"serialized response mechanism max%0d",max_parallel);
-        $display("PASS parallel32 releasedK/V rows128 simultaneous32 WR32 ACK32 debt0 warmheld realcredits CLK833.333 HCLK1024 scopeCOMPONENT");
+        $display("KV_MAP=%0d PASS parallel32",KV_MAP," releasedK/V rows128 simultaneous32 WR32 ACK32 debt0 warmheld realcredits CLK833.333 HCLK1024 scopeCOMPONENT");
         $finish;
     end
 endmodule

@@ -1,0 +1,167 @@
+{
+  "schema": "opentallas.ds-head-safe-source-gate.v1",
+  "source_commit": "94abba0f265ba94883fd4618fb007448902dedc8",
+  "queued_job": "dshead-top-safe-94abba0f2",
+  "verdict": "PASS_MATCHING_SOURCE_GATE",
+  "physical_adopted": false,
+  "scope": "Source-matched SAFE fused-head endpoint plus one head-assembly component. Numeric gold4 slice harvested; no whole-array or die simulation run.",
+  "supersedes_open_question": {
+    "commit": "b9827cbf03e96c9776b1c1e55987be9b9c381cdf",
+    "field": "safe_exactness_caveat",
+    "resolution": "Later remote numeric artifact matches all 40 queued source pins and its Verilator build command identifies src_full_94abba0f2. Missing same-source component gate has now passed."
+  },
+  "numeric": {
+    "artifact_host": "ot-epyc1tb",
+    "artifact": "/srv/opentallas-scratch/claude/tk-ds-head/fh/gold_safe/result.json",
+    "source_pins_matched": 40,
+    "all_pass": true,
+    "tokens": 5,
+    "bad_tokens": 0,
+    "vm_mismatches": 0,
+    "kv_mismatches": 0,
+    "fault": 0,
+    "cycles": 63128,
+    "baseline_margin_v2_cycles": 63073,
+    "delta_vs_margin_v2_cycles": 55,
+    "delta_vs_margin_v2_slice_percent": 0.08720054539977487,
+    "pre_fix_safe_cycles": 63128,
+    "delta_due_to_guard_busy_fix_cycles": 0,
+    "old_and_new_slice_records_identical": true,
+    "cost_scope": "Measured gold4 draft_1 slice, not a system AR/MTP percentage. This gate adds no hardware cycles or model change."
+  },
+  "component": {
+    "baselines": 2,
+    "negative_controls": 6,
+    "all_pass": true,
+    "cases": {
+      "endpoint_fpipe2/baseline": {
+        "returncode": 0,
+        "output": "PASS CHECK_PIPE identity/quarantine/reset/maskedX cases=9",
+        "binary_built": true,
+        "expected": "PASS",
+        "ok": true,
+        "elapsed_s": 11.421036683022976,
+        "mutation": null
+      },
+      "endpoint_fpipe2/pin_data_skip": {
+        "returncode": -6,
+        "output": "[116000] %Fatal: tb_fh_margin_checked_permission.sv:49: Assertion failed in tb_fh_checked_permission: masked X normalization",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 13.224287869001273,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv",
+          "data_q<=head_data;",
+          "data_q<=0;"
+        ]
+      },
+      "endpoint_fpipe2/no_wide_veto": {
+        "returncode": -6,
+        "output": "[1226000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirror not caught in 4 cycles",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 13.882945087971166,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv",
+          "wide_bad=FPIPE?checked_error:",
+          "wide_bad=FPIPE?1'b0:"
+        ]
+      },
+      "endpoint_fpipe2/drop_bank0": {
+        "returncode": -6,
+        "output": "[1226000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirror not caught in 4 cycles",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 13.437125352036674,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv",
+          ".bad({metadata_bad,identity_bad,request_bad,reply_bad})",
+          ".bad({metadata_bad,identity_bad,request_bad[RB-1:1],1'b0,reply_bad})"
+        ]
+      },
+      "head_q_safe/baseline": {
+        "returncode": 0,
+        "output": "PASS head_q == macro_ctx QPIN=1 FPIPE=2 cycles=9000 writes=3766 fused=410 index_writes=20 acks=16 leaf=2538 fault_cycles=1972",
+        "binary_built": true,
+        "expected": "PASS",
+        "ok": true,
+        "elapsed_s": 68.6438552030013,
+        "mutation": null
+      },
+      "head_q_safe/pin_wdata_skip": {
+        "returncode": -6,
+        "output": "[562000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 561",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 70.16881563101197,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_quad.sv",
+          "s_wdata <= s_wdata0;",
+          "s_wdata <= wr_data_in;"
+        ]
+      },
+      "head_q_safe/fold_skip": {
+        "returncode": -6,
+        "output": "[12000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 11",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 70.15302533499198,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_head_top.sv",
+          "assign argmax_level1=f2;",
+          "assign argmax_level1=^f1;"
+        ]
+      },
+      "head_q_safe/wok_mask": {
+        "returncode": -6,
+        "output": "[710000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 709",
+        "binary_built": true,
+        "expected": "FAIL",
+        "ok": true,
+        "elapsed_s": 69.98304352298146,
+        "mutation": [
+          "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_quad.sv",
+          ".write_ok_d(wok_q && s_wmask[l])",
+          ".write_ok_d(wok_q)"
+        ]
+      }
+    },
+    "parameters": {
+      "endpoint_fpipe2": {
+        "MARGIN": 1,
+        "FPIPE": 2
+      },
+      "head_q_safe": {
+        "FPIPE": 2,
+        "QPIN": 1,
+        "SAFE": 1,
+        "RETURN_EXTRA": 6
+      }
+    },
+    "source_hashes_checked_before_and_after": true,
+    "negative_acceptance": "All mutants compiled to executables and failed via simulation assertions. Compiler failures do not count.",
+    "retained_objects": "ot-epyc1tb:/srv/opentallas-scratch/codex/ds-head-safe-gate-94abba0f2/out",
+    "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+    "started_utc": "2026-10-07T05:28:28.964744+00:00",
+    "finished_utc": "2026-10-07T05:33:59.908955+00:00"
+  },
+  "admission": {
+    "host": "ot-epyc1tb",
+    "guard": "/srv/opentallas-scratch/admit.sh 16 --",
+    "expected_peak_gib": 16,
+    "hard_memory_or_time_cap": false,
+    "preflight_available_gib": 479,
+    "preflight_load1": 37.52,
+    "preflight_disk_available": "561G",
+    "actual_max_child_rss_kib": 1921620,
+    "builds": "Sequential component/mutant builds; completed objects retained on NVMe."
+  },
+  "duplicate_check": "No matching live gold_safe/test_fh_margin run on EPYC1, EPYC2 or EPYC3 before launch. Existing numeric exact result reused; no numeric rerun. Older gate2 did not include FPIPE2/SAFE cases and used the old endpoint hash.",
+  "queued_binding": "Top 94abba0f2 parameters FPIPE=2 SAFE=1 RETURN_EXTRA=6 match component and numeric configurations; quadrant RTL and hardened return source hashes match queued b529ca8c9. This record does not newly qualify elemA/elemB or glue.",
+  "remaining_gate": "Physical acceptance remains separate: SS >=15 ps, FF >=15 ps, DRC0 under actual context and exact source binding. No closure-loop files, jobs, HBM files or adoption selectors were changed."
+}

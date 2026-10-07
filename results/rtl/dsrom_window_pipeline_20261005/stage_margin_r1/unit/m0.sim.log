@@ -1,0 +1,2 @@
+PASS MARGIN=0 NPC32 full128 stage golden reads=397 lanes=1151 denied=19 completion_races=2 conflict_stalls=112 effective-edge reset/owner-snapshot/masked-unknown
+/srv/opentallas-scratch/claude/takeover-ds/window-stage/bench/src/rtl/test/dsrom_sys/s81_window_la/tb_window_stage_margin.sv:238: $finish called at 6670000 (1ps)

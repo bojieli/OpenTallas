@@ -1,0 +1,632 @@
+{
+ "schema": "opentallas.dsrom-recovery.addcycles.v1",
+ "lever": "s81_die_tiles",
+ "verdict": "ADOPT",
+ "items": null,
+ "note": "S81 die integration + S81 tile closure costs (CLAUDE S81-RERUN), priced per operation on the measured composition; the ledger is tools/dsrom_closure_cost_ledger.py",
+ "adds": [
+  {
+   "item": "s81_die",
+   "nodes": "*.attn.a_proj",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.attn.wq_b",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.attn.wo_a",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.attn.wo_b",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.ffn.router",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "s81_die",
+   "nodes": "*.ffn.down",
+   "cycles": 24,
+   "frac": 0,
+   "source": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.attn.a_proj",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.attn.wq_b",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.attn.wo_a",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.attn.wo_b",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.ffn.router",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "meso_d8g1",
+   "nodes": "*.ffn.down",
+   "cycles": 4,
+   "frac": 0,
+   "source": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)"
+  },
+  {
+   "item": "ctrl_status",
+   "nodes": "*.attn.idx.score",
+   "cycles": 1,
+   "frac": 0,
+   "source": "CTRL status chain: +1 cycle per column (HBM stream reads)"
+  },
+  {
+   "item": "ctrl_status",
+   "nodes": "*.attn.scores",
+   "cycles": 1,
+   "frac": 0,
+   "source": "CTRL status chain: +1 cycle per column (HBM stream reads)"
+  },
+  {
+   "item": "ctrl_status",
+   "nodes": "*.attn.pv",
+   "cycles": 1,
+   "frac": 0,
+   "source": "CTRL status chain: +1 cycle per column (HBM stream reads)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.out_allreduce",
+   "cycles": 0,
+   "frac": -0.0997294163123309,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.ffn.combine_allreduce",
+   "cycles": 0,
+   "frac": -0.0997294163123309,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.a_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.idx.topk_merge",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.cand.merge",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.rows_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.ffn.router_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.attn.a_proj",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.attn.wq_b",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.attn.wo_a",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.attn.wo_b",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.ffn.router",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "vm_bank_group",
+   "nodes": "*.ffn.down",
+   "cycles": 8,
+   "frac": 0,
+   "source": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.attn.a_proj",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.attn.wq_b",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.attn.wo_a",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.attn.wo_b",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.ffn.router",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "gather_root_v4",
+   "nodes": "*.ffn.down",
+   "cycles": 6,
+   "frac": 0,
+   "source": "Gather root v4: +6 cycles per phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.attn.a_proj",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.attn.wq_b",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.attn.wo_a",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.attn.wo_b",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.ffn.router",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "capture",
+   "nodes": "*.ffn.down",
+   "cycles": 3,
+   "frac": 0,
+   "source": "Capture tiles: VM write +3 a phase"
+  },
+  {
+   "item": "selector",
+   "nodes": "*.attn.idx.topk_local",
+   "cycles": 20,
+   "frac": 0,
+   "source": "Selector tiles: +20 a segment (mean; +15 max)"
+  },
+  {
+   "item": "selector",
+   "nodes": "*.attn.cand.topk_local",
+   "cycles": 20,
+   "frac": 0,
+   "source": "Selector tiles: +20 a segment (mean; +15 max)"
+  },
+  {
+   "item": "collector",
+   "nodes": "*.attn.gather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Collector tiles: +2 a job"
+  },
+  {
+   "item": "svc_io",
+   "nodes": "*.attn.idx.score",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)"
+  },
+  {
+   "item": "svc_io",
+   "nodes": "*.attn.scores",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)"
+  },
+  {
+   "item": "svc_io",
+   "nodes": "*.attn.pv",
+   "cycles": 2,
+   "frac": 0,
+   "source": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)"
+  },
+  {
+   "item": "softmax_safe_div",
+   "nodes": "*.attn.normalize",
+   "cycles": 29,
+   "frac": 0,
+   "source": "Softmax SAFE divider: +29 on normalize"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.attn.a_proj",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.attn.wq_b",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.attn.wo_a",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.attn.wo_b",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.ffn.router",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "code_pair",
+   "nodes": "*.ffn.down",
+   "cycles": 11,
+   "frac": 0,
+   "source": "Code pair: LAT_DELTA 11 a field phase"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.attn.a_proj",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.attn.wq_b",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.attn.wo_a",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.attn.wo_b",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.ffn.router",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "bf_rowfix",
+   "nodes": "*.ffn.down",
+   "cycles": 1,
+   "frac": 0,
+   "source": "BF rowfix: +1 per push (a field phase)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.attn.a_proj",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.attn.wq_b",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.attn.cmp.wk",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.attn.wo_a",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.attn.wo_b",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.ffn.router",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.ffn.shared_gu",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.ffn.experts_gu",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  },
+  {
+   "item": "pq_qelem",
+   "nodes": "*.ffn.down",
+   "cycles": 0,
+   "frac": 0.0017,
+   "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
+  }
+ ]
+}

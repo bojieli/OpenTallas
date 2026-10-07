@@ -1,0 +1,40 @@
+{
+  "observed_utc": "2026-10-07T05:24:41.115802+00:00",
+  "host": "ot-epyc1tb",
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/quarter_rb.run.log",
+      "mode": "tail",
+      "size": 490,
+      "text": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_PARENT_RELEASE edge=218\nCALENDAR_WARM_ACK edge=220\nPASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0\n/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/quarter_rb_tb.sv:255: $finish called at 269999568 (1fs)\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S8_rel_q_decision_removed.run.log",
+      "mode": "tail",
+      "size": 0,
+      "text": "\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/terminal.json",
+      "mode": "tail",
+      "missing": true
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/quarter_rb.run.log",
+      "mode": "tail",
+      "size": 490,
+      "text": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_PARENT_RELEASE edge=218\nCALENDAR_WARM_ACK edge=220\nPASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0\n/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/quarter_rb_tb.sv:255: $finish called at 269999568 (1fs)\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S8_rel_q_decision_removed.run.log",
+      "mode": "tail",
+      "size": 0,
+      "text": "\n"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/terminal.json",
+      "mode": "tail",
+      "missing": true
+    }
+  ]
+}
