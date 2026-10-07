@@ -251,7 +251,9 @@ module ot_meso_fifo #(
             always_ff @(posedge rclk) begin onq <= {NCHF{on_n}}; alq <= {NCHF{al_n}}; end
             assign r_on_v = onq; assign r_al_v = alq;
 `ifndef SYNTHESIS
-            always @(posedge rclk) if (!$isunknown(rs) && !$isunknown(onq[0]) && (onq[0] !== r_on || alq[0] !== r_align))
+            reg seen_rst = 1'b0;             // compare only once both sides come from a reset state (2-state sims start random)
+            always @(posedge rclk) if (!rrst_n) seen_rst <= 1'b1;
+            always @(posedge rclk) if (seen_rst && !$isunknown(rs) && !$isunknown(onq[0]) && (onq[0] !== r_on || alq[0] !== r_align))
                 $display("PLREG_MISMATCH ONREG %m t=%0t onq=%b on=%b alq=%b al=%b", $time, onq[0], r_on, alq[0], r_align);
 `endif
         end else begin : g_oncomb
