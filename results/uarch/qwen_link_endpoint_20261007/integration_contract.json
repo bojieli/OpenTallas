@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.qwen_native_link.integration_contract.v1",
+  "adoption": false,
+  "physical_528": {
+    "source": "rtl/physical/ot_qwen_die_hub.sv:4",
+    "ABI": "[527:16]data512,[15:5]tag11,[4:1]cumulativeGraycreditmod16,[0]valid",
+    "transmit": "lines94-115:x3skid2,one sharedsend/ck acrossall4links;dest=x3data[511:510];payload={x3data[509:0],2b00}",
+    "receive": "lines44-59:IBUF4/W523 asyncFIFO AD8,OCRED1;creditsreturnonIBUFpopintoasyncFIFO,NOT finalarconsumption",
+    "merge": "lines76-89:ar downstream4credits,roundrobin;tag11andlinkidentitydroppedfromar_d",
+    "finite_credit": "lines95-112:lc3bit init4;incomingGray decoded delta modcounter without explicitrange/integrityvalidation",
+    "drain_required": [
+      "inhibit newx3offers whilelettingskid/links/CDC/arcontinue",
+      "xv_q==0,sv==0,lo_q.valid==0",
+      "everylaneIBUFempty,asyncwr_bin==rd_bin,iv_q==0,ov_q==0",
+      "held==0,arv_q==0,arcr_q==0,arc==4",
+      "lc==4andGrayreturnownershipaccounted includinginflightframes",
+      "allacceptedwrite requests havevalid matchingrealservice completion, no packet/adapter queuesowned",
+      "coordinatedreset onlyafterallownersack;clearflightvalid andcreditbaselines together"
+    ],
+    "no_epoch": "No sessionepoch exists in physical528ABI. tag11 is notcheckedorretainedthroughar. Independent endpoint reset can resurrectcredits ordiscardwords; cannotpromise warmreset."
+  },
+  "measured_minimum_vehicle": {
+    "hops": [
+      54,
+      55
+    ],
+    "credit_seen_roundtrip_cycles": [
+      117,
+      119
+    ],
+    "first_window_restart_cycles": [
+      118,
+      120
+    ],
+    "bare_transport_cycles": [
+      108,
+      110
+    ],
+    "actual_endpoint_cost_to_restart_cycles": 10,
+    "gate": "credit_gate_v2/result.json",
+    "source": "rtl/test/tb_qwen_link_native_credit.sv",
+    "negative_results": [
+      "ignoreproducercredits nativeoverflowfault",
+      "corruptGray issued5beforeanyremoteIBUFpop withnativefault0",
+      "unilateralreset lc=5 withnativefault0"
+    ],
+    "protection": "Passing external negative detection demonstrates nativegap,notphysicalhubprotection qualification"
+  },
+  "KVC_actual_binding": {
+    "physical_master": "tools/qwen_rom_fulldie.py:775-800:R18 removesqfd_lfifo,adds qfd_kvc;R19 adds32PC->12row768bitlandingxbar",
+    "missing": "No native528packetizer or liveglobaldrain/epoch bridge in recoveredKVCcut",
+    "service_source": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv:66-139",
+    "write_request": "w_v,sec24,data256,tag9 perPC;w_room sampleprecedesregisteredw_v emission byoneedge;reserveforthatflight",
+    "completion": "wd_v/tag9;servicecheckswritebit,IDlive,generation,PC atlines612-625;generation2 islocalwritecontext,nottransportepoch",
+    "descriptor": "d_rdy sampled thenregistered d_v,row19,n11,go;notheld-valid-ready",
+    "landing": "l_v/sec17/row8/data256heldtill l_pop,128PC;decodebadmustveto publication;16decodercredits distinctfrom4physical linkcredits",
+    "drain": "wb_busy reflects outstandingwrites;kv_write_drained mayassert earlywithpostedwriteback;cannotstandinforphysicaldrain",
+    "minimum_next": "One-PCwrite/request-completion adapter at actualw_room/w_v/word/tagboundary, sourcepreservingdefaultoff;protected framedidentity andonecycleadvertisement headroom;do notreplace command scheduler"
+  },
+  "other_existing_layers": {
+    "collective_system": "ot_qwen_sys_die instantiatesPW554,S8 endpoint:610protectedflit bits on0.9GHz clk;differentlayer from528hubstrip;32replayrecords,16enginecredits,TMO96nativecycles",
+    "nearbaseline_bench": "ot_qwen_combined_nearbaseline_subsystem PW563,S9:621protectedflit bits on1.2GHz;LRB7=128replayentries,EFD512,TMO4LINK+32;up_crtied0;bench-onlysourcecomment",
+    "reset_owner": "ot_qwen_sys_rst_seq.sv:59 resetslink/core immediately onsoft_rst;no issuerinhibit/drain handshake. sysdie.drained is KVqueue/writebackonly. Needadditive resetcoordinator beforewarmreset claim"
+  },
+  "distinct_layer_alternatives": {
+    "direct610": "610protectedflit plusseparateframe-valid requires611physicalbits iffullnativeflittransported intact. Widenedstation model+physicalpins+CDCneeded;currentlow16controlmask cannotbeappliedtonativepayloadlowbits. No such masterboundto528graph.",
+    "serialize528": "Atleast2beats for610bits beforeframing;withnative0.9GHzcontinuousflitoutput and1.2GHztransport capacity0.6Gflits/s, naive2beatserializercannotaccept0.9Gflits/s. Needsmodeledendpointstall/idleframingchangeandexacttraining/ACK contract,notaparameter-onlysubstitution.",
+    "clock_conversion": "110streamcycles@1.2GHz=91.6667ns=82.5native0.9GHzcycles;TMO96native exceedsbaretransport. NeedaddactualCDC/endpoint/framing beforeTMOdecision."
+  },
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_hub.sv": "06d01e706d7b7790e4e6f0869e15dfa6f278a7e504f4a313b87daa6efe6d4a93",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/qwen_sys/ot_qwen_d2d_link.sv": "cf3f882ed8a365965d2c7c2712f74eee154dc6ec81225658885b552470fcee34",
+    "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+    "rtl/qwen_sys/ot_qwen_sys_die.sv": "ebc0dfb1642a94d48726809102860d3665d9cd037c3d7e8ac1ab5b2a618390bd",
+    "rtl/qwen_sys/combined/ot_qwen_combined_nearbaseline_subsystem.sv": "9afaa8b23a8005e30816ea39a083106ed24e51949d69fe71a306a4f9b5708e8b",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "a6fc66baaf850607cb1ba7fe29d51fff735117d64af56b28467bee8c596b14ca",
+    "rtl/physical/ot_qwen_kvc_decode_map_pc.sv": "3f91a1b5a1663e5f458d0684429c2ad38fffe92590ac9ef662c2effea26e5964",
+    "tools/qwen_rom_fulldie.py": "d45178b8d71803f231d103f3870b8ee3b220035e19ce31921380755d81b5fedd"
+  }
+}
