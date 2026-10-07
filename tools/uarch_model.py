@@ -13987,3 +13987,25 @@ def hbm_su_installed_span_model():
     """Price checked published-span scalar reads before endpoint construction."""
     from tools.hbm_su_installed_span_model import model
     return model()
+
+
+def qwen_core_meif_idle_capture_model(*, nw=18, aw=24, replicas=4):
+    """Remove return-status cone from the existing MEIF payload capture mux.
+
+    Speculate only while no ME command is pending; hold the complete packet
+    until its enabled engine edge. Both issue epoch and payload acceptance stay
+    unchanged. Active consumer uses must remain go-qualified.
+    """
+    bits=3*nw+13*aw+13
+    return dict(default_enabled=False,adopted=False,physical_signoff=False,
+        mechanism='Existing payload registers capture decoded input while !me_gop; freeze while pending',
+        MACs_per_cycle=0,new_memory_ports=0,new_memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0,added_routing_tracks=0,replicas=replicas,
+        payload_register_bits=bits,register_delta=0,mux_register_delta=0,
+        removed_enable_cone='SU take/status/ready to combined ME go to payload capture mux',
+        new_enable_cone='Local registered me_gop inversion to existing payload mux',
+        area_delta_first_order_um2=0,original_floorplan_slot_unchanged=True,
+        native_cycle_delta_per_instruction=0,token_latency_delta_cycles=0,
+        speculative_switching='Payload may update on other instruction epochs when no ME command is pending; no claim of energy saving',
+        exactness_obligations=['Full controller ME/SU accepted payload equality under source-enable stalls','Freeze packet over pending go','Actual instruction broadcast samples packet with matching go','Negative unconditional capture must fail'],
+        inherited_open_physical_obligations=['ME write ingress collar','prog_q and other input minimum delay','Clock output insertion/phase contract','SS/FF setup/hold +15ps and DRC0'])
