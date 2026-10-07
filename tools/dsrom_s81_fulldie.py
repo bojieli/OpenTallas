@@ -112,10 +112,18 @@ def configure(die, gen='r7'):
                 BF_PAIRS = round(PAIRS * 519 / 2417)
 
 
+# --bf-per-region N (bf-double 2026-10-07; default None = the decision's 519/2417 share, spread die-wide): exactly N
+# BF pairs in every return region of a layer die, at the in-region positions tools/dsrom_bf_double_alloc.py binds
+# (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
+BF_PER_REGION = None
+
+
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND == 'layer':
+    if DIE_KIND == 'layer' and BF_PER_REGION is not None:
+        PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
+    elif DIE_KIND == 'layer':
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
     else:
         NV_PAIRS = round(NV_PAIRS * n / PAIRS)
@@ -294,6 +302,13 @@ def region_bounds():
 
 
 def bf_sites():
+    if BF_PER_REGION is not None and DIE_KIND == 'layer':
+        b, s = region_bounds(), set()
+        for r in range(ROOTS):
+            ps = list(range(b[r], b[r + 1]))
+            s.update(ps[(2 * j + 1) * len(ps) // (2 * BF_PER_REGION)] for j in range(BF_PER_REGION))
+        assert len(s) == BF_PAIRS == BF_PER_REGION * ROOTS
+        return s
     nv = nv_sites()
     rest = [p for p in range(PAIRS) if p not in nv]
     s = sorted({rest[round(i * len(rest) / BF_PAIRS)] for i in range(BF_PAIRS)})
@@ -2225,6 +2240,7 @@ def capacity_report():
         if _frames_fit(sl, sh):
             best = p
     set_globals_pairs(*keep)
+    flav = bf_flavour_capacity(sl, sh)
     inv = json.loads((ROOT / 'results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json').read_text())
     total = 81 * 4 * 2417
     return dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
@@ -2238,7 +2254,26 @@ def capacity_report():
                           source='results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 '
                                  'table, 1-stack layer dies)'),
                 meso_slot=dict(record=MESO_V7, um2_per_W512_slot=MESO_V7_UM2, cfifo_W564_slots=2,
-                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)))
+                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)),
+                bf_per_region_flavours=flav)
+
+
+def bf_flavour_capacity(sl, sh):
+    """bf-double (2026-10-07): max pairs a layer die for the --bf-per-region flavours (4 = BF die, 0 = q-only die)"""
+    global BF_PER_REGION
+    keep, kb = (PAIRS, BF_PAIRS, NV_PAIRS), BF_PER_REGION
+    out = {}
+    for n in (4, 0):
+        BF_PER_REGION, best = n, 0
+        for p in range(ROOTS * max(n, 1), 4000):
+            set_pairs(p)
+            if not _frames_fit(sl, sh):
+                break
+            best = p
+        out[str(n)] = dict(max_pairs=best, bf=n * ROOTS, slots_per_column=sl, slot_h_um=sh)
+    BF_PER_REGION = kb
+    set_globals_pairs(*keep)
+    return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
 POWER8 = dict(
     seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
@@ -4719,6 +4754,8 @@ def die_options(ap):
     ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--bf-per-region', type=int, default=None,
+                    help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
     ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
                     'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
@@ -4777,7 +4814,11 @@ def apply_options(a):
     if a.gen == 'r8':
         if a.elem_h or a.field_margin is not None:
             slot_geometry(a.elem_h, a.field_margin)
-        if a.pairs:
+        if getattr(a, 'bf_per_region', None) is not None:
+            global BF_PER_REGION
+            BF_PER_REGION = a.bf_per_region
+            set_pairs(a.pairs or PAIRS)
+        elif a.pairs:
             set_pairs(a.pairs)
 
 
