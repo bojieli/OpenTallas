@@ -4,22 +4,29 @@ set -euo pipefail
 O=$(realpath -m "$1"); mode=${2:-gold}
 R=$(cd "$(dirname "$0")/../../../.." && pwd)
 mkdir -p "$O"
-opts=(); margin=1
+opts=(); margin=1; top=tb_s81ph_svc_od_margin
 case "$mode" in
  gold) ;;
  legacy) margin=0 ;;
+ latency) top=tb_s81ph_svc_od_latency ;;
  noatom) opts+=(+define+S81PH_SVC_MUT_NOATOM) ;;
  skid) opts+=(+define+S81PH_SVC_MUT_SKID) ;;
  *) exit 2 ;;
 esac
+params=(); if [ "$mode" != latency ]; then params+=(-GMARGIN=$margin); fi
 verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
- --top-module tb_s81ph_svc_od_margin +define+SVCIO_TILED -GMARGIN=$margin "${opts[@]}" \
+ --top-module "$top" +define+SVCIO_TILED "${params[@]}" "${opts[@]}" \
  -Mdir "$O/obj" -o sim \
  "$R/rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv" \
  "$R/rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv" \
  "$R/rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_od_margin.sv" \
  "$R/rtl/common/ot_fwd_link_stage.sv" \
- "$R/rtl/dsrom_sys/s81_ph/svc/tb_s81ph_svc_od_margin.sv" > "$O/build.log" 2>&1
+ "$R/rtl/dsrom_sys/s81_ph/svc/$top.sv" > "$O/build.log" 2>&1
+if [ "$mode" = latency ]; then
+ "$O/obj/sim" > "$O/latency.log" 2>&1
+ grep "OD_LAT PASS" "$O/latency.log"
+ exit 0
+fi
 for seed in 1 2 3; do
  "$O/obj/sim" +SEED=$seed +N=300 > "$O/seed$seed.log" 2>&1 || true
  grep -E 'SUMMARY|RESULT' "$O/seed$seed.log"
