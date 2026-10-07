@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
-// Equivalence of ot_dsrom_su_fdiv_f12 (DEPTH 33/34/62) with ot_hdc_v41x_fdiv (DEPTH 19): {y, fault} of every pair equal.
+// Equivalence of ot_dsrom_su_fdiv_f12 (DEPTH 33/34/63) with ot_hdc_v41x_fdiv (DEPTH 19): {y, fault} of every pair equal.
 // +N=<pairs> +SEED=<seed>.  Operands: random bit patterns, subnormals, specials (0, inf, NaN), equal and adjacent
 // significands, results near overflow / underflow.  Prints FDIVEQ n=<pairs> mismatches=<m>.
 module tb_dsrom_su_fdiv_f12_eq;
     parameter integer NR = 0;                   // 0: restoring, 1/2: non-restoring
-    localparam integer DUT_DEPTH = (NR == 2) ? 62 : ((NR == 1) ? 34 : 33);
+    localparam integer DUT_DEPTH = (NR == 2) ? 63 : ((NR == 1) ? 34 : 33);
     reg clk = 1'b0, rst_n = 1'b0;
     always #1 clk = ~clk;
     reg         v;
