@@ -1,0 +1,7 @@
+{
+  "status": "PREPARED_LINT_PASS_NO_BUILD_NO_SIMULATION",
+  "source_pins": "source_pins.json",
+  "model": "results/rtl/hbm_collective_native_gate_20261007/model_before_bench.json",
+  "scope": "One fullPF384/16lane native endpoint; all eight full-duplex credit ports, actual source/receiver/storage/flight/CDC/session. Own24 arithmetic golden from original reference.1512 externally provided results checked for exact transport only. VendorPHY quiesce/resetACK remain fixtures. No fullfabric/physical proof.",
+  "next": "Fleet measured CPU/RAM/disk admission in a pinned clean worktree; replace ADMITTED_BUILD_JOBS using admission decision, remap repository paths to pinned sources, build once and run all five modes. No local C++ compilation launched."
+}

@@ -1,0 +1,43 @@
+{
+  "status": "FROZEN_READY",
+  "new_paths": {
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_shared_service_join.sv": "ade1dfd89c06d0ba2b1a6fd1a233256a6ecf0b7d024a1bea0439bc9094d68a8a",
+    "rtl/hbm_accel/control_20261007/service_mux/tb_hbm_sm_service_mux.sv": "c2c5c04ff3b365cb98c49460b92e1c42be32f6d5a9a122581f8a641b1c591641",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_service_mux.sv": "9f3d8450c6047d00e0e8ba0ba9dd203d50bf03a19ba856266fe1185e7bbdaa59",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_loader_identity_join.sv": "2415f1cc6277465f1fe5247a97d22b8f912ef148957a7df521ffb2fb729bb741",
+    "tools/hbm_sm_service_mux_gate.py": "931b1678e9ea747b742a49219ba1976ca56e19e603d661a4723fad2c8b6126b0",
+    "tools/hbm_sm_service_mux_build.py": "fe386c871e830848fe71c967d7060a0834778c924a0cfa4eb3f7b76fb147c060",
+    "tools/hbm_sm_service_mux_model.py": "bd1b06cb5fdcca60a1b9ef655b84b97f62211defab6fe22433ec2a7e8ae0f38e",
+    "results/uarch/hbm_sm_service_mux_20261007/prebuild.json": "2661faa58315ea3d5a2be67fd92cc80b2a2bb7be9c8594ba0e8b40a2f8cdd330",
+    "results/rtl/hbm_sm_service_mux_20261007/component.json": "0c8efe152b8b1124990d5384dca3cce1fdf09c58079c0697844ad818dd29aee6",
+    "results/uarch/hbm_sm_native_production_20261007/installed_spans_candidate.json": "966e26b3ae32d310ced8a3667b8076a45b7d13ca4a449035cd8d90bc16516427",
+    "results/uarch/hbm_sm_native_production_20261007/recovered_payload_manifest.json": "b57da5e45b5cb46f4d24a3ee168b66022b500a8288e1b49e2760e355278d6f74",
+    "tools/hbm_sm_native_recovered_golden.py": "dc2413d6c404377f04ca251156aa260588b6906437dfc91cb09dce1d1294d0f9",
+    "results/rtl/hbm_sm_native_production_20261007/golden_rows.txt": "628f3a5d5278db133281bd422c89a6be845f8bb2085fa1872d0fcd7e5e095342",
+    "results/rtl/hbm_sm_native_production_20261007/golden_regeneration.json": "77e0e9c5d76a8026530f72db4102f3ac9bbdb71b1cb21a80cdf6c647c49dc349"
+  },
+  "dependencies": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d",
+    "tools/hbm_sm_native_install.py": "c4270f023a7507fa0832d42270ae0a60d41cf6e669c8bc4d67dbfe7aad470e92",
+    "tools/hbm_sm_native_install_model.py": "809956d390e94196aa11e489770ca4fcb4564c5ab702a4586b37f32ef962f510",
+    "results/rtl/hbm_opt_integrated_20261005/normal_gather_owner/source_r2/workspace_successor.json": "09206d3b688ea441a26a84406bfd688050c011a132288532f8a36ab2d156ce8f",
+    "tools/gpu_sys/mem_image.py": "5f49a213735b218bf7e4e7154506ac55b17d8b1803a04c35f64cf699616bd170",
+    "tools/dshbm_sm_pq_seq.py": "dfb0b12bca2cee5fa33566768ec2d307394c896c40aac6cafece4642bab602f9",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/dshbm_matched_sm_seq.py": "9381e605dcf93d1c176ab10ec1be57b9268d6ee17166a2ce67eb6392aeab5a17",
+    "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+    "tools/rtl_hdc_v41_blockdot_campaign.py": "e7cb86b9eeea0aae2ca46ba19d11bebef814415a7a5da70f73576860e0188955"
+  },
+  "scope": [
+    "Actual four/fiveclient finite capture plus existingloaderjoin identity/reversegrant with modeled ownedpeer, not actual dispatchissuer/causalPHY",
+    "installed_spans is candidate actualProgram.put allocation from real existing successor cursor; original source flags installed/enrolledfalse retained in source; no hardware grant",
+    "Recovered stress fixtures exactly regenerate all13records and97fullNC8goldenrows; initial original bench active1, no new arithmeticRTL claim",
+    "Newmetadata original three recoveredpayload artifacts live under /tmp; hashes pinned and regeneration uses exact original seed/producer; bulkimages not staged",
+    "Productionjoin parent and SUlive programmapping remain evolving and excluded"
+  ],
+  "untracked_dependencies_owned": true
+}

@@ -6,7 +6,8 @@
 // must bound occupancy; native overflow and upstream fault remain visible.
 module ot_s81_pq_root_adapter #(
     parameter integer R = 128,
-    parameter integer ROOTD = 128
+    parameter integer ROOTD = 128,
+    parameter bit PIPELINED_CAM = 0
 ) (
     input wire clk,
     input wire rst_n,
@@ -23,6 +24,15 @@ module ot_s81_pq_root_adapter #(
     genvar r;
     generate for (r=0; r<R; r=r+1) begin: g_root
         wire fault;
+        if (PIPELINED_CAM) begin: g_cam
+        ot_s81_pq_ret_root_cam #(.D(ROOTD),.QD(ROOTD)) u_root (
+            .clk(clk),.rst_n(rst_n),
+            .i_v(tree_return[66*r]),.i_t(tree_return[66*r+1 +: 32]),
+            .i_d(tree_return[66*r+33 +: 32]),.i_e(tree_return[66*r+65]),
+            .r_v(r_v[r]),.r_row(r_row[16*r +: 16]),.r_pos(r_pos[3*r +: 3]),
+            .r_fp32(r_fp32[32*r +: 32]),.r_bf16(r_bf16[16*r +: 16]),
+            .r_e(r_e[r]),.fault(fault));
+        end else begin: g_native
         ot_v41_ret_root #(.D(ROOTD),.QD(ROOTD)) u_root (
             .clk(clk),.rst_n(rst_n),
             .i_v(tree_return[66*r]),.i_t(tree_return[66*r+1 +: 32]),
@@ -30,6 +40,7 @@ module ot_s81_pq_root_adapter #(
             .r_v(r_v[r]),.r_row(r_row[16*r +: 16]),.r_pos(r_pos[3*r +: 3]),
             .r_fp32(r_fp32[32*r +: 32]),.r_bf16(r_bf16[16*r +: 16]),
             .r_e(r_e[r]),.fault(fault));
+        end
         assign root_fault[r] = fault | upstream_fault[r];
     end endgenerate
 endmodule

@@ -14044,3 +14044,8 @@ def qwen_ctrl_write_cancel_service_model():
     return impl()
 
 
+
+def hbm_su_div64_closure_successor_model():
+    """Price the gather-stage successor against immutable failed route evidence."""
+    from tools.hbm_su_div64_closure_successor_model import model
+    return model()

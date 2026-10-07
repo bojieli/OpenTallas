@@ -1,0 +1,30 @@
+{
+  "status": "COMPONENT_PASS_NOT_NATIVE_ADOPTED",
+  "evidence": "20261007T184611.755166Z/verdict.json",
+  "source_pair": [
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_rx.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_source.sv"
+  ],
+  "enable": "Both endpoints ENABLE=0 by default. Instantiate ENABLE=1 only behind default-off native option with full retirement/reservation binding.",
+  "receiver_binding": "final_retire is valid for the final native receive packet-queue head. Its actual pop, delivery and return accounting must all require final_retire_ready. Never bind a previously emitted unstallable rx_credit pulse. final_retire_ready deasserts on CE scrub or faults.",
+  "source_binding": "reserve_valid/reserve_ready handshake must happen before the first PHY launch of that flit. Every granted reservation, including all forward flight and intermediate held heads, remains outstanding until final receiver queue retirement. External source is responsible for retention and payload ordering.",
+  "transport": "grant/ACK are independent 72-bit SECDED words using valid/ready; provider must preserve frames and ordering, implement registered interfaces/CDC, and supply finite buffering. Correctable message faults are corrected on acceptance; UE faults stop endpoint. No automatic timeout/regrant; reliable transport or coordinated recovery required.",
+  "generation": "cold_link_start is a one-cycle local-clock event after coordinated reset flushes both endpoint state AND all old control/data transport. Both sides get the same trusted fresh24bit link_epoch from a still-unimplemented owner/provider. No context/go/operation-arm generation. Provider forbids epoch reuse/wrap with outstanding old frames. A repeated start during active generation faults rather than regrants.",
+  "sequence": "24bit sequences never wrap; 0 is initial64. Receiver stops after exhaustion until coordinated cold reset. Source repeats ACK only for identical most-recent epoch/sequence/count; older sequence is ignored and cannot grant. Producer accepts an exact duplicate last ACK without scheduling any additional credit.",
+  "state_inventory": {
+    "each_endpoint_encoded_bits": 216,
+    "each_endpoint_fault_rails": 2,
+    "eight_pairs_total_stored_bits": 3488,
+    "logic": "per endpoint three stored SECDED decoders/encoders plus incoming message decoder, 8bit credit add/sub and24bit sequence increment/comparison; no mapped-cell area or placement claim"
+  },
+  "timing": "Initial source launch eligibility follows its initial ACK handshake; no same-cycle grant-to-launch bypass. Receiver schedules next batched return no earlier than the cycle after previous ACK accepted. Grant framing, ACK framing, CDC and physical propagation must be added to token calendar; local functional TB rates are not physical performance claims.",
+  "checks": "iverilog component gate PASS; Verilator source-only lint exits0, integer ENABLE boolean width warnings only. Original source files unchanged; no SS/FF or DRC claim.",
+  "required_native_gate": [
+    "gate actual final queue pop with retire_ready",
+    "bind pre-PHY reservation before launch",
+    "implement coordinated cold reset and epoch provider",
+    "implement grant/ACK clock transport with physical latency inventory",
+    "repeat fullshape native ingress64 stall/flight conservation and fault gate",
+    "close SS/FF and routing in actual context"
+  ]
+}

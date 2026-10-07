@@ -1,0 +1,32 @@
+{
+  "calendar": "nativePF384-own24-plus1512-external-results-v1",
+  "native_shape": {
+    "PFMAX": 384,
+    "PF": 384,
+    "LANES": 16,
+    "NPT": 8,
+    "RXAW": 8,
+    "TXAW": 6,
+    "WSTG": 14,
+    "packet_SRAM": 1,
+    "link_protection": 1,
+    "owner_truecredit": 1,
+    "owner_banked_half": 1
+  },
+  "own_partial_calendar": "Original contributor-major hot-column sequence retained exactly: each port except3 sends48 partials; ordinal=m*7+(p<3?p:p-1), contributor=ordinal/48 skipping3, flit=ordinal%48. Payload bits and accepted-transaction reference adapter unchanged. Per-port reservation stalls may change arrival times.",
+  "additional_external_results": "Each port sends189 externally supplied result flits following its partials (port3 has no partials). Result ordinal=j*8+p maps to globalindex ordinal+(ordinal>=456?24:0), covering all1512 other-owner results exactly once. Deterministic payload3e800000+(globalindex<<4)+lane is a TRANSPORT fixture, not claimed remote reduction arithmetic.",
+  "coverage": {
+    "native_injected_values": 384,
+    "peer_partials_to_native": 336,
+    "peer_results_to_native": 1512,
+    "native_own_results": 24,
+    "native_total_deliveries": 1536,
+    "native_partials_to_peer": 336,
+    "native_results_to_peer": 24
+  },
+  "termination": "Actual endpoint_rearm_ready, actual peer queues/control/debt quiet, all1536 delivered once, all360 outgoing flits checked, source epoch1 and exactlyone coldstart.",
+  "resets": "Actual source coordinator+2localagents+resetentry; no operation arm resets. Vendor PHY quiesce/reset acknowledges requests in fixture registers, not hardware qualification. Busy context mutation negative must assert actual native context_fault.",
+  "latency_scope": "Report absolute own24 last delivery, full1536 last delivery and actual final drain/rearm, all relative to first issue. No delta vs unmatched historical529/531 partial-only gate. A comparison requires baseline replaying this exact calendar and same real peer control scope.",
+  "original_golden_bench_sha256": "ae5a2f4fbd2519b0ff84d20b2a8830d43c930b2b9422916f9980e67eff7eb403",
+  "physical_scope": "14peerflight cycles are an explicit fixture, not extractedwire evidence; nominal833.334ps clocks with137ps phase are functional clocks, not signoff."
+}

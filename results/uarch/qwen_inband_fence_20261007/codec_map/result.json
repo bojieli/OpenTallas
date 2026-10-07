@@ -1,0 +1,22 @@
+{
+  "rows": [
+    {
+      "module": "ot_qwen_kvc_packet_encode_fence",
+      "area_um2": 518.4502200000021,
+      "FFs": 358,
+      "max_input_to_D_cell_levels": 9,
+      "source_sha256": "78547a8a7c0c78a3bab635daa922316fe5f1b5e38d83c27506567fc55db598f0",
+      "mapped_sha256": "3365fdc219f6984778bfbd2c8b7bf61fe6499ce7dcdf0477e58c7186d87de329"
+    },
+    {
+      "module": "ot_qwen_kvc_packet_decode_fence",
+      "area_um2": 766.8788399999823,
+      "FFs": 512,
+      "max_input_to_D_cell_levels": 14,
+      "source_sha256": "78547a8a7c0c78a3bab635daa922316fe5f1b5e38d83c27506567fc55db598f0",
+      "mapped_sha256": "eee42d1a706b964176331c821004bdf2b9a6a3796df2ad2f61b33cbc13025c4e"
+    }
+  ],
+  "scope": "Actual production ASAP7 SS mapped cellarea and logicdepth only. Wire/fanout/clock/SSFF timing not qualified.",
+  "tool": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+}

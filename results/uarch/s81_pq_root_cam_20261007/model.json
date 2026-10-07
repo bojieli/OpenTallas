@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.s81.pq-root-cam-sizing.v1",
+  "model_before_RTL_basis": {
+    "path": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/design.json",
+    "sha256": "e52d69ad76daff4e351e92aa2b647b4beb191b2c5e5d207f19f61c1be873bfe0",
+    "block": "ret_root_r128.microarch_obligation"
+  },
+  "D": 128,
+  "QD": 128,
+  "replicas": 128,
+  "native_queue_and_buffer_bits": 16768,
+  "incremental_state_bits": {
+    "match_vector": 128,
+    "free_vector": 128,
+    "candidate_tag_data_error": 65,
+    "candidate_valid": 1,
+    "registered_queue_head": 65,
+    "total_per_root": 387,
+    "total_128_roots": 49536
+  },
+  "memory_ports_bits_per_cycle": {
+    "queue_write": 65,
+    "queue_head_prefetch": 65,
+    "buffer_candidate_read": 65,
+    "buffer_update": 66,
+    "tag_compare_parallel": 4096
+  },
+  "boundaries_bits_per_cycle": {
+    "tree_input_per_root": 66,
+    "result_and_fault_per_root": 70,
+    "stage_A_to_B": 322,
+    "all_tree_inputs": 8448,
+    "all_result_outputs": 8960
+  },
+  "compute": {
+    "FP32_adds_per_cycle_peak": 1,
+    "adder_latency_cycles": 5,
+    "MACs_per_cycle": 0,
+    "sibling_comparators": 128,
+    "priority_encoders": 2,
+    "register_file_read_mux_inputs": 128,
+    "extra_logic": "128-way same-edge insertion/removal forwarding before registered match/free vectors; registered queue-head singleton/empty bypass"
+  },
+  "area_sizing": {
+    "incremental_FF_allocation_um2_per_root": 387,
+    "incremental_FF_allocation_all_roots_mm2": 0.049536,
+    "basis": "Conservative1um2 per addedFF allocation, not mapped area; forwarding/encoder/clock/route additional",
+    "actual_reserved_root_slot_um": [
+      132.192,
+      133.92
+    ],
+    "slot_fit_qualified": false
+  },
+  "routing": {
+    "new_registered_stage_boundary_tracks_needed": 322,
+    "gross_M4_tracks_across_reserved_height_at_0_048um_pitch": 2790,
+    "usable_tracks_after_PG_clock_and_obstacles": null,
+    "route_qualified": false
+  },
+  "latency": {
+    "measured_isolated_complete_delta_cycles": 1,
+    "measured_two_leaf_delta_cycles": 2,
+    "measured_eight_leaf_delta_cycles": 4,
+    "critical_path_increment_rule": "One added cycle per root decision pass, including final complete publication; d dependent root additions costs d+1 cycles if this path is exposed. Arrival/queue contention must be composed separately.",
+    "prior_design_3cycles_per_phase_not_conservative_for_three_add_depth": true,
+    "full_parent_token_delta": null
+  },
+  "mutable_state_protection": "Unchanged native queue/CAM semantics; new parity or protected140-pin contract is NOT implemented in this candidate. Production protection remains required.",
+  "adopted": false,
+  "physical_gate": "Must establish SS/FF in reserved root shape; stage-B encode/read mux not claimed closed."
+}

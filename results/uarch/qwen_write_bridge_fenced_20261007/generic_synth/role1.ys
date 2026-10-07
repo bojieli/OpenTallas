@@ -1,0 +1,6 @@
+read_verilog -sv /tmp/qwen-write-bridge-fenced-20261007/rtl/physical/ot_qwen_kvc_write_link_bridge_fenced.sv /tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_hub_cdc.sv /tmp/qwen-inband-fence-20261007/rtl/physical/ot_qwen_kvc_packet_codec_fence.sv /home/ubuntu/OpenTallas/rtl/lib/ot_async_fifo.sv /home/ubuntu/OpenTallas/rtl/lib/ot_reset_sync.sv
+hierarchy -top ot_qwen_kvc_write_link_bridge_fenced -chparam ENABLE 1 -chparam ROLE 1
+synth -top ot_qwen_kvc_write_link_bridge_fenced -flatten -noabc
+check -assert
+write_json /tmp/qwen-write-bridge-fenced-20261007/results/uarch/qwen_write_bridge_fenced_20261007/generic_synth/role1.json
+stat

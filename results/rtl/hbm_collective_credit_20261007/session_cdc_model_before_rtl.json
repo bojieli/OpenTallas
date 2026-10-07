@@ -1,0 +1,50 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "width": 72,
+  "depth": 8,
+  "replicas": 4,
+  "implementation": "Encoded dual-clock flop storage, protected local pointers/head reused from W2; registered Gray/complement rails through2sync stages",
+  "payload_bits": 2304,
+  "encoded_storage_bits": 4608,
+  "protected_banks_bits_per_fifo": 1368,
+  "protected_banks_failure_rails_per_fifo": 6,
+  "gray_rails_bits_per_fifo": 48,
+  "ports": {
+    "write_bits_per_wclk": 144,
+    "read_capture_bits_per_rclk": 144,
+    "read": 1,
+    "write": 1
+  },
+  "compute": {
+    "macs_per_cycle": 0,
+    "encode_slices": 2,
+    "head_check_slices": 2
+  },
+  "normal_timing": {
+    "read_initiation_interval": 3,
+    "head_capture_plus_validate_cycles": 2,
+    "gray_sync_stages": 2,
+    "credit_return": "read pointer advances only upon consumer acceptance, then2write sync stages"
+  },
+  "fault_timing": "singleerror repair holds bank for fivephase sequence per faultyword; no guessed finite latency on incoherent CDC rails",
+  "boundary": {
+    "core_period_ps": 833.333333,
+    "link_period_ps": 833.333333,
+    "relationship": "asynchronous",
+    "reset": "coordinated coldPOR, independent asyncassert/syncrelease from actual die entry; no unilateral runtime reset"
+  },
+  "area": "flopcount sized above; SS/FFcell mapping/area/floorplan pending, no2mm\u00b2fit claim",
+  "composed_cost": "Additional2read cycles and readII3 must be included per CDC queue in matched endpoint calendar before adoption",
+  "routing": "545payload bits +Gray/complement28bits across two clockregions per FIFO; physicalroute length/track capacity pending",
+  "predecessor": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv AW3 implementation preserved",
+  "adoption_gates": [
+    "independentclock full64depth exactness",
+    "storage/pointer/rail corruption",
+    "coordinatedreset/drain",
+    "fullnativeTU creditcapacity/latency",
+    "contextualmacro/cell SS/FF physical closure"
+  ],
+  "purpose": "Before RTL: two command and two ACK management CDCs; always-on POR resets only, not endpoint session resets",
+  "total_stored_bits": 10296,
+  "ack_observer": "Each endpoint adds SECDED72 sticky state plus2fault rails, reset with corresponding credit endpoint. Checks actual handshake ACK kind41 epoch match seq0 count64."
+}

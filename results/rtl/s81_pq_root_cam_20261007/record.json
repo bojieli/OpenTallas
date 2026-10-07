@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.s81.pq-root-cam-gate.v1",
+  "cases": {
+    "positive": {
+      "exit_code": 0,
+      "gate_passed": true,
+      "compiled_source_sha256": "1e72a91cf9101ca91e2bae0783ded95fb2e08b63eb397ddd6e5dd76fcd47d318"
+    },
+    "no_insert_forward": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "compiled_source_sha256": "c41f900fc18c0d389c5beefe611376d1be1e9d2e3d390f26d7f32339fd5fb280"
+    },
+    "wrong_sibling": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "compiled_source_sha256": "52e835bfef85c9f289d32d39fbd319d7d39e449b85a1db2bd990faa011d0a495"
+    }
+  },
+  "source_sha256": {
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_ret_root_cam.sv": "1e72a91cf9101ca91e2bae0783ded95fb2e08b63eb397ddd6e5dd76fcd47d318",
+    "tests/rtl/s81_pq_parent/root_cam_tb.sv": "697b19cafba8b33ff49fb560669da79e58ba9347ed7256794c8075e444f6e714"
+  },
+  "tool_sha256": "575bdcd4daa3967df765bc774d38fa8722ccc37ffd448aa2e8a40de964b051d4",
+  "exact_roots": 384,
+  "ROOTD": 128,
+  "QD": 128,
+  "measured_delta_cycles": {
+    "complete": 1,
+    "two_leaf": 2,
+    "eight_leaf": 4
+  },
+  "scope": "Minimum one real ROOTD128 component compared to unchanged native root. No parity, full-parent or physical qualification.",
+  "adopted": false
+}
