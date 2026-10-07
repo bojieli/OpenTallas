@@ -1,5 +1,5 @@
 {
-  "status": "COMPONENT_EXACT_PARENT_PENDING",
+  "status": "COMPONENT_AND_PARENT_LOCKSTEP_EXACT_PHYSICAL_PENDING",
   "date": "2026-10-07T03:51:49.237402-07:00",
   "variant": "FPIPE=3 opt-in; view default remains FPIPE=2",
   "inherited_failure": "reset stale grant",
@@ -8,5 +8,6 @@
   "negative_judge": "Compilation/infrastructure failure cannot count as a detected mutant",
   "cycles": "Inherited FPIPE3 adds one input edge and one output edge relative to FPIPE2; reset fix adds no transaction pipeline stage. Parent pricing remains pending.",
   "physical": "Not routed; no closure or model adoption claimed",
-  "source_manifest": "source_manifest.json"
+  "source_manifest": "source_manifest.json",
+  "parent_gate": "head_q_lret3 9000-cycle lockstep PASS; three timing/fault/address mutants detected"
 }
