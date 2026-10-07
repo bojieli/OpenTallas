@@ -24,6 +24,12 @@ def r4(v):
     return round(v + 1e-9, 4)
 
 
+def snap(c):
+    """pin centre on the generator's M4 / M5 track grid (offset 0.012, pitch 0.048; 2026-10-06 ctr route: off-track
+    pins -> DRT-0422 and an unreachable E-face pin)"""
+    return 0.012 + round((c - 0.012) / 0.048) * 0.048
+
+
 def emit(master, w, h, pins, dirs, note):
     """pins: list of (name, layer, x0, y0, x1, y1); dirs: {port: (dir, bits)}"""
     d = ROOT / 'physical/s81_ph_views/ports/contract' / master
@@ -82,12 +88,12 @@ def main():
     xmax = max(p[4] for p in pins)
     assert xmax < TW - 0.5, xmax
     for k, nm in enumerate(('cks', 'ckh', 'rst')):
-        x = 0.96 + 0.192 * (580 + 5 * k)
+        x = snap(0.96 + 0.192 * (580 + 5 * k))
         pins.append((f'{nm}[0]', 'M5', x - 0.012, TH - 0.192, x + 0.012, TH)); dirs[nm] = ('input', 1)
     for face, x0, x1 in (('w', 0.0, 0.192), ('e', TW - 0.192, TW)):
         for k, nm in enumerate((f'ci_{face}', f'co_{face}')):
             for b in range(2):
-                y = 124.128 + 0.384 * (2 * k + b)
+                y = snap(124.128 + 0.384 * (2 * k + b))
                 pins.append((f'{nm}[{b}]', 'M4', x0, y - 0.012, x1, y + 0.012))
             dirs[nm] = ('input' if nm.startswith('ci') else 'output', 2)
     # tile pin x must be the same in every column (relative): checked against PC 31
@@ -106,16 +112,16 @@ def main():
     cx0 = r4(15 * PITCH + TW + (PITCH - TW - CW) / 2)
     cp, cd = [], {}
     for k, nm in enumerate(('cks', 'ckh', 'rst')):
-        x = 4.8 + 1.92 * k; cp.append((f'{nm}[0]', 'M5', x - 0.012, CH - 0.192, x + 0.012, CH)); cd[nm] = ('input', 1)
+        x = snap(4.8 + 1.92 * k); cp.append((f'{nm}[0]', 'M5', x - 0.012, CH - 0.192, x + 0.012, CH)); cd[nm] = ('input', 1)
     for b in range(2):
-        x = 12.48 + 0.96 * b; cp.append((f'st[{b}]', 'M5', x - 0.012, CH - 0.192, x + 0.012, CH))
+        x = snap(12.48 + 0.96 * b); cp.append((f'st[{b}]', 'M5', x - 0.012, CH - 0.192, x + 0.012, CH))
     cd['st'] = ('output', 2)
     for k, nm in enumerate(('k_oor', 'w_oor', 'phy_rst_n')):
-        x = 4.8 + 1.92 * k; cp.append((f'{nm}[0]', 'M5', x - 0.012, 0.0, x + 0.012, 0.192))
+        x = snap(4.8 + 1.92 * k); cp.append((f'{nm}[0]', 'M5', x - 0.012, 0.0, x + 0.012, 0.192))
         cd[nm] = ('output' if nm == 'phy_rst_n' else 'input', 1)
     for face, x0, x1 in (('w', 0.0, 0.192), ('e', CW - 0.192, CW)):
         for b in range(2):
-            y = 21.552 + 0.384 * b; cp.append((f'co_{face}[{b}]', 'M4', x0, y - 0.012, x1, y + 0.012))
+            y = snap(21.552 + 0.384 * b); cp.append((f'co_{face}[{b}]', 'M4', x0, y - 0.012, x1, y + 0.012))
         cd[f'co_{face}'] = ('input', 2)
     emit('dsfd_ctrl_ctr', CW, CH, cp, cd, 'centre tile of dsfd_ctrl: resets, PHY reset, status merge')
     comp = dict(
