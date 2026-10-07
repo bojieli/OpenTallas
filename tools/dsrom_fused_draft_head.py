@@ -321,6 +321,9 @@ def cmd_run(a):
         if not (a.checked_permission and a.capture_return_extra == 5):
             raise ValueError("--margin requires --checked-permission and --capture-return-extra 5")
         defs = defs + ["+define+OT_FH_MARGIN=1"]
+    if a.fpipe:
+        if not a.margin: raise ValueError("--fpipe requires --margin")
+        defs = defs + ["+define+OT_FH_FPIPE=1"]
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
@@ -454,6 +457,7 @@ def main():
     r.add_argument("--capture-cut", action="store_true", help="Default-off protected return/capture candidate")
     r.add_argument("--capture-return-extra", type=int, choices=(2,3,5), default=2, help="Matched protected return extra stages;2 retained,3 decode-split,5 decode-split + margin-first ADDR_PIPE=2 request distribution")
     r.add_argument("--margin", action="store_true", help="Default-off margin-first head (OT_FH_MARGIN: zero-cycle trees, five-deep retirement, staged checked endpoint); pair with --capture-return-extra 5")
+    r.add_argument("--fpipe", action="store_true", help="Default-off registered endpoint fault aggregation (OT_FH_FPIPE: per-bank fault flops, registered reduce, release age 6, registered head ACK); needs --margin")
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
     r.add_argument("--jobs", type=int, default=8)

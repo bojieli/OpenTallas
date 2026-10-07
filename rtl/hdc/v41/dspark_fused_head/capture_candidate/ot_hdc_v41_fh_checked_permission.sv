@@ -9,7 +9,14 @@
 // three cycles before the age-0 release). The quarantine stays the same-cycle OR of every bank's
 // mismatch (fail closed at the grant); the two data registers carry each lane's payload to banks
 // beside the guard, so that OR is local. No release cycle changes.
-module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
+// FPIPE (default 0; needs MARGIN): registered fault aggregation for 1.2 GHz (head_m2 post-CTS -1987 ps:
+// bank pair XNOR -> 129-bank OR -> endpoint fault -> warm ACK -> head index-write state, ~2.5 ns).
+// Each bank launches its bad flag from a kept per-bank fault flop; the wide bank OR leaves the
+// same-cycle endpoint fault and is carried only by the registered reduce (local 8 -> cluster 4 ->
+// final), whose result now also vetoes the endpoint fault; request/reply release ages grow by one
+// (6) so the grant still sees the loaded banks' check; the head ACK fields leave registers (+1).
+// A bank corrupted after its check is quarantined four cycles later (sticky), never silently.
+module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  input wire fast_clk,cold_n_in,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
  input wire [31:0] native_ordinal,input wire [46:0] request_owner,
@@ -86,13 +93,13 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
  end
  for(genvar b=0;b<RB;b=b+1) begin : g_request_bank
   localparam integer N=(REQ_BITS-b*32>=32)?32:REQ_BITS-b*32;
-  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN)) u_bank (
+  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_bank (
    .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_rc[b%16]),.d(accepted_input[b*32+:N]),
    .q(source_packet[b*32+:N]),.check(source_check[b*32+:N]),.bad(request_bad[b]));
  end
  for(genvar b=0;b<PB;b=b+1) begin : g_reply_bank
   localparam integer N=(REP_BITS-b*32>=32)?32:REP_BITS-b*32;
-  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN)) u_bank (
+  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_bank (
    .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_pc[b%8]),.d(checked_reply[b*32+:N]),
    .q(held_reply[b*32+:N]),.check(held_check[b*32+:N]),.bad(reply_bad[b]));
  end
@@ -115,18 +122,36 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
  ot_hdc_v41_fh_checked_reduce #(.BITS(RB+PB+2)) u_check_reduce (
   .clk(fast_clk),.cold_n(cold_n),
   .bad({metadata_bad,identity_bad,request_bad,reply_bad}),.fault(checked_error));
+ wire wide_bad=FPIPE?checked_error:((|request_bad)||(|reply_bad));
  assign endpoint_fault=protocol_fault||metadata_bad||bounds_fault||
-     (|request_bad)||(|reply_bad)||identity_bad||
+     wide_bad||identity_bad||
      (reply_active&&rep_age==0&&!matching_reply);
  assign request_checked_v=active&&req_age==0&&!endpoint_fault&&!checked_error;
  assign reply_checked_v=active&&reply_active&&rep_age==0&&matching_reply&&!endpoint_fault&&!checked_error;
  // Early held publication is refused until the matching check completes.
  // A wrong identity quarantines; a held correct publication is consumed once.
  wire consume=published_reply_v&&reply_checked_v&&!sent;
- assign head_ack_v=consume&&warm&&held_reply.visible[1];
- assign head_ack_id=id;
- assign head_ack_word={9'b0,held_reply.wa[15+:15]};
- assign head_ack_mask=held_reply.wm[16+:16];
+ wire ack_n=consume&&warm&&held_reply.visible[1];
+ wire [23:0] ack_word_n={9'b0,held_reply.wa[15+:15]};
+ wire [15:0] ack_mask_n=held_reply.wm[16+:16];
+ localparam [2:0] AGE=FPIPE?3'd6:3'd5;
+ generate if(FPIPE) begin : g_ack_reg
+`ifndef SYNTHESIS
+  initial if(!MARGIN) $fatal(1,"FPIPE needs MARGIN");
+`endif
+  // head ACK launched from registers: the debt owner sees the receipt one cycle later
+  (* keep=1,dont_touch=1 *) reg ack_v_q;
+  reg [7:0] ack_id_q;reg [23:0] ack_word_q;reg [15:0] ack_mask_q;
+  always @(posedge fast_clk) begin
+   if(!cold_n) ack_v_q<=0; else ack_v_q<=ack_n;
+   ack_id_q<=id;ack_word_q<=ack_word_n;ack_mask_q<=ack_mask_n;
+  end
+  assign head_ack_v=ack_v_q;assign head_ack_id=ack_id_q;
+  assign head_ack_word=ack_word_q;assign head_ack_mask=ack_mask_q;
+ end else begin : g_ack_direct
+  assign head_ack_v=ack_n;assign head_ack_id=id;
+  assign head_ack_word=ack_word_n;assign head_ack_mask=ack_mask_n;
+ end endgenerate
  assign guard_busy=active;
  assign captured_request=source_packet;assign captured_request_check=source_check;
  assign captured_reply=held_reply;assign captured_reply_check=held_check;
@@ -139,11 +164,11 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
   end else begin
    if(request_take) begin
     active<=1;active_check<=0;reply_active<=0;reply_active_check<=1;
-    req_age<=5;req_age_check<=~3'd5;rep_age<=0;rep_age_check<=3'b111;
+    req_age<=AGE;req_age_check<=~AGE;rep_age<=0;rep_age_check<=3'b111;
     warm<=request_warm;warm_check<=~request_warm;id<=request_id;id_check<=~request_id;
     sent<=0;sent_check<=1;
    end else if(active&&req_age!=0) begin req_age<=req_age-1'b1;req_age_check<=~(req_age-3'd1);end
-   if(reply_take) begin reply_active<=1;reply_active_check<=0;rep_age<=5;rep_age_check<=~3'd5;end
+   if(reply_take) begin reply_active<=1;reply_active_check<=0;rep_age<=AGE;rep_age_check<=~AGE;end
    else if(reply_active&&rep_age!=0) begin rep_age<=rep_age-1'b1;rep_age_check<=~(rep_age-3'd1);end
    if(consume) begin sent<=1;sent_check<=0;end
    // Release storage only after matching real checked visibility. The parent
@@ -160,7 +185,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
 endmodule
 
 (* keep_hierarchy *)
-module ot_hdc_v41_fh_checked_bank #(parameter integer BITS=32, MARGIN=0)(
+module ot_hdc_v41_fh_checked_bank #(parameter integer BITS=32, MARGIN=0, FPIPE=0)(
  input wire clk,cold_n,load,input wire [BITS-1:0] d,
  (* keep=1,dont_touch=1 *) output reg [BITS-1:0] q,check,output wire bad
 );
@@ -177,12 +202,20 @@ module ot_hdc_v41_fh_checked_bank #(parameter integer BITS=32, MARGIN=0)(
  end endgenerate
  (* keep=1,dont_touch=1 *) reg fault,fault_check;
  wire mismatch=q!=~check;
- assign bad=mismatch||fault||fault!=~fault_check;
+ wire bad_n=mismatch||fault||fault!=~fault_check;
+ // FPIPE: the bank's bad flag leaves a kept per-bank flop (the local pair check stays inside the bank)
+ generate if(FPIPE) begin : g_bad_reg
+  (* keep=1,dont_touch=1 *) reg bad_q;
+  always @(posedge clk) if(!cold_n) bad_q<=0; else bad_q<=bad_n;
+  assign bad=bad_q;
+ end else begin : g_bad_direct
+  assign bad=bad_n;
+ end endgenerate
  always @(posedge clk) begin
   if(!cold_n) begin q<=0;check<={BITS{1'b1}};fault<=0;fault_check<=1;end
   else begin
-   if(ll&&!bad) begin q<=dl;check<=~dl;end
-   if(bad) begin fault<=1;fault_check<=0;end
+   if(ll&&!bad_n) begin q<=dl;check<=~dl;end
+   if(bad_n) begin fault<=1;fault_check<=0;end
   end
  end
 endmodule

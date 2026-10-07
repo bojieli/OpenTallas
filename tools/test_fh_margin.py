@@ -21,20 +21,26 @@ BENCH = {
       f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/margin/tb_fh_margin_addr_pipe.sv'], mut={
       'no_delay_ref': ('PARAM', 'MUT', '1'),
       'lane_mask': (f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', '.write_ok_d(g_wok[GR]&&s_wmask[b])', '.write_ok_d(g_wok[GR])')}),
+  'endpoint_fpipe': dict(top='tb_fh_checked_permission', params=['-GMARGIN=1', '-GFPIPE=1'],
+      srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+            f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/margin/tb_fh_margin_checked_permission.sv'], mut={
+      'age5': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', "AGE=FPIPE?3'd6:3'd5", "AGE=3'd5"),
+      'no_wide_veto': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'wide_bad=FPIPE?checked_error:', 'wide_bad=FPIPE?1\'b0:'),
+      'bank_not_sticky': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'else bad_q<=bad_n;', 'else bad_q<=mismatch;')}),
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }
 def run(name, b, mut, tmp):
-    srcs = [ROOT / s for s in b['srcs']]; params = []
+    srcs = [ROOT / s for s in b['srcs']]; params = list(b.get('params', []))
     if mut:
         f, a, c = mut
-        if f == 'PARAM': params = [f'-G{a}={c}']
+        if f == 'PARAM': params += [f'-G{a}={c}']
         else:
             t = Path(tmp) / Path(f).name; s = (ROOT / f).read_text(); assert s.count(a) == 1, (f, a)
             t.write_text(s.replace(a, c)); srcs = [t if x == ROOT / f else x for x in srcs]
     obj = Path(tmp) / 'obj'
     c = subprocess.run(['verilator', '--binary', '-O1', '-Wno-fatal', '-Wno-WIDTH', '-Wno-UNUSED', '-Wno-TIMESCALEMOD', '-Wno-UNOPTFLAT',
-                        '-Wno-MULTIDRIVEN', '--top-module', b['top'], '-Mdir', str(obj), *params, *map(str, srcs)], capture_output=True, text=True)
+                        '-Wno-MULTIDRIVEN', '-Wno-IMPORTSTAR', '--top-module', b['top'], '-Mdir', str(obj), *params, *map(str, srcs)], capture_output=True, text=True)
     if c.returncode: return dict(returncode=c.returncode, output=c.stderr[-800:])
     p = subprocess.run([str(obj / f"V{b['top']}")], capture_output=True, text=True)
     lines = [l for l in (p.stdout + p.stderr).splitlines() if 'PASS' in l or 'Fatal' in l or 'FATAL' in l or 'Error' in l]

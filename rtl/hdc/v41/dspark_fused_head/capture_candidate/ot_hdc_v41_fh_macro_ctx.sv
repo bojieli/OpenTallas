@@ -16,7 +16,9 @@ module ot_hdc_v41_fh_macro_ctx #(
     // retirement, five-deep retirement (+1), staged checked-permission endpoint; with HARD_LANE=1 the
     // 64 SRAM lanes are the hardened lane macro and requests reach them through ADDR_PIPE=2
     // distribution registers (RETURN_EXTRA = 2 + PROTECT_SPLIT + 2).
-    parameter integer MARGIN = 0, HARD_LANE = 0
+    parameter integer MARGIN = 0, HARD_LANE = 0,
+    // FPIPE (default 0; needs MARGIN): registered endpoint fault aggregation (ot_hdc_v41_fh_checked_permission)
+    parameter integer FPIPE = 0
     // MARGIN context folds the duplicate observation buses (result_capture = slices of the captured
     // request; the two check mirrors) to one tied bit and the argmax level-1 consumer registers to a
     // parity bit: the registers and every internal load stay, ~7,900 stand-in pins go.
@@ -147,7 +149,7 @@ module ot_hdc_v41_fh_macro_ctx #(
 `ifndef SYNTHESIS
         initial if(!RETIRE) $fatal(1,"Native endpoint context requires retirement enabled");
 `endif
-        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD),.MARGIN(MARGIN)) u_native (
+        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_native (
             .fast_clk(clk),.cold_n(native_cold_n),
             .request_accept((|o_we)&&native_request_ready),.request_warm(commit_warm),
             .checked_reply_capture(native_reply_capture),.published_reply_v(native_reply_v),

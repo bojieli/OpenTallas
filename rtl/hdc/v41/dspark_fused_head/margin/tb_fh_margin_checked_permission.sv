@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-module tb_fh_checked_permission #(parameter integer MARGIN=1);
+module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
+ // FPIPE: release ages 6 (+1), head ACK registered (+1); a held bank/reduction corruption is caught before the grant
  import ot_dsrom_vm_pkg::*;
  reg fast_clk=0;always #5 fast_clk=~fast_clk;
  reg cold_n=0,request_accept=0,request_warm=1,checked_reply_capture=0,published_reply_v=0;
@@ -15,7 +16,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1);
  wire [7:0] head_ack_id;wire [23:0] head_ack_word;wire [15:0] head_ack_mask;
  request_t captured_request,captured_request_check;
  reply_t captured_reply,captured_reply_check;
- ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(MARGIN)) dut(.*);
+ ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(MARGIN),.FPIPE(FPIPE)) dut(.*);
  task tick;begin @(posedge fast_clk);#1;end endtask
  task reset;begin
   @(negedge fast_clk);cold_n=0;request_accept=0;checked_reply_capture=0;published_reply_v=0;
@@ -27,6 +28,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1);
   @(negedge fast_clk);request_accept=0;
   if(request_checked_v||head_ack_v)$fatal(1,"early grant");
   repeat(5)tick;
+  if(FPIPE)begin if(request_checked_v)$fatal(1,"grant before age 6");tick;end
   if(!request_checked_v||!guard_busy||captured_request!=~captured_request_check)$fatal(1,"missing checked capture");
  end endtask
  task reply(input reg wrong_owner,input reg wrong_ordinal);reg [46:0] owner;reg [31:0] ordinal;begin
@@ -37,7 +39,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1);
   checked_reply_capture=1;published_reply_v=1;tick;
   @(negedge fast_clk);checked_reply_capture=0;
   if(head_ack_v)$fatal(1,"early visibility");
-  repeat(4)begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
+  repeat(4+2*FPIPE)begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
   tick;
  end endtask
  integer cases=0;
@@ -54,14 +56,30 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1);
   reset;take;@(negedge fast_clk);request_accept=1;tick;request_accept=0;
   if(!endpoint_fault||!guard_busy)$fatal(1,"held request overwrite not quarantined");cases=cases+1;
   reset;head_addr=96'h8000;tick;if(!bounds_fault||head_ack_v)$fatal(1,"address truncation");cases=cases+1;
+  if(FPIPE)begin
+   // registered aggregation: a bank corrupted while held is quarantined before the reply grant
+   reset;take;
+   force dut.g_distributed_check.u_guard.g_request_bank[0].u_bank.check=32'h0;
+   repeat(4)tick;if(!endpoint_fault)$fatal(1,"held payload mirror not caught in 4 cycles");
+   reply(0,0);if(head_ack_v||!endpoint_fault)$fatal(1,"late payload mirror ACK");
+   repeat(4)begin tick;if(head_ack_v)$fatal(1,"late payload mirror ACK");end
+  end else begin
   reset;take;reply(0,0);
   force dut.g_distributed_check.u_guard.g_request_bank[0].u_bank.check=32'h0;
   #1;if(head_ack_v||!endpoint_fault)$fatal(1,"late payload mirror ACK");tick;
+  end
   release dut.g_distributed_check.u_guard.g_request_bank[0].u_bank.check;
   tick;if(!endpoint_fault||head_ack_v)$fatal(1,"sticky bank quarantine lost");cases=cases+1;
+  if(FPIPE)begin
+   reset;take;
+   force dut.g_distributed_check.u_guard.u_check_reduce.local_check=17'b0;
+   reply(0,0);if(head_ack_v||reply_checked_v)$fatal(1,"late reduction mirror ACK");
+   repeat(4)begin tick;if(head_ack_v)$fatal(1,"late reduction mirror ACK");end
+  end else begin
   reset;take;reply(0,0);
   force dut.g_distributed_check.u_guard.u_check_reduce.local_check=17'b0;
   #1;if(head_ack_v||reply_checked_v)$fatal(1,"late reduction mirror ACK");
+  end
   release dut.g_distributed_check.u_guard.u_check_reduce.local_check;cases=cases+1;
   reset;take;reset;if(guard_busy||head_ack_v||request_checked_v||reply_checked_v)$fatal(1,"reset stale grant");cases=cases+1;
   $display("PASS CHECK_PIPE identity/quarantine/reset/maskedX cases=%0d",cases);$finish;
