@@ -4,16 +4,20 @@
  "generator": "tools/dsrom_s81_fulldie.py --gen r8",
  "generator_tag": {
   "file": "tools/dsrom_s81_fulldie.py",
-  "sha256": "bdcc1bcac84b1fe0f1a72ac898ebb42c3d7f9038cb0047b02261af7aa4e1c665",
-  "tree_head": "a51befd50",
+  "sha256": "503fca566c395ef38d8cf9958fd5ebaea8cd2d6015f9370fe32ab07659706837",
+  "tree_head": "1f106f700",
   "file_commit": null
  },
- "s81_opts": "--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --pairs 2050",
+ "s81_opts": "--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --pairs 2050",
  "qwen_source": null,
  "qwen_recipe": null,
  "variant": {
   "gen": "r8",
+  "cfifo_v2": true,
   "link_fix": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
   "corr_interleave": true,
   "rev": "r9",
   "cc_reach_um": 215.0,
@@ -50,7 +54,7 @@
  ],
  "summary": {
   "kinds": 27,
-  "copies": 57970,
+  "copies": 60532,
   "families_by_status": {
    "REAL_VIEW": 2,
    "REAL_VIEW_NOT_CLOSED": 2,
@@ -63,7 +67,7 @@
    "REAL_VIEW": 14354,
    "REAL_VIEW_NOT_CLOSED": 1618,
    "RTL_CLOSED": 0,
-   "RTL_OPEN": 41981,
+   "RTL_OPEN": 44543,
    "NO_RTL_TOP": 17,
    "RESERVATION_ONLY": 0
   }
@@ -279,8 +283,8 @@
    "per_master": null,
    "placeholder_size_um": [
     [
-     850.152,
-     47.496
+     431.976,
+     95.016
     ]
    ],
    "distinct_sizes": 1,
@@ -1016,7 +1020,6 @@
    ],
    "masters": [
     "dsfd_rly_15_EN",
-    "dsfd_rly_15_EW",
     "dsfd_rly_15_SN",
     "dsfd_rly_15_WN",
     "dsfd_rly_1_ES",
@@ -1026,13 +1029,15 @@
     "dsfd_rly_1_WN",
     "dsfd_rly_266_EW",
     "dsfd_rly_266_NS",
+    "dsfd_rly_266_NW",
     "dsfd_rly_266_SE",
     "dsfd_rly_266_SN",
+    "dsfd_rly_266_SW",
     "dsfd_rly_266_WE",
     "dsfd_rly_266_WN",
+    "dsfd_rly_283_EN",
     "dsfd_rly_283_EW",
     "dsfd_rly_283_NS",
-    "dsfd_rly_283_SE",
     "dsfd_rly_283_SN",
     "dsfd_rly_283_WE",
     "dsfd_rly_2_EN",
@@ -1041,7 +1046,6 @@
     "dsfd_rly_2_NE",
     "dsfd_rly_2_NS",
     "dsfd_rly_2_NW",
-    "dsfd_rly_2_SE",
     "dsfd_rly_2_SN",
     "dsfd_rly_2_WE",
     "dsfd_rly_2_WS",
@@ -1062,53 +1066,53 @@
     "dsfd_rly_66_WS"
    ],
    "distinct_masters": 45,
-   "instances": 27714,
+   "instances": 30210,
    "per_master": {
     "dsfd_rly_15_EN": 6,
-    "dsfd_rly_15_EW": 128,
     "dsfd_rly_15_SN": 790,
     "dsfd_rly_15_WN": 356,
-    "dsfd_rly_1_ES": 198,
-    "dsfd_rly_1_EW": 545,
+    "dsfd_rly_1_ES": 99,
+    "dsfd_rly_1_EW": 644,
     "dsfd_rly_1_NW": 99,
     "dsfd_rly_1_SN": 312,
     "dsfd_rly_1_WN": 440,
-    "dsfd_rly_266_EW": 128,
+    "dsfd_rly_266_EW": 499,
     "dsfd_rly_266_NS": 356,
-    "dsfd_rly_266_SE": 71,
+    "dsfd_rly_266_NW": 1,
+    "dsfd_rly_266_SE": 72,
     "dsfd_rly_266_SN": 796,
+    "dsfd_rly_266_SW": 28,
     "dsfd_rly_266_WE": 840,
     "dsfd_rly_266_WN": 2,
-    "dsfd_rly_283_EW": 198,
+    "dsfd_rly_283_EN": 767,
+    "dsfd_rly_283_EW": 70,
     "dsfd_rly_283_NS": 356,
-    "dsfd_rly_283_SE": 99,
     "dsfd_rly_283_SN": 29,
-    "dsfd_rly_283_WE": 671,
+    "dsfd_rly_283_WE": 770,
     "dsfd_rly_2_EN": 2,
-    "dsfd_rly_2_ES": 1125,
+    "dsfd_rly_2_ES": 1128,
     "dsfd_rly_2_EW": 768,
     "dsfd_rly_2_NE": 29,
     "dsfd_rly_2_NS": 455,
     "dsfd_rly_2_NW": 2,
-    "dsfd_rly_2_SE": 99,
     "dsfd_rly_2_SN": 358,
-    "dsfd_rly_2_WE": 796,
+    "dsfd_rly_2_WE": 767,
     "dsfd_rly_2_WS": 866,
-    "dsfd_rly_54_EW": 770,
-    "dsfd_rly_54_WN": 440,
-    "dsfd_rly_63_NE": 869,
-    "dsfd_rly_63_NS": 1419,
-    "dsfd_rly_63_SE": 46,
-    "dsfd_rly_63_SN": 1,
-    "dsfd_rly_63_WE": 7933,
-    "dsfd_rly_63_WN": 59,
-    "dsfd_rly_63_WS": 3465,
-    "dsfd_rly_66_ES": 126,
-    "dsfd_rly_66_EW": 227,
-    "dsfd_rly_66_NS": 896,
+    "dsfd_rly_54_EW": 671,
+    "dsfd_rly_54_WN": 539,
+    "dsfd_rly_63_NE": 1055,
+    "dsfd_rly_63_NS": 1608,
+    "dsfd_rly_63_SE": 97,
+    "dsfd_rly_63_SN": 4,
+    "dsfd_rly_63_WE": 8870,
+    "dsfd_rly_63_WN": 132,
+    "dsfd_rly_63_WS": 3523,
+    "dsfd_rly_66_ES": 128,
+    "dsfd_rly_66_EW": 340,
+    "dsfd_rly_66_NS": 940,
     "dsfd_rly_66_NW": 29,
     "dsfd_rly_66_SN": 512,
-    "dsfd_rly_66_WS": 2
+    "dsfd_rly_66_WS": 55
    },
    "placeholder_size_um": [
     [
@@ -1118,9 +1122,17 @@
     [
      17.256,
      19.416
+    ],
+    [
+     18.552,
+     18.552
+    ],
+    [
+     19.416,
+     19.416
     ]
    ],
-   "distinct_sizes": 2,
+   "distinct_sizes": 4,
    "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
    "ports": {
     "i": {
@@ -1435,6 +1447,10 @@
      "bits": 1,
      "face": "N"
     },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
     "rE0": {
      "bits": 692,
      "face": "E"
@@ -1465,10 +1481,6 @@
     },
     "f_vm": {
      "bits": 512,
-     "face": "E"
-    },
-    "rst": {
-     "bits": 1,
      "face": "E"
     },
     "rW0": {
@@ -1959,17 +1971,18 @@
     "dsfd_stnv_512x1",
     "dsfd_stnv_514x1",
     "dsfd_stnv_566x1",
+    "dsfd_stnv_70x1",
     "dsfd_stnv_70x10",
     "dsfd_stnv_70x11"
    ],
-   "distinct_masters": 21,
-   "instances": 2619,
+   "distinct_masters": 22,
+   "instances": 2685,
    "per_master": {
-    "dsfd_stnh_1026x1": 76,
-    "dsfd_stnh_512x1": 607,
-    "dsfd_stnh_514x1": 246,
+    "dsfd_stnh_1026x1": 77,
+    "dsfd_stnh_512x1": 604,
+    "dsfd_stnh_514x1": 248,
     "dsfd_stnh_566x1": 386,
-    "dsfd_stnh_70x1": 24,
+    "dsfd_stnh_70x1": 55,
     "dsfd_stnh_70x10": 44,
     "dsfd_stnh_70x11": 38,
     "dsfd_stnh_70x2": 36,
@@ -1980,14 +1993,19 @@
     "dsfd_stnh_70x7": 36,
     "dsfd_stnh_70x8": 36,
     "dsfd_stnh_70x9": 36,
-    "dsfd_stnv_1026x1": 86,
-    "dsfd_stnv_512x1": 242,
-    "dsfd_stnv_514x1": 352,
+    "dsfd_stnv_1026x1": 88,
+    "dsfd_stnv_512x1": 247,
+    "dsfd_stnv_514x1": 354,
     "dsfd_stnv_566x1": 89,
+    "dsfd_stnv_70x1": 26,
     "dsfd_stnv_70x10": 77,
     "dsfd_stnv_70x11": 64
    },
    "placeholder_size_um": [
+    [
+     17.256,
+     17.256
+    ],
     [
      17.256,
      30.216
@@ -2007,13 +2025,9 @@
     [
      17.256,
      73.416
-    ],
-    [
-     29.352,
-     17.256
     ]
    ],
-   "distinct_sizes": 11,
+   "distinct_sizes": 12,
    "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
    "ports": {
     "fi0": {
@@ -2235,8 +2249,14 @@
    },
    "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): one ot_fwd_link_stage (W <= 512) per lane slice, flops at both faces (falling edge of the forwarded clock), fo = kept inverter",
    "status": "RTL_OPEN",
-   "hardened_view": null,
-   "closure": "hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters (1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774",
+   "hardened_view": [
+    "physical/s81_die_views/views/dsfd_stnh_512x1/ (dsfd_stnh_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_514x1/ (dsfd_stnh_514x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_566x1/ (dsfd_stnh_566x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_512x1/ (dsfd_stnv_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_514x1/ (dsfd_stnv_514x1.lef + SS/FF LIB)"
+   ],
+   "closure": "hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters (1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774; landed die views: dsfd_stnh_512x1 SS +83.89 / FF +413.93, dsfd_stnh_514x1 SS +81.75 / FF +413.36, dsfd_stnh_566x1 SS +79.84 / FF +411.16, dsfd_stnv_512x1 SS +82.06 / FF +415.18, dsfd_stnv_514x1 SS +77.67 / FF +415.29",
    "owner": "CLAUDE S81-RERUN",
    "note": "21 masters by lane signature; registered die view = the station itself (no added cycle)",
    "generator_note": [

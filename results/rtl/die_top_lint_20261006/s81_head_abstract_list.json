@@ -4,16 +4,20 @@
  "generator": "tools/dsrom_s81_fulldie.py --gen r8",
  "generator_tag": {
   "file": "tools/dsrom_s81_fulldie.py",
-  "sha256": "bdcc1bcac84b1fe0f1a72ac898ebb42c3d7f9038cb0047b02261af7aa4e1c665",
-  "tree_head": "a51befd50",
+  "sha256": "503fca566c395ef38d8cf9958fd5ebaea8cd2d6015f9370fe32ab07659706837",
+  "tree_head": "1f106f700",
   "file_commit": null
  },
- "s81_opts": "--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave",
+ "s81_opts": "--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2",
  "qwen_source": null,
  "qwen_recipe": null,
  "variant": {
   "gen": "r8",
+  "cfifo_v2": true,
   "link_fix": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
   "corr_interleave": true,
   "rev": "r9",
   "cc_reach_um": 215.0,
@@ -50,7 +54,7 @@
  ],
  "summary": {
   "kinds": 30,
-  "copies": 43967,
+  "copies": 47245,
   "families_by_status": {
    "REAL_VIEW": 3,
    "REAL_VIEW_NOT_CLOSED": 4,
@@ -63,7 +67,7 @@
    "REAL_VIEW": 10386,
    "REAL_VIEW_NOT_CLOSED": 1588,
    "RTL_CLOSED": 0,
-   "RTL_OPEN": 31976,
+   "RTL_OPEN": 35254,
    "NO_RTL_TOP": 17,
    "RESERVATION_ONLY": 0
   }
@@ -279,8 +283,8 @@
    "per_master": null,
    "placeholder_size_um": [
     [
-     850.152,
-     47.496
+     431.976,
+     95.016
     ]
    ],
    "distinct_sizes": 1,
@@ -502,6 +506,10 @@
      "bits": 66,
      "face": "N"
     },
+    "xsa": {
+     "bits": 256,
+     "face": "N"
+    },
     "ck": {
      "bits": 1,
      "face": "N"
@@ -512,10 +520,6 @@
     },
     "bd": {
      "bits": 32,
-     "face": "N"
-    },
-    "xsa": {
-     "bits": 256,
      "face": "N"
     },
     "a2bbits": {
@@ -546,35 +550,19 @@
      "bits": 17,
      "face": "N"
     },
-    "ro": {
-     "bits": 66,
-     "face": "E"
-    },
-    "go": {
+    "a3done": {
      "bits": 1,
-     "face": "E"
+     "face": "N"
     },
-    "so": {
-     "bits": 2,
-     "face": "E"
+    "a3flt": {
+     "bits": 1,
+     "face": "N"
     },
     "a3bbits": {
      "bits": 32,
-     "face": "E"
+     "face": "N"
     },
-    "a3bkey": {
-     "bits": 32,
-     "face": "E"
-    },
-    "a3brow": {
-     "bits": 17,
-     "face": "E"
-    },
-    "a3done": {
-     "bits": 1,
-     "face": "E"
-    },
-    "a3flt": {
+    "go": {
      "bits": 1,
      "face": "E"
     },
@@ -583,6 +571,14 @@
      "face": "E"
     },
     "r0a3": {
+     "bits": 17,
+     "face": "E"
+    },
+    "a3bkey": {
+     "bits": 32,
+     "face": "E"
+    },
+    "a3brow": {
      "bits": 17,
      "face": "E"
     },
@@ -612,6 +608,14 @@
     },
     "xbi": {
      "bits": 266,
+     "face": "S"
+    },
+    "ro": {
+     "bits": 66,
+     "face": "S"
+    },
+    "so": {
+     "bits": 2,
      "face": "S"
     }
    },
@@ -935,18 +939,20 @@
     "dsfd_hstnh_761",
     "dsfd_hstnv_1024",
     "dsfd_hstnv_512",
+    "dsfd_hstnv_515",
     "dsfd_hstnv_576"
    ],
-   "distinct_masters": 8,
-   "instances": 101,
+   "distinct_masters": 9,
+   "instances": 104,
    "per_master": {
     "dsfd_hstnh_1024": 13,
     "dsfd_hstnh_512": 17,
     "dsfd_hstnh_576": 2,
     "dsfd_hstnh_692": 9,
     "dsfd_hstnh_761": 16,
-    "dsfd_hstnv_1024": 33,
+    "dsfd_hstnv_1024": 34,
     "dsfd_hstnv_512": 5,
+    "dsfd_hstnv_515": 2,
     "dsfd_hstnv_576": 6
    },
    "placeholder_size_um": [
@@ -975,7 +981,7 @@
      17.256
     ]
    ],
-   "distinct_sizes": 8,
+   "distinct_sizes": 9,
    "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
    "ports": {
     "di": {
@@ -1242,20 +1248,25 @@
    ],
    "masters": [
     "dsfd_rly_15_EN",
-    "dsfd_rly_15_EW",
     "dsfd_rly_15_NS",
     "dsfd_rly_15_SN",
     "dsfd_rly_15_WN",
+    "dsfd_rly_17_EW",
+    "dsfd_rly_17_WN",
+    "dsfd_rly_1_EN",
     "dsfd_rly_1_ES",
     "dsfd_rly_1_EW",
     "dsfd_rly_1_NW",
     "dsfd_rly_1_SN",
     "dsfd_rly_1_WE",
     "dsfd_rly_1_WN",
+    "dsfd_rly_256_EN",
+    "dsfd_rly_256_WN",
     "dsfd_rly_266_EN",
     "dsfd_rly_266_ES",
     "dsfd_rly_266_EW",
     "dsfd_rly_266_NS",
+    "dsfd_rly_266_NW",
     "dsfd_rly_266_SE",
     "dsfd_rly_266_SN",
     "dsfd_rly_266_SW",
@@ -1265,16 +1276,17 @@
     "dsfd_rly_283_EN",
     "dsfd_rly_283_EW",
     "dsfd_rly_283_NS",
-    "dsfd_rly_283_SE",
     "dsfd_rly_283_SN",
     "dsfd_rly_283_WE",
     "dsfd_rly_2_ES",
     "dsfd_rly_2_EW",
     "dsfd_rly_2_NS",
-    "dsfd_rly_2_SE",
     "dsfd_rly_2_SN",
     "dsfd_rly_2_WE",
     "dsfd_rly_2_WS",
+    "dsfd_rly_32_ES",
+    "dsfd_rly_32_EW",
+    "dsfd_rly_32_WN",
     "dsfd_rly_54_EW",
     "dsfd_rly_54_WN",
     "dsfd_rly_63_NE",
@@ -1288,61 +1300,67 @@
     "dsfd_rly_66_NE",
     "dsfd_rly_66_NS",
     "dsfd_rly_66_SN",
-    "dsfd_rly_66_WE",
+    "dsfd_rly_66_SW",
     "dsfd_rly_66_WS"
    ],
-   "distinct_masters": 49,
-   "instances": 21081,
+   "distinct_masters": 55,
+   "instances": 24280,
    "per_master": {
     "dsfd_rly_15_EN": 20,
-    "dsfd_rly_15_EW": 128,
     "dsfd_rly_15_NS": 68,
     "dsfd_rly_15_SN": 620,
     "dsfd_rly_15_WN": 250,
-    "dsfd_rly_1_ES": 172,
-    "dsfd_rly_1_EW": 424,
+    "dsfd_rly_17_EW": 85,
+    "dsfd_rly_17_WN": 85,
+    "dsfd_rly_1_EN": 255,
+    "dsfd_rly_1_ES": 256,
+    "dsfd_rly_1_EW": 765,
     "dsfd_rly_1_NW": 86,
     "dsfd_rly_1_SN": 206,
     "dsfd_rly_1_WE": 255,
-    "dsfd_rly_1_WN": 401,
-    "dsfd_rly_266_EN": 17,
+    "dsfd_rly_1_WN": 486,
+    "dsfd_rly_256_EN": 85,
+    "dsfd_rly_256_WN": 85,
+    "dsfd_rly_266_EN": 45,
     "dsfd_rly_266_ES": 28,
-    "dsfd_rly_266_EW": 145,
+    "dsfd_rly_266_EW": 319,
     "dsfd_rly_266_NS": 250,
-    "dsfd_rly_266_SE": 68,
+    "dsfd_rly_266_NW": 47,
+    "dsfd_rly_266_SE": 98,
     "dsfd_rly_266_SN": 555,
     "dsfd_rly_266_SW": 28,
     "dsfd_rly_266_WE": 555,
     "dsfd_rly_266_WN": 80,
     "dsfd_rly_266_WS": 30,
-    "dsfd_rly_283_EN": 17,
-    "dsfd_rly_283_EW": 168,
+    "dsfd_rly_283_EN": 542,
+    "dsfd_rly_283_EW": 40,
     "dsfd_rly_283_NS": 318,
-    "dsfd_rly_283_SE": 86,
     "dsfd_rly_283_SN": 98,
-    "dsfd_rly_283_WE": 469,
+    "dsfd_rly_283_WE": 555,
     "dsfd_rly_2_ES": 805,
     "dsfd_rly_2_EW": 555,
     "dsfd_rly_2_NS": 348,
-    "dsfd_rly_2_SE": 86,
     "dsfd_rly_2_SN": 343,
-    "dsfd_rly_2_WE": 642,
+    "dsfd_rly_2_WE": 600,
     "dsfd_rly_2_WS": 617,
-    "dsfd_rly_54_EW": 555,
-    "dsfd_rly_54_WN": 316,
-    "dsfd_rly_63_NE": 517,
-    "dsfd_rly_63_NS": 1052,
-    "dsfd_rly_63_SE": 63,
-    "dsfd_rly_63_WE": 5626,
-    "dsfd_rly_63_WN": 48,
+    "dsfd_rly_32_ES": 85,
+    "dsfd_rly_32_EW": 170,
+    "dsfd_rly_32_WN": 85,
+    "dsfd_rly_54_EW": 469,
+    "dsfd_rly_54_WN": 402,
+    "dsfd_rly_63_NE": 653,
+    "dsfd_rly_63_NS": 1174,
+    "dsfd_rly_63_SE": 82,
+    "dsfd_rly_63_WE": 6327,
+    "dsfd_rly_63_WN": 135,
     "dsfd_rly_63_WS": 2436,
     "dsfd_rly_66_ES": 111,
-    "dsfd_rly_66_EW": 150,
+    "dsfd_rly_66_EW": 222,
     "dsfd_rly_66_NE": 68,
-    "dsfd_rly_66_NS": 738,
+    "dsfd_rly_66_NS": 794,
     "dsfd_rly_66_SN": 361,
-    "dsfd_rly_66_WE": 17,
-    "dsfd_rly_66_WS": 85
+    "dsfd_rly_66_SW": 64,
+    "dsfd_rly_66_WS": 179
    },
    "placeholder_size_um": [
     [
@@ -1352,9 +1370,21 @@
     [
      17.256,
      19.416
+    ],
+    [
+     17.688,
+     17.688
+    ],
+    [
+     18.552,
+     18.552
+    ],
+    [
+     19.416,
+     19.416
     ]
    ],
-   "distinct_sizes": 2,
+   "distinct_sizes": 5,
    "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
    "ports": {
     "i": {
@@ -1681,12 +1711,12 @@
      "bits": 761,
      "face": "E"
     },
-    "rE4": {
-     "bits": 761,
-     "face": "E"
-    },
     "rst": {
      "bits": 1,
+     "face": "E"
+    },
+    "rE4": {
+     "bits": 761,
      "face": "E"
     },
     "ck": {
@@ -1769,11 +1799,11 @@
      "bits": 1,
      "face": "W"
     },
-    "f_s": {
+    "t_s": {
      "bits": 1024,
      "face": "W"
     },
-    "t_s": {
+    "f_s": {
      "bits": 1024,
      "face": "W"
     },
@@ -1937,6 +1967,10 @@
      "bits": 515,
      "face": "N"
     },
+    "f_collective": {
+     "bits": 512,
+     "face": "N"
+    },
     "aNE": {
      "bits": 1027,
      "face": "N"
@@ -2006,10 +2040,6 @@
      "face": "E"
     },
     "f_capture": {
-     "bits": 512,
-     "face": "E"
-    },
-    "f_collective": {
      "bits": 512,
      "face": "E"
     },
@@ -2191,17 +2221,18 @@
     "dsfd_stnv_512x1",
     "dsfd_stnv_514x1",
     "dsfd_stnv_566x1",
+    "dsfd_stnv_70x1",
     "dsfd_stnv_70x10",
     "dsfd_stnv_70x11"
    ],
-   "distinct_masters": 21,
-   "instances": 2547,
+   "distinct_masters": 22,
+   "instances": 2623,
    "per_master": {
-    "dsfd_stnh_1026x1": 78,
-    "dsfd_stnh_512x1": 600,
-    "dsfd_stnh_514x1": 244,
+    "dsfd_stnh_1026x1": 79,
+    "dsfd_stnh_512x1": 601,
+    "dsfd_stnh_514x1": 246,
     "dsfd_stnh_566x1": 387,
-    "dsfd_stnh_70x1": 24,
+    "dsfd_stnh_70x1": 65,
     "dsfd_stnh_70x10": 45,
     "dsfd_stnh_70x11": 38,
     "dsfd_stnh_70x2": 36,
@@ -2212,14 +2243,19 @@
     "dsfd_stnh_70x7": 36,
     "dsfd_stnh_70x8": 36,
     "dsfd_stnh_70x9": 36,
-    "dsfd_stnv_1026x1": 85,
-    "dsfd_stnv_512x1": 184,
-    "dsfd_stnv_514x1": 351,
+    "dsfd_stnv_1026x1": 87,
+    "dsfd_stnv_512x1": 185,
+    "dsfd_stnv_514x1": 353,
     "dsfd_stnv_566x1": 84,
+    "dsfd_stnv_70x1": 25,
     "dsfd_stnv_70x10": 75,
-    "dsfd_stnv_70x11": 64
+    "dsfd_stnv_70x11": 65
    },
    "placeholder_size_um": [
+    [
+     17.256,
+     17.256
+    ],
     [
      17.256,
      30.216
@@ -2239,13 +2275,9 @@
     [
      17.256,
      73.416
-    ],
-    [
-     29.352,
-     17.256
     ]
    ],
-   "distinct_sizes": 11,
+   "distinct_sizes": 12,
    "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
    "ports": {
     "fi0": {
@@ -2467,8 +2499,14 @@
    },
    "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): one ot_fwd_link_stage (W <= 512) per lane slice, flops at both faces (falling edge of the forwarded clock), fo = kept inverter",
    "status": "RTL_OPEN",
-   "hardened_view": null,
-   "closure": "hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters (1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774",
+   "hardened_view": [
+    "physical/s81_die_views/views/dsfd_stnh_512x1/ (dsfd_stnh_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_514x1/ (dsfd_stnh_514x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_566x1/ (dsfd_stnh_566x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_512x1/ (dsfd_stnv_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_514x1/ (dsfd_stnv_514x1.lef + SS/FF LIB)"
+   ],
+   "closure": "hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters (1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774; landed die views: dsfd_stnh_512x1 SS +83.89 / FF +413.93, dsfd_stnh_514x1 SS +81.75 / FF +413.36, dsfd_stnh_566x1 SS +79.84 / FF +411.16, dsfd_stnv_512x1 SS +82.06 / FF +415.18, dsfd_stnv_514x1 SS +77.67 / FF +415.29",
    "owner": "CLAUDE S81-RERUN",
    "note": "21 masters by lane signature; registered die view = the station itself (no added cycle)",
    "generator_note": [

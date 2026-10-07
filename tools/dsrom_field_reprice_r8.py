@@ -69,7 +69,7 @@ GEOMS = {
     # S81-RERUN v6 die case: + VCH / corridor interleave, link fix, a station on every hop over reach (budget sheets
     # 2026-10-06: column relays / hub stations / forwarded stations), meso FIFOs DEPTH 8 (+1 cycle a crossing)
     "r9m215v6f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
-                            opts="--vch-interleave --corr-interleave --link-fix --hop-fix --meso-d8",
+                            opts="--vch-interleave --corr-interleave --link-fix --hop-fix --meso-d8 --cfifo-v2",
                             q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
                             label="S81-RERUN v6: r9m215 + hop stations (budget sheets) + meso depth 8 (FH 192.24)"),
 }
