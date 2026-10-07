@@ -347,6 +347,10 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
 R23V = dict(R23, vm_split8=True)
 # r24 (coordinator 2026-10-07): R23 + 8 per-segment ck pins on every hub quarter (hfd_su / hfd_sfu / hfd_hc)
 R24 = dict(R23, hub_ck_seg=8)
+# Candidate only: paired half-rate DDIV64 full lane, sized by unified-model
+# commit 6dc3c9707.  Reserve >=400 x 400 um on the existing macro/site lattice;
+# keep the other slots and adopted floorplan unchanged.
+R24F = dict(R24, spine_slots=dict(R24['spine_slots'], su_full=(400.008, 401.736)))
 ADOPTED = R23
 
 
@@ -2989,7 +2993,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
