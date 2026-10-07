@@ -358,7 +358,9 @@ R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.
 # Geometry-only successor sized by hbm_w2_slot_model.py (ac7d9ee59).
 # Logical SM identity/ports stay 4x2; physical locations become eight of nine
 # 3x3 sites. Network generation is intentionally unavailable pending remapping.
-R24SM3 = dict(R24W, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+# W2/HA2 partial interfaces stay inside hb_coll; the earlier R24W
+# external sender reservation is historical diagnostic geometry only.
+R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
 ADOPTED = R23
 
 
