@@ -541,8 +541,8 @@ against the GPU golden, unless it is marked otherwise. Records:
 
 #### The two rates
 
-**Plain decoding.** In the closed configuration (owner decision, 2026-10-06) one token is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
-at 1.2 GHz, which is **5,537.3** tok/s per user. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+**Plain decoding.** In the candidate configuration (declared closed 2026-10-06; physical closure reopened by the owner on 2026-10-07, so this is a priced candidate, not a closed rate) one token is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM candidate headline cycles" -->
+at 1.2 GHz, which is **5,537.3** tok/s per user. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM candidate headline tok/s" -->
 It is the measured full token, 193,955 cycles <!-- figure: 193955 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles_measured" tol="exact" name="Qwen ROM measured full token cycles" -->
 (36 layers and the head at P8191 on STREAM4), plus the adopted levers' measured cycles: slab MUL_LAT 7
 +217 and KV landing Option M (KV_MAP=1) +54 on the cold first layer, plus the die relay stations at the
@@ -599,6 +599,12 @@ The ME op counts are decoded from the program images the components ran.
 The published per-user rate is **3,902.0** tok/s, <!-- figure: 3902.0 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.tok_s_upper" name="DSpark STREAM4 tok/s" -->
 **0.705×** of the 5,537.3 tok/s AR headline. <!-- figure: 0.705 src="results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json#variants.baseline_np4.speedup_vs_ar_upper" name="DSpark STREAM4 vs AR" -->
 The relays cost both modes about the same share, so the verdict does not change.
+Re-evaluated on 2026-10-07 with the newer priced Qwen inputs (controller SHIFT worst case +144 cycles on AR and on
+each step; forwarded link clocks add no stage), DSpark gives **3,901.4** tok/s, <!-- figure: 3901.4 src="results/arch/unified_composition_20261007/ledger.json#targets.qwen_rom.dspark.reevaluated.tok_s" name="DSpark re-evaluated tok/s" -->
+still 0.705× of AR, so AR mode stands. The VM bank service and the link credit round trip are gated, not priced.
+A per-ME-op cost can only lower the ratio, since a step issues more ME ops per accepted token than AR does.
+A link-credit stall could raise it only above about 2,190 cycles a traversal <!-- figure: 2190 src="results/arch/unified_composition_20261007/ledger.json#targets.qwen_rom.dspark.gated_inputs.link_credit.break_even_stall_cycles_per_traversal_equal_payload" tol="exact" name="DSpark link-stall break-even" -->
+(`results/arch/unified_composition_20261007/`).
 With the drafter ingest and Markov epilogue priced instead of measured (7,875
 cycles), the step was 801,075 cycles: 4,710.4 tok/s, 0.763× of AR. With a free
 draft (`D` = 0) the bound is still **0.969×** of AR. <!-- figure: 0.969 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#bound_if_draft_free.speedup_vs_ar_chained" name="DSpark free-draft bound" -->
@@ -741,13 +747,13 @@ verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_full
 
 - **The Qwen3-8B ROM operates in AR mode at 8K.** The verdict above was taken on
   the layer composition, 194,498 cycles = 6,169.7 tok/s per user on STREAM4.
-- **Closed configuration (owner decision, 2026-10-06).** The headline is the
+- **Candidate configuration (declared closed 2026-10-06; reopened for full physical closure 2026-10-07).** The headline is the
   measured full token, 193,955 cycles (36 layers and the head, next-token argmax
   on all four ranks), plus the adopted levers' measured cycles: core r5_f2ba +0,
   slab MUL_LAT 7 +217, and KV landing Option M (KV_MAP=1) +54 on the cold first
   layer, plus the die relay stations at the measured 430.56 µm reach, +22,487
-  (owner-approved 2026-10-07). That is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
-  = **5,537.3** tok/s per user at 1.2 GHz. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+  (owner-approved 2026-10-07). That is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM candidate headline cycles" -->
+  = **5,537.3** tok/s per user at 1.2 GHz. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM candidate headline tok/s" -->
   The Option M die crossbar adds a modelled (not RTL) +24 cycles, which gives
   5,536.7 tok/s. <!-- figure: 5536.7 src="results/arch/three_machine_compose/compose.json#qwen_rom.modelled_sensitivity.AR_tok_s" name="Qwen ROM modelled-crossbar sensitivity" -->
   The shipped KV path is the unprotected STREAM4 service; the protected
