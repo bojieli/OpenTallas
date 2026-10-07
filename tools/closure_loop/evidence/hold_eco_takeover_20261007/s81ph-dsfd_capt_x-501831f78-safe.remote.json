@@ -1,0 +1,42 @@
+{
+  "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2",
+  "files": {
+    "pass1/result.json": {
+      "sha256": "fdbf5467932e8d8e4993e699e7af2c7006a263dbd2f45a3399fec8c32e40272a",
+      "data": {
+        "ss_ps": 41.5,
+        "ff_ps": -12.11,
+        "drc": 0,
+        "cells_added": 1203,
+        "errors": [],
+        "pass": 1,
+        "session": "two",
+        "window": "endpoints_below_hm 8041 fixable 8030 tight 11 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "score": -27.11
+      }
+    },
+    "pass1/eff_ss.sdc.slack": {
+      "sha256": "a9772019d786590175c59d25934f8041388f266407d27c572ea2517a3018db5e",
+      "line_count": 20071,
+      "macro_addr_pins": []
+    },
+    "pass2/eff_ss.sdc.slack": {
+      "sha256": "cb1e20630c7f0b28dbf17a02db6e441a0e3ac532b98bc1af56709dac4f5713eb",
+      "line_count": 20071,
+      "macro_addr_pins": []
+    }
+  },
+  "log_excerpt": [
+    "OT_PASS 1 input /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/5_2_route.odb spef /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.spef",
+    "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 8041 fixable 8030 tight 11 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+    "OT_ECO route guides from the db: 1",
+    "}OT_PASS 2 input /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2/pass1/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.odb spef /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2/pass1/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.spef",
+    "OT_PASS 2 hold repair target 30.0 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 7220 fixable 6674 tight 546 infeasible 0 (hm 30.0 filt 40 accept_ss 15.0)",
+    "OT_ECO route guides from the db: 1",
+    "[ERROR DRT-0218] Guide is not connected to design for net net49533",
+    "Error: hold_eco.tcl, 162 DRT-0218"
+  ],
+  "eco_log_sha256": "82ac96b6ed7c627b102b5cd691a516aaec0686ad60ab874c4b9bc0902cdc7c39"
+}
