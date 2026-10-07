@@ -5,6 +5,11 @@ module tb_ha2_half_endpoint_credit;
  localparam integer FW=512,PWT=545,PF=384,OF=48,ROF=24;
  reg clk=0,pclk=0;always #416.666667 clk=~clk;always #500 pclk=~pclk;
  reg rst_n=0,prst_n=0,go=0;
+ bit corrupt_golden;
+ initial begin
+  corrupt_golden=$test$plusargs("CORRUPT_GOLDEN");
+  if($test$plusargs("IGNORE_PEER_CREDIT"))force dut.g_candidate.g_on.owner_p_r=8'hff;
+ end
  reg [7:0] rxv=0;reg [8*PWT-1:0] rxf=0;
  wire ready,fault;wire [31:0] idx,stall;wire [1:0] rd;
  reg [2*FW-1:0] inj_data;
@@ -39,7 +44,7 @@ module tb_ha2_half_endpoint_credit;
    if(fault||ref_bad)$fatal(1,"ENDPOINT_FAIL unexpected fault endpoint=%b ref=%b cycle=%0d",fault,ref_bad,cycles);
    if(ref_v)begin
     if(ref_m>=ROF||reference_seen[ref_m])$fatal(1,"ENDPOINT_FAIL reference identity");
-    golden[ref_m]=ref_d;reference_seen[ref_m]=1;
+    golden[ref_m]=ref_d ^ (corrupt_golden ? 512'b1 : 512'b0);reference_seen[ref_m]=1;
    end
    for(integer i=0;i<4;i=i+1)if(dv[i])begin:check_delivery
     integer m;

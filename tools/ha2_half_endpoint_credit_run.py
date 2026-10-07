@@ -17,6 +17,14 @@ with (o/'run.log').open('w') as log:r=subprocess.run([str(o/'obj/Vtb_ha2_half_en
 (o/'run.exit').write_text(str(r.returncode)+'\n')
 text=(o/'run.log').read_text();passed=r.returncode==0 and 'PASS_HA2_HALF_ENDPOINT_CREDIT' in text
 assert pins=={s:hashlib.sha256((source.ROOT/s).read_bytes()).hexdigest() for s in f}
-(o/'terminal.json').write_text(json.dumps(dict(passed=passed,returncode=r.returncode,source_sha256=pins,output=text),indent=2)+'\n')
+negatives={}
+if passed:
+ for mode in ['CORRUPT_GOLDEN','IGNORE_PEER_CREDIT']:
+  with (o/(mode+'.log')).open('w') as log:
+   neg=subprocess.run([str(o/'obj/Vtb_ha2_half_endpoint_credit'),'+'+mode],cwd=source.ROOT,stdout=log,stderr=subprocess.STDOUT)
+  nt=(o/(mode+'.log')).read_text()
+  negatives[mode]=dict(returncode=neg.returncode,rejected=neg.returncode!=0 and 'ENDPOINT_FAIL' in nt,output=nt)
+ passed=passed and all(n['rejected'] for n in negatives.values())
+(o/'terminal.json').write_text(json.dumps(dict(passed=passed,returncode=r.returncode,source_sha256=pins,output=text,negative_controls=negatives),indent=2)+'\n')
 print(text)
 raise SystemExit(0 if passed else 1)
