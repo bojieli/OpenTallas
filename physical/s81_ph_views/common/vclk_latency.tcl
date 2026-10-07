@@ -30,7 +30,10 @@ proc ot_vclk_from_insertion {{force 0}} {
   set_clock_latency $L [get_clocks vclk]
   set ::ot_vclk_L_done $L
   if {[llength $bc]} {
-    set omin [expr {$L - round([lindex $bc 1]) - 25}]
+    # output hold = the budget sheets' FF model (tools/budgets/make_block_sdc.py ff: the receiver's flops at the
+    # EARLIEST insertion + 15 ps under a 50 ps hold IO uncertainty = BC min + 65 here with the 25 ps route hold uncertainty).  Was BC max + 25
+    # (+ 25) = BC min + ~95: ~30 ps stricter than the agreed model (ctrl_pc / svcio_od FF -7 / +4 after the hold ECO squeezed setup).
+    set omin [expr {$L - round([lindex $bc 0]) - 40}]
     # outputs timed against a second virtual clock (vclk_h: the ctrl tiles' PHY ports, hbm_clk domain) keep their own
     # FF model below; a vclk min delay on them would be a bogus hbm_clk -> vclk hold check (ctrl_pc FF -9.7 on k_*)
     set ot_oc {}; set ot_oh {}
@@ -45,8 +48,8 @@ proc ot_vclk_from_insertion {{force 0}} {
       if {[llength $hw] && [llength $hb]} {
         set Lh [expr {round(([lindex $hw 0] + [lindex $hw 1]) / 2.0)}]
         set_clock_latency $Lh [get_clocks vclk_h]
-        set_output_delay -min [expr {$Lh - round([lindex $hb 1]) - 25}] -clock vclk_h $ot_oh
-        puts "ot_vclk_from_insertion: hbm_clk WC $hw BC $hb -> vclk_h latency $Lh, [llength $ot_oh] PHY outputs min delay [expr {$Lh - round([lindex $hb 1]) - 25}]"
+        set_output_delay -min [expr {$Lh - round([lindex $hb 0]) - 40}] -clock vclk_h $ot_oh
+        puts "ot_vclk_from_insertion: hbm_clk WC $hw BC $hb -> vclk_h latency $Lh, [llength $ot_oh] PHY outputs min delay [expr {$Lh - round([lindex $hb 0]) - 40}]"
       }
     }
     puts "ot_vclk_from_insertion: core_clk WC $lo .. $hi, BC $bc ps -> vclk latency $L ps, output min delay $omin ps"
