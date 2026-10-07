@@ -2,7 +2,9 @@
 """Pinned smh request-output validation: share builds only within one parameter group.
 
 Run in a fresh archived source tree through the host admission guard (28 compiler
-workers maximum, 96 GiB admission). No process deadline or build-size cap.
+workers maximum, reserve at least 192 GiB: seven elaborators measured about
+18 GiB each). No process deadline or build-size cap. The rejected alternating
+request candidate is reproduced at commit d3393aa88; later RTL retains the FIFO.
 """
 import concurrent.futures
 import json

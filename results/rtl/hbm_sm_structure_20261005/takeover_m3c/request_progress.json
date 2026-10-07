@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm_smh.request_progress.v1",
+  "source_parent": "d3393aa88",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "95dea98c793687b328e507a1800eebb220c8aeb0db490320c7264914e1f0e922",
+    "rtl/test/tb_hbm_accel_smh_req_progress.sv": "4a17b8cb339a8e253afb16f98b6f60fb64e4790050c41a75cb94a34befe69786"
+  },
+  "simulator": "Icarus Verilog version 11.0 (stable) ()",
+  "positive": {
+    "USE_RETRY": 0,
+    "exit_code": 0,
+    "phases": [
+      {
+        "phase": 0,
+        "sent": 16,
+        "received": 16,
+        "pending": "0000"
+      },
+      {
+        "phase": 1,
+        "sent": 16,
+        "received": 16,
+        "pending": "0000"
+      }
+    ],
+    "verdict": "PASS"
+  },
+  "negative": {
+    "USE_RETRY": 1,
+    "exit_code": 1,
+    "phase": 0,
+    "sent": 16,
+    "received": 15,
+    "pending": "0002",
+    "verdict": "FAIL: REQ_PROGRESS starvation under periodic ready"
+  },
+  "commands": [
+    "iverilog -g2012 -s tb_hbm_accel_smh_req_progress -o /tmp/hbmsm-progress.vvp rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/test/tb_hbm_accel_smh_req_progress.sv && vvp /tmp/hbmsm-progress.vvp",
+    "iverilog -g2012 -s tb_hbm_accel_smh_req_progress -Ptb_hbm_accel_smh_req_progress.USE_RETRY=1 -o /tmp/hbmsm-starve.vvp rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/test/tb_hbm_accel_smh_req_progress.sv && vvp /tmp/hbmsm-starve.vvp"
+  ],
+  "decision": "REJECT alternating request candidate, restore active m3b FIFO and its placement hints; no m3c route permitted"
+}

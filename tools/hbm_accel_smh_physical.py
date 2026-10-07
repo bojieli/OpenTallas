@@ -352,6 +352,8 @@ ot_place {^u_sch\.(cred|rq|u_cr\.g_s\[1\])} 108 124 330 338
     "front_s": r"""ot_pin_place_auto {.*} 14
 # descriptor channel credits beside d_valid / d_ready; request channel sink beside the request skid
 ot_place {^u_dch\.(cred|rq|u_cr\.g_s\[1\])} 128 140 16 24
+ot_place {^u_rsk\.(rp|rpq)} 140 160 16 24
+ot_place {^u_rsk\.} 120 200 26 40
 ot_place {^u_rch\.(?!u_)} 120 200 42 66
 """,
 }

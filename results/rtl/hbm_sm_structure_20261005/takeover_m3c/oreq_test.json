@@ -1,0 +1,10 @@
+{
+  "source_commit": "d3393aa8827b22427e5f4095988b900516f6fbca",
+  "command": "iverilog -g2012 -s tb_hbm_accel_smh_oreq -o /tmp/hbmsm-oreq-m3c.vvp rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/test/tb_hbm_accel_smh_oreq.sv && vvp /tmp/hbmsm-oreq-m3c.vvp",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "8723c2ed0b06e59af7cb10628b34bcc2a61598169907da520d51a9eb43e330f3",
+    "rtl/test/tb_hbm_accel_smh_oreq.sv": "cf38bfc2c309d54421e2e9efd5b0ebac09978de808d9d1b59dcfb1acfaaf2b5c"
+  },
+  "returncode": 0,
+  "stdout": "OREQ phase=0 PASS sent=2273 received=2273 cycles=8781\nOREQ phase=1 PASS sent=2295 received=2295 cycles=8781\nOREQ phase=2 PASS sent=2392 received=2392 cycles=8781\nOREQ PASS reordered=1615\n"
+}
