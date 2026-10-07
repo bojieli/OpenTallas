@@ -15,7 +15,7 @@ sed 's/hfd_index_q dut/hfd_index_q_seg dut/' $V/tb/tb_hfd_index_q.sv > $O/tb_seg
 grep -q "hfd_index_q_seg dut" $O/tb_seg.sv || { echo "tb not retargeted" >> $O/summary.txt; rc=1; }
 iverilog -g2012 -o $O/sim.vvp -s tb_hfd_index_q $LIB $B $V/rtl/split/hfd_index_q_seg.sv $O/tb_seg.sv > $O/build.log 2>&1
 vvp -n $O/sim.vvp > $O/sim.log 2>&1; r=$?; echo "sim_seg rc=$r $(grep IDXQ_BENCH $O/sim.log | tail -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
-sed 's/pick1 ? fd\[2\*g+1\] : fd\[2\*g\]/pick1 ? fd[2*g] : fd[2*g+1]/' $V/rtl/split/hfd_index_q_b2.sv > $O/b2_mutant.sv
+sed 's/d <= pq ? hq1 : hq0/d <= pq ? hq0 : hq1/' $V/rtl/split/hfd_index_q_b2.sv > $O/b2_mutant.sv
 cmp -s $O/b2_mutant.sv $V/rtl/split/hfd_index_q_b2.sv && { echo "mutant not applied" >> $O/summary.txt; rc=1; }
 BN=$(echo $B | sed "s#$V/rtl/split/hfd_index_q_b2.sv#$O/b2_mutant.sv#")
 iverilog -g2012 -o $O/neg.vvp -s tb_hfd_index_q $LIB $BN $V/rtl/split/hfd_index_q_seg.sv $O/tb_seg.sv > $O/build_neg.log 2>&1
