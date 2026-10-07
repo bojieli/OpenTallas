@@ -21,7 +21,7 @@ module ot_qwen_embed_code_bank #(
 );
     (* keep="true", dont_touch="true" *) reg iv_q, cr_q, iv_n, cr_n;
     (* keep="true", dont_touch="true" *) reg [11:0] ia_q, ia_n;
-    (* keep="true", dont_touch="true" *) always @(posedge clk) begin ia_q <= i_addr; ia_n <= ~i_addr; end
+    always @(posedge clk) begin ia_q <= i_addr; ia_n <= ~i_addr; end
     (* keep="true", dont_touch="true" *) always @(posedge clk or negedge rst_n)
         if (!rst_n) begin iv_q <= 0; cr_q <= 0; iv_n <= 1; cr_n <= 1; end
         else begin iv_q <= i_v; cr_q <= o_cr; iv_n <= ~i_v; cr_n <= ~o_cr; end
@@ -38,7 +38,7 @@ module ot_qwen_embed_code_bank #(
     (* keep="true", dont_touch="true" *) reg ce_q, ce_n;
     (* keep="true", dont_touch="true" *) reg [3:0] valid_pipe, valid_n;
     reg [511:0] capture_data;
-    (* keep="true", dont_touch="true" *) always @(posedge clk) o_data <= capture_data;
+    always @(posedge clk) o_data <= capture_data;
     // Keep one enable per 32-bit capture lane, avoiding a 512-load enable.
     (* keep = "true", dont_touch = "true" *) reg [15:0] capture_en_q;
     wire meta_bad = (iv_n != ~iv_q) || (cr_n != ~cr_q) ||
@@ -57,7 +57,7 @@ module ot_qwen_embed_code_bank #(
     ot_rom_4096x266_m8 u_lo (.clk(clk), .ce_in(ce_q), .addr_in(addr_q), .rd_out(lo));
     ot_rom_4096x266_m8 u_hi (.clk(clk), .ce_in(ce_q), .addr_in(addr_q), .rd_out(hi));
 
-    (* keep="true", dont_touch="true" *) always @(posedge clk) begin
+    always @(posedge clk) begin
         if (iv_q && !full && !fault && !bad) begin fifo[wp[0]] <= ia_q; fifo_n[wp[0]] <= ~ia_q; end
         if (launch) begin addr_q <= fifo[rp[0]]; addr_n <= ~fifo[rp[0]]; end
         // Macro launches one edge after launch. Capture is two further
@@ -69,10 +69,10 @@ module ot_qwen_embed_code_bank #(
             if (!rst_n) capture_en_q[lane] <= 0;
             else capture_en_q[lane] <= valid_pipe[1];
         if (lane<8) begin : g_lo
-            (* keep="true", dont_touch="true" *) always @(posedge clk) if (capture_en_q[lane])
+            always @(posedge clk) if (capture_en_q[lane])
                 capture_data[lane*32+:32] <= lo[lane*32+:32];
         end else begin : g_hi
-            (* keep="true", dont_touch="true" *) always @(posedge clk) if (capture_en_q[lane])
+            always @(posedge clk) if (capture_en_q[lane])
                 capture_data[lane*32+:32] <= hi[(lane-8)*32+:32];
         end
     end endgenerate

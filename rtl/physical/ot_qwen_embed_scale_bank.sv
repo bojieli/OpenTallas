@@ -11,7 +11,7 @@ module ot_qwen_embed_scale_bank #(
     localparam integer CW=$clog2(OCRED+1)+1;
     (* keep="true", dont_touch="true" *) reg iv_q,cr_q,iv_n,cr_n;
     (* keep="true", dont_touch="true" *) reg [17:0] row_q,row_n;
-    (* keep="true", dont_touch="true" *) always @(posedge clk) begin row_q<=i_row;row_n<=~i_row;end
+    always @(posedge clk) begin row_q<=i_row;row_n<=~i_row;end
     (* keep="true", dont_touch="true" *) always @(posedge clk or negedge rst_n)
         if(!rst_n) begin iv_q<=0;cr_q<=0;iv_n<=1;cr_n<=1;end
         else begin iv_q<=i_v;cr_q<=o_cr;iv_n<=~i_v;cr_n<=~o_cr;end
@@ -50,10 +50,10 @@ module ot_qwen_embed_scale_bank #(
             else capture_en_q[g]<=valid_pipe[1];
         // Actual macro launch is one edge after launch; this capture is TWO
         // further edges later. Lane selection occurs on the following edge.
-        (* keep="true", dont_touch="true" *) always @(posedge clk) if(capture_en_q[g]) capture[g*32+:32]<=rom_data[g*32+:32];
+        always @(posedge clk) if(capture_en_q[g]) capture[g*32+:32]<=rom_data[g*32+:32];
     end endgenerate
     integer n;
-    (* keep="true", dont_touch="true" *) always @(posedge clk) begin
+    always @(posedge clk) begin
         if(iv_q && !full && !fault && !bad) begin
             fifo[wp[0]]<=row_q;fifo_n[wp[0]]<=~row_q;
         end
