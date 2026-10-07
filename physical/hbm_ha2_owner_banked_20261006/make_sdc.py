@@ -11,6 +11,7 @@ p.add_argument('--l-max',type=float,required=True);p.add_argument('--l-min',type
 p.add_argument('--l-ff-min',type=float,required=True)
 p.add_argument('--io-ref-period-ps',type=float,default=833.333)
 p.add_argument('--route-ss-hold',action='store_true',help='route SDC: hold windows referenced to the SS insertion (the flow repairs hold at the SS corner; FF hold is signed off by signoff.py with the FF numbers)')
+p.add_argument('--half',action='store_true',help='half-rate core: generated clock gclk (divide by 2) at the ICG AND gate')
 p.add_argument('--skew-ps',type=float,default=150.0);p.add_argument('--hold-io-ps',type=float,default=50.0)
 p.add_argument('--wire-ps',type=float,default=200.0);p.add_argument('--clkq-ps',type=float,default=100.0)
 p.add_argument('--clkq-min-ps',type=float,default=30.0);p.add_argument('--out',type=Path,required=True)
@@ -33,3 +34,17 @@ a.out.write_text('\n'.join([
  f'set_output_delay -max {out_max:.3f} -clock clk [all_outputs]',f'set_output_delay -min {out_min:.3f} -clock clk [all_outputs]',
  'set_load 4.0 [all_outputs]','set_false_path -from [get_ports rst_n]','set_max_fanout 32 [current_design]',''])+'\n')
 print(a.out,dict(in_max=in_max,in_min=in_min,out_max=out_max,out_min=out_min))
+if a.half:
+    with open(a.out,'a') as f:
+        f.write('''# half-rate core clock: the ICG AND output is a divide-by-2 generated clock of clk
+set ot_g {}
+foreach p [get_pins -hierarchical *] {
+ set n [get_full_name $p]
+ if {[regexp {u_icg.*/Y$} $n]} {
+  set c [get_cells -of_objects $p]
+  if {[regexp {AND} [get_property $c ref_name]]} {lappend ot_g $p}
+ }
+}
+if {[llength $ot_g]!=1} {error "expected one ICG AND output, found [llength $ot_g]"}
+create_generated_clock -name gclk -source [get_ports clk] -divide_by 2 [lindex $ot_g 0]
+''')
