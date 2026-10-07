@@ -6404,7 +6404,7 @@
   "results/arch/energy_silicon_measured/energy_silicon.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "ec137a24c7c7a65345caec8fac81916a21872ecc95648641d53d5c2f70e511ad",
+   "sha256": "301ddaa15ca8bee13d57b0efb58eb08038801a71f18e94088fc7cfc11abf340a",
    "schema": "opentallas.arch.energy_silicon_measured.v1",
    "tool": "tools/energy_silicon_measured.py",
    "command": "python3 tools/energy_silicon_measured.py  (inferred; the record names no command)",
@@ -6479,7 +6479,7 @@
    "commits": [
     {
      "field": "inputs.scoreboard_commit",
-     "commit": "60c6e1172",
+     "commit": "2758a0dc5",
      "in_head_history": true
     }
    ]

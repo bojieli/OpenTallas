@@ -923,7 +923,7 @@ function buildSteps(){
   $('tokenLede').textContent = lede;
   $('tSpec').disabled = d === 'qwen' || (d === 'hbm' && state.hbmModel === 'qwen');
   if ($('tSpec').disabled){ TK.spec = false; $('tSpec').setAttribute('aria-pressed', 'false'); }
-  $('tSpec').title = d === 'qwen' ? 'Off on the Qwen ROM: DSpark measured 0.704x of plain decoding' : 'Show the speculative wavefront';
+  $('tSpec').title = d === 'qwen' ? 'Off on the Qwen ROM: DSpark measured 0.705x of plain decoding (r21 relays charged)' : 'Show the speculative wavefront';
   const ul = $('tSteps'); ul.innerHTML = TK.steps.map((s, i) => `<li data-i="${i}" tabindex="0"><span class="sw" style="background:var(${CATVAR[{field:'field', su:'su', link:'link', hbm:'hbm', attn:'attn', move:'ctrl', stream:'hbm', compute:'res'}[s.kind]] || '--k-res'})"></span><span>${esc(s.label)}</span><span class="t">${TK.unit === 'cyc' ? fmt0(s.dur) : fmt(s.dur, 3)}</span></li>`).join('');
   ul.querySelectorAll('li').forEach(li => { const go = () => { TK.i = +li.dataset.i; TK.t = 0; drawToken(); }; li.onclick = go; li.onkeydown = e => { if (e.key === 'Enter'){ go(); } }; });
   const srcs = { ds: DATA.ds_stages, hbm: DATA.hbm_l20, qwen: DATA.qwen_phase_split };

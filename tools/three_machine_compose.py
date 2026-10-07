@@ -48,7 +48,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"
 QWEN_TERMINAL = ROOT / "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json"
 QWEN_CORE = ROOT / "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json"
-QWEN_DSPARK = ROOT / "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+QWEN_DSPARK = ROOT / "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json"  # r21 relays charged (2026-10-07)
 QWEN_SLAB = ROOT / "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json"
 QWEN_CONFIG = ROOT / "compiler/models/qwen3-8b/config.json"
 # Qwen lever records (schema opentallas.qwen-rom.lever.v1): ADOPT + exact are composed with their measured token_cost;
@@ -345,6 +345,10 @@ def qwen_rom():
     ar = clk / cyc
     kv["token_average_system_TBps"] = round(kv_sys_token / (cyc / clk) / 1e12, 3)
     sp = dsp["variants"]["baseline_np4"]
+    if dsp["ar"]["token_cycles"] != cyc or dsp.get("relays", {}).get("record") != rel(QWEN_RELAYS):
+        raise Refused(f"Qwen DSpark verdict {rel(QWEN_DSPARK)} is priced on AR {dsp['ar']['token_cycles']} cycles / relays "
+                      f"{dsp.get('relays', {}).get('record')}; the composed AR token is {cyc} (stale: re-run "
+                      f"tools/qwen_rom_dspark_verdict.py --relays --ar-cycles {cyc})")
     mtp_mode = dsp["verdict"] == "AR_MODE"
     return dict(
         position=t["position"], clock_hz=clk, token_cycles_measured=t["total_cycles"],
