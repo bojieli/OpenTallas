@@ -209,6 +209,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer PQ = 0,           // see the PQ header: 0 = the qx element
     parameter integer RT = 3,           // PQ: settle cycles after the replay
     parameter integer QW = 0,           // 1: lanes decode the weight codes before their P0 register (bterm4 WD)
+    parameter integer QS = 0,           // SAFE (owner fail-fast 2026-10-06): 1 = bterm5 S1b decode stage (P0B, +1 lane cycle); 2 = product in S1b, S2 a wire stage;
+                                        // 3 (owner decision 23:00, Z29c): bterm5 P0B = 3 (register-only S1b and S2 around the
+                                        // product, registered terms before the 32-input CSA: +2 lane cycles), the segment tree
+                                        // at initiation interval 2 (segtree6 II2), and the need walker's state written one
+                                        // cycle after its match (WRT, zero cycles; see the walker)
     parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
                                         // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
                                         // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
@@ -220,6 +225,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     groups) with kept enable copies, kept xs_p copies for r_dp, parallel next-
                                         //     class flags for w_sf_r (0 cycles), capture / FP4-select stage before the
                                         //     word mux (+1 lane cycle), walking from a pin register (+1 status cycle)
+                                        // 7 = + the ROM macros on the free clock, read enable ANDed with a kept copy of
+                                        //     the registered gate enable (cycle-exact: a gated edge happens iff that
+                                        //     register is 1), so no clock gate drives a macro (Z27a post-CTS at 770: the
+                                        //     macro-gating clones sat at the clock root, ENA -208.8 / -119.3, ce_in -96.7,
+                                        //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -787,13 +797,35 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         ca_f = {1'b0, fj} + 4'd1 < fa[NSEG + 4*fc +: 4];
     endfunction
     // ---------------- x-need walker: one (pair, b) per class unit per round ------------------------------
-    reg        n_run;
-    reg [2:0]  n_q, n_pos, bn_pos, w_pos;
-    reg [2:0]  n_b, n_j;
-    reg [SW-1:0] n_c;
+    // WRT (QS >= 3, owner decision 2026-10-06 23:00; Z29c post-CTS at 730: d_q -> pair compare -> hit -> 40-load enable
+    // -> nB -103.5, the d_pos copy -57.6, n_cgt / n_pos / n_ca_r -28..-18): the need walker's state is WRITTEN one
+    // cycle after its match.  Every walker register X (the d_* match copies, n_*, n_coh / n_cgt / n_ca_r, nA, nB) is
+    // held as storage X_s plus a registered candidate X_r = the value X takes on a match (formed every cycle from the
+    // current state, no match in it), and the walker reads X = hp ? X_r : X_s, hp the registered match (kept copies,
+    // one per load group); X_s <= X every cycle (go loads X_s as before and clears hp).  So X is the original
+    // register cycle for cycle (exact, back-to-back matches included: the field sends them), the match drives only the
+    // hp flops, and no path runs match -> enable -> register; the one-cycle loop is hp -> read select -> pair compare
+    // -> hp.  Zero added cycles.  QX bench: the walker state compared cycle by cycle as before.
+    localparam integer WRT = (QS >= 3 && QTIMING_FIX != 0) ? 1 : 0;
+    wire [1:0]   hp_w, hp_a, hp_b;      // WRT: registered match, kept copies (n_* | nA halves | nB halves)
+    wire         hp_c;                  //      (n_coh / n_cgt / n_ca_r)
+    reg          n_run_s;
+    reg [2:0]    n_q_s, n_pos_s, n_b_s, n_j_s;
+    reg [SW-1:0] n_c_s;
+    reg [UW+2:0] nN_r;                  // WRT: {run, q, b, c, j, pos} on a match, registered
+    wire         n_run;
+    wire [2:0]   n_q, n_pos, n_b, n_j;
+    wire [SW-1:0] n_c;
+    assign {n_run, n_q, n_b, n_c, n_j, n_pos} = (WRT != 0 && hp_w[0]) ? nN_r : {n_run_s, n_q_s, n_b_s, n_c_s, n_j_s, n_pos_s};
+    reg [2:0]  bn_pos, w_pos;
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx, n_nx0;          // n_nx0: the encoded walk2 step; n_nx = n_nx0, or the one-hot step (QX = 3)
-    reg [6*NSEG-1:0] nA, nB, wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
+    reg [6*NSEG-1:0] wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
+    reg [6*NSEG-1:0] nA_s, nB_s, nA_r, nB_r;          // WRT: storage / registered value on a match
+    wire [6*NSEG-1:0] wsel_a = {{(3*NSEG){hp_a[1]}}, {(3*NSEG){hp_a[0]}}};
+    wire [6*NSEG-1:0] wsel_b = {{(3*NSEG){hp_b[1]}}, {(3*NSEG){hp_b[0]}}};
+    wire [6*NSEG-1:0] nA = (WRT != 0) ? ((wsel_a & nA_r) | (~wsel_a & nA_s)) : nA_s;
+    wire [6*NSEG-1:0] nB = (WRT != 0) ? ((wsel_b & nB_r) | (~wsel_b & nB_s)) : nB_s;
     // QM >= 3 (BP = 0): f(q + 2) for every q in a configuration-only table registered on the free clock, so xQ2 is
     // an 8:1 select of registers instead of the per-class subtract / compare on the walker's q (Z20c: w_q -> wQ2 +42.7 ps)
     reg [6*NSEG-1:0] q2_tab [0:7];
@@ -817,8 +849,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire qx_n_endq = n_b == 3'd7 && n_q == qlast;
     // QX = 3: the x-need walker's step in one-hot form, as the word walker's (QX = 1, 2): n_coh / n_cgt mirror n_c,
     // n_ca_r holds its "next unit of the same class" decision, the next class stays one-hot
-    reg  [NSEG-1:0] n_coh, n_cgt;
-    reg  n_ca_r;
+    reg  [NSEG-1:0] n_coh_s, n_cgt_s;
+    reg  n_ca_r_s;
+    reg  [2*NSEG:0] nC_r;               // WRT: {n_coh, n_cgt, n_ca_r} on a match, registered
+    wire [NSEG-1:0] n_coh, n_cgt;
+    wire n_ca_r;
+    assign {n_coh, n_cgt, n_ca_r} = (WRT != 0 && hp_c) ? nC_r : {n_coh_s, n_cgt_s, n_ca_r_s};
     reg  [NSEG-1:0] qn_cmpA, qn_cmpA1, qn_c0A, qn_c0B;
     wire [2:0] qn_j1 = n_j + 3'd1;
     always @* for (int k = 0; k < NSEG; k++) begin
@@ -916,10 +952,23 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
         end
         for (genvar hc = 0; hc < HC; hc = hc + 1) begin : g_hc
-            (* keep, dont_touch = "true" *) reg d_run;
+            (* keep, dont_touch = "true" *) reg d_run_s;
             (* keep, dont_touch = "true" *) reg d_fam;
-            (* keep, dont_touch = "true" *) reg [SW-1:0] d_c;
-            (* keep, dont_touch = "true" *) reg [2:0] d_q, d_j, d_b, d_pos;
+            (* keep, dont_touch = "true" *) reg [SW-1:0] d_c_s;
+            (* keep, dont_touch = "true" *) reg [2:0] d_q_s, d_j_s, d_b_s, d_pos_s;
+            // WRT: this copy's registered match and its registered next state (kept: never merged across copies)
+            wire d_hp;
+            wire [UW+2:0] d_nr;
+            wire d_rs = !n_nx[UW-1] && n_more;
+            wire d_run;
+            wire [SW-1:0] d_c;
+            wire [2:0] d_q, d_j, d_b, d_pos;
+            assign {d_run, d_q, d_b, d_c, d_j, d_pos} = (WRT != 0 && d_hp) ? d_nr : {d_run_s, d_q_s, d_b_s, d_c_s, d_j_s, d_pos_s};
+`ifdef WRT_MUTANT_NR
+            wire [UW+2:0] d_nc = {n_nx, d_pos};                 // negative control: the copy's next state ignores the MTP restart
+`else
+            wire [UW+2:0] d_nc = d_rs ? {d_run, 3'd0, 3'd0, c_live, 3'd0, d_pos + 3'd1} : {n_nx, d_pos};
+`endif
             wire [NSEG-1:0] cm;
             for (genvar fc = 0; fc < NSEG; fc = fc + 1) begin : g_cls
                 (* keep *) wire [7:0] ep;
@@ -935,23 +984,27 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                 end
             end
             assign hit_k[hc] = d_run && !d_fam && xs_v_e && (|cm) && xs_b_e == d_b && xs_pos_e == d_pos;
+            if (WRT != 0) begin : g_wrt
+                ot_v41_kreg #(.W(1), .AR(1)) u_hp (.clk(gclk), .arst_n(rst_n), .d(hit_k[hc] && !go_e), .q(d_hp));
+                ot_v41_kreg #(.W(UW + 3)) u_nr (.clk(gclk), .arst_n(1'b1), .d(d_nc), .q(d_nr));
+            end else begin : g_nwrt
+                assign d_hp = 1'b0; assign d_nr = '0;
+            end
             always @(posedge gclk or negedge rst_n)
-                if (!rst_n) begin d_run <= 1'b0; d_fam <= 1'b0; end
+                if (!rst_n) begin d_run_s <= 1'b0; d_fam <= 1'b0; end
                 else if (go_e) begin
 `ifdef W10_MUTANT_EMPTY_GO
-                    d_run <= !go_bf_e;
+                    d_run_s <= !go_bf_e;
 `else
-                    d_run <= !go_bf_e && c_first_ok;
+                    d_run_s <= !go_bf_e && c_first_ok;
 `endif
                     d_fam <= go_bf_e;
-                end else if (hit_k[hc] && !(!n_nx[UW-1] && n_more)) d_run <= n_nx[UW-1];
+                end else if (WRT != 0) d_run_s <= d_run;
+                else if (hit_k[hc] && !d_rs) d_run_s <= n_nx[UW-1];
             always @(posedge gclk)
-                if (go_e) begin d_q <= 3'd0; d_b <= 3'd0; d_c <= c_first; d_j <= 3'd0; d_pos <= 3'd0; end
-                else if (hit_k[hc]) begin
-                    if (!n_nx[UW-1] && n_more) begin
-                        d_q <= 3'd0; d_b <= 3'd0; d_c <= c_live; d_j <= 3'd0; d_pos <= d_pos + 3'd1;
-                    end else {d_q, d_b, d_c, d_j} <= n_nx[UW-2:0];
-                end
+                if (go_e) begin d_q_s <= 3'd0; d_b_s <= 3'd0; d_c_s <= c_first; d_j_s <= 3'd0; d_pos_s <= 3'd0; end
+                else if (WRT != 0) {d_q_s, d_b_s, d_c_s, d_j_s, d_pos_s} <= {d_q, d_b, d_c, d_j, d_pos};
+                else if (hit_k[hc]) {d_q_s, d_b_s, d_c_s, d_j_s, d_pos_s} <= d_nc[UW+1:0];
         end
         assign hit_q = hit_k[0];
 `ifdef QT_CHECK
@@ -962,6 +1015,16 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end else begin : g_qt_nohit
         assign hit_k = {HC{hit_q0}};
         assign hit_q = hit_q0;
+    end
+    if (WRT != 0) begin : g_hpk
+        for (genvar k = 0; k < 2; k = k + 1) begin : g_k
+            ot_v41_kreg #(.W(1), .AR(1)) u_w (.clk(gclk), .arst_n(rst_n), .d(hit_k[0] && !go_e), .q(hp_w[k]));
+            ot_v41_kreg #(.W(1), .AR(1)) u_a (.clk(gclk), .arst_n(rst_n), .d(hit_k[1 % HC] && !go_e), .q(hp_a[k]));
+            ot_v41_kreg #(.W(1), .AR(1)) u_b (.clk(gclk), .arst_n(rst_n), .d(hit_k[2 % HC] && !go_e), .q(hp_b[k]));
+        end
+        ot_v41_kreg #(.W(1), .AR(1)) u_c (.clk(gclk), .arst_n(rst_n), .d(hit_k[0] && !go_e), .q(hp_c));
+    end else begin : g_nhpk
+        assign hp_w = '0; assign hp_a = '0; assign hp_b = '0; assign hp_c = 1'b0;
     end
     // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
     reg        bn_run;
@@ -1284,6 +1347,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire  h_live = (QM >= 3) ? h_live_r : h_live_c;
     // MTP: a walker that finishes a position's rounds restarts for the next position
     wire n_more = n_pos != plast;
+    // the walker's value on a match (WRT: registered every cycle; else loaded on the match)
+    wire [UW+2:0] nN_c = (!n_nx[UW-1] && n_more) ? {n_run, 3'd0, 3'd0, c_live, 3'd0, n_pos + 3'd1} : {n_nx, n_pos};
+    always @(posedge gclk) nN_r <= nN_c;
     wire w_more = w_pos != plast;
     wire w_restart = issue && w_cls_last && ((QX != 0) ? !qx_same && qx_endq : !w_nx[UW-1]) && w_more;
     // QX = 5: hazard_r's next value (above).  On an issue w_cnt restarts at 0 exactly when the class's last word
@@ -1338,7 +1404,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 
     always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
-            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
+            n_run_s <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
             pp_last_v <= 1'b0; bp_hold <= 3'd0;
         end else begin
             hz_v <= {hz_v[LAT-2:0], issue};
@@ -1350,21 +1416,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                 // the walkers started on the stale class 0 and could leave held operands in the segment tree that
                 // corrupted the next op (W17 field-composition finding, 2026-09-30).
 `ifdef W10_MUTANT_EMPTY_GO
-                n_run <= !go_bf_e; bn_run <= go_bf_e; w_run <= 1'b1;
+                n_run_s <= !go_bf_e; bn_run <= go_bf_e; w_run <= 1'b1;
 `else
-                n_run <= !go_bf_e && c_first_ok; bn_run <= go_bf_e && c_first_ok; w_run <= c_first_ok;
+                n_run_s <= !go_bf_e && c_first_ok; bn_run <= go_bf_e && c_first_ok; w_run <= c_first_ok;
 `endif
-                n_q <= 3'd0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
-                n_pos <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0;
+                n_q_s <= 3'd0; n_b_s <= 3'd0; n_c_s <= c_first; n_j_s <= 3'd0;
+                n_pos_s <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0;
                 bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf_e; bn_tot <= (FAST != 0) ? gtot_f : gtot; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
                 w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
                 f_cnt <= 0; f_wr <= 0; f_rd <= 0;
             end else begin
-                if (hit) begin
-                    if (!n_nx[UW-1] && n_more) begin
-                        n_q <= 3'd0; n_b <= 3'd0; n_c <= c_live; n_j <= 3'd0; n_pos <= n_pos + 3'd1;
-                    end else {n_run, n_q, n_b, n_c, n_j} <= n_nx;
-                end
+                if (WRT != 0) {n_run_s, n_q_s, n_b_s, n_c_s, n_j_s, n_pos_s} <= {n_run, n_q, n_b, n_c, n_j, n_pos};
+                else if (hit) {n_run_s, n_q_s, n_b_s, n_c_s, n_j_s, n_pos_s} <= nN_c;
                 if (issue) begin
                     if (!w_seg_last) begin
                         w_h <= 1'b1;
@@ -1563,12 +1626,13 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [NSEG-1:0] qn_ohl_c = qx_low(base_live);
     reg  [NSEG-1:0] qn_ohl_r; always @(posedge clk) qn_ohl_r <= qn_ohl_c;   // QM >= 3: candidate a cycle early
     wire [NSEG-1:0] qn_ohl = (QM >= 3) ? qn_ohl_r : qn_ohl_c;
+    wire [2*NSEG:0] nC_c = (qx_n_end && n_more) ? {qn_ohl, qx_gt(qn_ohl), ca_f(qn_a_rs, c_live, 3'd0)}
+                                                : {qn_nxoh, qx_gt(qn_nxoh), qn_ca_nx};
+    always @(posedge gclk) nC_r <= nC_c;
     always @(posedge gclk) if (rst_n) begin
-        if (go_e) begin n_coh <= qn_ohf; n_cgt <= qx_gt(qn_ohf); n_ca_r <= ca_f(qn_a_go, c_first, 3'd0); end
-        else if (hit) begin
-            if (qx_n_end && n_more) begin n_coh <= qn_ohl; n_cgt <= qx_gt(qn_ohl); n_ca_r <= ca_f(qn_a_rs, c_live, 3'd0); end
-            else begin n_coh <= qn_nxoh; n_cgt <= qx_gt(qn_nxoh); n_ca_r <= qn_ca_nx; end
-        end
+        if (go_e) begin n_coh_s <= qn_ohf; n_cgt_s <= qx_gt(qn_ohf); n_ca_r_s <= ca_f(qn_a_go, c_first, 3'd0); end
+        else if (WRT != 0) {n_coh_s, n_cgt_s, n_ca_r_s} <= {n_coh, n_cgt, n_ca_r};
+        else if (hit) {n_coh_s, n_cgt_s, n_ca_r_s} <= nC_c;
     end
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 3 && rst_n && qy_seen) begin
@@ -1613,15 +1677,22 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
 `endif
     // go_en / go_ew equal go_e (QX = 7 copies); the go loads are split by register group, unchanged in function
+    wire [6*NSEG-1:0] nA_c = (qx_n_end && n_more) ? sbf(4'd0, 2'd3, nu_p, base_live) : qx_n_adv ? nB : nA;
+    wire [6*NSEG-1:0] nB_c = (qx_n_end && n_more) ? sbf(4'd1, 2'd3, nu_p, base_live) : qx_n_adv ? nQ2 : nB;
+    always @(posedge gclk) begin nA_r <= nA_c; nB_r <= nB_c; end
     always @(posedge gclk) begin
         if (go_en) begin
-            nA <= sbf(4'd0, 2'd3, nu_p, base_go); nB <= sbf(4'd1, 2'd3, nu_p, base_go);
+            nA_s <= sbf(4'd0, 2'd3, nu_p, base_go); nB_s <= sbf(4'd1, 2'd3, nu_p, base_go);
+        end else if (WRT != 0) begin
+`ifdef WRT_MUTANT_SB
+            nA_s <= nA;                 // negative control: nB's storage never takes the step (it reverts once hp drops)
+`else
+            nA_s <= nA; nB_s <= nB;
+`endif
         end else begin
             // QTIMING_FIX: nA and nB take their enables from match copies 1 and 2 (equal to hit)
-            if (hit_k[1 % HC] && qx_n_end && n_more) nA <= sbf(4'd0, 2'd3, nu_p, base_live);
-            else if (hit_k[1 % HC] && qx_n_adv) nA <= nB;
-            if (hit_k[2 % HC] && qx_n_end && n_more) nB <= sbf(4'd1, 2'd3, nu_p, base_live);
-            else if (hit_k[2 % HC] && qx_n_adv) nB <= nQ2;
+            if (hit_k[1 % HC]) nA_s <= nA_c;
+            if (hit_k[2 % HC]) nB_s <= nB_c;
         end
         if (go_ew) begin
             fF0 <= f0_go; fF1 <= f1_go; wA <= f0_go; wB <= f1_go;
@@ -1856,16 +1927,43 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         // macro to it), and the bank select sits after the capture registers.
         wire [273:0] rd0, rd1;
         reg  [273:0] cap0, cap1;
+        // QM >= 7: the macros on the free clock; each read enable ANDed with its own kept copy of the registered gate
+        // enable (u_z's next state, same reset).  The clock gate's latch passes that register's value to the next
+        // edge, so the gated macro saw an edge exactly when the copy is 1: the free-clock macro with the ANDed enable
+        // reads in the same cycles (and holds rd_out otherwise, as a gated one does).
+        wire rom_clk, rz0, rz1;
+        if (QM >= 7 && QZ != 0 && CG != 0) begin : g_rz
+`ifdef QM7_MUTANT_RZ
+            wire rz_d = !qz_zd;             // negative control: the macro enable copies inverted (a one-cycle-late
+                                            // copy is NOT caught: issue never meets a closing / opening gate edge)
+`else
+            wire rz_d = qz_zd;
+`endif
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz0 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz0));
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz1 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz1));
+            assign rom_clk = clk;
+`ifdef QP_CHECK
+            always @(negedge clk) if (rst_n_pin && (rz0 !== cg_en_g || rz1 !== cg_en_g)) begin
+                $display("QM7_CHECK FAIL: macro enable copy %b/%b != %b at %t", rz0, rz1, cg_en_g, $time); $fatal(1);
+            end
+            always @(negedge clk) if (rst_n_pin && issue && !rz0) begin
+                $display("QM7_CHECK FAIL: issue with the gate closed at %t", $time); $fatal(1);
+            end
+`endif
+        end else begin : g_rz_n
+            assign rom_clk = gclk_ma; assign rz0 = 1'b1; assign rz1 = 1'b1;
+        end
+        wire rze0 = rz0, rze1 = rz1;
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(mb == 0 ? $sformatf("%s_0", INSTANCE) : $sformatf("%sb_0", INSTANCE)))
 `endif
-            u_rom0 (.clk(gclk_ma), .ce_in(issue && !a_ctr[0]), .addr_in(a_ctr[12:1]), .rd_out(rd0));
+            u_rom0 (.clk(rom_clk), .ce_in(issue && !a_ctr[0] && rze0), .addr_in(a_ctr[12:1]), .rd_out(rd0));
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(mb == 0 ? $sformatf("%s_1", INSTANCE) : $sformatf("%sb_1", INSTANCE)))
 `endif
-            u_rom1 (.clk(gclk_ma), .ce_in(issue && a_ctr[0]), .addr_in(a_ctr[12:1]), .rd_out(rd1));
+            u_rom1 (.clk(rom_clk), .ce_in(issue && a_ctr[0] && rze1), .addr_in(a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
             for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e
@@ -2019,9 +2117,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
             assign p_we0 = we0; assign p_we1 = we1;
         end
-        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
@@ -2237,7 +2335,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
     // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
-    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_mb), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0)) u_tree (.clk(gclk_mb), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5

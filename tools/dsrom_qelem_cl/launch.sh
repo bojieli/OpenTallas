@@ -1,4 +1,5 @@
 #!/bin/bash
+# (copy of results/rtl/dsrom_qz_20261004/Z23_launch.sh for the closure loop, whose source snapshot holds only rtl/ physical/ tools/)
 # Z23* (2026-10-06, OWNER RULE margin-first): the PQ q-element with QM = 1 (ot_v41_bterm5_w10 lanes, +5 cycles), routed
 # OVER-CONSTRAINED at PER (default 0.770 ns) and signed off at 0.833 ns (post_sta_qm.sh rewrites the period and the max
 # input delays back): target SS >= +60 ps at 0.833.  Max input delay = PER - 0.106 ns so the internal pin -> flop budget is

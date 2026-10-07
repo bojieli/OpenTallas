@@ -12,6 +12,14 @@
 //       copies, each driving a slice of the head registers; the next-entry read uses a registered qr + 1 (Z20c:
 //       qc -> XNOR -> 30-load -> h_v +9.4 ps; h_e / h_t / h_p / h_f +27..49 ps).  Zero cycles.
 // QP_CHECK additionally asserts the flag form against the pointer compare every cycle.
+// YF = 1 (owner fail-fast 2026-10-06 23:00; Z29c post-CTS at 730: have -> slot-local decision -> in-flight increment ->
+// 16:1 tree select -> y_infl -118.7): the read stage's in-flight count of its event's tree is formed from REGISTERS only:
+// when the x2 event is of the same tree (same_r, registered a cycle early from e_t == x_t) it is that event's own count
+// y_infl (QP_CHECK: y_infl == infl[y_t]) plus its global decision (pair | promote, from y_hv / y_ab / y_infl: QP_CHECK
+// t_inc == (pair | promote) && y_t == t) minus its add, both sums precomputed; otherwise the tree's stored count (no
+// other tree changes this cycle).  The forward no longer runs through have and the slot-local form.  Zero cycles, same
+// value every cycle (QP_CHECK asserts it against the direct form).  (An initiation-interval-2 tree was exact in the QX
+// bench but changed the PQ field's tree results: rejected.)
 // ---------------------------------------------------------------------------
 // Original header (ot_v41_segtree5):
 // ot_v41_segtree5: ot_v41_segtree3 with the decide stage split in two (DS-V4.1 ROM q-pair SS closure, owner decision
@@ -34,6 +42,7 @@ module ot_v41_segtree6 #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer YF = 0,        // 1: the read stage's in-flight forward from registers (see the header)
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
 ) (
@@ -210,6 +219,26 @@ module ot_v41_segtree6 #(
         for (gi = 0; gi < NT; gi = gi + 1)
             if (x_toh[gi]) r_infl = r_infl | (infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
     end
+    // YF: the in-flight read from registers
+    reg same_r;                                        // the x2 event (next cycle) is of the x1 event's tree
+    always @(posedge clk or negedge rst_n) if (!rst_n) same_r <= 1'b0; else same_r <= x_v && e_t == x_t;
+    wire [IW-1:0] yi_p = y_infl + 1'b1 - (y_add ? 1'b1 : 1'b0);
+    wire [IW-1:0] yi_n = y_infl - (y_add ? 1'b1 : 1'b0);
+`ifdef ST7_MUTANT_YF
+    wire [IW-1:0] yf_same = yi_n;                      // negative control: the x2 event's own increment ignored
+`else
+    wire [IW-1:0] yf_same = (pair || promote) ? yi_p : yi_n;
+`endif
+    reg  [IW-1:0] r_infl_s;                            // the x1 event's tree's stored count
+    always @* begin
+        r_infl_s = '0;
+        for (int g = 0; g < NT; g++) if (x_toh[g]) r_infl_s = r_infl_s | infl[g];
+    end
+    wire [IW-1:0] r_infl_y = (y_v && same_r) ? yf_same : r_infl_s;
+`ifdef QP_CHECK
+    always @(negedge clk) if (YF != 0 && rst_n && x_v && r_infl_y !== r_infl)
+        begin $display("QP_CHECK FAIL segtree6 YF in-flight forward %m %t", $time); $fatal(1); end
+`endif
 `ifdef ST_MUTANT_FW
     wire r_fw = 1'b0;                                                   // negative control: no same-slot forward
 `else
@@ -219,7 +248,7 @@ module ot_v41_segtree6 #(
     always @(posedge clk) begin
         y_t <= x_t; y_l <= x_l; y_f <= x_f; y_e <= x_e; y_d <= x_d; y_add <= x_add;
         y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
-        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
+        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= (YF != 0) ? r_infl_y : r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
     end
     // kept copies of the x2 operand for the held writes, one per slot group
