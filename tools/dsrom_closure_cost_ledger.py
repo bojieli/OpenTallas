@@ -54,6 +54,10 @@ ITEMS = [
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 # CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)
 CANDIDATES = [
+    ("fh_half", "DSpark fused head SAFE half-rate backstop (whole draft-core domain on the die clock / 2; gold4 OT_FH_HALF "
+                "EXACT 126,310 die cycles vs 63,153, claude/takeover-ds-head-20261006 7d63728a0): draft head occupancy x2 "
+                "(+8,387 cyc = 6.9892 us a draft position); adopt only for a view whose full-rate route misses",
+     [("draft.head_occ", 8387, 0)]),
     ("head_elem", "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT "
                   "8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
      [("head.lm_head", 57, 0), ("draft.head_occ", 57, 0)]),
