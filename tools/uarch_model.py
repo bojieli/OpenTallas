@@ -13494,6 +13494,12 @@ def s81_bf_root_phase_model():
     }
 
 
+def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
+    """Native-record command transport with conservative retirement ordering."""
+    from hbm_sm_command_model import model
+    return model(hops=hops, depth=depth, replicas=replicas)
+
+
 def hbm_smh_tile_headroom_model():
     """Measured tile-area alternatives, preserving existing BE masters."""
     from hbm_smh_tile_headroom_model import model
