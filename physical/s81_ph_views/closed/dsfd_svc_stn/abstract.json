@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svc_stn",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svc_stn.lef": "6bcdc56b02795d6583736fd020d94c4d01365e25dcaf52177a1dc49e4545d89b",
+    "dsfd_svc_stn_ff.lib": "c98a926408a8097bf76fb857bb9f4125f66164f526d6ac382d51902a74c63030",
+    "dsfd_svc_stn_ss.lib": "c9034a100f82f4bb542c09e23f7be551b731e89a3c7d580ba813a812c6058e52"
+  },
+  "ok": true
+}
