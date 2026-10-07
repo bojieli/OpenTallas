@@ -12793,3 +12793,66 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def dsrom_s81_selector_pipeline_model(segment_delta_cycles=56, ctx=1048576):
+    """Opt-in S81 selt_c structural successor; no headline adoption.
+
+    +3 edges in coarse-group sums and +4 in fine-bin sums. The 56-edge
+    initial envelope is four times the doubled-search hold increment; bench
+    measurements replace it. Scan/replay work must be checked separately.
+    Charge every index top-k invocation serially (no overlap credit).
+    """
+    if segment_delta_cycles < 0:
+        raise ValueError('structural successor cannot claim unmeasured speedup')
+    arch, built = arch_graph(ctx)
+    graph = built.g
+    calls = [n for n in graph.nodes if n.endswith('.attn.idx.topk_local')]
+    before = graph.solve(True)[built.sink]
+    for n in calls:
+        graph.nodes[n]['depth'] += segment_delta_cycles / 1.2e9
+    after = graph.solve(True)[built.sink]
+    # Two searches, 16 bins, pair sums at SW17 and XW21, eighth sums,
+    # and the extra B accumulator stage. Metadata conservatively 7 edges
+    # of (quota + accumulator + group) per search, quota widths 11 and 21.
+    sum_ff = 2 * (2 * (32*17 + 32*21 + 16*21) + 16*21)
+    metadata_ff = 7 * ((11+21+4) + (21+21+4))
+    extra_ff = sum_ff + metadata_ff
+    # Full native tile routed area (cd3337221-b): 19,974.4 um2.
+    # 50% of added flop area reserved for local prefix wiring/clock buffers.
+    area = 19974.4 + 1.5 * extra_ff * DFF_UM2
+    return dict(schema='opentallas.s81.selector_pipeline_model.v1',
+        enabled_by_default=False, adopted=False, target='DeepSeek V4.1 ROM S81 selector control',
+        clock_hz=1.2e9, macs_per_cycle=0, integer_sum_II=1,
+        compute_intensity='two threshold searches per edge, four quarters and 16 radix bins per search',
+        geometry=dict(Q=4, W=16, K=512, CB=11, SW=17, XW=21, searches=2),
+        memory_ports=dict(control_tile=0, quarter_macros_unchanged=True),
+        boundaries_bits_per_cycle=dict(f_s=4*865, f_o=4*354, t_c=4*66, t_cr=4, vd=514, vf=1),
+        port_bytes_per_cycle=dict(f_s=432.5, f_o=177, t_c=33, t_cr=0.5, vd=64.25),
+        communication_intensity='unchanged registered tile interfaces; internal extra registered sum stages only',
+        routing=dict(new_external_tracks=0, existing_horizontal_data_tracks_per_face=2*(865+354+66+1),
+                     M4_pitch_um=0.048, face_capacity_tracks=int(319.68/0.048),
+                     note='two quarters on each W/E face; same pin plan, no die channel change; internal route unmeasured'),
+        replication=dict(control_tiles_per_selector=1, searches_per_tile=2, extra_FF_bits=extra_ff,
+                         sum_FF_bits=sum_ff, metadata_FF_upper_bits=metadata_ff,
+                         max_sum_operand_bin_fanout=4, extra_boundary_mux_demux=0,
+                         accumulator_fanout=16, group_selector_mux='unchanged 16:1 registered result path'),
+        floorplan=dict(outline_um=[129.6,319.68], baseline_routed_cell_um2=19974.4,
+                       candidate_cell_estimate_um2=round(area,2), utilization_estimate=area/(129.6*319.68),
+                       estimate_basis='actual baseline plus added FF and 50% local-buffer allowance',
+                       fits_area_estimate=area < 0.65*129.6*319.68, physical_fit_proven=False),
+        timing=dict(extra_search_cycles=7, group_extra=3, bin_extra=4, II=1,
+                    WAIT=24, HOLD=48, HC0=35, HF0=58, CLRW=35,
+                    rule='quota/group/accumulator travel with their partial sum; WAIT +7, coarse warmup +7, fine hold +14, stale drain +7'),
+        composition=dict(context=ctx, invocations=len(calls), affected_nodes=calls,
+                         delta_cycles_per_segment=segment_delta_cycles,
+                         serial_upper_delta_ns=len(calls)*segment_delta_cycles/1.2,
+                         graph_before_us=before*1e6, graph_after_us=after*1e6,
+                         graph_delta_us=(after-before)*1e6,
+                         rate_penalty_percent=100*(1-before/after),
+                         mtp_per_verify_position_extra_cycles=len(calls)*segment_delta_cycles,
+                         mtp_rule='multiply by verified positions; acceptance unchanged; no drafter speed credit',
+                         basis='arch_graph local top-k dependency DAG; sensitivity only, not replacement of current headline',
+                         replay_gate='must measure equal replay count; otherwise price additional full scans before route'),
+        gates=dict(exact=False, negative=False, SSFF=False, hub_pin_map='unchanged',
+                   adopted=False, performance_credit=False))
