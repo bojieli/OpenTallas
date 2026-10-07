@@ -12,6 +12,7 @@ sync source (git archive of the pinned commit -> <host base>/<job>/src, read-onl
  -> route -> [signoff] -> VERDICT: SS >= +15 ps, FF >= +15 ps at 833.333 (60/25 corners), DRC 0, every check OK
       CLOSED : collect -> export -> commit record + view on the job's branch (explicit paths)
                -> trial-merge the branch into merge_target in a scratch worktree -> push -> ledger
+      budget : (jobs with a `budget`) calibrate is a CHECK against the sheet -> NEEDS_BUDGET on deviation
       else   : path-class summary (path_summary.py: worst 10 classes per failing check, start/end, slack, levels)
                -> ledger -> NEEDS_RTL
  a stage crash -> retry ONCE (on another host if the crash is resource-related: OOM / ENOSPC / Killed / lost wrapper)
@@ -41,6 +42,7 @@ so a new source commit needs a new job name (`<block>-<sha9>`).
 | `verdict` | `corner_sta` (glob of a tools/w18/corner_sta.py JSON) + `drc_metrics` (glob of ORFS `5_2_route.json`), or `metrics_cmd` printing `{"ss_ps","ff_ps","drc"}`. `checks[]`: `{name, cmd}` must exit 0 (LEF check MATCH, pin access ...). `macros`, `post_sdc`, `summary_base`: inputs for the failure summary |
 | `record[]` | `{from: remote path (may use {RUN}), to: repo-relative path, exclude?}`, copied into the branch on CLOSED. The loop also writes `results/closure_loop/<name>/verdict.json` |
 | `merge_target` | branch to trial-merge the job branch into after CLOSED (`main`, a coordinator branch, or null) |
+| `budget` | optional `{master, clock?, domain_clock?[], on_deviation?: flag\|continue, sheets_ref?}`: close against the master's BUDGET SHEET (results/rtl/budgets_20261006/sheets/<master>.json at `sheets_ref`, default origin/main). At sync the loop generates `{CL}/budget_route.sdc`, `budget_signoff.sdc`, `budget_ff.sdc` with tools/budgets/make_block_sdc.py and exports `BUDGET_SDC`, `BUDGET_SDC_SIGNOFF`, `BUDGET_SDC_FF`, `BUDGET_SHEET`, `BUDGET_LINT_SS/FF`; use them in `sdc_cmd` / the route instead of `make_io_vclk*` at `$CK_*`. Calibrate stays a CHECK: a measured insertion off the sheet (or over the block's insertion target) by more than the sheet tolerance -> `NEEDS_BUDGET` (default) or a ledger flag (`continue`); `retry` of a NEEDS_BUDGET job continues after calibrate on the sheet SDC |
 | `cycles_added` | optional, copied into the verdict record for the recompose |
 
 Placeholders in every command: `{RUN}` (the job's run dir), `{SRC}` (`{RUN}/src`, the cwd of every stage), `{CL}`

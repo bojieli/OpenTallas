@@ -42,6 +42,7 @@ import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import subprocess
+import tempfile
 import sys
 import time
 import traceback
@@ -59,7 +60,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 180                # load1 lags a launch: count own launches of the last 5 min as load
-TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "REFUSED", "CANCELLED", "INVALID"}
+TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)", re.M)
@@ -171,6 +172,17 @@ def validate(spec: dict) -> list[str]:
         e.append("verdict.corner_sta (glob of a tools/w18/corner_sta.py JSON) or verdict.metrics_cmd is required")
     if not v.get("drc_metrics") and not v.get("metrics_cmd") and v.get("drc") != "skip":
         e.append("verdict.drc_metrics (glob of ORFS 5_2_route.json) is required")
+    bud = spec.get("budget")
+    if bud is not None:
+        if not isinstance(bud, dict) or not bud.get("master"):
+            e.append("budget needs {master[, clock, domain_clock[], on_deviation flag|continue, sheets_ref]}")
+        elif bud.get("on_deviation", "flag") not in ("flag", "continue"):
+            e.append("budget.on_deviation must be flag or continue")
+        else:
+            try:
+                budget_files(bud, check_only=True)
+            except Exception as ex:  # noqa: BLE001
+                e.append(f"budget: {str(ex)[:300]}")
     for h in spec.get("hosts", []):
         if h not in [x["name"] for x in hosts_table()]:
             e.append(f"unknown host {h}")
@@ -437,6 +449,56 @@ def subst(text, j):
     return text
 
 
+# ------------------------------------------------------------------------------------------------ budget sheets
+BUDGET_SHEETS = "results/rtl/budgets_20261006/sheets"
+
+
+def budget_files(bud, check_only=False):
+    """budget SDCs of the job's master from its sheet at sheets_ref (default origin/main; tools/budgets/make_block_sdc.py
+    of the same ref): {name: text} + the sheet.  The SDC is generated HERE (localhost, from the published sheet), so
+    every job uses the same sheet whatever its own branch carries."""
+    ref = bud.get("sheets_ref", "origin/main")
+    with tempfile.TemporaryDirectory() as td:
+        arch = sh(["bash", "-c", f"git -C {REPO} archive {ref} tools/budgets {BUDGET_SHEETS}/{bud['master']}.json | tar -x -C {td}"],
+                  timeout=300)
+        sheet = Path(td) / BUDGET_SHEETS / f"{bud['master']}.json"
+        if arch.returncode or not sheet.exists():
+            raise ValueError(f"no budget sheet {bud['master']} at {ref} ({arch.stderr[-300:]})")
+        if check_only:
+            return {}
+        tool = Path(td) / "tools/budgets/make_block_sdc.py"
+        clk = bud.get("clock", "core_clk")
+        dc = sum((["--domain-clock", x] for x in bud.get("domain_clock", [])), [])
+        out = {}
+        for name, args in (("budget_route.sdc", ["sdc", "--route-mode", "route"] + dc),
+                           ("budget_signoff.sdc", ["sdc", "--route-mode", "signoff"] + dc), ("budget_ff.sdc", ["ff"])):
+            r = sh(["python3", str(tool), args[0], bud["master"], "--sheets", str(sheet.parent), "--clock", clk] + args[1:],
+                   timeout=120)
+            if r.returncode:
+                raise ValueError(f"make_block_sdc {name}: {r.stderr[-300:]}")
+            out[name] = r.stdout
+        out["budget_sheet.json"] = sheet.read_text()
+        out["_ref"] = git("rev-parse", ref).stdout.strip()
+        return out
+
+
+def budget_check(j):
+    """calibrate CHECK against the sheet (never a re-calibration): None if within tolerance, else the reason"""
+    bud = j["spec"].get("budget")
+    if not bud or not j.get("budget") or not j.get("calibration"):
+        return None
+    ins = j["budget"]["insertion"]
+    m = float(j["calibration"]["env"]["CK_SS_MEAN"])
+    tol = ins["tolerance_ps"]
+    why = []
+    if abs(m - ins["ss"]) > tol:
+        why.append(f"measured SS insertion {m:g} vs sheet {ins['ss']:g} ({ins['grade']}): {m - ins['ss']:+.0f} > {tol:g} ps")
+    if m - ins["target_ss"] > tol:
+        why.append(f"exceeds the block insertion TARGET {ins['target_ss']:g} by {m - ins['target_ss']:+.0f} ps")
+    j["budget"]["check"] = dict(measured_ss=m, ok=not why, reasons=why)
+    return "; ".join(why) or None
+
+
 def sync_source(j):
     spec, host = j["spec"], j["host"]
     src = spec["source"]
@@ -464,6 +526,15 @@ def sync_source(j):
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
+    if spec.get("budget"):
+        files = budget_files(spec["budget"])
+        for fn, text in files.items():
+            if not fn.startswith("_"):
+                ssh(host, f"cat > {run}/cl/{fn}", input=text, timeout=60, check=True)
+        sheet = json.loads(files["budget_sheet.json"])
+        j["budget"] = dict(master=spec["budget"]["master"], sheets_ref=files["_ref"],
+                           insertion=sheet["clock"]["internal_insertion"],
+                           entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
 def tag(st, j):
@@ -478,6 +549,11 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
+        env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
+            ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
+            ("BUDGET_SHEET", "budget_sheet.json")))
+        env += f"export BUDGET_LINT_SS={j['budget']['insertion']['ss']}\nexport BUDGET_LINT_FF={j['budget']['insertion']['ff']}\n"
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
@@ -705,7 +781,7 @@ def finish(j, status, reason, ledger_text):
     event(j, f"{status}: {reason}")
     ledger(j, ledger_text)
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
-            "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
+            "NEEDS_BUDGET": "failed: NEEDS_BUDGET", "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
     experiment(j, f"{term} {reason[:120]}")
 
 
@@ -895,6 +971,19 @@ def step(j, fleet):
                     event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
                 except Exception:  # noqa: BLE001
                     return crash(j, st, fleet, "calibrate produced no calib.json")
+                dev = budget_check(j)
+                if dev:
+                    if j["spec"]["budget"].get("on_deviation", "flag") == "flag":
+                        finish(j, "NEEDS_BUDGET", dev[:200],
+                               f"NEEDS_BUDGET: {j['budget']['master']} block clock insertion off its budget sheet ({dev}). "
+                               "Re-plan the die entry target (tools/budgets) or fix the block tree, then retry; the IO SDC "
+                               "is NOT re-calibrated silently.")
+                        return
+                    event(j, f"BUDGET FLAG (continuing on the sheet SDC): {dev}")
+                    ledger(j, f"BUDGET FLAG {j['budget']['master']}: {dev} (on_deviation=continue)")
+                elif j.get("budget"):
+                    event(j, f"budget check OK: insertion {j['budget']['check']['measured_ss']:g} within "
+                             f"{j['budget']['insertion']['tolerance_ps']:g} ps of the sheet")
         j["stage_idx"] += 1
         j["status"] = "READY"
         return
@@ -1087,8 +1176,12 @@ def cmd_validate(a):
 
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN",):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN jobs can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET"):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET jobs can be retried")
+    if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
+        j["budget"]["override"] = "human retry after NEEDS_BUDGET"
+        j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
+        j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
     j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
