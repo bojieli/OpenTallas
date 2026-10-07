@@ -102,7 +102,7 @@ module dsfd_selt_q #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_hdc_v41x_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MREG(SAFE)) u_s (
+    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MREG(SAFE)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
@@ -243,7 +243,7 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end else begin : g_native
-    ot_hdc_v41x_sel_ctl #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+    ot_s81ph_native_sel_ctl #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),

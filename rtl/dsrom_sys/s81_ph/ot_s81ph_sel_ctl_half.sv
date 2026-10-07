@@ -90,10 +90,10 @@ module ot_s81ph_sel_ctl_half #(
     always @(posedge clk or negedge rst_n) if (!rst_n) hen_q <= 1'b0; else hen_q <= ~hen_q;
     always @(*) if (!clk) hen_l = hen_q;
     wire ck_h = clk & hen_l;
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(QC), .XR(XRH)) u_cs (
+    ot_s81ph_native_sel_su #(.Q(Q), .CB(CB), .QW(QC), .XR(XRH)) u_cs (
         .clk(ck_h), .gs(s_gc), .bs(s_bc), .q(kq), .g_out(c_cg),
         .res_b(cres_b), .res_above(cres_above), .res_ok(cres_ok), .res_eq(cres_eq));
-    ot_hdc_v41x_sel_su #(.Q(Q), .CB(CB), .QW(XW), .XR(XRH)) u_fs (
+    ot_s81ph_native_sel_su #(.Q(Q), .CB(CB), .QW(XW), .XR(XRH)) u_fs (
         .clk(ck_h), .gs(s_gf), .bs(s_bf), .q(qf), .g_out(c_fg),
         .res_b(fres_b), .res_above(fres_above), .res_ok(fres_ok), .res_eq(fres_eq));
 

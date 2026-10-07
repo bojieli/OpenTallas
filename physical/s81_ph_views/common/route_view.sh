@@ -28,6 +28,10 @@ read DW DH < <(python3 -c "import json;d=json.load(open('$P/ports.json'));print(
 mkdir -p $SRC/.views/$lab; cp $P/io_place.tcl $SRC/.views/$lab/io_place.tcl
 # SDCM: the IO SDC regenerated at the measured insertion (closure-loop calibrate stage: make_io_vclk_margin.sh $CK_SS_MEAN)
 cat ${SDCM:-physical/s81_ph_views/common/io_vclk_m_770.sdc} ${SDCX:+$SDCX} > $SRC/.views/$lab/margin.sdc
+# Current S81 selector variants use isolated successors, preserving golden source pins.
+if [[ "$topsrc" == rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv ]]; then
+    SRCS="${SRCS:-} rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv"
+fi
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
 echo "SRC=$SRC die=$die master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.45} MAXL=${MAXL:-M7} SRCS=${SRCS:-} CLK=${CLK:-ck} SDCX=${SDCX:-} CTSA=${CTSA:-} $*" > $W/args
