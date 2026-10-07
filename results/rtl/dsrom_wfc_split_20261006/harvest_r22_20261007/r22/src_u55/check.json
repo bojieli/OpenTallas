@@ -1,0 +1,59 @@
+{
+ "synth": {
+  "file": "results/asap7/wfc_src_src_u55/base/1_2_yosys.v",
+  "sram_macros": 4,
+  "upos_wr_l": 16,
+  "upos_wd_l": 0
+ },
+ "final": {
+  "file": "results/asap7/wfc_src_src_u55/base/6_final.v",
+  "sram_macros": 4,
+  "upos_wr_l": 109,
+  "upos_wd_l": 28
+ },
+ "sdc": {
+  "1_synth.sdc": [
+   "set_clock_uncertainty -setup 60.0000 core_clk",
+   "set_clock_uncertainty -hold 25.0000 core_clk",
+   "set_clock_uncertainty -setup 60.0000 io_clk",
+   "set_clock_uncertainty -hold 25.0000 io_clk",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[0]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[10]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[11]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[12]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[13]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[14]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[15]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[16]}]"
+  ],
+  "4_cts.sdc": [
+   "set_clock_uncertainty -setup 60.0000 core_clk",
+   "set_clock_uncertainty -hold 25.0000 core_clk",
+   "set_clock_uncertainty -setup 60.0000 io_clk",
+   "set_clock_uncertainty -hold 25.0000 io_clk",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[0]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[10]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[11]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[12]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[13]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[14]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[15]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[16]}]"
+  ],
+  "6_final.sdc": [
+   "set_clock_uncertainty -setup 60.0000 core_clk",
+   "set_clock_uncertainty -hold 25.0000 core_clk",
+   "set_clock_uncertainty -setup 60.0000 io_clk",
+   "set_clock_uncertainty -hold 25.0000 io_clk",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[0]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[10]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[11]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[12]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[13]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[14]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[15]}]",
+   "set_input_delay 166.6000 -clock [get_clocks {io_clk}] -add_delay [get_ports {cfg_gen_len[16]}]"
+  ]
+ },
+ "metrics_file": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r22/src_u55/logs/asap7/wfc_src_src_u55/base/6_report.json"
+}

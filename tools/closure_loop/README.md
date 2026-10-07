@@ -106,6 +106,42 @@ clock plan.
   - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
 
+### Hold ECO rev 2 (2026-10-07): the "ECO buffers destroy setup" class
+Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Causes found, and what rev 2 does:
+- constraints differed from sign-off: corner-conditional post-SDCs (`vclk_corner_true.sdc`, budget FF files) were read
+  once into a two-corner session, so the ECO applied the FF IO model to SS setup (idxq_b1: ECO SS -414.69 vs sign-off
+  +107.23; 14,557 buffers). Rev 2 builds each corner's EFFECTIVE sign-off SDC in its own session (`hold_eco_corner.tcl`,
+  corner_sta.py's read order, `write_sdc`), merges them (`hold_eco_sdc.py`: SS max side, FF min side, FF min IO delays
+  shifted by the virtual-clock latency difference). Repair now defaults to an FF-only session protected by the SS
+  session's endpoint slacks and critical nets. Matching the worst margins alone cannot exclude irrelevant SS hold
+  endpoints (W2 NO3/hquad diagnosis). `ECO_SESSION=ff` makes this explicit; `hold_eco.session: "ff"` selects it in
+  a job. `ECO_SESSION=auto` retains the legacy two-corner mismatch detection for explicitly requested experiments.
+- the RE-ROUTE, not the buffers, destroyed setup: on ctrl_pc 3f0455126 a strip + fresh GRT + DRT with NO ECO cell took
+  SS +70.18 -> +5.98 (FF -4.20 -> -2.06). Rev 2 keeps the route's GRT guides (still in 5_2_route.odb): incremental
+  GRT around the repair re-guides only the touched nets, every wire is stripped, DRT routes on the original guides.
+  The same no-ECO control then reproduces SS +70.18 / FF -4.20 exactly; with the ECO (293 cells) SS +73.02 / FF -4.20 ->
+  +6.51 in one pass (the 2nd pass closes the residue). Keeping untouched WIRES does not work with this DRT ('pin not
+  visited' on untouched nets), nor does keeping clock wires (checkConnectivity). Original guides are required:
+  missing or rejected guides fail the pass. A fresh global route is not an accepted fallback (owner takeover,
+  2026-10-07; `svc_SE_s6` eco-r3 passed timing only after that fallback).
+- post-route hold GOAL +18 (coordinator 2026-10-07: margin over the +15 line for die context; was a +22 pre-route
+  target that routed to anything); the repair aims +18 + an allowance (3 ps, then adds 1.5 times the previous pass's shortfall, capped at 20 ps)
+  because the new buffers' nets are unrouted during the repair; acceptance stays +15. Only endpoints with SS setup > 2.4 x deficit + 40 ps are repaired (a ps of FF hold delay costs ~2.4 ps at
+  SS; `hold_eco_window.tcl` prints every class as fixable / tight / infeasible / nodata: S - 2.4 (15 - H) < 15 means the
+  constraints leave no window -> IO budget or RTL, never an ECO);
+  `repair_timing -setup_margin 40`; HB1-4xp67 delay cells allowed; up to 2 passes ECO -> re-route -> corner_sta, the
+  each starting from the original route. A failed later pass retains the best completed earlier pass.
+- SS endpoint export includes `all_registers -data_pins`, covering macro timing-check pins as well as flop D pins
+  and output ports. Missing SS data is `nodata` and excluded from repair, not evidence of an infeasible window.
+  `test_hold_eco_macro_pins.py` covers this export and classification and the original-guide failure behavior.
+- tune with `hold_eco: {hold_margin_ps, setup_margin_ps, setup_filter_ps, passes, resistance_aware, hold_cells, ...}`;
+  `WINDOW_ONLY=1 hold_eco.sh ...` reports the endpoint windows without an ECO.
+- `closure_loop.py retry-eco <name> [--why ...]` re-runs the ECO on a hold-only NEEDS_RTL job whose earlier ECO missed
+  (earlier ECO kept in `eco_history`, new output `cl/eco-r<n>`).
+- found on the way: tools/budgets/make_block_sdc.py `--route-mode signoff` put the sheet latency on the REAL clock;
+  read after set_propagated_clock that made sign-off ideal-clock (hfd_svc_SE_s6 FF -135.15 -> -36.67 once propagated).
+  Fixed: vclk only + `set_propagated_clock` on the real clock.
+
 ### Cancellation and ECO reliability (2026-10-06)
 
 Job transitions and cancellation share a per-job file lock in `CL_STATE/job_locks`.

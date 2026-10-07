@@ -1,0 +1,16 @@
+{
+  "coordinator_thread": "01a115f7-4b72-7ac3-8436-d434e3d0b176",
+  "request": "W2 NO3/NO2 and hquad: do not repair SS hold from shared FF-derived min input SDC",
+  "source_change": "ECO_SESSION defaults to ff; hold_eco.session selects launcher mode; SS setup endpoint and critical-net protection retained, final SDC unchanged",
+  "source_owner": "Goodall owns W2 PRE_CTS/PRE_GLOBAL_ROUTE setup-only repair hooks and fresh pinned full-shape route; closure-loop takeover owns shared helper selection",
+  "validation": [
+    "3 focused Tcl/bash regression tests PASS",
+    "7 ECO recovery tests PASS",
+    "bash -n hold_eco.sh PASS",
+    "git diff --check PASS"
+  ],
+  "live_candidates": "elemB and cmdproc_s remain pinned to 6625a1139; neither helper copy changed after launch. Their SS exports include 26 ROM timing-check pins / 82 SRAM timing-check pins respectively.",
+  "deployment": "Coordinator safe-boundary deployment required for daemon; no live daemon edits/restart performed. Owner W2 can invoke pinned helpers directly with ECO_SESSION=ff.",
+  "worktree_retention": "Keep existing Claude worktree and scratch: user requests preservation; other live scripts reference this source path.",
+  "launch_script_sha256": "33f4eaeb3203ec186a5a003332c433db9bc0ba779d4410a1c1c8457979098d87"
+}

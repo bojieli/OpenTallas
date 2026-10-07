@@ -1,0 +1,215 @@
+{
+ "name": "s81ph-root_tile-34b3e75dd",
+ "spec": {
+  "name": "s81ph-root_tile-34b3e75dd",
+  "block": "ot_s81ph_root_tile",
+  "owner": "Claude:s81-ph",
+  "purpose": "gather root tile v4 (tile_m3 post-CTS -83: queue read mux, operand AND-OR, free-list take chain) -> one calibrated route",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "34b3e75dd75e44918a63da02783149aa82ee6878"
+  },
+  "no_bench_reason": "bench t5 (benchB on EPYC2, +UNORD): 9 cases PASS, mutants BF16_TRUNC / LANE_SWAP / NOFWD FAIL; record results/rtl/s81_ph_20261006/gather/bench_t5_summary.txt",
+  "stages": {
+   "calibrate": {
+    "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/ot_s81ph_root_tile"
+   }
+  ],
+  "cycles_added": 6,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/s81ph-root_tile-34b3e75dd.json",
+ "created": "2026-10-06T20:07:27-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 2,
+ "attempt": 2,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-pve1"
+ ],
+ "events": [
+  "2026-10-06T20:07:27-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-root_tile-34b3e75dd.json",
+  "2026-10-06T20:08:50-07:00 source 34b3e75dd75e synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/src",
+  "2026-10-06T20:10:02-07:00 launched calibrate (attempt 1) on ot-pve1",
+  "2026-10-06T20:50:41-07:00 calibrate done (rc=0)",
+  "2026-10-06T20:50:41-07:00 calibrated insertion CK_SS_MEAN=373 CK_SS_MIN=368 CK_SS_MAX=378 CK_FF_MEAN=238 CK_FF_MIN=233 CK_FF_MAX=241",
+  "2026-10-06T20:52:00-07:00 launched route (attempt 1) on ot-pve1",
+  "2026-10-06T23:35:35-07:00 route done (rc=0)",
+  "2026-10-06T23:36:33-07:00 verdict SS +17.00 / FF +8.92 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-06T23:36:38-07:00 hold-only miss (SS +17.00 / FF +8.92, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/5_2_route.odb",
+  "2026-10-07T01:06:17-07:00 hold ECO MISS: {'ss_ps': -3.21, 'ff_ps': 26.08, 'drc': 0, 'cells_added': 762, 'errors': []}",
+  "2026-10-07T01:12:57-07:00 NEEDS_RTL: SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+  "2026-10-07T01:32:30-07:00 human retry-eco (hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal)): re-judged at the verdict; earlier ECO kept in eco_history",
+  "2026-10-07T01:33:33-07:00 verdict SS +17.00 / FF +8.92 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-07T01:34:01-07:00 hold-only miss (SS +17.00 / FF +8.92, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/5_2_route.odb",
+  "2026-10-07T03:36:52-07:00 hold ECO MISS: no result (rc=9)",
+  "2026-10-07T03:39:17-07:00 NEEDS_RTL: SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+ ],
+ "updated": "2026-10-07T03:39:18-07:00",
+ "wait": null,
+ "host": "ot-pve1",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd",
+ "commit_full": "34b3e75dd75e44918a63da02783149aa82ee6878",
+ "stage_key": "summary",
+ "stage_tag": "summary.a2",
+ "stage_started": "2026-10-07T03:36:53-07:00",
+ "unreachable": 0,
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1977,
+    "mean": 372.7,
+    "min": 368.2,
+    "max": 377.5
+   },
+   "all": {
+    "n": 24384,
+    "mean": 371.6,
+    "min": 365.1,
+    "max": 377.8
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1977,
+    "mean": 237.5,
+    "min": 233.3,
+    "max": 241.4
+   },
+   "all": {
+    "n": 24384,
+    "mean": 236.7,
+    "min": 230.8,
+    "max": 242.7
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 373,
+   "CK_SS_ALL_MEAN": 372,
+   "CK_SS_MIN": 368,
+   "CK_SS_ALL_MIN": 365,
+   "CK_SS_MAX": 378,
+   "CK_SS_ALL_MAX": 378,
+   "CK_FF_MEAN": 238,
+   "CK_FF_ALL_MEAN": 237,
+   "CK_FF_MIN": 233,
+   "CK_FF_ALL_MIN": 231,
+   "CK_FF_MAX": 241,
+   "CK_FF_ALL_MAX": 243
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/logs/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/5_2_route.json"
+  ],
+  "ss_ps": 17.0,
+  "ff_ps": 8.92,
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs",
+  "errors": [],
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "drc": 0
+ },
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "failed_checks": [],
+ "eco": {
+  "tried": true,
+  "rb": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base",
+  "ob": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base",
+  "out": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/cl/eco-r2",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "pre": {
+   "ss_ps": 17.0,
+   "ff_ps": 8.92
+  },
+  "started": "2026-10-07T01:34:00-07:00",
+  "result": null
+ },
+ "reason": "SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+ "eco_history": [
+  {
+   "tried": true,
+   "rb": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base",
+   "ob": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base",
+   "out": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/cl/eco",
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "pre": {
+    "ss_ps": 17.0,
+    "ff_ps": 8.92
+   },
+   "started": "2026-10-06T23:36:37-07:00",
+   "result": {
+    "ss_ps": -3.21,
+    "ff_ps": 26.08,
+    "drc": 0,
+    "cells_added": 762,
+    "errors": []
+   }
+  }
+ ],
+ "errors": []
+}

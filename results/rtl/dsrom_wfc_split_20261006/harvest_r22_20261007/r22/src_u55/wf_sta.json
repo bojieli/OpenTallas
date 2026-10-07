@@ -1,0 +1,211 @@
+{
+ "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+ "artifacts_sha256": {
+  "6_final.odb": "7ecc5a10fb994d7d99396ff4aa20bbe5fe9260e697141a49bd0c253a73a1ac81",
+  "6_final.sdc": "86640eac139c758804f76284026741135602aa1ad7e869153904b2a46da5746d",
+  "6_final.spef": "53fe0702a6370f3c2ad7f912e813229e06789ba747101ecd8856073b6c650097"
+ },
+ "corners": {
+  "SS": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    451.2,
+    513.7
+   ],
+   "block": {
+    "setup_wns_ps": 54.3,
+    "hold_wns_ps": 78.8,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+     "g_vm_reg.wd_q[366]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 54.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_txq_slice.g_s[6].qd[1][12]$_DFFE_PP_",
+     "g_link_reg.u_tx.d[204]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 78.8,
+    "worst_min_path_group": "core_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": 54.3,
+    "hold_wns_ps": 78.8,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+     "g_vm_reg.wd_q[366]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 54.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_txq_slice.g_s[6].qd[1][12]$_DFFE_PP_",
+     "g_link_reg.u_tx.d[204]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 78.8,
+    "worst_min_path_group": "core_clk"
+   },
+   "die150": {
+    "setup_wns_ps": 54.3,
+    "hold_wns_ps": 48.0,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+     "g_vm_reg.wd_q[366]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 54.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "pr_q[3]",
+     "g_wf.eng.nu_tok[3]$_DFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 48.0,
+    "worst_min_path_group": "core_clk"
+   },
+   "region": {
+    "setup_wns_ps": 54.3,
+    "hold_wns_ps": 78.8,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+     "g_vm_reg.wd_q[366]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 54.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_txq_slice.g_s[6].qd[1][12]$_DFFE_PP_",
+     "g_link_reg.u_tx.d[204]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 78.8,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": 54.3,
+    "hold_wns_ps": 78.8,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.cnt[3]$_SDFF_PN0_",
+     "g_vm_reg.wd_q[366]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 54.3,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_txq_slice.g_s[6].qd[1][12]$_DFFE_PP_",
+     "g_link_reg.u_tx.d[204]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 78.8,
+    "worst_min_path_group": "core_clk"
+   }
+  },
+  "FF": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    269.3,
+    322.7
+   ],
+   "block": {
+    "setup_wns_ps": 145.8,
+    "hold_wns_ps": -85.2,
+    "failing_setup": 0,
+    "failing_hold": 1226,
+    "worst_max_path": [
+     "in_data[207]",
+     "g_link_reg.u_rx.pd[207]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 145.8,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_vm_reg.wd_q[324]$_DFF_P_",
+     "vm_wdata[324]"
+    ],
+    "worst_min_path_slack_ps": -85.2,
+    "worst_min_path_group": "io_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": 352.8,
+    "hold_wns_ps": 23.1,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.live$_DFF_P_",
+     "g_link_reg.u_rx.q[3][381]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": 352.8,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.g_rec_sram.m_q[1][117]$_DFF_P_",
+     "g_wf.eng.rrow[37]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 23.1,
+    "worst_min_path_group": "core_clk"
+   },
+   "die150": {
+    "setup_wns_ps": 261.8,
+    "hold_wns_ps": 3.2,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "proto_fault$_DFF_PN0_",
+     "proto_fault"
+    ],
+    "worst_max_path_slack_ps": 261.8,
+    "worst_max_path_group": "vclk",
+    "worst_min_path": [
+     "pr_q[3]",
+     "g_wf.eng.nu_tok[3]$_DFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 3.2,
+    "worst_min_path_group": "core_clk"
+   },
+   "region": {
+    "setup_wns_ps": 273.1,
+    "hold_wns_ps": 23.1,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "in_data[207]",
+     "g_link_reg.u_rx.pd[207]$_DFF_P_"
+    ],
+    "worst_max_path_slack_ps": 273.1,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.g_rec_sram.m_q[1][117]$_DFF_P_",
+     "g_wf.eng.rrow[37]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 23.1,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": 352.8,
+    "hold_wns_ps": 23.1,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "g_link_reg.u_rx.live$_DFF_P_",
+     "g_link_reg.u_rx.q[3][381]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": 352.8,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_wf.eng.g_rec_sram.m_q[1][117]$_DFF_P_",
+     "g_wf.eng.rrow[37]$_DFF_P_"
+    ],
+    "worst_min_path_slack_ps": 23.1,
+    "worst_min_path_group": "core_clk"
+   }
+  }
+ },
+ "signoff": {
+  "block": false,
+  "incontext": true,
+  "reg2reg": true
+ }
+}
