@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_stn_r19",
  "kind": "stations",
- "status": "closed",
+ "status": "interim-not-closed",
  "lef": "hfd_stn_r19.lef",
  "lib": {
   "ss": "hfd_stn_r19_ss.lib",
@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r19",
-  "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
-  "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r19/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R1_hfd_stn_r19",
+  "SOURCE_COMMIT": "693b941a77566e053f8969561a0b288bce0d1548",
+  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src24 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R1_hfd_stn_r19/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -50,25 +50,31 @@
    "signoff_corner_rc=0",
    "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 80.36,
-  "ff_hold_ps": 474.22,
-  "drc": 0,
+  "ss_setup_ps": 84.93,
+  "ff_hold_ps": 474.0,
+  "drc": 324,
   "closes_signoff": true,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 0,
-   "route_sdc": ".views/M1_hfd_stn_r19/route.sdc",
-   "signoff_sdc": ".views/M1_hfd_stn_r19/signoff.sdc",
+   "route_sdc": ".views/R1_hfd_stn_r19/route.sdc",
+   "signoff_sdc": ".views/R1_hfd_stn_r19/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
-   "ss": 17.36,
-   "ff": 474.22
+   "ss": 21.93,
+   "ff": 474.0
   },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc",
   "generator": "tools/hbm_die_station_gen.py"
+ },
+ "io_min_delay": {
+  "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+  "ps_per_um": 0.1118,
+  "clkq_ff_ps": 32.2,
+  "view": null
  },
  "bench": {
   "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench16/hfd_stn_r19",
@@ -94,9 +100,9 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_stn_r19.lef": "c140d32669cbb4e805ef641f38eda15832253a3f6c05e6291897a78a06e401fb",
-  "hfd_stn_r19_ss.lib": "2e473b0e083166ab7551531646cf7d0ef4d46edecab4584896a402a4b38a2387",
-  "hfd_stn_r19_ff.lib": "082a91e8b05d0e9502948863b83addc9a55d8d4247aa7cac6da3c72346b4f8e2"
+  "hfd_stn_r19.lef": "b82e6f36c8ff0f823c4fcb82559f89c647fa2c129c7cfcf09a7994a6779d2030",
+  "hfd_stn_r19_ss.lib": "c82bc38f52055ce160d5913a79de750e0eff46619afa6fde5f251028e733cfaf",
+  "hfd_stn_r19_ff.lib": "c2979b93794d4062798c8ceb09396793ae377d83e6a51c1c682523d118adfb9b"
  },
  "defects": []
 }

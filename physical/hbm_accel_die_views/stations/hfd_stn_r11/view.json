@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r11",
-  "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
-  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src16 master=hfd_stn_r11 top=physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv DW=48.792 DH=127.416 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r11/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+  "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_stn_r11",
+  "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+  "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_stn_r11 top=physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv DW=48.792 DH=127.416 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_stn_r11/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -50,25 +50,31 @@
    "signoff_corner_rc=0",
    "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 81.34,
-  "ff_hold_ps": 454.69,
+  "ss_setup_ps": 93.64,
+  "ff_hold_ps": 444.32,
   "drc": 0,
   "closes_signoff": true,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 0,
-   "route_sdc": ".views/M1_hfd_stn_r11/route.sdc",
-   "signoff_sdc": ".views/M1_hfd_stn_r11/signoff.sdc",
+   "route_sdc": ".views/P1_hfd_stn_r11/route.sdc",
+   "signoff_sdc": ".views/P1_hfd_stn_r11/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
-   "ss": 18.34,
-   "ff": 454.69
+   "ss": 30.64,
+   "ff": 444.32
   },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sdc",
   "generator": "tools/hbm_die_station_gen.py"
+ },
+ "io_min_delay": {
+  "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+  "ps_per_um": 0.1118,
+  "clkq_ff_ps": 32.2,
+  "view": null
  },
  "bench": {
   "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench16/hfd_stn_r11",
@@ -96,9 +102,20 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_stn_r11.lef": "5c3ca8f6518a1d39b41ffeadbe0c2490b65df5e91e36c67284f4c08314ab57ad",
-  "hfd_stn_r11_ss.lib": "b1e2afd9039a7597ea4200c30dd9eb55fcb2358945033f6d8f18be8bf1caa6c7",
-  "hfd_stn_r11_ff.lib": "de4db19c8f4c6244bf7a0d062b0f7ea4a3635d731221f11aa1bd78a9b4ae2874"
+  "hfd_stn_r11.lef": "8b3bff8fc00f94edde32254d68831e9160b60a8a208ab7c97e32b7cc9938151d",
+  "hfd_stn_r11_ss.lib": "b1b48c06e2942ffaf08d079382bc99ad28664642e4ae4e1ae9c082d89dea9047",
+  "hfd_stn_r11_ff.lib": "9560ef38f809538e8787904cd5c6506f9fa135ed321ce0d65d4dfcc50f701e34"
  },
- "defects": []
+ "defects": [],
+ "pin_access_check": {
+  "tool": "physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh",
+  "verdict": "DONE",
+  "drt0073_instances": 0,
+  "orients": [
+   "R0",
+   "MX",
+   "MY",
+   "R180"
+  ]
+ }
 }

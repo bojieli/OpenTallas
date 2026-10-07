@@ -24,13 +24,13 @@
    "RVTP"
   ],
   "pg_pins": {
-   "VSS": [
+   "VDD": [
     "M1",
     "M2",
     "M6",
     "M7"
    ],
-   "VDD": [
+   "VSS": [
     "M1",
     "M2",
     "M6",
@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/N3_hfd_gath_r25",
-  "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
-  "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src21 master=hfd_gath_r25 top=physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sv DW=166.728 DH=315.336 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_gath_r25/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_gath_r25",
+  "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_gath_r25 top=physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_gath_r25/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -50,21 +50,21 @@
    "signoff_corner_rc=0",
    "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 37.25,
-  "ff_hold_ps": 9.57,
+  "ss_setup_ps": -9.23,
+  "ff_hold_ps": 17.79,
   "drc": 0,
-  "closes_signoff": true,
+  "closes_signoff": false,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 425,
-   "route_sdc": ".views/N3_hfd_gath_r25/route.sdc",
-   "signoff_sdc": ".views/N3_hfd_gath_r25/signoff.sdc",
+   "route_sdc": ".views/Q1_hfd_gath_r25/route.sdc",
+   "signoff_sdc": ".views/Q1_hfd_gath_r25/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
-   "ss": -25.75,
-   "ff": 9.57
+   "ss": -72.23,
+   "ff": 17.79
   },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sdc",
@@ -88,7 +88,7 @@
   }
  },
  "bench": {
-  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench21/hfd_gath_r25",
+  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench23/hfd_gath_r25",
   "simulator": "verilator (tools/hbm_die_station_bench.py)",
   "positive": {
    "verdict": "PASS",
@@ -116,9 +116,10 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_gath_r25.lef": "b683c183d7d338c463af53a74914e624cf1243ea40416d56f1e7fb108211304f",
-  "hfd_gath_r25_ss.lib": "2711ae6404bf5c857866060135d5ffc46dc6d2818812af0d6a3e0e987297c782",
-  "hfd_gath_r25_ff.lib": "837f1259cc5863c52ff71e45c89a2943808ce6cfd0e095d45d540f5a6b554f92"
+  "hfd_gath_r25.lef": "bf2bc937a8cb02aba987b08a8c9bd4fdd1e3279741355645aa7ee9d1c8e98c6b",
+  "hfd_gath_r25_ss.lib": "776f5d4a167f1e23cfa235ebf99f6605e652ecc65870a2f9916954ff1fba9a93",
+  "hfd_gath_r25_ff.lib": "41898ef39197a7113c85ef55db8627a8ca5d7b1164c3a877d878e4e7d704e058"
  },
- "defects": []
+ "defects": [],
+ "note": "Q1 SS -9.23 on the launch b out (o_b2160: launch QN + 2 buffers vs LDLY 3 forwarded clock); FF +17.8, PA DONE -> R1 LDLY 7"
 }

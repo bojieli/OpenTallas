@@ -97,11 +97,12 @@ def rng(bits):
 
 
 class Emit:
-    def __init__(self, rec, fcm, mutant=False, margin=False, wchk=False, pin_stages=1, fdly=0):
+    def __init__(self, rec, fcm, mutant=False, margin=False, wchk=False, pin_stages=1, fdly=0, ldly=0):
         self.rec, self.fcm, self.n = rec, fcm, 0
         self.wchk = wchk              # ot_meso_fifo WCHK=1 (chunked data-ring write, 0 cycles; see --wchk)
         self.pin_stages = pin_stages  # --margin drive(): registers per ck-domain output (1 = the pin register only)
         self.fdly = fdly              # forward-slice FDLY override (0 = the library default)
+        self.ldly = ldly              # launch-slice LDLY override (0 = the library default)
         self.margin = margin          # owner margin rule: register every face pin of a meso crossing (see --margin)
         self.body, self.sdc, self.map = [], [], {}
         self.clk_in, self.clk_out = [], []        # (port, idx) forwarded clock inputs / outputs
@@ -180,7 +181,8 @@ class Emit:
         """srcs: list of verilog bit expressions (ck domain) -> forwarded slice out on op[obits], clock op[oclk]."""
         u = self.name('lau')
         w = len(obits)
-        self.body.append(f'  ot_hbm_stn_launch #(.W({w})) {u} (.ck(ck[0]), .d_i({{{", ".join(reversed(self.mut(srcs)))}}}), '
+        ld = f', .LDLY({self.ldly})' if self.ldly else ''
+        self.body.append(f'  ot_hbm_stn_launch #(.W({w}){ld}) {u} (.ck(ck[0]), .d_i({{{", ".join(reversed(self.mut(srcs)))}}}), '
                          f'.fclk_o({op}[{oclk}]), .d_o({rng([(op, i) for i in obits])}));')
         self.clk_out.append(((op, oclk), ('ck', 0), False))
         for s, b in zip(srcs, obits):
@@ -466,8 +468,9 @@ def main(argv=None):
     ap.add_argument('--pin-stages', type=int, default=1, help='--margin: registers per ck-domain output port (1 = the pin '
                     'register; each extra stage +1 cycle on that output, placed by common/face_chain_place.tcl)')
     ap.add_argument('--fdly', type=int, default=0, help='forward slices: FDLY kept inverter pairs (0 = library default)')
+    ap.add_argument('--ldly', type=int, default=0, help='launch slices: LDLY kept inverter pairs (0 = library default)')
     a = ap.parse_args(argv)
-    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly)
+    kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly)
     fcm = fc_map()
     pdir = Path(a.ports)
     out = Path(a.out)
@@ -496,7 +499,7 @@ def main(argv=None):
                           meso=sum('ot_hbm_stn_meso' in l for l in E.body),
                           launch=sum('ot_hbm_stn_launch' in l for l in E.body), outputs_mapped=len(E.map),
                           **({'wchk': True} if a.wchk else {}), **({'pin_stages': a.pin_stages} if a.pin_stages != 1 else {}),
-                          **({'fdly': a.fdly} if a.fdly else {}))
+                          **({'fdly': a.fdly} if a.fdly else {}), **({'ldly': a.ldly} if a.ldly else {}))
     if a.master and (out / 'summary.json').exists():      # a partial emit updates the other masters' rows in place
         summary = {**json.loads((out / 'summary.json').read_text()), **summary}
     (out / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
