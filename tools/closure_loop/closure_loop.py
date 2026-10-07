@@ -2281,7 +2281,13 @@ def recover_jobs():
     for recover in (reevaluate_benches, requeue_toolchain, requeue_budget,
                     requeue_hold_only, requeue_ssh_verdict, auto_requeue):
         try:
-            recover(all_jobs())
+            jobs = all_jobs()
+            live_blocks = {j["spec"].get("block") for j in jobs
+                           if j["status"] not in TERMINAL or j["status"] == "CLOSED"}
+            # Automatic migration of historical failures must not revive a
+            # superseded route alongside an active or closed replacement.
+            recover([j for j in jobs if j["status"] not in TERMINAL
+                     or j["spec"].get("block") not in live_blocks])
         except Exception:
             log(f"{getattr(recover, '__name__', 'recovery')} error:\n" + traceback.format_exc())
 

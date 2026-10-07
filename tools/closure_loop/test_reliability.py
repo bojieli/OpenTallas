@@ -52,6 +52,17 @@ class ReliabilityTests(unittest.TestCase):
             cl.schedule_recovery()
             pool.submit.assert_called_once_with(cl.recover_jobs)
 
+    def test_recovery_does_not_revive_superseded_failure(self):
+        old = dict(name="old", status="NEEDS_RTL", spec={"block": "same"})
+        live = dict(name="successor", status="RUNNING", spec={"block": "same"})
+        alone = dict(name="recover", status="NEEDS_HUMAN", spec={"block": "other"})
+        with patch.object(cl, "all_jobs", return_value=[old, live, alone]), \
+             patch.object(cl, "reevaluate_benches") as bench, patch.object(cl, "requeue_toolchain"), \
+             patch.object(cl, "requeue_budget"), patch.object(cl, "requeue_hold_only"), \
+             patch.object(cl, "requeue_ssh_verdict"), patch.object(cl, "auto_requeue"):
+            cl.recover_jobs()
+        bench.assert_called_once_with([live, alone])
+
     def test_recovery_failure_does_not_skip_other_classes(self):
         with patch.object(cl, "all_jobs", return_value=[]), patch.object(cl, "log"), \
              patch.object(cl, "reevaluate_benches", side_effect=RuntimeError("network")), \
