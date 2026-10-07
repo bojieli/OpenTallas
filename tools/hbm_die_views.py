@@ -88,6 +88,14 @@ def port_dirs():
             seg, _ = L.endpoint_dirs('hbm', real, by, bus, j)
             if seg is None:
                 continue
+            if '@' in port:           # r23: a sliced endpoint (station split): bus bit i -> port bit idx[i]
+                base, idx = H.port_base(port), H.port_idx(port)
+                w = pw.get((mst, base), max(idx) + 1)
+                cur = pdir[mst].setdefault(base, ['?'] * w)
+                for a, b, d in seg:
+                    for i in range(a, b):
+                        cur[idx[i]] = d if cur[idx[i]] in ('?', d) else 'x'
+                continue
             w = pw.get((mst, port), bits)
             cur = pdir[mst].setdefault(port, ['?'] * w)
             if bits < w:
@@ -372,7 +380,7 @@ def cmd_index(a):
         rows[v['master']] = v
     rows.update(receipt_views())
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
-    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=getattr(a, 'variant', '') or 'r19b',
+    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=getattr(a, 'variant', '') or H.FINAL_ROUND,
                generator_sha256=sha(ROOT / 'tools/hbm_accel_die_fp.py'),
                status_values=['closed', 'closed-below-margin', 'interim-not-closed', 'reservation', 'missing'],
                masters={}, counts=defaultdict(int))

@@ -9,7 +9,7 @@ module tb;
     reg [1023:0] vin [0:5];
     reg [1023:0] vout [0:5];
     integer v, c, bad, lat, first;
-    hfd_hc dut(.ck(clk), .rst(rst), .f_sfu(din[1023:0]), .t_sfu(dout[1023:0]));
+    hfd_hc dut(.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst(rst), .f_sfu(din[1023:0]), .t_sfu(dout[1023:0]));
     initial begin
         $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
         bad = 0; lat = 0;

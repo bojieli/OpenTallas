@@ -38,8 +38,16 @@ module ot_hdc_v41x_vec_lane #(
     // CLAUDE HBM-ABSTRACTS hub margin (2026-10-06, default off; the hub quarter lane views ot_su12_light / _sfu):
     parameter integer GSH = 0,          // 1 (with OPR 1): the gather word's shift (vi_q << sh) registered in its own
                                         // stage GS before G2's add: +1 cycle on gathers (controller fetch 6+OPR+CAPR+GSH)
-    parameter integer KIMM = 0          // 1: cx_imm3 arrives in order-key form okey(imm3) (the controller encodes it
+    parameter integer KIMM = 0,         // 1: cx_imm3 arrives in order-key form okey(imm3) (the controller encodes it
                                         // before its control delay line): no key XOR in front of the X compares
+    // CLAUDE HBM-ABSTRACTS views agent, SFU lane fail-fast (2026-10-06, default off; ot_su12_sfu eco2 SS +10.09 on
+    // u_exp.y -> u_den decode stage, FF +11.87 on the u_l4 / u_num shift lines):
+    parameter integer DENR = 0,         // 1: the sigmoid denominator adder's exp operand registered in front of u_den
+                                        // (+1 cycle on sigmoid / SiLU: D_SIG + 1; the controller and the campaign
+                                        // model take the same parameter; the side pipe's gate keeps its own depth)
+    parameter integer DRING = 0         // 1: the SFU numerator delay (u_num) and the S insertion line (u_l4) as ring
+                                        // buffers (write slot / read slot one-hot, no flop-to-flop shift chain); same
+                                        // words, same cycles
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -120,10 +128,11 @@ module ot_hdc_v41x_vec_lane #(
     localparam [2:0] E1_BYP = 0, E1_MULC = 1, E1_ADDC = 2, E1_MULIMM = 3, E1_ADDIMM = 4;
     localparam [1:0] E2_BYP = 0, E2_MULB = 1, E2_MULIMM = 2;
     // stage depths; MLAT = 4 lengthens every multiplying stage by one (M1 / M2 / E1 / E2: 4) and the SFU chains
-    localparam integer D_DIV = DDIV, D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + D_DIV;  // 49, 71
+    localparam integer D_DIV = DDIV, D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + D_DIV;  // 49, 71
+    localparam integer D_SIG = D_SIG0 + DENR;
     localparam integer D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX;                // 37
     localparam integer D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + D_DIV + SIDEX;                    // 162
-    localparam integer D_EG = 1 + 31 + 1 + D_SIG + SIDEX;                                // 104 (111)
+    localparam integer D_EG = 1 + 31 + 1 + D_SIG0 + SIDEX;                               // 104 (111): side pipe sigmoid
     // MLAT >= 4 is the serial-domain build: its integer adds and compares are keep-prefix adders
     // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
     // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
@@ -711,13 +720,21 @@ module ot_hdc_v41x_vec_lane #(
             wire [D_EXP:0] ve;
             wire [D_EXP:0] vs;                 // a sigmoid-chain element, along the exp
             ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)), .vd(ve));
-            ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
+            ot_hdc_vline #(.D(D_EXP + DENR)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
             ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
                                    .x(is_exp ? R : {~R[31], R[30:0]}), .y(y_exp), .vo(), .fault(f_e));
-            ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
+            wire [31:0] y_den_in;
+            if (DENR != 0) begin : g_denr
+                (* keep *) reg [31:0] y_den_r;      // own copy next to u_den (y_exp also feeds S)
+                always @(posedge clk) y_den_r <= y_exp;
+                assign y_den_in = y_den_r;
+            end else begin : g_nodenr
+                assign y_den_in = y_exp;
+            end
+            ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP + DENR], y_den_in, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
-            ot_hdc_delay #(.W(32), .D(D_EXP + ALAT)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
+            ot_hdc_delay #(.W(32), .D(D_EXP + DENR + ALAT), .RING(DRING)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
             wire [ALAT:0] vdn;
             ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
             if (DDIV == 31) begin : g_s31
@@ -735,10 +752,10 @@ module ot_hdc_v41x_vec_lane #(
                           is_sig, is_exp, ci_sfu == SFU_NONE};
             if (FULL != 0) begin : g_full
                 ot_hdc_v41x_ins #(.W(T4W), .K(7),
-                    .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}), .DMAX(D_SP)) u_l4 (
+                    .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}), .DMAX(D_SP), .RING(DRING)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());
             end else begin : g_vec
-                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (
+                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG), .RING(DRING)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),
                     .coll(c4), .busy());
             end

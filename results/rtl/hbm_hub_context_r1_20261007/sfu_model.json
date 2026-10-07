@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.hbm_hub_face_chain.v1",
+  "default_off": true,
+  "macro_shape_um": [
+    398.712,
+    5529.576
+  ],
+  "replica_count": 4,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": {
+    "input": 2048,
+    "output": 2048
+  },
+  "communication_bytes_per_cycle": 512.0,
+  "pipeline_index": 6,
+  "registers_per_face": 7,
+  "old_pipeline_index": 1,
+  "max_pin_to_band_um": 2964.1440000000002,
+  "wire_reach_um": 500.0,
+  "planned_max_hop_um": 494.02400000000006,
+  "replica_mux_demux_cost": 0,
+  "new_stage_data_fanout": 1,
+  "added_FF": 20485,
+  "added_FF_area_um2": 5973.426,
+  "free_slot_area_um2": 514342.76371199964,
+  "fit_at_50pct_free_area": true,
+  "routing_tracks_needed": 9632,
+  "routing_tracks_capacity": 4886,
+  "routing_capacity_assumption": "M5 central channel + M7 over lanes, actual PDN widths, 30% routing reserve; validate in route",
+  "routing_track_fit": false,
+  "added_serial_edges_per_roundtrip": 10,
+  "serial_period_ps": 1111.111111111111,
+  "transactions_per_token": 442,
+  "added_latency_us_per_token": 4.911111111111111,
+  "clock_insertion": "Must be measured in this parent; no assumed 900 ps acceptance",
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "adopted": false,
+  "physical_closed": false,
+  "token_rate_credit": 0,
+  "transaction_basis": "Conservative upper bound: every SU/fused chain; no claim each uses SFU",
+  "source_sha256": {
+    "tools/uarch_model.py": "68b3313d8fa4666e8ba1a21dbe4205ed52cdab852d0d498aae9106b053a9cb34",
+    "tools/hbm_hub_quarter_gen.py": "780a5eb2ca365438b6d82d4107c853d0027e5d0f2f31ada3b0fe877213853c39",
+    "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f"
+  }
+}

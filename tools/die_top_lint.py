@@ -685,7 +685,7 @@ def endpoint_dirs(die, real, by, bus, j):
         names = _binding(rb, port)
         if names is None:
             return None, ('port_not_in_binding', port)
-        names = list(names[lo:lo + bits])
+        names = [names[i] if i < len(names) else None for i in idx] if idx else list(names[:bits])
         seg, pins = [], []
         for i in range(bits):
             pn = names[i] if i < len(names) else None

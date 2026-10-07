@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_closure_headline.v1",
+ "generator_round": "r23",
+ "wire_record": "die r23c GRT k16 i5 (EPYC2)",
+ "pre_closure": {
+  "AR_us": 537.376,
+  "AR_tok_s": 1860.9,
+  "basis": "r16j wire-priced DS AR (r13 wire record), no closure cost"
+ },
+ "with_closure": {
+  "AR_us": 571.141,
+  "AR_tok_s": 1750.9,
+  "AR_delta_pct": 6.28,
+  "MTP_step_us": 1146.971,
+  "MTP_tok_s": 3626.1,
+  "tau": 4.159,
+  "die_level_us": 25.504,
+  "sm_element_us": 8.261,
+  "cp": "inside the SU block (adopted)"
+ },
+ "note": "HBM die closure cost composed into the DS-on-HBM headline: die-level (margin / stages / splits / relays / 2x hub / bigger attention tile on the r23 wire record) + SM element m2+m3 (SM stream). The r23 record grows the die to 30.59 x 24.62 mm (wire-priced base 549.89 us vs 538.48 at r22)."
+}

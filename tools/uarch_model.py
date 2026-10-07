@@ -54,6 +54,57 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def hbm_hub_face_chain_model(*, width_um, height_um, input_bits, output_bits,
+                             lane_count, lane_width_um, lane_height_um,
+                             channel_um, broadcast_bits, accumulator_bits,
+                             old_pipe=1, period_ps=10000 / 9, transactions=0):
+    """Opt-in hub boundary transport, before RTL: pin -> central band -> pin.
+
+    q8hc lacked physical pin capture and had only two registers per face.
+    The 500 um ceiling is a geometry design bound, not a signoff exception.
+    Tracks use ASAP7 M5/M7 pitches and the existing quarter PDN reservation.
+    This prices transport only; the quarter remains a functional envelope.
+    """
+    overhead_ps = 90 + 40 + 41 + 30 + 60 + 90 + 15
+    wire_ps_um = 1.135  # budget-sheet SS wire coefficient, not an ideal wire
+    reach = min(500.0, (period_ps - overhead_ps) / wire_ps_um)
+    if reach <= 0:
+        raise ValueError('No positive wire reach at this clock and uncertainty')
+    distance = (width_um + height_um) / 2
+    pipe = max(old_pipe, math.ceil(distance / reach))
+    added_edges = 2 * (pipe - old_pipe)
+    # Reset joins the same input depth as data; old reset depth was two.
+    added_ff = (input_bits + output_bits) * (pipe - old_pipe) + pipe - old_pipe
+    area = added_ff * DFF_UM2
+    free_area = width_um * height_um - lane_count * lane_width_um * lane_height_um
+    # Each PDN pair occupies its two stripe widths plus two edge spacings.
+    m5 = channel_um / .048 * (1 - 2 * (.120 + .072) / 5.4)
+    m7 = width_um / .064 * (1 - 2 * (.288 + .032) / 10.8)
+    capacity = math.floor(.70 * (m5 + m7))  # reserve 30% for turns/clock/other nets
+    demand = input_bits + output_bits + broadcast_bits + accumulator_bits + 2
+    return dict(schema='opentallas.hbm_hub_face_chain.v1', default_off=True,
+                macro_shape_um=[width_um, height_um], replica_count=4,
+                MACs_per_cycle=0, compute_intensity=0, memory_bytes_per_cycle=0,
+                boundary_bits_per_cycle=dict(input=input_bits, output=output_bits),
+                communication_bytes_per_cycle=(input_bits + output_bits) / 8,
+                pipeline_index=pipe, registers_per_face=pipe + 1,
+                old_pipeline_index=old_pipe, max_pin_to_band_um=distance,
+                wire_reach_um=reach, planned_max_hop_um=distance / pipe,
+                replica_mux_demux_cost=0, new_stage_data_fanout=1,
+                added_FF=added_ff, added_FF_area_um2=area,
+                free_slot_area_um2=free_area,
+                fit_at_50pct_free_area=2 * area <= free_area,
+                routing_tracks_needed=demand, routing_tracks_capacity=capacity,
+                routing_capacity_assumption='M5 central channel + M7 over lanes, actual PDN widths, 30% routing reserve; validate in route',
+                routing_track_fit=demand <= capacity,
+                added_serial_edges_per_roundtrip=added_edges,
+                serial_period_ps=period_ps, transactions_per_token=transactions,
+                added_latency_us_per_token=transactions * added_edges * period_ps / 1e6,
+                clock_insertion='Must be measured in this parent; no assumed 900 ps acceptance',
+                setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                adopted=False, physical_closed=False, token_rate_credit=0)
+
+
 def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
     """Item2 G4W16 capture successor, before RTL; no adopted rate credit.
 
