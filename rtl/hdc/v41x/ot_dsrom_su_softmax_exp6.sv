@@ -436,6 +436,9 @@ module ot_dsrom_su_softmax_exp_tile #(
     output wire        vo,
     output wire        fault
 );
+    wire fault_c; reg fault_q;                       // fault registered at the pin (the core's is a combinational OR: SS output IO -53..-101 ps)
+    always @(posedge clk or negedge rst_n) if (!rst_n) fault_q <= 1'b0; else fault_q <= fault_c;
+    assign fault = fault_q;
     reg [31:0] xr; reg vr;
 `ifdef SOFTMAX_SAFE_MUTANT
     always @(posedge clk) xr <= {x[31:1], x[0] ^ v};   // bench-only negative control
@@ -443,7 +446,7 @@ module ot_dsrom_su_softmax_exp_tile #(
     always @(posedge clk) xr <= x;
 `endif
     always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
-    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT), .ADDX(ADDX)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault));
+    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT), .ADDX(ADDX)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault_c));
 endmodule
 
 // SAFE half-rate backstop (owner 2026-10-07): two copies of the unchanged exp unit, each on a clock-gated half-rate domain
@@ -458,7 +461,7 @@ module ot_dsrom_su_softmax_exp_hr #(
     input  wire [31:0] x,
     output reg  [31:0] y,
     output wire        vo,
-    output wire        fault
+    output reg         fault
 );
     localparam integer DEPTH = 7 * LM + 8 * LA + 4 + NSPLIT + ((NSPLIT == 2) ? 1 : 0);
     reg ph; reg [31:0] xr; reg vr;
@@ -474,5 +477,5 @@ module ot_dsrom_su_softmax_exp_hr #(
     wire [2*DEPTH+1:0] vd;
     ot_hdc_vline #(.D(2 * DEPTH + 1)) u_vl (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
     assign vo = vd[2*DEPTH+1];
-    assign fault = fa | fb;
+    always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= fa | fb;   // registered at the pin
 endmodule
