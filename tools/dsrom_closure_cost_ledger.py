@@ -62,8 +62,15 @@ CANDIDATES = [
     ("bf_half", "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, "
                 "exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase "
                 "share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes "
-                "first (variant A re-cut is the target)",
+                "first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on "
+                "shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
      [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
+    ("bf_recut", "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; "
+                 "closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound "
+                 "+15 per field phase (wo_a 4 phases, a_proj 3)",
+     [("*.attn.wo_a", 60, 0), ("*.attn.a_proj", 45, 0), ("*.ffn.router", 15, 0), ("*.attn.cmp.wk", 15, 0),
+      ("*.attn.wq_b", 15, 0), ("*.attn.wo_b", 15, 0), ("*.ffn.shared_gu", 15, 0), ("*.ffn.experts_gu", 15, 0),
+      ("*.ffn.down", 15, 0)]),
 ]
 
 
