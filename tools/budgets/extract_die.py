@@ -115,6 +115,7 @@ def main():
                        round(it.y, 3), round(it.w, 3), round(it.h, 3), it.orient] for it in m['insts']],
                buses=buses, ports=ports, fclk_buses=sorted(m.get('fclk', {})),
                pin_stage_buses=sorted(m.get('pin_stage_buses', [])),
+               relay_rule=bool(a.die == 'hbm' and (m.get('variant') or {}).get('relay_all')),
                budget_stages=bool(a.die == 'hbm' and (m.get('variant') or {}).get('budget_stages')),
                path_buses=sorted({b for ids in m.get('paths', {}).values() for b in ids}), real_masters=sorted(real), endpoint_dir_failures=nodir)
     a.out.parent.mkdir(parents=True, exist_ok=True)
