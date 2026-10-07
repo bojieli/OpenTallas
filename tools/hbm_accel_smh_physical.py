@@ -159,12 +159,17 @@ def be_pins(w, h, variant):
 def floorplan(g):
     """Positions of every piece in the element (origin = core lower-left), from the piece sizes."""
     tw, th, bh, fw, gap, m = g["tile_w"], g["tile_h"], g["be_h"], g["front_w"], g["gap"], g["margin"]
+    bw = g.get("be_w", tw)
+    if not (0 < bw <= tw):
+        raise ValueError("backend width must fit the tile column")
     nl = P["NC"] // 2
     fx = m + nl * (tw + gap)
     pos = {}
     for c in range(P["NC"]):
         x = m + c * (tw + gap) if c < nl else fx + fw + gap + (c - nl) * (tw + gap)
-        pos[("be", c)] = (x, m)
+        # Optional area fallback: preserve the real backend master width and
+        # center its gather pins under the wider tile's centered lane field.
+        pos[("be", c)] = (x if bw == tw else round(x + (tw - bw) / 2, 3), m)
         for p in range(P["NP"]):
             # tile p = 0 on top
             pos[("tile", c, p)] = (x, m + bh + gap + (P["NP"] - 1 - p) * (th + gap))
@@ -1079,7 +1084,7 @@ def cmd_block(a):
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
         sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     elif a.piece == "be":
-        w, h = g["tile_w"], g["be_h"]
+        w, h = g.get("be_w", g["tile_w"]), g["be_h"]
         pins = be_pins(w, h, a.variant)
         macros = []
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
