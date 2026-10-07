@@ -1,0 +1,58 @@
+{
+  "name": "code_pair_iofixed_d2cc11e78",
+  "block": "ot_qwen_hbm_code_pair_margin",
+  "owner": "Codex:DS miscellaneous",
+  "purpose": "Supersedes cancelled e4ca6da7ac invalid ps/ns route. Same dual-copy RTL, correct conversion, calibrated unchanged IO formulas and 16 admitted cores.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 80,
+  "source": {
+    "branch": "claude/takeover-code-pair-20261006",
+    "commit": "d2cc11e7851b876ccdba21da5182a55f9086d75e"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/qwen_code_pair_margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "clk",
+      "threads": 16,
+      "peak_ram_gb": 80
+    },
+    "route": {
+      "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/qwen_code_pair_margin/route_cl.sh {LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_code_pair_margin/signoff_cl_{NAME}.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/code_pair_harvest_20261007/corrected_route"
+    }
+  ],
+  "cycles_added": 11,
+  "merge_target": null,
+  "no_bench_reason": "Unchanged RTL at e4ca6da7ac: seeds 1/2 + UE/DMR/META pass, three mutants fail, 64/64 burst. Source-pinned logs and receipts in results/rtl/code_pair_harvest_20261007. Only parenthesized ps/ns arithmetic and explicit admitted core count changed; arithmetic regression cases pass."
+}
