@@ -78,6 +78,7 @@ WORKERS = 16
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
 HM_DEFAULT_SINCE = "2026-10-06T20:40"
+HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 10 ps, hold closed by the post-route ECO
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
@@ -840,7 +841,11 @@ def launch_stage(j, st, cmd):
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
-        env += f"export HM={j['spec'].get('route_hold_margin_ns', 0.035)}\n"
+        # coordinator 2026-10-07: jobs created from HM_LOW_SINCE default to 10 ps -- 35 ps + the 50 ps FF IO hold
+        # uncertainty overloaded CTS/GRT hold repair (RSZ-0060 buffer-cap deaths, hours-long GRT hold); the post-route
+        # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
+        hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
+        env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if j.get("resume") and st["kind"] == "route":
         env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)

@@ -90,7 +90,9 @@ acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's me
 clock plan.
 
 ## Hold margin and automatic hold ECO (2026-10-06)
-- Jobs ingested from 2026-10-06 20:40 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
+- Jobs created from 2026-10-07 04:17 get `HM=0.010` (10 ps; coordinator: 35 ps + the 50 ps FF IO hold uncertainty
+  overloaded CTS/GRT hold repair, RSZ-0060 buffer-cap deaths); the post-route hold ECO carries hold to +18.
+- Jobs ingested from 2026-10-06 20:40 to 2026-10-07 04:17 get `HM=0.035` (route hold margin, ns, as route_view.sh reads it) exported
   to calibrate and route. Override it with spec `route_hold_margin_ns`, or with an inline `HM=` in the command.
 - HOLD-ECO: when a verdict is hold-only (SS >= +15, DRC 0, all checks and benches OK, FF < +15), the loop runs
   `hold_eco.sh` / `hold_eco.tcl` before declaring NEEDS_RTL. The ECO is the hub recipe:
