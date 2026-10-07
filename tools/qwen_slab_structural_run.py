@@ -63,7 +63,7 @@ def command(a, out):
              "--orfs-var", f"SDC_FILE=/src/{S}/{a.sdc}", "--orfs-var", f"QSS_SDC_DIR=/src/{S}",
              "--orfs-var", f"QSS_IO_HOLD_EXTRA={a.io_hold_extra:g}",
              "--orfs-var", "PDN_TCL=/src/physical/qwen_slab_m5/pdn_m5.tcl",
-             "--orfs-var", f"MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h{h:g}.tcl",
+             "--orfs-var", f"MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h{h:g}{'_bwm8' if a.bw_m8 else ''}.tcl",
              "--orfs-var", "GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose -critical_nets_percentage 0",
              "--step-tcl", f"PRE_CTS={S}/pre_cts.tcl", "--step-tcl", f"POST_CTS={S}/post_plain.tcl"]
     if a.bw_m8:
