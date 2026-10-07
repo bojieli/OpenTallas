@@ -14018,3 +14018,29 @@ def qwen_core_meif_idle_capture_model(*, nw=18, aw=24, replicas=4):
         speculative_switching='Payload may update on other instruction epochs when no ME command is pending; no claim of energy saving',
         exactness_obligations=['Full controller ME/SU accepted payload equality under source-enable stalls','Freeze packet over pending go','Actual instruction broadcast samples packet with matching go','Negative unconditional capture must fail'],
         inherited_open_physical_obligations=['ME write ingress collar','prog_q and other input minimum delay','Clock output insertion/phase contract','SS/FF setup/hold +15ps and DRC0'])
+
+
+def qwen_ctrl_write_ledger_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_ledger import qwen_ctrl_write_ledger_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_service_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_service import qwen_ctrl_write_service_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_cancel_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_cancel import qwen_ctrl_write_cancel_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_cancel_service_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_cancel import qwen_ctrl_write_cancel_service_model as impl
+    return impl()
+
+
