@@ -211,3 +211,9 @@ is disabled for these three rebinds pending parent review.
   WC +106 / BC -121 ps) and the flow inserted thousands of hold buffers (SE_s6 7,531, SW_s4 5,939, ctrl_pc 11,732).
   FF hold is closed by the post-route hold ECO against the exact FF sign-off constraints; sign-off is unchanged.
   Spec `"route_hold_corners": "keep"` keeps the recipe's own `--hold-corners`; any other value is passed through.
+- localhost incident (2026-10-07 05:20): recipes pinning the BARE image ID `sha256:16470cea...` failed there (exit 125):
+  the same image has another ID in localhost's overlay2 store. localhost stages now export
+  `OPENTALLAS_ORFS_IMAGE=openroad/orfs@sha256:16470cea...` (the registry digest resolves everywhere; the image's Yosys /
+  OpenROAD binaries are byte-identical to the fleet's), and a job whose recipe hard-codes a bare ID is not placed there.
+  hosts.json `smoke_only` admits only spec `"smoke": true` jobs (terminal status SMOKE_OK, nothing published);
+  spec `host_require` pins a job to hosts.
