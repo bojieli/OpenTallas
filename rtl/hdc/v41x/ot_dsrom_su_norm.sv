@@ -42,6 +42,8 @@ module ot_dsrom_su_norm #(
                                         //    the fault flag only): the rope adder's err -> flt OR spanned the block
     parameter integer SXC = 0,          // 1: the scale multipliers (x*r, w*(x*r)) on the operand-cut multiplier (LM+1):
                                         //    their first stage is fed from another unit (xo, the broadcast rh, u_xr)
+    parameter integer MEMSPLIT = 0,     // 1: the per-lane x wait line / gain ROM are keep_hierarchy modules (host synthesis of wide
+                                        //    engines); 0: the original in-lane arrays (existing views byte-identical)
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
     parameter integer BW = 9,           // broadcast wire stages (scalar tail -> lanes)
     parameter integer LM = 5,
@@ -179,13 +181,29 @@ module ot_dsrom_su_norm #(
             end
             // the x of the row waits here until the rstd comes back
             wire [31:0] xo;
-            ot_dsrom_su_norm_mem #(.NV(NV)) u_xb (.clk(clk), .we(x_v), .wa(xi), .wd(xl), .ra(sc_nx), .q(xo));
+            if (MEMSPLIT) begin : g_xm
+                ot_dsrom_su_norm_mem #(.NV(NV)) u_xb (.clk(clk), .we(x_v), .wa(xi), .wd(xl), .ra(sc_nx), .q(xo));
+            end else begin : g_xa
+                reg [31:0] xb [0:NV-1];
+                reg [31:0] xo_r;
+                always @(posedge clk) if (x_v) xb[xi] <= xl;
+                always @(posedge clk) xo_r <= xb[sc_nx];
+                assign xo = xo_r;
+            end
             wire live = (l < LB) || !x_last;          // lanes past D (last vector only) carry +0
             wire [31:0] xs = live ? xl : 32'd0;
             ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xs, xs, sq[l * 32 +: 32], f[7]);
             // gain ROM and the scale y = bf16(w * (x * r))
             wire [31:0] wo;
-            ot_dsrom_su_norm_mem #(.NV(NV)) u_wr (.clk(clk), .we(wl_v), .wa(wl_i), .wd(wl_d[l * 32 +: 32]), .ra(yi_m), .q(wo));
+            if (MEMSPLIT) begin : g_wm
+                ot_dsrom_su_norm_mem #(.NV(NV)) u_wr (.clk(clk), .we(wl_v), .wa(wl_i), .wd(wl_d[l * 32 +: 32]), .ra(yi_m), .q(wo));
+            end else begin : g_wa
+                reg [31:0] wr [0:NV-1];
+                reg [31:0] wo_r;
+                always @(posedge clk) if (wl_v) wr[wl_i] <= wl_d[l * 32 +: 32];
+                always @(posedge clk) wo_r <= wr[yi_m];
+                assign wo = wo_r;
+            end
             wire [31:0] p, q;
             ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
             ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, vy[LMS], wo, p, q, f[9]);
@@ -527,9 +545,8 @@ module ot_dsrom_qadd #(parameter integer LAT = 4) (
     end endgenerate
 endmodule
 
-// One lane's NV-word store with a registered read (the x wait line and the gain ROM). Kept as its own hierarchy so a
-// 64-lane engine synthesises this array once instead of as 128 flat NV x 32 dynamically indexed register files
-// (the flat form never leaves the host synthesis flow). Behaviour is the original array's.
+// One lane's NV-word store with a registered read, as its own kept hierarchy (MEMSPLIT=1 only): a 64-lane engine
+// then synthesises this array once instead of 128 flat NV x 32 dynamically indexed register files.
 (* keep_hierarchy = "yes" *)
 module ot_dsrom_su_norm_mem #(parameter integer NV = 8) (
     input  wire clk, we,

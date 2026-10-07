@@ -48,7 +48,7 @@ module ot_hbm_norm_engine_view (
     wire [7:0] e_y_i, e_q_i; wire [64*32-1:0] e_y, e_ro; wire [31:0] e_r;
     wire [2*256-1:0] e_qc; wire [2*10-1:0] e_qe; wire [2*512-1:0] e_qy;
     ot_dsrom_su_norm #(.N(64), .D(5120), .HC(1), .RD(0), .QUANT(1), .RW(9), .BW(9), .LM(5), .LA(6),
-                       .RXS(1), .SXC(1), .FREG(1)) u_engine (
+                       .RXS(1), .SXC(1), .FREG(1), .MEMSPLIT(1)) u_engine (
         .clk(clk), .rst_n(rstn), .go(go_c), .in_v(in_v_c), .in_x(x_c), .pre(pre_c), .n_f(nf_c), .eps(eps_c),
         .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c), .cos_t(cos_c), .sin_t(sin_c),
         .y_v(e_y_v), .y_i(e_y_i), .y(e_y), .r_v(e_r_v), .r(e_r),
