@@ -88,7 +88,7 @@ def seg_stages(m, bid, L):
         return math.ceil(L / LINK_STAGE_UM)
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM)
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r18'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r19'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -288,7 +288,10 @@ R17 = dict(R16J, budget_stages=True, hub_stage_all=True, fwd_hub=True, spine_reg
 # r18 (2026-10-06 ~21:45, views agent handover): r17 + the band clock pins at the block centre (CK_CENTRE, M7 area pin)
 #   + gath_r9 / stn_r19 re-read from their re-routed views (index) + fwd hub chain station directions (die_top_lint).
 R18 = dict(R17, ck_centre=True)
-ADOPTED = R18
+# r19 (2026-10-06 ~23:55, coordinator decision on the views agent's hfd_vm NEEDS_BUDGET): the VM as four quadrant
+#   tiles joined by registered cross buses (split_vm); +1 cycle per cross hop.
+R19 = dict(R18, vm_split=True)
+ADOPTED = R19
 
 
 def build(variant=None):
@@ -558,6 +561,8 @@ def build(variant=None):
         apply_splits_x(m, variant['split_x_masters'])
     if variant.get('barrier_low'):
         fix_ports_from_views(m, ['hfd_barrier'])
+    if variant.get('vm_split'):
+        split_vm(m)
     return m
 
 
@@ -619,6 +624,54 @@ def ck_centre(mst_, sp_):
     cx = round(best, 4)
     cy = round(round(mst_.h / 2 / 0.048) * 0.048, 4)
     sp_['ck'] = ('area', 'M7', cx, cy, 0.064, 0.288)
+
+
+VM_TILE_OF = {           # r19: VM port -> quadrant tile (each tile carries the faces toward its quadrant)
+    'f_su_SW': 'sw', 't_su_SW': 'sw', 'xSW': 'sw', 'qSW': 'sw', 'iSW': 'sw', 't_router': 'sw',
+    'f_su_SE': 'se', 't_su_SE': 'se', 'xSE': 'se', 'qSE': 'se', 'iSE': 'se',
+    'f_su_NW': 'nw', 't_su_NW': 'nw', 'xNW': 'nw', 'qNW': 'nw', 'iNW': 'nw', 't_quant': 'nw',
+    'f_su_NE': 'ne', 't_su_NE': 'ne', 'xNE': 'ne', 'qNE': 'ne', 'iNE': 'ne'}
+VM_X_ROW, VM_X_WR, VM_X_CTL = 2256, 2264, 256     # per directed neighbour edge, registered at both pins
+
+
+def split_vm(m):
+    """r19 (coordinator 2026-10-06 ~23:50, views agent NEEDS_BUDGET hfd_vm 1,921 ps insertion, 1,400 x 2,000 um, 120k
+    sinks): the VM becomes four quadrant tiles hfd_vm_{sw,se,nw,ne} (2 x 2 in the VM slot, abutting, ~700 x 1,000 um).
+    Each tile carries its quadrant's faces (SU publication in / out, x trunk root, attention query, index return) and
+    a quarter of the multicast root's row store (banks split by address).  Neighbour tiles (W-E in a row, S-N in a
+    column) are joined by registered cross buses on the shared edge, per direction:
+      row  2,256 b  read-multicast row (2,063 data + 192 owner + valid): owner tile -> the other taps
+      wr   2,264 b  write forward (2,063 data + 192 owner + 7 addr + bank + valid) to the owning tile
+      ctl    256 b  read command / ACK / drained / fault exchange
+    +1 cycle per cross hop (diagonal tile 2 hops), priced in hbm_die_views_recompose (vm_split).  t_router rides the
+    SW tile, t_quant the NW tile."""
+    vm = next(i for i in m['insts'] if i.name == 'hb_vm')
+    Wf, Hf = vm.w + SHAVE, vm.h + SHAVE
+    wl = dn(Wf / 2, GX)
+    hb_ = dn(Hf / 2, GY)
+    geo = dict(sw=(0.0, 0.0, wl, hb_), se=(wl, 0.0, Wf - wl, hb_), nw=(0.0, hb_, wl, Hf - hb_), ne=(wl, hb_, Wf - wl, Hf - hb_))
+    tiles = {}
+    for q, (dx, dy, w, h) in geo.items():
+        tiles[q] = Inst(f'hb_vm_{q}', f'hfd_vm_{q}', round(vm.x + dx, 4), round(vm.y + dy, 4), round(w - SHAVE, 4),
+                        round(h - SHAVE, 4), vm.orient, kind=vm.kind, region=vm.region, domain=vm.domain)
+    m['insts'] = [i for i in m['insts'] if i.name != 'hb_vm'] + list(tiles.values())
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        e2 = []
+        for inst, port in eps:
+            if inst != 'hb_vm':
+                e2.append((inst, port))
+            elif port in ('ck', 'rst'):
+                e2 += [(t.name, port) for t in tiles.values()]
+            else:
+                e2.append((tiles[VM_TILE_OF[port]].name, port))
+        nb.append((bid, cls, bits, e2))
+    for a_, b_, d_ab, d_ba in (('sw', 'se', 'e', 'w'), ('nw', 'ne', 'e', 'w'), ('sw', 'nw', 'n', 's'), ('se', 'ne', 'n', 's')):
+        for src, dst, d_, r_ in ((a_, b_, d_ab, d_ba), (b_, a_, d_ba, d_ab)):
+            for nm, w in (('row', VM_X_ROW), ('wr', VM_X_WR), ('ctl', VM_X_CTL)):
+                nb.append((f'hb_vm_x_{src}_{dst}_{nm}', 'hub', w, [(tiles[src].name, f't_{d_}_{nm}'), (tiles[dst].name, f'f_{r_}_{nm}')]))
+    m['buses'] = nb
+    m['vm_tiles'] = {q: t.name for q, t in tiles.items()}
 
 
 def fix_ports_from_views(m, masters_):

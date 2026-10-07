@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r18",
- "generator_sha256": "ed44d08fe7b603e8f9fe31396eef510d813cd05200781c22a7c78c2e70f89a97",
+ "round": "r19",
+ "generator_sha256": "8f3c8e495c40a43086b0530bcb93b43c43ed4b60c81a18ddce22962674648639",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -2498,7 +2498,22 @@
    "status": "missing",
    "instances": 2
   },
-  "hfd_vm": {
+  "hfd_vm_ne": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_nw": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_se": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_sw": {
    "kind": "vm",
    "status": "missing",
    "instances": 1
@@ -2507,7 +2522,7 @@
  "counts": {
   "interim-not-closed": 7,
   "closed": 31,
-  "missing": 36,
+  "missing": 39,
   "reservation": 2
  }
 }
