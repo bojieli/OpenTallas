@@ -1,0 +1,19 @@
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv:99:9: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_off UNUSEDSIGNAL*/'
+   99 |         /*verilator lint_off UNUSEDSIGNAL*/ 
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv:101:9: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_on UNUSEDSIGNAL*/'
+  101 |         /*verilator lint_on UNUSEDSIGNAL*/ 
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv:92:9: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_off UNUSEDSIGNAL*/'
+   92 |         /*verilator lint_off UNUSEDSIGNAL*/ 
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv:94:9: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_on UNUSEDSIGNAL*/'
+   94 |         /*verilator lint_on UNUSEDSIGNAL*/ 
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:292:3: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_off UNUSEDSIGNAL*/'
+  292 |   /*verilator lint_off UNUSEDSIGNAL*/ 
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:294:3: Unknown verilator lint message code: 'UNUSEDSIGNAL', in '/*verilator lint_on UNUSEDSIGNAL*/'
+  294 |   /*verilator lint_on UNUSEDSIGNAL*/ 
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 6 error(s)

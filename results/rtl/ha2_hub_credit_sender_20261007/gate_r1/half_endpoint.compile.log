@@ -1,0 +1,223 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.983 MB sources in 39 modules, into 21.814 MB in 33 C++ files needing 0.000 MB
+- Verilator: Walltime 13.250 s (elab=0.255, cvt=12.727, bld=0.000); cpu 13.244 s on 1 threads; alloced 1555.691 MB
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:123:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OWNER_BANKED_HALF' generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  123 |         if(OWNER_BANKED_HALF && NC>1)begin:g_hub_credit
+      |                              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:243:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OWNER_BANKED_HALF' generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  243 |         if(OWNER_BANKED_HALF && NC>1)begin:g_peer_launch
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:252:20: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OWNER_BANKED_HALF' generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  252 |         if(NC>1 && !OWNER_BANKED_HALF)begin:g_owner
+      |                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:121:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PQREG' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  121 |   if(PQREG)begin:g_pqreg
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core.g_lv[3].g_n[0].g_ln[15].u_add.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:70:22: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'pf_p' generates 16 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+   70 |    ok_q<=pf_p>0&&pf_p<=PFMAX&&pf_p[LV-1:0]==0&&(!BF16||!of_c[0]);
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:70:49: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BF16' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+   70 |    ok_q<=pf_p>0&&pf_p<=PFMAX&&pf_p[LV-1:0]==0&&(!BF16||!of_c[0]);
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:93:43: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'c' generates 8 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+   93 |   assign pq_bad[p]=run&&pv_p[p]&&ident&&(c>=NC||fl>=OF_q);
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:94:43: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'c' generates 8 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+   94 |   assign pq_push[p]=run&&pv_p[p]&&ident&&c<NC&&fl<OF_q;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:116:19: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PQREG' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  116 |   wire pushB=PQREG?pushq:pq_push[p];
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:117:32: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  117 |   assign povf[p]=pushB&&pcnt[p]==QD&&!pdeq[p];
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:143:21: Operator ADD expects 4 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  143 |     pcnt[p]<=pcnt[p]+(pushB&&!povf[p])-pdeq[p];
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:143:39: Operator SUB expects 4 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  143 |     pcnt[p]<=pcnt[p]+(pushB&&!povf[p])-pdeq[p];
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:149:47: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PQREG' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  149 |    else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:149:32: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 5 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  149 |    else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:149:32: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  149 |    else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:149:47: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'pushq' generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  149 |    else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:149:47: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  149 |    else p_r[p]<=({1'b0,pcnt[p]}+pv_p[p]+(PQREG?pushq:1'b0)+2)<=QD;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:160:64: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  160 |  always @*begin npush=0;for(integer i=0;i<INJ;i=i+1)npush=npush+oq_push[i];end
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:161:24: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  161 |  wire oovf=({1'b0,ocnt}+npush-odeq)>QO;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:161:30: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'odeq' generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  161 |  wire oovf=({1'b0,ocnt}+npush-odeq)>QO;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:173:14: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ocnt' generates 3 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  173 |    ocnt<=ocnt+(oovf?0:npush)-odeq;
+      |              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:173:29: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'odeq' generates 1 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  173 |    ocnt<=ocnt+(oovf?0:npush)-odeq;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:173:8: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                         : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  173 |    ocnt<=ocnt+(oovf?0:npush)-odeq;
+      |        ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:242:57: Operator LT expects 16 bits on the LHS, but LHS's REPLICATE generates 7 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  242 |  always @*for(integer c=0;c<NC;c=c+1)col[c]=({1'b0,rptr}<OF_q)?prdy[c][rptr]:1'b0;
+      |                                                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:261:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BF16' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  261 |    pending<=pending+(issue?1:0)-(r_v?(BF16?2:1):0);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:316:5: Logical operator IF expects 1 bit on the If, but If's VARREF 'BF16' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  316 |     if(BF16)begin
+      |     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv:338:43: Operator GTE expects 16 bits on the LHS, but LHS's REPLICATE generates 7 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.u_core'
+  338 |    quiet<=pending==0&&(!act_p||{1'b0,rptr}>=OF_q)&&!busy_q&&!(|pv_p)&&!(|hv_p)&&qe&&!one&&!(|Wv)&&!(|W2v);
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv:115:64: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'c' generates 4 bits.
+                                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.g_hf[1].u'
+  115 |  always @(posedge clk)for(integer e=0;e<D;e=e+1)if(wv&&wp[e]&&c!=D)mem[e]<=wd;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv:119:12: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'c' generates 4 bits.
+                                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.g_hf[1].u'
+  119 |    if(wv&&c==D&&!pop)ovf<=1;
+      |            ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv:120:13: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'c' generates 4 bits.
+                                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.g_hf[1].u'
+  120 |    if(wv&&(c!=D||pop))wp<={wp[D-2:0],wp[D-1]};
+      |             ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv:122:17: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'c' generates 4 bits.
+                                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner.g_hf[1].u'
+  122 |    c<=c+((wv&&(c!=D||pop))?1:0)-(pop?1:0);
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv:93:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 7 bits.
+                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_hub_credit.u_sender.g_lane[1].u_queue'
+   93 |     wire full = count == D;
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv:93:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 9 bits.
+                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_rx[7].u_rb'
+   93 |     wire full = count == D;
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv:50:20: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'BLKN' generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on..g_half_owner.u_owner'
+   50 |    if(ph&&arm_s)blk<=BLKN;else if(ph&&blk!=0)blk<=blk-1'b1;
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv:35:57: Operator ASSIGNDLY expects 7 bits on the Assign RHS, but Assign RHS's VARREF 'next_reserved' generates 32 bits.
+                                                                           : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_hub_credit.u_sender'
+   35 |     if(next_reserved>=0 && next_reserved<=DEPTH)reserved<=next_reserved;
+      |                                                         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:75:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BF16' generates 32 bits.
+                                                                             : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   75 |         wire [31:0] ROF = BF16 ? OF / 2 : OF;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:80:34: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   80 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:80:47: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   80 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:80:58: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BF16' generates 32 bits.
+                                                                             : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   80 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:80:72: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   80 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:80:67: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's AND generates 32 bits.
+                                                                             : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+   80 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:239:34: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                                               : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  239 |              rb_head[p][FW+16+:8]>=NC || rb_head[p][FW+:16]>=OF);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:239:60: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                               : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  239 |              rb_head[p][FW+16+:8]>=NC || rb_head[p][FW+:16]>=OF);
+      |                                                            ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:351:79: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'delivered_words' generates 16 bits.
+                                                                               : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  351 |           else if(arm)delivered_words<=0;else delivered_words<=delivered_words+delivered_now;
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:351:62: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  351 |           else if(arm)delivered_words<=0;else delivered_words<=delivered_words+delivered_now;
+      |                                                              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:359:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'delivered_words' generates 16 bits.
+                                                                               : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner'
+  359 |           (!context_bound || ((!CONTRIB||k>=PF)&&delivered_words==expected_words));
+      |                                                                 ^~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:310:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.unnamedblk9.inj.ord' (not all control paths of combinational always assign a value)
+                                                                        : ... Suggest use of always_latch for intentional latches
+  310 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:310:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.unnamedblk9.inj.f' (not all control paths of combinational always assign a value)
+                                                                        : ... Suggest use of always_latch for intentional latches
+  310 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:310:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.unnamedblk9.inj.pt' (not all control paths of combinational always assign a value)
+                                                                        : ... Suggest use of always_latch for intentional latches
+  310 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv:310:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.unnamedblk9.inj.s' (not all control paths of combinational always assign a value)
+                                                                        : ... Suggest use of always_latch for intentional latches
+  310 |         always @* begin
+      |         ^~~~~~
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.g'
+                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.p'
+                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_accel_tu_endpoint_owner.g_candidate.g_on.g_half_owner.u_owner.u_core.g_lv[1].g_n[0].g_ln[0].u_add.u_cmp.p
