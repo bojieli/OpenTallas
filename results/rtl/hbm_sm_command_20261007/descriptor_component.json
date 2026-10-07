@@ -1,0 +1,91 @@
+{
+  "model": {
+    "status": "candidate_not_adopted",
+    "protocol": "one parent descriptor outstanding, retained until returned actual south d_valid&&d_ready acceptance; finite credit is not delivery acknowledgement",
+    "payload_bits": 56,
+    "physical_forward_bits": 114,
+    "physical_reverse_bits": 6,
+    "physical_bidirectional_tracks": 120,
+    "forward_valid_bits": 1,
+    "internal_credit_return_bits": 1,
+    "consumed_ack_return_bits": 1,
+    "sticky_SM_fault_return_bits": 1,
+    "hops_each_way": 32,
+    "queue_depth": 2,
+    "replicas": 32,
+    "protected_copies": 2,
+    "total_register_bits": 4079,
+    "flop_only_um2": 1189.4364,
+    "south_queue_state_bits": 232,
+    "south_queue_flop_only_um2": 67.6512,
+    "proposed_south_bay_um": [
+      128,
+      64
+    ],
+    "south_cell_budget_at55pct_um2": 4505.6,
+    "earliest_owner_ack_edges": 66,
+    "added_vs_same_cycle_accept_edges": 66,
+    "fault_return_added_edges": 32,
+    "protection": "duplicated forward queues, credits, consumption ACK and fault-return chains; compare valid payloads/credits/ACK/fault; complementary pending rails and sticky abort",
+    "physical_route": "Illustrative32hops, not final assignment. Initial obstacle-aware26/32 paths measured3.956-5.016mm with16-31 chain registers under300um bend segmentation; sixpathsblocked. Owner/adapter flight pins and independent dual-rail packing remain unqualified.",
+    "track_payload_each_copy": 56,
+    "peak_descriptor_B_per_fast_edge": 7,
+    "conservation": "no second source send while pending; owner completion waits actual south acceptance + registered return, independent of route latency",
+    "open_gates": [
+      "actual legal hop count",
+      "independent mapped state bank preservation",
+      "south bay cell fit and SS/FF",
+      "production parent integration"
+    ],
+    "selected": false
+  },
+  "scope": "component finite transport; actual route/hops/timing unqualified",
+  "runs": [
+    {
+      "hops": 0,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS descriptors=64 consumed=64 acknowledged=64 hops=0 cycles=645"
+    },
+    {
+      "hops": 1,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS descriptors=64 consumed=64 acknowledged=64 hops=1 cycles=774"
+    },
+    {
+      "hops": 12,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS descriptors=64 consumed=64 acknowledged=64 hops=12 cycles=2193"
+    },
+    {
+      "hops": 40,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS descriptors=64 consumed=64 acknowledged=64 hops=40 cycles=5805"
+    },
+    {
+      "hops": 81,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS descriptors=64 consumed=64 acknowledged=64 hops=81 cycles=11094"
+    },
+    {
+      "hops": 12,
+      "mutation": "reservation_as_delivery",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/descriptor/tb_hbm_sm_descriptor_bridge.sv:27: premature parent acknowledgement\n       Time: 40000000000000 Scope: tb_hbm_sm_descriptor_bridge"
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv": "75849d67b78b758c49a99473d317994cba0888d082122546733aef9480701ec1",
+    "rtl/hbm_accel/control_20261007/descriptor/tb_hbm_sm_descriptor_bridge.sv": "eaaa8184d8abc2cee96c90f3d37266d3550f2c194c5b258a765f2399c032777d",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "tools/hbm_sm_descriptor_bridge_model.py": "4203463d4580eead62841b48fd8ab978bb582b7ea3b88ffa6c26885c82c48602",
+    "tools/hbm_sm_descriptor_bridge_gate.py": "2b6d0023461c03cd9dc8fb0f7f66d7c4f3aee62d5d2640e2a4cc85e576917020"
+  },
+  "passed": true,
+  "selected": false
+}
