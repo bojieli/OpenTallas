@@ -53,6 +53,7 @@ import traceback
 from pathlib import Path
 
 from ssh_transport import command as transport_command
+from source_archive import build_archive, repo_path
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -181,6 +182,16 @@ def validate(spec: dict) -> list[str]:
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
+    if isinstance(src, dict) and "required_files" in src:
+        files = src["required_files"]
+        if not isinstance(files, list) or not files:
+            e.append("source.required_files must be a nonempty list of literal repository paths")
+        else:
+            try:
+                for value in files:
+                    repo_path(value)
+            except ValueError as ex:
+                e.append(str(ex))
     st = spec["stages"]
     if not isinstance(st, dict) or not st.get("route", {}).get("cmd"):
         e.append("stages.route.cmd is required")
@@ -850,6 +861,19 @@ def publish_measured():
     stamp.write_text(now_iso())
 
 
+@contextmanager
+def prepared_source_archive(source, commit):
+    """Check declared dependencies before remote mutation; yield the exact checked tar."""
+    if "required_files" not in source:
+        yield None, None
+        return
+    with tempfile.TemporaryDirectory(prefix="closure-source-") as scratch:
+        archive = Path(scratch) / "source.tar"
+        receipt = build_archive(REPO, commit, source, archive)
+        receipt.pop("archive", None)  # retain hash/inventory, not a transient local path
+        yield archive, receipt
+
+
 def sync_source(j):
     j["source_synced"] = False
     spec, host = j["spec"], j["host"]
@@ -862,23 +886,34 @@ def sync_source(j):
     j["commit_full"] = full
     paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
     run = j["run"]
-    ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
-              f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-    with transport_command(host) as base:
-        arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
-                                stdout=subprocess.PIPE)
-        gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
-        arch.stdout.close()
-        try:
-            put = subprocess.run(base + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
-                                 capture_output=True, text=True, timeout=1800)
-        finally:
-            # Release our producer pipes even if transport fails; never touches a remote job.
-            gz.stdout.close()
-            gz.wait()
-            arch.wait()
-    if put.returncode or arch.returncode or gz.returncode:
-        raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+    with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
+        ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
+                  f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
+        with transport_command(host) as base:
+            if verified_tar is not None:
+                # Transfer this exact validated tar, not a second git archive.
+                with verified_tar.open("rb") as stream:
+                    put = subprocess.run(base + [f"tar -xf - -C {run}/src"], stdin=stream,
+                                         capture_output=True, text=True, timeout=1800)
+                if put.returncode:
+                    raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+            else:
+                arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
+                                        stdout=subprocess.PIPE)
+                gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
+                arch.stdout.close()
+                try:
+                    put = subprocess.run(base + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
+                                         capture_output=True, text=True, timeout=1800)
+                finally:
+                    gz.stdout.close()
+                    gz.wait()
+                    arch.wait()
+                if put.returncode or arch.returncode or gz.returncode:
+                    raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+    if archive_receipt is not None:
+        j["source_archive"] = archive_receipt
+        ssh(host, f"cat > {run}/cl/source_archive.json", input=json.dumps(archive_receipt, indent=1), timeout=60, check=True)
     ship_helpers(host, run)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
