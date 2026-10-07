@@ -35,7 +35,9 @@ def command(a):
   # SS insertion (pass --ins-ff = --ins-ss); --hold-corners BC made ORFS CORNERS=BC, i.e. setup repaired at FF (bf_m2)
   hc='WC' if a.wc_only else 'BC'
   if a.hitfix: cmd+=['--param','HITFIX=1']
-  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
+  if a.half: cmd+=['--param','HALF=1']
+  if a.recut: cmd+=['--param','RECUT=1']
+  cmd+=['--param','PINREG=1','--clock-period-ns',a.period,'--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
    '--hold-corners',hc,'--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',
@@ -62,7 +64,7 @@ def main():
  p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55')
  p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
- p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--extra',default='')
+ p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--extra',default='')
  a=p.parse_args()
  cmd=command(a)
  if a.print:
@@ -74,6 +76,8 @@ def main():
   lines += ['# Physical PP ROM read/capture: alternate banks, capture two edges after read.',
    'set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]',
    'set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]']
+  if a.half:   # BF SAFE variant B: element + pin regs on the half-rate gated clock (multicycle 2 / 1 among them)
+   lines += [l for l in (ROOT/'physical/s81_native_bf/margin/half_mc.sdc').read_text().splitlines() if l.strip()]
   return lines
  flow.sdc_lines=sdc
  return flow.main(cmd,synth_timeout=None,flow_timeout=None)
