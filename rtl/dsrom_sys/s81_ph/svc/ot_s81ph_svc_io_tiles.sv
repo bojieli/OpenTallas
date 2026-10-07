@@ -17,6 +17,21 @@ module ot_s81ph_rsync (input wire ck, input wire rst, output wire rn);
     assign rn = rst_s[1];
 endmodule
 
+// pin-registered input queue (r3b, svcio_ad a0_v -> skid enables +14 ps at 10 levels from the pin): every input bit
+// is captured in a flop at the pin, then a 4-entry register FIFO; ready = the FIFO's registered room2 (>= 2 free:
+// covers the word in the pin register), so the producer's valid/ready contract is unchanged, latency +2.
+module ot_s81ph_inq #(parameter integer W = 512) (
+    input wire clk, input wire rst_n,
+    input wire i_v, input wire [W-1:0] i_d, output wire i_r,
+    output wire o_v, output wire [W-1:0] o_d, input wire o_r);
+    reg pv; reg [W-1:0] pd;
+    always @(posedge clk or negedge rst_n) if (!rst_n) pv <= 1'b0; else pv <= i_v && i_r;   // the word the producer saw accepted
+    always @(posedge clk) pd <= i_d;
+    wire room, flt;
+    ot_s81ph_rfifo #(.W(W), .D(4), .R2RST(0)) u_f (.clk(clk), .rst_n(rst_n), .push(pv), .wd(pd), .pop(o_v && o_r), .hv(o_v), .hd(o_d),
+        .room(room), .room2(i_r), .fault(flt));
+endmodule
+
 module dsfd_svcio_q (input wire [0:0] ck, input wire [0:0] rst, input wire [514:0] q, output reg [2059:0] q_q);
     reg [514:0] q_p;
     (* keep *) reg [514:0] q_rep [0:3];
@@ -48,8 +63,16 @@ module dsfd_svcio_ad (
     output reg [1025:0] ad, output wire [0:0] af, output reg [0:0] fault);
     wire rn; ot_s81ph_rsync u_rs (.ck(ck[0]), .rst(rst[0]), .rn(rn));
     wire m_v, m_bad, k1_v; wire [511:0] m_d, k1_d;
-    ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(a0_v), .s_d(a0_d), .s_r(a0_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
-    ot_s81ph_skid #(.W(512)) u_k1 (.clk(ck[0]), .rst_n(rn), .i_v(a1_v[0]), .i_d(a1_d), .i_r(a1_r[0]), .o_v(k1_v), .o_d(k1_d), .o_r(1'b1));
+    // r3b: every quadrant input through a pin-registered queue (ot_s81ph_inq), then the r2 merge / skid
+    wire [3:0] q0_v, q0_r; wire [2047:0] q0_d; wire q1_v, q1_r; wire [511:0] q1_d;
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_iq
+        ot_s81ph_inq u_iq (.clk(ck[0]), .rst_n(rn), .i_v(a0_v[gq]), .i_d(a0_d[512*gq +: 512]), .i_r(a0_r[gq]),
+            .o_v(q0_v[gq]), .o_d(q0_d[512*gq +: 512]), .o_r(q0_r[gq]));
+    end endgenerate
+    ot_s81ph_inq u_iq1 (.clk(ck[0]), .rst_n(rn), .i_v(a1_v[0]), .i_d(a1_d), .i_r(a1_r[0]), .o_v(q1_v), .o_d(q1_d), .o_r(q1_r));
+    ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(q0_v), .s_d(q0_d), .s_r(q0_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+    ot_s81ph_skid #(.W(512)) u_k1 (.clk(ck[0]), .rst_n(rn), .i_v(q1_v), .i_d(q1_d), .i_r(q1_r), .o_v(k1_v), .o_d(k1_d), .o_r(1'b1));
     always @(posedge ck[0]) ad <= {k1_d, k1_v & rn, m_d, m_v & rn};
     reg fi_q;
     always @(posedge ck[0] or negedge rn) if (!rn) begin fi_q <= 1'b0; fault <= 1'b0; end

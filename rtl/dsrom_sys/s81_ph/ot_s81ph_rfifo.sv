@@ -5,7 +5,8 @@
 module ot_s81ph_rfifo #(
     parameter integer W = 8,
     parameter integer D = 4,
-    parameter integer AW = (D > 1) ? $clog2(D) : 1
+    parameter integer AW = (D > 1) ? $clog2(D) : 1,
+    parameter integer R2RST = (D >= 2)    // room2 value during reset (0: a producer may not hand over words before release)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -28,7 +29,7 @@ module ot_s81ph_rfifo #(
     assign hd = m[rp];
     always @(posedge clk) if (push) m[wp] <= wd;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wp <= 0; rp <= 0; n <= 0; ne <= 1'b0; room <= 1'b1; room2 <= (D >= 2); fault <= 1'b0; end
+        if (!rst_n) begin wp <= 0; rp <= 0; n <= 0; ne <= 1'b0; room <= 1'b1; room2 <= R2RST; fault <= 1'b0; end
         else begin
             if (push) wp <= (wp == D - 1) ? 0 : wp + 1'b1;
             if (do_pop) rp <= (rp == D - 1) ? 0 : rp + 1'b1;
