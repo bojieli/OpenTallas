@@ -64,7 +64,90 @@
     "neg_x": false,
     "neg_bv": false
    }
+  },
+  "fused_head_QPIN": {
+   "rtl": "QPIN=1: hardened return ADDR_PIPE 3 (quadrant input-pin request stage), RETURN_EXTRA 6",
+   "exact": {
+    "all_pass": true,
+    "cycles": 63088,
+    "tokx_bad": 0
+   },
+   "delta_vs_margin_v2": 15,
+   "lockstep": "head_q_qpin == macro_ctx QPIN=1 + 3 negatives; addr_pipe3 + 2 negatives"
+  },
+  "fused_head_SAFE": {
+   "rtl": "QPIN=1 + endpoint FPIPE=2 pin stage (guard_busy covers the in-flight accept) + retirement SAFE (+1 stage, registered receipt compare, registered sink busy) + registered stand-in fold",
+   "exact": {
+    "all_pass": true,
+    "cycles": 63128,
+    "tokx": 5,
+    "tokx_bad": 0,
+    "vm_mismatch": 0
+   },
+   "delta_vs_margin_v2": 55,
+   "delta_vs_base": 100,
+   "negatives": {
+    "data_skip (endpoint pin data dropped)": {
+     "tokx_bad": 4,
+     "vm_mismatch": 37
+    },
+    "ackcmp (receipt compare inverted)": "no warm ACK: the head stops (killed after 31 min, no completion)"
+   },
+   "lockstep": "head_q_safe == macro_ctx SAFE (9,000 cyc) + 3 negatives; endpoint_fpipe2 9 cases + 3 negatives"
+  },
+  "head_elem_SAFE": {
+   "rtl": "ot_dsrom_head_elem IOREG=1 SAFE=1 CUT=511",
+   "exact": {
+    "rows": [
+     21888,
+     22016
+    ],
+    "root4096_exact": 128,
+    "padded_root1024_exact": 128,
+    "logits_exact": 128,
+    "elements_complete": 4,
+    "result": {
+     "row": 21946,
+     "bits": 1098098008,
+     "fault": 0,
+     "cycle": 8396
+    },
+    "golden_bundle_argmax": 21946,
+    "exact": true,
+    "cycles": {
+     "first_A_root": 441,
+     "last_A_root": 8377,
+     "last_B_root": 8377,
+     "last_logit": 8391,
+     "result": 8396,
+     "rom_read_span": 8262,
+     "issue_offset": 2
+    },
+    "checkpoint_header_sha256": {
+     "model-00043-of-00048.safetensors": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54"
+    }
+   },
+   "baseline_result_cycle": 8357,
+   "delta_cycles": 39,
+   "negatives": {
+    "neg_take": false,
+    "neg_x": false
+   }
   }
  },
- "physical": "pending: CTS calibration -> one route per view (quad, top, elem A, elem B)"
+ "physical": {
+  "routes_old_rtl": {
+   "elemA_IOREG": "SS -203.6 / FF -30.6 (argmax take compare)",
+   "elemB_IOREG": "SS -196.0 / FF -34.8 (fadd steps 7+8)",
+   "top_FPIPE1_700um": "CTS WNS -467, 100,648 hold buffers, killed",
+   "quad_QPIN0": "CTS -170 (wok input fanout), routing as data"
+  },
+  "closure_loop_jobs": [
+   "dshead-quad-safe-b529ca8c9",
+   "dshead-top-safe-94abba0f2",
+   "dshead-elemA-safe-b529ca8c9",
+   "dshead-elemB-safe-b529ca8c9",
+   "dshead-glue-safe-351e67caa"
+  ]
+ }
 }
