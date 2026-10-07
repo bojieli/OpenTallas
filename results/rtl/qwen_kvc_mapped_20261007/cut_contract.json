@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.qwen_kvc_mapped_cut.v1",
+  "status": "RTL_EXACT_ROUTE_QUEUED_NOT_ADOPTED",
+  "replaces": "qfd_kvc_decode_pc leaf only; never the complete qfd_kvc master",
+  "master": "qfd_kvc_decode_map_pc",
+  "replicas": 128,
+  "replicas_per_stack": 32,
+  "frame_um": [
+    328.32,
+    370.44
+  ],
+  "functional_clock": "core1.2GHz",
+  "input_change": "i_expected[16:0] removed; i_port[6:0] added; i_count supplies trusted per-PC ordinal",
+  "other_ports": "same decode leaf ABI",
+  "initial_credits": 16,
+  "downstream_fifo_min_slots": 16,
+  "pipeline_edges": 8,
+  "output_format": "compact data256 + two tile11/local7/quarter2 destinations + n2/isk/tail/bad/drop/tail_lanes4",
+  "pin_faces": {
+    "raw_beat_context": "east",
+    "compact_destinations": "west",
+    "clk_rst_credits_fault": "north"
+  },
+  "expected_mapping": "generated period96 lookup; all128PC x1024indices exact against original m_p2l and base map",
+  "source_pin": "970663df7",
+  "source_hashes": {
+    "rtl/physical/ot_qwen_kvc_decode_map_pc.sv": "3f91a1b5a1663e5f458d0684429c2ad38fffe92590ac9ef662c2effea26e5964",
+    "rtl/physical/ot_qwen_kvc_decode_pc.sv": "3165d450bb32920a7c037aa9da3e024cfa0c8d108ae6e86bf51dd60b4c2b6221",
+    "rtl/physical/ot_qwen_kvc_map_lut.sv": "67f3f95362f2dd7e3fe6578c12e1e9178c8d95b4e1ca9db5ba5473062a904350",
+    "rtl/test/tb_qwen_kvc_decode_map_pc.sv": "ba3480491ff6358768900205ee262c8dd84624f34473321f519afc258affade4"
+  },
+  "omitted": [
+    "trusted ordinal producer with no increment on bad beats",
+    "per-stack window limit m_n",
+    "finite row queues and golden-order arbitration",
+    "token writeback/tail memory",
+    "global layer retirement/fault/descriptor fence",
+    "die-context STA"
+  ]
+}

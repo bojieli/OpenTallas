@@ -13116,7 +13116,7 @@ def qwen_final_pc_closure_composition(decode=False, controller=False, mapped_dec
         total_cycles=base + extra, clock_hz=1.2e9,
         ar_tokens_per_second=1.2e9/(base + extra),
         rate_cost_pct=100*(1-base/(base + extra)),
-        pricing_basis='gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit',
+        pricing_basis=('gross eight-edge mapped decoder' if mapped_decode else 'gross four-edge decoder') + ' plus selected three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap or removal credit',
         exact_connected_latency_measured=False,
         adoption_gate='connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing',
         excluded_unpriced='row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages')
