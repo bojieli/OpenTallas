@@ -82,11 +82,15 @@ def sha(p):
 
 
 def wfc_closure():
-    """The accepted WFC closure record (physically closed + exact), else None."""
+    """Require block closure, exactness, and verified producer/receiver integration."""
     if not WFC_CLOSURE.exists():
         return None
     c = json.loads(WFC_CLOSURE.read_text())
-    return c if (c.get("accepted") is True and c.get("exact") is True) else None
+    # Region block STA assumes 90 ps intra-region on every non-link port. The selected
+    # parent includes a 1.2/0.9 GHz VM crossing, so block acceptance alone cannot enable
+    # the WFC cost/physical-qualification lever. Integration must bind actual endpoints.
+    return c if (c.get("accepted") is True and c.get("exact") is True
+                 and c.get("integration_qualified") is True) else None
 
 
 def apply_wfc_hop(P, info):
