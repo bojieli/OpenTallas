@@ -1,4 +1,6 @@
 #!/bin/bash
+# d8g1 meso (DEPTH 8 / OFFSET 4 / GUARD_LO 1 / GUARD_HI 7): the low guard trips at a lag below 1.5 T, so every crossing
+# arc must settle within 1.5 T - 60 ps = 1,190 ps (was T/2 - 60 = 356.7 with GUARD_LO 0; +1 cycle a crossing).
 # CLAUDE S81-RERUN: route SDC of the ot_meso_fifo die view (calibrated flow).  usage: make_sdc.sh <L_ps> <out.sdc>
 # L = the CTS-only calibration's measured SS insertion (closure loop CK_SS_MEAN); post_cts_vclk.tcl re-measures each
 # clock tree per corner after CTS.  Routed over-constrained (setup uncertainty 123 ps = 770 ps effective), signed off
@@ -15,8 +17,8 @@ create_clock -name vr -period 833.333
 set_clock_latency $L [get_clocks {vw vr}]
 set_clock_uncertainty -setup 123 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
-set_max_delay -ignore_clock_latency 356.667 -from [get_clocks wclk] -to [get_clocks rclk]
-set_max_delay -ignore_clock_latency 356.667 -from [get_clocks rclk] -to [get_clocks wclk]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks wclk] -to [get_clocks rclk]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks rclk] -to [get_clocks wclk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks wclk] -to [get_clocks rclk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks rclk] -to [get_clocks wclk]
 set_false_path -from [get_clocks vw] -to [get_clocks {rclk vr}]

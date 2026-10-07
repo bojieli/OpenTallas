@@ -123,7 +123,7 @@ def cmd_geometry(a):
     fr, xs, rs = m["frames"], m.get("x_stages", {}), m.get("r_stages", {})
     frames = {}
     for r, f in fr.items():
-        mc = 3 if getattr(S, "MESO_D8", False) else 2
+        mc = 4 if getattr(S, "MESO_D8", False) else 2
         comp = dict(x_trunk=xs.get(r, 0), entry_meso=mc, slot_stations=f["last_slot"] + 1, column_return_reg=1,
                     root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=mc)
         if m.get("hop_fix"):

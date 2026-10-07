@@ -2454,7 +2454,8 @@ class Chains:
 
 
 def MESO_P():
-    return ", .DEPTH(8), .OFFSET(3), .GUARD_HI(6), .CREDITS(16)" if MESO_D8 else ''
+    # d8g1 (S81-RERUN fail-fast): GUARD_LO 1 gives the crossing arcs 1.5 T (meso / cfifo views SS -65..+14 at T/2)
+    return ", .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)" if MESO_D8 else ''
 
 
 HOP_FWD_CLS = ('lane',)
@@ -4451,7 +4452,7 @@ def plan_record_r8(m):
     ch = m['chains']
     fr = m['frames']
     xs, rs = m.get('x_stages', {}), m.get('r_stages', {})
-    mc = 3 if MESO_D8 else 2
+    mc = 4 if MESO_D8 else 2
     hf = m.get('hop_fix', {}).get('fwd_rt_add', 0)
     hf += 2 if CFIFO_V2 else 0              # cfifo v2: xd pin register + output register
     rt = {r: xs.get(r, 0) + mc + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + mc

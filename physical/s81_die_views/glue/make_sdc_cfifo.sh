@@ -1,4 +1,6 @@
 #!/bin/bash
+# d8g1 meso (DEPTH 8 / OFFSET 4 / GUARD_LO 1 / GUARD_HI 7): the low guard trips at a lag below 1.5 T, so every crossing
+# arc must settle within 1.5 T - 60 ps = 1,190 ps (was T/2 - 60 = 356.7 with GUARD_LO 0; +1 cycle a crossing).
 # CLAUDE S81-RERUN: route SDC of the column FIFO die view dsfd_cfifo.  usage: make_sdc_cfifo.sh <L_ps> <out.sdc>
 # Clocks: ck (column clock, core_clk) and xf (the forwarded x-stream clock, wclk), equal period, unknown static phase:
 # the meso crossing arcs carry the T/2 - 60 ps phase-window budget (physical/rom_clock/meso_ring_w512_d4.sdc).
@@ -18,8 +20,8 @@ create_clock -name vw -period 833.333
 set_clock_latency $L [get_clocks {vclk vw}]
 set_clock_uncertainty -setup 123 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
-set_max_delay -ignore_clock_latency 356.667 -from [get_clocks wclk] -to [get_clocks core_clk]
-set_max_delay -ignore_clock_latency 356.667 -from [get_clocks core_clk] -to [get_clocks wclk]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks wclk] -to [get_clocks core_clk]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks core_clk] -to [get_clocks wclk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks wclk] -to [get_clocks core_clk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks wclk]
 set_false_path -from [get_clocks vw] -to [get_clocks {core_clk vclk}]
