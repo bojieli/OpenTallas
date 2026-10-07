@@ -1,0 +1,15 @@
+Both old 206a W2 jobs cancelled with deployed job-locked CLI under explicit owner authority.
+NO2 at 22:43:25 PT; NO3 at 22:43:31 PT. Both cancellation commands exit0.
+Post-stop /proc and container mount checks: no survivors for either run.
+All protected receipts, source files, calibration scripts, argv/launch records unchanged.
+All completed source/mapped/synthesis objects remain. One transient NO2 macro tmp log
+was replaced by the completed 2_2_floorplan_macro.log while the snapshot/cancel ran;
+the matching macro ODB is present. No artifact deletion command was issued.
+Run roots: EPYC1 /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no{2,3}-206a3037e.
+Original aggregate PASS retained unchanged, but BOTH S8 records are runtime124/empty
+summary and cannot qualify a negative control. Eleven other intended assertions per
+job verified under fixed classifier. All non-gate source dependencies match the fixed
+source; mapping/synthesis ODB hashes retained as reuse candidates for loop owner.
+No manual checkpoint restart. Old assumed-IO floorplan is not calibrated signoff.
+Source fix d108b33de; minimal positive/S8/S3/buildfailure evidence37faddeb0.
+Parent subsequently authorizes two fixed-source closure-loop submissions only.
