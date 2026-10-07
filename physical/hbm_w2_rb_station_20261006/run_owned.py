@@ -90,7 +90,7 @@ if cal:
     a.hold_margin_ns = 0.0
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
                 '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min), '--l-ff-max', str(a.l_ff_max),
-                '--io-ref-period-ps', '833.333'] + (['--half'] if a.half else []) + (['--hold-relax'] if cal else []) + [
+                '--io-ref-period-ps', '833.333'] + (['--half'] if a.half else []) + (['--hold-relax'] if cal else []) + ['--route-ss-hold'] + (['--half'] if False else []) + [
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 

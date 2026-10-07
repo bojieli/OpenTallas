@@ -7,12 +7,12 @@
   },
   "source_pins": {
     "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
-    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "489d9bf505518c3726546424a18eda5871f582830f32e6468e702fd1f5ed3af4",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "75553360ca7c912e4528bde5541098205016d769351b19b10c4c127a39bd7572",
     "physical/hbm_w2_check_station_20261006/bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e"
   },
   "generated_pins": {
     "bank_veto_static.sv": "c35f7d9b350797b4251a70818cf3873240190f64a7666f7a95718a9347106e26",
-    "station_rb_static.sv": "f0df3347263a2a8454b4db00b64b76d94b6dc56e9d150165bb8fdc5dec8c6340"
+    "station_rb_static.sv": "f3be8b53ba728009287dcaf531d5405b11e115409dde20715a552d95acc1e214"
   },
   "lowering": "package imports replaced by the static W6 functions of bank_legacy_static.sv"
 }

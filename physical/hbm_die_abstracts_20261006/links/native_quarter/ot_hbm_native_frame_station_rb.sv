@@ -265,7 +265,17 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
    assign out_frame[t*73+:73]=out_q[t*PW+2063+:73];
    assign out_owner[t*192+:192]=out_q[t*PW+2136+:192];
   end
-  assign out_v=ov;assign in_r=gr;assign release_v=rv;
+  // Dedicated output launch copies (SAFE=1): the pin is driven by a kept flop with no other load, so no buffer chain sits between
+  // the launching flop and the pin (setup class in_r/out_v/release_v). The copies take the same D as the state flops.
+  wire gr_pin;wire [NO-1:0] ov_pin;wire rv_pin;
+  if(SAFE)begin:pinfl
+   ot_hbm_w2_keep_reg #(.W(1)) u_grp(.clk(clk_sm),.rst_n(rst_n),.d(gr_next),.q(gr_pin));
+   ot_hbm_w2_keep_reg #(.W(NO)) u_ovp(.clk(clk_sm),.rst_n(rst_n),.d(ov_next),.q(ov_pin));
+   ot_hbm_w2_keep_reg #(.W(1)) u_rvp(.clk(clk_sm),.rst_n(rst_n),.d(rv_next),.q(rv_pin));
+  end else begin:nopinfl
+   assign gr_pin=gr;assign ov_pin=ov;assign rv_pin=rv;
+  end
+  assign out_v=ov_pin;assign in_r=gr_pin;assign release_v=rv_pin;
   assign release_owner=rel_q[191:0];assign release_frame=rel_q[264:192];
   // ---------------- fault / status ----------------------------------------
   reg [7:0] dr_term;reg dr_bad_q;
