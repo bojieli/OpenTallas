@@ -14,6 +14,8 @@ module ot_hdc_v41_fh_sram_return_hardened #(
     // request decode and each lane's macro pins: one per-group stage, one kept per-lane stage at the
     // lane. Reads and writes are delayed alike (order preserved); address faults keep their cycle.
     // Read return latency grows by ADDR_PIPE (the head's RETURN_EXTRA = 2 + PROTECT_SPLIT + ADDR_PIPE).
+    // ADDR_PIPE=3 (quadrant pin stage, redesign pass 2026-10-06): a second group stage (the quadrant's input pin
+    // register) between the decode stage and the per-lane stage; write mask/data take the same extra stage.
     parameter integer ADDR_PIPE=0,
     parameter [AW-1:0] LG_BASE_WORD=0
 )(
@@ -59,15 +61,30 @@ module ot_hdc_v41_fh_sram_return_hardened #(
         end
     end else begin : g_pipe
 `ifndef SYNTHESIS
-        initial if(ADDR_PIPE!=2) $fatal(1,"ADDR_PIPE must be 0 or 2");
+        initial if(ADDR_PIPE!=2 && ADDR_PIPE!=3) $fatal(1,"ADDR_PIPE must be 0, 2 or 3");
 `endif
         // stage 1: group request registers (+ per-lane write mask/data)
-        reg [G-1:0] g_rok,g_wok; reg [G*9-1:0] g_rrow,g_wrow;
-        reg [G*W-1:0] s_wmask; reg [G*W*32-1:0] s_wdata;
+        reg [G-1:0] g_rok1,g_wok1; reg [G*9-1:0] g_rrow1,g_wrow1;
+        reg [G*W-1:0] s_wmask1; reg [G*W*32-1:0] s_wdata1;
         always @(posedge clk or negedge rst_n)
-            if(!rst_n) begin g_rok<=0; g_wok<=0; end
-            else begin g_rok<=read_ok; g_wok<=write_ok; end
-        always @(posedge clk) begin g_rrow<=read_row; g_wrow<=write_row; s_wmask<=wr_mask; s_wdata<=wr_data; end
+            if(!rst_n) begin g_rok1<=0; g_wok1<=0; end
+            else begin g_rok1<=read_ok; g_wok1<=write_ok; end
+        always @(posedge clk) begin g_rrow1<=read_row; g_wrow1<=write_row; s_wmask1<=wr_mask; s_wdata1<=wr_data; end
+        wire [G-1:0] g_rok,g_wok; wire [G*9-1:0] g_rrow,g_wrow;
+        wire [G*W-1:0] s_wmask; wire [G*W*32-1:0] s_wdata;
+        if(ADDR_PIPE==3) begin : g_pin
+            reg [G-1:0] g_rok2,g_wok2; reg [G*9-1:0] g_rrow2,g_wrow2;
+            reg [G*W-1:0] s_wmask2; reg [G*W*32-1:0] s_wdata2;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) begin g_rok2<=0; g_wok2<=0; end
+                else begin g_rok2<=g_rok1; g_wok2<=g_wok1; end
+            always @(posedge clk) begin g_rrow2<=g_rrow1; g_wrow2<=g_wrow1; s_wmask2<=s_wmask1; s_wdata2<=s_wdata1; end
+            assign g_rok=g_rok2; assign g_wok=g_wok2; assign g_rrow=g_rrow2; assign g_wrow=g_wrow2;
+            assign s_wmask=s_wmask2; assign s_wdata=s_wdata2;
+        end else begin : g_nopin
+            assign g_rok=g_rok1; assign g_wok=g_wok1; assign g_rrow=g_rrow1; assign g_wrow=g_wrow1;
+            assign s_wmask=s_wmask1; assign s_wdata=s_wdata1;
+        end
         // stage 2: one kept request register per lane, placed at the lane's macro pins
         for(genvar b=0;b<G*W;b=b+1) begin : g_l
             localparam integer GR=b/W;

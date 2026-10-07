@@ -2,7 +2,7 @@
 // Lockstep: ot_hdc_v41_fh_head_q (top + 4 hardened quadrants) == ot_hdc_v41_fh_macro_ctx MARGIN=1 HARD_LANE=1 (FPIPE as
 // given), every output every cycle, open loop with a checked-endpoint responder (request -> commit -> checked reply ->
 // warm ACK) driven from the reference. Valid-address fused traffic, SRAM writes, index writes, periodic resets.
-module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer CYCLES = 9000);
+module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer QPIN = 0, parameter integer CYCLES = 9000);
  localparam integer W=16,G=4,AW=24,NW=16,TW=1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1;
  import ot_dsrom_vm_pkg::*;
  reg clk=0; always #0.5 clk=~clk;
@@ -29,9 +29,9 @@ module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer CYCLES = 90
  .go_fus(go_fus),.i_iaddr(i_iaddr),.busy_in(busy_in),.o_we1_in(o_we1_in),.o_addr1_in(o_addr1_in),.o_mask1_in(o_mask1_in),.leaf_mask_in(leaf_mask_in), \
  .leaf_row_in(leaf_row_in),.tv_in(tv_in),.ov1_in(ov1_in),.am_idx_in(am_idx_in),.r_tag(rt``s),.r_v(rv``s),.leaf(lf``s),.o_we(we``s),.o_addr(oa``s), \
  .o_mask(om``s),.o_data(od``s),.fault(f``s),.result_capture(rc``s),.argmax_level1(am``s)
- ot_hdc_v41_fh_macro_ctx #(.ALAT(7),.CAPTURE(1),.RETURN_EXTRA(5),.PROTECT_SPLIT(1),.RETIRE(1),.VM_ENDPOINT(1),.VM_GUARD(1),
-   .HARD_LANE(1),.MARGIN(1),.FPIPE(FPIPE)) ref0(`CONN(0));
- ot_hdc_v41_fh_head_q #(.FPIPE(FPIPE)) dut(`CONN(1));
+ ot_hdc_v41_fh_macro_ctx #(.ALAT(7),.CAPTURE(1),.RETURN_EXTRA(5+QPIN),.PROTECT_SPLIT(1),.RETIRE(1),.VM_ENDPOINT(1),.VM_GUARD(1),
+   .HARD_LANE(1),.MARGIN(1),.FPIPE(FPIPE),.QPIN(QPIN)) ref0(`CONN(0));
+ ot_hdc_v41_fh_head_q #(.FPIPE(FPIPE),.QPIN(QPIN)) dut(`CONN(1));
  // checked endpoint responder (as tb_hdc_core_v41_mtp_slice_checked), driven by the reference
  reg [1:0] cv=0; request_t pk0,pk1; reg sent=0;
  integer i,j,seed=11,writes=0,acks=0,fused=0,iws=0,faults=0,leafv=0;
@@ -75,8 +75,8 @@ module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer CYCLES = 90
    end
   end
   if(faults<100||writes<50||fused<200||iws<10||acks<3||leafv<200) $fatal(1,"coverage writes=%0d fused=%0d iw=%0d acks=%0d leaf=%0d",writes,fused,iws,acks,leafv);
-  $display("PASS head_q == macro_ctx FPIPE=%0d cycles=%0d writes=%0d fused=%0d index_writes=%0d acks=%0d leaf=%0d fault_cycles=%0d",
-           FPIPE,CYCLES,writes,fused,iws,acks,leafv,faults);
+  $display("PASS head_q == macro_ctx QPIN=%0d FPIPE=%0d cycles=%0d writes=%0d fused=%0d index_writes=%0d acks=%0d leaf=%0d fault_cycles=%0d",
+           QPIN,FPIPE,CYCLES,writes,fused,iws,acks,leafv,faults);
   $finish;
  end
  always @(posedge clk) begin

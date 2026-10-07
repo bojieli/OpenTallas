@@ -21,6 +21,10 @@ BENCH = {
       f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/margin/tb_fh_margin_addr_pipe.sv'], mut={
       'no_delay_ref': ('PARAM', 'MUT', '1'),
       'lane_mask': (f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', '.write_ok_d(g_wok[GR]&&s_wmask[b])', '.write_ok_d(g_wok[GR])')}),
+  'addr_pipe3': dict(top='tb_fh_margin_addr_pipe', params=['-GAP=3'], srcs=[SRAM, 'rtl/dft/ot_rom_secded_dec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_sram_return.sv',
+      f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/margin/tb_fh_margin_addr_pipe.sv'], mut={
+      'no_delay_ref': ('PARAM', 'MUT', '1'),
+      'pin_stage_skip': (f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', 'assign g_rok=g_rok2;', 'assign g_rok=g_rok1;')}),
   'endpoint_fpipe': dict(top='tb_fh_checked_permission', params=['-GMARGIN=1', '-GFPIPE=1'],
       srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
             f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/margin/tb_fh_margin_checked_permission.sv'], mut={
@@ -37,7 +41,17 @@ BENCH = {
       'fsel_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.d(fsel_g), .q(fused_lane_v[l])', '.d(fsel_m), .q(fused_lane_v[l])'),
       'rh_depth': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.D(2 + RETURN_EXTRA)) u_rh', '.D(1 + RETURN_EXTRA)) u_rh'),
       'idx_group': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', "wire idx_group = gid == 2'd0;", "wire idx_group = 1'b1;"),
-      'wok_mask': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.write_ok_d(wok && s_wmask[l])', '.write_ok_d(wok)')}),
+      'wok_mask': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.write_ok_d(wok_q && s_wmask[l])', '.write_ok_d(wok_q)')}),
+  'head_q_qpin': dict(top='tb_fh_head_q', params=['-GFPIPE=1', '-GQPIN=1'], srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv'] + CTX + [SRAM,
+      'rtl/dft/ot_rom_secded_dec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_sram_return.sv',
+      f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv',
+      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
+      f'{D}/quad/tb_fh_head_q.sv'], mut={
+      'pin_wdata_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', 's_wdata <= s_wdata0;', 's_wdata <= wr_data_in;'),
+      'pin_rok_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', 'assign rok_q = rok_p;', 'assign rok_q = rok;'),
+      'wok_mask': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.write_ok_d(wok_q && s_wmask[l])', '.write_ok_d(wok_q)')}),
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }

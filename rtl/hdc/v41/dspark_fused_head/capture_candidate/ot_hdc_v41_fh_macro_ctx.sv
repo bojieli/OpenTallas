@@ -18,7 +18,10 @@ module ot_hdc_v41_fh_macro_ctx #(
     // distribution registers (RETURN_EXTRA = 2 + PROTECT_SPLIT + 2).
     parameter integer MARGIN = 0, HARD_LANE = 0,
     // FPIPE (default 0; needs MARGIN): registered endpoint fault aggregation (ot_hdc_v41_fh_checked_permission)
-    parameter integer FPIPE = 0
+    parameter integer FPIPE = 0,
+    // QPIN (default 0; needs MARGIN HARD_LANE): ADDR_PIPE 3 - the quadrant input-pin request stage (+1 read and write
+    // request cycle; RETURN_EXTRA = 6)
+    parameter integer QPIN = 0
     // MARGIN context folds the duplicate observation buses (result_capture = slices of the captured
     // request; the two check mirrors) to one tied bit and the argmax level-1 consumer registers to a
     // parity bit: the registers and every internal load stay, ~7,900 stand-in pins go.
@@ -84,7 +87,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     wire [G*W*32-1:0] raw_data;
     wire [G-1:0] child_we;
     wire [(1+32+NW)*G*W-1:0] child_leaf;
-    localparam integer ADDR_PIPE = (HARD_LANE && MARGIN) ? 2 : 0;
+    localparam integer ADDR_PIPE = (HARD_LANE && MARGIN) ? 2 + QPIN : 0;
     generate if (HARD_LANE) begin : g_hard_memory
     ot_hdc_v41_fh_sram_return_hardened #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT),.ADDR_PIPE(ADDR_PIPE)) u_memory (
         .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),

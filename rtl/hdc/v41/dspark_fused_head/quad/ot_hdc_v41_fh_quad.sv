@@ -14,7 +14,11 @@
 // to the top's iaddr_r whenever an index write is selected (iaddr_r is held from go_fus acceptance to the write).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_hdc_v41_fh_quad #(
-    parameter integer W = 16, AW = 24, NW = 16, ALAT = 7, RETURN_EXTRA = 5
+    parameter integer W = 16, AW = 24, NW = 16, ALAT = 7, RETURN_EXTRA = 5,
+    // QPIN (redesign r2): the request inputs (rok/rrow/wok/wrow) and the write mask/data land on a group input-pin
+    // register before the per-lane request registers (ADDR_PIPE 3, +1 request cycle, RETURN_EXTRA = 6): no input pin
+    // fans out across the quadrant.
+    parameter integer QPIN = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -62,14 +66,30 @@ module ot_hdc_v41_fh_quad #(
     wire [W*32-1:0] ra_q;
     reg [W-1:0] s_wmask;
     reg [W*32-1:0] s_wdata;
-    always @(posedge clk) begin s_wmask <= wr_mask_in; s_wdata <= wr_data_in; end
+    wire rok_q, wok_q;
+    wire [8:0] rrow_q, wrow_q;
+    generate if (QPIN) begin : g_pin
+        reg [W-1:0] s_wmask0;
+        reg [W*32-1:0] s_wdata0;
+        reg rok_p, wok_p;
+        reg [8:0] rrow_p, wrow_p;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin rok_p <= 1'b0; wok_p <= 1'b0; end
+            else begin rok_p <= rok; wok_p <= wok; end
+        always @(posedge clk) begin rrow_p <= rrow; wrow_p <= wrow; s_wmask0 <= wr_mask_in; s_wdata0 <= wr_data_in;
+                                    s_wmask <= s_wmask0; s_wdata <= s_wdata0; end
+        assign rok_q = rok_p; assign wok_q = wok_p; assign rrow_q = rrow_p; assign wrow_q = wrow_p;
+    end else begin : g_nopin
+        always @(posedge clk) begin s_wmask <= wr_mask_in; s_wdata <= wr_data_in; end
+        assign rok_q = rok; assign wok_q = wok; assign rrow_q = rrow; assign wrow_q = wrow;
+    end endgenerate
     genvar l;
     generate for (l = 0; l < W; l = l + 1) begin : g_bank
         wire r_ok, w_ok;
         wire [8:0] r_row, w_row;
         wire [31:0] w_d;
         ot_hdc_v41_fh_quad_lane_req u_req (.clk(clk), .rst_n(rst_n),
-            .read_ok_d(rok), .read_row_d(rrow), .write_ok_d(wok && s_wmask[l]), .write_row_d(wrow), .wr_data_d(s_wdata[32*l+:32]),
+            .read_ok_d(rok_q), .read_row_d(rrow_q), .write_ok_d(wok_q && s_wmask[l]), .write_row_d(wrow_q), .wr_data_d(s_wdata[32*l+:32]),
             .read_ok(r_ok), .read_row(r_row), .write_ok(w_ok), .write_row(w_row), .wr_data(w_d));
         ot_hdc_v41_fh_sram_lane_hardened u_lane (
             .bank_id({gid, 4'(l)}),

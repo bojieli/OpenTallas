@@ -318,7 +318,7 @@ def cmd_run(a):
               candidate/'ot_hdc_v41_fh_checked_permission.sv',candidate/'ot_hdc_v41_fh_vm_endpoint_ctx.sv']
         tb=candidate/'tb_hdc_core_v41_mtp_slice_checked.sv'
     if a.margin:
-        if not (a.checked_permission and a.capture_return_extra == 5):
+        if not (a.checked_permission and a.capture_return_extra in (5, 6)):
             raise ValueError("--margin requires --checked-permission and --capture-return-extra 5")
         defs = defs + ["+define+OT_FH_MARGIN=1"]
     if a.fpipe:
@@ -455,7 +455,7 @@ def main():
     r.add_argument("--checked-permission", action="store_true", help="Default-off distributed native checked grant in the actual VM fixture")
     r.add_argument("--fault-retire", action="store_true", help="Default-off full-transaction retirement with real warm commit acknowledgement")
     r.add_argument("--capture-cut", action="store_true", help="Default-off protected return/capture candidate")
-    r.add_argument("--capture-return-extra", type=int, choices=(2,3,5), default=2, help="Matched protected return extra stages;2 retained,3 decode-split,5 decode-split + margin-first ADDR_PIPE=2 request distribution")
+    r.add_argument("--capture-return-extra", type=int, choices=(2,3,5,6), default=2, help="Matched protected return extra stages;2 retained,3 decode-split,5 decode-split + margin-first ADDR_PIPE=2 request distribution,6 + quadrant pin stage (QPIN, ADDR_PIPE=3)")
     r.add_argument("--margin", action="store_true", help="Default-off margin-first head (OT_FH_MARGIN: zero-cycle trees, five-deep retirement, staged checked endpoint); pair with --capture-return-extra 5")
     r.add_argument("--fpipe", action="store_true", help="Default-off registered endpoint fault aggregation (OT_FH_FPIPE: per-bank fault flops, registered reduce, release age 6, registered head ACK); needs --margin")
     r.add_argument("--run-dir", type=Path, required=True)
