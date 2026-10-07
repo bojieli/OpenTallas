@@ -130,12 +130,12 @@ module tb_code_pair_margin #(parameter integer M2=0);
   end endtask
   // Margin read response for (col) over the next window; returns whether any valid was seen.
   integer seed;
-  reg neg_ue, neg_dmr;
+  reg neg_ue, neg_dmr, neg_meta;
   integer saw_valid, saw_unc;
   initial begin
     if(!$value$plusargs("seed=%d",seed)) seed=1;
     void'($urandom(seed));
-    neg_ue=$test$plusargs("NEG_UE"); neg_dmr=$test$plusargs("NEG_DMR");
+    neg_ue=$test$plusargs("NEG_UE"); neg_dmr=$test$plusargs("NEG_DMR"); neg_meta=$test$plusargs("NEG_META");
     wr_owned='0;
     for(integer k=0;k<=LAT_DELTA;k=k+1) begin h_rom[k]=0;h_rsp[k]=0;h_corr[k]=0;h_unc[k]=0; end
     for(integer b=0;b<5;b=b+1) begin
@@ -219,6 +219,21 @@ module tb_code_pair_margin #(parameter integer M2=0);
     if(M2 && rcpt<200) $fatal(1,"too few receipts compared (%0d)",rcpt);
     if(valid_rsp<1000) $fatal(1,"too few valid responses compared (%0d)",valid_rsp);
     // Phase 4 (optional negatives; fault is sticky, so each is its own run).
+    if(neg_meta) begin : negmeta
+      // flip ONE copy of the visible receipt metadata while it is held (consumer not ready): fault must be raised
+      compare_on=0;
+      @(negedge clk); visible_r=0; wr_v=0; rd_v=0;
+      @(negedge clk); wr_v=1; wr_span_bound=1; wr_row=1*1024+3; wr_column=0; wr_owned.data=rnd256(); wr_owned.physical_tag=$urandom; wr_owned.beat=$urandom; wr_owned.id.sector=$urandom;
+      #100; while(!m_wr_r) begin @(negedge clk); #100; end
+      @(negedge clk); wr_v=0; visible_r=0;
+      repeat(30) @(negedge clk);
+      if(!m_visible_v) $fatal(1,"NEGATIVE: no receipt held");
+      dut_m.on.vq_meta_b[7]=~dut_m.on.vq_meta_b[7];
+      repeat(6) @(negedge clk);
+      if(!m_fault) $fatal(1,"NEGATIVE: receipt copy mismatch not detected");
+      $display("PASS_CODE_PAIR_MARGIN_NEGATIVE kind=META fault=1");
+      $finish;
+    end
     if(neg_ue || neg_dmr) begin
       reg [255:0] a;
       compare_on=0;

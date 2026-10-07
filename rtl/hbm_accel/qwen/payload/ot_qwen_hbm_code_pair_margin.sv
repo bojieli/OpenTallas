@@ -290,7 +290,7 @@ module ot_qwen_hbm_code_pair_margin #(
     metadata_t m;
     wire [$bits(metadata_t)-1:0] fa_dout, fb_dout, fa_dn, fb_dn; wire fa_v, fb_v, fa_vn, fb_vn, fa_ovf, fb_ovf;
     wire rc_push, rc_pop;
-    reg [$bits(metadata_t)-1:0] vq_meta; reg vq_v; reg [15:0] cmp_sl_q; wire cmp_ok_q = &cmp_sl_q;
+    reg [$bits(metadata_t)-1:0] vq_meta; reg vq_v; reg [$bits(metadata_t)-1:0] vq_meta_b, s1_a, s1_b; reg s1_v; reg [15:0] cmp_sl_q; wire cmp_ok_q = &cmp_sl_q;
     assign m=Q ? vq_meta : (P ? fa_dout : meta_a);
     wire metadata_same=Q ? cmp_ok_q : (P ? (fa_v==fb_v && fa_dout==fb_dout) : (meta_a==meta_b));
     wire metadata_bad=!metadata_same;
@@ -537,7 +537,10 @@ module ot_qwen_hbm_code_pair_margin #(
     always @(posedge clk) rc_din2<=rc_din;
     wire take_out = vq_v && visible_r;
     wire head_ok = fa_v && fb_v && cmp_ok_q;
-    wire xfer = Q && head_ok && !fault_int && (!vq_v || take_out);
+    // two copies all the way to the pins: FIFO heads (compared, registered) -> S1 (a,b) -> compare -> visible regs (a,b)
+    wire s1_same = ~|(s1_a ^ s1_b);
+    wire xfer2 = Q && s1_v && s1_same && !fault_int && (!vq_v || take_out);
+    wire xfer = Q && head_ok && !fault_int && (!s1_v || xfer2);
     assign rc_push=Q ? rc_push2 : (P && write_fire);
     assign rc_pop=Q ? xfer : (P && visible_v_q && visible_r);
     ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_a(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(Q ? rc_din2 : rc_din),
@@ -546,7 +549,12 @@ module ot_qwen_hbm_code_pair_margin #(
       .vld(fb_v),.dout(fb_dout),.vld_n(fb_vn),.dout_n(fb_dn),.ovf(fb_ovf));
     ot_qwen_hbm_code_shadow_r #(.W($bits(metadata_t))) u_meta_b(.clk(clk),.por_n(por_n),
       .d(write_fire ? {wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i} : meta_b),.q(meta_b));
-    wire detect_raw=control_bad || (Q ? ((fa_v||fb_v) && !cmp_ok_q || fa_ovf || fb_ovf) : P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
+`ifdef CODE_PAIR_MARGIN_MUTANT_NO_META_CMP
+    wire vis_cmp_bad=1'b0;                         // bench-only negative control
+`else
+    wire vis_cmp_bad=vq_v && (vq_meta!=vq_meta_b);
+`endif
+    wire detect_raw=control_bad || (Q ? ((fa_v||fb_v) && !cmp_ok_q || fa_ovf || fb_ovf || (s1_v && !s1_same) || vis_cmp_bad) : P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
                 (|bank_err) || (|sel_err) || out_err || out_err7 || (Q ? (|unc6) : (|unc5)) || (fq_a!=fq_b);
     // MARGIN2=2: the detect OR is registered (two kept copies); the sticky fault follows one edge later
     reg detect_a; wire detect_b;
@@ -573,12 +581,16 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     assign cmp_sl_nx[15] = (fa_vn==fb_vn);
     always @(posedge clk or negedge por_n)
-      if(!por_n) begin cmp_sl_q<=0; vq_v<=0; end
+      if(!por_n) begin cmp_sl_q<=0; vq_v<=0; s1_v<=0; end
       else if(Q) begin
         cmp_sl_q<=cmp_sl_nx;
-        vq_v<=(xfer || (vq_v && !take_out)) && !fault_nx;
+        s1_v<=(xfer || (s1_v && !xfer2)) && !fault_nx;
+        vq_v<=(xfer2 || (vq_v && !take_out)) && !fault_nx;
       end
-    always @(posedge clk) if(Q && xfer) vq_meta<=fa_dout;
+    always @(posedge clk) begin
+      if(Q && xfer) begin s1_a<=fa_dout; s1_b<=fb_dout; end
+      if(Q && xfer2) begin vq_meta<=s1_a; vq_meta_b<=s1_b; end
+    end
     wire [3:0] occ_n=occ + {3'b0,wr_r_q} - {3'b0,(wrr_p && !write_fire)} - {3'b0,Q ? take_out : rc_pop};
     wire meta_same_nx=P ? (fa_vn==fb_vn && fa_dn==fb_dn) : (write_fire ? 1'b1 : metadata_same);
     always @(posedge clk or negedge por_n)
@@ -586,7 +598,7 @@ module ot_qwen_hbm_code_pair_margin #(
       else if(P) begin
         rd_r_q<={2{!fault_nx}}; rrr_p<=rd_r_q;
         occ<=occ_n;
-        wr_r_q<=!fault_nx && (occ_n<(Q ? 4'd6 : 4'd4));
+        wr_r_q<=!fault_nx && (occ_n<(Q ? 4'd7 : 4'd4));
         wrr_p<=wr_r_q;
         visible_v_q<=Q ? 1'b0 : (fa_vn && fb_vn && !fault_nx && meta_same_nx);
         fault_q<=fault_nx;
