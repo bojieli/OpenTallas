@@ -37,6 +37,10 @@ module ot_s81_bf_native #(
     parameter integer BP = 0,
     parameter integer FIX_SECOND_ROW_INDEX = 1, // mandatory row decoder repair, opt-in preparation
     parameter integer GRADUAL_RNE = 1, // shared reviewed multiplier repair
+    // PINREG (margin-first 2026-10-06, default 0): every input pin captured in a flop at the pin (+1 cycle on all inputs
+    // uniformly, so cfg/go/stream alignment is unchanged) and busy/fault launched from a flop (+1); pv..ppos are
+    // already element output flops. Block boundary is then register-to-register for the die IO budget.
+    parameter integer PINREG = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -72,6 +76,111 @@ module ot_s81_bf_native #(
     output wire         busy,
     output wire         fault
 );
+    // pin-captured inputs (PINREG) or pass-through
+    wire cfg_v_i;
+    wire [4:0] cfg_a_i;
+    wire [47:0] cfg_d_i;
+    wire go_i;
+    wire go_bf_i;
+    wire xs_v_i;
+    wire [7:0] xs_p_i;
+    wire [2:0] xs_b_i;
+    wire [1:0] xs_sv_i;
+    wire [255:0] xs_q0_i;
+    wire [9:0] xs_e0_i;
+    wire [255:0] xs_q1_i;
+    wire [9:0] xs_e1_i;
+    wire [2:0] xs_pos_i;
+    wire [2:0] xb_pos_i;
+    wire xb_v_i;
+    wire [2:0] xb_b_i;
+    wire [3:0] xb_sv_i;
+    wire [31:0] xb_u_i;
+    wire [1023:0] xb_d_i;
+    wire busy_e, fault_e;
+    if (PINREG != 0) begin : g_pin
+        reg r_cfg_v, r_go, r_xs_v, r_xb_v, r_busy, r_fault;
+        reg [4:0] r_cfg_a;
+        reg [47:0] r_cfg_d;
+        reg r_go_bf;
+        reg [7:0] r_xs_p;
+        reg [2:0] r_xs_b;
+        reg [1:0] r_xs_sv;
+        reg [255:0] r_xs_q0;
+        reg [9:0] r_xs_e0;
+        reg [255:0] r_xs_q1;
+        reg [9:0] r_xs_e1;
+        reg [2:0] r_xs_pos;
+        reg [2:0] r_xb_pos;
+        reg [2:0] r_xb_b;
+        reg [3:0] r_xb_sv;
+        reg [31:0] r_xb_u;
+        reg [1023:0] r_xb_d;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; r_busy <= 1'b0; r_fault <= 1'b0; end
+            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; r_busy <= busy_e; r_fault <= fault_e; end
+        always @(posedge clk) begin
+            r_cfg_a <= cfg_a;
+            r_cfg_d <= cfg_d;
+            r_go_bf <= go_bf;
+            r_xs_p <= xs_p;
+            r_xs_b <= xs_b;
+            r_xs_sv <= xs_sv;
+            r_xs_q0 <= xs_q0;
+            r_xs_e0 <= xs_e0;
+            r_xs_q1 <= xs_q1;
+            r_xs_e1 <= xs_e1;
+            r_xs_pos <= xs_pos;
+            r_xb_pos <= xb_pos;
+            r_xb_b <= xb_b;
+            r_xb_sv <= xb_sv;
+            r_xb_u <= xb_u;
+            r_xb_d <= xb_d;
+        end
+        assign cfg_v_i = r_cfg_v;
+        assign cfg_a_i = r_cfg_a;
+        assign cfg_d_i = r_cfg_d;
+        assign go_i = r_go;
+        assign go_bf_i = r_go_bf;
+        assign xs_v_i = r_xs_v;
+        assign xs_p_i = r_xs_p;
+        assign xs_b_i = r_xs_b;
+        assign xs_sv_i = r_xs_sv;
+        assign xs_q0_i = r_xs_q0;
+        assign xs_e0_i = r_xs_e0;
+        assign xs_q1_i = r_xs_q1;
+        assign xs_e1_i = r_xs_e1;
+        assign xs_pos_i = r_xs_pos;
+        assign xb_pos_i = r_xb_pos;
+        assign xb_v_i = r_xb_v;
+        assign xb_b_i = r_xb_b;
+        assign xb_sv_i = r_xb_sv;
+        assign xb_u_i = r_xb_u;
+        assign xb_d_i = r_xb_d;
+        assign busy = r_busy; assign fault = r_fault;
+    end else begin : g_nopin
+        assign cfg_v_i = cfg_v;
+        assign cfg_a_i = cfg_a;
+        assign cfg_d_i = cfg_d;
+        assign go_i = go;
+        assign go_bf_i = go_bf;
+        assign xs_v_i = xs_v;
+        assign xs_p_i = xs_p;
+        assign xs_b_i = xs_b;
+        assign xs_sv_i = xs_sv;
+        assign xs_q0_i = xs_q0;
+        assign xs_e0_i = xs_e0;
+        assign xs_q1_i = xs_q1;
+        assign xs_e1_i = xs_e1;
+        assign xs_pos_i = xs_pos;
+        assign xb_pos_i = xb_pos;
+        assign xb_v_i = xb_v;
+        assign xb_b_i = xb_b;
+        assign xb_sv_i = xb_sv;
+        assign xb_u_i = xb_u;
+        assign xb_d_i = xb_d;
+        assign busy = busy_e; assign fault = fault_e;
+    end
     ot_v41_rom_elem_w10 #(
         .NSEG(NSEG),
         .NCH(NCH),
@@ -96,26 +205,26 @@ module ot_s81_bf_native #(
     ) u_elem (
         .clk(clk),
         .rst_n(rst_n),
-        .cfg_v(cfg_v),
-        .cfg_a(cfg_a),
-        .cfg_d(cfg_d),
-        .go(go),
-        .go_bf(go_bf),
-        .xs_v(xs_v),
-        .xs_p(xs_p),
-        .xs_b(xs_b),
-        .xs_sv(xs_sv),
-        .xs_q0(xs_q0),
-        .xs_e0(xs_e0),
-        .xs_q1(xs_q1),
-        .xs_e1(xs_e1),
-        .xs_pos(xs_pos),
-        .xb_pos(xb_pos),
-        .xb_v(xb_v),
-        .xb_b(xb_b),
-        .xb_sv(xb_sv),
-        .xb_u(xb_u),
-        .xb_d(xb_d),
+        .cfg_v(cfg_v_i),
+        .cfg_a(cfg_a_i),
+        .cfg_d(cfg_d_i),
+        .go(go_i),
+        .go_bf(go_bf_i),
+        .xs_v(xs_v_i),
+        .xs_p(xs_p_i),
+        .xs_b(xs_b_i),
+        .xs_sv(xs_sv_i),
+        .xs_q0(xs_q0_i),
+        .xs_e0(xs_e0_i),
+        .xs_q1(xs_q1_i),
+        .xs_e1(xs_e1_i),
+        .xs_pos(xs_pos_i),
+        .xb_pos(xb_pos_i),
+        .xb_v(xb_v_i),
+        .xb_b(xb_b_i),
+        .xb_sv(xb_sv_i),
+        .xb_u(xb_u_i),
+        .xb_d(xb_d_i),
         .pv(pv),
         .pval(pval),
         .prow(prow),
@@ -123,7 +232,7 @@ module ot_s81_bf_native #(
         .pnseg(pnseg),
         .perr(perr),
         .ppos(ppos),
-        .busy(busy),
-        .fault(fault)
+        .busy(busy_e),
+        .fault(fault_e)
     );
 endmodule
