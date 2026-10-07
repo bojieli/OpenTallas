@@ -40,6 +40,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
+HOP = 480.0                    # um a face-chain stage (owner rule 2026-10-07: stages <= 480 um apart)
 QUARTERS = {
     # master, lane module, lane source, params, per-lane fields, C2 pairs, G groups / half, L lanes / column / group,
     # lane macro (w, h), channel width, spine (east) width
@@ -83,6 +84,22 @@ class Plan:
         self.WC = -(-self.WO // self.K)      # accumulator width of one chain
         self.PIPE = q.get('PIPE', 0)         # extra (* keep *) wire stages on every die input and output (port band
         #                                      -> chain heads up to ~2.7 mm: a stage per <= 504 um)
+        # r23 (2x hub, ports clustered per face): PER-PORT face chains sized from the geometry: the first input stage /
+        # the last output stage AT the pin, a stage every <= HOP um from the pin-window centroid to the quarter centre
+        # (the port band / chain heads), placed by common/face_chain_place.tcl (OT_FC_FILE = face_stages.tcl)
+        self.dp = {}
+        if ports.get('w_um') and HOP:
+            cx, cy = ports['w_um'] / 2, ports['h_um'] / 2
+            for p, v in ports['ports'].items():
+                if p in ('ck', 'rst') or not v.get('pins'):
+                    continue
+                xs = [(pp[2] + pp[4]) / 2 for pp in v['pins']]
+                ys = [(pp[3] + pp[5]) / 2 for pp in v['pins']]
+                d = abs(sum(xs) / len(xs) - cx) + abs(sum(ys) / len(ys) - cy)
+                self.dp[p] = max(1, math.ceil(d / HOP))
+        for p, _ in self.din + self.dout:
+            self.dp.setdefault(p, self.PIPE + 1)
+        self.DMAX = max(self.dp.values())
 
     def lanes(self):
         """(lane index j, chain k, group g, side s (0 left col / 1 right col), slot i)."""
@@ -154,11 +171,14 @@ def emit_rtl(P, neg=False):
            '    // reset request: two-flop synchroniser at the boundary, carried down every broadcast chain',
            '    (* keep *) reg [1:0] rst_q;',
            '    always @(posedge clk) rst_q <= {rst_q[0], rst[0]};',
-           f'    (* keep *) reg [{P.WI - 1}:0] din_p0;',
-           '    always @(posedge clk) din_p0 <= {' + ', '.join(p for p, _ in reversed(P.din)) + '};']
-    for s_ in range(1, P.PIPE + 1):
-        L_.append(f'    (* keep *) reg [{P.WI - 1}:0] din_p{s_};  always @(posedge clk) din_p{s_} <= din_p{s_ - 1};')
-    L_ += [f'    wire [{P.WI - 1}:0] din_q = din_p{P.PIPE};', f'    wire [{P.LB}:0] bsrc;']
+           '    // face chains: input stage 0 at the pin, a stage per <= 480 um to the port band (per-port depth dp)']
+    for p, w in P.din:
+        D = P.dp[p]
+        L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_i0;  always @(posedge clk) {p}_i0 <= {p};')
+        for s_ in range(1, D):
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_i{s_};  always @(posedge clk) {p}_i{s_} <= {p}_i{s_ - 1};')
+    L_.append(f'    wire [{P.WI - 1}:0] din_q = {{' + ', '.join(f'{p}_i{P.dp[p] - 1}' for p, _ in reversed(P.din)) + '};')
+    L_ += [f'    wire [{P.LB}:0] bsrc;']
     # bsrc[t] = XOR of din_q[t + m LB]; bsrc[LB] = reset
     fold = {}
     for u in range(P.WI):
@@ -215,13 +235,14 @@ def emit_rtl(P, neg=False):
                 L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' ^ '.join(parts) if parts else "1'b0") + ';')
             L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge clk) acc_{k}_{g} <= nx_{k}_{g};')
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
-    L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_p0;  always @(posedge clk) dout_p0 <= heads[{P.WO - 1}:0];')
-    for s_ in range(1, P.PIPE + 1):
-        L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_p{s_};  always @(posedge clk) dout_p{s_} <= dout_p{s_ - 1};')
-    L_.append(f'    wire [{P.WO - 1}:0] dout_q = dout_p{P.PIPE};')
+    # face chains: the last output stage at the pin (per-port depth dp)
     ob = 0
     for p, w in P.dout:
-        L_.append(f'    assign {p} = dout_q[{ob + w - 1}:{ob}];')
+        D = P.dp[p]
+        L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_o0;  always @(posedge clk) {p}_o0 <= heads[{ob + w - 1}:{ob}];')
+        for s_ in range(1, D):
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_o{s_};  always @(posedge clk) {p}_o{s_} <= {p}_o{s_ - 1};')
+        L_.append(f'    assign {p} = {p}_o{D - 1};')
         ob += w
     L_.append('endmodule\n')
     return '\n'.join(L_)
@@ -262,7 +283,7 @@ def emit_tb(P, nvec, seed, out):
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
     q = P.q
     m = q['master']
-    hold = 2 * P.G + 2 * P.PIPE + 14
+    hold = 2 * P.G + 2 * P.DMAX + 14
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
     return f"""`timescale 1ns/1ps
@@ -384,9 +405,11 @@ def main():
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
-                flops=dict(boundary=(P.WI + P.WO) * (1 + P.PIPE) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
+                face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
                                                                      lane_output_stage=P.N * P.LO))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
+    (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
+        ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))
     if a.lane_size:
         pj = json.loads(Path(a.ports).read_text())
         tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided)

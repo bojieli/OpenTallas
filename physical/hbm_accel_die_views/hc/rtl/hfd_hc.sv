@@ -11,10 +11,9 @@ module hfd_hc (
     // reset request: two-flop synchroniser at the boundary, carried down every broadcast chain
     (* keep *) reg [1:0] rst_q;
     always @(posedge clk) rst_q <= {rst_q[0], rst[0]};
-    (* keep *) reg [1023:0] din_p0;
-    always @(posedge clk) din_p0 <= {f_sfu};
-    (* keep *) reg [1023:0] din_p1;  always @(posedge clk) din_p1 <= din_p0;
-    wire [1023:0] din_q = din_p1;
+    // face chains: input stage 0 at the pin, a stage per <= 480 um to the port band (per-port depth dp)
+    (* keep *) reg [1023:0] f_sfu_i0;  always @(posedge clk) f_sfu_i0 <= f_sfu;
+    wire [1023:0] din_q = {f_sfu_i0};
     wire [161:0] bsrc;
     assign bsrc[161] = rst_q[1];
     assign bsrc[0] = din_q[0] ^ din_q[161] ^ din_q[322] ^ din_q[483] ^ din_q[644] ^ din_q[805] ^ din_q[966];
@@ -11773,8 +11772,6 @@ module hfd_hc (
     assign nx_1_0[511] = acc_1_1[511] ^ lq_45[5];
     (* keep *) reg [511:0] acc_1_0;  always @(posedge clk) acc_1_0 <= nx_1_0;
     wire [1023:0] heads = {acc_1_0, acc_0_0};
-    (* keep *) reg [1023:0] dout_p0;  always @(posedge clk) dout_p0 <= heads[1023:0];
-    (* keep *) reg [1023:0] dout_p1;  always @(posedge clk) dout_p1 <= dout_p0;
-    wire [1023:0] dout_q = dout_p1;
-    assign t_sfu = dout_q[1023:0];
+    (* keep *) reg [1023:0] t_sfu_o0;  always @(posedge clk) t_sfu_o0 <= heads[1023:0];
+    assign t_sfu = t_sfu_o0;
 endmodule

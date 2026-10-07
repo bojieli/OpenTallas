@@ -13,8 +13,25 @@
  "lane_per_lane_bits": 192,
  "lane_out_bits": 315,
  "acc_bits_per_chain": 1067,
+ "face_stages": {
+  "r": 7,
+  "a": 2,
+  "f_sfu": 2,
+  "t_sfu": 2,
+  "t_router": 5,
+  "f_su_ew": 5,
+  "t_su_ew": 5,
+  "f_cmdproc": 5,
+  "f_coll": 5,
+  "t_coll": 5,
+  "f_vm": 6,
+  "t_vm": 6,
+  "f_quant": 6,
+  "f_su_ns": 6,
+  "t_su_ns": 7
+ },
  "flops": {
-  "boundary": 95396,
+  "boundary": 82189,
   "broadcast": 83664,
   "accumulate": 51216,
   "lane_output_stage": 60480
