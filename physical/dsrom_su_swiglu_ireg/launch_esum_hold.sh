@@ -9,10 +9,10 @@ mkdir -p $J; cd $WT
 exec python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
  --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.26 --stages pnr \
  --core-utilization 35 --place-density 0.55 --hold-margin-ns 0.030 --sdc-append physical/dsrom_su_swiglu_ireg/hold_io_append.sdc --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 \
- --orfs-var REMOVE_ABC_BUFFERS=1 --force --top ot_dsrom_su_swiglu_lane \
+ --orfs-var REMOVE_ABC_BUFFERS=1 --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --force --top ot_dsrom_su_swiglu_lane \
  --source rtl/hdc/v41x/ot_dsrom_su_swiglu.sv --source rtl/hdc/v41x/ot_dsrom_su_f12.sv --source rtl/hdc/v41x/ot_dsrom_su_add6.sv \
  --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
  --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fastfp_lat_f12.sv \
  --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/ot_hdc_prefix.sv \
  --param LM=5 --param LA=4 --param ROUTED=1 --param IREG=1 --param ESUM=1 \
- --output $J/physical.json --keep-workdir $J/work --nickname-tag swiglu_lane_esum_h770 > $J/launch.log 2>&1
+ --output $J/physical.json --keep-workdir $J/work --nickname-tag swiglu_lane_esum_${TAG:-h770} > $J/launch.log 2>&1
