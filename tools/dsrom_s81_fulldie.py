@@ -3166,8 +3166,9 @@ def buses_r8(m):
             dom['hbm'].append((it.name, 'ckh'))
             dom['stream'].append((it.name, 'cks'))
             rst['hbm'].append((it.name, 'rst'))
-        elif it.kind == 'xstg':
-            dom['serial' if it.domain == 'serial_0p9' else 'stream'].append((it.name, 'ck'))
+        elif it.kind == 'xstg':           # cw: write side (the end block's region), ck: the band block's
+            d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
+            dom[d_] += [(it.name, 'cw'), (it.name, 'ck')]
         elif it.kind == 'hend':
             spec = G[it.master]
             if spec['kind'] == 'l2r':
@@ -3213,8 +3214,8 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
-SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): registered crossing stage (falling-edge capture
-                                #   1.5 T after launch + guard flop) on the 8 end block -> selector / collector buses; +1 cycle
+SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+                                #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
@@ -3903,8 +3904,9 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
             if SEL_XSTG:
                 # v8 (budget README: bk_selector <-> hix_* / bk_collector <-> hco_* 382-385 ps, regions not merged):
-                # a registered crossing stage at the band block: capture on the falling edge 1.5 T after the end
-                # block's launch (multicycle on that arc), guard flop on the next rising edge; +1 cycle
+                # a crossing stage at the band block = the d8g1 meso FIFO (crossing arcs at 1.5 T - 60, low guard
+                # flop at 1.5 T; a single register cannot hold a +-385 ps window on data that changes every cycle),
+                # pins registered: +6 cycles (pin 1 + OFFSET 4 + out 1)
                 xw, xh = stn_dims([515], True)     # W / E data faces (a horizontal station's outline)
                 xs = beside_blk(f'xs{tag}_{st}', 'dsfd_xstg_515', xw, xh, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
                 xs.kind, xs.domain = 'xstg', blk.domain
@@ -4308,7 +4310,7 @@ def _faces_r8(m, Mx, it, ports):
     elif kind == 'xstg':           # placed beside the band block: R0 east of it, MY west of it -> o faces the block
         _lay(Mx, 'W', P_(['o']), 'M4', gap=0.0)
         _lay(Mx, 'E', P_(['i']), 'M4', gap=0.0)
-        _lay(Mx, 'S', P_(['ck']), 'M5')
+        _lay(Mx, 'S', P_(['ck', 'cw']), 'M5')
     elif kind == 'rstg':
         _lay(Mx, 'N', P_(['i']), 'M5')
         _lay(Mx, 'S', P_(['o']), 'M5')
@@ -4472,13 +4474,19 @@ def glue_rtl(m):
             body.append('    assign o = r;')
         elif mst.startswith('dsfd_xstg'):
             w = ports['i'][1]
-            body += ['    // SEL_XSTG crossing stage (S81-RERUN v8): i is launched by the end block\'s rising edge in another clock',
-                     '    // region (bound 382-385 ps); xa captures it on the falling edge 1.5 T later (die STA: multicycle',
-                     '    // -setup 2 / -hold 1 on i -> xa against the falling edge), xg is the guard flop on the rising edge.',
-                     f'    reg [{w - 1}:0] xa, xg;',
-                     '    always @(negedge ck[0]) xa <= i;',
-                     '    always @(posedge ck[0]) xg <= xa;',
-                     '    assign o = xg;']
+            body += ['    // SEL_XSTG crossing stage (S81-RERUN v8): the end block (its own clock region, cw) -> band block (ck)',
+                     '    // crossing is bounded at 382-385 ps, beyond a single-register window (data changes every cycle), so',
+                     '    // it crosses through the d8g1 meso FIFO (the closed die crossing: arcs settle in 1.5 T - 60 ps, low',
+                     '    // guard flop at 1.5 T) with registered pins.  Lane vr: i[0] rst_n, i[1] valid.',
+                     _sync('rsync', 'ck[0]', 'i[0]'),
+                     f'    reg [{w - 1}:0] ir; always @(posedge cw[0]) ir <= i;',
+                     '    wire rv, wl, rl, wf, rf_, wr; wire [%d:0] rq;' % (w - 3),
+                     f'    ot_meso_fifo #(.W({w - 2}), .ENABLE(1\'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), '
+                     '.CREDITS(16)) u_x (.wclk(cw[0]), .wrst_n(ir[0]), .w_v(ir[1]), .w_rdy(wr), '
+                     f'.w_d(ir[{w - 1}:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(rv), .r_rdy(1\'b1), .r_d(rq), .w_live(wl), '
+                     '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
+                     f'    reg [{w - 1}:0] orr; always @(posedge ck[0]) orr <= {{rq, rv & rl, rsync}};',
+                     '    assign o = orr;']
         elif mst.startswith('dsfd_hstn'):
             w = ports['di'][1]
             body.append('    wire fck;   // common clock: the stage captures on negedge fclk_i = posedge ck')
