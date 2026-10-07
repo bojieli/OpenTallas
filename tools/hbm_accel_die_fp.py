@@ -2225,6 +2225,8 @@ def port_widths(m, k):
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         for inst, port in eps:
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             if '@' in port and mst not in REAL:      # r23: a sliced generated endpoint
                 key = (mst, slice_port(port, k))
@@ -2253,6 +2255,8 @@ def masters(m, k=1):
     pf = m['variant'].get('port_fix')
     for bid, cls, bits, eps in m['buses']:
         for i, (inst, port) in enumerate(eps):
+            if inst == 'TOP':
+                continue
             it = by[inst]
             key = (it.master, slice_port(port, k) if it.master not in REAL else port)
             if '@' in port and k > 1 and it.master not in REAL:
@@ -2267,7 +2271,7 @@ def masters(m, k=1):
                 ref[key] = it
             elif it is not first[it.master]:
                 continue
-            others = [by[o] for j, (o, _) in enumerate(eps) if j != i]
+            others = [by[o] for j, (o, _) in enumerate(eps) if j != i and o != 'TOP']
             peers[key] += others
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
@@ -2462,12 +2466,21 @@ def write_netlist(m, k, path, top='hfd_die'):
     rp = real_ports(m) if k == 1 else {}
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
-    V = [f'// tools/hbm_accel_die_fp.py: die-level nets only (k = {k})', f'module {top} ();']
+    top_ports = m.get('top_input_ports', {})
+    declarations = ', '.join(f'input wire {name}' for name in top_ports)
+    V = [f'// tools/hbm_accel_die_fp.py: die-level nets only (k = {k})', f'module {top} ({declarations});']
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         net = f'n_{bid}'
         V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
+            if inst == 'TOP':
+                if n != 1 or port not in top_ports:
+                    raise ValueError(f'unsupported top connection {port}')
+                V.append(f'  assign {net}[0] = {port};')
+        for inst, port in eps:
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             if '@' in port and mst not in REAL:      # r23: sliced generated endpoint
                 if k == 1:
@@ -2588,7 +2601,16 @@ def write_def_floorplan(m, path):
     d += ['END REGIONS', f'COMPONENTS {len(m["insts"])} ;']
     for it in m['insts']:
         d.append(f'- {it.name} {it.master} + FIXED ( {round(it.x * 1000)} {round(it.y * 1000)} ) {o[it.orient]} ;')
-    d += ['END COMPONENTS', 'END DESIGN', '']
+    d += ['END COMPONENTS']
+    if m.get('top_input_ports'):
+        d.append(f'PINS {len(m["top_input_ports"])} ;')
+        for name, pin in m['top_input_ports'].items():
+            x, y = pin['center_um']; w, h = pin['size_um']
+            d.append(f'- {name} + NET {name} + DIRECTION INPUT + USE {pin["use"]}'
+                     f' + LAYER {pin["layer"]} ( {round(-w*500)} {round(-h*500)} )'
+                     f' ( {round(w*500)} {round(h*500)} ) + FIXED ( {round(x*1000)} {round(y*1000)} ) N ;')
+        d.append('END PINS')
+    d += ['END DESIGN', '']
     Path(path).write_text('\n'.join(d))
 
 
@@ -2765,7 +2787,7 @@ def r15_record(m):
     by_i = {it.name: it for it in m['insts']}
     for bid, cls, bits, eps in m['buses']:
         for inst, port in eps:
-            if by_i[inst].kind == 'waypoint':
+            if inst != 'TOP' and by_i[inst].kind == 'waypoint':
                 wpb[inst] = max(wpb[inst], bits)
     fwd_slices = sum(4 * math.ceil(b / 512) for b in wpb.values())
     cks = {b[0]: len(b[3]) - 1 for b in m['buses'] if b[1] in ('clock_trunk', 'reset_tree')}
