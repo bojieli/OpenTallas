@@ -104,9 +104,24 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--report", required=True)
     ap.add_argument("--max-hop", type=float, default=350.0)
+    # r23 (coordinator 2026-10-07): wider tile 1778.52 x 1349.976; the left quads keep their x, the right quads move
+    # by the width growth (a multiple of the 0.048 pin phase), so the central channel (the banks) grows by it; the
+    # S / N centre pins (ci / cf) and k move with the generator (first pin x from its io_place)
+    ap.add_argument("--tw", type=float, default=1349.112)
+    ap.add_argument("--kx", type=float, default=0.624)
+    ap.add_argument("--cx", type=float, default=519.228)
+    ap.add_argument("--qshift", type=float, default=0.0, help="r23: both quad columns move this far toward the centre (multiple of 0.048)")
     for k, v in dict(NK=4, NC=2, NR=3, PMID=1, NFC=2, NFR=3, NL=6, NI=4).items():
         ap.add_argument(f"--{k}", type=int, default=v)
     a = ap.parse_args()
+    global TW, CW_, QR_X, QL_X
+    dw = round(a.tw - TW, 3)
+    assert abs(dw / 0.048 - round(dw / 0.048)) < 1e-6, ("width growth off the 0.048 phase", dw)
+    TW = a.tw
+    CW_ = int(TW / 0.054) * 0.054
+    assert abs(a.qshift / 0.048 - round(a.qshift / 0.048)) < 1e-6, ("qshift off the 0.048 phase", a.qshift)
+    QR_X = round(QR_X + dw - a.qshift, 3)
+    QL_X = round(QL_X + a.qshift, 3)
     P = Plan()
     hops = []
     cc_x = (QL_X + QW + QR_X) / 2                         # central channel centre
@@ -134,10 +149,10 @@ def main():
         return [P.put(bname(pipe, s, c, True), orient, x, y, EWW, EWH) for c, y in enumerate(cs)]
 
     # inputs (stage 0 = the pin bank); outputs (last stage = the pin bank)
-    pin["k"] = pins_s("u_pk", 0.624, 2, 0.0, "R0")
-    pin["ci"] = pins_s("u_pc", 519.228, 3, 0.0, "R0")
+    pin["k"] = pins_s("u_pk", a.kx, 2, 0.0, "R0")
+    pin["ci"] = pins_s("u_pc", a.cx, 3, 0.0, "R0")
     pin["cf"] = [P.put(bname("u_fc", a.NFC, c, False), "R0", x, trk(CH_ - SNH, 0.024, True), SNW, SNH)
-                 for c, x in enumerate([519.228 - 0.396, 519.228 - 0.396 + SNW + 1.62, 519.228 - 0.396 + 2 * (SNW + 1.62)])]
+                 for c, x in enumerate([a.cx - 0.396, a.cx - 0.396 + SNW + 1.62, a.cx - 0.396 + 2 * (SNW + 1.62)])]
     pin["q"] = pins_e("u_pq", 0, 1236.864, 1, trk(CW_ - EWW, 0.0, True), "MY")
     pin["ri"] = pins_e("u_pr", 0, 725.952, 3, trk(CW_ - EWW, 0.0, True), "MY")
     pin["rf"] = pins_e("u_fr", a.NFR, 725.952, 3, 0.0, "MY")
@@ -201,7 +216,7 @@ def main():
             if x == 0:
                 xs, o, qe = 15.0, "MY", QL_X
             else:
-                xs, o, qe = 1314.0, "R0", QR_X + QW
+                xs, o, qe = TW - 35.112, "R0", QR_X + QW
             e0 = P.put(bname(nm, 0, 0, True), o, xs, sy - EWH / 2, EWW, EWH)
             e1 = P.put(bname(nm, 1, 0, True), o, xs, y1 - EWH / 2, EWW, EWH)
             hops.append((f"res{y}{x} quad->bank", round(abs(qe - (xs + EWW / 2)), 1)))
