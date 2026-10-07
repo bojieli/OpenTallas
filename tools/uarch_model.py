@@ -14058,3 +14058,8 @@ def hbm_su_div64_closure_successor_model():
     """Price the gather-stage successor against immutable failed route evidence."""
     from tools.hbm_su_div64_closure_successor_model import model
     return model()
+
+def ha2_truecredit_protection_model():
+    """Size encoded HA2 storage and explicit unresolved physical obligations."""
+    from tools.ha2_truecredit_protection_model import model
+    return model()
