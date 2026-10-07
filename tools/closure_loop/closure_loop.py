@@ -311,8 +311,6 @@ def ingest():
                 event(j, j["reason"])
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
-                keys[key] = name
-                keys_path().write_text(json.dumps(keys, indent=1) + "\n")
                 event(j, f"ingested from {origin}")
         save_job(j)
 
@@ -768,6 +766,14 @@ def step(j, fleet):
                 event(j, f"{st['key']} waiting for capacity: {why}")
             return
         j["wait"] = None
+        if st["kind"] == "route":   # one route per (block, source commit): the key is taken when the route launches
+            keys, key = route_keys(), f"{spec['block']}@{spec['source']['commit'][:12]}"
+            if keys.get(key, j["name"]) != j["name"]:
+                finish(j, "REFUSED", f"one route per source commit: {key} already routed by job {keys[key]}",
+                       f"REFUSED: {key} already routed by job {keys[key]}")
+                return
+            keys[key] = j["name"]
+            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
         launch_stage(j, st, st["cmd"])
         fleet.launched(j["host"], st["threads"], st["ram"])
         j["status"] = "RUNNING"
