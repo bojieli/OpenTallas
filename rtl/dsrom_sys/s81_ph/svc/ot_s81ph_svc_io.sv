@@ -15,32 +15,47 @@
 // Order guarantees: per source, words leave in arrival order; a frame's words leave contiguously; nothing is dropped
 // or duplicated.  fault: a header whose len > LMAX (malformed) raises the sticky fault output, frames keep flowing.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81ph_skid #(parameter integer W = 8) (
+module ot_s81ph_skid #(parameter integer W = 8, parameter integer SL = 32) (
     input  wire         clk, rst_n,
     input  wire         i_v, input wire [W-1:0] i_d, output wire i_r,
     output wire         o_v, output wire [W-1:0] o_d, input wire o_r
 );
-    // 2-slot skid: i_r is a register (no combinational ready path through the block)
+    // 2-slot skid: i_r is a register (no combinational ready path through the block).  The data-path enables are
+    // computed per SL-bit slice from kept replicas of the control flops (fanout <= SL per replica, svcio_m1: one
+    // enable net drove 512 flops, -229 ps).
+    localparam integer NS = (W + SL - 1) / SL;
     reg v0, v1, up; reg [W-1:0] d0, d1;
-    assign i_r = up && !v1;                 // not ready while in reset
-    always @(posedge clk or negedge rst_n) if (!rst_n) up <= 1'b0; else up <= 1'b1;
+    (* keep *) reg [NS-1:0] v0_c, v1_c, up_c;
+    // i_r = up && !v1, launched from its own flop (placed at the ready pin; svcio_m1 x_r -224 through the v1 cone)
+    reg ir_q;
+    assign i_r = ir_q;
     assign o_v = v0; assign o_d = d0;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin up <= 1'b0; up_c <= {NS{1'b0}}; end
+                                           else begin up <= 1'b1; up_c <= {NS{1'b1}}; end
+    wire adv = o_r || !v0;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v0 <= 1'b0; v1 <= 1'b0; end
+        if (!rst_n) begin v0 <= 1'b0; v1 <= 1'b0; v0_c <= {NS{1'b0}}; v1_c <= {NS{1'b0}}; ir_q <= 1'b0; end
         else begin
-            if (o_r || !v0) begin
-                v0 <= v1 || (i_v && i_r);
-                v1 <= 1'b0;
-            end else if (i_v && i_r) v1 <= 1'b1;
+            ir_q <= adv ? 1'b1 : !(v1 || (i_v && i_r));
+            if (adv) begin
+                v0 <= v1 || (i_v && i_r); v0_c <= {NS{v1 || (i_v && i_r)}};
+                v1 <= 1'b0; v1_c <= {NS{1'b0}};
+            end else if (i_v && i_r) begin v1 <= 1'b1; v1_c <= {NS{1'b1}}; end
         end
-    always @(posedge clk) begin
-        if (o_r || !v0) d0 <= v1 ? d1 : i_d;
+    genvar g;
+    generate for (g = 0; g < NS; g = g + 1) begin : g_sl
+        localparam integer LO = g * SL, WS = (W - LO < SL) ? W - LO : SL;
+        wire adv_g = o_r || !v0_c[g];
+        wire acc_g = i_v && up_c[g] && !v1_c[g];
+        always @(posedge clk) begin
+            if (adv_g) d0[LO +: WS] <= v1_c[g] ? d1[LO +: WS] : i_d[LO +: WS];
 `ifdef S81PH_SVC_MUT_SKID
-        if (1'b0) d1 <= i_d;                                                 // MUTANT: second slot never written
+            if (1'b0) d1[LO +: WS] <= i_d[LO +: WS];                       // MUTANT: second slot never written
 `else
-        if (!(o_r || !v0) && i_v && i_r) d1 <= i_d;
+            if (!adv_g && acc_g) d1[LO +: WS] <= i_d[LO +: WS];
 `endif
-    end
+        end
+    end endgenerate
 endmodule
 
 // frame-atomic round-robin merge of N valid/ready frame streams into one registered valid-only output
@@ -65,14 +80,22 @@ module ot_s81ph_fmerge #(parameter integer N = 4, parameter integer LMAX = 255) 
         for (j = N - 1; j >= 0; j = j - 1)
             if (k_v[(rr + j) % N]) begin pick = (rr + j) % N; pick_v = 1'b1; end
     end
-    wire [511:0] cd = k_d[512*cur +: 512];
+    wire [511:0] cd = k_d[512*cur +: 512];          // control only (header len, 12 b)
+    (* keep *) reg [N-1:0] sel_c [0:15];            // one-hot copies of cur, 32 data bits each
+    reg [511:0] o_dn; integer b, t;
+    always @* begin
+        o_dn = 512'd0;
+        for (b = 0; b < 16; b = b + 1)
+            for (t = 0; t < N; t = t + 1)
+                o_dn[32*b +: 32] = o_dn[32*b +: 32] | ({32{sel_c[b][t]}} & k_d[512*t + 32*b +: 32]);
+    end
     always @* begin k_r = {N{1'b0}}; if (busy) k_r[cur] = 1'b1; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin busy <= 1'b0; hdr <= 1'b0; cur <= 0; rem <= 0; rr <= 0; o_v <= 1'b0; bad <= 1'b0; end
         else begin
             o_v <= 1'b0;
             if (!busy) begin
-                if (pick_v) begin busy <= 1'b1; hdr <= 1'b1; cur <= pick; end   // header next
+                if (pick_v) begin busy <= 1'b1; hdr <= 1'b1; cur <= pick; for (b = 0; b < 16; b = b + 1) sel_c[b] <= {{(N-1){1'b0}}, 1'b1} << pick; end   // header next
             end else if (k_v[cur]) begin
                 o_v <= 1'b1;
                 if (hdr) begin                                                    // header word
@@ -89,7 +112,7 @@ module ot_s81ph_fmerge #(parameter integer N = 4, parameter integer LMAX = 255) 
                 end
             end
         end
-    always @(posedge clk) o_d <= cd;
+    always @(posedge clk) o_d <= o_dn;
 endmodule
 
 module ot_s81ph_svc_io #(
