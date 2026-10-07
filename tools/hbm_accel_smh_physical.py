@@ -1222,12 +1222,11 @@ def cmd_top(a):
              "VERILOG_TOP_PARAMS": ""}
     del extra["VERILOG_TOP_PARAMS"]
     (work / "config.mk").write_text(config_mk("ot_hbm_accel_smh", f"smh_top_{a.label}", die, views, extra))
-    run_sh(work, a.label, a.src, a.need, a.cores, views)
-    # no abstract for the top
-    txt = (work / "run.sh").read_text()
-    txt = txt[:txt.index('  docker run --rm -v $S:/src:ro -v $W:/work $IMG bash -lc \\\n    "mkdir -p /work/views')] + \
-        txt[txt.index('  (cd $S && python3 tools/w18/corner_sta.py'):]
-    (work / "run.sh").write_text(txt)
+    # The top exports the same SS/FF view contract as its children. Keep the
+    # shared runner's 6_signoff.sdc generation before corner STA.
+    write_abstract(work, "ot_hbm_accel_smh", views, "ot_hbm_accel_smh")
+    run_sh(work, a.label, a.src, a.need, a.cores, views,
+           target=a.stop_after or "finish", admit=not a.no_admit)
     (work / "geometry.json").write_text(json.dumps(dict(die=die, hcore=hcore, geom=g, slots=xy, pins=len(pins)),
                                                    indent=1) + "\n")
     print(f"wrote {work}: element die {die}, {len(xy)} pieces, {len(pins)} pins")
@@ -1281,6 +1280,10 @@ def main(argv=None):
     t.add_argument("--src", required=True)
     t.add_argument("--need", default="64")
     t.add_argument("--cores", default="24")
+    t.add_argument("--stop-after", choices=("floorplan", "cts"), default=None,
+                   help="stop at a floorplan check or closure-loop CTS calibration")
+    t.add_argument("--no-admit", action="store_true",
+                   help="omit the host admission wrapper when the closure loop admits the job")
     a = ap.parse_args(argv)
     if a.cmd == "block":
         cmd_block(a)
