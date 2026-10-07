@@ -8,6 +8,9 @@ NAME=$1; FB=$2; UTIL=$3; DENS=$4; OUT=$5; STOP=${6:-}
 S=${SRC:?}; R=$OUT/$NAME
 Y=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
 mkdir -p $R; cd $S
+# the loop source snapshot carries no results/: restore the retained screen parameter set the prep reads
+RS=results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys
+[ -f $RS ] || { mkdir -p $(dirname $RS); cp physical/qwen_core_ctx/retained_screen_synth.ys $RS; }
 echo "$(date -Is) start $NAME fb=$FB util=$UTIL dens=$DENS src=$(cat $S/SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $R/STATUS.md
 BOPT=; CUTOPT=; case $FB in *p) BOPT="$BOPT --pinreg"; CUTOPT=--drop-feedthrough; FB=${FB%p};; esac; case $FB in *u) BOPT="$BOPT --su-in"; FB=${FB%u};; esac; case $FB in *s) BOPT="$BOPT --suif"; FB=${FB%s};; esac; case $FB in *m) BOPT="$BOPT --meif"; FB=${FB%m};; esac; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
 python3 tools/qwen_rom_core_ctx_claude.py --out $R/prep --fallback $FB $BOPT || exit 2
