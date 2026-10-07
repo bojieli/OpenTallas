@@ -8,6 +8,7 @@ at the same y (pin-to-pin hops across a 0.192-um gap); lane die pins (rx / tx / 
 Generator conventions (on-track: M4 horizontal / M5 vertical, offset 0.012, pitch 0.048; pin 0.024 x 0.192).
 Writes physical/s81_ph_views/ports/contract/<tile>/{ports.json, io_place.tcl, ports.svh} and
 physical/s81_ph_views/collective/composition.json."""
+import argparse
 import json
 from pathlib import Path
 
@@ -17,6 +18,8 @@ SW, SH = 1015.176, 1369.416
 LW, LH = 253.8, 340.2              # lane tile (10 x 512x128 SRAM macros in one column: 10 x 29.736 + halos)
 CW, CH = 507.384, 1360.8           # core tile (24 x 256x256 SRAM macros + ~90k flops)
 KW, KH = 216.0, 216.0              # clock tile (PLL 172.8 x 172.8)
+CONTRACT = "contract"
+COMPOSITION = "composition.json"
 Y_DIE, Y_CORE = 60.0, 150.0        # lane die-pin group / lane-core group start (lane-relative)
 
 
@@ -50,7 +53,7 @@ class Plan:
         return start + n * step * P + 2 * P
 
     def emit(self, note):
-        d = ROOT / 'physical/s81_ph_views/ports/contract' / self.m
+        d = ROOT / 'physical/s81_ph_views/ports' / CONTRACT / self.m
         d.mkdir(parents=True, exist_ok=True)
         ports = {}
         for nm, ly, *r in self.pins:
@@ -59,7 +62,7 @@ class Plan:
             p['bits'] = self.dirs[b][1]
             p['direction'] = self.dirs[b][0]
             assert len(p['pins']) == p['bits'], (self.m, b)
-        rec = dict(master=self.m, die='contract', w_um=self.w, h_um=self.h, obs_top=7, domain='stream_1p2', instances=None,
+        rec = dict(master=self.m, die=CONTRACT, w_um=self.w, h_um=self.h, obs_top=7, domain='stream_1p2', instances=None,
                    orients=['R0'], ports=ports, generator=dict(file='tools/s81_ph/s81_ph_coll_tiles.py', note=note))
         (d / 'ports.json').write_text(json.dumps(rec, indent=0) + '\n')
         L = [f'# {self.m} (contract pin plan, tools/s81_ph/s81_ph_coll_tiles.py)']
@@ -88,6 +91,17 @@ def lane_core_group(pl, face, y0, k=None):
 
 
 def main():
+    global LW, SW, CONTRACT, COMPOSITION
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--lane-width', type=float, default=LW)
+    ap.add_argument('--contract', default=CONTRACT)
+    ap.add_argument('--composition', default=COMPOSITION)
+    args = ap.parse_args()
+    assert args.lane_width >= 253.8
+    assert '/' not in args.contract and '/' not in args.composition
+    LW = args.lane_width
+    SW = r4(2 * LW + CW + 0.192)
+    CONTRACT, COMPOSITION = args.contract, args.composition
     comp = []
     for side, die_face, core_face, x0 in (('w', 'W', 'E', 0.0), ('e', 'E', 'W', SW - LW)):
         pl = Plan(f'dsfd_coll_lane_{side}', LW, LH)
@@ -132,7 +146,7 @@ def main():
                          die='lane tile rx / tx / tf = the slab rX / tdX / tfX of its lane; u_core f_vm / ts / t_vm (S face) = the slab VM interface; '
                              'chb pin tied 0 on lanes W0 / E0 (UCIe ACK timeout), 1 elsewhere'),
                timing='every tile pin a flop (skid main / skid-valid flops, pin registers), forwarded clocks kept buffers')
-    (ROOT / 'physical/s81_ph_views/collective/composition.json').write_text(json.dumps(rec, indent=1) + '\n')
+    (ROOT / 'physical/s81_ph_views/collective' / COMPOSITION).write_text(json.dumps(rec, indent=1) + '\n')
     print('ok', len(pc.pins), 'core pins')
 
 
