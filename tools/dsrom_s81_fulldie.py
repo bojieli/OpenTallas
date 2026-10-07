@@ -4702,7 +4702,7 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
-    LINK_SPLIT = bool(getattr(a, 'link_split', False)) and LINK_FIX
+    LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
