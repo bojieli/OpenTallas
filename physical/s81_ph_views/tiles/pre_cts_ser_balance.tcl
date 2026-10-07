@@ -23,8 +23,9 @@ proc ot_ser_balance {} {
   if {$ck < 0 || $se < 0} { puts "ot_ser_balance: no latency report, unchanged"; return }
   set goal [expr {$se + 0.5 * ($ck - $se)}]
   set blk [ord::get_db_block]
-  set bt [$blk findBTerm ckv]
-  if {$bt eq "NULL"} { puts "ot_ser_balance: no ckv port"; return }
+  set bt [$blk findBTerm {ckv[0]}]
+  if {$bt eq "NULL"} { set bt [$blk findBTerm ckv] }
+  if {$bt eq "NULL"} { error "ot_ser_balance: no ckv port" }
   set mst [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
   set k 0; set now $se
   while {$now < $goal && $k < 16} {
