@@ -1,0 +1,15 @@
+max_delay/setup group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_exp.g_h[2].u_a.genblk1.g_keep4.u.u.u_k3.g_r.r[1]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1134.56 1144.73  -10.18 (VIOLATED)
+u_exp.g_h[2].u_a.genblk1.g_keep4.u.u.u_k3.g_r.r[2]$_DFF_P_/D (DFFHQNx2_ASAP7_75t_R) 1133.77 1128.04    5.73 (MET)
+u_exp.g_h[2].u_a.genblk1.g_keep4.u.u.u_k3.g_r.r[4]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1134.98 1107.37   27.61 (MET)
+vo (output)                           573.13  538.58   34.56 (MET)
+u_exp.g_h[2].u_a.genblk1.g_keep4.u.u.u_k3.g_r.r[5]$_SDFF_PN1_/D (DFFHQNx1_ASAP7_75t_R) 1123.16 1085.31   37.85 (MET)
+fault (output)                        573.13  535.17   37.97 (MET)
+
+{"block": "ot_dsrom_su_swiglu_lane", "clock_period_ns": 0.77, "area_um2": 17495.5, "core_area_um2": 43289.8, "cells": 141537, "closed": false}
+{"antenna_violating_nets": 0.0, "antenna_violating_pins": 0.0, "drc_errors": 0.0, "hold_violations": 0.0, "hold_wns_ns": 0.00576691, "max_cap_violations": 0.0, "max_fanout_violations": 0.0, "max_slew_violations": 0.0, "met": false, "physically_clean": true, "scope": "post-route, extracted parasitics", "setup_violations": 42.0, "setup_wns_ns": -0.07350960000000001, "signal_integrity_clean": true, "stage": "place_and_route", "timing_met": false}
+{"commit": null, "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count", "untracked_results": [], "worktree_dirty": false, "worktree_status": []}

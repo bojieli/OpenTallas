@@ -1,0 +1,17 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv:76:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                             : ... In instance ot_hbm_formatter_install_consumer
+   76 |  generate if(!ENABLE)begin:disabled
+      |              ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv:117:42: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'received' generates 13 bits.
+                                                                                                              : ... In instance ot_hbm_formatter_install_consumer
+  117 |    formatter_retained&&!pending&&received<EXPECTED_PAIRS;
+      |                                          ^
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv:129:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'received' generates 13 bits.
+                                                                                                              : ... In instance ot_hbm_formatter_install_consumer
+  129 |   assign consumer_loaded=usable&&active&&received==EXPECTED_PAIRS&&!pending;
+      |                                                  ^~
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv:148:9: Operator ADD expects 32 or 7 bits on the RHS, but RHS's VARREF 'caller_desc_index' generates 3 bits.
+                                                                                                             : ... In instance ot_hbm_formatter_install_consumer
+  148 |     n[73+caller_desc_index]=1;
+      |         ^

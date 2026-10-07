@@ -1,0 +1,2665 @@
+{
+ "schema": "opentallas.rom_die_abstract_list.v1",
+ "die": "s81_layer",
+ "generator": "tools/dsrom_s81_fulldie.py --gen r8",
+ "generator_tag": {
+  "file": "tools/dsrom_s81_fulldie.py",
+  "sha256": "503fca566c395ef38d8cf9958fd5ebaea8cd2d6015f9370fe32ab07659706837",
+  "tree_head": "1f106f700",
+  "file_commit": null
+ },
+ "s81_opts": "--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --pairs 2050",
+ "qwen_source": null,
+ "qwen_recipe": null,
+ "variant": {
+  "gen": "r8",
+  "cfifo_v2": true,
+  "link_fix": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
+  "corr_interleave": true,
+  "rev": "r9",
+  "cc_reach_um": 215.0,
+  "vch_interleave": true,
+  "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+  "head_dies": 12,
+  "die": "layer",
+  "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+  "pairs": 2050,
+  "bf": 440,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
+  "elem_frame_h": 198.72,
+  "slot_h": 280.8,
+  "slots": 10
+ },
+ "die_um": [
+  32980.056,
+  25978.32
+ ],
+ "status_codes": [
+  "REAL_VIEW",
+  "REAL_VIEW_NOT_CLOSED",
+  "RTL_CLOSED",
+  "RTL_OPEN",
+  "NO_RTL_TOP",
+  "RESERVATION_ONLY"
+ ],
+ "summary": {
+  "kinds": 27,
+  "copies": 60532,
+  "families_by_status": {
+   "REAL_VIEW": 2,
+   "REAL_VIEW_NOT_CLOSED": 2,
+   "RTL_CLOSED": 0,
+   "RTL_OPEN": 13,
+   "NO_RTL_TOP": 10,
+   "RESERVATION_ONLY": 0
+  },
+  "instances_by_status": {
+   "REAL_VIEW": 14354,
+   "REAL_VIEW_NOT_CLOSED": 1618,
+   "RTL_CLOSED": 0,
+   "RTL_OPEN": 44543,
+   "NO_RTL_TOP": 17,
+   "RESERVATION_ONLY": 0
+  }
+ },
+ "families": [
+  {
+   "family": "dsfd_bf",
+   "kind": "bf",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bf"
+   ],
+   "distinct_masters": 1,
+   "instances": 440,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1002.888,
+     198.696
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "go": {
+     "bits": 1,
+     "face": "S"
+    },
+    "cfg": {
+     "bits": 54,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "S"
+    },
+    "x0": {
+     "bits": 283,
+     "face": "S"
+    },
+    "x1": {
+     "bits": 266,
+     "face": "S"
+    },
+    "r0": {
+     "bits": 63,
+     "face": "E"
+    },
+    "r1": {
+     "bits": 63,
+     "face": "E"
+    },
+    "st": {
+     "bits": 2,
+     "face": "S"
+    }
+   },
+   "rtl_top": "BF-capable pair: ot_v41_rom_elem_w10 BF16=1 XF=8 WAKE_REG=1 (results/uarch/dsrom_noECC_complete_element_20261002/physical_source_manifest.json)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed in the 1002.89 x 157.68 outline (inputs/wake.json: BF_SS_FF_closed false, fullframe_routed_fit false); old 0.92 ns TT routes errored",
+   "owner": "CODEX",
+   "note": "outline = mapped area; pairs with the q element (same pin order per lane)",
+   "generator_note": [
+    "r8 bf"
+   ]
+  },
+  {
+   "family": "dsfd_bk_collector",
+   "kind": "band_blk",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bk_collector"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     5270.376,
+     881.256
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "cSE": {
+     "bits": 515,
+     "face": "E"
+    },
+    "cNE": {
+     "bits": 515,
+     "face": "E"
+    },
+    "cSW": {
+     "bits": 515,
+     "face": "W"
+    },
+    "cNW": {
+     "bits": 515,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
+    "vd": {
+     "bits": 514,
+     "face": "S"
+    },
+    "vf": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "band block; only its SRAM body has a retained macro abstract",
+   "generator_note": [
+    "r8 band_blk"
+   ]
+  },
+  {
+   "family": "dsfd_bk_selector",
+   "kind": "band_blk",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bk_selector"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     5270.376,
+     321.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "vd": {
+     "bits": 514,
+     "face": "N"
+    },
+    "vf": {
+     "bits": 1,
+     "face": "N"
+    },
+    "iSE": {
+     "bits": 515,
+     "face": "E"
+    },
+    "iNE": {
+     "bits": 515,
+     "face": "E"
+    },
+    "iSW": {
+     "bits": 515,
+     "face": "W"
+    },
+    "iNW": {
+     "bits": 515,
+     "face": "W"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "band block",
+   "generator_note": [
+    "r8 band_blk"
+   ]
+  },
+  {
+   "family": "dsfd_cfifo",
+   "kind": "cfifo",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_cfifo"
+   ],
+   "distinct_masters": 1,
+   "instances": 128,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     431.976,
+     95.016
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "xf": {
+     "bits": 1,
+     "face": "S"
+    },
+    "xd": {
+     "bits": 566,
+     "face": "S"
+    },
+    "rf": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rd": {
+     "bits": 70,
+     "face": "S"
+    },
+    "xa": {
+     "bits": 283,
+     "face": "N"
+    },
+    "xb": {
+     "bits": 266,
+     "face": "N"
+    },
+    "cc": {
+     "bits": 15,
+     "face": "N"
+    },
+    "st": {
+     "bits": 2,
+     "face": "N"
+    },
+    "ri": {
+     "bits": 66,
+     "face": "N"
+    },
+    "co": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): ot_meso_fifo W564 entry crossing + column region root + registered status word",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "meso core meso_d4_v7 SS +10.13 / FF +9.44 (below +15/+15): calibrated re-route closure-loop job s81-meso-d4-f21799d1c; port record physical/s81_die_views/ports/layer/dsfd_cfifo",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "xa/xb/cc are the FIFO output register ANDed with its valid (one gate after the flop)",
+   "generator_note": [
+    "r8 cfifo"
+   ]
+  },
+  {
+   "family": "dsfd_ctrl",
+   "kind": "ctrl",
+   "domain": [
+    "hbm"
+   ],
+   "masters": [
+    "dsfd_ctrl"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.032,
+     248.376
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "phy": {
+     "bits": 22238,
+     "face": "xy"
+    },
+    "rd": {
+     "bits": 8864,
+     "face": "N"
+    },
+    "ckh": {
+     "bits": 1,
+     "face": "N"
+    },
+    "cks": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    }
+   },
+   "rtl_top": "none (only the behavioural PHY model)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "streaming HBM3E controller + async FIFOs; no clock port (lint S7). The Qwen ROM stream controller (qwen_hbm_sustained_bw ck2 r6, closed at 1.024 ns) is the nearest RTL",
+   "generator_note": [
+    "r8 ctrl"
+   ]
+  },
+  {
+   "family": "dsfd_hend_*",
+   "kind": "hend",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_l2r_vr_512x1__hq_NE",
+    "dsfd_l2r_vr_512x1__hq_NW",
+    "dsfd_l2r_vr_512x1__hq_SE",
+    "dsfd_l2r_vr_512x1__hq_SW",
+    "dsfd_l2r_vr_564x1__hx_E",
+    "dsfd_l2r_vr_564x1__hx_W",
+    "dsfd_m2l_raw_512x1__hl_E0",
+    "dsfd_m2l_raw_512x1__hl_E1",
+    "dsfd_m2l_raw_512x1__hl_E2",
+    "dsfd_m2l_raw_512x1__hl_E3",
+    "dsfd_m2l_raw_512x1__hl_W0",
+    "dsfd_m2l_raw_512x1__hl_W1",
+    "dsfd_m2l_raw_512x1__hl_W2",
+    "dsfd_m2l_raw_512x1__hl_W3",
+    "dsfd_m2l_vr_512x1__hco_NE",
+    "dsfd_m2l_vr_512x1__hco_NW",
+    "dsfd_m2l_vr_512x1__hco_SE",
+    "dsfd_m2l_vr_512x1__hco_SW",
+    "dsfd_m2l_vr_512x1__hix_NE",
+    "dsfd_m2l_vr_512x1__hix_NW",
+    "dsfd_m2l_vr_512x1__hix_SE",
+    "dsfd_m2l_vr_512x1__hix_SW",
+    "dsfd_m2l_vr_512x1__hqe_NE",
+    "dsfd_m2l_vr_512x1__hqe_NW",
+    "dsfd_m2l_vr_512x1__hqe_SE",
+    "dsfd_m2l_vr_512x1__hqe_SW",
+    "dsfd_m2l_vr_68x10__hr_E0",
+    "dsfd_m2l_vr_68x10__hr_E5",
+    "dsfd_m2l_vr_68x10__hr_W0",
+    "dsfd_m2l_vr_68x10__hr_W5",
+    "dsfd_m2l_vr_68x11__hr_E1",
+    "dsfd_m2l_vr_68x11__hr_E2",
+    "dsfd_m2l_vr_68x11__hr_E3",
+    "dsfd_m2l_vr_68x11__hr_E4",
+    "dsfd_m2l_vr_68x11__hr_W1",
+    "dsfd_m2l_vr_68x11__hr_W2",
+    "dsfd_m2l_vr_68x11__hr_W3",
+    "dsfd_m2l_vr_68x11__hr_W4",
+    "dsfd_r2l_vr_1024x1__ha_NE",
+    "dsfd_r2l_vr_1024x1__ha_NW",
+    "dsfd_r2l_vr_1024x1__ha_SE",
+    "dsfd_r2l_vr_1024x1__ha_SW",
+    "dsfd_r2l_vr_512x1__hcol",
+    "dsfd_r2l_vr_512x1__hsel"
+   ],
+   "distinct_masters": 44,
+   "instances": 44,
+   "per_master": {
+    "dsfd_l2r_vr_512x1__hq_NE": 1,
+    "dsfd_l2r_vr_512x1__hq_NW": 1,
+    "dsfd_l2r_vr_512x1__hq_SE": 1,
+    "dsfd_l2r_vr_512x1__hq_SW": 1,
+    "dsfd_l2r_vr_564x1__hx_E": 1,
+    "dsfd_l2r_vr_564x1__hx_W": 1,
+    "dsfd_m2l_raw_512x1__hl_E0": 1,
+    "dsfd_m2l_raw_512x1__hl_E1": 1,
+    "dsfd_m2l_raw_512x1__hl_E2": 1,
+    "dsfd_m2l_raw_512x1__hl_E3": 1,
+    "dsfd_m2l_raw_512x1__hl_W0": 1,
+    "dsfd_m2l_raw_512x1__hl_W1": 1,
+    "dsfd_m2l_raw_512x1__hl_W2": 1,
+    "dsfd_m2l_raw_512x1__hl_W3": 1,
+    "dsfd_m2l_vr_512x1__hco_NE": 1,
+    "dsfd_m2l_vr_512x1__hco_NW": 1,
+    "dsfd_m2l_vr_512x1__hco_SE": 1,
+    "dsfd_m2l_vr_512x1__hco_SW": 1,
+    "dsfd_m2l_vr_512x1__hix_NE": 1,
+    "dsfd_m2l_vr_512x1__hix_NW": 1,
+    "dsfd_m2l_vr_512x1__hix_SE": 1,
+    "dsfd_m2l_vr_512x1__hix_SW": 1,
+    "dsfd_m2l_vr_512x1__hqe_NE": 1,
+    "dsfd_m2l_vr_512x1__hqe_NW": 1,
+    "dsfd_m2l_vr_512x1__hqe_SE": 1,
+    "dsfd_m2l_vr_512x1__hqe_SW": 1,
+    "dsfd_m2l_vr_68x10__hr_E0": 1,
+    "dsfd_m2l_vr_68x10__hr_E5": 1,
+    "dsfd_m2l_vr_68x10__hr_W0": 1,
+    "dsfd_m2l_vr_68x10__hr_W5": 1,
+    "dsfd_m2l_vr_68x11__hr_E1": 1,
+    "dsfd_m2l_vr_68x11__hr_E2": 1,
+    "dsfd_m2l_vr_68x11__hr_E3": 1,
+    "dsfd_m2l_vr_68x11__hr_E4": 1,
+    "dsfd_m2l_vr_68x11__hr_W1": 1,
+    "dsfd_m2l_vr_68x11__hr_W2": 1,
+    "dsfd_m2l_vr_68x11__hr_W3": 1,
+    "dsfd_m2l_vr_68x11__hr_W4": 1,
+    "dsfd_r2l_vr_1024x1__ha_NE": 1,
+    "dsfd_r2l_vr_1024x1__ha_NW": 1,
+    "dsfd_r2l_vr_1024x1__ha_SE": 1,
+    "dsfd_r2l_vr_1024x1__ha_SW": 1,
+    "dsfd_r2l_vr_512x1__hcol": 1,
+    "dsfd_r2l_vr_512x1__hsel": 1
+   },
+   "placeholder_size_um": [
+    [
+     63.048,
+     64.776
+    ],
+    [
+     64.776,
+     64.776
+    ],
+    [
+     69.528,
+     71.256
+    ],
+    [
+     108.408,
+     110.136
+    ],
+    [
+     112.296,
+     112.296
+    ],
+    [
+     117.912,
+     118.776
+    ]
+   ],
+   "distinct_sizes": 6,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "cks": {
+     "bits": 1,
+     "face": "S",
+     "masters": 6
+    },
+    "rs": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rss": {
+     "bits": 1,
+     "face": "S",
+     "masters": 6
+    },
+    "fo": {
+     "bits": 1,
+     "face": "E/S/W",
+     "masters": 6
+    },
+    "od": {
+     "bits": 566,
+     "face": "E/S/W",
+     "masters": 6
+    },
+    "i": {
+     "bits": 565,
+     "face": "E/W",
+     "masters": 6
+    },
+    "st": {
+     "bits": 3,
+     "face": "E/W",
+     "masters": 6
+    },
+    "o": {
+     "bits": 1027,
+     "face": "E/N/S/W",
+     "masters": 38
+    },
+    "di0": {
+     "bits": 1026,
+     "face": "E/N/S/W",
+     "masters": 38
+    },
+    "fi0": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 38
+    },
+    "di1": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi1": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di2": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi2": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di3": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi3": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di4": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi4": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di5": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi5": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di6": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi6": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di7": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi7": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di8": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi8": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di9": {
+     "bits": 70,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "fi9": {
+     "bits": 1,
+     "face": "E/N/S/W",
+     "masters": 12
+    },
+    "di10": {
+     "bits": 70,
+     "face": "N/S/W",
+     "masters": 8
+    },
+    "fi10": {
+     "bits": 1,
+     "face": "N/S/W",
+     "masters": 8
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): hub end / start blocks (ot_meso_fifo / ot_ratio_cdc_fifo)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "meso core as dsfd_cfifo",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "one master per instance (pin faces follow its own peers): 8 RTL shapes",
+   "generator_note": [
+    "r8 hend"
+   ]
+  },
+  {
+   "family": "dsfd_hstn_*",
+   "kind": "hstn",
+   "domain": [
+    "serial_0p9",
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_hstnh_1024",
+    "dsfd_hstnh_512",
+    "dsfd_hstnh_576",
+    "dsfd_hstnh_692",
+    "dsfd_hstnh_761",
+    "dsfd_hstnv_1024",
+    "dsfd_hstnv_512",
+    "dsfd_hstnv_576"
+   ],
+   "distinct_masters": 8,
+   "instances": 121,
+   "per_master": {
+    "dsfd_hstnh_1024": 13,
+    "dsfd_hstnh_512": 17,
+    "dsfd_hstnh_576": 2,
+    "dsfd_hstnh_692": 8,
+    "dsfd_hstnh_761": 16,
+    "dsfd_hstnv_1024": 37,
+    "dsfd_hstnv_512": 11,
+    "dsfd_hstnv_576": 17
+   },
+   "placeholder_size_um": [
+    [
+     17.256,
+     30.216
+    ],
+    [
+     17.256,
+     32.376
+    ],
+    [
+     17.256,
+     38.856
+    ],
+    [
+     17.256,
+     43.176
+    ],
+    [
+     17.256,
+     53.976
+    ],
+    [
+     29.352,
+     17.256
+    ]
+   ],
+   "distinct_sizes": 8,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "di": {
+     "bits": 1024,
+     "face": "S/W"
+    },
+    "dq": {
+     "bits": 1024,
+     "face": "E/N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N/W"
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): common-clock hub-bus station (one register stage)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed standalone",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "r9 hub-bus stations (CC reach 215 um)",
+   "generator_note": [
+    "r8 hstn"
+   ]
+  },
+  {
+   "family": "dsfd_lkck_*",
+   "kind": "lkck",
+   "domain": [
+    "fwd"
+   ],
+   "masters": [
+    "dsfd_lkck_NE",
+    "dsfd_lkck_NW",
+    "dsfd_lkck_SE",
+    "dsfd_lkck_SW"
+   ],
+   "distinct_masters": 4,
+   "instances": 8,
+   "per_master": {
+    "dsfd_lkck_NE": 1,
+    "dsfd_lkck_NW": 1,
+    "dsfd_lkck_SE": 3,
+    "dsfd_lkck_SW": 3
+   },
+   "placeholder_size_um": [
+    [
+     8.616,
+     8.616
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "fi": {
+     "bits": 1,
+     "face": "N/S"
+    },
+    "fo": {
+     "bits": 1,
+     "face": "E/W"
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): link-macro forwarded-clock relay (assign fo = fi; a CTS-sized clock buffer)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "n/a (clock buffer, sized by die CTS)",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "--link-fix: the SerDes / UCIe clock source on the macro ck face",
+   "generator_note": [
+    "r8 lkck"
+   ]
+  },
+  {
+   "family": "dsfd_node",
+   "kind": "node",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_node_LLd",
+    "dsfd_node_LLfd",
+    "dsfd_node_LLfu",
+    "dsfd_node_NNfd",
+    "dsfd_node_NNfu"
+   ],
+   "distinct_masters": 5,
+   "instances": 3972,
+   "per_master": {
+    "dsfd_node_LLd": 128,
+    "dsfd_node_LLfd": 898,
+    "dsfd_node_LLfu": 1024,
+    "dsfd_node_NNfd": 1024,
+    "dsfd_node_NNfu": 898
+   },
+   "placeholder_size_um": [
+    [
+     86.376,
+     77.736
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "a": {
+     "bits": 66,
+     "face": "S/W"
+    },
+    "b": {
+     "bits": 66,
+     "face": "N/W"
+    },
+    "fo": {
+     "bits": 1,
+     "face": "S"
+    },
+    "o": {
+     "bits": 66,
+     "face": "N/S"
+    },
+    "clk": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst_n": {
+     "bits": 1,
+     "face": "E"
+    },
+    "fi": {
+     "bits": 1,
+     "face": "N",
+     "masters": 4
+    }
+   },
+   "rtl_top": "ot_v41_retn_w17w10 (rtl/v41die/ot_v41_retn_w17w10.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "RTL only, never routed standalone",
+   "owner": "CODEX",
+   "note": "abstract has no clock/reset pin (lint S4b); leaf 63 b -> node 66 b",
+   "generator_note": [
+    "r8 node"
+   ]
+  },
+  {
+   "family": "dsfd_qbank_*",
+   "kind": "qbank",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_qbank_N",
+    "dsfd_qbank_S"
+   ],
+   "distinct_masters": 2,
+   "instances": 3220,
+   "per_master": {
+    "dsfd_qbank_N": 1610,
+    "dsfd_qbank_S": 1610
+   },
+   "placeholder_size_um": [
+    [
+     60.456,
+     6.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "e_r0": {
+     "bits": 63,
+     "face": "S",
+     "masters": 1
+    },
+    "e_r1": {
+     "bits": 63,
+     "face": "S",
+     "masters": 1
+    },
+    "e_st": {
+     "bits": 2,
+     "face": "S",
+     "masters": 1
+    },
+    "o_x1": {
+     "bits": 266,
+     "face": "S",
+     "masters": 1
+    },
+    "d_r0": {
+     "bits": 63,
+     "face": "N",
+     "masters": 1
+    },
+    "d_r1": {
+     "bits": 63,
+     "face": "N",
+     "masters": 1
+    },
+    "d_st": {
+     "bits": 2,
+     "face": "N",
+     "masters": 1
+    },
+    "i_x1": {
+     "bits": 266,
+     "face": "N",
+     "masters": 1
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "W"
+    },
+    "o_cfg": {
+     "bits": 54,
+     "face": "N",
+     "masters": 1
+    },
+    "o_go": {
+     "bits": 1,
+     "face": "N",
+     "masters": 1
+    },
+    "o_x0": {
+     "bits": 283,
+     "face": "N",
+     "masters": 1
+    },
+    "i_cfg": {
+     "bits": 54,
+     "face": "S",
+     "masters": 1
+    },
+    "i_go": {
+     "bits": 1,
+     "face": "S",
+     "masters": 1
+    },
+    "i_x0": {
+     "bits": 283,
+     "face": "S",
+     "masters": 1
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): q-element bank stations",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "",
+   "generator_note": [
+    "r8 qbank"
+   ]
+  },
+  {
+   "family": "dsfd_rly_*",
+   "kind": "rly",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_rly_15_EN",
+    "dsfd_rly_15_SN",
+    "dsfd_rly_15_WN",
+    "dsfd_rly_1_ES",
+    "dsfd_rly_1_EW",
+    "dsfd_rly_1_NW",
+    "dsfd_rly_1_SN",
+    "dsfd_rly_1_WN",
+    "dsfd_rly_266_EW",
+    "dsfd_rly_266_NS",
+    "dsfd_rly_266_NW",
+    "dsfd_rly_266_SE",
+    "dsfd_rly_266_SN",
+    "dsfd_rly_266_SW",
+    "dsfd_rly_266_WE",
+    "dsfd_rly_266_WN",
+    "dsfd_rly_283_EN",
+    "dsfd_rly_283_EW",
+    "dsfd_rly_283_NS",
+    "dsfd_rly_283_SN",
+    "dsfd_rly_283_WE",
+    "dsfd_rly_2_EN",
+    "dsfd_rly_2_ES",
+    "dsfd_rly_2_EW",
+    "dsfd_rly_2_NE",
+    "dsfd_rly_2_NS",
+    "dsfd_rly_2_NW",
+    "dsfd_rly_2_SN",
+    "dsfd_rly_2_WE",
+    "dsfd_rly_2_WS",
+    "dsfd_rly_54_EW",
+    "dsfd_rly_54_WN",
+    "dsfd_rly_63_NE",
+    "dsfd_rly_63_NS",
+    "dsfd_rly_63_SE",
+    "dsfd_rly_63_SN",
+    "dsfd_rly_63_WE",
+    "dsfd_rly_63_WN",
+    "dsfd_rly_63_WS",
+    "dsfd_rly_66_ES",
+    "dsfd_rly_66_EW",
+    "dsfd_rly_66_NS",
+    "dsfd_rly_66_NW",
+    "dsfd_rly_66_SN",
+    "dsfd_rly_66_WS"
+   ],
+   "distinct_masters": 45,
+   "instances": 30210,
+   "per_master": {
+    "dsfd_rly_15_EN": 6,
+    "dsfd_rly_15_SN": 790,
+    "dsfd_rly_15_WN": 356,
+    "dsfd_rly_1_ES": 99,
+    "dsfd_rly_1_EW": 644,
+    "dsfd_rly_1_NW": 99,
+    "dsfd_rly_1_SN": 312,
+    "dsfd_rly_1_WN": 440,
+    "dsfd_rly_266_EW": 499,
+    "dsfd_rly_266_NS": 356,
+    "dsfd_rly_266_NW": 1,
+    "dsfd_rly_266_SE": 72,
+    "dsfd_rly_266_SN": 796,
+    "dsfd_rly_266_SW": 28,
+    "dsfd_rly_266_WE": 840,
+    "dsfd_rly_266_WN": 2,
+    "dsfd_rly_283_EN": 767,
+    "dsfd_rly_283_EW": 70,
+    "dsfd_rly_283_NS": 356,
+    "dsfd_rly_283_SN": 29,
+    "dsfd_rly_283_WE": 770,
+    "dsfd_rly_2_EN": 2,
+    "dsfd_rly_2_ES": 1128,
+    "dsfd_rly_2_EW": 768,
+    "dsfd_rly_2_NE": 29,
+    "dsfd_rly_2_NS": 455,
+    "dsfd_rly_2_NW": 2,
+    "dsfd_rly_2_SN": 358,
+    "dsfd_rly_2_WE": 767,
+    "dsfd_rly_2_WS": 866,
+    "dsfd_rly_54_EW": 671,
+    "dsfd_rly_54_WN": 539,
+    "dsfd_rly_63_NE": 1055,
+    "dsfd_rly_63_NS": 1608,
+    "dsfd_rly_63_SE": 97,
+    "dsfd_rly_63_SN": 4,
+    "dsfd_rly_63_WE": 8870,
+    "dsfd_rly_63_WN": 132,
+    "dsfd_rly_63_WS": 3523,
+    "dsfd_rly_66_ES": 128,
+    "dsfd_rly_66_EW": 340,
+    "dsfd_rly_66_NS": 940,
+    "dsfd_rly_66_NW": 29,
+    "dsfd_rly_66_SN": 512,
+    "dsfd_rly_66_WS": 55
+   },
+   "placeholder_size_um": [
+    [
+     17.256,
+     17.256
+    ],
+    [
+     17.256,
+     19.416
+    ],
+    [
+     18.552,
+     18.552
+    ],
+    [
+     19.416,
+     19.416
+    ]
+   ],
+   "distinct_sizes": 4,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "i": {
+     "bits": 283,
+     "face": "E/N/S/W"
+    },
+    "o": {
+     "bits": 283,
+     "face": "E/N/S/W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E/N/S"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "E/N/S"
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): column relays (one register stage)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed standalone",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "49 masters by width and face pair",
+   "generator_note": [
+    "r8 rly"
+   ]
+  },
+  {
+   "family": "dsfd_rstg",
+   "kind": "rstg",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_rstg"
+   ],
+   "distinct_masters": 1,
+   "instances": 384,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     38.856,
+     34.536
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "i": {
+     "bits": 66,
+     "face": "N"
+    },
+    "o": {
+     "bits": 66,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): return-tree root stage",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "",
+   "generator_note": [
+    "r8 rstg"
+   ]
+  },
+  {
+   "family": "dsfd_sp_capture",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_capture"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     107.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "E"
+    },
+    "f_gather": {
+     "bits": 576,
+     "face": "E"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CLAUDE FIELD-SPINE",
+   "note": "",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_collective",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_collective"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     1369.416
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "rst_serial": {
+     "bits": 1,
+     "face": "S"
+    },
+    "pll_serial": {
+     "bits": 1,
+     "face": "S"
+    },
+    "pll_stream": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rst_stream": {
+     "bits": 1,
+     "face": "S"
+    },
+    "pll_hbm": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rst_hbm": {
+     "bits": 1,
+     "face": "S"
+    },
+    "por": {
+     "bits": 1,
+     "face": "N"
+    },
+    "refclk": {
+     "bits": 1,
+     "face": "N"
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "E"
+    },
+    "rE0": {
+     "bits": 515,
+     "face": "E"
+    },
+    "tdE0": {
+     "bits": 512,
+     "face": "E"
+    },
+    "tfE0": {
+     "bits": 1,
+     "face": "E"
+    },
+    "tdE1": {
+     "bits": 512,
+     "face": "E"
+    },
+    "tfE1": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rE1": {
+     "bits": 515,
+     "face": "E"
+    },
+    "tdE3": {
+     "bits": 512,
+     "face": "E"
+    },
+    "tfE3": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rE2": {
+     "bits": 515,
+     "face": "E"
+    },
+    "tdE2": {
+     "bits": 512,
+     "face": "E"
+    },
+    "tfE2": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rE3": {
+     "bits": 515,
+     "face": "E"
+    },
+    "tdW0": {
+     "bits": 512,
+     "face": "W"
+    },
+    "tfW0": {
+     "bits": 1,
+     "face": "W"
+    },
+    "tdW1": {
+     "bits": 512,
+     "face": "W"
+    },
+    "tfW1": {
+     "bits": 1,
+     "face": "W"
+    },
+    "tdW2": {
+     "bits": 512,
+     "face": "W"
+    },
+    "tfW2": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rW0": {
+     "bits": 515,
+     "face": "W"
+    },
+    "tdW3": {
+     "bits": 512,
+     "face": "W"
+    },
+    "tfW3": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rW1": {
+     "bits": 515,
+     "face": "W"
+    },
+    "rW2": {
+     "bits": 515,
+     "face": "W"
+    },
+    "rW3": {
+     "bits": 515,
+     "face": "W"
+    }
+   },
+   "rtl_top": "ot_dsrom_link_rt (rtl/dsrom_sys/ot_dsrom_link_rt.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "context_r1 SS -176.57 / FF -44.74, FAIL_CONTEXT_CLOCK (results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL/verdict.json)",
+   "owner": "CODEX",
+   "note": "duplicate pll binding (lint S1)",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_gather",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_gather"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     1369.416
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rE0": {
+     "bits": 692,
+     "face": "E"
+    },
+    "rE1": {
+     "bits": 761,
+     "face": "E"
+    },
+    "rE2": {
+     "bits": 761,
+     "face": "E"
+    },
+    "rE3": {
+     "bits": 761,
+     "face": "E"
+    },
+    "rE4": {
+     "bits": 761,
+     "face": "E"
+    },
+    "rE5": {
+     "bits": 692,
+     "face": "E"
+    },
+    "t_capture": {
+     "bits": 576,
+     "face": "E"
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "E"
+    },
+    "rW0": {
+     "bits": 692,
+     "face": "W"
+    },
+    "rW1": {
+     "bits": 761,
+     "face": "W"
+    },
+    "rW2": {
+     "bits": 761,
+     "face": "W"
+    },
+    "rW3": {
+     "bits": 761,
+     "face": "W"
+    },
+    "rW4": {
+     "bits": 761,
+     "face": "W"
+    },
+    "rW5": {
+     "bits": 692,
+     "face": "W"
+    }
+   },
+   "rtl_top": "none (field spine ot_v41_spine_pqc_w17w10 may cover it: unconfirmed)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none (spine c0r16_h20 PASS_SCREEN_ONLY, not adopted)",
+   "owner": "CLAUDE FIELD-SPINE",
+   "note": "return gather of the 12 tier roots",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_hc_n",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_hc_n"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     10836.696
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "t_s": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "f_s": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_vm": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "W"
+    },
+    "f_su_n": {
+     "bits": 512,
+     "face": "W"
+    }
+   },
+   "rtl_top": "no slab top; ot_hdc_sinkhorn",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "never routed (S81-PH twins)",
+   "owner": "CLAUDE S81-PH",
+   "note": "HC north half",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_hc_s",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_hc_s"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     7205.736
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "f_su_s": {
+     "bits": 512,
+     "face": "W"
+    },
+    "f_n": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_n": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "no slab top; ot_hdc_sinkhorn",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "never routed (S81-PH twins, built to the simplification rules)",
+   "owner": "CLAUDE S81-PH",
+   "note": "HC south half",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_su_*",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_su_n",
+    "dsfd_sp_su_s"
+   ],
+   "distinct_masters": 2,
+   "instances": 2,
+   "per_master": {
+    "dsfd_sp_su_n": 1,
+    "dsfd_sp_su_s": 1
+   },
+   "placeholder_size_um": [
+    [
+     1015.176,
+     6307.176
+    ],
+    [
+     1015.176,
+     6309.336
+    ]
+   ],
+   "distinct_sizes": 2,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "rst": {
+     "bits": 1,
+     "face": "N/S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N/S"
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_hc": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "rtl_top": "no slab top; lanes rtl/hdc/v41x/ot_dsrom_su_*.sv",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "lanes only: su_routeract SS +17.0 / FF +3.74 at 1.111 ns; su_hcpost +0.23 / +1.69; norm / swiglu / softmax components closed, levers PENDING_SSFF",
+   "owner": "CLAUDE SU-FUSION",
+   "note": "serial 0.9 GHz domain; su_n / su_s halves",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sp_vm",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_vm"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     2620.056
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "t_su_s": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_gather": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_hc": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "sel": {
+     "bits": 515,
+     "face": "E"
+    },
+    "aSE": {
+     "bits": 1027,
+     "face": "E"
+    },
+    "qSE": {
+     "bits": 513,
+     "face": "E"
+    },
+    "qSEs": {
+     "bits": 3,
+     "face": "E"
+    },
+    "f_hc": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "xe": {
+     "bits": 565,
+     "face": "E"
+    },
+    "xes": {
+     "bits": 3,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "qNE": {
+     "bits": 513,
+     "face": "E"
+    },
+    "qNEs": {
+     "bits": 3,
+     "face": "E"
+    },
+    "aNE": {
+     "bits": 1027,
+     "face": "E"
+    },
+    "col": {
+     "bits": 515,
+     "face": "E"
+    },
+    "f_capture": {
+     "bits": 512,
+     "face": "E"
+    },
+    "f_collective": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_n": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "aSW": {
+     "bits": 1027,
+     "face": "W"
+    },
+    "qSW": {
+     "bits": 513,
+     "face": "W"
+    },
+    "qSWs": {
+     "bits": 3,
+     "face": "W"
+    },
+    "xw": {
+     "bits": 565,
+     "face": "W"
+    },
+    "xws": {
+     "bits": 3,
+     "face": "W"
+    },
+    "qNW": {
+     "bits": 513,
+     "face": "W"
+    },
+    "qNWs": {
+     "bits": 3,
+     "face": "W"
+    },
+    "aNW": {
+     "bits": 1027,
+     "face": "W"
+    }
+   },
+   "rtl_top": "no slab top (behavioural ot_chip_v41x_tile u_tile.vm; SRAM ot_sram_1r1w_512x128_m4_r2c2)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none (old 0.92 ns TT slices only)",
+   "owner": "CODEX",
+   "note": "WFC child allocated beside it (codex ds-wfc)",
+   "generator_note": [
+    "r8 hub"
+   ]
+  },
+  {
+   "family": "dsfd_sstn_*",
+   "kind": "sstn",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sstn_e0c0",
+    "dsfd_sstn_e0c0qt",
+    "dsfd_sstn_e0c0sinf",
+    "dsfd_sstn_e0c0siqt",
+    "dsfd_sstn_e0e1c0c1",
+    "dsfd_sstn_e0e1c0c1qt",
+    "dsfd_sstn_e0e1c0c1si",
+    "dsfd_sstn_e0e1c0c1sinf",
+    "dsfd_sstn_e0e1c0c1siqt"
+   ],
+   "distinct_masters": 9,
+   "instances": 1280,
+   "per_master": {
+    "dsfd_sstn_e0c0": 26,
+    "dsfd_sstn_e0c0qt": 99,
+    "dsfd_sstn_e0c0sinf": 29,
+    "dsfd_sstn_e0c0siqt": 356,
+    "dsfd_sstn_e0e1c0c1": 1,
+    "dsfd_sstn_e0e1c0c1qt": 2,
+    "dsfd_sstn_e0e1c0c1si": 358,
+    "dsfd_sstn_e0e1c0c1sinf": 99,
+    "dsfd_sstn_e0e1c0c1siqt": 310
+   },
+   "placeholder_size_um": [
+    [
+     172.776,
+     30.216
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "xai": {
+     "bits": 283,
+     "face": "S"
+    },
+    "xbi": {
+     "bits": 266,
+     "face": "S"
+    },
+    "cci": {
+     "bits": 15,
+     "face": "S"
+    },
+    "so": {
+     "bits": 2,
+     "face": "S"
+    },
+    "e0": {
+     "bits": 2,
+     "face": "N"
+    },
+    "c0": {
+     "bits": 2,
+     "face": "N"
+    },
+    "cc": {
+     "bits": 15,
+     "face": "N"
+    },
+    "xa": {
+     "bits": 283,
+     "face": "N"
+    },
+    "xb": {
+     "bits": 266,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "W"
+    },
+    "qt": {
+     "bits": 266,
+     "face": "S",
+     "masters": 4
+    },
+    "si": {
+     "bits": 2,
+     "face": "N",
+     "masters": 5
+    },
+    "nf": {
+     "bits": 1,
+     "face": "E",
+     "masters": 2
+    },
+    "e1": {
+     "bits": 2,
+     "face": "N",
+     "masters": 5
+    },
+    "c1": {
+     "bits": 2,
+     "face": "N",
+     "masters": 5
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): slot stations",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "",
+   "generator_note": [
+    "r8 sstn"
+   ]
+  },
+  {
+   "family": "dsfd_stn_*",
+   "kind": "stn",
+   "domain": [
+    "fwd"
+   ],
+   "masters": [
+    "dsfd_stnh_1026x1",
+    "dsfd_stnh_512x1",
+    "dsfd_stnh_514x1",
+    "dsfd_stnh_566x1",
+    "dsfd_stnh_70x1",
+    "dsfd_stnh_70x10",
+    "dsfd_stnh_70x11",
+    "dsfd_stnh_70x2",
+    "dsfd_stnh_70x3",
+    "dsfd_stnh_70x4",
+    "dsfd_stnh_70x5",
+    "dsfd_stnh_70x6",
+    "dsfd_stnh_70x7",
+    "dsfd_stnh_70x8",
+    "dsfd_stnh_70x9",
+    "dsfd_stnv_1026x1",
+    "dsfd_stnv_512x1",
+    "dsfd_stnv_514x1",
+    "dsfd_stnv_566x1",
+    "dsfd_stnv_70x1",
+    "dsfd_stnv_70x10",
+    "dsfd_stnv_70x11"
+   ],
+   "distinct_masters": 22,
+   "instances": 2685,
+   "per_master": {
+    "dsfd_stnh_1026x1": 77,
+    "dsfd_stnh_512x1": 604,
+    "dsfd_stnh_514x1": 248,
+    "dsfd_stnh_566x1": 386,
+    "dsfd_stnh_70x1": 55,
+    "dsfd_stnh_70x10": 44,
+    "dsfd_stnh_70x11": 38,
+    "dsfd_stnh_70x2": 36,
+    "dsfd_stnh_70x3": 36,
+    "dsfd_stnh_70x4": 36,
+    "dsfd_stnh_70x5": 36,
+    "dsfd_stnh_70x6": 36,
+    "dsfd_stnh_70x7": 36,
+    "dsfd_stnh_70x8": 36,
+    "dsfd_stnh_70x9": 36,
+    "dsfd_stnv_1026x1": 88,
+    "dsfd_stnv_512x1": 247,
+    "dsfd_stnv_514x1": 354,
+    "dsfd_stnv_566x1": 89,
+    "dsfd_stnv_70x1": 26,
+    "dsfd_stnv_70x10": 77,
+    "dsfd_stnv_70x11": 64
+   },
+   "placeholder_size_um": [
+    [
+     17.256,
+     17.256
+    ],
+    [
+     17.256,
+     30.216
+    ],
+    [
+     17.256,
+     32.376
+    ],
+    [
+     17.256,
+     56.136
+    ],
+    [
+     17.256,
+     66.936
+    ],
+    [
+     17.256,
+     73.416
+    ]
+   ],
+   "distinct_sizes": 12,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "fi0": {
+     "bits": 1,
+     "face": "S/W"
+    },
+    "di0": {
+     "bits": 1026,
+     "face": "S/W"
+    },
+    "fo0": {
+     "bits": 1,
+     "face": "E/N"
+    },
+    "do0": {
+     "bits": 1026,
+     "face": "E/N"
+    },
+    "fi1": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 12
+    },
+    "di1": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 12
+    },
+    "fi2": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 11
+    },
+    "di2": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 11
+    },
+    "fi3": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 10
+    },
+    "di3": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 10
+    },
+    "fi4": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 9
+    },
+    "di4": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 9
+    },
+    "fi5": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 8
+    },
+    "di5": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 8
+    },
+    "fi6": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 7
+    },
+    "di6": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 7
+    },
+    "fi7": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 6
+    },
+    "di7": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 6
+    },
+    "fi8": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 5
+    },
+    "di8": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 5
+    },
+    "fi9": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 4
+    },
+    "di9": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 4
+    },
+    "fo1": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 12
+    },
+    "do1": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 12
+    },
+    "fo2": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 11
+    },
+    "do2": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 11
+    },
+    "fo3": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 10
+    },
+    "do3": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 10
+    },
+    "fo4": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 9
+    },
+    "do4": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 9
+    },
+    "fo5": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 8
+    },
+    "do5": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 8
+    },
+    "fo6": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 7
+    },
+    "do6": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 7
+    },
+    "fo7": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 6
+    },
+    "do7": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 6
+    },
+    "fo8": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 5
+    },
+    "do8": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 5
+    },
+    "fo9": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 4
+    },
+    "do9": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 4
+    },
+    "fi10": {
+     "bits": 1,
+     "face": "S/W",
+     "masters": 2
+    },
+    "di10": {
+     "bits": 70,
+     "face": "S/W",
+     "masters": 2
+    },
+    "fo10": {
+     "bits": 1,
+     "face": "E/N",
+     "masters": 2
+    },
+    "do10": {
+     "bits": 70,
+     "face": "E/N",
+     "masters": 2
+    }
+   },
+   "rtl_top": "glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): one ot_fwd_link_stage (W <= 512) per lane slice, flops at both faces (falling edge of the forwarded clock), fo = kept inverter",
+   "status": "RTL_OPEN",
+   "hardened_view": [
+    "physical/s81_die_views/views/dsfd_stnh_512x1/ (dsfd_stnh_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_514x1/ (dsfd_stnh_514x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnh_566x1/ (dsfd_stnh_566x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_512x1/ (dsfd_stnv_512x1.lef + SS/FF LIB)",
+    "physical/s81_die_views/views/dsfd_stnv_514x1/ (dsfd_stnv_514x1.lef + SS/FF LIB)"
+   ],
+   "closure": "hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters (1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774; landed die views: dsfd_stnh_512x1 SS +83.89 / FF +413.93, dsfd_stnh_514x1 SS +81.75 / FF +413.36, dsfd_stnh_566x1 SS +79.84 / FF +411.16, dsfd_stnv_512x1 SS +82.06 / FF +415.18, dsfd_stnv_514x1 SS +77.67 / FF +415.29",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "21 masters by lane signature; registered die view = the station itself (no added cycle)",
+   "generator_note": [
+    "r8 stn"
+   ]
+  },
+  {
+   "family": "dsfd_svc",
+   "kind": "svc",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_svc"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.032,
+     1576.776
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "od": {
+     "bits": 514,
+     "face": "N"
+    },
+    "of": {
+     "bits": 1,
+     "face": "N"
+    },
+    "xd": {
+     "bits": 514,
+     "face": "N"
+    },
+    "xf": {
+     "bits": 1,
+     "face": "N"
+    },
+    "ad": {
+     "bits": 1026,
+     "face": "N"
+    },
+    "af": {
+     "bits": 1,
+     "face": "N"
+    },
+    "q": {
+     "bits": 515,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rd": {
+     "bits": 8864,
+     "face": "S"
+    }
+   },
+   "rtl_top": "no service top; parts ot_hdc_v41x_attn_tile_s / ot_attn_hgrp_m6h1 + ot_hdc_v41x_idx_*",
+   "status": "NO_RTL_TOP",
+   "hardened_view": [
+    "leaf only: physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ (LEF + ss/ff LIB; HBM-die leaf, contextual tile not closed)"
+   ],
+   "closure": "no block closure; WINDOW screen SS -1175.2 pre-layout (results/rtl/dsrom_window_full_block_screen_20261005)",
+   "owner": "CODEX",
+   "note": "16 attention tiles + pooled indexer ring reader per stack",
+   "generator_note": [
+    "r8 svc"
+   ]
+  },
+  {
+   "family": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "kind": "phy",
+   "domain": [
+    "hbm"
+   ],
+   "masters": [
+    "ot_hbm3e_phy_v41x_aw30_e8p5"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.056,
+     1177.2
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "dfi": {
+     "bits": 22238,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "black box only (behavioural rtl/chip/ot_chip_v41x_hbm3e_phy.sv)",
+   "status": "REAL_VIEW",
+   "hardened_view": [
+    "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ (LEF + ss/tt/ff LIB + _bb.v)"
+   ],
+   "closure": "generated macro (tools/mem_compiler/hbm_phy_gen.py), assumed boundary timing",
+   "owner": "-",
+   "note": "\"PHY + controller abstract, controller-side pins\": overlaps dsfd_ctrl in function (uncertain)",
+   "generator_note": []
+  },
+  {
+   "family": "ot_pdie_*",
+   "kind": "link",
+   "domain": [
+    "link"
+   ],
+   "masters": [
+    "ot_pdie_serdes",
+    "ot_pdie_ucie"
+   ],
+   "distinct_masters": 2,
+   "instances": 8,
+   "per_master": {
+    "ot_pdie_serdes": 6,
+    "ot_pdie_ucie": 2
+   },
+   "placeholder_size_um": [
+    [
+     250.056,
+     2250.216
+    ],
+    [
+     260.808,
+     1652.424
+    ]
+   ],
+   "distinct_sizes": 2,
+   "die_view": "real LEF macro",
+   "ports": {
+    "tx": {
+     "bits": 512,
+     "face": "LEF",
+     "masters": 1
+    },
+    "rx": {
+     "bits": 512,
+     "face": "LEF",
+     "masters": 1
+    },
+    "ck": {
+     "bits": 1,
+     "face": "LEF",
+     "masters": 1
+    }
+   },
+   "rtl_top": "none (placeholder pin macro)",
+   "status": "REAL_VIEW_NOT_CLOSED",
+   "hardened_view": [
+    "physical/asap7_v41x_pdie_macros_v2/ot_pdie_{serdes,ucie}/ (LEF + tt/ss/ff LIB: tools/s81_pdie_corner_libs.py, HBM3E PHY corner method)"
+   ],
+   "closure": "n/a: pin-only shell with corner LIBs",
+   "owner": "CLAUDE S81-RERUN",
+   "note": "real SerDes / UCIe hard IP abstract still needed",
+   "generator_note": []
+  },
+  {
+   "family": "ot_rom_4096x72_m8",
+   "kind": "cfg",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "ot_rom_4096x72_m8"
+   ],
+   "distinct_masters": 1,
+   "instances": 14350,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     38.04,
+     62.952
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "ce": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "a": {
+     "bits": 12,
+     "face": "LEF"
+    },
+    "rd": {
+     "bits": 48,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "compiler ROM macro (functional model physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v)",
+   "status": "REAL_VIEW",
+   "hardened_view": [
+    "results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef (= v1 physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef, 38.016 x 62.910, + _ss/_tt/_ff.lib)",
+    "v2 aligned view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ (38.040 x 62.952, LEF + 3 LIB) NOT used"
+   ],
+   "closure": "macro (SS clk->q in results/uarch/v41_rom_depth_study.json)",
+   "owner": "CLAUDE S81-DIE",
+   "note": "generator uses the v1 (unaligned) view; v2 is the mirror-legal one. Lint S3: clk/ce/addr undriven, 7-way multi-driven cfg nets (no cfg sequencer RTL)",
+   "generator_note": []
+  },
+  {
+   "family": "ot_s81_cfg7_seq",
+   "kind": "seq",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "ot_s81_cfg7_seq"
+   ],
+   "distinct_masters": 1,
+   "instances": 2050,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     34.536,
+     60.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "q0": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q1": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q2": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q3": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q4": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q5": {
+     "bits": 48,
+     "face": "W"
+    },
+    "q6": {
+     "bits": 48,
+     "face": "W"
+    },
+    "a": {
+     "bits": 12,
+     "face": "W"
+    },
+    "ce0": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce1": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce2": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce3": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce4": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce5": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ce6": {
+     "bits": 1,
+     "face": "W"
+    },
+    "cfg": {
+     "bits": 54,
+     "face": "N"
+    },
+    "go_e": {
+     "bits": 1,
+     "face": "N"
+    },
+    "lc": {
+     "bits": 15,
+     "face": "E"
+    },
+    "st": {
+     "bits": 2,
+     "face": "E"
+    },
+    "clk": {
+     "bits": 1,
+     "face": "S"
+    },
+    "rst_n": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "ot_s81_cfg7_seq (rtl/v41die/ot_s81_cfg7_seq.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed standalone",
+   "owner": "CLAUDE S81-DIE",
+   "note": "cfg ROM sequencer, one per pair",
+   "generator_note": [
+    "r8 seq"
+   ]
+  },
+  {
+   "family": "ot_v41_rom_elem_q_qx_w10",
+   "kind": "q",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "ot_v41_rom_elem_q_qx_w10"
+   ],
+   "distinct_masters": 1,
+   "instances": 1610,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     510.84,
+     177.12
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "x0": {
+     "bits": 283,
+     "face": "LEF"
+    },
+    "x1": {
+     "bits": 266,
+     "face": "LEF"
+    },
+    "go": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "rs": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "cfg": {
+     "bits": 54,
+     "face": "LEF"
+    },
+    "r0": {
+     "bits": 63,
+     "face": "LEF"
+    },
+    "r1": {
+     "bits": 63,
+     "face": "LEF"
+    },
+    "st": {
+     "bits": 2,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "ot_v41_rom_elem_q_qx_w10 (QX10, QELEM)",
+   "status": "REAL_VIEW_NOT_CLOSED",
+   "hardened_view": [
+    "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz"
+   ],
+   "closure": "Z20c die-context SS -60.7 after CTS (pre-margin); PQ q-element Z24b pending",
+   "owner": "CLAUDE QELEM",
+   "note": "die cases use Z20c until the PQ q-element posts",
+   "generator_note": []
+  }
+ ]
+}

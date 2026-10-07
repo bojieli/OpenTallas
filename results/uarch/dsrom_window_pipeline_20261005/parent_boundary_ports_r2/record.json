@@ -1,0 +1,31 @@
+{
+  "status": "PASS_ACTUAL_PARENT_BOUNDARY_PORTS",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_parent_context.sv": "7c7e2b66c77f2c1e643812f422b8f6b92d891c39c71153e547c2f12b6f37c4f1",
+    "tools/uarch_model.py": "1234bbce5414640c5c0fbe1973936333d6f5c64fbe171e487fd51276af5c7c0b"
+  },
+  "prebuild": "../parent_boundary_ports_prebuild_r2.json",
+  "scalar_terminal_bits": {
+    "input": 69082,
+    "output": 101082
+  },
+  "total_scalar_terminal_bits": 170164,
+  "removed_scalar_observation_bits": 16966,
+  "internal_connections": [
+    "u_window KV outputs -> u_capture staging and u_desc_life; consumer ready -> source"
+  ],
+  "FF_delta_bits": 0,
+  "added_cycles": 0,
+  "leaf_source_unchanged": true,
+  "actual_consumer_source_unchanged": true,
+  "exact344_repeated": false,
+  "capture_PASS_repeated": false,
+  "elaboration": "iverilog PASS",
+  "lint": "verilator PASS,13 inherited WIDTH warnings",
+  "IO_waiver": false,
+  "macro_loads_preserved": true,
+  "terminal_leaf_required": true,
+  "actual_slot_required": true,
+  "parent_CTS_qualified": false,
+  "adoption": false
+}

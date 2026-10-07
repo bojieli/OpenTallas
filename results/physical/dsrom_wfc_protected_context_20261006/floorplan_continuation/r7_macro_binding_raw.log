@@ -1,0 +1,650 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib
+read_db /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/2_1_floorplan.odb
+read_sdc /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/dsrom_wfc_protected_context/macro_placement.tcl
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[0\].u_prompt placed. Bounding box (17.280um, 2810.160um), (191.400um, 2839.896um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[10\].u_prompt placed. Bounding box (17.280um, 3012.864um), (191.400um, 3042.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[11\].u_prompt placed. Bounding box (202.200um, 3012.864um), (376.320um, 3042.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[12\].u_prompt placed. Bounding box (17.280um, 3053.376um), (191.400um, 3083.112um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[13\].u_prompt placed. Bounding box (202.200um, 3053.376um), (376.320um, 3083.112um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[1\].u_prompt placed. Bounding box (202.200um, 2810.160um), (376.320um, 2839.896um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[2\].u_prompt placed. Bounding box (17.280um, 2850.720um), (191.400um, 2880.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[3\].u_prompt placed. Bounding box (202.200um, 2850.720um), (376.320um, 2880.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[4\].u_prompt placed. Bounding box (17.280um, 2891.232um), (191.400um, 2920.968um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[5\].u_prompt placed. Bounding box (202.200um, 2891.232um), (376.320um, 2920.968um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[6\].u_prompt placed. Bounding box (17.280um, 2931.792um), (191.400um, 2961.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[7\].u_prompt placed. Bounding box (202.200um, 2931.792um), (376.320um, 2961.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[8\].u_prompt placed. Bounding box (17.280um, 2972.304um), (191.400um, 3002.040um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_cfg.g_live.g_bank\[9\].u_prompt placed. Bounding box (202.200um, 2972.304um), (376.320um, 3002.040um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[0\].u_check placed. Bounding box (202.200um, 2084.640um), (376.320um, 2114.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[10\].u_check placed. Bounding box (202.200um, 2165.712um), (376.320um, 2195.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[11\].u_check placed. Bounding box (387.120um, 2165.712um), (561.240um, 2195.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[12\].u_check placed. Bounding box (572.040um, 2165.712um), (746.160um, 2195.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[13\].u_check placed. Bounding box (756.960um, 2165.712um), (931.080um, 2195.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[14\].u_check placed. Bounding box (17.280um, 2206.224um), (191.400um, 2235.960um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[15\].u_check placed. Bounding box (202.200um, 2206.224um), (376.320um, 2235.960um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[16\].u_check placed. Bounding box (387.120um, 2206.224um), (561.240um, 2235.960um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[17\].u_check placed. Bounding box (572.040um, 2206.224um), (746.160um, 2235.960um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[18\].u_check placed. Bounding box (756.960um, 2206.224um), (931.080um, 2235.960um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[19\].u_check placed. Bounding box (17.280um, 2246.784um), (191.400um, 2276.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[1\].u_check placed. Bounding box (387.120um, 2084.640um), (561.240um, 2114.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[20\].u_check placed. Bounding box (202.200um, 2246.784um), (376.320um, 2276.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[21\].u_check placed. Bounding box (387.120um, 2246.784um), (561.240um, 2276.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[22\].u_check placed. Bounding box (572.040um, 2246.784um), (746.160um, 2276.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[23\].u_check placed. Bounding box (756.960um, 2246.784um), (931.080um, 2276.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[24\].u_check placed. Bounding box (17.280um, 2287.296um), (191.400um, 2317.032um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[25\].u_check placed. Bounding box (202.200um, 2287.296um), (376.320um, 2317.032um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[26\].u_check placed. Bounding box (387.120um, 2287.296um), (561.240um, 2317.032um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[27\].u_check placed. Bounding box (572.040um, 2287.296um), (746.160um, 2317.032um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[28\].u_check placed. Bounding box (756.960um, 2287.296um), (931.080um, 2317.032um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[29\].u_check placed. Bounding box (17.280um, 2327.856um), (191.400um, 2357.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[2\].u_check placed. Bounding box (572.040um, 2084.640um), (746.160um, 2114.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[30\].u_check placed. Bounding box (202.200um, 2327.856um), (376.320um, 2357.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[31\].u_check placed. Bounding box (387.120um, 2327.856um), (561.240um, 2357.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[3\].u_check placed. Bounding box (756.960um, 2084.640um), (931.080um, 2114.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[4\].u_check placed. Bounding box (17.280um, 2125.152um), (191.400um, 2154.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[5\].u_check placed. Bounding box (202.200um, 2125.152um), (376.320um, 2154.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[6\].u_check placed. Bounding box (387.120um, 2125.152um), (561.240um, 2154.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[7\].u_check placed. Bounding box (572.040um, 2125.152um), (746.160um, 2154.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[8\].u_check placed. Bounding box (756.960um, 2125.152um), (931.080um, 2154.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_checks\[9\].u_check placed. Bounding box (17.280um, 2165.712um), (191.400um, 2195.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[0\].u_data placed. Bounding box (17.280um, 17.280um), (191.400um, 47.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[1\].u_data placed. Bounding box (202.200um, 17.280um), (376.320um, 47.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[2\].u_data placed. Bounding box (387.120um, 17.280um), (561.240um, 47.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[3\].u_data placed. Bounding box (572.040um, 17.280um), (746.160um, 47.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[0\].u_data placed. Bounding box (17.280um, 341.568um), (191.400um, 371.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[1\].u_data placed. Bounding box (202.200um, 341.568um), (376.320um, 371.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[2\].u_data placed. Bounding box (387.120um, 341.568um), (561.240um, 371.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[3\].u_data placed. Bounding box (572.040um, 341.568um), (746.160um, 371.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[0\].u_data placed. Bounding box (756.960um, 341.568um), (931.080um, 371.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[1\].u_data placed. Bounding box (17.280um, 382.128um), (191.400um, 411.864um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[2\].u_data placed. Bounding box (202.200um, 382.128um), (376.320um, 411.864um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[3\].u_data placed. Bounding box (387.120um, 382.128um), (561.240um, 411.864um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[0\].u_data placed. Bounding box (572.040um, 382.128um), (746.160um, 411.864um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[1\].u_data placed. Bounding box (756.960um, 382.128um), (931.080um, 411.864um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[2\].u_data placed. Bounding box (17.280um, 422.640um), (191.400um, 452.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[3\].u_data placed. Bounding box (202.200um, 422.640um), (376.320um, 452.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[0\].u_data placed. Bounding box (387.120um, 422.640um), (561.240um, 452.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[1\].u_data placed. Bounding box (572.040um, 422.640um), (746.160um, 452.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[2\].u_data placed. Bounding box (756.960um, 422.640um), (931.080um, 452.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[3\].u_data placed. Bounding box (17.280um, 463.200um), (191.400um, 492.936um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[0\].u_data placed. Bounding box (202.200um, 463.200um), (376.320um, 492.936um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[1\].u_data placed. Bounding box (387.120um, 463.200um), (561.240um, 492.936um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[2\].u_data placed. Bounding box (572.040um, 463.200um), (746.160um, 492.936um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[3\].u_data placed. Bounding box (756.960um, 463.200um), (931.080um, 492.936um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[0\].u_data placed. Bounding box (17.280um, 503.712um), (191.400um, 533.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[1\].u_data placed. Bounding box (202.200um, 503.712um), (376.320um, 533.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[2\].u_data placed. Bounding box (387.120um, 503.712um), (561.240um, 533.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[3\].u_data placed. Bounding box (572.040um, 503.712um), (746.160um, 533.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[0\].u_data placed. Bounding box (756.960um, 503.712um), (931.080um, 533.448um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[1\].u_data placed. Bounding box (17.280um, 544.272um), (191.400um, 574.008um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[2\].u_data placed. Bounding box (202.200um, 544.272um), (376.320um, 574.008um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[3\].u_data placed. Bounding box (387.120um, 544.272um), (561.240um, 574.008um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[0\].u_data placed. Bounding box (572.040um, 544.272um), (746.160um, 574.008um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[1\].u_data placed. Bounding box (756.960um, 544.272um), (931.080um, 574.008um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[2\].u_data placed. Bounding box (17.280um, 584.784um), (191.400um, 614.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[3\].u_data placed. Bounding box (202.200um, 584.784um), (376.320um, 614.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[0\].u_data placed. Bounding box (387.120um, 584.784um), (561.240um, 614.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[1\].u_data placed. Bounding box (572.040um, 584.784um), (746.160um, 614.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[2\].u_data placed. Bounding box (756.960um, 584.784um), (931.080um, 614.520um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[3\].u_data placed. Bounding box (17.280um, 625.344um), (191.400um, 655.080um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[0\].u_data placed. Bounding box (202.200um, 625.344um), (376.320um, 655.080um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[1\].u_data placed. Bounding box (387.120um, 625.344um), (561.240um, 655.080um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[2\].u_data placed. Bounding box (572.040um, 625.344um), (746.160um, 655.080um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[3\].u_data placed. Bounding box (756.960um, 625.344um), (931.080um, 655.080um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[0\].u_data placed. Bounding box (756.960um, 17.280um), (931.080um, 47.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[1\].u_data placed. Bounding box (17.280um, 57.840um), (191.400um, 87.576um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[2\].u_data placed. Bounding box (202.200um, 57.840um), (376.320um, 87.576um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[3\].u_data placed. Bounding box (387.120um, 57.840um), (561.240um, 87.576um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[0\].u_data placed. Bounding box (17.280um, 665.856um), (191.400um, 695.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[1\].u_data placed. Bounding box (202.200um, 665.856um), (376.320um, 695.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[2\].u_data placed. Bounding box (387.120um, 665.856um), (561.240um, 695.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[3\].u_data placed. Bounding box (572.040um, 665.856um), (746.160um, 695.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[0\].u_data placed. Bounding box (756.960um, 665.856um), (931.080um, 695.592um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[1\].u_data placed. Bounding box (17.280um, 706.416um), (191.400um, 736.152um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[2\].u_data placed. Bounding box (202.200um, 706.416um), (376.320um, 736.152um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[3\].u_data placed. Bounding box (387.120um, 706.416um), (561.240um, 736.152um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[0\].u_data placed. Bounding box (572.040um, 706.416um), (746.160um, 736.152um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[1\].u_data placed. Bounding box (756.960um, 706.416um), (931.080um, 736.152um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[2\].u_data placed. Bounding box (17.280um, 746.928um), (191.400um, 776.664um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[3\].u_data placed. Bounding box (202.200um, 746.928um), (376.320um, 776.664um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[0\].u_data placed. Bounding box (387.120um, 746.928um), (561.240um, 776.664um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[1\].u_data placed. Bounding box (572.040um, 746.928um), (746.160um, 776.664um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[2\].u_data placed. Bounding box (756.960um, 746.928um), (931.080um, 776.664um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[3\].u_data placed. Bounding box (17.280um, 787.488um), (191.400um, 817.224um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[0\].u_data placed. Bounding box (202.200um, 787.488um), (376.320um, 817.224um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[1\].u_data placed. Bounding box (387.120um, 787.488um), (561.240um, 817.224um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[2\].u_data placed. Bounding box (572.040um, 787.488um), (746.160um, 817.224um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[3\].u_data placed. Bounding box (756.960um, 787.488um), (931.080um, 817.224um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[0\].u_data placed. Bounding box (17.280um, 828.000um), (191.400um, 857.736um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[1\].u_data placed. Bounding box (202.200um, 828.000um), (376.320um, 857.736um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[2\].u_data placed. Bounding box (387.120um, 828.000um), (561.240um, 857.736um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[3\].u_data placed. Bounding box (572.040um, 828.000um), (746.160um, 857.736um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[0\].u_data placed. Bounding box (756.960um, 828.000um), (931.080um, 857.736um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[1\].u_data placed. Bounding box (17.280um, 868.560um), (191.400um, 898.296um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[2\].u_data placed. Bounding box (202.200um, 868.560um), (376.320um, 898.296um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[3\].u_data placed. Bounding box (387.120um, 868.560um), (561.240um, 898.296um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[0\].u_data placed. Bounding box (572.040um, 868.560um), (746.160um, 898.296um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[1\].u_data placed. Bounding box (756.960um, 868.560um), (931.080um, 898.296um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[2\].u_data placed. Bounding box (17.280um, 909.072um), (191.400um, 938.808um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[3\].u_data placed. Bounding box (202.200um, 909.072um), (376.320um, 938.808um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[0\].u_data placed. Bounding box (387.120um, 909.072um), (561.240um, 938.808um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[1\].u_data placed. Bounding box (572.040um, 909.072um), (746.160um, 938.808um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[2\].u_data placed. Bounding box (756.960um, 909.072um), (931.080um, 938.808um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[3\].u_data placed. Bounding box (17.280um, 949.632um), (191.400um, 979.368um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[0\].u_data placed. Bounding box (202.200um, 949.632um), (376.320um, 979.368um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[1\].u_data placed. Bounding box (387.120um, 949.632um), (561.240um, 979.368um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[2\].u_data placed. Bounding box (572.040um, 949.632um), (746.160um, 979.368um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[3\].u_data placed. Bounding box (756.960um, 949.632um), (931.080um, 979.368um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[0\].u_data placed. Bounding box (572.040um, 57.840um), (746.160um, 87.576um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[1\].u_data placed. Bounding box (756.960um, 57.840um), (931.080um, 87.576um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[2\].u_data placed. Bounding box (17.280um, 98.352um), (191.400um, 128.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[3\].u_data placed. Bounding box (202.200um, 98.352um), (376.320um, 128.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[0\].u_data placed. Bounding box (17.280um, 990.144um), (191.400um, 1019.880um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[1\].u_data placed. Bounding box (202.200um, 990.144um), (376.320um, 1019.880um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[2\].u_data placed. Bounding box (387.120um, 990.144um), (561.240um, 1019.880um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[3\].u_data placed. Bounding box (572.040um, 990.144um), (746.160um, 1019.880um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[0\].u_data placed. Bounding box (756.960um, 990.144um), (931.080um, 1019.880um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[1\].u_data placed. Bounding box (17.280um, 1030.704um), (191.400um, 1060.440um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[2\].u_data placed. Bounding box (202.200um, 1030.704um), (376.320um, 1060.440um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[3\].u_data placed. Bounding box (387.120um, 1030.704um), (561.240um, 1060.440um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[0\].u_data placed. Bounding box (572.040um, 1030.704um), (746.160um, 1060.440um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[1\].u_data placed. Bounding box (756.960um, 1030.704um), (931.080um, 1060.440um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[2\].u_data placed. Bounding box (17.280um, 1071.216um), (191.400um, 1100.952um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[3\].u_data placed. Bounding box (202.200um, 1071.216um), (376.320um, 1100.952um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[0\].u_data placed. Bounding box (387.120um, 1071.216um), (561.240um, 1100.952um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[1\].u_data placed. Bounding box (572.040um, 1071.216um), (746.160um, 1100.952um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[2\].u_data placed. Bounding box (756.960um, 1071.216um), (931.080um, 1100.952um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[3\].u_data placed. Bounding box (17.280um, 1111.776um), (191.400um, 1141.512um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[0\].u_data placed. Bounding box (202.200um, 1111.776um), (376.320um, 1141.512um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[1\].u_data placed. Bounding box (387.120um, 1111.776um), (561.240um, 1141.512um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[2\].u_data placed. Bounding box (572.040um, 1111.776um), (746.160um, 1141.512um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[3\].u_data placed. Bounding box (756.960um, 1111.776um), (931.080um, 1141.512um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[0\].u_data placed. Bounding box (17.280um, 1152.288um), (191.400um, 1182.024um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[1\].u_data placed. Bounding box (202.200um, 1152.288um), (376.320um, 1182.024um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[2\].u_data placed. Bounding box (387.120um, 1152.288um), (561.240um, 1182.024um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[3\].u_data placed. Bounding box (572.040um, 1152.288um), (746.160um, 1182.024um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[0\].u_data placed. Bounding box (756.960um, 1152.288um), (931.080um, 1182.024um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[1\].u_data placed. Bounding box (17.280um, 1192.848um), (191.400um, 1222.584um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[2\].u_data placed. Bounding box (202.200um, 1192.848um), (376.320um, 1222.584um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[3\].u_data placed. Bounding box (387.120um, 1192.848um), (561.240um, 1222.584um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[0\].u_data placed. Bounding box (572.040um, 1192.848um), (746.160um, 1222.584um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[1\].u_data placed. Bounding box (756.960um, 1192.848um), (931.080um, 1222.584um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[2\].u_data placed. Bounding box (17.280um, 1233.360um), (191.400um, 1263.096um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[3\].u_data placed. Bounding box (202.200um, 1233.360um), (376.320um, 1263.096um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[0\].u_data placed. Bounding box (387.120um, 1233.360um), (561.240um, 1263.096um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[1\].u_data placed. Bounding box (572.040um, 1233.360um), (746.160um, 1263.096um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[2\].u_data placed. Bounding box (756.960um, 1233.360um), (931.080um, 1263.096um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[3\].u_data placed. Bounding box (17.280um, 1273.920um), (191.400um, 1303.656um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[0\].u_data placed. Bounding box (202.200um, 1273.920um), (376.320um, 1303.656um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[1\].u_data placed. Bounding box (387.120um, 1273.920um), (561.240um, 1303.656um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[2\].u_data placed. Bounding box (572.040um, 1273.920um), (746.160um, 1303.656um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[3\].u_data placed. Bounding box (756.960um, 1273.920um), (931.080um, 1303.656um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[0\].u_data placed. Bounding box (387.120um, 98.352um), (561.240um, 128.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[1\].u_data placed. Bounding box (572.040um, 98.352um), (746.160um, 128.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[2\].u_data placed. Bounding box (756.960um, 98.352um), (931.080um, 128.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[3\].u_data placed. Bounding box (17.280um, 138.912um), (191.400um, 168.648um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[0\].u_data placed. Bounding box (17.280um, 1314.432um), (191.400um, 1344.168um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[1\].u_data placed. Bounding box (202.200um, 1314.432um), (376.320um, 1344.168um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[2\].u_data placed. Bounding box (387.120um, 1314.432um), (561.240um, 1344.168um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[3\].u_data placed. Bounding box (572.040um, 1314.432um), (746.160um, 1344.168um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[0\].u_data placed. Bounding box (756.960um, 1314.432um), (931.080um, 1344.168um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[1\].u_data placed. Bounding box (17.280um, 1354.992um), (191.400um, 1384.728um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[2\].u_data placed. Bounding box (202.200um, 1354.992um), (376.320um, 1384.728um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[3\].u_data placed. Bounding box (387.120um, 1354.992um), (561.240um, 1384.728um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[0\].u_data placed. Bounding box (572.040um, 1354.992um), (746.160um, 1384.728um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[1\].u_data placed. Bounding box (756.960um, 1354.992um), (931.080um, 1384.728um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[2\].u_data placed. Bounding box (17.280um, 1395.504um), (191.400um, 1425.240um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[3\].u_data placed. Bounding box (202.200um, 1395.504um), (376.320um, 1425.240um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[0\].u_data placed. Bounding box (387.120um, 1395.504um), (561.240um, 1425.240um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[1\].u_data placed. Bounding box (572.040um, 1395.504um), (746.160um, 1425.240um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[2\].u_data placed. Bounding box (756.960um, 1395.504um), (931.080um, 1425.240um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[3\].u_data placed. Bounding box (17.280um, 1436.064um), (191.400um, 1465.800um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[0\].u_data placed. Bounding box (202.200um, 1436.064um), (376.320um, 1465.800um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[1\].u_data placed. Bounding box (387.120um, 1436.064um), (561.240um, 1465.800um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[2\].u_data placed. Bounding box (572.040um, 1436.064um), (746.160um, 1465.800um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[3\].u_data placed. Bounding box (756.960um, 1436.064um), (931.080um, 1465.800um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[0\].u_data placed. Bounding box (17.280um, 1476.576um), (191.400um, 1506.312um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[1\].u_data placed. Bounding box (202.200um, 1476.576um), (376.320um, 1506.312um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[2\].u_data placed. Bounding box (387.120um, 1476.576um), (561.240um, 1506.312um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[3\].u_data placed. Bounding box (572.040um, 1476.576um), (746.160um, 1506.312um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[0\].u_data placed. Bounding box (756.960um, 1476.576um), (931.080um, 1506.312um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[1\].u_data placed. Bounding box (17.280um, 1517.136um), (191.400um, 1546.872um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[2\].u_data placed. Bounding box (202.200um, 1517.136um), (376.320um, 1546.872um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[3\].u_data placed. Bounding box (387.120um, 1517.136um), (561.240um, 1546.872um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[0\].u_data placed. Bounding box (572.040um, 1517.136um), (746.160um, 1546.872um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[1\].u_data placed. Bounding box (756.960um, 1517.136um), (931.080um, 1546.872um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[2\].u_data placed. Bounding box (17.280um, 1557.648um), (191.400um, 1587.384um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[3\].u_data placed. Bounding box (202.200um, 1557.648um), (376.320um, 1587.384um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[0\].u_data placed. Bounding box (387.120um, 1557.648um), (561.240um, 1587.384um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[1\].u_data placed. Bounding box (572.040um, 1557.648um), (746.160um, 1587.384um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[2\].u_data placed. Bounding box (756.960um, 1557.648um), (931.080um, 1587.384um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[3\].u_data placed. Bounding box (17.280um, 1598.208um), (191.400um, 1627.944um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[0\].u_data placed. Bounding box (202.200um, 1598.208um), (376.320um, 1627.944um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[1\].u_data placed. Bounding box (387.120um, 1598.208um), (561.240um, 1627.944um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[2\].u_data placed. Bounding box (572.040um, 1598.208um), (746.160um, 1627.944um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[3\].u_data placed. Bounding box (756.960um, 1598.208um), (931.080um, 1627.944um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[0\].u_data placed. Bounding box (202.200um, 138.912um), (376.320um, 168.648um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[1\].u_data placed. Bounding box (387.120um, 138.912um), (561.240um, 168.648um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[2\].u_data placed. Bounding box (572.040um, 138.912um), (746.160um, 168.648um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[3\].u_data placed. Bounding box (756.960um, 138.912um), (931.080um, 168.648um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[0\].u_data placed. Bounding box (17.280um, 1638.720um), (191.400um, 1668.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[1\].u_data placed. Bounding box (202.200um, 1638.720um), (376.320um, 1668.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[2\].u_data placed. Bounding box (387.120um, 1638.720um), (561.240um, 1668.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[3\].u_data placed. Bounding box (572.040um, 1638.720um), (746.160um, 1668.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[0\].u_data placed. Bounding box (756.960um, 1638.720um), (931.080um, 1668.456um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[1\].u_data placed. Bounding box (17.280um, 1679.280um), (191.400um, 1709.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[2\].u_data placed. Bounding box (202.200um, 1679.280um), (376.320um, 1709.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[3\].u_data placed. Bounding box (387.120um, 1679.280um), (561.240um, 1709.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[0\].u_data placed. Bounding box (572.040um, 1679.280um), (746.160um, 1709.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[1\].u_data placed. Bounding box (756.960um, 1679.280um), (931.080um, 1709.016um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[2\].u_data placed. Bounding box (17.280um, 1719.792um), (191.400um, 1749.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[3\].u_data placed. Bounding box (202.200um, 1719.792um), (376.320um, 1749.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[0\].u_data placed. Bounding box (387.120um, 1719.792um), (561.240um, 1749.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[1\].u_data placed. Bounding box (572.040um, 1719.792um), (746.160um, 1749.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[2\].u_data placed. Bounding box (756.960um, 1719.792um), (931.080um, 1749.528um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[3\].u_data placed. Bounding box (17.280um, 1760.352um), (191.400um, 1790.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[0\].u_data placed. Bounding box (202.200um, 1760.352um), (376.320um, 1790.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[1\].u_data placed. Bounding box (387.120um, 1760.352um), (561.240um, 1790.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[2\].u_data placed. Bounding box (572.040um, 1760.352um), (746.160um, 1790.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[3\].u_data placed. Bounding box (756.960um, 1760.352um), (931.080um, 1790.088um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[0\].u_data placed. Bounding box (17.280um, 1800.864um), (191.400um, 1830.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[1\].u_data placed. Bounding box (202.200um, 1800.864um), (376.320um, 1830.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[2\].u_data placed. Bounding box (387.120um, 1800.864um), (561.240um, 1830.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[3\].u_data placed. Bounding box (572.040um, 1800.864um), (746.160um, 1830.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[0\].u_data placed. Bounding box (756.960um, 1800.864um), (931.080um, 1830.600um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[1\].u_data placed. Bounding box (17.280um, 1841.424um), (191.400um, 1871.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[2\].u_data placed. Bounding box (202.200um, 1841.424um), (376.320um, 1871.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[3\].u_data placed. Bounding box (387.120um, 1841.424um), (561.240um, 1871.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[0\].u_data placed. Bounding box (572.040um, 1841.424um), (746.160um, 1871.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[1\].u_data placed. Bounding box (756.960um, 1841.424um), (931.080um, 1871.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[2\].u_data placed. Bounding box (17.280um, 1881.936um), (191.400um, 1911.672um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[3\].u_data placed. Bounding box (202.200um, 1881.936um), (376.320um, 1911.672um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[0\].u_data placed. Bounding box (387.120um, 1881.936um), (561.240um, 1911.672um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[1\].u_data placed. Bounding box (572.040um, 1881.936um), (746.160um, 1911.672um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[2\].u_data placed. Bounding box (756.960um, 1881.936um), (931.080um, 1911.672um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[3\].u_data placed. Bounding box (17.280um, 1922.496um), (191.400um, 1952.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[0\].u_data placed. Bounding box (202.200um, 1922.496um), (376.320um, 1952.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[1\].u_data placed. Bounding box (387.120um, 1922.496um), (561.240um, 1952.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[2\].u_data placed. Bounding box (572.040um, 1922.496um), (746.160um, 1952.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[3\].u_data placed. Bounding box (756.960um, 1922.496um), (931.080um, 1952.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[0\].u_data placed. Bounding box (17.280um, 179.424um), (191.400um, 209.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[1\].u_data placed. Bounding box (202.200um, 179.424um), (376.320um, 209.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[2\].u_data placed. Bounding box (387.120um, 179.424um), (561.240um, 209.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[3\].u_data placed. Bounding box (572.040um, 179.424um), (746.160um, 209.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[0\].u_data placed. Bounding box (17.280um, 1963.008um), (191.400um, 1992.744um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[1\].u_data placed. Bounding box (202.200um, 1963.008um), (376.320um, 1992.744um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[2\].u_data placed. Bounding box (387.120um, 1963.008um), (561.240um, 1992.744um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[3\].u_data placed. Bounding box (572.040um, 1963.008um), (746.160um, 1992.744um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[0\].u_data placed. Bounding box (756.960um, 1963.008um), (931.080um, 1992.744um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[1\].u_data placed. Bounding box (17.280um, 2003.568um), (191.400um, 2033.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[2\].u_data placed. Bounding box (202.200um, 2003.568um), (376.320um, 2033.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[3\].u_data placed. Bounding box (387.120um, 2003.568um), (561.240um, 2033.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[0\].u_data placed. Bounding box (572.040um, 2003.568um), (746.160um, 2033.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[1\].u_data placed. Bounding box (756.960um, 2003.568um), (931.080um, 2033.304um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[2\].u_data placed. Bounding box (17.280um, 2044.080um), (191.400um, 2073.816um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[3\].u_data placed. Bounding box (202.200um, 2044.080um), (376.320um, 2073.816um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[0\].u_data placed. Bounding box (387.120um, 2044.080um), (561.240um, 2073.816um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[1\].u_data placed. Bounding box (572.040um, 2044.080um), (746.160um, 2073.816um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[2\].u_data placed. Bounding box (756.960um, 2044.080um), (931.080um, 2073.816um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[3\].u_data placed. Bounding box (17.280um, 2084.640um), (191.400um, 2114.376um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[0\].u_data placed. Bounding box (756.960um, 179.424um), (931.080um, 209.160um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[1\].u_data placed. Bounding box (17.280um, 219.984um), (191.400um, 249.720um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[2\].u_data placed. Bounding box (202.200um, 219.984um), (376.320um, 249.720um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[3\].u_data placed. Bounding box (387.120um, 219.984um), (561.240um, 249.720um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[0\].u_data placed. Bounding box (572.040um, 219.984um), (746.160um, 249.720um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[1\].u_data placed. Bounding box (756.960um, 219.984um), (931.080um, 249.720um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[2\].u_data placed. Bounding box (17.280um, 260.496um), (191.400um, 290.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[3\].u_data placed. Bounding box (202.200um, 260.496um), (376.320um, 290.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[0\].u_data placed. Bounding box (387.120um, 260.496um), (561.240um, 290.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[1\].u_data placed. Bounding box (572.040um, 260.496um), (746.160um, 290.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[2\].u_data placed. Bounding box (756.960um, 260.496um), (931.080um, 290.232um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[3\].u_data placed. Bounding box (17.280um, 301.056um), (191.400um, 330.792um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[0\].u_data placed. Bounding box (202.200um, 301.056um), (376.320um, 330.792um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[1\].u_data placed. Bounding box (387.120um, 301.056um), (561.240um, 330.792um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[2\].u_data placed. Bounding box (572.040um, 301.056um), (746.160um, 330.792um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[3\].u_data placed. Bounding box (756.960um, 301.056um), (931.080um, 330.792um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_whole.g_live.g_rank\[0\].u_book placed. Bounding box (397.920um, 2810.160um), (435.960um, 2873.112um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_whole.g_live.g_rank\[1\].u_book placed. Bounding box (397.920um, 2883.936um), (435.960um, 2946.888um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_whole.g_live.g_rank\[2\].u_book placed. Bounding box (397.920um, 2957.664um), (435.960um, 3020.616um). Orientation R0
+[INFO MPL-0035] Macro u_r4.u_whole.g_live.g_rank\[3\].u_book placed. Bounding box (397.920um, 3031.440um), (435.960um, 3094.392um). Orientation R0
+WFC_ACTUAL_MACROS 306 data 256 check 32 prompt 14 book 4; 32 reserved VM slots empty
+DS_PROTECTED_VM_CONNECTED data=256 check=32 serial_clock=clk_serial PG=VDD/VSS
+WFC_ACTUAL_MACRO_PG 306 realVDD/VSS; dont_touch retained
+Took 11 seconds: source /src/physical/dsrom_wfc_protected_context/macro_placement.tcl
+rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/zeno_wfc_inputclock_r4_u55/u55/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[0\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[10\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[11\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[12\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[13\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[1\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[2\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[3\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[4\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[5\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[6\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[7\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[8\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_cfg.g_live.g_bank\[9\].u_prompt.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[0\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[10\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[11\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[12\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[13\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[14\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[15\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[16\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[17\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[18\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[19\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[1\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[20\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[21\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[22\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[23\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[24\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[25\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[26\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[27\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[28\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[29\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[2\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[30\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[31\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[3\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[4\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[5\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[6\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[7\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[8\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_checks\[9\].u_check.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[0\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[10\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[11\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[12\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[13\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[14\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[15\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[16\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[17\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[18\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[19\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[1\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[20\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[21\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[22\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[23\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[24\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[25\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[26\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[27\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[28\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[29\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[2\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[30\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[31\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[32\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[33\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[34\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[35\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[36\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[37\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[38\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[39\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[3\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[40\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[41\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[42\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[43\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[44\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[45\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[46\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[47\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[48\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[49\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[4\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[50\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[51\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[52\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[53\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[54\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[55\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[56\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[57\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[58\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[59\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[5\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[60\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[61\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[62\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[63\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[6\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[7\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[8\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[0\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[1\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[2\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_memory.g_live.u_backend.g_data\[9\].g_column\[3\].u_data.
+[INFO MPL-0062] Found fixed macro u_r4.u_whole.g_live.g_rank\[0\].u_book.
+[INFO MPL-0062] Found fixed macro u_r4.u_whole.g_live.g_rank\[1\].u_book.
+[INFO MPL-0062] Found fixed macro u_r4.u_whole.g_live.g_rank\[2\].u_book.
+[INFO MPL-0062] Found fixed macro u_r4.u_whole.g_live.g_rank\[3\].u_book.
+[INFO MPL-0017] No unfixed macros.
+[INFO MPL-0013] Skipping macro placement.
+[INFO MPL-0500] Runtime: 0.04s
+Design area 1617386 um^2 51% utilization.
+write_db /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/2_2_floorplan_macro.odb
+Elapsed time: 0:14.60[h:]min:sec. CPU time: user 31.96 sys 32.55 (441%). Peak memory: 2016540KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb           14           1969 f9764af0c4eb4da2416b

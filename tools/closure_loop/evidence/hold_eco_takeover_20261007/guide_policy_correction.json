@@ -1,0 +1,18 @@
+{
+  "supersedes": "6625a1139 attribution of original-guides requirement and prior SE_s6 rejection in takeover.json",
+  "owner_criterion": "Strict final timing, DRC, IO and context, with fully bound sources and artifacts; routing strategy is not acceptance",
+  "options": {
+    "shell": "ALLOW_FRESH_GRT=1",
+    "tcl": "OT_ALLOW_FRESH_GRT=1",
+    "job": "hold_eco.allow_fresh_grt=true",
+    "default": "preserve guides; fail pass rather than silently reroute"
+  },
+  "provenance": "result.json route_strategy lists incremental_original_guides and any fresh_global reason missing_original_guides/rejected_guides explicit_opt_in 1",
+  "validation": [
+    "4 focused Tcl/bash/result tests PASS",
+    "7 ECO recovery tests PASS",
+    "bash syntax PASS"
+  ],
+  "historical_results": "SE_s6 fresh-GRT timing result remains CLOSED. Original raw snapshots retained, no failed measurement overwritten.",
+  "integration": "Parent only; no central merge/push/deployment"
+}

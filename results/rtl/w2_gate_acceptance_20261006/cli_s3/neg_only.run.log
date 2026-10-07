@@ -1,0 +1,12 @@
+W2_PROGRESS_ARM event=tap_accept edge=16 bound=352
+CALENDAR_TAP_ACCEPT edge=16
+W2_PROGRESS_DONE event=all_sm_accept elapsed=80 accepted=ff
+CALENDAR_ALL_SM edge=96
+CALENDAR_LAST_SM_ACK edge=124
+CALENDAR_QUARTER_ACK edge=213
+CALENDAR_PARENT_RELEASE edge=218
+CALENDAR_WARM_ACK edge=220
+W2_PROGRESS_ARM event=tap_accept edge=237 bound=352
+W2_PROGRESS_DONE event=all_sm_accept elapsed=80 accepted=ff
+FATAL: /home/ubuntu/wt-codex-w2-gate-acceptance-20261006/results/rtl/w2_gate_acceptance_20261006/cli_s3/neg_only_tb.sv:274: wrong full73 receipt fabricated retirement
+       Time: 269999568 Scope: tb_native_quarter_publication

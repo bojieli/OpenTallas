@@ -1,0 +1,497 @@
+{
+ "schema": "opentallas.dsrom-s81.boundary-window.v1",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "unit": "q_z20c",
+ "top": "ot_v41_rom_elem_q_qx_w10",
+ "base": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z20c/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z20c_20261005/base",
+ "wire_ps": 30.0,
+ "dff": {
+  "clkq_min_ff": 32.2,
+  "clkq_max_ss": 115.6,
+  "setup_ss": 28.6,
+  "hold_ff": 13.6
+ },
+ "clock_tree_path_ps": {
+  "ss": {
+   "min_clock_tree_path": 437.03534,
+   "max_clock_tree_path": 623.92944
+  },
+  "ff": {
+   "min_clock_tree_path": 269.7977,
+   "max_clock_tree_path": 388.4032
+  }
+ },
+ "groups": [
+  {
+   "kind": "in",
+   "port": "cfg_a",
+   "bits": 5,
+   "ss_slack_ps": 773.856995,
+   "ff_slack_ps": -237.599854,
+   "req_min_ps": 237.6,
+   "max_arr_ps": 773.86,
+   "offset_window_ps": [
+    205.4,
+    628.26
+   ],
+   "feasible": true,
+   "P0_margin_ps": -205.4,
+   "P1_margin_ps": 4.33,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "cfg_d",
+   "bits": 48,
+   "ss_slack_ps": 970.062378,
+   "ff_slack_ps": -234.106155,
+   "req_min_ps": 234.11,
+   "max_arr_ps": 970.06,
+   "offset_window_ps": [
+    201.91,
+    824.46
+   ],
+   "feasible": true,
+   "P0_margin_ps": -201.91,
+   "P1_margin_ps": 67.89,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "cfg_v",
+   "bits": 1,
+   "ss_slack_ps": 853.941467,
+   "ff_slack_ps": -226.209366,
+   "req_min_ps": 226.21,
+   "max_arr_ps": 853.94,
+   "offset_window_ps": [
+    194.01,
+    708.34
+   ],
+   "feasible": true,
+   "P0_margin_ps": -194.01,
+   "P1_margin_ps": 75.79,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "go",
+   "bits": 1,
+   "ss_slack_ps": 916.232788,
+   "ff_slack_ps": -229.967392,
+   "req_min_ps": 229.97,
+   "max_arr_ps": 916.23,
+   "offset_window_ps": [
+    197.77,
+    770.63
+   ],
+   "feasible": true,
+   "P0_margin_ps": -197.77,
+   "P1_margin_ps": 72.03,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "rst_n",
+   "bits": 1,
+   "ss_slack_ps": 896.211365,
+   "ff_slack_ps": -214.253738,
+   "req_min_ps": 214.25,
+   "max_arr_ps": 896.21,
+   "offset_window_ps": [
+    182.05,
+    750.61
+   ],
+   "feasible": true,
+   "P0_margin_ps": -182.05,
+   "P1_margin_ps": 87.74,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_b",
+   "bits": 3,
+   "ss_slack_ps": 939.104553,
+   "ff_slack_ps": -214.166672,
+   "req_min_ps": 214.17,
+   "max_arr_ps": 939.1,
+   "offset_window_ps": [
+    181.97,
+    793.5
+   ],
+   "feasible": true,
+   "P0_margin_ps": -181.97,
+   "P1_margin_ps": 87.83,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_e0",
+   "bits": 10,
+   "ss_slack_ps": 906.061035,
+   "ff_slack_ps": -208.236328,
+   "req_min_ps": 208.24,
+   "max_arr_ps": 906.06,
+   "offset_window_ps": [
+    176.04,
+    760.46
+   ],
+   "feasible": true,
+   "P0_margin_ps": -176.04,
+   "P1_margin_ps": 93.76,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_e1",
+   "bits": 10,
+   "ss_slack_ps": 927.010315,
+   "ff_slack_ps": -219.346298,
+   "req_min_ps": 219.35,
+   "max_arr_ps": 927.01,
+   "offset_window_ps": [
+    187.15,
+    781.41
+   ],
+   "feasible": true,
+   "P0_margin_ps": -187.15,
+   "P1_margin_ps": 82.65,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_p",
+   "bits": 8,
+   "ss_slack_ps": 906.719543,
+   "ff_slack_ps": -212.123688,
+   "req_min_ps": 212.12,
+   "max_arr_ps": 906.72,
+   "offset_window_ps": [
+    179.92,
+    761.12
+   ],
+   "feasible": true,
+   "P0_margin_ps": -179.92,
+   "P1_margin_ps": 89.87,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_pos",
+   "bits": 3,
+   "ss_slack_ps": 922.402649,
+   "ff_slack_ps": -202.082672,
+   "req_min_ps": 202.08,
+   "max_arr_ps": 922.4,
+   "offset_window_ps": [
+    169.88,
+    776.8
+   ],
+   "feasible": true,
+   "P0_margin_ps": -169.88,
+   "P1_margin_ps": 99.92,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_q0",
+   "bits": 256,
+   "ss_slack_ps": 832.713745,
+   "ff_slack_ps": -216.125839,
+   "req_min_ps": 216.13,
+   "max_arr_ps": 832.71,
+   "offset_window_ps": [
+    183.93,
+    687.11
+   ],
+   "feasible": true,
+   "P0_margin_ps": -183.93,
+   "P1_margin_ps": 63.18,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_q1",
+   "bits": 256,
+   "ss_slack_ps": 885.55481,
+   "ff_slack_ps": -220.408737,
+   "req_min_ps": 220.41,
+   "max_arr_ps": 885.55,
+   "offset_window_ps": [
+    188.21,
+    739.95
+   ],
+   "feasible": true,
+   "P0_margin_ps": -188.21,
+   "P1_margin_ps": 81.59,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_sv",
+   "bits": 2,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "req_min_ps": "-inf",
+   "max_arr_ps": "inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "xs_v",
+   "bits": 1,
+   "ss_slack_ps": 947.132263,
+   "ff_slack_ps": -206.595047,
+   "req_min_ps": 206.6,
+   "max_arr_ps": 947.13,
+   "offset_window_ps": [
+    174.4,
+    801.53
+   ],
+   "feasible": true,
+   "P0_margin_ps": -174.4,
+   "P1_margin_ps": 95.4,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "busy",
+   "bits": 1,
+   "ss_slack_ps": 79.612648,
+   "ff_slack_ps": 339.928802,
+   "out_min_ps": 364.93,
+   "out_max_ps": 693.39,
+   "offset_window_ps": [
+    -21.01,
+    326.33
+   ],
+   "feasible": true,
+   "P0_margin_ps": 21.01,
+   "P1_margin_ps": -62.07,
+   "P0": true,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "fault",
+   "bits": 1,
+   "ss_slack_ps": 50.936199,
+   "ff_slack_ps": 353.270599,
+   "out_min_ps": 378.27,
+   "out_max_ps": 722.06,
+   "offset_window_ps": [
+    7.66,
+    339.67
+   ],
+   "feasible": true,
+   "P0_margin_ps": -7.66,
+   "P1_margin_ps": -48.73,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "perr",
+   "bits": 2,
+   "ss_slack_ps": -8.853307,
+   "ff_slack_ps": 317.221619,
+   "out_min_ps": 342.22,
+   "out_max_ps": 781.85,
+   "offset_window_ps": [
+    67.45,
+    303.62
+   ],
+   "feasible": true,
+   "P0_margin_ps": -67.45,
+   "P1_margin_ps": -84.78,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "pnseg",
+   "bits": 10,
+   "ss_slack_ps": 77.379211,
+   "ff_slack_ps": 316.395508,
+   "out_min_ps": 341.4,
+   "out_max_ps": 695.62,
+   "offset_window_ps": [
+    -18.78,
+    302.8
+   ],
+   "feasible": true,
+   "P0_margin_ps": 18.78,
+   "P1_margin_ps": -85.61,
+   "P0": true,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "ppos",
+   "bits": 6,
+   "ss_slack_ps": 54.685535,
+   "ff_slack_ps": 330.134033,
+   "out_min_ps": 355.13,
+   "out_max_ps": 718.31,
+   "offset_window_ps": [
+    3.91,
+    316.53
+   ],
+   "feasible": true,
+   "P0_margin_ps": -3.91,
+   "P1_margin_ps": -71.87,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "prow",
+   "bits": 32,
+   "ss_slack_ps": 69.250824,
+   "ff_slack_ps": 317.284546,
+   "out_min_ps": 342.28,
+   "out_max_ps": 703.75,
+   "offset_window_ps": [
+    -10.65,
+    303.68
+   ],
+   "feasible": true,
+   "P0_margin_ps": 10.65,
+   "P1_margin_ps": -84.72,
+   "P0": true,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "pseg",
+   "bits": 10,
+   "ss_slack_ps": 82.441109,
+   "ff_slack_ps": 318.594086,
+   "out_min_ps": 343.59,
+   "out_max_ps": 690.56,
+   "offset_window_ps": [
+    -23.84,
+    304.99
+   ],
+   "feasible": true,
+   "P0_margin_ps": 23.84,
+   "P1_margin_ps": -83.41,
+   "P0": true,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "pv",
+   "bits": 2,
+   "ss_slack_ps": 40.364491,
+   "ff_slack_ps": 323.547516,
+   "out_min_ps": 348.55,
+   "out_max_ps": 732.64,
+   "offset_window_ps": [
+    18.24,
+    309.95
+   ],
+   "feasible": true,
+   "P0_margin_ps": -18.24,
+   "P1_margin_ps": -78.46,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "pval",
+   "bits": 64,
+   "ss_slack_ps": 44.378723,
+   "ff_slack_ps": 319.908051,
+   "out_min_ps": 344.91,
+   "out_max_ps": 728.62,
+   "offset_window_ps": [
+    14.22,
+    306.31
+   ],
+   "feasible": true,
+   "P0_margin_ps": -14.22,
+   "P1_margin_ps": -82.1,
+   "P0": false,
+   "P1": false
+  }
+ ],
+ "summary": {
+  "groups": 23,
+  "infeasible": [],
+  "common_offset": {
+   "in": {
+    "window_ps": [
+     205.4,
+     628.26
+    ],
+    "width_ps": 422.86,
+    "feasible": true
+   },
+   "out": {
+    "window_ps": [
+     67.45,
+     302.8
+    ],
+    "width_ps": 235.35,
+    "feasible": true
+   }
+  },
+  "P0_pass": false,
+  "P1_pass": false,
+  "P0_worst_margin_ps": -205.4,
+  "P1_worst_margin_ps": -85.61,
+  "P0_fail": [
+   "cfg_a",
+   "cfg_d",
+   "cfg_v",
+   "go",
+   "rst_n",
+   "xs_b",
+   "xs_e0",
+   "xs_e1",
+   "xs_p",
+   "xs_pos",
+   "xs_q0",
+   "xs_q1",
+   "xs_v",
+   "fault",
+   "perr",
+   "ppos",
+   "pv",
+   "pval"
+  ],
+  "P1_fail": [
+   "busy",
+   "fault",
+   "perr",
+   "pnseg",
+   "ppos",
+   "prow",
+   "pseg",
+   "pv",
+   "pval"
+  ]
+ }
+}

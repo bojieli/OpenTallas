@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.ds-bounded-harvest.v1",
+  "base_commit": "cf99d667d6ae486d4b4accd57046e8c6efa970b6",
+  "scope": "Bounded DS result harvest; no adoption, RTL edits, route launches, loop changes, merges or pushes.",
+  "acceptance": {
+    "ss_setup_ps_min": 15,
+    "ff_hold_ps_min": 15,
+    "drc": 0,
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "requires": [
+      "actual production context / budget binding",
+      "source-pinned exact gate",
+      "negative controls fail",
+      "model-composed latency"
+    ]
+  },
+  "newly_accepted_results": 0,
+  "results": [
+    {
+      "name": "reindex",
+      "status": "RUNNING_SYNTHESIS",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/takeover-ds/reindex/route_m1",
+      "observed_utc": "2026-10-07T05:21:48.170377+00:00",
+      "adopted": false,
+      "next": "Finish existing route_m1; verify actual budget/IO context before accepting signoff.json. Current script uses fractional IO, not an established die budget.",
+      "evidence": "reindex.json"
+    },
+    {
+      "name": "bf_m2",
+      "status": "RUNNING_DETAILED_ROUTE",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch/claude/tk-ds-head/bf_m2",
+      "observed_utc": "2026-10-07T05:21:51.610719+00:00",
+      "adopted": false,
+      "next": "Finish existing route, then pinned SS/FF+DRC and exact PINREG gate under actual context.",
+      "evidence": "bf_m2.json"
+    },
+    {
+      "name": "softmax_m5e",
+      "status": "RUNNING_GLOBAL_ROUTE_HOLD_REPAIR",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/dsrom-su-softmax-r5/calib/m5d",
+      "observed_utc": "2026-10-07T05:21:59.177059+00:00",
+      "adopted": false,
+      "next": "Read m5d.log and m5d.rc; stale orfs_flow.log describes earlier CTS failure. SAFE exp/div jobs already exist; do not duplicate.",
+      "evidence": "softmax_m5e.json"
+    },
+    {
+      "name": "window_stage",
+      "status": "RUNNING_SYNTHESIS_CANONICALIZE",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/takeover-ds/window-stage/route_r2",
+      "observed_utc": "2026-10-07T05:21:48.180284+00:00",
+      "adopted": false,
+      "next": "Finish route_r2; r1 placer failure preserved. Verify kept replicas and actual context at signoff.",
+      "evidence": "window_stage.json"
+    },
+    {
+      "name": "window_source",
+      "status": "RUNNING_GLOBAL_ROUTE",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/takeover-ds/window-source/route_r2",
+      "observed_utc": "2026-10-07T05:21:48.170350+00:00",
+      "adopted": false,
+      "next": "Finish route_r2; validate IO budget binding before accepting any signoff.",
+      "evidence": "window_source.json"
+    },
+    {
+      "name": "head_quad",
+      "status": "RUNNING_GLOBAL_ROUTE_DATA_ONLY",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch/claude/tk-ds-head/fh/route_quad",
+      "observed_utc": "2026-10-07T05:21:55.599278+00:00",
+      "adopted": false,
+      "next": "QPIN=0 predecessor; SAFE quad already submitted.",
+      "evidence": "head_quad.json"
+    },
+    {
+      "name": "code_pair_r1",
+      "status": "RUNNING_GLOBAL_ROUTE",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch/claude/cpm2/route/out",
+      "observed_utc": "2026-10-07T05:21:55.585734+00:00",
+      "adopted": false,
+      "next": "MARGIN2 route r1 exists alongside r2. Record only; no duplicate launches or kills. Review write-credit throughput and exact source binding before adoption.",
+      "evidence": "code_pair_r1.json"
+    },
+    {
+      "name": "code_pair_r2",
+      "status": "RUNNING_GLOBAL_ROUTE",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch/claude/cpm2/route2/out",
+      "observed_utc": "2026-10-07T05:21:57.691505+00:00",
+      "adopted": false,
+      "next": "MARGIN2 route r2 exists alongside r1; latest STATUS describes only one. No terminal signoff. Compare source/config pins before selecting a vehicle.",
+      "evidence": "code_pair_r2.json"
+    },
+    {
+      "name": "head_elemA/corner_sta.json",
+      "status": "REJECTED_TIMING",
+      "ss_setup_ps": -203.61,
+      "ff_hold_ps": -30.6,
+      "drc": 0,
+      "signoff_period_ps": 833.333,
+      "adopted": false,
+      "source_and_post_sdc_hashes_verified": true,
+      "evidence": "head_elemA.json"
+    },
+    {
+      "name": "head_elemB/corner_sta.json",
+      "status": "REJECTED_TIMING",
+      "ss_setup_ps": -195.97,
+      "ff_hold_ps": -34.8,
+      "drc": 0,
+      "signoff_period_ps": 833.333,
+      "adopted": false,
+      "source_and_post_sdc_hashes_verified": true,
+      "evidence": "head_elemB.json"
+    },
+    {
+      "name": "glue_m3/corner_sta.json",
+      "status": "REJECTED_TIMING",
+      "ss_setup_ps": 53.34,
+      "ff_hold_ps": -1.42,
+      "drc": 0,
+      "signoff_period_ps": 833.333,
+      "adopted": false,
+      "source_and_post_sdc_hashes_verified": true,
+      "evidence": "glue_m3.json"
+    },
+    {
+      "name": "glue_m3/corner_sta_m4io.json",
+      "status": "REJECTED_TIMING",
+      "ss_setup_ps": 42.63,
+      "ff_hold_ps": -23.17,
+      "drc": 0,
+      "signoff_period_ps": 833.333,
+      "adopted": false,
+      "source_and_post_sdc_hashes_verified": true,
+      "evidence": "glue_m3.json"
+    },
+    {
+      "name": "glue_m3/eco",
+      "status": "REJECTED_TIMING_AND_DRC",
+      "ss_setup_ps": -101.48,
+      "ff_hold_ps": 9.62,
+      "drc": 4350,
+      "adopted": false,
+      "evidence": "status_exact_and_eco.json"
+    }
+  ],
+  "reindex_exact": {
+    "source_commit": "da3e7736a33ac30887e40a00ef1e9644be10973a",
+    "source_manifest_matches": true,
+    "exact_record_hash_matches": true,
+    "status": "pass",
+    "cycles": 741,
+    "baseline_cycles": 739,
+    "negative_control_failed": true,
+    "backpressure_pass": true
+  },
+  "concrete_next_blocker": "For reindex, completion of the existing synthesis/route plus actual-context signoff: its current signoff script cannot establish the required IO budget binding. Do not promote its closed boolean alone.",
+  "bounded_fix_decision": "No RTL fix justified in this harvest: named jobs are progressing, and failed head/glue/softmax classes already have SAFE successors submitted. A signoff constraint change needs the actual budget binding; inventing one would invalidate the context requirement. Preserve and report evidence instead.",
+  "safe_exactness_caveat": "Head SAFE 63,128-cycle gold4 evidence in the 94abba0f2 commit message is explicitly pre-fix; matching post-guard_busy-fix exact gate and acknowledged negative-control outcome must be established before adopting that successor. STATUS is not a substitute for pinned gate evidence.",
+  "historical_context": "Code-pair r1 SS -176.8/FF -12.0 (DRC0) remains committed under results/rtl/qwen_code_pair_margin_20261006/route_r1; WINDOW historical failures remain under results/physical/dsrom_window_pipeline_20261005/takeover_harvest_20261006.json. Code-pair inspected only as requested DS dependency despite legacy qwen names; no Qwen design work performed.",
+  "limitations": [
+    "Snapshots are observations at recorded UTC timestamps, not continuing monitors.",
+    "Existing loop jobs were read only through their submitted job descriptions; no loop status or tool changes performed.",
+    "Pending live runs have no adopted physical verdict.",
+    "Prior source hashes and original failure records were not changed."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "status": "PREBUILD_OPT_IN",
+  "trigger": "ctl r4: ep_ack_word -> registered receipt match SS -12.69ps, 9 levels",
+  "change": "SAFE=2 splits 48-bit receipt match into six independent kept 8-bit registered matches; reduction occurs after registers",
+  "macs_per_cycle": 0,
+  "input_bits_per_cycle": 49,
+  "output_bits_per_cycle": 1,
+  "memory_bytes_per_cycle": 0,
+  "boundary_change_bits": 0,
+  "registered_match_replicas": 6,
+  "added_flops": 5,
+  "latency_added_cycles": 0,
+  "area": "Five single-bit flops incremental in existing 300x300um controller; no new macro/slot; physical validation pending",
+  "golden": "Conjunction of disjoint equality slices equals original complete equality, gated by same sampled ack_v; debt/sent qualification unchanged",
+  "adoption": "Default SAFE=1 retained; exact gate and strict SS/FF required before adoption",
+  "unified_model": {
+    "schema": "opentallas.dsrom.fh.receipt-compare.v1",
+    "opt_in_default": false,
+    "physical_SS_FF_qualified": false,
+    "receipt_bits": 48,
+    "input_bits_per_cycle": 49,
+    "result_bits_per_cycle": 1,
+    "macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "compare_replicas": 6,
+    "compare_bits_per_replica": 8,
+    "state_bits": 7,
+    "incremental_state_bits": 5,
+    "incremental_register_lower_bound_um2": 1.4580000000000002,
+    "receipt_latency_cycles": 1,
+    "added_token_latency_cycles": 0,
+    "incremental_boundary_bits_per_cycle": 0,
+    "routing": "Six local 8-bit compares feed six flops, then a six-bit local reduction",
+    "controller_slot_um": [
+      300,
+      300
+    ],
+    "slot_fit_qualified": false,
+    "qualification": "Exact sampled equality and strict controller SS/FF/DRC required; no headline gain claimed"
+  }
+}

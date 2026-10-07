@@ -1,0 +1,47 @@
+{
+ "rc": 0,
+ "time_s": 11.17,
+ "peak_GB": 0.12,
+ "counts": {
+  "Warning-PINMISSING": {
+   "top": 272
+  },
+  "Warning-UNDRIVEN": {
+   "top": 481,
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+   "rtl:ot_pdie_serdes_bb.v": 1,
+   "rtl:ot_pdie_ucie_bb.v": 1
+  },
+  "Warning-UNUSEDPARAM": {
+   "rtl:hbm_r16g_lint_top_real_shells.sv": 12
+  },
+  "Warning-UNUSEDSIGNAL": {
+   "top": 481,
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+   "rtl:ot_pdie_serdes_bb.v": 2,
+   "rtl:ot_pdie_ucie_bb.v": 2,
+   "stubs": 4
+  }
+ },
+ "examples": {
+  "Warning-PINMISSING": [
+   "Instance has missing pin: 'cf'",
+   "Instance has missing pin: 'ci'",
+   "Instance has missing pin: 'i'",
+   "Instance has missing pin: 'k'"
+  ],
+  "Warning-UNDRIVEN": [
+   "Signal is not driven: 'lint_nc_0'",
+   "Signal is not driven: 'lint_nc_1'",
+   "Signal is not driven: 'lint_nc_2'",
+   "Signal is not driven: 'lint_nc_3'"
+  ],
+  "Warning-UNUSEDSIGNAL": [
+   "Signal is not used: 'lint_nc_25'",
+   "Signal is not used: 'lint_nc_26'",
+   "Signal is not used: 'lint_nc_27'",
+   "Signal is not used: 'lint_nc_28'"
+  ],
+  "Warning-UNUSEDPARAM": []
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "name": "w2-rb-safe-no2-206a3037e",
+ "block": "ot_hbm_native_frame_station_rb_NO2_SAFE",
+ "owner": "Claude:tk-hbm-w2",
+ "purpose": "W2 rb station SAFE (registered permission decision, REL_REG, margin hold model), route 730 / sign-off 833.333, in parallel with r4",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/takeover-hbm-w2-20261006",
+  "commit": "206a3037e32ee0a8773d21ff7c61fa20de586743",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical/hbm_w2_rb_station_20261006",
+   "physical/hbm_die_abstracts_20261006",
+   "physical/asap7_memory_macros",
+   "physical/hbm_w2_check_station_20261006"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_gate_safe",
+    "cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --out {RUN}/gate",
+    "expect": "pass",
+    "ok": "python3 -c \"import json,sys;sys.exit(not json.load(open('{RUN}/gate/terminal.json'))['passed'])\"",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_frame_check_removed",
+    "cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --neg-only S3_frame_check_removed --out {RUN}/neg_s3",
+    "expect": "fail",
+    "fail_regex": "(?m)^FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "cmd": "python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME} --no 2 --safe --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.035 --threads 16 --tag tk_W2_safe ",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk_sm",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME} --no 2 --safe --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.035 --threads 16 --tag tk_W2_safe",
+   "ok": "test -s {RUN}/routes/{NAME}/terminal.json && grep -q DRIVER_RETURNED {RUN}/routes/{NAME}/terminal.json && grep -q '\"exit_code\": 0' {RUN}/routes/{NAME}/terminal.json",
+   "logs": [
+    "{RUN}/routes/{NAME}/launch.json"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 physical/hbm_w2_rb_station_20261006/signoff.py --run {RUN}/routes/{NAME}",
+   "ok": "test -s {RUN}/routes/{NAME}/signoff.json"
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/signoff.json {RUN}/routes/{NAME}/argv.json {RUN}/record/ && cp {RUN}/gate/terminal.json {RUN}/record/gate_terminal.json && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 -c \"import json,glob;d=json.load(open('{RUN}/routes/{NAME}/signoff.json'));a=d['accept'];drc=None\nfor f in glob.glob('{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json'):\n drc=json.load(open(f)).get('detailedroute__route__drc_errors',drc)\nprint(json.dumps(dict(ss_ps=a['SS_setup_ps'],ff_ps=a['FF_hold_ps'],drc=drc)))\"",
+  "checks": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/w2_rb_safe_20261006/no2"
+  }
+ ],
+ "cycles_added": 15,
+ "merge_target": "claude/takeover-hbm-w2-20261006"
+}

@@ -1,0 +1,26 @@
+{
+ "ss": {
+  "endpoints": 153,
+  "groups": [
+   {
+    "cls": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 153,
+    "worst_ps": -6.5
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].u_rom/rd_out[*]",
+    "end": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 153,
+    "worst_ps": -6.5,
+    "example": "g_col[0].g_bank[2].u_rom/rd_out[91] -> g_col[0].g_bank[2].cap4[91]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 0,
+  "groups": [],
+  "paths": []
+ }
+}

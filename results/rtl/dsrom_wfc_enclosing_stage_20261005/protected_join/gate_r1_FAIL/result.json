@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL",
+  "source": "becdcc777",
+  "provider_source": "554d7b0c9",
+  "tool": "Verilator5.050",
+  "terminal_exit": 1,
+  "first_fatal": "joint nominal mechanism failed at14590ns; independent data/held-lifetime assertions prior to final nominal boundary did not fire",
+  "root": "ot-agidock128:/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r1",
+  "retained_objects": "out/obj unique binary and all generated/compiled objects retained in place",
+  "diagnosis": "Final XB service waited registered xb_port_retired then next negedge; monitor and adapter consume that pulse at NEXT posedge. Last final check could run before monitor retirement count advances. R2 waits actual next posedge+negedge and preserves all exact counters; prints all first-failure values if still discrepant. This is a fixture timing diagnosis to validate in R2, not accepted numerical PASS.",
+  "binding_review": "R1 additionally serialized concurrent native XA write/read even for sameowner. R2 removes this priority change; preserves both enables and explicitly rejects distinct simultaneous XA owners (provider only one lease).",
+  "build": {
+    "rc": 0,
+    "seconds": 30.807,
+    "source_MB": 2.164,
+    "generated_CPP_MB": 22.302,
+    "allocated_MB": 267.191
+  },
+  "actual_whole_job_peak_RSS_KiB": 465308
+}

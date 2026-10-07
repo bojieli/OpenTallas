@@ -1,0 +1,46 @@
+{
+  "status": "FRESH_CPU_FIT_BEFORE_GUARD",
+  "capacity": {
+    "utc": "2026-10-06T04:56:24Z",
+    "CPU_count": 64,
+    "load1": 5.6083984375,
+    "idle_CPU": 59.991252733520774,
+    "MemAvailable_bytes": 31417614336,
+    "NVMe_free_bytes": 296129265664,
+    "CPU_fit": true,
+    "guard_core_sha256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f",
+    "guard_reserve_bytes": 20246159155,
+    "guard_ramping_bytes": 0
+  },
+  "guard_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_vm_sfu_result_publication.sv": "6ead0ce215d9f9b01943ab8d628497b455edbf0c83e060889d50b2650ae65e41"
+  },
+  "requested_CPU": 1,
+  "reservation_GiB": 1,
+  "basis": "single-process Icarus32existingSRAMs+new35W6publisher rows, finite2rowmechanism;1GiB capacity reservation, no process limits",
+  "whole_VM_parent_qualified": false,
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "1",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch/codex/hbm-native-sfu-publication-20261006/f9e05138c/src/physical/hbm_die_abstracts_20261006/memory_control/run_sfu_result_publication.py",
+    "--root",
+    "/srv/opentallas-scratch/codex/hbm-native-sfu-publication-20261006/f9e05138c/src",
+    "--out",
+    "/srv/opentallas-scratch/codex/hbm-native-sfu-publication-20261006/f9e05138c/gate-r1",
+    "--admitted"
+  ],
+  "exit": 0,
+  "guard_unchanged": true
+}

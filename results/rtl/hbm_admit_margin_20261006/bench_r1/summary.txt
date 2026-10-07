@@ -1,0 +1,30 @@
+== run_rp0_s1.log
+EXACT checks=387505 mismatches=0 first=-1 launches=5367 native=1770 leases=1690 release_accepts=1212 done=1194 fault_cycles=163715 upsets=0 owner_changes=992 revokes=150 shared_faults=125 exec_faults=66 raw_cycles=1369 resets=4164
+ADMIT REPLAY=0 checks=375073 ref_idle=148593 shadow3_admit=2141 (extra_blocked_unfaulted=4259) shadow3_unsafe=0 | NEGCTL shadow0_admit=8702 shadow0_unsafe=3943 shadow2_unsafe=0 | fault_quarantine_admits=4
+PASS
+NEGCTL_SHADOW0 FAIL (expected: too-early admit caught)
+NEGCTL_SHADOW2 PASS
+== run_rp0_s2.log
+EXACT checks=388024 mismatches=0 first=-1 launches=5231 native=1722 leases=1727 release_accepts=1253 done=1232 fault_cycles=160856 upsets=0 owner_changes=1004 revokes=171 shared_faults=127 exec_faults=81 raw_cycles=975 resets=3991
+ADMIT REPLAY=0 checks=376106 ref_idle=147043 shadow3_admit=2298 (extra_blocked_unfaulted=4396) shadow3_unsafe=0 | NEGCTL shadow0_admit=8905 shadow0_unsafe=4059 shadow2_unsafe=0 | fault_quarantine_admits=8
+PASS
+NEGCTL_SHADOW0 FAIL (expected: too-early admit caught)
+NEGCTL_SHADOW2 PASS
+== run_rp1_s1.log
+EXACT checks=0 mismatches=0 first=-1 launches=9714 native=3307 leases=3115 release_accepts=2984 done=2931 fault_cycles=271183 upsets=0 owner_changes=959 revokes=46 shared_faults=123 exec_faults=19 raw_cycles=1093 resets=6767
+ADMIT REPLAY=1 checks=359398 ref_idle=280294 shadow3_admit=7591 (extra_blocked_unfaulted=11090) shadow3_unsafe=0 | NEGCTL shadow0_admit=22501 shadow0_unsafe=9058 shadow2_unsafe=0 | fault_quarantine_admits=16
+PASS
+NEGCTL_SHADOW0 FAIL (expected: too-early admit caught)
+NEGCTL_SHADOW2 PASS
+== run_rp1_s2.log
+EXACT checks=0 mismatches=0 first=-1 launches=9528 native=3260 leases=3071 release_accepts=2911 done=2870 fault_cycles=270919 upsets=0 owner_changes=970 revokes=42 shared_faults=121 exec_faults=15 raw_cycles=1198 resets=6641
+ADMIT REPLAY=1 checks=360149 ref_idle=279471 shadow3_admit=7356 (extra_blocked_unfaulted=10817) shadow3_unsafe=0 | NEGCTL shadow0_admit=21940 shadow0_unsafe=8809 shadow2_unsafe=0 | fault_quarantine_admits=10
+PASS
+NEGCTL_SHADOW0 FAIL (expected: too-early admit caught)
+NEGCTL_SHADOW2 PASS
+== run_rp1_s3.log
+EXACT checks=0 mismatches=0 first=-1 launches=9750 native=3289 leases=3131 release_accepts=2983 done=2926 fault_cycles=271215 upsets=0 owner_changes=996 revokes=25 shared_faults=136 exec_faults=23 raw_cycles=1427 resets=6802
+ADMIT REPLAY=1 checks=359182 ref_idle=279015 shadow3_admit=7226 (extra_blocked_unfaulted=10945) shadow3_unsafe=0 | NEGCTL shadow0_admit=22034 shadow0_unsafe=9039 shadow2_unsafe=0 | fault_quarantine_admits=20
+PASS
+NEGCTL_SHADOW0 FAIL (expected: too-early admit caught)
+NEGCTL_SHADOW2 PASS

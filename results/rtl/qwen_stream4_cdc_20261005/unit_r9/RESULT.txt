@@ -1,0 +1,4 @@
+iverilog unit scoreboard (40 us, random push/pop, credit-respecting controller):
+r5 (6fc28b155)       popped 23867 mism 0     held_changed 0
+r6/r7 RSEL=0 (df1ac3975, unconditional group load) popped 23867 mism 11950 held_changed 11950  <- BROKEN
+r9 RSEL=1 (kept one-hot select + kept l_v copy enable) popped 23867 mism 0 held_changed 0

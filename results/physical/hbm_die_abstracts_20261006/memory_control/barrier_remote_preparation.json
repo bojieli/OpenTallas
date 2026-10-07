@@ -1,0 +1,16 @@
+{
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/codex/hbm-memory-abstracts-20261006/barrier",
+  "input_hashes_verified_on_remote": true,
+  "verified_UTC": "2026-10-06T03:35:38Z",
+  "retained_cells": 139,
+  "local_transport_snapshots_removed": true,
+  "local_OpenROAD_or_STA_runs": 0,
+  "new_guard_queued": false,
+  "new_extraction_launched": false,
+  "status": "WAIT_FRESH_CPU_FIT",
+  "E2_load1": 233.26,
+  "E2_CPU_count": 128,
+  "source_host": "ot-epyc1tb",
+  "source_evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/barrier_k32/corner_sta.json"
+}

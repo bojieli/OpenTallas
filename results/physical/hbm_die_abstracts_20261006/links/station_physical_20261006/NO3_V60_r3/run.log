@@ -1,0 +1,25 @@
+CAPACITY_HOLD {"UTC": "2026-10-06T06:04:49Z", "phase": "pre", "cpu_count": 64, "load1": 10.37939453125, "idle_cpu_equivalents": 52.87133111216881, "threads": 16, "need_GiB": 8.0, "available_GiB": 32.13003921508789, "reserve_GiB": 18.85570507030934, "recent_peak_GiB": 8.0, "disk_free_GiB": 275.2454071044922, "disk_need_GiB": 8, "guard_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb", "guard_core_sha256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f", "cpu_fit": true, "memory_fit": false, "disk_fit": true}
+Command exited with non-zero status 75
+	Command being timed: "python3 /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r6/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/fit_guard.py --need-gib 8 --receipt /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_V60_r3/capacity.jsonl -- python3 /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r6/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/route_worker.py --NO 3 --orientation V --util 60 --cache /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_static_synth_r1/work --run /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_V60_r3 --resume-orfs /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_V60_r2/work/orfs"
+	User time (seconds): 0.06
+	System time (seconds): 0.01
+	Percent of CPU this job got: 6%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.07
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21044
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2652
+	Voluntary context switches: 2
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 75

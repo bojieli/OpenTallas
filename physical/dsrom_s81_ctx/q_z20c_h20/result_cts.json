@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.dsrom-s81-macro-context.result.v1",
+ "vehicle": "physical/dsrom_s81_ctx/q_z20c_h20",
+ "cell": "ot_v41_rom_elem_q_qx_w10 (QELEM Z20c, pre-MARGIN-FIRST)",
+ "host": "ot-epyc1tb:/srv/opentallas-scratch/claude/s81-rerun/ctx/q_z20c_h20",
+ "source": "cbe161d6c",
+ "stage_reached": "CTS done; GRT-0116 congestion (168 overflow, M5/M7 at the q pin clusters, routing capped at M7 by the platform) -> stopped",
+ "cts": {
+  "cts__timing__setup__tns": -4883.93,
+  "cts__timing__hold__tns": 0,
+  "cts__timing__setup__ws": -60.554,
+  "cts__timing__hold__ws": 17.9719,
+  "cts__timing__fmax__clock:core_clk": 1119130000.0,
+  "cts__timing__fmax": 1119130000.0,
+  "cts__timing__drv__max_slew_limit": 0.279581,
+  "cts__timing__drv__max_slew": 0,
+  "cts__timing__drv__max_cap_limit": 0.794882,
+  "cts__timing__drv__max_cap": 0,
+  "cts__timing__drv__max_fanout_limit": 32,
+  "cts__timing__drv__max_fanout": 0,
+  "cts__timing__drv__setup_violation_count": 168,
+  "cts__timing__drv__hold_violation_count": 0
+ },
+ "cts_repair": {
+  "setup_final_wns_ps": -60.7,
+  "setup_violators": 185,
+  "worst_endpoint": "u_blk/xs_q1[245] (die bank -> q input pin -> ETM setup)",
+  "hold_after_repair_ps": 20.0,
+  "hold_buffers": 1867,
+  "pre_repair_worst": "bN12.c[48] (q output -> die bank) -194.2 ps"
+ },
+ "verdict": "Z20c does NOT survive die context with a register bank at its pins: SS -60.7 ps after CTS repair (accept line +40), 1,867 hold buffers. Expected from its boundary window (inputs need launch 205..628 ps after the port edge): a pre-margin abstract. The vehicle works; the MARGIN-FIRST q element (registered pins, insertion <= 150 ps) is what it must pass.",
+ "next": "vehicles now route to M9 (MAX_ROUTING_LAYER=M9) like the die; run the PQ / margin q abstract when QELEM posts it"
+}

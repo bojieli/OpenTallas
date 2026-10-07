@@ -1,0 +1,164 @@
+--- b80f96a51/tools/qwen_rom_fulldie_b3r2.py
++++ observed/tools/qwen_rom_fulldie_b3r2.py
+@@ -455,7 +455,7 @@
+                     x, y = xa + (xb - xa) * f, ya + (yb - ya) * f
+                     out.append((s + L * f, x, y, cr if in_field(x, y) else None, 'v' if not horiz else 'o'))
+             s += L
+-        return sorted(set(out), key=lambda q: (q[0], q[1], q[2])), s
++        return sorted(set(out), key=lambda q: (q[0], q[1], q[2], -1 if q[3] is None else q[3], q[4])), s
+ 
+     masters_needed = {}
+     regs = m['clock_regions']
+@@ -469,6 +469,7 @@
+                    + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+     ck_add = {}
+     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
++    stage_of = {}
+     order = {'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
+     buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
+     keep = {}
+@@ -726,6 +727,7 @@
+             fck_drop.add(f'fck_{bid}')
+             fck_new.append((f'fck_{last}', 'clock_trunk', 1, [(prev[0], 'fck_b'), (eps[1][0], f'fck_{eps[1][1]}')]))
+         keep[idx] = hops
++        stage_of[bid] = n + 1
+         s = stats.setdefault(cl, dict(buses=0, relays=0, relay_bits=0, max_hop_um=0.0, max_stages=0))
+         s['buses'] += 1
+         s['relays'] += n
+@@ -741,6 +743,7 @@
+             B[j] = (bid, cl, bits, eps + ck_add.pop(bid))
+     missing = sorted(ck_add)
+     m['buses'] = B + fck_new
++    m['r21_stage_of'] = stage_of
+     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
+     m['r21_relays'] = dict(pitch_um=pitch, max_um=RELAY_MAX_UM, relays=len(insts), masters=len(masters_needed),
+                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
+@@ -2202,6 +2205,105 @@
+                        'is 0 once the column-FIFO prefetch is measured')
+ 
+ 
++def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json'):
++    """Registered-stage counts of the die paths every ME op / layer pass waits on, from the die's buses (one register
++    boundary per die hop: each element port is registered, r21 relays add hops), against the stages the measured
++    token RTL carries (k_AR0 wire_stages): bd = x / instruction broadcast VM -> head chain -> corridor -> tap,
++    tree = the in-block split tree (leaf t_out -> block root, all levels), tws = block word -> slab (-> primary) ->
++    tree top, ord = tree-top result -> VM; link = hub <-> stack (two traversals a layer pass)."""
++    st = m.get('r21_stage_of', {})
++    S = lambda bid: st.get(bid, 1)
++    B = {b[0]: b for b in m['buses']}
++    # ---- bd
++    head = {}
++    for side, cols in (('W', range(31, -1, -1)), ('E', range(32, v.COLS))):
++        acc = 0
++        for c in cols:
++            acc += S(f'head_{c}')
++            head[c] = acc
++    bd = 0
++    for c in range(v.COLS):
++        acc_s, acc_n = head[c], head[c]
++        for r in range(11, -1, -1):
++            acc_s += S(f'cor_{c}_{r}')
++            bd = max(bd, acc_s + S(f'tap_{c}_{r}'))
++        for r in range(12, v.ROWS):
++            acc_n += S(f'cor_{c}_{r}')
++            bd = max(bd, acc_n + S(f'tap_{c}_{r}'))
++    # ---- in-block tree: longest leaf -> root
++    import re as _re
++    tree = 0
++    blocks = {}
++    for bid in B:
++        mm = _re.match(r'tree_(\d+)_(\d+)_(\d+)([ab])$', bid)
++        if mm:
++            blocks.setdefault(int(mm[1]), []).append(bid)
++    for nb, legs in blocks.items():
++        out_t = {}
++        for bid in sorted(legs, key=lambda b: int(b.split('_')[2])):
++            # the original 2-endpoint bus: source output -> host input (relayed buses keep their first hop name)
++            src = B[bid][3][0]
++            last = f'{bid}__r{S(bid) - 1}' if S(bid) > 1 else bid
++            dst = B[last][3][1]
++            t0 = out_t.get(src[0], 0) if src[1] == 'n_y' else 0
++            out_t[dst[0]] = max(out_t.get(dst[0], 0), t0 + S(bid))
++        tree = max(tree, max(out_t.values()))
++    # ---- block words to the tree top
++    prim, frag = {}, {}
++    for bid, b in B.items():
++        if bid.startswith('pword_'):
++            prim[b[3][0][0]] = bid
++        if bid.startswith('pfrag_'):
++            frag[b[3][0][0]] = bid
++    tws = 0
++    for bid, b in B.items():
++        if not _re.match(r'bword_\d+$', bid):
++            continue
++        last = f'{bid}__r{S(bid) - 1}' if S(bid) > 1 else bid
++        slab = B[last][3][1][0]
++        n = S(bid)
++        if slab in frag:
++            fb = frag[slab]
++            n += S(fb)
++            fl = f'{fb}__r{S(fb) - 1}' if S(fb) > 1 else fb
++            slab = B[fl][3][1][0]
++        n += S(prim[slab])
++        tws = max(tws, n)
++    ordv = S('tt_res')
++    # ---- hub <-> stack: the longest chain of link hops a traversal takes (hub -> leg -> corner -> channel -> FIFO)
++    lk = {}
++    for bid in B:
++        mm = _re.match(r'lnk([vh])_(\d)(\w?)_?(\w+)$', bid)
++    link_chains = {}
++    for bid in B:
++        if bid.startswith(('lnkv_', 'lnkh_')) and '__r' not in bid:
++            si = bid[5]
++            link_chains.setdefault(si, []).append(bid)
++    link = 0
++    for si, bids in link_chains.items():
++        vs = sum(S(b) for b in bids if b.startswith('lnkv_'))
++        hs = {}
++        for b in bids:
++            if b.startswith('lnkh_'):
++                hs.setdefault(b[5:7], 0)
++                hs[b[5:7]] += S(b)
++        link = max(link, vs + max(hs.values() or [0]))
++    rtl = json.loads((ROOT / ar_job).read_text())['wire_stages']
++    f2 = latency()
++    ops = f2['me_ops_on_token_path']
++    ls = v.link_stages(m)
++    cur = dict(bd=bd, tree=tree, tws=tws, ord=ordv, link=link)
++    base = dict(bd=rtl['bd'], tree=rtl['nws'] * 4, tws=rtl['tws'], ord=rtl['ord'], link=ls['r2_model_total_stages'])
++    d_op = sum(cur[k] - base[k] for k in ('bd', 'tree', 'tws', 'ord'))
++    d_link = cur['link'] - base['link']
++    per_token = ops * d_op + 2 * 36 * d_link
++    return dict(schema='opentallas.qwen-rom-relay-token-cost.v1', stages_r21=cur, stages_rtl=base,
++                me_ops_per_ar_token=ops, delta_per_me_op=d_op, delta_link_per_traversal=d_link,
++                cycles_per_ar_token=per_token,
++                basis='one register boundary per die hop (element ports registered); r21 relays add hops; the measured '
++                      'token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)')
++
++
+ def write_def_regions(v, m, path):
+     v.write_def_floorplan(m, path)
+     txt = Path(path).read_text()
+@@ -2443,7 +2545,7 @@
+ 
+ def main(argv=None):
+     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+-    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k'])
++    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k', 'relaycost'])
+     ap.add_argument('--window', default='tile_field')
+     ap.add_argument('--vdd-pitch', type=float, default=63.64,
+                     help='per-net bump pitch: 63.64 = 45 um array, every core bump power (the IR PASS cases ir_*_align_b45)')
+@@ -2518,6 +2620,13 @@
+                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
+                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
+                     r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch)
++    if a.mode == 'relaycost':
++        rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
++        if a.out:
++            a.out.write_text(json.dumps(rec, indent=1) + '\n')
++        print(json.dumps({k: rec[k] for k in ('stages_r21', 'stages_rtl', 'delta_per_me_op', 'delta_link_per_traversal',
++                                              'cycles_per_ar_token')}, indent=1))
++        return 0
+     if a.mode == 'wire8k':
+         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
+         if a.out:

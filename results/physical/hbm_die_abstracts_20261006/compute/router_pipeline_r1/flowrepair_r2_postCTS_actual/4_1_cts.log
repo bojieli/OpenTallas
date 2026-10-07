@@ -1,0 +1,1046 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_pipeline_r1/base/3_place.odb
+read_sdc /work/results/asap7/carson_router_pipeline_r1/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 45270 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 45270.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 21.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 2414.
+[INFO CTS-0024]  Normalized sink region: [(3.0288, 2.88182), (214.033, 214.391)].
+[INFO CTS-0025]     Width:  211.0045.
+[INFO CTS-0026]     Height: 211.5091.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1207
+    Sub-region size: 211.0045 X 105.7545
+[INFO CTS-0034]     Segment length (rounded): 52.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 604
+    Sub-region size: 105.5023 X 105.7545
+[INFO CTS-0034]     Segment length (rounded): 52.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 302
+    Sub-region size: 105.5023 X 52.8773
+[INFO CTS-0034]     Segment length (rounded): 26.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 151
+    Sub-region size: 52.7511 X 52.8773
+[INFO CTS-0034]     Segment length (rounded): 26.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 76
+    Sub-region size: 52.7511 X 26.4386
+[INFO CTS-0034]     Segment length (rounded): 14.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 38
+    Sub-region size: 26.3756 X 26.4386
+[INFO CTS-0034]     Segment length (rounded): 14.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 19
+    Sub-region size: 26.3756 X 13.2193
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 8
+    Direction: Horizontal
+    Sinks per sub-region: 10
+    Sub-region size: 13.1878 X 13.2193
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (200.682 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2414.
+[INFO CTS-0018]     Created 2737 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 2737 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 6:5, 7:19, 8:47, 9:63, 10:71, 11:53, 12:35, 13:64, 14:100, 15:157, 16:249, 17:235, 18:287, 19:260, 20:297, 21:238, 22:210, 23:142, 24:81, 25:38, 26:16, 27:2..
+[INFO CTS-0017]     Max level of the clock tree: 8.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 47554
+[INFO CTS-0100]  Leaf buffers 2414
+[INFO CTS-0101]  Average sink wire length 541.43 um
+[INFO CTS-0102]  Path depth 8 - 9
+[INFO CTS-0207]  Dummy loads inserted 2284
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0500] Runtime: 16.52s
+Took 16 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+estimate_parasitics -placement
+Took 9 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 83666.13 um^2
+[INFO DPL-0007] Movable instances area: 34006.86 um^2
+[INFO DPL-0008] Fixed instances area within core: 234.53 um^2
+[INFO DPL-0009] Utilization: 40.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 260499 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         14 |         4 |        10
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 2.88s
+Placement Analysis
+---------------------------------
+total displacement      27800.1 u
+average displacement        0.1 u
+max displacement            2.3 u
+original HPWL         1389625.4 u
+legalized HPWL        1406032.0 u
+delta HPWL                    1 %
+
+estimate_parasitics -placement
+Took 8 seconds: estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 18722 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 18722 out of 18722 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -818.081 |  -140924.2 | -1864313.4 |  18722 | g_on.g_lane\[12\].u_lane.ge_q\[3\]$_DFF_P_/D
+      10* |       0 |       5 |        4 |      0 |     0 |    +0.0% | -735.586 |  -140745.6 | -1856579.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      20* |       1 |       9 |        8 |      0 |     1 |    +0.0% | -669.953 |  -140610.1 | -1849961.4 |  18722 | g_on.g_lane\[12\].u_lane.ge_q\[3\]$_DFF_P_/D
+      30* |       4 |      12 |       14 |      0 |     1 |    +0.0% | -574.433 |  -140401.2 | -1839156.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      40* |       5 |      16 |       18 |      0 |     2 |    +0.0% | -536.173 |  -140347.5 | -1836576.5 |  18722 | g_on.g_lane\[12\].u_lane.ge_q\[3\]$_DFF_P_/D
+      50* |       6 |      18 |       28 |      0 |     2 |    +0.0% | -487.694 |  -140187.6 | -1503734.4 |  18722 | g_on.g_lane\[12\].u_lane.ge_q\[3\]$_DFF_P_/D
+      52* |       6 |      19 |       28 |      0 |     2 |    +0.0% | -484.253 |  -140179.5 | -1503322.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      56* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      57* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      60* |       6 |      19 |       31 |      0 |     5 |    +0.0% | -484.416 |  -140132.3 | -1502731.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      60* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      63* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      65* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      68* |       6 |      19 |       31 |      0 |     3 |    +0.0% | -484.253 |  -140132.1 | -1502725.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      70* |       6 |      19 |       31 |      0 |     4 |    +0.0% | -484.253 |  -140132.2 | -1502729.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      71* |       7 |      19 |       31 |      0 |     4 |    +0.0% | -484.253 |  -140132.2 | -1502702.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      74* |       8 |      19 |       31 |      0 |     5 |    +0.0% | -484.253 |  -140132.2 | -1502678.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      80* |       9 |      22 |       31 |      0 |     6 |    +0.0% | -484.253 |  -140137.5 | -1502640.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      80* |       9 |      22 |       31 |      0 |     6 |    +0.0% | -484.253 |  -140137.5 | -1502640.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      82* |       9 |      22 |       31 |      0 |     6 |    +0.0% | -484.253 |  -140137.5 | -1502640.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      85* |       9 |      22 |       31 |      0 |     6 |    +0.0% | -484.253 |  -140137.5 | -1502640.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      90* |       9 |      24 |       32 |      0 |     7 |    +0.0% | -484.253 |  -140136.0 | -1502665.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      94* |      10 |      24 |       35 |      0 |     7 |    +0.0% | -484.253 |  -140115.7 | -1502167.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+      96* |      10 |      24 |       35 |      0 |     7 |    +0.0% | -484.253 |  -140115.7 | -1502167.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     100* |      10 |      25 |       36 |      0 |     8 |    +0.0% | -484.253 |  -140115.7 | -1502217.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     101* |      10 |      26 |       36 |      0 |     8 |    +0.0% | -484.253 |  -140115.7 | -1502158.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     104* |      10 |      26 |       36 |      0 |     8 |    +0.0% | -484.253 |  -140115.7 | -1502158.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     109* |      11 |      26 |       36 |      0 |     9 |    +0.0% | -484.253 |  -140108.6 | -1502136.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     110* |      11 |      26 |       36 |      0 |     9 |    +0.0% | -484.253 |  -140108.6 | -1502136.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     116* |      11 |      30 |       37 |      0 |    10 |    +0.0% | -484.253 |  -140110.1 | -1502116.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     120* |      11 |      31 |       38 |      0 |    11 |    +0.0% | -484.253 |  -140110.0 | -1502043.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     121* |      12 |      31 |       38 |      0 |    11 |    +0.0% | -484.253 |  -140110.0 | -1502016.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     124* |      13 |      31 |       38 |      0 |    12 |    +0.0% | -484.253 |  -140110.0 | -1501993.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     130* |      13 |      33 |       40 |      0 |    13 |    +0.0% | -484.253 |  -140108.3 | -1502050.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     140* |      15 |      40 |       41 |      0 |    13 |    +0.0% | -484.331 |  -140045.7 | -1501862.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     144* |      15 |      38 |       41 |      0 |    13 |    +0.0% | -484.252 |  -140045.6 | -1501987.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     147* |      16 |      38 |       41 |      0 |    14 |    +0.0% | -484.252 |  -140045.6 | -1501963.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     150* |      17 |      38 |       41 |      0 |    15 |    +0.0% | -484.252 |  -140045.6 | -1501939.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     155* |      17 |      38 |       41 |      0 |    15 |    +0.0% | -484.252 |  -140045.6 | -1501939.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     160* |      18 |      40 |       41 |      0 |    16 |    +0.0% | -484.331 |  -140045.7 | -1501801.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     164* |      18 |      38 |       41 |      0 |    16 |    +0.0% | -484.252 |  -140045.6 | -1501926.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     170* |      18 |      41 |       42 |      0 |    17 |    +0.0% | -484.331 |  -140045.7 | -1501687.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     176* |      18 |      40 |       42 |      0 |    16 |    +0.0% | -484.252 |  -140045.6 | -1501844.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     180* |      18 |      41 |       43 |      0 |    17 |    +0.0% | -484.331 |  -140045.7 | -1501697.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     185* |      18 |      40 |       42 |      0 |    16 |    +0.0% | -484.252 |  -140045.6 | -1501844.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     190* |      18 |      43 |       42 |      0 |    17 |    +0.0% | -484.680 |  -140046.0 | -1501662.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     195* |      18 |      40 |       42 |      0 |    16 |    +0.0% | -484.252 |  -140045.6 | -1501844.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     200* |      18 |      42 |       43 |      0 |    17 |    +0.0% | -484.331 |  -140045.7 | -1501732.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     204* |      18 |      40 |       42 |      0 |    16 |    +0.0% | -484.252 |  -140045.6 | -1501844.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     210* |      18 |      44 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501812.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     214* |      18 |      45 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501808.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     219* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     220* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     221* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     230* |      18 |      52 |       46 |      0 |    18 |    +0.0% | -484.844 |  -140046.2 | -1501337.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     230* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     232* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     239* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     240* |      18 |      48 |       42 |      0 |    17 |    +0.0% | -484.252 |  -140045.6 | -1501765.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     250* |      18 |      55 |       44 |      0 |    18 |    +0.0% | -484.490 |  -140045.9 | -1501291.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     256* |      18 |      49 |       43 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501309.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     260* |      18 |      52 |       43 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501257.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     268* |      18 |      53 |       43 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501254.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     270* |      18 |      54 |       43 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501233.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     280* |      18 |      60 |       48 |      0 |    19 |    +0.0% | -483.396 |  -140044.8 | -1500930.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     283* |      18 |      55 |       44 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501331.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     290* |      18 |      59 |       47 |      0 |    19 |    +0.0% | -483.396 |  -140044.8 | -1500856.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     293* |      18 |      55 |       44 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501331.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     300* |      19 |      59 |       44 |      0 |    19 |    +0.0% | -483.396 |  -140044.8 | -1501021.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     301* |      18 |      55 |       44 |      0 |    18 |    +0.0% | -482.804 |  -140044.2 | -1501331.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     310* |      18 |      61 |       45 |      0 |    19 |    +0.0% | -482.804 |  -140044.2 | -1501332.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     320* |      18 |      69 |       47 |      0 |    19 |    +0.0% | -482.804 |  -140045.1 | -1501428.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     330* |      18 |      76 |       50 |      0 |    19 |    +0.0% | -482.804 |  -140044.0 | -1501606.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     335* |      18 |      59 |       44 |      0 |    19 |    +0.0% | -482.804 |  -140045.1 | -1501289.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     340* |      18 |      61 |       45 |      0 |    20 |    +0.0% | -482.804 |  -140044.2 | -1501335.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     350* |      18 |      69 |       47 |      0 |    20 |    +0.0% | -482.804 |  -140045.1 | -1501431.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     360* |      18 |      76 |       50 |      0 |    20 |    +0.0% | -482.804 |  -140044.0 | -1501610.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     364* |      18 |      59 |       44 |      0 |    19 |    +0.0% | -482.804 |  -140045.1 | -1501289.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     370* |      18 |      62 |       46 |      0 |    19 |    +0.0% | -482.804 |  -140044.1 | -1501289.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     380* |      18 |      70 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140042.4 | -1501407.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     387* |      18 |      63 |       46 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501287.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     390* |      18 |      65 |       46 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501288.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     400* |      18 |      72 |       48 |      0 |    20 |    +0.0% | -482.804 |  -140044.3 | -1501384.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     401* |      18 |      66 |       46 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501288.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     410* |      18 |      72 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501381.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     412* |      18 |      66 |       46 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501288.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     420* |      18 |      71 |       47 |      0 |    20 |    +0.0% | -482.804 |  -140044.3 | -1501112.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     430* |      19 |      76 |       54 |      0 |    20 |    +0.0% | -484.212 |  -140045.8 | -1500205.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     438* |      18 |      69 |       47 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501132.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     440* |      18 |      70 |       47 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501172.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     450* |      19 |      76 |       50 |      0 |    20 |    +0.0% | -483.396 |  -140044.9 | -1500561.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     458* |      18 |      71 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501100.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     460* |      18 |      71 |       48 |      0 |    20 |    +0.0% | -482.804 |  -140044.3 | -1501105.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     470* |      19 |      78 |       51 |      0 |    20 |    +0.0% | -483.396 |  -140044.9 | -1500311.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     475* |      18 |      71 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501100.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     480* |      18 |      74 |       48 |      0 |    20 |    +0.0% | -483.232 |  -140044.8 | -1500910.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     490* |      19 |      80 |       52 |      0 |    20 |    +0.0% | -483.396 |  -140044.9 | -1500525.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     492* |      18 |      71 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501100.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     500* |      18 |      76 |       49 |      0 |    20 |    +0.0% | -483.311 |  -140044.8 | -1500448.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     510* |      21 |      79 |       54 |      0 |    20 |    +0.0% | -484.212 |  -140045.8 | -1499397.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     511* |      18 |      73 |       48 |      0 |    19 |    +0.0% | -482.804 |  -140044.3 | -1501074.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     520* |      18 |      81 |       48 |      0 |    19 |    +0.0% | -482.804 |  -139962.4 | -1443363.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     530* |      18 |      87 |       52 |      0 |    20 |    +0.0% | -482.804 |  -139962.4 | -1465732.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     540* |      20 |      89 |       59 |      0 |    20 |    +0.0% | -482.804 |  -139955.3 | -1445239.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     550* |      21 |      96 |       61 |      0 |    20 |    +0.0% | -482.804 |  -139960.5 | -1474292.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     560* |      21 |     103 |       64 |      0 |    20 |    +0.0% | -482.804 |  -139961.9 | -1539942.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     570* |      24 |     105 |       70 |      0 |    20 |    +0.0% | -482.804 |  -139961.9 | -1560126.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     580* |      29 |     105 |       75 |      0 |    20 |    +0.0% | -482.804 |  -139961.9 | -1560126.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     588* |      19 |      89 |       58 |      0 |    20 |    +0.0% | -482.804 |  -139955.3 | -1430925.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     590* |      19 |      89 |       58 |      0 |    21 |    +0.0% | -482.804 |  -139955.7 | -1430930.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     600* |      20 |      96 |       60 |      0 |    21 |    +0.0% | -482.804 |  -139953.9 | -1430918.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     610* |      21 |     104 |       62 |      0 |    21 |    +0.0% | -483.396 |  -139925.5 | -1430432.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     610* |      20 |      95 |       58 |      0 |    21 |    +0.0% | -482.804 |  -139958.3 | -1430875.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     620* |      20 |      99 |       62 |      0 |    22 |    +0.0% | -482.804 |  -139956.3 | -1446476.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     620* |      20 |      95 |       58 |      0 |    21 |    +0.0% | -482.804 |  -139958.3 | -1430875.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     623* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     630* |      22 |      99 |       58 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430541.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     640* |      22 |     106 |       62 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430294.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     640* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     650* |      22 |     101 |       60 |      0 |    23 |    +0.0% | -483.396 |  -139884.6 | -1430217.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     657* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     660* |      21 |      97 |       58 |      0 |    22 |    +0.0% | -483.153 |  -139931.3 | -1430563.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     670* |      23 |     100 |       62 |      0 |    23 |    +0.0% | -484.212 |  -139932.4 | -1429436.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     674* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     680* |      21 |      99 |       58 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430569.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     690* |      22 |     105 |       62 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430253.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     691* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     700* |      21 |     100 |       60 |      0 |    23 |    +0.0% | -484.212 |  -139932.4 | -1430071.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     709* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     710* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     720* |      21 |     102 |       60 |      0 |    23 |    +0.0% | -482.883 |  -139926.3 | -1430740.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     723* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     730* |      21 |      97 |       61 |      0 |    23 |    +0.0% | -482.804 |  -139928.0 | -1447899.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     733* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     740* |      22 |      99 |       58 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430542.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     750* |      22 |     106 |       62 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430295.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     750* |      21 |      95 |       58 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430852.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     760* |      21 |     100 |       61 |      0 |    23 |    +0.0% | -482.883 |  -139931.0 | -1430716.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     767* |      21 |      95 |       59 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430906.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     770* |      21 |      96 |       59 |      0 |    23 |    +0.0% | -482.883 |  -139931.0 | -1430747.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     780* |      21 |     104 |       61 |      0 |    23 |    +0.0% | -482.883 |  -139931.0 | -1430744.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     783* |      21 |      95 |       59 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430906.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     790* |      21 |     100 |       59 |      0 |    23 |    +0.0% | -484.520 |  -139932.7 | -1429422.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     800* |      21 |     104 |       64 |      0 |    24 |    +0.0% | -489.257 |  -139937.4 | -1429198.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     808* |      21 |      95 |       59 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430906.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     810* |      21 |      96 |       59 |      0 |    22 |    +0.0% | -482.804 |  -139931.0 | -1430870.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     820* |      22 |     103 |       60 |      0 |    23 |    +0.0% | -482.804 |  -139931.0 | -1430895.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     830* |      22 |     111 |       63 |      0 |    23 |    +0.0% | -483.396 |  -139931.6 | -1430428.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     832* |      22 |     101 |       59 |      0 |    23 |    +0.0% | -482.804 |  -139931.0 | -1430841.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     840* |      23 |     106 |       59 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430762.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     850* |      23 |     114 |       61 |      0 |    24 |    +0.0% | -483.232 |  -139931.4 | -1430599.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     853* |      23 |     107 |       59 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430738.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     860* |      23 |     110 |       61 |      0 |    25 |    +0.0% | -482.804 |  -139931.0 | -1430785.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     867* |      23 |     107 |       59 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430738.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     870* |      23 |     108 |       59 |      0 |    25 |    +0.0% | -482.883 |  -139931.3 | -1430582.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     880* |      24 |     114 |       63 |      0 |    25 |    +0.0% | -483.396 |  -139892.6 | -1430243.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     884* |      23 |     107 |       59 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430738.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     890* |      23 |     109 |       61 |      0 |    25 |    +0.0% | -482.804 |  -139931.0 | -1430799.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     898* |      23 |     107 |       59 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430738.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     900* |      23 |     107 |       61 |      0 |    24 |    +0.0% | -482.804 |  -139931.0 | -1430750.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     910* |      24 |     114 |       63 |      0 |    25 |    +0.0% | -482.804 |  -139931.6 | -1430633.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     912* |      24 |     114 |       63 |      0 |    25 |    +0.0% | -482.804 |  -139931.6 | -1430633.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     920* |      24 |     121 |       63 |      0 |    25 |    +0.0% | -485.180 |  -139934.0 | -1428832.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     930* |      25 |     124 |       68 |      0 |    26 |    +0.0% | -489.257 |  -139937.9 | -1428813.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     937* |      24 |     114 |       63 |      0 |    25 |    +0.0% | -482.804 |  -139931.6 | -1430633.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     940* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430696.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     950* |      24 |     122 |       67 |      0 |    26 |    +0.0% | -483.396 |  -139932.2 | -1430279.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     954* |      24 |     114 |       64 |      0 |    25 |    +0.0% | -482.804 |  -139931.6 | -1430693.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     960* |      24 |     117 |       65 |      0 |    26 |    +0.0% | -483.232 |  -139932.0 | -1430585.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     970* |      24 |     126 |       67 |      0 |    26 |    +0.0% | -483.396 |  -139932.2 | -1430360.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     970* |      24 |     114 |       64 |      0 |    25 |    +0.0% | -482.804 |  -139931.6 | -1430693.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     980* |      24 |     120 |       65 |      0 |    27 |    +0.0% | -490.387 |  -139939.2 | -1430986.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     986* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+     990* |      24 |     115 |       65 |      0 |    27 |    +0.0% | -482.883 |  -139931.7 | -1430535.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1000* |      24 |     124 |       66 |      0 |    27 |    +0.0% | -483.232 |  -139932.0 | -1430475.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1002* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1010* |      24 |     120 |       64 |      0 |    27 |    +0.0% | -485.180 |  -139934.0 | -1428978.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1020* |      24 |     122 |       70 |      0 |    29 |    +0.0% | -489.257 |  -139938.2 | -1429050.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1021* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1030* |      24 |     118 |       67 |      0 |    27 |    +0.0% | -482.804 |  -139929.7 | -1446338.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1031* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1040* |      24 |     120 |       65 |      0 |    27 |    +0.0% | -483.232 |  -139932.0 | -1430446.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1046* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1050* |      24 |     117 |       64 |      0 |    26 |    +0.0% | -483.118 |  -139931.9 | -1429416.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1060* |      24 |     122 |       69 |      0 |    27 |    +0.0% | -489.257 |  -139938.0 | -1429553.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1070* |      25 |     125 |       72 |      0 |    30 |    +0.0% | -489.257 |  -139924.8 | -1429215.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1074* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1080* |      24 |     118 |       64 |      0 |    27 |    +0.0% | -484.520 |  -139933.3 | -1429254.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1090* |      24 |     122 |       69 |      0 |    28 |    +0.0% | -489.257 |  -139938.0 | -1428985.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1092* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1096* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1100* |      24 |     117 |       64 |      0 |    26 |    +0.0% | -483.118 |  -139931.9 | -1429416.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1110* |      24 |     122 |       67 |      0 |    28 |    +0.0% | -489.257 |  -139938.0 | -1429101.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1116* |      24 |     114 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139931.6 | -1430688.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1120* |      24 |     117 |       64 |      0 |    26 |    +0.0% | -482.804 |  -139897.8 | -1430481.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1130* |      24 |     122 |       72 |      0 |    26 |    +0.0% | -482.804 |  -139833.4 | -1352810.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1140* |      25 |     128 |       77 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1399545.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1150* |      26 |     132 |       83 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1402442.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1150* |      26 |     129 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400561.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1160* |      26 |     136 |       82 |      0 |    27 |    +0.0% | -485.180 |  -139828.3 | -1398805.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1168* |      26 |     129 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400561.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1170* |      26 |     130 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400553.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1172* |      26 |     132 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400550.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1173* |      26 |     132 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400550.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1180* |      26 |     137 |       82 |      0 |    26 |    +0.0% | -485.180 |  -139828.3 | -1398926.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1190* |      26 |     142 |       86 |      0 |    27 |    +0.0% | -489.257 |  -139832.4 | -1399076.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1200* |      27 |     144 |       90 |      0 |    30 |    +0.0% | -489.257 |  -139832.4 | -1399373.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1200* |      26 |     132 |       81 |      0 |    26 |    +0.0% | -482.804 |  -139826.0 | -1400550.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1210* |      26 |     140 |       81 |      0 |    27 |    +0.0% | -482.804 |  -139826.0 | -1400469.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1220* |      26 |     146 |       85 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400516.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1230* |      27 |     152 |       88 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400589.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1240* |      27 |     160 |       90 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400729.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1250* |      27 |     168 |       92 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400869.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1256* |      27 |     147 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400514.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1260* |      27 |     150 |       86 |      0 |    27 |    +0.0% | -483.118 |  -139828.0 | -1399242.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1270* |      27 |     155 |       90 |      0 |    28 |    +0.0% | -489.257 |  -139834.1 | -1399068.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1280* |      28 |     158 |       94 |      0 |    30 |    +0.0% | -489.257 |  -139834.1 | -1399207.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1287* |      27 |     147 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400514.4 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1290* |      27 |     149 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400515.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1296* |      27 |     150 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400514.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1300* |      27 |     152 |       86 |      0 |    28 |    +0.0% | -483.153 |  -139828.1 | -1400258.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1300* |      27 |     150 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400514.5 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1310* |      27 |     157 |       88 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1402367.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1310* |      27 |     154 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400484.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1320* |      27 |     160 |       87 |      0 |    29 |    +0.0% | -490.387 |  -139835.3 | -1400782.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1325* |      27 |     154 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400484.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1330* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1401673.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1331* |      27 |     154 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400484.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1334* |      27 |     154 |       86 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400484.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1339* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1340* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1350* |      27 |     164 |       89 |      0 |    28 |    +0.0% | -489.257 |  -139834.1 | -1398960.8 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1360* |      27 |     168 |       95 |      0 |    28 |    +0.0% | -489.257 |  -139834.1 | -1399183.1 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1366* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1370* |      27 |     160 |       87 |      0 |    27 |    +0.0% | -483.118 |  -139828.0 | -1399222.9 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1380* |      27 |     165 |       91 |      0 |    28 |    +0.0% | -489.257 |  -139834.1 | -1399048.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1390* |      27 |     168 |       95 |      0 |    31 |    +0.0% | -489.257 |  -139834.1 | -1399235.2 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1398* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1400* |      27 |     157 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139827.7 | -1400497.6 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1400* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1400* |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18722 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1400+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1401+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1402+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1403+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1404+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1405+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1406+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1407+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1408+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1409+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1410+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1410+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1411+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1412+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1413+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1414+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1415+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1416+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1417+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1418+ |      27 |     157 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400495.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1420+ |      27 |     158 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400479.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1422+ |      27 |     160 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400465.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1423+ |      27 |     160 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400465.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1424+ |      27 |     160 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400465.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1425+ |      27 |     160 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139827.7 | -1400465.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1427+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1428+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1429+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1430+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1430+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1431+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1432+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1433+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1434+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1435+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1436+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1437+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1438+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1439+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1440+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1440+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1441+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1442+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1443+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1444+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1445+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1446+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1447+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1448+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1449+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1450+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1450+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1451+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1452+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1453+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1454+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1455+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1456+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1457+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1458+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1459+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1460+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1460+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1461+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1462+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1463+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1464+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1465+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1466+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1467+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1468+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1469+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1470+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1470+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1471+ |      27 |     161 |       87 |      0 |    27 |    +0.0% | -482.804 |  -139799.8 | -1309611.6 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1474+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1475+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1476+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1477+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1478+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1479+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1480+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1480+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1481+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1482+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1483+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1484+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1485+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1486+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1487+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1488+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1489+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1490+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1490+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1491+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1492+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1493+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1494+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1495+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1496+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1497+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1498+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1499+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1500+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1501+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1502+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1503+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1504+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1505+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1506+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1507+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1508+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1509+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1510+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1510+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1511+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1512+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1513+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1514+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1515+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1516+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1517+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1518+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1519+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1520+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1520+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1521+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1522+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1523+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1524+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1525+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1526+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1527+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1528+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1529+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1530+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1530+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1531+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1532+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1533+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1534+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1535+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1536+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1537+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1538+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1539+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1540+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1540+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1541+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1542+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1543+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1544+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1545+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1546+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1547+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1548+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1549+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1550+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1550+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1551+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1552+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1553+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1554+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1555+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1556+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1557+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1558+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1559+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1560+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1560+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1561+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1562+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1563+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1564+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1565+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1566+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1567+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1568+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1569+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1570+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1570+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1571+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1572+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1573+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1574+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1575+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1576+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1577+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1578+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1579+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1580+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1580+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1581+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1582+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1583+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1584+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1585+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1586+ |      27 |     162 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.2 | -1309275.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1589+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1590+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1590+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1591+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1592+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1593+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1594+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1595+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1596+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1597+ |      27 |     164 |       87 |      0 |    28 |    +0.0% | -482.804 |  -139803.4 | -1309270.0 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    1600+ |      27 |     165 |       87 |      0 |    29 |    +0.0% | -482.804 |  -139803.4 | -1309098.2 |  18469 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+    final |      27 |     165 |       87 |      0 |    29 |    +0.0% | -482.804 |  -139803.4 | -1309098.2 |  18176 | g_on.g_lane\[31\].u_lane.ge_q\[4\]$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 27 buffers.
+[INFO RSZ-0040] Inserted 87 buffers.
+[INFO RSZ-0051] Resized 165 instances: 165 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 29 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 183.32s
+[INFO RSZ-0046] Found 3679 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -335.602 | -259257.656 | g_on.g_lane[31].u_lane.x_last$_DFF_PN0_/D
+       10 |       0 |      38 |            0 |    +0.0% | -287.771 | -235390.281 | g_on.g_lane[21].u_lane.x_q[31]$_DFFE_PP_/D
+       20 |       0 |      88 |            0 |    +0.0% | -283.878 | -232963.562 | g_on.g_lane[10].u_lane.x_q[30]$_DFFE_PP_/D
+       30 |       0 |     134 |            0 |    +0.0% | -282.040 | -230872.312 | g_on.g_lane[26].u_lane.x_q[12]$_DFFE_PP_/D
+       40 |       0 |     193 |            0 |    +0.0% | -278.752 | -228722.312 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+       50 |       0 |     254 |            0 |    +0.1% | -276.639 | -226755.109 | g_on.g_lane[17].u_lane.x_q[9]$_DFFE_PP_/D
+       60 |       0 |     329 |            0 |    +0.1% | -274.896 | -224839.734 | g_on.g_lane[16].u_lane.x_q[31]$_DFFE_PP_/D
+       70 |       0 |     397 |            0 |    +0.1% | -273.494 | -223032.797 | g_on.g_lane[20].u_lane.x_q[30]$_DFFE_PP_/D
+       80 |       0 |     451 |            0 |    +0.1% | -271.636 | -221247.953 | g_on.g_lane[17].u_lane.x_q[18]$_DFFE_PP_/D
+       90 |       0 |     514 |            0 |    +0.1% | -269.881 | -219298.531 | g_on.g_lane[21].u_lane.x_q[25]$_DFFE_PP_/D
+      100 |       0 |     579 |            0 |    +0.1% | -268.246 | -217239.328 | g_on.g_lane[16].u_lane.x_q[16]$_DFFE_PP_/D
+      110 |       0 |     637 |            0 |    +0.1% | -266.920 | -215327.516 | g_on.g_lane[16].u_lane.x_q[15]$_DFFE_PP_/D
+      120 |       0 |     695 |            0 |    +0.1% | -266.081 | -210630.375 | g_on.g_lane[21].u_lane.x_q[23]$_DFFE_PP_/D
+      130 |       0 |     745 |            0 |    +0.2% | -264.563 | -208586.875 | g_on.g_lane[16].u_lane.x_q[20]$_DFFE_PP_/D
+      140 |       0 |     802 |            0 |    +0.2% | -263.400 | -206588.766 | g_on.g_lane[18].u_lane.x_q[26]$_DFFE_PP_/D
+      150 |       0 |     857 |            0 |    +0.2% | -262.618 | -204696.750 | g_on.g_lane[21].u_lane.x_q[15]$_DFFE_PP_/D
+      160 |       0 |     909 |            0 |    +0.2% | -262.055 | -202755.969 | g_on.g_lane[21].u_lane.x_q[14]$_DFFE_PP_/D
+      170 |       0 |     965 |            0 |    +0.2% | -261.384 | -200784.266 | g_on.g_lane[21].u_lane.x_q[11]$_DFFE_PP_/D
+      180 |       0 |    1032 |            0 |    +0.2% | -260.669 | -198802.672 | g_on.g_lane[18].u_lane.x_q[14]$_DFFE_PP_/D
+      190 |       0 |    1087 |            0 |    +0.2% | -259.958 | -196880.047 | g_on.g_lane[17].u_lane.x_q[32]$_DFFE_PP_/D
+      200 |       0 |    1143 |            0 |    +0.2% | -259.468 | -194866.234 | g_on.g_lane[18].u_lane.x_q[18]$_DFFE_PP_/D
+      210 |       0 |    1210 |            0 |    +0.3% | -258.597 | -189814.234 | g_on.g_lane[21].u_lane.x_q[10]$_DFFE_PP_/D
+      220 |       0 |    1280 |            0 |    +0.3% | -258.169 | -187824.969 | g_on.g_lane[16].u_lane.x_q[35]$_DFFE_PP_/D
+      230 |       0 |    1345 |            0 |    +0.3% | -257.603 | -185870.984 | g_on.g_lane[18].u_lane.x_q[15]$_DFFE_PP_/D
+      240 |       0 |    1421 |            0 |    +0.3% | -256.657 | -184008.359 | g_on.g_lane[21].u_lane.x_q[16]$_DFFE_PP_/D
+      250 |       0 |    1494 |            0 |    +0.3% | -255.829 | -181914.422 | g_on.g_lane[18].u_lane.x_q[10]$_DFFE_PP_/D
+      260 |       0 |    1558 |            0 |    +0.3% | -254.553 | -179598.094 | g_on.g_lane[17].u_lane.x_q[37]$_DFFE_PP_/D
+      270 |       0 |    1632 |            0 |    +0.3% | -253.510 | -177389.688 | g_on.g_lane[20].u_lane.x_q[22]$_DFFE_PP_/D
+      280 |       0 |    1698 |            0 |    +0.4% | -251.266 | -175634.781 | g_on.g_lane[19].u_lane.x_q[26]$_DFFE_PP_/D
+      290 |       0 |    1755 |            0 |    +0.4% | -250.336 | -172685.859 | g_on.g_lane[18].u_lane.x_q[33]$_DFFE_PP_/D
+      300 |       0 |    1821 |            0 |    +0.4% | -249.842 | -170571.891 | g_on.g_lane[20].u_lane.x_q[16]$_DFFE_PP_/D
+      310 |       0 |    1879 |            0 |    +0.4% | -248.915 | -168432.766 | g_on.g_lane[19].u_lane.x_q[9]$_DFFE_PP_/D
+      320 |       0 |    1943 |            0 |    +0.4% | -248.348 | -166330.609 | g_on.g_lane[0].u_lane.x_q[39]$_DFFE_PP_/D
+      330 |       0 |    2010 |            0 |    +0.4% | -247.174 | -162240.156 | g_on.g_lane[8].u_lane.x_q[27]$_DFFE_PP_/D
+      340 |       0 |    2070 |            0 |    +0.4% | -246.583 | -159034.719 | g_on.g_lane[8].u_lane.x_q[35]$_DFFE_PP_/D
+      350 |       0 |    2131 |            0 |    +0.5% | -246.037 | -156842.484 | g_on.g_lane[19].u_lane.x_q[14]$_DFFE_PP_/D
+      360 |       0 |    2204 |            0 |    +0.5% | -245.342 | -154622.359 | g_on.g_lane[11].u_lane.x_q[34]$_DFFE_PP_/D
+      370 |       0 |    2270 |            0 |    +0.5% | -244.808 | -152404.672 | g_on.g_lane[27].u_lane.x_q[19]$_DFFE_PP_/D
+      380 |       0 |    2306 |            0 |    +0.5% | -243.619 | -150211.891 | g_on.g_lane[27].u_lane.x_q[21]$_DFFE_PP_/D
+      390 |       0 |    2386 |            0 |    +0.5% | -242.994 | -148034.781 | g_on.g_lane[8].u_lane.x_q[20]$_DFFE_PP_/D
+      400 |       0 |    2455 |            0 |    +0.5% | -242.816 | -145688.297 | g_on.g_lane[8].u_lane.x_q[31]$_DFFE_PP_/D
+      410 |       0 |    2512 |            0 |    +0.5% | -241.898 | -143417.797 | g_on.g_lane[8].u_lane.x_q[18]$_DFFE_PP_/D
+      420 |       0 |    2571 |            0 |    +0.5% | -241.323 | -141004.828 | g_on.g_lane[8].u_lane.x_q[15]$_DFFE_PP_/D
+      430 |       0 |    2638 |            0 |    +0.6% | -240.362 | -138781.031 | g_on.g_lane[19].u_lane.x_q[29]$_DFFE_PP_/D
+      440 |       0 |    2688 |            0 |    +0.6% | -238.906 | -136632.047 | g_on.g_lane[8].u_lane.x_q[13]$_DFFE_PP_/D
+      450 |       0 |    2752 |            0 |    +0.6% | -237.427 | -134392.719 | g_on.g_lane[8].u_lane.x_q[12]$_DFFE_PP_/D
+      460 |       0 |    2815 |            0 |    +0.6% | -234.944 | -132235.031 | g_on.g_lane[17].u_lane.x_q[33]$_DFFE_PP_/D
+      470 |       0 |    2876 |            0 |    +0.6% | -234.764 | -130203.617 | g_on.g_lane[19].u_lane.x_q[35]$_DFFE_PP_/D
+      480 |       0 |    2940 |            0 |    +0.6% | -233.671 | -127277.289 | g_on.g_lane[19].u_lane.x_q[28]$_DFFE_PP_/D
+      490 |       0 |    3008 |            0 |    +0.6% | -232.874 | -124997.914 | g_on.g_lane[20].u_lane.x_q[37]$_DFFE_PP_/D
+      500 |       0 |    3063 |            0 |    +0.7% | -231.915 | -121878.914 | g_on.g_lane[20].u_lane.x_q[34]$_DFFE_PP_/D
+      510 |       0 |    3132 |            0 |    +0.7% | -231.072 | -119595.781 | g_on.g_lane[14].u_lane.x_q[33]$_DFFE_PP_/D
+      520 |       0 |    3198 |            0 |    +0.7% | -230.227 | -117331.898 | g_on.g_lane[8].u_lane.x_q[10]$_DFFE_PP_/D
+      530 |       0 |    3261 |            0 |    +0.7% | -228.513 | -115579.867 | g_on.g_lane[15].u_lane.x_q[23]$_DFFE_PP_/D
+      540 |       0 |    3291 |            0 |    +0.7% | -227.791 | -114484.648 | g_on.g_lane[15].u_lane.x_q[31]$_DFFE_PP_/D
+      550 |       0 |    3360 |            0 |    +0.7% | -227.080 | -112201.617 | g_on.g_lane[14].u_lane.x_q[32]$_DFFE_PP_/D
+      560 |       0 |    3421 |            0 |    +0.7% | -226.455 | -109883.320 | g_on.g_lane[6].u_lane.x_q[37]$_DFFE_PP_/D
+      570 |       0 |    3475 |            0 |    +0.7% | -225.287 | -106999.391 | g_on.g_lane[12].u_lane.x_q[30]$_DFFE_PP_/D
+      580 |       0 |    3547 |            0 |    +0.8% | -223.880 | -104569.797 | g_on.g_lane[19].u_lane.x_q[23]$_DFFE_PP_/D
+      590 |       0 |    3600 |            0 |    +0.8% | -222.684 | -98958.016 | g_on.g_lane[14].u_lane.x_q[39]$_DFFE_PP_/D
+      600 |       0 |    3642 |            0 |    +0.8% | -221.674 | -96336.914 | g_on.g_lane[9].u_lane.x_q[9]$_DFFE_PP_/D
+      610 |       0 |    3678 |            0 |    +0.8% | -220.363 | -94052.828 | g_on.g_lane[12].u_lane.x_q[20]$_DFFE_PP_/D
+      620 |       0 |    3730 |            0 |    +0.8% | -219.471 | -91443.711 | g_on.g_lane[22].u_lane.x_q[39]$_DFFE_PP_/D
+      630 |       0 |    3779 |            0 |    +0.8% | -218.640 | -89570.891 | g_on.g_lane[12].u_lane.x_q[13]$_DFFE_PP_/D
+      640 |       0 |    3828 |            0 |    +0.8% | -217.643 | -87782.422 | g_on.g_lane[12].u_lane.x_q[25]$_DFFE_PP_/D
+      650 |       0 |    3869 |            0 |    +0.8% | -216.695 | -86136.742 | g_on.g_lane[14].u_lane.x_q[22]$_DFFE_PP_/D
+      660 |       0 |    3905 |            0 |    +0.8% | -215.818 | -84338.492 | g_on.g_lane[15].u_lane.x_q[35]$_DFFE_PP_/D
+      670 |       0 |    3945 |            0 |    +0.8% | -213.358 | -82640.438 | g_on.g_lane[14].u_lane.x_q[19]$_DFFE_PP_/D
+      680 |       0 |    3990 |            0 |    +0.8% | -212.561 | -80487.805 | g_on.g_lane[6].u_lane.x_q[13]$_DFFE_PP_/D
+      690 |       0 |    4035 |            0 |    +0.9% | -211.637 | -78543.312 | g_on.g_lane[12].u_lane.x_q[14]$_DFFE_PP_/D
+      700 |       0 |    4098 |            0 |    +0.9% | -210.693 | -76299.023 | g_on.g_lane[12].u_lane.x_q[28]$_DFFE_PP_/D
+      710 |       0 |    4149 |            0 |    +0.9% | -209.633 | -71705.398 | g_on.g_lane[6].u_lane.x_q[15]$_DFFE_PP_/D
+      720 |       0 |    4201 |            0 |    +0.9% | -209.181 | -69496.156 | g_on.g_lane[15].u_lane.x_q[16]$_DFFE_PP_/D
+      730 |       0 |    4254 |            0 |    +0.9% | -208.665 | -67277.359 | g_on.g_lane[6].u_lane.x_q[10]$_DFFE_PP_/D
+      740 |       0 |    4311 |            0 |    +0.9% | -207.629 | -65080.555 | g_on.g_lane[9].u_lane.x_q[24]$_DFFE_PP_/D
+      750 |       0 |    4389 |            0 |    +0.9% | -207.235 | -63163.348 | g_on.g_lane[15].u_lane.x_q[10]$_DFFE_PP_/D
+      760 |       0 |    4461 |            0 |    +0.9% | -205.710 | -61033.859 | g_on.g_lane[14].u_lane.x_q[11]$_DFFE_PP_/D
+      770 |       0 |    4532 |            0 |    +1.0% | -205.475 | -58853.422 | g_on.g_lane[25].u_lane.x_q[37]$_DFFE_PP_/D
+      780 |       0 |    4607 |            0 |    +1.0% | -204.973 | -56802.477 | g_on.g_lane[14].u_lane.x_q[40]$_DFFE_PP_/D
+      790 |       0 |    4676 |            0 |    +1.0% | -204.469 | -55219.727 | g_on.g_lane[15].u_lane.x_q[12]$_DFFE_PP_/D
+      800 |       0 |    4743 |            0 |    +1.0% | -203.653 | -53286.973 | g_on.g_lane[9].u_lane.x_q[16]$_DFFE_PP_/D
+      810 |       0 |    4808 |            0 |    +1.0% | -202.833 | -51219.957 | g_on.g_lane[22].u_lane.x_q[31]$_DFFE_PP_/D
+      820 |       0 |    4872 |            0 |    +1.0% | -201.989 | -48965.457 | g_on.g_lane[22].u_lane.x_q[30]$_DFFE_PP_/D
+      830 |       0 |    4932 |            0 |    +1.0% | -200.837 | -47088.090 | g_on.g_lane[25].u_lane.x_q[36]$_DFFE_PP_/D
+      840 |       0 |    5006 |            0 |    +1.1% | -200.105 | -45288.129 | g_on.g_lane[9].u_lane.x_q[34]$_DFFE_PP_/D
+      850 |       0 |    5073 |            0 |    +1.1% | -198.658 | -43432.961 | g_on.g_lane[6].u_lane.x_q[28]$_DFFE_PP_/D
+      860 |       0 |    5144 |            0 |    +1.1% | -197.606 | -41524.273 | g_on.g_lane[9].u_lane.x_q[22]$_DFFE_PP_/D
+      870 |       0 |    5208 |            0 |    +1.1% | -196.708 | -39960.473 | g_on.g_lane[15].u_lane.x_q[9]$_DFFE_PP_/D
+      880 |       0 |    5269 |            0 |    +1.1% | -194.767 | -37646.480 | g_on.g_lane[23].u_lane.x_q[19]$_DFFE_PP_/D
+      890 |       0 |    5322 |            0 |    +1.1% | -193.226 | -32393.725 | g_on.g_lane[9].u_lane.x_q[23]$_DFFE_PP_/D
+      900 |       0 |    5394 |            0 |    +1.1% | -188.891 | -30463.160 | g_on.g_lane[23].u_lane.x_q[17]$_DFFE_PP_/D
+      910 |       0 |    5453 |            0 |    +1.2% | -188.392 | -28946.760 | g_on.g_lane[23].u_lane.x_q[13]$_DFFE_PP_/D
+      920 |       0 |    5496 |            0 |    +1.2% | -187.580 | -25723.662 | g_on.g_lane[23].u_lane.x_q[10]$_DFFE_PP_/D
+      930 |       0 |    5533 |            0 |    +1.2% | -184.877 | -24432.391 | g_on.g_lane[23].u_lane.x_q[26]$_DFFE_PP_/D
+      940 |       0 |    5563 |            0 |    +1.2% | -180.572 | -23382.490 | g_on.g_lane[23].u_lane.x_q[12]$_DFFE_PP_/D
+      950 |       0 |    5586 |            0 |    +1.2% | -180.572 | -22464.502 | g_on.g_lane[23].u_lane.x_q[12]$_DFFE_PP_/D
+      960 |       0 |    5606 |            0 |    +1.2% | -179.166 | -21695.168 | g_on.g_lane[23].u_lane.x_q[27]$_DFFE_PP_/D
+      970 |       0 |    5668 |            0 |    +1.2% | -176.619 | -20186.635 | g_on.g_lane[29].u_lane.x_q[13]$_DFFE_PP_/D
+      980 |       0 |    5722 |            0 |    +1.2% | -173.961 | -17752.459 | g_on.g_lane[13].u_lane.x_q[35]$_DFFE_PP_/D
+      990 |       0 |    5776 |            0 |    +1.2% | -159.088 | -16169.904 | g_on.g_lane[13].u_lane.x_q[36]$_DFFE_PP_/D
+     1000 |       0 |    5816 |            0 |    +1.2% | -159.088 | -15312.010 | g_on.g_lane[13].u_lane.x_q[36]$_DFFE_PP_/D
+     1010 |       0 |    5833 |            0 |    +1.2% | -159.088 | -14988.945 | g_on.g_lane[13].u_lane.x_q[36]$_DFFE_PP_/D
+     1020 |       0 |    5841 |            0 |    +1.2% | -159.088 | -14878.816 | g_on.g_lane[13].u_lane.x_q[36]$_DFFE_PP_/D
+     1030 |       0 |    5873 |            0 |    +1.3% | -155.001 | -13350.277 | g_on.g_lane[13].u_lane.x_q[27]$_DFFE_PP_/D
+     1040 |       0 |    5915 |            0 |    +1.3% | -152.725 | -8740.380 | g_on.g_lane[13].u_lane.x_q[38]$_DFFE_PP_/D
+     1050 |       0 |    5953 |            0 |    +1.3% | -144.620 | -7290.397 | g_on.g_lane[23].u_lane.x_q[39]$_DFFE_PP_/D
+     1060 |       0 |    5972 |            0 |    +1.3% | -144.620 | -7039.224 | g_on.g_lane[23].u_lane.x_q[39]$_DFFE_PP_/D
+     1070 |       0 |    6000 |            0 |    +1.3% | -143.161 | -6445.843 | g_on.g_lane[23].u_lane.x_q[38]$_DFFE_PP_/D
+     1080 |       0 |    6022 |            0 |    +1.3% | -140.411 | -5558.306 | g_on.g_lane[23].u_lane.x_q[35]$_DFFE_PP_/D
+     1090 |       0 |    6050 |            0 |    +1.3% | -131.170 | -4622.814 | g_on.g_lane[13].u_lane.x_q[29]$_DFFE_PP_/D
+     1100 |       0 |    6064 |            0 |    +1.3% | -131.170 | -4503.503 | g_on.g_lane[13].u_lane.x_q[29]$_DFFE_PP_/D
+     1110 |       0 |    6099 |            0 |    +1.3% | -126.762 | -4057.742 | g_on.g_lane[13].u_lane.x_q[18]$_DFFE_PP_/D
+     1120 |       0 |    6145 |            0 |    +1.3% | -122.781 | -3581.619 | g_on.g_lane[13].u_lane.x_q[16]$_DFFE_PP_/D
+     1130 |       0 |    6198 |            0 |    +1.3% | -120.022 | -3114.860 | g_on.g_lane[13].u_lane.x_q[32]$_DFFE_PP_/D
+     1140 |       0 |    6236 |            0 |    +1.3% | -82.630 | -2683.119 | g_on.g_lane[23].u_lane.x_q[22]$_DFFE_PP_/D
+     1150 |       0 |    6270 |            0 |    +1.3% | -70.217 | -2382.138 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1160 |       0 |    6273 |            0 |    +1.3% | -70.217 | -2361.661 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1170 |       0 |    6276 |            0 |    +1.3% | -70.217 | -2340.732 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1180 |       0 |    6276 |            0 |    +1.3% | -70.217 | -2340.732 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1190 |       0 |    6276 |            0 |    +1.3% | -70.217 | -2340.732 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1200 |       0 |    6276 |            0 |    +1.3% | -70.217 | -2340.732 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1210 |       0 |    6278 |            0 |    +1.3% | -70.217 | -2333.484 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1220 |       0 |    6278 |            0 |    +1.3% | -70.217 | -2333.484 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1230 |       0 |    6278 |            0 |    +1.3% | -70.217 | -2333.484 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1240 |       0 |    6278 |            0 |    +1.3% | -70.217 | -2333.484 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1250 |       0 |    6296 |            0 |    +1.3% | -70.217 | -2196.716 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1260 |       0 |    6316 |            0 |    +1.3% | -70.217 | -2099.262 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1270 |       0 |    6336 |            0 |    +1.3% | -70.217 | -2023.437 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1280 |       0 |    6356 |            0 |    +1.4% | -70.217 | -1961.787 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1290 |       0 |    6376 |            0 |    +1.4% | -70.217 | -1903.988 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1300 |       0 |    6396 |            0 |    +1.4% | -70.217 | -1852.101 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1310 |       0 |    6416 |            0 |    +1.4% | -70.217 | -1803.069 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1320 |       0 |    6436 |            0 |    +1.4% | -70.217 | -1757.067 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1330 |       0 |    6456 |            0 |    +1.4% | -70.217 | -1716.776 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1340 |       0 |    6476 |            0 |    +1.4% | -70.217 | -1682.106 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1350 |       0 |    6496 |            0 |    +1.4% | -70.217 | -1651.459 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1360 |       0 |    6516 |            0 |    +1.4% | -70.217 | -1625.021 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1370 |       0 |    6536 |            0 |    +1.4% | -70.217 | -1602.173 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1380 |       0 |    6556 |            0 |    +1.4% | -70.217 | -1580.700 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1390 |       0 |    6576 |            0 |    +1.4% | -70.217 | -1561.409 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1400 |       0 |    6596 |            0 |    +1.4% | -70.217 | -1544.482 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1410 |       0 |    6614 |            0 |    +1.4% | -70.217 | -1529.271 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1420 |       0 |    6631 |            0 |    +1.4% | -70.217 | -1516.913 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1430 |       0 |    6648 |            0 |    +1.4% | -70.217 | -1504.878 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1440 |       0 |    6660 |            0 |    +1.4% | -70.217 | -1494.243 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1450 |       0 |    6677 |            0 |    +1.4% | -70.217 | -1484.697 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1460 |       0 |    6688 |            0 |    +1.4% | -70.217 | -1477.555 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1470 |       0 |    6700 |            0 |    +1.4% | -70.217 | -1472.354 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1480 |       0 |    6711 |            0 |    +1.4% | -70.217 | -1468.971 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1490 |       0 |    6721 |            0 |    +1.4% | -70.217 | -1467.176 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1500 |       0 |    6731 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1510 |       0 |    6742 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1520 |       0 |    6752 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1530 |       0 |    6762 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1540 |       0 |    6772 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1550 |       0 |    6782 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1560 |       0 |    6792 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1570 |       0 |    6802 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1580 |       0 |    6812 |            0 |    +1.4% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1590 |       0 |    6822 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1600 |       0 |    6832 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1610 |       0 |    6842 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1620 |       0 |    6852 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1630 |       0 |    6862 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1640 |       0 |    6872 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1650 |       0 |    6882 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1660 |       0 |    6892 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1670 |       0 |    6903 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1680 |       0 |    6913 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1690 |       0 |    6923 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1700 |       0 |    6933 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1710 |       0 |    6943 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1720 |       0 |    6953 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1730 |       0 |    6963 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1740 |       0 |    6973 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1750 |       0 |    6983 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1760 |       0 |    6993 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1770 |       0 |    7003 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1780 |       0 |    7013 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1790 |       0 |    7023 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1800 |       0 |    7033 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1810 |       0 |    7043 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1820 |       0 |    7053 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1830 |       0 |    7063 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1840 |       0 |    7073 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1850 |       0 |    7083 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1860 |       0 |    7093 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1870 |       0 |    7103 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1880 |       0 |    7113 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1890 |       0 |    7123 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1900 |       0 |    7133 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1910 |       0 |    7143 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1920 |       0 |    7153 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1930 |       0 |    7163 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1940 |       0 |    7173 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1950 |       0 |    7183 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1960 |       0 |    7193 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1970 |       0 |    7203 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1980 |       0 |    7213 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     1990 |       0 |    7223 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2000 |       0 |    7233 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2010 |       0 |    7243 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2020 |       0 |    7253 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2030 |       0 |    7263 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2040 |       0 |    7273 |            0 |    +1.5% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2050 |       0 |    7283 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2060 |       0 |    7293 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2070 |       0 |    7303 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2080 |       0 |    7313 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2090 |       0 |    7323 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2100 |       0 |    7333 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2110 |       0 |    7343 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2120 |       0 |    7353 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2130 |       0 |    7363 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2140 |       0 |    7373 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2150 |       0 |    7383 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2160 |       0 |    7393 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2170 |       0 |    7403 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2180 |       0 |    7413 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2190 |       0 |    7423 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2200 |       0 |    7433 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2210 |       0 |    7443 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2220 |       0 |    7453 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2230 |       0 |    7463 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2240 |       0 |    7473 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2250 |       0 |    7483 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2260 |       0 |    7493 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2270 |       0 |    7503 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2280 |       0 |    7513 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2290 |       0 |    7523 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2300 |       0 |    7533 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2310 |       0 |    7543 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2320 |       0 |    7553 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2330 |       0 |    7563 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2340 |       0 |    7573 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2350 |       0 |    7583 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2360 |       0 |    7593 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2370 |       0 |    7603 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2380 |       0 |    7613 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2390 |       0 |    7623 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2400 |       0 |    7633 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2410 |       0 |    7643 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2420 |       0 |    7653 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2430 |       0 |    7663 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2440 |       0 |    7673 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2450 |       0 |    7683 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2460 |       0 |    7693 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2470 |       0 |    7703 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2480 |       0 |    7713 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2490 |       0 |    7723 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2500 |       0 |    7733 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2510 |       0 |    7743 |            0 |    +1.6% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2520 |       0 |    7753 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2530 |       0 |    7763 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2540 |       0 |    7773 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2550 |       0 |    7783 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2560 |       0 |    7793 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2570 |       0 |    7803 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2580 |       0 |    7813 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2590 |       0 |    7823 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2600 |       0 |    7833 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2610 |       0 |    7843 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2620 |       0 |    7853 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2630 |       0 |    7863 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2640 |       0 |    7873 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2650 |       0 |    7883 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2660 |       0 |    7893 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2670 |       0 |    7903 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2680 |       0 |    7913 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2690 |       0 |    7923 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2700 |       0 |    7933 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2710 |       0 |    7943 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2720 |       0 |    7953 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2730 |       0 |    7963 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2740 |       0 |    7973 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2750 |       0 |    7983 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2760 |       0 |    7993 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2770 |       0 |    8003 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2780 |       0 |    8013 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2790 |       0 |    8023 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2800 |       0 |    8033 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2810 |       0 |    8043 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2820 |       0 |    8054 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2830 |       0 |    8064 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2840 |       0 |    8074 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2850 |       0 |    8084 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2860 |       0 |    8094 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2870 |       0 |    8104 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2880 |       0 |    8114 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2890 |       0 |    8124 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2900 |       0 |    8134 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2910 |       0 |    8144 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2920 |       0 |    8154 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2930 |       0 |    8164 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2940 |       0 |    8174 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2950 |       0 |    8184 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2960 |       0 |    8194 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2970 |       0 |    8204 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2980 |       0 |    8214 |            0 |    +1.7% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     2990 |       0 |    8224 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3000 |       0 |    8234 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3010 |       0 |    8244 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3020 |       0 |    8254 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3030 |       0 |    8264 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3040 |       0 |    8274 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3050 |       0 |    8284 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3060 |       0 |    8294 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3070 |       0 |    8304 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3080 |       0 |    8314 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3090 |       0 |    8324 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3100 |       0 |    8334 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3110 |       0 |    8344 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3120 |       0 |    8354 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3130 |       0 |    8364 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3140 |       0 |    8374 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3150 |       0 |    8384 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3160 |       0 |    8394 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3170 |       0 |    8404 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3180 |       0 |    8414 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3190 |       0 |    8424 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3200 |       0 |    8434 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3210 |       0 |    8444 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3220 |       0 |    8454 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3230 |       0 |    8464 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3240 |       0 |    8475 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3250 |       0 |    8485 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3260 |       0 |    8495 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3270 |       0 |    8505 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3280 |       0 |    8515 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3290 |       0 |    8525 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3300 |       0 |    8535 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3310 |       0 |    8545 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3320 |       0 |    8555 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3330 |       0 |    8565 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3340 |       0 |    8575 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3350 |       0 |    8585 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3360 |       0 |    8595 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3370 |       0 |    8605 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3380 |       0 |    8614 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3390 |       0 |    8624 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3400 |       0 |    8634 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3410 |       0 |    8644 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3420 |       0 |    8654 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3430 |       0 |    8664 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3440 |       0 |    8674 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3450 |       0 |    8684 |            0 |    +1.8% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3460 |       0 |    8693 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3470 |       0 |    8703 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3480 |       0 |    8713 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3490 |       0 |    8722 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3500 |       0 |    8732 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3510 |       0 |    8742 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3520 |       0 |    8752 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3530 |       0 |    8762 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3540 |       0 |    8772 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3550 |       0 |    8780 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3560 |       0 |    8790 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3570 |       0 |    8801 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3580 |       0 |    8811 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3590 |       0 |    8822 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3600 |       0 |    8832 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3610 |       0 |    8842 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3620 |       0 |    8852 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3630 |       0 |    8862 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3640 |       0 |    8872 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3650 |       0 |    8882 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3660 |       0 |    8892 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3670 |       0 |    8902 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3680 |       0 |    8912 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3680 |       0 |    8912 |            0 |    +1.9% | -70.217 | -1466.822 | g_on.g_lane[26].u_lane.x_q[11]$_DFFE_PP_/D
+     3690 |       0 |    8961 |            0 |    +1.9% | -47.866 | -888.895 | g_on.g_lane[20].u_lane.x_q[30]$_DFFE_PP_/D
+     3700 |       0 |    8983 |            0 |    +1.9% | -37.973 | -576.063 | g_on.g_lane[20].u_lane.x_q[21]$_DFFE_PP_/D
+     3710 |       0 |    9006 |            0 |    +1.9% | -21.391 | -306.627 | g_on.g_lane[19].u_lane.x_q[29]$_DFFE_PP_/D
+     3720 |       0 |    9027 |            0 |    +1.9% | -12.714 | -172.359 | g_on.g_lane[26].u_lane.x_q[15]$_DFFE_PP_/D
+     3730 |       0 |    9044 |            0 |    +1.9% | -10.552 | -84.089 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3740 |       0 |    9064 |            0 |    +1.9% | -10.041 | -35.271 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3750 |       0 |    9085 |            0 |    +1.9% | -10.041 | -14.326 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3760 |       0 |    9097 |            0 |    +1.9% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3770 |       0 |    9117 |            0 |    +1.9% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3780 |       0 |    9133 |            0 |    +1.9% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3790 |       0 |    9147 |            0 |    +1.9% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3800 |       0 |    9158 |            0 |    +1.9% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3810 |       0 |    9167 |            0 |    +2.0% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3820 |       0 |    9174 |            0 |    +2.0% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3830 |       0 |    9184 |            0 |    +2.0% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3840 |       0 |    9192 |            0 |    +2.0% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3850 |       0 |    9201 |            0 |    +2.0% | -10.041 | -10.041 | g_on.g_lane[11].u_lane.x_q[40]$_DFFE_PP_/D
+     3860 |       0 |    9207 |            0 |    +2.0% |   8.746 |   0.000 | g_on.g_lane[18].u_lane.x_q[9]$_DFFE_PP_/D
+    final |       0 |    9213 |            0 |    +2.0% |  10.002 |   0.000 | g_on.g_node[21].m.c3.q[47]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 9213 hold buffers.
+[INFO RSZ-0506] Runtime: 37.00s
+Took 221 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+detailed_placement
+[INFO DPL-0006] Core area: 83666.13 um^2
+[INFO DPL-0007] Movable instances area: 34688.33 um^2
+[INFO DPL-0008] Fixed instances area within core: 234.53 um^2
+[INFO DPL-0009] Utilization: 41.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 269772 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      15206 |      2590 |      9773
+        1 |      10392 |      1694 |      6461
+        2 |       5477 |      1090 |      4051
+        3 |       3226 |       678 |      2416
+        4 |       1851 |       401 |      1432
+        5 |       1149 |       245 |       898
+        6 |        663 |       151 |       509
+        7 |        456 |        94 |       353
+        8 |        329 |        69 |       260
+        9 |        265 |        47 |       218
+       10 |        110 |        26 |        84
+       15 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 15.
+[INFO DPL-0500] Runtime: 7.38s
+Placement Analysis
+---------------------------------
+total displacement       8322.9 u
+average displacement        0.0 u
+max displacement            6.3 u
+original HPWL         1421053.4 u
+legalized HPWL        1427665.9 u
+delta HPWL                    0 %
+
+Took 7 seconds: detailed_placement
+estimate_parasitics -placement
+Took 10 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 34923 um^2 42% utilization.
+write_db /work/results/asap7/carson_router_pipeline_r1/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/carson_router_pipeline_r1/base/4_cts.sdc
+Elapsed time: 7:47.52[h:]min:sec. CPU time: user 778.24 sys 148.06 (198%). Peak memory: 3317640KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          467           3239 b2164787634ae6a98fe4

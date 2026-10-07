@@ -1,0 +1,17 @@
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/proto/ot_fp32_add_rne_pipe.sv
+hierarchy -check -top ot_dsrom_reindex_native_quarter -chparam ENABLE 1
+proc
+opt_clean
+rename ot_dsrom_reindex_native_quarter ot_dsrom_reindex_quarter_mapped
+write_rtlil /tmp/codex-kc8-hierarchical-source-r5/quarter_frontend.il
+write_verilog /tmp/codex-kc8-hierarchical-source-r5/quarter_frontend.v

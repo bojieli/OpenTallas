@@ -1,0 +1,21 @@
+{
+ "rc": 0,
+ "ctrl_sha256": "06d25d07e7cae73083ced2d0459b53212eb16b6babd53ef63cb23e4379264f84",
+ "defines": [
+  "OT_WFC_CONTROL_PIPE=1",
+  "OT_WFC_UPOS_LWR=1",
+  "OT_WFC_PRECOMP=1",
+  "OT_WFC_CFG_Q=1",
+  "OT_WFC_IN_DEC=1",
+  "OT_WFC_TXQ_SLICE=1",
+  "OT_WFC_RDY_LT=1",
+  "OT_WFC_FANOUT_COPY=1",
+  "OT_WFC_MARGIN=1",
+  "OT_WFC_LINK_REG=1",
+  "OT_WFC_VM_REG=1",
+  "OT_WFC_SLEW_COPY=1"
+ ],
+ "bench_out_sha256": "2aefcafd8aff4bf43dd1fa55407789791620bc0fb9297ae3ab9df86c713a1a7b",
+ "ref_out_sha256": "54db3cc32eb37ebfbf57e45ca1fc71f492f8e620217dfe1ab3762f7af86e4d29",
+ "identical_to_reference_run": false
+}

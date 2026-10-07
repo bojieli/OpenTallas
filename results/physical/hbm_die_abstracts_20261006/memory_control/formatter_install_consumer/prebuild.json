@@ -1,0 +1,54 @@
+{
+  "status": "MODEL_BEFORE_ADDITIVE_HOOK",
+  "existing_composed_model": "results/uarch/hbm_index_w15_formatter_20261005/plane_major/model.json",
+  "existing_model_sha256": "b30123e8261d0d2e507da487f3644fb8aae28b07c74e5a63d0f93c8edcafb170",
+  "replicas": 1,
+  "role": "Specific descriptor/receipt and existingformatter consumer/release hookup; not allocation/score authority",
+  "MACs_per_cycle": 0,
+  "added_useful_state_bits": 160,
+  "added_W6_rows": 3,
+  "added_coded_FF": 216,
+  "state_layout": {
+    "full73_frame": "0:72",
+    "accepted_descriptor_mask": "73:80",
+    "lifecycle_flags": "81:90",
+    "actual_accepted_pair_count": "91:103",
+    "reserved_zero": "104:116",
+    "one_pending_tag_rank_word": "117:145",
+    "reserved_zero_tail": "146:159"
+  },
+  "new_payload_FF": 0,
+  "payload_hold_reused": "existing checked formatter512 staging",
+  "new_SRAM_bytes": 0,
+  "new_provider_ports": 0,
+  "clock_domain": "actual clk_sm; no clock cut/CDC/freeclkQ claim",
+  "boundary_bits": {
+    "existing_pair_query": 102,
+    "existing_pair_result": 672,
+    "positive_reservation_receipt": "512descriptor+73frame+checked/exclusive",
+    "reverse_receipt": "73frame+checked/drained; real producer not yetbound"
+  },
+  "input_output_memory_bytes_per_cycle": 0,
+  "tracks": "Existing599/73 formatter return wiring retained; new receipt585bits must be physically loaded/routed before adoption, not declared free",
+  "added_sequencing_cycles": {
+    "last_desc_to_receipt_accept": 1,
+    "receipt_to_gather_start_accept": 1,
+    "formatter_release_accept_to_gather_release_offer": "at least1; waitsactualfmt_retaineddrop",
+    "gather_release_accept_to_epoch_rearm": "wait actual sharedborrowreverse/gatherretaineddrop"
+  },
+  "added_launch_ns_at1p2": 1.6666666666666667,
+  "area": "Unmapped additional216codedFF plus W6 enc/dec,512constant receipt comparator,64descriptor comparator, full73/tag/rank/word comparisons and13bitacceptedcount; no closed area or floorplan slot claimed",
+  "rate_credit": 0,
+  "numerical_producer_owner": "Noether",
+  "parent_math_owner": "Gibbs",
+  "harness_owner": "Bacon",
+  "runtime_owner": "Lorentz/Gibbs coordination",
+  "missing_actual_callbacks": [
+    "checked exclusive reservation/source publication bound to exactdescriptor/frame",
+    "actual96rank FP32score/literalU32ID sourcephase",
+    "actual consumer acceptedpair and source reverseACK/drain integration",
+    "native selectedID->RESULT kernel remains Gibbsowned"
+  ],
+  "physical_closed": false,
+  "numerical_pass": false
+}

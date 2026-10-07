@@ -1,0 +1,50 @@
+{
+  "status": "ACTUAL_SOURCE_AND_RECEIPT_HARNESS_WRITTEN_NUMERICAL_CHILD_UNBOUND",
+  "source_paths": {
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_integrated_minimum_parent.sv": "ec2145fb123a421afd075ad1e5548429e773f06da0c7af937bc086f8ec0c9ad7",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp": "1f601be4fe645ce8a560b1a9ce4137ba2025633f75d561a7979fcbfc9fda1971",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_inputs.inc": "24585eb04144eb35275e9b020f23fd9e6d1553865ffca40e68160baf4f2aad9d",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_formatter_continuation.inc": "49dc208e82d6a026ce2526f4ae95ca292acc301de8fe3989ade0067b93b3afc8",
+    "physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_formatter_fixture.py": "d77822cdadd23863382a64fbe7a3155acffe8ea6154fc7482053b75cd0b3c8ed"
+  },
+  "selected_parent": {
+    "preinstall_source": "318578cdc",
+    "direct_source_replay": "7785bfad59e9fc0208558a3c008e569444e431659cda78bf4378d653523c6ba8"
+  },
+  "source_checks": {
+    "literal_new_parent_ports": 54,
+    "CPP_member_names": 289,
+    "Python_syntax": true,
+    "diff_whitespace": true,
+    "compile": false,
+    "runtime": false
+  },
+  "source_events": {
+    "source_words": 6144,
+    "source_bytes": 393216,
+    "held_ACK_edges": 3,
+    "arena_checked_responses": 6144,
+    "negative": "actual_foreign_high_TOKEN17_preinstall_offer"
+  },
+  "comparison_only": {
+    "formatter_accepted_pairs": 49152,
+    "sink_words": 32,
+    "saved_gold": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+  },
+  "numerical_child_owner": "Gauss",
+  "compile_link_runtime_owner": "Lorentz",
+  "execution_blockers": [
+    "Noether all96 actual publications/planes not yet emitted",
+    "Gauss parameterized production preinstall geometry pending",
+    "Gauss selected_ID_consumer body/literal ABI pending"
+  ],
+  "production_geometry_source": "results/rtl/hbm_formatter_preinstall_parent_20261006/fullplane_install_recipe_r1/workspace.json",
+  "source_arena_path": "accepted native source replay, not fullplane HBM kind0 read",
+  "native_external_stage_recipe": true,
+  "normal_SM_entry_enrolled": false,
+  "full_token_qualified": false,
+  "all_levers_qualified": false,
+  "physical_qualified": false,
+  "jobs_launched": 0,
+  "passing_gates_replayed": 0
+}

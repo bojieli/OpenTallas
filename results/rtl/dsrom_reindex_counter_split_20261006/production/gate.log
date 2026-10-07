@@ -1,0 +1,21 @@
+real_rank0_p1 {"pass_": true, "blocks": [136, 110, 128, 111], "cycles": 677, "achieved_TBps": 0.4679, "fraction_of_peak": 0.117}
+real_rank1_p1 {"pass_": true, "blocks": [132, 145, 140, 124], "cycles": 640, "achieved_TBps": 0.552, "fraction_of_peak": 0.138}
+real_rank2_p1 {"pass_": true, "blocks": [137, 132, 132, 116], "cycles": 619, "achieved_TBps": 0.5454, "fraction_of_peak": 0.1364}
+real_rank3_p1 {"pass_": true, "blocks": [127, 133, 131, 114], "cycles": 639, "achieved_TBps": 0.5161, "fraction_of_peak": 0.129}
+func_edges_p1 True 918
+func_full_list_2048_p1 True 3750
+func_dense_run_2048_p1 True 3902
+func_random0_p1 True 1311
+func_random1_p1 True 1186
+func_random2_p1 True 1339
+real_rank0_p2 {"pass_": true, "blocks": [136, 110, 128, 111], "cycles": 618, "achieved_TBps": 0.5125, "fraction_of_peak": 0.1281}
+real_rank1_p2 {"pass_": true, "blocks": [132, 145, 140, 124], "cycles": 739, "achieved_TBps": 0.4781, "fraction_of_peak": 0.1195}
+real_rank2_p2 {"pass_": true, "blocks": [137, 132, 132, 116], "cycles": 636, "achieved_TBps": 0.5309, "fraction_of_peak": 0.1327}
+real_rank3_p2 {"pass_": true, "blocks": [127, 133, 131, 114], "cycles": 738, "achieved_TBps": 0.4469, "fraction_of_peak": 0.1117}
+func_edges_p2 True 818
+func_full_list_2048_p2 True 3099
+func_dense_run_2048_p2 True 3768
+func_random0_p2 True 1145
+func_random1_p2 True 1176
+func_random2_p2 True 1405
+gather pass {"name": "real_rank1_p2", "cycles": 739, "sectors": 9197, "bytes": 294304, "achieved_TBps": 0.4781, "fraction_of_peak": 0.1195}

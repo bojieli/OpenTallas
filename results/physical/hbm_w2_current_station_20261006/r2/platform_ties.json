@@ -1,0 +1,17 @@
+{
+  "TIEHI_CELL_AND_PORT": [
+    "TIEHIx1_ASAP7_75t_R",
+    "H"
+  ],
+  "TIELO_CELL_AND_PORT": [
+    "TIELOx1_ASAP7_75t_R",
+    "L"
+  ],
+  "source": "/OpenROAD-flow-scripts/flow/platforms/asap7/config.mk",
+  "lookup": "make --no-print-directory -s -f actual installed platform config, print resolved variables",
+  "installed_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "asap7lock_and_latest_same_actual_image": true,
+  "R2_mapping_matches_actual_platform": true,
+  "R1_failure": "owned check wrongly required unused TIELO alongside present correct TIEHI; not timing or circuit failure",
+  "current_R2_source_untouched": true
+}

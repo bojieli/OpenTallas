@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.dsrom-combined.deferred-input-hold.v1",
+ "generated": "2026-10-05 (PT), CLAUDE DS-INTEGRATION",
+ "purpose": "Every DS-ROM fused / recovery unit whose routed closure did NOT time hold (or all IO) on its data inputs, so the S81 full-die re-run (plan item 10) must check data-input hold (and, where IO was cut entirely, setup too) at that boundary in context. Two mechanisms: (a) su_norm's own SDC 'set_false_path -hold -from [all_inputs -no_clocks]' (input setup still timed); (b) tools/run_abi3_physical.py --false-path-io ('set_false_path -from $non_clock_inputs' + 'set_false_path -to [all_outputs]': setup AND hold of every non-clock input and output cut; the corner STA shows input-to-reg slack inf).",
+ "units": [
+  {"lever": "su_norm", "top": "ot_dsrom_su_norm_mix (LA6 mix), ot_dsrom_aq12", "mechanism": "a: hold only, all non-clock inputs; outputs r[*]/r_v (bench observation) cut",
+   "sdc": "results/rtl/dsrom_recovery_20261004/su_norm/route/su_norm_unit.sdc (+ input_hold.sdc)",
+   "routed": {"mix6": "results/rtl/dsrom_recovery_20261004/su_norm/route/corner_sta_mix6.json SS +28.96 / FF +17.58 ps", "aq12": "corner_sta_aq12.json SS +27.01 / FF +2.52 ps"},
+   "parent_must_check": "hold from the hub DIN wire-stage registers (33 fast stages; same clock tree) into the norm lanes' x / pre / weight inputs and into aq12's block input; the core16_6a/b/c contextual routes (Codex SU-FUSION) are still in GRT"},
+  {"lever": "su_norm", "top": "ot_dsrom_divc", "mechanism": "none: input hold timed (finite 68.7 ps)", "routed": {"divc": "corner_sta_divc.json SS +21.99 / FF +7.7 ps"}, "parent_must_check": "nothing beyond normal r2r", "deferred": false},
+  {"lever": "su_swiglu", "top": "ot_dsrom_su_swiglu_lane (r4, r4_shared)", "mechanism": "b: all IO",
+   "routed": {"r4": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/route_lane_r4_physical.json SS +19.37 / FF +0.96 ps (TT hold -1.8: not closed)", "r4_shared": "route_lane_r4_shared_physical.json SS +15.6 / FF +3.2 ps (closed)"},
+   "parent_must_check": "setup+hold from the experts_gu / shared_gu field root (hub DIN 33 stages) into g/u/w; outputs q/e/y into the hub DOUT 23 stages toward ffn.down"},
+  {"lever": "su_swiglu", "top": "ot_dsrom_actquant_f12 (quantiser, q5)", "mechanism": "b: all IO",
+   "routed": {"q5": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/route_aq_q5_corner_sta.json SS +11.51 / FF +0.51 ps (closed)"},
+   "parent_must_check": "setup+hold lane -> quantiser and quantiser -> DOUT stage (swiglu_current_binding.json: 'Component IO false paths still require contextual parent boundary setup/hold')"},
+  {"lever": "su_swiglu (idx.q RoPE bank, excluded pending routes)", "top": "ot_dsrom_su_qbank (rope d65 / d45h / m6a5 / r6 / r7)", "mechanism": "b: all IO", "routed": {"note": "observer records only (su_fusion_takeover/collected/swiglu-rope_*); no SS/FF closure yet"}, "parent_must_check": "setup+hold at the qbank's x / cos / sin inputs and code outputs"},
+  {"lever": "su_softmax", "top": "ot_dsrom_su_softmax (LPH16 e54 / m65)", "mechanism": "b: all IO (lever note: 'false-path-io boundary checks remain parent requirements')", "routed": {"note": "no committed SS/FF record (levers/su_softmax.json ss_ff null); LM6/LA5 routes active"},
+   "parent_must_check": "setup+hold at the score input (attention tile -> DIN 33 stages), the PV input, and outputs e / o (DOUT 23), plus RWU/RWD 9-stage reduction/broadcast wires"},
+  {"lever": "field_spine / field_spine_pq (v9)", "top": "ot_v41_pqc_spine_screen wrapping ot_v41_spine_pqc_w17w10", "mechanism": "b: all IO of the screen wrapper; the wrapper registers every spine port, so the spine's own ports are timed r2r inside it",
+   "routed": {"c0r16_ak": "SS +9.90 / FF +6.14 ps (PQ0, keep-aq12)", "c1r16_bk": "SS +3.20 / FF +6.43 ps (PQ1)", "c0r16 (route_takeover)": "SS +18.74 / FF -0.18 ps FAIL_HOLD", "R128": "routing"},
+   "parent_must_check": "the wrapper's stand-in ports in context: vector-memory read/write ports, region roots, the broadcast's first wire stage, the op issuer and the two-cycle phase/stream ROM macros (physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv header)"},
+  {"lever": "head", "top": "ot_dsrom_head_elem (r4 A/B)", "mechanism": "b: all IO", "routed": {"r4_A": "TT setup +24.4 / hold +8.5 ps (no SS/FF corner file)", "r4_B": "TT +28.9 / +2.3 ps"},
+   "parent_must_check": "drivers not recorded anywhere: the head element's x / config inputs and partial outputs need an SS/FF corner run in context first"},
+  {"lever": "head (L2 element)", "top": "ot_v41_rom_elem_nv_w10", "mechanism": "b: all IO", "routed": {"route_r4": "TT -431 / -710 ps (not closed)"}, "parent_must_check": "closure first"},
+  {"lever": "re-index / mdrop (adopted reindex path)", "top": "ot_hdc_v41x_idx_kgctl_*_ctx, ot_hdc_v41x_sel_mdrop_ctx", "mechanism": "b: all IO (dsrom_reindex_kc8_20261005/route_r1/constraint.sdc)", "routed": {"mdrop mc3": "TT +47.2 / +1.06 ps", "kc6": "+0.20 / +2.41", "kc8": "-45.8", "reindex_parallel u45": "+7.6 / +3.4"}, "parent_must_check": "parent re-index context (TT only so far: SS/FF still open)"},
+  {"lever": "fh_capture (head capture, C10c)", "top": "ot_hdc_v41_fh_macro_ctx", "mechanism": "explicit: set_false_path -from the stand-in ports {s3_v_in a_tag_p_in res_in go_fus i_iaddr busy_in o_we1_in o_addr1_in o_mask1_in leaf_mask_in leaf_row_in tv_in ov1_in am_idx_in wr_en wr_addr wr_mask wr_data rst_n} and -to all outputs (physical/dsrom_fh_capture/boundary.sdc)", "routed": {"record": "results/rtl/dsrom_fh_capture_20261005/record.json physical_closed false; boundary SS input setup -121.1 ps"}, "parent_must_check": "setup AND hold of the cut ports; owner Fermat (head item 2)"}
+ ],
+ "timed_normally_not_deferred": [
+  "su_hcpost ot_dsrom_su_hcpost_lane (IO delay 0.2 T; input hold 58.7 ps timed; m5a5 SS +0.23 / FF +1.69)",
+  "su_routeract ot_dsrom_su_spsqrt_lane1 @1.111 ns (SS +17.0 / FF +3.74; input hold 70.3 timed)",
+  "field PQ pair ot_v41_pq_pair_screen (pair0 SS +220.69 / FF +10.84; pair1 +140.04 / +5.04)",
+  "q-element ot_v41_rom_elem_q_qx_w10 Z18c/Z18d (input -min 360 / -max 727, output -min -322 / -max -193; Z18d FF -10.84 internal hold FAIL, mandatory)",
+  "QX10 / v9 parent contexts (physical/dsrom_qx10_parent_context, physical/dsrom_v9_parent_context: no false paths)",
+  "WFC ot_rom_pkg_ctrl_wfc / ot_dsrom_wfc_parent_cut (false_path_io false)"
+ ]
+}

@@ -1,0 +1,26 @@
+Owner-authorized submission: exactly two corrected W2 jobs, no manual launch.
+Names: w2-rb-safe-no2-d108b33de-gate1 / w2-rb-safe-no3-d108b33de-gate1.
+Pinned source: d108b33de on published codex/w2-gate-acceptance-20261006.
+Both validated with the deployed wt-codex-closure-reliability CLI, then atomically
+dropped into /tmp/claude-review-20261003/closure_jobs. Full fixed exact gate and
+standalone assertion-qualified S3 run before calibration. Calibration uses a
+separate _cal path and explicit --pnr-stop-after cts; normal host admission applies.
+merge_target=null. Parent main packaging7cbd4bb85 remains unchanged.
+
+Original 206a jobs were cancelled under the deployed per-job lock after preserving
+final gate receipts, scripts and inventories. No old processes or containers remain.
+S8 timeout is excluded; other11 negative assertions source-qualified. Source/mapping
+objects retained; no blind resume or RTL/settings/clock changes. Reuse mapped objects
+only through loop-owner source/config/tool identity checks; no reused timing credit.
+
+Dependency inventory for later main integration:
+ results/rtl/w2_invalid_calibration_stop_20261006/source_dependency_closure.json
+34 paths cover gate sources, W2 route kit and direct flow imports;16 absent on main
+at inspection. Add missing W2 prerequisites, review differing shared-driver hunks;
+do not cherry-pick only the gate file and pretend its old RTL dependencies exist.
+Broad tools shipping remains necessary for transitive flow dependencies.
+
+NEXT: closure loop runs the source-pinned full suite and only then admits CTS/route.
+Harvest its actual terminal; no agent-side duplicate campaign, settings sweep or
+manual route. If any gate fails, preserve that failure and diagnose its specific
+assertion/infrastructure receipt. No full gate PASS or physical closure claimed here.

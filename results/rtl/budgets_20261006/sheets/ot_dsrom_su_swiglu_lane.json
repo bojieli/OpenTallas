@@ -1,0 +1,306 @@
+{
+ "schema": "opentallas.budgets.sheet.v1",
+ "master": "ot_dsrom_su_swiglu_lane",
+ "kinds": [
+  "su_lane"
+ ],
+ "dies": {
+  "s81_layer": 1,
+  "s81_layer1": 1,
+  "s81_head": 1
+ },
+ "size_um": [
+  215.854,
+  215.854
+ ],
+ "tile_of": "dsfd_sp_su_n/s",
+ "clock": {
+  "ports": [
+   "clk"
+  ],
+  "domains": [
+   "core_0p833"
+  ],
+  "regions": [
+   "inside the dsfd_sp_su partition clock region (intra)"
+  ],
+  "n_regions": 1,
+  "internal_insertion": {
+   "target_ss": 616.7,
+   "target_ff": null,
+   "target_basis": "min(430 + 0.865 sqrt(w h), 900)",
+   "tolerance_ps": 100.0,
+   "ss": 370.4,
+   "ff": 226.8,
+   "ss_min": 344.53,
+   "ss_max": 396.25,
+   "ff_min": 206.58,
+   "ff_max": 247.09,
+   "grade": "calibrated",
+   "source": "measured: route lane_esum_h770b (0c9c4c32a, ESUM+IREG) 6_final SS/FF report_clock_latency",
+   "over_target": false
+  },
+  "calibrate_check": {
+   "compare": "closure-loop CK_SS_MEAN vs internal_insertion.ss (the value the die plan compensates) and vs internal_insertion.target_ss",
+   "tolerance_ps": 100.0,
+   "on_deviation": "FLAG (NEEDS_BUDGET): re-plan the die pin target; never silently re-calibrate the IO SDC"
+  }
+ },
+ "skew": {
+  "intra_ps": 90.0,
+  "inter_ps": 150.0,
+  "hold_io_ps": 50.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "route_period_ps": 770.0,
+  "signoff_period_ps": 833.333,
+  "accept_ps": 15.0
+ },
+ "control": {},
+ "interfaces": [
+  {
+   "port": "v",
+   "dir": "input",
+   "bits": 1,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "g",
+   "dir": "input",
+   "bits": 32,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "u",
+   "dir": "input",
+   "bits": 32,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "w",
+   "dir": "input",
+   "bits": 32,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "lim",
+   "dir": "input",
+   "bits": 32,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "a",
+   "dir": "output",
+   "bits": 32,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "vo",
+   "dir": "output",
+   "bits": 1,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  },
+  {
+   "port": "fault",
+   "dir": "output",
+   "bits": 1,
+   "bus_classes": [
+    "su_internal"
+   ],
+   "neighbours": [
+    "dsfd_sp_su partition logic"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 124.5,
+   "length_basis": "su partition pin hop (same as dsfd_sp_su_n f_vm)",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "also_cdc": false,
+   "input_delay_ss_ps": 346.3,
+   "output_delay_ss_ps": 287.3,
+   "input_min_delay_ff_ps": 46.1,
+   "output_min_delay_ff_ps": 1.1,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "feasible": true
+  }
+ ],
+ "totals": {},
+ "constants": {
+  "wire_ss_ps_per_um": 1.135,
+  "clkq_ss": 90.0,
+  "drv_out": 40.0,
+  "rcv_in": 41.0,
+  "setup_ss": 30.0,
+  "clkq_ff_min": 32.2,
+  "hold_ff": 15.0,
+  "wire_ff_credit_ps_per_um": 0.112
+ },
+ "note": "CLAUDE S81-RERUN 2026-10-07: hand sheet for the su_swiglu lane (a sub-block of the su partition, not a die master in budget_sheet.py): every port is an intra-region pin-registered hop of the su partition, budgeted with the dsfd_sp_su_n f_vm formula (L 124.5 um, intra skew 75, hold IO 50)."
+}

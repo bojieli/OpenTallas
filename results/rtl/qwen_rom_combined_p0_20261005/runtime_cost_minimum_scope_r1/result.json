@@ -1,0 +1,60 @@
+{
+  "status": "SOURCE_AUDIT_AND_MINIMUM_DRIVER_PREPARED_NOT_RUN",
+  "runtime_pid": 1959093,
+  "hardware_source": "183a4dde5",
+  "driver_source": "95dd5f7d1",
+  "observations": [
+    {
+      "tick": 28672,
+      "wall_s": 13542,
+      "passes": 161281
+    },
+    {
+      "tick": 32768,
+      "wall_s": 15818,
+      "passes": 184332
+    }
+  ],
+  "s_per_core_edge": {
+    "at_28672": 0.47230747767857145,
+    "cumulative_32768": 0.48272705078125,
+    "last4096": 0.5556640625
+  },
+  "settle_passes_per_core_edge": 5.6253662109375,
+  "source_eval": {
+    "ranks": 4,
+    "tiles_per_rank": 1536,
+    "settle": "All4 dies + collective evaluated every pass; Fabric.propagate visits all tiles",
+    "tile_edge": "Fabric.edge evaluates every tile on low/high transitions when rank tile_en is set",
+    "tile_enable": "me_clk_en OR actual kv_active; KV stall does not itself suppress full-fabric edges",
+    "clock_source": "Independent833333fs core and1024000fs HCLK; no skipping or clock change"
+  },
+  "active_payload_service_cycles": 1179648,
+  "conditional_wall_projection_hours": 154.7657142857143,
+  "conditional_latest_cumulative_projection_hours": 158.18,
+  "remaining_payload_after_first_fill_cycles": 1146880,
+  "remaining_payload_conditional_hours": 153.7861111111111,
+  "projection_scope": "Constant observed host seconds/core-edge applied to serialized service demand only, not an ETA or hardware latency; future phase/load/overlap not measured",
+  "minimum_vehicle": {
+    "stage": "layer-runtime",
+    "ranks": 4,
+    "tiles_per_rank": 1536,
+    "layers_executed": 1,
+    "layer": 0,
+    "position": 8191,
+    "actual_full36_backing": true,
+    "outputs_compared": 8,
+    "next_layer_prefetch": false,
+    "reuse": "Same generated top, canonical5.050 and retained engine archives; one new driver TU only",
+    "drain": "Real warm close plus consumer write ACK debt and protected transport quiet",
+    "full_token_pass": false,
+    "overlap_measured": false
+  },
+  "source_emission_check": "PASS; manifest/history checks precede execution-list shortening; final host unchanged; Python AST and diff-check PASS",
+  "minimum_run_started": false,
+  "final_criterion": "One owner-requested source-correct P8191 full36+head smoke, all300 exact output comparisons, faults/drain/cycles; minimum result cannot satisfy it",
+  "named_old_run_consumer": "Socrates/COMPOSE first fullshape L0 cold-fill/compute/readback reference; not continued all36 baseline completion by default",
+  "retirement": "Preserve now; assess scoped retirement once corrected source/branch/executable supersession is proven and required L0 reference captured. No stop/restart/migration performed",
+  "functional_binding": "Actual a06 rawRSEL1 versus protected3f3c full504 branch question remains directly with ClaudeQWEN-PHYS/Descartes",
+  "physical_qualified": false
+}

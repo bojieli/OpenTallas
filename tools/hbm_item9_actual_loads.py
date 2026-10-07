@@ -72,6 +72,23 @@ for bit in response:
 clock=net['ports']['clk_sm']['bits'][0]
 caps=json.loads((out/'library_input_caps_ff.json').read_text())
 summary=dict(mapped_sha256=hashlib.sha256(mapped.read_bytes()).hexdigest(),corners={},units='fF',actual_library_pin_loads=True,wire_RC_included=False,propagated_clocks=False,physical_qualified=False,adopted=False)
+if r['shape'].get('GEO')==1:
+ retained={name:row for name,row in net['netnames'].items()
+           if '.g_dsl[' in name and ('.nodes[' in name or name.endswith('.match_owner'))}
+ def kept(row):
+  value=row.get('attributes',{}).get('keep','0')
+  return bool(int(value,2) if isinstance(value,str) and set(value)<={'0','1'} else value)
+ node_bits=sum(len(row['bits']) for name,row in retained.items() if '.nodes[' in name and kept(row))
+ match_count=sum(kept(row) for name,row in retained.items() if name.endswith('.match_owner'))
+ leaves=1 << (r['shape']['NSM']-1).bit_length()
+ expected_nodes=(2*leaves-1)*r['shape']['NL']*32
+ expected_matches=r['shape']['NSM']*64
+ summary['geographic_tree_retention']=dict(actual_kept_node_bits=node_bits,
+   expected_node_bits=expected_nodes,actual_kept_match_count=match_count,
+   expected_match_count=expected_matches,through_final_mapped_export=True,
+   passed=node_bits==expected_nodes and match_count==expected_matches)
+ # Preserve the actual failure and continue counting loads if retention is lost.
+ # A source-ready route must consume this verdict, never silently assume keep worked.
 for corner,lib in caps.items():
  loads={bit:0. for tree in response_trees for bit in tree};count=Counter();leafloads=Counter();leafcount=Counter();clockload=0.;clockpins=0
  for name,cell in net['cells'].items():

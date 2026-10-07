@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.hbm_stn_r33.capacity_diagnosis.v1",
+  "base_commit": "46548e035539565f8991a87497473d9e2917c6b4",
+  "failed_source": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+  "failed_job": "hbm_stn_stn_r33_30f87bcc4",
+  "failed_run": "ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r33_30f87bcc4",
+  "cause": "CTS repair_timing instance-count limit, not demonstrated floorplan exhaustion. All 512 launch-register input endpoints need hold repair. At 2923 buffers the 100% cap aborts with RSZ-0060, WNS +1.664 ps below unchanged +35 ps repair margin.",
+  "upstream": {
+    "mapping": "upstream.json",
+    "index": "Four hfd_index_q_b5.t_vm ports launched by vm[511:0] posedge ck flops (conditional enable pv).",
+    "vm": "One hfd_vm.t_router port launched by per-bit ot_hfd_oreg4 (four kept posedge registers).",
+    "scope": "Physical wrapper interfaces; index b5 is explicitly an interim view, not proof of complete indexer functionality."
+  },
+  "constraints": {
+    "input_min_ps": -77,
+    "virtual_clock_latency_ps": 131,
+    "external_min_arrival_ps": 54,
+    "ff_leaf_calibration_ps": [
+      72,
+      79
+    ],
+    "setup_uncertainty_signoff_ps": 60,
+    "setup_uncertainty_route_ps": 123,
+    "hold_uncertainty_ps": 25,
+    "repair_hold_margin_ps": 35,
+    "signoff_period_ps": 833.333,
+    "io_max_ps": 316.667,
+    "minimum_credit_ps": 0,
+    "metadata": "r33 absent from io_min_delay.json; retained conservative zero. The generic station-flop plus wire heuristic is not a measured minimum over these actual index/VM output paths. No minimum-wire or clk-to-Q credit introduced."
+  },
+  "read_only_path_measurement": {
+    "database": "failed run calibration 4_1_cts.odb (before full route repair)",
+    "sdc": "failed route route.sdc",
+    "libraries": "exact five WC/BC library paths from failed_cts.log",
+    "parasitics": "placement estimate; diagnostic only, not routed sign-off or reproduction of the setup-resized failed database",
+    "ss": {
+      "start": "a[296]",
+      "end": "u_lau1.r[296]$_DFF_P_",
+      "arrival_ps": 95.698,
+      "required_ps": 135.909,
+      "slack_ps": -40.211
+    },
+    "ff": {
+      "start": "a[307]",
+      "end": "u_lau1.r[307]$_DFF_P_",
+      "arrival_ps": 74.621,
+      "required_ps": 87.555,
+      "slack_ps": -12.934
+    }
+  },
+  "capacity": {
+    "opt_in": "OT_STN_R33_CAPACITY=1",
+    "old_max_buffer_percent": 100,
+    "new_max_buffer_percent": 300,
+    "measured_hold_buffers": 2923,
+    "measured_hold_area_growth_percent": 62.8,
+    "calibration_design_area_um2": 362,
+    "core_area_um2": 2999.7,
+    "projected_area_um2": 1044.008,
+    "projected_utilization_percent": 34.804,
+    "placement_density": 0.45,
+    "qualification": "Projection from observed repair-buffer area cost, not a guaranteed final utilization or timing result. Full routed SS/FF, DRC, LEF and die pin-access checks remain mandatory. The budget allows repair; it does not force insertion.",
+    "tool_api": "Pinned OpenROAD validates percentages <=100 even for instance-count ratios. The opt-in hook permits exactly -max_buffer_percent=300 only during this helper call, forwarding all other validation and restoring the original checker in finally."
+  },
+  "model": {
+    "instances": 5,
+    "bits_per_cycle_per_instance": 512,
+    "outline_um": [
+      39.288,
+      77.736
+    ],
+    "cycles_added": 0,
+    "rtl_changed": false,
+    "boundary_changed": false,
+    "latency_effect": "No architecture or latency change for any model; the existing generator hub-stage plan remains applicable."
+  },
+  "limitations": [
+    "Failed CTS also left estimated setup WNS -92.506 ps on output b[208]. Capacity repair alone does not assert setup closure; the new full route must resolve or report it.",
+    "No whole-die timing or functional adoption is claimed."
+  ],
+  "wrapper_fix": "Local stn_route.sh requires the exact physical rc, propagates signoff/export failures and returns after successful CTS-only calibration; shared closure-loop tooling untouched.",
+  "validation": {
+    "flow_regressions": "test_stn_capacity.py: PASS (default 100%, opt-in 300%, wrong-master rejection, masked physical failure and stale/multiple-rc cases)",
+    "syntax": "bash -n stn_route.sh: PASS",
+    "full_shape": "Existing exact_station and neg_mutant stages retained in successor closure-loop job.",
+    "pinned_openroad_api": "PASS: capacity accepted on real r33 database, other percentage checks preserved, original checker restored after normal return and intentional helper error (capacity_api_smoke.log)."
+  },
+  "source_sha256": {
+    "physical/hbm_accel_die_views/stations/hfd_stn_r33/hfd_stn_r33.sv": "ed14935ce171695c1ae7edab6cccb6e856a49468c74c76fa75f206018fcf77a6",
+    "physical/hbm_accel_die_views/stations/hfd_stn_r33/hfd_stn_r33.sdc": "2002ed57342765cc8ebd74bab80b4151ce91d33f4a1987d176ee69826ea34c79",
+    "physical/hbm_accel_die_views/stations/io_min_delay.json": "64d0594aedd18c4d1f0c16d933111c87b9f550ae48532dc699061b595c5bc0f1",
+    "physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b5.sv": "f1e5d92761d78955ff3c8cc16099c932b42ed462a9fd0f20526d517961b3d8e7",
+    "physical/hbm_accel_die_views/vm/rtl/hfd_vm.sv": "bf136be42c0fcf32cdbc537ef232f86eabc011d116b7233ee6ad600f015c0d2f",
+    "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+    "tools/hbm_die_views.py": "df2e0bfc476196932f4014095c4518e2778ffb65d90461b30ad2b9ab027c63b8",
+    "tools/hbm_accel_die_fp.py": "cecce1d0c8c91ad0a9326d53f1e221517f6d46c51740370a76f5ea350ae0637f"
+  }
+}

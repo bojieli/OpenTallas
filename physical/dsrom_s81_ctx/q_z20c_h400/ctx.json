@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.dsrom-s81-macro-context.v1",
+ "tool": "tools/dsrom_s81_macro_context.py",
+ "cell": "ot_v41_rom_elem_q_qx_w10",
+ "lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+ "lib_dir": "/tmp/s81rr/etm",
+ "hop_um": 400.0,
+ "bin_um": 20.0,
+ "die_um": [
+  1371.6000000000001,
+  1037.3400000000001
+ ],
+ "macro_at_um": [
+  430.56,
+  430.38000000000005
+ ],
+ "macro_um": [
+  510.84,
+  177.12
+ ],
+ "signal_pins": 733,
+ "inputs": 605,
+ "outputs": 128,
+ "bins": 6,
+ "lef_pins_without_lib": [],
+ "lef_pins_without_lib_n": 0
+}

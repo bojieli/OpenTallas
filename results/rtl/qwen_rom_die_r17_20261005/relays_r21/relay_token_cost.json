@@ -1,0 +1,315 @@
+{
+ "schema": "opentallas.qwen-rom-relay-token-cost.v1",
+ "stages_r21": {
+  "bd": 77,
+  "tree": 21,
+  "tws": 93,
+  "ord": 10,
+  "link": 72
+ },
+ "stages_rtl": {
+  "bd": 41,
+  "tree": 20,
+  "tws": 38,
+  "ord": 7,
+  "link": 46
+ },
+ "me_ops_per_ar_token": 217,
+ "delta_per_me_op": 95,
+ "delta_link_per_traversal": 26,
+ "cycles_per_ar_token": 22487,
+ "basis": "one register boundary per die hop (element ports registered); r21 relays add hops; the measured token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)",
+ "relays": {
+  "pitch_um": 430.56,
+  "max_um": 430.56,
+  "relays": 8965,
+  "masters": 34,
+  "classes": {
+   "corridor": {
+    "buses": 1536,
+    "relays": 3072,
+    "relay_bits": 992256,
+    "max_hop_um": 423.5,
+    "max_stages": 3
+   },
+   "head_chain": {
+    "buses": 2,
+    "relays": 9,
+    "relay_bits": 2907,
+    "max_hop_um": 452.0,
+    "max_stages": 8
+   },
+   "tree_block": {
+    "buses": 960,
+    "relays": 3485,
+    "relay_bits": 1784320,
+    "max_hop_um": 453.6,
+    "max_stages": 9
+   },
+   "link_channel": {
+    "buses": 24,
+    "relays": 132,
+    "relay_bits": 139392,
+    "max_hop_um": 425.2,
+    "max_stages": 7
+   },
+   "link_spine": {
+    "buses": 12,
+    "relays": 37,
+    "relay_bits": 51744,
+    "max_hop_um": 425.5,
+    "max_stages": 5
+   },
+   "spine_local": {
+    "buses": 2,
+    "relays": 7,
+    "relay_bits": 3584,
+    "max_hop_um": 423.7,
+    "max_stages": 5
+   },
+   "io": {
+    "buses": 6,
+    "relays": 207,
+    "relay_bits": 104016,
+    "max_hop_um": 461.8,
+    "max_stages": 46
+   },
+   "tree_spine": {
+    "buses": 106,
+    "relays": 1956,
+    "relay_bits": 1001472,
+    "max_hop_um": 440.6,
+    "max_stages": 38
+   },
+   "sequencer": {
+    "buses": 2,
+    "relays": 60,
+    "relay_bits": 3320,
+    "max_hop_um": 421.2,
+    "max_stages": 50
+   }
+  },
+  "clock_nets_missing": [],
+  "repaired": 341,
+  "repaired_examples": [
+   [
+    "head_32",
+    6,
+    8,
+    421.2
+   ],
+   [
+    "tree_0_2_0b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_0_2_2b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_0_3_0b",
+    8,
+    7,
+    424.9
+   ],
+   [
+    "tree_1_2_0b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_1_2_2b",
+    5,
+    4,
+    426.1
+   ],
+   [
+    "tree_1_3_0b",
+    8,
+    7,
+    421.2
+   ],
+   [
+    "tree_2_2_0b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_2_2_2b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_2_3_0b",
+    8,
+    7,
+    422.8
+   ],
+   [
+    "tree_3_2_0b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_3_2_2b",
+    5,
+    4,
+    428.3
+   ],
+   [
+    "tree_3_3_0b",
+    8,
+    7,
+    421.2
+   ],
+   [
+    "tree_4_2_0b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_4_2_2b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_4_3_0b",
+    8,
+    7,
+    421.2
+   ],
+   [
+    "tree_5_2_0b",
+    5,
+    4,
+    421.8
+   ],
+   [
+    "tree_5_2_2b",
+    5,
+    4,
+    421.2
+   ],
+   [
+    "tree_5_3_0b",
+    8,
+    7,
+    421.2
+   ],
+   [
+    "tree_6_2_0b",
+    5,
+    4,
+    421.2
+   ]
+  ],
+  "unrepaired": [
+   "serdes_rx (start 0, visited 0, sites 90914, D 426)"
+  ],
+  "relay_flop_bits": 4083011,
+  "relay_area_mm2": 14.607
+ },
+ "recipe": "r21 = r20c + --slab-bw-m8 + --relay-pitch 430.56 (tools/die_top_lint.py QWEN_R21)",
+ "decision": "OWNER APPROVED 2026-10-07: relay pitch = the measured 430.56 um reach (-10.4%, +22,487 cycles / AR token); pricing commit 2de2dfc1b",
+ "alternatives_priced": {
+  "pitch_300_owner_fast_rule": {
+   "cycles_per_ar_token": 38178,
+   "delta_per_me_op": 162,
+   "delta_link": 42,
+   "relays": 14395
+  },
+  "pitch_350": {
+   "cycles_per_ar_token": 35070,
+   "delta_per_me_op": 150,
+   "delta_link": 35
+  }
+ },
+ "hop_lengths_pin_manhattan": {
+  "corridor": {
+   "hops": 4608,
+   "max_um": 408.5,
+   "over_430p56": 0
+  },
+  "tap": {
+   "hops": 1536,
+   "max_um": 0.2,
+   "over_430p56": 0
+  },
+  "head_chain": {
+   "hops": 73,
+   "max_um": 437.0,
+   "over_430p56": 1
+  },
+  "tree_block": {
+   "hops": 6365,
+   "max_um": 427.5,
+   "over_430p56": 0
+  },
+  "link_channel": {
+   "hops": 156,
+   "max_um": 397.9,
+   "over_430p56": 0
+  },
+  "link_spine": {
+   "hops": 49,
+   "max_um": 408.9,
+   "over_430p56": 0
+  },
+  "kv_land": {
+   "hops": 1536,
+   "max_um": 52.9,
+   "over_430p56": 0
+  },
+  "hbm_cdc": {
+   "hops": 256,
+   "max_um": 111.8,
+   "over_430p56": 0
+  },
+  "cdc_core": {
+   "hops": 256,
+   "max_um": 111.8,
+   "over_430p56": 0
+  },
+  "phy_dfi": {
+   "hops": 4,
+   "max_um": 417.2,
+   "over_430p56": 0
+  },
+  "spine_local": {
+   "hops": 9,
+   "max_um": 408.7,
+   "over_430p56": 0
+  },
+  "io": {
+   "hops": 219,
+   "max_um": 435.5,
+   "over_430p56": 1
+  },
+  "tree_spine": {
+   "hops": 2069,
+   "max_um": 414.5,
+   "over_430p56": 0
+  },
+  "sequencer": {
+   "hops": 66,
+   "max_um": 395.7,
+   "over_430p56": 0
+  },
+  "crom": {
+   "hops": 2,
+   "max_um": 260.3,
+   "over_430p56": 0
+  }
+ },
+ "hops_over_pitch": "head_31 437.0 um (VM xw -> first relay) and serdes_rx last hop 436 um: under the 504 um measured SS reach; phy_dfi 417 um exempt (PHY interface)"
+}

@@ -1,0 +1,15 @@
+{
+  "verdict": "FLOW_ERROR_INFERRED_MEMORY_RECIPE_LIMIT",
+  "terminal_exit": 2,
+  "supervisor_exit": 2,
+  "container_exit": 2,
+  "OOMKilled": false,
+  "finished_utc": "2026-10-06T07:43:37.170284773Z",
+  "active_children": false,
+  "cause": "ORFS SYNTH_MEMORY_MAX_BITS4096 vs existing two-entry protected request CDC read-shadow6480bits",
+  "largest_instance": "u_r4.u_memory.g_live.u_request.sh depth2 width3240",
+  "source_RTL_changed": false,
+  "SSFF": null,
+  "DRC": null,
+  "retained": "Original source/container/logs/19MB canonical RTLIL/41MB mem.json retained in original root; continuation reuses canonical RTLIL only"
+}

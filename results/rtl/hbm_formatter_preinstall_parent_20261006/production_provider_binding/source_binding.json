@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_ADDRESS_MAPPING_VERIFIED",
+  "book": "results/rtl/hbm_formatter_preinstall_parent_20261006/fullplane_install_recipe_r1/workspace.json",
+  "book_sha256": "c18419a44e9c4268e1beef5619b3ac345766b856b6d6d3d64fa4b55194944363",
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "11f267163d69efd2d58f335a0f09832608c7edbeffadc376a543ce3de0d9750f",
+    "rtl/gpu_sys/ot_gpu_sys_glue.sv": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129",
+    "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+    "rtl/gpu_sys/ot_gpu_xbar.sv": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+    "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "NS": 2,
+  "NPC": 2,
+  "MEM_WORDS_per_partition": 2097152,
+  "sector_bytes": 32,
+  "capacity_bytes_per_die": 134217728,
+  "VM_AW": 21,
+  "sector_mapping": "partition=(byte>>7)&1; local=((byte>>8)<<7)|(byte&127); sector=local>>5",
+  "unique_successor_sectors": 24770,
+  "partition_counts": [
+    12386,
+    12384
+  ],
+  "max_sector_by_partition": [
+    1868065,
+    1868063
+  ],
+  "original_occupied_end": 118763520,
+  "allocated_end": 119556160,
+  "old_prefix_preserved": true,
+  "modulo_wrap": false,
+  "syntax_disabled_rc": 0,
+  "hardware_runtime_pass": false,
+  "production_installation_complete": false,
+  "physical_provider_signoff": false,
+  "live_job_changed": false
+}

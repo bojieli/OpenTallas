@@ -1,0 +1,342 @@
+{
+ "schema": "opentallas.dsrom-s81.deferred-hold.v1",
+ "generated": "2026-10-06 (PT), CLAUDE S81-RERUN",
+ "source": "results/rtl/dsrom_recovery_20261004/combined/deferred_input_hold.json",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "method": "Per routed unit (6_final odb + spef, propagated clock, SS and FF ASAP7 NLDM): the IO false paths / IO delays of its SDC are dropped and every non-clock input / output gets a 0 ps IO delay on the unit clock; the port slack then gives the window the parent must meet, relative to the clock edge at the unit clk PORT: an input may change no earlier than -FF hold slack and must arrive by the SS setup slack; an output is valid from FF hold slack + 25 ps to T - 60 - SS setup slack. Composed with an ASAP7 DFFHQNx1 parent register (FF clk->q 32.2 ps, SS 115.6 ps, 30 ps wire), each port group yields the window of parent launch (input) / capture (output) clock offsets that close both corners. P0 = parent CTS treats the unit clk pin as a plain sink (offset 0); P1 = parent registers clocked at the unit's own insertion (write_timing_model min/max_clock_tree_path).",
+ "units": [
+  {
+   "unit": "su_norm_core16_xf_a",
+   "lever": "su_norm (ADOPTED route)",
+   "top": "ot_dsrom_su_norm (core16_xf_a, adopted: SS +10.55 / FF +2.44 r2r)",
+   "mechanism": "a: input hold false path",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_xf_a/work/orfs/results/asap7/opentallas_ot_dsrom_su_norm_asap7_su_norm_core16_xf_a/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 580.2652,
+     "max_clock_tree_path": 636.11041
+    },
+    "ff": {
+     "min_clock_tree_path": 354.22058,
+     "max_clock_tree_path": 397.77734
+    }
+   },
+   "infeasible_ports": [],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      366.57,
+      507.08
+     ],
+     "width_ps": 140.51,
+     "feasible": true
+    },
+    "out": {
+     "window_ps": [
+      238.93,
+      375.69
+     ],
+     "width_ps": 136.76,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -366.57,
+   "P1_worst_margin_ps": -129.03,
+   "verdict": "FEASIBLE with insertion-aware parent banks (P0 plain-sink parent fails by 367 ps); launch window only 141 ps wide"
+  },
+  {
+   "unit": "su_norm_mix6",
+   "lever": "su_norm",
+   "top": "ot_dsrom_su_norm_mix (mix6_a, closed SS +28.96 / FF +17.58)",
+   "mechanism": "a: input hold false path",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/mix6_a/work/orfs/results/asap7/opentallas_ot_dsrom_su_norm_mix_asap7_su_norm_mix6_a/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 194.34543,
+     "max_clock_tree_path": 220.35913
+    },
+    "ff": {
+     "min_clock_tree_path": 118.11771,
+     "max_clock_tree_path": 136.88719
+    }
+   },
+   "infeasible_ports": [],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      119.59,
+      222.0
+     ],
+     "width_ps": 102.41,
+     "feasible": true
+    },
+    "out": {
+     "window_ps": [
+      -142.98,
+      136.06
+     ],
+     "width_ps": 279.04,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -119.59,
+   "P1_worst_margin_ps": -1.47,
+   "verdict": "FEASIBLE with insertion-aware parent banks (P0 plain-sink parent fails by 120 ps)"
+  },
+  {
+   "unit": "aq_q5",
+   "lever": "su_swiglu",
+   "top": "ot_dsrom_actquant_f12 (q5, closed SS +11.51 / FF +0.51)",
+   "mechanism": "b: all IO",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/aq_q5/work/orfs/results/asap7/opentallas_ot_dsrom_actquant_f12_asap7_aq_q5/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 260.02609,
+     "max_clock_tree_path": 303.29593
+    },
+    "ff": {
+     "min_clock_tree_path": 159.06242,
+     "max_clock_tree_path": 192.77945
+    }
+   },
+   "infeasible_ports": [],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      187.29,
+      574.41
+     ],
+     "width_ps": 387.12,
+     "feasible": true
+    },
+    "out": {
+     "window_ps": [
+      -245.49,
+      171.83
+     ],
+     "width_ps": 417.32,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -187.29,
+   "P1_worst_margin_ps": -28.22,
+   "verdict": "FEASIBLE with insertion-aware parent banks (P0 plain-sink parent fails by 187 ps)"
+  },
+  {
+   "unit": "lane_r4_shared",
+   "lever": "su_swiglu",
+   "top": "ot_dsrom_su_swiglu_lane (r4_shared, closed SS +15.6 / FF +3.2)",
+   "mechanism": "b: all IO",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/lane_r4_shared/work/orfs/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_lane_r4_shared/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 305.5145,
+     "max_clock_tree_path": 355.71722
+    },
+    "ff": {
+     "min_clock_tree_path": 189.25691,
+     "max_clock_tree_path": 227.19856
+    }
+   },
+   "infeasible_ports": [
+    "g",
+    "lim",
+    "rst_n",
+    "u"
+   ],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      205.28,
+      -321.28
+     ],
+     "width_ps": -526.56,
+     "feasible": false
+    },
+    "out": {
+     "window_ps": [
+      67.07,
+      225.21
+     ],
+     "width_ps": 158.14,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -321.28,
+   "P1_worst_margin_ps": -677.0,
+   "verdict": "BOUNDARY INFEASIBLE: g, lim, rst_n, u"
+  },
+  {
+   "unit": "lane_r4",
+   "lever": "su_swiglu",
+   "top": "ot_dsrom_su_swiglu_lane (r4, SS +19.37 / FF +0.96)",
+   "mechanism": "b: all IO",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/lane_r4/work/orfs/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_lane_r4/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 346.1485,
+     "max_clock_tree_path": 398.21133
+    },
+    "ff": {
+     "min_clock_tree_path": 208.38535,
+     "max_clock_tree_path": 245.40483
+    }
+   },
+   "infeasible_ports": [
+    "g",
+    "lim",
+    "rst_n",
+    "u"
+   ],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      236.27,
+      -394.85
+     ],
+     "width_ps": -631.12,
+     "feasible": false
+    },
+    "out": {
+     "window_ps": [
+      119.63,
+      234.89
+     ],
+     "width_ps": 115.26,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -394.85,
+   "P1_worst_margin_ps": -793.06,
+   "verdict": "BOUNDARY INFEASIBLE: g, lim, rst_n, u"
+  },
+  {
+   "unit": "rope_r5",
+   "lever": "su_swiglu idx.q RoPE bank",
+   "top": "ot_dsrom_su_qbank (rope_r5, no SS/FF closure)",
+   "mechanism": "b: all IO",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/route/rope_r5/work/orfs/results/asap7/opentallas_ot_dsrom_su_qbank_asap7_rope_r5/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 854.21509,
+     "max_clock_tree_path": 957.70593
+    },
+    "ff": {
+     "min_clock_tree_path": 529.77448,
+     "max_clock_tree_path": 616.26813
+    }
+   },
+   "infeasible_ports": [
+    "cs",
+    "rst_n"
+   ],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      611.01,
+      -3675.03
+     ],
+     "width_ps": -4286.04,
+     "feasible": false
+    },
+    "out": {
+     "window_ps": [
+      765.0,
+      545.05
+     ],
+     "width_ps": -219.95,
+     "feasible": false
+    }
+   },
+   "P0_worst_margin_ps": -3675.03,
+   "P1_worst_margin_ps": -4632.74,
+   "verdict": "BOUNDARY INFEASIBLE: cs, rst_n"
+  },
+  {
+   "unit": "smx_x7u35",
+   "lever": "su_softmax",
+   "top": "ot_dsrom_su_softmax (x7u35, no SS/FF closure)",
+   "mechanism": "b: all IO",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/route/x7u35/orfs/results/asap7/opentallas_ot_dsrom_su_softmax_asap7_smx_x7u35/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 822.72864,
+     "max_clock_tree_path": 886.55322
+    },
+    "ff": {
+     "min_clock_tree_path": 506.93195,
+     "max_clock_tree_path": 555.54718
+    }
+   },
+   "infeasible_ports": [
+    "rst_n"
+   ],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      543.47,
+      -1795.61
+     ],
+     "width_ps": -2339.08,
+     "feasible": false
+    },
+    "out": {
+     "window_ps": [
+      532.92,
+      530.03
+     ],
+     "width_ps": -2.89,
+     "feasible": false
+    }
+   },
+   "P0_worst_margin_ps": -1795.61,
+   "P1_worst_margin_ps": -2682.17,
+   "verdict": "BOUNDARY INFEASIBLE: rst_n"
+  },
+  {
+   "unit": "q_z20c",
+   "lever": "q element (reference: IO timed)",
+   "top": "ot_v41_rom_elem_q_qx_w10 Z20c (closed SS +3.54 / FF +0.61)",
+   "mechanism": "none (input -min 360 / -max 727, output -min -322 / -max -193)",
+   "base": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z20c/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z20c_20261005/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 437.03534,
+     "max_clock_tree_path": 623.92944
+    },
+    "ff": {
+     "min_clock_tree_path": 269.7977,
+     "max_clock_tree_path": 388.4032
+    }
+   },
+   "infeasible_ports": [],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      205.4,
+      628.26
+     ],
+     "width_ps": 422.86,
+     "feasible": true
+    },
+    "out": {
+     "window_ps": [
+      67.45,
+      302.8
+     ],
+     "width_ps": 235.35,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -205.4,
+   "P1_worst_margin_ps": -85.61,
+   "verdict": "FEASIBLE with insertion-aware parent banks (P0 plain-sink parent fails by 205 ps)"
+  }
+ ],
+ "not_measured": {
+  "field_spine_v9": "ot_v41_pqc_spine_screen: routed v9 work dirs removed; the screen wrapper registers every spine port, so the boundary is the wrapper's stand-in ports -- owner FIELD-SPINE (v11 closure in flight)",
+  "head_r4": "ot_dsrom_head_elem r4_A/B: routed databases removed (only TT records); Turing's real views carry no SS/FF; owner Fermat (fused head)",
+  "reindex_mdrop": "TT-only routes; parent re-index context SS/FF still open (owner re-index)",
+  "fh_capture": "Fermat (head item 2): boundary SS input setup -121.1 ps already recorded as not closed"
+ }
+}

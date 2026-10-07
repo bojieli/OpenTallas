@@ -1,0 +1,30 @@
+{
+ "rows": [
+  21888,
+  22016
+ ],
+ "root4096_exact": 128,
+ "padded_root1024_exact": 128,
+ "logits_exact": 128,
+ "elements_complete": 4,
+ "result": {
+  "row": 21946,
+  "bits": 1098098008,
+  "fault": 0,
+  "cycle": 8359
+ },
+ "golden_bundle_argmax": 21946,
+ "exact": true,
+ "cycles": {
+  "first_A_root": 407,
+  "last_A_root": 8343,
+  "last_B_root": 8343,
+  "last_logit": 8355,
+  "result": 8359,
+  "rom_read_span": 8248,
+  "issue_offset": 2
+ },
+ "checkpoint_header_sha256": {
+  "model-00043-of-00048.safetensors": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54"
+ }
+}

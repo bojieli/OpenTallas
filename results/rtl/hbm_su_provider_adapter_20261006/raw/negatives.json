@@ -1,0 +1,12 @@
+{
+  "response_live_veto": {
+    "rc": 1,
+    "expected_failure": "accepted response drain mismatch",
+    "caught": true
+  },
+  "token17_truncation": {
+    "rc": 1,
+    "expected_failure": "full73 identity/PC mismatch",
+    "caught": true
+  }
+}

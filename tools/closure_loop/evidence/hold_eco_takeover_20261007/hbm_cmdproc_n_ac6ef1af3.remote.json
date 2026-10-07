@@ -1,0 +1,55 @@
+{
+  "directory": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3/cl/eco-r2",
+  "files": {
+    "pass1/result.json": {
+      "sha256": "dc09ad6a9b512fe14df991d51f5aa3b801fc404fe484d38608e4c36d6c2f0dcf",
+      "data": {
+        "ss_ps": 60.84,
+        "ff_ps": 19.69,
+        "drc": 0,
+        "cells_added": 98,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 95 fixable 95 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 4.690000000000001
+      }
+    },
+    "result.json": {
+      "sha256": "dc09ad6a9b512fe14df991d51f5aa3b801fc404fe484d38608e4c36d6c2f0dcf",
+      "data": {
+        "ss_ps": 60.84,
+        "ff_ps": 19.69,
+        "drc": 0,
+        "cells_added": 98,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 95 fixable 95 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 4.690000000000001
+      }
+    },
+    "pass1/eff_ss.sdc.slack": {
+      "sha256": "0581fcfc80d6bc077ee3436b06c4ac513901cb3b43b5a4390cea19bc9a0c9eea",
+      "line_count": 5765,
+      "macro_addr_pins": [
+        "{u_cpN.g_on.u_cmem/b_addr_in[0]} 646.189575",
+        "{u_cpN.g_on.u_cmem/b_addr_in[1]} 670.676086",
+        "{u_cpN.g_on.u_cmem/b_addr_in[2]} 716.428894",
+        "{u_cpN.g_on.u_cmem/b_addr_in[3]} 730.001343",
+        "{u_cpN.g_on.u_cmem/b_addr_in[4]} 724.185852",
+        "{u_cpN.g_on.u_cmem/b_addr_in[5]} 723.272705",
+        "{u_cpN.g_on.u_cmem/b_addr_in[6]} 719.912231",
+        "{u_cpN.g_on.u_cmem/b_addr_in[7]} 738.543579"
+      ]
+    }
+  },
+  "log_excerpt": [
+    "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3/routes/hbm_cmdproc_n_ac6ef1af3/work/orfs/results/asap7/opentallas_hfd_cmdproc_n_asap7_hv_hbm_cmdproc_n_ac6ef1af3/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3/routes/hbm_cmdproc_n_ac6ef1af3/work/orfs/results/asap7/opentallas_hfd_cmdproc_n_asap7_hv_hbm_cmdproc_n_ac6ef1af3/base/6_final.spef",
+    "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 95 fixable 95 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+    "OT_ECO route guides from the db: 1",
+    "}OT_ECO chosen pass1"
+  ],
+  "eco_log_sha256": "fe134d81afa21aa909d40cbaf2d1052fb00ee2880f06720dad610f9fb76e08b3"
+}

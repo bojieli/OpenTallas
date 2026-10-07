@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.budgets.sheet.v1",
+ "master": "dsfd_rly_2_NW",
+ "kinds": [
+  "rly"
+ ],
+ "dies": {
+  "s81_layer": 2,
+  "s81_layer1": 2
+ },
+ "size_um": [
+  17.256,
+  17.256
+ ],
+ "tile_of": null,
+ "clock": {
+  "ports": [
+   "ck"
+  ],
+  "domains": [
+   "stream_1p2"
+  ],
+  "regions": [
+   "s81_layer1:ck_col_127",
+   "s81_layer1:ck_col_63",
+   "s81_layer:ck_col_127",
+   "s81_layer:ck_col_63"
+  ],
+  "n_regions": 4,
+  "entry_target_ss_ps": {
+   "mean": 727.9,
+   "min": 727.9,
+   "max": 727.9
+  },
+  "entry_target_ff_ps": {
+   "mean": 432.3,
+   "min": 432.3,
+   "max": 432.3
+  },
+  "die_pad_ss_ps": {
+   "mean": 372.9,
+   "min": 372.9,
+   "max": 372.9
+  },
+  "internal_insertion": {
+   "target_ss": 444.9,
+   "target_ff": 293.6,
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 444.9, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "tolerance_ps": 100.0,
+   "ss": 444.9,
+   "ff": 293.6,
+   "ss_min": 422.7,
+   "ss_max": 489.4,
+   "ff_min": 278.9,
+   "ff_max": 323.0,
+   "grade": "target",
+   "source": "no calibration yet: the target",
+   "over_target": false
+  },
+  "calibrate_check": {
+   "compare": "closure-loop CK_SS_MEAN vs internal_insertion.ss (the value the die plan compensates) and vs internal_insertion.target_ss",
+   "tolerance_ps": 100.0,
+   "on_deviation": "FLAG (NEEDS_BUDGET): re-plan the die pin target; never silently re-calibrate the IO SDC"
+  }
+ },
+ "skew": {
+  "intra_ps": 90.0,
+  "inter_ps": 150.0,
+  "hold_io_ps": 50.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "route_period_ps": 770.0,
+  "signoff_period_ps": 833.333,
+  "accept_ps": 15.0
+ },
+ "control": {
+  "max_fanout_internal": 32,
+  "rule": "nets above 32 loads get kept (dont_touch) replicas; reductions > 4 inputs get a register per 4-6 levels (DESIGN SIMPLIFICATION 3/5)"
+ },
+ "interfaces": [
+  {
+   "port": "i",
+   "dir": "input",
+   "bits": 2,
+   "bus_classes": [
+    "stat"
+   ],
+   "neighbours": [
+    "dsfd_qbank_N"
+   ],
+   "connections": 4,
+   "dies": [
+    "s81_layer",
+    "s81_layer1"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 451.2,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 62,
+   "hold_io_ps": 50.0,
+   "worst_instance": "s81_layer:y_es_1024_0<->bn1024",
+   "also_cdc": false,
+   "input_delay_ss_ps": 448.0,
+   "output_delay_ss_ps": 389.0,
+   "input_fraction_of_T": 0.538,
+   "output_fraction_of_T": 0.467,
+   "internal_input_ps": 310.3,
+   "internal_output_ps": 369.3,
+   "as_planned_internal_input_ps": 54.2,
+   "as_planned_internal_output_ps": 113.2,
+   "feasible_input": false,
+   "feasible_output": false,
+   "reach_um": 436.4,
+   "stages_needed": 2,
+   "stages_planned": 1,
+   "extra_stages_needed": 1,
+   "segment_after_stages_um": 225.6,
+   "input_min_delay_ff_ps": 57.5,
+   "output_min_delay_ff_ps": -10.3,
+   "feasible": false
+  },
+  {
+   "port": "o",
+   "dir": "output",
+   "bits": 2,
+   "bus_classes": [
+    "stat"
+   ],
+   "neighbours": [
+    "dsfd_rly_2_EN"
+   ],
+   "connections": 4,
+   "dies": [
+    "s81_layer",
+    "s81_layer1"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 140.9,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 62,
+   "hold_io_ps": 50.0,
+   "worst_instance": "s81_layer:y_es_1024_0<->y_es_1024_1",
+   "also_cdc": false,
+   "input_delay_ss_ps": 351.9,
+   "output_delay_ss_ps": 292.9,
+   "input_fraction_of_T": 0.422,
+   "output_fraction_of_T": 0.351,
+   "internal_input_ps": 406.5,
+   "internal_output_ps": 465.5,
+   "as_planned_internal_input_ps": 406.5,
+   "as_planned_internal_output_ps": 465.5,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 436.4,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 140.9,
+   "input_min_delay_ff_ps": 48.0,
+   "output_min_delay_ff_ps": -0.8,
+   "die_fanout": 1,
+   "feasible": true
+  }
+ ],
+ "totals": {
+  "ports": 2,
+  "sync": 2,
+  "cdc": 0,
+  "infeasible": 1,
+  "fanout_flags": 0,
+  "max_length_um": 451.2,
+  "max_stages_needed": 2
+ },
+ "constants": {
+  "wire_ss_ps_per_um": 1.135,
+  "clkq_ss": 90.0,
+  "drv_out": 40.0,
+  "rcv_in": 41.0,
+  "setup_ss": 30.0,
+  "clkq_ff_min": 32.2,
+  "hold_ff": 15.0,
+  "wire_ff_credit_ps_per_um": 0.112
+ }
+}

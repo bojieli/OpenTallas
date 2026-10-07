@@ -25,7 +25,11 @@
 // ---------------------------------------------------------------------------
 module ot_v41_fadd #(
     parameter [8:0] CUT = 9'b1_0111_1011,          // 8 stages: steps 2+3 and 7+8 share a stage
-    parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8]
+    // SPLIT9 (default 0; SAFE head 2026-10-06): step 9 cut in two (+1 latency). The round carry leaves u_c8 as four kept
+    // copies (one per 6-8 loads), step 9a forms the normalised mantissa / exponent / subnormal / overflow terms into a
+    // register, step 9b encodes and selects. Bit-identical.
+    parameter integer SPLIT9 = 0,
+    parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -180,22 +184,44 @@ module ot_v41_fadd #(
     // ---------------- step 9: encode ----------------
     wire        v9, byp9, sg9, z9; wire [1:0] er9; wire [31:0] code9; wire [7:0] ex9; wire [24:0] rnd9;
     assign {v9, byp9, sg9, z9, er9, code9, ex9, rnd9} = i9;
-    wire        cy9 = rnd9[24];
-    wire [23:0] man9 = cy9 ? rnd9[24:1] : rnd9[23:0];
-    wire [7:0]  exo9 = cy9 ? (ex9 + 8'd1) : ex9;
-    wire        subn9 = (exo9 == 8'd1) && !man9[23];
-    wire [31:0] enc9 = {sg9, subn9 ? 8'd0 : exo9, man9[22:0]};
+`ifndef SYNTHESIS
+    initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
+`endif
+    wire [3:0]  cyk;                       // the round carry, one copy per load group
+    if (SPLIT9) begin : g_cy_copy
+        (* keep = 1 *) reg [3:0] cyq;
+        always @(posedge clk) cyq <= {4{r8[24]}};
+        assign cyk = cyq;
+    end else begin : g_cy_wire
+        assign cyk = {4{rnd9[24]}};
+    end
+    wire [23:0] man9 = {cyk[0] ? rnd9[24:19] : rnd9[23:18], cyk[1] ? rnd9[18:13] : rnd9[17:12],
+                        cyk[2] ? rnd9[12:7] : rnd9[11:6], cyk[3] ? rnd9[6:1] : rnd9[5:0]};
+    wire [7:0]  exo9 = cyk[3] ? (ex9 + 8'd1) : ex9;
     wire        over9 = (ex9 >= 8'hff) || (exo9 >= 8'hff);
+    // step 9a -> (SPLIT9 register) -> step 9b
+    wire        va, bypa, sga, za, overa; wire [1:0] era; wire [31:0] codea; wire [7:0] exoa; wire [23:0] mana;
+    if (SPLIT9) begin : g_s9
+        reg v_q; reg byp_q, sg_q, z_q, over_q; reg [1:0] er_q; reg [31:0] code_q; reg [7:0] exo_q; reg [23:0] man_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_q <= 1'b0; else v_q <= v9;
+        always @(posedge clk) begin byp_q <= byp9; sg_q <= sg9; z_q <= z9; over_q <= over9; er_q <= er9; code_q <= code9;
+                                    exo_q <= exo9; man_q <= man9; end
+        assign {va, bypa, sga, za, overa, era, codea, exoa, mana} = {v_q, byp_q, sg_q, z_q, over_q, er_q, code_q, exo_q, man_q};
+    end else begin : g_s9w
+        assign {va, bypa, sga, za, overa, era, codea, exoa, mana} = {v9, byp9, sg9, z9, over9, er9, code9, exo9, man9};
+    end
+    wire        subn9 = (exoa == 8'd1) && !mana[23];
+    wire [31:0] enc9 = {sga, subn9 ? 8'd0 : exoa, mana[22:0]};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             y <= 32'd0; err <= E_NONE; valid_out <= 1'b0;
         end else begin
-            valid_out <= v9;
-            if (byp9) begin
-                y <= code9; err <= er9;
-            end else if (z9) begin
+            valid_out <= va;
+            if (bypa) begin
+                y <= codea; err <= era;
+            end else if (za) begin
                 y <= 32'd0; err <= E_NONE;
-            end else if (over9) begin
+            end else if (overa) begin
                 y <= 32'd0; err <= E_OVERFLOW;
             end else begin
                 y <= (enc9[30:0] == 31'd0) ? 32'd0 : enc9; err <= E_NONE;

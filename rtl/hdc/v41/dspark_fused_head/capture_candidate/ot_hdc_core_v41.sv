@@ -72,10 +72,20 @@ module ot_hdc_core_v41 #(
     parameter integer HS   = 8,            // HE K chunks (hdc_golden_v41.HC_SPLIT)
     parameter integer W_HBM = 0,
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
-    parameter integer MP    = 1            // lane multiplier of the ME, QE and HE
+    parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
+    parameter integer FH_RETIRE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire fh_sink_busy,fh_ack_v,
+    input wire [7:0] fh_ack_id,
+    input wire [23:0] fh_ack_word,
+    input wire [15:0] fh_ack_mask,
+    input wire [63:0] fh_mem_poison,
+    input wire [3:0] fh_mem_address_fault,
+    output wire fh_write_warm,
+    output wire [7:0] fh_write_id,
+    output wire fh_warm_debt,
     input  wire              start,
     input  wire [NW-1:0]     token,
     input  wire [NW-1:0]     pos,
@@ -486,7 +496,19 @@ module ot_hdc_core_v41 #(
     // -- units -----------------------------------------------------------------------------------------
     wire me_wrom_re;
     wire [AW-1:0] me_wrom_addr;
-    ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_me (
+    wire [MP*G-1:0] me_raw_we;
+    wire [MP*G*AW-1:0] me_raw_addr;
+    wire [MP*G*W-1:0] me_raw_mask;
+    wire [MP*G*W*32-1:0] me_raw_data;
+    wire me_raw_ov,me_internal_fault,fh_raw_leaf_v,fh_raw_warm,fh_raw_tag_v;
+    wire [MP*G*W*(1+32+NW)-1:0] fh_raw_leaf,fh_checked_leaf;
+    wire [159:0] fh_raw_tag;
+    wire fh_retire_busy,fh_warm_ack,fh_retired_ov,fh_retired_leaf_v,fh_parent_fault;
+    ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),.FAULT_RETIRE(FH_RETIRE)) u_me (
+        .fh_retire_busy(fh_retire_busy),.fh_warm_ack(fh_warm_ack),.fh_ov_retired(fh_retired_ov),
+        .fh_leaf_v_retired(fh_retired_leaf_v),.fh_leaf_retired(fh_checked_leaf),
+        .fh_leaf(fh_raw_leaf),.fh_tag(fh_raw_tag),.fh_tag_v(fh_raw_tag_v),
+        .fh_leaf_v(fh_raw_leaf_v),.fh_warm_emit(fh_raw_warm),
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
@@ -497,8 +519,62 @@ module ot_hdc_core_v41 #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
-        .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
-        .am_idx(am_idx_v), .am_val(am_val_v), .am_any(am_any_v), .progress(me_progress), .fault(me_fault));
+        .ov(me_raw_ov), .o_we(me_raw_we), .o_addr(me_raw_addr), .o_mask(me_raw_mask), .o_data(me_raw_data),
+        .am_idx(am_idx_v), .am_val(am_val_v), .am_any(am_any_v), .progress(me_progress), .fault(me_internal_fault));
+    generate if(FH_RETIRE) begin : g_fh_retirement
+        localparam integer PW=5512;
+        wire retired_v,retired_warm,retired_warm_payload,retired_tag_v;
+        wire retired_ov_payload,retired_leaf_v_payload;
+        wire [PW-1:0] packet={fh_raw_leaf,me_raw_we,me_raw_addr,me_raw_mask,me_raw_data,
+            fh_raw_tag,fh_raw_tag_v,me_raw_ov,fh_raw_leaf_v,fh_raw_warm};
+        wire [PW-1:0] retired;
+        wire [63:0] veto;
+        wire [3:0] write_veto,retired_we;
+        wire [159:0] retired_tag;
+        wire [3135:0] retired_leaf;
+`ifdef OT_FH_MARGIN
+        localparam integer FH_MARGIN=`OT_FH_MARGIN;
+`else
+        localparam integer FH_MARGIN=0;
+`endif
+`ifdef OT_FH_SAFE
+        localparam integer FH_SAFE=`OT_FH_SAFE;
+`else
+        localparam integer FH_SAFE=0;
+`endif
+        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(FH_MARGIN),.SAFE(FH_SAFE)) u_parent (
+            .clk(clk),.rst_n(rst_n),.packet_v(me_raw_ov||(|me_raw_we)||fh_raw_leaf_v||fh_raw_warm),
+            .warm(fh_raw_warm),.packet(packet),.warm_word(me_raw_addr[23:0]),.warm_mask(me_raw_mask[15:0]),
+            .poison(fh_mem_poison),.address_fault(fh_mem_address_fault),.arithmetic_fault(me_internal_fault),.group_fault(4'b0),
+            .sink_busy(fh_sink_busy),.ack_v(fh_ack_v),.ack_id(fh_ack_id),.ack_word(fh_ack_word),.ack_mask(fh_ack_mask),
+            .retired_v(retired_v),.retired_warm(retired_warm),.retired_packet(retired),.retired_id(fh_write_id),
+            .lane_veto(veto),.write_veto(write_veto),.busy(fh_retire_busy),.warm_ack(fh_warm_ack),
+            .fault(fh_parent_fault),.warm_debt(fh_warm_debt));
+        assign {retired_leaf,retired_we,vw_me_addr,vw_me_mask,vw_me_data,
+            retired_tag,retired_tag_v,retired_ov_payload,retired_leaf_v_payload,retired_warm_payload}=retired;
+        // Data registers intentionally retain across reset. Only the resettable
+        // valid line owns progress/argmax events; stale payload flags cannot.
+        assign fh_retired_ov=retired_v&&retired_ov_payload;
+        assign fh_retired_leaf_v=retired_v&&retired_leaf_v_payload;
+        assign vw_me_we=retired_v?(retired_we&~write_veto):4'b0;
+        assign me_ov=retired_v&&fh_retired_ov;
+        assign fh_write_warm=retired_warm&&(|vw_me_we);
+        for(genvar l=0;l<64;l=l+1) begin : g_checked_leaf
+            assign fh_checked_leaf[l*49+:49]={retired_leaf[l*49+48]&&!veto[l],retired_leaf[l*49+:48]};
+        end
+`ifndef SYNTHESIS
+        initial if(MP!=1||G!=4||W!=16||AW!=24||NW!=16) $fatal(1,"FH_RETIRE full G4W16/MP1 binding required");
+`endif
+    end else begin : g_fh_original
+        assign {vw_me_we,vw_me_addr,vw_me_mask,vw_me_data}={me_raw_we,me_raw_addr,me_raw_mask,me_raw_data};
+        assign me_ov=me_raw_ov;
+        assign fh_checked_leaf=fh_raw_leaf;
+        assign fh_retired_leaf_v=fh_raw_leaf_v;
+        assign fh_retired_ov=me_raw_ov;
+        assign fh_retire_busy=0;assign fh_warm_ack=0;assign fh_parent_fault=0;
+        assign fh_write_warm=0;assign fh_write_id=0;assign fh_warm_debt=0;
+    end endgenerate
+    assign me_fault=me_internal_fault||fh_parent_fault;
     assign me_oaddr = vw_me_addr;
     assign me_omask = vw_me_mask;
     assign me_odata = vw_me_data;

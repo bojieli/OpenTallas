@@ -1,0 +1,32 @@
+{
+  "records": [
+    {
+      "macro": "ot_hbm_accel_bd_col",
+      "supported_parameters": {
+        "LB": 2,
+        "IL": 8,
+        "TAGW": 16
+      },
+      "original_declaration": "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col/ot_hbm_accel_bd_col_bb.v",
+      "original_sha256": "7661f36e6f3f6b446efc1f672e199ce1fd9a6ccf696e72620b311bb2a05ffddf",
+      "compat_sha256": "14b26f253cb6f07111f95f25b5af615fc7f4058879e02aa17885dabdc45aeac9",
+      "replacement_only": true,
+      "port_widths_fixed": true,
+      "parent_closed": false
+    },
+    {
+      "macro": "ot_hbm_accel_tc16",
+      "supported_parameters": {
+        "IL": 8,
+        "TAGW": 16
+      },
+      "original_declaration": "physical/hbm_accel_sm_views/ot_hbm_accel_tc16/ot_hbm_accel_tc16_bb.v",
+      "original_sha256": "ac5aa8fc264dc0c42ca8b520b20dfba3fb0327ec01189351299f5b871f50fd45",
+      "compat_sha256": "859730ff2c7511ae4cd005961d47be0acf1dd7dfd84485cd71a66ea693bfda41",
+      "replacement_only": true,
+      "port_widths_fixed": true,
+      "parent_closed": false
+    }
+  ],
+  "unsupported_shapes": "reject before synthesis; never use fixed macro timing for another shape"
+}

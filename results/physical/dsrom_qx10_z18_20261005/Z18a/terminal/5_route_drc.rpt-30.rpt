@@ -1,0 +1,81 @@
+violation type: Metal Spacing
+	srcs: net:net1132 net:VSS
+	bbox = (243.3450, 9.9730) - (243.3600, 10.0070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net46699
+	bbox = (257.0370, 9.7030) - (257.0400, 9.7370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net46321
+	bbox = (262.2450, 8.3860) - (262.2600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.g_qb.g_bx.b_xs_q0\[146\]
+	bbox = (262.2450, 9.4330) - (262.2600, 9.4340) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net51091
+	bbox = (262.2450, 10.5130) - (262.2600, 10.5140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net46275
+	bbox = (262.4370, 8.6230) - (262.4400, 8.6570) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50456
+	bbox = (264.9450, 8.3860) - (264.9600, 8.3870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net50456
+	bbox = (264.9450, 8.8930) - (264.9600, 8.8940) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18093 net:VDD
+	bbox = (265.1370, 7.0030) - (265.1400, 7.0370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net18093 net:VDD
+	bbox = (265.1370, 7.5430) - (265.1400, 7.5770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net46191
+	bbox = (267.6450, 6.2260) - (267.6600, 6.2270) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net46564
+	bbox = (267.6450, 7.8130) - (267.6600, 7.8140) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:u_e.i2x_q0\[148\]
+	bbox = (267.6450, 9.4660) - (267.6600, 9.4670) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VSS net:net1274
+	bbox = (267.6450, 11.5930) - (267.6600, 11.5940) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[137\] net:VDD
+	bbox = (267.8370, 7.0030) - (267.8400, 7.0370) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[137\] net:VDD
+	bbox = (267.8370, 7.5430) - (267.8400, 7.5770) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[137\] net:VDD
+	bbox = (267.8370, 8.0830) - (267.8400, 8.1170) on Layer M3
+violation type: Metal Spacing
+	srcs: net:u_e.g_ir.r_xs_q0\[137\] net:VDD
+	bbox = (267.8370, 8.6230) - (267.8400, 8.6570) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net46271
+	bbox = (267.8370, 9.7030) - (267.8400, 9.7370) on Layer M3
+violation type: Short
+	srcs: net:_016781_ net:VDD
+	bbox = (256.9470, 9.7030) - (256.9500, 9.7370) on Layer M3
+violation type: Short
+	srcs: net:VDD net:net46713
+	bbox = (265.0470, 5.3830) - (265.0500, 5.4170) on Layer M3
+violation type: Short
+	srcs: net:VDD net:net50458
+	bbox = (265.0470, 8.0830) - (265.0500, 8.1170) on Layer M3
+violation type: Short
+	srcs: net:VDD net:net46303
+	bbox = (265.0470, 9.1630) - (265.0500, 9.1970) on Layer M3
+violation type: Short
+	srcs: net:_016202_ net:_065480_
+	bbox = (267.3720, 10.9750) - (267.3900, 11.0690) on Layer M3
+violation type: Short
+	srcs: net:VDD net:net46271
+	bbox = (267.7470, 9.1630) - (267.7500, 9.1970) on Layer M3
+violation type: Short
+	srcs: net:clknet_leaf_854_u_e.g_cg.u_cg.gclk_regs net:net50573
+	bbox = (266.7850, 9.5040) - (267.0110, 9.5280) on Layer M4
+violation type: Short
+	srcs: net:u_e.i2x_q0\[116\] net:VDD
+	bbox = (267.7400, 9.1680) - (267.8440, 9.1920) on Layer M4

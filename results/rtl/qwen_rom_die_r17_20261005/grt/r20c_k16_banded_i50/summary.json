@@ -1,0 +1,98 @@
+{
+ "case": "r20c_k16_banded_i50",
+ "schema": "opentallas.qwen_die_grt_summary.v1",
+ "host": "ot-epyc1tb /srv/opentallas/scratch-overflow/claude/qwen-die-r17/cases/r20c_k16_banded_i50 (run.log copied here verbatim)",
+ "bundling": "k=16 banded (bundled nets), 50 FastRoute iterations",
+ "exit": "0",
+ "start": "2026-10-06T12:31:05Z",
+ "end": "2026-10-06T17:39:24Z",
+ "grt_s": 18317,
+ "wall": "5:08:18",
+ "peak_rss_kb": 13317600,
+ "total": {
+  "resource": 127837234,
+  "demand": 15950702,
+  "usage_pct": 12.48,
+  "max_h": 21,
+  "max_v": 20,
+  "overflow": 7972
+ },
+ "wirelength_um": 153905570,
+ "vias": 1390798,
+ "routed_nets": 219041,
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 175530,
+   "demand": 17782,
+   "usage_pct": 10.13,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 71662,
+   "demand": 7890,
+   "usage_pct": 11.01,
+   "max_h": 0,
+   "max_v": 2,
+   "overflow": 3
+  },
+  "M6": {
+   "resource": 16637308,
+   "demand": 737700,
+   "usage_pct": 4.43,
+   "max_h": 1,
+   "max_v": 0,
+   "overflow": 7
+  },
+  "M7": {
+   "resource": 16039046,
+   "demand": 4623889,
+   "usage_pct": 28.83,
+   "max_h": 0,
+   "max_v": 1,
+   "overflow": 4
+  },
+  "M8": {
+   "resource": 47514915,
+   "demand": 4873728,
+   "usage_pct": 10.26,
+   "max_h": 19,
+   "max_v": 2,
+   "overflow": 3391
+  },
+  "M9": {
+   "resource": 47398773,
+   "demand": 5689713,
+   "usage_pct": 12.0,
+   "max_h": 1,
+   "max_v": 15,
+   "overflow": 4567
+  }
+ },
+ "verdict": "NOT CLOSED: final overflow 7,972 (i5 was 7,266); the residual block-word detours are priced as extra stages, the route is not closed"
+}

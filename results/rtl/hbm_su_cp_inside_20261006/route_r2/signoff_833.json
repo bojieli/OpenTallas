@@ -1,0 +1,57 @@
+{
+ "schema": "hbm.su-cp-side.signoff.v1",
+ "clock_ps": 833.333,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "io": "die/seat ports 0.2T+150 ps, in-block executor inputs 0.15T / outputs 0.5T, vs vclk at measured mean insertion; -min 0",
+ "post_sdc": {
+  "physical/hbm_su_cp_side_20261006/signoff_post.sdc": "454591c283f87eccc1bbd6897e749531461e486aa74db73015fe9f97e862a5cf"
+ },
+ "ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 79.4,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 80.527031,
+  "worst_reg_to_reg_slack_ps": 80.53,
+  "worst_input_to_reg_slack_ps": 97.59,
+  "worst_output_port_slack_ps": 79.397514,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "beacac6c5223130d553ad9fbfa7f332d306fc54773ce5facd52d75d348e0d7b1",
+  "spef_sha256": "81e850b05928f74729c9abded7c8e61c783cbe3e38850c8b3f6e2d0b17699e44",
+  "sdc_sha256": "07b67a63c1a8ab9bbeb384d08c4f461f2fbe8bc67f34f79b4836cb58ba890b6c",
+  "vclk_insertion_ps": [
+   115.32,
+   142.46,
+   128.89
+  ],
+  "worst_endpoint_slack_ps": 79.397499
+ },
+ "ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 28.17,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 28.170731,
+  "worst_reg_to_reg_slack_ps": 28.17,
+  "worst_input_to_reg_slack_ps": 39.31,
+  "worst_output_port_slack_ps": 70.75531,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "beacac6c5223130d553ad9fbfa7f332d306fc54773ce5facd52d75d348e0d7b1",
+  "spef_sha256": "81e850b05928f74729c9abded7c8e61c783cbe3e38850c8b3f6e2d0b17699e44",
+  "sdc_sha256": "07b67a63c1a8ab9bbeb384d08c4f461f2fbe8bc67f34f79b4836cb58ba890b6c",
+  "vclk_insertion_ps": [
+   65.88,
+   83.57,
+   74.725
+  ],
+  "worst_endpoint_slack_ps": 28.170731
+ },
+ "accept": {
+  "rule": "SS >= +40 ps, FF >= +15 ps, DRC 0 (owner UPDATE 2)",
+  "ss_ok": true,
+  "ff_ok": true
+ }
+}

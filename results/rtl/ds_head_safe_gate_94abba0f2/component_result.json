@@ -1,0 +1,107 @@
+{
+  "source_commit": "94abba0f265ba94883fd4618fb007448902dedc8",
+  "started_utc": "2026-10-07T05:28:28.964744+00:00",
+  "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+  "cases": {
+    "endpoint_fpipe2/baseline": {
+      "returncode": 0,
+      "output": "PASS CHECK_PIPE identity/quarantine/reset/maskedX cases=9",
+      "binary_built": true,
+      "expected": "PASS",
+      "ok": true,
+      "elapsed_s": 11.421036683022976,
+      "mutation": null
+    },
+    "endpoint_fpipe2/pin_data_skip": {
+      "returncode": -6,
+      "output": "[116000] %Fatal: tb_fh_margin_checked_permission.sv:49: Assertion failed in tb_fh_checked_permission: masked X normalization",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 13.224287869001273,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv",
+        "data_q<=head_data;",
+        "data_q<=0;"
+      ]
+    },
+    "endpoint_fpipe2/no_wide_veto": {
+      "returncode": -6,
+      "output": "[1226000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirror not caught in 4 cycles",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 13.882945087971166,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv",
+        "wide_bad=FPIPE?checked_error:",
+        "wide_bad=FPIPE?1'b0:"
+      ]
+    },
+    "endpoint_fpipe2/drop_bank0": {
+      "returncode": -6,
+      "output": "[1226000] %Fatal: tb_fh_margin_checked_permission.sv:64: Assertion failed in tb_fh_checked_permission: held payload mirror not caught in 4 cycles",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 13.437125352036674,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv",
+        ".bad({metadata_bad,identity_bad,request_bad,reply_bad})",
+        ".bad({metadata_bad,identity_bad,request_bad[RB-1:1],1'b0,reply_bad})"
+      ]
+    },
+    "head_q_safe/baseline": {
+      "returncode": 0,
+      "output": "PASS head_q == macro_ctx QPIN=1 FPIPE=2 cycles=9000 writes=3766 fused=410 index_writes=20 acks=16 leaf=2538 fault_cycles=1972",
+      "binary_built": true,
+      "expected": "PASS",
+      "ok": true,
+      "elapsed_s": 68.6438552030013,
+      "mutation": null
+    },
+    "head_q_safe/pin_wdata_skip": {
+      "returncode": -6,
+      "output": "[562000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 561",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 70.16881563101197,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_quad.sv",
+        "s_wdata <= s_wdata0;",
+        "s_wdata <= wr_data_in;"
+      ]
+    },
+    "head_q_safe/fold_skip": {
+      "returncode": -6,
+      "output": "[12000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 11",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 70.15302533499198,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_head_top.sv",
+        "assign argmax_level1=f2;",
+        "assign argmax_level1=^f1;"
+      ]
+    },
+    "head_q_safe/wok_mask": {
+      "returncode": -6,
+      "output": "[710000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 709",
+      "binary_built": true,
+      "expected": "FAIL",
+      "ok": true,
+      "elapsed_s": 69.98304352298146,
+      "mutation": [
+        "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_quad.sv",
+        ".write_ok_d(wok_q && s_wmask[l])",
+        ".write_ok_d(wok_q)"
+      ]
+    }
+  },
+  "all_pass": true,
+  "sources_unchanged_after": true,
+  "finished_utc": "2026-10-07T05:33:59.908955+00:00",
+  "max_child_rss_kib": 1921620
+}

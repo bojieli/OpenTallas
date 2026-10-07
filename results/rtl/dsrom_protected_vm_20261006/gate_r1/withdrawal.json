@@ -1,0 +1,18 @@
+{
+  "utc": 1791259198.2212274,
+  "controller_pid": 2374835,
+  "cmdline": "python3 copernicus_protected_vm_r1.py ",
+  "children": "",
+  "verdict": "WITHDRAWN_VERIFIED_UNADMITTED_SUPERSEDED_SOURCE",
+  "reason": "masked-undriven inactive ingress data must be sanitized before SECDED; successor preserves enabled values",
+  "capacity": {
+    "stage": "pre-guard",
+    "utc": 1791259188.891909,
+    "load1": 220.5185546875,
+    "idle_cores": 0.505,
+    "mem_available_bytes": 427975409664,
+    "disk_free_bytes": 2038223945728,
+    "workers": 1,
+    "reservation_GiB": 4
+  }
+}
