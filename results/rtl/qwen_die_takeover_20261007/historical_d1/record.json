@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen_die.takeover.v1",
+  "source_commit": "a9bf510a0",
+  "recovered_from": "Claude a79b95b7469337fc9 transcript and EPYC2 pinned station routes",
+  "rtl_changed": false,
+  "cycles_added": 0,
+  "historical_signoff_clock_ps": 770,
+  "required_signoff_clock_ps": 833.333,
+  "uncertainty_ps": {
+    "setup": 60,
+    "hold": 25
+  },
+  "load_ff": 80,
+  "input_transition_ps": 150,
+  "records": {
+    "cst": {
+      "verdict": "FAIL_AT_ROUTE_CLOCK",
+      "ss_ps": -6.34,
+      "ff_ps": 17.75
+    },
+    "chead": {
+      "verdict": "FAIL_AT_ROUTE_CLOCK",
+      "ss_ps": -25.4,
+      "ff_ps": 17.62
+    },
+    "rly": {
+      "verdict": "FLOW_FAILED",
+      "reason": "CTS RSZ-0060 max buffer count; any STA output is inadmissible"
+    }
+  },
+  "followup_jobs": [
+    "qfd_cst_signoff833_host-f1c7e6550",
+    "qfd_chead_signoff833_host-f1c7e6550",
+    "qfd_rly_hold10-04ae53163"
+  ],
+  "die_adoption": "BLOCKED until real-master interface, timing, route, DRC and IR closure; r21 contains assumed views"
+}
