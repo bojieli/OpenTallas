@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.s81.capture_startup_patch.v1",
+  "status": "ONE_ENDPOINT_MECHANISM_CANDIDATE_NOT_ADOPTED",
+  "purpose": "Validate literalHB3 insertion and fresh SS/FF timing atworstFFstartupendpoint before any larger perendpoint patch; fullshape routed context, unchangedprotocol.",
+  "original_sha256": {
+    "6_final.odb": "7e74e2f302b518df9e84631076b37f5f3a17a6e08e6536cdcc3fe8467c31a81d",
+    "6_final.sdc": "75b18d590fcc9fdf4df5b6d855ad43c47440bbf580282da6ac7f2931f0ea55be",
+    "6_final.spef": "f1df3cf88c38400886d000216e38c5f5510fb38d9148a800cade546caadc7435"
+  },
+  "patches": [
+    {
+      "endpoint": "g_r[12].u_x.w_st_r[0]$_DFF_P_/D",
+      "cells": [
+        "HB3xp67_ASAP7_75t_R"
+      ],
+      "baseline_ss_ps": 99.07,
+      "baseline_ff_ps": -11.11,
+      "added_cycles": 0,
+      "added_cell_area_um2": 0.08748,
+      "model": {
+        "ss_actual_input_slew_ps": 21.75,
+        "ff_actual_input_slew_ps": 7.4,
+        "ss_trial_load_ceiling_fF": 0.72,
+        "ff_sink_input_cap_fF": 0.62135,
+        "ss_rise_cell_delay_ps": 61.96053875,
+        "ff_fall_cell_delay_ps": 32.6841924256,
+        "ss_same_edge_prediction_ps": 37.10946125,
+        "ff_same_edge_prediction_ps": 21.5741924256,
+        "limitations": "Othertransition may become worst; upstream driverload changes; newwire/slew/cap require actualextractedfreshSTA. Screen isnot closureproof."
+      }
+    }
+  ],
+  "acceptance": {
+    "target_endpoint_ss_ps": 15,
+    "target_endpoint_ff_ps": 15,
+    "full_design_ss_ps": 15,
+    "full_design_ff_ps": 15,
+    "drc": 0
+  },
+  "expected_scope": "Otherstartup endpoints and old serialoutputclock binding remain unresolved inoriginalbaseline. This single-pin experiment cannot qualify wholeblockadoption."
+}
