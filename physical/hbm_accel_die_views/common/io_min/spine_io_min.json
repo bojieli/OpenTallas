@@ -1,0 +1,475 @@
+{
+ "method": "Per-PORT minimum IO arrival credit for a spine die view's FF hold sign-off: the stations' FF hold model\n(stations/bench/stn_io_min.py, coordinator decision 2026-10-06) applied per die port instead of per view.",
+ "ps_per_um": 0.1118,
+ "clkq_ff_ps": 32.2,
+ "views": {
+  "hfd_cmdproc_s": {
+   "cSE": {
+    "min_wire_um": 1254.288,
+    "credit_in_ps": 172.43,
+    "credit_out_ps": 140.23,
+    "via": "w97_ct_SE.a"
+   },
+   "cSW": {
+    "min_wire_um": 1254.72,
+    "credit_in_ps": 172.48,
+    "credit_out_ps": 140.28,
+    "via": "w34_ct_SW.a"
+   },
+   "f_loader": {
+    "min_wire_um": 980.664,
+    "credit_in_ps": 141.84,
+    "credit_out_ps": 109.64,
+    "via": "hb_loader.t_cmdproc"
+   },
+   "f_router": {
+    "min_wire_um": 327.192,
+    "credit_in_ps": 68.78,
+    "credit_out_ps": 36.58,
+    "via": "hb_router.t_cmdproc"
+   },
+   "t_su_SE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SE.f_cmdproc"
+   },
+   "t_su_SW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SW.f_cmdproc"
+   },
+   "xb": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xb"
+   },
+   "xl": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xl"
+   },
+   "xt": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xt"
+   }
+  },
+  "hfd_cmdproc_n": {
+   "cNE": {
+    "min_wire_um": 1252.272,
+    "credit_in_ps": 172.2,
+    "credit_out_ps": 140.0,
+    "via": "w220_ct_NE.a"
+   },
+   "cNW": {
+    "min_wire_um": 1252.704,
+    "credit_in_ps": 172.25,
+    "credit_out_ps": 140.05,
+    "via": "w153_ct_NW.a"
+   },
+   "f_barrier": {
+    "min_wire_um": 3942.024,
+    "credit_in_ps": 472.92,
+    "credit_out_ps": 440.72,
+    "via": "hb_barrier.t_cmdproc"
+   },
+   "f_coll": {
+    "min_wire_um": 429.648,
+    "credit_in_ps": 80.23,
+    "credit_out_ps": 48.03,
+    "via": "hb_coll.t_cmdproc"
+   },
+   "t_barrier": {
+    "min_wire_um": 3942.024,
+    "credit_in_ps": 472.92,
+    "credit_out_ps": 440.72,
+    "via": "hb_barrier.f_cmdproc"
+   },
+   "t_coll": {
+    "min_wire_um": 469.2,
+    "credit_in_ps": 84.66,
+    "credit_out_ps": 52.46,
+    "via": "hb_coll.f_cmdproc"
+   },
+   "t_su_NE": {
+    "min_wire_um": 2333.616,
+    "credit_in_ps": 293.1,
+    "credit_out_ps": 260.9,
+    "via": "hb_su_NE.f_cmdproc"
+   },
+   "t_su_NW": {
+    "min_wire_um": 2333.616,
+    "credit_in_ps": 293.1,
+    "credit_out_ps": 260.9,
+    "via": "hb_su_NW.f_cmdproc"
+   },
+   "xb": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xb"
+   },
+   "xl": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xl"
+   },
+   "xt": {
+    "min_wire_um": 0.0,
+    "credit_in_ps": 32.2,
+    "credit_out_ps": 0.0,
+    "via": "abutting band.xt"
+   }
+  },
+  "hfd_loader": {
+   "h": {
+    "min_wire_um": 1545.936,
+    "credit_in_ps": 205.04,
+    "credit_out_ps": 172.84,
+    "via": "w289_host.a"
+   },
+   "t_cmdproc": {
+    "min_wire_um": 980.664,
+    "credit_in_ps": 141.84,
+    "credit_out_ps": 109.64,
+    "via": "hb_cmdproc.f_loader"
+   }
+  },
+  "hfd_quant": {
+   "f_vm": {
+    "min_wire_um": 470.904,
+    "credit_in_ps": 84.85,
+    "credit_out_ps": 52.65,
+    "via": "hb_vm.t_quant"
+   },
+   "t_su_NE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NE.f_quant"
+   },
+   "t_su_NW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NW.f_quant"
+   },
+   "t_su_SE": {
+    "min_wire_um": 4700.832,
+    "credit_in_ps": 557.75,
+    "credit_out_ps": 525.55,
+    "via": "hb_su_SE.f_quant"
+   },
+   "t_su_SW": {
+    "min_wire_um": 4700.832,
+    "credit_in_ps": 557.75,
+    "credit_out_ps": 525.55,
+    "via": "hb_su_SW.f_quant"
+   }
+  },
+  "hfd_coll": {
+   "f_cmdproc": {
+    "min_wire_um": 469.2,
+    "credit_in_ps": 84.66,
+    "credit_out_ps": 52.46,
+    "via": "hb_cmdproc.t_coll"
+   },
+   "f_su_NE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NE.t_coll"
+   },
+   "f_su_NW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NW.t_coll"
+   },
+   "f_su_SE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SE.t_coll"
+   },
+   "f_su_SW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SW.t_coll"
+   },
+   "llk_N0": {
+    "min_wire_um": 1026.432,
+    "credit_in_ps": 146.96,
+    "credit_out_ps": 114.76,
+    "via": "w272_lk_lk_N0.a"
+   },
+   "llk_N1": {
+    "min_wire_um": 1091.568,
+    "credit_in_ps": 154.24,
+    "credit_out_ps": 122.04,
+    "via": "w276_lk_lk_N1.a"
+   },
+   "llk_N2": {
+    "min_wire_um": 1466.592,
+    "credit_in_ps": 196.16,
+    "credit_out_ps": 163.96,
+    "via": "w281_lk_lk_N2.a"
+   },
+   "llk_N3": {
+    "min_wire_um": 1504.032,
+    "credit_in_ps": 200.35,
+    "credit_out_ps": 168.15,
+    "via": "w285_lk_lk_N3.a"
+   },
+   "llk_S0": {
+    "min_wire_um": 1780.608,
+    "credit_in_ps": 231.27,
+    "credit_out_ps": 199.07,
+    "via": "w251_lk_lk_S0.a"
+   },
+   "llk_S1": {
+    "min_wire_um": 1715.472,
+    "credit_in_ps": 223.99,
+    "credit_out_ps": 191.79,
+    "via": "w255_lk_lk_S1.a"
+   },
+   "llk_S2": {
+    "min_wire_um": 1650.72,
+    "credit_in_ps": 216.75,
+    "credit_out_ps": 184.55,
+    "via": "w259_lk_lk_S2.a"
+   },
+   "llk_S3": {
+    "min_wire_um": 1341.264,
+    "credit_in_ps": 182.15,
+    "credit_out_ps": 149.95,
+    "via": "w264_lk_lk_S3.a"
+   },
+   "llk_S4": {
+    "min_wire_um": 1303.872,
+    "credit_in_ps": 177.97,
+    "credit_out_ps": 145.77,
+    "via": "w268_lk_lk_S4.a"
+   },
+   "pll_hbm": {
+    "min_wire_um": 11823.192,
+    "credit_in_ps": 1354.03,
+    "credit_out_ps": 1321.83,
+    "via": "svc_NW.ck"
+   },
+   "pll_link": {
+    "min_wire_um": 6103.824,
+    "credit_in_ps": 714.61,
+    "credit_out_ps": 682.41,
+    "via": "lk_S4.ck"
+   },
+   "pll_serial": {
+    "min_wire_um": 1804.2,
+    "credit_in_ps": 233.91,
+    "credit_out_ps": 201.71,
+    "via": "hb_su_NE.ck"
+   },
+   "pll_stream": {
+    "min_wire_um": 1439.256,
+    "credit_in_ps": 193.11,
+    "credit_out_ps": 160.91,
+    "via": "hb_vm.ck"
+   },
+   "por_hbm": {
+    "min_wire_um": 12102.936,
+    "credit_in_ps": 1385.31,
+    "credit_out_ps": 1353.11,
+    "via": "svc_NW.rst"
+   },
+   "por_link": {
+    "min_wire_um": 1013.664,
+    "credit_in_ps": 145.53,
+    "credit_out_ps": 113.33,
+    "via": "w268_lk_lk_S4.rst"
+   },
+   "por_serial": {
+    "min_wire_um": 1524.456,
+    "credit_in_ps": 202.63,
+    "credit_out_ps": 170.43,
+    "via": "hb_su_NE.rst"
+   },
+   "por_stream": {
+    "min_wire_um": 470.928,
+    "credit_in_ps": 84.85,
+    "credit_out_ps": 52.65,
+    "via": "w17_xt_SW.rst"
+   },
+   "t_cmdproc": {
+    "min_wire_um": 429.648,
+    "credit_in_ps": 80.23,
+    "credit_out_ps": 48.03,
+    "via": "hb_cmdproc.f_coll"
+   },
+   "t_su_NE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NE.f_coll"
+   },
+   "t_su_NW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NW.f_coll"
+   },
+   "t_su_SE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SE.f_coll"
+   },
+   "t_su_SW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_SW.f_coll"
+   }
+  },
+  "hfd_vm": {
+   "f_su_NE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NE.t_vm"
+   },
+   "f_su_NW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NW.t_vm"
+   },
+   "f_su_SE": {
+    "min_wire_um": 2348.16,
+    "credit_in_ps": 294.72,
+    "credit_out_ps": 262.52,
+    "via": "hb_su_SE.t_vm"
+   },
+   "f_su_SW": {
+    "min_wire_um": 2348.16,
+    "credit_in_ps": 294.72,
+    "credit_out_ps": 262.52,
+    "via": "hb_su_SW.t_vm"
+   },
+   "iNE": {
+    "min_wire_um": 4308.048,
+    "credit_in_ps": 513.84,
+    "credit_out_ps": 481.64,
+    "via": "hb_index_NE_b5.t_vm"
+   },
+   "iNW": {
+    "min_wire_um": 4308.048,
+    "credit_in_ps": 513.84,
+    "credit_out_ps": 481.64,
+    "via": "hb_index_NW_b5.t_vm"
+   },
+   "iSE": {
+    "min_wire_um": 5195.952,
+    "credit_in_ps": 613.11,
+    "credit_out_ps": 580.91,
+    "via": "hb_index_SE_b5.t_vm"
+   },
+   "iSW": {
+    "min_wire_um": 5195.952,
+    "credit_in_ps": 613.11,
+    "credit_out_ps": 580.91,
+    "via": "hb_index_SW_b5.t_vm"
+   },
+   "qNE": {
+    "min_wire_um": 1567.296,
+    "credit_in_ps": 207.42,
+    "credit_out_ps": 175.22,
+    "via": "w245_qa_NE.a"
+   },
+   "qNW": {
+    "min_wire_um": 1567.728,
+    "credit_in_ps": 207.47,
+    "credit_out_ps": 175.27,
+    "via": "w182_qa_NW.a"
+   },
+   "qSE": {
+    "min_wire_um": 1660.896,
+    "credit_in_ps": 217.89,
+    "credit_out_ps": 185.69,
+    "via": "w116_qa_SE.a"
+   },
+   "qSW": {
+    "min_wire_um": 1661.328,
+    "credit_in_ps": 217.94,
+    "credit_out_ps": 185.74,
+    "via": "w57_qa_SW.a"
+   },
+   "t_quant": {
+    "min_wire_um": 470.904,
+    "credit_in_ps": 84.85,
+    "credit_out_ps": 52.65,
+    "via": "hb_quant.f_vm"
+   },
+   "t_router": {
+    "min_wire_um": 3457.032,
+    "credit_in_ps": 418.7,
+    "credit_out_ps": 386.5,
+    "via": "hb_router.f_vm"
+   },
+   "t_su_NE": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NE.f_vm"
+   },
+   "t_su_NW": {
+    "min_wire_um": 1244.184,
+    "credit_in_ps": 171.3,
+    "credit_out_ps": 139.1,
+    "via": "hb_su_NW.f_vm"
+   },
+   "t_su_SE": {
+    "min_wire_um": 2564.832,
+    "credit_in_ps": 318.95,
+    "credit_out_ps": 286.75,
+    "via": "hb_su_SE.f_vm"
+   },
+   "t_su_SW": {
+    "min_wire_um": 2564.832,
+    "credit_in_ps": 318.95,
+    "credit_out_ps": 286.75,
+    "via": "hb_su_SW.f_vm"
+   },
+   "xNE": {
+    "min_wire_um": 1586.592,
+    "credit_in_ps": 209.58,
+    "credit_out_ps": 177.38,
+    "via": "w204_xt_NE.a"
+   },
+   "xNW": {
+    "min_wire_um": 1587.024,
+    "credit_in_ps": 209.63,
+    "credit_out_ps": 177.43,
+    "via": "w138_xt_NW.a"
+   },
+   "xSE": {
+    "min_wire_um": 2020.992,
+    "credit_in_ps": 258.15,
+    "credit_out_ps": 225.95,
+    "via": "w79_xt_SE.a"
+   },
+   "xSW": {
+    "min_wire_um": 2021.424,
+    "credit_in_ps": 258.2,
+    "credit_out_ps": 226.0,
+    "via": "w17_xt_SW.a"
+   }
+  }
+ }
+}

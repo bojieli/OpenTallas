@@ -53,6 +53,14 @@ STRESS = [("s bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("s fp4 K2304 R2 (G2)",
           ("s bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("s fp8 K2304 R2 (G3)", "fp8", 2304, 2, 1),
           ("s fp4 K2304 R2 (G2) b", "fp4", 2304, 2, 1), ("s bf16 K512 R32 (G1) b", "bf16", 512, 32, 1)]
 
+# directed retire-order hazard (the HAZ = 0 negative must fail on the deeper smh pipeline): a deep-D op (BF16 G10:
+# D = DBF + 4 SLAT = 39) followed at once by a SINGLE-ROW shallow one (block-dot G1: D = 0, 8 lines), whose row
+# drains ~81 cycles after its last line: 15 + 8 + 81 < 120, inside the BF16 row's drain.  (sim15: with R8 / R4
+# followers the eight interleaved rows finished with the op's last line, after the BF16 row, and HAZ = 0 passed.)
+HAZSEQ = [("h bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("h fp8 K512 R1 (G1)", "fp8", 512, 1, 1),
+          ("h bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("h fp4 K512 R1 (G1)", "fp4", 512, 1, 1),
+          ("h bf16 K5120 R2 (G10)", "bf16", 5120, 2, 1), ("h fp8 K512 R1 (G1) b", "fp8", 512, 1, 1)]
+
 
 def seq_ops(name, serial):
     base = name[3:] if name.startswith("p6_") else name
@@ -68,6 +76,9 @@ def seq_ops(name, serial):
     elif base == "stress":
         ops = MS.WARM + STRESS
         dep = [1] + [0] * len(STRESS)
+    elif base == "haz":
+        ops = MS.WARM + HAZSEQ
+        dep = [1] + [0] * len(HAZSEQ)
     else:
         raise SystemExit(f"unknown sequence {name}")
     if serial:
@@ -115,7 +126,7 @@ def cmd_run(a):
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + suffix + ("_smh" if a.smh else ""))
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh)
     with (d / "runtime.log").open("w") as log:
-        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
+        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
                        stderr=subprocess.STDOUT)
     res, meta, total, timeout = {}, {}, None, None
@@ -178,9 +189,9 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs, smh=False):
+def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False, mutbf=False, extra_defs=()):
     src = SRC + (SMH_SRC if smh else [])
-    defs = ["-DOT_SMH"] if smh else []
+    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else []) + (["-DOT_SMH_MUT_S1W"] if mut else []) + (["-DOT_SMH_MUT_BFDLY"] if mutbf else []) + list(extra_defs)
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     if sim == "verilator":
@@ -210,7 +221,17 @@ def main(argv=None):
     ap.add_argument("--bd-prefix", type=int, choices=(0, 1), default=0, help="opt-in SMH kept-prefix rounding successor")
     ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
+    ap.add_argument("--mut-s1w", action="store_true", help="--smh negative control: compile-time RTL mutant, bit 3 of "
+                    "the front's s1 line register inverted (+define+OT_SMH_MUT_S1W in ot_hbm_accel_smh.sv)")
+    ap.add_argument("--mut-bfdly", action="store_true", help="--smh: compile-time mutant, BF16 column output 64 cycles "
+                    "late with the issue's DBF raised to match (+define+OT_SMH_MUT_BFDLY): HAZ = 1 must pass, HAZ = 0 fail")
+    ap.add_argument("--neg-flip", action="store_true", help="negative control: bit 3 of every returned line flipped at the response port (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
+    ap.add_argument("--req-stalls", action="store_true", help="deterministic hub request backpressure (+REQ_STALLS)")
+    ap.add_argument("--req-credit", action="store_true", help="--smh: request port with ready latency 2 (REQCR = 1); the "
+                    "bench receiver loses any beat sent without its ready two cycles earlier")
+    ap.add_argument("--mut-reqovf", action="store_true", help="REQCR negative control: beats shown without permission")
+    ap.add_argument("--mut-reqleak", action="store_true", help="REQCR negative control: one request in 64 popped, never shown")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")

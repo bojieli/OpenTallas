@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.hbm_die_views_round.v1",
+ "round": "r0",
+ "cases": {
+  "a_real": {
+   "instances": 439,
+   "overlaps": 0,
+   "outside": 0,
+   "on_track": "PASS",
+   "pin_access": "DONE",
+   "pa_errors": 0,
+   "macro_no_access": 0,
+   "place_s": 13,
+   "pa_s": 190,
+   "exit": "0",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab"
+   ],
+   "bundle_k": null,
+   "iterations": null
+  },
+  "b_k16_i5": {
+   "grt_capacity": 99693887,
+   "grt_demand": 6105069,
+   "grt_usage_pct": 6.12,
+   "overflow_h": 2,
+   "overflow_v": 3,
+   "overflow": 10,
+   "grt_s": 146,
+   "exit": "0",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab"
+   ],
+   "bundle_k": 16,
+   "iterations": 5
+  },
+  "b_k16_i50": {
+   "grt_capacity": 99693887,
+   "grt_demand": 6105196,
+   "grt_usage_pct": 6.12,
+   "overflow_h": 0,
+   "overflow_v": 0,
+   "overflow": 0,
+   "grt_s": 292,
+   "exit": "0",
+   "real_views": [
+    "hfd_host_slab",
+    "hfd_serdes_slab"
+   ],
+   "bundle_k": 16,
+   "iterations": 50
+  }
+ },
+ "source_commit": "21c2ef3a239ebbee486a6216a6b2ceaf583986de"
+}

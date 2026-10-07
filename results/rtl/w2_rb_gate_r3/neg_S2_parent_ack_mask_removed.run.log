@@ -1,0 +1,7 @@
+CALENDAR_TAP_ACCEPT edge=16
+CALENDAR_ALL_SM edge=88
+CALENDAR_LAST_SM_ACK edge=116
+CALENDAR_QUARTER_ACK edge=195
+CALENDAR_QUARTER_ACK edge=196
+FATAL: /srv/opentallas-scratch/claude/tk-hbm-w2/gate_r3/neg_S2_parent_ack_mask_removed_tb.sv:240: parent release identity/conservation
+       Time: 164999736  Scope: tb_native_quarter_publication

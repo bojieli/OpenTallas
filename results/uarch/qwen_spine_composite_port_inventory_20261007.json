@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.qwen-spine-composite-port-inventory.v1",
+  "source_sha256": {
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv": "751e0d2cad3ee1b90b6018c84bf56fc563db43fc898f8db9969d0f23533906dd"
+  },
+  "adopted": false,
+  "physical_closed": false,
+  "shape": {
+    "G": 6144,
+    "W": 16,
+    "SW": 64,
+    "SMIN": 7,
+    "SMAX": 11,
+    "NPORT": 48,
+    "NXC": 2048
+  },
+  "vector_memory": {
+    "source_location": "lines315-364",
+    "implementation": "Behavioral host-preloaded register array",
+    "words": 1048576,
+    "word_bits": 32,
+    "payload_bytes": 4194304,
+    "read_ports": {
+      "SU_three_vectors": 192,
+      "ME_gather": 2048,
+      "sequencer": 16
+    },
+    "max_read_words_per_cycle": 2256,
+    "max_read_bytes_per_cycle": 9024,
+    "write_ports": {
+      "ME_masked_vector": 768,
+      "matrix_masked_vector": 16,
+      "SU": 64,
+      "scalar_reduction": 1,
+      "sequencer": 16
+    },
+    "max_write_words_per_cycle": 865,
+    "max_write_bytes_per_cycle": 3460,
+    "semantics": {
+      "read_during_write": "Old word; all writes nonblocking at same edge",
+      "idle_read": "Registered response holds when read enable is clear",
+      "bounds": "Out-of-range reads return0 and writes are discarded",
+      "write_conflict": "Last enabled writer wins: ME (ascending port/lane), matrix, SU (ascending lane), scalar, sequencer; retain priority or prove conflicts impossible",
+      "ME_clock": "ME read/write only when me_clk_en; read delay XVM applies to ME path"
+    },
+    "physical_gate": "Need source-pinned scheduled port activity/conflict proof, protected SRAM bank inventory and finite-flow interfaces. A narrow1R1W slice is not equivalent merely because it closes.",
+    "new_proposal": null
+  },
+  "constants": {
+    "source_location": "lines269-286",
+    "program": {
+      "words": 1024,
+      "width_bits": 1024,
+      "bytes": 131072,
+      "ports": 1,
+      "read_bytes_per_cycle": 128
+    },
+    "descriptors": {
+      "words": 64,
+      "width_bits": 64,
+      "bytes": 512,
+      "ports": 1,
+      "read_bytes_per_cycle": 8
+    },
+    "constant_table": {
+      "max_words": 1048576,
+      "width_bits": 64,
+      "max_bytes": 8388608,
+      "independent_ports": 64,
+      "read_bytes_per_cycle": 512,
+      "live_words": "crom_words host-loaded",
+      "address": "20-bit array index, full24-bit address checked against crom_words"
+    },
+    "policy": "No ROM ECC; preserve released payload, descriptor validity, full address bounds and transaction identity",
+    "physical_gate": "Pin actual program/descriptor/constant payload and live extent, then bank/replicate selected macro. Behavioral maximum array size alone is neither macro inventory nor exact transport proof."
+  },
+  "su64_sfu": {
+    "lanes": 64,
+    "candidate_source": "rtl/hdc/ot_hdc_vstream_lane.sv",
+    "physical_gate": "Cut lane-local chains without splitting feedback; retain shared reductions in golden tree order, independently price transport/serial domain. No new closure claim from isolated arithmetic."
+  }
+}

@@ -1,0 +1,35 @@
+---------------------------------------------
+        0 |       7108 |      2022 |      4943
+        1 |       2488 |       540 |      1870
+        2 |        952 |       204 |       736
+        3 |        437 |        83 |       354
+        4 |        215 |        45 |       170
+        5 |         71 |        17 |        54
+        6 |         56 |        14 |        42
+        7 |         18 |         4 |        14
+        8 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 8.
+[INFO DPL-0500] Runtime: 12.06s
+Placement Analysis
+---------------------------------
+total displacement      45713.9 u
+average displacement        0.1 u
+max displacement            3.8 u
+original HPWL         2551298.8 u
+legalized HPWL        2581248.6 u
+delta HPWL                    1 %
+
+Took 13 seconds: detailed_placement
+estimate_parasitics -placement
+Took 13 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 50813 um^2 39% utilization.
+write_db /work/results/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_cts.sdc
+Elapsed time: 17:01.12[h:]min:sec. CPU time: user 1183.31 sys 108.39 (126%). Peak memory: 4186348KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         1021           4088 67746dd31a5c7fc7bbbb

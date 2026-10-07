@@ -1,0 +1,80 @@
+{
+  "name": "qfd_cst_signoff833_host-f1c7e6550",
+  "block": "qfd_cst_signoff833",
+  "owner": "Codex:qwen-die",
+  "purpose": "Re-sign unchanged 80fF station route at required833.333ps, retaining770ps failure record. No reroute/no cycle change.",
+  "hosts": [
+    "ot-epyc2"
+  ],
+  "host_require": [
+    "ot-epyc2"
+  ],
+  "threads": 2,
+  "peak_ram_gb": 8,
+  "source": {
+    "branch": "codex/qwen-die-final-20261007",
+    "commit": "f1c7e6550257ec1b175a8ab6f99cd5660ed560b9"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "station_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/b0 -P tb_qwen_die_station.N=20000 -P tb_qwen_die_station.NEG=0 -P tb_qwen_die_station.SPLIT=0 rtl/test/tb_qwen_die_station.sv rtl/physical/ot_qwen_die_station.sv && vvp {RUN}/bench/b0 | tee {RUN}/bench/b0.log && grep -q \"^PASS\" {RUN}/bench/b0.log",
+        "expect": "pass",
+        "pass_regex": "^PASS station",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "station_negative",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/b1 -P tb_qwen_die_station.N=20000 -P tb_qwen_die_station.NEG=1 -P tb_qwen_die_station.SPLIT=0 rtl/test/tb_qwen_die_station.sv rtl/physical/ot_qwen_die_station.sv && vvp {RUN}/bench/b1 | tee {RUN}/bench/b1.log && grep -q \"^PASS\" {RUN}/bench/b1.log",
+        "expect": "fail",
+        "fail_regex": "^FAIL station",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Unchanged completed route, measured boundary insertion retained; only headline clock restored."
+    },
+    "route": {
+      "cmd": "set -e\nOLD=/srv/opentallas-scratch2/scratch/claude/qwen-die-r17/stations_die/d1_cst\nW={RUN}/routes/{LABEL}\nmkdir -p \"$W/work\"\ntest \"$(cat \"$OLD/flow.exit\")\" = 0\ncp -a --reflink=auto \"$OLD/work/orfs\" \"$W/work/\"\ncp \"$OLD/corner_sta_ref.json\" \"$W/historical770.json\"\n{ cat physical/qwen_die_masters/station_signoff.sdc; cat \"$OLD/io_ref_skew_signoff.sdc\"; } > \"$W/signoff.sdc\"\npython3 tools/w18/corner_sta_ref.py --orfs-dir \"$W/work/orfs\" --extra-sdc \"$W/signoff.sdc\" --output \"$W/corner_sta.json\" > \"$W/sta.log\" 2>&1\n",
+      "needs": [
+        "orfs"
+      ],
+      "threads": 2,
+      "peak_ram_gb": 8
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/historical770.json {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_cst --out {RUN}/record/views/qfd_cst --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": false
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Unchanged measured own-clock-reference IO at90/150ps skew,50ps hold. No r21 sheet."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/qwen_die_takeover_20261007/qfd_cst_signoff833_host-f1c7e6550"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null
+}

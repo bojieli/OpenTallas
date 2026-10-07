@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.closure_loop.exact_gate_binding.v1",
+  "jobs": [
+    {
+      "name": "dsrom-qelem-qs5r-1b89b1b6d",
+      "source": {
+        "branch": "claude/dsrom-qelem-pq-20261006",
+        "commit": "1b89b1b6d"
+      },
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsrom-qelem-qs5r-1b89b1b6d",
+      "gate": {
+        "commit": "2299e6eeb",
+        "path": "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json",
+        "sha256": "44f6c76d27d95b83e0e4bdb57241121c91672d4eb816de27f21038b3cbd4f33b",
+        "source_binding": "all source_sha256 match source commit and live route snapshot",
+        "remote": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsrom-qelem-qs5r-1b89b1b6d/cl/qs5_exact_gate_44f6c76d27d9.json"
+      },
+      "checks": [
+        {
+          "name": "qs5_exact_gate_source_bound",
+          "cmd": "python3 - <<'QS5_GATE_PY'\nimport hashlib,json,pathlib\np=pathlib.Path('{CL}/qs5_exact_gate_44f6c76d27d9.json');raw=p.read_bytes()\nassert hashlib.sha256(raw).hexdigest()=='44f6c76d27d95b83e0e4bdb57241121c91672d4eb816de27f21038b3cbd4f33b'\ng=json.loads(raw);assert g['verdict']=='PASS' and g['total_compared_cycles']==12775002\npos=[x for x in g['runs'] if x['name'].startswith('pos')]\nneg=[x for x in g['runs'] if x['name'].startswith('neg')]\nassert len(pos)==5 and len(neg)==3\nassert all(x['returncode']==0 and x['coverage']['compared_cycles']>0 for x in pos)\nassert all(x['returncode']!=0 and x['caught'] for x in neg)\nfor f,h in g['source_sha256'].items():\n assert hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()==h, f\nprint('QS5_GATE_BOUND_PASS sources=%d positives=5 negatives=3 cycles=12775002'%len(g['source_sha256']))\nQS5_GATE_PY"
+        }
+      ],
+      "hold": "retained pending central integration"
+    },
+    {
+      "name": "dsrom-qelem-qs5f-e1fbc25c1",
+      "source": {
+        "branch": "claude/dsrom-qelem-pq-20261006",
+        "commit": "e1fbc25c1"
+      },
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-e1fbc25c1",
+      "gate": {
+        "commit": "2299e6eeb",
+        "path": "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json",
+        "sha256": "44f6c76d27d95b83e0e4bdb57241121c91672d4eb816de27f21038b3cbd4f33b",
+        "source_binding": "all source_sha256 match source commit and live route snapshot",
+        "remote": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-e1fbc25c1/cl/qs5_exact_gate_44f6c76d27d9.json"
+      },
+      "checks": [
+        {
+          "name": "qs5_exact_gate_source_bound",
+          "cmd": "python3 - <<'QS5_GATE_PY'\nimport hashlib,json,pathlib\np=pathlib.Path('{CL}/qs5_exact_gate_44f6c76d27d9.json');raw=p.read_bytes()\nassert hashlib.sha256(raw).hexdigest()=='44f6c76d27d95b83e0e4bdb57241121c91672d4eb816de27f21038b3cbd4f33b'\ng=json.loads(raw);assert g['verdict']=='PASS' and g['total_compared_cycles']==12775002\npos=[x for x in g['runs'] if x['name'].startswith('pos')]\nneg=[x for x in g['runs'] if x['name'].startswith('neg')]\nassert len(pos)==5 and len(neg)==3\nassert all(x['returncode']==0 and x['coverage']['compared_cycles']>0 for x in pos)\nassert all(x['returncode']!=0 and x['caught'] for x in neg)\nfor f,h in g['source_sha256'].items():\n assert hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()==h, f\nprint('QS5_GATE_BOUND_PASS sources=%d positives=5 negatives=3 cycles=12775002'%len(g['source_sha256']))\nQS5_GATE_PY"
+        }
+      ],
+      "hold": "retained pending central integration"
+    }
+  ]
+}

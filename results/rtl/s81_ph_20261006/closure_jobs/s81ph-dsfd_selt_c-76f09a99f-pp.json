@@ -1,0 +1,79 @@
+{
+ "name": "s81ph-dsfd_selt_c-76f09a99f-pp",
+ "block": "dsfd_selt_c",
+ "owner": "Claude:s81-ph",
+ "purpose": "selt_c ping-pong backstop (SEARCH_PIPE 3), third parallel variant (with b6fcd9853 SEARCH_PIPE 1 and 9497b5ad1-half)",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "76f09a99f2f8d6fca59e61cf702b6d1f68b483e8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_pipe1",
+    "cmd": "command -v verilator >/dev/null && JOBS=8 bash tools/s81_ph/selt_pipeline_bench.sh {RUN}/bench p3 3 ",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "neg_mut2",
+    "cmd": "command -v verilator >/dev/null && JOBS=8 bash tools/s81_ph/selt_pipeline_bench.sh {RUN}/bench p2m 3 +define+OT_S81PH_MUT2",
+    "expect": "fail",
+    "fail_regex": "SELT_PIPE FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8
+   }
+  ],
+  "calibrate": {
+   "cmd": "HM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' SDCX='physical/s81_ph_views/common/fwd_clk_out.sdc physical/s81_ph_views/selector/selt_c_pp.sdc' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_c rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --param SEARCH_PIPE=3 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' SDCX='physical/s81_ph_views/common/fwd_clk_out.sdc physical/s81_ph_views/selector/selt_c_pp.sdc' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_c rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --param SEARCH_PIPE=3 $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_selt_c"
+  }
+ ],
+ "cycles_added": 68,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "same IO SDC flow as the cd3337221-b route it re-runs (calibrated measured insertion); the miss being fixed is internal (search sum trees), keeping the IO model fixed isolates the RTL change"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "parent": "hfd_cmdproc",
+ "out": "physical/hbm_accel_die_views/cmdproc/split",
+ "note": "cmdproc split (coordinator DECISION 2026-10-06, cp10_pd55: one 1.4 mm block gave a 33-buffer clock tree, 557 ps skew, SRAM macros ~0.7 ns early): one view per cmdproc20 instance, each half the slot. S band = cpS + faces cSE/cSW/t_su_SE/t_su_SW + f_loader/f_router; N band = cpN + cNE/cNW/t_su_NE/t_su_NW + f_barrier/f_coll/t_barrier/t_coll. Cross buses abut on the shared edge: xl = f_loader[147:294] (cpN's command/doorbell slice) S->N, xb = f_barrier[0:16] (release to the S faces) N->S, xt = t_barrier[0:16] (S-face SM arrive) S->N. The S band gets its own clock / reset pins on its south edge (die clock tree / die reset). Gap 0.024 um between bands.",
+ "bands": [
+  {"name": "hfd_cmdproc_s", "y0": 0.0, "h": 701.976,
+   "ports": ["cSE", "cSW", "t_su_SE", "t_su_SW", "f_loader", "f_router"],
+   "new": [
+    {"port": "ck", "bits": 1, "direction": "input", "edge": "bottom", "copy_x": "ck", "role": "die clock (new die net from the die clock tree)"},
+    {"port": "rst", "bits": 1, "direction": "input", "edge": "bottom", "copy_x": "rst", "role": "die reset (same die net as hfd_cmdproc rst)"},
+    {"port": "xl", "bits": 147, "direction": "output", "edge": "top", "x0": 695.328, "role": "f_loader[147:294] to the N band"},
+    {"port": "xb", "bits": 16, "direction": "input", "edge": "top", "x0": 683.904, "role": "f_barrier[0:16] from the N band"},
+    {"port": "xt", "bits": 16, "direction": "output", "edge": "top", "x0": 679.68, "role": "t_barrier[0:16] to the N band"}
+   ]},
+  {"name": "hfd_cmdproc_n", "y0": 702.0, "h": 701.976,
+   "ports": ["cNE", "cNW", "t_su_NE", "t_su_NW", "ck", "rst", "f_barrier", "f_coll", "t_barrier", "t_coll"],
+   "new": [
+    {"port": "xl", "bits": 147, "direction": "input", "edge": "bottom", "x0": 695.328, "role": "f_loader[147:294] from the S band"},
+    {"port": "xb", "bits": 16, "direction": "output", "edge": "bottom", "x0": 683.904, "role": "f_barrier[0:16] to the S band"},
+    {"port": "xt", "bits": 16, "direction": "input", "edge": "bottom", "x0": 679.68, "role": "t_barrier[0:16] from the S band"}
+   ]}
+ ],
+ "cross": [
+  {"from": "hfd_cmdproc_s.xl", "to": "hfd_cmdproc_n.xl", "bits": 147, "carries": "hfd_cmdproc f_loader[147:294]"},
+  {"from": "hfd_cmdproc_n.xb", "to": "hfd_cmdproc_s.xb", "bits": 16, "carries": "hfd_cmdproc f_barrier[0:16]"},
+  {"from": "hfd_cmdproc_s.xt", "to": "hfd_cmdproc_n.xt", "bits": 16, "carries": "hfd_cmdproc t_barrier[0:16]"}
+ ],
+ "die_nets": ["hfd_cmdproc_s.ck <- die clock", "hfd_cmdproc_s.rst <- die reset (net of hfd_cmdproc.rst)"]
+}

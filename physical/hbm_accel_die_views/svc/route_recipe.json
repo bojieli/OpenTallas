@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.hbm_die_view.route_recipe.v1",
+ "views": "hfd_svc_{SW,SE}_s0..s7",
+ "note": "views agent 2026-10-06 20:45 PT: closure-loop recipe for the svc segment masters. Budget SDCs (results/rtl/budgets_20261006 sheets) for IO; hold repair margin HM 0.035 ns (calibrated routes hbm_svc_SE_s6 / SW_s4 at 70a27c406 closed SS +158 / +87, DRC 0, but FF +3.4 / +4.0 on the PC-pin unit d_r -> bd / t_r -> bt internal hold with the 10 ps default); forwarded-clock SDC appended where svc/sdc/<master>_fwd.sdc exists; PRECTS fclk root buffer; WSF 0.12 with the master's ws.tcl.",
+ "hold_margin_ns": 0.035
+}

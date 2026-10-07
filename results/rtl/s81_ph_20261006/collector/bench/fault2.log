@@ -1,0 +1,8 @@
+fault case mode 2: FAULT bits 00010 expected bit 12    seen, DONE after FAULT 0
+RESULT PASS fault mode 2
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv:247: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.006 s; speed 788.683 us/s
+- Verilator: cpu 0.006 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Maximum resident set size (kbytes): 8268

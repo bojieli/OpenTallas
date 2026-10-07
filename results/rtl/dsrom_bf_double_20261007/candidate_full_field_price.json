@@ -1,0 +1,1285 @@
+{
+ "schema": "opentallas.dsrom.bf-double.mixed-price.v1",
+ "tool": "tools/dsrom_bf_merge_mixed_price.py",
+ "release": "results/uarch/dsrom_bf_candidates_20261007/mixed2304",
+ "geometry": "f183.60",
+ "region_runs": 18288,
+ "all_exact": true,
+ "nodes": {
+  "E1.wkv": {
+   "old": 1148,
+   "new": 1146,
+   "old_phases": 2,
+   "new_phases": 2,
+   "delta": -2,
+   "exact": true
+  },
+  "L0.attn.a_proj": {
+   "old": 543,
+   "new": 543,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L0.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L0.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L0.attn.wq_b": {
+   "old": 473,
+   "new": 473,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L0.ffn.down": {
+   "old": 2160,
+   "new": 2147,
+   "old_phases": 5,
+   "new_phases": 5,
+   "delta": -13,
+   "exact": true
+  },
+  "L0.ffn.experts_gu": {
+   "old": 2178,
+   "new": 2174,
+   "old_phases": 4,
+   "new_phases": 4,
+   "delta": -4,
+   "exact": true
+  },
+  "L0.ffn.router": {
+   "old": 637,
+   "new": 507,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -130,
+   "exact": true
+  },
+  "L0.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L1.attn.a_proj": {
+   "old": 543,
+   "new": 543,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L1.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L1.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L1.attn.wq_b": {
+   "old": 473,
+   "new": 473,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L1.ffn.down": {
+   "old": 1301,
+   "new": 1719,
+   "old_phases": 3,
+   "new_phases": 4,
+   "delta": 418,
+   "exact": true
+  },
+  "L1.ffn.experts_gu": {
+   "old": 1632,
+   "new": 1628,
+   "old_phases": 3,
+   "new_phases": 3,
+   "delta": -4,
+   "exact": true
+  },
+  "L1.ffn.router": {
+   "old": 637,
+   "new": 507,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -130,
+   "exact": true
+  },
+  "L1.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L2.attn.a_proj": {
+   "old": 2470,
+   "new": 1822,
+   "old_phases": 4,
+   "new_phases": 3,
+   "delta": -648,
+   "exact": true
+  },
+  "L2.attn.cmp.wk": {
+   "old": 324,
+   "new": 324,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L2.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L2.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L2.attn.wq_b": {
+   "old": 919,
+   "new": 919,
+   "old_phases": 2,
+   "new_phases": 2,
+   "delta": 0,
+   "exact": true
+  },
+  "L2.ffn.down": {
+   "old": 1286,
+   "new": 2155,
+   "old_phases": 3,
+   "new_phases": 5,
+   "delta": 869,
+   "exact": true
+  },
+  "L2.ffn.experts_gu": {
+   "old": 1090,
+   "new": 2174,
+   "old_phases": 2,
+   "new_phases": 4,
+   "delta": 1084,
+   "exact": true
+  },
+  "L2.ffn.router": {
+   "old": 637,
+   "new": 507,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -130,
+   "exact": true
+  },
+  "L2.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L20.attn.a_proj": {
+   "old": 1830,
+   "new": 1191,
+   "old_phases": 3,
+   "new_phases": 2,
+   "delta": -639,
+   "exact": true
+  },
+  "L20.attn.cmp.wk": {
+   "old": 324,
+   "new": 324,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L20.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L20.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L20.attn.wq_b": {
+   "old": 919,
+   "new": 916,
+   "old_phases": 2,
+   "new_phases": 2,
+   "delta": -3,
+   "exact": true
+  },
+  "L20.ffn.down": {
+   "old": 2150,
+   "new": 1750,
+   "old_phases": 5,
+   "new_phases": 4,
+   "delta": -400,
+   "exact": true
+  },
+  "L20.ffn.experts_gu": {
+   "old": 2182,
+   "new": 2174,
+   "old_phases": 4,
+   "new_phases": 4,
+   "delta": -8,
+   "exact": true
+  },
+  "L20.ffn.router": {
+   "old": 637,
+   "new": 507,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -130,
+   "exact": true
+  },
+  "L20.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L21.attn.a_proj": {
+   "old": 546,
+   "new": 551,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 5,
+   "exact": true
+  },
+  "L21.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L21.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L21.attn.wq_b": {
+   "old": 473,
+   "new": 473,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L21.ffn.down": {
+   "old": 1311,
+   "new": 1725,
+   "old_phases": 3,
+   "new_phases": 4,
+   "delta": 414,
+   "exact": true
+  },
+  "L21.ffn.experts_gu": {
+   "old": 1628,
+   "new": 1632,
+   "old_phases": 3,
+   "new_phases": 3,
+   "delta": 4,
+   "exact": true
+  },
+  "L21.ffn.router": {
+   "old": 637,
+   "new": 510,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -127,
+   "exact": true
+  },
+  "L21.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L24.attn.a_proj": {
+   "old": 1190,
+   "new": 1182,
+   "old_phases": 2,
+   "new_phases": 2,
+   "delta": -8,
+   "exact": true
+  },
+  "L24.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L24.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L24.attn.wq_b": {
+   "old": 919,
+   "new": 919,
+   "old_phases": 2,
+   "new_phases": 2,
+   "delta": 0,
+   "exact": true
+  },
+  "L24.ffn.down": {
+   "old": 2173,
+   "new": 1310,
+   "old_phases": 5,
+   "new_phases": 3,
+   "delta": -863,
+   "exact": true
+  },
+  "L24.ffn.experts_gu": {
+   "old": 2724,
+   "new": 1632,
+   "old_phases": 5,
+   "new_phases": 3,
+   "delta": -1092,
+   "exact": true
+  },
+  "L24.ffn.router": {
+   "old": 637,
+   "new": 510,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -127,
+   "exact": true
+  },
+  "L24.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L3.attn.a_proj": {
+   "old": 551,
+   "new": 551,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L3.attn.wo_a": {
+   "old": 2338,
+   "new": 1176,
+   "old_phases": 4,
+   "new_phases": 2,
+   "delta": -1162,
+   "exact": true
+  },
+  "L3.attn.wo_b": {
+   "old": 472,
+   "new": 472,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  },
+  "L3.attn.wq_b": {
+   "old": 473,
+   "new": 470,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -3,
+   "exact": true
+  },
+  "L3.ffn.down": {
+   "old": 2623,
+   "new": 2193,
+   "old_phases": 6,
+   "new_phases": 5,
+   "delta": -430,
+   "exact": true
+  },
+  "L3.ffn.experts_gu": {
+   "old": 3262,
+   "new": 2720,
+   "old_phases": 6,
+   "new_phases": 5,
+   "delta": -542,
+   "exact": true
+  },
+  "L3.ffn.router": {
+   "old": 637,
+   "new": 510,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": -127,
+   "exact": true
+  },
+  "L3.ffn.shared_gu": {
+   "old": 557,
+   "new": 557,
+   "old_phases": 1,
+   "new_phases": 1,
+   "delta": 0,
+   "exact": true
+  }
+ },
+ "adds": [
+  [
+   "E1.wkv",
+   -2
+  ],
+  [
+   "L0.attn.wo_a",
+   -1162
+  ],
+  [
+   "L0.ffn.down",
+   -13
+  ],
+  [
+   "L0.ffn.experts_gu",
+   -4
+  ],
+  [
+   "L0.ffn.router",
+   -130
+  ],
+  [
+   "L1.attn.wo_a",
+   -1162
+  ],
+  [
+   "L1.ffn.down",
+   418
+  ],
+  [
+   "L1.ffn.experts_gu",
+   -4
+  ],
+  [
+   "L1.ffn.router",
+   -130
+  ],
+  [
+   "L2.attn.a_proj",
+   -648
+  ],
+  [
+   "L8.attn.a_proj",
+   -648
+  ],
+  [
+   "L14.attn.a_proj",
+   -648
+  ],
+  [
+   "L2.attn.wo_a",
+   -1162
+  ],
+  [
+   "L8.attn.wo_a",
+   -1162
+  ],
+  [
+   "L14.attn.wo_a",
+   -1162
+  ],
+  [
+   "L2.ffn.down",
+   869
+  ],
+  [
+   "L8.ffn.down",
+   869
+  ],
+  [
+   "L14.ffn.down",
+   869
+  ],
+  [
+   "L2.ffn.experts_gu",
+   1084
+  ],
+  [
+   "L8.ffn.experts_gu",
+   1084
+  ],
+  [
+   "L14.ffn.experts_gu",
+   1084
+  ],
+  [
+   "L2.ffn.router",
+   -130
+  ],
+  [
+   "L8.ffn.router",
+   -130
+  ],
+  [
+   "L14.ffn.router",
+   -130
+  ],
+  [
+   "L20.attn.a_proj",
+   -639
+  ],
+  [
+   "L20.attn.wo_a",
+   -1162
+  ],
+  [
+   "L20.attn.wq_b",
+   -3
+  ],
+  [
+   "L20.ffn.down",
+   -400
+  ],
+  [
+   "L20.ffn.experts_gu",
+   -8
+  ],
+  [
+   "L20.ffn.router",
+   -130
+  ],
+  [
+   "L21.attn.a_proj",
+   5
+  ],
+  [
+   "L22.attn.a_proj",
+   5
+  ],
+  [
+   "L23.attn.a_proj",
+   5
+  ],
+  [
+   "L25.attn.a_proj",
+   5
+  ],
+  [
+   "L26.attn.a_proj",
+   5
+  ],
+  [
+   "L27.attn.a_proj",
+   5
+  ],
+  [
+   "L29.attn.a_proj",
+   5
+  ],
+  [
+   "L30.attn.a_proj",
+   5
+  ],
+  [
+   "L31.attn.a_proj",
+   5
+  ],
+  [
+   "L33.attn.a_proj",
+   5
+  ],
+  [
+   "L34.attn.a_proj",
+   5
+  ],
+  [
+   "L35.attn.a_proj",
+   5
+  ],
+  [
+   "L37.attn.a_proj",
+   5
+  ],
+  [
+   "L38.attn.a_proj",
+   5
+  ],
+  [
+   "L39.attn.a_proj",
+   5
+  ],
+  [
+   "L21.attn.wo_a",
+   -1162
+  ],
+  [
+   "L22.attn.wo_a",
+   -1162
+  ],
+  [
+   "L23.attn.wo_a",
+   -1162
+  ],
+  [
+   "L25.attn.wo_a",
+   -1162
+  ],
+  [
+   "L26.attn.wo_a",
+   -1162
+  ],
+  [
+   "L27.attn.wo_a",
+   -1162
+  ],
+  [
+   "L29.attn.wo_a",
+   -1162
+  ],
+  [
+   "L30.attn.wo_a",
+   -1162
+  ],
+  [
+   "L31.attn.wo_a",
+   -1162
+  ],
+  [
+   "L33.attn.wo_a",
+   -1162
+  ],
+  [
+   "L34.attn.wo_a",
+   -1162
+  ],
+  [
+   "L35.attn.wo_a",
+   -1162
+  ],
+  [
+   "L37.attn.wo_a",
+   -1162
+  ],
+  [
+   "L38.attn.wo_a",
+   -1162
+  ],
+  [
+   "L39.attn.wo_a",
+   -1162
+  ],
+  [
+   "L21.ffn.down",
+   414
+  ],
+  [
+   "L22.ffn.down",
+   414
+  ],
+  [
+   "L23.ffn.down",
+   414
+  ],
+  [
+   "L25.ffn.down",
+   414
+  ],
+  [
+   "L26.ffn.down",
+   414
+  ],
+  [
+   "L27.ffn.down",
+   414
+  ],
+  [
+   "L29.ffn.down",
+   414
+  ],
+  [
+   "L30.ffn.down",
+   414
+  ],
+  [
+   "L31.ffn.down",
+   414
+  ],
+  [
+   "L33.ffn.down",
+   414
+  ],
+  [
+   "L34.ffn.down",
+   414
+  ],
+  [
+   "L35.ffn.down",
+   414
+  ],
+  [
+   "L37.ffn.down",
+   414
+  ],
+  [
+   "L38.ffn.down",
+   414
+  ],
+  [
+   "L39.ffn.down",
+   414
+  ],
+  [
+   "L21.ffn.experts_gu",
+   4
+  ],
+  [
+   "L22.ffn.experts_gu",
+   4
+  ],
+  [
+   "L23.ffn.experts_gu",
+   4
+  ],
+  [
+   "L25.ffn.experts_gu",
+   4
+  ],
+  [
+   "L26.ffn.experts_gu",
+   4
+  ],
+  [
+   "L27.ffn.experts_gu",
+   4
+  ],
+  [
+   "L29.ffn.experts_gu",
+   4
+  ],
+  [
+   "L30.ffn.experts_gu",
+   4
+  ],
+  [
+   "L31.ffn.experts_gu",
+   4
+  ],
+  [
+   "L33.ffn.experts_gu",
+   4
+  ],
+  [
+   "L34.ffn.experts_gu",
+   4
+  ],
+  [
+   "L35.ffn.experts_gu",
+   4
+  ],
+  [
+   "L37.ffn.experts_gu",
+   4
+  ],
+  [
+   "L38.ffn.experts_gu",
+   4
+  ],
+  [
+   "L39.ffn.experts_gu",
+   4
+  ],
+  [
+   "L21.ffn.router",
+   -127
+  ],
+  [
+   "L22.ffn.router",
+   -127
+  ],
+  [
+   "L23.ffn.router",
+   -127
+  ],
+  [
+   "L25.ffn.router",
+   -127
+  ],
+  [
+   "L26.ffn.router",
+   -127
+  ],
+  [
+   "L27.ffn.router",
+   -127
+  ],
+  [
+   "L29.ffn.router",
+   -127
+  ],
+  [
+   "L30.ffn.router",
+   -127
+  ],
+  [
+   "L31.ffn.router",
+   -127
+  ],
+  [
+   "L33.ffn.router",
+   -127
+  ],
+  [
+   "L34.ffn.router",
+   -127
+  ],
+  [
+   "L35.ffn.router",
+   -127
+  ],
+  [
+   "L37.ffn.router",
+   -127
+  ],
+  [
+   "L38.ffn.router",
+   -127
+  ],
+  [
+   "L39.ffn.router",
+   -127
+  ],
+  [
+   "L24.attn.a_proj",
+   -8
+  ],
+  [
+   "L28.attn.a_proj",
+   -8
+  ],
+  [
+   "L32.attn.a_proj",
+   -8
+  ],
+  [
+   "L36.attn.a_proj",
+   -8
+  ],
+  [
+   "L24.attn.wo_a",
+   -1162
+  ],
+  [
+   "L28.attn.wo_a",
+   -1162
+  ],
+  [
+   "L32.attn.wo_a",
+   -1162
+  ],
+  [
+   "L36.attn.wo_a",
+   -1162
+  ],
+  [
+   "L24.ffn.down",
+   -863
+  ],
+  [
+   "L28.ffn.down",
+   -863
+  ],
+  [
+   "L32.ffn.down",
+   -863
+  ],
+  [
+   "L36.ffn.down",
+   -863
+  ],
+  [
+   "L24.ffn.experts_gu",
+   -1092
+  ],
+  [
+   "L28.ffn.experts_gu",
+   -1092
+  ],
+  [
+   "L32.ffn.experts_gu",
+   -1092
+  ],
+  [
+   "L36.ffn.experts_gu",
+   -1092
+  ],
+  [
+   "L24.ffn.router",
+   -127
+  ],
+  [
+   "L28.ffn.router",
+   -127
+  ],
+  [
+   "L32.ffn.router",
+   -127
+  ],
+  [
+   "L36.ffn.router",
+   -127
+  ],
+  [
+   "L3.attn.wo_a",
+   -1162
+  ],
+  [
+   "L4.attn.wo_a",
+   -1162
+  ],
+  [
+   "L5.attn.wo_a",
+   -1162
+  ],
+  [
+   "L6.attn.wo_a",
+   -1162
+  ],
+  [
+   "L7.attn.wo_a",
+   -1162
+  ],
+  [
+   "L9.attn.wo_a",
+   -1162
+  ],
+  [
+   "L10.attn.wo_a",
+   -1162
+  ],
+  [
+   "L11.attn.wo_a",
+   -1162
+  ],
+  [
+   "L12.attn.wo_a",
+   -1162
+  ],
+  [
+   "L13.attn.wo_a",
+   -1162
+  ],
+  [
+   "L15.attn.wo_a",
+   -1162
+  ],
+  [
+   "L16.attn.wo_a",
+   -1162
+  ],
+  [
+   "L17.attn.wo_a",
+   -1162
+  ],
+  [
+   "L18.attn.wo_a",
+   -1162
+  ],
+  [
+   "L19.attn.wo_a",
+   -1162
+  ],
+  [
+   "L3.attn.wq_b",
+   -3
+  ],
+  [
+   "L4.attn.wq_b",
+   -3
+  ],
+  [
+   "L5.attn.wq_b",
+   -3
+  ],
+  [
+   "L6.attn.wq_b",
+   -3
+  ],
+  [
+   "L7.attn.wq_b",
+   -3
+  ],
+  [
+   "L9.attn.wq_b",
+   -3
+  ],
+  [
+   "L10.attn.wq_b",
+   -3
+  ],
+  [
+   "L11.attn.wq_b",
+   -3
+  ],
+  [
+   "L12.attn.wq_b",
+   -3
+  ],
+  [
+   "L13.attn.wq_b",
+   -3
+  ],
+  [
+   "L15.attn.wq_b",
+   -3
+  ],
+  [
+   "L16.attn.wq_b",
+   -3
+  ],
+  [
+   "L17.attn.wq_b",
+   -3
+  ],
+  [
+   "L18.attn.wq_b",
+   -3
+  ],
+  [
+   "L19.attn.wq_b",
+   -3
+  ],
+  [
+   "L3.ffn.down",
+   -430
+  ],
+  [
+   "L4.ffn.down",
+   -430
+  ],
+  [
+   "L5.ffn.down",
+   -430
+  ],
+  [
+   "L6.ffn.down",
+   -430
+  ],
+  [
+   "L7.ffn.down",
+   -430
+  ],
+  [
+   "L9.ffn.down",
+   -430
+  ],
+  [
+   "L10.ffn.down",
+   -430
+  ],
+  [
+   "L11.ffn.down",
+   -430
+  ],
+  [
+   "L12.ffn.down",
+   -430
+  ],
+  [
+   "L13.ffn.down",
+   -430
+  ],
+  [
+   "L15.ffn.down",
+   -430
+  ],
+  [
+   "L16.ffn.down",
+   -430
+  ],
+  [
+   "L17.ffn.down",
+   -430
+  ],
+  [
+   "L18.ffn.down",
+   -430
+  ],
+  [
+   "L19.ffn.down",
+   -430
+  ],
+  [
+   "L3.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L4.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L5.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L6.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L7.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L9.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L10.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L11.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L12.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L13.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L15.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L16.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L17.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L18.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L19.ffn.experts_gu",
+   -542
+  ],
+  [
+   "L3.ffn.router",
+   -127
+  ],
+  [
+   "L4.ffn.router",
+   -127
+  ],
+  [
+   "L5.ffn.router",
+   -127
+  ],
+  [
+   "L6.ffn.router",
+   -127
+  ],
+  [
+   "L7.ffn.router",
+   -127
+  ],
+  [
+   "L9.ffn.router",
+   -127
+  ],
+  [
+   "L10.ffn.router",
+   -127
+  ],
+  [
+   "L11.ffn.router",
+   -127
+  ],
+  [
+   "L12.ffn.router",
+   -127
+  ],
+  [
+   "L13.ffn.router",
+   -127
+  ],
+  [
+   "L15.ffn.router",
+   -127
+  ],
+  [
+   "L16.ffn.router",
+   -127
+  ],
+  [
+   "L17.ffn.router",
+   -127
+  ],
+  [
+   "L18.ffn.router",
+   -127
+  ],
+  [
+   "L19.ffn.router",
+   -127
+  ]
+ ],
+ "estimated": "wire: f183.60 per-region round trip (the mixed column is 37.8 um a tier taller)"
+}

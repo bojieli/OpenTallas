@@ -1,0 +1,9 @@
+    input wire [0:0] ck,
+    input wire [0:0] ckv,
+    input wire [63:0] f_sn,
+    input wire [831:0] f_w,
+    input wire [0:0] rst,
+    input wire [0:0] rsv,
+    output wire [0:0] t_ho,
+    output wire [63:0] t_st,
+    output wire [1663:0] t_vm

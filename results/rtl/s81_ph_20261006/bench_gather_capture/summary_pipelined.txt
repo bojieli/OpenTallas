@@ -1,0 +1,91 @@
+# benchB (EPYC2 /srv/opentallas-scratch2/scratch/claude/s81-ph/benchB): Verilator 5.032, +UNORD
+## p3: gather ROOT_BLK 1 PIPE 1 (ot_s81ph_ret_root_p, 940e28939) + capture rd64 core; m3 = S81PH_MUT_NOFWD
+== run_p3_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_p3_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=28 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=27 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=27 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=26 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=1 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=15 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p3_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=11 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+## c1: gather PIPE root + capture ot_s81ph_cap_p (091a46e72); m1 BF16_TRUNC, m2 LANE_SWAP, m4 S81PH_MUT_NOOVER (over case)
+== run_c1_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=4 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_c1_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_c1_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=35 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=9 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=23 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_c1_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=19 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+UNORD reordered_roots=0 fault_run_dut_writes_not_in_ref=0
+== m4 over:
+MISMATCH root 7: dut write 60831459804e1 is not an individually valid row
+SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=0 ref_drained=0 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=1
+RESULT FAIL
+DONE
+## p4: root norm pipelined (input 3 stages, parent norm in the tag delay line), local pkg functions (yosys-native) + capture cap_p; m3 = NOFWD
+== run_p4_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=6 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_p4_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=13 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=4 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=23 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=20 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+## t1: gather ROOT_BLK 2 (4 x 32 abutted ot_s81ph_root_tile chains) + capture cap_p
+== run_t1_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=32 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_t1_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_t1_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=63 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=62 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=37 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=8 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=51 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=50 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+## t2: R0 symmetric-lane tiles (li_w/li_e + sel, lane thru both ways) + root delayed buffer write; m3 NOFWD
+== run_t2_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=32 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_t2_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_t2_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_t2_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=63 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=62 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=37 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=8 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=51 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t2_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=50 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+## t3: root S1 key compare / S2 register-only decision / registered free slot / 1 norm step per stage / no queue bypass; tile lane mux registered
+== run_t3_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=65 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_t3_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=65 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_t3_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_t3_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=65 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=65 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=67 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=66 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=41 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=12 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=55 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t3_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=54 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0

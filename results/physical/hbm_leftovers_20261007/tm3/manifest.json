@@ -1,0 +1,314 @@
+{
+  "observed_utc": "2026-10-07T10:51:38.120767+00:00",
+  "route": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30",
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13",
+  "source_root_exists": true,
+  "files": {
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/args": {
+      "sha256": "318575472c50315f55873704e8253e120c2152f876212575281ca4828afaa0e2",
+      "bytes": 53,
+      "original_bytes": 53,
+      "tail_only": false,
+      "saved_as": "route/args"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/exit": {
+      "sha256": "a8203980ad024431fdef64218e9ceb3cc1d7f88950672e3f2f21b2eee97bf891",
+      "bytes": 30,
+      "original_bytes": 30,
+      "tail_only": false,
+      "saved_as": "route/exit"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/corner.log": {
+      "sha256": "6b6e3e4f280905ea80bbada3a8e4c5e6ef2733ce91651538f420eaf7fe62bb1f",
+      "bytes": 1129,
+      "original_bytes": 1129,
+      "tail_only": false,
+      "saved_as": "route/corner.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/io150.txt": {
+      "sha256": "27b054727c08f0fb5420c1ce2e7cdd56a0af95d1f3be0ded55ff7f381dc6fa05",
+      "bytes": 298,
+      "original_bytes": 298,
+      "tail_only": false,
+      "saved_as": "route/io150.txt"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/run.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_bytes": 0,
+      "tail_only": true,
+      "saved_as": "route/run.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/config.mk": {
+      "sha256": "9f7d5cf2db7cdcec95690b71e6961512320186d3847a903ba7e314d07137e4b5",
+      "bytes": 1548,
+      "original_bytes": 1548,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/config.mk"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/constraint.sdc": {
+      "sha256": "a17a1cfcc1c4b4ef54f64cf381de6acff02b73b238eb436ee889e282ef809f10",
+      "bytes": 1140,
+      "original_bytes": 1140,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/constraint.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_4_floorplan_pdn.json": {
+      "sha256": "2df9ab0ac17eca1eae8fda98fb793a4922b37505bb87f7b167a504e9a59f0a26",
+      "bytes": 172,
+      "original_bytes": 172,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_4_floorplan_pdn.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_1_floorplan.json": {
+      "sha256": "b27b0ef5cd77a6dc247c3b57529059f8aaec50d185931597a167322c5ab03912",
+      "bytes": 2291,
+      "original_bytes": 2291,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_1_floorplan.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_3_place_gp.json": {
+      "sha256": "74a3af51c5f34200e76f2d9e657148de569ff661e921b4129fdd5d87b18b4a4c",
+      "bytes": 1890,
+      "original_bytes": 1890,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_3_place_gp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/1_synth.json": {
+      "sha256": "12b3e82c2b8fe4b09b4f238a3c11a4e573044997d5d17eba9051cb5f6a8e9da2",
+      "bytes": 808,
+      "original_bytes": 808,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/1_synth.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_4_place_resized.json": {
+      "sha256": "0b07613d068c5a0a54c04a356cb52531477753060dff38197ff49ae1ab41e7eb",
+      "bytes": 2190,
+      "original_bytes": 2190,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_4_place_resized.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_1_place_gp_skip_io.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_1_place_gp_skip_io.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_2_place_iop.json": {
+      "sha256": "17208ff7b3fe1e043523762e85e5fe41b5164f2ae97f57cedde8d1f33509ea27",
+      "bytes": 200,
+      "original_bytes": 200,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_2_place_iop.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_5_place_dp.json": {
+      "sha256": "3bbb832e8bf0fb1734664635eb9fd02d2bc9fe6fdc1471142a4f59c7798e1c55",
+      "bytes": 2834,
+      "original_bytes": 2834,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/3_5_place_dp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_1_cts.json": {
+      "sha256": "e73e6b202badd7fbc7c9ff31113d3f31d5c9b9789a8b952b2a173d3711747843",
+      "bytes": 2929,
+      "original_bytes": 2929,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_1_cts.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_2_floorplan_macro.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_2_floorplan_macro.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_3_floorplan_tapcell.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/2_3_floorplan_tapcell.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_1_cts.log": {
+      "sha256": "d7d4e457a8b49dd698a8ef8b6ffabcda9c03a0ecc23aa3f63e845256fb59996a",
+      "bytes": 1674,
+      "original_bytes": 934560,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/4_1_cts.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/5_1_grt.tmp.log": {
+      "sha256": "6ec9c2ddd8b6259955d3363383000c45b1b1b82a8f30737302fc44d66c04f997",
+      "bytes": 4385,
+      "original_bytes": 142970,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/5_1_grt.tmp.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/v41x/phys/ot_hdc_v41x_vec_red_c12_phys.sv": {
+      "sha256": "62f3e29da392c5cc6542e3f3cde23a3af3b0e8666c597564a531d50f8785405d",
+      "bytes": 6972,
+      "original_bytes": 6972,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/rtl/hdc/v41x/phys/ot_hdc_v41x_vec_red_c12_phys.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": {
+      "sha256": "066f564510f3e95621a053770d224b95f941ad4c8d897aaecebcfe8a062f0078",
+      "bytes": 37903,
+      "original_bytes": 37903,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_fastfp_lat_c12.sv": {
+      "sha256": "870020b95d623ed481ec8caebda69cb80f57e43dd824ece5fa31c381ebd4c5ac",
+      "bytes": 6976,
+      "original_bytes": 6976,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_fastfp_lat_c12.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_fp32_f12.sv": {
+      "sha256": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+      "bytes": 27241,
+      "original_bytes": 27241,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_fp32_f12.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/v41x/ot_dsrom_su_add6.sv": {
+      "sha256": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+      "bytes": 617,
+      "original_bytes": 617,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_fastfp.sv": {
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "bytes": 19069,
+      "original_bytes": 19069,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_fastfp.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "bytes": 11377,
+      "original_bytes": 11377,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "bytes": 12112,
+      "original_bytes": 12112,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_prefix.sv": {
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "bytes": 2803,
+      "original_bytes": 2803,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_prefix.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_delay.sv": {
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "bytes": 1395,
+      "original_bytes": 1395,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_delay.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/rtl/hdc/ot_hdc_sfu.sv": {
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "bytes": 7751,
+      "original_bytes": 7751,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/hdc/ot_hdc_sfu.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/physical/hbm_su_c12/signoff_833_io150.sdc": {
+      "sha256": "afeacc12451783d6e79d45767fa935b745b3042654aa1a8f2735dfde1ec30f78",
+      "bytes": 1536,
+      "original_bytes": 1536,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_su_c12/signoff_833_io150.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/physical/hbm_su_c12/red_io_vclk_slice.sdc": {
+      "sha256": "14d30f399851ba8aff5f774c4110c290d8fa83d3930b0174bccdb026e87e84e1",
+      "bytes": 1177,
+      "original_bytes": 1177,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_su_c12/red_io_vclk_slice.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/physical/hbm_su_c12/signoff_833_fpio.sdc": {
+      "sha256": "fc3910e8b8163f8d8f3980f7e1f0daa4fa4561986bb66d36ececaf884f90f7a5",
+      "bytes": 503,
+      "original_bytes": 503,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_su_c12/signoff_833_fpio.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/physical/hbm_su_c12/red_io_vclk_top.sdc": {
+      "sha256": "658b76f548cbf45c09d5d687fec81ec7feeb060d437dddff48a1ee5de4f59c9d",
+      "bytes": 1177,
+      "original_bytes": 1177,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_su_c12/red_io_vclk_top.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/STATUS.md": {
+      "sha256": "1dda71bc565b859c5b19c8f0f3d16aedc21734af185c841f7e96c599e5f8af3a",
+      "bytes": 6849,
+      "original_bytes": 6849,
+      "tail_only": false,
+      "saved_as": "context/hbm-su/STATUS.md"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/safe_bench.out": {
+      "sha256": "8e171dadb0a4dd9b8df861bc082b8b17e40fe112a4dc37ecf4c2c2d9e5d94b90",
+      "bytes": 297,
+      "original_bytes": 297,
+      "tail_only": false,
+      "saved_as": "context/hbm-su/safe_bench.out"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-su/safe_bench.sh": {
+      "sha256": "08a2e8bbaa2e5ba03904e06c2fdfe2f580d7e9f24c65432adfc8ef28fc27ffbc",
+      "bytes": 999,
+      "original_bytes": 999,
+      "tail_only": false,
+      "saved_as": "context/hbm-su/safe_bench.sh"
+    }
+  },
+  "missing": [
+    "SOURCE_COMMIT",
+    "physical.json",
+    "corner_sta.json",
+    "corner_sta_833.json",
+    "check.json",
+    "ports/summary.json",
+    "view/abstract.json"
+  ],
+  "processes": [],
+  "host": "ot-epyc2"
+}

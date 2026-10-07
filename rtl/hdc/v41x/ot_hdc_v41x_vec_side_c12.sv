@@ -45,7 +45,7 @@ module ot_hdc_v41x_vec_side #(
     output wire        fault
 );
     localparam [2:0] SFU_RSQRT = 2, SFU_SQRT = 3, SFU_SPSQRT = 6, SFU_EGATE = 7;
-    generate if ((SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (DDIV != 19 && DDIV != 21) || (FSQ != 0 && FSQ != 1)) begin : g_bad
+    generate if ((SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (DDIV != 19 && DDIV != 21 && DDIV != 31) || (FSQ != 0 && FSQ != 1)) begin : g_bad
         ot_hdc_v41x_vec_side_c12_SIDEX_0_3_DDIV_19_21_FSQ_0_1 u_trap ();
     end endgenerate
     // c12 SIDEX = 3: v and x arrive from lane 0's register one cycle after fn (the controller's S-in code):
@@ -116,7 +116,10 @@ module ot_hdc_v41x_vec_side #(
     ot_hdc_qadd_lat #(.KEEP(KS), .LAT(ALAT)) u_den (clk, rst_n, ve[D_EXP], e_y, 32'h3F800000, den, f_eg3);
     wire [ALAT:0] vd;
     ot_hdc_vline #(.D(ALAT)) u_vd (.clk(clk), .rst_n(rst_n), .v(ve[D_EXP]), .vd(vd));
-    generate if (DDIV == 21) begin : g_d21
+    generate if (DDIV == 31) begin : g_d31
+        ot_hdc_fdiv    u_div (.clk(clk), .rst_n(rst_n), .v(vd[ALAT]), .a(32'h3F800000), .b(den), .y(y_eg), .vo(vo_eg),
+                                 .fault(f_eg4));
+    end else if (DDIV == 21) begin : g_d21
         ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_n), .v(vd[ALAT]), .a(32'h3F800000), .b(den), .y(y_eg), .vo(vo_eg),
                                  .fault(f_eg4));
     end else begin : g_d19

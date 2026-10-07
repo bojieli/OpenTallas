@@ -1,0 +1,7 @@
+run_g_1.log: SUMMARY seed=1 frames/src=300 words=52928 cycles=35381 errors=0 RESULT PASS
+run_g_2.log: SUMMARY seed=2 frames/src=300 words=52667 cycles=35774 errors=0 RESULT PASS
+run_g_3.log: SUMMARY seed=3 frames/src=300 words=51278 cycles=33738 errors=0 RESULT PASS
+run_m1.log: SUMMARY seed=1 frames/src=300 words=50420 cycles=2000001 errors=35984 RESULT FAIL
+run_m2.log: SUMMARY seed=1 frames/src=300 words=53131 cycles=2000001 errors=50794 RESULT FAIL
+DONE
+# r3b: svcio_ad inputs through pin-registered 4-entry queues (ot_s81ph_inq, ready = rfifo room2 flop, held low in reset); XDEF=+define+SVCIO_TILED

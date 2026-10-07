@@ -328,7 +328,11 @@ def real_blocks(die, m=None):
                              ('ot_pdie_serdes', 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v',
                               'placeholder hard macro black box'),
                              ('ot_pdie_ucie', 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v',
-                              'placeholder hard macro black box')):
+                              'placeholder hard macro black box'),
+                             ('ot_hbm_host_phy', 'physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy_bb.v',
+                              'pin-accurate host PHY black box (tools/hbm_phy_bb.py)')):
+            if mst not in rp:
+                continue
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind=kind, params={}, ports=pm['ports'], binding=rp[mst])
         prm = json.loads((ROOT / H.PORTMAP).read_text())['DS']['SM_parameters']
@@ -650,8 +654,8 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
                 part += [(a + H.W_CTL, b + H.W_CTL, d) for a, b, d in flow(j, w - H.W_CTL, w - H.W_CTL - 1)]
             seg += [(a + b0, b + b0, d) for a, b, d in part]
         return seg
-    if cls == 'hub':
-        return [(0, bits, 'out' if port.startswith('t_') else 'in')]
+    if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
+        return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
@@ -681,7 +685,7 @@ def endpoint_dirs(die, real, by, bus, j):
         names = _binding(rb, port)
         if names is None:
             return None, ('port_not_in_binding', port)
-        names = list(names[:bits])
+        names = [names[i] if i < len(names) else None for i in idx] if idx else list(names[:bits])
         seg, pins = [], []
         for i in range(bits):
             pn = names[i] if i < len(names) else None
@@ -2037,7 +2041,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         generator_sha256=sha_gen(die, tool.split()[0]), generator_tag=gen_tag(tool.split()[0], gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
         qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
-        lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
+        lint_tool_sha256=sha('tools/die_top_lint.py'), variant=H._jsonable(m.get('variant')) if die == 'hbm' else m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
                     real_instances=sum(it.master in real for it in m['insts']),

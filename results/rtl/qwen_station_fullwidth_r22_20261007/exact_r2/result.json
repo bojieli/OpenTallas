@@ -1,0 +1,123 @@
+{
+  "schema": "opentallas.qwen_station_fullwidth_r22_exact.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "e0_t0_s0_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e0_t1_s0_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e0_t0_s1_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e0_t1_s1_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e1_t0_s0_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e1_t1_s0_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e1_t0_s1_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e1_t1_s1_n0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "log_sha256": "6f28c3b0d392a3cf739abf0dce8b65f8623116b66528d6326da5e602ef4b1ce5"
+    },
+    {
+      "case": "e1_t1_s1_n1",
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "log_sha256": "1e9ac2ec143df70fa4fdef3a9738208696b059e46e9bc8f049742aa50a7a05d7"
+    },
+    {
+      "case": "e1_t1_s1_n2",
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "log_sha256": "1e9ac2ec143df70fa4fdef3a9738208696b059e46e9bc8f049742aa50a7a05d7"
+    },
+    {
+      "case": "e1_t1_s1_n3",
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "log_sha256": "8bdcefb5f6962631d319f2e0562846d2aeb8be146e44de2f312fcd6821b2b6b5"
+    },
+    {
+      "case": "e1_t1_s1_n4",
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "log_sha256": "21a1dccb95ca8eaa207ea0ccb53c2b277202233907b96db3eaa1dda75e13088b"
+    },
+    {
+      "case": "e1_t1_s1_n5",
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "log_sha256": "a09e8ae1c3c14034dd7c26767afe884e7d6918f16bd69c01d3437680c8821e5d"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/physical/ot_qwen_die_fullwidth_station_r22.sv": "7ac12f3a421506055a275349f03cfd2cf65fa3f83e8ec09eb85eb6ada9bd81d5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "tools/qwen_station_fullwidth_r22_regression.py": "c7c522d1091f0ebb360416974e44e8cccde460426c7ef118090a0c2a9f9f95af",
+    "tools/uarch_model_qwen_station_r22.py": "3dddd996415e8010b7982c7da00d37ef6ee02603a9fe460d2d8bd198b5676aa4"
+  },
+  "extracted_slices": {
+    "source_slice_sha256": "09ccd156b40602658eec772486d5892ff188e0e75ff1cc385fbc9af0f6176ab8",
+    "consumer_slice_sha256": "4d995c436383be1cd446229e2528844cf7e9b18333e92437424b530fe20fd24e"
+  },
+  "transport_slices_sha256": "5dd42fa91e847998e77e7616ceb8d7003fb0ebe984b7d64c9749fdf2318c14be",
+  "bench_sha256": "c0761e43de30b853823aab3556ec746290ffe32eda337bb39629a415a891a9dc",
+  "model_record_sha256": "3eabc46d0aabd0536c7256cd378274d090d0ef70f63057df5e7871fe84f6420a",
+  "scope": "Actual producer pack/go-admission/delay and tile input-register/unpack slices,508-bit station all branch shapes;2091 cycle comparisons per case; no arithmetic substitutes instantiated",
+  "excluded": [
+    "VM request/split scheduling",
+    "arithmetic and tile fault production",
+    "actual result retirement/publication guard",
+    "complete token",
+    "die geometry",
+    "mutable fault protection",
+    "physical timing"
+  ],
+  "adoption": false
+}

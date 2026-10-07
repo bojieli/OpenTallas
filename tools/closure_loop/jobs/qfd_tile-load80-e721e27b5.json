@@ -1,0 +1,91 @@
+{
+  "name": "qfd_tile-load80-e721e27b5",
+  "block": "qfd_tile",
+  "owner": "Codex:qwen-masters",
+  "purpose": "Qwen r21 qfd_tile (west arrays, landing li W -> lo E): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + 2-cycle landing hop (984 b, 3 slots) + land merge NSRC 3; route 770 / sign-off 833.333; corrected die output load 80 fF and input transition 150 ps (95043d69f), retained obsolete failures",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "source": {
+    "branch": "codex/qwen-masters-final-20261007",
+    "commit": "e721e27b561104aac303e4cdd1187b59cd163e20"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "tile_die_glue_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td0 -P tb_qwen_rom_tile_die.NEG=0 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td0 | tee {RUN}/bench/td0.log && grep -q '^PASS' {RUN}/bench/td0.log",
+        "expect": "pass",
+        "pass_regex": "^PASS tile_die",
+        "min_count_regex": "writes=(\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "tile_die_glue_neg",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td1 -P tb_qwen_rom_tile_die.NEG=1 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td1 | tee {RUN}/bench/td1.log && grep -q '^PASS' {RUN}/bench/td1.log",
+        "expect": "fail",
+        "fail_regex": "^FAIL tile_die",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_tile {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 64
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tile --out {RUN}/record/views/qfd_tile --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_tile.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ]
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_masters_final_20261007/qfd_tile-load80-e721e27b5"
+    }
+  ],
+  "cycles_added": "landing hop 2 cycles a tile (r19 priced 1): <= +32 cycles KV-landing latency on the cold first layer only (pipelined fill); fault +1 cycle; tile datapath MUL_LAT 8 / KV_PREP 4 from the masters-margin record (ME partition gate PASS)",
+  "merge_target": "main"
+}

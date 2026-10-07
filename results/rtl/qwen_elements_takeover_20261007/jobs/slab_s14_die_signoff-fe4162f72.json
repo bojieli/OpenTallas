@@ -1,0 +1,64 @@
+{
+  "name": "slab_s14_die_signoff-fe4162f72",
+  "block": "ot_qwen_slab_port_group_s14_die",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Immutable s14 clone: explicit833.333ps 60/25 uncertainty plus90/50ps die skew and80fF/150ps IO. Historical +44.55 was inferred from770ps \u221218.78 without die skew; reclassify before any ECO. s15 route remains alive.",
+  "hosts": [
+    "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/qwen-elements-takeover-20261007",
+    "commit": "fe4162f72"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\nsha256sum -c <<'HASHES'\n8bfc7163d475a1a3c36653f6f7ddf042ff63b76e6114e4126c686aee79dc0531  /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/6_final.odb\n6b24b517c23977018ba32878462a5c1258a87449d7fafe15e6dfcfe156e9b253  /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/6_final.spef\nacfe2c314f67ecaab51e6a7649d00115beda010a46c2a28f4547e369e9dbe9de  /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/6_final.sdc\nd9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346  physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib\n8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805  physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib\nHASHES\nmkdir -p {RUN}/routes/{LABEL}/work\ncp -a --reflink=auto /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs {RUN}/routes/{LABEL}/work/\ncp /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/corner_sta.json {RUN}/routes/{LABEL}/historical_770ps_corner_sta.json\ncp /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/recipe.json {RUN}/routes/{LABEL}/historical_recipe.json\npython3 tools/w18/corner_sta.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --macro physical/asap7_memory_macros/ot_rom_4096x266_m8 --post-sdc physical/qwen_slab_structural/signoff833_die.sdc --output {RUN}/routes/{LABEL}/corner_sta.json > {RUN}/routes/{LABEL}/sta.log 2>&1\nprintf 'flow_rc=0\\ncorner_rc=0\\n' > {RUN}/routes/{LABEL}/status",
+      "threads": 8,
+      "peak_ram_gb": 32,
+      "needs": [
+        "orfs"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/*.json {RUN}/routes/{LABEL}/status {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_slab_structural/signoff833_die.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+    ]
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "First reclassify actual die-context timing; macro-output-net-safe ECO requires coordinated opt-in before repair."
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/qwen_elements_takeover_20261007/slab_s14_die_signoff"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "no_bench_reason": "No RTL or netlist change; signoff-only replay of source8903807da00ef62992458c6417be90ca9666fc97 slab s14. Original ODB/SPEF/SDC and macro timing SHA256 checked before copy. This job cannot adopt a new variant.",
+  "host_require": [
+    "ot-epyc2"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.qwen-spine-credit-model.v1",
+  "adopted": false,
+  "sources_sha256": {
+    "results/uarch/qwen_body_wire_latency_20261003/study.json": "f84a1204819a81510270649cd0c8229d3957aeb77fc599f36c7f3d51fad78e7a",
+    "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3"
+  },
+  "lanes": 16,
+  "words_per_lane": 48,
+  "bits_per_packet_per_lane": 1536,
+  "tag_bits": 32,
+  "MACs_per_cycle": 0,
+  "FP32_adds_per_cycle_per_lane": 46,
+  "storage": {
+    "result_slots": 32,
+    "basis": "max body operation emits24 lane packets: max rounds3 times IL8; next power of two32",
+    "input_credits": 32,
+    "downstream_initial_credits": 2,
+    "reservation": "One input credit reserves one result slot across capture, all arithmetic stages and output staging; return only when registered output launches",
+    "payload_FF_bits": 49152,
+    "metadata_FF_bits": 1024,
+    "registered_mux_bits": 16896,
+    "SRAM_macros": 0
+  },
+  "ports": {
+    "input_bits_per_cycle": 1573,
+    "output_bits_per_cycle": 1569,
+    "credit_bits_each_direction": 1,
+    "memory_bytes_per_cycle": 0
+  },
+  "routing": {
+    "frame_um": [
+      600.048,
+      600.048
+    ],
+    "max_side_um": 1000,
+    "per_data_side_pins": 1536,
+    "signal_tracks_available_at_pitch064": 8906,
+    "passes_local_pin_capacity": true,
+    "hub_layer_check": "pending actual die lane transpose"
+  },
+  "area": {
+    "additional_FF_um2": 19558.195200000002,
+    "tree_historical_area_proxy_um2": 30358.243,
+    "die_16_replica_reserved_mm2": 5.760921636864
+  },
+  "latency": {
+    "arithmetic_cycles": 41,
+    "external_capture_and_output_stages": 5,
+    "local_packet_cycles_bound": 45,
+    "retained_r21_path_roundtrip_bound": 206,
+    "input_credit_roundtrip_upper_bound": 251,
+    "credits_needed_for_full_one_packet_per_cycle": 251,
+    "full_rate_credit_window": false,
+    "body_complete_operation_burst_fits": true,
+    "serial_packet_extra_cycles_upper_bound": 251,
+    "body_packets_per_token": 2304,
+    "all_six_ME_packets_per_token_excluding_head": 2880,
+    "current_relay_ME_ops_per_ar_token": 217,
+    "local_tail_delta_against_r21": 24,
+    "no_backpressure_tail_delta_cycles": 5208,
+    "conservative_all_six_ME_extra_cycles_bound": 722880,
+    "conservative_body_extra_cycles_bound": 578304,
+    "head_bound": "head packets *251; exact head packet count remains required for adopted token rate",
+    "adoption_gate": "Recompose actual body/head packet schedule and measured shell latency. Bound deliberately assumes every packet serialized with full206 r21 wire RTT."
+  },
+  "exactness": "Same adjacent-pair FP32 tree; level valid and select are generated from each captured split and transaction tag. All48 held positions retire. FIFO drains in arrival order. Remote stalls only consume reserved credits.",
+  "finite_flow": "32 outstanding input reservations; two prepaid downstream credits. Arbitrarily delayed credit return stalls without dropping or overwriting packets. Reset flush requires simultaneous peer credit reset."
+}

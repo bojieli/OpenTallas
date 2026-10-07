@@ -1,0 +1,4 @@
+physical/hbm_ha2_owner_banked_20261006/run_bench.sh: line 6: 31966 Aborted                    (core dumped) ./obj/Vtb_ha2_tu_owner_banked ${NEG:+$([ "$NEG" != 0 ] && echo +NEG=$NEG)} > run.log 2>&1
+S0 result 1 mismatch m 1/1
+S0 pf=64 mode=0 throttle=0 results=4 ref_first_issue->last=84 dut_first_issue->last=106 ref_last=102 dut_last=148 dut_ready_stalls=56
+[125833132000] %Fatal: tb_ha2_tu_owner_banked.sv:124: Assertion failed in tb_ha2_tu_owner_banked.unnamedblk9: FAIL scenario 0 (1 mismatches)

@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.qwen_kvc_mapped.v1",
+  "model_precedes_rtl": true,
+  "status": "PROPOSED_NOT_ADOPTED",
+  "replicas": 128,
+  "static_masters": 1,
+  "macs_per_cycle": 0,
+  "compute_intensity_macs_per_byte": 0,
+  "memory_ports": [
+    {
+      "name": "period96_map_lut",
+      "read_bytes_per_cycle": 1.125,
+      "bits": 3456,
+      "read_only": true,
+      "ECC": false
+    }
+  ],
+  "input_bits_per_cycle": 334,
+  "output_bits_per_cycle": 307,
+  "frame_um": [
+    328.32,
+    370.44
+  ],
+  "cell_area_bound_um2": 20826.1028,
+  "frame_fit_at_55pct": true,
+  "routing": {
+    "required_each_face": 346,
+    "available_per_face": 1286,
+    "pitch_um": 0.288
+  },
+  "data_bytes_per_cycle": 32,
+  "mux_demux": "one384entry9bit constant map lookup; no cross-PC data mux",
+  "fanout": "local context pipeline, no new die broadcast",
+  "flow": {
+    "initial_credits": 16,
+    "receiver_fifo_required": 16,
+    "reason": "eight forward edges plus credit return cannot sustain one beat/cycle on eight credits",
+    "receiver_state_bits_per_pc": 4896,
+    "receiver_cell_floor_um2": 1427.6736,
+    "receiver_owned_by_unclosed_row_scheduler": true
+  },
+  "pipeline_edges": 8,
+  "latency": "four map edges plus existing four decoder edges",
+  "replaces_decoder_latency": true,
+  "added_token_cycles": 288,
+  "expected_sector": "computed internally from captured port and count; count/fence owner remains upstream",
+  "remaining": [
+    "per-PC ordinal ownership/retirement",
+    "per-stack window-limit generation",
+    "row arbitration",
+    "token writeback",
+    "global descriptor and fault fence"
+  ]
+}

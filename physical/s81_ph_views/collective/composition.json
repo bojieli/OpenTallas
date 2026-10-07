@@ -1,0 +1,125 @@
+{
+ "schema": "opentallas.s81_ph.composition.v1",
+ "slab": "dsfd_sp_collective",
+ "slab_um": [
+  1015.176,
+  1369.416
+ ],
+ "source": "rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv (default = tiled: the exact composition netlist; bench rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh)",
+ "instances": [
+  {
+   "inst": "g_lane[0].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    0.0
+   ],
+   "orient": "R0",
+   "lane": "W0",
+   "ch_b": 0
+  },
+  {
+   "inst": "g_lane[1].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    340.2
+   ],
+   "orient": "R0",
+   "lane": "W1",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[2].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    680.4
+   ],
+   "orient": "R0",
+   "lane": "W2",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[3].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    1020.6
+   ],
+   "orient": "R0",
+   "lane": "W3",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[4].g_e.u_l",
+   "master": "dsfd_coll_lane_e",
+   "xy": [
+    761.376,
+    0.0
+   ],
+   "orient": "R0",
+   "lane": "E0",
+   "ch_b": 0
+  },
+  {
+   "inst": "g_lane[5].g_e.u_l",
+   "master": "dsfd_coll_lane_e",
+   "xy": [
+    761.376,
+    340.2
+   ],
+   "orient": "R0",
+   "lane": "E1",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[6].g_e.u_l",
+   "master": "dsfd_coll_lane_e",
+   "xy": [
+    761.376,
+    680.4
+   ],
+   "orient": "R0",
+   "lane": "E2",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[7].g_e.u_l",
+   "master": "dsfd_coll_lane_e",
+   "xy": [
+    761.376,
+    1020.6
+   ],
+   "orient": "R0",
+   "lane": "E3",
+   "ch_b": 1
+  },
+  {
+   "inst": "u_core",
+   "master": "dsfd_coll_core",
+   "xy": [
+    253.8,
+    0.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "outside_slab": [
+  {
+   "inst": "u_ck",
+   "master": "dsfd_coll_ck",
+   "um": [
+    216.0,
+    216.0
+   ],
+   "note": "die places it next to the slab (any free site); its pll_stream output is the die stream clock tree root"
+  }
+ ],
+ "nets": {
+  "clocks": "pll_stream (u_ck) -> ck of every lane tile and of u_core (die clock tree); rst_stream -> rs of every tile (async assert, synchronised in each tile)",
+  "lanes": "lane tile lo_* / li_* / flt <-> u_core lo_* / li_* / flt bits of that lane: abutting faces at the same y (0.192-um gap)",
+  "die": "lane tile rx / tx / tf = the slab rX / tdX / tfX of its lane; u_core f_vm / ts / t_vm (S face) = the slab VM interface; chb pin tied 0 on lanes W0 / E0 (UCIe ACK timeout), 1 elsewhere"
+ },
+ "timing": "every tile pin a flop (skid main / skid-valid flops, pin registers), forwarded clocks kept buffers"
+}

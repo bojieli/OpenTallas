@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm_die_views_sta.v1",
+ "block": "ot_hbm_integrated_su_cp_context (HBM CP, SU_PIN_MARGIN, main 833cb68de, view physical/hbm_cp_pin_margin_20261006)",
+ "placement_note": "The CP is not a die master in r16h: it lives inside the integrated SU parent (hfd_su region, hub fork), so it has no die-level nets; its context paths are parent-internal. Vehicle: every CP pin bit driven / captured by an ASAP7 DFFHQNx1 neighbour flop (236 bits), 6 fF per net, CP ETM SS/FF, 833.333 ps, 60 ps setup / 25 ps hold uncertainty, neighbour clock skew swept (positive = neighbours later than the CP clock).",
+ "host": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/cpsta",
+ "files": "results/rtl/hbm_accel_die_views_20261006/cp_context_sta/{cpctx.v,run.tcl}",
+ "results_ns": {
+  "+0.150": {
+   "setup_ss": 0.261,
+   "hold_ff": 0.005
+  },
+  "+0.050": {
+   "setup_ss": 0.356,
+   "hold_ff": 0.068
+  },
+  "0.000": {
+   "setup_ss": 0.306,
+   "hold_ff": 0.018
+  },
+  "-0.050": {
+   "setup_ss": 0.256,
+   "hold_ff": -0.032
+  },
+  "-0.150": {
+   "setup_ss": 0.156,
+   "hold_ff": -0.132
+  }
+ },
+ "verdict": "Setup clean in every case (>= +156 ps). Hold is the watch item: flop-direct neighbours meet hold only while they are no more than ~+20 ps early relative to the CP clock (+18 ps at zero skew; -32 ps at 50 ps early; -132 ps at 150 ps early, worst on CP inputs launch_pc / cp_job / por_n). Adoption condition: the SU parent route must hold-repair the CP input nets against its real local skew (or keep the CP on the same clock leaf as its drivers); the block-level FF +15.97 / I2R +43.24 does not cover an early-clocked parent driver.",
+ "placement_decision": {
+  "date": "2026-10-06 13:50 PT (coordinator)",
+  "where": "SU side: inside the SU parent that executes the bound job (the r16i hfd_su_full / SU-parent slot region), not in the cmdproc bands",
+  "why": "In ot_ds_hbm_cluster20_integrated the CP binder (u_su_cp + u_su_association) takes a ONE-WAY launch from the cmdproc20 (launch_v/pc, cpl_job/generation, token, pos, native_launch: the die cmdproc -> su 64 b bus) and runs every handshake loop (lease_v/lease_granted, release_v/r, exec_done/fault, retired, owned frontier) with the SU executor/provider. Placing it with the SU keeps the loops inside one hardened block (owner clarification: never a register in a one-cycle loop; move the cut instead) and leaves only the one-way launch on the die wire, staged by the existing cmdproc -> su stations (0 added cycles beyond the +15 per SU CP transaction already priced).",
+  "context": "Every CP neighbour is then a flop of the same hardened SU-side parent: the launch inputs come from that parent's registered face flops (die stations stage the wire), the loop partners are parent-internal. Same clock region -> skew = the parent's CTS skew (measured region pair 65 + 25 ps margin bound), hold closed by the parent route's hold repair under FF constraints (never by RTL registers).",
+  "verdict": "ADOPT-READY for die context: setup closed for any neighbour skew within +/-150 ps (worst +156 ps, so also as a stand-alone die master across a clock-region boundary); hold needs repair only on the CP input nets when drivers are > ~20 ps early (-32 ps at 50 ps, -132 ps at 150 ps): a hold-repair item for the SU-side parent route (hub fork), zero cycles. Remaining step: the hub fork hardens the CP view into the SU-side parent and reports its post-repair FF hold on the CP input pins."
+ }
+}

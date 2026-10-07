@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.hbm_die_abstract_list.v1",
  "generator": "tools/hbm_accel_die_fp.py",
- "round": "r14b",
- "generator_sha256": "351db816c5daa7c3efef57f89384df520830899e433ad6ff0867f0806c371da9",
+ "round": "r16g",
+ "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
  "die_um": [
   24401.52,
-  19722.96
+  24621.84
  ],
  "families": [
   {
@@ -21,31 +21,51 @@
    ],
    "size_um": [
     [
-     707.16,
-     708.456
+     1349.112,
+     1349.976
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
     "k": {
-     "bits": 1024,
-     "face": "W"
+     "bits": 1041,
+     "face": "S"
     },
-    "i": {
-     "bits": 512,
-     "face": "W"
+    "ci": {
+     "bits": 1618,
+     "face": "S"
     },
     "o": {
-     "bits": 512,
+     "bits": 529,
      "face": "E"
     },
-    "ku": {
-     "bits": 1024,
+    "ri": {
+     "bits": 1618,
+     "face": "E"
+    },
+    "q": {
+     "bits": 582,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "cf": {
+     "bits": 1618,
      "face": "N"
     },
-    "kd": {
-     "bits": 1024,
-     "face": "S"
+    "i": {
+     "bits": 529,
+     "face": "W"
+    },
+    "rf": {
+     "bits": 1618,
+     "face": "W"
     }
    },
    "kind": "attn_tile"
@@ -63,14 +83,22 @@
    ],
    "size_um": [
     [
-     1814.376,
-     28.056
+     1399.656,
+     36.696
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
     "ck": {
-     "bits": 3,
+     "bits": 1,
+     "face": "S"
+    },
+    "f_cmdproc": {
+     "bits": 64,
      "face": "S"
     },
     "t_cmdproc": {
@@ -82,45 +110,53 @@
   },
   {
    "family": "hfd_cdist_*",
-   "masters": 8,
+   "masters": 2,
    "instances": 8,
    "status": "NEEDS hardened abstract",
    "rtl": "",
    "ledger": null,
    "size_um": [
     [
-     43.176,
-     110.136
+     67.8,
+     203.016
     ],
     [
-     62.184,
-     88.536
+     111.0,
+     215.976
     ]
    ],
    "distinct_sizes": 2,
    "ports": {
     "a": {
-     "bits": 360,
+     "bits": 827,
      "face": "N"
     },
     "b": {
-     "bits": 180,
+     "bits": 414,
      "face": "S"
     },
     "t0": {
-     "bits": 45,
+     "bits": 103,
      "face": "W"
     },
     "t1": {
-     "bits": 45,
+     "bits": 103,
      "face": "W"
     },
     "t2": {
-     "bits": 45,
+     "bits": 103,
      "face": "E"
     },
     "t3": {
-     "bits": 45,
+     "bits": 103,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
      "face": "E"
     }
    },
@@ -139,54 +175,66 @@
    ],
    "size_um": [
     [
-     1814.376,
+     1399.656,
      1403.976
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
-    "cSW": {
-     "bits": 360,
-     "face": "W"
-    },
     "t_su_SW": {
      "bits": 64,
      "face": "W"
     },
+    "cSW": {
+     "bits": 827,
+     "face": "W"
+    },
     "cNW": {
-     "bits": 360,
+     "bits": 827,
      "face": "W"
     },
     "t_su_NW": {
      "bits": 64,
      "face": "W"
     },
-    "cSE": {
-     "bits": 360,
-     "face": "E"
-    },
     "t_su_SE": {
      "bits": 64,
      "face": "E"
     },
+    "cSE": {
+     "bits": 827,
+     "face": "E"
+    },
     "cNE": {
-     "bits": 360,
+     "bits": 827,
      "face": "E"
     },
     "t_su_NE": {
      "bits": 64,
      "face": "E"
     },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
     "ck": {
-     "bits": 3,
+     "bits": 1,
      "face": "N"
     },
     "f_barrier": {
      "bits": 64,
      "face": "N"
     },
-    "t_coll": {
+    "f_coll": {
+     "bits": 33,
+     "face": "N"
+    },
+    "t_barrier": {
      "bits": 64,
+     "face": "N"
+    },
+    "t_coll": {
+     "bits": 25,
      "face": "N"
     },
     "f_loader": {
@@ -213,50 +261,54 @@
    ],
    "size_um": [
     [
-     1814.376,
+     1399.656,
      1403.976
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
     "f_cmdproc": {
-     "bits": 64,
+     "bits": 25,
      "face": "S"
     },
-    "f_vm": {
-     "bits": 512,
-     "face": "N"
+    "t_cmdproc": {
+     "bits": 33,
+     "face": "S"
     },
     "f_su_SW": {
      "bits": 1024,
      "face": "W"
     },
     "t_su_SW": {
-     "bits": 1024,
+     "bits": 580,
      "face": "W"
     },
     "llk_S0": {
-     "bits": 971,
+     "bits": 976,
      "face": "W"
     },
     "llk_S1": {
-     "bits": 971,
+     "bits": 976,
      "face": "W"
     },
     "llk_S2": {
-     "bits": 971,
+     "bits": 976,
      "face": "W"
     },
-    "pll": {
-     "bits": 3,
+    "pll_stream": {
+     "bits": 1,
+     "face": "W"
+    },
+    "por_stream": {
+     "bits": 1,
      "face": "W"
     },
     "llk_N0": {
-     "bits": 971,
+     "bits": 976,
      "face": "W"
     },
     "llk_N1": {
-     "bits": 971,
+     "bits": 976,
      "face": "W"
     },
     "f_su_NW": {
@@ -264,7 +316,7 @@
      "face": "W"
     },
     "t_su_NW": {
-     "bits": 1024,
+     "bits": 580,
      "face": "W"
     },
     "f_su_SE": {
@@ -272,23 +324,31 @@
      "face": "E"
     },
     "t_su_SE": {
-     "bits": 1024,
+     "bits": 580,
+     "face": "E"
+    },
+    "por_link": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_link": {
+     "bits": 1,
      "face": "E"
     },
     "llk_S3": {
-     "bits": 971,
+     "bits": 976,
      "face": "E"
     },
     "llk_S4": {
-     "bits": 971,
+     "bits": 976,
      "face": "E"
     },
     "llk_N2": {
-     "bits": 971,
+     "bits": 976,
      "face": "E"
     },
     "llk_N3": {
-     "bits": 971,
+     "bits": 976,
      "face": "E"
     },
     "f_su_NE": {
@@ -296,15 +356,31 @@
      "face": "E"
     },
     "t_su_NE": {
-     "bits": 1024,
+     "bits": 580,
      "face": "E"
+    },
+    "pll_serial": {
+     "bits": 1,
+     "face": "N"
+    },
+    "por_serial": {
+     "bits": 1,
+     "face": "N"
+    },
+    "pll_hbm": {
+     "bits": 1,
+     "face": "N"
+    },
+    "por_hbm": {
+     "bits": 1,
+     "face": "N"
     }
    },
    "kind": "spine"
   },
   {
    "family": "hfd_gath_*",
-   "masters": 16,
+   "masters": 5,
    "instances": 16,
    "status": "NEEDS hardened abstract",
    "rtl": "",
@@ -320,7 +396,7 @@
     ],
     [
      166.728,
-     168.456
+     315.336
     ]
    ],
    "distinct_sizes": 3,
@@ -331,6 +407,14 @@
     },
     "t1": {
      "bits": 270,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
      "face": "E"
     },
     "b": {
@@ -353,8 +437,8 @@
    ],
    "size_um": [
     [
-     494.184,
-     3080.136
+     275.592,
+     5529.576
     ]
    ],
    "distinct_sizes": 1,
@@ -363,8 +447,16 @@
      "bits": 1024,
      "face": "E"
     },
+    "t_sfu": {
+     "bits": 1024,
+     "face": "E"
+    },
     "ck": {
-     "bits": 3,
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
      "face": "E"
     }
    },
@@ -396,38 +488,42 @@
    "ledger": null,
    "size_um": [
     [
-     1669.656,
-     3080.136
+     930.072,
+     5529.576
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
     "k": {
-     "bits": 1024,
+     "bits": 1026,
      "face": "S"
     },
     "a0": {
-     "bits": 512,
+     "bits": 529,
      "face": "W"
     },
     "a1": {
-     "bits": 512,
+     "bits": 529,
      "face": "W"
     },
     "a2": {
-     "bits": 512,
+     "bits": 529,
      "face": "W"
     },
     "a3": {
-     "bits": 512,
+     "bits": 529,
      "face": "W"
     },
     "t_su": {
-     "bits": 1024,
+     "bits": 1058,
      "face": "E"
     },
     "ck": {
-     "bits": 3,
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
      "face": "E"
     },
     "t_vm": {
@@ -450,14 +546,18 @@
    ],
    "size_um": [
     [
-     1814.376,
-     183.576
+     1399.656,
+     237.576
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
     "ck": {
-     "bits": 3,
+     "bits": 1,
      "face": "N"
     },
     "t_cmdproc": {
@@ -465,7 +565,7 @@
      "face": "N"
     },
     "h": {
-     "bits": 512,
+     "bits": 514,
      "face": "E"
     }
    },
@@ -473,38 +573,88 @@
   },
   {
    "family": "hfd_mcast_*",
-   "masters": 16,
+   "masters": 3,
    "instances": 16,
    "status": "NEEDS hardened abstract",
    "rtl": "",
    "ledger": null,
    "size_um": [
     [
-     133.032,
-     120.936
+     241.896,
+     410.376
     ],
     [
-     241.896,
-     241.896
+     466.968,
+     120.936
     ]
    ],
    "distinct_sizes": 2,
    "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "a": {
+     "bits": 2068,
+     "face": "N"
+    },
     "t1": {
      "bits": 2063,
      "face": "N"
     },
-    "a": {
-     "bits": 2063,
-     "face": "N"
-    },
     "b": {
-     "bits": 2063,
-     "face": "W"
+     "bits": 2068,
+     "face": "E"
     },
     "t0": {
      "bits": 2063,
      "face": "S"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_meso_*",
+   "masters": 3,
+   "instances": 26,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     39.288,
+     285.096
+    ],
+    [
+     63.48,
+     190.056
+    ],
+    [
+     398.28,
+     71.256
+    ]
+   ],
+   "distinct_sizes": 3,
+   "ports": {
+    "a": {
+     "bits": 1102,
+     "face": "E"
+    },
+    "b": {
+     "bits": 1099,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
     }
    },
    "kind": "waypoint"
@@ -522,18 +672,22 @@
    ],
    "size_um": [
     [
-     1814.376,
-     276.456
+     1399.656,
+     358.536
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
     "ck": {
-     "bits": 3,
+     "bits": 1,
      "face": "S"
     },
     "f_vm": {
      "bits": 1024,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
      "face": "S"
     },
     "t_su_SW": {
@@ -568,46 +722,50 @@
    ],
    "size_um": [
     [
-     1814.376,
-     103.656
+     1399.656,
+     133.896
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
+    "f_su_SW": {
+     "bits": 256,
+     "face": "W"
+    },
     "eSW": {
-     "bits": 128,
+     "bits": 129,
      "face": "W"
     },
     "eNW": {
-     "bits": 128,
-     "face": "W"
-    },
-    "f_su_SW": {
-     "bits": 256,
+     "bits": 129,
      "face": "W"
     },
     "f_su_NW": {
      "bits": 256,
      "face": "W"
     },
+    "f_su_SE": {
+     "bits": 256,
+     "face": "E"
+    },
     "eSE": {
-     "bits": 128,
+     "bits": 129,
      "face": "E"
     },
     "eNE": {
-     "bits": 128,
-     "face": "E"
-    },
-    "f_su_SE": {
-     "bits": 256,
+     "bits": 129,
      "face": "E"
     },
     "f_su_NE": {
      "bits": 256,
      "face": "E"
     },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
     "ck": {
-     "bits": 3,
+     "bits": 1,
      "face": "N"
     },
     "f_vm": {
@@ -651,8 +809,8 @@
    ],
    "size_um": [
     [
-     715.8,
-     3080.136
+     398.712,
+     5529.576
     ]
    ],
    "distinct_sizes": 1,
@@ -661,9 +819,21 @@
      "bits": 1024,
      "face": "E"
     },
-    "ck": {
-     "bits": 3,
+    "t_su": {
+     "bits": 1024,
      "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "f_hc": {
+     "bits": 1024,
+     "face": "W"
     },
     "t_hc": {
      "bits": 1024,
@@ -692,11 +862,11 @@
    "distinct_sizes": 1,
    "ports": {
     "d": {
-     "bits": 1100,
+     "bits": 1099,
      "face": "S"
     },
     "q": {
-     "bits": 48,
+     "bits": 44,
      "face": "S"
     },
     "x": {
@@ -708,11 +878,15 @@
      "face": "E"
     },
     "ck": {
-     "bits": 3,
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
      "face": "N"
     },
     "c": {
-     "bits": 45,
+     "bits": 103,
      "face": "N"
     }
    },
@@ -720,38 +894,42 @@
   },
   {
    "family": "hfd_stn_*",
-   "masters": 168,
-   "instances": 168,
+   "masters": 20,
+   "instances": 233,
    "status": "NEEDS hardened abstract",
    "rtl": "",
    "ledger": null,
    "size_um": [
     [
-     18.984,
-     118.776
+     14.664,
+     142.536
     ],
     [
-     31.08,
-     88.536
+     18.984,
+     118.776
     ],
     [
      39.288,
      77.736
     ],
     [
-     48.792,
-     127.416
+     42.744,
+     73.416
     ]
    ],
-   "distinct_sizes": 15,
+   "distinct_sizes": 19,
    "ports": {
     "a": {
-     "bits": 1100,
-     "face": "S"
+     "bits": 1102,
+     "face": "N"
     },
     "b": {
-     "bits": 1100,
-     "face": "N"
+     "bits": 1102,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
     }
    },
    "kind": "waypoint"
@@ -769,17 +947,21 @@
    ],
    "size_um": [
     [
-     1262.28,
-     3080.136
+     703.272,
+     5529.576
     ]
    ],
    "distinct_sizes": 1,
    "ports": {
     "r": {
-     "bits": 2160,
+     "bits": 2165,
      "face": "S"
     },
     "a": {
+     "bits": 1058,
+     "face": "W"
+    },
+    "f_sfu": {
      "bits": 1024,
      "face": "W"
     },
@@ -803,16 +985,20 @@
      "bits": 64,
      "face": "E"
     },
-    "ck": {
-     "bits": 3,
-     "face": "E"
-    },
     "f_coll": {
-     "bits": 1024,
+     "bits": 580,
      "face": "E"
     },
     "t_coll": {
      "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
      "face": "E"
     },
     "f_vm": {
@@ -853,84 +1039,88 @@
    ],
    "distinct_sizes": 1,
    "ports": {
-    "kv": {
-     "bits": 1024,
-     "face": "N"
-    },
     "lsm4": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "lsm0": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "qsm0": {
-     "bits": 48,
+     "bits": 1102,
      "face": "N"
     },
     "qsm4": {
-     "bits": 48,
+     "bits": 45,
+     "face": "N"
+    },
+    "lsm0": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm0": {
+     "bits": 44,
+     "face": "N"
+    },
+    "kv": {
+     "bits": 1041,
      "face": "N"
     },
     "lsm5": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "ik": {
-     "bits": 1024,
-     "face": "N"
-    },
-    "lsm1": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "qsm1": {
-     "bits": 48,
+     "bits": 1102,
      "face": "N"
     },
     "qsm5": {
-     "bits": 48,
+     "bits": 45,
+     "face": "N"
+    },
+    "ik": {
+     "bits": 1026,
+     "face": "N"
+    },
+    "lsm1": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm1": {
+     "bits": 44,
      "face": "N"
     },
     "lsm6": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "e": {
-     "bits": 128,
-     "face": "N"
-    },
-    "lsm2": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "qsm2": {
-     "bits": 48,
+     "bits": 1102,
      "face": "N"
     },
     "qsm6": {
-     "bits": 48,
+     "bits": 45,
+     "face": "N"
+    },
+    "e": {
+     "bits": 129,
+     "face": "N"
+    },
+    "lsm2": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm2": {
+     "bits": 44,
      "face": "N"
     },
     "lsm7": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "lsm3": {
-     "bits": 1100,
-     "face": "N"
-    },
-    "qsm3": {
-     "bits": 48,
+     "bits": 1102,
      "face": "N"
     },
     "qsm7": {
-     "bits": 48,
+     "bits": 45,
+     "face": "N"
+    },
+    "lsm3": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm3": {
+     "bits": 44,
      "face": "N"
     },
     "ck": {
-     "bits": 3,
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
      "face": "N"
     },
     "phy": {
@@ -953,8 +1143,8 @@
    ],
    "size_um": [
     [
-     1814.376,
-     1403.976
+     1399.656,
+     2000.136
     ]
    ],
    "distinct_sizes": 1,
@@ -971,8 +1161,20 @@
      "bits": 2048,
      "face": "W"
     },
+    "qSW": {
+     "bits": 582,
+     "face": "W"
+    },
     "xSW": {
-     "bits": 2063,
+     "bits": 2068,
+     "face": "W"
+    },
+    "qNW": {
+     "bits": 582,
+     "face": "W"
+    },
+    "xNW": {
+     "bits": 2068,
      "face": "W"
     },
     "f_su_NW": {
@@ -987,10 +1189,6 @@
      "bits": 2048,
      "face": "W"
     },
-    "xNW": {
-     "bits": 2063,
-     "face": "W"
-    },
     "f_su_SE": {
      "bits": 2048,
      "face": "E"
@@ -1003,8 +1201,20 @@
      "bits": 2048,
      "face": "E"
     },
+    "qSE": {
+     "bits": 582,
+     "face": "E"
+    },
     "xSE": {
-     "bits": 2063,
+     "bits": 2068,
+     "face": "E"
+    },
+    "qNE": {
+     "bits": 582,
+     "face": "E"
+    },
+    "xNE": {
+     "bits": 2068,
      "face": "E"
     },
     "f_su_NE": {
@@ -1019,20 +1229,16 @@
      "bits": 2048,
      "face": "E"
     },
-    "xNE": {
-     "bits": 2063,
-     "face": "E"
-    },
     "t_quant": {
      "bits": 1024,
      "face": "N"
     },
-    "ck": {
-     "bits": 3,
+    "rst": {
+     "bits": 1,
      "face": "S"
     },
-    "t_coll": {
-     "bits": 512,
+    "ck": {
+     "bits": 1,
      "face": "S"
     },
     "t_router": {

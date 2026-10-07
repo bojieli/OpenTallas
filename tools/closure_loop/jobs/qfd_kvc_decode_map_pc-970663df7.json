@@ -1,0 +1,87 @@
+{
+  "name": "qfd_kvc_decode_map_pc-970663df7",
+  "block": "qfd_kvc_decode_map_pc",
+  "owner": "Codex:qwen-kvctrl",
+  "purpose": "Integrated exact KV_MAP1 sector mapping plus full256b landing decode; eightedges16credits, all128PCx1024indices checked against golden m_p2l; notcompleteKVC.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-ctrl-kvc-final-20261007",
+    "commit": "970663df7a5d5e39738a0ef962185b486962be2a"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "mapped_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -I rtl/hdc/kv -s tb_qwen_kvc_decode_map_pc -P tb_qwen_kvc_decode_map_pc.NEG=0 -o {RUN}/bench/map0 rtl/test/tb_qwen_kvc_decode_map_pc.sv rtl/physical/ot_qwen_kvc_decode_map_pc.sv rtl/physical/ot_qwen_kvc_decode_pc.sv rtl/physical/ot_qwen_kvc_map_lut.sv && vvp -n {RUN}/bench/map0",
+        "expect": "pass",
+        "pass_regex": "^PASS kvc_mapped transactions=131328",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mapped_mutant",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -I rtl/hdc/kv -s tb_qwen_kvc_decode_map_pc -P tb_qwen_kvc_decode_map_pc.NEG=1 -o {RUN}/bench/map1 rtl/test/tb_qwen_kvc_decode_map_pc.sv rtl/physical/ot_qwen_kvc_decode_map_pc.sv rtl/physical/ot_qwen_kvc_decode_pc.sv rtl/physical/ot_qwen_kvc_map_lut.sv && vvp -n {RUN}/bench/map1",
+        "expect": "fail",
+        "fail_regex": "^FAIL kvc_mapped",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_kvc_decode_map_pc {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_kvc_decode_map_pc --out {RUN}/record/views/qfd_kvc_decode_map_pc --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_kvc_decode_map_pc.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_kvc_mapped_20261007/qfd_kvc_decode_map_pc-970663df7"
+    }
+  ],
+  "cycles_added": "Mapped decoder replaces4edge decoder with8edges=288cycles/36layers; controller term144 remains separate; unified composed432delta.",
+  "merge_target": "main"
+}

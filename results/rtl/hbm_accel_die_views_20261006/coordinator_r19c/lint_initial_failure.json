@@ -1,0 +1,1 @@
+{"status":"FAIL_SERIALIZATION","command":"python3 tools/die_top_lint.py lint --die hbm --variant r19c --out .qscratch/hbm_r19c_lint","error":"TypeError: keys must be str, int, float, bool or None, not tuple","remedy":"HBM variant only uses existing generator _jsonable; no source netlist or constraints change"}

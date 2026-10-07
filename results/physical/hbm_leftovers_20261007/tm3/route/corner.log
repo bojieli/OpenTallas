@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/tools/w18/corner_sta.py", line 125, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/scratch/claude/hbm-su/src_red13/tools/w18/corner_sta.py", line 112, in main
+    sdc=(next((o / "results/asap7").glob("*/base")) / "6_final.sdc").read_text()[:600],
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30/work/orfs/results/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12m_asap7_su_red_tm3_io_u30/base/6_final.sdc'

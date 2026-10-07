@@ -1,0 +1,185 @@
+{
+  "name": "hbm_stn_mcast_r5_56a4bdb6c",
+  "spec": {
+    "name": "hbm_stn_mcast_r5_56a4bdb6c",
+    "block": "hfd_mcast_r5",
+    "owner": "Claude:hbm-views",
+    "purpose": "hfd_mcast_r5 fail-fast fix #2 (views agent 2026-10-07): 337a5afcb (pin-stages 2 + RC fwd) SS -41 (tap pin register -> t0/t1, 10 buffer levels: the pin register was not at its pin) and DRC 2 (N-face M5 spacing a[2064..2066]): pin register placed AT the tap pin (face_chain_place.tcl + fc_taps2.tcl, s0 midway), N-face k25 pin keepout (the r6/r7/r19 recipe); 0 cycles",
+    "hosts": [
+      "ot-epyc3",
+      "ot-epyc1tb",
+      "ot-epyc2"
+    ],
+    "threads": 6,
+    "peak_ram_gb": 20,
+    "source": {
+      "branch": "claude/hbm-abstracts-stn-20261006",
+      "commit": "56a4bdb6c3ae67ff6d8fa63a5e27f6639e8cb94b",
+      "extra_paths": [
+        "results/uarch/hbm_current_target_portmap_20261005",
+        "results/rtl/hbm_accel_die_floorplan_20261005",
+        "results/rtl/die_top_lint_20261006",
+        "results/rtl/dshbm_matched_reference_20261005",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "bench_mcast_exact_and_negatives",
+          "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_mcast_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_mcast_r5 $PWD {RUN}/bench",
+          "expect": "pass",
+          "pass_regex": "MCAST_BENCH PASS",
+          "threads": 4,
+          "peak_ram_gb": 12
+        },
+        {
+          "name": "bench_neg_generator_mutant",
+          "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_mcast_r5/result.txt && echo NEG_DETECTED && exit 1",
+          "expect": "fail",
+          "fail_regex": "NEG_DETECTED",
+          "threads": 1,
+          "peak_ram_gb": 1
+        }
+      ],
+      "calibrate": {
+        "cmd": "MARGIN=1 CKINS=334 CKFF=\"167 183\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r5 0.45 --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=0 --orfs-var OT_FC_FILE=/src/physical/hbm_accel_die_views/stations/bench/fc_taps2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=N $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "ck",
+        "threads": 6,
+        "peak_ram_gb": 20
+      },
+      "route": {
+        "cmd": "MARGIN=1 CKINS=$CK_SS_MAX CKFF=\"$CK_FF_MIN $CK_FF_MAX\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r5 0.45 --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=0 --orfs-var OT_FC_FILE=/src/physical/hbm_accel_die_views/stations/bench/fc_taps2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=N",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^signoff_corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_mcast_r5.lef {RUN}/routes/{NAME}/view/hfd_mcast_r5_ss.lib {RUN}/routes/{NAME}/view/hfd_mcast_r5_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        },
+        {
+          "name": "die_pin_access",
+          "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_mcast_r5.lef hfd_mcast_r5 {RUN}/pa"
+        }
+      ],
+      "post_sdc": []
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/route_cl"
+      }
+    ],
+    "cycles_added": 1,
+    "merge_target": "claude/hbm-abstracts-20261006",
+    "budget": {
+      "enabled": false,
+      "reason": "station margin SDC recipe (stn_margin_sdc.py: forwarded-clock arcs + meso crossing bounds); ck IO from this job's calibrate (CKINS = CK_SS_MAX, CKFF = CK_FF_MIN/MAX)"
+    },
+    "cycles_note": "0 added by this fix (placement + keepout); r5 carries +1 forwarded (RC=1) and the pre-existing pin-stages 2 tap cycle"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_stn_mcast_r5_56a4bdb6c.json",
+  "created": "2026-10-07T03:06:19-07:00",
+  "status": "RUNNING",
+  "stage_idx": 3,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_bench_mcast_exact_and_negatives": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "pos rc=0 plreg_mismatch=0\nneg rc=1 plreg_mismatch=0\nneg_pl rc=0 plreg_mismatch=1980\nneg_rs rc=1 plreg_mismatch=0\nb[2063]<-a[2063] 2 0\nb[2064]<-a[2064] 2 0\nb[2065]<-a[2065] 2 0\nb[2066]<-a[2066] 2 0\nb[2067]<-a[2067] 2 0\nck<-a[2063] 5 0\nck<-a[2064] 5 0\nck<-a[2065] 6 0\nck<-a[2066] 6 0\nck<-a[2067] 6 0\nMCAST_BENCH PASS\n"
+    },
+    "bench_bench_neg_generator_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "NEG_DETECTED\n"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc3"
+  ],
+  "events": [
+    "2026-10-07T03:06:19-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_stn_mcast_r5_56a4bdb6c.json",
+    "2026-10-07T03:08:44-07:00 source 56a4bdb6c3ae synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r5_56a4bdb6c/src",
+    "2026-10-07T03:10:18-07:00 launched bench_bench_mcast_exact_and_negatives (attempt 1) on ot-epyc3",
+    "2026-10-07T03:12:15-07:00 bench_bench_mcast_exact_and_negatives PASS (rc=0)",
+    "2026-10-07T03:14:17-07:00 launched bench_bench_neg_generator_mutant (attempt 1) on ot-epyc3",
+    "2026-10-07T03:15:59-07:00 bench_bench_neg_generator_mutant FAIL as expected (rc=1)",
+    "2026-10-07T03:17:37-07:00 launched calibrate (attempt 1) on ot-epyc3",
+    "2026-10-07T03:27:15-07:00 calibrate done (rc=0)",
+    "2026-10-07T03:27:17-07:00 calibrated insertion CK_SS_MEAN=581 CK_SS_MIN=572 CK_SS_MAX=593 CK_FF_MEAN=392 CK_FF_MIN=383 CK_FF_MAX=404",
+    "2026-10-07T03:28:52-07:00 launched route (attempt 1) on ot-epyc3"
+  ],
+  "updated": "2026-10-07T03:50:45-07:00",
+  "wait": null,
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r5_56a4bdb6c",
+  "commit_full": "56a4bdb6c3ae67ff6d8fa63a5e27f6639e8cb94b",
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T03:28:52-07:00",
+  "unreachable": 0,
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 2063,
+        "mean": 580.6,
+        "min": 571.7,
+        "max": 593.0
+      },
+      "all": {
+        "n": 8576,
+        "mean": 583.8,
+        "min": 568.9,
+        "max": 626.0
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 2063,
+        "mean": 391.9,
+        "min": 383.3,
+        "max": 404.2
+      },
+      "all": {
+        "n": 8576,
+        "mean": 395.0,
+        "min": 380.5,
+        "max": 438.3
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 581,
+      "CK_SS_ALL_MEAN": 584,
+      "CK_SS_MIN": 572,
+      "CK_SS_ALL_MIN": 569,
+      "CK_SS_MAX": 593,
+      "CK_SS_ALL_MAX": 626,
+      "CK_FF_MEAN": 392,
+      "CK_FF_ALL_MEAN": 395,
+      "CK_FF_MIN": 383,
+      "CK_FF_ALL_MIN": 380,
+      "CK_FF_MAX": 404,
+      "CK_FF_ALL_MAX": 438
+    },
+    "db": "4_1_cts.odb",
+    "clock": "ck",
+    "parasitics": "placement-estimated"
+  }
+}

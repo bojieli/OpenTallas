@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.closure_loop.recovery.v1",
+  "timestamp_utc": "2026-10-07T15:48:05.700715+00:00",
+  "recovered_claude_agents": [
+    "a07a16681156050c6",
+    "a6e6cb0cc821fb88a"
+  ],
+  "inherited_patch_sha256": "4a9a8a42bcfaba5e2581f2e6a9c93c44de48d6330ae0bc229d494985b8f11946",
+  "deployment": {
+    "commit": "377d78292",
+    "worktree": "/home/ubuntu/wt-codex-closure-daemon-20261007",
+    "service": "closure-loop.service",
+    "pid": 3293475,
+    "started": "2026-10-07T08:46:34-07:00",
+    "kill_mode": "process",
+    "local_jobs": [
+      {
+        "name": "dsrom_softmax_safe_exprcf_bd30aca4a",
+        "pid": 3199068,
+        "alive": true,
+        "start": "359159038",
+        "alive_after": false,
+        "same_process_after": false,
+        "completed_rc": 0,
+        "completed_at_utc": "2026-10-07T15:45:30.626013+00:00"
+      },
+      {
+        "name": "dsrom_softmax_safe_exphrf_bd30aca4a",
+        "pid": 3199085,
+        "alive": true,
+        "start": "359159039",
+        "alive_after": true,
+        "same_process_after": true
+      },
+      {
+        "name": "dsrom_softmax_safe_exprc2f_bd30aca4a",
+        "pid": 3199099,
+        "alive": true,
+        "start": "359159040",
+        "alive_after": false,
+        "same_process_after": false,
+        "completed_rc": 0,
+        "completed_at_utc": "2026-10-07T15:45:55.620456+00:00"
+      }
+    ]
+  },
+  "tests": {
+    "reliability": 17,
+    "bench_track": 11,
+    "hold_eco_shell_tcl": 6,
+    "physical_wire_preservation_tested": false
+  },
+  "fixed": [
+    "unreadable historical bench no longer blocks unrelated recovery passes",
+    "preserved-wire rejection retries in fresh process and preserves failed output; opt-ins remain off",
+    "bench source isolated from concurrent route",
+    "external adoption holds preserve running work",
+    "failed reference tool probe expires after15seconds, successful probes after1hour",
+    "host_require validates explicit host list"
+  ],
+  "pending_adoption_holds": [
+    "dsrom-qelem-qs4r-cc7e9b2a9",
+    "dsrom-qelem-qs5r-1b89b1b6d",
+    "dsrom-qelem-qs5f-e1fbc25c1",
+    "hbm_sfu_lane_f244ad7e3_r2"
+  ],
+  "eco_diagnostic": {
+    "job": "wcol128-m6-01a487c86",
+    "original_ss_ps": 25.85,
+    "original_ff_ps": -2.25,
+    "mm_pass2_internal_post_ff_ps": 24.515141,
+    "mm_pass2_fresh_signoff_ff_ps": 1.48,
+    "mm_pass2_signoff_ss_ps": 28.55,
+    "mm_pass2_drc": 0,
+    "odb_sha256": "712558fe3e1d3d78f84d50d6fdbd14dac6e169738ce51aae604074b84c840c53",
+    "spef_sha256": "60210820ca4872baa9fc5bc772957235e1076ccecabb0b5d76dfdbee3f8b7ec7",
+    "action": "one guarded FF-only retry queued via daemon; previous failure retained; no adoption"
+  },
+  "superseded_open_item": {
+    "job": "hbm_stn_r38_88136dcd2_ck80",
+    "successor": "hbm_stn_r38_88136dcd2_bud2",
+    "ss_ps": 193.57,
+    "ff_ps": 25.05,
+    "drc": 0,
+    "record_commit": "6bc864526",
+    "action": "preserve old failure, no duplicate repair"
+  }
+}

@@ -31,6 +31,17 @@ module tb_hbm_accel_sm_pq_seq;
     wire busy;
     reg d_valid = 0; wire d_ready; reg [31:0] d_base = 0; reg [23:0] d_lines = 0;
     wire req_v; wire [31:0] req_addr; wire [9:0] req_tag;
+    // Optional deterministic hub backpressure; also exercises alternating tagged
+    // requests in smh's registered-ready output. Default measurements unchanged.
+    reg req_stalls;
+    initial req_stalls = $test$plusargs("REQ_STALLS");
+    wire req_ready = !req_stalls || ((cyc % 97) >= 31 && (cyc % 7) >= 2);
+    // REQCR = 1 (smh ready latency 2): the bench is the receiver; it takes every beat, and a beat that arrives when it
+    // did not show ready two cycles earlier overflows its 2-entry headroom: the beat is LOST (# REQ_OVERFLOW)
+    reg rdy_d1 = 0, rdy_d2 = 0;
+    always @(posedge clk) begin rdy_d1 <= req_ready; rdy_d2 <= rdy_d1; end
+    wire req_take = (REQCR != 0) ? (req_v && rdy_d2) : (req_v && req_ready);
+    always @(posedge clk) if (rst_n && REQCR != 0 && req_v && !rdy_d2) $display("# REQ_OVERFLOW cyc %0d tag %0d", cyc, req_tag);
     reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
     reg xw_en = 0; reg [XW-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
@@ -41,18 +52,18 @@ module tb_hbm_accel_sm_pq_seq;
                        .MAX_OUT(512), .HAZ(HAZ), .BD_PREFIX(BD_PREFIX)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
-        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
+        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
-`define OT_DP dut.g_fp.u_front   // the bench configuration (RMAX 256) instantiates the parameterised pieces
-`define OT_DCROW dut.g_fp.u_front.al[RW-1:0]
+`define OT_DP dut.g_fp.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
+`define OT_DCROW dut.g_fp.u_fs.al[RW-1:0]
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
-        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
+        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
@@ -60,6 +71,13 @@ module tb_hbm_accel_sm_pq_seq;
 `define OT_DCROW dut.crow[RW-1:0]
 `endif
     reg [1087:0] lines [0:131071];
+    // negative control (+define+OT_SMH_NEG_FLIP): bit 3 of every line the bench returns is flipped at the DUT's
+    // response port, so the golden compare must fail (a hierarchical force on s1_w was not honoured by Verilator)
+`ifdef OT_SMH_NEG_FLIP
+    localparam [1087:0] NEGM = 1088'd8;
+`else
+    localparam [1087:0] NEGM = 1088'd0;
+`endif
     reg [FRAGW+2047:0] xwords [0:MAXOPS*XDEPTH-1];
     reg [31:0] seq [0:MAXOPS*NW-1];
     integer base_of [0:MAXOPS-1];
@@ -75,7 +93,7 @@ module tb_hbm_accel_sm_pq_seq;
     always @(posedge clk) begin
         rsp_v <= 1'b0;
         if (rst_n) begin
-            if (req_v) begin
+            if (req_take) begin
                 pick = -1;
                 for (i = 0; i < 512; i = i + 1) if (!p_use[i] && pick < 0) pick = i;
                 p_use[pick] = 1; p_addr[pick] = req_addr; p_tag[pick] = req_tag;
@@ -85,7 +103,7 @@ module tb_hbm_accel_sm_pq_seq;
             for (i = 0; i < 512; i = i + 1)
                 if (p_use[i] && p_rdy[i] <= cyc && (pick < 0 || p_rdy[i] < p_rdy[pick])) pick = i;
             if (pick >= 0) begin
-                rsp_v <= 1'b1; rsp_tag <= p_tag[pick]; rsp_data <= lines[p_addr[pick]];
+                rsp_v <= 1'b1; rsp_tag <= p_tag[pick]; rsp_data <= lines[p_addr[pick]] ^ NEGM;
                 p_use[pick] = 0;
             end
         end

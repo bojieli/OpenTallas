@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "collector",
+ "master": "dsfd_bk_collector",
+ "owner": "Claude:s81-ph (fork C, 2026-10-06)",
+ "die": "layer and head (identical ports; only ck / rst sit at another x on the head die's S face: ck 2335.8 vs 2316.4, rst 2448.1 vs 2446.9 um)",
+ "outline_um": [5270.376, 881.256],
+ "domain": "stream 1.2 GHz (ck), rst active low (die reset net, as every r8/r9 glue block)",
+ "decision": {
+  "by": "Claude (owner rule: Claude decides), 2026-10-06",
+  "choice": "attention stays UNSPLIT in arithmetic; the collector is a frame-atomic row gather (FIFOs + register stages, no arithmetic)",
+  "why": [
+   "the core's attention engine ot_hdc_v41x_attn (via ot_hdc_v41x_att_adapt in ot_hdc_core_v41x, X_ATT) computes s = q.k as a csum over the D dims and pv = p.v as a csum over the T rows in golden row order (padded pairwise tree over ceil(T/8) chunk sums, merged by ot_hdc_v41x_attn_merge); the softmax (max, exp, sum, sink, divide) is on the stream unit, not in the engine",
+   "selected compressed rows live on their owner stack (ot_chip_v41x_ckv_die_service_cr: home stack id[7:6]), so a per-stack p.v over the stack's own rows, or a flash-style max/LSE rescale merge, changes the FP32 summation order: NOT bit-exact with the golden. No such merge RTL exists and none is built",
+   "exact splits need no cross-stack arithmetic: a stack may own complete outputs (q.k score rows of the rows it holds: each score is a csum over that row's dims only; p.v dims whose every row it holds; or forwarded rows). The collector only moves those finished words",
+   "the existing exact precedent is the same shape: ot_chip_v41x_ckv_die_service_cr gathers rows from four sources into a rank-addressed buffer so the engine sees golden row order"
+  ],
+  "constraint_on_svc": "the scan service (svc kind) must send only finished, exact result frames on od (no partial sums across rows); if a split needs a cross-stack sum it must be re-derived as a golden-order pairwise tree first (not planned). Recorded for the svc owner"
+ },
+ "rtl": {
+  "top": "rtl/dsrom_sys/s81_ph/dsfd_bk_collector.sv",
+  "core": "rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv (ot_s81ph_col_in, ot_s81ph_col_core)",
+  "reused": ["rtl/link/ot_fifo_sram_fwft.sv (MACRO 1, W 512, DEPTH 256)", "rtl/common/ot_fwd_link_stage.sv (ot_fwd_clk_inv for vf)"],
+  "macros": "8 x ot_sram_1r1w_256x256_m2_r2c2 (2 per stack: 256 words x 512 b frame buffer)",
+  "params": "STG 7 (pin register + 7 transport stages from the W / E faces to the centre, <= ~380 um a stage), OSTG 1, DEPTH 256, PACE 2"
+ },
+ "inputs": {
+  "ports": "cSW, cSE, cNW, cNE (515 b): one per scan service (HBM stack), delivered by the hub end block dsfd_m2l_vr_512x1__hco_<st> (ot_meso_fifo) in ck: [0] valid, [512:1] data, [513] live, [514] fault",
+  "framing": "hub common framing (contracts_hub.json common_rules.framing): header word then len raw data words",
+  "header": "data[511:508] type, [507:500] tag, [499:492] op, [491:480] len, [479:0] payload carried unchanged (the VM destination: the producer's address fields)",
+  "types": {
+   "1 op descriptor / 2 operand-data / 3 result": "forwarded whole",
+   "5 fault": "forwarded whole and raises fault bit 15",
+   "4 done/status": "len 0; one per stack per job, NOT forwarded; the four are merged into one DONE",
+   "other": "format fault (bit 12)"
+  },
+  "rate": "one word a cycle per stack, valid-only, never throttled",
+  "capacity": "per job each stack sends <= DEPTH = 256 words (headers included); the VM issues the next job's work to the stacks only after this job's DONE. Above that: fail closed (bit 11). A frame longer than 255 data words is a format fault"
+ },
+ "output": {
+  "ports": "vd (514 b, vr format: [0] rst_n, [1] valid, [513:2] data) + vf (forwarded clock = ck through a kept ot_fwd_clk_inv) -> station chain -> VM ratio CDC dsfd_r2l_vr_512x1__hcol",
+  "pacing": "the VM end is ot_ratio_cdc_fifo with no w_rdy back: at most ONE word every PACE = 2 cycles (0.6 G words/s into the 0.9 GHz reader), as the selector",
+  "order": "frames atomic (no word of another frame inside a frame); each stack's frames in its own order; a frame starts only when all its words are buffered; stacks granted round robin at frame boundaries",
+  "collector_words": {
+   "4 DONE": "[507:500] tag, [15:11] 0, [10:0] OR of the four stacks' DONE [10:0]; leaves after every frame the four stacks sent before their DONE",
+   "5 FAULT": "[507:500] tag of the last DONE, [45:30] 0, [15:11] sticky fault bits; at a frame boundary (a frame in flight is completed first, zero words if its data is gone); after it no data and no DONE until reset"
+  },
+  "fault_bits": {"11": "buffer overflow", "12": "format (unknown type, DONE len != 0, frame longer than 255 data words)", "13": "the four DONE tags differ", "14": "input lane fault bit, or a valid word while the lane is not live", "15": "a stack sent a fault frame"}
+ },
+ "vm_sequencer_rules": [
+  "write every data word of a frame at the address its header names (the image is then independent of the merge order)",
+  "issue the next job's work to the four stacks only after this job's DONE",
+  "a FAULT word aborts the job: reset the collector and re-run"
+ ],
+ "cycle_cost": {
+  "latency": "pin + 7 stages + parser + FIFO (bypass) + count + decision (registered, 1 pre cycle) + slot + OSTG 1 + pin: ~13-14 ck cycles from the first word at the pin to vd when the lane is idle",
+  "throughput": "0.5 word / ck cycle out (PACE 2) against up to 4 words / cycle in: a job's attention results leave in 2 x (sum of the four stacks' words) ck cycles. COMPOSE owns the model term: e.g. 640 score rows + 4 x ~10 headers = ~680 words -> ~1,360 ck cycles (1.13 us) per q.k job on this path. A wider col_vm lane (generator change, or a w_rdy back from the CDC for PACE 4/3) is the lever if this path is on the critical path; the svc -> VM direct lane (a<st>, 1,024 b) is the alternative carrier"
+ },
+ "generator_changes": [],
+ "generator_notes": [
+  "r9 collector input hco end blocks drop the meso FIFO w_rdy (valid-only lane): consistent with this contract",
+  "head die master differs only in ck / rst x; one RTL, the head view needs its own route (same RTL) or the generator aligns ck/rst x across dies"
+ ]
+}

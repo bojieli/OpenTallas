@@ -1,0 +1,9 @@
+    input wire [0:0] ckh,
+    input wire [0:0] cks,
+    inout wire [22237:0] phy,
+    output wire [8895:0] rd,
+    output wire [31:0] rk,
+    input wire [10911:0] rq,
+    input wire [0:0] rst,
+    output wire [1:0] st,
+    output wire [31:0] wd

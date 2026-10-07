@@ -1,0 +1,225 @@
+{
+  "name": "hbm_idxq_b0_48529891f_r19b",
+  "spec": {
+    "name": "hbm_idxq_b0_48529891f_r19b",
+    "block": "hfd_index_q_b0",
+    "owner": "Claude:hbm-views",
+    "purpose": "hfd_index_q_b0 RTL unchanged (b1-only commit 48529891f) re-routed on the r19b budget sheets (main b4ea1b4f4: pin-abutting die stations; internal input ~114-149 -> ~426-433 ps); budget SDCs; CTS without clock NDR",
+    "hosts": [
+      "ot-epyc3",
+      "ot-epyc1tb",
+      "ot-epyc2"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 40,
+    "source": {
+      "branch": "claude/hbm-abstracts-svcidx-20261006",
+      "commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "extra_paths": [
+        "results/uarch/hbm_current_target_portmap_20261005",
+        "results/rtl/hbm_accel_die_floorplan_20261005",
+        "results/rtl/die_top_lint_20261006",
+        "results/rtl/dshbm_matched_reference_20261005",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "exact_split",
+          "cmd": "bash physical/hbm_accel_die_views/index_q/run_bench_split.sh {RUN}/bench; rc=$?; tail -4 {RUN}/bench/summary.txt; exit $rc",
+          "expect": "pass",
+          "threads": 2,
+          "peak_ram_gb": 8
+        },
+        {
+          "name": "neg_lane_swap",
+          "cmd": "grep -q 'IDXQ_BENCH FAIL' {RUN}/bench/neg.log && echo IDXQ_NEG_DETECTED && exit 1; exit 0",
+          "expect": "fail",
+          "fail_regex": "IDXQ_NEG_DETECTED",
+          "threads": 1,
+          "peak_ram_gb": 1
+        }
+      ],
+      "calibrate": {
+        "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b0 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b0.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append physical/hbm_accel_die_views/index_q/sdc/hfd_index_q_b0_fwd.sdc $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "threads": 8,
+        "peak_ram_gb": 40
+      },
+      "route": {
+        "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b0 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b0.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append physical/hbm_accel_die_views/index_q/sdc/hfd_index_q_b0_fwd.sdc $CL_STOP_AFTER",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_index_q_b0.lef {RUN}/routes/{NAME}/view/hfd_index_q_b0_ss.lib {RUN}/routes/{NAME}/view/hfd_index_q_b0_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        }
+      ],
+      "post_sdc": [
+        "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+        "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+      ]
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b0"
+      }
+    ],
+    "cycles_added": 0,
+    "merge_target": "claude/hbm-abstracts-20261006",
+    "budget": {
+      "master": "hfd_index_q_b0",
+      "clock": "core_clk"
+    }
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_idxq_b0_48529891f_r19b.json",
+  "created": "2026-10-07T01:27:01-07:00",
+  "status": "RUNNING",
+  "stage_idx": 3,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_exact_split": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "lint_b5 rc=0\nsim_seg rc=0 IDXQ_BENCH PASS\nneg rc=1 (must be nonzero) FATAL: /srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b/bench/tb_seg.sv:52: IDXQ_BENCH FAIL\noverall rc=0\n"
+    },
+    "bench_neg_lane_swap": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "IDXQ_NEG_DETECTED\n"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc1tb"
+  ],
+  "events": [
+    "2026-10-07T01:27:01-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b0_48529891f_r19b.json",
+    "2026-10-07T01:29:39-07:00 source 48529891fce3 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b/src",
+    "2026-10-07T01:31:30-07:00 launched bench_exact_split (attempt 1) on ot-epyc1tb",
+    "2026-10-07T01:33:27-07:00 bench_exact_split PASS (rc=0)",
+    "2026-10-07T01:35:54-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc1tb",
+    "2026-10-07T01:37:56-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+    "2026-10-07T01:40:01-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+    "2026-10-07T01:49:08-07:00 calibrate done (rc=0)",
+    "2026-10-07T01:49:11-07:00 calibrated insertion CK_SS_MEAN=1190 CK_SS_MIN=1160 CK_SS_MAX=1268 CK_FF_MEAN=786 CK_FF_MIN=761 CK_FF_MAX=852",
+    "2026-10-07T01:49:26-07:00 budget check OK: measured insertion 1190 <= target 1254 (sheet 1186); budget SDCs regenerated from the measured insertion",
+    "2026-10-07T01:51:08-07:00 launched route (attempt 1) on ot-epyc1tb"
+  ],
+  "updated": "2026-10-07T03:50:43-07:00",
+  "wait": null,
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b",
+  "commit_full": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+  "budget": {
+    "master": "hfd_index_q_b0",
+    "sheets_ref": "958a86d4adade674c03b95fd1e9546bceacecc47",
+    "insertion": {
+      "target_ss": 1254,
+      "target_ff": 840,
+      "target_basis": "RE-PLANNED: edge ck kept: R0 + x-mirrored copies cannot both take an on-track centre M7 ck pin (r16b); coordinator 2026-10-06 23:20 re-plan (measured SS 1157..1254); IO skew +17.7 ps (OCV x (target - cap 900))",
+      "tolerance_ps": 100.0,
+      "ss": 1186,
+      "ff": 782,
+      "ss_min": 1157,
+      "ss_max": 1254,
+      "ff_min": 757,
+      "ff_max": 840,
+      "grade": "measured",
+      "source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+      "over_target": false,
+      "replanned": true
+    },
+    "entry_target_ss": {
+      "mean": 2829.2,
+      "min": 2827.7,
+      "max": 2830.8
+    },
+    "insertion_used": {
+      "ss": 1190,
+      "ff": 786,
+      "ss_min": 1160,
+      "ss_max": 1268,
+      "ff_min": 761,
+      "ff_max": 852,
+      "grade": "measured",
+      "source": "closure-loop calibrate hbm_idxq_b0_48529891f_r19b (ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b)",
+      "over_target": false
+    },
+    "check": {
+      "measured_ss": 1190.0,
+      "ok": true,
+      "reasons": [],
+      "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+    }
+  },
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T01:51:08-07:00",
+  "unreachable": 0,
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 1571,
+        "mean": 1190.5,
+        "min": 1160.2,
+        "max": 1267.6
+      },
+      "all": {
+        "n": 5722,
+        "mean": 1179.3,
+        "min": 1150.1,
+        "max": 1476.8
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 1571,
+        "mean": 786.3,
+        "min": 761.4,
+        "max": 852.2
+      },
+      "all": {
+        "n": 5722,
+        "mean": 775.2,
+        "min": 751.9,
+        "max": 996.6
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 1190,
+      "CK_SS_ALL_MEAN": 1179,
+      "CK_SS_MIN": 1160,
+      "CK_SS_ALL_MIN": 1150,
+      "CK_SS_MAX": 1268,
+      "CK_SS_ALL_MAX": 1477,
+      "CK_FF_MEAN": 786,
+      "CK_FF_ALL_MEAN": 775,
+      "CK_FF_MIN": 761,
+      "CK_FF_ALL_MIN": 752,
+      "CK_FF_MAX": 852,
+      "CK_FF_ALL_MAX": 997
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+  }
+}

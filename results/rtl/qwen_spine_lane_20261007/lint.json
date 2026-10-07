@@ -1,0 +1,11 @@
+{
+  "top": "ot_qwen_spine_lane",
+  "GT": 6144,
+  "SMIN": 7,
+  "TCUT": 7,
+  "TREE_LAT": 7,
+  "exit_code": 0,
+  "tool": "verilator --lint-only -Wno-fatal -Wno-TIMESCALEMOD",
+  "warnings": "Existing prefix-array UNOPTFLAT and unused upper array slices; no errors",
+  "adopted": false
+}

@@ -1,0 +1,34 @@
+{
+ "kind": "capture",
+ "rtl": "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv (dsfd_capt_grp x8 (16 roots), dsfd_capt_ctl, composition ot_s81ph_cap_t; dsfd_sp_capture CORE 2)",
+ "bench": "tools/s81_ph/capt_bench.sh (tb_s81ph_gather_capture +UNORD: gather ROOT_BLK/PIPE root -> capture vs 128 W10 roots + rd64 reference; 9 cases)",
+ "exact": "9/9 PASS (mix seeds 7/11/12/13, trace, err, over, range, rreq: non-fault phases write-multiset equal per root, fault phases fault with only individually valid writes)",
+ "negative_controls": {
+  "S81PH_MUTANT_BF16_TRUNC (mix)": "FAIL 128 roots mismatch",
+  "S81PH_MUT_NOOVER (over)": "FAIL (no fault, timeout)"
+ },
+ "cycles": {
+  "max_extra_cycles vs reference": {
+   "mix": {
+    "cap_p (CORE 1)": 48,
+    "tiled": 52
+   },
+   "mix11": {
+    "cap_p": 49,
+    "tiled": 53
+   },
+   "trace": {
+    "cap_p": 27,
+    "tiled": 31
+   },
+   "rreq": {
+    "cap_p": 31,
+    "tiled": 35
+   }
+  },
+  "added": "+4 ck cycles per phase (row check 1 stage later, constants via the ctl tile hop)"
+ },
+ "schema": "opentallas.s81_ph.bench.v1",
+ "date": "2026-10-06",
+ "owner": "Claude:s81-ph (tiles)"
+}

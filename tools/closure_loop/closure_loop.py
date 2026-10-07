@@ -170,6 +170,12 @@ def validate(spec: dict) -> list[str]:
         return e
     if not NAME_RE.match(spec["name"]):
         e.append("name must match " + NAME_RE.pattern)
+    required = spec.get("host_require")
+    if required is not None and (not isinstance(required, list) or not required
+                                or any(not isinstance(x, str) for x in required)):
+        e.append("host_require must be a nonempty list of host names, not a boolean")
+    elif required and any(x not in {h["name"] for h in hosts_table()} for x in required):
+        e.append("host_require contains an unknown host")
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
@@ -552,7 +558,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def toolchain(self, host):
         """ORFS image digests + bench tool versions of a host (cached 1 h)."""
         c = self.tool_cache.get(host)
-        if c and time.time() - c[0] < 3600:
+        if c and time.time() - c[0] < (3600 if c[1] else 15):
             return c[1]
         r = ssh(host, TOOLPROBE, timeout=60)
         info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
@@ -601,7 +607,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if ok:
                 return h, None
             why.append(msg)
-        return None, "; ".join(why)
+        return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
 
 
 TOOL_REF_HOST = "ot-epyc3"
@@ -686,7 +692,7 @@ def label(name):
 
 
 def subst(text, j):
-    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+    m = dict(RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
              LABEL=label(j["name"]), RAW_NAME=j["name"],
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
@@ -927,8 +933,14 @@ def tag(st, j):
 
 def launch_stage(j, st, cmd):
     t = tag(st, j)
+    if st["kind"] == "bench":
+        # Mutation benches must never write the route's source tree. One private
+        # tree per job attempt retains generated inputs shared by bench stages.
+        j["stage_source"] = f"{j['run']}/bench_src_a{str(j['attempt']).split('b')[0]}"
+    else:
+        j.pop("stage_source", None)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
-        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+        RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
         LABEL=label(j["name"]), RAW_NAME=j["name"],
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
@@ -972,6 +984,16 @@ def launch_stage(j, st, cmd):
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
+    if st["kind"] == "bench":
+        private = shlex.quote(j["stage_source"])
+        original = shlex.quote(f"{j['run']}/src")
+        env += (f"if [ ! -d {private} ]; then\n"
+                f"  test ! -e {private}.tmp || exit 9\n"
+                f"  cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
+                f"  mv {private}.tmp {private} || exit $?\nfi\n"
+                f"cd {private} || exit $?\n")
+        # A few legacy recipes spell {RUN}/src instead of using {SRC}.
+        cmd = cmd.replace("{RUN}/src", "{SRC}")
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
     # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
@@ -1005,7 +1027,8 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
 def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
-    r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=timeout)
+    source = j.get("stage_source", f"{j['run']}/src")
+    r = ssh(j["host"], f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
@@ -1236,7 +1259,7 @@ def write_status(fleet_note=""):
     for r in done:
         L.append(f"- {r['name']} [{r['spec'].get('block', '?')}] {r['status']} {r.get('reason', '')[:200]}")
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
-          "free RAM >= peak + max(10% RAM, 32 GB))"]
+          "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
         r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
         v = r.stdout.split()
@@ -1413,6 +1436,8 @@ def _bview(j, e):
     """a job view addressing one bench-track stage (its own host / run / tag)"""
     v = dict(j)
     v.update(host=e["host"], run=e["run"], stage_tag=e["tag"])
+    if e.get("stage_source"):
+        v["stage_source"] = e["stage_source"]
     return v
 
 
@@ -1445,7 +1470,7 @@ def bench_track(j, fleet, stl):
             n = (e or {}).get("n", 0) + 1
             v = dict(j, attempt=f"{j['attempt']}b{n}")
             launch_stage(v, st, st["cmd"])
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
@@ -1563,6 +1588,8 @@ def step(j, fleet):
     if s == "READY":
         st = stl[j["stage_idx"]]
         j["stage_key"] = st["key"]
+        if st["kind"] in ("verdict", "collect", "export", "commit") and adoption_held(j):
+            return
         if st["kind"] == "verdict":
             if j.get("bench_par") and not benches_done(j, stl):
                 if j.get("wait") != "benches":
@@ -1691,7 +1718,22 @@ def step(j, fleet):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+def adoption_held(j):
+    """A live owner hold prevents adoption while physical evidence can finish."""
+    path = STATE / "adoption_holds" / f"{j['name']}.json"
+    if not path.exists():
+        return False
+    reason = json.loads(path.read_text())["reason"]
+    note = f"adoption hold: {reason}"
+    if j.get("wait") != note:
+        j["wait"] = note
+        event(j, note)
+    return True
+
+
 def do_verdict(j, fleet, stl):
+    if adoption_held(j):
+        return
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
     if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
@@ -1832,6 +1874,8 @@ def eco_install_cmd(j):
 
 
 def do_commit(j):
+    if adoption_held(j):
+        return
     m = j["metrics"]
     try:
         with PUBLISH_LOCK:
@@ -1869,14 +1913,21 @@ def reevaluate_benches(jobs):
         m = BENCH_RE.match(j.get("reason") or "")
         if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
             continue
-        j.setdefault("fix_requeued", []).append(fid)
         stl = stage_list(j["spec"])
         idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
         if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
             save_job(j)
             continue
         st = stl[idx]
-        if bench_outcome(j, st, int(m.group(3))):
+        try:
+            correct = bench_outcome(j, st, int(m.group(3)))
+        except RuntimeError as exc:
+            # An unavailable historical log must not starve later jobs or the
+            # independent recovery passes. Do not consume this retry until read.
+            log(f"[{j['name']}] bench re-judgment deferred: {exc}")
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        if correct:
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
             j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
             event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
@@ -2203,16 +2254,7 @@ def tick(fleet):
             except Exception:  # noqa: BLE001
                 pass
         req.unlink(missing_ok=True)
-    try:
-        reevaluate_benches(all_jobs())
-        requeue_toolchain(all_jobs())
-        requeue_budget(all_jobs())
-        requeue_hold_only(all_jobs())
-        # migrate_overloaded() / checkpoint moves retired by OWNER 21:35 (memory-based admission)
-        requeue_ssh_verdict(all_jobs())
-        auto_requeue(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("auto_requeue error:\n" + traceback.format_exc())
+    schedule_recovery()
     # persistent pool, no per-tick barrier (2026-10-07): a job still being stepped (a source sync, a 30-min verdict check)
     # is skipped this tick instead of holding every other job until the next tick
     global _POOL
@@ -2227,6 +2269,35 @@ def tick(fleet):
             _INFLIGHT.add(x["name"])
         _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status()
+
+
+_RECOVERY_POOL = None
+_RECOVERY_FUTURE = None
+
+
+def recover_jobs():
+    # Historical log reads can wait on an unreachable host for minutes. They
+    # must neither block live dispatch nor suppress unrelated recovery classes.
+    for recover in (reevaluate_benches, requeue_toolchain, requeue_budget,
+                    requeue_hold_only, requeue_ssh_verdict, auto_requeue):
+        try:
+            jobs = all_jobs()
+            live_blocks = {j["spec"].get("block") for j in jobs
+                           if j["status"] not in TERMINAL or j["status"] == "CLOSED"}
+            # Automatic migration of historical failures must not revive a
+            # superseded route alongside an active or closed replacement.
+            recover([j for j in jobs if j["status"] not in TERMINAL
+                     or j["spec"].get("block") not in live_blocks])
+        except Exception:
+            log(f"{getattr(recover, '__name__', 'recovery')} error:\n" + traceback.format_exc())
+
+
+def schedule_recovery():
+    global _RECOVERY_POOL, _RECOVERY_FUTURE
+    if _RECOVERY_POOL is None:
+        _RECOVERY_POOL = ThreadPoolExecutor(max_workers=1)
+    if _RECOVERY_FUTURE is None or _RECOVERY_FUTURE.done():
+        _RECOVERY_FUTURE = _RECOVERY_POOL.submit(recover_jobs)
 
 
 _POOL = None

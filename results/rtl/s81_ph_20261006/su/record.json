@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81_ph.su.v1",
+ "owner": "Claude:s81-ph (lead), 2026-10-06",
+ "design": "REMOTE-READ split (contracts_hub.json kinds.su.decision.chosen): unchanged su_adapt/vec op semantics in the SU slab, VM in the hub; lanes' reads cross the die (RX = GX = DF + DR), writes land DR later (RET_STAGES + DR), sequencer ready/idle held while a go is in flight",
+ "rtl": ["rtl/dsrom_sys/s81_ph/su/ot_s81ph_vec_lane.sv", "rtl/dsrom_sys/s81_ph/su/ot_s81ph_vec.sv", "rtl/dsrom_sys/s81_ph/su/ot_s81ph_su_adapt.sv", "rtl/dsrom_sys/s81_ph/su/ot_s81ph_su_xing.sv"],
+ "bench": {
+  "runner": "tools/s81_ph/su_split_bench.py (tools/rtl_hdc_v41x_decode_campaign.py single bit-exact decode step, --units su, sun 16 / sum 8, reduced V4.1 vehicle: 2,649 SU ops checked against the ISA model: logits, vector memory, KV cache)",
+  "shim": "rtl/dsrom_sys/s81_ph/test/ot_hdc_v41x_su_adapt_s81ph_shim.sv",
+  "host": "ot-epyc3 /srv/opentallas-scratch2/claude/s81-ph/su/bench (src_598d45aa5 + runner fix 4d6185555), Verilator 5.032",
+  "note": "campaign status 'fail' is the single-only run's missing end-to-end section; the gate is single_step.pass",
+  "runs": {
+   "df0_dr0": {"pass": true, "next_token": 3118, "cycles": 295743, "mismatches": [0, 0, 0], "note": "= committed hdc_v41x_decode_campaign_su.json cycle for cycle (shim transparent)"},
+   "df3_dr3": {"pass": true, "next_token": 3118, "cycles": 321135, "mismatches": [0, 0, 0]},
+   "df8_dr8": {"pass": true, "next_token": 3118, "cycles": 366479, "mismatches": [0, 0, 0]}
+  },
+  "negative_controls": {
+   "NEG1 lane read delay one short (df3 dr3)": {"pass": false, "next_token": 990, "fault": 1, "logit/vm/kv mismatches": [4040, 12843, 17084]},
+   "NEG2 ready/idle not held while a go is in flight": {"pass": false, "next_token": 538, "fault": 1, "logit/vm/kv mismatches": [4040, 12816, 5026]},
+   "NEG3 write credits counted before landing": {"pass": true, "note": "BENIGN BY CONSTRUCTION: a chained consumer's read is RX = DF + DR >= DR cycles later too, so the early credit never reads early; landing-time credits are conservative, not required (not a valid negative)"}
+  }
+ },
+ "cycle_cost": {"reduced_vehicle_single_step": {"D3": "+25,392 cycles (+8.6%)", "D8": "+70,736 (+23.9%)", "per_su_op_D3": 9.6},
+   "verdict": "over the 2% pre-approval at any die-scale D (6.3 mm slab trunk ~15 stations each way): REPORTED; the partition is mandatory, COMPOSE must price D per SU op"},
+ "open": ["vm_port_finding (contracts_hub kinds.su.decision): element-addressed SU reads vs the row-port VM placeholder -- architecture gap",
+          "generator patch su.patch (vm->su 16,384 b, su->vm read requests 13,824 b + writes 8,592 b per slab) not written",
+          "physical view: one SU slab = 128 lanes + controller; route only after the VM port decision"],
+ "state": "RTL + exact bench PASS (2 valid negatives FAIL); physical/generator pending the VM port decision"
+}

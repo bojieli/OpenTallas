@@ -46,7 +46,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {libs}
 {mlibs}
 read_db {base}/6_final.odb
-read_sdc {base}/6_final.sdc
+read_sdc {base}/{sdc}
 read_spef {base}/6_final.spef
 set_propagated_clock [all_clocks]
 {post}
@@ -80,7 +80,7 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = ()) ->
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = f"/work/{base.relative_to(orfs)}"
     (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc))
-    cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:latest", "bash",
+    cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
     (orfs / f"w18_sta_{corner}.log").write_text(out)
@@ -95,7 +95,7 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = ()) ->
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
                 errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                 odb_sha256=sha(base / "6_final.odb"), spef_sha256=sha(base / "6_final.spef"),
-                sdc_sha256=sha(base / "6_final.sdc"))
+                sdc_sha256=sha(base / sdc))
 
 
 def main(argv=None):

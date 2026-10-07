@@ -1,0 +1,922 @@
+{
+  "def_path": "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div2b_6133b4bbf/routes/dsrom_softmax_safe_div2b_6133b4bbf/work/orfs/results/asap7/opentallas_ot_dsrom_su_fdiv_tile_asap7_safe_dsrom_softmax_safe_div2b_6133b4bbf/base/6_final.def",
+  "def_sha256": "9dc1c7c7f832664aaf1511e42177fa14017c73aa9e8143cd8a5ea5ae58bea966",
+  "units_per_um": 1000,
+  "die_um": [
+    0.0,
+    0.0,
+    100.948,
+    100.948
+  ],
+  "pins": [
+    {
+      "name": "a[0]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        30.348
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[10]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        22.86
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[11]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        23.052
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[12]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        22.092
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[13]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        21.612
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[14]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        22.284
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[15]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        21.516
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[16]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.012
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[17]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.492
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[18]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        23.724
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[19]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        25.452
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[1]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        28.14
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[20]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.588
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[21]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        26.22
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[22]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        23.34
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[23]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        20.652
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[24]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        19.596
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[25]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        19.5
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[26]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        18.54
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[27]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.868
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[28]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        16.14
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[29]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.1
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[2]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        27.276
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[30]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        14.796
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[31]",
+      "direction": "INPUT",
+      "position_um": [
+        16.428,
+        0.042
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[3]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        27.084
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[4]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        28.812
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[5]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        26.028
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[6]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.876
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[7]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.972
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[8]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.108
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "a[9]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        22.956
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[0]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        27.948
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[10]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        21.708
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[11]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        20.556
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[12]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        19.404
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[13]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        19.116
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[14]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        19.02
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[15]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        18.636
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[16]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.964
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[17]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.676
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[18]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        16.908
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[19]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.004
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[1]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        27.372
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[20]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        16.332
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[21]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        15.66
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[22]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        16.044
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[23]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        17.388
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[24]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        15.948
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[25]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        16.524
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[26]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        14.892
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[27]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        14.988
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[28]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        13.74
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[29]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        13.836
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[2]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        26.316
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[30]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        12.684
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[31]",
+      "direction": "INPUT",
+      "position_um": [
+        16.332,
+        0.042
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[3]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        26.124
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[4]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.78
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[5]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        24.684
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[6]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        23.148
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[7]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        23.244
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[8]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        21.804
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "b[9]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        20.748
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "clk",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        98.22
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "fault",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        26.028
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "rst_n",
+      "direction": "INPUT",
+      "position_um": [
+        100.906,
+        6.924
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "v",
+      "direction": "INPUT",
+      "position_um": [
+        89.292,
+        0.042
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "vo",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        24.972
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[0]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        88.236
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[10]",
+      "direction": "OUTPUT",
+      "position_um": [
+        92.076,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[11]",
+      "direction": "OUTPUT",
+      "position_um": [
+        93.324,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[12]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.836
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[13]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.548
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[14]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.164
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[15]",
+      "direction": "OUTPUT",
+      "position_um": [
+        93.516,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[16]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        96.78
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[17]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.068
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[18]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.26
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[19]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.452
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[1]",
+      "direction": "OUTPUT",
+      "position_um": [
+        86.892,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[20]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        96.972
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[21]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        97.356
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[22]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        96.876
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[23]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        91.212
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[24]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        92.556
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[25]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        92.172
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[26]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        91.404
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[27]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        89.964
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[28]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        90.06
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[29]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        89.1
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[2]",
+      "direction": "OUTPUT",
+      "position_um": [
+        86.028,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[30]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        88.524
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[31]",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.906,
+        87.468
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[3]",
+      "direction": "OUTPUT",
+      "position_um": [
+        86.124,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[4]",
+      "direction": "OUTPUT",
+      "position_um": [
+        87.948,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[5]",
+      "direction": "OUTPUT",
+      "position_um": [
+        88.908,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[6]",
+      "direction": "OUTPUT",
+      "position_um": [
+        89.1,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[7]",
+      "direction": "OUTPUT",
+      "position_um": [
+        86.796,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[8]",
+      "direction": "OUTPUT",
+      "position_um": [
+        90.636,
+        100.906
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[9]",
+      "direction": "OUTPUT",
+      "position_um": [
+        92.172,
+        100.906
+      ],
+      "orientation": "N"
+    }
+  ]
+}
