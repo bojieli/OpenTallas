@@ -2,7 +2,7 @@
 // ot_hdc_v41_fh_ctl: the fused head's CONTROL view (r4): ot_hdc_v41_fh_head_top at FPIPE=2 SAFE HQ LRET with only the
 // ports that view uses (the lanes retire their own data; the checked endpoint is its own view). No logic of its own.
 module ot_hdc_v41_fh_ctl #(
-    parameter integer W = 16, G = 4, AW = 24, NW = 16, RETURN_EXTRA = 6, SAFE = 1,
+    parameter integer W = 16, G = 4, AW = 24, NW = 16, RETURN_EXTRA = 6, SAFE = 1, OREG = 0,
     parameter integer TW = 1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1
 ) (
     input  wire clk, rst_n,
@@ -41,7 +41,7 @@ module ot_hdc_v41_fh_ctl #(
 );
     wire u0, u1; wire [2830:0] u2; wire [1266:0] u3; wire [(1+32+NW)*G*W-1:0] u4; wire [G*AW-1:0] u5;
     wire [G*W-1:0] u6; wire [G*W*32-1:0] u7; wire [0:0] u8;
-    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.AW(AW),.NW(NW),.FPIPE(2),.SAFE(SAFE),.HQ(1),.LRET(1),.RETURN_EXTRA(RETURN_EXTRA)) u_top (
+    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.AW(AW),.NW(NW),.FPIPE(2),.SAFE(SAFE),.HQ(1),.LRET(1),.OREG(OREG),.RETURN_EXTRA(RETURN_EXTRA)) u_top (
         .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.commit_ack_v(1'b0),
         .native_cold_n(native_cold_n),.native_request_ready(1'b0),.native_reply_capture(1'b0),.native_reply_v(1'b0),
         .native_ordinal(32'b0),.native_request_owner(47'b0),.native_checked_reply(1267'b0),
