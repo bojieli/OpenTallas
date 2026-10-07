@@ -59,7 +59,7 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 180                # load1 lags a launch: count own launches of the last 5 min as load
+PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
 TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -70,6 +70,9 @@ FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are a
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
 WORKERS = 16
+# declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
+# (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
+OWN_RUNNING_WEIGHT = 0.6
 HM_DEFAULT_SINCE = "2026-10-06T20:40"
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -431,13 +434,14 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         pt, pr = self.own_pending(host)
         # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
         # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        eff = max(info["load1"], self.own_running.get(host, 0))
+        eff = info["load1"]       # measured; only launches of the last 10 min are added (ramp allowance, pt)
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        if info["mem_gb"] - pr - res < ram + RAM_HEADROOM_GB:
+        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB)      # OWNER 21:35: peak + max(10% RAM, 32 GB)
+        if info["mem_gb"] - pr - res < ram + head:
             return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
-                           + f" < {ram}+{RAM_HEADROOM_GB}")
+                           + f" < {ram}+{head:.0f}")
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         return True, "ok"
@@ -488,7 +492,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if info is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - max(info["load1"], self.own_running.get(h, 0)) - pt - threads) / cfg["cap"]
+            fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
             return min(fc, fr) + 0.5 * (fc + fr) / 2 + (0.05 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
         order.sort(key=score, reverse=True)
@@ -735,7 +739,8 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh")
+HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh", "resume_patch.py",
+           "resume_check.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -777,6 +782,8 @@ def launch_stage(j, st, cmd):
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
         env += f"export HM={j['spec'].get('route_hold_margin_ns', 0.035)}\n"
+    if j.get("resume") and st["kind"] == "route":
+        env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
@@ -1001,6 +1008,18 @@ def write_status(fleet_note=""):
     L += ["", "## Recent terminal"]
     for r in done:
         L.append(f"- {r['name']} [{r['spec'].get('block', '?')}] {r['status']} {r.get('reason', '')[:200]}")
+    fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
+          "free RAM >= peak + max(10% RAM, 32 GB))"]
+    for h in hosts_table():
+        r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+        v = r.stdout.split()
+        if len(v) == 2:
+            ld = float(v[0])
+            fl.append(f"- {h['label']}: load1 {ld:.0f}/{h['cores']} threads (idle {max(0, 100 * (1 - ld / h['cores'])):.0f}%), "
+                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own running {sum(1 for x in act if x.get('host') == h['name'] and x['status'] == 'RUNNING')}")
+        else:
+            fl.append(f"- {h['label']}: unreachable")
+    L[3:3] = fl
     tmp = STATUS_MD.with_suffix(".tmp")
     tmp.write_text("\n".join(L) + "\n")
     os.replace(tmp, STATUS_MD)
@@ -1100,7 +1119,7 @@ def launch_ready(j, fleet, spec, stl, st):
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
-        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 600:
+        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
@@ -1546,6 +1565,46 @@ for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.
         timeout=300)
 
 
+def migrate_checkpoint(j, dest):
+    """move a RUNNING route WITH its ORFS checkpoint (coordinator 2026-10-06): stop this job's own stage, stream the
+    whole run dir (src snapshot + work/orfs results/logs/objects) to the same path on dest (tar keeps mtimes), patch
+    the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
+    relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
+    src = j["host"]
+    if host_cfg(src)["base"] != host_cfg(dest)["base"]:
+        raise ValueError(f"checkpoint move needs the same run root ({host_cfg(src)['base']} vs {host_cfg(dest)['base']})")
+    run = j["run"]
+    j["status"] = "MIGRATING"
+    save_job(j)
+    event(j, f"checkpoint move {host_cfg(src)['label']} -> {host_cfg(dest)['label']}: stopping own stage")
+    kill_own_stage(j)
+    for _ in range(30):
+        r = ssh(src, f"for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c "
+                     f"| grep -q '{run}/' && echo BUSY; done; pgrep -f '{run}/cl/run.sh' >/dev/null && echo BUSY; true", timeout=120)
+        if "BUSY" not in r.stdout:
+            break
+        time.sleep(10)
+    t0 = time.time()
+    ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
+    p = subprocess.run(f"ssh -o BatchMode=yes {src} 'tar -C {run} -cf - .' | ssh -o BatchMode=yes {dest} 'tar -C {run} -xf -'",
+                       shell=True, capture_output=True, text=True, timeout=7200)
+    if p.returncode:
+        raise RuntimeError(f"checkpoint transfer failed: {p.stderr[-500:]}")
+    ship_helpers(dest, run)
+    r = ssh(dest, f"cd {run}/src && python3 {run}/cl/resume_patch.py .", timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
+    dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
+    orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
+    chk = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600).stdout if orfs else ""
+    j["resume"] = dict(from_host=src, at=now_iso(), transfer_s=round(time.time() - t0), check=chk.strip()[-400:])
+    j["hosts_tried"].append(dest)
+    j.update(host=dest, status="READY", attempt=j["attempt"] + 1, wait=None)
+    event(j, f"checkpoint moved in {j['resume']['transfer_s']} s; make dry-run: {' '.join(chk.split())[-200:]}")
+    experiment(j, f"running: route resumed on {host_cfg(dest)['label']} from checkpoint")
+    save_job(j)
+
+
 def migrate_overloaded(jobs, fleet):
     """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
     jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
@@ -1610,12 +1669,30 @@ def tick(fleet):
             st = stl[min(x.get("stage_idx", 0), len(stl) - 1)]
             own[x["host"]] = own.get(x["host"], 0) + (8 if x["status"] == "ECO" else st.get("threads", 4) or 4)
     fleet.own_running = own
+    for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
+        try:
+            rq = json.loads(req.read_text())
+            j = load_job(rq["name"])
+            if j["status"] == "RUNNING" and j.get("stage_key") == "route":
+                migrate_checkpoint(j, rq["host"])
+            else:
+                log(f"migrate request {rq['name']} ignored: status {j['status']} stage {j.get('stage_key')}")
+        except Exception:  # noqa: BLE001
+            log("migrate request error:\n" + traceback.format_exc())
+            try:
+                j = load_job(rq["name"])
+                if j["status"] == "MIGRATING":
+                    finish(j, "NEEDS_HUMAN", "checkpoint move failed (see daemon.log)", "NEEDS_HUMAN: checkpoint move failed")
+                    save_job(j)
+            except Exception:  # noqa: BLE001
+                pass
+        req.unlink(missing_ok=True)
     try:
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
         requeue_budget(all_jobs())
         requeue_hold_only(all_jobs())
-        migrate_overloaded(all_jobs(), fleet)
+        # migrate_overloaded() / checkpoint moves retired by OWNER 21:35 (memory-based admission)
         requeue_ssh_verdict(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
@@ -1721,6 +1798,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name")
     c = sub.add_parser("cancel"); c.add_argument("name")
+    mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -1735,6 +1813,10 @@ def main():
         cmd_retry(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
+        (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
+        (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))
+        print(f"migrate request queued: {a.name} -> {a.host}")
 
 
 if __name__ == "__main__":
