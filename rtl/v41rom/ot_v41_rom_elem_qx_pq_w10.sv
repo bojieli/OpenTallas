@@ -2335,7 +2335,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
     // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
-    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .II2(QS >= 3 ? 1 : 0)) u_tree (.clk(gclk_mb), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0)) u_tree (.clk(gclk_mb), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5

@@ -12,14 +12,14 @@
 //       copies, each driving a slice of the head registers; the next-entry read uses a registered qr + 1 (Z20c:
 //       qc -> XNOR -> 30-load -> h_v +9.4 ps; h_e / h_t / h_p / h_f +27..49 ps).  Zero cycles.
 // QP_CHECK additionally asserts the flag form against the pointer compare every cycle.
-// II2 = 1 (owner decision 2026-10-06 23:00, fail-fast; Z29c post-CTS at 730: have -> x2 decision -> forwarded in-flight
-// count -> y_infl -118.7): initiation interval 2.  An event enters the read stage only on every other cycle (a free-
-// running phase), so the read of an event never overlaps the previous event's decision: the read takes the
-// registered have / above / in-flight / held state directly and the same-cycle forwarding (have_nx, the in-flight
-// increment, the same-slot hold forward) is gone.  The one-cycle loop decision -> read becomes a two-cycle loop
-// (decision -> state register -> read -> y register).  Adder results arrive on an accepting phase by construction
-// (the result path is padded by one register when LAT + 5 is odd); QP_CHECK / the bench assert it.  Same events,
-// adds and per-tree order, so every output value and per-tree order is unchanged; output times are later.
+// YF = 1 (owner fail-fast 2026-10-06 23:00; Z29c post-CTS at 730: have -> slot-local decision -> in-flight increment ->
+// 16:1 tree select -> y_infl -118.7): the read stage's in-flight count of its event's tree is formed from REGISTERS only:
+// when the x2 event is of the same tree (same_r, registered a cycle early from e_t == x_t) it is that event's own count
+// y_infl (QP_CHECK: y_infl == infl[y_t]) plus its global decision (pair | promote, from y_hv / y_ab / y_infl: QP_CHECK
+// t_inc == (pair | promote) && y_t == t) minus its add, both sums precomputed; otherwise the tree's stored count (no
+// other tree changes this cycle).  The forward no longer runs through have and the slot-local form.  Zero cycles, same
+// value every cycle (QP_CHECK asserts it against the direct form).  (An initiation-interval-2 tree was exact in the QX
+// bench but changed the PQ field's tree results: rejected.)
 // ---------------------------------------------------------------------------
 // Original header (ot_v41_segtree5):
 // ot_v41_segtree5: ot_v41_segtree3 with the decide stage split in two (DS-V4.1 ROM q-pair SS closure, owner decision
@@ -42,7 +42,7 @@ module ot_v41_segtree6 #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
-    parameter integer II2 = 0,       // 1: initiation interval 2 (see the header)
+    parameter integer YF = 0,        // 1: the read stage's in-flight forward from registers (see the header)
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
 ) (
@@ -85,43 +85,19 @@ module ot_v41_segtree6 #(
     reg  [1:0] err;
     reg  sv;
     reg  [PW+LW+1:0] st;     // {tree, level, final, err}
-    // II2: the accepting phase (events enter the read stage only when ph = 1), and the result-path pad that puts every
-    // adder result on an accepting phase (accept -> x -> y -> z -> add -> LAT -> sv: LAT + 5 cycles, made even)
-    localparam integer RP = (II2 != 0 && ((LAT + 5) % 2) == 1) ? 1 : 0;
-    reg ph;
-    always @(posedge clk or negedge rst_n) if (!rst_n) ph <= 1'b0; else ph <= (II2 != 0) ? !ph : 1'b1;
-`ifdef ST7_MUTANT_PH
-    wire acc = 1'b1;                    // negative control: II2's stale-state read with an event accepted every cycle
-`else
-    wire acc = (II2 != 0) ? ph : 1'b1;
-`endif
-    wire [31:0] sum_p;
-    wire [1:0] err_p;
-    wire sv_p;
-    wire [PW+LW+1:0] st_p;
-    if (RP != 0) begin : g_rp
-        reg [31:0] r_sum; reg [1:0] r_err; reg r_sv; reg [PW+LW+1:0] r_st;
-        always @(posedge clk or negedge rst_n) if (!rst_n) r_sv <= 1'b0; else r_sv <= sv_a;
-        always @(posedge clk) begin r_sum <= sum_a; r_err <= err_a; r_st <= st_a; end
-        assign sum_p = r_sum; assign err_p = r_err; assign sv_p = r_sv; assign st_p = r_st;
-    end else begin : g_nrp
-        assign sum_p = sum_a; assign err_p = err_a; assign sv_p = sv_a; assign st_p = st_a;
-    end
-    always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else sv <= sv_p;
-    always @(posedge clk) begin sum <= sum_p; err <= err_p; st <= st_p; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else sv <= sv_a;
+    always @(posedge clk) begin sum <= sum_a; err <= err_a; st <= st_a; end
     // (2) registered count flags {qc == 0, qc == 1, qc == QD} and qr + 1, NQ kept copies of the flags (one per 8-bit
     // slice of the head value; copy 0 also loads the head's tree / final / error / position)
     localparam integer NQ = 4;
     reg  [QW-1:0] qr1;
-    wire use_q;
-    wire [QW:0]   qc_nx = qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
+    wire [QW:0]   qc_nx = qc + (in_v ? 1'b1 : 1'b0) - ((!sv && qc != 0) ? 1'b1 : 1'b0);
     wire [2:0]    fl_nx = {qc_nx == QD, qc_nx == 1, qc_nx == 0};
     wire [2:0]    fl [0:NQ-1];
     wire [NQ-1:0] svc;
     for (genvar g = 0; g < NQ; g = g + 1) begin : g_fl
         ot_v41_kreg #(.W(3), .AR(1), .RV(3'b001)) u_f (.clk(clk), .arst_n(rst_n), .d(fl_nx), .q(fl[g]));
-        // svc = "no queue pop this cycle": a result arrives (sv) or, II2, the phase does not accept
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_s (.clk(clk), .arst_n(rst_n), .d(sv_p || (II2 != 0 && ph)), .q(svc[g]));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_s (.clk(clk), .arst_n(rst_n), .d(sv_a), .q(svc[g]));
     end
     reg [NQ-1:0] uq, byp;
     always @* for (int c = 0; c < NQ; c++) begin
@@ -133,12 +109,12 @@ module ot_v41_segtree6 #(
     // decision stage below is a few AND-OR levels over registers (1.2 GHz at SS).  An event spends one cycle in
     // each stage; the decision stage reads and writes the held operands in the same cycle, so consecutive
     // events of one tree see each other's updates.
-    assign use_q = !sv && acc && qc != 0;
+    wire use_q = !sv && qc != 0;
     reg [31:0] h_v;
     reg [PW-1:0] h_t;
     reg h_f, h_e;
     reg [2:0] h_p;
-    wire        e_v = sv || use_q;
+    wire        e_v = sv || qc != 0;
     wire [PW-1:0] e_t = sv ? st[PW+LW+1 -: PW] : h_t;
     wire [LW-1:0] e_l = sv ? st[LW+1 -: LW] : {LW{1'b0}};
     wire        e_f = sv ? st[1] : h_f;
@@ -235,24 +211,44 @@ module ot_v41_segtree6 #(
     always @* begin
         r_hv = '0; r_ab = '0; r_he = '0; r_hd = '0; r_infl = '0;
         for (gi = 0; gi < NH; gi = gi + 1) begin
-            r_hv[gi / GS] = r_hv[gi / GS] | (((II2 != 0) ? have[gi] : have_nx[gi]) & x_oh[gi]);
-            r_ab[gi / GS] = r_ab[gi / GS] | (((II2 != 0) ? have[gi] : have_nx[gi]) & x_above[gi]);
+            r_hv[gi / GS] = r_hv[gi / GS] | (have_nx[gi] & x_oh[gi]);
+            r_ab[gi / GS] = r_ab[gi / GS] | (have_nx[gi] & x_above[gi]);
             r_he[gi / GS] = r_he[gi / GS] | (herr[gi] & x_oh[gi]);
             if (x_oh[gi]) r_hd[32*(gi / GS) +: 32] = r_hd[32*(gi / GS) +: 32] | held[gi];
         end
         for (gi = 0; gi < NT; gi = gi + 1)
-            if (x_toh[gi]) r_infl = r_infl | ((II2 != 0) ? infl[gi] : infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
+            if (x_toh[gi]) r_infl = r_infl | (infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
     end
+    // YF: the in-flight read from registers
+    reg same_r;                                        // the x2 event (next cycle) is of the x1 event's tree
+    always @(posedge clk or negedge rst_n) if (!rst_n) same_r <= 1'b0; else same_r <= x_v && e_t == x_t;
+    wire [IW-1:0] yi_p = y_infl + 1'b1 - (y_add ? 1'b1 : 1'b0);
+    wire [IW-1:0] yi_n = y_infl - (y_add ? 1'b1 : 1'b0);
+`ifdef ST7_MUTANT_YF
+    wire [IW-1:0] yf_same = yi_n;                      // negative control: the x2 event's own increment ignored
+`else
+    wire [IW-1:0] yf_same = (pair || promote) ? yi_p : yi_n;
+`endif
+    reg  [IW-1:0] r_infl_s;                            // the x1 event's tree's stored count
+    always @* begin
+        r_infl_s = '0;
+        for (int g = 0; g < NT; g++) if (x_toh[g]) r_infl_s = r_infl_s | infl[g];
+    end
+    wire [IW-1:0] r_infl_y = (y_v && same_r) ? yf_same : r_infl_s;
+`ifdef QP_CHECK
+    always @(negedge clk) if (YF != 0 && rst_n && x_v && r_infl_y !== r_infl)
+        begin $display("QP_CHECK FAIL segtree6 YF in-flight forward %m %t", $time); $fatal(1); end
+`endif
 `ifdef ST_MUTANT_FW
     wire r_fw = 1'b0;                                                   // negative control: no same-slot forward
 `else
-    wire r_fw = (II2 == 0) && hold && y_t == x_t && y_l == x_l;
+    wire r_fw = hold && y_t == x_t && y_l == x_l;
 `endif
     always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= x_v;
     always @(posedge clk) begin
         y_t <= x_t; y_l <= x_l; y_f <= x_f; y_e <= x_e; y_d <= x_d; y_add <= x_add;
         y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
-        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
+        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= (YF != 0) ? r_infl_y : r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
     end
     // kept copies of the x2 operand for the held writes, one per slot group
@@ -331,13 +327,6 @@ module ot_v41_segtree6 #(
         oval <= y_d;
         otree <= y_t;
     end
-`ifndef SYNTHESIS
-`ifndef ST7_MUTANT_PH
-    // II2: every adder result lands on an accepting phase, and no read overlaps a decision
-    always @(negedge clk) if (II2 != 0 && rst_n && ((sv && !acc) || (x_v && y_v)))
-        begin $display("ST6_II2 FAIL %m sv=%b ph=%b x_v=%b y_v=%b %t", sv, ph, x_v, y_v, $time); $fatal(1); end
-`endif
-`endif
 `ifdef QP_CHECK
     always @(negedge clk) if (rst_n) for (int c = 0; c < NQ; c++)
         if (byp[c] !== (qr + (use_q ? 1'b1 : 1'b0) == qw) || uq[c] !== use_q || qr1 !== qr + 1'b1)
