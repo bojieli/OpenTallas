@@ -1,6 +1,7 @@
 #!/bin/bash
 # run_svc_stn_bench.sh <out> <tag> [defines] [plusargs]: Verilator gate of a dsfd_svc_stn chain (repo root); exit 0 iff PASS
 set -u
+command -v verilator >/dev/null || { echo "NO_VERILATOR on $(hostname)"; exit 3; }
 O=$1; T=$2; D=${3:-}; A=${4:-}
 mkdir -p $O
 verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_dsfd_svc_stn $D --Mdir $O/obj_$T \

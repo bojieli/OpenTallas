@@ -4,6 +4,7 @@
 # dsfd_ctrl_ctr).  Run from the repo root.
 #   run_ctrl_bench.sh <out> <mutant-define|none> <ckh_ps> <seed> [n] [threads]
 set -u
+command -v verilator >/dev/null || { echo "NO_VERILATOR on $(hostname)"; exit 3; }
 O=$1; M=$2; H=$3; SEED=$4; N=${5:-48}; T=${6:-4}
 mkdir -p $O
 D=""; [ "$M" != none ] && D="+define+$M"
