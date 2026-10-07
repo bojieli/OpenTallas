@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r19b",
- "generator_sha256": "986c530ffa9ef1db78de18a656f4204c3ee2688efc35e851f8777ea7047f75ad",
+ "generator_sha256": "6dcdd4183670b31d35441f76a89fc36992e96cbc44c8ef3986fca9fb16cce03d",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -2296,7 +2296,7 @@
   },
   "hfd_stn_r31": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
    "lef": "hfd_stn_r31.lef",
@@ -2305,11 +2305,9 @@
     "ff": "hfd_stn_r31_ff.lib"
    },
    "check": {
-    "verdict": "MISMATCH",
-    "problems": [
-     "1 pins off the generator position (same face)"
-    ],
-    "positions": "1 pins off the generator position (same face)",
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
     "size_view": [
      72.984,
      41.016
@@ -2751,8 +2749,8 @@
   }
  },
  "counts": {
-  "interim-not-closed": 5,
-  "closed": 38,
+  "interim-not-closed": 4,
+  "closed": 39,
   "missing": 38,
   "reservation": 2
  }
