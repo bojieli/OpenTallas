@@ -10,6 +10,8 @@
 // single-view cores (dsfd_sp_capture_v1).
 `ifdef S81PH_CAP_CORE1
 module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 1) (
+`elsif S81PH_CAP_SAFE
+module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 3) (
 `else
 module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 2) (
 `endif
@@ -20,8 +22,8 @@ module dsfd_sp_capture #(parameter integer LD = 4, parameter integer CORE = 2) (
     input wire [6946:0] f_gather,
     output wire [13375:0] t_vm
 );
-    generate if (CORE == 2) begin : g_t
-        ot_s81ph_cap_t #(.NT(8), .LD(LD)) u_t (.ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]),
+    generate if (CORE == 2 || CORE == 3) begin : g_t
+        ot_s81ph_cap_t #(.SAFE(CORE == 3 ? 1 : 0), .NT(8), .LD(LD)) u_t (.ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]),
             .f_gather(f_gather), .t_vm(t_vm));
     end else begin : g_v
         dsfd_sp_capture_v1 #(.LD(LD), .CORE(CORE)) u_v (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather),

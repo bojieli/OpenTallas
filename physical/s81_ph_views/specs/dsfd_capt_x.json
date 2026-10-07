@@ -1,0 +1,90 @@
+{
+ "master": "dsfd_capt_x",
+ "w_um": 118.8,
+ "h_um": 270.0,
+ "domain": "stream_1p2+serial_0p9",
+ "note": "SAFE capture crossing tile (16 pair packers + ratio CDCs + status crossing); S face abuts dsfd_capt_g2",
+ "ports": [
+  [
+   "f_w",
+   832,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "t_ho",
+   1,
+   "output",
+   "S",
+   "M5",
+   1,
+   0.9
+  ],
+  [
+   "f_sn",
+   64,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.12
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.03
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.04
+  ],
+  [
+   "t_vm",
+   1664,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "t_st",
+   64,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.92
+  ],
+  [
+   "ckv",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.05
+  ],
+  [
+   "rsv",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.06
+  ]
+ ]
+}

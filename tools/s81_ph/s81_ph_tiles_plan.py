@@ -223,6 +223,32 @@ def main():
                      'kind': 'pin-to-pin in the S channel / abutment N face; f_sn of the other tiles tied 0, their t_st open'},
                     {'what': 'tile t_vm -> VM (serial)', 'kind': 'abutment (N face), as G3'}],
            'clock': 'ck and ckv per tile, own CTS trees'}
+    # SAFE capture (owner SAFE variant): dsfd_capt_g2 (single clock) under dsfd_capt_x (the 17 crossings), abutted N/S
+    G2H, XH = 162.0, 270.0
+    g2_spec = {'master': 'dsfd_capt_g2', 'w_um': GW, 'h_um': G2H, 'domain': 'stream_1p2',
+               'note': 'SAFE capture root-group tile (no crossings); N face abuts dsfd_capt_x',
+               'ports': [['f_row', 16 * 53, 'input', 'S', 'M5', 2, 0.5], ['f_k', KB, 'input', 'S', 'M5', 1, 0.9],
+                         ['t_sb', 2, 'output', 'S', 'M5', 1, 0.96], ['ck', 1, 'input', 'S', 'M5', 1, 0.03],
+                         ['rst', 1, 'input', 'S', 'M5', 1, 0.04],
+                         ['t_w', 16 * 52, 'output', 'N', 'M5', 1, 0.5], ['f_ho', 1, 'input', 'N', 'M5', 1, 0.9]]}
+    write('dsfd_capt_g2', GW, G2H, 'stream_1p2', plan(g2_spec), g2_spec)
+    x_spec = {'master': 'dsfd_capt_x', 'w_um': GW, 'h_um': XH, 'domain': 'stream_1p2+serial_0p9',
+              'note': 'SAFE capture crossing tile (16 pair packers + ratio CDCs + status crossing); S face abuts dsfd_capt_g2',
+              'ports': [['f_w', 16 * 52, 'input', 'S', 'M5', 1, 0.5], ['t_ho', 1, 'output', 'S', 'M5', 1, 0.9],
+                        ['f_sn', 64, 'input', 'S', 'M5', 1, 0.12], ['ck', 1, 'input', 'S', 'M5', 1, 0.03],
+                        ['rst', 1, 'input', 'S', 'M5', 1, 0.04],
+                        ['t_vm', 16 * 104, 'output', 'N', 'M5', 1, 0.5], ['t_st', 64, 'output', 'N', 'M5', 1, 0.92],
+                        ['ckv', 1, 'input', 'N', 'M5', 1, 0.05], ['rsv', 1, 'input', 'N', 'M5', 1, 0.06]]}
+    write('dsfd_capt_x', GW, XH, 'stream_1p2+serial_0p9', plan(x_spec), x_spec)
+    cap['safe_variant'] = {
+        'composition': 'ot_s81ph_cap_t SAFE 1 (dsfd_sp_capture CORE 3)',
+        'outline_um': [1036.8, r4(CHAN + G2H + XH)],
+        'tiles': [{'inst': f'u_g{t}', 'master': 'dsfd_capt_g2', 'x': xs[t], 'y': CHAN, 'orient': 'R0'} for t in range(8)] +
+                 [{'inst': f'u_x{t}', 'master': 'dsfd_capt_x', 'x': xs[t], 'y': r4(CHAN + G2H), 'orient': 'R0'} for t in range(8)] +
+                 [{'inst': 'u_ctl', 'master': 'dsfd_capt_ctl', 'x': 475.2, 'y': CHAN, 'orient': 'R0'}],
+        'hops': ['u_g<t> t_w -> u_x<t> f_w and u_x<t> t_ho -> u_g<t> f_ho: abutted (same x, flop at both pins)',
+                 'u_ctl t_sn -> u_x3 f_sn (64 b; other tiles tie 0), u_x3 t_st -> VM status', 'others as the main variant'],
+        'cycles': '+2 VM-write latency vs the main tiled variant (pin flops of the g2 / x hop); phase completion unchanged'}
     out['capture'] = cap
     for kind, rec in out.items():
         rec['schema'] = 'opentallas.s81_ph.tiles.v1'

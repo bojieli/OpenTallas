@@ -6,3 +6,4 @@ r5 ee7d4fc82-e  capt_ctl / capt_grp (balance hook fixed, HM 0.070)
    c3413659a-c  colt_lane lane FIFO with registered macro output; HM 0.090 -> RSZ-0060 (hold buffer cap) in CTS repair
 r6 (this commit) colt_lane HM 0.035 (+ the loop's automatic hold ECO)
 r6 (structural, owner fail-fast): capt_ctl ee7d4fc82-e SS +57.4 / FF +0.39 after the hold ECO (ratio-CDC mem->sh and pointer arcs at the coincident edge) -> status CDC moved into dsfd_capt_grp (f_sn/t_st, used by u_g3), capt_ctl single-clock; bench 9/9 PASS, BF16_TRUNC FAIL; +4..6 cyc/phase vs cap_p
+SAFE (coordinator/owner SAFE variant): dsfd_capt_g2 (single clock) + dsfd_capt_x (16 packers + ratio CDCs + status crossing, ck/ckv sink counts similar); bench 9/9 PASS, BF16_TRUNC FAIL; phase completion unchanged, VM writes +2 cycles

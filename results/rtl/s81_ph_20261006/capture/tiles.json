@@ -124,5 +124,139 @@
  ],
  "clock": "ck and ckv per tile, own CTS trees",
  "schema": "opentallas.s81_ph.tiles.v1",
- "generator": "tools/s81_ph/s81_ph_tiles_plan.py"
+ "generator": "tools/s81_ph/s81_ph_tiles_plan.py",
+ "safe_variant": {
+  "composition": "ot_s81ph_cap_t SAFE 1 (dsfd_sp_capture CORE 3)",
+  "outline_um": [
+   1036.8,
+   453.6
+  ],
+  "tiles": [
+   {
+    "inst": "u_g0",
+    "master": "dsfd_capt_g2",
+    "x": 0.0,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g1",
+    "master": "dsfd_capt_g2",
+    "x": 118.8,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g2",
+    "master": "dsfd_capt_g2",
+    "x": 237.6,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g3",
+    "master": "dsfd_capt_g2",
+    "x": 356.4,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g4",
+    "master": "dsfd_capt_g2",
+    "x": 561.6,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g5",
+    "master": "dsfd_capt_g2",
+    "x": 680.4,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g6",
+    "master": "dsfd_capt_g2",
+    "x": 799.2,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_g7",
+    "master": "dsfd_capt_g2",
+    "x": 918.0,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x0",
+    "master": "dsfd_capt_x",
+    "x": 0.0,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x1",
+    "master": "dsfd_capt_x",
+    "x": 118.8,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x2",
+    "master": "dsfd_capt_x",
+    "x": 237.6,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x3",
+    "master": "dsfd_capt_x",
+    "x": 356.4,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x4",
+    "master": "dsfd_capt_x",
+    "x": 561.6,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x5",
+    "master": "dsfd_capt_x",
+    "x": 680.4,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x6",
+    "master": "dsfd_capt_x",
+    "x": 799.2,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_x7",
+    "master": "dsfd_capt_x",
+    "x": 918.0,
+    "y": 183.6,
+    "orient": "R0"
+   },
+   {
+    "inst": "u_ctl",
+    "master": "dsfd_capt_ctl",
+    "x": 475.2,
+    "y": 21.6,
+    "orient": "R0"
+   }
+  ],
+  "hops": [
+   "u_g<t> t_w -> u_x<t> f_w and u_x<t> t_ho -> u_g<t> f_ho: abutted (same x, flop at both pins)",
+   "u_ctl t_sn -> u_x3 f_sn (64 b; other tiles tie 0), u_x3 t_st -> VM status",
+   "others as the main variant"
+  ],
+  "cycles": "+2 VM-write latency vs the main tiled variant (pin flops of the g2 / x hop); phase completion unchanged"
+ }
 }

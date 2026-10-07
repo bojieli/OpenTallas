@@ -196,6 +196,215 @@ module dsfd_capt_grp #(
 `endif
 endmodule
 
+module dsfd_capt_g2 #(
+    parameter integer NR = 16,               // roots per tile
+    parameter integer LD = 4
+) (
+    input  wire [0:0]          ck,
+    input  wire [0:0]          rst,          // stream die reset net (active low, asynchronous assert)
+    input  wire [NR*53-1:0]    f_row,        // per root {e, pos3, row16, fp32 32, v} (the gather's t_capture slice)
+    input  wire [`CAPT_KB-1:0] f_k,          // from dsfd_capt_ctl (registered there)
+    output wire [NR*52-1:0]    t_w,          // per root {data32, addr19, v}: the VM write, from a flop (to dsfd_capt_x)
+    input  wire [0:0]          f_ho,         // dsfd_capt_x: sticky hold-buffer overflow (fault)
+    output wire [1:0]          t_sb          // {all done, any bad} (stream, from flops)
+);
+    localparam integer KB = `CAPT_KB;
+    localparam integer NH = 2;               // reset / constant copies (one per 8 roots)
+    integer i;
+    genvar g;
+    // ---- reset synchronisers (2 kept copies per domain); rst_s[1] = the view SDC's rst_mcp2 cell
+    reg [1:0] rst_s;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    (* keep *) reg [NH-1:0] rst_h;
+    always @(posedge ck[0] or negedge rst_s[1]) if (!rst_s[1]) rst_h <= {NH{1'b0}}; else rst_h <= {NH{1'b1}};
+    // ---- pin flops (data: no reset; valid bits reset)
+    reg [NR*53-1:0] fr;
+    always @(posedge ck[0]) fr <= f_row;
+    reg [KB-1:0] kq;
+    always @(posedge ck[0]) kq <= f_k;
+    wire        k_gate = kq[98], k_go = kq[97];
+    // ---- K2: kept copies of the constants + per-root quota precompute (t'+4)
+    (* keep *) reg [KB-1:0] k2 [0:NH-1];
+    always @(posedge ck[0]) for (i = 0; i < NH; i = i + 1) k2[i] <= kq;
+    wire [7:0]  k_rhi = kq[15:8];
+    wire [5:0]  k_lot = kq[7:2];
+    wire [2:0]  k_np  = kq[36:34];
+    wire [3:0]  positions = {1'b0, k_np} + 4'd1;
+
+    wire [NR-1:0] r_bad, r_done, hovf_now;
+    wire [2*NR-1:0] wv_o; wire [NR*102-1:0] wd_o;
+    generate for (g = 0; g < NR; g = g + 1) begin : g_r
+        localparam integer H = g / (NR / NH);
+        wire          rs_n = rst_h[H];
+        wire [KB-1:0] k = k2[H];
+        wire          go = k[97];
+        // held constants of the phase (updated by go at the K2 stage: visible from t'+5)
+        reg [29:0] ob, ops; reg [2:0] np; reg [1:0] fmt; reg [15:0] rs; reg lo, hi, gate;
+        always @(posedge ck[0]) if (go) {ob, ops, np, fmt, rs, lo, hi} <= {k[96:67], k[66:37], k[36:34], k[33:32],
+                                                                          k[31:16], k[1], k[0]};
+        always @(posedge ck[0] or negedge rs_n) if (!rs_n) gate <= 1'b0; else gate <= k[98];
+        // quota exactly as ot_dsrom_s81_phase_capture_profile for this root: the ctl sends lo_t = clamp(rows[7:0] -
+        // 32 * tile, 0, 32), so (rows[7:0] > 2R) == (lo_t > 2g) for R = 16 * tile + g
+        reg [13:0] q2;
+        wire [9:0] rows_r = {1'b0, k_rhi, 1'b0} + 10'(k_lot > 6'(2 * g)) + 10'(k_lot > 6'(2 * g + 1));
+        always @(posedge ck[0]) q2 <= rows_r * positions;
+        // rows: pin (t) -> R1 bf16 RNE (t+1) -> R2 -> R3 -> R4 (t+4): check
+        reg v1, v2, v3, v4; reg [51:0] d1, d2, d3, d4; reg [15:0] bf1, bf2, bf3, bf4;
+        wire [51:0] d0 = fr[53 * g + 1 +: 52];
+        wire [32:0] rb = {1'b0, d0[31:0]} + 33'h7FFF + {32'd0, d0[16]};
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; end
+            else begin v1 <= fr[53 * g]; v2 <= v1; v3 <= v2; v4 <= v3; end
+`ifdef S81PH_MUTANT_BF16_TRUNC
+        always @(posedge ck[0]) begin d1 <= d0; bf1 <= d0[31:16]; d2 <= d1; bf2 <= bf1; d3 <= d2; bf3 <= bf2;
+                                      d4 <= d3; bf4 <= bf3; end
+`else
+        always @(posedge ck[0]) begin d1 <= d0; bf1 <= rb[31:16]; d2 <= d1; bf2 <= bf1; d3 <= d2; bf3 <= bf2;
+                                      d4 <= d3; bf4 <= bf3; end
+`endif
+        // quota / received (reset by the accept)
+        reg [13:0] exp_q; reg [18:0] rcv;
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin exp_q <= 14'd0; rcv <= 19'd0; end
+            else if (go) begin exp_q <= q2; rcv <= 19'd0; end
+            else if (v4) rcv <= rcv + 19'd1;
+        // check (R4)
+        wire [15:0] row = d4[47:32]; wire [2:0] pos = d4[50:48]; wire e = d4[51];
+`ifdef S81PH_MUT_NOOVER
+        wire over = 1'b0;
+`else
+        wire over = rcv >= {5'd0, exp_q};
+`endif
+        wire bad1 = v4 && (e || pos > np || over);
+        // W1 (t+5): partial address, format compare
+        reg w1v, w1ok, w1bad; reg [30:0] s1; reg [32:0] m1; reg lt1; reg [31:0] f1; reg [15:0] b1;
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin w1v <= 1'b0; w1ok <= 1'b0; w1bad <= 1'b0; end
+            else begin w1v <= v4; w1ok <= v4 && !bad1; w1bad <= bad1; end
+        always @(posedge ck[0]) begin
+            s1 <= {1'b0, ob} + {15'd0, row};
+            m1 <= {30'd0, pos} * {3'd0, ops};
+            lt1 <= row < rs;
+            f1 <= d4[31:0]; b1 <= bf4;
+        end
+        // W2 (t+6): address, data select
+        reg w2v, w2ok, w2bad; reg [33:0] a2; reg [31:0] dt2;
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin w2v <= 1'b0; w2ok <= 1'b0; w2bad <= 1'b0; end
+            else begin w2v <= w1v; w2ok <= w1ok; w2bad <= w1bad; end
+        always @(posedge ck[0]) begin
+            a2 <= {3'd0, s1} + {1'b0, m1};
+            dt2 <= (fmt == 2'd1 || (fmt == 2'd0 && (lt1 ? lo : hi))) ? f1 : {b1, 16'b0};
+        end
+        // W3 (t+7): range, write
+        wire range_error = |a2[33:19];
+        reg w_ok, w_bad, wv3; reg [18:0] w_a; reg [31:0] w_dt;
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin w_ok <= 1'b0; w_bad <= 1'b0; wv3 <= 1'b0; end
+            else begin w_ok <= w2ok && !range_error; w_bad <= w2bad || (w2v && range_error); wv3 <= w2v; end
+        always @(posedge ck[0]) begin w_a <= a2[18:0]; w_dt <= dt2; end
+        wire vm_valid = w_ok && !gate;
+        assign r_bad[g]  = w_bad;
+        assign r_done[g] = rcv == {5'd0, exp_q} && !(v1 || v2 || v3 || v4 || w1v || w2v || wv3);
+        // ---- the VM write leaves from a flop (pair packer + crossing in dsfd_capt_x)
+        reg [51:0] wq;
+        always @(posedge ck[0] or negedge rs_n) if (!rs_n) wq <= 52'd0; else wq <= {w_dt, w_a, vm_valid};
+        assign t_w[52 * g +: 52] = wq;
+        assign hovf_now[g] = 1'b0;
+    end endgenerate
+    // ---- registered 16-root fault OR / done AND (two levels), outputs from flops
+    reg [3:0] o1, a1; reg o2, a2r, hoq;
+    always @(posedge ck[0] or negedge rst_h[0]) if (!rst_h[0]) hoq <= 1'b0; else hoq <= f_ho[0];
+    integer q;
+    always @(posedge ck[0] or negedge rst_h[0])
+        if (!rst_h[0]) begin o1 <= 4'd0; a1 <= 4'd0; o2 <= 1'b0; a2r <= 1'b0; end
+        else begin
+            for (q = 0; q < 4; q = q + 1) begin
+                o1[q] <= |(r_bad[4 * q +: 4] | hovf_now[4 * q +: 4]);
+                a1[q] <= &r_done[4 * q +: 4];
+            end
+            o2 <= (|o1) | hoq; a2r <= &a1;
+        end
+    assign t_sb = {a2r, o2};
+`ifndef SYNTHESIS
+    initial if (NR != 16) $fatal(1, "dsfd_capt_g2: NR must be 16");
+`endif
+endmodule
+
+// SAFE capture (owner SAFE-variant directive 2026-10-06): the 17 stream -> serial crossings of a group leave the root
+// tile.  dsfd_capt_g2 = dsfd_capt_grp without the pair packers / ratio CDCs / status crossing (single clock); the
+// crossings live in dsfd_capt_x, a small two-clock tile whose ck and ckv trees drive similar sink counts (write-side
+// storage + packer vs read-side shadows + output flops), so the 278-ps ck -> ckv window and the coincident-edge hold
+// are not eaten by a tree imbalance (capt_ctl r5: ser_clk 100 ps ahead of core_clk in a view where ck drove 4x the
+// sinks).  Every dsfd_capt_x input is captured at its pin, every output leaves from a flop.  +2 write latency.
+module dsfd_capt_x #(
+    parameter integer NR = 16,
+    parameter integer LD = 4
+) (
+    input  wire [0:0]        ck,
+    input  wire [0:0]        rst,
+    input  wire [0:0]        ckv,
+    input  wire [0:0]        rsv,
+    input  wire [NR*52-1:0]  f_w,            // per root {data32, addr19, v} (dsfd_capt_g2 t_w)
+    output wire [NR*104-1:0] t_vm,           // per root {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0} (serial)
+    output wire [0:0]        t_ho,           // sticky hold-buffer overflow (stream)
+    input  wire [63:0]       f_sn,           // status word (stream; used in the tile next to the control tile)
+    output wire [63:0]       t_st            // status word (serial)
+);
+    reg [1:0] rst_s, rv_s;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
+    (* keep *) reg [1:0] rst_h, rsv_h;
+    always @(posedge ck[0] or negedge rst_s[1]) if (!rst_s[1]) rst_h <= 2'b00; else rst_h <= 2'b11;
+    always @(posedge ckv[0] or negedge rv_s[1]) if (!rv_s[1]) rsv_h <= 2'b00; else rsv_h <= 2'b11;
+    reg [NR*52-1:0] fw;
+    always @(posedge ck[0]) fw <= f_w;
+    wire [NR-1:0] hovf;
+    genvar g;
+    generate for (g = 0; g < NR; g = g + 1) begin : g_r
+        localparam integer H = g / (NR / 2);
+        wire rs_n = rst_h[H];
+        wire vm_valid = fw[52 * g];
+        wire [50:0] din = fw[52 * g + 1 +: 51];
+        reg [50:0] h [0:3];
+        reg [1:0] hr, hw;
+        reg [2:0] hc;
+        reg ho;
+        wire wr;
+        wire [2:0] npop = (!wr || hc == 3'd0) ? 3'd0 : (hc == 3'd1) ? 3'd1 : 3'd2;
+        wire crdy = (hc - npop) < 3'd4;
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
+            else begin
+                hr <= hr + npop[1:0];
+                if (vm_valid && crdy) begin hw <= hw + 2'd1; h[hw] <= din; end
+                hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
+                if (vm_valid && !crdy) ho <= 1'b1;
+            end
+        assign hovf[g] = ho;
+        wire cv; wire [102:0] cd;
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+            .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rsv_h[H]), .r_v(cv), .r_rdy(1'b1),
+            .r_d(cd), .w_live(), .r_live());
+        reg [1:0] ov; reg [101:0] od;
+        always @(posedge ckv[0] or negedge rsv_h[H]) if (!rsv_h[H]) ov <= 2'b00; else ov <= {cv & cd[51], cv};
+        always @(posedge ckv[0]) begin od[50:0] <= cd[50:0]; od[101:51] <= cd[102:52]; end
+        assign t_vm[104 * g +: 104] = {od[101:51], ov[1], od[50:0], ov[0]};
+    end endgenerate
+    reg hq;
+    always @(posedge ck[0] or negedge rst_h[0]) if (!rst_h[0]) hq <= 1'b0; else hq <= |hovf;
+    assign t_ho = hq;
+    reg [63:0] snq;
+    always @(posedge ck[0]) snq <= f_sn;
+    wire s_v; wire [63:0] s_d;
+    ot_ratio_cdc_fifo #(.W(64), .DEPTH(2)) u_s (.wclk(ck[0]), .wrst_n(rst_h[1]), .w_v(1'b1), .w_rdy(), .w_d(snq),
+        .rclk(ckv[0]), .rrst_n(rsv_h[1]), .r_v(s_v), .r_rdy(1'b1), .r_d(s_d), .w_live(), .r_live());
+    reg [63:0] stq;
+    always @(posedge ckv[0] or negedge rsv_h[1]) if (!rsv_h[1]) stq <= 64'd0; else if (s_v) stq <= s_d;
+    assign t_st = stq;
+endmodule
+
+
 module dsfd_capt_ctl #(
     parameter integer NT = 8
 ) (
@@ -282,6 +491,7 @@ endmodule
 
 // the composition (bench / die generator reference): ctl + NT tiles, pin-to-pin hops
 module ot_s81ph_cap_t #(
+    parameter integer SAFE = 0,              // 1: dsfd_capt_g2 + dsfd_capt_x per group (crossings in their own tile)
     parameter integer NT = 8,
     parameter integer LD = 4
 ) (
@@ -298,8 +508,17 @@ module ot_s81ph_cap_t #(
     assign t_vm[13375:13312] = stv[64 * (NT / 2 - 1) +: 64];   // the tile left of the control tile
     genvar g;
     generate for (g = 0; g < NT; g = g + 1) begin : g_t
+        if (SAFE != 0) begin : g_s
+            wire [16*52-1:0] w; wire ho;
+            dsfd_capt_g2 #(.NR(16)) u_g (.ck(ck), .rst(rst), .f_row(f_gather[53 * 16 * g +: 53 * 16]),
+                .f_k(k[KB * g +: KB]), .t_w(w), .f_ho(ho), .t_sb(st[2 * g +: 2]));
+            dsfd_capt_x #(.NR(16), .LD(LD)) u_x (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_w(w),
+                .t_vm(t_vm[104 * 16 * g +: 104 * 16]), .t_ho(ho), .f_sn(g == NT / 2 - 1 ? sn : 64'd0),
+                .t_st(stv[64 * g +: 64]));
+        end else begin : g_n
         dsfd_capt_grp #(.NR(16), .LD(LD)) u_g (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv),
             .f_row(f_gather[53 * 16 * g +: 53 * 16]), .f_k(k[KB * g +: KB]), .t_vm(t_vm[104 * 16 * g +: 104 * 16]),
             .t_sb(st[2 * g +: 2]), .f_sn(g == NT / 2 - 1 ? sn : 64'd0), .t_st(stv[64 * g +: 64]));
+        end
     end endgenerate
 endmodule
