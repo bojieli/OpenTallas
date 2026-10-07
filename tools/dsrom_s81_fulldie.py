@@ -3879,7 +3879,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 # v8 (budget README: bk_selector <-> hix_* / bk_collector <-> hco_* 382-385 ps, regions not merged):
                 # a registered crossing stage at the band block: capture on the falling edge 1.5 T after the end
                 # block's launch (multicycle on that arc), guard flop on the next rising edge; +1 cycle
-                xw, xh = stn_dims([515], False)
+                xw, xh = stn_dims([515], True)     # W / E data faces (a horizontal station's outline)
                 xs = beside_blk(f'xs{tag}_{st}', 'dsfd_xstg_515', xw, xh, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
                 xs.kind, xs.domain = 'xstg', blk.domain
                 xs.power_w = 2 * 515 * FLOP_CLK_W * 1.5
