@@ -72,6 +72,12 @@ H_SRAM = "results/rtl/hbm_collective_full_20261007/storage_model.json"
 H_CLKIN = "results/uarch/hbm_die_clock_inputs_20261007/model.json"
 H_CLKENT = "results/uarch/hbm_collective_clock_entry_20261007/model.json"
 FULLSYS = "results/rtl/fullsys_recheck_20261007/status.json"
+# Claude CDC design (branch claude/hbm-collective-cdc-design-20261007 b49366616; not on main): packet-SRAM receive queue and
+# candidate protected CDC drain at II=3 (1/3 line rate per port); 3-bank rotation (option B) restores II=1
+H_CDC = "results/rtl/hbm_collective_cdc_design_20261007/options.json"
+H_CDC_COMMIT = "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+H_CDC_V = dict(ii3_AR_us=30.78, ii3_MTP_us=171.99, ii3_AR_pct=6.48, ii3_MTP_pct=16.37, ser_AR=18470, ser_MTP=103196,
+               lat_us=1.017, lat_cycles=1220, rot_area_um2=12093.2)
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
 BF_BRANCH_COMMIT = "332983233"
 # bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07); record not on main
@@ -447,6 +453,20 @@ def hbm_ds():
           "x %d collective terms (assumption); default-off candidate" % n_red, "candidate"),
         L("ha2_half_rate_credit", "HA2 half-rate own-partial credit (alternative if it is the variant that closes)", "priced-candidate",
           dict(unit="us", AR=10.16, MTP_step=10.16), src(H_LEDGER, "Conditional"), "+46 cycles x 265; not summed", "alternative"),
+        L("cdc_sram_ii3_rate_cap", "Packet-SRAM receive queue and candidate protected CDC drain at II=3 (1/3 line rate per port)",
+          "gated-unknown", None, src(H_CDC, "options.A_credit_bound.cost_serialisation", commit=H_CDC_COMMIT),
+          "II=3 rate cap: +%.2f us AR / +%.0f us MTP unless the 3-bank rotation (II=1) lands for both the CDC and the packet "
+          "SRAM; the rotation itself costs +2 cycles/pass (+%.2f us) and +%s um2. Basis: measured receive streaming %s "
+          "cycles a AR token, %s a MTP step, tripled at II=3 (+%.2f %% AR, +%.2f %% MTP step on the gate). Not summed in "
+          "unified_candidate; see compositions unified_candidate_ii3_cap / unified_candidate_ii1_rotation"
+          % (H_CDC_V["ii3_AR_us"], H_CDC_V["ii3_MTP_us"], H_CDC_V["lat_us"], format(H_CDC_V["rot_area_um2"], ",.0f"),
+             format(H_CDC_V["ser_AR"], ","), format(H_CDC_V["ser_MTP"], ","), H_CDC_V["ii3_AR_pct"], H_CDC_V["ii3_MTP_pct"]), "gate"),
+        L("cdc_sram_ii1_rotation", "3-bank rotation (II=1) for the CDC and the packet SRAM: +2 cycles a pass x 610 passes",
+          "priced-candidate", dict(unit="us", AR=H_CDC_V["lat_us"], MTP_step=H_CDC_V["lat_us"]),
+          src(H_CDC, "options.B_rotated_II1", commit=H_CDC_COMMIT),
+          "design-model recommendation, no RTL; +%s um2; replaces the +2 x 265 collective_sram_protected term in the "
+          "both-ways compositions (it covers every TX and RX CDC pass of the 305 crossings)" % format(H_CDC_V["rot_area_um2"], ",.1f"),
+          "alternative"),
         L("su_reducer_safe", "SU reducer SAFE (+4 per reduction at 0.9 GHz)", "gated-unknown", None, src(H_LEDGER, "Pending"),
           "occurrences per token not bound", "gate"),
         L("su_c12_margin", "SU CP+c12 margin stage (+30 DS1M, measured exact) / RHALF (+176)", "gated-unknown", None,
@@ -483,6 +503,18 @@ def hbm_ds():
     comps["unified_candidate"] = dict(AR_us=ar2, MTP_step_us=mtp2, AR_tok_s=tok_s_us(ar2), MTP_tok_s=tok_s_us(mtp2, tau), tau=tau,
                                       status="priced-candidate", gated_by=gates,
                                       note="as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)")
+    sram = next(x for x in lines if x["id"] == "collective_sram_protected")["effect"]
+    for cname, (dar, dmtp, label) in dict(
+            unified_candidate_ii3_cap=(H_CDC_V["lat_us"] + H_CDC_V["ii3_AR_us"], H_CDC_V["lat_us"] + H_CDC_V["ii3_MTP_us"],
+                                       "II=3 rate cap stands (no rotation)"),
+            unified_candidate_ii1_rotation=(H_CDC_V["lat_us"], H_CDC_V["lat_us"],
+                                            "3-bank rotation lands for both the CDC and the packet SRAM (II=1)")).items():
+        a_ = round(ar2 - sram["AR"] + dar, 3); m_ = round(mtp2 - sram["MTP_step"] + dmtp, 3)
+        comps[cname] = dict(AR_us=a_, MTP_step_us=m_, AR_tok_s=tok_s_us(a_), MTP_tok_s=tok_s_us(m_, tau), tau=tau,
+                            status="priced-candidate", case=label, gated_by=[g for g in gates if g != "cdc_sram_ii3_rate_cap"],
+                            note="unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes"
+                                 + (" plus the II=3 serialisation cost" if "ii3" in cname else ""),
+                            record=src(H_CDC, "options", commit=H_CDC_COMMIT))
     return dict(context="DeepSeek-V4.1 1M, HBM accelerator", tau=tau, lines=lines, compositions=comps, gates=gates,
                 physical_status="die views priced; no full-die closure")
 

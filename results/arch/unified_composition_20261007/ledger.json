@@ -891,7 +891,7 @@
       {
        "file": "docs/PROGRAM_PLAN_2026_10_05.md",
        "pointer": null,
-       "commit": "8a1895308"
+       "commit": "5635e6c59"
       }
      ],
      "note": "no native end-to-end S81 token yet"
@@ -1779,6 +1779,40 @@
      "note": "+46 cycles x 265; not summed"
     },
     {
+     "id": "cdc_sram_ii3_rate_cap",
+     "item": "Packet-SRAM receive queue and candidate protected CDC drain at II=3 (1/3 line rate per port)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
+       "pointer": "options.A_credit_bound.cost_serialisation",
+       "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+      }
+     ],
+     "note": "II=3 rate cap: +30.78 us AR / +172 us MTP unless the 3-bank rotation (II=1) lands for both the CDC and the packet SRAM; the rotation itself costs +2 cycles/pass (+1.02 us) and +12,093 um2. Basis: measured receive streaming 18,470 cycles a AR token, 103,196 a MTP step, tripled at II=3 (+6.48 % AR, +16.37 % MTP step on the gate). Not summed in unified_candidate; see compositions unified_candidate_ii3_cap / unified_candidate_ii1_rotation"
+    },
+    {
+     "id": "cdc_sram_ii1_rotation",
+     "item": "3-bank rotation (II=1) for the CDC and the packet SRAM: +2 cycles a pass x 610 passes",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.017,
+      "MTP_step": 1.017
+     },
+     "role": "alternative",
+     "source": [
+      {
+       "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
+       "pointer": "options.B_rotated_II1",
+       "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+      }
+     ],
+     "note": "design-model recommendation, no RTL; +12,093.2 um2; replaces the +2 x 265 collective_sram_protected term in the both-ways compositions (it covers every TX and RX CDC pass of the 305 crossings)"
+    },
+    {
      "id": "su_reducer_safe",
      "item": "SU reducer SAFE (+4 per reduction at 0.9 GHz)",
      "status": "gated-unknown",
@@ -1901,6 +1935,7 @@
      "MTP_tok_s": 3526.2,
      "status": "priced-candidate",
      "gated_by": [
+      "cdc_sram_ii3_rate_cap",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -1918,6 +1953,7 @@
      "tau": 4.159,
      "status": "priced-candidate",
      "gated_by": [
+      "cdc_sram_ii3_rate_cap",
       "su_reducer_safe",
       "su_c12_margin",
       "su_full_ddiv31",
@@ -1926,9 +1962,56 @@
       "hbm_full_die"
      ],
      "note": "as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)"
+    },
+    "unified_candidate_ii3_cap": {
+     "AR_us": 592.422,
+     "MTP_step_us": 1274.955,
+     "AR_tok_s": 1688.0,
+     "MTP_tok_s": 3262.1,
+     "tau": 4.159,
+     "status": "priced-candidate",
+     "case": "II=3 rate cap stands (no rotation)",
+     "gated_by": [
+      "su_reducer_safe",
+      "su_c12_margin",
+      "su_full_ddiv31",
+      "vm_alignment",
+      "die_clock_plan",
+      "hbm_full_die"
+     ],
+     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes plus the II=3 serialisation cost",
+     "record": {
+      "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
+      "pointer": "options",
+      "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+     }
+    },
+    "unified_candidate_ii1_rotation": {
+     "AR_us": 561.642,
+     "MTP_step_us": 1102.965,
+     "AR_tok_s": 1780.5,
+     "MTP_tok_s": 3770.7,
+     "tau": 4.159,
+     "status": "priced-candidate",
+     "case": "3-bank rotation lands for both the CDC and the packet SRAM (II=1)",
+     "gated_by": [
+      "su_reducer_safe",
+      "su_c12_margin",
+      "su_full_ddiv31",
+      "vm_alignment",
+      "die_clock_plan",
+      "hbm_full_die"
+     ],
+     "note": "unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes",
+     "record": {
+      "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
+      "pointer": "options",
+      "commit": "b49366616 (origin/claude/hbm-collective-cdc-design-20261007; not on main)"
+     }
     }
    },
    "gates": [
+    "cdc_sram_ii3_rate_cap",
     "su_reducer_safe",
     "su_c12_margin",
     "su_full_ddiv31",
@@ -2147,6 +2230,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "f8467eb6fc7152b3526e2b2a00bee3ed706f2ebf6c7c795ca53a04bd9db9b21e"
+  "sha256": "2f3cf54099d5cb6b8eb3f77fb7bbbe4a6d94b00f23c03db2619baf9ecab2d95a"
  }
 }

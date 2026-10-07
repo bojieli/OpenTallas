@@ -33,7 +33,9 @@ Every line of the three targets carries a status, its effect on the single-user 
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
-| HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted) |
+| HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
+| HBM DS 1M | unified, II=3 cap stands | 1,688.0 | 3,262.1 | packet-SRAM receive queue and candidate protected CDC drain at II=3, a third of line rate per port: +30.78 µs AR / +172 µs MTP on the measured receive streaming of 18,470 / 103,196 cycles. The rotation-latency term below is also included. Source: CDC design b49366616 (`claude/hbm-collective-cdc-design-20261007`, not on main). |
+| HBM DS 1M | unified, 3-bank rotation (II=1) | 1,780.5 | 3,770.7 | the rotation lands for both the CDC and the packet SRAM: +2 cycles a pass (+1.02 µs), replacing the +2 × 265 SRAM term; +12,093 µm² |
 
 DS ROM / HBM, per user, both sides candidates:
 
