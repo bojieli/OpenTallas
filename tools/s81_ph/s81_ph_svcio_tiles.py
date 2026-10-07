@@ -35,10 +35,13 @@ def main():
     W = 269.568; x0 = round((8121.0 - W) / G) * G
     pl = Plan('dsfd_svcio_ad', W, H); north(pl, x0, [('ad', 'ad'), ('af', 'af')]); clk(pl, 20.0)
     pl.bus('fault', 1, 'output', 'N', 'M5', 30.0)
-    x = pl.bus('a0_v', 4, 'input', 'S', 'M5', 4.8); x = pl.bus('a0_d', 2048, 'input', 'S', 'M5', x, step=1)
-    x = pl.bus('a0_r', 4, 'output', 'S', 'M5', x); x = pl.bus('a1_v', 1, 'input', 'S', 'M5', x)
-    x = pl.bus('a1_d', 512, 'input', 'S', 'M5', x, step=1); x = pl.bus('a1_r', 1, 'output', 'S', 'M5', x)
-    pl.bus('fi', 1, 'input', 'W', 'M4', H / 2)
+    # r3b route (e87322073-b): GRT-0116 with 2,570 S-face pins on every M5 track -> a0 on every 2nd S track,
+    # a1 on the W face (M4, every 2nd track)
+    x = pl.bus('a0_v', 4, 'input', 'S', 'M5', 4.8); x = pl.bus('a0_d', 2048, 'input', 'S', 'M5', x, step=2)
+    x = pl.bus('a0_r', 4, 'output', 'S', 'M5', x)
+    y = pl.bus('a1_v', 1, 'input', 'W', 'M4', 6.0); y = pl.bus('a1_d', 512, 'input', 'W', 'M4', y, step=2)
+    y = pl.bus('a1_r', 1, 'output', 'W', 'M4', y)
+    pl.bus('fi', 1, 'input', 'W', 'M4', y + 2.4)
     assert x < W - 1, x
     pl.emit('svc IO hub r3: a0 frame-atomic merge + a1 skid -> ad / af; fault (sticky; od tile fault in on fi)'); tiles.append((pl.m, x0, W))
     # x tile: xd 7425.8 .. 7450.5, xf 7452.5
