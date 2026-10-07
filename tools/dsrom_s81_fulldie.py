@@ -245,6 +245,17 @@ def _bus(base, n):
     return [f'{base}[{i}]' for i in range(n)]
 
 
+_PSL = re.compile(r'^(.+)\[(\d+):(\d+)\]$')
+
+
+def pslice(port):
+    """bus endpoint port spec: 'p' (the whole port) or 'p[lo:hi]' (bits lo..hi of port p, ascending; S81-RERUN
+    2026-10-07 port slicing: one port served by several nets, e.g. a 512-b link tx by two 256-b final stations).
+    Returns (base, lo, hi) with lo = hi = None for a whole port."""
+    mm = _PSL.match(port)
+    return (mm.group(1), int(mm.group(2)), int(mm.group(3))) if mm else (port, None, None)
+
+
 def real_ports():
     """master -> port -> ordered real pin names (the netlist binds port bit i to the i-th name)."""
     if GEN == 'r8':
@@ -963,6 +974,9 @@ def port_widths(m, k):
         for inst, port in eps:
             if inst == 'TOP':
                 continue
+            port, lo, hi = pslice(port)
+            if lo is not None:
+                n = (hi + 1) if k == 1 else max(1, math.ceil((hi + 1) / k))
             key = (by[inst].master, port)
             w[key] = max(w.get(key, 0), n)
     return w
@@ -1057,15 +1071,22 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             if inst == 'TOP':
                 continue
             mst = by[inst].master
-            if mst in rp and port in rp[mst]:
-                names = rp[mst][port][:n]
+            base, lo, hi = pslice(port)
+            if mst in rp and base in rp[mst]:
+                names = rp[mst][base][:n] if lo is None else rp[mst][base][lo:hi + 1]
                 conns[inst].append((names, net))
+            elif lo is not None:
+                conns[inst].append((base, net, n, lo if k == 1 else lo // k))
             else:
                 conns[inst].append((port, net, n))
     for it in m['insts']:
         parts = []
         bus_bits = defaultdict(dict)
+        sliced = defaultdict(list)
         for c in conns.get(it.name, []):
+            if len(c) == 4:                      # a slice of a generated / bundled port
+                sliced[c[0]].append((c[3], c[1], c[2]))
+                continue
             if isinstance(c[0], list):
                 names, net = c
                 for i, pn in enumerate(names):
@@ -1077,6 +1098,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             else:
                 port, net, n = c
                 parts.append(f'.{port}({net})')
+        for base, pcs in sliced.items():
+            pcs.sort()
+            assert all(pcs[i][0] + pcs[i][2] == pcs[i + 1][0] for i in range(len(pcs) - 1)) and pcs[0][0] == 0, \
+                (it.name, base, pcs)
+            parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
@@ -2465,7 +2491,7 @@ HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_res
 
 def _anchor(Mx, it, port):
     """die coordinates of a port's anchor (generated face centre) on a placed instance; None for real macros"""
-    p = Mx.ports.get(port) if Mx is not None else None
+    p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
     if not p or p[0] != 'face':
         return None
     _, _, face, _, c, _ = p
@@ -2739,7 +2765,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3164,6 +3190,8 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
+LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
+                                #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
                                 #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
@@ -3187,7 +3215,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else ''))
 
 
 def set_cc_reach(um):
@@ -3887,6 +3915,33 @@ def link_span_y(lk, port):
     return (min(ys) + max(ys)) / 2
 
 
+def link_half_y(lk, port, h, nh=2):
+    """centre (die y) of slice h of nh of a link macro's tx / rx bits (pins ascend with the bit index)"""
+    r = real_lef(SERDES_LEF if lk.master == real_lef(SERDES_LEF)['name'] else UCIE_LEF)
+    n = sum(1 for p_ in r['pins'] if re.fullmatch(rf'{port}\[\d+\]', p_))
+    lo, hi = h * n // nh, (h + 1) * n // nh - 1
+    ys = [_lk_pin_xy(lk, f'{port}[{i}]')[1] for i in (lo, hi)]
+    return (ys[0] + ys[1]) / 2, lo, hi
+
+
+def _split_stations(P, CH8, lk, nm, port, allc, lx, side):
+    """LINK_SPLIT: one 256-b station per half of the macro's tx / rx pin span, at the half's centre beside the macro face
+    (a 1,122 um SerDes span from one centre station is a 561 um last hop > the 430.56 um reach; halves give <= 281 um)"""
+    out = []
+    for h in range(2):
+        yc, lo, hi = link_half_y(lk, port, h)
+        w, h_ = stn_dims([hi - lo + 1], False)
+        x0 = lx + (8.0 if side == 'W' else -8.0 - w)
+        pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        assert pl, (nm, port, h)
+        P.n[f'{nm}{port}s'] += 1
+        it = Inst(f'f_{nm}{port}s_{h}', stn_master([hi - lo + 1], False), pl[0], pl[1], w, h_, 'R0', kind='stn',
+                  region='link', domain='fwd')
+        it.power_w = (hi - lo + 1) * FLOP_CLK_W * 1.5
+        out.append((P.add(it), lo, hi))
+    return out
+
+
 def _face_to(it, x, y):
     dx, dy = x - (it.x + it.w / 2), y - (it.y + it.h / 2)
     return ('E' if dx > 0 else 'W') if abs(dx) * it.h > abs(dy) * it.w else ('N' if dy > 0 else 'S')
@@ -3959,14 +4014,33 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly))
         rst = [it for it, _, _ in rs]
         ckd = (tail[0], tail[1])
+        split = LINK_SPLIT and lk.master == real_lef(SERDES_LEF)['name']
+        if split:         # tail -> two 256-b half-span stations -> macro tx halves; the macro ck follows the upper half
+            txs = _split_stations(P, CH8, lk, nm, 'tx', allc, lx, side)
+            CH8.bus(f'{nm}ts_f', 'fclk', 1, [ckd] + [(it.name, 'fi0') for it, _, _ in txs])
+            for it, lo, hi in txs:
+                CH8.bus(f'{nm}ts_d{lo}', 'lane', hi - lo + 1, [(tail[0], f'{tail[2]}[{lo}:{hi}]'), (it.name, 'di0')])
+                CH8.bus(f'{nm}ts_o{lo}', 'lane', hi - lo + 1, [(it.name, 'do0'), (lk.name, f'tx[{lo}:{hi}]')])
+            ckd = (txs[-1][0].name, 'fo0')
+            rxs = _split_stations(P, CH8, lk, nm, 'rx', allc, lx, side)
         if LINK_FIX:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
-            ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == tail[0])))
+            ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == ckd[0])))
             CH8.bus(f'{nm}_ckf', 'fclk', 1, [ckd, (ck.name, 'fi')])
             ckd = (ck.name, 'fo')
-        CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
-                                                                 [(he.name, 'fi0')]))
-        CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
-        if rst:
+        if split:
+            assert rst, nm
+            CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + [(it.name, 'fi0') for it, _, _ in rxs])
+            for it, lo, hi in rxs:
+                CH8.bus(f'{nm}rs_d{lo}', 'lane', hi - lo + 1, [(lk.name, f'rx[{lo}:{hi}]'), (it.name, 'di0')])
+                CH8.bus(f'{nm}rs_o{lo}', 'lane', hi - lo + 1, [(it.name, 'do0'), (rst[0].name, f'di0[{lo}:{hi}]')])
+            CH8.bus(f'{nm}rs_f', 'fclk', 1, [(rxs[-1][0].name, 'fo0'), (rst[0].name, 'fi0')])
+        else:
+            CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
+                                                                     [(he.name, 'fi0')]))
+            CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
+        if rst and split:
+            pass
+        elif rst:
             CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
             prev = (rst[0].name, 'fo0', 'do0')
             for k, it in enumerate(rst[1:], 1):
@@ -3998,10 +4072,13 @@ def port_usage(m):
             d = 'output' if j == 0 and cls != 'top_in' else 'input'
             if cls == 'phy_dfi':
                 d = 'inout'
+            port, lo, hi = pslice(port)
+            if lo is not None:
+                assert hi - lo + 1 == bits, (bid, inst, port, lo, hi, bits)
             old = use[inst].get(port)
             if old and old[0] != d:
                 raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
-            use[inst][port] = (d, max(bits, old[1] if old else 0))
+            use[inst][port] = (d, max(bits if lo is None else hi + 1, old[1] if old else 0))
     return use
 
 
@@ -4090,7 +4167,7 @@ def masters_r8(m, k=1):
         nets = defaultdict(list)
         for b in m['buses']:
             for inst, p_ in b[3]:
-                nets[(inst, p_)].append(b)
+                nets[(inst, pslice(p_)[0])].append(b)
         m['_nets_of'] = nets
     first = {}
     for it in m['insts']:
@@ -4580,6 +4657,8 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
+                    'stations (port slices; needs --link-fix; default off)')
     ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
     return ap
@@ -4591,6 +4670,8 @@ def apply_options(a):
     global VCH_INTERLEAVE, LINK_FIX, HC_XFACE
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
+    global LINK_SPLIT
+    LINK_SPLIT = bool(getattr(a, 'link_split', False)) and LINK_FIX
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
