@@ -41,6 +41,14 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_host_requirement_must_be_explicit_known_hosts(self):
+        spec = dict(name="test", block="b", owner="o", source={"branch": "b", "commit": "c" * 40},
+                    stages={"route": {"cmd": "true"}}, no_bench_reason="fixture")
+        for bad in (True, False, "ot-epyc2", [], ["unknown-host"]):
+            with self.subTest(value=bad):
+                self.assertTrue(any("host_require" in e for e in cl.validate(dict(spec, host_require=bad))))
+        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc2"]))))
+
     def test_failed_tool_probe_is_retried_without_hour_long_fleet_outage(self):
         fleet = cl.Fleet()
         fleet.tool_cache["host"] = (cl.time.time() - 16, None)
