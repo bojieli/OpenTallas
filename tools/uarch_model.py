@@ -13413,6 +13413,12 @@ def qwen_kvc_decode_pc_model():
     return model()
 
 
+def qwen_ctrl_registered_head_model():
+    """Exact zero-cycle PC FIFO-head and bank-eligibility closure candidate."""
+    from uarch_model_qwen_ctrl_head import model
+    return model()
+
+
 def qwen_ctrl_pc_closure_model():
     """Default-off full-feature Qwen r14 command cut; unchanged JEDEC clock."""
     from uarch_model_qwen_ctrl_pc import model
@@ -13471,8 +13477,14 @@ def s81_bf_root_phase_model():
         'added_internal_clock_nets': 2,
         'routing': {'local_branch_max_span_um': 100, 'tracks_added': 2,
                     'capacity_and_actual_wire_length': 'must measure after placement'},
-        'area_um2': None, 'area_status': 'two cells estimated; placement not measured',
-        'slot_fit': 'existing outline retained; verify legalization and actual utilization',
+        'area_um2': 0.08748,
+        'area_status': 'two actual ASAP7 INVx1 cells; incremental CTS/repair area pending',
+        'area_capacity_record': 'physical/s81_bf_root_phase/area_capacity.json',
+        'slot_um': [1002.888, 190.08],
+        'baseline_stdcell_area_um2': 67096.1,
+        'usable_stdcell_site_area_um2': 145342.231168,
+        'headroom_at_55pct_um2': 12842.0396624,
+        'slot_fit': 'fits at <55% even excluding all four ROM halos; verify actual legalization',
         'latency': 'zero logical delta from HALF baseline; existing half-rate cost retained',
         'physical_obligations': [
             'keep phase register and both branch inverters within 100um of root ICG',
