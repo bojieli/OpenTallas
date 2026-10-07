@@ -57,7 +57,7 @@ foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/pre_eco.spef }
 rep pre
 set n0 [llength [get_cells *]]
 if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 10] -verbose} err]} {
-  puts "OT_ECO repair_timing caught: $err"
+  error "OT_ECO repair_timing failed: $err"
 }
 puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
 detailed_placement

@@ -105,3 +105,28 @@ clock plan.
   - only a missed ECO goes NEEDS_RTL
   - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
+
+### Cancellation and ECO reliability (2026-10-06)
+
+Job transitions and cancellation share a per-job file lock in `CL_STATE/job_locks`.
+Workers reload state under that lock before any launch. `CANCELLED` is terminal even
+for a stale ingest/requeue save; a new attempt needs a new job name. Cancellation
+is persisted before remote termination, so an unreachable host cannot requeue it.
+Use the same deployed version of the CLI and daemon to get this serialization.
+
+`restore-cancelled <name>` repairs a cancellation overwritten by an older daemon.
+It requires an explicit human cancellation in the ledger, archives the current job
+JSON in `CL_STATE/cancel_recovery`, and prevents subsequent transitions. It neither
+kills nor restarts remote processes; the preserved stage identity is recorded for
+parent follow-up. It refuses an already CLOSED job.
+
+The hold ECO takes its ordered post-SDC list from the measured sign-off record
+(falling back to the spec only when that metadata is absent), and records that
+list in job state. Non-finite/missing timing, STA errors, and failed repair cannot
+pass installation. Existing ECO output directories are preserved rather than
+removed. The hbglue failure and cancellation race evidence are in
+`evidence/reliability_20261006.json`. Run the local regression vehicle with:
+
+```
+python3 -m unittest discover -s tools/closure_loop -p test_reliability.py -v
+```

@@ -38,6 +38,9 @@ import json
 import os
 import re
 import shlex
+import math
+from contextlib import contextmanager
+from functools import wraps
 import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -301,17 +304,60 @@ def jpath(name):
     return STATE / "jobs" / f"{name}.json"
 
 
+# Hold this across read/transition/remote launch/save, not just os.replace.  A cancellation
+# must see the stage actually launched by an in-flight worker, including a host move.
+_JOB_LOCKS = threading.local()
+
+
+@contextmanager
+def job_lock(name):
+    if not NAME_RE.fullmatch(name):
+        raise ValueError(f"invalid job name: {name}")
+    held = getattr(_JOB_LOCKS, "held", None)
+    if held is None:
+        held = _JOB_LOCKS.held = set()
+    if name in held:
+        yield
+        return
+    directory = STATE / "job_locks"
+    directory.mkdir(parents=True, exist_ok=True)
+    with open(directory / f"{name}.lock", "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        held.add(name)
+        try:
+            yield
+        finally:
+            held.remove(name)
+
+
+def locked_job_command(fn):
+    @wraps(fn)
+    def command(a):
+        with job_lock(a.name):
+            return fn(a)
+    return command
+
+
 def load_job(name):
     return json.loads(jpath(name).read_text())
 
 
 def save_job(j):
-    j["updated"] = now_iso()
-    p = jpath(j["name"])
-    p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_suffix(".tmp")
-    tmp.write_text(json.dumps(j, indent=1) + "\n")
-    os.replace(tmp, p)
+    with job_lock(j["name"]):
+        p = jpath(j["name"])
+        # Auto-requeue/ingest may have taken their snapshot before cancel.  CANCELLED
+        # is absorbing: another attempt needs a new job name, never a stale save.
+        if p.exists():
+            current = load_job(j["name"])
+            if current["status"] == "CANCELLED" and j["status"] != "CANCELLED":
+                j.clear()
+                j.update(current)
+                return
+        j["updated"] = now_iso()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(j, indent=1) + "\n")
+        os.replace(tmp, p)
 
 
 def all_jobs():
@@ -1260,8 +1306,7 @@ def step(j, fleet):
             except Exception:  # noqa: BLE001
                 res = None
             j["eco"]["result"] = res
-            ok = bool(res) and rc == 0 and res["ss_ps"] >= SS_MIN and res["ff_ps"] >= FF_MIN and res["drc"] == 0 \
-                and not res.get("errors")
+            ok = eco_passes(res, rc)
             event(j, f"hold ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
             if not ok:
                 ledger(j, f"HOLD-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
@@ -1332,6 +1377,16 @@ def do_verdict(j, fleet, stl):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+def eco_passes(res, rc):
+    if rc != 0 or not isinstance(res, dict) or res.get("errors"):
+        return False
+    for key, minimum in (("ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
+        value = res.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
+            return False
+    return type(res.get("drc")) in (int, float) and res["drc"] == 0
+
+
 def hold_only(j, m, failed=(), benches_ok=True):
     return (m.get("ss_ps") is not None and m["ss_ps"] >= SS_MIN and m.get("drc") == 0 and m.get("ff_ps") is not None
             and m["ff_ps"] < FF_MIN and not failed and benches_ok and not (j.get("eco") or {}).get("tried")
@@ -1361,10 +1416,11 @@ def start_hold_eco(j, fleet, m):
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     env = f"HM={he.get('hold_margin_ps', 22)} SM={he.get('setup_margin_ps', 25)} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
-    post = " ".join(shlex.quote(p) for p in v.get("post_sdc", []))
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    post = " ".join(shlex.quote(p) for p in post_sdcs)
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {{CL}}/eco {j['spec']['block']} {post}"
     ship_helpers(j["host"], j["run"])
-    j["eco"] = dict(tried=True, rb=rb, ob=ob, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
+    j["eco"] = dict(tried=True, rb=rb, ob=ob, post_sdc=post_sdcs, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_stage(j, st, cmd)
     fleet.launched(j["host"], 8, 32)
@@ -1657,6 +1713,23 @@ def migrate_overloaded(jobs, fleet):
         save_job(j)
 
 
+def advance_job(name, fleet):
+    with job_lock(name):
+        j = load_job(name)
+        if j["status"] in TERMINAL:
+            return
+        try:
+            step(j, fleet)
+        except Exception as ex:  # noqa: BLE001
+            j.setdefault("errors", []).append(f"{now_iso()} {type(ex).__name__}: {str(ex)[:500]}")
+            j["errors"] = j["errors"][-10:]
+            log(f"[{j['name']}] step error:\n{traceback.format_exc()}")
+            if len(j["errors"]) >= 10 and j["status"] in ("SYNC", "READY"):
+                finish(j, "NEEDS_HUMAN", f"10 consecutive loop errors: {str(ex)[:200]}",
+                       f"NEEDS_HUMAN: loop errors at {j['status']}: {str(ex)[:300]}")
+        save_job(j)
+
+
 def tick(fleet):
     try:
         ingest()
@@ -1672,11 +1745,12 @@ def tick(fleet):
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())
-            j = load_job(rq["name"])
-            if j["status"] == "RUNNING" and j.get("stage_key") == "route":
-                migrate_checkpoint(j, rq["host"])
-            else:
-                log(f"migrate request {rq['name']} ignored: status {j['status']} stage {j.get('stage_key')}")
+            with job_lock(rq["name"]):
+                j = load_job(rq["name"])
+                if j["status"] == "RUNNING" and j.get("stage_key") == "route":
+                    migrate_checkpoint(j, rq["host"])
+                else:
+                    log(f"migrate request {rq['name']} ignored: status {j['status']} stage {j.get('stage_key')}")
         except Exception:  # noqa: BLE001
             log("migrate request error:\n" + traceback.format_exc())
             try:
@@ -1697,19 +1771,9 @@ def tick(fleet):
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
-    def one(j):
-        try:
-            step(j, fleet)
-        except Exception as ex:  # noqa: BLE001
-            j.setdefault("errors", []).append(f"{now_iso()} {type(ex).__name__}: {str(ex)[:500]}")
-            j["errors"] = j["errors"][-10:]
-            log(f"[{j['name']}] step error:\n{traceback.format_exc()}")
-            if len(j["errors"]) >= 10 and j["status"] in ("SYNC", "READY"):
-                finish(j, "NEEDS_HUMAN", f"10 consecutive loop errors: {str(ex)[:200]}",
-                       f"NEEDS_HUMAN: loop errors at {j['status']}: {str(ex)[:300]}")
-        save_job(j)
     with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        list(ex.map(one, [j for j in all_jobs() if j["status"] not in TERMINAL]))
+        list(ex.map(lambda j: advance_job(j["name"], fleet),
+                    [j for j in all_jobs() if j["status"] not in TERMINAL]))
     write_status()
 
 
@@ -1761,6 +1825,7 @@ def cmd_validate(a):
     sys.exit(1 if errs else 0)
 
 
+@locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
     if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET"):
@@ -1776,10 +1841,13 @@ def cmd_retry(a):
     ledger(j, "RETRY (human) from stage " + str(j.get("stage_key")))
 
 
+@locked_job_command
 def cmd_cancel(a):
     j = load_job(a.name)
     if j["status"] in TERMINAL:
         sys.exit(f"{a.name} already {j['status']}")
+    j.update(status="CANCELLED", reason="cancelled by a human", cancelled_at=now_iso())
+    save_job(j)                 # durable even if the remote stop or experiment register fails
     if j.get("stage_tag") and j.get("host"):
         run, t = j["run"], j["stage_tag"]
         # only this loop's own stage process group, and only containers that mount this job's own run dir
@@ -1790,6 +1858,35 @@ for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.
     save_job(j)
 
 
+@locked_job_command
+def cmd_restore_cancelled(a):
+    """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
+    j = load_job(a.name)
+    if j["status"] == "CANCELLED":
+        return
+    # Require explicit historical intent; a replacement name alone is insufficient.
+    cancellations = [line for line in LEDGER.read_text().splitlines()
+                     if f" | {a.name} | " in line and " | CANCELLED by a human | " in line]
+    if not cancellations:
+        sys.exit(f"{a.name}: no human cancellation in {LEDGER}")
+    if j["status"] == "CLOSED":
+        sys.exit(f"{a.name}: already CLOSED; requires parent investigation")
+    archive = STATE / "cancel_recovery"
+    archive.mkdir(parents=True, exist_ok=True)
+    backup = archive / f"{a.name}.{time.time_ns()}.json"
+    with backup.open("x") as f:
+        f.write(jpath(a.name).read_text())
+    j["cancel_recovery"] = dict(backup=str(backup), ledger=cancellations[-1],
+                               preserved_stage={k: j.get(k) for k in
+                                                ("status", "host", "run", "stage_tag", "stage_started")},
+                               remote_action="none; existing processes and evidence preserved")
+    j.update(status="CANCELLED", reason="restored ledger cancellation; remote work preserved", cancelled_at=now_iso())
+    event(j, j["reason"])
+    save_job(j)
+    ledger(j, f"CANCELLED restored from ledger; no remote stop; prior state {backup}; "
+              f"preserved {j.get('stage_tag')} at {j.get('host')}:{j.get('run')}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1798,6 +1895,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name")
     c = sub.add_parser("cancel"); c.add_argument("name")
+    rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -1813,6 +1911,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "restore-cancelled":
+        cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))
