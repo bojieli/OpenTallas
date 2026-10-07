@@ -82,9 +82,12 @@ def station_stat(text):
 
 driver.parse_stat = station_stat
 sdc = run/'station.sdc'
+cal = os.environ.get('CL_PHASE') == 'calibrate'  # CTS-only insertion measurement: no hold repair load
+if cal:
+    a.hold_margin_ns = 0.0
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
                 '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min), '--l-ff-max', str(a.l_ff_max),
-                '--io-ref-period-ps', '833.333',
+                '--io-ref-period-ps', '833.333'] + (['--hold-relax'] if cal else []) + [
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 

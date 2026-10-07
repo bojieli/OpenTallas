@@ -34,6 +34,7 @@ p.add_argument('--l-min', type=float, required=True, help='SS clk_sm insertion, 
 p.add_argument('--l-ff-min', type=float, required=True, help='FF clk_sm insertion, earliest flop (hold side)')
 p.add_argument('--l-ff-max', type=float, default=None, help='FF clk_sm insertion, latest flop: approved IO hold model (inputs launched at FF max insertion + clk->Q FF + wire credit, hold uncertainty 50)')
 p.add_argument('--wire-credit-ps', type=float, default=0.0, help='0.112 ps/um x minimum die wire to the neighbour pin (stn_io_min.py)')
+p.add_argument('--hold-relax', action='store_true', help='calibration run: IO hold constraints relaxed (insertion measurement only)')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--hold-skew-ps', type=float, default=50.0)
 p.add_argument('--io-ref-period-ps', type=float, default=None, help='sign-off period the IO windows refer to (default: --period-ps)')
@@ -51,6 +52,9 @@ shift = a.period_ps - (a.io_ref_period_ps if a.io_ref_period_ps else a.period_ps
 in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps + shift
 in_min = (a.l_ff_max + 32.2 + a.wire_credit_ps) if a.l_ff_max else a.l_ff_min - a.hold_skew_ps + a.clkq_min_ps
 hold_unc = a.hold_skew_ps if a.l_ff_max else 25
+if a.hold_relax:
+    in_min = 0.0
+    hold_unc = 0
 out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min + shift
 out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest FF flop
 L = a.l_max
