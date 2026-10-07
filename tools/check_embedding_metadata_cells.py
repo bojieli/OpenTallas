@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory(prefix='embedding-retention-') as d:
  q=Path(d)/'mapped.json'
  subprocess.run([y,'-Q','-T','-p',f'read_verilog "{Path(a.netlist).resolve()}"; write_json "{q}"'],check=True,stdout=subprocess.DEVNULL)
  m=json.loads(q.read_text())['modules'][a.top]
- pairs=[('wp','wp_n'),('rp','rp_n'),('credits','credits_n'),('phase','phase_n'),('valid_pipe','valid_n'),('addr_q','addr_n'),('ce_q','ce_n'),('iv_q','iv_n'),('cr_q','cr_n')]
+ pairs=[('fault','fault_n'),('wp','wp_n'),('rp','rp_n'),('credits','credits_n'),('phase','phase_n'),('valid_pipe','valid_n'),('addr_q','addr_n'),('ce_q','ce_n'),('iv_q','iv_n'),('cr_q','cr_n')]
  pairs+=[('row_q','row_n')] if 'scale' in a.top else [('ia_q','ia_n')]
  # Require direct FF outputs, never a kept wire driven only by an inverter.
  def storage(name):
