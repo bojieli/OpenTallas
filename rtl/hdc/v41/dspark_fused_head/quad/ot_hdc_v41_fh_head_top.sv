@@ -13,6 +13,7 @@ module ot_hdc_v41_fh_head_top #(
     parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, ALAT = 7, RETURN_EXTRA = 5,
     parameter integer FPIPE = 1,
     parameter integer SAFE = 0,          // retirement SAFE + registered stand-in fold (with FPIPE=2)
+    parameter integer HQ = 0,            // half-quadrant views: q_group_fault carries 2 bits per group (ORed here)
     parameter integer ROWS = 505,
     parameter [AW-1:0] LG_BASE_WORD = 0
 ) (
@@ -67,7 +68,7 @@ module ot_hdc_v41_fh_head_top #(
     input  wire [G*W-1:0]    q_o_mask,
     input  wire [G*AW-1:0]   q_o_addr,
     input  wire [G*W-1:0]    q_poison,
-    input  wire [G-1:0]      q_group_fault
+    input  wire [(HQ?2:1)*G-1:0] q_group_fault
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
@@ -243,6 +244,11 @@ module ot_hdc_v41_fh_head_top #(
             reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
         end
     end
+    wire [G-1:0] group_fault_g;
+    genvar gg;
+    for(gg=0;gg<G;gg=gg+1) begin : g_gf
+        assign group_fault_g[gg]=HQ?(q_group_fault[2*gg]|q_group_fault[2*gg+1]):q_group_fault[gg];
+    end
     localparam integer PW=5512;
     wire parent_fault, rv, rw, retired_warm_payload, retired_ov, retired_leaf_v;
     wire child_leaf_v = tv[0], child_ov = ov;
@@ -256,7 +262,7 @@ module ot_hdc_v41_fh_head_top #(
     ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(1),.SAFE(SAFE)) u_parent (
         .clk(clk),.rst_n(rst_n),.packet_v(r_v_q||child_ov||(|o_we_q)||warm_emit||child_leaf_v),
         .warm(warm_emit),.packet(packet),.warm_word(q_o_addr[23:0]),.warm_mask(q_o_mask[15:0]),
-        .poison(q_poison),.address_fault(address_fault),.arithmetic_fault(native_fault),.group_fault(q_group_fault),
+        .poison(q_poison),.address_fault(address_fault),.arithmetic_fault(native_fault),.group_fault(group_fault_g),
         .sink_busy(commit_busy||native_guard_busy),.ack_v(native_ack_v),.ack_id(native_ack_id),
         .ack_word(native_ack_word),.ack_mask(native_ack_mask),
         .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),

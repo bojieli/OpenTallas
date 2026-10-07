@@ -4,7 +4,8 @@
 // PROTECT_SPLIT 1, RETIRE 1, VM_ENDPOINT 1, VM_GUARD 1); cycle-identical to it (tb_fh_head_q lockstep). The feed-through
 // inputs (res_in, o_addr1_in, o_mask1_in, leaf_mask_in, leaf_row_in, am_idx_in) go straight to quadrant pin flops.
 module ot_hdc_v41_fh_head_q #(
-    parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, FPIPE = 1, QPIN = 0, SAFE = 0
+    parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, FPIPE = 1, QPIN = 0, SAFE = 0,
+    parameter integer HQ = 0   // 1: eight half-quadrant views (ot_hdc_v41_fh_hquad) instead of four quadrants
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -56,7 +57,8 @@ module ot_hdc_v41_fh_head_q #(
     output wire [0:0] argmax_level1
 );
     localparam integer CW = 1 + 32 + NW;
-    wire [G-1:0] q_rok, q_rv_mid, q_fsel_m, q_iwg_m, q_group_fault;
+    wire [G-1:0] q_rok, q_rv_mid, q_fsel_m, q_iwg_m;
+    wire [(HQ?2:1)*G-1:0] q_group_fault;
     wire [G*9-1:0] q_rrow, q_wrow;
     wire [G-1:0] q_wok;
     wire [G*W-1:0] q_o_mask, q_poison;
@@ -67,7 +69,7 @@ module ot_hdc_v41_fh_head_q #(
     assign native_captured_request_check = 1'b0;
     assign native_captured_reply_check = 1'b0;
     assign result_capture = 1'b0;
-    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.FPIPE(FPIPE),.SAFE(SAFE),.RETURN_EXTRA(5+QPIN)) u_top (
+    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.FPIPE(FPIPE),.SAFE(SAFE),.HQ(HQ),.RETURN_EXTRA(5+QPIN)) u_top (
         .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.commit_ack_v(commit_ack_v),
         .native_cold_n(native_cold_n),.native_request_ready(native_request_ready),.native_reply_capture(native_reply_capture),
         .native_reply_v(native_reply_v),.native_ordinal(native_ordinal),.native_request_owner(native_request_owner),
@@ -83,8 +85,28 @@ module ot_hdc_v41_fh_head_q #(
         .q_rok(q_rok),.q_rrow(q_rrow),.q_wok(q_wok),.q_wrow(q_wrow),.q_rv_mid(q_rv_mid),
         .q_fsel_m(q_fsel_m),.q_iwg_m(q_iwg_m),.q_iw_e(q_iw_e),.q_leaf(q_leaf),.q_o_data(q_o_data),.q_o_mask(q_o_mask),
         .q_o_addr(q_o_addr),.q_poison(q_poison),.q_group_fault(q_group_fault));
-    genvar g;
-    generate for (g = 0; g < G; g = g + 1) begin : g_quad
+    genvar g, hh;
+    generate if (HQ) begin : g_halves
+     for (g = 0; g < G; g = g + 1) begin : g_grp
+      for (hh = 0; hh < 2; hh = hh + 1) begin : g_half
+        localparam integer L0 = W*g + 8*hh;     // first lane of this half
+        wire [AW-1:0] oa;
+        ot_hdc_v41_fh_hquad #(.W(8),.AW(AW),.NW(NW),.RETURN_EXTRA(5+QPIN),.QPIN(QPIN)) u_hq (
+            .clk(clk),.rst_n(rst_n),.gid(2'(g)),.hid(1'(hh)),
+            .rok(q_rok[g]),.rrow(q_rrow[9*g+:9]),.wok(q_wok[g]),.wrow(q_wrow[9*g+:9]),
+            .wr_mask_in(wr_mask[L0+:8]),.wr_data_in(wr_data[32*L0+:256]),
+            .res_in(res_in[32*L0+:256]),.o_mask1_in(o_mask1_in[L0+:8]),.o_addr1_in(o_addr1_in[AW*g+:AW]),
+            .leaf_mask_in(leaf_mask_in[L0+:8]),.leaf_row_in(leaf_row_in),.am_idx_in(am_idx_in),
+            .rv_mid(q_rv_mid[g]),.fsel_m(q_fsel_m[g]),.iwg_m(q_iwg_m[g]),.iw_e(q_iw_e),
+            .leaf(q_leaf[CW*L0+:CW*8]),.o_data(q_o_data[32*L0+:256]),.o_mask(q_o_mask[L0+:8]),
+            .o_addr(oa),.poison(q_poison[L0+:8]),.group_fault(q_group_fault[2*g+hh]));
+        if (hh == 0) begin : g_oa
+            assign q_o_addr[AW*g+:AW] = oa;
+        end
+      end
+     end
+    end else begin : g_quads
+    for (g = 0; g < G; g = g + 1) begin : g_quad
         ot_hdc_v41_fh_quad #(.W(W),.AW(AW),.NW(NW),.RETURN_EXTRA(5+QPIN),.QPIN(QPIN)) u_quad (
             .clk(clk),.rst_n(rst_n),.gid(2'(g)),
             .rok(q_rok[g]),.rrow(q_rrow[9*g+:9]),.wok(q_wok[g]),.wrow(q_wrow[9*g+:9]),
@@ -94,5 +116,6 @@ module ot_hdc_v41_fh_head_q #(
             .rv_mid(q_rv_mid[g]),.fsel_m(q_fsel_m[g]),.iwg_m(q_iwg_m[g]),.iw_e(q_iw_e),
             .leaf(q_leaf[CW*W*g+:CW*W]),.o_data(q_o_data[W*32*g+:W*32]),.o_mask(q_o_mask[W*g+:W]),
             .o_addr(q_o_addr[AW*g+:AW]),.poison(q_poison[W*g+:W]),.group_fault(q_group_fault[g]));
+    end
     end endgenerate
 endmodule
