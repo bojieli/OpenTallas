@@ -27,9 +27,8 @@ proc ot_ser_balance {} {
   if {$bt eq "NULL"} { set bt [$blk findBTerm ckv] }
   if {$bt eq "NULL"} { error "ot_ser_balance: no ckv port" }
   set mst [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
-  # cap: a BUFx4 stage on the root is >= ~15 ps at WC, so never more than (goal - now) / 15 stages even if the
-  # latency report were not refreshed after an edit
-  set kmax [expr {int(($goal - $se) / 15.0)}]
+  # cap: a BUFx4 stage on the root is >= ~8 ps at WC (parasitics re-estimated after every stage)
+  set kmax [expr {int(($goal - $se) / 8.0)}]
   set k 0; set now $se
   while {$now < $goal && $k < $kmax} {
     set n [$bt getNet]
@@ -46,6 +45,7 @@ proc ot_ser_balance {} {
     [$b findITerm A] connect $n
     [$b findITerm Y] connect $nn
     incr k
+    estimate_parasitics -placement
     set now [ot_lat_mean ser_clk]
   }
   # dont_touch only once the chain is complete (each new stage re-hangs the previous one's input)
