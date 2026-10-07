@@ -11,8 +11,9 @@
 #    SS paths under the guard, dont_touch here).  Before rev 2 corner-conditional post-SDCs (vclk_corner_true.sdc)
 #    were read once into a two-corner session: idxq_b1 saw SS vclk setup -414.69 where sign-off read +107.23, the
 #    setup guard was void and 14,557 buffers took SS to -275.
-#  * ENDPOINT FILTER (hold_eco_window.tcl): only endpoints with SS setup slack > deficit + OT_SETUP_FILTER (40) are
-#    repaired; windows narrower than hm + accept_ss are reported INFEASIBLE (IO budget / RTL, never an ECO).
+#  * ENDPOINT FILTER (hold_eco_window.tcl): only endpoints with SS setup slack > r x deficit + OT_SETUP_FILTER (40) are
+#    repaired, r = OT_SS_FF_RATIO (2.4: a ps of FF hold delay costs ~2.4 ps at SS; with r = 1 the FF-only session on
+#    idxq_b1 took SS +107 -> -142).  Endpoints that cannot reach accept_ff with SS >= accept_ss are INFEASIBLE.
 #  * HOLD TARGET 15 (OT_HOLD_MARGIN; was 22): the acceptance line, not 7 ps over it (hold_eco.sh re-passes residue).
 #  * DELAY CELLS: HB1-4xp67 (ASAP7 hold buffers) are allowed for the repair (OT_HOLD_CELLS=1): one delay cell at the
 #    capture pin replaces a chain of BUFx2 on the net.
@@ -112,10 +113,11 @@ if {$session eq "two" && [envd OT_SETUP_FIX 0] && $ss0 < $acc_ss + 10} {
 
 # ---- endpoint filter: repair only endpoints whose setup can absorb the deficit + filt
 # window: endpoints under the repair target (post-route goal + allowance, from hold_eco.sh)
-set win [ot_window $hm $filt $acc_ss pre]
+set ::ot_ss_ff_ratio [envd OT_SS_FF_RATIO 2.4]
+set win [ot_window $hm $filt $acc_ss pre $acc_ff]
 if {[envd OT_WINDOW_ONLY 0]} { puts "OT_ECO window_only"; exit }
 set nx 0
-foreach k {tight infeasible} { foreach ep [dict get $win $k] { set_false_path -hold -to $ep; incr nx } }
+foreach k {tight infeasible nodata} { foreach ep [dict get $win $k] { set_false_path -hold -to $ep; incr nx } }
 puts "OT_ECO filter: [llength [dict get $win fixable]] endpoints repaired, $nx excluded (tight/infeasible stay as they are)"
 
 # ---- snapshot, repair, legalise
@@ -128,7 +130,8 @@ set block [ord::get_db_block]
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 puts "OT_ECO route guides from the db: $guides"
-if {$guides} { global_route -start_incremental }
+if {!$guides} { error "OT_ECO original route guides required; refusing fresh global route" }
+global_route -start_incremental
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 if {[llength [dict get $win fixable]]} {
@@ -158,7 +161,11 @@ foreach net [$block getNets] {
 }
 puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
-if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
+global_route -end_incremental -allow_congestion {*}$ra
+# A rejected guide is a failed pass. Keep its evidence and let hold_eco.sh
+# retain the best completed pass; never replace the original routing guides.
+# svc_SE_s6 eco-r3 met SS/FF after a fresh-GRT fallback, but that result does
+# not satisfy the owner's original-guides requirement.
 detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose

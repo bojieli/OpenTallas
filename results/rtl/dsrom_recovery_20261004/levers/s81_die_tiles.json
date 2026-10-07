@@ -155,51 +155,16 @@
   {
    "item": "collective_lane",
    "nodes": "*.attn.out_allreduce",
-   "cycles": 0,
-   "frac": -0.0997294163123309,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+   "cycles": 288,
+   "frac": 0,
+   "source": "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 (absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)"
   },
   {
    "item": "collective_lane",
    "nodes": "*.ffn.combine_allreduce",
-   "cycles": 0,
-   "frac": -0.0997294163123309,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
-  },
-  {
-   "item": "collective_lane",
-   "nodes": "*.attn.a_allgather",
-   "cycles": 2,
+   "cycles": 288,
    "frac": 0,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
-  },
-  {
-   "item": "collective_lane",
-   "nodes": "*.attn.idx.topk_merge",
-   "cycles": 2,
-   "frac": 0,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
-  },
-  {
-   "item": "collective_lane",
-   "nodes": "*.attn.cand.merge",
-   "cycles": 2,
-   "frac": 0,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
-  },
-  {
-   "item": "collective_lane",
-   "nodes": "*.attn.rows_allgather",
-   "cycles": 2,
-   "frac": 0,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
-  },
-  {
-   "item": "collective_lane",
-   "nodes": "*.ffn.router_allgather",
-   "cycles": 2,
-   "frac": 0,
-   "source": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)"
+   "source": "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 (absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)"
   },
   {
    "item": "vm_bank_group",
@@ -438,69 +403,6 @@
    "cycles": 29,
    "frac": 0,
    "source": "Softmax SAFE divider: +29 on normalize"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.attn.a_proj",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.attn.wq_b",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.attn.cmp.wk",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.attn.wo_a",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.attn.wo_b",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.ffn.router",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.ffn.shared_gu",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.ffn.experts_gu",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
-  },
-  {
-   "item": "code_pair",
-   "nodes": "*.ffn.down",
-   "cycles": 11,
-   "frac": 0,
-   "source": "Code pair: LAT_DELTA 11 a field phase"
   },
   {
    "item": "bf_rowfix",

@@ -13,6 +13,12 @@
   "Z20b / Z20a: the head die holds 1,450 / 1,282 pairs (< 1,471 content pairs), so 13 / 14 head dies instead of 12 -- not priced (no serial hop added by a wider head group)",
   "SU hub traverse: intra-slab span assumed face-centre entry to the farthest lane corner"
  ],
+ "unpriced_geometries": {
+  "r9m215v6f198.72": {
+   "reason": "Missing layer1 geometry; no measured input or valid scan-die proxy basis",
+   "missing_input": "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_r9m215v6f198.72.json"
+  }
+ },
  "rows": {
   "old80": {
    "label": "r7 floorplan charge: 80 cycles a field phase, no hub stations (main before this re-price)",
@@ -26,22 +32,22 @@
    "farthest_round_trip": null,
    "wire_per_region": null,
    "headline": {
-    "AR_us": 566.364,
-    "AR_tok_s": 1765.6,
-    "MTP_step_us": 814.23,
-    "MTP_tok_s": 5107.9,
-    "MTP_tok_s_tau_published": 4774.9,
-    "II_us": 24.372,
+    "AR_us": 587.714,
+    "AR_tok_s": 1701.5,
+    "MTP_step_us": 838.21,
+    "MTP_tok_s": 4961.8,
+    "MTP_tok_s_tau_published": 4638.3,
+    "II_us": 24.898,
     "measured_share": 1.0
    },
    "conditional_all": {
-    "AR_us": 445.845,
-    "AR_tok_s": 2242.9,
-    "MTP_step_us": 672.08,
-    "MTP_tok_s": 6188.2,
-    "MTP_tok_s_tau_published": 5784.9,
-    "II_us": 20.046,
-    "measured_share": 1.0
+    "AR_us": 467.195,
+    "AR_tok_s": 2140.4,
+    "MTP_step_us": 696.06,
+    "MTP_tok_s": 5975.1,
+    "MTP_tok_s_tau_published": 5585.6,
+    "II_us": 20.572,
+    "measured_share": 0.9998
    },
    "headline_delta_vs_old80": {
     "AR_us": 0.0,
@@ -75,34 +81,34 @@
     "mean": 94.76
    },
    "headline": {
-    "AR_us": 603.382,
-    "AR_tok_s": 1657.3,
-    "MTP_step_us": 857.574,
-    "MTP_tok_s": 4849.7,
-    "MTP_tok_s_tau_published": 4533.6,
-    "II_us": 25.637,
-    "measured_share": 0.9999
+    "AR_us": 624.7,
+    "AR_tok_s": 1600.8,
+    "MTP_step_us": 881.523,
+    "MTP_tok_s": 4718.0,
+    "MTP_tok_s_tau_published": 4410.4,
+    "II_us": 26.164,
+    "measured_share": 1.0
    },
    "conditional_all": {
-    "AR_us": 459.462,
-    "AR_tok_s": 2176.5,
-    "MTP_step_us": 687.581,
-    "MTP_tok_s": 6048.7,
-    "MTP_tok_s_tau_published": 5654.5,
-    "II_us": 20.423,
-    "measured_share": 0.9999
+    "AR_us": 480.826,
+    "AR_tok_s": 2079.8,
+    "MTP_step_us": 711.576,
+    "MTP_tok_s": 5844.8,
+    "MTP_tok_s_tau_published": 5463.8,
+    "II_us": 20.949,
+    "measured_share": 1.0001
    },
    "headline_delta_vs_old80": {
-    "AR_us": 37.018,
-    "AR_tok_s": -108.3,
-    "MTP_step_us": 43.344,
-    "MTP_tok_s": -258.2
+    "AR_us": 36.986,
+    "AR_tok_s": -100.7,
+    "MTP_step_us": 43.313,
+    "MTP_tok_s": -243.8
    },
    "conditional_all_delta_vs_old80": {
-    "AR_us": 13.617,
-    "AR_tok_s": -66.4,
-    "MTP_step_us": 15.501,
-    "MTP_tok_s": -139.5
+    "AR_us": 13.631,
+    "AR_tok_s": -60.6,
+    "MTP_step_us": 15.516,
+    "MTP_tok_s": -130.3
    },
    "headline_delta_vs_current_frame": {
     "AR_us": 0.0,
@@ -136,46 +142,46 @@
     "mean": 93.31
    },
    "headline": {
-    "AR_us": 606.11,
-    "AR_tok_s": 1649.9,
-    "MTP_step_us": 860.198,
-    "MTP_tok_s": 4834.9,
-    "MTP_tok_s_tau_published": 4519.8,
-    "II_us": 25.616,
+    "AR_us": 627.455,
+    "AR_tok_s": 1593.7,
+    "MTP_step_us": 884.174,
+    "MTP_tok_s": 4703.8,
+    "MTP_tok_s_tau_published": 4397.2,
+    "II_us": 26.143,
     "measured_share": 1.0
    },
    "conditional_all": {
-    "AR_us": 462.562,
-    "AR_tok_s": 2161.9,
-    "MTP_step_us": 690.643,
-    "MTP_tok_s": 6021.9,
-    "MTP_tok_s_tau_published": 5629.4,
-    "II_us": 20.415,
+    "AR_us": 483.925,
+    "AR_tok_s": 2066.4,
+    "MTP_step_us": 714.638,
+    "MTP_tok_s": 5819.7,
+    "MTP_tok_s_tau_published": 5440.4,
+    "II_us": 20.941,
     "measured_share": 1.0
    },
    "headline_delta_vs_old80": {
-    "AR_us": 39.746,
-    "AR_tok_s": -115.7,
-    "MTP_step_us": 45.968,
-    "MTP_tok_s": -273.0
+    "AR_us": 39.741,
+    "AR_tok_s": -107.8,
+    "MTP_step_us": 45.964,
+    "MTP_tok_s": -258.0
    },
    "conditional_all_delta_vs_old80": {
-    "AR_us": 16.717,
-    "AR_tok_s": -81.0,
-    "MTP_step_us": 18.563,
-    "MTP_tok_s": -166.3
+    "AR_us": 16.73,
+    "AR_tok_s": -74.0,
+    "MTP_step_us": 18.578,
+    "MTP_tok_s": -155.4
    },
    "headline_delta_vs_current_frame": {
-    "AR_us": 2.728,
-    "AR_tok_s": -7.4,
-    "MTP_step_us": 2.624,
-    "MTP_tok_s": -14.8
+    "AR_us": 2.755,
+    "AR_tok_s": -7.1,
+    "MTP_step_us": 2.651,
+    "MTP_tok_s": -14.2
    },
    "conditional_delta_vs_current_frame": {
-    "AR_us": 3.1,
-    "AR_tok_s": -14.6,
+    "AR_us": 3.099,
+    "AR_tok_s": -13.4,
     "MTP_step_us": 3.062,
-    "MTP_tok_s": -26.8
+    "MTP_tok_s": -25.1
    }
   },
   "f198.72": {
@@ -197,46 +203,46 @@
     "mean": 91.82
    },
    "headline": {
-    "AR_us": 614.259,
-    "AR_tok_s": 1628.0,
-    "MTP_step_us": 868.162,
-    "MTP_tok_s": 4790.6,
-    "MTP_tok_s_tau_published": 4478.3,
-    "II_us": 25.58,
-    "measured_share": 1.0
+    "AR_us": 635.622,
+    "AR_tok_s": 1573.3,
+    "MTP_step_us": 892.156,
+    "MTP_tok_s": 4661.7,
+    "MTP_tok_s_tau_published": 4357.9,
+    "II_us": 26.106,
+    "measured_share": 1.0001
    },
    "conditional_all": {
-    "AR_us": 471.417,
-    "AR_tok_s": 2121.3,
-    "MTP_step_us": 699.448,
-    "MTP_tok_s": 5946.1,
-    "MTP_tok_s_tau_published": 5558.5,
-    "II_us": 20.405,
+    "AR_us": 492.78,
+    "AR_tok_s": 2029.3,
+    "MTP_step_us": 723.443,
+    "MTP_tok_s": 5748.9,
+    "MTP_tok_s_tau_published": 5374.2,
+    "II_us": 20.931,
     "measured_share": 1.0001
    },
    "headline_delta_vs_old80": {
-    "AR_us": 47.895,
-    "AR_tok_s": -137.6,
-    "MTP_step_us": 53.932,
-    "MTP_tok_s": -317.3
+    "AR_us": 47.908,
+    "AR_tok_s": -128.2,
+    "MTP_step_us": 53.946,
+    "MTP_tok_s": -300.1
    },
    "conditional_all_delta_vs_old80": {
-    "AR_us": 25.572,
-    "AR_tok_s": -121.6,
-    "MTP_step_us": 27.368,
-    "MTP_tok_s": -242.1
+    "AR_us": 25.585,
+    "AR_tok_s": -111.1,
+    "MTP_step_us": 27.383,
+    "MTP_tok_s": -226.2
    },
    "headline_delta_vs_current_frame": {
-    "AR_us": 10.877,
-    "AR_tok_s": -29.3,
-    "MTP_step_us": 10.588,
-    "MTP_tok_s": -59.1
+    "AR_us": 10.922,
+    "AR_tok_s": -27.5,
+    "MTP_step_us": 10.633,
+    "MTP_tok_s": -56.3
    },
    "conditional_delta_vs_current_frame": {
-    "AR_us": 11.955,
-    "AR_tok_s": -55.2,
+    "AR_us": 11.954,
+    "AR_tok_s": -50.5,
     "MTP_step_us": 11.867,
-    "MTP_tok_s": -102.6
+    "MTP_tok_s": -95.9
    }
   },
   "f216.00": {
@@ -258,53 +264,175 @@
     "mean": 89.38
    },
    "headline": {
-    "AR_us": 624.049,
-    "AR_tok_s": 1602.4,
-    "MTP_step_us": 877.763,
-    "MTP_tok_s": 4738.2,
-    "MTP_tok_s_tau_published": 4429.3,
-    "II_us": 25.542,
-    "measured_share": 1.0
+    "AR_us": 645.412,
+    "AR_tok_s": 1549.4,
+    "MTP_step_us": 901.758,
+    "MTP_tok_s": 4612.1,
+    "MTP_tok_s_tau_published": 4311.5,
+    "II_us": 26.068,
+    "measured_share": 1.0001
    },
    "conditional_all": {
-    "AR_us": 481.901,
-    "AR_tok_s": 2075.1,
-    "MTP_step_us": 709.874,
-    "MTP_tok_s": 5858.8,
-    "MTP_tok_s_tau_published": 5476.9,
-    "II_us": 20.393,
-    "measured_share": 1.0
+    "AR_us": 503.265,
+    "AR_tok_s": 1987.0,
+    "MTP_step_us": 733.869,
+    "MTP_tok_s": 5667.2,
+    "MTP_tok_s_tau_published": 5297.8,
+    "II_us": 20.92,
+    "measured_share": 1.0001
    },
    "headline_delta_vs_old80": {
-    "AR_us": 57.685,
-    "AR_tok_s": -163.2,
-    "MTP_step_us": 63.533,
-    "MTP_tok_s": -369.7
+    "AR_us": 57.698,
+    "AR_tok_s": -152.1,
+    "MTP_step_us": 63.548,
+    "MTP_tok_s": -349.7
    },
    "conditional_all_delta_vs_old80": {
-    "AR_us": 36.056,
-    "AR_tok_s": -167.8,
-    "MTP_step_us": 37.794,
-    "MTP_tok_s": -329.4
+    "AR_us": 36.07,
+    "AR_tok_s": -153.4,
+    "MTP_step_us": 37.809,
+    "MTP_tok_s": -307.9
    },
    "headline_delta_vs_current_frame": {
-    "AR_us": 20.667,
-    "AR_tok_s": -54.9,
-    "MTP_step_us": 20.189,
-    "MTP_tok_s": -111.5
+    "AR_us": 20.712,
+    "AR_tok_s": -51.4,
+    "MTP_step_us": 20.235,
+    "MTP_tok_s": -105.9
    },
    "conditional_delta_vs_current_frame": {
     "AR_us": 22.439,
-    "AR_tok_s": -101.4,
+    "AR_tok_s": -92.8,
     "MTP_step_us": 22.293,
-    "MTP_tok_s": -189.9
+    "MTP_tok_s": -177.6
+   }
+  },
+  "r9f198.72": {
+   "label": "S81-RERUN r9 die, FH 192.24 (10 slots; hub stations + q banks + column relays)",
+   "elem_h": 198.72,
+   "fh": 192.24,
+   "pairs_per_layer_die": 2050,
+   "layer_dies": 383,
+   "extra_layer_dies": 59,
+   "stages": 96,
+   "extra_stage_hops": 15,
+   "farthest_round_trip": {
+    "layer": 140,
+    "layer1": 141
+   },
+   "wire_per_region": {
+    "min": 44,
+    "max": 149,
+    "mean": 98.11
+   },
+   "headline": {
+    "AR_us": 637.41,
+    "AR_tok_s": 1568.8,
+    "MTP_step_us": 894.317,
+    "MTP_tok_s": 4650.5,
+    "MTP_tok_s_tau_published": 4347.3,
+    "II_us": 26.18,
+    "measured_share": 1.0
+   },
+   "conditional_all": {
+    "AR_us": 493.268,
+    "AR_tok_s": 2027.3,
+    "MTP_step_us": 724.014,
+    "MTP_tok_s": 5744.4,
+    "MTP_tok_s_tau_published": 5369.9,
+    "II_us": 20.948,
+    "measured_share": 1.0
+   },
+   "headline_delta_vs_old80": {
+    "AR_us": 49.696,
+    "AR_tok_s": -132.7,
+    "MTP_step_us": 56.107,
+    "MTP_tok_s": -311.3
+   },
+   "conditional_all_delta_vs_old80": {
+    "AR_us": 26.073,
+    "AR_tok_s": -113.1,
+    "MTP_step_us": 27.954,
+    "MTP_tok_s": -230.7
+   },
+   "headline_delta_vs_current_frame": {
+    "AR_us": 12.71,
+    "AR_tok_s": -32.0,
+    "MTP_step_us": 12.794,
+    "MTP_tok_s": -67.5
+   },
+   "conditional_delta_vs_current_frame": {
+    "AR_us": 12.442,
+    "AR_tok_s": -52.5,
+    "MTP_step_us": 12.438,
+    "MTP_tok_s": -100.4
+   }
+  },
+  "r9m215f198.72": {
+   "label": "S81-RERUN r9 MARGIN-FIRST: common-clock hops <= 215 um (FH 192.24)",
+   "elem_h": 198.72,
+   "fh": 192.24,
+   "pairs_per_layer_die": 2050,
+   "layer_dies": 383,
+   "extra_layer_dies": 59,
+   "stages": 96,
+   "extra_stage_hops": 15,
+   "farthest_round_trip": {
+    "layer": 151,
+    "layer1": 152
+   },
+   "wire_per_region": {
+    "min": 71,
+    "max": 177,
+    "mean": 125.61
+   },
+   "headline": {
+    "AR_us": 654.269,
+    "AR_tok_s": 1528.4,
+    "MTP_step_us": 914.038,
+    "MTP_tok_s": 4550.1,
+    "MTP_tok_s_tau_published": 4253.5,
+    "II_us": 26.753,
+    "measured_share": 0.9999
+   },
+   "conditional_all": {
+    "AR_us": 500.156,
+    "AR_tok_s": 1999.4,
+    "MTP_step_us": 731.892,
+    "MTP_tok_s": 5682.5,
+    "MTP_tok_s_tau_published": 5312.1,
+    "II_us": 21.146,
+    "measured_share": 0.9999
+   },
+   "headline_delta_vs_old80": {
+    "AR_us": 66.555,
+    "AR_tok_s": -173.1,
+    "MTP_step_us": 75.828,
+    "MTP_tok_s": -411.7
+   },
+   "conditional_all_delta_vs_old80": {
+    "AR_us": 32.961,
+    "AR_tok_s": -141.0,
+    "MTP_step_us": 35.832,
+    "MTP_tok_s": -292.6
+   },
+   "headline_delta_vs_current_frame": {
+    "AR_us": 29.569,
+    "AR_tok_s": -72.4,
+    "MTP_step_us": 32.515,
+    "MTP_tok_s": -167.9
+   },
+   "conditional_delta_vs_current_frame": {
+    "AR_us": 19.33,
+    "AR_tok_s": -80.4,
+    "MTP_step_us": 20.316,
+    "MTP_tok_s": -162.3
    }
   }
  },
  "tool_sha256": {
-  "tools/dsrom_field_reprice_r8.py": "7063c17a794b6b674c5d2401b3414c0715905564050be7a1574a9e3a3917dbf4"
+  "tools/dsrom_field_reprice_r8.py": "5587771b73a48773079b0e895a93429d1b884d964bc3145e9c186f5af1cfaddb"
  },
  "inputs": {
-  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "7212e12021ecaaf577ea4dc2a8ee50964195ba6435c0c9a957a5d626a9994ded"
+  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "bb091995c7f91217b6a93465e92ce5d78f4980228c09f809e63453e53837b144"
  }
 }

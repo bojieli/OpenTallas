@@ -8,7 +8,12 @@
 # e.g. $CL_STOP_AFTER]. Writes <out>/exit (rc=, corner_rc=), <out>/corner_sta.json and <out>/view/ (LEF + SS/FF ETM).
 set -o pipefail
 V=${1:?view}; LBL=${2:?label}; O=${3:?out}; shift 3
-S=$(pwd); mkdir -p $O
+S=$(pwd); mkdir -p "$O"
+# A retry must use a new attempt directory: preserve the original failure and logs.
+if [ -e "$O/physical.json" ]; then
+ echo "existing result preserved: $O/physical.json; use a new attempt directory" >&2
+ exit 2
+fi
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 export OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29}
 ISS=${CK_SS_MEAN:-500}; IFF=${CK_FF_MEAN:-300}; HMS=${HM:-0.035}
@@ -74,11 +79,15 @@ python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "$
  --hold-margin-ns $HMS --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
  --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
  --keep-workdir "$O/work" --nickname-tag $LBL --keep-heavy-artifacts --output "$O/physical.json" "$@" > $O/run.log 2>&1
-rc=$?; echo "rc=$rc" > $O/exit
+rc=$?; result_rc=$rc; echo "rc=$rc" > $O/exit
 if [ $rc = 0 ] && ! echo "$*" | grep -q -- --pnr-stop-after; then
  python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs "${MAC[@]}" --post-sdc $G/signoff_$V.sdc --output $O/corner_sta.json > $O/sta.log 2>&1
- echo "corner_rc=$?" >> $O/exit
+ corner_rc=$?; echo "corner_rc=$corner_rc" >> $O/exit
+ if [ "$corner_rc" -ne 0 ]; then result_rc=$corner_rc; fi
  python3 tools/w18/export_view.py --orfs-dir $O/work/orfs --name $TOP --post-sdc $G/signoff_$V.sdc "${MAC[@]}" --out $O/view > $O/export.log 2>&1
- echo "export_rc=$?" >> $O/exit
+ export_rc=$?; echo "export_rc=$export_rc" >> $O/exit
+ if [ "$export_rc" -ne 0 ]; then result_rc=$export_rc; fi
 fi
 echo "$(date -Is) END $(cat $O/exit | tr '\n' ' ')" >> $O/MANIFEST
+
+exit "$result_rc"

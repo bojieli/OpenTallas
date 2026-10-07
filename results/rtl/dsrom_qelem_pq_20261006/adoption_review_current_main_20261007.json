@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.dsrom-qs3-current-ledger-review.v1",
+  "main_commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+  "status": "PENDING_SSFF",
+  "adopted": false,
+  "geometry": "f183.60",
+  "baseline": {
+    "AR_us": 627.455,
+    "AR_tok_s": 1593.7,
+    "MTP_step_us": 884.174,
+    "MTP_tok_s": 4703.8,
+    "MTP_tok_s_tau_published": 4397.2,
+    "II_us": 26.143,
+    "measured_share": 1.0
+  },
+  "baseline_matches_published_main": true,
+  "conditional_qs3_literal_ledger": {
+    "AR_us": 510.011,
+    "AR_tok_s": 1960.7,
+    "MTP_step_us": 744.476,
+    "MTP_tok_s": 5586.5,
+    "MTP_tok_s_tau_published": 5222.3,
+    "II_us": 21.692,
+    "measured_share": 1.0001
+  },
+  "conditional_qs3_deduplicated": {
+    "AR_us": 509.678,
+    "AR_tok_s": 1962.0,
+    "MTP_step_us": 744.093,
+    "MTP_tok_s": 5589.4,
+    "MTP_tok_s_tau_published": 5225.0,
+    "II_us": 21.682,
+    "measured_share": 1.0001
+  },
+  "conditional_qs3_route_frame": {
+    "geometry": "f198.72",
+    "frame_height_um": 192.24,
+    "composed": {
+      "AR_us": 518.906,
+      "AR_tok_s": 1927.1,
+      "MTP_step_us": 753.322,
+      "MTP_tok_s": 5520.9,
+      "MTP_tok_s_tau_published": 5161.0,
+      "II_us": 21.682,
+      "measured_share": 1.0001
+    },
+    "delta_vs_current_main": {
+      "AR_us": -108.549,
+      "AR_tok_s": 333.4,
+      "MTP_step_us": -130.852,
+      "MTP_tok_s": 817.1
+    },
+    "caveat": "QS3 route uses 192.24 um height. f183.60 scenarios isolate cycle changes but do not prove QS3 fits that smaller frame. Taller-frame placement is analytically composed, not remeasured; selected v6 geometry input is absent."
+  },
+  "deduplicated_delta": {
+    "AR_us": -117.777,
+    "AR_tok_s": 368.3,
+    "MTP_step_us": -140.081,
+    "MTP_tok_s": 885.6
+  },
+  "overlap": {
+    "item": "pq_qelem",
+    "fractional_charge": 0.0017,
+    "removed_rows_in_scratch": 9,
+    "rule": "Candidate full-field QS3 measurement includes decode stages. Remove only this older approximation when adopting QS3; current headline ledger remains unchanged."
+  },
+  "unpriced_geometries": {
+    "r9m215v6f198.72": {
+      "reason": "Missing layer1 geometry; no measured input or valid scan-die proxy basis",
+      "missing_input": "results/rtl/dsrom_field_reprice_r8_20261006/geometry/layer1_r9m215v6f198.72.json"
+    }
+  },
+  "pending": [
+    "Actual QS3 and v13b R16/R128 SS>=15 FF>=15 DRC0 closure",
+    "Required exact/negative and die-context integration gates",
+    "Coordinator adoption and fresh composition; no field_spine_pq stacking"
+  ],
+  "supersedes": "adoption_review_20261007.json used obsolete 1649.9/4834.9 baseline; retained as history",
+  "inputs": {
+    "results/rtl/dsrom_recovery_20261004/levers/s81_die_tiles.json": "0d5b2707ca4c84f4ff2227c79f6acc3d565c155f11110e6c613e554de327e349",
+    "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "bb091995c7f91217b6a93465e92ce5d78f4980228c09f809e63453e53837b144",
+    "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "1d7a2e641edc61ad54446f69fe66025f541048fb52b2732e5f6f6641dc379b36",
+    "tools/dsrom_qs3_reprice_review.py": "e5a0919c7f931f13e4f19617cfa298b306fef1aaab97a18ef809aacd654b4113"
+  }
+}

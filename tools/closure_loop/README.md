@@ -123,8 +123,9 @@ Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Cause
   resistance-aware GRT.
 - post-route hold GOAL +18 (coordinator 2026-10-07: margin over the +15 line for die context; was a +22 pre-route
   target that routed to anything); the repair aims +18 + an allowance (3 ps, then twice the previous pass's shortfall)
-  because the new buffers' nets are unrouted during the repair; acceptance stays +15. Only endpoints with SS setup > deficit + 40 ps are repaired (`hold_eco_window.tcl` prints
-  every class as fixable / tight / infeasible: S + H < 15 + 15 means the constraints leave no window -> IO budget or RTL);
+  because the new buffers' nets are unrouted during the repair; acceptance stays +15. Only endpoints with SS setup > 2.4 x deficit + 40 ps are repaired (a ps of FF hold delay costs ~2.4 ps at
+  SS; `hold_eco_window.tcl` prints every class as fixable / tight / infeasible: S - 2.4 (15 - H) < 15 means the
+  constraints leave no window -> IO budget or RTL, never an ECO);
   `repair_timing -setup_margin 40`; HB1-4xp67 delay cells allowed; up to 2 passes ECO -> re-route -> corner_sta, the
   second from the first's route.
 - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, setup_filter_ps, passes, resistance_aware, hold_cells, ...}`;

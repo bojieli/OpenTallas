@@ -24,11 +24,16 @@ foreach s [envd OT_POST_SDC ""] { read_sdc $s }
 puts "OT_CORNER_EFF $c ws_max [sta::worst_slack_cmd max] ws_min [sta::worst_slack_cmd min]"
 write_sdc -no_timestamp $::env(OT_EFF)
 # SS session: data the FF-only ECO session needs to protect setup (hold_eco.tcl OT_SESSION=ff)
-#   <eff>.slack : SS setup slack per register D pin and output port ("name slack")
+#   <eff>.slack : SS setup slack per timing-check data pin (including macros) and output port ("name slack")
 #   <eff>.crit  : nets on SS setup paths under OT_CRIT_PS (dont_touch in the FF-only ECO)
 if {$c eq "ss"} {
   set f [open $::env(OT_EFF).slack w]
-  foreach p [concat [get_pins -hierarchical */D] [all_outputs]] {
+  # every timing-check data pin: flop D pins AND macro data pins (hfd_cmdproc_n: u_cmem/b_addr_in had no SS slack
+  # with */D only, so its hold endpoints were classed infeasible on missing data)
+  set ot_dp [concat [get_pins -hierarchical */D] [all_registers -data_pins] [all_outputs]]
+  set ot_seen [dict create]
+  foreach p $ot_dp {
+    set pn [get_full_name $p]; if {[dict exists $ot_seen $pn]} continue; dict set ot_seen $pn 1
     if {[catch {set s [get_property $p slack_max]}]} continue
     if {$s ne "INF" && $s ne ""} { puts $f [list [get_full_name $p] $s] }
   }
