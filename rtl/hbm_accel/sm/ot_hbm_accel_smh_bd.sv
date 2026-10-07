@@ -457,7 +457,11 @@ module ot_hbm_accel_smh_tc_col #(
         // a bubble multiplies by +0: the slot's sum holds
         ot_hbm_accel_smh_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(v_q2), .kill(!v_ql[l]), .a({w_l, 16'd0}),
                                      .b({x_l, 16'd0}), .y(prod), .fault(f0));
-        always @(posedge clk) acc_q <= fl[ML-1] ? 32'd0 : fb_pre;
+        // (m3e) the chunk-start clear from a per-lane copy of the flag (tile_e c2: one fl[ML-1] flop -> 512 lane
+        // clears -42 ps); flc = fl[ML-1], loaded from fl[ML-2] on the same edge
+        reg flc;
+        always @(posedge clk or negedge rst_n) if (!rst_n) flc <= 1'b0; else flc <= fl[ML-2];
+        always @(posedge clk) acc_q <= flc ? 32'd0 : fb_pre;
         ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[ML]), .a(acc_q), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
         ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*l +: 32]), .q(fb_pre));
         always @(posedge clk) sum_q[32*l +: 32] <= sum[32*l +: 32];
@@ -516,7 +520,7 @@ module ot_hbm_accel_smh_bmul (
     // stage 1: decode
     reg        s1_v, s1_s, s1_z, s1_nf;
     reg [7:0]  s1_a, s1_b;
-    reg signed [10:0] s1_e;
+    reg signed [9:0] s1_ea, s1_eb;       // (m3e) the exponent sum moved to stage 2a (x_l -> s1_e was -14 ps, 14 levels)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= v;
@@ -526,7 +530,7 @@ module ot_hbm_accel_smh_bmul (
         s1_z <= kill || (a[30:16] == 15'd0) || (b[30:16] == 15'd0);
         s1_nf <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF);
         s1_a <= da[17:10]; s1_b <= db[17:10];
-        s1_e <= $signed(da[9:0]) + $signed(db[9:0]);
+        s1_ea <= $signed(da[9:0]); s1_eb <= $signed(db[9:0]);
     end
     // stage 2a: four 8x2 partial products
     reg        t_v, t_s, t_z, t_nf;
@@ -538,7 +542,7 @@ module ot_hbm_accel_smh_bmul (
     end
     always @(posedge clk) begin
         t_s <= s1_s; t_z <= s1_z; t_nf <= s1_nf;
-        t_e8 <= s1_e + 11'sd128; t_e7 <= s1_e + 11'sd127;
+        t_e8 <= $signed(s1_ea) + $signed(s1_eb) + 11'sd128; t_e7 <= $signed(s1_ea) + $signed(s1_eb) + 11'sd127;
         t_q0 <= s1_a * s1_b[1:0]; t_q1 <= s1_a * s1_b[3:2];
         t_q2 <= s1_a * s1_b[5:4]; t_q3 <= s1_a * s1_b[7:6];
     end

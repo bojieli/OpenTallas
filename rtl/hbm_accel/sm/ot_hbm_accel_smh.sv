@@ -1308,9 +1308,9 @@ module ot_hbm_accel_smh_front_s #(
                     .d(lin[QLW-1 -: 2]), .q(land[QLW-1 -: 2]));
                 ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_ld (.clk(clk), .rst_n(rst_n), .en(1'b1),
                     .d(lin[QLW-3:0]), .q(land[QLW-3:0]));
-                ot_hbm_accel_smv_chain #(.W(2), .D(4*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(2), .D(5*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-1 -: 2]), .q(al[COLN*QLW + QLW - 2 +: 2]));
-                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(4*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(5*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-3:0]), .q(al[COLN*QLW +: QLW-2]));
             end
         end
@@ -1413,33 +1413,51 @@ module ot_hbm_accel_smh_tile #(
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
     // (margin m2) the pass-through copy lands at the input pins and launches from a second register at the output
     // pins (+1 per tile hop on the x-write beat, matched by the row bundles' +1 per hop: the margin is unchanged)
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-1]),
+    // (margin m3e) a third pass-through register mid-tile (tile_e c2: u_bld -> u_bld2 -10.6 ps across the tile): +1 per
+    // tile hop on the x-write beat, matched by the row bundles' third register (rpm), so the margin is unchanged
+    wire [BBW-1:0] bm;
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-1]), .q(bm[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-1]),
         .q(bout[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bout[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-2:0]), .q(bout[BBW-2:0]));
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         // the row bundle of row j (landed, driven on)
         // the row bundle lands in a pass-through copy (rout) and the leaf's own copy (kept, bit-identical)
-        wire [RBW-1:0] rl, rp;
+        wire [RBW-1:0] rl, rl1, rp, rpm;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rp));
-        // (margin m2) landing at the input pins (u_rp), launch from a second register at the output pins (+1 per hop)
+        // (margin m2) landing at the input pins (u_rp), launch from a register at the output pins; (m3e) a third
+        // register mid-tile (u_rpm, rp -> rp2 was +0.8 ps): 3 per hop, in step with the x-write beat
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rst_n),
+            .d(rp), .q(rpm));
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp2 (.clk(clk), .rst_n(rst_n),
-            .d(rp), .q(rout[j*RBW +: RBW]));
+            .d(rpm), .q(rout[j*RBW +: RBW]));
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
-            .d(rin[j*RBW +: RBW]), .q(rl));
-        wire [BBW-1:0] bk;
+            .d(rin[j*RBW +: RBW]), .q(rl1));
+        // (m3e) the leaf's row copy one register deeper (+1 on every read), matching the x-write copy's bk2 below
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rst_n),
+            .d(rl1), .q(rl));
+        wire [BBW-1:0] bk, bk1;
         ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
-            .q(bk[BBW-1]));
+            .q(bk1[BBW-1]));
         ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]),
+            .q(bk1[BBW-2:0]));
+        // (m3e) the leaf's x-write copy registered again inside the leaf before the strap rotation (tile_e c2: the
+        // pin landing u_bkd -> 8:1 rotation -> bf0 / blk0 -92 / -84 ps, 10-12 levels): +1 on the write, matched above
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bk1[BBW-1]),
+            .q(bk[BBW-1]));
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bk1[BBW-2:0]),
             .q(bk[BBW-2:0]));
         // one-hot beat group replicas for this leaf's masks (landed straight from the pins, NG copies)
         // (round 5) the beat one-hot lands once per leaf (kept, beside the pins), its NG replicas load one edge later,
         // in step with the leaf's two-stage rotation
         wire [NG*NBEAT-1:0] ohr;
-        wire [NBEAT-1:0] ohl;
+        wire [NBEAT-1:0] ohl, ohl1;
         ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[2048 +: NBEAT]),
-            .q(ohl));
+            .q(ohl1));
+        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(ohl1), .q(ohl));   // (m3e) +1 with bk2
         genvar gi;
         for (gi = 0; gi < NG; gi = gi + 1) begin : g_ohr
             ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(ohl),
