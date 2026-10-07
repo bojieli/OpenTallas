@@ -12793,3 +12793,46 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def hbm_ha2_half_sender_model(hub_cycles=35, lanes=16, injectors=2,
+                              fifo_aw=6, pf=384, exposed_reductions=1):
+    """Default-off endpoint credit adapter before RTL; no closure/adoption claim.
+
+    Reservation counts issue through the existing unstallable hub delay until
+    registered launch to the half-rate reducer. The finite queue cannot accept
+    more rows than were reserved, including every row still on the hub wire.
+    """
+    depth = 1 << fifo_aw
+    width = 32 + 32 * lanes
+    if depth < hub_cycles + 2:
+        raise ValueError('FIFO capacity must cover hub flight plus two local stages')
+    batches = math.ceil(pf / injectors)
+    # Half-rate consumption doubles the sustained issue span. This conservative
+    # bound is kept until the endpoint sender's transaction calendar is measured.
+    extra_per_reduction = 46 + 2 + batches
+    bits = injectors * depth * width
+    return dict(default_off=True, adopted=False, MACs_per_cycle=0,
+        compute_intensity=0, communication_intensity_bits_per_row=width,
+        replica_count=injectors, fifo_rows=depth, row_bits=width,
+        storage_bits=bits, implementation='existing synchronous ot_ha2_fifo; SRAM mapping not claimed',
+        port_bytes_per_cycle=dict(write=injectors*width/8, read=injectors*width/8),
+        sustained_rows_per_cycle=injectors/2,
+        boundary_bits_per_cycle=dict(hub_arrival=injectors*(width+1),
+            reducer_launch=injectors*(width+1), ready=injectors),
+        mux_cost=dict(read_muxes=injectors, inputs_per_mux=depth, width=width),
+        demux_cost=dict(write_decoders=injectors, leaves_per_decoder=depth),
+        fanout=dict(issue_credit=injectors, queue_write_enable_width=width),
+        flop_area_floor_um2=bits*DFF_UM2, floorplan_slot_fit=False,
+        routing_tracks_needed=2*injectors*(width+1)+injectors,
+        channel_capacity=None, physical_closed=False,
+        added_local_pipeline_cycles=2,
+        prior_half_reducer_measured_extra_cycles=46,
+        conservative_extra_issue_span_cycles=batches,
+        conservative_extra_cycles_per_reduction=extra_per_reduction,
+        composed_extra_token_cycles=exposed_reductions*extra_per_reduction,
+        exposed_owner_reductions=exposed_reductions,
+        token_latency_us=exposed_reductions*extra_per_reduction/1200,
+        adoption_gates=['finite credit and negative controls',
+            'transaction exact endpoint sender/reducer', 'SS15/FF15/DRC0 in context'],
+        protection='Existing queue payload contract retained; overflow or reservation violations latch fault; no claimed mutable-memory reliability signoff')
