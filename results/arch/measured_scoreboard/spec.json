@@ -4393,13 +4393,13 @@
    "pointer": "qwen_rom.AR_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) = 194,226 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) + 22,487 r21 die relay stations at the measured 430.56 um reach (owner ADOPT 2026-10-07, -10.4%; results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json) = 216,713 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "token_cycles_8k_composed",
-   "label": "Qwen ROM P8191 token cycles incl. adopted lever cycles (core, slab, KV_MAP=1)",
+   "label": "Qwen ROM P8191 token cycles incl. adopted lever cycles (core, slab, KV_MAP=1, 430 um die relays)",
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "qwen_rom.token_cycles",
    "unit": "cycles",
@@ -4662,7 +4662,7 @@
     "gpu_qwen.h100_tp8_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
+   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1, 430 um die relays)",
    "unit": "x",
    "section": "ratios"
   },
@@ -4675,7 +4675,7 @@
     "gpu_qwen.h100_tp1_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
+   "note": "not iso-area; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1, 430 um die relays)",
    "unit": "x",
    "section": "ratios"
   },

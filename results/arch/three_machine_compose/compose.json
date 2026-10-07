@@ -308,12 +308,56 @@
      "cycles": 54,
      "AR_tok_s": -1.718
     }
+   },
+   "die_relays_430um": {
+    "cls": "adopted",
+    "verdict": "ADOPT (owner 2026-10-07, die relay stations at the measured 430.56 um reach)",
+    "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "sha256": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
+    "relays": 8965,
+    "stages_r21": {
+     "bd": 77,
+     "tree": 21,
+     "tws": 93,
+     "ord": 10,
+     "link": 72
+    },
+    "stages_rtl": {
+     "bd": 41,
+     "tree": 20,
+     "tws": 38,
+     "ord": 7,
+     "link": 46
+    },
+    "delta_per_me_op": 95,
+    "delta_link_per_traversal": 26,
+    "token_cycles_before": 194226,
+    "AR_tok_s_before": 6178.4,
+    "delta_pct": -10.38,
+    "alternatives_priced": {
+     "pitch_300_owner_fast_rule": {
+      "cycles_per_ar_token": 38178,
+      "delta_per_me_op": 162,
+      "delta_link": 42,
+      "relays": 14395
+     },
+     "pitch_350": {
+      "cycles_per_ar_token": 35070,
+      "delta_per_me_op": 150,
+      "delta_link": 35
+     }
+    },
+    "decision": "OWNER APPROVED 2026-10-07: relay pitch = the measured 430.56 um reach (-10.4%, +22,487 cycles / AR token); pricing commit 2de2dfc1b",
+    "delta": {
+     "cycles": 22487,
+     "AR_tok_s": -641.092
+    }
    }
   },
   "modelled_sensitivity": {
    "cycles": 24,
-   "token_cycles": 194250,
-   "AR_tok_s": 6177.6,
+   "token_cycles": 216737,
+   "AR_tok_s": 5536.7,
    "note": "adopted levers' MODELLED (not RTL) costs added on top of the measured headline; not a headline"
   },
   "physical_closure": {
@@ -351,7 +395,7 @@
     "mean": 91.3,
     "best": 96.4
    },
-   "token_average_system_TBps": 3.732,
+   "token_average_system_TBps": 3.344,
    "record": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log",
    "not_this_vehicle": {
     "record": "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json",
@@ -369,17 +413,18 @@
     },
     "grt_overflow": 11534,
     "status": "PENDING: die-top route not done (r20c GRT i50 overflow 7,972; flat and region pilots did not complete, results/rtl/qwen_rom_closed_20261006/closure.json); r18g bound kept as the last priced wire bound",
+    "superseded_by": "levers.die_relays_430um (registered relays replace the unregistered-wire bound)",
     "bound_tok_s": {
      "skew0": 5782.3,
      "skew65": 5700.9
     }
    }
   },
-  "token_cycles": 194226,
-  "AR_us": 161.855,
-  "AR_tok_s": 6178.4,
+  "token_cycles": 216713,
+  "AR_us": 180.594,
+  "AR_tok_s": 5537.3,
   "MTP_mode": "AR (DSpark OFF)",
-  "MTP_tok_s": 6178.4,
+  "MTP_tok_s": 5537.3,
   "dspark_reference": {
    "tok_s": 4346.2,
    "speedup_vs_ar": 0.704,
@@ -394,6 +439,7 @@
    "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
    "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
    "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
    "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
@@ -542,6 +588,7 @@
   ],
   "qwen_rom_adopted": [
    "core_context",
+   "die_relays_430um",
    "kv_map_m",
    "slab_mul_lat7"
   ],
@@ -574,6 +621,7 @@
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
   "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
   "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
   "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
   "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
@@ -583,6 +631,6 @@
   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "3276e5c64a896e0a45ede0e30fba970ad332af1656b0d5c4409c5c67914f1378"
+  "tools/three_machine_compose.py": "2ab29e81e49f7dee47c28e56bcca207154eea37735f99a5b1c514db360ab11c8"
  }
 }

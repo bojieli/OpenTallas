@@ -486,7 +486,7 @@ D['fused_chains'] = V([
 D['spec_table'] = V([
     ['Qwen3-8B ROM, 8K, STREAM4', 'none: compute-bound, KV fill hidden', 5282, '17,197 (4)', 3.26, 0.70],
     ['Qwen3-8B HBM accelerator, TP4, 8K', 'weight stream', 17237, '16,044 (4)', 0.93, 2.28],
-    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '597.0 us/token', '723.6 us (6)', 1.21, 2.73],
+    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '623.7 us/token', '755.6 us (6)', 1.21, 2.75],
 ], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row = ' + CMP + ' ds_rom (default q-element) at the published tau 3.8879, verify from ' + DSC + '.')
 assert D['spec_table']['v'][2][2] == f"{ds['AR_us']:.1f} us/token" and D['spec_table']['v'][2][3] == f"{dsc['MTP']['verify_us']:.1f} us (6)", 'Table 8-14a DS row is stale against ' + CMP
 assert D['spec_table']['v'][2][5] == round(ds['MTP_tok_s_tau_published'] / ds['AR_tok_s'], 2), 'Table 8-14a DS speculative ratio is stale'

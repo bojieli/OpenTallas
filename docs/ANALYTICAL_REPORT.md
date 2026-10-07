@@ -541,11 +541,13 @@ against the GPU golden, unless it is marked otherwise. Records:
 
 #### The two rates
 
-**Plain decoding.** In the closed configuration (owner decision, 2026-10-06) one token is 194,226 cycles <!-- figure: 194226 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
-at 1.2 GHz, which is **6,178.4** tok/s per user. <!-- figure: 6178.4 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+**Plain decoding.** In the closed configuration (owner decision, 2026-10-06) one token is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
+at 1.2 GHz, which is **5,537.3** tok/s per user. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
 It is the measured full token, 193,955 cycles <!-- figure: 193955 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles_measured" tol="exact" name="Qwen ROM measured full token cycles" -->
 (36 layers and the head at P8191 on STREAM4), plus the adopted levers' measured cycles: slab MUL_LAT 7
-+217 and KV landing Option M (KV_MAP=1) +54 on the cold first layer. The core context lever r5_f2ba adds 0
++217 and KV landing Option M (KV_MAP=1) +54 on the cold first layer, plus the die relay stations at the
+measured 430.56 µm reach, +22,487 cycles (owner-approved 2026-10-07, −10.4%;
+`results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json`). The core context lever r5_f2ba adds 0
 cycles. The Option M die crossbar's +24 cycles are a modelled (not RTL) sensitivity only and are not
 composed. Records: `results/arch/three_machine_compose/compose.json` (`qwen_rom`) and
 `results/rtl/qwen_rom_closed_20261006/closure.json`.
@@ -731,10 +733,11 @@ verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_full
   measured full token, 193,955 cycles (36 layers and the head, next-token argmax
   on all four ranks), plus the adopted levers' measured cycles: core r5_f2ba +0,
   slab MUL_LAT 7 +217, and KV landing Option M (KV_MAP=1) +54 on the cold first
-  layer. That is 194,226 cycles <!-- figure: 194226 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
-  = **6,178.4** tok/s per user at 1.2 GHz. <!-- figure: 6178.4 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
+  layer, plus the die relay stations at the measured 430.56 µm reach, +22,487
+  (owner-approved 2026-10-07). That is 216,713 cycles <!-- figure: 216713 src="results/arch/three_machine_compose/compose.json#qwen_rom.token_cycles" tol="exact" name="Qwen ROM closed headline cycles" -->
+  = **5,537.3** tok/s per user at 1.2 GHz. <!-- figure: 5537.3 src="results/arch/three_machine_compose/compose.json#qwen_rom.AR_tok_s" name="Qwen ROM closed headline tok/s" -->
   The Option M die crossbar adds a modelled (not RTL) +24 cycles, which gives
-  6,177.6 tok/s. <!-- figure: 6177.6 src="results/arch/three_machine_compose/compose.json#qwen_rom.modelled_sensitivity.AR_tok_s" name="Qwen ROM modelled-crossbar sensitivity" -->
+  5,536.7 tok/s. <!-- figure: 5536.7 src="results/arch/three_machine_compose/compose.json#qwen_rom.modelled_sensitivity.AR_tok_s" name="Qwen ROM modelled-crossbar sensitivity" -->
   The shipped KV path is the unprotected STREAM4 service; the protected
   full-width transport was explored and not adopted. Blocks closed under the
   prior Qwen bar (SS60 / FF25 slack at or above 0); the die-top route is not done
