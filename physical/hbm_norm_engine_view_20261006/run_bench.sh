@@ -12,3 +12,4 @@ srcs=$(grep -v norm_engine_view $V/sources.f | sed 's/^/ /' | tr -d '\n');
 verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH --top-module tb_dsrom_su_norm -GN=64 -GD=5120 -GHC=1 -GRD=0 -GQUANT=1 -Mdir $O/obj $srcs $O/view.sv $O/tb.sv --build-jobs 4 > $O/build.log 2>&1 || { echo BUILD_FAILED; tail -n 5 $O/build.log; exit 3; }
 mkdir -p $O/run; cp $G/*.mem $O/run/; (cd $O/run && ../obj/Vtb_dsrom_su_norm > ../run.log 2>&1); grep -E "^SUN|^PASS|^FAIL" $O/run.log
 grep -q '^PASS' $O/run.log
+# negative controls print FAIL at line start; closure-loop fail_regex is (?m)^FAIL
