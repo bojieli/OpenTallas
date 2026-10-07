@@ -1003,7 +1003,7 @@ function bindToken(){
 /* ================================================================ 4. TIMING */
 const WFCAT = { field: ['ROM field matvec', '--k-field'], su: ['SU / vector chains', '--k-su'], hop: ['Hops and collectives', '--k-link'], attn: ['Attention and index', '--k-attn'], head: ['Embed and LM head', '--k-tree'],
   sm: ['SM matrix ops (weights from HBM)', '--k-field'], coll: ['TU collectives', '--k-link'], tail: ['Switch striping tail (modelled)', '--k-res'], hbm: ['HBM rows', '--k-hbm'], du: ['Index / select', '--k-index'], du_fast: ['Index / select', '--k-index'],
-  attention: ['Attention block', '--k-attn'], mlp: ['MLP block', '--k-field'], residual: ['Residual', '--k-su'], layer: ['Layer (measured)', '--k-field'], headq: ['RTL head', '--k-tree'], lever: ['Exact levers (removed)', '--s-closed'], wire: ['Die wire stages (added)', '--k-wire'], ctx: ['Adopted core-context cycles', '--k-ctrl'] };
+  attention: ['Attention block', '--k-attn'], mlp: ['MLP block', '--k-field'], residual: ['Residual', '--k-su'], layer: ['Layer (measured)', '--k-field'], headq: ['RTL head', '--k-tree'], lever: ['Exact levers (removed)', '--s-closed'], wire: ['Die wire stages (added)', '--k-wire'], ctx: ['Adopted lever cycles', '--k-ctrl'] };
 function hatchDefs(svg){
   const defs = svgEl('defs', {}, svg);
   const mk = (id, col) => { const p = svgEl('pattern', {id, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)'}, defs); svgEl('rect', {width: 6, height: 6, fill: col, opacity: .25}, p); svgEl('rect', {width: 2.4, height: 6, fill: col}, p); };
@@ -1021,7 +1021,7 @@ function renderWaterfall(){
   } else if (d === 'qwen'){
     const L = val(DATA.qwen_layers); const ps = val(DATA.qwen_phase_split); unit = 'cycles';
     L.forEach(s => { if (s.name === 'HEAD' || /head/i.test(s.name)){ rows.push({ label: 'head', parts: [{ t0: s.start, d: s.cycles, c: 'headq', name: 'RTL head' }] }); return; } const f = s.cycles / ps.total; rows.push({ label: s.name, parts: [{ t0: s.start, d: ps.attention * f, c: 'attention', name: 'attention (split analytical)' }, { t0: s.start + ps.attention * f, d: ps.mlp * f, c: 'mlp', name: 'MLP (split analytical)' }, { t0: s.start + (ps.attention + ps.mlp) * f, d: ps.residual * f, c: 'residual', name: 'residual (split analytical)' }], tot: s.cycles }); });
-    const last = L[L.length - 1]; let t = last.start + last.cycles; rows.push({ label: '+core ctx', parts: [{ t0: t, d: 112, c: 'ctx', name: 'adopted core-context cycles' }] }); total = val(DATA.rates.qwen.cycles); legendKeys = ['attention', 'mlp', 'residual', 'headq', 'ctx'];
+    const last = L[L.length - 1]; let t = last.start + last.cycles; for (const lv of val(DATA.rates.qwen.levers)){ if (!lv.cycles) continue; rows.push({ label: '+' + lv.name, parts: [{ t0: t, d: lv.cycles, c: 'ctx', name: `adopted lever ${lv.name} (${lv.variant || lv.verdict}): +${lv.cycles} cycles` }] }); t += lv.cycles; } total = val(DATA.rates.qwen.cycles); legendKeys = ['attention', 'mlp', 'residual', 'headq', 'ctx'];
     $('wfLede').innerHTML = `Each decoder layer of the measured P8191 token (L0 includes the first KV fill; L1-L35 are 5,282 cycles each, at their compute-only bound). The attention/MLP/residual split inside a layer applies the measured isolated-L0 proportions and is analytical. Total ${fmt0(total)} cycles. ${pill('measured')}`;
   } else {
     const L = val(DATA.hbm_layers); let t = 0;
@@ -1121,11 +1121,15 @@ function renderLevers(){
     $('lvLede').innerHTML = `HBM accelerator levers credited in the comparator: both are exact on minimum components; their SS/FF closure is not admitted. ${pill('analytical')}`;
     $('lvLegend').innerHTML = '<span>bar length: µs removed from the token (AR) or the speculative step (MTP)</span>';
   } else {
-    H = 110; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-    const t = svgEl('text', {x: 20, y: 30, 'font-size': 13, fill: css('--ink')}, svg); t.textContent = `core_context (adopted): the in-context core decode closure adds ${val(DATA.rates.qwen.core_ctx)} cycles to the 193,955-cycle measured token: 6,187.0 → ${fmt(val(DATA.rates.qwen.AR))} tok/s.`;
-    const t2 = svgEl('text', {x: 20, y: 56, 'font-size': 13, fill: css('--muted')}, svg); t2.textContent = `DSpark speculation: built and exact, switched off; it measures ${fmt(val(DATA.rates.qwen.dspark_ratio), 3)}× of plain decoding (${fmt(val(DATA.rates.qwen.dspark))} tok/s).`;
-    const t3 = svgEl('text', {x: 20, y: 82, 'font-size': 13, fill: css('--muted')}, svg); t3.textContent = 'Reason: a 4-position verify layer costs 3.26× an AR layer, because the ROM reads exactly as fast as the lanes multiply.';
-    $('lvLede').innerHTML = `The Qwen ROM has one adopted lever since the measured token, and one decision. ${pill('measured')}`;
+    const QL = val(DATA.rates.qwen.levers), Q = DATA.rates.qwen, m = val(Q.cycles_measured), sn = val(Q.sens);
+    H = 136 + QL.length * 26; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+    const t = svgEl('text', {x: 20, y: 30, 'font-size': 13, fill: css('--ink')}, svg); t.textContent = `Measured token ${fmt0(m)} cycles (${fmt(1.2e9 / m, 1)} tok/s) + adopted levers = ${fmt0(val(Q.cycles))} cycles: ${fmt(val(Q.AR), 1)} tok/s.`;
+    QL.forEach((lv, k) => { const tl = svgEl('text', {x: 36, y: 56 + k * 26, 'font-size': 12.5, fill: css('--ink')}, svg); tl.textContent = `${lv.name} (${lv.variant || 'adopted'}): +${lv.cycles} cycles, ${fmt(lv.dAR_tok_s, 1)} tok/s, ${lv.verdict.split(',')[0].split(' (')[0]}`; });
+    const y0 = 56 + QL.length * 26;
+    const t1 = svgEl('text', {x: 20, y: y0, 'font-size': 13, fill: css('--muted')}, svg); t1.textContent = `Modelled sensitivity (not RTL, not a headline): +${sn.cycles} cycles of die crossbar on the cold first layer, ${fmt(sn.AR, 1)} tok/s.`;
+    const t2 = svgEl('text', {x: 20, y: y0 + 26, 'font-size': 13, fill: css('--muted')}, svg); t2.textContent = `DSpark speculation: built and exact, switched off; it measures ${fmt(val(Q.dspark_ratio), 3)}× of plain decoding (${fmt(val(Q.dspark))} tok/s).`;
+    const t3 = svgEl('text', {x: 20, y: y0 + 52, 'font-size': 13, fill: css('--muted')}, svg); t3.textContent = 'Reason: a 4-position verify layer costs 3.26× an AR layer, because the ROM reads exactly as fast as the lanes multiply.';
+    $('lvLede').innerHTML = `The Qwen ROM's adopted levers since the measured token, and one decision. ${pill('measured')}`;
     $('lvLegend').innerHTML = '';
   }
 }

@@ -40,6 +40,7 @@ RECHECK_PATH = "results/uarch/dsrom_c_recheck_20261004/model.json"
 # stacks sized to need (scenario C rule at 12 head dies = 468); the recheck's 368 dies / 452 stacks are 8 head dies
 RACK_PATH = "results/arch/dsrom_s81_rack_20261006/rack.json"
 ECON_PATH = "results/uarch/economics.json"
+COMPOSE_PATH = "results/arch/three_machine_compose/compose.json"
 QHBM_P8191 = "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json"
 RANK = ["measured", "composed_from_measured", "published", "partial", "off_target_context", "modelled", "assumed",
         "unvalidated", "pending"]
@@ -301,14 +302,23 @@ def ds(get, reg, el, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def qwen(F, get, reg, dram):
     econ = load(ECON_PATH)["qwen_rom"]["energy"]
-    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_stream4"), get("qwen_rom.dspark_tok_s_8k_stream4")
+    # Qwen ROM AR = the committed three-machine composition (measured full36+head token + adopted levers), read through
+    # the scoreboard figure that points at it; the pointer is resolved here so a stale scoreboard cannot pass silently.
+    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_composed"), get("qwen_rom.dspark_tok_s_8k_stream4")
+    q_fig = F["qwen_rom.ar_tok_s_8k_composed"]
+    assert q_fig["path"] == COMPOSE_PATH, q_fig["path"]
+    q_rec = load(COMPOSE_PATH)
+    for k in q_fig["pointer"].split("."):
+        q_rec = q_rec[k]
+    assert q_rec == q_ar.value, f"scoreboard qwen_rom.ar_tok_s_8k_composed {q_ar.value} != {COMPOSE_PATH} {q_fig['pointer']} {q_rec}"
     q_static = Term(econ["static_w_total"], "modelled", f"{ECON_PATH} qwen_rom.energy.static_w_total (4 dies; ungated clock)")
     q_dyn = Term(round(econ["dynamic_mJ_per_token"] * 1e-3, 5), "modelled", f"{ECON_PATH} qwen_rom.energy.dynamic_mJ_per_token")
     integ = load(INTEG_PATH)["fairness"]
     qc = integ["qwen_ROM_option_C_area"]["central"]
     unv_q = ["Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM "
              "tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
-             "AR rate is the measured STREAM4 component composition; full36+head token remains separately required",
+             "AR rate is the composed record (measured full36+head P8191 token + adopted levers, "
+             f"{COMPOSE_PATH} qwen_rom.AR_tok_s); power is modelled, evaluated at that rate",
              "Operating mode is plain AR; DSpark rows are off-mode sensitivity, not the selected operating mode"]
     rom = dict(design="Qwen3-8B ROM, TP4: 4 reticle dies, 4 HBM stacks a die (KV)",
                rates=dict(ar=q_ar.d(), dspark=q_ds.d()),
