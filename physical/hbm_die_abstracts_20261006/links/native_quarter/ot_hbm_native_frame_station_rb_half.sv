@@ -55,13 +55,13 @@ module ot_hbm_native_frame_station_rb_half #(parameter integer ENABLE=0,NO=3)(
    .release_v(c_rv),.release_r(rhit_core),.release_owner(release_owner),.release_frame(release_frame),
    .fclk_o(),.drained(c_drained),.paused(c_paused),.fault(c_fault));
   // ---- fast launch flops (outputs) ----
-  reg [NO-1:0] ack_s;
+  reg [NO-1:0] ack_s;reg [NO-1:0] taken;reg rtaken;wire [NO-1:0] hit_n;wire rhit_n;
   reg [NO-1:0] ov_o,ov_od;reg rv_o,rv_od,in_r_o,fault_o,drained_o,paused_o;
   always @(posedge clk_sm or negedge por_n)
    if(!por_n)begin ov_o<=0;ov_od<=0;rv_o<=0;rv_od<=0;in_r_o<=0;fault_o<=0;drained_o<=1;paused_o<=0;end
    else begin
-    ov_o<=c_ov;ov_od<=ov_o;
-    rv_o<=release_held?c_rv:(!ph&&c_rv);rv_od<=rv_o;
+    ov_o<=c_ov&~(hit_n|taken);ov_od<=ov_o;
+    rv_o<=release_held?(c_rv&&!(rhit_n||rtaken)):(!ph&&c_rv);rv_od<=rv_o;
     in_r_o<=!ph&&c_in_r;
     fault_o<=c_fault;drained_o<=c_drained&&!(|hit_s)&&!(|ack_s);paused_o<=c_paused;
    end
@@ -71,12 +71,14 @@ module ot_hbm_native_frame_station_rb_half #(parameter integer ENABLE=0,NO=3)(
   reg [NO-1:0] or_f;reg rr_f;
   reg [NO-1:0] hit_q;reg rhit_q;reg [NO-1:0] hit_st;reg rhit_st;
   always @(posedge clk_sm or negedge por_n)
-   if(!por_n)begin or_f<=0;rr_f<=0;hit_st<=0;rhit_st<=0;end
+   if(!por_n)begin or_f<=0;rr_f<=0;hit_st<=0;rhit_st<=0;taken<=0;rtaken<=0;end
    else begin
     or_f<=out_r;rr_f<=release_r;
-    hit_st<=(ov_od&or_f)|(hit_st&{NO{!ph}});
-    rhit_st<=(rv_od&rr_f)|(rhit_st&!ph);
+    taken<=(taken|hit_n)&c_ov;rtaken<=(rtaken|rhit_n)&c_rv;
+    hit_st<=hit_n|(hit_st&{NO{!ph}});
+    rhit_st<=rhit_n|(rhit_st&!ph);
    end
+  assign hit_n=ov_od&or_f;assign rhit_n=rv_od&rr_f;
   assign hit_s=hit_st;assign hit_core=hit_st;assign rhit_core=rhit_st;
   // ---- readyless ACK pulses: sticky valid + held frame ----
   reg [NO-1:0] ackv_f;reg [NO*192-1:0] acko_f;reg [NO*73-1:0] ackf_f;
