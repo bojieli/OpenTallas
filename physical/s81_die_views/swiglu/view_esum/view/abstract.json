@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_su_swiglu_lane",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b/routes/s81_swiglu_esum_05d995e9b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b/routes/s81_swiglu_esum_05d995e9b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/takeover-ds/esum-resign/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/takeover-ds/esum-resign/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b/routes/s81_swiglu_esum_05d995e9b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/takeover-ds/esum-resign/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/takeover-ds/esum-resign/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_su_swiglu_lane.lef": "956535e1307a619cab71f0061eacde03d48008a17e04dc62b6485d95ce545b84",
+    "ot_dsrom_su_swiglu_lane_ff.lib": "9ab52dd8c0fca8a56f9f9c626523dd0c116cdcf1eab0e85403e9b1aac292ec6b",
+    "ot_dsrom_su_swiglu_lane_ss.lib": "2f126a8658348bef90bcb3e24043fa98b08189a5d0713d4634cb10c19c87abd1"
+  },
+  "ok": true
+}
