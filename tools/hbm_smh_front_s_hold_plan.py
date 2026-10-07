@@ -52,7 +52,14 @@ def tcl(plan):
         else:
             instance,pin=target.rsplit('/',1)
             text += [f'set inst [$block findInst {{{instance}}}]',
-                     'if {$inst eq "NULL"} {error "Internal register missing"}',
+                     'if {$inst eq "NULL"} {',
+                     '  set matches {}',
+                     '  foreach candidate [$block getInsts] {',
+                     f'    if {{[string map {{\\\\ {{}}}} [$candidate getName]] eq {{{instance}}}}} {{lappend matches $candidate}}',
+                     '  }',
+                     '  if {[llength $matches] != 1} {error "Canonical internal register missing or ambiguous"}',
+                     '  set inst [lindex $matches 0]',
+                     '}',
                      f'set sink [$inst findITerm {{{pin}}}]',
                      'if {$sink eq "NULL"} {error "Internal D pin missing"}',
                      'set old [$sink getNet]', 'lassign [$inst getLocation] x y']
