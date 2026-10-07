@@ -13413,6 +13413,12 @@ def qwen_kvc_decode_pc_model():
     return model()
 
 
+def qwen_forwarded_link_tmr_model():
+    """Candidate protected forwarded-clock graph, without physical adoption."""
+    from uarch_model_qwen_forwarded_link_tmr import model
+    return model()
+
+
 def qwen_ctrl_shift_queue_model():
     """Exact oldest-first write queue with stored onehot bank identities."""
     from uarch_model_qwen_ctrl_shift import model
