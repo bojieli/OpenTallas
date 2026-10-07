@@ -34,7 +34,10 @@ module ot_dsrom_head_elem #(
     parameter INSTANCE = "",
     // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
     // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
-    parameter integer IOREG = 0
+    parameter integer IOREG = 0,
+    // SAFE (default 0; redesign SAFE variant 2026-10-06): the argmax compare is registered (take decided in one
+    // cycle, applied in the next; logits arrive >= 64 cycles apart, a back-to-back key fails closed)
+    parameter integer SAFE = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -255,16 +258,34 @@ module ot_dsrom_head_elem #(
         end
         reg have;
         wire take = !have || k_key > best_key || (k_key == best_key && k_row < best_row);
+        // SAFE: stage the key and its decision (u_v/u_take), apply one cycle later
+        wire        u_v, u_take, u_bad;
+        wire [31:0] u_key, u_bits;
+        wire [16:0] u_row;
+        reg         b2b;
+        if (SAFE) begin : g_safe_cmp
+            reg sv, st, sb;
+            reg [31:0] skey, sbits;
+            reg [16:0] srow;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin sv <= 1'b0; b2b <= 1'b0; end
+                else begin sv <= k_v && !go_e; b2b <= k_v && sv; end
+            always @(posedge clk) begin st <= take; sb <= k_bad; skey <= k_key; sbits <= k_bits; srow <= k_row; end
+            assign u_v = sv; assign u_take = st; assign u_bad = sb; assign u_key = skey; assign u_bits = sbits; assign u_row = srow;
+        end else begin : g_direct_cmp
+            assign u_v = k_v; assign u_take = take; assign u_bad = k_bad; assign u_key = k_key; assign u_bits = k_bits; assign u_row = k_row;
+            always @(posedge clk) b2b <= 1'b0;
+        end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; best_key <= 32'd0; best_row <= 17'd0; best_bits <= 32'd0; end
             else if (go_e) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
-            else if (k_v) begin
+            else if (u_v) begin
                 cnt <= cnt + 7'd1;
                 if (cnt == ROWS - 1) done <= 1'b1;
-                if (!k_bad && take) begin have <= 1'b1; best_key <= k_key; best_row <= k_row; best_bits <= k_bits; end
+                if (!u_bad && u_take) begin have <= 1'b1; best_key <= u_key; best_row <= u_row; best_bits <= u_bits; end
             end
         reg kerr;
-        always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= k_v && k_bad;
+        always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= (u_v && u_bad) || b2b;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) fault <= 1'b0;
             else if (go_e) fault <= 1'b0;
