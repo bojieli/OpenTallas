@@ -1,0 +1,16 @@
+{
+  "source_commit": "0566c978d54fa504fe8ff2f569e37b7bedb76d7e",
+  "local_source_hashes": {
+    "tools/dsrom_fused_draft_head.py": "f52bbe3cc795f2fc360007f7fae6aeb7d432eae919931043c203e35984a4373d",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_hdc_core_v41_mtp_slice_checked.sv": "890b789cf1e9dd218835c4689742ba0473ec5917bff2044fedb81d0736262f22",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv": "be5c487cd4a3920847e43b0cf93a3580c541e9ee0679e0753d7330d24f506839",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_retire_parent.sv": "b892c1821142fda3eb74258f6ddde43aedca2a167abdedd6cb509e4798542972"
+  },
+  "launcher_overlay": "launcher.patch",
+  "golden_edited": false,
+  "commits_created": false
+}

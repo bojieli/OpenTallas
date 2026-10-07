@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.elemB.final.v1",
+  "verdict": "PASS",
+  "job": "dshead-elemB-ss-a318fdf47",
+  "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+  "helper_commit": "6625a113964df4316b6c3ad5c56ed0630f21cb17",
+  "ss_setup_ps": 91.75,
+  "ff_hold_ps": 19.13,
+  "drc": 0,
+  "period_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "io_delays_ps": {
+    "input_max": 784,
+    "input_min": 289,
+    "output_max": -284,
+    "output_min": -389
+  },
+  "coverage": {
+    "ss": {
+      "macro_count": "26",
+      "macro_worst": "389.42215",
+      "outputs": "34",
+      "constants": "115",
+      "period": "833.333008"
+    },
+    "ff": {
+      "macro_count": "26",
+      "macro_worst": "30.416225",
+      "outputs": "34",
+      "constants": "115",
+      "period": "833.333008"
+    }
+  },
+  "binding": {
+    "odb": "768d0d6849012222c6032b15ccf9898ed238e919206a6294d0d922d82ec9c4cc",
+    "sdc": "8c9f0817122bd02fb5998d89da25f352e024155b0834c27bc8c8ddf6e5c9bf2f",
+    "spef": "92d9acb7e07f25a57ebd50d29f5e56af6498fc2a8315095c7f4023cf5a057a78",
+    "physical/dsrom_fh_safe/gen/signoff_elemB.sdc": "7b80ded3c5bd5d3692f85ac2fa3eada33ea48ff218637755c1cf22106cbf13f0"
+  },
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "parameterization": {
+    "CUT": 511,
+    "IOREG": 1,
+    "JOIN": 0,
+    "LV": 6,
+    "PAD": 2,
+    "ROWS": 128,
+    "SAFE": 1,
+    "SPLIT9": 1
+  },
+  "source_binding": "All six design sources and SS/FF ROM Liberty plus ROM LEF match immutable source commit.",
+  "export_binding": "LEF/SS/FF Liberty hashes match export.json; exporter and final STA used the same installed ODB/SPEF/SDC, post-SDC and macro views; matching reported margins.",
+  "constant_outputs": "JOIN=0 outputs without timing paths are accepted only after proving a single TIELO/TIEHI driver in the signed-off ODB.",
+  "prior_failure_preserved": {
+    "ss_ps": 92.02,
+    "ff_ps": 14.54,
+    "location": "history/first_eco_result.json"
+  },
+  "new_eco_launched": false,
+  "existing_eco": "eco-r2/pass1; 404 added cells; installed/exported remotely at 04:12",
+  "workflow_note": "Loop status/top-level metrics may lag completed eco_install. This result uses candidate and exported artifacts, not stale pre-ECO metrics. No shared job state changed.",
+  "scope": "Element-B block closure under the pinned IO/multicycle/reset contract; not new full-head/die context qualification.",
+  "git_action": "No commits, branch moves, staging, or pushes; parent commits explicit paths."
+}

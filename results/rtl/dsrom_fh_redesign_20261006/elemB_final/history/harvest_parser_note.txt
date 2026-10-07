@@ -1,0 +1,1 @@
+Initial harvest validation stopped on OpenSTA multiline SDC serialization: set_false_path followed by a backslash/newline. All downloaded artifacts were preserved; validation now joins Tcl continuation lines before checking that only rst_n is false-pathed. No design/constraint changes or new ECO.

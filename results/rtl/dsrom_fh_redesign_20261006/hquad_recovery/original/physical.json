@@ -1,0 +1,297 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-07T10:39:19.178602+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hdc_v41_fh_hquad",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.835,
+    "core_input_delay_min_ns": 0.331,
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "gid",
+      "hid",
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": -0.335,
+    "output_delay_min_ns": -0.431,
+    "parameters": {
+      "LRET": 7,
+      "QPIN": 1,
+      "RETURN_EXTRA": 6
+    },
+    "sources": [
+      {
+        "path": "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv",
+        "sha256": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02",
+        "size_bytes": 635
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+        "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+        "size_bytes": 10843
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_matvec.sv",
+        "sha256": "876ed4e5f65aaaad1c961c9f9bb60f8440a6d9d3fb1f61e2860687678d862131",
+        "size_bytes": 44998
+      },
+      {
+        "path": "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_ctx.sv",
+        "sha256": "0f4eafebf52a10481bdf128be78fb36087146edd5f4539202e5f7e4fb91d7156",
+        "size_bytes": 14077
+      },
+      {
+        "path": "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_hquad.sv",
+        "sha256": "dce03c3a7479e871592652d67b582328752f5eeff83e0f0b951977ca618f0b5d",
+        "size_bytes": 11781
+      }
+    ],
+    "top": "ot_hdc_v41_fh_hquad"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n4 |       452\n      399 |        698 |       268 |       430\nNegotiation phase 2: isolation point active, 1000 iterations.\n      400 |        705 |       265 |       440\n      410 |        715 |       251 |       464\n      420 |        604 |       236 |       368\n      430 |        589 |       211 |       378\n      440 |        522 |       208 |       314\n      450 |        492 |       180 |       312\n      460 |        513 |       171 |       342\n      470 |        508 |       178 |       330\n      480 |        515 |       167 |       348\n      490 |        406 |       156 |       250\n      500 |        435 |       157 |       278\n      510 |        428 |       160 |       268\n      520 |        359 |       145 |       214\n      530 |        316 |       124 |       192\n      540 |        364 |       124 |       240\n      550 |        277 |       101 |       176\n      560 |        246 |        96 |       150\n      570 |        255 |        99 |       156\n      580 |        249 |        93 |       156\n      590 |        242 |        92 |       150\n      600 |        224 |        88 |       136\n      610 |        170 |        66 |       104\n      620 |        163 |        59 |       104\n      630 |        164 |        64 |       100\n      640 |        137 |        51 |        86\n      650 |        139 |        49 |        90\n      660 |        130 |        42 |        88\n      670 |        131 |        43 |        88\n      680 |        125 |        43 |        82\n      690 |        124 |        42 |        82\n      700 |        116 |        40 |        76\n      710 |        113 |        43 |        70\n      720 |        125 |        45 |        80\n      730 |         92 |        38 |        54\n      740 |         87 |        37 |        50\n      750 |         79 |        33 |        46\n      760 |         64 |        26 |        38\n      770 |         56 |        26 |        30\n      780 |         65 |        25 |        40\n      790 |         64 |        24 |        40\n      799 |         60 |        20 |        40\n[WARNING DPL-0702] Negotiation phase 2: violations stuck at 60 for 3 consecutive iterations. Using diamond search for 20 remaining illegal cells.\ndiamond recovery: recovered 11/20 stuck cells.\n[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 2\n[INFO DPL-0500] Runtime: 208.47s\nPlacement Analysis\n---------------------------------\ntotal displacement      43681.1 u\naverage displacement        0.5 u\nmax displacement           38.1 u\noriginal HPWL          252254.4 u\nlegalized HPWL         289681.7 u\ndelta HPWL                   15 %\n\nTook 209 seconds: detailed_placement\ncheck_placement -verbose\n[WARNING DPL-0005] Overlap check failed (1).\n hold12252 (BUFx2_ASAP7_75t_R) overlaps g_lret.u_rpipe.g_line.line\\[1253\\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)\n[WARNING DPL-0011] Padding check failed (1).\n hold12252\n[ERROR DPL-0033] detailed placement checks failed during check placement.\nError: global_route.tcl, 175 DPL-0033\n\nElapsed time: 0:04.25[h:]min:sec. CPU time: user 4.10 sys 0.14 (99%). Peak memory: 423340KB.\nElapsed time: 0:40.25[h:]min:sec. CPU time: user 43.47 sys 5.68 (122%). Peak memory: 515448KB.\nElapsed time: 0:02.20[h:]min:sec. CPU time: user 2.09 sys 0.11 (99%). Peak memory: 379208KB.\nElapsed time: 0:02.13[h:]min:sec. CPU time: user 2.04 sys 0.09 (99%). Peak memory: 348608KB.\nElapsed time: 0:02.98[h:]min:sec. CPU time: user 2.88 sys 0.11 (100%). Peak memory: 397448KB.\nElapsed time: 0:25.39[h:]min:sec. CPU time: user 151.67 sys 0.24 (598%). Peak memory: 502824KB.\nElapsed time: 0:02.36[h:]min:sec. CPU time: user 2.26 sys 0.10 (99%). Peak memory: 396456KB.\nElapsed time: 1:07.12[h:]min:sec. CPU time: user 237.38 sys 21.75 (386%). Peak memory: 1420544KB.\nElapsed time: 0:24.76[h:]min:sec. CPU time: user 32.45 sys 11.88 (179%). Peak memory: 582280KB.\nElapsed time: 0:38.73[h:]min:sec. CPU time: user 47.27 sys 11.20 (150%). Peak memory: 1067168KB.\nElapsed time: 1:36.38[h:]min:sec. CPU time: user 134.64 sys 26.98 (167%). Peak memory: 1419692KB.\nElapsed time: 54:44.81[h:]min:sec. CPU time: user 5612.80 sys 43.66 (172%). Peak memory: 2724208KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_hdc_v41_fh_hquad_asap7_dshead_hquad_r4_cd3cbef4b/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-07T09:38:43.327236+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/src",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hdc_v41_fh_hquad",
+      "--source",
+      "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_matvec.sv",
+      "--source",
+      "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_ctx.sv",
+      "--source",
+      "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_hquad.sv",
+      "--param",
+      "QPIN=1",
+      "--param",
+      "RETURN_EXTRA=6",
+      "--macro-view",
+      "ot_hdc_v41_fh_sram_lane_hardened=physical/dsrom_fh_quad/ot_hdc_v41_fh_sram_lane_hardened",
+      "--macro-place-halo",
+      "2",
+      "2",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/dsrom_fh_quad/macro_place_hquad.tcl",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/dsrom_fh_quad/pdn_quad.tcl",
+      "--die-area",
+      "0",
+      "0",
+      "470",
+      "300",
+      "--core-area",
+      "2",
+      "2",
+      "468",
+      "298",
+      "--false-path-from",
+      "gid",
+      "--false-path-from",
+      "hid",
+      "--core-utilization",
+      "30",
+      "--max-fanout",
+      "16",
+      "--param",
+      "LRET=7",
+      "--orfs-var",
+      "PWR_NETS_VOLTAGES=",
+      "--orfs-var",
+      "GND_NETS_VOLTAGES=",
+      "--clock-period-ns",
+      "0.730",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--false-path-from",
+      "rst_n",
+      "--core-input-delay-min-ns",
+      ".33100000000000000000",
+      "--core-input-delay-max-ns",
+      ".83500000000000000000",
+      "--output-delay-min-ns",
+      "-.43100000000000000000",
+      "--output-delay-max-ns",
+      "-.33500000000000000000",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--place-density",
+      "0.55",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--max-transition-ns",
+      "0.25",
+      "--hold-margin-ns",
+      "0.035",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/routes/dshead_hquad_r4_cd3cbef4b/work",
+      "--nickname-tag",
+      "dshead_hquad_r4_cd3cbef4b",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/routes/dshead_hquad_r4_cd3cbef4b/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-cd3cbef4b/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.73,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
