@@ -67,7 +67,17 @@ PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches 
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
-                         r"admission (?:timed out|refused)", re.M)
+                         r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
+                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+# a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
+# g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
+BENCH_CRASH_RC = (124, 134, 135, 137, 139, 143)
+
+
+def bench_crashed(st, rc, tail):
+    if rc in BENCH_CRASH_RC or RESOURCE_RE.search(tail):
+        return st["expect"] == "fail" or not WORK_RE.search(tail)
+    return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
@@ -941,9 +951,17 @@ def launch_stage(j, st, cmd):
         if st["kind"] != "calibrate" else ""
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
-    ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
-    ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
-        check=True)
+    # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
+    # the second copy overwrote the script and rc (dsrom_softmax_safe_div2b: hold ECO 'rc=10 output exists' while the
+    # first ECO was running).  A tag whose process is alive is adopted, never launched twice.
+    alive = ssh(j["host"], f"p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n \"$p\" ] && kill -0 $p 2>/dev/null && "
+                           f"[ ! -f {run}/cl/{t}.rc ] && echo ALIVE; true", timeout=60)
+    if "ALIVE" in alive.stdout:
+        log(f"[{j['name']}] {t} already running on {j['host']}: adopted, not relaunched")
+    else:
+        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
+        ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
+            check=True)
     j["stage_tag"] = t
     j["stage_started"] = now_iso()
 
@@ -1226,7 +1244,7 @@ def crash(j, st, fleet, why):
                f"NEEDS_HUMAN: calibrate failed, class {m.group(1)} (deterministic, not retried)\n"
                f"detail: {m.group(2).strip()[:200]}\nOWNER ACTION ({j['spec'].get('owner')}): {act}")
         return
-    resource = bool(RESOURCE_RE.search(tail)) or why.startswith("LOST")
+    resource = bool(RESOURCE_RE.search(tail)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:]))
     if j["retries_used"] >= 1:
@@ -1402,7 +1420,7 @@ def bench_track(j, fleet, stl):
             return True
         ok_extra, _ = remote_ok(v, st.get("ok"))
         tail = stage_tail(v, st, 40)
-        crashed = state == "LOST" or (st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)))
+        crashed = state == "LOST" or bench_crashed(st, rc, tail)
         if crashed:
             if e["n"] < 2:
                 e["state"] = "retry"
@@ -1543,8 +1561,9 @@ def step(j, fleet):
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
             tail = stage_tail(j, st, 40)
-            if st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)):
-                return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
+            if bench_crashed(st, rc, tail):
+                return crash(j, st, fleet, f"bench tool crash: rc={rc} ({'negative control' if st['expect'] == 'fail' else 'positive bench'}"
+                                           f" with no verdict evidence)")
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
