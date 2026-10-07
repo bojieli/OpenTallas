@@ -106,7 +106,7 @@ module ot_dsrom_su_softmax #(
     localparam integer D_EXP_CORE = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0);
     localparam integer D_EXP = (SAFE == 3) ? 2 * D_EXP_CORE + 1 : D_EXP_CORE + ((SAFE != 0) ? 1 : 0);   // SAFE 3: half-rate cores
     localparam integer NRD = (SAFE == 2) ? 2 : MARGIN;     // SAFE 2: the divider's steps in two stages (62 deep)
-    localparam integer D_DIV_CORE = (DIVF12 ? 33 + ((NRD != 0) ? 1 : 0) + ((NRD == 2) ? 28 : 0) : 19);
+    localparam integer D_DIV_CORE = (DIVF12 ? 33 + ((NRD != 0) ? 1 : 0) + ((NRD == 2) ? 29 : 0) : 19);
     localparam integer D_DIV = (SAFE == 3) ? 2 * D_DIV_CORE + 1 : D_DIV_CORE + ((SAFE != 0) ? 1 : 0);
     // configuration inputs: registered at the pin in the margin build
     wire [6:0]         nv_i;

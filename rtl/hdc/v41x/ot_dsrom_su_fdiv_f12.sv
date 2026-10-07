@@ -32,7 +32,7 @@ module ot_dsrom_su_fdiv_f12 #(
 );
     localparam integer QB = 27;
     localparam integer SPL = (NR == 2) ? 1 : 0;                                 // NR 2: SAFE build, every step in two stages
-    localparam integer DEPTH = 2 + QB + 4 + ((NR != 0) ? 1 : 0) + (SPL ? QB + 1 : 0);   // 33 (NR 0) / 34 (NR 1) / 62 (NR 2)
+    localparam integer DEPTH = 2 + QB + 4 + ((NR != 0) ? 1 : 0) + (SPL ? QB + 2 : 0);   // 33 (NR 0) / 34 (NR 1) / 63 (NR 2)
 
     wire [DEPTH:0] vd;
     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
@@ -69,16 +69,34 @@ module ot_dsrom_su_fdiv_f12 #(
     end else begin : g_nz
         always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
     end endgenerate
-    wire [33:0] na = SPL ? norm2(da[30:23], da[22:0], z_pa) : norm(a[30:23], a[22:0]);
-    wire [33:0] nb = SPL ? norm2(db[30:23], db[22:0], z_pb) : norm(b[30:23], b[22:0]);
+    // NR 2: the subnormal shift split in two stages: coarse (by 8 * sh[4:3]) here, fine (sh[2:0]) in the normalise stage
+    reg [23:0] zz_ma, zz_mb; reg [2:0] zz_sa, zz_sb; reg [9:0] zz_ea, zz_eb; reg zz_sign, zz_zero, zz_bad;
+    wire [4:0] sha = 5'd23 - z_pa, shb = 5'd23 - z_pb;
+    generate if (SPL) begin : g_zz
+        always @(posedge clk) begin
+            zz_ma <= (da[30:23] != 8'd0) ? {1'b1, da[22:0]} : ({1'b0, da[22:0]} << {sha[4:3], 3'b000});
+            zz_mb <= (db[30:23] != 8'd0) ? {1'b1, db[22:0]} : ({1'b0, db[22:0]} << {shb[4:3], 3'b000});
+            zz_sa <= (da[30:23] != 8'd0) ? 3'd0 : sha[2:0];
+            zz_sb <= (db[30:23] != 8'd0) ? 3'd0 : shb[2:0];
+            zz_ea <= (da[30:23] != 8'd0) ? da[30:23] - 10'sd127 : $signed({5'd0, z_pa}) - 10'sd149;
+            zz_eb <= (db[30:23] != 8'd0) ? db[30:23] - 10'sd127 : $signed({5'd0, z_pb}) - 10'sd149;
+            zz_sign <= da[31] ^ db[31];
+            zz_zero <= (da[30:0] == 31'd0);
+            zz_bad  <= (da[30:23] == 8'hFF) || (db[30:23] == 8'hFF) || (db[30:0] == 31'd0);
+        end
+    end else begin : g_nzz
+        always @* begin zz_ma = 24'd0; zz_mb = 24'd0; zz_sa = 3'd0; zz_sb = 3'd0; zz_ea = 10'd0; zz_eb = 10'd0; zz_sign = 1'b0; zz_zero = 1'b0; zz_bad = 1'b0; end
+    end endgenerate
+    wire [33:0] na = SPL ? {(zz_ma << zz_sa), zz_ea} : norm(a[30:23], a[22:0]);
+    wire [33:0] nb = SPL ? {(zz_mb << zz_sb), zz_eb} : norm(b[30:23], b[22:0]);
 
     // decode in two stages: normalise both operands (subnormal leading-one count and shift) | exponent difference
     reg        n_sign, n_zero, n_bad;
     reg [33:0] n_a, n_b;
     always @(posedge clk) begin
-        n_sign <= da[31] ^ db[31];
-        n_zero <= (da[30:0] == 31'd0);
-        n_bad  <= (da[30:23] == 8'hFF) || (db[30:23] == 8'hFF) || (db[30:0] == 31'd0);
+        n_sign <= SPL ? zz_sign : (a[31] ^ b[31]);
+        n_zero <= SPL ? zz_zero : (a[30:0] == 31'd0);
+        n_bad  <= SPL ? zz_bad : ((a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0));
         n_a    <= na;
         n_b    <= nb;
     end
@@ -113,9 +131,12 @@ module ot_dsrom_su_fdiv_f12 #(
             wire          sub = (j == 0) ? 1'b1 : r_q[j-1][0];
             wire [26:0]   x   = (j == 0) ? {3'b0, d_ma} : {p_rem[j-1][25:0], 1'b0};
             wire [26:0]   opb = sub ? ~{3'b0, mb} : {3'b0, mb};
-            wire [13:0]   lo  = {1'b0, x[12:0]} + {1'b0, opb[12:0]} + {13'b0, sub};   // stage A: low half
-            wire [13:0]   h0  = x[26:13] + opb[26:13];                              // upper half, both carries
-            wire [13:0]   h1  = x[26:13] + opb[26:13] + 14'd1;
+            wire [12:0]   lo_s; wire lo_c;                                          // stage A: low half (keep-prefix: ABC cannot re-ripple it)
+            ot_hdc_kadd #(.W(13), .K(1)) u_lo (.a(x[12:0]), .b(opb[12:0]), .cin(sub), .s(lo_s), .cout(lo_c));
+            wire [13:0]   lo  = {lo_c, lo_s};
+            wire [13:0]   h0, h1; wire h0_c, h1_c;                                  // upper half, both carries
+            ot_hdc_kadd #(.W(14), .K(1)) u_h0 (.a(x[26:13]), .b(opb[26:13]), .cin(1'b0), .s(h0), .cout(h0_c));
+            ot_hdc_kadd #(.W(14), .K(1)) u_h1 (.a(x[26:13]), .b(opb[26:13]), .cin(1'b1), .s(h1), .cout(h1_c));
             reg  [12:0] a_lo; reg a_cl; reg [13:0] a_h0, a_h1;
             reg  [23:0] a_mb; reg [QB-1:0] a_q; reg a_sign, a_zero, a_bad; reg signed [10:0] a_e;
             always @(posedge clk) begin
