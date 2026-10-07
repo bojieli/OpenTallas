@@ -51,7 +51,8 @@ module ot_hbm_accel_smh #(
     parameter integer PIO  = 2,
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
-    parameter integer RPT  = 2          // leaves (rows) per hardened tile
+    parameter integer RPT  = 2,         // leaves (rows) per hardened tile
+    parameter integer REQCR = 0         // 1: request port with ready latency 2 (req_ready captured raw; see front_s)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -152,7 +153,7 @@ module ot_hbm_accel_smh #(
             .bout_r1(f_br[BBW +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
             .fo_row0(n_row0), .fo_pbz(n_pbz), .fd_v(s_dv), .fd_d(s_dd), .fd_ret(s_dret), .fq_v(s_qv), .fq_d(s_qd),
             .fq_ret(s_qret), .fp_v(s_pv), .fp_d(s_pd), .fsv(s_sv), .fo_row3(s_row3));
-        ot_hbm_accel_smh_front_s u_fs (
+        ot_hbm_accel_smh_front_s #(.REQCR(REQCR)) u_fs (
             .clk(clk), .rst_n(rst_n), .d_valid(d_valid), .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines),
             .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
             .rsp_tag(rsp_tag), .rsp_data(rsp_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault),
@@ -176,7 +177,8 @@ module ot_hbm_accel_smh #(
             .fo_row0(n_row0), .fo_pbz(n_pbz), .fd_v(s_dv), .fd_d(s_dd), .fd_ret(s_dret), .fq_v(s_qv), .fq_d(s_qd),
             .fq_ret(s_qret), .fp_v(s_pv), .fp_d(s_pd), .fsv(s_sv), .fo_row3(s_row3));
         ot_hbm_accel_smh_front_s #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .RMAX(RMAX), .XD(XD),
-                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT)) u_fs (
+                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT),
+                                   .REQCR(REQCR)) u_fs (
             .clk(clk), .rst_n(rst_n), .d_valid(d_valid), .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines),
             .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
             .rsp_tag(rsp_tag), .rsp_data(rsp_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault),
@@ -649,16 +651,15 @@ module ot_hbm_accel_smh_oskid #(
     always @(posedge clk) if (push) mem[wp[1:0]] <= s_data;
 endmodule
 
-// REJECTED m3c candidate, retained for the directed liveness regression only.
-// Alternating ready can starve a slot indefinitely; front_s keeps the m3b FIFO.
-// The request port at the element pins (margin m3c): req_ready lands in a flop with NO logic and the request leaves
-// from a flop (front_s m3b: req_ready -> read pointer -75 ps, read pointer -> 4:1 select -> req_addr -31 ps; an element
-// input keeps ~100 ps beyond a bare capture flop).  Two request slots take turns on the pins: the slot shown in cycle t
-// is shown again no earlier than t + 2, when the registered ready says whether it was taken (then it refills from the
-// sink queue) or not (then it is shown again).  A request is therefore never shown in two consecutive cycles, so it
-// can't be taken twice, and two slots keep one request a cycle.  Requests may leave out of order when the hub refuses one:
-// the bulk copy tags every request and accepts responses in any order (ot_hbm_accel_bulk_copy_oq5).
-module ot_hbm_accel_smh_oreq #(
+// The request port with READY LATENCY 2 (REQCR = 1, margin m3d; owner-approved credit-style protocol): req_ready lands
+// in a flop with no logic (rq) and req_v / req_addr / req_tag leave flops.  A beat is shown in cycle t + 2 only if the
+// receiver showed ready in cycle t, so the receiver must take every beat that arrives up to two cycles after it drops
+// ready: a 2-entry headroom in its FIFO (the credits of the round trip).  The die's receiver (station hfd_stn_r2) ties
+// req_ready to a register and never stalls, which meets this by construction.  front_s m3 / m3b: any logic between
+// req_ready and a flop failed (-184 / -75 ps: the hfd_sm sheet leaves 86 ps inside the element on this pin).
+// Mutants (negative controls): OT_SMH_MUT_REQOVF shows beats without the permission (receiver overflow),
+// OT_SMH_MUT_REQLEAK pops a request every 64 transfers without showing it (a lost credit / request).
+module ot_hbm_accel_smh_reqrl #(
     parameter integer W = 8
 ) (
     input  wire         clk,
@@ -670,24 +671,28 @@ module ot_hbm_accel_smh_oreq #(
     input  wire         m_ready,
     output wire [W-1:0] m_data
 );
-    reg         ov, qv, rq;            // shown slot valid, other slot valid, registered pin ready
-    reg [W-1:0] od, qd;
-    wire        q_taken = qv && rq;    // the other slot was shown last cycle; rq is the ready it got
-    wire        q_free  = q_taken || !qv;
-    assign s_ready = q_free;
+    reg         rq, ov;
+    reg [W-1:0] od;
+`ifdef OT_SMH_MUT_REQOVF
+    wire perm = 1'b1;
+`else
+    wire perm = rq;
+`endif
+    wire go = s_valid && perm;
+`ifdef OT_SMH_MUT_REQLEAK
+    reg [5:0] lk;
+    always @(posedge clk or negedge rst_n) if (!rst_n) lk <= 6'd0; else if (go) lk <= lk + 6'd1;
+    wire drop = (lk == 6'd63);
+`else
+    wire drop = 1'b0;
+`endif
+    assign s_ready = perm;
     assign m_valid = ov;
-    assign m_data  = od;
+    assign m_data = od;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ov <= 1'b0; qv <= 1'b0; rq <= 1'b0; end
-        else begin
-            rq <= m_ready;
-            ov <= q_free ? s_valid : 1'b1;
-            qv <= ov;
-        end
-    always @(posedge clk) begin
-        od <= q_free ? s_data : qd;
-        qd <= od;
-    end
+        if (!rst_n) begin rq <= 1'b0; ov <= 1'b0; end
+        else begin rq <= m_ready; ov <= go && !drop; end
+    always @(posedge clk) if (go) od <= s_data;
 endmodule
 
 // ot_hbm_accel_smh_skid3 with every handshake PER COPY (margin m3): copy i (0 .. NS-1: the 32-bit slices; NS: the
@@ -1216,7 +1221,8 @@ module ot_hbm_accel_smh_front_s #(
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,
-    parameter integer NFMT = SUB * LBS * 8 + SUB
+    parameter integer NFMT = SUB * LBS * 8 + SUB,
+    parameter integer REQCR = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -1270,8 +1276,13 @@ module ot_hbm_accel_smh_front_s #(
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
     ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
-    ot_hbm_accel_smh_oskid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
-        .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
+    generate if (REQCR != 0) begin : g_rc
+        ot_hbm_accel_smh_reqrl #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+            .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
+    end else begin : g_rs
+        ot_hbm_accel_smh_oskid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+            .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
+    end endgenerate
     // response: stages 1 (pins) and 2 (north face) of m2's four
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(fp_v));
     ot_hbm_accel_smv_chain #(.W(1098), .D(2), .RST(0)) u_prd (.clk(clk), .rst_n(rst_n), .d({rsp_tag, rsp_data}),

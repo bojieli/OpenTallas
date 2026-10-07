@@ -1149,6 +1149,10 @@ def cmd_block(a):
     nick = f"smh_{a.piece}_{a.variant}_{a.label}"
     (work / "config.mk").write_text(config_mk(name, nick, die, macros, extra))
     write_abstract(work, name, macros, name)
+    if a.top_param:
+        # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
+        (work / "config.mk").write_text((work / "config.mk").read_text() + "export VERILOG_TOP_PARAMS = "
+                                        + " ".join(" ".join(x.split("=", 1)) for x in a.top_param) + "\n")
     mx = " ".join(f"{k}={v}" for k, v in (x.split("=", 1) for x in (a.make_var or [])))
     run_sh(work, a.label, a.src, a.need, a.cores, macros, target=a.stop_after or "finish", admit=not a.no_admit,
            make_extra=(mx + " ") if mx else "")
@@ -1271,6 +1275,7 @@ def main(argv=None):
     b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
                    "loop does its own admission)")
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
+    b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)

@@ -17,7 +17,7 @@
 // x.hex; +NOPS.  Output out.txt: "<op> <row> <data>" result lines and one "# op ..." timing line per op.
 module tb_hbm_accel_sm_pq_seq;
     parameter integer SUB = 4, LBS = 2, LSB = 16, NC = 1, XDEPTH = 128, RMAX = 256, LEV = 4,
-                      LAT = 60, JIT = 40, MAXOPS = 64, XB = 0, HAZ = 1, G1ASB = 0;
+                      LAT = 60, JIT = 40, MAXOPS = 64, XB = 0, HAZ = 1, G1ASB = 0, REQCR = 0;
     localparam integer RW = $clog2(RMAX);
     localparam integer XW = $clog2(XDEPTH);
     localparam integer FRAGW = NC * (SUB * LBS * 266 + SUB * LSB * 16);
@@ -36,6 +36,12 @@ module tb_hbm_accel_sm_pq_seq;
     reg req_stalls;
     initial req_stalls = $test$plusargs("REQ_STALLS");
     wire req_ready = !req_stalls || ((cyc % 97) >= 31 && (cyc % 7) >= 2);
+    // REQCR = 1 (smh ready latency 2): the bench is the receiver; it takes every beat, and a beat that arrives when it
+    // did not show ready two cycles earlier overflows its 2-entry headroom: the beat is LOST (# REQ_OVERFLOW)
+    reg rdy_d1 = 0, rdy_d2 = 0;
+    always @(posedge clk) begin rdy_d1 <= req_ready; rdy_d2 <= rdy_d1; end
+    wire req_take = (REQCR != 0) ? (req_v && rdy_d2) : (req_v && req_ready);
+    always @(posedge clk) if (rst_n && REQCR != 0 && req_v && !rdy_d2) $display("# REQ_OVERFLOW cyc %0d tag %0d", cyc, req_tag);
     reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
     reg xw_en = 0; reg [XW-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
@@ -43,7 +49,7 @@ module tb_hbm_accel_sm_pq_seq;
 `ifdef OT_SMH
     // the hierarchical element ot_hbm_accel_smh (same pins, same protocol; +define+OT_SMH)
     ot_hbm_accel_smh #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
-                       .MAX_OUT(512), .HAZ(HAZ)) dut (
+                       .MAX_OUT(512), .HAZ(HAZ), .REQCR(REQCR)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
         .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
@@ -87,7 +93,7 @@ module tb_hbm_accel_sm_pq_seq;
     always @(posedge clk) begin
         rsp_v <= 1'b0;
         if (rst_n) begin
-            if (req_v && req_ready) begin
+            if (req_take) begin
                 pick = -1;
                 for (i = 0; i < 512; i = i + 1) if (!p_use[i] && pick < 0) pick = i;
                 p_use[pick] = 1; p_addr[pick] = req_addr; p_tag[pick] = req_tag;
