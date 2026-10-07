@@ -39,6 +39,9 @@ class BindingTest(unittest.TestCase):
         result = self.run_check()
         self.assertEqual(result['verdict'], 'PASS')
         self.assertFalse(result['signoff_claim'])
+        self.assertFalse(result['active_main_validated'])
+        self.assertFalse((self.root / 'physical/hbm_accel_die_views/insertion_override.json').exists())
+        self.assertFalse((self.root / 'tools/budgets/common.py').exists())
         self.assertEqual(len(result['jobs']), 5)
         self.assertTrue(all(j['stale_binding'] and j['mean_gate_pass'] for j in result['jobs']))
         b2 = next(j for j in result['jobs'] if '_b2_' in j['job'])
@@ -68,6 +71,12 @@ class BindingTest(unittest.TestCase):
         self.mutate(binding.BUDGET / 'inputs/provenance.json',
                     lambda j: j['die_models']['hbm'].update(commit='0' * 40))
         with self.assertRaisesRegex(ValueError, 'provenance/model source mismatch'):
+            self.run_check()
+
+    def test_helper_snapshot_tamper_rejected(self):
+        path = self.root / binding.SNAPSHOT / 'tools/budgets/common.py'
+        path.write_text(path.read_text() + '\n# altered\n')
+        with self.assertRaisesRegex(ValueError, 'snapshot digest mismatch'):
             self.run_check()
 
 

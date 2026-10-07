@@ -6,6 +6,7 @@ distinguishes a valid budget plan from a stale job binding and physical sign-off
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 import math
 from pathlib import Path
@@ -13,13 +14,10 @@ import subprocess
 import sys
 import tempfile
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import common as C
-import budget_sheet as B
-
 ROOT = Path(__file__).resolve().parents[2]
-BUDGET = Path('results/rtl/budgets_20261006')
 RECORD = Path('results/rtl/hbm_index_budget_binding_20261006')
+SNAPSHOT = RECORD / 'inputs'
+BUDGET = SNAPSHOT / 'results/rtl/budgets_20261006'
 
 
 def require(ok, message):
@@ -36,7 +34,38 @@ def stats(values):
                 min=round(min(values), 1), max=round(max(values), 1))
 
 
+def snapshot_modules(snapshot):
+    """Load the audited helpers without depending on active-tree Python modules."""
+    def load(name, filename):
+        spec = importlib.util.spec_from_file_location(name, snapshot / 'tools/budgets' / filename)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    common = load('hbm_audit_common', 'common.py')
+    previous = sys.modules.get('common')
+    old_path = sys.path[:]
+    try:
+        sys.modules['common'] = common
+        budget = load('hbm_audit_budget_sheet', 'budget_sheet.py')
+    finally:
+        sys.path[:] = old_path
+        if previous is None:
+            sys.modules.pop('common', None)
+        else:
+            sys.modules['common'] = previous
+    return common, budget
+
+
 def check(root, jobs):
+    snapshot = root / SNAPSHOT
+    manifest_path = snapshot / 'manifest.json'
+    manifest = json.loads(manifest_path.read_text())
+    require(manifest['schema'] == 'opentallas.hbm_index_budget_snapshot.v1', 'snapshot schema')
+    for name in ('common.py', 'budget_sheet.py'):
+        relative = f'tools/budgets/{name}'
+        require(sha(snapshot / relative) == manifest['files'][relative]['sha256'],
+                f'{relative}: snapshot digest mismatch')
+    C, B = snapshot_modules(snapshot)
     base = root / BUDGET
     model_path = base / 'inputs/die_models/hbm.json.gz'
     plan_path = base / 'clock_plan/hbm.json.gz'
@@ -55,16 +84,14 @@ def check(root, jobs):
     require(plan['violations']['intra'] == plan['violations']['inter'] == 0, 'clock plan violations')
     expected_masters = {f'hfd_index_q_b{i}' for i in (0, 1, 2, 3, 5)}
     require(set(overrides) == expected_masters, 'approved override scope changed')
-    require(json.loads((root / 'physical/hbm_accel_die_views/insertion_override.json').read_text())
+    require(json.loads((snapshot / 'physical/hbm_accel_die_views/insertion_override.json').read_text())
             == overrides, 'published override differs from coordinator')
-    inputs = [model_path, plan_path, cal_path, override_path, provenance_path,
-              root / 'physical/hbm_accel_die_views/insertion_override.json']
-    inputs += [root / 'tools/budgets' / n for n in
-               ('budget_sheet.py', 'common.py', 'make_block_sdc.py', 'check_hbm_index_binding.py')]
+    inputs = [manifest_path, root / 'tools/budgets/check_hbm_index_binding.py']
+    inputs += [snapshot / name for name in manifest['files']]
     sheets = {}
     # Replay ALL HBM sheets to include the peers which also pay the extra OCV.
     with tempfile.TemporaryDirectory(prefix='hbm-budget-binding-') as tmp:
-        subprocess.run([sys.executable, str(root / 'tools/budgets/budget_sheet.py'),
+        subprocess.run([sys.executable, str(snapshot / 'tools/budgets/budget_sheet.py'),
                         '--die', f'hbm={model_path}:{plan_path}', '--calib', str(cal_path),
                         '--insertion-override', str(override_path), '--out', tmp],
                        check=True, capture_output=True, text=True)
@@ -187,8 +214,11 @@ def check(root, jobs):
                                          'preserve historical failure; route and SS/FF sign-off still required'))
         inputs.append(path)
     require(len(bindings) == 5, 'expected five index job snapshots')
+    for name, pin in manifest['files'].items():
+        require(sha(snapshot / name) == pin['sha256'], f'{name}: snapshot digest mismatch')
     return dict(schema='opentallas.hbm_index_budget_binding.v1', verdict='PASS', signoff_claim=False,
-                scope='approved r18 analytical compensation and immutable job binding audit; no physical adoption',
+                scope='historical r18 snapshot compensation and job binding audit; no active-main validation or physical adoption',
+                replay_source_commit=manifest['audit_commit'], active_main_validated=False,
                 model_source_commit=model['source_commit'], replayed_hbm_sheets=len(sheets),
                 shared_macros_scope='PHY/SerDes: HBM replay and published insertion only; other dies excluded',
                 provenance_note='Generator source is the model/clock-plan embedded commit; publication commit '
@@ -205,7 +235,7 @@ if __name__ == '__main__':
     args = ap.parse_args()
     try:
         result = check(args.root.resolve(), args.jobs or args.root / RECORD / 'jobs')
-    except (ValueError, KeyError, TypeError, subprocess.CalledProcessError) as exc:
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
         raise SystemExit(f'HBM_INDEX_BINDING FAIL: {exc}')
     text = json.dumps(result, indent=2) + '\n'
     if args.out:
