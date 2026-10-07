@@ -106,10 +106,23 @@ def sh(cmd, timeout=600, check=False, input=None, cwd=None):
 def ssh(host, script, timeout=120, check=False, input=None):
     """Run a shell script on host.  Without input the script goes in on stdin (bash -s); with input, the script is
     the remote command line and input is piped to it."""
+    if is_local(host):          # localhost runs loop jobs directly (OWNER 2026-10-07 05:00), no ssh to itself
+        if input is None:
+            return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
+        return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
     base = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=30", host]
     if input is None:
         return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
     return sh(base + [script], timeout=timeout, check=check, input=input)
+
+
+def is_local(host):
+    return host in ("localhost", "local")
+
+
+def rpath(host, path):
+    """rsync source spec of a path on host"""
+    return path if is_local(host) else f"{host}:{path}"
 
 
 def gfetch(*refs, timeout=600):
@@ -370,8 +383,19 @@ def keys_path():
     return STATE / "route_keys.json"
 
 
+MAX_ROUTES_PER_KEY = 3     # OWNER 2026-10-07 05:00: small + aggressive + half-rate variants of one design in parallel
+
+
 def route_keys():
-    return json.loads(keys_path().read_text()) if keys_path().exists() else {}
+    """{block@commit: [job names]} (older files hold one name per key)"""
+    k = json.loads(keys_path().read_text()) if keys_path().exists() else {}
+    return {key: (v if isinstance(v, list) else [v]) for key, v in k.items()}
+
+
+def route_key_full(keys, key, name):
+    """None if name may route under key, else the holders that fill it"""
+    held = keys.get(key, [])
+    return None if name in held or len(held) < MAX_ROUTES_PER_KEY else held
 
 
 def event(j, msg):
@@ -430,9 +454,9 @@ def ingest():
             ledger(j, f"INVALID spec ({origin}): {j['reason']}")
         else:
             key = f"{spec['block']}@{spec['source']['commit'][:12]}"
-            if key in keys and keys[key] != name:
+            if route_key_full(keys, key, name):
                 j["status"] = "REFUSED"
-                j["reason"] = f"one route per source commit: {key} already routed by job {keys[key]}"
+                j["reason"] = f"{MAX_ROUTES_PER_KEY} routes per source commit: {key} already routed by jobs {keys[key]}"
                 event(j, j["reason"])
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
@@ -486,7 +510,11 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB)      # OWNER 21:35: peak + max(10% RAM, 32 GB)
+        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35
+        if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
+            used = self.own_running.get(host, 0) + pt
+            if used + threads > cfg["max_loop_threads"]:
+                return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
         if info["mem_gb"] - pr - res < ram + head:
             return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
                            + f" < {ram}+{head:.0f}")
@@ -779,7 +807,8 @@ def sync_source(j):
                             stdout=subprocess.PIPE)
     gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
     arch.stdout.close()
-    put = subprocess.run(["ssh", "-o", "BatchMode=yes", host, f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
+    put = subprocess.run((["bash", "-c"] if is_local(host) else ["ssh", "-o", "BatchMode=yes", host])
+                         + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
                          capture_output=True, text=True, timeout=1800)
     gz.wait(); arch.wait()
     if put.returncode or arch.returncode:
@@ -983,9 +1012,9 @@ def publish(j, metrics):
             excl = sum((["--exclude", x] for x in r.get("exclude", [])), [])
             if isdir:
                 dst.mkdir(parents=True, exist_ok=True)
-                sh(["rsync", "-a", *excl, f"{j['host']}:{src.rstrip('/')}/", f"{dst}/"], timeout=1800, check=True)
+                sh(["rsync", "-a", *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
             else:
-                sh(["rsync", "-a", f"{j['host']}:{src}", str(dst)], timeout=1800, check=True)
+                sh(["rsync", "-a", rpath(j['host'], src), str(dst)], timeout=1800, check=True)
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
@@ -1212,11 +1241,12 @@ def launch_ready(j, fleet, spec, stl, st):
         j.pop("wait_since", None)
         if st["kind"] == "route":   # one route per (block, source commit): the key is taken when the route launches
             keys, key = route_keys(), f"{spec['block']}@{spec['source']['commit'][:12]}"
-            if keys.get(key, j["name"]) != j["name"]:
-                finish(j, "REFUSED", f"one route per source commit: {key} already routed by job {keys[key]}",
-                       f"REFUSED: {key} already routed by job {keys[key]}")
+            if route_key_full(keys, key, j["name"]):
+                finish(j, "REFUSED", f"{MAX_ROUTES_PER_KEY} routes per source commit: {key} already routed by jobs {keys[key]}",
+                       f"REFUSED: {key} already routed by jobs {keys[key]}")
                 return
-            keys[key] = j["name"]
+            if j["name"] not in keys.setdefault(key, []):
+                keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
         launch_stage(j, st, st["cmd"])
         fleet.launched(j["host"], st["threads"], st["ram"])
@@ -1226,10 +1256,114 @@ def launch_ready(j, fleet, spec, stl, st):
         return
 
 
+# ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
+# calibrate -> route on the job's host, one bench at a time; they gate ADOPTION, not launch.  A bench with the wrong
+# verdict stops the route and ends the job NEEDS_RTL; the verdict waits until every bench has its expected verdict.
+# Opt out per job with spec "bench_first": true (benches before the route, as before).
+
+
+def bench_stages(stl):
+    return [x for x in stl if x["kind"] == "bench"]
+
+
+def bench_par_decide(j, stl):
+    """decide once, when the job first leaves QUEUED / its first stage: parallel unless bench_first or no benches"""
+    if "bench_par" in j:
+        return
+    started = bool(j.get("stage_tag")) or j.get("stage_idx", 0) > 0
+    j["bench_par"] = bool(bench_stages(stl)) and j["spec"].get("bench_first") is not True and not started
+    if j["bench_par"]:
+        j["btrack"] = {}
+        j["stage_idx"] = next(i for i, x in enumerate(stl) if x["kind"] != "bench")
+        event(j, f"benches run in parallel with calibrate/route ({len(bench_stages(stl))} benches; spec bench_first opts out)")
+
+
+def _bview(j, e):
+    """a job view addressing one bench-track stage (its own host / run / tag)"""
+    v = dict(j)
+    v.update(host=e["host"], run=e["run"], stage_tag=e["tag"])
+    return v
+
+
+def benches_done(j, stl):
+    return all(k["key"] in j.get("benches", {}) for k in bench_stages(stl))
+
+
+def bench_track(j, fleet, stl):
+    """advance the bench track; returns False if the job ended (bench failure)"""
+    if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
+        return True
+    tr = j.setdefault("btrack", {})
+    for st in bench_stages(stl):
+        k = st["key"]
+        if k in j["benches"]:
+            continue
+        e = tr.get(k)
+        if e is None or e.get("state") == "retry":
+            if any(x.get("state") == "running" for x in tr.values()):
+                return True                  # one bench at a time
+            with FLEET_LOCK:
+                ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+                if not ok:
+                    if j.get("bwait") != why:
+                        j["bwait"] = why
+                        event(j, f"bench track: {k} waiting for capacity: {why}")
+                    return True
+                n = (e or {}).get("n", 0) + 1
+                v = dict(j, attempt=f"{j['attempt']}b{n}")
+                launch_stage(v, st, st["cmd"])
+                fleet.launched(j["host"], st["threads"], st["ram"])
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
+            j["bwait"] = None
+            event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
+            return True
+        v = _bview(j, e)
+        state, rc = poll_stage(v)
+        if state in ("RUNNING", "STARTING", "UNREACHABLE"):
+            return True
+        ok_extra, _ = remote_ok(v, st.get("ok"))
+        tail = stage_tail(v, st, 40)
+        crashed = state == "LOST" or (st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)))
+        if crashed:
+            if e["n"] < 2:
+                e["state"] = "retry"
+                event(j, f"bench track: {k} crashed (state {state}, rc={rc}); retry once")
+                return True
+            stop_main_for_bench(j)
+            finish(j, "NEEDS_HUMAN", f"{k} crashed twice in the bench track (rc={rc})",
+                   f"NEEDS_HUMAN: bench {k} crashed twice (rc={rc}); route stopped\n" + "\n".join(tail.strip().splitlines()[-5:]))
+            return False
+        passed = bench_outcome(v, st, rc, ok_extra)
+        e["state"] = "done"
+        j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
+        if not passed:
+            stop_main_for_bench(j)
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+                   f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
+                   "\n".join(tail.strip().splitlines()[-5:]))
+            return False
+        event(j, f"bench track: {k} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc})")
+    return True
+
+
+def stop_main_for_bench(j):
+    """a bench failed: stop the job's own main-track stage (route / calibrate / ECO) -- its result cannot be adopted"""
+    if j["status"] in ("RUNNING", "ECO", "ECO_INSTALL", "SUMMARY"):
+        try:
+            kill_own_stage(j)
+            event(j, f"bench failed: stopped {j.get('stage_key')} ({j.get('stage_tag')})")
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"bench failed: could not stop {j.get('stage_key')}: {ex}")
+
+
 def step(j, fleet):
     spec = j["spec"]
     stl = stage_list(spec)
     s = j["status"]
+    if s in ("QUEUED", "READY", "SYNC") and "bench_par" not in j:
+        bench_par_decide(j, stl)
+    if not bench_track(j, fleet, stl):
+        return
     if s == "QUEUED":
         with FLEET_LOCK:
             h, why = fleet.choose(spec, exclude=[])
@@ -1259,6 +1393,11 @@ def step(j, fleet):
         st = stl[j["stage_idx"]]
         j["stage_key"] = st["key"]
         if st["kind"] == "verdict":
+            if j.get("bench_par") and not benches_done(j, stl):
+                if j.get("wait") != "benches":
+                    j["wait"] = "benches"
+                    event(j, "verdict waits for the parallel bench track")
+                return
             return do_verdict(j, fleet, stl)
         if st["kind"] == "commit":
             return do_commit(j)
@@ -1387,7 +1526,7 @@ def do_verdict(j, fleet, stl):
         finish(j, "NEEDS_HUMAN", f"verdict inputs missing ({json.dumps(m)[:300]})",
                f"NEEDS_HUMAN: verdict inputs missing: {json.dumps(m)[:400]}")
         return
-    benches_ok = all(b["ok"] for b in j["benches"].values())
+    benches_ok = all(b["ok"] for b in j["benches"].values()) and benches_done(j, stl)
     closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
     event(j, f"verdict SS {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
@@ -1660,7 +1799,13 @@ def auto_requeue(jobs):
 
 
 def kill_own_stage(j):
-    """stop ONLY this loop's own stage process group and containers mounting this job's own run dir"""
+    """stop ONLY this loop's own stage process group and containers mounting this job's own run dir (and its running
+    parallel-bench stage, if any)"""
+    for e in (j.get("btrack") or {}).values():
+        if e.get("state") == "running":
+            ssh(e["host"], f"p=$(cat {e['run']}/cl/{e['tag']}.pid 2>/dev/null); [ -n \"$p\" ] && kill -TERM -- -$p 2>/dev/null; true",
+                timeout=60)
+            e["state"] = "killed"
     if not (j.get("stage_tag") and j.get("host")):
         return
     run, t = j["run"], j["stage_tag"]
@@ -1789,6 +1934,9 @@ def tick(fleet):
             stl = stage_list(x["spec"])
             st = stl[min(x.get("stage_idx", 0), len(stl) - 1)]
             own[x["host"]] = own.get(x["host"], 0) + (8 if x["status"] == "ECO" else st.get("threads", 4) or 4)
+        for e in (x.get("btrack") or {}).values() if x["status"] not in TERMINAL else ():
+            if e.get("state") == "running":
+                own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
