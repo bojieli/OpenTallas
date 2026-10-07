@@ -73,6 +73,8 @@ def main():
     ap.add_argument('--s81-opts', required=True)
     ap.add_argument('--die', default='layer')
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--clock-plan', type=Path, help='results/rtl/budgets_20261006/clock_plan/<die>.json.gz: per-sink '
+                    'planned SS / FF insertion (sinks not in the plan take the nearest planned sink of the same clock)')
     a = ap.parse_args()
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
@@ -120,12 +122,46 @@ def main():
         elif cls == 'col_clock':
             srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', 833.333))
     rec['clocks'] = srcs
-    for corner, (us, uh) in (('ss', (210.0, 75.0)), ('ff', (210.0, 75.0))):
+    lat = {}
+    if a.clock_plan:
+        import gzip, math
+        cp = json.load(gzip.open(a.clock_plan))
+        si = cp['sink_insertion']
+        by = {it.name: it for it in m['insts']}
+        cen = lambda n: (by[n].x + by[n].w / 2, by[n].y + by[n].h / 2)
+        known = defaultdict(list)          # clock bus -> [(x, y, ss, ff)]
+        sinks = []
+        for bid, cls, bits, eps in m['buses']:
+            if cls not in ('clock', 'col_clock'):
+                continue
+            for inst, p_ in eps[1:]:
+                if inst not in by:
+                    continue
+                k_ = f'{inst}/{p_}'
+                sinks.append((bid, inst, p_))
+                if k_ in si:
+                    known[bid].append(cen(inst) + tuple(si[k_]))
+        for bid, inst, p_ in sinks:
+            k_ = f'{inst}/{p_}'
+            if k_ in si:
+                lat[k_] = si[k_]
+            elif known[bid]:
+                x, y = cen(inst)
+                nb = min(known[bid], key=lambda q: abs(q[0] - x) + abs(q[1] - y))
+                lat[k_] = [nb[2], nb[3]]
+        for ci, corner in enumerate(('ss', 'ff')):
+            (a.out / f'latency_{corner}.tcl').write_text(''.join(
+                f'set_clock_latency {v[ci]:.1f} [get_pins {{{k_}}}]\n' for k_, v in sorted(lat.items())))
+        rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
+                                 nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
+    for corner, (us, uh) in ((('ss', (85.0, 75.0)), ('ff', (85.0, 75.0))) if lat else (('ss', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
         T = ['set libs [split [string trim [read [open /kit/libs_%s.txt]]] "\\n"]' % corner,
              'foreach l $libs { read_liberty $l }', 'read_verilog /kit/die.v', 'link_design dsfd_die',
              'if {[file exists /kit/die.spef]} { read_spef /kit/die.spef; puts OT_SPEF }']
         for n_, pin, per in srcs:
             T.append(f'create_clock -name {n_} -period {per} [get_pins {{{pin}}}]')
+        if lat:   # planned per-sink insertion (the die tree's skew); uncertainty = signoff 60 + 25 plan tolerance
+            T.append(f'source /kit/latency_{corner}.tcl')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'set_clock_groups -asynchronous ' + ' '.join(f'-group {{{n_}}}' for n_ in ('clk_serial', 'clk_hbm')
                                                             if any(s[0] == n_ for s in srcs)) if False else '',
