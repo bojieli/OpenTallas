@@ -3,6 +3,8 @@
 # pin flop, outputs from flops). Redesign pass 2026-10-06: routed at 770 ps, signed off at 833.333 ps (60/25 ps),
 # IO at the MEASURED insertion (owner model: in max = insSS + 250, in min = insFF - 50, out max = 250 - insSS,
 # out min = -(insFF + 50)). Accept SS >= +15 / FF >= +15, DRC 0.
+# r1 (2026-10-06 20:05): hold margin 35 ps hit RSZ-0060 at CTS (16,642 hold endpoints, 21,390 buffers at the default
+# 20% buffer budget): flow margin 20 ps (accept FF >= +15) and the repair buffer budget hook.
 # Usage: route.sh <src> <out> <A|B> <cal|route> [insSS_ps insFF_ps]
 #   cal  : CTS-only calibration run (assumed insertion 150/100) -> tools/w18/clock_insertion.py
 #   route: one full route with the measured insertion; writes $O/signoff_833.sdc and runs corner_sta
@@ -40,7 +42,8 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_head_elem --sourc
  --orfs-corner WC --hold-corners BC --orfs-var ADDER_MAP_FILE= --max-fanout 32 --stages pnr "${STOP[@]}" \
  --false-path-from rst_n --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX \
  --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \
- --core-utilization 40 --macro-place-halo 3 3 --hold-margin-ns 0.035 --slew-margin-percent 30 \
+ --core-utilization 40 --macro-place-halo 3 3 --hold-margin-ns 0.020 --slew-margin-percent 30 \
+ --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
  --sdc-append physical/abi3/v41_w10_elem_pp_multicycle.sdc --macro-view $M=physical/asap7_memory_macros/$M \
  --nickname-tag hio$E$MODE --keep-workdir $O/work --keep-heavy-artifacts --output $O/physical.json > $O/route.log 2>&1
 echo $? > $O/route.exit
