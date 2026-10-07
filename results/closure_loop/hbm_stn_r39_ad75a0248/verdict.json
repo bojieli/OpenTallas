@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_stn_r39_ad75a0248",
+ "block": "hfd_stn_r39",
+ "owner": "Claude:hbm-views",
+ "source_branch": "claude/hbm-abstracts-stn-20261006",
+ "source_commit": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 48.58,
+  "ff_ps": 462.04,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248/routes/hbm_stn_r39_ad75a0248/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248/routes/hbm_stn_r39_ad75a0248/work/orfs/logs/asap7/opentallas_hfd_stn_r39_asap7_hv_hbm_stn_r39_ad75a0248/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_bench_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "pos rc=0\nneg rc=1\n",
+   "track": "parallel"
+  },
+  "bench_bench_neg_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "STN_NEG_DETECTED\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  },
+  "die_pin_access": {
+   "ok": true,
+   "out": "hfd_stn_r39 OT_PA DONE DRT0073=0\n"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T08:23:57-07:00",
+ "job_spec": {
+  "name": "hbm_stn_r39_ad75a0248",
+  "block": "hfd_stn_r39",
+  "owner": "Claude:hbm-views",
+  "purpose": "hfd_stn_r39 (r23 new forward station x8): margin recipe, narrow E keepout (the closed stn_r19 recipe)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 6,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/hbm-abstracts-stn-20261006",
+   "commit": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "bench_exact",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_stn_r39 $PWD {RUN}/bench; cat {RUN}/bench/hfd_stn_r39/result.txt; grep -q '^pos rc=0' {RUN}/bench/hfd_stn_r39/result.txt",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "bench_neg_mutant",
+     "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_stn_r39/result.txt && echo STN_NEG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "STN_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "forward station: no ck IO (margin.json ckins 0); the station recipe stn_margin_sdc.py budgets the forwarded-clock crossings"
+   },
+   "route": {
+    "cmd": "MARGIN=1 CKINS=0 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL} hfd_stn_r39 0.55 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^signoff_corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_stn_r39.lef {RUN}/routes/{NAME}/view/hfd_stn_r39_ss.lib {RUN}/routes/{NAME}/view/hfd_stn_r39_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    },
+    {
+     "name": "die_pin_access",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_stn_r39.lef hfd_stn_r39 {RUN}/pa"
+    }
+   ],
+   "post_sdc": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/stations/hfd_stn_r39/route_cl"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "claude/hbm-abstracts-20261006",
+  "budget": {
+   "enabled": false,
+   "reason": "forward pass-through station: no ck IO (margin.json ckins 0); its forwarded-clock arcs are budgeted by the station recipe stn_margin_sdc.py, not by a vclk insertion"
+  },
+  "cycles_note": "forward station: 1 forwarded cycle per crossing, priced by the coordinator in r23"
+ }
+}
