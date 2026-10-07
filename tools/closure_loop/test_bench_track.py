@@ -100,6 +100,33 @@ class VacuousPass(unittest.TestCase):
         self.assertEqual(cl.bench_work("nothing", r"reducer results (\d+)")[0], False)
 
 
+class Watchdog(unittest.TestCase):
+    def test_requeue_then_needs_human(self):
+        import time, datetime as dt
+        old = (dt.datetime.now().astimezone() - dt.timedelta(hours=4)).isoformat()
+        j = job(status="RUNNING", stage_started=old)
+        st = dict(key="calibrate")
+        quiet = SimpleNamespace(returncode=0, stdout="END\n")
+        with patch.object(cl, "ssh", return_value=quiet), patch.object(cl, "kill_own_stage") as kill, \
+                patch.object(cl, "ledger"), patch.object(cl, "experiment"), patch.object(cl, "log"):
+            cl.stuck_watchdog(j, st)
+            self.assertEqual(j["status"], "READY")
+            j.update(status="RUNNING", wd_checked=0)
+            cl.stuck_watchdog(j, st)
+        self.assertEqual(j["status"], "NEEDS_HUMAN")
+        self.assertEqual(kill.call_count, 2)
+
+    def test_growing_log_is_left_alone(self):
+        import datetime as dt
+        old = (dt.datetime.now().astimezone() - dt.timedelta(hours=4)).isoformat()
+        j = job(status="RUNNING", stage_started=old)
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=0, stdout="/r/x.log\nEND\n")), \
+                patch.object(cl, "kill_own_stage") as kill:
+            cl.stuck_watchdog(j, dict(key="route"))
+        self.assertEqual(j["status"], "RUNNING")
+        kill.assert_not_called()
+
+
 class Transient(unittest.TestCase):
     def test_classify(self):
         import subprocess
