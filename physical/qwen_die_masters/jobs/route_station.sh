@@ -10,6 +10,11 @@ if [ "$KIND" = cst ]; then
   P=(--param DW=508 --param TAP=1 --param SPLIT=0 --pin-region '^(a_d|a_r)=top:4-48' --pin-region '^(b_d|b_r)=bottom:4-48'
      --pin-region '^(t_d|t_r|c_d|c_r|clk|rst_n)(\[|$)=left:8-96')
   INTER='a_d*,a_r,b_d*,b_r'
+elif [ "$KIND" = rly ]; then
+  # r21 die relay (qfd_rly_* N/S corridor frame 52.68 x 30.24): one registered 512-bit hop, a N -> b S, die-wire SDC
+  P=(--param DW=512 --param TAP=0 --param SPLIT=0 --pin-region '^(a_d|a_r)=top:2-50' --pin-region '^(b_d|b_r)=bottom:2-50'
+     --pin-region '^(t_d|t_r|c_d|c_r|clk|rst_n)(\[|$)=left:4-26')
+  INTER='a_d*,a_r,b_d*,b_r'; FW=52.68; FH=30.24
 elif [ "$KIND" = lsth ]; then
   # qfd_lst_h_e / _w (20 copies, 34.536 x 97.176): one registered 1056-bit link stage, W -> E
   P=(--param DW=1056 --param TAP=0 --param SPLIT=0 --pin-region '^(a_d|a_r|clk|rst_n)(\[|$)=left:4-93'
@@ -28,7 +33,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_die_station --sour
   --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr \
   --place-density 0.6 --hold-margin-ns ${HM:-0.02} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
-  --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=8 --orfs-var SDC_FILE=$D/station_p770.sdc --orfs-var QDM_SDC_DIR=$D \
+  --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=8 --orfs-var SDC_FILE=$D/${SDC:-station_p770.sdc} --orfs-var QDM_SDC_DIR=$D \
   --orfs-var 'PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks' \
   --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl \
   --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
