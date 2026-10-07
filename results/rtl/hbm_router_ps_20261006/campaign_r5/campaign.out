@@ -1,0 +1,33 @@
+ROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=1 vectors ref=2000 dut=2000 bad=0 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=2 vectors ref=2000 dut=2000 bad=0 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=3 vectors ref=2000 dut=2000 bad=0 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=4 vectors ref=2000 dut=2000 bad=0 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=1 SEED=7 vectors ref=200 dut=200 bad=136 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=2 SEED=7 vectors ref=200 dut=200 bad=68 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=3 SEED=7 vectors ref=200 dut=200 bad=25 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=1 RATE=1 NEG=4 SEED=7 vectors ref=200 dut=200 bad=106 latency ref=23 dut=20..20
+ROUTER_PS PIPESEL=2 RATE=2 NEG=0 SEED=1 vectors ref=1000 dut=1000 bad=0 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=0 SEED=2 vectors ref=1000 dut=1000 bad=0 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=0 SEED=3 vectors ref=1000 dut=1000 bad=0 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=0 SEED=4 vectors ref=1000 dut=1000 bad=0 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=1 SEED=7 vectors ref=200 dut=200 bad=143 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=2 SEED=7 vectors ref=200 dut=200 bad=54 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=3 SEED=7 vectors ref=200 dut=200 bad=16 latency ref=23 dut=23..23
+ROUTER_PS PIPESEL=2 RATE=2 NEG=4 SEED=7 vectors ref=200 dut=200 bad=108 latency ref=23 dut=23..23
+neg1_ps1 rc=1
+neg1_ps2 rc=1
+neg2_ps1 rc=1
+neg2_ps2 rc=1
+neg3_ps1 rc=1
+neg3_ps2 rc=1
+neg4_ps1 rc=1
+neg4_ps2 rc=1
+ps1_s1 rc=0
+ps1_s2 rc=0
+ps1_s3 rc=0
+ps1_s4 rc=0
+ps2_s1 rc=0
+ps2_s2 rc=0
+ps2_s3 rc=0
+ps2_s4 rc=0
+2ee77de216f7edb129be12dd549b6d85fa8bb374f6046b178bdb8ac37ab578c2  rtl/gpu/ot_gpu_router_topk_ps.sv
