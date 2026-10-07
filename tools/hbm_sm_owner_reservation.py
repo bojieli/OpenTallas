@@ -8,10 +8,31 @@ from pathlib import Path
 import hbm_accel_die_fp as H
 
 
-def generate(descriptor=False):
+def generate(descriptor=False, sm_readback=None):
     old=H.build(H.R24SM3V,network_probe=True)
     m=H.build(H.R24SM3VOC if descriptor else H.R24SM3VO,network_probe=True)
     bays=m['native_owner_bays']
+    descriptor_actual=None
+    readback_sources=[]
+    if sm_readback:
+        if not descriptor:
+            raise ValueError('SM descriptor readback requires descriptor reservations')
+        rb_path=Path(sm_readback);rb=json.loads(rb_path.read_text())
+        if rb['die_um'] != [0,0,3075.84,1131.84]:
+            raise ValueError('SM descriptor BPin dimensions do not match candidate')
+        pins=[p for p in rb['pins'] if p['name'].startswith('d_') or p['name']=='fault']
+        if len(pins)!=59 or any(len(p['boxes'])!=1 for p in pins):
+            raise ValueError('expected all 58 descriptor signals and fault, one box each')
+        distances=[]
+        for pin in pins:
+            x0,y0,x1,y1=pin['boxes'][0]['rect_um']
+            x,y=(x0+x1)/2,(y0+y1)/2
+            distances.append(max(abs(x-1441.152)+abs(y-edge_y) for edge_y in (-66.96,-2.16)))
+        descriptor_actual=dict(scope=rb['scope'],odb_sha256=rb['odb_sha256'],pins=len(pins),
+            adapter_east_face_worst_manhattan_um=round(max(distances),6))
+        if max(distances)>100:
+            raise ValueError('actual descriptor BPin exceeds 100um candidate face bound')
+        readback_sources.append(rb_path)
     collisions=[]
     for r in bays+m.get('native_descriptor_bays',[]):
         x0,y0,x1,y1=r['box_um']
@@ -23,6 +44,7 @@ def generate(descriptor=False):
         raise ValueError(dict(bay_collisions=collisions,legality=check))
     record=dict(status='RESERVATION_ONLY_PHYSICAL_MASTER_AND_CONTROL_PATHS_OPEN',selected=False,
         legality=check,bay_macro_collisions=collisions,bays=bays,
+        descriptor_actual_bpin=descriptor_actual,
         descriptor_bays=m.get('native_descriptor_bays',[]),
         descriptor_reserved_um=[128.304,64.8] if descriptor else None,
         total_descriptor_reservation_um2=32*128.304*64.8 if descriptor else 0,
@@ -41,16 +63,16 @@ def generate(descriptor=False):
           'obstacle-aware outside-SM descriptor and fault paths; no straight-through-macro routing',
           'rerun all result/control/X/weight shared corridor capacities and endpoint proximity',
           'clock entries, IO budgets, exactness and SS/FF physical qualification'],
-        source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(H.__file__)]})
+        source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(H.__file__)]+readback_sources})
     placement=dict(insts=[dict(name=i.name,master=i.master,x=i.x,y=i.y,w=i.w,h=i.h,orient=i.orient,
         kind=i.kind,box_um=i.box()) for i in m['insts']],buses=m['buses'],paths=m['paths'],geo=m['geo'],
         result_pin_bays=m['result_pin_bays'],native_owner_bays=bays,native_descriptor_bays=m.get('native_descriptor_bays',[]),legality=check)
     return record,placement
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true')
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true');ap.add_argument('--sm-readback')
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    record,placement=generate(a.descriptor)
+    record,placement=generate(a.descriptor,a.sm_readback)
     (out/'model.json').write_text(json.dumps(record,indent=2)+'\n')
     with gzip.open(out/'placement.json.gz','wt') as f:json.dump(placement,f,separators=(',',':'))
     print(json.dumps(record['legality']))
