@@ -136,7 +136,12 @@ module ot_svs_pc (
 endmodule
 
 // SM line assembler: four PC response chains + the W lane chain -> one line {data1088, tag10, v}
-module ot_svs_asm (
+// SLOT = 1 (coordinator 2026-10-06 18:55, margin rule on v2 routes: full -> round-robin select -> 5:1 x 1088 mux -> ld
+// at -296..-488 ps @833 over a ~1 mm segment): each assembler hands its line to its own slot register when the slot is
+// empty (take = full & ~slot valid; an assembler needs >= 5 beats per line, so the refill bubble is never exposed); the
+// round-robin merge then selects among slot valids only (all merge logic local, slots registered).  +1 cycle on every
+// K / W line.  SLOT = 0 is the original single-cycle merge.
+module ot_svs_asm #(parameter integer SLOT = 0) (
   input wire ck, input wire rn,
   input wire [3:0] sv, input wire [4*277-1:0] sq, input wire wsv, input wire [270:0] wsq,
   output wire [3:0] k_take, output wire w_take, output wire [1098:0] line);
@@ -154,21 +159,39 @@ module ot_svs_asm (
     .bdata(wsq[255:0]), .full(full[4]), .tag(t10), .data(dt[4]), .take(w_take));
   assign tg[4] = t10;
   reg [2:0] lr;
-  wire [9:0] fx = {full, full};
+  reg lv; reg [9:0] lt; reg [1087:0] ld;
+  wire [4:0] cand;                        // merge candidates: assembler full flags (SLOT 0) or slot valids (SLOT 1)
+  wire [9:0] fx = {cand, cand};
   wire [4:0] rot = fx >> lr;
   wire [3:0] off = rot[0] ? 4'd0 : rot[1] ? 4'd1 : rot[2] ? 4'd2 : rot[3] ? 4'd3 : 4'd4;
   wire [3:0] s0 = {1'b0, lr} + off;
   wire [2:0] sel = (s0 >= 4'd5) ? 3'(s0 - 4'd5) : s0[2:0];
-  wire any = |full;
-  generate for (p = 0; p < 4; p = p + 1) begin : gt
-    assign k_take[p] = any && (sel == p);
-  end endgenerate
-  assign w_take = any && (sel == 3'd4);
-  reg lv; reg [9:0] lt; reg [1087:0] ld;
+  wire any = |cand;
   always @(posedge ck or negedge rn)
     if (!rn) begin lv <= 1'b0; lr <= 3'd0; end
     else begin lv <= any; if (any) lr <= (sel == 3'd4) ? 3'd0 : sel + 3'd1; end
-  always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
+  generate if (SLOT) begin : gs
+    reg [4:0] sv_q; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
+    wire [4:0] fill = full & ~sv_q;
+    wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
+    assign cand = sv_q;
+    assign k_take = fill[3:0];
+    assign w_take = fill[4];
+    always @(posedge ck or negedge rn)
+      if (!rn) sv_q <= 5'd0;
+      else sv_q <= (sv_q & ~drain) | fill;
+    for (p = 0; p < 5; p = p + 1) begin : gsl
+      always @(posedge ck) if (fill[p]) begin st[p] <= tg[p]; sd[p] <= dt[p][1087:0]; end
+    end
+    always @(posedge ck) if (any) begin lt <= st[sel]; ld <= sd[sel]; end
+  end else begin : g0
+    assign cand = full;
+    for (p = 0; p < 4; p = p + 1) begin : gt
+      assign k_take[p] = any && (sel == p);
+    end
+    assign w_take = any && (sel == 3'd4);
+    always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
+  end endgenerate
   assign line = {ld, lt, lv};
 endmodule
 

@@ -353,7 +353,7 @@ def build(pl):
                 k = int(u[2:]); fwd = g['fwd'][k]
                 decl.append(f'  wire [3:0] as{k}_sv, as{k}_kt; wire [1107:0] as{k}_sq; wire as{k}_wsv, as{k}_wt; '
                             f'wire [270:0] as{k}_wsq; wire [1098:0] as{k}_line;')
-                body.append(f'  ot_svs_asm u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
+                body.append(f'  ot_svs_asm #(.SLOT(1)) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
                             f'.wsq(as{k}_wsq), .k_take(as{k}_kt), .w_take(as{k}_wt), .line(as{k}_line));')
                 if fwd:
                     body.append(f'  wire fck{k}; ot_svc_fclk_buf u_fc{k} (.a(c), .y(fck{k}));')
@@ -471,13 +471,17 @@ def build(pl):
         sdc, cl = [], []
         for bn, (pn, lo_, hi_) in port_map[names[j]].items():
             if bn.startswith('q') and g['fwd'][int(bn[1:])]:
-                sdc.append(f'create_clock -name f{bn} -period 0.833 [get_ports {{{bn}[44]}}]'); cl.append(f'f{bn}')
+                # 18:55 fix: SDC time unit is ps (core_clk -period 833): the forwarded clocks were 0.833 ps, and their
+                # data bits were timed against vclk (v2 routes: -1006 ps).  Data in relative to its own forwarded clock.
+                sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[44]}}]'); cl.append(f'f{bn}')
+                sdc.append(f'for {{set i 0}} {{$i < 44}} {{incr i}} {{ set_input_delay -clock f{bn} 166.6 [get_ports [format {{{bn}[%d]}} $i]] }}')
             if bn == 'e':
-                sdc.append('create_clock -name fe -period 0.833 [get_ports {e[128]}]'); cl.append('fe')
+                sdc.append('create_clock -name fe -period 833 [get_ports {e[128]}]'); cl.append('fe')
+                sdc.append('for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe 166.6 [get_ports [format {e[%d]} $i]] }')
         if cl:
-            sdc += ['set_clock_uncertainty -setup 0.060 [get_clocks {' + ' '.join(cl) + '}]',
-                    'set_clock_uncertainty -hold 0.025 [get_clocks {' + ' '.join(cl) + '}]',
-                    'set_clock_groups -asynchronous -group [get_clocks core_clk] ' + ' '.join(f'-group [get_clocks {n}]' for n in cl)]
+            sdc += ['set_clock_uncertainty -setup 60 [get_clocks {' + ' '.join(cl) + '}]',
+                    'set_clock_uncertainty -hold 25 [get_clocks {' + ' '.join(cl) + '}]',
+                    'set_clock_groups -asynchronous -group [get_clocks {core_clk vclk}] ' + ' '.join(f'-group [get_clocks {n}]' for n in cl)]
             (HERE / 'sdc').mkdir(exist_ok=True)
             (HERE / 'sdc' / f'{names[j]}_fwd.sdc').write_text(
                 f'# {names[j]}: forwarded input clocks (two-clock FIFO writes, asynchronous to ck)\n' + '\n'.join(sdc) + '\n')

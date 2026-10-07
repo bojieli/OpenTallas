@@ -45,7 +45,7 @@ module hfd_svc_SW_s7 (
   assign ar7_kcv = 1'b0; assign ar7_kcd = 40'd0;
   assign ar7_icv = 1'b0; assign ar7_icd = 40'd0;
   ot_svs_arb #(.S(7), .KVI(-1), .IKI(-1)) u_ar7 (.ck(c), .rn(rn), .sv(ar7_sv), .sd(ar7_sd), .rq_take(ar7_take), .kvc_v(ar7_kcv), .kvc_d(ar7_kcd), .kv_take(ar7_kt), .ikc_v(ar7_icv), .ikc_d(ar7_icd), .ik_take(ar7_it), .done({dn31_o, dn30_o, dn29_o, dn28_o}), .iss_v(ar7_iv), .iss_d(ar7_id));
-  ot_svs_asm u_as7 (.ck(c), .rn(rn), .sv(as7_sv), .sq(as7_sq), .wsv(as7_wsv), .wsq(as7_wsq), .k_take(as7_kt), .w_take(as7_wt), .line(as7_line));
+  ot_svs_asm #(.SLOT(1)) u_as7 (.ck(c), .rn(rn), .sv(as7_sv), .sq(as7_sq), .wsv(as7_wsv), .wsq(as7_wsq), .k_take(as7_kt), .w_take(as7_wt), .line(as7_line));
   assign l7 = as7_line;
   ot_svs_pc u_pc28 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc28_iv), .iss_d(pc28_id), .k_v(pc28_k_v), .k_rdy(pc28_k_rdy), .k_addr(pc28_k_addr), .k_len(pc28_k_len), .k_tag(pc28_k_tag), .kr_v(pc28_kr_v), .kr_tag(pc28_kr_tag), .kr_beat(pc28_kr_beat), .kr_data(pc28_kr_data), .b_v(pc28_bv), .b_t(pc28_bt), .b_b(pc28_bb), .b_d(pc28_bd));
   ot_svs_pc u_pc29 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc29_iv), .iss_d(pc29_id), .k_v(pc29_k_v), .k_rdy(pc29_k_rdy), .k_addr(pc29_k_addr), .k_len(pc29_k_len), .k_tag(pc29_k_tag), .kr_v(pc29_kr_v), .kr_tag(pc29_kr_tag), .kr_beat(pc29_kr_beat), .kr_data(pc29_kr_data), .b_v(pc29_bv), .b_t(pc29_bt), .b_b(pc29_bb), .b_d(pc29_bd));
