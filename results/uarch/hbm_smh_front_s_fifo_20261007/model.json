@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.hbm.smh.front_s_fifo_model.v1",
+  "baseline_source": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+  "measurement": {
+    "job": "hbm_smh_front_s_m3f_f7f1a0ee4_t8",
+    "SS_setup_ps": 7.357004,
+    "FF_hold_ps": -21.096708,
+    "FF_register_hold_ps": 13.878565,
+    "DRC": 0,
+    "logic_area_um2": 5597.77,
+    "macro_um": [
+      432,
+      241.92
+    ],
+    "critical_setup_path": "u_rch.cnt[3] -> u_rch.head[13]",
+    "critical_hold_path": "u_prd.g_s[1].g_n.u/q[39] -> fp_d[39]"
+  },
+  "candidate": "request sink caches cnt != 0 in one resettable state bit",
+  "default_enabled": false,
+  "implementation_contract": {
+    "nonempty_reset": 0,
+    "nonempty_next": "push&&!pop:1; pop&&!push:cnt!=1; otherwise hold",
+    "invariant": "nonempty == (cnt != 0) for every legal credit trace",
+    "head_and_memory_updates": "unchanged",
+    "fifo_width_bits": 42,
+    "fifo_depth": 9,
+    "forward_landing_cycles": 1,
+    "credit_return_cycles": 2,
+    "boundary_bits_per_cycle": {
+      "input": 43,
+      "output": 43,
+      "credit": 1
+    },
+    "memory_bytes_per_cycle": {
+      "local_fifo_write": 5.25,
+      "local_fifo_read": 5.25
+    },
+    "memory_capacity_bits": 378,
+    "MACs_per_cycle": 0,
+    "arithmetic_operations_changed": 0,
+    "compute_intensity_MAC_per_byte": 0,
+    "communication_intensity_bits_per_request": 87,
+    "replicas_per_SM": 1,
+    "SMs": 32,
+    "added_resettable_state_bits_per_SM": 1,
+    "added_comparators_per_SM": 1,
+    "added_mux_bits_per_SM_upper_bound": 2,
+    "state_fanout_sinks_upper_bound": 44,
+    "removed_critical_logic": "4-bit occupancy zero-detect before pop/head enable",
+    "added_logic_location": "occupancy==1 decode feeds nonempty state only",
+    "added_boundary_tracks": 0,
+    "routing_channel_capacity_changed": false,
+    "area_upper_bound_um2": 1.0,
+    "area_bound_basis": "provisional conservative budget for 1 FF + comparator/mux; synthesis must validate",
+    "area_fraction_of_measured_front_s": 0.00017864256659348276,
+    "slot_changed": false,
+    "added_latency_cycles": 0,
+    "request_acceptance_cycle_changed": false,
+    "single_user_token_latency_delta_cycles": 0,
+    "applicable_designs": [
+      "Qwen3-8B HBM",
+      "DeepSeek-V4.1 HBM"
+    ],
+    "ROM_design_delta": 0
+  },
+  "adoption": false,
+  "requirements": [
+    "Expose model through tools/uarch_model.py before RTL build",
+    "Cycle comparison of valid/data/credits at full 42-bit depth-9 sink against pinned original",
+    "Exercise empty, simultaneous push/pop, occupancy one, full, wraparound and reset; meaningful mutation must fail",
+    "Full front_s elaboration and source-pinned admitted route under unchanged clocks/uncertainty",
+    "Separate output/internal FF hold repair remains required; this setup optimization does not claim to fix hold",
+    "Real SS/FF >=15 ps, DRC0 and composed in-context clock/port validation"
+  ],
+  "model_sha256": "82d9141d454d9c135236cad9b25e1e1e2bd0672f05246bfc407212cfa84eb4fa"
+}

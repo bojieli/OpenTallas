@@ -13506,6 +13506,12 @@ def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
     return model(hops=hops, depth=depth, replicas=replicas)
 
 
+def hbm_smh_front_s_fifo_model():
+    """Price the registered-nonempty SM request-sink candidate."""
+    from hbm_smh_front_s_fifo_model import model
+    return model()
+
+
 def hbm_smh_tile_headroom_model():
     """Measured tile-area alternatives, preserving existing BE masters."""
     from hbm_smh_tile_headroom_model import model
