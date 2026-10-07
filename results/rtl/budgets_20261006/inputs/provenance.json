@@ -10,10 +10,12 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
+   "commit": "681626d045cb2f93925fe4f9a8c086b8fe95564e",
    "generator": "tools/hbm_accel_die_fp.py",
    "options": "ADOPTED = R18 (r17 budget stage plan + svc centre ck)",
-   "via": "tools/die_top_lint.py build(hbm)"
+   "via": "tools/die_top_lint.py build(hbm)",
+   "publication_commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
+   "source_binding": "commit matches source_commit embedded in die model and clock plan; publication_commit identifies the coordinator publication revision"
   }
  },
  "tiles": {
