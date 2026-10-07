@@ -27,8 +27,8 @@ Every line of the three targets carries a status, its effect on the single-user 
 | Qwen ROM 8K | unified candidate | 5,533.0 | AR mode | adds the controller SHIFT worst case (+144) and the crossbar model (+24); forwarded clocks add 0 |
 | Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service and link-credit inputs are gated. |
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
-| DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | ≤ 1,305.0 | ≤ 3,993.3 | **Current physical integration basis.** Not an adopted rate or closure. Priced with +35 stage hops and the BF16 half-rate doubling; field phases unmeasured. |
-| DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | ≤ 1,337.3 | ≤ 4,065.7 | **Current physical integration basis.** Not an adopted rate or closure. Upper bound: the q phases on BF pairs also halve. |
+| DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
+| DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
 | DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
@@ -38,7 +38,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 DS ROM / HBM, per user, both sides candidates:
 
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.
-- For the BF-dedicated 1792 mapping: 0.73× AR and 1.06× MTP.
+- For the BF-dedicated 1792 mapping: 0.73× AR and 1.06× MTP. This is a partial-priced sensitivity; no bound is proven.
 - The earlier 0.8193× and 1.1921× omitted the HBM die closure costs.
 
 ## What else the ledger holds

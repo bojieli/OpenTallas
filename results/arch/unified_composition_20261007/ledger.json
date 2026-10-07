@@ -750,7 +750,7 @@
      "note": "as above"
     },
     {
-     "id": "bf_half_rate_upper",
+     "id": "bf_half_rate_doubling",
      "item": "BF half-rate (owner 2026-10-07): BF16 field phases doubled",
      "status": "priced-candidate",
      "effect": {
@@ -766,7 +766,7 @@
        "commit": "8d485e23b"
       }
      ],
-     "note": "upper bound for BF-dedicated pairs (q phases on q pairs stay full rate); a LOWER bound for shared pairs, where q words on BF pairs (20.6 %) also halve; zero added logic cycles (physical/s81_bf_root_phase/model.json)"
+     "note": "priced BF16-phase doubling only (q phases on q pairs unchanged); on shared pairs the q words on BF pairs (20.6 %) would also halve and are not priced. With the field phases of the 1792 geometry unmeasured, this proves no overall bound in either direction; zero added logic cycles (physical/s81_bf_root_phase/model.json)"
     },
     {
      "id": "return_station_plus1",
@@ -969,7 +969,9 @@
      "adopted": false,
      "closure": false,
      "status": "priced-candidate (current physical integration basis; not an adopted rate)",
-     "bound": "upper bound on latency (lower bound on rate) for the BF16 doubling",
+     "label": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
+     "bound": "none proven",
+     "caveat": "BF16 doubling priced; field phases at this geometry unmeasured",
      "gated_by": [
       "field_phases_1792",
       "bf_half_physical",
@@ -980,7 +982,7 @@
      ],
      "lines": [
       "actual1792_half_dedicated_hops",
-      "bf_half_rate_upper"
+      "bf_half_rate_doubling"
      ],
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
     },
@@ -1010,7 +1012,9 @@
      "adopted": false,
      "closure": false,
      "status": "priced-candidate (current physical integration basis; not an adopted rate)",
-     "bound": "rate is an UPPER bound: shared-pair q phases also halve",
+     "label": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
+     "bound": "none proven",
+     "caveat": "BF16 doubling priced; shared-pair q-phase halving NOT priced (undercount); field phases unmeasured",
      "gated_by": [
       "field_phases_1792",
       "bf_half_physical",
@@ -1021,7 +1025,7 @@
      ],
      "lines": [
       "actual1792_full_shared_hops",
-      "bf_half_rate_upper"
+      "bf_half_rate_doubling"
      ],
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
     },
@@ -1063,7 +1067,8 @@
        "bf_rate": "half",
        "AR_tok_s": 1305.0,
        "MTP_tok_s": 3993.3,
-       "status": "priced-candidate envelope; field phases unmeasured"
+       "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
+       "bound": "none proven"
       },
       {
        "name": "actual1792_full_shared",
@@ -1077,7 +1082,8 @@
        "bf_rate": "half",
        "AR_tok_s": 1337.3,
        "MTP_tok_s": 4065.7,
-       "status": "priced-candidate; rate upper bound"
+       "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
+       "bound": "none proven"
       }
      ],
      "not_basis": [
@@ -1940,6 +1946,7 @@
    "MTP": 1.2463
   },
   "ds_rom_1792_half_dedicated_over_hbm_unified": {
+   "note": "partial-priced sensitivity (unmeasured field phases), no bound proven",
    "AR": 0.7322,
    "MTP": 1.0585
   },
@@ -2140,6 +2147,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "bd42dc511bf19434e9169b6a90cf46ab375226069f1859788e5c7239446ece7f"
+  "sha256": "f8467eb6fc7152b3526e2b2a00bee3ed706f2ebf6c7c795ca53a04bd9db9b21e"
  }
 }
