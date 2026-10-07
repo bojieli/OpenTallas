@@ -43,16 +43,21 @@ module ot_hbm_native_frame_station_rb_half #(parameter integer ENABLE=0,NO=3)(
   ot_fwd_clk_inv w_clk1(.a(c1),.y(c2));
   ot_fwd_clk_inv w_clk2(.a(c2),.y(c3));
   ot_fwd_clk_inv w_clk3(.a(c3),.y(fclk_o));
+  // ---- fast capture of every held input (pin -> flop, no logic; the core samples these) ----
+  reg in_v_f,held_f;reg [2062:0] in_data_f;reg [191:0] in_owner_f;reg [72:0] in_frame_f;
+  always @(posedge clk_sm or negedge por_n)if(!por_n)begin in_v_f<=0;held_f<=0;end else begin in_v_f<=in_v;held_f<=release_held;end
+  always @(posedge clk_sm)begin in_data_f<=in_data;in_owner_f<=in_owner;in_frame_f<=in_frame;end
   // core
   wire c_in_r,c_rv,c_fault,c_drained,c_paused;wire [NO-1:0] c_ov;
+  wire [NO*2063-1:0] c_od;wire [NO*192-1:0] c_oo;wire [NO*73-1:0] c_of;wire [191:0] c_ro;wire [72:0] c_rf;
   wire [NO-1:0] hit_s,hit_core;wire rhit_core;wire [NO-1:0] ack_core;
   wire [NO*192-1:0] ack_o_core;wire [NO*73-1:0] ack_f_core;
   ot_hbm_native_frame_station_rb #(.ENABLE(1),.NO(NO),.REL_REG(0),.SAFE(0),.FCLK(0)) u_core(
-   .clk_sm(gclk),.por_n(por_n),.release_held(release_held),.in_v(in_v),.in_r(c_in_r),
-   .in_data(in_data),.in_owner(in_owner),.in_frame(in_frame),
-   .out_v(c_ov),.out_r(hit_core),.out_data(out_data),.out_owner(out_owner),.out_frame(out_frame),
+   .clk_sm(gclk),.por_n(por_n),.release_held(held_f),.in_v(in_v_f),.in_r(c_in_r),
+   .in_data(in_data_f),.in_owner(in_owner_f),.in_frame(in_frame_f),
+   .out_v(c_ov),.out_r(hit_core),.out_data(c_od),.out_owner(c_oo),.out_frame(c_of),
    .ACK_v(ack_core),.ACK_owner(ack_o_core),.ACK_frame(ack_f_core),
-   .release_v(c_rv),.release_r(rhit_core),.release_owner(release_owner),.release_frame(release_frame),
+   .release_v(c_rv),.release_r(rhit_core),.release_owner(c_ro),.release_frame(c_rf),
    .fclk_o(),.drained(c_drained),.paused(c_paused),.fault(c_fault));
   // ---- fast launch flops (outputs) ----
   reg [NO-1:0] ack_s;reg [NO-1:0] taken;reg rtaken;wire [NO-1:0] hit_n;wire rhit_n;
@@ -65,6 +70,10 @@ module ot_hbm_native_frame_station_rb_half #(parameter integer ENABLE=0,NO=3)(
     in_r_o<=!ph&&c_in_r;
     fault_o<=c_fault;drained_o<=c_drained&&!(|hit_s)&&!(|ack_s);paused_o<=c_paused;
    end
+  // data launch flops (the core's data are static while its valid is up; aligned with ov_o/rv_o, one fast cycle later)
+  reg [NO*2063-1:0] od_o;reg [NO*192-1:0] oo_o;reg [NO*73-1:0] of_o;reg [191:0] ro_o;reg [72:0] rf_o;
+  always @(posedge clk_sm)begin od_o<=c_od;oo_o<=c_oo;of_o<=c_of;ro_o<=c_ro;rf_o<=c_rf;end
+  assign out_data=od_o;assign out_owner=oo_o;assign out_frame=of_o;assign release_owner=ro_o;assign release_frame=rf_o;
   assign out_v=ov_o;assign release_v=rv_o;assign in_r=in_r_o;
   assign fault=fault_o;assign drained=drained_o;assign paused=paused_o;
   // ---- ready inputs: fast-domain transfer detection, sticky until the core samples it ----
