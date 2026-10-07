@@ -7,7 +7,7 @@ This document aligns the owner, Claude and Codex on one picture: where the three
 Close three design targets:
 
 1. **Qwen3-8B ROM**, 8K context (position 8,191).
-2. **DeepSeek-V4.1 ROM** (S81, 81 stages), 1M context (position 1,048,575).
+2. **DeepSeek-V4.1 ROM** (S81 die; 85 stages / 340 layer dies at the default q-element frame, 81 / 324 before it), 1M context (position 1,048,575).
 3. **HBM accelerator**, both models at the same contexts.
 
 A target is closed when all four hold:
@@ -32,25 +32,25 @@ Owner rules in force:
 
 | Target | Headline (measured) | Exactness | Physical | Status |
 |---|---|---|---|---|
-| Qwen3-8B ROM, 8K | **CLOSED (owner, 2026-10-06).** AR on STREAM4 with KV landing Option M: **6,178.4 tok/s** = 194,226 cycles (measured full token 193,955 + slab +217 + Option M +54; Option M crossbar +24 modelled, 6,177.6) (`results/arch/three_machine_compose/compose.json`, `results/rtl/qwen_rom_closed_20261006/closure.json`) | Full token measured end to end: 36 layers + head, next-token argmax on all 4 ranks, all 576 MiB FP8 KV in the token; Option M exact 15/15 | Blocks closed under the prior Qwen bar (SS60/FF25 >= 0, not the +15/+15 rule): core r5_f2ba +6.27/+6.92 (r5b_f3ba +0.87/+7.12), slab r11c +11.47/+4.20, CDC r11a +25.40/+10.17, CDC m1j +46.0/+36.5, station +73.7/+26.3, column head +51.3/+30.7; 25 die masters on assumed-constant views; die r20c legality/track/pin access PASS, GRT i50 overflow 7,972, IR 26.0 mV; die-top route not done | Shipped KV path = unprotected STREAM4; protected full-width transport explored, not adopted (`results/rtl/qwen_rom_fullwidth_20261006/`) |
-| DeepSeek-V4.1 ROM, 1M | **1,654.7 AR / 4,872.2 MTP** (all measured: AR 604.3 µs, MTP step 853.6 µs; fused hc_post lever `9082d0a53`, head lever `1c4e785ee`, window bound `42cf43125`; tau 4.159, 4,554.6 MTP at the published 3.8879) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed physical feasibility at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers; that netlist had connectivity holes (x chain undriven at 2,161 of 2,417 pairs, cfg ROMs and return nodes unclocked, no forwarded stages or meso FIFOs; die-top lint `7ccef3810`), now wired by the S81-DIE `--gen r8` generator | Recovery in progress; several blocks still closing |
+| Qwen3-8B ROM, 8K | **CLOSED (owner, 2026-10-06).** AR on STREAM4 with KV landing Option M: **5,537.3 tok/s** = 216,713 cycles (measured full token 193,955 + slab +217 + Option M +54 + die relay stations at 430.56 µm +22,487, owner-approved 2026-10-07; Option M crossbar +24 modelled, 5,536.7) (`results/arch/three_machine_compose/compose.json`, `results/rtl/qwen_rom_closed_20261006/closure.json`) | Full token measured end to end: 36 layers + head, next-token argmax on all 4 ranks, all 576 MiB FP8 KV in the token; Option M exact 15/15 | Blocks closed under the prior Qwen bar (SS60/FF25 >= 0, not the +15/+15 rule): core r5_f2ba +6.27/+6.92 (r5b_f3ba +0.87/+7.12), slab r11c +11.47/+4.20, CDC r11a +25.40/+10.17, CDC m1j +46.0/+36.5, station +73.7/+26.3, column head +51.3/+30.7; 25 die masters on assumed-constant views; die r20c legality/track/pin access PASS, GRT i50 overflow 7,972, IR 26.0 mV; die-top route not done | Shipped KV path = unprotected STREAM4; protected full-width transport explored, not adopted (`results/rtl/qwen_rom_fullwidth_20261006/`) |
+| DeepSeek-V4.1 ROM, 1M | **1,675.0 AR / 4,895.0 MTP** (all measured: AR 597.0 µs, MTP step 849.6 µs; recovery levers on full FEC with the default q-element QX 10, owner go `3661e31c6`; tau 4.159, 4,575.9 MTP at the published 3.8879; `results/arch/three_machine_compose/compose.json` `ds_rom`). If every PENDING_SSFF lever closes: 2,204.6 / 6,113.9 (conditional, not a headline) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed physical feasibility at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers; that netlist had connectivity holes (x chain undriven at 2,161 of 2,417 pairs, cfg ROMs and return nodes unclocked, no forwarded stages or meso FIFOs; die-top lint `7ccef3810`), now wired by the S81-DIE `--gen r8` generator | Recovery in progress; several blocks still closing |
 | HBM accelerator, DS 1M | **2,173.7 AR / 4,683.2 MTP** (fully measured `7dfe62676`, notice default; tau 4.159, 4,377.9 at 3.8879). Matched reference `b39173b46` (review corrections measured, shared levers credited): **474.8 µs AR / 1,050.6 µs MTP step = 3,958.5 MTP** | Exact | Control loops closed (bulk copy, KV lifecycle `7ce508488`, SECDED fence `b5f1dcdf6`) | Datapath short of 1.2 GHz: collective endpoint −329 ps, SU lane −4.8/−46 ps, SFU tail −113/−167 ps, attention tile about 881 MHz |
 | HBM accelerator, Qwen 8K | 2,154–2,220 AR; DSpark about 5,055 (TP4, `2f4a6af49`) | Exact (TP2 and TP4 vs GPU golden) | Not closed: Qwen-side core, collective and lane blocks open | Handed to Codex |
 
 **Comparisons at equal silicon, measured:**
 
-- **Qwen:** the ROM (AR, closed configuration, 6,178.4) is 2.78-2.87x the HBM accelerator's AR (2,154-2,220).
-- **DeepSeek (per user):** against the fully measured HBM accelerator the ROM is 0.76x on AR and **1.04x on MTP**. Against the matched reference it is 0.79x on AR (604.3 vs 474.8 µs) and **1.23x on MTP** (step 853.6 vs 1,050.6 µs). Both ratios use one tau on both sides, so they do not depend on it.
-- **Energy** (`results/arch/energy_silicon_measured/`, regenerated 2026-10-05):
+- **Qwen:** the ROM (AR, closed configuration with 430 µm die relays, 5,537.3) is 2.49-2.57x the HBM accelerator's AR (2,154-2,220).
+- **DeepSeek (per user):** against the fully measured HBM accelerator the ROM is 0.77x on AR and **1.05x on MTP**. Against the matched reference it is 0.80x on AR (597.0 vs 474.8 µs) and **1.24x on MTP** (step 849.6 vs 1,050.6 µs). Both ratios use one tau on both sides, so they do not depend on it.
+- **Energy** (`results/arch/energy_silicon_measured/`, regenerated 2026-10-06):
   - Qwen ROM leads (0.109 vs 0.761 J/token, model power).
-  - DS at batch 1, AR: ROM 5.80 J/token (measured PG residual) against HBM 5.77, a tie until spine gating is measured.
+  - DS at batch 1, AR: ROM 6.76 J/token (measured PG residual; 85 stages, 340 layer dies; scoreboard `ds_rom.j_per_token_ar_b1_pg`) against HBM 5.77 (switch charged), so the HBM accelerator uses 11% less (HBM/ROM 0.89). The spine-gating row, still unvalidated, is 5.58 J/token.
 
 ## 3. Decisions already taken
 
 - **Qwen ROM operating mode is plain decoding (AR) at 8K.** This is conditional on `results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json`.
   - DSpark on the compute-balanced ROM measured 0.763x AR (free-draft bound 0.969x): the ROM's read rate equals its MAC rate, so a 4-position verify layer costs 3.26x an AR layer.
   - DSpark stays built and exact but off.
-  - MTP stays required and pays on the DS ROM (2.94x) and the HBM accelerator (2.15x), both at tau 4.159.
+  - MTP stays required and pays on the DS ROM (2.92x) and the HBM accelerator (2.15x), both at tau 4.159.
   - Principle: speculation pays only when the dominant per-token cost is shared across the verified positions.
 - **Near-HBM attention dropped** (`c8d7ab368`); the KV path is STREAM4. The old HBM_STREAM controller is retired.
 - **DS ROM batched draft head (L2, NV5) rejected.** It is wire-bound: routed −674 ps.
@@ -101,7 +101,7 @@ Handoff files are in `/tmp/claude-review-20261003/handoff_to_codex_20261004/`; t
 
 1. **DS ROM AR gap to the matched HBM accelerator.**
    - **Target (owner 2026-10-05):** the DS ROM continues to closure and aims to beat the matched HBM accelerator in both AR and MTP. The comparison is a measured checkpoint for the paper, not a kill switch.
-   - Today, against the matched reference (`b39173b46`), the ROM leads on MTP: step 853.6 vs 1,050.6 µs, 4,872.2 vs 3,958.5 tok/s at tau 4.159. It trails on AR: 604.3 vs 474.8 µs, a 129.5 µs gap.
+   - Today, against the matched reference (`b39173b46`), the ROM leads on MTP: step 849.6 vs 1,050.6 µs, 4,895.0 vs 3,958.5 tok/s at tau 4.159. It trails on AR: 597.0 vs 474.8 µs, a 122.2 µs gap.
    - The token is latency-bound. Field matvecs are 37% of the AR critical path: serial phases with a fixed cost of 200–260 cycles each, experts swept one after another, no K-split. Serial SU chains are 26%.
    - The field-phase lever (PQ) is exact and worth +20.5% AR (measured on the 1,612.7 tok/s base), but it is rejected until its spine closes SS at 1.2 GHz (−722.8 ps). That spine, the remaining SU-chain fusions and expert concurrency are the levers for the AR gap.
 2. **1.2 GHz on baseline blocks across all three targets.** Every rate assumes 1.2 GHz. At today's closing clocks the DS HBM AR falls to 1,656.3 tok/s. Open baseline blocks:

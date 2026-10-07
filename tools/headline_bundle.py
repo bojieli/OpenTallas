@@ -192,6 +192,7 @@ T1_T32 = "+32,768 tokens on 1M, prefix cached"
 T1_Q = "Qwen3-8B package, cold 8K prompt, KV streamed during the prefill"
 PFS = "Prefill, ingest and time to first token"
 
+ESM = "results/arch/energy_silicon_measured/energy_silicon.json"
 PB = "scenarios.B_proposed_production"
 PA = "scenarios.A_measured_implementation"
 QPB = "power_production.scenarios.B_proposed_production"
@@ -728,9 +729,24 @@ HEADLINES: list[dict[str, Any]] = [
          claim="V4.1 ROM array energy per token at 1M, batch 1, scenario B (J)",
          binding=B(PS, f"{POB}.1048576.ar_batch1.rom_energy_j"),
          sensitivity=[S("scenario A (measured lane)", B(PS, f"{POA}.1048576.ar_batch1.rom_energy_j"))],
-         printed=[at(DEPLOY, "spends 2.41 J per token at batch 1"),
+         printed=[at(DEPLOY, "model's 2.40 J against 6.70 J"),
                   at("Energy per token, batch 1 (both static-dominated)", "2.40 vs 6.70 J"),
-                  at("Static power decides array energy at low batch", "2.41 J per token")]),
+                  at("Static power decides array energy at low batch", "model gave 2.40 J")]),
+    # DS-RACK85 2026-10-06: the measured energy record supersedes the power-scenario model at batch 1
+    dict(id="v41.energy_rom_1m_measured", section="DeepSeek-V4.1 energy", cls="model",
+         claim="V4.1 ROM array energy per token at 1M, batch 1, AR, measured energy record (85 stages, stage PG at "
+               "the measured element residual; scoreboard ds_rom.j_per_token_ar_b1_pg) (J)",
+         binding=B(ESM, "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token"),
+         printed=[at(DEPLOY, "spends 6.76 J per token at batch 1 in AR"),
+                  at("Static power decides array energy at low batch", "6.76 J per token at batch 1 in AR"),
+                  at("Energy per token, batch 1 (both static-dominated)", "measured energy record 6.76 vs 5.77 J"),
+                  at(S101, "6.76 J for the array (85 stages")]),
+    dict(id="v41.energy_hbm_accel_1m_measured", section="DeepSeek-V4.1 energy", cls="model",
+         claim="DS HBM accelerator energy per token at 1M, batch 1, AR, measured energy record (scoreboard "
+               "hbm_ds.accel_ar_J_per_token) (J)",
+         binding=B(ESM, "deepseek_1m.hbm_accel.power.ar_b1.J_per_token"),
+         printed=[at(DEPLOY, "against 5.77 J and 2.89 J for the DS HBM accelerator"),
+                  at(S101, "against 5.77 J for the DS HBM accelerator in AR")]),
     dict(id="v41.energy_hbm_1m", section="DeepSeek-V4.1 energy", cls="model",
          claim="Best HBM comparator energy per token at 1M, batch 1, scenario B (J)",
          binding=B(PS, f"{POB}.1048576.ar_batch1.hbm_energy_j"),
@@ -1498,6 +1514,7 @@ def record_pins(record: str, body: dict[str, Any]) -> dict[str, Any]:
     """Every source pin the record carries, each classified against the tree."""
     artifact = ROOT / record
     pins: list[dict[str, Any]] = []
+    commit_pins: list[dict[str, Any]] = []
     containers = [("", body)]
     if isinstance(body.get("provenance"), dict):
         containers.append(("provenance.", body["provenance"]))
@@ -1507,6 +1524,10 @@ def record_pins(record: str, body: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(mapping, dict):
                 continue
             for key, value in mapping.items():
+                if key.endswith("_commit") and isinstance(value, str) and re.fullmatch(r"[0-9a-f]{7,40}", value):
+                    commit_pins.append({"field": f"{prefix}{field}.{key}", "commit": value,
+                                        "in_head_history": in_head_history(value)})
+                    continue       # a commit named among the inputs (e.g. scoreboard_commit), not a path
                 entry: dict[str, Any] = {"field": prefix + field, "key": key}
                 if isinstance(value, dict) and isinstance(value.get("from"), str):
                     origin, _, path = value["from"].partition(":")
@@ -1550,7 +1571,7 @@ def record_pins(record: str, body: dict[str, Any]) -> dict[str, Any]:
         pins.append({"field": "golden_pin", "key": golden["file"], "path": golden["file"],
                      "pinned": golden["git_blob"], "hash": "git-blob",
                      "status": "missing" if now is None else "current" if now == golden["git_blob"] else "stale"})
-    commits = []
+    commits = list(commit_pins)
     for prefix, container in containers:
         for field in COMMIT_FIELDS:
             value = container.get(field)
@@ -1569,6 +1590,7 @@ def record_pins(record: str, body: dict[str, Any]) -> dict[str, Any]:
 #: output path is the record (found by grepping tools/ for the record name);
 #: it is reported as INFERRED, because the record itself does not say so.
 INFERRED_PRODUCERS = {
+    "results/arch/energy_silicon_measured/energy_silicon.json": "tools/energy_silicon_measured.py",
     "results/rtl/hdc_v41_decode_campaign.json": "tools/rtl_hdc_v41_decode_campaign.py",
     "results/rtl/hdc_v41x_egather_campaign.json": "tools/rtl_hdc_v41x_egather_campaign.py",
     "results/rtl/hdc_v41x_sel_campaign.json": "tools/rtl_hdc_v41x_sel_campaign.py",

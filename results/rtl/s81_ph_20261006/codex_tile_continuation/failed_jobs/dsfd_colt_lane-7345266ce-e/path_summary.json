@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e/routes/s81ph_dsfd_colt_lane_7345266ce_e/work/orfs/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_7345266ce_e/base",
+ "hold_ff": {
+  "paths_seen": 1200,
+  "worst_slack_ps": -9.99,
+  "classes": [
+   {
+    "start_class": "ow[*]$_DFF_PN0_/QN",
+    "end_class": "t_w[*]",
+    "worst_slack_ps": -9.99,
+    "paths": 398,
+    "max_levels": 9,
+    "example_start": "ow[483]$_DFF_PN0_/QN",
+    "example_end": "t_w[483]"
+   },
+   {
+    "start_class": "flt[*]$_DFF_PN0_/QN",
+    "end_class": "t_f[*]",
+    "worst_slack_ps": -4.59,
+    "paths": 2,
+    "max_levels": 7,
+    "example_start": "flt[3]$_DFF_PN0_/QN",
+    "example_end": "t_f[3]"
+   },
+   {
+    "start_class": "pd[*]$_DFF_P_/QN",
+    "end_class": "u_q.g_m[*].u_m/wd_in[*]",
+    "worst_slack_ps": 22.38,
+    "paths": 136,
+    "max_levels": 3,
+    "example_start": "pd[457]$_DFF_P_/QN",
+    "example_end": "u_q.g_m[1].u_m/wd_in[201]"
+   },
+   {
+    "start_class": "w[*]$_DFF_P_/QN",
+    "end_class": "pd[*]$_DFF_P_/D",
+    "worst_slack_ps": 22.66,
+    "paths": 59,
+    "max_levels": 5,
+    "example_start": "w[480]$_DFF_P_/QN",
+    "example_end": "pd[479]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_q.ob[*][*]$_DFFE_PP_/QN",
+    "end_class": "ow[*]$_DFF_PN0_/D",
+    "worst_slack_ps": 25.75,
+    "paths": 28,
+    "max_levels": 5,
+    "example_start": "u_q.ob[0][12]$_DFFE_PP_/QN",
+    "example_end": "ow[13]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_q.rq_r[*]$_DFFE_PP_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 28.43,
+    "paths": 42,
+    "max_levels": 5,
+    "example_start": "u_q.rq_r[60]$_DFFE_PP_/QN",
+    "example_end": "u_q.ob[1][60]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_q.wp[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_q.g_m[*].u_m/w_addr_in[*]",
+    "worst_slack_ps": 29.92,
+    "paths": 4,
+    "max_levels": 3,
+    "example_start": "u_q.wp[7]$_DFFE_PN0P_/QN",
+    "example_end": "u_q.g_m[1].u_m/w_addr_in[7]"
+   },
+   {
+    "start_class": "e_link$_DFF_PN0_/QN",
+    "end_class": "flt[*]$_DFF_PN0_/D",
+    "worst_slack_ps": 30.46,
+    "paths": 1,
+    "max_levels": 4,
+    "example_start": "e_link$_DFF_PN0_/QN",
+    "example_end": "flt[2]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_q.ob[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 30.8,
+    "paths": 106,
+    "max_levels": 5,
+    "example_start": "u_q.ob[0][228]$_DFFE_PP_/QN",
+    "example_end": "u_q.ob[0][228]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_q.rq_r[*]$_DFFE_PP_/QN",
+    "end_class": "u_q.rq_r[*]$_DFFE_PP_/D",
+    "worst_slack_ps": 31.71,
+    "paths": 18,
+    "max_levels": 4,
+    "example_start": "u_q.rq_r[339]$_DFFE_PP_/QN",
+    "example_end": "u_q.rq_r[339]$_DFFE_PP_/D"
+   }
+  ],
+  "errors": []
+ }
+}

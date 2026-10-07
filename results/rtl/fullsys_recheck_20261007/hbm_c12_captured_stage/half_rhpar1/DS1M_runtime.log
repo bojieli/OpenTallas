@@ -1,0 +1,49 @@
+A 13 0
+C 27 e0 -0 -0
+A 27 1
+C 28 e0 -0 -0
+C 29 e0 -0 -0
+C 30 e0 -0 -0
+C 31 e0 -0 -0
+A 41 2
+C 76 e1 -0 -0
+C 77 e1 -0 -0
+C 78 e1 -0 -0
+C 79 e1 -0 -0
+C 80 e1 -0 -0
+C 82 -2 r0 -0
+C 83 -2 r0 -0
+C 84 -2 r0 -0
+C 85 -2 r0 -0
+C 86 -2 r0 -0
+C 126 e2 -0 -0
+C 128 e2 -0 -0
+C 130 e2 -0 -0
+C 131 -2 r1 -0
+C 132 e2 r1 -0
+C 133 -2 r1 -0
+C 134 e2 r1 -0
+C 135 -2 r1 -0
+C 181 -2 r2 -0
+C 183 -2 r2 -0
+C 185 -2 r2 -0
+C 187 -2 r2 -0
+C 189 -2 r2 -0
+C 463 -2 -0 s2
+A 464 3
+C 478 e3 -0 -0
+A 478 4
+C 619 e4 -0 -0
+C 620 e4 -0 -0
+C 621 e4 -0 -0
+C 622 e4 -0 -0
+C 623 e4 -0 -0
+C 625 -4 r3 -0
+C 674 -4 r4 -0
+C 675 -4 r4 -0
+C 676 -4 r4 -0
+C 677 -4 r4 -0
+C 678 -4 r4 -0
+PASS_INTEGRATED_STAGE_DRAIN position=1048575 token=1a321 job=9234abcd gen=9 ops=5 held_cpl_edges=5
+END 697 ok
+- /srv/opentallas-scratch2/scratch/claude/fullsys-recheck/wt-su/rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_su_c12.sv:277: Verilog $finish

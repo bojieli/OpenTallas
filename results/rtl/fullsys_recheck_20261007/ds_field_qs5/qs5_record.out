@@ -1,0 +1,81 @@
+spine rule {'c_first': 62, 'c_gap': 32, 'c_guard': 203, 'c_cfg': 63, 'rule_checked': 9072, 'rule_violations': 0, 'violations': []}
+L0.attn.a_proj           481 cyc 0.4008 us (as-built 0.4008) exact True
+L0.attn.wo_a             833 cyc 0.6942 us (as-built 1.7283) exact True
+L0.attn.wo_b             423 cyc 0.3525 us (as-built 0.3342) exact True
+L0.attn.wq_b             425 cyc 0.3542 us (as-built 0.3367) exact True
+L0.ffn.down              1002 cyc 0.835 us (as-built 1.5025) exact True
+L0.ffn.experts_gu        1151 cyc 0.9592 us (as-built 1.5883) exact True
+L0.ffn.router            573 cyc 0.4775 us (as-built 0.4958) exact True
+L0.ffn.shared_gu         487 cyc 0.4058 us (as-built 0.4058) exact True
+E1.wkv                   717 cyc 0.5975 us (as-built 0.8383) exact True
+L1.attn.a_proj           481 cyc 0.4008 us (as-built 0.4008) exact True
+L1.attn.wo_a             833 cyc 0.6942 us (as-built 1.7283) exact True
+L1.attn.wo_b             423 cyc 0.3525 us (as-built 0.3342) exact True
+L1.attn.wq_b             437 cyc 0.3642 us (as-built 0.3367) exact True
+L1.ffn.down              710 cyc 0.5917 us (as-built 0.9158) exact True
+L1.ffn.experts_gu        925 cyc 0.7708 us (as-built 1.1908) exact True
+L1.ffn.router            573 cyc 0.4775 us (as-built 0.4958) exact True
+L1.ffn.shared_gu         487 cyc 0.4058 us (as-built 0.4058) exact True
+L2.attn.a_proj           1363 cyc 1.1358 us (as-built 1.8933) exact True
+L2.attn.cmp.wk           308 cyc 0.2567 us (as-built 0.2342) exact True
+L2.attn.wo_a             833 cyc 0.6942 us (as-built 1.7283) exact True
+L2.attn.wo_b             423 cyc 0.3525 us (as-built 0.3342) exact True
+L2.attn.wq_b             559 cyc 0.4658 us (as-built 0.6492) exact True
+L2.ffn.down              677 cyc 0.5642 us (as-built 0.8908) exact True
+L2.ffn.experts_gu        699 cyc 0.5825 us (as-built 0.7933) exact True
+L2.ffn.router            573 cyc 0.4775 us (as-built 0.4958) exact True
+L2.ffn.shared_gu         487 cyc 0.4058 us (as-built 0.4058) exact True
+L3.attn.a_proj           481 cyc 0.4008 us (as-built 0.4008) exact True
+L3.attn.wo_a             833 cyc 0.6942 us (as-built 1.7283) exact True
+L3.attn.wo_b             423 cyc 0.3525 us (as-built 0.3342) exact True
+L3.attn.wq_b             437 cyc 0.3642 us (as-built 0.3367) exact True
+L3.ffn.down              1189 cyc 0.9908 us (as-built 1.8333) exact True
+L3.ffn.experts_gu        1603 cyc 1.3358 us (as-built 2.3833) exact True
+L3.ffn.router            573 cyc 0.4775 us (as-built 0.4958) exact True
+L3.ffn.shared_gu         487 cyc 0.4058 us (as-built 0.4058) exact True
+L20.attn.a_proj          1073 cyc 0.8942 us (as-built 1.3958) exact True
+L20.attn.cmp.wk          308 cyc 0.2567 us (as-built 0.2342) exact True
+L20.attn.wo_a            833 cyc 0.6942 us (as-built 1.7283) exact True
+L20.attn.wo_b            423 cyc 0.3525 us (as-built 0.3342) exact True
+L20.attn.wq_b            559 cyc 0.4658 us (as-built 0.6492) exact True
+L20.ffn.down             1002 cyc 0.835 us (as-built 1.5025) exact True
+L20.ffn.experts_gu       1151 cyc 0.9592 us (as-built 1.5883) exact True
+L20.ffn.router           573 cyc 0.4775 us (as-built 0.4958) exact True
+L20.ffn.shared_gu        487 cyc 0.4058 us (as-built 0.4058) exact True
+L21.attn.a_proj          481 cyc 0.4008 us (as-built 0.4008) exact True
+L21.attn.wo_a            833 cyc 0.6942 us (as-built 1.7283) exact True
+L21.attn.wo_b            423 cyc 0.3525 us (as-built 0.3342) exact True
+L21.attn.wq_b            437 cyc 0.3642 us (as-built 0.3367) exact True
+L21.ffn.down             710 cyc 0.5917 us (as-built 0.9158) exact True
+L21.ffn.experts_gu       925 cyc 0.7708 us (as-built 1.1908) exact True
+L21.ffn.router           573 cyc 0.4775 us (as-built 0.4958) exact True
+L21.ffn.shared_gu        487 cyc 0.4058 us (as-built 0.4058) exact True
+L24.attn.a_proj          783 cyc 0.6525 us (as-built 0.8983) exact True
+L24.attn.wo_a            833 cyc 0.6942 us (as-built 1.7283) exact True
+L24.attn.wo_b            423 cyc 0.3525 us (as-built 0.3342) exact True
+L24.attn.wq_b            559 cyc 0.4658 us (as-built 0.6492) exact True
+L24.ffn.down             1035 cyc 0.8625 us (as-built 1.5275) exact True
+L24.ffn.experts_gu       1377 cyc 1.1475 us (as-built 1.9858) exact True
+L24.ffn.router           573 cyc 0.4775 us (as-built 0.4958) exact True
+L24.ffn.shared_gu        487 cyc 0.4058 us (as-built 0.4058) exact True
+status pass
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/fullsys-recheck/wt-qs5/tools/dsrom_combined_l20.py", line 824, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/fullsys-recheck/wt-qs5/tools/dsrom_combined_l20.py", line 819, in main
+    return dict(static=cmd_static, edges=cmd_edges, field=cmd_field, units=cmd_units, compose=cmd_compose,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                record=cmd_record, **{"qelem-lever": cmd_qelem_lever})[a.cmd](a)
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/fullsys-recheck/wt-qs5/tools/dsrom_combined_l20.py", line 441, in cmd_qelem_lever
+    FS.cmd_lever(argparse.Namespace(record=rec, ssff=None, lever="qelem_pq", verdict="PENDING_SSFF", note=note,
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                    lever_out=None))
+                                    ^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/fullsys-recheck/wt-qs5/tools/dsrom_field_spine.py", line 289, in cmd_lever
+    measurement=dict(record=str(a.record.resolve().relative_to(ROOT)), record_sha256=sha(a.record),
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 489, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/srv/opentallas-scratch/claude/fullsys-recheck/field_pq_qelem_qs5.json' is not in the subpath of '/srv/opentallas-scratch/claude/fullsys-recheck/wt-qs5'

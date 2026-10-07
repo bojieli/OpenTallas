@@ -1,0 +1,1401 @@
+{
+  "added_cycles": 0,
+  "closure_claim": false,
+  "convention": "ETM constraints include internal receiver clock-tree delay; do not add standalone CTS insertion to ETM hold/setup again.",
+  "current_v6_bindings": {
+    "NE": {
+      "capture_edge": "falling",
+      "clock_net": "n_coNE_f0_g0_f_coNE_1",
+      "clock_port": "fi0",
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "data_net": "n_coNE_d0_g0_f_coNE_1",
+      "data_port": "di0",
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ],
+      "receiver_instance": "g_coNE_d0_f_coNE_1_0",
+      "receiver_master": "dsfd_stnv_514x1"
+    },
+    "NW": {
+      "capture_edge": "falling",
+      "clock_net": "n_coNW_f0",
+      "clock_port": "fi0",
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "data_net": "n_coNW_d0",
+      "data_port": "di0",
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ],
+      "receiver_instance": "f_coNW_1",
+      "receiver_master": "dsfd_stnh_514x1"
+    },
+    "SE": {
+      "capture_edge": "falling",
+      "clock_net": "n_coSE_f0_g0_f_coSE_1",
+      "clock_port": "fi0",
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "data_net": "n_coSE_d0_g0_f_coSE_1",
+      "data_port": "di0",
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ],
+      "receiver_instance": "g_coSE_d0_f_coSE_1_0",
+      "receiver_master": "dsfd_stnh_514x1"
+    },
+    "SW": {
+      "capture_edge": "falling",
+      "clock_net": "n_coSW_f0",
+      "clock_port": "fi0",
+      "ctrl_rd_width": 8864,
+      "ctrl_rtl_rd_width": 8896,
+      "data_net": "n_coSW_d0",
+      "data_port": "di0",
+      "missing_ctrl_ports": [
+        "rq",
+        "rk",
+        "wd"
+      ],
+      "receiver_instance": "f_coSW_1",
+      "receiver_master": "dsfd_stnh_514x1"
+    }
+  },
+  "current_v6_case_sha256": "b9bb5d073f78a7d77d533b69b0852d9170745ffc12caa80358e9dd8f76ad28b5",
+  "historical_buses": [
+    [
+      "coNE_f0",
+      "fclk",
+      1,
+      [
+        [
+          "svc_NE",
+          "of",
+          "?"
+        ],
+        [
+          "f_coNE_1",
+          "fi0",
+          "in"
+        ]
+      ]
+    ],
+    [
+      "coNE_d0",
+      "lane",
+      514,
+      [
+        [
+          "svc_NE",
+          "od",
+          "?"
+        ],
+        [
+          "f_coNE_1",
+          "di0",
+          "in"
+        ]
+      ]
+    ],
+    [
+      "dfi_NE",
+      "phy_dfi",
+      22238,
+      [
+        [
+          "ctrl_NE",
+          "phy",
+          "mixed"
+        ],
+        [
+          "phy_NE",
+          "dfi",
+          "mixed"
+        ]
+      ]
+    ],
+    [
+      "rd_NE",
+      "hbm_read",
+      8864,
+      [
+        [
+          "ctrl_NE",
+          "rd",
+          "out"
+        ],
+        [
+          "svc_NE",
+          "rd",
+          "in"
+        ]
+      ]
+    ]
+  ],
+  "historical_die_source": "f21799d1c3269e49206012358c3ef667daaf4222",
+  "hold_equation": "C_launch + CQ_min_ETM + D_data_min >= C_capture + H_receiver_ETM + U_hold",
+  "legacy_budget_differences": [
+    {
+      "changes": {
+        "bits": [
+          0,
+          2
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ]
+      },
+      "port": "ci_e"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          2
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ]
+      },
+      "port": "ci_w"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          2
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ]
+      },
+      "port": "co_e"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          2
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ]
+      },
+      "port": "co_w"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          30
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_addr"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          4
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_len"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_rdy"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          17
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_tag"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_v"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          256
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_wdata"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_we"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_wr_done"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          32
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "k_wstrb"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          4
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "kr_beat"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          256
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "kr_data"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "kr_rdy"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          17
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "kr_tag"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "hbm_clk"
+        ]
+      },
+      "port": "kr_v"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          4
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "r_beat"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          256
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "r_data"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          17
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "r_tag"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "rk"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          341
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "output",
+          "input"
+        ]
+      },
+      "port": "rq"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "rv"
+    },
+    {
+      "changes": {
+        "bits": [
+          0,
+          1
+        ],
+        "clock_domain": [
+          null,
+          "core_clk"
+        ],
+        "dir": [
+          "input",
+          "output"
+        ]
+      },
+      "port": "wd"
+    }
+  ],
+  "measured_calibrations": {
+    "dsfd_ctrl_pc": {
+      "boundary_n": 625,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 231,
+        "mean": 222,
+        "min": 205
+      },
+      "host": "ot-epyc3",
+      "job": "s81ph-dsfd_ctrl_pc-3f0455126",
+      "measured_at": "2026-10-06T22:37:02-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-3f0455126",
+      "source_commit": "3f0455126529d8b595e7be43a606274dff73cbc6",
+      "ss": {
+        "max": 351,
+        "mean": 342,
+        "min": 324
+      }
+    },
+    "dsfd_stnh_514x1": {
+      "boundary_n": 514,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 72,
+        "mean": 71,
+        "min": 70
+      },
+      "host": "ot-agidock128",
+      "job": "s81-dsfd-stnh-514x1-2e2d7aa3f",
+      "measured_at": "2026-10-06T20:50:37-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-514x1-2e2d7aa3f",
+      "source_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+      "ss": {
+        "max": 137,
+        "mean": 136,
+        "min": 135
+      }
+    },
+    "dsfd_stnv_514x1": {
+      "boundary_n": 514,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 73,
+        "mean": 71,
+        "min": 70
+      },
+      "host": "ot-agidock128",
+      "job": "s81-dsfd-stnv-514x1-2e2d7aa3f",
+      "measured_at": "2026-10-06T20:50:38-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnv-514x1-2e2d7aa3f",
+      "source_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+      "ss": {
+        "max": 138,
+        "mean": 137,
+        "min": 136
+      }
+    },
+    "dsfd_svc_pc": {
+      "boundary_n": 621,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 95,
+        "mean": 91,
+        "min": 86
+      },
+      "host": "ot-epyc2",
+      "job": "s81ph-dsfd_svc_pc-da50ce55a",
+      "measured_at": "2026-10-06T20:19:08-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_pc-da50ce55a",
+      "source_commit": "da50ce55acbbe2d2cba0872f4d1ce2185dea9a73",
+      "ss": {
+        "max": 150,
+        "mean": 145,
+        "min": 140
+      }
+    },
+    "dsfd_svc_stn": {
+      "boundary_n": 2567,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 153,
+        "mean": 140,
+        "min": 128
+      },
+      "host": "ot-epyc2",
+      "job": "s81ph-dsfd_svc_stn-da50ce55a",
+      "measured_at": "2026-10-06T20:20:11-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a",
+      "source_commit": "da50ce55acbbe2d2cba0872f4d1ce2185dea9a73",
+      "ss": {
+        "max": 237,
+        "mean": 222,
+        "min": 210
+      }
+    },
+    "dsfd_svcio_od": {
+      "boundary_n": 4623,
+      "budget": null,
+      "clock": "core_clk",
+      "ff": {
+        "max": 191,
+        "mean": 180,
+        "min": 166
+      },
+      "host": "ot-epyc3",
+      "job": "s81ph-dsfd_svcio_od-3f0455126",
+      "measured_at": "2026-10-06T22:37:02-07:00",
+      "parasitics": "placement-estimated",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-3f0455126",
+      "source_commit": "3f0455126529d8b595e7be43a606274dff73cbc6",
+      "ss": {
+        "max": 302,
+        "mean": 289,
+        "min": 271
+      }
+    }
+  },
+  "missing_evidence": [
+    "Current v6 die still connects ctrl rd as 8864 bits vs RTL 8896, and omits rq/rk/wd: repaired assembled tile/slab netlist with all valid/credit bits and clock/reset packing is required.",
+    "Per-PC ctrl.ckh -> PHY.clk routed wire/clock arrival, selected die HBM period, and qualified licensed-IP timing. The assumed PHY metadata nominal FF hold is 27.060841 ps, not 15; actual Liberty constraint selection requires data/clock slew.",
+    "Per-PC ctrl.cks versus svc_pc.ck SS/FF entry arrivals and uncertainty at actual adjacent pins; legacy slab clock plan has no tile leaves.",
+    "OD ck -> of rising/falling delay and slew after real CTS/inverter; paired of->fi0 and od->di0 routed RC, receiver ETM source match, and generated-clock edge propagation.",
+    "The pinned svc_stn ETMs expose no extracted od_er setup/hold arcs; receiver coverage must be resolved, not treated as zero. OD quadrant Q3 producer/ready receiver RTL and timing; actual station-chain-to-OD placements/wires for Q0..2 and bad->AD.fi routed clock pair.",
+    "Die-context STA using the corrected per-port and per-domain binding, retained 60/25 and 50ps IO policy; no BCmin from the transmitting tile substituted for receiver arrival."
+  ],
+  "od_capture": "falling of inverted forwarded clock corresponds to source ck rising; do not substitute a generic half-period or independent vclk",
+  "phy_claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are assumed, the port list is the adopted RTL's",
+  "phy_timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "phy_timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+  "receiver_liberty_arcs": {
+    "PHY_ff": [
+      {
+        "pin_count": 32,
+        "port": "k_v",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_v",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 960,
+        "port": "k_addr",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 960,
+        "port": "k_addr",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 128,
+        "port": "k_len",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 128,
+        "port": "k_len",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 544,
+        "port": "k_tag",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 544,
+        "port": "k_tag",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_we",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_we",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 8192,
+        "port": "k_wdata",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 8192,
+        "port": "k_wdata",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1024,
+        "port": "k_wstrb",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1024,
+        "port": "k_wstrb",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "kr_rdy",
+        "related_pin": "clk",
+        "table_max_ps": 132.9993,
+        "table_min_ps": 22.7493,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "kr_rdy",
+        "related_pin": "clk",
+        "table_max_ps": 58.5608,
+        "table_min_ps": -51.6892,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "PHY_ss": [
+      {
+        "pin_count": 32,
+        "port": "k_v",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_v",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 960,
+        "port": "k_addr",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 960,
+        "port": "k_addr",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 128,
+        "port": "k_len",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 128,
+        "port": "k_len",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 544,
+        "port": "k_tag",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 544,
+        "port": "k_tag",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_we",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "k_we",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 8192,
+        "port": "k_wdata",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 8192,
+        "port": "k_wdata",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1024,
+        "port": "k_wstrb",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1024,
+        "port": "k_wstrb",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "kr_rdy",
+        "related_pin": "clk",
+        "table_max_ps": 165.737,
+        "table_min_ps": 55.487,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 32,
+        "port": "kr_rdy",
+        "related_pin": "clk",
+        "table_max_ps": 73.3706,
+        "table_min_ps": -36.8794,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "dsfd_stnh_514x1_ff": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 84.37882,
+        "table_min_ps": 62.06913,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -49.18608,
+        "table_min_ps": -67.41507,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "dsfd_stnh_514x1_ss": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 158.50291,
+        "table_min_ps": 119.69008,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -99.7159,
+        "table_min_ps": -130.48962,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "dsfd_stnv_514x1_ff": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 87.49946,
+        "table_min_ps": 64.67464,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -51.23095,
+        "table_min_ps": -69.55733,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "dsfd_stnv_514x1_ss": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 161.0867,
+        "table_min_ps": 121.65258,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -101.59004,
+        "table_min_ps": -132.73557,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "station_ff": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 84.37882,
+        "table_min_ps": 62.06913,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -49.18608,
+        "table_min_ps": -67.41507,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "station_ss": [
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": 158.50291,
+        "table_min_ps": 119.69008,
+        "timing_type": "hold_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 514,
+        "port": "di0",
+        "related_pin": "fi0[0]",
+        "table_max_ps": -99.7159,
+        "table_min_ps": -130.48962,
+        "timing_type": "setup_falling",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "svc_pc_ff": [
+      {
+        "pin_count": 4,
+        "port": "r_beat",
+        "related_pin": "ck[0]",
+        "table_max_ps": 67.89025,
+        "table_min_ps": 54.09842,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 4,
+        "port": "r_beat",
+        "related_pin": "ck[0]",
+        "table_max_ps": -38.1166,
+        "table_min_ps": -49.44289,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 256,
+        "port": "r_data",
+        "related_pin": "ck[0]",
+        "table_max_ps": 70.77723,
+        "table_min_ps": 42.48101,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 256,
+        "port": "r_data",
+        "related_pin": "ck[0]",
+        "table_max_ps": -30.13604,
+        "table_min_ps": -51.72607,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 17,
+        "port": "r_tag",
+        "related_pin": "ck[0]",
+        "table_max_ps": 68.86536,
+        "table_min_ps": 43.24183,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 17,
+        "port": "r_tag",
+        "related_pin": "ck[0]",
+        "table_max_ps": -29.8777,
+        "table_min_ps": -50.81885,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rk",
+        "related_pin": "ck[0]",
+        "table_max_ps": 63.69064,
+        "table_min_ps": 48.20851,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rk",
+        "related_pin": "ck[0]",
+        "table_max_ps": -34.57106,
+        "table_min_ps": -41.66126,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rv",
+        "related_pin": "ck[0]",
+        "table_max_ps": 70.06317,
+        "table_min_ps": 54.89925,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rv",
+        "related_pin": "ck[0]",
+        "table_max_ps": -40.22803,
+        "table_min_ps": -47.70101,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "wd",
+        "related_pin": "ck[0]",
+        "table_max_ps": 63.48046,
+        "table_min_ps": 47.9524,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "wd",
+        "related_pin": "ck[0]",
+        "table_max_ps": -34.35114,
+        "table_min_ps": -41.39077,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "svc_pc_ss": [
+      {
+        "pin_count": 4,
+        "port": "r_beat",
+        "related_pin": "ck[0]",
+        "table_max_ps": 93.34919,
+        "table_min_ps": 66.14086,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 4,
+        "port": "r_beat",
+        "related_pin": "ck[0]",
+        "table_max_ps": -43.2858,
+        "table_min_ps": -60.3328,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 256,
+        "port": "r_data",
+        "related_pin": "ck[0]",
+        "table_max_ps": 98.31455,
+        "table_min_ps": 46.59972,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 256,
+        "port": "r_data",
+        "related_pin": "ck[0]",
+        "table_max_ps": -24.31806,
+        "table_min_ps": -67.06601,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 17,
+        "port": "r_tag",
+        "related_pin": "ck[0]",
+        "table_max_ps": 95.62148,
+        "table_min_ps": 44.56834,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 17,
+        "port": "r_tag",
+        "related_pin": "ck[0]",
+        "table_max_ps": -22.4962,
+        "table_min_ps": -63.00502,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rk",
+        "related_pin": "ck[0]",
+        "table_max_ps": 91.44452,
+        "table_min_ps": 64.51485,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rk",
+        "related_pin": "ck[0]",
+        "table_max_ps": -35.94286,
+        "table_min_ps": -55.00122,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rv",
+        "related_pin": "ck[0]",
+        "table_max_ps": 98.85436,
+        "table_min_ps": 73.45938,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "rv",
+        "related_pin": "ck[0]",
+        "table_max_ps": -44.28139,
+        "table_min_ps": -61.73569,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "wd",
+        "related_pin": "ck[0]",
+        "table_max_ps": 91.10392,
+        "table_min_ps": 63.81402,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "wd",
+        "related_pin": "ck[0]",
+        "table_max_ps": -35.26569,
+        "table_min_ps": -54.65372,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "svc_stn_ff": [
+      {
+        "pin_count": 1,
+        "port": "od_er",
+        "related_pin": "ck[0]",
+        "table_max_ps": 73.79033,
+        "table_min_ps": 52.69568,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "od_er",
+        "related_pin": "ck[0]",
+        "table_max_ps": 90.33425,
+        "table_min_ps": 88.84122,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ],
+    "svc_stn_ss": [
+      {
+        "pin_count": 1,
+        "port": "od_er",
+        "related_pin": "ck[0]",
+        "table_max_ps": 77.05965,
+        "table_min_ps": 43.16725,
+        "timing_type": "hold_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      },
+      {
+        "pin_count": 1,
+        "port": "od_er",
+        "related_pin": "ck[0]",
+        "table_max_ps": 195.27148,
+        "table_min_ps": 192.19803,
+        "timing_type": "setup_rising",
+        "use": "Tabulated boundary constraints; select with actual slew. Routed ETMs include internal receiver clock paths."
+      }
+    ]
+  },
+  "schema": "opentallas.s81.boundary_model.v1",
+  "setup_equation": "C_launch + CQ_max_ETM + D_data_max <= next_capture_edge + C_capture - S_receiver_ETM - U_setup",
+  "slab_clock_evidence": {
+    "ctrl_NE/ckh": {
+      "insertion_ss_ff": [
+        1626.9,
+        863.4
+      ],
+      "region": "clk_hbm:svc_NE"
+    },
+    "ctrl_NE/cks": {
+      "insertion_ss_ff": [
+        3856.6,
+        2045.7
+      ],
+      "region": "clk_stream:svc_NE.0"
+    },
+    "svc_NE/ck": {
+      "insertion_ss_ff": [
+        3854.7,
+        2044.9
+      ],
+      "region": "clk_stream:die.1.1.1.1.1.1"
+    }
+  },
+  "source_marker_note": "remote SOURCE_COMMIT is older than generator bytes; generator hash matches pinned die commit",
+  "timing_ready": false
+}

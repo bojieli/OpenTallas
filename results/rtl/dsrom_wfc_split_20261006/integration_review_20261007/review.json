@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.dsrom-wfc.integration-review.v1",
+  "main_commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+  "block_accepted": true,
+  "integration_qualified": false,
+  "enable_model_lever": false,
+  "region_contract": {
+    "inter_region_ports": "in_* out_*",
+    "inter_region_ps": 150,
+    "intra_region_ports": "all remaining data/control IO",
+    "intra_region_ps": 90,
+    "hold_io_uncertainty_ps": 50,
+    "core_uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "period_ps": 833,
+    "source_all_ports_die150_ff_ps": 3.2,
+    "source_region_ff_ps": 23.1,
+    "stage_region_ff_ps": 15.7
+  },
+  "bindings": [
+    {
+      "ports": "vm_we vm_waddr vm_wdata vm_re vm_raddr vm_rq",
+      "producer_receiver": "WFC u_ctrl <-> native tile VM / selected sp_vm",
+      "block_assumption": "same-frequency neighbouring region, +/-90 ps skew; VM_REG fixed read schedule",
+      "integration_evidence": "Selected WFC 1.2 GHz phase0; VM_parent sp_vm 0.9 GHz. Related 3:4 transport mandatory; parent allocation records installed_pipeline_edges=0. Native backend read-valid 5/write-ACK 4 edges. Same-clock behavioural bench is not proof of real transport.",
+      "verified": false
+    },
+    {
+      "ports": "cfg_* pr_*",
+      "producer_receiver": "finite u_cfg producer -> WFC and prompt request return",
+      "block_assumption": "intra-region +/-90 ps; fixed prompt response",
+      "integration_evidence": "Producer has a geometric 480x400 um reservation only; allocation explicitly requires own source gate, macro clkQ, CTS, SS/FF, and receiver mapping. No actual per-corner pair skew binding proving <=90 ps.",
+      "verified": false
+    },
+    {
+      "ports": "core_start core_* done/result/token/status",
+      "producer_receiver": "whole-stage producer, native engine, C8/core capture and WFC",
+      "block_assumption": "intra-region +/-90 ps",
+      "integration_evidence": "boundary_pending external_missing includes retirement/fence/result/context/idle/fragment/visibility endpoints; finite_IO_source_bound=false. Canonical stage is SOURCE0; not SOURCE1 head-token completion evidence.",
+      "verified": false
+    },
+    {
+      "ports": "in_* out_*",
+      "producer_receiver": "WFC registered link <-> actual upstream/downstream router or link",
+      "block_assumption": "inter-region +/-150 ps; LINK_REG receiver uses delayed ready/grants and 4-slot skid",
+      "integration_evidence": "boundary_pending lists finite router/link endpoints and min/max arrival/load as missing. No complete producer/receiver region/clock-pin mapping or integrated grant protocol proof for the actual neighbouring link.",
+      "verified": false
+    }
+  ],
+  "conclusion": "Region block closure does not establish the selected parent contracts. Do not enable the WFC lever or physical-qualified MTP headline.",
+  "minimal_main_integration": {
+    "now": "Evidence-only harvest da09addc7 (already present on inspected main as 6b134d773); this review may be integrated separately. Leave canonical results/rtl/dsrom_wfc_split_20261006/closure.json absent/unqualified and RTL default-off. No broad WFC branch merge required.",
+    "later": "Bind exact source/receiver instance and clock/region per port, actual wire/load and SS/FF min/max arrival; resolve 3:4 VM transport and latency-insensitive link agreement; exact-test the minimum joined boundary, price added cycles, and pass SS>=15 FF>=15 DRC0 in that context. Then set integration_qualified only on that source-pinned evidence and recompose current main.",
+    "consumer_guard": "Branch model consumer now requires integration_qualified=true in addition to accepted and exact; block-only record cannot activate the lever."
+  },
+  "validation": {
+    "model_gate": "PASS: missing, block-only, explicitly unqualified, failed physical and failed exact records rejected; fully-qualified record accepted",
+    "static_contract_review": "FAIL_INTEGRATION_BINDING_NOT_BLOCK_CLOSURE"
+  },
+  "inputs": {
+    "results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json": {
+      "commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+      "sha256": "bb6a93e14e301a55ec3cacc966daa5f9e422ce432018dbba17291e6b85d7ff9f"
+    },
+    "physical/dsrom_wfc_protected_context/boundary_pending.json": {
+      "commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+      "sha256": "49fd14a125be08deeb82edac599c115ffc5ed6457803a9d38ad08783f7cdccc0"
+    },
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_canonical_stage.sv": {
+      "commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+      "sha256": "bc565b2aad9f77193cd0b5b8972b4db816ae390fd075051c7a3731164e3ac9ae"
+    },
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_parent_cut.sv": {
+      "commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+      "sha256": "99633a9aef71dc2c226cbdb4a9a5279d87067c8ea003e703bdfce169e6f953af"
+    },
+    "tools/dsrom_s81_fulldie.py": {
+      "commit": "6b134d77375dbcfd4baa45a18154851e147b4f85",
+      "sha256": "bf03f2523f33dc5ed3a4fedf2e5f10c6a71c7479882263849012902dc8d2cb1d"
+    }
+  }
+}

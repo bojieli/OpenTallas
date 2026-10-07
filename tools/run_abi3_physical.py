@@ -3266,6 +3266,31 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
+    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
+    if _ot_rhc and args.hold_corners:
+        # closure loop (2026-10-07): route-time repair corners; "primary" = --orfs-corner (or the first listed corner)
+        _ot_new = (args.orfs_corner or args.hold_corners.split(",")[0].strip()) if _ot_rhc == "primary" else _ot_rhc
+        # a step hook that times a dropped corner by name (s81_ph vclk_latency.tcl: report_clock_latency -scenes BC)
+        # would error (counted as an ORFS flow error) and fall back to a different IO model: keep the corners then
+        _ot_drop = [c.strip() for c in args.hold_corners.split(",") if c.strip() not in _ot_new.split(",")]
+        _ot_seen, _ot_todo, _ot_hit = set(), [h.split("=", 1)[-1] for h in (args.step_tcl or [])], None
+        while _ot_todo and _ot_drop and not _ot_hit:
+            _ot_f = _ot_todo.pop()
+            _ot_p = Path(_ot_f[5:] if _ot_f.startswith("/src/") else _ot_f)
+            if str(_ot_p) in _ot_seen or not _ot_p.is_file():
+                continue
+            _ot_seen.add(str(_ot_p))
+            _ot_t = _ot_p.read_text(errors="replace")
+            if any(re.search(rf"(-scenes|-corner|ot_clk_ins)\s+{re.escape(c)}\b", _ot_t) for c in _ot_drop):
+                _ot_hit = str(_ot_p)
+            _ot_todo += re.findall(r"^\s*source\s+(\S+)", _ot_t, re.M)
+        if _ot_hit:
+            print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: kept {args.hold_corners}: step hook {_ot_hit} times corner(s) "
+                  f"{_ot_drop} by name", file=sys.stderr)
+        else:
+            print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: place-and-route repair corners {args.hold_corners} -> {_ot_new} "
+                  f"(FF hold: post-route hold ECO; sign-off unchanged)", file=sys.stderr)
+            args.hold_corners = _ot_new
     previous = {}
     try:
         for option, override, env, callback in (
@@ -3360,6 +3385,13 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
     adder_map = ADDER_MAP_PLATFORM if args.asap7_adder_map else ADDER_MAP_KOGGE_STONE
     view = with_adder_map(view, adder_map)
 
+    if args.hold_corners and args.orfs_corner:
+        # ORFS CORNERS replaces the primary corner's liberty: a hold list without the primary corner
+        # (e.g. --orfs-corner WC --hold-corners BC) would run every setup repair at FF only
+        hc = [c.strip() for c in args.hold_corners.split(",")]
+        if args.orfs_corner not in hc:
+            args.hold_corners = ",".join([args.orfs_corner] + hc)
+            print(f"--hold-corners: primary corner {args.orfs_corner} added first -> {args.hold_corners}", file=sys.stderr)
     if args.orfs_corner:
         if view.get("pnr") is None:
             print(f"--orfs-corner: view {args.view} has no place-and-route platform", file=sys.stderr)

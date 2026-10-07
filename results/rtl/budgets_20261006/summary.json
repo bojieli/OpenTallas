@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.budgets.summary.v1",
- "masters": 257,
+ "masters": 269,
  "rows": [
   {
    "master": "dsfd_bf",
@@ -5259,13 +5259,13 @@
     "hbm": 64
    },
    "size_um": [
-    1349.112,
+    1778.52,
     1349.976
    ],
    "entry_ss": {
-    "mean": 2824.4,
-    "min": 2691.4,
-    "max": 3116.6
+    "mean": 2785.8,
+    "min": 2678.6,
+    "max": 3105.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5274,7 +5274,7 @@
    "ports": 8,
    "sync": 8,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 4525.2,
    "max_stages_needed": 11
@@ -5292,9 +5292,9 @@
     36.696
    ],
    "entry_ss": {
-    "mean": 2965.4,
-    "min": 2965.4,
-    "max": 2965.4
+    "mean": 2953.2,
+    "min": 2953.2,
+    "max": 2953.2
    },
    "lint_ss": 626.0,
    "lint_grade": "target",
@@ -5305,8 +5305,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3961.0,
-   "max_stages_needed": 9
+   "max_length_um": 107.6,
+   "max_stages_needed": 1
   },
   {
    "master": "hfd_cdist_r14",
@@ -5321,9 +5321,9 @@
     215.976
    ],
    "entry_ss": {
-    "mean": 3028.9,
-    "min": 3027.0,
-    "max": 3030.8
+    "mean": 3016.5,
+    "min": 3014.5,
+    "max": 3018.5
    },
    "lint_ss": 563.9,
    "lint_grade": "target",
@@ -5332,7 +5332,7 @@
    "ports": 6,
    "sync": 6,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 3724.5,
    "max_stages_needed": 9
@@ -5350,9 +5350,9 @@
     203.016
    ],
    "entry_ss": {
-    "mean": 3062.0,
-    "min": 3059.9,
-    "max": 3063.2
+    "mean": 3049.2,
+    "min": 3047.4,
+    "max": 3050.9
    },
    "lint_ss": 531.5,
    "lint_grade": "target",
@@ -5361,7 +5361,7 @@
    "ports": 5,
    "sync": 5,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 3964.2,
    "max_stages_needed": 10
@@ -5379,9 +5379,9 @@
     1403.976
    ],
    "entry_ss": {
-    "mean": 2691.4,
-    "min": 2691.4,
-    "max": 2691.4
+    "mean": 2679.2,
+    "min": 2679.2,
+    "max": 2679.2
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5392,8 +5392,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3961.0,
-   "max_stages_needed": 9
+   "max_length_um": 3483.3,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_coll",
@@ -5417,7 +5417,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2091.6,
+   "max_length_um": 2080.5,
    "max_stages_needed": 4
   },
   {
@@ -5433,9 +5433,9 @@
     315.336
    ],
    "entry_ss": {
-    "mean": 2963.1,
-    "min": 2963.1,
-    "max": 2963.1
+    "mean": 2952.2,
+    "min": 2952.2,
+    "max": 2952.2
    },
    "lint_ss": 628.3,
    "lint_grade": "target",
@@ -5462,9 +5462,9 @@
     110.136
    ],
    "entry_ss": {
-    "mean": 3065.9,
-    "min": 3065.8,
-    "max": 3065.9
+    "mean": 3053.3,
+    "min": 3053.3,
+    "max": 3053.3
    },
    "lint_ss": 525.1,
    "lint_grade": "target",
@@ -5473,9 +5473,9 @@
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2462.2,
+   "max_length_um": 2464.4,
    "max_stages_needed": 6
   },
   {
@@ -5491,9 +5491,9 @@
     315.336
    ],
    "entry_ss": {
-    "mean": 2964.1,
-    "min": 2963.1,
-    "max": 2965.0
+    "mean": 2950.6,
+    "min": 2950.6,
+    "max": 2950.6
    },
    "lint_ss": 628.3,
    "lint_grade": "target",
@@ -5520,9 +5520,9 @@
     82.056
    ],
    "entry_ss": {
-    "mean": 3091.8,
-    "min": 3090.3,
-    "max": 3094.1
+    "mean": 3079.4,
+    "min": 3077.8,
+    "max": 3081.8
    },
    "lint_ss": 500.6,
    "lint_grade": "target",
@@ -5533,7 +5533,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2462.2,
+   "max_length_um": 2405.5,
    "max_stages_needed": 6
   },
   {
@@ -5549,9 +5549,9 @@
     110.136
    ],
    "entry_ss": {
-    "mean": 3069.6,
-    "min": 3069.6,
-    "max": 3069.6
+    "mean": 3057.3,
+    "min": 3057.3,
+    "max": 3057.3
    },
    "lint_ss": 525.1,
    "lint_grade": "target",
@@ -5560,7 +5560,7 @@
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 2436.2,
    "max_stages_needed": 6
@@ -5574,13 +5574,13 @@
     "hbm": 4
    },
    "size_um": [
-    275.592,
+    550.776,
     5529.576
    ],
    "entry_ss": {
-    "mean": 855.4,
-    "min": 853.0,
-    "max": 856.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5591,7 +5591,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 542.4,
+   "max_length_um": 446.4,
    "max_stages_needed": 1
   },
   {
@@ -5632,14 +5632,14 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2828.9,
-    "min": 2827.7,
-    "max": 2830.6
+    "mean": 2817.1,
+    "min": 2815.2,
+    "max": 2819.0
    },
    "lint_ss": 1186,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1254,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
@@ -5661,14 +5661,14 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2882.9,
-    "min": 2881.7,
-    "max": 2884.6
+    "mean": 2871.1,
+    "min": 2869.2,
+    "max": 2873.0
    },
    "lint_ss": 1132,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1154,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
@@ -5690,20 +5690,20 @@
     959.976
    ],
    "entry_ss": {
-    "mean": 2705.9,
-    "min": 2704.7,
-    "max": 2707.6
+    "mean": 2694.1,
+    "min": 2692.2,
+    "max": 2696.0
    },
    "lint_ss": 1309,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1402,
+   "lint_over_target": false,
    "ports": 7,
    "sync": 7,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2055.8,
+   "max_length_um": 2537.2,
    "max_stages_needed": 5
   },
   {
@@ -5719,18 +5719,18 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2829.9,
-    "min": 2828.7,
-    "max": 2831.6
+    "mean": 2818.1,
+    "min": 2816.2,
+    "max": 2820.0
    },
    "lint_ss": 1185,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1298,
+   "lint_over_target": false,
    "ports": 6,
    "sync": 6,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 1737.1,
    "max_stages_needed": 5
@@ -5748,9 +5748,9 @@
     829.896
    ],
    "entry_ss": {
-    "mean": 3114.9,
-    "min": 3113.7,
-    "max": 3116.6
+    "mean": 3103.1,
+    "min": 3101.2,
+    "max": 3105.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5777,21 +5777,21 @@
     829.416
    ],
    "entry_ss": {
-    "mean": 2690.9,
-    "min": 2689.7,
-    "max": 2692.6
+    "mean": 2679.1,
+    "min": 2677.2,
+    "max": 2681.0
    },
    "lint_ss": 1324,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1354,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 2,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5253.7,
-   "max_stages_needed": 13
+   "max_length_um": 4525.2,
+   "max_stages_needed": 11
   },
   {
    "master": "hfd_loader",
@@ -5806,9 +5806,9 @@
     237.576
    ],
    "entry_ss": {
-    "mean": 2690.8,
-    "min": 2690.8,
-    "max": 2690.8
+    "mean": 2679.2,
+    "min": 2679.2,
+    "max": 2679.2
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5835,24 +5835,24 @@
     410.376
    ],
    "entry_ss": {
-    "mean": 2888.7,
-    "min": 2888.4,
-    "max": 2888.9
+    "mean": 2876.9,
+    "min": 2875.9,
+    "max": 2878.0
    },
    "lint_ss": 702.5,
    "lint_grade": "target",
    "lint_target_ss": 702.5,
    "lint_over_target": false,
-   "ports": 4,
-   "sync": 4,
+   "ports": 5,
+   "sync": 5,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2107.8,
-   "max_stages_needed": 5
+   "max_length_um": 2583.0,
+   "max_stages_needed": 6
   },
   {
-   "master": "hfd_mcast_r6",
+   "master": "hfd_mcast_r6a",
    "kinds": [
     "waypoint"
    ],
@@ -5864,9 +5864,9 @@
     120.936
    ],
    "entry_ss": {
-    "mean": 2956.4,
-    "min": 2955.3,
-    "max": 2959.1
+    "mean": 2944.3,
+    "min": 2942.8,
+    "max": 2946.8
    },
    "lint_ss": 635.6,
    "lint_grade": "target",
@@ -5879,6 +5879,35 @@
    "fanout_flags": 0,
    "max_length_um": 2107.8,
    "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_mcast_r6b",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    466.968,
+    120.936
+   ],
+   "entry_ss": {
+    "mean": 2944.0,
+    "min": 2942.8,
+    "max": 2944.9
+   },
+   "lint_ss": 635.6,
+   "lint_grade": "target",
+   "lint_target_ss": 635.6,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2583.0,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_mcast_r7",
@@ -5893,21 +5922,21 @@
     120.936
    ],
    "entry_ss": {
-    "mean": 2957.9,
-    "min": 2955.8,
-    "max": 2959.1
+    "mean": 2945.1,
+    "min": 2943.3,
+    "max": 2946.8
    },
    "lint_ss": 635.6,
    "lint_grade": "target",
    "lint_target_ss": 635.6,
    "lint_over_target": false,
-   "ports": 3,
-   "sync": 3,
+   "ports": 4,
+   "sync": 4,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1995.0,
-   "max_stages_needed": 5
+   "max_length_um": 2470.6,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_meso_r1",
@@ -5922,9 +5951,9 @@
     71.256
    ],
    "entry_ss": {
-    "mean": 3016.6,
-    "min": 3015.2,
-    "max": 3019.0
+    "mean": 3004.3,
+    "min": 3002.7,
+    "max": 3006.7
    },
    "lint_ss": 575.7,
    "lint_grade": "target",
@@ -5951,9 +5980,9 @@
     190.056
    ],
    "entry_ss": {
-    "mean": 1658.0,
-    "min": 1656.1,
-    "max": 1659.5
+    "mean": 626.2,
+    "min": 625.4,
+    "max": 626.9
    },
    "lint_ss": 525.0,
    "lint_grade": "target",
@@ -5980,9 +6009,9 @@
     285.096
    ],
    "entry_ss": {
-    "mean": 1661.5,
-    "min": 1661.5,
-    "max": 1661.5
+    "mean": 628.9,
+    "min": 628.9,
+    "max": 628.9
    },
    "lint_ss": 521.5,
    "lint_grade": "target",
@@ -5993,7 +6022,65 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1546.8,
+   "max_length_um": 1549.0,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r35",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    39.288,
+    285.096
+   ],
+   "entry_ss": {
+    "mean": 3056.6,
+    "min": 3056.6,
+    "max": 3056.6
+   },
+   "lint_ss": 521.5,
+   "lint_grade": "target",
+   "lint_target_ss": 521.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1542.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r37",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    269.976,
+    41.016
+   ],
+   "entry_ss": {
+    "mean": 3058.2,
+    "min": 3058.2,
+    "max": 3058.2
+   },
+   "lint_ss": 521.0,
+   "lint_grade": "target",
+   "lint_target_ss": 521.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1533.5,
    "max_stages_needed": 4
   },
   {
@@ -6009,9 +6096,9 @@
     358.536
    ],
    "entry_ss": {
-    "mean": 856.6,
-    "min": 856.6,
-    "max": 856.6
+    "mean": 343.4,
+    "min": 343.4,
+    "max": 343.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6022,8 +6109,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 4775.1,
-   "max_stages_needed": 8
+   "max_length_um": 5580.2,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_router",
@@ -6038,9 +6125,9 @@
     326.28
    ],
    "entry_ss": {
-    "mean": 2690.8,
-    "min": 2690.8,
-    "max": 2690.8
+    "mean": 2679.2,
+    "min": 2679.2,
+    "max": 2679.2
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6049,10 +6136,10 @@
    "ports": 10,
    "sync": 10,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 6724.4,
-   "max_stages_needed": 11
+   "max_length_um": 5339.4,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_serdes_slab",
@@ -6088,13 +6175,13 @@
     "hbm": 4
    },
    "size_um": [
-    398.712,
+    797.448,
     5529.576
    ],
    "entry_ss": {
-    "mean": 855.4,
-    "min": 853.0,
-    "max": 856.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6105,7 +6192,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 542.4,
+   "max_length_um": 545.9,
    "max_stages_needed": 1
   },
   {
@@ -6121,21 +6208,21 @@
     2073.576
    ],
    "entry_ss": {
-    "mean": 2692.3,
-    "min": 2690.9,
-    "max": 2694.7
+    "mean": 2680.0,
+    "min": 2678.4,
+    "max": 2682.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 5,
-   "sync": 5,
+   "ports": 7,
+   "sync": 7,
    "cdc": 0,
-   "infeasible": 2,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3854.6,
-   "max_stages_needed": 10
+   "max_length_um": 3614.9,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_stn_r0",
@@ -6159,8 +6246,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.3,
-   "max_stages_needed": 4
+   "max_length_um": 2468.0,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_stn_r11",
@@ -6168,7 +6255,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 12
+    "hbm": 17
    },
    "size_um": [
     48.792,
@@ -6218,7 +6305,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 12
+    "hbm": 20
    },
    "size_um": [
     64.344,
@@ -6234,7 +6321,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1666.3,
+   "max_length_um": 1665.7,
    "max_stages_needed": 4
   },
   {
@@ -6243,7 +6330,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 24
+    "hbm": 25
    },
    "size_um": [
     18.984,
@@ -6259,8 +6346,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2049.0,
-   "max_stages_needed": 5
+   "max_length_um": 1608.0,
+   "max_stages_needed": 4
   },
   {
    "master": "hfd_stn_r17",
@@ -6268,7 +6355,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 12
+    "hbm": 18
    },
    "size_um": [
     115.752,
@@ -6318,7 +6405,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 4
+    "hbm": 8
    },
    "size_um": [
     60.024,
@@ -6350,9 +6437,9 @@
     142.536
    ],
    "entry_ss": {
-    "mean": 3122.9,
-    "min": 3121.4,
-    "max": 3125.2
+    "mean": 3110.6,
+    "min": 3108.9,
+    "max": 3112.9
    },
    "lint_ss": 469.5,
    "lint_grade": "target",
@@ -6363,7 +6450,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2100.2,
+   "max_length_um": 1893.5,
    "max_stages_needed": 5
   },
   {
@@ -6388,8 +6475,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1952.0,
-   "max_stages_needed": 4
+   "max_length_um": 4400.5,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_stn_r21",
@@ -6397,7 +6484,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 8
+    "hbm": 10
    },
    "size_um": [
     59.592,
@@ -6438,7 +6525,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1703.0,
+   "max_length_um": 1663.9,
    "max_stages_needed": 4
   },
   {
@@ -6447,7 +6534,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 8
+    "hbm": 12
    },
    "size_um": [
     72.552,
@@ -6463,7 +6550,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1656.9,
+   "max_length_um": 1657.3,
    "max_stages_needed": 4
   },
   {
@@ -6472,7 +6559,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 2
+    "hbm": 3
    },
    "size_um": [
     126.12,
@@ -6488,8 +6575,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2478.1,
-   "max_stages_needed": 6
+   "max_length_um": 1675.6,
+   "max_stages_needed": 4
   },
   {
    "master": "hfd_stn_r27",
@@ -6513,7 +6600,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1698.1,
+   "max_length_um": 1669.2,
    "max_stages_needed": 4
   },
   {
@@ -6572,7 +6659,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 4
+    "hbm": 3
    },
    "size_um": [
     39.288,
@@ -6588,7 +6675,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1659.4,
+   "max_length_um": 1657.2,
    "max_stages_needed": 4
   },
   {
@@ -6597,7 +6684,7 @@
     "waypoint"
    ],
    "dies": {
-    "hbm": 6
+    "hbm": 8
    },
    "size_um": [
     72.984,
@@ -6617,12 +6704,145 @@
    "max_stages_needed": 4
   },
   {
+   "master": "hfd_stn_r33",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 5
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": {
+    "mean": 3440.3,
+    "min": 3100.3,
+    "max": 3527.2
+   },
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2068.5,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_stn_r34",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    72.984,
+    41.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.3,
+   "lint_grade": "target",
+   "lint_target_ss": 477.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1664.6,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r36",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1652.7,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r38",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    72.984,
+    41.016
+   ],
+   "entry_ss": {
+    "mean": 3525.8,
+    "min": 3523.9,
+    "max": 3527.7
+   },
+   "lint_ss": 477.3,
+   "lint_grade": "target",
+   "lint_target_ss": 477.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 167.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_stn_r39",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    50.088,
+    120.936
+   ],
+   "entry_ss": null,
+   "lint_ss": 497.3,
+   "lint_grade": "target",
+   "lint_target_ss": 497.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1683.0,
+   "max_stages_needed": 4
+  },
+  {
    "master": "hfd_stn_r4",
    "kinds": [
     "waypoint"
    ],
    "dies": {
-    "hbm": 20
+    "hbm": 16
    },
    "size_um": [
     120.936,
@@ -6638,8 +6858,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2141.3,
-   "max_stages_needed": 5
+   "max_length_um": 1683.0,
+   "max_stages_needed": 4
   },
   {
    "master": "hfd_su",
@@ -6650,13 +6870,13 @@
     "hbm": 4
    },
    "size_um": [
-    703.272,
+    1406.136,
     5529.576
    ],
    "entry_ss": {
-    "mean": 855.4,
-    "min": 853.0,
-    "max": 856.6
+    "mean": 343.5,
+    "min": 343.3,
+    "max": 344.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6665,10 +6885,10 @@
    "ports": 15,
    "sync": 15,
    "cdc": 0,
-   "infeasible": 5,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 6724.4,
-   "max_stages_needed": 17
+   "max_length_um": 5580.2,
+   "max_stages_needed": 14
   },
   {
    "master": "hfd_su_full",
@@ -6683,9 +6903,9 @@
     347.736
    ],
    "entry_ss": {
-    "mean": 1023.0,
-    "min": 1023.0,
-    "max": 1023.0
+    "mean": 513.4,
+    "min": 513.4,
+    "max": 513.4
    },
    "lint_ss": 730.0,
    "lint_grade": "target",
@@ -6712,9 +6932,9 @@
     218.136
    ],
    "entry_ss": {
-    "mean": 856.6,
-    "min": 856.6,
-    "max": 856.6
+    "mean": 343.4,
+    "min": 343.4,
+    "max": 343.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6741,9 +6961,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 1057,
    "lint_grade": "measured",
@@ -6754,7 +6974,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2466.7,
+   "max_length_um": 2468.0,
    "max_stages_needed": 4
   },
   {
@@ -6770,9 +6990,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2370.3,
-    "min": 2370.3,
-    "max": 2370.3
+    "mean": 2053.0,
+    "min": 2053.0,
+    "max": 2053.0
    },
    "lint_ss": 879,
    "lint_grade": "measured",
@@ -6783,7 +7003,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.3,
+   "max_length_um": 1699.6,
    "max_stages_needed": 3
   },
   {
@@ -6799,9 +7019,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2491.3,
-    "min": 2491.3,
-    "max": 2491.3
+    "mean": 2174.0,
+    "min": 2174.0,
+    "max": 2174.0
    },
    "lint_ss": 758,
    "lint_grade": "measured",
@@ -6812,7 +7032,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 177.6,
+   "max_length_um": 175.5,
    "max_stages_needed": 1
   },
   {
@@ -6828,21 +7048,21 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2299.3,
-    "min": 2299.3,
-    "max": 2299.3
+    "mean": 2013.0,
+    "min": 2013.0,
+    "max": 2013.0
    },
-   "lint_ss": 950,
+   "lint_ss": 919,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
+   "lint_target_ss": 919,
    "lint_over_target": false,
    "ports": 10,
    "sync": 10,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2049.0,
-   "max_stages_needed": 4
+   "max_length_um": 4400.5,
+   "max_stages_needed": 7
   },
   {
    "master": "hfd_svc_SE_s4",
@@ -6857,9 +7077,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2213.3,
-    "min": 2213.3,
-    "max": 2213.3
+    "mean": 1894.9,
+    "min": 1894.9,
+    "max": 1894.9
    },
    "lint_ss": 808,
    "lint_grade": "measured",
@@ -6870,7 +7090,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 176.9,
+   "max_length_um": 174.3,
    "max_stages_needed": 1
   },
   {
@@ -6886,9 +7106,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 1873.9,
+    "min": 1873.9,
+    "max": 1873.9
    },
    "lint_ss": 829,
    "lint_grade": "measured",
@@ -6899,7 +7119,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1700.2,
+   "max_length_um": 1698.1,
    "max_stages_needed": 3
   },
   {
@@ -6915,9 +7135,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2459.3,
-    "min": 2459.3,
-    "max": 2459.3
+    "mean": 2140.9,
+    "min": 2140.9,
+    "max": 2140.9
    },
    "lint_ss": 562,
    "lint_grade": "measured",
@@ -6940,24 +7160,53 @@
     "hbm": 2
    },
    "size_um": [
-    870.048,
+    469.992,
     259.176
    ],
    "entry_ss": {
-    "mean": 2390.3,
-    "min": 2390.3,
-    "max": 2390.3
+    "mean": 2071.9,
+    "min": 2071.9,
+    "max": 2071.9
    },
    "lint_ss": 631,
    "lint_grade": "measured",
-   "lint_target_ss": 840.8,
+   "lint_target_ss": 731.9,
    "lint_over_target": false,
-   "ports": 5,
-   "sync": 5,
+   "ports": 7,
+   "sync": 7,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 176.4,
+   "max_length_um": 173.9,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SE_s8",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    400.032,
+    259.176
+   ],
+   "entry_ss": {
+    "mean": 1994.4,
+    "min": 1994.4,
+    "max": 1994.4
+   },
+   "lint_ss": 708.5,
+   "lint_grade": "target",
+   "lint_target_ss": 708.5,
+   "lint_over_target": false,
+   "ports": 3,
+   "sync": 3,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 8.7,
    "max_stages_needed": 1
   },
   {
@@ -6973,9 +7222,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2218.2,
-    "min": 2218.2,
-    "max": 2218.2
+    "mean": 1900.9,
+    "min": 1900.9,
+    "max": 1900.9
    },
    "lint_ss": 874.1,
    "lint_grade": "target",
@@ -6986,7 +7235,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2465.9,
+   "max_length_um": 2466.3,
    "max_stages_needed": 4
   },
   {
@@ -7002,9 +7251,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7015,7 +7264,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1951.5,
+   "max_length_um": 1936.7,
    "max_stages_needed": 3
   },
   {
@@ -7031,9 +7280,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2209.6,
-    "min": 2209.6,
-    "max": 2209.6
+    "mean": 1892.3,
+    "min": 1892.3,
+    "max": 1892.3
    },
    "lint_ss": 882.7,
    "lint_grade": "target",
@@ -7044,7 +7293,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 343.5,
+   "max_length_um": 343.9,
    "max_stages_needed": 1
   },
   {
@@ -7060,9 +7309,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2206.2,
-    "min": 2206.2,
-    "max": 2206.2
+    "mean": 1888.9,
+    "min": 1888.9,
+    "max": 1888.9
    },
    "lint_ss": 886.1,
    "lint_grade": "target",
@@ -7073,7 +7322,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.2,
+   "max_length_um": 1700.3,
    "max_stages_needed": 3
   },
   {
@@ -7089,9 +7338,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2271.3,
-    "min": 2271.3,
-    "max": 2271.3
+    "mean": 1954.0,
+    "min": 1954.0,
+    "max": 1954.0
    },
    "lint_ss": 820.4,
    "lint_grade": "target",
@@ -7118,9 +7367,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2207.7,
-    "min": 2207.7,
-    "max": 2207.7
+    "mean": 1890.4,
+    "min": 1890.4,
+    "max": 1890.4
    },
    "lint_ss": 884.0,
    "lint_grade": "target",
@@ -7131,7 +7380,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 343.9,
+   "max_length_um": 344.4,
    "max_stages_needed": 1
   },
   {
@@ -7147,9 +7396,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2207.9,
-    "min": 2207.9,
-    "max": 2207.9
+    "mean": 1890.6,
+    "min": 1890.6,
+    "max": 1890.6
    },
    "lint_ss": 883.8,
    "lint_grade": "target",
@@ -7160,7 +7409,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1700.7,
+   "max_length_um": 1699.8,
    "max_stages_needed": 3
   },
   {
@@ -7176,9 +7425,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 1875.0,
+    "min": 1875.0,
+    "max": 1875.0
    },
    "lint_ss": 899.4,
    "lint_grade": "target",
@@ -7189,11 +7438,11 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 344.4,
+   "max_length_um": 345.6,
    "max_stages_needed": 1
   },
   {
-   "master": "hfd_vm",
+   "master": "hfd_vm_ne",
    "kinds": [
     "spine"
    ],
@@ -7201,25 +7450,112 @@
     "hbm": 1
    },
    "size_um": [
-    1399.656,
-    2000.136
+    699.816,
+    1000.056
    ],
    "entry_ss": {
-    "mean": 2691.4,
-    "min": 2691.4,
-    "max": 2691.4
+    "mean": 2678.1,
+    "min": 2678.1,
+    "max": 2678.1
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 22,
-   "sync": 22,
+   "ports": 17,
+   "sync": 17,
    "cdc": 0,
-   "infeasible": 5,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5253.7,
-   "max_stages_needed": 13
+   "max_length_um": 2815.9,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_vm_nw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2678.1,
+    "min": 2678.1,
+    "max": 2678.1
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2817.7,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_vm_se",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2678.1,
+    "min": 2678.1,
+    "max": 2678.1
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 17,
+   "sync": 17,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3391.5,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_vm_sw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2678.1,
+    "min": 2678.1,
+    "max": 2678.1
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3393.2,
+   "max_stages_needed": 6
   },
   {
    "master": "ot_dsrom_head_elem_A",
@@ -7285,10 +7621,10 @@
     "phy"
    ],
    "dies": {
-    "hbm": 4,
     "s81_layer": 4,
     "s81_layer1": 1,
-    "s81_head": 4
+    "s81_head": 4,
+    "hbm": 4
    },
    "size_um": [
     8500.056,
@@ -7299,8 +7635,8 @@
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 14,
-   "sync": 14,
+   "ports": 15,
+   "sync": 15,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
@@ -7320,9 +7656,9 @@
     1652.424
    ],
    "entry_ss": {
-    "mean": 1283.0,
-    "min": 1283.0,
-    "max": 1283.0
+    "mean": 250.4,
+    "min": 250.4,
+    "max": 250.4
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7333,8 +7669,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 174.0,
-   "max_stages_needed": 1
+   "max_length_um": 1545.6,
+   "max_stages_needed": 4
   },
   {
    "master": "ot_pdie_serdes",
@@ -7342,19 +7678,19 @@
     "link"
    ],
    "dies": {
-    "hbm": 9,
     "s81_layer": 6,
     "s81_layer1": 6,
-    "s81_head": 6
+    "s81_head": 6,
+    "hbm": 9
    },
    "size_um": [
     250.056,
     2250.216
    ],
    "entry_ss": {
-    "mean": 1283.0,
-    "min": 1281.1,
-    "max": 1284.5
+    "mean": 251.2,
+    "min": 250.4,
+    "max": 251.9
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7365,7 +7701,7 @@
    "cdc": 0,
    "infeasible": 2,
    "fanout_flags": 0,
-   "max_length_um": 1235.6,
+   "max_length_um": 1083.7,
    "max_stages_needed": 3
   },
   {
@@ -9403,375 +9739,6 @@
    "where": "IO hub <-> die (slab N-E pin group) [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1]",
    "classes": [
     "IO hub <-> die (slab N-E pin group) [inherits dsfd_svc: s81_"
-   ]
-  },
-  {
-   "master": "hfd_attn_tile",
-   "port": "o",
-   "dir": "output",
-   "bits": 529,
-   "length_um": 4525.2,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 11,
-   "stages_planned": 1,
-   "internal_ps": -4519.8,
-   "where": "hbm:at_NW_33<->hb_index_NW_b5",
-   "classes": [
-    "attn_chain",
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_cdist_r14",
-   "port": "t1",
-   "dir": "output",
-   "bits": 103,
-   "length_um": 1272.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 4,
-   "stages_planned": 3,
-   "internal_ps": 123.9,
-   "where": "hbm:w160_cdNW1<->sm21",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_cdist_r15",
-   "port": "t3",
-   "dir": "output",
-   "bits": 103,
-   "length_um": 3854.6,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 51.2,
-   "where": "hbm:w40_cdSW0<->sm3",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_gath_r24",
-   "port": "t0",
-   "dir": "input",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 80,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 64.7,
-   "where": "hbm:w91_rgSE1<->sm9",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_gath_r9",
-   "port": "t0",
-   "dir": "input",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 62.7,
-   "where": "hbm:w29_rgSW1<->sm1",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b2",
-   "port": "a1",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 1742.4,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 5,
-   "stages_planned": 1,
-   "internal_ps": -1420.3,
-   "where": "hbm:hb_index_NW_b2<->at_NW_13",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b3",
-   "port": "a2",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 1737.1,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 5,
-   "stages_planned": 1,
-   "internal_ps": -1414.3,
-   "where": "hbm:hb_index_NW_b3<->at_NW_23",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b5",
-   "port": "a3",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 4525.2,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 11,
-   "stages_planned": 1,
-   "internal_ps": -4578.8,
-   "where": "hbm:hb_index_NW_b5<->at_NW_33",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b5",
-   "port": "t_vm",
-   "dir": "output",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5425.6,
-   "where": "hbm:hb_index_SW_b5<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_mcast_r5",
-   "port": "t1",
-   "dir": "output",
-   "bits": 2063,
-   "length_um": 1278.8,
-   "skew_class": "intra",
-   "skew_ps": 80,
-   "stages_needed": 4,
-   "stages_planned": 3,
-   "internal_ps": 123.5,
-   "where": "hbm:w85_xmSE0<->sm12",
-   "classes": [
-    "x_leaf"
-   ]
-  },
-  {
-   "master": "hfd_router",
-   "port": "f_vm",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 3782.2,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 1.4,
-   "where": "hbm:hb_router<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_sm",
-   "port": "c",
-   "dir": "input",
-   "bits": 103,
-   "length_um": 3854.6,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": -7.8,
-   "where": "hbm:sm3<->w40_cdSW0",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_sm",
-   "port": "r",
-   "dir": "output",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 121.7,
-   "where": "hbm:sm1<->w29_rgSW1",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "a",
-   "dir": "input",
-   "bits": 1058,
-   "length_um": 2055.8,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 6,
-   "stages_planned": 5,
-   "internal_ps": 11.7,
-   "where": "hbm:hb_su_SW<->hb_index_SW_b2",
-   "classes": [
-    "attn_out"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_cmdproc",
-   "dir": "input",
-   "bits": 64,
-   "length_um": 3782.5,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 1.3,
-   "where": "hbm:hb_su_NW<->hb_cmdproc",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_coll",
-   "dir": "input",
-   "bits": 580,
-   "length_um": 2091.6,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 6,
-   "stages_planned": 5,
-   "internal_ps": 3.5,
-   "where": "hbm:hb_su_SE<->hb_coll",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_vm",
-   "dir": "input",
-   "bits": 2048,
-   "length_um": 3303.1,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 9,
-   "stages_planned": 8,
-   "internal_ps": 9.7,
-   "where": "hbm:hb_su_SW<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "t_router",
-   "dir": "output",
-   "bits": 256,
-   "length_um": 6724.4,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 17,
-   "stages_planned": 16,
-   "internal_ps": 60.3,
-   "where": "hbm:hb_su_NW<->hb_router",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iNE",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5100.0,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5310.2,
-   "where": "hbm:hb_vm<->hb_index_NE_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iNW",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5100.0,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5310.2,
-   "where": "hbm:hb_vm<->hb_index_NW_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iSE",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5484.6,
-   "where": "hbm:hb_vm<->hb_index_SE_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iSW",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5484.6,
-   "where": "hbm:hb_vm<->hb_index_SW_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "t_router",
-   "dir": "output",
-   "bits": 512,
-   "length_um": 3782.2,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 60.4,
-   "where": "hbm:hb_vm<->hb_router",
-   "classes": [
-    "hub"
    ]
   },
   {

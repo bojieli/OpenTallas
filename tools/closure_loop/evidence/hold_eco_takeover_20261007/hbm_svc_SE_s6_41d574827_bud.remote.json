@@ -1,0 +1,71 @@
+{
+  "directory": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/cl/eco-r3",
+  "files": {
+    "pass1/result.json": {
+      "sha256": "680d40f997d49eedf4211e5121b04caccde39439df1ae1b90465f14d5a19a11b",
+      "data": {
+        "ss_ps": 146.97,
+        "ff_ps": 13.22,
+        "drc": 0,
+        "cells_added": 2153,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 1109 fixable 1109 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": -1.7799999999999994
+      }
+    },
+    "pass2/result.json": {
+      "sha256": "8a29df801d334175c59b183ef16f3495891b8b8a2b4b6ab8e14bcbaf376aff8e",
+      "data": {
+        "ss_ps": 136.79,
+        "ff_ps": 23.52,
+        "drc": 0,
+        "cells_added": 81,
+        "errors": [],
+        "pass": 2,
+        "session": "ff",
+        "window": "endpoints_below_hm 83 fixable 83 tight 0 infeasible 0 (hm 27.56 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 8.52
+      }
+    },
+    "result.json": {
+      "sha256": "8a29df801d334175c59b183ef16f3495891b8b8a2b4b6ab8e14bcbaf376aff8e",
+      "data": {
+        "ss_ps": 136.79,
+        "ff_ps": 23.52,
+        "drc": 0,
+        "cells_added": 81,
+        "errors": [],
+        "pass": 2,
+        "session": "ff",
+        "window": "endpoints_below_hm 83 fixable 83 tight 0 infeasible 0 (hm 27.56 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 8.52
+      }
+    },
+    "pass1/eff_ss.sdc.slack": {
+      "sha256": "fdf77216c4a689da344e8a0a003e17a391bfe437dbd03c2c965a3cb28799bc3f",
+      "line_count": 6147,
+      "macro_addr_pins": []
+    },
+    "pass2/eff_ss.sdc.slack": {
+      "sha256": "2b7aa3b5688d6ea5ea39e33ac5b88fdd3b0305a6dd78f691629e03b4c1dc103c",
+      "line_count": 6147,
+      "macro_addr_pins": []
+    }
+  },
+  "log_excerpt": [
+    "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.spef",
+    "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 1109 fixable 1109 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+    "OT_ECO route guides from the db: 1",
+    "}OT_PASS 2 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/cl/eco-r3/pass1/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/cl/eco-r3/pass1/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.spef",
+    "OT_PASS 2 hold repair target 27.56 (post-route goal 18, acceptance 15.0)",
+    "OT_WIN pre endpoints_below_hm 83 fixable 83 tight 0 infeasible 0 (hm 27.56 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+    "OT_ECO route guides from the db: 1",
+    "[ERROR DRT-0218] Guide is not connected to design for net net22253",
+    "OT_ECO guide re-route failed (DRT-0218): fresh global route",
+    "}OT_ECO chosen pass2"
+  ],
+  "eco_log_sha256": "2a727d35ba19d5cd5f792e8867b2f2cf21f2421b966e54f2360c6bc78d24a2c0"
+}

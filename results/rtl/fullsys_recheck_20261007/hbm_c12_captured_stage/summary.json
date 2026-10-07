@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.fullsys_recheck.hbm_c12_stage.v1",
+ "source": "claude/hbm-su-attn-close-20261005 d773c1033 + tb forwarding ROPI/RKC/RHALF/RHPAR (this branch)",
+ "vehicle": "tools/hbm_integrated_su_c12_stage.py (CP cmdproc20 + 73-bit descriptor join + c12 SU, captured DS1M L20 hc_pre_norm 5 ops @1,048,575 and Qwen8K head RMSNorm 3 ops @8,191), fp dpi_beh as the main record",
+ "previous": "results/rtl/hbm_integrated_20261006/c12_captured_stages (DS1M END 521, Qwen8K END 400)",
+ "admission_note": "tool load cap (load+16<110) scaled by 1/3 per OWNER 2026-10-06 21:35 (3 x cores, memory hard limit)",
+ "rows": [
+  {
+   "config": "ref",
+   "params": "branch defaults CTL12 1 / ROUT 1 (same-source baseline)",
+   "target": "Qwen8K",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 400,
+   "delta_vs_main_c12": 0
+  },
+  {
+   "config": "ref",
+   "params": "branch defaults CTL12 1 / ROUT 1 (same-source baseline)",
+   "target": "DS1M",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 521,
+   "delta_vs_main_c12": 0
+  },
+  {
+   "config": "margin",
+   "params": "CTL12 2 / ROPI 1 / ROUT 2 / RKC 1",
+   "target": "Qwen8K",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 429,
+   "delta_vs_main_c12": 29
+  },
+  {
+   "config": "margin",
+   "params": "CTL12 2 / ROPI 1 / ROUT 2 / RKC 1",
+   "target": "DS1M",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 551,
+   "delta_vs_main_c12": 30
+  },
+  {
+   "config": "half_rhpar0",
+   "params": "margin + RHALF 1, RHPAR 0 (the N16 campaign setting)",
+   "target": "Qwen8K",
+   "exact": false,
+   "mismatches": {
+    "vm": null,
+    "kv": null
+   },
+   "faults": 1,
+   "foreign_owner_rejected": null,
+   "end_cycle": null,
+   "delta_vs_main_c12": null
+  },
+  {
+   "config": "half_rhpar1",
+   "params": "margin + RHALF 1, RHPAR 1",
+   "target": "Qwen8K",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 567,
+   "delta_vs_main_c12": 167
+  },
+  {
+   "config": "half_rhpar1",
+   "params": "margin + RHALF 1, RHPAR 1",
+   "target": "DS1M",
+   "exact": true,
+   "mismatches": {
+    "vm": 0,
+    "kv": 0
+   },
+   "faults": 0,
+   "foreign_owner_rejected": true,
+   "end_cycle": 697,
+   "delta_vs_main_c12": 176
+  }
+ ],
+ "finding": "RHALF=1 with RHPAR=0 FAILS at full shape (Qwen8K: controller/reducer contract fault at cycle 76, drain/CPL identity assertion); RHPAR=1 PASSES both targets. The RHALF campaign chose RHPAR 0 at N16 only: the emit->retire parity is shape dependent."
+}

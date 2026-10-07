@@ -1,0 +1,175 @@
+{
+  "observed_utc": "2026-10-07T10:47:24.708994+00:00",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/claude/dsrom-wfc-split",
+  "files": [
+    {
+      "path": "r22/status",
+      "sha256": "dfaffc43b355d12dcdb5c192ea6df1b378b5daa847975ccc2c5029eb5c2a1202"
+    },
+    {
+      "path": "r22/run.sh",
+      "sha256": "78e0660e5d78ef7c86d332ea8ca68e85b4ec8904db7aabe020aea478e49e804f"
+    },
+    {
+      "path": "r22/eco/grt_drv.tcl",
+      "sha256": "0c24ddd838a34d84c5826bd5f869fbf57e21aa4d82287d2f2d6f13408bccf511"
+    },
+    {
+      "path": "r22/eco/grt_eco.tcl",
+      "sha256": "c6335c46dc60cc5d1fa281033c737981e45248924445d9b1d3561760a99efc66"
+    },
+    {
+      "path": "r22/eco/region_ff.sdc",
+      "sha256": "b552b2af4abd25b707d350fa523a5032ad141ee0d438aa723ced481c899fa7d3"
+    },
+    {
+      "path": "r22/eco/signoff.sdc",
+      "sha256": "9e5eb8dd08d5c221c11ffcbeb3e469a428c657b8c7b9f301bef5ca1de6d5f9b8"
+    },
+    {
+      "path": "eq_r11.sh",
+      "sha256": "a8fe1b7e803751fa0dbe2b411fc5cc70c3ed6608070b6f73e7e4fd8882b1074a"
+    },
+    {
+      "path": "r22/src_u55/case.json",
+      "sha256": "0c45013c7150d6b3dd99804af33c0b422a19fe5322cdff5948f0a7340820ff73"
+    },
+    {
+      "path": "r22/src_u55/wf_sta.json",
+      "sha256": "536cb29fe14163847ca5accc382961f23747e2955c1c49e1c11bf99a97bb5009"
+    },
+    {
+      "path": "r22/src_u55/wf_drv.json",
+      "sha256": "29d424b09e408d2be194e482e5877f37774546c1e9a720d6b236f3d6e607d576"
+    },
+    {
+      "path": "r22/src_u55/check.json",
+      "sha256": "a0d32e57332258b0d7c9ecbe99e72021d35c385caa71321a4ffed1d4151b3955"
+    },
+    {
+      "path": "r22/src_u55/wf_sta.tcl",
+      "sha256": "7def7facd7bd930fb979f37e3274e4d0bca1906ba9d497cda521cbf880363637"
+    },
+    {
+      "path": "r22/src_u55/signoff.sdc",
+      "sha256": "9e5eb8dd08d5c221c11ffcbeb3e469a428c657b8c7b9f301bef5ca1de6d5f9b8"
+    },
+    {
+      "path": "r22/src_u55/config.mk",
+      "sha256": "3a4aea16445b853a10366396eba927ec8c9cecd494a0f48250250fddea91ed3e"
+    },
+    {
+      "path": "r22/src_u55/logs/asap7/wfc_src_src_u55/base/5_2_route.json",
+      "sha256": "f102d40578dcd8e6f3c76ec3ab4b2dc3dd68840d40cb8edb635ba63e6a11c824"
+    },
+    {
+      "path": "r22/src_u55/logs/asap7/wfc_src_src_u55/base/6_report.json",
+      "sha256": "70a9aea70569bd0f744d4c02621c0bd76b13396f9252b9b89d080c2a7b849997"
+    },
+    {
+      "path": "r22/src_u55/wf_sta_SS.log",
+      "sha256": "bcf73b5d5d506095f10c7d56c830060a005a7def4e084b293870f58d31895600"
+    },
+    {
+      "path": "r22/src_u55/wf_sta_FF.log",
+      "sha256": "0719b255fff52c5ade20c6744f4fca14392ae68acb7d8ac801ab009bb7ac792c"
+    },
+    {
+      "path": "r22/src_u55/wf_drv_SS.log",
+      "sha256": "ec854d1e9a207b6bac3c6fdb4e36fbd0f981319227cc074870f81262f31e66a6"
+    },
+    {
+      "path": "r22/src_u55/wf_drv_FF.log",
+      "sha256": "8e64a9032f212ee6ba1ae907b1f4f1de0829f11e141b2b74df9f92344775a660"
+    },
+    {
+      "path": "r11/stg_u50/case.json",
+      "sha256": "81d2b5873f943b2a3e9f5d4ae4193e599e1640aa161d62285000e83c5e165ec2"
+    },
+    {
+      "path": "r11/stg_u50/wf_sta.json",
+      "sha256": "698f043afa9a064dee9f670baab209411fce3fd2dee32409ab3c9906210f4b15"
+    },
+    {
+      "path": "r11/stg_u50/wf_drv.json",
+      "sha256": "29d424b09e408d2be194e482e5877f37774546c1e9a720d6b236f3d6e607d576"
+    },
+    {
+      "path": "r11/stg_u50/check.json",
+      "sha256": "e3fb05eb40fd217725a385786e13905e5f07521d70e85de0f331551f5e4fcac1"
+    },
+    {
+      "path": "r11/stg_u50/wf_sta.tcl",
+      "sha256": "7def7facd7bd930fb979f37e3274e4d0bca1906ba9d497cda521cbf880363637"
+    },
+    {
+      "path": "r11/stg_u50/signoff.sdc",
+      "sha256": "75780a480cb42e47178265999ab90cd83520b6324fc80dde44dc6f9e4519a36d"
+    },
+    {
+      "path": "r11/stg_u50/config.mk",
+      "sha256": "db670eb178d4ba693a1d1eb541a65ab3fee3a3c5c1960c6f38c95cd99aee4496"
+    },
+    {
+      "path": "r11/stg_u50/logs/asap7/wfc_stg_stg_u50/base/5_2_route.json",
+      "sha256": "66a2feacdda2f90141563abad9c291c6358b870f8e1e11319abaaff7c6ac6130"
+    },
+    {
+      "path": "r11/stg_u50/logs/asap7/wfc_stg_stg_u50/base/6_report.json",
+      "sha256": "74ac98126523000d31ad025b232096a55047a633c8c4c0f402368cc689d9613c"
+    },
+    {
+      "path": "r11/stg_u50/wf_sta_SS.log",
+      "sha256": "faf8b6f38e82983f15c43e1f5e708246791a0bf562b991a3566cf35249cadeed"
+    },
+    {
+      "path": "r11/stg_u50/wf_sta_FF.log",
+      "sha256": "e5436c9cc831cba9a303cd9ffc715eb95698e158c57c326a6c533e8f781a532e"
+    },
+    {
+      "path": "r11/stg_u50/wf_drv_SS.log",
+      "sha256": "1b825d6052c58df6563176fa0b4a717085f852877726f76bd58e9fd5f98a1809"
+    },
+    {
+      "path": "r11/stg_u50/wf_drv_FF.log",
+      "sha256": "213adbdb1b8f9e0f34344a9fc1b2e6e89dd9b2be97f3bdd8a2551e9bf4047df6"
+    },
+    {
+      "path": "r18/src_u55/wf_sta.json",
+      "sha256": "3c4c7864034e2b44c4a641f544af6751310fba776f4b8eb9dfd0b0301c9d5a68"
+    },
+    {
+      "path": "r18/src_u55/wf_drv.json",
+      "sha256": "0c741eaeefc769c74d4cd97e53261a53453d81654705f57f5faad3c274a5c457"
+    },
+    {
+      "path": "r18/src_u55/logs/asap7/wfc_src_src_u55/base/5_2_route.json",
+      "sha256": "168a83ead2c2ec0f1e33c3055e3ae2b4539b3c32d4ca38383d06457727964f74"
+    },
+    {
+      "path": "r20/src_u55/wf_sta.json",
+      "sha256": "710076a69dc659c29ee96e2545362fa63345ad18b3f0082c9a1d4f0d04a118e3"
+    },
+    {
+      "path": "r20/src_u55/wf_drv.json",
+      "sha256": "29d424b09e408d2be194e482e5877f37774546c1e9a720d6b236f3d6e607d576"
+    },
+    {
+      "path": "r20/src_u55/logs/asap7/wfc_src_src_u55/base/5_2_route.json",
+      "sha256": "c1c288559880d9c3f28644fbc2808a4fb3be872321428013ac91bc6e249d4b31"
+    },
+    {
+      "path": "r21/src_u55/wf_sta.json",
+      "sha256": "f577a07d9c327632c524d0ef3144f88022c34dd28886ec6c8877da831ab8593f"
+    },
+    {
+      "path": "r21/src_u55/wf_drv.json",
+      "sha256": "29d424b09e408d2be194e482e5877f37774546c1e9a720d6b236f3d6e607d576"
+    },
+    {
+      "path": "r21/src_u55/logs/asap7/wfc_src_src_u55/base/5_2_route.json",
+      "sha256": "c1c288559880d9c3f28644fbc2808a4fb3be872321428013ac91bc6e249d4b31"
+    }
+  ]
+}

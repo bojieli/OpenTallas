@@ -121,3 +121,42 @@ every one.
   - Capture ctl <-> group: 562 um with no station.
   - svc IO hub <-> die lane station: 611 um.
   - The svc quadrant station chains (430 um) fit the slab's measured region budget.
+
+## Update 2026-10-06 ~23:40 PT (CLAUDE HBM-ABSTRACTS coordinator): HBM re-planned on generator r18
+- HBM die model / clock plan regenerated on r18 (claude/hbm-abstracts-20261006): budget stage plan (common-clock staged
+  segments 1 + ceil((L - 359) / 412) hops), forwarded-clock hub chains (index b5 -> VM, VM -> router), regions HUB-SP /
+  HUB-V, barrier beside the cmdproc, svc bands SE_s0 / SE_s3 / SW_s0 / SW_s1 / SW_s7 with their ck at the band centre
+  (M7 area pin).  Clock-only CTS (EPYC2): 34 regions, max intra 56.7 ps, max inter 141.4 ps, 0 crossings > 150 ps.
+  HBM interfaces infeasible as planned: 23 -> 0.  S81 sheets unchanged.
+- `--insertion-override inputs/insertion_override.json`: index_q b0 / b1 / b2 / b3 / b5 keep their edge ck (R0 and
+  x-mirrored copies of one master cannot both carry an on-track centre M7 pin); their internal insertion TARGET is
+  re-planned to the measured SS max (1,154-1,402 ps), the die entry target follows (the tree delivers earlier by the
+  excess), and the extra OCV of the deeper tree, 0.05 x (target - 900), is added to the skew term of each of their
+  synchronous interfaces (+12.7..+25.1 ps).  The die skew budget (<= 56.7 ps) is unchanged.
+- 2026-10-07 ~00:10 PT: HBM on generator r19 (VM split into 4 quadrant tiles hfd_vm_{sw,se,nw,ne}, ~700 x 1,000 um,
+  registered cross buses; sheets for the four tiles), svc SE_s3 re-planned to 919 ps (centre ck measured; die pad 138 ps).
+  HBM infeasible as planned: 0; clock plan 0 crossings > 150 ps.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r19b: every attention root bus (tile row -> index band a0..a3) and index-key chain end (-> b0 k) ends in a die station abutting the receiving pin (budget PIN_LAST_UM 100 um, +1 hop): index b5 a3 internal input budget 113.6 -> 428.1 ps; all index-band interfaces >= 387.8 ps.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r20 (VM quadrant tiles with the centre M7 ck). Clock plan unchanged in outcome (34 regions, max inter 141.4, 0 > 150).
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r21: a station opposite each index b5 t_vm pin run (87.7 um): b5 t_vm internal output budget 247.7 -> 501.1 ps. Clock plan 36 regions, max inter 141.4, 0 > 150.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER three rules): HBM on r22: a relay station abuts every hardened-block pin of every
+  die interface whose pin segment exceeds 100 um (500 relay ends, list relay_ends_hbm.json; last segment <= 100 um,
+  +1 hop each). HBM hardened blocks with an interface internal budget < 300 ps: 17 -> 1 (ot_pdie_serdes black box, 465 ps
+  after the link relay; hfd_su a at 339.7 ps). Clock plan unchanged (relays are not clock-tree instances).
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER 2x hub): HBM on r23: SU / SFU / HC quarters x2 area (1406 / 797 / 551 um x 5530 um), die W 24.40 -> 27.16 mm; hub quarter E/W ports in <= 500 um windows. Clock plan: stream trunk 2.69 -> 2.88 ns SS, 7 SE-group w/e crossings at 150.5-150.9 ps (<= 0.9 ps over the 150 ps term: next plan pads them). HBM infeasible 0.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r23 (die 30.59 x 24.62 mm): 2x hub (SU / SFU / HC quarters 1406 / 797 / 551 um wide,
+  ports clustered in <= 500 um windows), attention tile 1778.5 x 1350.0 um (~54 % util, option-B power), mcast_r6 split into
+  hfd_mcast_r6a / r6b (half bus each), svc SE_s7 split into SE_s7 + SE_s8, SE_s1 centre ck. Clock plan method update: sibling
+  regions (SM group halves, scan-quadrant cuts, HUB-C cuts) share ONE trunk sink at their family root, and forwarded-clock
+  segments are not tree pairs: 37 regions, max intra 56.7 ps, max inter 58.5 ps (the wider die had 54 crossings at
+  150-160 ps with per-region trunk sinks). Stale sheet hfd_vm removed (split into hfd_vm_{sw,se,nw,ne} since r19).
+  HBM infeasible as planned: 0.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): VM early clock branch: HUB-V taps the stream trunk 300 ps early (the rest of the tree lifts 84.4 ps), the region flop instant is kept, so the four VM tiles have 300 ps die pad for deeper tile trees; svc SE_s5 centre ck.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): index_q b1 FF IO model from its routed boundary leaf (ff_min 540, kout hold); sheets_r23v/: the 8 VM sub-tile sheets of the r23v fallback (flag default off; VM early branch: 300 ps die pad each).
+- 2026-10-07 ~08:20 PT (CLAUDE HBM-ABSTRACTS coordinator phase 2): HUB EARLY CLOCK BRANCH. The serial trunk taps every
+  HUB-C sub-region 500 ps early (clock_plan.py EARLY_PS 'clk_serial:HUB-C', prefix key; early-branch lift now computed
+  once per tree), so the 5.53 mm hub quarters get a 500 ps die pad: hfd_su / hfd_sfu / hfd_hc / hfd_su_red pad 0 -> 500,
+  hfd_su_full 170 -> 670, entry targets 343.5 -> 843.5 ps; hfd_quant (HUB-C) follows. Clock plan max inter 58.5 -> 66.9 ps
+  (0 > 150). Same r23 die model and committed calibrations; HBM infeasible 0. Structural follow-up: r24 per-segment ck
+  pins on the hub quarters.
+- 2026-10-07 ~08:40 PT: r24 sheets (sheets_r24/, clock_plan/hbm_r24.json.gz; generator d3ebf06d9 preset r24 = r23 + 8 per-segment ck pins per hub quarter, ck0..ck7 on M4 W face): hub quarters' clock ports ck0..ck7, die pad 500 ps, entry 1,014 ps; 44 regions, max inter 66.9 ps. Use these for the multi-ck hub quarter variant; every other master's sheet equals sheets/ (r23).

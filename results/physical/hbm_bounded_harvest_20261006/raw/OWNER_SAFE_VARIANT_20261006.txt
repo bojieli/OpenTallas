@@ -1,0 +1,10 @@
+OWNER DIRECTIVE (2026-10-06 ~21:10): for the HIGH-RISK blocks, build a "SAFE" version NOW and route it IN PARALLEL with the current route; don't wait for the current one to fail.
+Blocks: DS PQ q-element, DS fused head, DS softmax, HBM SM, HBM W2, HBM attention-tile assembly, HBM SU controller + reducer. (Optional, if cheap: HBM router, DS code-pair, DS WFC src.)
+The SAFE version is designed to close easily, accepting a performance penalty:
+- every path in the last route's failing classes, and every path within 150 ps of failing, gets +1..+3 register stages;
+- leaves of <= ~0.5 mm with registered latency-insensitive boundaries; no block-internal clock tree deeper than the budget target;
+- halve hot datapaths (II 2 / 2x cycles) wherever one stage is still deep; SRAM/FIFO for long delay lines; pipelined reduction trees;
+- route target 730 ps (sign-off 833.333), HM 35, closure loop with calibrate + auto hold ECO.
+Exactness stays transaction-level, with the negative controls failing. Price the SAFE version's cycle/throughput cost.
+ADOPTION: whichever version closes first (SS >= +15 / FF >= +15) is adopted. If both close, adopt the faster one. Flag the SAFE cost to the main session if it is above ~3% of the target's AR/MTP headline.
+This is an explicit owner exception to the one-route rule: max 2 routes per block (current + SAFE).

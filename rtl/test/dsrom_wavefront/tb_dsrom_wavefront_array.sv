@@ -20,6 +20,9 @@
 //     of every job at every package), WF lines (issue / reject / squash), and
 //     KV / index-key write-to-visible probes (VIS lines).
 // ---------------------------------------------------------------------------
+`ifndef OT_WFC_LINK_REG
+`define OT_WFC_LINK_REG 0
+`endif
 // ROM-array token simulation of the reduced DeepSeek-V4.1 decode: a layer-range
 // pipeline of V4.1 hardwired decode cores (tools/hdc_program_v41_array.py
 // decides the split and what crosses a boundary; the configuration comes in as
@@ -814,6 +817,24 @@ module tb_dsrom_wavefront_array #(
             wire c_in_ready, c_out_valid;
             assign rx_r[n] = c_in_ready && in_ok;
             assign tx_v[n] = c_out_valid && out_ok;
+            // the controller's link ports: direct, or (OT_WFC_LINK_REG: the controller's registered link
+            // boundary) through the other end of a registered link on each side, so the fabric keeps its
+            // valid / ready protocol
+            wire k_in_valid, k_in_ready, k_in_last, k_out_valid, k_out_ready, k_out_last;
+            wire [FLIT-1:0] k_in_data, k_out_data;
+            if (`OT_WFC_LINK_REG) begin : g_lreg
+                ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT + 1)) atx (.clk(clk), .rst_n(rst_n),
+                    .c_valid(rx_v[n] && in_ok), .c_ready(c_in_ready), .c_data({rx_l[n], rx_d[n*FLIT +: FLIT]}),
+                    .l_valid(k_in_valid), .l_ready(k_in_ready), .l_data({k_in_last, k_in_data}));
+                ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(4)) arx (.clk(clk), .rst_n(rst_n),
+                    .l_valid(k_out_valid), .l_ready(k_out_ready), .l_data({k_out_last, k_out_data}),
+                    .c_valid(c_out_valid), .c_ready(tx_r[n] && out_ok), .c_data({tx_l[n], tx_d[n*FLIT +: FLIT]}));
+            end else begin : g_ldir
+                assign k_in_valid = rx_v[n] && in_ok; assign c_in_ready = k_in_ready;
+                assign k_in_data = rx_d[n*FLIT +: FLIT]; assign k_in_last = rx_l[n];
+                assign c_out_valid = k_out_valid; assign k_out_ready = tx_r[n] && out_ok;
+                assign tx_d[n*FLIT +: FLIT] = k_out_data; assign tx_l[n] = k_out_last;
+            end
 
             wire          c_we, c_re; wire [15:0] c_waddr, c_raddr;
             wire [FLIT-1:0] c_wdata; reg [FLIT-1:0] c_rq;
@@ -831,10 +852,10 @@ module tb_dsrom_wavefront_array #(
                                 .SIDE_RXB(C_SRXB(n)), .SIDE_IN(C_SIN(n)), .SIDE_USH(10)) ctrl (
                 .clk(clk), .rst_n(rst_n),
                 .cfg_users(n_users[7:0]), .cfg_prompt_len(n_prompt[NW-1:0]), .cfg_gen_len(n_gen[NW-1:0]),
-                .in_valid(rx_v[n] && in_ok), .in_ready(c_in_ready), .in_data(rx_d[n*FLIT +: FLIT]),
-                .in_last(rx_l[n]),
-                .out_valid(c_out_valid), .out_ready(tx_r[n] && out_ok), .out_data(tx_d[n*FLIT +: FLIT]),
-                .out_last(tx_l[n]),
+                .in_valid(k_in_valid), .in_ready(k_in_ready), .in_data(k_in_data),
+                .in_last(k_in_last),
+                .out_valid(k_out_valid), .out_ready(k_out_ready), .out_data(k_out_data),
+                .out_last(k_out_last),
                 .core_start(c_start), .core_token(c_token), .core_pos(c_pos), .core_done(c_done),
                 .core_next_token(next_token), .core_next_val(next_val), .kv_base(kv_base),
                 .vm_we(c_we), .vm_waddr(c_waddr), .vm_wdata(c_wdata), .vm_re(c_re), .vm_raddr(c_raddr),

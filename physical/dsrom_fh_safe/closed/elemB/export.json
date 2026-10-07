@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_dsrom_head_elem",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47/routes/dshead_elemB_ss_a318fdf47/work/orfs",
+ "post_sdc": "physical/dsrom_fh_safe/gen/signoff_elemB.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "9.175404880323867e-11",
+  "ws_min": "-1.0278417006404084e-10"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "1.6107692957234576e-10",
+  "ws_min": "1.9130447226345382e-11"
+ },
+ "files": {
+  "ot_dsrom_head_elem.lef": "381fa3da0d9236c93ef79592098d0ff00491834d1a05525ac5582c7e64efa837",
+  "ot_dsrom_head_elem_ff.lib": "b57a1cd8ede9c4e94a77c56197bdc51e194f6464bdaaa41b766a2741faab9ef2",
+  "ot_dsrom_head_elem_ss.lib": "c1eca9c1861178691ab7c185d905212aafcb8b8bff81c31efd0ed301d0c9066b"
+ }
+}

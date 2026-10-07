@@ -39,6 +39,7 @@ import hashlib
 import json
 import math
 import re
+import shlex
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -53,6 +54,7 @@ import hbm_accel_die_fp as H  # noqa: E402
 Q = S.Q          # main's qwen_rom_fulldie (esc, pin_rects); the Qwen DIE generator is loaded separately (load_qwen)
 
 OUT = 'results/rtl/die_top_lint_20261006'
+S81_OPTS = ''
 
 
 def sha(rel):
@@ -360,9 +362,16 @@ def real_blocks_r8(die):
     m = R8[die]
     rp = S.real_ports_r8()
     out = {}
-    files = {S.real_lef(S.Q_LEF)['name']: ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv', 'routed RTL (NB=2 receipt params)',
-                                            dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1,
-                                                 QP_CAP=0, QP_P1=1, QP_CSAM=10)),
+    qn = S.real_lef(S.Q_LEF)['name']
+    qf = {'ot_v41_rom_elem_q_qx_w10': ('rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv', 'routed RTL (QELEM Z20c receipt params)',
+                                       dict(MTP=1, EARLY=1, NB=2, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1, QP_CAP=0,
+                                            QP_P1=1, QP_CSAM=10, QZ=1, QZ_NS=8, QZ_NE=4, QY=1, QX=10)),
+          'ot_v41_rom_elem_q_qxpq_w10': ('rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv', 'routed RTL (QELEM PQ, NB=2)',
+                                         dict(NB=2))}.get(qn, ('rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv',
+                                                               'routed RTL (NB=2 receipt params)',
+                                                               dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, QTIMING_FIX=1,
+                                                                    QPIPE=1, QP_XS=1, QP_CAP=0, QP_P1=1, QP_CSAM=10)))
+    files = {qn: qf,
              'ot_rom_4096x72_m8': ('physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v',
                                    'hard macro black box', {}),
              'ot_hbm3e_phy_v41x_aw30_e8p5': ('physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/'
@@ -384,7 +393,7 @@ def real_blocks_r8(die):
                             params=prm, ports=pm['ports'], binding=rp[mst])
     for mst in sorted(used):
         if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
-            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL
+            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/')
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
@@ -493,7 +502,11 @@ def build(die, top_fix=False):
     global TOP_FIX
     TOP_FIX = top_fix
     if die.startswith('s81r8'):
-        S.configure(die.split('_', 1)[1], 'r8')
+        if S81_OPTS:          # the die variant of a recorded case (tools/dsrom_s81_fulldie.py die options)
+            S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(
+                shlex.split(S81_OPTS) + ['--gen', 'r8', '--die', die.split('_', 1)[1]]))
+        else:
+            S.configure(die.split('_', 1)[1], 'r8')
         m = S.build()
         S.finalize_r8(m)
         R8[die] = m
@@ -653,6 +666,15 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
 
 
 # ------------------------------------------------------------------------------------------------ connectivity lint
+def _binding(rb, port):
+    """rtl pin names of a die port; 'p[lo:hi]' (S81 generator port slice) = bits lo..hi of port p"""
+    mm = re.match(r'^(.+)\[(\d+):(\d+)\]$', port)
+    if mm:
+        names = rb['binding'].get(mm.group(1))
+        return None if names is None else names[int(mm.group(2)):int(mm.group(3)) + 1]
+    return rb['binding'].get(port)
+
+
 def endpoint_dirs(die, real, by, bus, j):
     """[(lo, hi, dir)] per net bit range for endpoint j, plus (rtl pin per net bit or None) for real endpoints."""
     bid, cls, bits, eps = bus
@@ -1319,7 +1341,7 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
             rb = real[mst]
             bitmap = defaultdict(dict)        # rtl port -> bit -> expr
             for port, net, bits, j, bus in conns.get(it.name, []):
-                names = rb['binding'].get(port)
+                names = _binding(rb, port)
                 if names is None:
                     continue
                 for i, pn in enumerate(names[:bits]):
@@ -1578,6 +1600,58 @@ def vlsum(log, top):
 #   RTL_OPEN             RTL exists; routed but failing, or never routed
 #   NO_RTL_TOP           logic needed but no RTL top (model ledger / generator rectangle only)
 #   RESERVATION_ONLY     area reservation with no logic of its own
+S81R8_FAMILIES = {      # r8 / r9 die masters (--s81-opts); a landed die view (physical/s81_die_views/views) overrides
+    'dsfd_stn_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): one ot_fwd_link_stage (W <= 512) per lane slice, flops at both faces (falling edge '
+                       'of the forwarded clock), fo = kept inverter', status='RTL_OPEN', owner='CLAUDE S81-RERUN',
+                       closure='hop reg-to-reg fwd_hop2_v11 SS +373.97 / FF +246.18; die views of the 5 most-used masters '
+                               '(1,811 of 2,593 stations) are closure-loop jobs s81-dsfd-stn*-b85da0774',
+                       note='21 masters by lane signature; registered die view = the station itself (no added cycle)'),
+    'dsfd_hstn_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): common-clock hub-bus station (one register stage)', status='RTL_OPEN',
+                        owner='CLAUDE S81-RERUN', closure='never routed standalone', note='r9 hub-bus stations (CC reach 215 um)'),
+    'dsfd_cfifo': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): ot_meso_fifo W564 entry crossing + column region root + registered status word',
+                       status='RTL_OPEN', owner='CLAUDE S81-RERUN',
+                       closure='meso core meso_d4_v7 SS +10.13 / FF +9.44 (below +15/+15): calibrated re-route closure-loop '
+                               'job s81-meso-d4-f21799d1c; port record physical/s81_die_views/ports/layer/dsfd_cfifo',
+                       note='xa/xb/cc are the FIFO output register ANDed with its valid (one gate after the flop)'),
+    'dsfd_hend_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): hub end / start blocks (ot_meso_fifo / ot_ratio_cdc_fifo)', status='RTL_OPEN',
+                        owner='CLAUDE S81-RERUN', closure='meso core as dsfd_cfifo', note='one master per instance (pin faces '
+                        'follow its own peers): 8 RTL shapes'),
+    'dsfd_rly_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): column relays (one register stage)', status='RTL_OPEN', owner='CLAUDE S81-RERUN',
+                       closure='never routed standalone', note='49 masters by width and face pair'),
+    'dsfd_sstn_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): slot stations', status='RTL_OPEN', owner='CLAUDE S81-RERUN', closure='never routed',
+                        note=''),
+    'dsfd_qbank_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): q-element bank stations', status='RTL_OPEN', owner='CLAUDE S81-RERUN',
+                         closure='never routed', note=''),
+    'dsfd_rstg': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): return-tree root stage', status='RTL_OPEN', owner='CLAUDE S81-RERUN',
+                      closure='never routed', note=''),
+    'dsfd_lkck_*': dict(rtl='glue RTL generated by tools/dsrom_s81_fulldie.py (results/rtl/dsrom_s81_fulldie_20261004/<rev>/dsfd_glue.sv): link-macro forwarded-clock relay (assign fo = fi; a CTS-sized clock buffer)',
+                        status='RTL_OPEN', owner='CLAUDE S81-RERUN', closure='n/a (clock buffer, sized by die CTS)',
+                        note='--link-fix: the SerDes / UCIe clock source on the macro ck face'),
+    'dsfd_hbglue': dict(rtl='ot_s81_head_delay8x32', status='REAL_VIEW', owner='CODEX item8 / CLAUDE',
+                        view=['physical/s81_die_views/hbglue/ot_s81_head_delay8x32/ (LEF + SS/FF LIB, 8d02d5505)'],
+                        closure='routed leaf, SS/FF timing models exported', note='head-bundle skew element'),
+    'dsfd_sp_hc_s': dict(rtl='no slab top; ot_hdc_sinkhorn', status='NO_RTL_TOP', owner='CLAUDE S81-PH',
+                         closure='never routed (S81-PH twins, built to the simplification rules)', note='HC south half'),
+    'dsfd_sp_hc_n': dict(rtl='no slab top; ot_hdc_sinkhorn', status='NO_RTL_TOP', owner='CLAUDE S81-PH',
+                         closure='never routed (S81-PH twins)', note='HC north half'),
+    'ot_dsrom_head_elem_A': dict(rtl='ot_dsrom_head_elem (recovery lever head.json)', status='REAL_VIEW_NOT_CLOSED',
+                                 owner='CLAUDE', view=['results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz'],
+                                 closure='r4_A SS +24.4 / FF +8.5 (FF below +15)', note=''),
+    'ot_dsrom_head_elem_B': dict(rtl='ot_dsrom_head_elem (recovery lever head.json)', status='REAL_VIEW_NOT_CLOSED',
+                                 owner='CLAUDE', view=['results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz'],
+                                 closure='r4_B (FF below +15 as A)', note=''),
+    'ot_s81_cfg7_seq': dict(rtl='ot_s81_cfg7_seq (rtl/v41die/ot_s81_cfg7_seq.sv)', status='RTL_OPEN', owner='CLAUDE S81-DIE',
+                            closure='never routed standalone', note='cfg ROM sequencer, one per pair'),
+    'ot_v41_rom_elem_q_qx_w10': dict(rtl='ot_v41_rom_elem_q_qx_w10 (QX10, QELEM)', status='REAL_VIEW_NOT_CLOSED',
+                                     owner='CLAUDE QELEM', view=['results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz'],
+                                     closure='Z20c die-context SS -60.7 after CTS (pre-margin); PQ q-element Z24b pending',
+                                     note='die cases use Z20c until the PQ q-element posts'),
+    'ot_pdie_*': dict(rtl='none (placeholder pin macro)', status='REAL_VIEW_NOT_CLOSED', owner='CLAUDE S81-RERUN',
+                      view=['physical/asap7_v41x_pdie_macros_v2/ot_pdie_{serdes,ucie}/ (LEF + tt/ss/ff LIB: '
+                            'tools/s81_pdie_corner_libs.py, HBM3E PHY corner method)'],
+                      closure='n/a: pin-only shell with corner LIBs', note='real SerDes / UCIe hard IP abstract still needed'),
+}
+
 STATUS_ORDER = ['REAL_VIEW', 'REAL_VIEW_NOT_CLOSED', 'RTL_CLOSED', 'RTL_OPEN', 'NO_RTL_TOP', 'RESERVATION_ONLY']
 
 S81_FAMILIES = {
@@ -1771,8 +1845,13 @@ def family_of(die, mst):
     if die.startswith('s81'):
         if mst.startswith('ot_pdie_'):
             return 'ot_pdie_*'
-        if re.match(r'dsfd_stn_[hlv]$', mst):
+        if re.match(r'dsfd_stn_[hlv]$', mst) or re.match(r'dsfd_stn[hv]_', mst):
             return 'dsfd_stn_*'
+        for pat, fam in ((r'dsfd_hstn[hv]_', 'dsfd_hstn_*'), (r'dsfd_(m2l|r2l|l2r)_', 'dsfd_hend_*'),
+                         (r'dsfd_rly_', 'dsfd_rly_*'), (r'dsfd_node_', 'dsfd_node'), (r'dsfd_sstn_', 'dsfd_sstn_*'),
+                         (r'dsfd_qbank_', 'dsfd_qbank_*'), (r'dsfd_lkck_', 'dsfd_lkck_*')):
+            if re.match(pat, mst):
+                return fam
         if re.match(r'dsfd_sp_su_[ns]$', mst):
             return 'dsfd_sp_su_*'
         return mst
@@ -1783,11 +1862,32 @@ def family_of(die, mst):
     return mst
 
 
+VIEWS = 'physical/s81_die_views/views'
+
+
+def landed_views(masters):
+    """die views landed by the closure loop (physical/s81_die_views/views/<master>/corner_sta.json): closed at SS and FF
+    >= +15 ps at the 833.333 ps sign-off"""
+    out = {}
+    for mst in masters:
+        f = ROOT / VIEWS / mst / 'corner_sta.json'
+        if not f.exists():
+            continue
+        c = json.loads(f.read_text())
+        ss, ff = c['setup_ss'].get('worst_slack_ps'), c['hold_ff'].get('worst_slack_ps')
+        if ss is None or ff is None:
+            continue
+        out[mst] = dict(ss=ss, ff=ff, closed=ss >= 15.0 and ff >= 15.0, path=f'{VIEWS}/{mst}/ ({mst}.lef + SS/FF LIB)')
+    return out
+
+
 def rom_abstracts(die):
-    """block-family inventory of one ROM die: what each family needs to become a real hardened abstract."""
-    m, pw, M, tool = build(die)
-    table = QWEN_FAMILIES if die == 'qwen_rom' else S81_FAMILIES
-    real = real_blocks(die)
+    """block-family inventory of one ROM die: what each family needs to become a real hardened abstract.
+    With --s81-opts the S81 dies are the r8 / r9 die variant of those options (the recorded die case)."""
+    dd = 's81r8_' + die.split('_')[1] if S81_OPTS and die in ('s81_layer', 's81_head') else die
+    m, pw, M, tool = build(dd)
+    table = QWEN_FAMILIES if die == 'qwen_rom' else dict(S81_FAMILIES, **(S81R8_FAMILIES if dd != die else {}))
+    real = real_blocks(dd)
     cnt = Counter(it.master for it in m['insts'])
     fam = defaultdict(list)
     for mst, n in cnt.items():
@@ -1818,6 +1918,16 @@ def rom_abstracts(die):
             if e['masters'] == len(ms_):
                 e.pop('masters')
         meta = table.get(f)
+        lv = landed_views(ms_) if dd != die else {}
+        if lv and meta is not None:
+            ok_ = [x for x, v in lv.items() if v['closed']]
+            meta = dict(meta, view=(meta.get('view') or []) + [v['path'] for v in lv.values()],
+                        closure=meta['closure'] + '; landed die views: ' + ', '.join(
+                            f"{x} SS {v['ss']:+.2f} / FF {v['ff']:+.2f}" for x, v in sorted(lv.items())))
+            if len(ok_) == len(ms_):
+                meta['status'] = 'REAL_VIEW'
+            elif lv:
+                meta['status'] = 'REAL_VIEW_NOT_CLOSED' if not ok_ else meta['status']
         if meta is None:
             meta = dict(rtl='UNKNOWN (new master: add it to the family table)', status='NO_RTL_TOP', owner='?',
                         closure='', note='')
@@ -1836,7 +1946,7 @@ def rom_abstracts(die):
     for r in rows:
         inst[r['status']] += r['instances']
     return dict(
-        schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool, gen_root(die)),
+        schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool.split()[0], gen_root(die)), s81_opts=S81_OPTS if dd != die else None,
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
         qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
         die_um=[round(m['die']['w'], 3), round(m['die']['h'], 3)] if isinstance(m.get('die'), dict) else
@@ -1915,7 +2025,7 @@ def run_lint(die, out, top_fix=False, tag=''):
     out.mkdir(parents=True, exist_ok=True)
     top = f'{die}{tag}_lint_top' + ('_fix' if top_fix else '')
     em = emit_verilog(die, m, real, pw, out, top)
-    extra = (S.GLUE_RTL, S.CFG7_RTL) if R8_ACTIVE[0] else ()
+    extra = (S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/'), S.CFG7_RTL) if R8_ACTIVE[0] else ()
     files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
     if R8_ACTIVE[0]:
@@ -1972,11 +2082,14 @@ def main(argv=None):
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
+    ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '
+                    '"--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave"')
     ap.add_argument('--tag', default='', help='output name tag (e.g. _r15)')
     ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r16g)')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
     a = ap.parse_args(argv)
-    global VARIANT
+    global VARIANT, S81_OPTS
+    S81_OPTS = a.s81_opts
     VARIANT = a.variant
     global QWEN_REF, QWEN_RECIPE
     QWEN_REF = a.qwen_ref

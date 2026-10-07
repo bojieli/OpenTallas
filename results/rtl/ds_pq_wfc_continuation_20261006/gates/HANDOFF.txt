@@ -1,0 +1,37 @@
+Completed next two gates; supersedes the corresponding outstanding checks
+in the parent HANDOFF.txt. No new tool jobs, bench runs, routes or merges.
+
+WFC r11 SOURCE=0 stage: PASS full-shape component under approved region IO
+contract. SS setup +73.1 ps, FF hold +15.7 ps; incontext/reg2reg +73.1/+22.5.
+Terminal detailed-route metrics explicitly DRC=0, antenna nets=0, pins=0;
+route report empty, log confirms both antenna counts, flow_rc=sta_rc=0.
+SS/FF electrical checks zero. Actual signoff period 833 ps (stricter than
+833.333), uncertainties 60/25 ps; region IO hold uncertainty 50 ps, skew
+150 ps link /90 ps same-region. Two full MAXU=866 stage streams pass with
+940,000 flits and 20,000 starts each; link/upos/vmrd negatives fail.
+Final ODB/SDC/SPEF hashes were recomputed from retained files and match STA.
+Controller pin matches the route case and saved bench source.
+
+wfc_stage_qualified.json is the integration-ready qualification/export
+record. It includes parameters, timing classes, electrical/physical metrics
+and paths/hashes for final DB, DEF, GDS, netlist, SDC and SPEF on EPYC1.
+This is full-shape component closure under the accepted boundary contract,
+not a claim of assembled-die closure. WFC SOURCE=1 still needs r14 results.
+
+QS2 SAFE: PASS exact/negative gate; all 37 recorded source hashes match
+central d44b98796 and its Z29c remote checkout. Four seeds + sparse NaN pass,
+12,775,002 compared cycles; neg_qs2ns / neg_qs2sh each rc1, mismatch caught.
+This QX mechanism bench uses PQ=0. Separate existing PQ=1 L20 full-shape
+campaign finished: 2,752 phase +896 node, all pass, no mismatched/extra rows
+or faults. The L20 field fixture spine SHA differs from active v13b; this
+is not a claim of combined v13b+QS2 qualification or physical adoption.
+
+Owner's live-Claude evidence commit 1dd2bf2f4 inspected: its qx10qs2.json
+is byte-identical to our independently harvested terminal. Its L20 note
+reports cycle identity with QS1 across 3,648 runs; no duplicate cost bench.
+The QS2 exact gate is independently checked; no adoption based on QS1.
+
+Main can integrate this evidence branch. Retain the current q-element
+physical jobs unchanged and use 1dd2bf2f4 for upstream gate provenance.
+Reproduce parsing/qualification locally with:
+  python3 results/rtl/ds_pq_wfc_continuation_20261006/gates/qualify.py

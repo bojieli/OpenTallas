@@ -1,0 +1,76 @@
+{
+  "base_commit": "ead4492049bd24446040112d46edb20bfed06d95",
+  "prior_observed_utc": "2026-10-07T05:22:07.424686+00:00",
+  "new_observed_utc": "2026-10-07T05:44:07.887334+00:00",
+  "input_comparison": {
+    "manifest.json": {
+      "current_sha256": "bdd0862859dcc9f8b95d2771e37a9fb716662e8266dba4ff1afe44a397f53902",
+      "prior_sha256": "bdd0862859dcc9f8b95d2771e37a9fb716662e8266dba4ff1afe44a397f53902",
+      "matches_prior": true
+    },
+    "run.tcl": {
+      "current_sha256": "f83abbcc595b3e7ccefc58f5be6c605aa24aeb5c6c9747b1ddd5e733ca631d91",
+      "prior_sha256": "f83abbcc595b3e7ccefc58f5be6c605aa24aeb5c6c9747b1ddd5e733ca631d91",
+      "matches_prior": true
+    },
+    "run_pdn.tcl": {
+      "current_sha256": "bffbcff7703d061e8eeba395591bd99d383e20cf2824b7ccd0b6c8e52559830b",
+      "prior_sha256": "bffbcff7703d061e8eeba395591bd99d383e20cf2824b7ccd0b6c8e52559830b",
+      "matches_prior": true
+    },
+    "die.v": {
+      "current_sha256": "37525b029fa4f03c978f83454d078e786401b07164a76dcc5570e58dafff412a",
+      "prior_sha256": "37525b029fa4f03c978f83454d078e786401b07164a76dcc5570e58dafff412a",
+      "matches_prior": true
+    },
+    "elements.lef": {
+      "current_sha256": "350dad8628ed9fff1986be5d69e6d41787f8c6d123f9f6f022465f8764357af6",
+      "prior_sha256": "350dad8628ed9fff1986be5d69e6d41787f8c6d123f9f6f022465f8764357af6",
+      "matches_prior": true
+    },
+    "phy_ew.lef": {
+      "current_sha256": "b640d6229a29c17790a3a6b03649481fb61a7144154becc2a982d266cdd52011",
+      "prior_sha256": null,
+      "matches_prior": null
+    },
+    "snap.tcl": {
+      "current_sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+      "prior_sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+      "matches_prior": true
+    },
+    "place.tcl": {
+      "current_sha256": "cb10d8ab04fa7896c3b1ca56e29eb5d5e6f34c990f87e8666758f91c5d59147a",
+      "prior_sha256": "cb10d8ab04fa7896c3b1ca56e29eb5d5e6f34c990f87e8666758f91c5d59147a",
+      "matches_prior": true
+    },
+    "pdn.tcl": {
+      "current_sha256": "192415e8abbac3381e6ee237ea22714361c55e1106b036f40778bdda087d1689",
+      "prior_sha256": "192415e8abbac3381e6ee237ea22714361c55e1106b036f40778bdda087d1689",
+      "matches_prior": true
+    }
+  },
+  "source_observation": {
+    "tools/qwen_rom_fulldie_b3r2.py": {
+      "sha256": "9e770f8e849fcf997bccb85a9479ecbfaab862e5a88949a048c49212507ac816",
+      "matches_prior_read_only_capture": true
+    },
+    "tools/die_top_lint.py": {
+      "sha256": "dd390f8d6cf5678d83e5be42761ed9f6d422f389f787ca72841842e506ea33e5",
+      "matches_prior_read_only_capture": true
+    },
+    "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": {
+      "sha256": "ce1dab0e3e61d6b9db8c432464b5ef09f79cc2dd4f2af434bdd0bc0468461be6",
+      "matches_prior_read_only_capture": true
+    },
+    "results/rtl/qwen_rom_die_r17_20261005/drt_fulldie_m4m9_20261006/record.json": {
+      "sha256": "76009e72fc755c92427d1424c5d142fe64c05e03daf89a43bc17386e177bd268",
+      "matches_prior_read_only_capture": true
+    },
+    "rtl/physical/ot_qwen_die_station.sv": {
+      "sha256": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+      "matches_prior_read_only_capture": true
+    }
+  },
+  "source_verified": false,
+  "interpretation": "Matching observations and pre-start timestamps narrow the replacement input candidate, but do not recover the original consumed bytes or prove generation from a clean source commit."
+}

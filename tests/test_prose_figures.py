@@ -174,7 +174,11 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # docs/MICROARCH_MODEL.md DS HBM annotations are pinned (unlisted -> 2) (1383 -> 1397).
     # docs/ANALYTICAL_REPORT.md Qwen ROM AR-mode (speculation break-even) annotations (280 -> 299) (1397 -> 1416).
     # docs/ANALYTICAL_REPORT.md Qwen ROM closed-configuration headline annotations (299 -> 302) (1416 -> 1419).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1419
+    # docs/ANALYTICAL_REPORT.md "two rates" section states the closed token (216,713 / 5,537.3 / measured 193,955; 430 um relays 2026-10-07)
+    # ahead of the layer composition the DSpark verdict uses (302 -> 305) (1419 -> 1422).
+    # DS-RACK85: docs/HEADLINE_BUNDLE.md binds the measured DS energy record (ROM 6.48 J, HBM accelerator 5.77 J
+    # at batch 1, AR) beside the superseded power-scenario model (199 -> 201) (1422 -> 1424).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1424
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

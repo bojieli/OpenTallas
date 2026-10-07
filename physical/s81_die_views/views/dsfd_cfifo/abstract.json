@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_cfifo",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/routes/s81_dsfd_cfifo_290446310/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/routes/s81_dsfd_cfifo_290446310/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/routes/s81_dsfd_cfifo_290446310/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_cfifo.lef": "48bf1a9420ecbc74aa75bb620d467d2a977ae0fe8924378d4fa6ce7afa2e9dbb",
+    "dsfd_cfifo_ff.lib": "9435be04728810b18903453211b557bb410c0ac55acb8a4452e19eb101b22f82",
+    "dsfd_cfifo_ss.lib": "cbe15c0ea401875da96acd73b8ca18870b81d6370f192925b5c0d8fca59ebef3"
+  },
+  "ok": true
+}

@@ -1,0 +1,35 @@
+{
+ "case": "a",
+ "instances": 60532,
+ "generated_pins": 206901,
+ "nets_bits": 7774403,
+ "variant": {
+  "gen": "r8",
+  "cfifo_v2": true,
+  "link_fix": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
+  "corr_interleave": true,
+  "rev": "r9",
+  "cc_reach_um": 215.0,
+  "vch_interleave": true,
+  "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+  "head_dies": 12,
+  "die": "layer",
+  "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+  "pairs": 2050,
+  "bf": 440,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
+  "elem_frame_h": 198.72,
+  "slot_h": 280.8,
+  "slots": 10
+ }
+}

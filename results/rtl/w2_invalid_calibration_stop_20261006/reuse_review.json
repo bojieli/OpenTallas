@@ -1,0 +1,422 @@
+{
+  "2": {
+    "non_gate_sources_identical": true,
+    "verified_dependency_count": 20,
+    "negative_controls": {
+      "B1_live_q_no_alignment": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: normal asserted with unverified data",
+        "matched_assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "progress_armed": false
+      },
+      "B2_copy_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "(?:enable|commit-select) copy corruption permitted",
+        "matched_assertions": [
+          "commit-select copy corruption permitted"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "commit-select copy corruption permitted"
+        ],
+        "progress_armed": false
+      },
+      "B3_controller_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "controller corruption permitted",
+        "matched_assertions": [
+          "controller corruption permitted"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "controller corruption permitted"
+        ],
+        "progress_armed": false
+      },
+      "B4_red_data_not_delayed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: normal asserted with unverified data",
+        "matched_assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "progress_armed": false
+      },
+      "S1_sm_duplicate_mask_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "duplicate or mismatched actual SM tap i=\\d+",
+        "matched_assertions": [
+          "duplicate or mismatched actual SM tap i=0"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "duplicate or mismatched actual SM tap i=0"
+        ],
+        "progress_armed": false
+      },
+      "S2_parent_ack_mask_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "parent release identity/conservation",
+        "matched_assertions": [
+          "parent release identity/conservation"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "parent release identity/conservation"
+        ],
+        "progress_armed": false
+      },
+      "S3_frame_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "wrong full73 receipt fabricated retirement",
+        "matched_assertions": [
+          "wrong full73 receipt fabricated retirement"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "wrong full73 receipt fabricated retirement"
+        ],
+        "progress_armed": false
+      },
+      "S4_held_release_ignored": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "held full73 receipt lost across repair/warm/backpressure",
+        "matched_assertions": [
+          "held full73 receipt lost across repair/warm/backpressure"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "held full73 receipt lost across repair/warm/backpressure"
+        ],
+        "progress_armed": false
+      },
+      "S6_cross_bank_veto_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: station acted after a station rail fault \\(edge \\d+\\)",
+        "matched_assertions": [
+          "VETO: station acted after a station rail fault (edge 6)"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: station acted after a station rail fault (edge 6)"
+        ],
+        "progress_armed": false
+      },
+      "S7_ack_frame_stage_skipped": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "unexpected parent/chain fault",
+        "matched_assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "progress_armed": false
+      },
+      "S8_rel_q_decision_removed": {
+        "expected": "FAIL",
+        "failed": false,
+        "outcome": "INFRASTRUCTURE_FAILURE",
+        "expected_assertion": "W2_PROGRESS_MISSING_SM_ACCEPT bound=352 elapsed=352 accepted=[0-9a-fA-F]{2}",
+        "matched_assertions": [],
+        "compile_exit": 0,
+        "runtime_exit": 124,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [],
+        "progress_armed": false
+      },
+      "S5_learned_send_not_recorded": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "unexpected parent/chain fault",
+        "matched_assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "progress_armed": false
+      }
+    },
+    "qualified_negative_count": 11,
+    "gate_qualified": false,
+    "reason": "Original S8 external timeout rejected; additive fixed-source S8 mechanism evidence exists separately, not an overwrite.",
+    "reuse_scope": "Mapped netlist + synthesis ODB retained and hash-pinned; reuse candidate for closure-loop owner only. Existing assumed-IO placement is not calibrated timing evidence."
+  },
+  "3": {
+    "non_gate_sources_identical": true,
+    "verified_dependency_count": 20,
+    "negative_controls": {
+      "B1_live_q_no_alignment": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: normal asserted with unverified data",
+        "matched_assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "progress_armed": false
+      },
+      "B2_copy_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "(?:enable|commit-select) copy corruption permitted",
+        "matched_assertions": [
+          "commit-select copy corruption permitted"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "commit-select copy corruption permitted"
+        ],
+        "progress_armed": false
+      },
+      "B3_controller_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "controller corruption permitted",
+        "matched_assertions": [
+          "controller corruption permitted"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "controller corruption permitted"
+        ],
+        "progress_armed": false
+      },
+      "B4_red_data_not_delayed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: normal asserted with unverified data",
+        "matched_assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: normal asserted with unverified data"
+        ],
+        "progress_armed": false
+      },
+      "S1_sm_duplicate_mask_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "duplicate or mismatched actual SM tap i=\\d+",
+        "matched_assertions": [
+          "duplicate or mismatched actual SM tap i=0"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "duplicate or mismatched actual SM tap i=0"
+        ],
+        "progress_armed": false
+      },
+      "S2_parent_ack_mask_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "parent release identity/conservation",
+        "matched_assertions": [
+          "parent release identity/conservation"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "parent release identity/conservation"
+        ],
+        "progress_armed": false
+      },
+      "S3_frame_check_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "wrong full73 receipt fabricated retirement",
+        "matched_assertions": [
+          "wrong full73 receipt fabricated retirement"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "wrong full73 receipt fabricated retirement"
+        ],
+        "progress_armed": false
+      },
+      "S4_held_release_ignored": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "held full73 receipt lost across repair/warm/backpressure",
+        "matched_assertions": [
+          "held full73 receipt lost across repair/warm/backpressure"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "held full73 receipt lost across repair/warm/backpressure"
+        ],
+        "progress_armed": false
+      },
+      "S6_cross_bank_veto_removed": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "VETO: station acted after a station rail fault \\(edge \\d+\\)",
+        "matched_assertions": [
+          "VETO: station acted after a station rail fault (edge 6)"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "VETO: station acted after a station rail fault (edge 6)"
+        ],
+        "progress_armed": false
+      },
+      "S7_ack_frame_stage_skipped": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "unexpected parent/chain fault",
+        "matched_assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "progress_armed": false
+      },
+      "S8_rel_q_decision_removed": {
+        "expected": "FAIL",
+        "failed": false,
+        "outcome": "INFRASTRUCTURE_FAILURE",
+        "expected_assertion": "W2_PROGRESS_MISSING_SM_ACCEPT bound=352 elapsed=352 accepted=[0-9a-fA-F]{2}",
+        "matched_assertions": [],
+        "compile_exit": 0,
+        "runtime_exit": 124,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [],
+        "progress_armed": false
+      },
+      "S5_learned_send_not_recorded": {
+        "expected": "FAIL",
+        "failed": true,
+        "outcome": "REJECTED",
+        "expected_assertion": "unexpected parent/chain fault",
+        "matched_assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "pass_marker": false,
+        "assertions": [
+          "unexpected parent/chain fault"
+        ],
+        "progress_armed": false
+      }
+    },
+    "qualified_negative_count": 11,
+    "gate_qualified": false,
+    "reason": "Original S8 external timeout rejected; additive fixed-source S8 mechanism evidence exists separately, not an overwrite.",
+    "reuse_scope": "Mapped netlist + synthesis ODB retained and hash-pinned; reuse candidate for closure-loop owner only. Existing assumed-IO placement is not calibrated timing evidence."
+  }
+}

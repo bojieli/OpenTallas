@@ -20,23 +20,23 @@
    "serial_0p9"
   ],
   "regions": [
-   "hbm:clk_serial:HUB-C.1.0"
+   "hbm:clk_serial:HUB-C.0.1.0"
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 856.6,
-   "min": 856.6,
-   "max": 856.6
+   "mean": 843.4,
+   "min": 843.4,
+   "max": 843.4
   },
   "entry_target_ff_ps": {
-   "mean": 453.6,
-   "min": 453.6,
-   "max": 453.6
+   "mean": 682.0,
+   "min": 682.0,
+   "max": 682.0
   },
   "die_pad_ss_ps": {
-   "mean": 1.9,
-   "min": 1.9,
-   "max": 1.9
+   "mean": 500.0,
+   "min": 500.0,
+   "max": 500.0
   },
   "internal_insertion": {
    "target_ss": 900.0,
