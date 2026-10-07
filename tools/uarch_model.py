@@ -12995,7 +12995,8 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
         source="rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8")
 
 
-def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9):
+def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
+                                     shared_die_station_hops=76, compute_die_station_hops=200):
     """Exact shared-ROM alternative; no full-ROM replication or silent slot squeeze.
 
     Conservatively store a complete row, then multicast bit-identical codes and
@@ -13017,7 +13018,11 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9):
     # request, provisionally bounded by the same 18-cycle root-read envelope.
     response_beats = math.ceil((4096 + 2) / 64)
     fixed_endpoint_cycles = 6  # 2 request capture / 2 TX / 2 RX, proposed
-    service_cycles = 1 + hop_cycles + code_cycles + response_beats + hop_cycles + fixed_endpoint_cycles
+    station_cycles = 2 * (shared_die_station_hops + compute_die_station_hops)
+    service_cycles = 1 + hop_cycles + code_cycles + response_beats + hop_cycles + fixed_endpoint_cycles + station_cycles
+    # A single selected row is issued at a time. Reserve its complete65-beat
+    # response, so a long credit return cannot stall the latency-critical row.
+    credit_slots = 1 << math.ceil(math.log2(min(response_beats, 2*hop_cycles+station_cycles+fixed_endpoint_cycles)+2))
     old_handoff = (link["hop_latency_s"]["value"] + 4098 / link["bytes_s"]["value"]) * clock_hz
     leaf_reservation = bank["replica_count"]["code_bank_pairs"] * 270 * 100.44 / 1e6
     scale_reservation = bank["replica_count"]["scale_macros"] * bank["macro"]["area_um2"] / .60 / 1e6
@@ -13046,9 +13051,9 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9):
                      link_hop_source="configs/hardware/technology.json: assumed rom_package_ucie, not routed PHY",
                      endpoint_bytes_per_cycle=64, ROM_bytes_per_cycle=32,
                      actual_bandwidth_upper_bytes_s=min(32*clock_hz,link['bytes_s']['value']),
-                     per_receiver_credit_slots=2*hop_cycles+fixed_endpoint_cycles+2,
-                     receiver_protected_bits=(2*hop_cycles+fixed_endpoint_cycles+2)*576,
-                     credit_sizing_basis="one response beat/cycle; round trip two hops plus endpoint pipeline and two skid seats",
+                     per_receiver_credit_slots=credit_slots,
+                     receiver_protected_bits=credit_slots*576,
+                     credit_sizing_basis="reserve entire65-beat selected row or full round trip, whichever smaller; two skid seats; round up power of two; next row waits for returned credits",
                      row_buffer_payload_bytes=4096,
                      row_buffer_protected_bits=64*576,
                      mutable_buffer_protection="64-bit SECDED words; metadata/credits require protected state before adoption",
@@ -13063,7 +13068,10 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9):
                      total_delta_including_bank_vs_existing=math.ceil(service_cycles-64-old_handoff),
                      bank_delta_already_priced=bank['latency']['extra_code_row_cycles'],
                      additional_transport_delta_after_bank=math.ceil(service_cycles-64-old_handoff)-bank['latency']['extra_code_row_cycles'],
-                     die_station_hops="must add actual generated relay count; zero assumed credit forbidden",
+                     shared_die_station_hops_each_direction=shared_die_station_hops,
+                     compute_die_station_hops_each_direction=compute_die_station_hops,
+                     added_station_cycles=station_cycles,
+                     station_basis="conservative300um pitch bounding-box allowance:76hops across128mm2 shared die,200 across <=60mm sum of compute die side lengths; replace only with generated measured counts",
                      overlap_credit=0),
         physical_closed=False, adopted_rate_tok_s=None,
         remaining="route code/scale leaves and protected row buffer, exact multicast endpoint, package PHY contract, station counts, die floorplan/STA/DRC/IR")
