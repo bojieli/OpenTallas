@@ -157,6 +157,33 @@ module ot_gpu_router_ps_lcopy #(parameter integer W = 1) (input wire clk, input 
     always @(posedge clk) q <= d;
 endmodule
 
+// r5: the S6 chunk compares as explicit 3-level gt/eq trees with kept level wires (die view dv8: synthesis re-rippled
+// the log-depth cmp8 function into a 6-MAJ chain, L5c -> cc6 +11.2 ps at 833 after a 300 ps wire).  Same values as
+// chunks() bit for bit; synthesis cannot flatten the levels back into a ripple.
+module ot_gpu_router_ps_cmp8k (input wire [7:0] a, input wire [7:0] b, output wire gt, output wire eq);
+    (* keep *) wire [7:0] g0 = a & ~b;
+    (* keep *) wire [7:0] e0 = ~(a ^ b);
+    (* keep *) wire [3:0] g1, e1;
+    (* keep *) wire [1:0] g2, e2;
+    genvar t;
+    for (t = 0; t < 4; t = t + 1) begin : g_l1
+        assign g1[t] = g0[2*t+1] | (e0[2*t+1] & g0[2*t]);
+        assign e1[t] = e0[2*t+1] & e0[2*t];
+    end
+    for (t = 0; t < 2; t = t + 1) begin : g_l2
+        assign g2[t] = g1[2*t+1] | (e1[2*t+1] & g1[2*t]);
+        assign e2[t] = e1[2*t+1] & e1[2*t];
+    end
+    assign gt = g2[1] | (e2[1] & g2[0]);
+    assign eq = e2[1] & e2[0];
+endmodule
+module ot_gpu_router_ps_chunksk (input wire [63:0] a, input wire [63:0] b, output wire [15:0] c);
+    genvar ch;
+    for (ch = 0; ch < 8; ch = ch + 1) begin : g_c
+        ot_gpu_router_ps_cmp8k u (.a(a[8*ch +: 8]), .b(b[8*ch +: 8]), .gt(c[2*ch+1]), .eq(c[2*ch]));
+    end
+endmodule
+
 module ot_gpu_router_topk_ps_core #(
     parameter integer N   = 384,
     parameter integer P   = 16,       // values a beat (power of two, K <= P <= 16)
@@ -371,6 +398,16 @@ module ot_gpu_router_topk_ps_core #(
     // ---- S6 / S7 / S8: NB running banks, 3-stage merge recurrence ----
     reg [EW-1:0]  R   [0:NB*K-1];          // bank b entry i at R[b*K+i]
     reg [15:0]    cc6 [0:NB*K*K-1];        // bank b: [b*K*K + i*K + j] = chunks(R_i, L_j)
+    wire [15:0]   ch6 [0:NB*K*K-1];        // r5: chunks(R_i, L_j) from kept 3-level trees
+    genvar gb6, gi6, gj6;
+    for (gb6 = 0; gb6 < NB; gb6 = gb6 + 1) begin : g_c6b
+        for (gi6 = 0; gi6 < K; gi6 = gi6 + 1) begin : g_c6i
+            for (gj6 = 0; gj6 < K; gj6 = gj6 + 1) begin : g_c6j
+                ot_gpu_router_ps_chunksk u_ck (.a({{(64-(EW-IW)){1'b0}}, R[gb6*K+gi6][EW-1:IW]}),
+                    .b({{(64-(EW-IW)){1'b0}}, L5c[gb6][gj6*EW+IW +: EW-IW]}), .c(ch6[gb6*K*K+gi6*K+gj6]));
+            end
+        end
+    end
     reg [EW-1:0]  Lc6 [0:K-1];
     reg [EW-1:0]  Lc7 [0:K-1];
     reg [NB-1:0]  mine6, fresh6;
@@ -383,7 +420,7 @@ module ot_gpu_router_topk_ps_core #(
         for (b = 0; b < NB; b = b + 1)
             for (i = 0; i < K; i = i + 1)
                 for (j = 0; j < K; j = j + 1)
-                    cc6[b*K*K+i*K+j] <= chunks(R[b*K+i][EW-1:IW], L5c[b][j*EW+IW +: EW-IW]);
+                    cc6[b*K*K+i*K+j] <= ch6[b*K*K+i*K+j];
         for (j = 0; j < K; j = j + 1) Lc6[j] <= L5c[NB][j*EW +: EW];
         for (b = 0; b < NB; b = b + 1) begin
             mine6[b] <= !rst_c && v5b && (bank5b == b);
