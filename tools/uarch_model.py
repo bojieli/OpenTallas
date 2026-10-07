@@ -47,6 +47,12 @@ def qwen_spine_cut_contract_model():
     return model()
 
 
+def hbm_relay_channel_model(**kwargs):
+    """Explicit per-route die relay sizing; no proxy physical qualification."""
+    from hbm_relay_channel_model import size_chain
+    return size_chain(**kwargs)
+
+
 def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
