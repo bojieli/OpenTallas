@@ -36,3 +36,13 @@ SU block).  The SM m2 cost is NOT inside the r16j wire baseline: that baseline p
 element latencies; the SM stream's +1.816% is relative to its own 439.9 us base and is added here in us.
 
 TOTAL at r23: +33.77 us = +6.28% vs pre-closure (die-level +25.50 us, SM +8.261 us); headline record headline_with_closure_r23.json (AR 1750.9 tok/s, MTP 3626.1 tok/s).
+
+## 2026-10-07 ~07:50 additions
+| item | cycles/token | AR % | cumulative AR % |
+|---|---|---|---|
+| attention tile r23 outline (attn agent: +1 root->quad broadcast, +2 quad->o result per tile on the critical path; +2 per tile chain hop i->o; 40 attention steps x (3 + 2 x 4 row hops)) | 440 | 0.068 | 6.35 |
+
+Conditional (priced, NOT in the total until the variant is the one that closes):
+- HA2 half-rate own-partial credit (a916e3f475e4d7ff2): +46 cycles per owner-reduction transaction (DS TP-96 NC8 PF384); x the exposed owner reductions per token (collective terms, 265) = 12,190 cyc = 10.16 us = +1.89 % AR if adopted.
+- SU reducer half-rate RHALF (hbm-su): +146 cycles per reduction chain (perf64 301 -> 447) -- only if the SAFE reducer (+4 per reduction) misses.
+- su_full DDIV 31: +10 cycles per divide op (DIVB / DIVIMM / SIGM / SILU / softplus / EGATE) -- only if hbm_su_full31 is the route that closes.
