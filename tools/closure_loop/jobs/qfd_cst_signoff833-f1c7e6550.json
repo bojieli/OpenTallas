@@ -6,7 +6,9 @@
   "hosts": [
     "ot-epyc2"
   ],
-  "host_require": true,
+  "host_require": [
+    "ot-epyc2"
+  ],
   "threads": 2,
   "peak_ram_gb": 8,
   "source": {
