@@ -308,11 +308,12 @@ def region_bounds():
 
 def bf_sites():
     if BF_PER_REGION is not None and DIE_KIND == 'layer':
-        b, s = region_bounds(), set()
-        for r in range(ROOTS):
-            ps = list(range(b[r], b[r + 1]))
-            s.update(ps[(2 * j + 1) * len(ps) // (2 * BF_PER_REGION)] for j in range(BF_PER_REGION))
-        assert len(s) == BF_PAIRS == BF_PER_REGION * ROOTS
+        # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
+        nb = BF_PER_REGION * ROOTS
+        s = {i * PAIRS // nb for i in range(nb)}
+        bd = region_bounds()
+        assert len(s) == BF_PAIRS == nb and all(sum(1 for x in s if bd[r] <= x < bd[r + 1]) == BF_PER_REGION
+                                                for r in range(ROOTS))
         return s
     nv = nv_sites()
     rest = [p for p in range(PAIRS) if p not in nv]
