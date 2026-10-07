@@ -40,7 +40,7 @@ module tb_dsrom_su_fdiv_f12_eq;
         v = 0; a = 0; b = 0; mism = 0; w0 = 0; r0 = 0;
         repeat (4) @(posedge clk);
         rst_n = 1'b1;
-        for (n = 0; n < N + DUT_DEPTH + 4; n = n + 1) begin
+        for (n = 0; n < N + 40; n = n + 1) begin
             @(posedge clk);
             if (n < N) begin
                 v <= 1'b1;

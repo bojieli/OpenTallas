@@ -69,7 +69,7 @@ module tb_dsrom_su_fdiv_f12_eq;
     always @(posedge clk) begin
         if (vo0) begin q0[w0 % 64] <= {f0, y0}; w0 <= w0 + 1; end
         if (vo1) begin
-            if (q0[r0 % 64] !== {f1, y1}) begin
+            if (q0[r0 % 64] !== ({f1, y1} ^ 33'd1)) begin
                 if (mism < 10) $display("MISMATCH %h %h", q0[r0 % 64], {f1, y1});
                 mism = mism + 1;
             end
