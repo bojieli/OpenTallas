@@ -10,7 +10,7 @@ P=$S/rtl/dsrom_sys/s81_ph
 ( cd $O/$L && verilator --binary -j 8 --timing -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINCONNECTEMPTY -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
   -Wno-PINMISSING -DOT_S81PH_PLL_MODEL --top-module tb_s81ph_coll_sys "$@" \
   $P/test/tb_s81ph_coll_sys.sv $P/dsfd_sp_collective.sv $P/coll/dsfd_coll_ck.sv $P/coll/dsfd_coll_core.sv \
-  $P/coll/ot_s81ph_coll_lane.sv $P/coll/ot_s81ph_skid.sv $P/coll/ot_s81ph_ckbuf.sv \
+  $P/coll/ot_s81ph_coll_lane.sv $P/coll/ot_s81ph_skid2.sv $P/coll/ot_s81ph_ckbuf.sv \
   $P/ot_s81ph_coll_core.sv $P/ot_s81ph_coll_rstc.sv $P/ot_s81_pll_bb.sv $P/ot_s81ph_link_ep.sv $P/ot_s81ph_link_gbx.sv \
   $P/ot_s81ph_mem1r1w.sv $P/ot_s81ph_rfifo.sv \
   $S/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv $S/rtl/link/ot_fifo_sram_fwft.sv $S/rtl/hdc/ot_hdc_fastfp.sv \

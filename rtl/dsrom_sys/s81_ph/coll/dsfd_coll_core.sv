@@ -29,9 +29,9 @@ module dsfd_coll_core (
     wire [8*552-1:0] x_lo_d, x_li_d;
     genvar l;
     generate for (l = 0; l < 8; l = l + 1) begin : g_l
-        ot_s81ph_skid #(.W(553)) u_so (.clk(clk), .rst_n(rst_n), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),
+        ot_s81ph_skid2 #(.W(553)) u_so (.clk(clk), .rst_n(rst_n), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),
             .in_d({x_lo_l[l], x_lo_d[l*552 +: 552]}), .out_v(lo_v[l]), .out_r(lo_r[l]), .out_d(lo_d[l*553 +: 553]));
-        ot_s81ph_skid #(.W(553)) u_si (.clk(clk), .rst_n(rst_n), .in_v(li_v[l]), .in_r(li_r[l]), .in_d(li_d[l*553 +: 553]),
+        ot_s81ph_skid2 #(.W(553)) u_si (.clk(clk), .rst_n(rst_n), .in_v(li_v[l]), .in_r(li_r[l]), .in_d(li_d[l*553 +: 553]),
             .out_v(x_li_v[l]), .out_r(x_li_r[l]), .out_d({x_li_l[l], x_li_d[l*552 +: 552]}));
     end endgenerate
     ot_s81ph_coll_core #(.EXT(1)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),

@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
-// ot_s81ph_skid (CLAUDE S81-PH, 2026-10-06): 2-slot skid buffer for latency-insensitive tile boundaries (DESIGN
+// ot_s81ph_skid2 (CLAUDE S81-PH, 2026-10-06): 2-slot skid buffer for latency-insensitive tile boundaries (DESIGN
 // SIMPLIFICATION RULE 2).  out_v / out_d come from the main register, in_r from the skid-valid flop: no
 // combinational path from in_* to out_* or from out_r to in_r.  Full throughput (one word a cycle).
-module ot_s81ph_skid #(parameter integer W = 8) (
+module ot_s81ph_skid2 #(parameter integer W = 8) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         in_v,
@@ -21,7 +21,11 @@ module ot_s81ph_skid #(parameter integer W = 8) (
         else if (ld) begin
             if (sk_v) begin out_v <= 1'b1; sk_v <= 1'b0; end
             else out_v <= in_v;
+`ifdef S81PH_SKID2_MUT_NOSLOT
+        end                                    // mutant: the second slot is never filled (a stalled word is lost)
+`else
         end else if (in_v && !sk_v) sk_v <= 1'b1;
+`endif
     always @(posedge clk)
         if (ld) out_d <= sk_v ? sk_d : in_d;
         else if (in_v && !sk_v) sk_d <= in_d;

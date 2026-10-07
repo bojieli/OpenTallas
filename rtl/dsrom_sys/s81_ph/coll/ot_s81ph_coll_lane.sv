@@ -51,11 +51,11 @@ module ot_s81ph_coll_lane #(
     always @(posedge clk or negedge rst_n) if (!rst_n) lr <= 0; else lr <= rx;
     // core -> link
     wire iv, ir, il; wire [W-1:0] id;
-    ot_s81ph_skid #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
+    ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
         .out_v(iv), .out_r(ir), .out_d({il, id}));
     // link -> core
     wire ov, orr, ol; wire [W-1:0] od;
-    ot_s81ph_skid #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_n), .in_v(ov), .in_r(orr), .in_d({ol, od}),
+    ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_n), .in_v(ov), .in_r(orr), .in_d({ol, od}),
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
