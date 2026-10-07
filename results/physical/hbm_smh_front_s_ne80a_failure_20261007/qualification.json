@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm.front_s.protected_route_failure.v1",
+  "source_commit": "80a11cea9191ca09153367debd21e79bef473605",
+  "status": "FAIL",
+  "required_setup_ps": 15,
+  "required_hold_ps": 15,
+  "actual_setup_ps": 14.887314,
+  "actual_hold_ps": -24.549168,
+  "setup_shortfall_ps": 0.11268600000000006,
+  "hold_shortfall_ps": 39.549168,
+  "setup_path": "req_ready -> input1315/Y BUFx6f -> g_rc.u_rsk.rq D",
+  "setup_input_buffer_delay_ps": 15.92,
+  "setup_last_wire_delay_ps": 0.05,
+  "register_to_register_setup_ps": 65.98777,
+  "register_to_register_hold_ps": 15.600271,
+  "helper_cli_failure": "Original route and abstract succeeded; corner helper rejected --sdc-name; fleet ran fresh STA on preserved ODB with selected signoff SDC copied to default filename.",
+  "sdc_source_name": "6_signoff.sdc",
+  "sdc_evaluation_name": "6_final.sdc",
+  "unchanged_constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "adopted": false,
+  "remaining_gates": [
+    "Fresh endpoint census on this exact ODB; do not reuse original RTL endpoint names",
+    "Model local input data buffer change and dedicated output delay before mutation",
+    "Fresh SS/FF and DRC after ECO; no constraint changes"
+  ],
+  "evidence_sha256": {
+    "w18_sta_ff.log": "4dfc251811fc5bd3a31827d96c9841610710b0477d5559f348102b6f1519d6e1",
+    "input_hashes.json": "e6f293beeb873e4d42587e7909f9be8eba935cb70371b98661e9d93dd6e64f2c",
+    "corner_sta.json": "160d294773cc42554d37a4b2658d11684ea31bcaf1ada9e845a677fc0c78b188",
+    "w18_sta_ss.log": "cc729cb2c164af2b9d324d69f88b83e7c1f0ae158bbfcf137b2df7d5e681e1d0"
+  }
+}
