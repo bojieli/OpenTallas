@@ -90,7 +90,7 @@ def seg_stages(m, bid, L):
     extra += m.get('relay_count', {}).get(bid, 0)                 # r22: relay stations abutting block pins
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM) + extra
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r22'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r23'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -311,7 +311,11 @@ R21 = dict(R20, iv_pin_stn=True)
 #   on ready/valid paths with < ~200 ps internal (inventory, owners implement; 0 steady-state cycles); die area grows
 #   to ~55-60 % utilisation if a round overflows on real views (current overflow = the interim attention tile chain).
 R22 = dict(R21, relay_all=True)
-ADOPTED = R22
+# r23 (OWNER 2026-10-07): the hub transport gets ~2x area: SU / SFU / HC quarters x2 (registered transport tiles at
+#   ~55 % utilisation for the SU / attn / router agent), SFU between its consumers SU and HC as before; the centre
+#   channel (mid_ch) widens by the added quarter widths, so the die grows in x
+R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0)
+ADOPTED = R23
 
 
 def build(variant=None):
@@ -325,6 +329,16 @@ def build(variant=None):
     grp_w = 4 * (smw + SHAVE) + 5 * CH
     grp_h = 2 * (smh + SHAVE) + 2 * CH
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
+    if variant.get('hub_scale'):        # r23: the SU / SFU / HC quarters grow by hub_scale; the centre channel widens by
+        #   the added quarter widths on both sides (each quarter is BLOCKS mm2 / 4 over the quarter height qhc)
+        hub_h0 = up(variant.get('hub_h', 7200.0), GY)
+        hh0 = dn(hub_h0 - 2 * HCH, GY) - 0.0
+        qh0 = dn((dn(hub_h0 - 2 * HCH, GY) - HCH) / 2, GY)
+        add = 0.0
+        for n_ in (('su', 'su_fused'), ('sfu',), ('hc',)):
+            mm2 = sum(BLOCKS[x][0] for x in n_)
+            add += up(mm2 * variant['hub_scale'] / 4 * 1e6 / qh0, GX) - up(mm2 / 4 * 1e6 / qh0, GX)
+        mid_ch = up(mid_ch + 2 * add, GX)
     core_w = 2 * grp_w + mid_ch
     W = up(EDGE + SCH + core_w + SCH + strip_d + EDGE, GX)
     side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h
@@ -482,9 +496,10 @@ def build(variant=None):
         return dn(xw - w - HCH, GX), up(xe + w + HCH, GX)
     spch = variant.get('spch', SPCH)
     geo['spch'] = spch
-    xw, xe = quarters('su', BLOCKS['su'][0] + BLOCKS['su_fused'][0], sx0 - spch, sx0 + spine_w + spch)
-    xw, xe = quarters('sfu', BLOCKS['sfu'][0], xw, xe)
-    xw, xe = quarters('hc', BLOCKS['hc'][0], xw, xe)
+    hsc = variant.get('hub_scale', 1.0)
+    xw, xe = quarters('su', (BLOCKS['su'][0] + BLOCKS['su_fused'][0]) * hsc, sx0 - spch, sx0 + spine_w + spch)
+    xw, xe = quarters('sfu', BLOCKS['sfu'][0] * hsc, xw, xe)
+    xw, xe = quarters('hc', BLOCKS['hc'][0] * hsc, xw, xe)
     regions.append(dict(name='centre', kind='hub', rect=[hub['hc_SW'].x, hy0, hub['hc_SE'].x + hub['hc_SE'].w, hy1]))
     # Historical r14b remains replayable. Measured-macro revisions must supply
     # both dimensions: an area-only square can lose the required halo/grid fit.
@@ -754,6 +769,40 @@ def relay_ends(m):
     m['relay_count'] = dict(cnt)
 
 
+def hub_pin_window(mst, window):
+    """r23 (hub owner a4649202a85580933, OWNER 2x hub): the SU / SFU / HC quarter ports of each long (E / W) face sit in
+    one window <= `window` um centred on the face's port band (the bit-weighted mean of the generator's peer-projected
+    port centres), so the registered transport tiles reach every die port within ~250 um.  Ports are packed in their
+    projected order at 2 tracks per bit: M4 (0.096 um) first, the remainder on M6 (0.128 um) over the same window."""
+    byf = defaultdict(list)
+    for p_, sp_ in mst.ports.items():
+        if sp_[0] == 'face' and sp_[2] in 'EW':
+            byf[sp_[2]].append(p_)
+    for f_, pns in byf.items():
+        pns.sort(key=lambda p_: mst.ports[p_][4])
+        bits = {p_: mst.ports[p_][1] for p_ in pns}
+        c = sum(mst.ports[p_][4] * bits[p_] for p_ in pns) / max(1, sum(bits.values()))
+        lay = {'M4': [], 'M6': []}
+        span = {'M4': 0.0, 'M6': 0.0}
+        for p_ in pns:
+            for L_ in ('M4', 'M6'):
+                need = bits[p_] * Q.TRK[L_][1] * 2 + 4 * Q.TRK[L_][1]
+                if span[L_] + need <= window or L_ == 'M6':
+                    lay[L_].append(p_)
+                    span[L_] += need
+                    break
+        for L_, lst in lay.items():
+            if not lst:
+                continue
+            c_ = min(max(c, span[L_] / 2 + 2.0), mst.h - span[L_] / 2 - 2.0)
+            y = c_ - span[L_] / 2
+            for p_ in lst:
+                n_ = bits[p_] * Q.TRK[L_][1] * 2
+                sp_ = mst.ports[p_]
+                mst.ports[p_] = ('face', sp_[1], f_, L_, round(y + 2 * Q.TRK[L_][1] + n_ / 2, 4), 2)
+                y += n_ + 4 * Q.TRK[L_][1]
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -1010,6 +1059,12 @@ def share_stations(m):
         for inst, port in eps:
             pw[inst][port] = max(pw[inst].get(port, 0), bits)
     reg, faces = {}, {}
+    # r23 stable_roles: a role keeps the name it had in the registry (station_roles.json, written from the r22 build):
+    # a re-layout no longer renumbers the closed station views
+    stable = None
+    if m['variant'].get('stable_roles'):
+        rf = ROOT / 'physical/hbm_accel_die_views/station_roles.json'
+        stable = json.loads(rf.read_text()) if rf.exists() else {}
     for it in m['insts']:
         if it.kind != 'waypoint':
             continue
@@ -1024,11 +1079,19 @@ def share_stations(m):
                 best = (key, o)
         key, o = best
         if key not in reg:
-            reg[key] = f'hfd_{kind}_r{len(reg)}'
+            nm_ = stable.get(repr(key)) if stable else None
+            if nm_ is None:          # a new role: next number after every registered and used one
+                used = set(reg.values()) | set(stable.values() if stable else ())
+                k_ = 0
+                while f'hfd_{kind}_r{k_}' in used or any(v.endswith(f'_r{k_}') for v in used):
+                    k_ += 1
+                nm_ = f'hfd_{kind}_r{k_}' if stable else f'hfd_{kind}_r{len(reg)}'
+            reg[key] = nm_
             faces[reg[key]] = {p: f for p, f, _ in key[3] if f != '-'}
         it.master = reg[key]
         it.orient = o
     m['stn_faces'] = faces
+    m['station_role_keys'] = {repr(k): v for k, v in reg.items()}
     m['station_roles'] = {v: dict(kind=k[0], w_um=k[1], h_um=k[2], ports={p: w for p, _, w in k[3]},
                                   copies=sum(1 for it in m['insts'] if it.master == v)) for k, v in reg.items()}
 
@@ -1949,6 +2012,10 @@ def masters(m, k=1):
     if m['variant'].get('vm_centre_ck'):
         for name in VM_CENTRE:
             ck_centre(M[name], M[name].ports)
+    if m['variant'].get('hub_pin_window') and k == 1:    # r23: hub quarter ports in a <= 500 um window per face
+        for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
+            if nm_ in M:
+                hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
         for q in ('sw', 'se', 'nw', 'ne'):
             if f'hfd_vm_{q}' in M:

@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r19b",
- "generator_sha256": "90b905124b0c8c46fcc55d8018e268b6390d5717da3678a903201681c40c0cb7",
+ "generator_sha256": "05586902ecd332a14b544f725aa626bb24f207c8bdb4270a19c1062a068189af",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -22,9 +22,11 @@
     "ff": "hfd_attn_tile_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      1349.112,
      1349.976
@@ -113,7 +115,7 @@
   },
   "hfd_cdist_r14": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 4,
    "dir": "physical/hbm_accel_die_views/stations/hfd_cdist_r14",
    "lef": "hfd_cdist_r14.lef",
@@ -122,9 +124,11 @@
     "ff": "hfd_cdist_r14_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      111.0,
      215.976
@@ -175,7 +179,7 @@
   },
   "hfd_cdist_r15": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 4,
    "dir": "physical/hbm_accel_die_views/stations/hfd_cdist_r15",
    "lef": "hfd_cdist_r15.lef",
@@ -184,9 +188,11 @@
     "ff": "hfd_cdist_r15_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      67.8,
      203.016
@@ -247,7 +253,7 @@
   },
   "hfd_gath_r10": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r10",
    "lef": "hfd_gath_r10.lef",
@@ -256,9 +262,11 @@
     "ff": "hfd_gath_r10_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      166.728,
      315.336
@@ -309,7 +317,7 @@
   },
   "hfd_gath_r24": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r24",
    "lef": "hfd_gath_r24.lef",
@@ -318,9 +326,12 @@
     "ff": "hfd_gath_r24_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 0 missing, 0 extra, 0 wrong face, 2 wrong layer",
+     "270 pins off the generator position (same face)"
+    ],
+    "positions": "270 pins off the generator position (same face)",
     "size_view": [
      109.704,
      110.136
@@ -371,7 +382,7 @@
   },
   "hfd_gath_r25": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r25/route_cl",
    "lef": "hfd_gath_r25.lef",
@@ -406,9 +417,11 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      166.728,
      315.336
@@ -422,7 +435,7 @@
   },
   "hfd_gath_r8": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r8",
    "lef": "hfd_gath_r8.lef",
@@ -431,9 +444,11 @@
     "ff": "hfd_gath_r8_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      81.192,
      82.056
@@ -489,7 +504,7 @@
   },
   "hfd_gath_r9": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r9/route_cl",
    "lef": "hfd_gath_r9.lef",
@@ -524,9 +539,11 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      109.704,
      110.136
@@ -875,7 +892,7 @@
   },
   "hfd_meso_r28": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 9,
    "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r28",
    "lef": "hfd_meso_r28.lef",
@@ -884,9 +901,12 @@
     "ff": "hfd_meso_r28_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 0 missing, 0 extra, 0 wrong face, 1 wrong layer",
+     "977 pins off the generator position (same face)"
+    ],
+    "positions": "977 pins off the generator position (same face)",
     "size_view": [
      63.48,
      190.056
@@ -937,7 +957,7 @@
   },
   "hfd_meso_r32": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 1,
    "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r32",
    "lef": "hfd_meso_r32.lef",
@@ -946,9 +966,11 @@
     "ff": "hfd_meso_r32_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      39.288,
      285.096
@@ -1161,16 +1183,18 @@
    "lef": "hfd_serdes_slab.lef",
    "lib": null,
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
+    "verdict": "MISMATCH",
+    "problems": [
+     "size 2462.376 x 3656.856 != 5215.944 x 1725.816"
+    ],
     "positions": "exact",
     "size_view": [
      2462.376,
      3656.856
     ],
     "size_gen": [
-     2462.376,
-     3656.856
+     5215.944,
+     1725.816
     ],
     "die_top_io_pins": []
    }
@@ -1293,7 +1317,7 @@
   "hfd_stn_r11": {
    "kind": "stations",
    "status": "closed",
-   "instances": 12,
+   "instances": 13,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r11",
    "lef": "hfd_stn_r11.lef",
    "lib": {
@@ -1417,7 +1441,7 @@
   "hfd_stn_r13": {
    "kind": "stations",
    "status": "closed",
-   "instances": 12,
+   "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r13",
    "lef": "hfd_stn_r13.lef",
    "lib": {
@@ -1479,7 +1503,7 @@
   "hfd_stn_r16": {
    "kind": "stations",
    "status": "closed",
-   "instances": 24,
+   "instances": 25,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r16",
    "lef": "hfd_stn_r16.lef",
    "lib": {
@@ -1541,7 +1565,7 @@
   "hfd_stn_r17": {
    "kind": "stations",
    "status": "closed",
-   "instances": 12,
+   "instances": 14,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r17",
    "lef": "hfd_stn_r17.lef",
    "lib": {
@@ -1717,7 +1741,7 @@
   },
   "hfd_stn_r2": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r2",
    "lef": "hfd_stn_r2.lef",
@@ -1726,9 +1750,11 @@
     "ff": "hfd_stn_r2_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2 pins off the generator position (same face)"
+    ],
+    "positions": "2 pins off the generator position (same face)",
     "size_view": [
      14.664,
      142.536
@@ -1973,7 +1999,7 @@
   "hfd_stn_r23": {
    "kind": "stations",
    "status": "closed",
-   "instances": 8,
+   "instances": 12,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r23",
    "lef": "hfd_stn_r23.lef",
    "lib": {
@@ -2035,7 +2061,7 @@
   "hfd_stn_r26": {
    "kind": "stations",
    "status": "closed",
-   "instances": 2,
+   "instances": 3,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r26",
    "lef": "hfd_stn_r26.lef",
    "lib": {
@@ -2097,7 +2123,7 @@
   "hfd_stn_r27": {
    "kind": "stations",
    "status": "closed",
-   "instances": 27,
+   "instances": 36,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
    "lef": "hfd_stn_r27.lef",
    "lib": {
@@ -2283,7 +2309,7 @@
   "hfd_stn_r30": {
    "kind": "stations",
    "status": "closed",
-   "instances": 4,
+   "instances": 3,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r30",
    "lef": "hfd_stn_r30.lef",
    "lib": {
@@ -2345,7 +2371,7 @@
   "hfd_stn_r31": {
    "kind": "stations",
    "status": "closed",
-   "instances": 6,
+   "instances": 7,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
    "lef": "hfd_stn_r31.lef",
    "lib": {
@@ -2411,8 +2437,8 @@
   },
   "hfd_stn_r34": {
    "kind": "stations",
-   "status": "closed",
-   "instances": 4,
+   "status": "interim-not-closed",
+   "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r34/route_cl",
    "lef": "hfd_stn_r34.lef",
    "lib": {
@@ -2446,9 +2472,11 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "514 pins off the generator position (same face)"
+    ],
+    "positions": "514 pins off the generator position (same face)",
     "size_view": [
      72.984,
      41.016
@@ -2516,10 +2544,15 @@
    "status": "missing",
    "instances": 4
   },
+  "hfd_stn_r39": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 4
+  },
   "hfd_stn_r4": {
    "kind": "stations",
    "status": "closed",
-   "instances": 20,
+   "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r4",
    "lef": "hfd_stn_r4.lef",
    "lib": {
@@ -2787,9 +2820,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 7,
-  "closed": 37,
-  "missing": 34,
+  "interim-not-closed": 18,
+  "closed": 26,
+  "missing": 35,
   "reservation": 2
  }
 }
