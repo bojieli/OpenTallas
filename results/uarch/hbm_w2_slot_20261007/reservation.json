@@ -15,6 +15,8 @@
     "cell_budget_um2": 88383.6876384,
     "storage_bits": 69632,
     "storage_flop_lower_bound_um2": 21896,
+    "capture_successor_flop_mux_subtotal_um2": 63594.22752,
+    "remaining_decode_clock_repair_budget_um2": 24789.460118400006,
     "cell_budget_after_storage_um2": 66487.6876384,
     "domain": "stream_1p2",
     "MACs_per_cycle": 0,
@@ -26,6 +28,25 @@
     "additional_latency": "relay hops pending placed boundary contract"
   },
   "tracks": {
+    "north_arrival_bits": 1090,
+    "south_send_bits": 1090,
+    "north_south_layer": "M5",
+    "north_south_pitch_um": 0.048,
+    "north_south_capacity_bits_per_face": 4166,
+    "north_south_signal_window_um": 104.64,
+    "reducer_box_um": [
+      14163.552,
+      16169.76,
+      15563.207999999999,
+      16387.896
+    ],
+    "intervening_divider_box_um": [
+      14663.376,
+      16606.08,
+      15063.384,
+      17007.816000000003
+    ],
+    "route_requirement": "sender to reducer must detour around occupied divider; no straight-line latency credit",
     "layer": "M6",
     "pitch_um": 0.064,
     "tracks_per_bit": 2,
