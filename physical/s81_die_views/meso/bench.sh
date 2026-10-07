@@ -15,7 +15,8 @@ sys.path.insert(0, 'tools')
 import meso_fifo_campaign as C
 mode, W = sys.argv[1], Path(sys.argv[2])
 cfg = C.CONFIGS['d4_central']
-tb = C.build(W, 'mut_OFFSET' if mode == 'mut' else 'd4', cfg, 'OT_MESO_MUTANT_OFFSET' if mode == 'mut' else '')
+tb = C.build(W, 'mut_OFFSET' if mode == 'mut' else 'd4', cfg,
+             'OT_MESO_PINREG -DOT_MESO_MUTANT_OFFSET' if mode == 'mut' else 'OT_MESO_PINREG')   # PINREG = the view's RTL
 jobs = []
 for i, ph in enumerate(C.phases(8)):
     for m in ('random', 'stream', 'bp', 'reset'):

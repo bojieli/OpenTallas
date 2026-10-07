@@ -9,9 +9,9 @@ physical/s81_die_views/meso/make_sdc.sh ${CK_SS_MEAN:-150} $SRC/.views/$lab/rout
 echo "lab=$lab L=${CK_SS_MEAN:-150} $*" > $W/args
 export OT_ORFS_NUM_CORES=${CORES:-8} NUM_CORES=${CORES:-8}
 python3 tools/run_abi3_physical.py --view asap7 --top ot_meso_fifo --source rtl/common/ot_meso_fifo.sv \
-  --param W=512 --param ENABLE=1 --core-utilization 30 --place-density 0.5 --clock-port wclk \
+  --param W=512 --param ENABLE=1 --param PINREG=1 --core-utilization 30 --place-density 0.5 --clock-port wclk \
   --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC \
-  --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --hold-margin-ns 0.030 --orfs-var ADDER_MAP_FILE= \
+  --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --hold-margin-ns 0.035 --orfs-var ADDER_MAP_FILE= \
   --orfs-var SDC_FILE=/src/.views/$lab/route.sdc --step-tcl PRE_CTS=physical/s81_die_views/meso/pre_cts.tcl --step-tcl POST_CTS=physical/s81_die_views/meso/post_cts_vclk.tcl \
   --nickname-tag s81meso_$(echo $lab | tr -c "A-Za-z0-9_\n" _) --purpose signoff_target "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
