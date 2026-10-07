@@ -126,7 +126,7 @@ def cmd_run(a):
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else ""))
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly)
     with (d / "runtime.log").open("w") as log:
-        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
+        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
                        stderr=subprocess.STDOUT)
     res, meta, total, timeout = {}, {}, None, None
@@ -168,7 +168,7 @@ def cmd_run(a):
                         "issue, G1 select by the producing column)" if a.smh else
                         "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc,
                active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
-               mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows,
+               mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows, req_stalls=a.req_stalls,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                build_command=cmd, source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest()
                                                  for s in SRC + (SMH_SRC if a.smh else []) + ["tools/dshbm_sm_pq_seq.py",
@@ -226,6 +226,7 @@ def main(argv=None):
                     "late with the issue's DBF raised to match (+define+OT_SMH_MUT_BFDLY): HAZ = 1 must pass, HAZ = 0 fail")
     ap.add_argument("--neg-flip", action="store_true", help="negative control: bit 3 of every returned line flipped at the response port (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
+    ap.add_argument("--req-stalls", action="store_true", help="deterministic hub request backpressure (+REQ_STALLS)")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")

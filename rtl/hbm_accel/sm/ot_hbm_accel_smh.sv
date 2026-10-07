@@ -649,6 +649,45 @@ module ot_hbm_accel_smh_oskid #(
     always @(posedge clk) if (push) mem[wp[1:0]] <= s_data;
 endmodule
 
+// The request port at the element pins (margin m3c): req_ready lands in a flop with NO logic and the request leaves
+// from a flop (front_s m3b: req_ready -> read pointer -75 ps, read pointer -> 4:1 select -> req_addr -31 ps; an element
+// input keeps ~100 ps beyond a bare capture flop).  Two request slots take turns on the pins: the slot shown in cycle t
+// is shown again no earlier than t + 2, when the registered ready says whether it was taken (then it refills from the
+// sink queue) or not (then it is shown again).  A request is therefore never shown in two consecutive cycles, so it
+// can't be taken twice, and two slots keep one request a cycle.  Requests may leave out of order when the hub refuses one:
+// the bulk copy tags every request and accepts responses in any order (ot_hbm_accel_bulk_copy_oq5).
+module ot_hbm_accel_smh_oreq #(
+    parameter integer W = 8
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         m_valid,
+    input  wire         m_ready,
+    output wire [W-1:0] m_data
+);
+    reg         ov, qv, rq;            // shown slot valid, other slot valid, registered pin ready
+    reg [W-1:0] od, qd;
+    wire        q_taken = qv && rq;    // the other slot was shown last cycle; rq is the ready it got
+    wire        q_free  = q_taken || !qv;
+    assign s_ready = q_free;
+    assign m_valid = ov;
+    assign m_data  = od;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin ov <= 1'b0; qv <= 1'b0; rq <= 1'b0; end
+        else begin
+            rq <= m_ready;
+            ov <= q_free ? s_valid : 1'b1;
+            qv <= ov;
+        end
+    always @(posedge clk) begin
+        od <= q_free ? s_data : qd;
+        qd <= od;
+    end
+endmodule
+
 // ot_hbm_accel_smh_skid3 with every handshake PER COPY (margin m3): copy i (0 .. NS-1: the 32-bit slices; NS: the
 // source port; NS + 1: the sink port) takes its own s_valid_v[i] / m_ready_v[i] and drives its own s_ready_v[i] /
 // m_valid_v[i].  Chained slice to slice, two of these move a wide line with no signal fanning out across it.  All
@@ -1229,7 +1268,7 @@ module ot_hbm_accel_smh_front_s #(
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
     ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
-    ot_hbm_accel_smh_oskid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+    ot_hbm_accel_smh_oreq #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
         .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
     // response: stages 1 (pins) and 2 (north face) of m2's four
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(fp_v));

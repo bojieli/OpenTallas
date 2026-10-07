@@ -31,6 +31,11 @@ module tb_hbm_accel_sm_pq_seq;
     wire busy;
     reg d_valid = 0; wire d_ready; reg [31:0] d_base = 0; reg [23:0] d_lines = 0;
     wire req_v; wire [31:0] req_addr; wire [9:0] req_tag;
+    // Optional deterministic hub backpressure; also exercises alternating tagged
+    // requests in smh's registered-ready output. Default measurements unchanged.
+    reg req_stalls;
+    initial req_stalls = $test$plusargs("REQ_STALLS");
+    wire req_ready = !req_stalls || ((cyc % 97) >= 31 && (cyc % 7) >= 2);
     reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
     reg xw_en = 0; reg [XW-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
@@ -41,7 +46,7 @@ module tb_hbm_accel_sm_pq_seq;
                        .MAX_OUT(512), .HAZ(HAZ)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
-        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
+        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
@@ -52,7 +57,7 @@ module tb_hbm_accel_sm_pq_seq;
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
-        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
+        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
@@ -82,7 +87,7 @@ module tb_hbm_accel_sm_pq_seq;
     always @(posedge clk) begin
         rsp_v <= 1'b0;
         if (rst_n) begin
-            if (req_v) begin
+            if (req_v && req_ready) begin
                 pick = -1;
                 for (i = 0; i < 512; i = i + 1) if (!p_use[i] && pick < 0) pick = i;
                 p_use[pick] = 1; p_addr[pick] = req_addr; p_tag[pick] = req_tag;
