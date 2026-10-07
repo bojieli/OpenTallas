@@ -44,7 +44,7 @@ set_false_path -from [get_ports {gid* hid}]";;
   args=("${base[@]}")
   for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \
     $D/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv $D/capture_candidate/ot_hdc_v41_fh_checked_permission.sv \
-    $D/quad/ot_hdc_v41_fh_head_top.sv $D/quad/ot_hdc_v41_fh_ctl.sv; do args+=(--source $f); done
+    $D/quad/ot_hdc_v41_fh_adec.sv $D/quad/ot_hdc_v41_fh_head_top.sv $D/quad/ot_hdc_v41_fh_ctl.sv; do args+=(--source $f); done
   args+=(--param RETURN_EXTRA=6 --param SAFE=${CTL_SAFE:-1} --param OREG=${CTL_OREG:-0} --die-area 0 0 300 300
    --core-area 2 2 298 298 --core-utilization 30 --max-fanout 16);;
  ep) TOP=ot_hdc_v41_fh_ep_view
@@ -58,7 +58,7 @@ set_false_path -from [get_ports cold_n]";;
   args=("${base[@]}")
   for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \
     $D/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv $D/capture_candidate/ot_hdc_v41_fh_checked_permission.sv \
-    $D/quad/ot_hdc_v41_fh_head_top.sv; do args+=(--source $f); done
+    $D/quad/ot_hdc_v41_fh_adec.sv $D/quad/ot_hdc_v41_fh_head_top.sv; do args+=(--source $f); done
   args+=(--param FPIPE=2 --param SAFE=1 --param RETURN_EXTRA=6 --die-area 0 0 560 560 --core-area 2 2 558 558
    --core-utilization 35 --max-fanout 16);;
  elemA|elemB) TOP=ot_dsrom_head_elem; M=ot_rom_4096x274_m8

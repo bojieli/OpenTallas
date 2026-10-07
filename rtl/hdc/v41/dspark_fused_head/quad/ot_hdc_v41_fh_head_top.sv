@@ -218,20 +218,11 @@ module ot_hdc_v41_fh_head_top #(
         wire [AW-1:0] ra = ra_addr[ga*AW+:AW] - LG_BASE_WORD;
         wire [AW-1:0] wa = wr_addr[ga*AW+:AW] - LG_BASE_WORD;
         if (OREG >= 2) begin : g_fast_dec
-            // OREG=2 (2026-10-07, exact rewrite, 0 cycles): no 24-bit subtract in the ok/fault cone. With BASE constant,
-            // (a-BASE)[LG-1:0]==ga <=> a[LG-1:0]==(BASE+ga)[LG-1:0], and a>=BASE && ((a-BASE)>>LG)<ROWS <=>
-            // BASE <= a < BASE+(ROWS<<LG): two parallel constant compares. The row needs only the low LG+9 bits.
-            localparam [AW-1:0] LIM = LG_BASE_WORD + (AW'(ROWS) << LG);
-            localparam [LG-1:0] LOWB = LG'(LG_BASE_WORD + ga);
-            wire [AW-1:0] a_r = ra_addr[ga*AW+:AW], a_w = wr_addr[ga*AW+:AW];
-            assign read_ok[ga] = ra_re[ga] && a_r >= LG_BASE_WORD && a_r < LIM && a_r[LG-1:0] == LOWB;
-            assign write_ok[ga] = wr_en[ga] && a_w >= LG_BASE_WORD && a_w < LIM && a_w[LG-1:0] == LOWB;
-            wire [LG+8:0] rs = a_r[LG+8:0] - LG_BASE_WORD[LG+8:0], ws = a_w[LG+8:0] - LG_BASE_WORD[LG+8:0];
-            assign read_row[ga*9+:9] = rs[LG+8:LG];
-            assign write_row[ga*9+:9] = ws[LG+8:LG];
-`ifndef SYNTHESIS
-            initial if (LG_BASE_WORD + (ROWS << LG) >= (1 << AW)) $fatal(1, "OREG=2 decode needs BASE+(ROWS<<LG) < 2^AW");
-`endif
+            // OREG=2 (2026-10-07, exact, 0 cycles): subtract-free decode (ot_hdc_v41_fh_adec; tb_fh_adec equivalence)
+            ot_hdc_v41_fh_adec #(.AW(AW), .LG(LG), .ROWS(ROWS), .GA(ga), .BASE(LG_BASE_WORD)) u_rdec (
+                .en(ra_re[ga]), .a(ra_addr[ga*AW+:AW]), .ok(read_ok[ga]), .row(read_row[ga*9+:9]));
+            ot_hdc_v41_fh_adec #(.AW(AW), .LG(LG), .ROWS(ROWS), .GA(ga), .BASE(LG_BASE_WORD)) u_wdec (
+                .en(wr_en[ga]), .a(wr_addr[ga*AW+:AW]), .ok(write_ok[ga]), .row(write_row[ga*9+:9]));
         end else begin : g_sub_dec
         assign read_ok[ga] = ra_re[ga] && ra_addr[ga*AW+:AW] >= LG_BASE_WORD && ra[LG-1:0] == ga && (ra >> LG) < ROWS;
         assign write_ok[ga] = wr_en[ga] && wr_addr[ga*AW+:AW] >= LG_BASE_WORD && wa[LG-1:0] == ga && (wa >> LG) < ROWS;
