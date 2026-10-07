@@ -20,5 +20,7 @@
 | VM quadrant tiles (+2/x load, +2/barrier) | 1268 | 0.197 | 2.42 |
 | cmdproc +3/command | 1029 | 0.160 | 2.58 |
 | loader ck/2 (off token path) | 0 | 0 | 2.58 |
+| r19b pin-abutting stations (attn roots into index bands, index-key ends; +1 hop each) | 41 | 0.006 | 2.59 |
+| SM m3 (front strips + tileW macro registers) over SM m2 (SM stream: m2 +1.816% AR is the SM element structural cost, tracked by the SM stream) | 400 | 0.062 | 2.65 |
 
-Cumulative +2.58% vs the r16j wire base (= +2.37% margin over the r17-staged wire base 538.478 us); MTP +1.15%. Pending: SM front +3-5 cyc/op, SU reducer SAFE ~+4/reduction, HA2 +1 edge, VM quadrant hops (measured), SM 3x3 grid lever (gives back up to the SM interim faces 0.46%). Source: recompose_r19_r13wire__cp_in_su.json
+Cumulative +2.65% vs the r16j wire base (2026-10-07: +r19b pin stages, +SM m3; was +2.58%) (= +2.37% margin over the r17-staged wire base 538.478 us); MTP +1.15%. Pending: SU reducer SAFE ~+4/reduction, HA2 +1 edge, VM quadrant hops (measured), SM 3x3 grid lever (gives back up to the SM interim faces 0.46%). Source: recompose_r19_r13wire__cp_in_su.json
