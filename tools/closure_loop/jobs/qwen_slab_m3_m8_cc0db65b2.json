@@ -47,7 +47,8 @@
       "threads": 16,
       "peak_ram_gb": 20,
       "needs": [
-        "orfs"
+        "orfs",
+        "yosys"
       ]
     },
     "collect": {
