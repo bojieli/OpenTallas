@@ -174,7 +174,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # docs/MICROARCH_MODEL.md DS HBM annotations are pinned (unlisted -> 2) (1383 -> 1397).
     # docs/ANALYTICAL_REPORT.md Qwen ROM AR-mode (speculation break-even) annotations (280 -> 299) (1397 -> 1416).
     # docs/ANALYTICAL_REPORT.md Qwen ROM closed-configuration headline annotations (299 -> 302) (1416 -> 1419).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1419
+    # docs/ANALYTICAL_REPORT.md "two rates" section states the closed token (194,226 / 6,178.4 / measured 193,955)
+    # ahead of the layer composition the DSpark verdict uses (302 -> 305) (1419 -> 1422).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1422
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

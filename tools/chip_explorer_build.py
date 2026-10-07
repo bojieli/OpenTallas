@@ -196,8 +196,11 @@ for i, s in enumerate(segs):
                         cats={k: round(v, 4) for k, v in s['cats'].items()}, n=len(s['nodes']),
                         nodes=s['nodes']))
 D['ds_stages'] = V(seg_out, 'us', 'measured', DSC + ' critical_path[] (1,762 nodes; 1,664 measured, 59 measured+vendor PHY budget, 38 inside-measured); split at each stage hop')
-D['ds_extra_hops'] = V(dict(count=23, us_each=round(dsc['info']['hop_us'], 4), total=dsc['critical_path_us_by_class']['extra_S81_hops']), 'us', 'measured',
-                       DSC + " critical_path_us_by_class.extra_S81_hops; tools/dsrom_1m_measure.py S81_EXTRA_HOPS = 81 - 58 (the S81 build adds 23 stage hops to the S58 graph)",
+_qx_hops = dsc['info'].get('r8_reprice', {}).get('extra_stage_hops', 0)   # default q-element frame (+4 at f183.60)
+_n_extra = 23 + _qx_hops
+assert abs(_n_extra * dsc['info']['hop_us'] - dsc['critical_path_us_by_class']['extra_S81_hops']) < 0.01, 'extra hop count does not reproduce extra_S81_hops'
+D['ds_extra_hops'] = V(dict(count=_n_extra, s81=23, qelem=_qx_hops, us_each=round(dsc['info']['hop_us'], 4), total=dsc['critical_path_us_by_class']['extra_S81_hops']), 'us', 'measured',
+                       DSC + " critical_path_us_by_class.extra_S81_hops; tools/dsrom_1m_measure.py S81_EXTRA_HOPS = 81 - 58 (the S81 build adds 23 stage hops to the S58 graph) + info.r8_reprice.extra_stage_hops (" + str(_qx_hops) + " for the default q-element frame " + str(dsc['info'].get('r8_reprice', {}).get('geom', '')) + ")",
                        note='Where the 23 extra stage boundaries fall is not in the composition record; the ribbon draws them as unplaced hop-only stages.')
 D['ds_by_class'] = V(dsc['critical_path_us_by_class'], 'us', 'measured', DSC + ' critical_path_us_by_class')
 D['ds_mtp'] = V(dict(II=dsc['MTP']['II_us'], verify=dsc['MTP']['verify_us'], draft=dsc['MTP']['draft_us'], seed=dsc['MTP']['seed_commit_us'],
@@ -476,8 +479,10 @@ D['fused_chains'] = V([
 D['spec_table'] = V([
     ['Qwen3-8B ROM, 8K, STREAM4', 'none: compute-bound, KV fill hidden', 5282, '17,197 (4)', 3.26, 0.70],
     ['Qwen3-8B HBM accelerator, TP4, 8K', 'weight stream', 17237, '16,044 (4)', 0.93, 2.28],
-    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '620.1 us/token', '748.9 us (6)', 1.21, 2.77],
-], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row predates the current 592.9 us recovery composition.')
+    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '597.0 us/token', '723.6 us (6)', 1.21, 2.73],
+], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row = ' + CMP + ' ds_rom (default q-element) at the published tau 3.8879, verify from ' + DSC + '.')
+assert D['spec_table']['v'][2][2] == f"{ds['AR_us']:.1f} us/token" and D['spec_table']['v'][2][3] == f"{dsc['MTP']['verify_us']:.1f} us (6)", 'Table 8-14a DS row is stale against ' + CMP
+assert D['spec_table']['v'][2][5] == round(ds['MTP_tok_s_tau_published'] / ds['AR_tok_s'], 2), 'Table 8-14a DS speculative ratio is stale'
 
 # ---------------------------------------------------------------- links (array views) and racks (rack view)
 # Bandwidths set the drawn stroke width of each link; latencies feed the link-class tables.

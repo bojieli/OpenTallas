@@ -228,7 +228,7 @@ function drawDsRibbon(svg){
   const gridW = perRow * (cw + gx) - gx, xs = Math.round((W - gridW) / 2);
   linkDefs(svg);
   const lay = svgEl('g', {}, svg);
-  const head = narrow ? [`token → ${segs.length} stretches + ${extra.count} hop-only stages`, `= ${segs.length + extra.count - 1} stage hops, serpentine`] : [`token → ${segs.length} critical-path stretches + ${extra.count} S81 hop-only stages = ${segs.length + extra.count - 1} stage hops · serpentine: left to right, then right to left`];
+  const head = narrow ? [`token → ${segs.length} stretches + ${extra.count} hop-only stages`, `= ${segs.length + extra.count - 1} stage hops, serpentine`] : [`token → ${segs.length} critical-path stretches + ${extra.count} hop-only stages (${extra.s81} S81 + ${extra.qelem} q-element frame) = ${segs.length + extra.count - 1} stage hops · serpentine: left to right, then right to left`];
   head.forEach((l, i) => txt(lay, xs, 16 + i * 15, l));
   const y0 = 16 + head.length * 15 + 12;
   const pos = k => { const r = Math.floor(k / perRow), c = k % perRow, cc = r % 2 ? perRow - 1 - c : c; return {r, c, x: xs + cc * (cw + gx), y: y0 + r * (ch + gy)}; };
@@ -258,7 +258,7 @@ function drawDsRibbon(svg){
       g.addEventListener('dblclick', () => { state.arraySel = k; state.arrayZoom = 'stage'; renderArray(); });
     } else {
       svgEl('rect', {x: x + 1, y: y + 2, width: cw - 2, height: ch - 4, fill: 'url(#hatchArr)', stroke: css('--die-edge'), 'stroke-width': 0.6, 'stroke-dasharray': '3 2'}, g);
-      g.addEventListener('mousemove', ev => showTip(`<b>S81 hop-only stage</b><br>one of ${extra.count} extra stage hops (${fmt(extra.us_each, 4)} µs each, ${fmt(extra.total, 3)} µs total).<br>Its position in the pipeline is not in the composition record.`, ev));
+      g.addEventListener('mousemove', ev => showTip(`<b>Hop-only stage</b><br>one of ${extra.count} extra stage hops (${extra.s81} S81 + ${extra.qelem} q-element frame) (${fmt(extra.us_each, 4)} µs each, ${fmt(extra.total, 3)} µs total).<br>Its position in the pipeline is not in the composition record.`, ev));
       g.addEventListener('mouseleave', hideTip);
     }
     if (k < total - 1){
@@ -1016,7 +1016,7 @@ function renderWaterfall(){
   if (d === 'ds'){
     const segs = val(DATA.ds_stages); let t = 0;
     segs.forEach((s, k) => { const parts = []; for (const n of s.nodes){ parts.push({ t0: t, d: n[1], c: catDs(n[0]), name: n[0] }); t += n[1]; } parts.push({ t0: t, d: s.hop, c: 'hop', name: s.hop_node || 'token return' }); t += s.hop; rows.push({ label: (s.layers.join(' ') || 'pass').replace(/L(\d+)/g, 'L$1'), parts }); });
-    const ex = val(DATA.ds_extra_hops); rows.push({ label: '+23 hops', parts: [{ t0: t, d: ex.total, c: 'hop', name: '23 extra S81 stage hops' }] }); t += ex.total; total = t; legendKeys = ['field', 'su', 'attn', 'hop', 'head'];
+    const ex = val(DATA.ds_extra_hops); rows.push({ label: `+${ex.count} hops`, parts: [{ t0: t, d: ex.total, c: 'hop', name: `${ex.count} extra stage hops (${ex.s81} S81 + ${ex.qelem} q-element frame)` }] }); t += ex.total; total = t; legendKeys = ['field', 'su', 'attn', 'hop', 'head'];
     $('wfLede').innerHTML = `Every node on the DeepSeek ROM token's critical path at 1M, one row per stretch between stage hops. Total ${fmt(total, 3)} µs = ${fmt(val(DATA.rates.ds.AR), 1)} tok/s. ${pill(st(DATA.ds_stages))}`;
   } else if (d === 'qwen'){
     const L = val(DATA.qwen_layers); const ps = val(DATA.qwen_phase_split); unit = 'cycles';
