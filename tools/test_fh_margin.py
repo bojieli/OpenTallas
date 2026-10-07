@@ -52,6 +52,22 @@ BENCH = {
       'pin_wdata_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', 's_wdata <= s_wdata0;', 's_wdata <= wr_data_in;'),
       'pin_rok_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', 'assign rok_q = rok_p;', 'assign rok_q = rok;'),
       'wok_mask': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.write_ok_d(wok_q && s_wmask[l])', '.write_ok_d(wok_q)')}),
+  'endpoint_fpipe2': dict(top='tb_fh_checked_permission', params=['-GMARGIN=1', '-GFPIPE=2'],
+      srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+            f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/margin/tb_fh_margin_checked_permission.sv'], mut={
+      'pin_data_skip': (f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', 'data_q<=head_data;', 'data_q<=0;'),
+      'no_wide_veto': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'wide_bad=FPIPE?checked_error:', 'wide_bad=FPIPE?1\'b0:'),
+      'drop_bank0': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', '.bad({metadata_bad,identity_bad,request_bad,reply_bad})', '.bad({metadata_bad,identity_bad,request_bad[RB-1:1],1\'b0,reply_bad})')}),
+  'head_q_safe': dict(top='tb_fh_head_q', params=['-GFPIPE=2', '-GQPIN=1', '-GSAFE=1'], srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv'] + CTX + [SRAM,
+      'rtl/dft/ot_rom_secded_dec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_sram_return.sv',
+      f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv',
+      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
+      f'{D}/quad/tb_fh_head_q.sv'], mut={
+      'pin_wdata_skip': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', 's_wdata <= s_wdata0;', 's_wdata <= wr_data_in;'),
+      'fold_skip': (f'{D}/quad/ot_hdc_v41_fh_head_top.sv', 'assign argmax_level1=f2;', 'assign argmax_level1=^f1;'),
+      'wok_mask': (f'{D}/quad/ot_hdc_v41_fh_quad.sv', '.write_ok_d(wok_q && s_wmask[l])', '.write_ok_d(wok_q)')}),
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }

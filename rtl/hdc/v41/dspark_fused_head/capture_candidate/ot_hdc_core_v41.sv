@@ -537,7 +537,12 @@ module ot_hdc_core_v41 #(
 `else
         localparam integer FH_MARGIN=0;
 `endif
-        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(FH_MARGIN)) u_parent (
+`ifdef OT_FH_SAFE
+        localparam integer FH_SAFE=`OT_FH_SAFE;
+`else
+        localparam integer FH_SAFE=0;
+`endif
+        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(FH_MARGIN),.SAFE(FH_SAFE)) u_parent (
             .clk(clk),.rst_n(rst_n),.packet_v(me_raw_ov||(|me_raw_we)||fh_raw_leaf_v||fh_raw_warm),
             .warm(fh_raw_warm),.packet(packet),.warm_word(me_raw_addr[23:0]),.warm_mask(me_raw_mask[15:0]),
             .poison(fh_mem_poison),.address_fault(fh_mem_address_fault),.arithmetic_fault(me_internal_fault),.group_fault(4'b0),

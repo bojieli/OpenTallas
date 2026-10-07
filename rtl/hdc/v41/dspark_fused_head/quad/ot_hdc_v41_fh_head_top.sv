@@ -12,6 +12,7 @@
 module ot_hdc_v41_fh_head_top #(
     parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, ALAT = 7, RETURN_EXTRA = 5,
     parameter integer FPIPE = 1,
+    parameter integer SAFE = 0,          // retirement SAFE + registered stand-in fold (with FPIPE=2)
     parameter integer ROWS = 505,
     parameter [AW-1:0] LG_BASE_WORD = 0
 ) (
@@ -252,7 +253,7 @@ module ot_hdc_v41_fh_head_top #(
     wire [3135:0] retired_leaf;
     wire [TW-1:0] raw_tag_out;
     wire raw_v_out;
-    ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(1)) u_parent (
+    ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(1),.SAFE(SAFE)) u_parent (
         .clk(clk),.rst_n(rst_n),.packet_v(r_v_q||child_ov||(|o_we_q)||warm_emit||child_leaf_v),
         .warm(warm_emit),.packet(packet),.warm_word(q_o_addr[23:0]),.warm_mask(q_o_mask[15:0]),
         .poison(q_poison),.address_fault(address_fault),.arithmetic_fault(native_fault),.group_fault(q_group_fault),
@@ -282,5 +283,14 @@ module ot_hdc_v41_fh_head_top #(
         always @(posedge clk) c<=x0_wins?x0:x1;
         assign argmax_level1_full[CW*p+:CW]=c;
     end
-    assign argmax_level1=^argmax_level1_full;
+    if(SAFE) begin : g_fold_reg   // stand-in observation fold, registered (SAFE)
+            localparam integer NF=((1+32+NW)*(G*W/2)+63)/64;
+            wire [NF*64-1:0] ff={{(NF*64-(1+32+NW)*(G*W/2)){1'b0}},argmax_level1_full};
+            reg [NF-1:0] f1; reg f2;
+            integer fi;
+            always @(posedge clk) begin for(fi=0;fi<NF;fi=fi+1) f1[fi]<=^ff[fi*64+:64]; f2<=^f1; end
+            assign argmax_level1=f2;
+        end else begin : g_fold_direct
+            assign argmax_level1=^argmax_level1_full;
+        end
 endmodule

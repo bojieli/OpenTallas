@@ -4,7 +4,7 @@
 // PROTECT_SPLIT 1, RETIRE 1, VM_ENDPOINT 1, VM_GUARD 1); cycle-identical to it (tb_fh_head_q lockstep). The feed-through
 // inputs (res_in, o_addr1_in, o_mask1_in, leaf_mask_in, leaf_row_in, am_idx_in) go straight to quadrant pin flops.
 module ot_hdc_v41_fh_head_q #(
-    parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, FPIPE = 1, QPIN = 0
+    parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, FPIPE = 1, QPIN = 0, SAFE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -67,7 +67,7 @@ module ot_hdc_v41_fh_head_q #(
     assign native_captured_request_check = 1'b0;
     assign native_captured_reply_check = 1'b0;
     assign result_capture = 1'b0;
-    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.FPIPE(FPIPE),.RETURN_EXTRA(5+QPIN)) u_top (
+    ot_hdc_v41_fh_head_top #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.FPIPE(FPIPE),.SAFE(SAFE),.RETURN_EXTRA(5+QPIN)) u_top (
         .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.commit_ack_v(commit_ack_v),
         .native_cold_n(native_cold_n),.native_request_ready(native_request_ready),.native_reply_capture(native_reply_capture),
         .native_reply_v(native_reply_v),.native_ordinal(native_ordinal),.native_request_owner(native_request_owner),

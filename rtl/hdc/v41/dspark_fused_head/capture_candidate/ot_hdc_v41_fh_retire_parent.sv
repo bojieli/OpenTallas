@@ -4,7 +4,10 @@
 // A wrong receipt quarantines debt until reset; emission never clears debt.
 module ot_hdc_v41_fh_retire_parent #(
     parameter integer ENABLE=0, PAYLOAD_BITS=5512,
-    parameter integer MARGIN=0   // ot_hdc_v41_fh_fault_retire MARGIN (+2 retirement cycles)
+    parameter integer MARGIN=0,  // ot_hdc_v41_fh_fault_retire MARGIN (+2 retirement cycles)
+    // SAFE (default 0; needs MARGIN): +1 retirement stage (fault_retire SAFE), the receipt compare is registered (+1
+    // on the warm ACK), the sink busy is registered and the drain busy covers the two cycles after retirement
+    parameter integer SAFE=0
 )(
     input wire clk,rst_n,
     input wire packet_v, warm,
@@ -47,8 +50,18 @@ module ot_hdc_v41_fh_retire_parent #(
         reg debt,sent,protocol_fault;
         wire pipe_busy,pipe_fault;
         wire [PAYLOAD_BITS+8-1:0] retired;
-        wire matching_ack=ack_v&&debt&&sent&&ack_id==expected_id&&
-            ack_word==expected_word&&ack_mask==expected_mask;
+        wire matching_ack, ack_seen;
+        if(SAFE) begin : g_ack_reg
+            reg av,am;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) begin av<=0;am<=0; end
+                else begin av<=ack_v; am<=ack_v&&ack_id==expected_id&&ack_word==expected_word&&ack_mask==expected_mask; end
+            assign ack_seen=av; assign matching_ack=av&&am&&debt&&sent;
+        end else begin : g_ack_direct
+            assign ack_seen=ack_v;
+            assign matching_ack=ack_v&&debt&&sent&&ack_id==expected_id&&
+                ack_word==expected_word&&ack_mask==expected_mask;
+        end
         assign warm_ack=matching_ack&&!fault;
         always @(posedge clk or negedge rst_n)
             if(!rst_n) begin
@@ -64,9 +77,9 @@ module ot_hdc_v41_fh_retire_parent #(
                     end
                 end else if(warm_ack) begin debt<=0;sent<=0;end
                 if(retired_warm&&!fault) sent<=1;
-                if(ack_v&&(!debt||!matching_ack)) protocol_fault<=1;
+                if(ack_seen&&(!debt||!matching_ack)) protocol_fault<=1;
             end
-        ot_hdc_v41_fh_fault_retire #(.ENABLE(1),.PACKET_BITS(PAYLOAD_BITS+8),.MARGIN(MARGIN)) u_cut (
+        ot_hdc_v41_fh_fault_retire #(.ENABLE(1),.PACKET_BITS(PAYLOAD_BITS+8),.MARGIN(MARGIN),.SAFE(SAFE)) u_cut (
             .clk(clk),.rst_n(rst_n),.packet_v(packet_v),.packet({next_id,packet}),
             .poison(poison),.address_fault(address_fault),
             .arithmetic_fault(arithmetic_fault||protocol_fault),.group_fault(group_fault),
@@ -77,7 +90,15 @@ module ot_hdc_v41_fh_retire_parent #(
         assign retired_packet=retired[PAYLOAD_BITS-1:0];
         assign retired_warm=retired_v&&retired[0];
         // Commit pipelines remain part of drain even after output retirement.
-        assign busy=pipe_busy||sink_busy;
+        if(SAFE) begin : g_busy_reg
+            reg pb1,pb2,sb1;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) begin pb1<=0;pb2<=0;sb1<=0; end
+                else begin pb1<=pipe_busy;pb2<=pb1;sb1<=sink_busy; end
+            assign busy=pipe_busy||pb1||pb2||sb1;
+        end else begin : g_busy_direct
+            assign busy=pipe_busy||sink_busy;
+        end
         assign warm_debt=debt;
         assign fault=pipe_fault||protocol_fault;
     end endgenerate

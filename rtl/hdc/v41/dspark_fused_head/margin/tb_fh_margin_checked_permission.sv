@@ -29,6 +29,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
   if(request_checked_v||head_ack_v)$fatal(1,"early grant");
   repeat(5)tick;
   if(FPIPE)begin if(request_checked_v)$fatal(1,"grant before age 6");tick;end
+  if(FPIPE>=2)begin if(request_checked_v)$fatal(1,"grant before the pin stage");tick;end
   if(!request_checked_v||!guard_busy||captured_request!=~captured_request_check)$fatal(1,"missing checked capture");
  end endtask
  task reply(input reg wrong_owner,input reg wrong_ordinal);reg [46:0] owner;reg [31:0] ordinal;begin
@@ -39,7 +40,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
   checked_reply_capture=1;published_reply_v=1;tick;
   @(negedge fast_clk);checked_reply_capture=0;
   if(head_ack_v)$fatal(1,"early visibility");
-  repeat(4+2*FPIPE)begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
+  repeat(4+(FPIPE?2:0)+(FPIPE>=2?1:0))begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
   tick;
  end endtask
  integer cases=0;

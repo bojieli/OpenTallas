@@ -21,7 +21,10 @@ module ot_hdc_v41_fh_macro_ctx #(
     parameter integer FPIPE = 0,
     // QPIN (default 0; needs MARGIN HARD_LANE): ADDR_PIPE 3 - the quadrant input-pin request stage (+1 read and write
     // request cycle; RETURN_EXTRA = 6)
-    parameter integer QPIN = 0
+    parameter integer QPIN = 0,
+    // SAFE (default 0; with FPIPE=2): retirement SAFE (+1 stage, registered receipt compare, registered sink busy),
+    // registered stand-in fold
+    parameter integer SAFE = 0
     // MARGIN context folds the duplicate observation buses (result_capture = slices of the captured
     // request; the two check mirrors) to one tied bit and the argmax level-1 consumer registers to a
     // parity bit: the registers and every internal load stay, ~7,900 stand-in pins go.
@@ -142,7 +145,16 @@ module ot_hdc_v41_fh_macro_ctx #(
         assign native_captured_request_check=1'b0;
         assign native_captured_reply_check=1'b0;
         assign result_capture=1'b0;
-        assign argmax_level1=^argmax_level1_full;
+        if(SAFE) begin : g_fold_reg   // stand-in observation fold, registered (SAFE)
+            localparam integer NF=((1+32+NW)*(G*W/2)+63)/64;
+            wire [NF*64-1:0] ff={{(NF*64-(1+32+NW)*(G*W/2)){1'b0}},argmax_level1_full};
+            reg [NF-1:0] f1; reg f2;
+            integer fi;
+            always @(posedge clk) begin for(fi=0;fi<NF;fi=fi+1) f1[fi]<=^ff[fi*64+:64]; f2<=^f1; end
+            assign argmax_level1=f2;
+        end else begin : g_fold_direct
+            assign argmax_level1=^argmax_level1_full;
+        end
     end endgenerate
     wire native_ack_v,native_fault,native_bounds_fault,native_guard_busy;
     wire [7:0] native_ack_id;
@@ -204,7 +216,7 @@ module ot_hdc_v41_fh_macro_ctx #(
         wire [63:0] veto;
         wire [3:0] write_veto,retired_we;
         wire [3135:0] retired_leaf;
-        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(MARGIN)) u_parent (
+        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(MARGIN),.SAFE(SAFE)) u_parent (
             .clk(clk),.rst_n(rst_n),.packet_v(raw_v||child_ov||(|child_we)||child_warm||child_leaf_v),
             .warm(child_warm),.packet(packet),.warm_word(raw_addr[23:0]),.warm_mask(raw_mask[15:0]),
             .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(MARGIN?native_fault:(child_fault||native_fault)),.group_fault(MARGIN?head_group_fault:4'b0),
