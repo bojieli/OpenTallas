@@ -469,7 +469,7 @@ module ot_dsrom_su_softmax_exp_hr #(
     wire [31:0] ya, yb; wire fa, fb;
     ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u_a (.clk(gclk_a), .rst_n(rst_n), .v(vr & ~ph), .x(xr), .y(ya), .vo(), .fault(fa));
     ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u_b (.clk(gclk_b), .rst_n(rst_n), .v(vr & ph), .x(xr), .y(yb), .vo(), .fault(fb));
-    always @(posedge clk) y <= ph ? yb : ya;      // sampled in the cycle after the core's update (ph odd: A's result, even: B's)
+    always @(posedge clk) y <= ph ? ya : yb;      // A updates at the end of even cycles (ph 0), visible while ph = 1
     wire [2*DEPTH+1:0] vd;
     ot_hdc_vline #(.D(2 * DEPTH + 1)) u_vl (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
     assign vo = vd[2*DEPTH+1];
