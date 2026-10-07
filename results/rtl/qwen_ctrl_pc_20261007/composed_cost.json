@@ -1,0 +1,77 @@
+{
+  "default": {
+    "default_OFF": true,
+    "adopted": false,
+    "physical_closed": false,
+    "baseline_record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "baseline_cycles": 216713,
+    "selected_delta_cycles": {},
+    "added_cycles": 0,
+    "total_cycles": 216713,
+    "clock_hz": 1200000000.0,
+    "ar_tokens_per_second": 5537.277412983993,
+    "rate_cost_pct": 0.0,
+    "pricing_basis": "gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit",
+    "exact_connected_latency_measured": false,
+    "adoption_gate": "connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing",
+    "excluded_unpriced": "row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages"
+  },
+  "decode_only": {
+    "default_OFF": true,
+    "adopted": false,
+    "physical_closed": false,
+    "baseline_record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "baseline_cycles": 216713,
+    "selected_delta_cycles": {
+      "landing_decoder": 144
+    },
+    "added_cycles": 144,
+    "total_cycles": 216857,
+    "clock_hz": 1200000000.0,
+    "ar_tokens_per_second": 5533.600483267775,
+    "rate_cost_pct": 0.06640320579921477,
+    "pricing_basis": "gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit",
+    "exact_connected_latency_measured": false,
+    "adoption_gate": "connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing",
+    "excluded_unpriced": "row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages"
+  },
+  "controller_only": {
+    "default_OFF": true,
+    "adopted": false,
+    "physical_closed": false,
+    "baseline_record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "baseline_cycles": 216713,
+    "selected_delta_cycles": {
+      "controller_boundary": 144
+    },
+    "added_cycles": 144,
+    "total_cycles": 216857,
+    "clock_hz": 1200000000.0,
+    "ar_tokens_per_second": 5533.600483267775,
+    "rate_cost_pct": 0.06640320579921477,
+    "pricing_basis": "gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit",
+    "exact_connected_latency_measured": false,
+    "adoption_gate": "connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing",
+    "excluded_unpriced": "row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages"
+  },
+  "both": {
+    "default_OFF": true,
+    "adopted": false,
+    "physical_closed": false,
+    "baseline_record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "baseline_cycles": 216713,
+    "selected_delta_cycles": {
+      "landing_decoder": 144,
+      "controller_boundary": 144
+    },
+    "added_cycles": 288,
+    "total_cycles": 217001,
+    "clock_hz": 1200000000.0,
+    "ar_tokens_per_second": 5529.928433509523,
+    "rate_cost_pct": 0.13271828240423167,
+    "pricing_basis": "gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit",
+    "exact_connected_latency_measured": false,
+    "adoption_gate": "connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing",
+    "excluded_unpriced": "row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages"
+  }
+}

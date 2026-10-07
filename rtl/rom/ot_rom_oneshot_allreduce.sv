@@ -348,7 +348,11 @@ module ot_rom_oneshot_allreduce #(
     parameter integer BPC_NUM    = 3600,
     parameter integer BPC_DEN    = 1,
     parameter integer FW         = 32 * LANES,
-    parameter integer RB         = (N > 1) ? $clog2(N) : 1
+    parameter integer RB         = (N > 1) ? $clog2(N) : 1,
+    // MARGIN (default 0): the dies are ot_rom_oneshot_die_m (rtl/rom/ot_rom_oneshot_die_m.sv: pin registers, registered
+    // FIFO heads, ADD_LAT 7 adders, credit-based local port); the package models each sequencer's credit counter
+    // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.
+    parameter integer MARGIN     = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -378,6 +382,7 @@ module ot_rom_oneshot_allreduce #(
     genvar s, t;
     generate
         for (s = 0; s < N; s = s + 1) begin : g_die
+            if (MARGIN == 0) begin : g_e
             ot_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[s]), .in_ready(in_ready[s]), .in_data(in_data[s*FW +: FW]),
@@ -387,6 +392,24 @@ module ot_rom_oneshot_allreduce #(
                 .out_valid(out_valid[s]), .out_data(out_data[s*FW +: FW]), .out_last(out_last[s]),
                 .out_rank(out_rank[s*RB +: RB]), .out_err(out_err[s]),
                 .fault(fault[s]), .fault_code(fault_code[s*3 +: 3]));
+            end else begin : g_m
+            // the sequencer's credit counter (4 = the die's input buffer)
+            reg [2:0] lcred;
+            wire icr;
+            assign in_ready[s] = (lcred != 0);
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) lcred <= 3'd4;
+                else lcred <= lcred - ((in_valid[s] && in_ready[s]) ? 3'd1 : 3'd0) + (icr ? 3'd1 : 3'd0);
+            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4)) u_die (
+                .clk(clk), .rst_n(rst_n),
+                .in_valid(in_valid[s] && in_ready[s]), .in_cr(icr), .in_data(in_data[s*FW +: FW]),
+                .in_last(in_last[s]), .in_mode(in_mode[s]), .in_tag(in_tag[s*TAGW +: TAGW]),
+                .tx_valid(txv[s]), .tx_rec(txr[s*PW +: PW]), .tx_ready(txrdy[s*N +: N]), .cr_in(crin[s*N +: N]),
+                .rx_valid(rxv[s*N +: N]), .rx_rec(rxr[s*N*PW +: N*PW]), .cr_out(crout[s*N +: N]),
+                .out_valid(out_valid[s]), .out_data(out_data[s*FW +: FW]), .out_last(out_last[s]),
+                .out_rank(out_rank[s*RB +: RB]), .out_err(out_err[s]),
+                .fault(fault[s]), .fault_code(fault_code[s*3 +: 3]));
+            end
             for (t = 0; t < N; t = t + 1) begin : g_to
                 if (t == s) begin : g_self
                     assign txrdy[s*N + t] = 1'b1;

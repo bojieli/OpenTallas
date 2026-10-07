@@ -1,0 +1,18 @@
+{
+  "source_commit": "5e7751db8fcca4a82190716d8b3e0f5a6c99dbe0",
+  "host": "ot-agidock128",
+  "job": "qfd_embed_code_bank-5e7751db8",
+  "verdict": "FAIL",
+  "ss_setup_ps": -284.88,
+  "ff_hold_ps": -33.58,
+  "diagnosis": "STA-1554 reports every macro rd_out pin is not a valid start point: MC2 -from macro outputs is ignored. Successor must use validated -through exception and verify2cycle edge separation; output path also -49.976ps needs extra pin-launchstage. No relaxed uncertainty or ideal macro delay.",
+  "adoption_blockers": [
+    "setup/hold do not close",
+    "critical mutable credit/address metadata needs protected successor and upset failstop tests",
+    "no embedding root/distribution/shared-die integration"
+  ],
+  "record_sha256": {
+    "route_metrics.json": "943303ef9b03560c761250d21130f3d712db2133c1aa94554126601eaff3cc37",
+    "corner_sta.json": "4252b6770072c456d043fd78bf07a3ad86e30800f218505a5fb5450a9afc68b7"
+  }
+}

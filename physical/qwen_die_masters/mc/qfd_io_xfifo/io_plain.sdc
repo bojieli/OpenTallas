@@ -1,0 +1,12 @@
+# restore the plain boundary (POST_* hooks)
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.667 -clock ck [get_ports {i_ucie_tx_v i_ucie_tx[*] i_serdes_tx_v i_serdes_tx[*] o_ucie_rx_cr o_serdes_rx_cr o_seq_coll_cr}]
+set_output_delay 166.667 -clock ck [get_ports {i_ucie_tx_cr i_serdes_tx_cr o_ucie_rx_v o_ucie_rx[*] o_serdes_rx_v o_serdes_rx[*] o_seq_coll_v o_seq_coll[*] fault_ck}]
+set_input_delay 166.667 -clock cku [get_ports {o_ucie_tx_cr i_ucie_rx_v i_ucie_rx[*]}]
+set_output_delay 166.667 -clock cku [get_ports {o_ucie_tx_v o_ucie_tx[*] i_ucie_rx_cr fault_cku}]
+set_input_delay 166.667 -clock cks [get_ports {o_serdes_tx_cr i_serdes_rx_v i_serdes_rx[*]}]
+set_output_delay 166.667 -clock cks [get_ports {o_serdes_tx_v o_serdes_tx[*] i_serdes_rx_cr fault_cks}]
+set_input_delay 166.667 -clock ckd [get_ports {i_seq_coll_v i_seq_coll[*]}]
+set_output_delay 166.667 -clock ckd [get_ports {i_seq_coll_cr fault_ckd}]
+set_false_path -from [get_ports rst_n]
