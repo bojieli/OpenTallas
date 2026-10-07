@@ -1,0 +1,96 @@
+{
+  "status": "RECEIVING_EDGE_NATIVE_SERVICE_BINDING_PASS",
+  "tests": [
+    {
+      "params": {
+        "PC": 0,
+        "NEG": 0,
+        "BAD": 0,
+        "GUARD": 0
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc0_neg0_bad0_guard0.log"
+    },
+    {
+      "params": {
+        "PC": 31,
+        "NEG": 0,
+        "BAD": 0,
+        "GUARD": 0
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc31_neg0_bad0_guard0.log"
+    },
+    {
+      "params": {
+        "PC": 0,
+        "NEG": 1,
+        "BAD": 0,
+        "GUARD": 0
+      },
+      "negative_control": true,
+      "returncode": 1,
+      "log": "service_pc0_neg1_bad0_guard0.log"
+    },
+    {
+      "params": {
+        "PC": 0,
+        "NEG": 0,
+        "BAD": 1,
+        "GUARD": 0
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc0_neg0_bad1_guard0.log"
+    },
+    {
+      "params": {
+        "PC": 31,
+        "NEG": 0,
+        "BAD": 1,
+        "GUARD": 0
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc31_neg0_bad1_guard0.log"
+    },
+    {
+      "params": {
+        "PC": 0,
+        "NEG": 0,
+        "BAD": 0,
+        "GUARD": 1
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc0_neg0_bad0_guard1.log"
+    },
+    {
+      "params": {
+        "PC": 0,
+        "NEG": 0,
+        "BAD": 0,
+        "GUARD": 2
+      },
+      "negative_control": false,
+      "returncode": 0,
+      "log": "service_pc0_neg0_bad0_guard2.log"
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_ctrl_pc_protected.sv": "c73bd887cac131c11b54bf2a36275a25f00745841efa67d6cece2092aebfcb62",
+    "rtl/physical/ot_qwen_ctrl_pc_shift.sv": "0c3f8a28bee079da5a53be8aa4659be9e15db867a4c59bf980e27afe90ade165",
+    "rtl/physical/ot_hbm_r14_stream_pc_shift.sv": "be7c10a7fb5a723d873cef8f41ef5c474eb476efb4096c9e31470f4c86bcd3c5",
+    "/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv": "fc9ceae01e8f1e86ebd326db92d0dbf6248e22621bbaed8e758b77bd9450c27e",
+    "/tmp/qwen-control-binding-20261007/ot_qwen_ctrl_write_service_pc.sv": "b961cc0371beef6cec287d289a9b90e301b033f38bdaf535f8fd1439217253df",
+    "/tmp/qwen-control-binding-20261007/tb_qwen_ctrl_service_binding.sv": "e08a3baa120359a627d0347aa3e21869d7a8b1cd64d1bd0b049ebca77127e242"
+  },
+  "limits": [
+    "No analog PHY or CDC claim",
+    "Independent refresh owner remains external and must meet absolute deadlines",
+    "No local fault reset or automatic epoch restart",
+    "Actual SS/FF and mapped independent state pending"
+  ]
+}
