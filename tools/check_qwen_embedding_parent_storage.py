@@ -13,17 +13,36 @@ def bits(m,name):
     return [b[0] for _,b in rows]
 
 
+def wire_resolver(m):
+    """Trace only identified physical BUF/INV cells; preserve inversion parity."""
+    drivers={}
+    for c in m['cells'].values():
+        kind=c['type'].lstrip('\\');co=c['connections']
+        if kind in ('$_BUF_','$_NOT_') or re.fullmatch(r'(?:INV|BUF)x(?:[0-9]+(?:p[0-9]+)?|p[0-9]+|[0-9]+f)_ASAP7_75t_R',kind):
+            if len(co.get('A',[]))==len(co.get('Y',[]))==1:
+                drivers.setdefault(co['Y'][0],[]).append((co['A'][0],int(kind=='$_NOT_' or kind.startswith('INV'))))
+    def resolve(bit):
+        seen=set();parity=0
+        while bit in drivers:
+            if bit in seen or len(drivers[bit])!=1:raise ValueError('cyclic or multiply driven macro wire')
+            seen.add(bit);bit,invert=drivers[bit][0];parity^=invert
+        return bit,parity
+    return resolve
+
+
 def check(m,kind):
     width=12 if kind=='code' else 18;prefix='ia' if kind=='code' else 'row';macro='qfd_embed_ingress_'+kind
     cells=[(name,c) for name,c in m['cells'].items() if c['type']==macro]
     if len(cells)!=1 or cells[0][0]!='u_ingress':raise ValueError('exactly one real u_ingress hard macro required')
     if any('embedding_ingress_' in c['type'] for c in m['cells'].values()):raise ValueError('flattenable ingress implementation forbidden')
+    resolve=wire_resolver(m)
     conn=cells[0][1]['connections'];expected={'address_q':prefix+'_q','address_n':prefix+'_n','valid_q':'iv_q','valid_n':'iv_n','credit_q':'cr_q','credit_n':'cr_n'}
     for pin,net in expected.items():
         actual=bits(m,net)
-        if conn.get(pin)!=actual or len(actual)!=(width if pin.startswith('address') else 1):raise ValueError('wrong macro binding '+pin)
+        if len(conn.get(pin,[]))!=len(actual) or any(resolve(a)!=resolve(b) for a,b in zip(conn[pin],actual)) or len(actual)!=(width if pin.startswith('address') else 1):raise ValueError('wrong macro binding '+pin)
     for pin,port in {'clk':'clk','rst_n':'rst_n','address':'i_addr' if kind=='code' else 'i_row','valid':'i_v','credit':'o_cr'}.items():
-        if conn.get(pin)!=m['ports'][port]['bits']:
+        source=m['ports'][port]['bits']
+        if len(conn.get(pin,[]))!=len(source) or any(resolve(a)!=(b,0) for a,b in zip(conn[pin],source)):
             raise ValueError('wrong macro input binding '+pin)
     pairs=[('fault','fault_n',1),('wp','wp_n',2),('rp','rp_n',2),('credits','credits_n',4),('phase','phase_n',1),('valid_pipe','valid_n',4),('addr_q','addr_n',12),('ce_q','ce_n',1)]
     pairs += [(f'fifo[{i}]',f'fifo_n[{i}]',width) for i in range(2)]

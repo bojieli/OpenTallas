@@ -11,6 +11,32 @@ import shutil
 Y=Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys';Y=str(Y) if Y.exists() else shutil.which('yosys')
 if not Y:raise ValueError('Yosys required')
 lib=C/'results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib'
+
+def wire_cases(m,kind):
+    rows=[]
+    for mode in ('buffered','double_inverted','inverted_clock','swapped_address','logic_cone','cycle'):
+        n=copy.deepcopy(m);nextbit=max(b for x in n['netnames'].values() for b in x['bits'] if isinstance(b,int))+1
+        def cell(name,a,inv=False):
+            nonlocal nextbit
+            b=nextbit;nextbit+=1
+            n['cells'][name]=dict(type=('INVx1' if inv else 'BUFx2')+'_ASAP7_75t_R',connections={'A':[a],'Y':[b]})
+            return b
+        co=n['cells']['u_ingress']['connections']
+        for pin in ('clk','rst_n','address','valid','credit'):
+            co[pin]=[cell('repair_'+pin+str(i),b) for i,b in enumerate(co[pin])]
+        n['netnames']['iv_q']['bits']=[cell('repair_macro_output',co['valid_q'][0])]
+        if mode=='double_inverted':co['clk']=[cell('inv2',cell('inv1',co['clk'][0],True),True)]
+        elif mode=='inverted_clock':co['clk']=[cell('bad_inv',co['clk'][0],True)]
+        elif mode=='swapped_address':co['address'][0],co['address'][1]=co['address'][1],co['address'][0]
+        elif mode=='logic_cone':n['cells']['repair_clk0']['type']='AND2x2_ASAP7_75t_R';n['cells']['repair_clk0']['connections']['B']=['1']
+        elif mode=='cycle':n['cells']['repair_clk0']['connections']['A']=co['clk']
+        expected=mode in ('buffered','double_inverted')
+        try:check(n,kind);accepted=True
+        except (ValueError,AssertionError):accepted=False
+        if accepted!=expected:raise RuntimeError('incorrect physical wire verdict '+kind+' '+mode)
+        rows.append(dict(kind=kind,test=mode,accepted=accepted,expected=expected))
+    return rows
+
 results=[]
 for kind in ('code','scale'):
     top=f'ot_qwen_embed_{kind}_bank_parent'
@@ -33,5 +59,6 @@ for kind in ('code','scale'):
         try:check(bad,kind)
         except ValueError as e:results.append(dict(kind=kind,test=mode,result='REJECTED',reason=str(e)))
         else:raise RuntimeError('mutant escaped '+mode)
+    results.extend(wire_cases(m,kind))
 (R/'mapped_validation.json').write_text(json.dumps(results,indent=2)+'\n')
 print(json.dumps(results,indent=2))
