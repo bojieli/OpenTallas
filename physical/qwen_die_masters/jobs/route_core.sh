@@ -20,7 +20,14 @@ python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --ou
 mkdir -p $R/context_src/rtl $R/context_src/physical
 $Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1 || exit 5
 cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/; mkdir -p $R/context_src/tools; cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/
-( cd $R/context_src && rm -rf .git && git init -q && git -c user.name=Claude -c user.email=claude@opentallas.local add -A . && git -c user.name=Claude -c user.email=claude@opentallas.local commit -qm "core ctx $NAME" )
+if [ "${CORE_DIE_IO:-0}" = 1 ]; then
+  # Apply the selected die load in both the measured boundary and the plain
+  # inter-stage SDC, so route, final STA and hold ECO keep the same contract.
+  for f in io_plain.sdc io_ref_skew.sdc; do
+    echo 'source /src/physical/qwen_core_ctx/die_io80.sdc' >> "$R/context_src/physical/qwen_core_ctx/$f"
+  done
+fi
+( cd $R/context_src && rm -rf .git && git init -q && git -c user.name=Claude -c user.email=claude@opentallas.local add rtl/control_context.v physical/qwen_core_ctx tools/orfs_allcorner_spef.py && { [ ! -d configs ] || git add configs; } && git -c user.name=Claude -c user.email=claude@opentallas.local commit -qm "core ctx $NAME" )
 D=/src/physical/qwen_core_ctx
 HOOK=(--orfs-var QCC_SDC_DIR=$D --orfs-var PRE_CTS_TCL=$D/pre_cts_skew.tcl --orfs-var POST_CTS_TCL=$D/post_plain.tcl
       --orfs-var PRE_GLOBAL_ROUTE_TCL=$D/pre_ref_skew.tcl --orfs-var POST_GLOBAL_ROUTE_TCL=$D/post_plain.tcl
