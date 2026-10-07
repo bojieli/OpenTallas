@@ -7,6 +7,7 @@
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
 #     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (mm by default = rev 3 multi-mode; ff = FF-only; auto = legacy two-corner detection),
 #     ALLOW_FRESH_GRT (0 by default; 1 permits fresh routing with explicit result provenance, unchanged acceptance),
+#     FREEZE / KEEPWIRES (0: opt-in macro-output / untouched-net wire preservation; rejected wires retry in a fresh process),
 #     WINDOW_ONLY (1: endpoint window report only, no ECO), MACROS (src-rel macro view dirs), THREADS (8), BUF (max buffer %, 30)
 # per pass k (<out>/pass<k>/):
 #   1. both corners' EFFECTIVE sign-off SDC from the current db (hold_eco_corner.tcl, one single-corner session each,
@@ -67,10 +68,9 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
            -e OT_RES_AWARE=${RESAWARE:-1} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8}
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
-           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0})
-  # Default FF-only: matching the worst SS/FF margins does not prove that
-  # every SS hold endpoint is irrelevant to a two-corner repair. Keep the
-  # legacy automatic selection available only by explicit request.
+           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0})
+  # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
+  # Legacy merged-corner selection remains an explicit request.
   SESSION=ff
   if [ "$ECO_SESSION" = mm ]; then
     # rev 3 default: multi-mode session (scene ss: SS effective SDC with hold false-pathed; scene ff: FF effective SDC
@@ -78,26 +78,38 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
     SESSION=mm
     { cat $P/eff_ss.sdc; echo 'set_false_path -hold -to [all_clocks]'; } > $P/mode_ss.sdc
     { cat $P/eff_ff.sdc; echo 'set_false_path -setup -to [all_clocks]'; } > $P/mode_ff.sdc
-    orun $P/eco_mm.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=mm -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
+    SARGS=(-e OT_SESSION=mm -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
       -e OT_PRE_SPEF=/inspef/$(basename $CUR_SPEF) \
-      -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true
+      -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF)
+    orun $P/eco_mm.log hold_eco.tcl "${ECO_ENV[@]}" "${SARGS[@]}" || true
     if grep -q "OT_ECO session_mismatch" $P/eco_mm.log; then
       SESSION=ff; grep "OT_ECO session_mismatch" $P/eco_mm.log | tee -a $OUT/eco.log
     fi
   fi
   if [ "$ECO_SESSION" = auto ]; then
     SESSION=two
-    orun $P/eco_two.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=two -e OT_SDC=/p/merged.sdc -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true
+    SARGS=(-e OT_SESSION=two -e OT_SDC=/p/merged.sdc -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF)
+    orun $P/eco_two.log hold_eco.tcl "${ECO_ENV[@]}" "${SARGS[@]}" || true
     if grep -q "OT_ECO session_mismatch" $P/eco_two.log; then
       SESSION=ff; grep "OT_ECO session_mismatch" $P/eco_two.log | tee -a $OUT/eco.log
     fi
   fi
   if [ "$SESSION" = ff ]; then
     rm -f $EB/pre_eco.spef
-    orun $P/eco_ff.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=ff -e OT_SDC=/p/eff_ff.sdc \
-      -e OT_SS_SLACK=/p/eff_ss.sdc.slack -e OT_SS_CRIT=/p/eff_ss.sdc.crit || true
+    SARGS=(-e OT_SESSION=ff -e OT_SDC=/p/eff_ff.sdc -e OT_SS_SLACK=/p/eff_ss.sdc.slack -e OT_SS_CRIT=/p/eff_ss.sdc.crit)
+    orun $P/eco_ff.log hold_eco.tcl "${ECO_ENV[@]}" "${SARGS[@]}" || true
   fi
-  L=$P/eco_$SESSION.log; cat $L >> $OUT/eco.log
+  L=$P/eco_$SESSION.log
+  if grep -q "OT_ECO freeze_rejected" $L; then
+    # DRT refused the kept wires: the same pass in a FRESH session with every wire stripped (a 2nd detailed_route in one
+    # session corrupted it on cmdproc_n)
+    grep "OT_ECO freeze_rejected" $L | tee -a $OUT/eco.log; mv $L $P/eco_${SESSION}_kept.log
+    mv "$EB" "${EB}_kept"
+    mkdir -p "$EB"
+    cp "$OB/6_final.sdc" "$EB/6_final.sdc"
+    orun $L hold_eco.tcl "${ECO_ENV[@]}" "${SARGS[@]}" -e OT_FREEZE_MACRO_NETS=0 -e OT_KEEP_UNTOUCHED=0 || true
+  fi
+  cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
   grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
   python3 tools/w18/corner_sta.py $CS_ARGS --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \

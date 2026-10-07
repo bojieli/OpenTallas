@@ -226,3 +226,14 @@ is disabled for these three rebinds pending parent review.
   mm: SS +16.0 / FF +17.1 after 2 passes; router dv12: SS +24.56 kept (+22.5 routed) while FF -8.6 -> +7.3 in pass 1.
 - Only HB1/HB2 delay cells; post-repair setup guard: ECO cells on any SS path under the setup margin are removed.
 - Macro-output net freeze exists (`OT_FREEZE_MACRO_NETS=1`) but is OFF: it corrupted the session on hbm_cmdproc_n.
+
+### Preserved-wire fallback recovery (2026-10-07)
+`hold_eco.sh` accepts `FREEZE=1` (macro-output nets) or `KEEPWIRES=1`
+(untouched nets). Both remain off by default; physical benefit and stability are
+not established. If detailed routing rejects preserved wires, the Tcl process
+exits instead of attempting another detailed route in the damaged session. The
+shell preserves the rejected log as `eco_<session>_kept.log` and output as
+`base_kept`, then repeats from the original route in a fresh process with both
+options disabled. SS/FF/DRC acceptance is unchanged. The local shell/Tcl fixture
+covers session arguments, retained failure evidence, and the clean retry; it is
+not physical validation of either wire-preservation option.
