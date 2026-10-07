@@ -1,0 +1,42 @@
+{
+  "scope": "local generic Yosys mapped netlist; NOT actual fleet ORFS/ASAP7 or physical timing",
+  "tool": "Yosys 0.9 (git sha1 1979e0b)",
+  "source_hashes": {
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv": "69dbfea11f7756c0a5da3dcee59adef3a5cfdb62da77fdd5e9615c48a78fb753",
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv": "fe13809162a3e9bbfda458d5a2a7353885f69515f331ec4cfcc2e971819d2905",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784"
+  },
+  "helper_extraction": "exact selected module text; unrelated original modules omitted for old local parser compatibility",
+  "recipe": "read_verilog -sv SOURCES; hierarchy -top ot_hbm_sm_serial_protected -chparam ENABLE 1 -chparam PROTECT 1; synth -top ot_hbm_sm_serial_protected -flatten; check; write_json",
+  "mapped_owner_banks": {
+    "a": {
+      "flops": 2671,
+      "attributes": {
+        "dont_touch": 1,
+        "keep": 1,
+        "keep_hierarchy": 1,
+        "src": "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:56"
+      }
+    },
+    "g_secondary.b": {
+      "flops": 2671,
+      "attributes": {
+        "dont_touch": 1,
+        "keep": 1,
+        "keep_hierarchy": 1,
+        "src": "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:58"
+      }
+    }
+  },
+  "total_mapped_flops": 5343,
+  "driven_owner_nets_disjoint": true,
+  "wrapper_generic_gate_depth": 20,
+  "state_parity_generic_gate_depth": 12,
+  "blocked_gate_depth": 19,
+  "blocked_direct_cell_pin_fanout": 13,
+  "target_clock_qualified": false,
+  "actual_flow_preservation_qualified": false,
+  "passed": true
+}
