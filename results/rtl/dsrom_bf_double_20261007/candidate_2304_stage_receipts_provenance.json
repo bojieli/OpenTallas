@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.dsrom.bf-double.receipts-provenance.v1",
+ "candidate": "results/uarch/dsrom_bf_candidates_20261007/mixed2304",
+ "adopted": false,
+ "receipt": "results/rtl/dsrom_bf_double_20261007/candidate_2304_stage_receipts.json",
+ "receipt_sha256": "34353748a408a227271a5bbed152f07107513c9d6ac788458d1939672864e6c2",
+ "source_commit": "505a9b484ce530002426e389cccee089eaa8f24d",
+ "script_sha256": "79893ee988085d2267bbde824cdcee8f36d7be31e14d692f90ee7b1206b80b1c",
+ "validation": {
+  "stage_count": 77,
+  "pairs_per_stage": 2304,
+  "rank": 0,
+  "all_input_sha256_match": true,
+  "maximum_source_phases": 624,
+  "maximum_PHW": 10
+ },
+ "scope": "Stage emitter generated configuration ROM and scheduler images for all77 rank0 stages. Images were deleted by the original script after emission. No native BF/hph RTL integration or physical closure is implied. Original release path in receipt is historical; input hashes identify this unadopted candidate.",
+ "tool_sha256": {
+  "tools/dsrom_s81_execution_binding.py": "0e336ed78c66da21c6546119afbd8232ba0a3074728501f758660777c74cb9de",
+  "tools/dsrom_stage_program_join.py": "79c64e25b135e5191c8c63aa0a612dbec6705e561cfe41bb805f366111c23235"
+ }
+}
