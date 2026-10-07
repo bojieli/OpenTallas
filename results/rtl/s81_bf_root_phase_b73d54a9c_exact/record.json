@@ -1,0 +1,32 @@
+{
+  "status": "PASS_FULL_PAIR_TRANSACTION_EXACTNESS",
+  "source_commit": "b73d54a9c1ddf91394b8adfb50386d6905153b6d",
+  "job": "bf_root_phase_b73d54a9c_archive",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/bf_root_phase_b73d54a9c_archive",
+  "candidate_parameters": {
+    "HALF": 1,
+    "PINREG": 1,
+    "HITFIX": 1,
+    "ROOT_PHASE": 1
+  },
+  "positive": {
+    "cycles": 124422,
+    "rows": 456,
+    "value_assertions": 912,
+    "config_assertions": 448,
+    "wake_assertions": 1990752,
+    "transaction_partials_compared": 456
+  },
+  "negative_controls": [
+    "mutant_front_pair: explicit DIFF TXN fatal",
+    "mutant_half_pv: explicit DIFF TXN fatal"
+  ],
+  "physical_closed": false,
+  "adopted": false,
+  "artifact_sha256": {
+    "bench/terminal.json": "70e9ab99ae2646ff9b37397cd896cf9f8a8329a0076d4cadd70d6acdb8834f07",
+    "bench/positive/run.log": "dd7c9e0818f5fa2d542c793bf34a8cb3cd83ba5f051e1408df35b3f067e4c523",
+    "bench/mutant_front_pair/run.log": "438d6c245be604bc1189159cee57c908356ec3e8ccfe89ac9ca0d5e22276a9a6",
+    "bench/mutant_half_pv/run.log": "67bf8e5dd20cb1a0995a564a706670d9c3d599f67bf77cf890eaf6c4a35e4750"
+  }
+}
