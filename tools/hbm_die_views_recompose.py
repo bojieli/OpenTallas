@@ -48,8 +48,13 @@ import hbm_accel_die_price as PR  # noqa: E402
 # 2, 5), added cycles per face = N - 1 over the pre-margin pin flop): collective SU faces 4/4 -> +3 +3, endpoint <->
 # SerDes llk 3 -> +2 +2, VM f_su 5 (SE/SW, bound) -> +4 and x faces 3 -> +2, cmdproc issue faces c* 3 -> +2; router keeps
 # face_stages 5 (+4 +4) until the hbm-router view records its faces; barrier view face_stages 3 (+4 round trip, measured)
-LEDGER = dict(meso_extra=2, gather=1, cdist=2, cp_su=15, cp_native=3, barrier=4, coll=6, serdes=4, vm=6, router=8, cmdproc=2, quant=17,
-              quant_points_bound=161, quant_points_gate=0)
+# 2026-10-06 18:50 (coordinator relaunch): router die view dv8 (r4, c22f7d0aa) records real faces W 4 / E 3 -> +3 +2 per
+# expert fetch (was fs5 +4 +4); svc SEGMENT split (fb5bc706e, r16j) +12 W line (far SM, 8 cut hops) +3 K line per expert
+# fetch (bound; KV / IK read gains -1..-11 not credited); index_q bands (351d3b775) keys +10 per index scan, rows <= +4 per
+# attention step.  --cp-in-su: the HBM CP binder placed inside the SU-side block, internal handshakes PIN_MARGIN 0
+# (coordinator decision 15:30, wt-hbm-su-cpin): cp_su / cp_native 0.
+LEDGER = dict(meso_extra=2, gather=1, cdist=2, cp_su=15, cp_native=3, barrier=4, coll=6, serdes=4, vm=6, router=5, cmdproc=2, quant=17,
+              quant_points_bound=161, quant_points_gate=0, svc_fetch=15, idx_keys=10, idx_rows=4)
 
 
 # SM faces: the interim SM view's own pin plan priced on the die (results/rtl/hbm_accel_die_views_20261006/
@@ -88,8 +93,11 @@ def priced(m, grt_work, meso):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--grt-work', type=Path, required=True, help='GRT case dir holding wirelength.csv')
+    ap.add_argument('--cp-in-su', action='store_true', help='CP binder inside the SU block (cp cycles 0)')
     ap.add_argument('--out', type=Path, default=ROOT / 'results/rtl/hbm_accel_die_views_20261006/recompose_margin.json')
     a = ap.parse_args(argv)
+    if a.cp_in_su:
+        LEDGER.update(cp_su=0, cp_native=0)
     m = F.build_model() if hasattr(F, 'build_model') else None
     if m is None:
         import hbm_die_views as V
@@ -111,7 +119,10 @@ def main(argv=None):
             serdes=n.get('coll_crossings', 0) * LEDGER['serdes'],
             vm=n.get('x_first_load', 0) * LEDGER['vm'],
             router=n.get('expert_fetch', 0) * LEDGER['router'],
-            cmdproc=n.get('barrier', 0) * LEDGER['cmdproc'])
+            cmdproc=n.get('barrier', 0) * LEDGER['cmdproc'],
+            svc_fetch=n.get('expert_fetch', 0) * LEDGER['svc_fetch'],
+            idx_keys=n.get('index_scores', 0) * LEDGER['idx_keys'],
+            idx_rows=n.get('attn', 0) * LEDGER['idx_rows'])
         su_tx, nat = cp_mix(json.loads((ROOT / F.MATCHED).read_text())['path'])
         extra['cp_su_tx'] = su_tx * LEDGER['cp_su']
         extra['cp_native'] = nat * LEDGER['cp_native']
@@ -140,13 +151,14 @@ def main(argv=None):
         cpmix = dict(su_transactions=su_tx, native_launches=nat)
         groups = dict(cp_us=cus(extra['cp_su_tx'] + extra['cp_native']), stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
                       barrier_us=cus(extra['barrier']),
+                      svc_index_us=cus(extra['svc_fetch'] + extra['idx_keys'] + extra['idx_rows']),
                       spine_faces_us=cus(extra['coll'] + extra['serdes'] + extra['vm'] + extra['router'] + extra['cmdproc']),
                       quant_us_gate=0.0,
                       quant_us_bound=round(LEDGER['quant'] * LEDGER['quant_points_bound'] / hz * 1e6, 3))
         sm = SM_FACES.get(key)
         if sm is not None:
             groups['sm_faces_interim_us'] = sm
-        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + groups['cp_us'] + (sm or 0.0)
+        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + groups['cp_us'] + groups['svc_index_us'] + (sm or 0.0)
         groups['cp_mix'] = cpmix
         groups['total_sm_fixed_us'] = round(tot - (sm or 0.0), 3)
         groups['total_sm_fixed_AR_pct'] = round(100 * (tot - (sm or 0.0)) / ar0, 2)
