@@ -378,6 +378,12 @@ def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
                 adoption=False)
 
 
+def dsrom_softmax_parent():
+    """Full-shape measured-leaf placement and conditional fixed-rate hop costs."""
+    from dsrom_softmax_parent import build
+    return build()
+
+
 def dsrom_recovery_decision_gate():
     """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
 
@@ -7953,7 +7959,15 @@ def main(argv=None):
     ap.add_argument("--levers", action="store_true", help="V4.1 static-power gating, adaptive MTP, ROM mask cost")
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
+    ap.add_argument("--dsrom-softmax-parent", action="store_true", help="full-shape SAFE softmax leaf placement, area and unbound clock/hop obligations")
     a = ap.parse_args(argv)
+    if a.dsrom_softmax_parent:
+        payload = json.dumps(dsrom_softmax_parent(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbrom_inputs:
         import hbrom_model
         inputs = json.loads(Path(a.hbrom_inputs).read_text())
