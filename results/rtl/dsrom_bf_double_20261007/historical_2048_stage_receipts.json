@@ -1,0 +1,788 @@
+{
+ "schema": "opentallas.dsrom.bf-double.stage-receipts.v1",
+ "release": "results/uarch/dsrom_s81_released_binding_20261007/canonical",
+ "tool": "tools/dsrom_s81_execution_binding.CanonicalS81Execution.emit_stage (OT_DSROM_S81_RELEASE=20261007), rank 0",
+ "input_sha256": {
+  "results/uarch/dsrom_s81_released_binding_20261007/canonical/inventory.json": "8f4b17fc271c87ce8a52700d1d729890715ebfa18da4c0aaf3efa72028044cfb",
+  "results/uarch/dsrom_s81_released_binding_20261007/canonical/stage_map.json": "14fe20977895e746779ef1d2e094070d6d790a5456e3a17ae3dff595aa91e3de",
+  "results/uarch/dsrom_s81_released_binding_20261007/canonical/matrix_map.jsonl.gz": "bef503ccc137c9e9287148daff0836edde2af01a28dd8d04fd1c6b89c9d350dd",
+  "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+  "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434"
+ },
+ "stages": [
+  {
+   "stage": 0,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "c44a86e78e53bc1ca22329e098578a2ab95402455f8a21c5a639179db82ff8fb"
+  },
+  {
+   "stage": 1,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "f695177c20f7d37c3b568c0ed542a53d811795c1c8cac3887c96f5ad2bd79799"
+  },
+  {
+   "stage": 2,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 536,
+   "PHW": 10,
+   "cfg_words_per_pair": 13400,
+   "source_allocation_digest": "e4256b575e73bc6016c71565f888b8ec7af4c0f2196625e63dd22d9a6651c064"
+  },
+  {
+   "stage": 3,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "6b59d919b34c4357a7a1b2d26e979d51818cd8c57a000b52a3688698fbda7082"
+  },
+  {
+   "stage": 4,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "b2f322980bb00f68f6889d713f01a5ab330bd23fc72b1a74f566f8ebd0abb132"
+  },
+  {
+   "stage": 5,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "1985a860651fdb03ec80ff9d206ca6961b75e7fb52f8004a2a37aa5b7721422f"
+  },
+  {
+   "stage": 6,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "d10c33d36230b5b10ce405cd32bdd7d80e7b6d333b01cc125ad0e046c0b80745"
+  },
+  {
+   "stage": 7,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "0891fbea189f4d7ad0ec08168b4da052e3f5148fea5aa4a780da1e007816c2af"
+  },
+  {
+   "stage": 8,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "5e49b6e0ea1443dbff969365dcbafff1dabb37389b0df5a3f537d60fe32fcb63"
+  },
+  {
+   "stage": 9,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "96543133b0fefe4a787cc551f1e3a07d1f08048977d35fba52f4861204ccfee2"
+  },
+  {
+   "stage": 10,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "63e958222a5a0829316797b1d41f24f518af2c429aeb4a5393abd2ae44504382"
+  },
+  {
+   "stage": 11,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "4cf6a638fef4bbd0cdb3342addb9e6acc4683ba1a78fa72a17bed2340554c549"
+  },
+  {
+   "stage": 12,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "e1043ffa630188f3a6ce1ce9861414c1164a9358499d43c42ded8916a25fc788"
+  },
+  {
+   "stage": 13,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "606dc4c2bd64fe373aceb91d2a340baa4f7db4220f7b44da2eed41deec9c53e9"
+  },
+  {
+   "stage": 14,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 570,
+   "PHW": 10,
+   "cfg_words_per_pair": 14250,
+   "source_allocation_digest": "dcaa979c6c71e54c02545eed5e88c0eeafbb7e8748e72e8b9239a305b04ffd93"
+  },
+  {
+   "stage": 15,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "287709235589cf91d13cc0a1b6750efc6496bb86648d6bad40a3d33d8dc5c776"
+  },
+  {
+   "stage": 16,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "3ae0467da6be08ed2ec7083398b47eefe1673f229458aa0c213797b55d8d71da"
+  },
+  {
+   "stage": 17,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "88c228aa69c24c3f9a9305e4f7884618fb9a6b4381b7e7ebb0202c3f44c99b65"
+  },
+  {
+   "stage": 18,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "947d193e14534d27a2a4f73647601467f863f39ce816a1cda346b3dcd030352d"
+  },
+  {
+   "stage": 19,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "a4dbda5b3ee210303f479ba0dcdfd2a50a03c73814584893c6208e5ae100f663"
+  },
+  {
+   "stage": 20,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "6c08486baaa93526591fb0fef2f5085133eb42f53ab23c651d5b3920e164ac72"
+  },
+  {
+   "stage": 21,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "dc8767339b8553651ffbe7855a245273b05f5d3a4bda38aa750caa9a309b04df"
+  },
+  {
+   "stage": 22,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "1aa51d14d8af6d4a18891e4d530cd754c14cb1853c4fd6f750e88c5a4bbde8ca"
+  },
+  {
+   "stage": 23,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "7ef0d79acdd5b08bd8a9f21db5c3a827121e35100cd5bc35c92c65c26cf6bcce"
+  },
+  {
+   "stage": 24,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "4dc0acb8b208c0e5ed3c65aef5e104a13aadce1bf6171a7ee28aa4cda3bd73e6"
+  },
+  {
+   "stage": 25,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "a218db1b9cbbbcdf90501ffa11fd480a16130394007d910566fbb637b2bd0ed7"
+  },
+  {
+   "stage": 26,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "0102cfa7c09662175c1a017ae3464aa23f90b045709c57c50eac48759b08c5f0"
+  },
+  {
+   "stage": 27,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "30be99ba0334e7025d83ceeb5520fd0ae2f111c8b9e707dc36440faf876af129"
+  },
+  {
+   "stage": 28,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "e8f8cb9dde870da3bf802e1795e5ae2328604d6c67d68ebc23fbc5681b497c5c"
+  },
+  {
+   "stage": 29,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "213cad515602ff83b9e5867c159b59c9439d999fee18b71f114c9a3e95c2a7ee"
+  },
+  {
+   "stage": 30,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 532,
+   "PHW": 10,
+   "cfg_words_per_pair": 13300,
+   "source_allocation_digest": "0a478aafbb95ad74158f2d562f5b24fb19aa70f24d70ba2b6c7c48d041a81ae8"
+  },
+  {
+   "stage": 31,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "d88553b13bc970372881d7ff327137ff3cbea02345bd0c7fa782dc847184217f"
+  },
+  {
+   "stage": 32,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "7e0fa12cd5a98b55a8288b0b12c87ea32769477777da30b792608353011bdbdb"
+  },
+  {
+   "stage": 33,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "69e22b45bcab8f57f7b872515470234c4018b7d60b36b79cc0c0d4e294ea8a4d"
+  },
+  {
+   "stage": 34,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "7465e45339cfe8d5d1140e0063fd2caad8ca6c110adfc50491c2edb9b027145f"
+  },
+  {
+   "stage": 35,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "3e430a7fa6b766107532e75c5f3d8a1b614efa969c66d731b8a30983494cb2eb"
+  },
+  {
+   "stage": 36,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "3a00d9d8501740152582d749ce05a484ba949d982baae12e67cb4900da751cf6"
+  },
+  {
+   "stage": 37,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "9cef6b29972c035f2b90804229bed7a8d0ec91cfc01151055e49b86be7bf2c0f"
+  },
+  {
+   "stage": 38,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "40f556cc2b0d45632cf83c67f28b50c08bd3ae35b3162e0d6df97169aede803a"
+  },
+  {
+   "stage": 39,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "846d0589bbdd26eabb447af8b6f9609a0736134dfc65ceded9d8665f528d687f"
+  },
+  {
+   "stage": 40,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "f1e88a75518a47d0ff544962ec08f437ca3483c5e06d00ceab15f611939002e6"
+  },
+  {
+   "stage": 41,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "893bf2a58c123cf68afa9b259d4a679d1003216c805a10249c71f9a016d23098"
+  },
+  {
+   "stage": 42,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 550,
+   "PHW": 10,
+   "cfg_words_per_pair": 13750,
+   "source_allocation_digest": "d9f8bef33f03992f331d5ae845923e0703a9648b65509eb938c504b94e351859"
+  },
+  {
+   "stage": 43,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "e7c7d96c53b833b47dee2b20c4eaf974018a16d5ff0ebb399e70159b51373b68"
+  },
+  {
+   "stage": 44,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 570,
+   "PHW": 10,
+   "cfg_words_per_pair": 14250,
+   "source_allocation_digest": "d6cea7bf0f4fd21a58867e01fc897e1530362795743efa61205ae6caa702a57a"
+  },
+  {
+   "stage": 45,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "72f68a2f1d5bfd9be1ef2b9d52c45c6693bf7378fd8796435d7b370fa00e518d"
+  },
+  {
+   "stage": 46,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "fb21a15d5a8221b1c58cf5ef6728158257287ac58daad23fee0c2b4d7397baa0"
+  },
+  {
+   "stage": 47,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "ee6aa98ec003c872a3adc476290a6d753c602fe2ed980daf0a54536d5947aae3"
+  },
+  {
+   "stage": 48,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "bd5e8b0dbd30f82278bb9ec9fa2b5d5ebc9a8372a7a59b5ec6be695516f0ae17"
+  },
+  {
+   "stage": 49,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "d197fa10f9166b971dba131c6d3ad050fbead9b7c266367a6ad97d8a3ab52867"
+  },
+  {
+   "stage": 50,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "dc1a18ffa6cbb8c4adfccbef0cb514aacc7d41447dc1940fbcf1aa5ce52ce27e"
+  },
+  {
+   "stage": 51,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "a974936f9693604e8e2e22a479380f05d6174e00a4fe33734ee2e1b565bf0e5c"
+  },
+  {
+   "stage": 52,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "88f45b96efe89a9826ec71c014de06fd1c87a69206e7dbbacd409aee874a3f66"
+  },
+  {
+   "stage": 53,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "6e8bd338d97db0a6e0c8dc214e90a4fd2602d387f2a3321c76825655ab6ae652"
+  },
+  {
+   "stage": 54,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "19dbc21c4521cc05f02e45950282e85302592c8bd91b5020d6c30584ecda2ace"
+  },
+  {
+   "stage": 55,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "8284cd225f9fbd85248bf60add8d83246fd64a6dfde6d86d2aee0d14ead84d1c"
+  },
+  {
+   "stage": 56,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "b79cb75b64814dca9a9c33bb5ebf2c6ae19704a85605ec1b467111d28f513b72"
+  },
+  {
+   "stage": 57,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "aea80f448e29801148b73d817ddc6d1fd7e485853f15781890d67182ff121a16"
+  },
+  {
+   "stage": 58,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "042545d9b7e43755a71fda0feadaf868d08e7a5f22af7a895564897e6606ae5f"
+  },
+  {
+   "stage": 59,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 558,
+   "PHW": 10,
+   "cfg_words_per_pair": 13950,
+   "source_allocation_digest": "b85e930e22b46e00196a9e842bbae9dbf4b75f4b52728f897e4ca4d5b608bac4"
+  },
+  {
+   "stage": 60,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "5ba4e496d502b3eae12f893d1e2ed97ce96343b74f99d4a9dafd969ca3d30289"
+  },
+  {
+   "stage": 61,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "f03ba98567dd16e4cccda99f10171b73212a69a1771bbf6e994601eb15579c37"
+  },
+  {
+   "stage": 62,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "40192a83774146d8317561a0c2ca4eafb33c64809e1e34ac71b850fcfd4622de"
+  },
+  {
+   "stage": 63,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "188b61cb57059dbfa6302806eb33ae455177d739430b9fbc26e0077cdf44e7b5"
+  },
+  {
+   "stage": 64,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "d1617831fd9ea553334f0f48d47bbba8f3c63d1309d62c61c97bc4508f883809"
+  },
+  {
+   "stage": 65,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "2bfe3f9fece5a6864ccd381bc6445c45e4e6ab451d85075411973adddd41b5aa"
+  },
+  {
+   "stage": 66,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "53aaea80a46bb30d61fbf0f05e54ecc619012e573d040aa137d588b753dcd9c1"
+  },
+  {
+   "stage": 67,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "effbc69980189cba87015958c98ad9f5961ef452b0d5e3b9a2a77e2eb60e90c5"
+  },
+  {
+   "stage": 68,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "06c3ceae5552cedf3ba81303b5dae9adb251d5e5528bc092ad5dd26fa08346df"
+  },
+  {
+   "stage": 69,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "663dcfd6e210d5d87a39a7ccdb12f8447abdd2c3da8795c449dcf268e7b17a5e"
+  },
+  {
+   "stage": 70,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "a661e054c87bffc2c60abcb6bd0f0fa257efdcecadce1adce4642f34fba971c9"
+  },
+  {
+   "stage": 71,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "d534080faa1f09accb1cad11654b1bdee5922db90e1816605a482bae8ffdd132"
+  },
+  {
+   "stage": 72,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "afbd8f44e40290697389b8c95ff5f9338414f05cf9abf179157eb60c91f96ed8"
+  },
+  {
+   "stage": 73,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "ee5e2eed3085878dfa9cc939808af0e541e3a8e3e60c7d878d6fb828f3ba7376"
+  },
+  {
+   "stage": 74,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "e605ada9d357b771af8511fa6bc3d57c464bf00e5c3e7733fc012831f95d3bf6"
+  },
+  {
+   "stage": 75,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "fba0865b11fa9c49f3bdb8f36de1ce2f3ba91458ba778249a35d166f127a639a"
+  },
+  {
+   "stage": 76,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "2c8e3a4ba3db6ada72c7fa2226054d43c5a2d88a411676d59c871d740502255f"
+  },
+  {
+   "stage": 77,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 551,
+   "PHW": 10,
+   "cfg_words_per_pair": 13775,
+   "source_allocation_digest": "ed7b095dd8b056018a443cd674f0796b2e221c8088796e283f5be30b865cd8fc"
+  },
+  {
+   "stage": 78,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "787ee7ff2ba73c3cc9f0e6bbec43bbb4b2ce6b3bf804ba846a4d9f3c0bcd0ba2"
+  },
+  {
+   "stage": 79,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "885ad6b3e11f5bcf39598a9449e635ffe05dbff8b2b8aaf69af04657aa64706f"
+  },
+  {
+   "stage": 80,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "c7cc7b0bad600d6507972eda6cdfb13179190bfc1ba086db8421c3bbf41b9c38"
+  },
+  {
+   "stage": 81,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "dd3687306b2a8bfee815c2d553627ebe982367fd096b8ed09a0d5413f4fa742d"
+  },
+  {
+   "stage": 82,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "4bec3535f0c4385cbaf7a01e715028968669f7b8f0139f6be634c20bfa3f28f2"
+  },
+  {
+   "stage": 83,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 552,
+   "PHW": 10,
+   "cfg_words_per_pair": 13800,
+   "source_allocation_digest": "dfcb812f78df7aace69c2711a92244b160ea5d6ffa09a1fdb19b6eca2ca9d989"
+  },
+  {
+   "stage": 84,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 534,
+   "PHW": 10,
+   "cfg_words_per_pair": 13350,
+   "source_allocation_digest": "1ad8ac98eada5415e9f1cdf6909549dc4eec8e5afbd43f6b91ff81b83fc1d399"
+  },
+  {
+   "stage": 85,
+   "rank": 0,
+   "pairs": 2048,
+   "source_phases": 393,
+   "PHW": 9,
+   "cfg_words_per_pair": 9825,
+   "source_allocation_digest": "fdce58bec24257fd43184a53c138d6bacd9ca170268db4f3580be7eee116aca8"
+  }
+ ]
+}
