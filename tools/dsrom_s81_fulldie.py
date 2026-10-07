@@ -4152,6 +4152,8 @@ def _faces_r8(m, Mx, it, ports):
     elif kind == 'cfifo':
         c0 = SSTN_X + SSTN_WH[0] / 2 - CF_X
         c1 = COL_W8 - RSC_W / 2 - CF_X
+        if CFIFO_V2:              # 432 um outline: the return pins at its E end (the return column lies beyond it)
+            c1 = min(c1, Mx.w - 30.0)
         _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'cc', 'st']), 'M5', start=c0 - 15.0)
