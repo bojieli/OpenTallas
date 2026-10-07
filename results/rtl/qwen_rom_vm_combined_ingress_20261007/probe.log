@@ -1,0 +1,3 @@
+PROBE start t=0
+PROBE settled t=1000
+PASS PROBE reset and empty clocks t=81000 epoch=5

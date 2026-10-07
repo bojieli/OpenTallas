@@ -1,0 +1,69 @@
+Combined actual-provider gate: ROM ingress plus direct readback
+
+PASS_COMPONENT, not whole-ROM or physical adoption. This bench instantiates the
+actual combined ROM_INGRESS=1/DIRECT_READBACK=1 adapter, checked bank, full SRAM
+macros and full2256-read/865-write normalizer. Original modules remain immutable;
+opt-in defaults remain off. Captured parent160 and directed mechanism cases are
+distinguished below. All production RTL source bytes are pinned in src/.
+
+The actual captured parent160 replays2048 VX reads and the delayed SU reducer
+write through checked backing SRAM:14419 service edges,1024 checked reads,1
+checked ACK. All2048 VX results match the pinned data fixture after the next
+admitted ME event, exercising real XVM1. Read service9/write service28 remain
+unchanged; the full case totals1027 checked reads,263 ACKs and15 native edges.
+
+Directed additions on the same full interface:
+- Raw ME group35 packet captures under original unleased intent. Live intent is
+  then dropped and address/data/enables changed while the owned frame services.
+  Its stored packet remains unchanged and commits the original data with1 ACK.
+- A raw ME write presented while original intent is false is suppressed:1 empty
+  service edge,0 reads/ACKs; checked readback confirms original memory unchanged.
+- A full-width native word0x100000 is rejected before24-bit seat narrowing. The
+  resulting native scalar0x01000000 is retained at normalization, never aliasing0.
+- Invalid ordinary, collective and VX reads own protected zero flags in existing
+  encoded payload bit57. The zero-only frame takes3125 baseline service edges,
+  issues0 backing reads/ACKs, and publishes zeros including through actual XVM1.
+  The normalizer uses VWA24 as a boundary stress; selected production VWA16 stays
+  a separate source-context/physical parameter. Raw ME word addresses are24-bit.
+- A separate actual-provider probe captures me_frame0, raises live original
+  intent during ownership, and observes native_tick1/native_me_lease0 atADMIT.
+  This is a lease contract observation, not an actual-core integration proof.
+
+The native-clock shortcut on RAW bank ACK, before checked postverify ACK, is
+rejected with UNPAID_NATIVE_ADVANCE (exit1) on the same procedural-boundary pin.
+No duplicate foreign-ACK campaign was run; its prior source-pinned gate remains.
+
+Clock/binding requirements remain explicit
+The normalizer's me_wanted is deliberately tied1 for raw normalization; original
+ME qualification belongs inside the existing CAP collar. A future wrapper must
+not restore the pre-capture core AND boundary or feed its post-lease me_clk_en
+back into source_me_wanted. Original intent is:
+ !rst_n_i || (((ME_STALL==0)||me_mem_ok_i) &&
+             ((ME_IDLE_GATE==0)||!me_idle||me_wake)).
+With PINREG1, me_mem_ok_i is pr_mmo_q. Lease feedback through that registered
+input is incorrect. The raw core output, original-intent output, direct effective
+ME-lease gate/issue acceptance and capture collar must enroll atomically. The
+core-side owner supplies VM_OWNED_LEASE default0, vm_me_wanted and vm_me_lease;
+its current successor also generates the ME clock gate when owned lease is
+selected even if legacy stall/idle gating is disabled. Full core/collective clock
+joining, backing capacity for the full native ABI, mutable-state fault coverage,
+area, SS/FF and parent floorplan remain unqualified.
+
+Benchmark representation and immutable history
+The original continuous packed-address wiring also PASSED, exit0,1280.87s wall,
+118272KiB RSS. A benchmark-only successor replaces per-seat continuous32→24
+assignments by one combinational procedural packing block. Every slot is compared
+with the original four-state slice expression at falling clock edges. No engine
+RTL, storage or source-cycle change occurs. Its complete positive log is
+byte-identical to the original: exit0,566.40s wall,114688KiB RSS. The negative
+ran367.40s; the actual-provider lease probe20.42s. These are simulator runtimes,
+not hardware speedup claims. Original positive source/log/resource history is
+retained. An earlier continuous-wiring empty startup diagnostic was still
+nonterminal at packaging; no failure or completion verdict is assigned to it.
+
+Reproduce canonical positive:
+ python3 tools/qwen_rom_vm_combined_ingress_check.py --root REPO --out NEW_OUT
+Add --negative 2 for the guarded raw-ACK negative.
+Use --lease-probe for the small captured0/live1 probe. Existing output logs are
+never overwritten. Pinned production sources, fixtures and selected bench are
+validated before execution. No arbitrary wall-time deadline is imposed.
