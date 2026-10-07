@@ -12917,3 +12917,43 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def qwen_kvc_decode_pc_model():
+    """Default-off Qwen per-PC landing decode physical cut, source-selected."""
+    from uarch_model_qwen_kvc_leaf import model
+    return model()
+
+
+def qwen_ctrl_pc_closure_model():
+    """Default-off full-feature Qwen r14 command cut; unchanged JEDEC clock."""
+    from uarch_model_qwen_ctrl_pc import model
+    return model()
+
+
+def qwen_final_pc_closure_composition(decode=False, controller=False):
+    """Compose each new pipeline once against the common pinned r21 baseline.
+
+    Gross added edges are conservative until connected-token measurement exists;
+    no baseline CDC or controller latency is subtracted or credited. Per-leaf
+    percentages must never be added: select edge terms, sum, recompute rate.
+    """
+    import math
+    base = 216713
+    terms = {}
+    if decode:
+        terms['landing_decoder'] = 36 * qwen_kvc_decode_pc_model()['latency']['pipeline_edges']
+    if controller:
+        hbmedges = qwen_ctrl_pc_closure_model()['latency']['minimum_request_to_phy_added_edges']
+        terms['controller_boundary'] = 36 * math.ceil(hbmedges * 1024 / (2500 / 3))
+    extra = sum(terms.values())
+    return dict(default_OFF=True, adopted=False, physical_closed=False,
+        baseline_record='results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json',
+        baseline_cycles=base, selected_delta_cycles=terms, added_cycles=extra,
+        total_cycles=base + extra, clock_hz=1.2e9,
+        ar_tokens_per_second=1.2e9/(base + extra),
+        rate_cost_pct=100*(1-base/(base + extra)),
+        pricing_basis='gross four-edge decoder plus three-edge HBM wrapper (ceil to four core edges), each per36 layers; no overlap credit or removal credit',
+        exact_connected_latency_measured=False,
+        adoption_gate='connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing',
+        excluded_unpriced='row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages')
