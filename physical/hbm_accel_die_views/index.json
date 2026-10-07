@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r19b",
- "generator_sha256": "e315f1ad18aa4fd89a6e1570487b22213ff188dcff86dd4374045bd7a5f8dafa",
+ "generator_sha256": "4b98e50f1ae66cae2e25eedfc4db66935e6952fe0ccde33595249a8610c03fca",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -24,15 +24,16 @@
    "check": {
     "verdict": "MISMATCH",
     "problems": [
-     "2 pins off the generator position (same face)"
+     "size 1349.112 x 1349.976 != 1778.52 x 1349.976",
+     "7008 pins off the generator position (same face)"
     ],
-    "positions": "2 pins off the generator position (same face)",
+    "positions": "7008 pins off the generator position (same face)",
     "size_view": [
      1349.112,
      1349.976
     ],
     "size_gen": [
-     1349.112,
+     1778.52,
      1349.976
     ],
     "die_top_io_pins": []
@@ -705,62 +706,15 @@
     "generator": "tools/hbm_die_station_gen.py"
    }
   },
-  "hfd_mcast_r6": {
+  "hfd_mcast_r6a": {
    "kind": "stations",
-   "status": "interim-not-closed",
-   "instances": 8,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r6",
-   "lef": "hfd_mcast_r6.lef",
-   "lib": {
-    "ss": "hfd_mcast_r6_ss.lib",
-    "ff": "hfd_mcast_r6_ff.lib"
-   },
-   "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
-    "size_view": [
-     466.968,
-     120.936
-    ],
-    "size_gen": [
-     466.968,
-     120.936
-    ],
-    "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_mcast_r6",
-    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_mcast_r6 top=physical/hbm_accel_die_views/stations/hfd_mcast_r6/hfd_mcast_r6.sv DW=466.968 DH=120.936 PD=0.40 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP=0 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_mcast_r6/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": -265.17,
-    "ff_hold_ps": 23.72,
-    "drc": 0,
-    "closes_signoff": false,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 334,
-     "route_sdc": ".views/Q1_hfd_mcast_r6/route.sdc",
-     "signoff_sdc": ".views/Q1_hfd_mcast_r6/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": -328.17,
-     "ff": 23.72
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_mcast_r6/hfd_mcast_r6.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_mcast_r6/hfd_mcast_r6.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
-   }
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_mcast_r6b": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
   },
   "hfd_mcast_r7": {
    "kind": "stations",
@@ -1165,7 +1119,7 @@
    "check": {
     "verdict": "MISMATCH",
     "problems": [
-     "size 2462.376 x 3656.856 != 5215.944 x 1725.816"
+     "size 2462.376 x 3656.856 != 8651.208 x 1041.096"
     ],
     "positions": "exact",
     "size_view": [
@@ -1173,8 +1127,8 @@
      3656.856
     ],
     "size_gen": [
-     5215.944,
-     1725.816
+     8651.208,
+     1041.096
     ],
     "die_top_io_pins": []
    }
@@ -1297,7 +1251,7 @@
   "hfd_stn_r11": {
    "kind": "stations",
    "status": "closed",
-   "instances": 13,
+   "instances": 17,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r11",
    "lef": "hfd_stn_r11.lef",
    "lib": {
@@ -1421,7 +1375,7 @@
   "hfd_stn_r13": {
    "kind": "stations",
    "status": "closed",
-   "instances": 16,
+   "instances": 20,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r13",
    "lef": "hfd_stn_r13.lef",
    "lib": {
@@ -1545,7 +1499,7 @@
   "hfd_stn_r17": {
    "kind": "stations",
    "status": "closed",
-   "instances": 14,
+   "instances": 18,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r17",
    "lef": "hfd_stn_r17.lef",
    "lib": {
@@ -1669,7 +1623,7 @@
   "hfd_stn_r19": {
    "kind": "stations",
    "status": "closed",
-   "instances": 4,
+   "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19/route_cl",
    "lef": "hfd_stn_r19.lef",
    "lib": {
@@ -1849,7 +1803,7 @@
   "hfd_stn_r21": {
    "kind": "stations",
    "status": "closed",
-   "instances": 8,
+   "instances": 10,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r21",
    "lef": "hfd_stn_r21.lef",
    "lib": {
@@ -2097,7 +2051,7 @@
   "hfd_stn_r27": {
    "kind": "stations",
    "status": "closed",
-   "instances": 36,
+   "instances": 41,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
    "lef": "hfd_stn_r27.lef",
    "lib": {
@@ -2345,7 +2299,7 @@
   "hfd_stn_r31": {
    "kind": "stations",
    "status": "closed",
-   "instances": 7,
+   "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
    "lef": "hfd_stn_r31.lef",
    "lib": {
@@ -2519,7 +2473,7 @@
   "hfd_stn_r39": {
    "kind": "stations",
    "status": "missing",
-   "instances": 4
+   "instances": 8
   },
   "hfd_stn_r4": {
    "kind": "stations",
@@ -2684,6 +2638,11 @@
    "status": "missing",
    "instances": 2
   },
+  "hfd_svc_SE_s8": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
   "hfd_svc_SW_s0": {
    "kind": "svc",
    "status": "missing",
@@ -2792,9 +2751,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 5,
+  "interim-not-closed": 4,
   "closed": 39,
-  "missing": 35,
+  "missing": 38,
   "reservation": 2
  }
 }

@@ -74,6 +74,30 @@ def stage_um(m):
     return LINK_STAGE_UM
 
 
+def port_base(p):
+    """'port@lo:hi[,lo:hi]' (a bus endpoint on a bit-slice of a port) -> 'port'"""
+    return p.split('@', 1)[0]
+
+
+def port_idx(p):
+    """bit indices of a sliced endpoint 'port@lo:hi[,lo:hi]' in bus-bit order, else None"""
+    if '@' not in p:
+        return None
+    out = []
+    for r_ in p.split('@', 1)[1].split(','):
+        lo, hi = map(int, r_.split(':'))
+        out += list(range(lo, hi + 1))
+    return out
+
+
+def slice_port(p, k):
+    """the port a sliced generated endpoint binds at bundling k: the base port at k = 1, a per-slice bundled port
+    '<base>_s<first bit>' at k > 1 (bundled abstracts need no bit fidelity)"""
+    if '@' not in p:
+        return p
+    return port_base(p) if k == 1 else f'{port_base(p)}_s{port_idx(p)[0]}'
+
+
 REACH_INTER_UM, REACH_INTRA_UM = 359.0, 412.0       # budgets_20261006: SS reach at the 150 ps / 90 ps skew terms
 
 
@@ -314,7 +338,8 @@ R22 = dict(R21, relay_all=True)
 # r23 (OWNER 2026-10-07): the hub transport gets ~2x area: SU / SFU / HC quarters x2 (registered transport tiles at
 #   ~55 % utilisation for the SU / attn / router agent), SFU between its consumers SU and HC as before; the centre
 #   channel (mid_ch) widens by the added quarter widths, so the die grows in x
-R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0,
+R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_stations=('hfd_mcast_r6',),
+           attn_tile_w_um=1778.544, attn_tile_w0_um=1349.136, attn_grow_mid=True,
            fix_station_pins=('hfd_cdist_r14', 'hfd_cdist_r15', 'hfd_gath_r10', 'hfd_gath_r24', 'hfd_gath_r25', 'hfd_gath_r8',
                              'hfd_gath_r9', 'hfd_meso_r28', 'hfd_meso_r32', 'hfd_stn_r2', 'hfd_stn_r34', 'hfd_stn_r18',
                              'hfd_stn_r20'))
@@ -342,6 +367,11 @@ def build(variant=None):
             mm2 = sum(BLOCKS[x][0] for x in n_)
             add += up(mm2 * variant['hub_scale'] / 4 * 1e6 / qh0, GX) - up(mm2 / 4 * 1e6 / qh0, GX)
         mid_ch = up(mid_ch + 2 * add, GX)
+    if variant.get('attn_tile_w_um') and variant.get('attn_grow_mid'):   # r23: wider attention tiles widen the scan
+        #   quadrants by 4 x (tile growth) per side; the centre channel grows by both sides' growth (the hub centre moves
+        #   by half of it, so the W quadrant gains the same room)
+        tw0 = up(math.sqrt(BLOCKS['attn_tile'][0] * 1e6), GX) if not variant.get('attn_tile_w0_um') else variant['attn_tile_w0_um']
+        mid_ch = up(mid_ch + 2 * 4 * (up(variant['attn_tile_w_um'], GX) - tw0), GX)
     core_w = 2 * grp_w + mid_ch
     W = up(EDGE + SCH + core_w + SCH + strip_d + EDGE, GX)
     side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h
@@ -606,6 +636,8 @@ def build(variant=None):
         fix_ports_from_views(m, fixv)
     if variant.get('vm_split'):
         split_vm(m)
+    for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
+        split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
         rf = ROOT / 'physical/hbm_accel_die_views/relay_ends.json'   # the budget's pin-to-pin list (authoritative)
         if rf.exists():
@@ -801,6 +833,89 @@ def hub_pin_window(mst, window):
             sp_ = mst.ports[p_]
             mst.ports[p_] = ('face', sp_[1], f_, 'M4', round(y + 2 * t + n_ / 2, 4), pitch)
             y += n_ + 4 * t
+
+
+def split_station(m, role, h_data=1024):
+    """r23 (coordinator, views agent REQUEST 05:35: mcast_r6 -328 ps over its 467 um width): every instance of station
+    role `role` becomes two die masters <role>a / <role>b side by side (each the original outline: ~2x total area, half
+    the logic), A carrying data bits [0, h_data) with their forwarded clocks (one per 512 b slice), B the rest.  Every
+    bus on the instance is split in two; the neighbour keeps its port and binds the two halves as bit slices
+    ('port@lo:hi,lo:hi').  Paths take the A half (same stage count)."""
+    by = {it.name: it for it in m['insts']}
+    ins = [it for it in m['insts'] if it.master == role]
+    if not ins:
+        return
+    fcl = m.setdefault('fclk', {})
+    pair = {}
+    for it in ins:
+        a = Inst(it.name + 'a', role + 'a', it.x, it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        bx = None
+        for cand in (it.x + it.w + SHAVE + 8.64, it.x - it.w - SHAVE - 8.64):
+            if all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
+                   for j in m['insts'] if j is not it):
+                bx = cand
+                break
+        assert bx is not None, ('no room for the B half', it.name)
+        b = Inst(it.name + 'b', role + 'b', round(bx, 4), it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region,
+                 domain=it.domain)
+        pair[it.name] = (a, b)
+    m['insts'] = [i for i in m['insts'] if i.name not in pair] + [x for ab in pair.values() for x in ab]
+    nb, ren = [], {}
+    for bid, cls, bits, eps in m['buses']:
+        hit = [j for j, e in enumerate(eps) if e[0] in pair]
+        if not hit:
+            nb.append((bid, cls, bits, eps))
+            continue
+        if cls in ('clock_trunk', 'reset_tree'):
+            e2 = []
+            for e in eps:
+                e2 += [(pair[e[0]][0].name, e[1]), (pair[e[0]][1].name, e[1])] if e[0] in pair else [e]
+            nb.append((bid, cls, bits, e2))
+            continue
+        assert len(eps) == 2, (bid, eps)
+        fc = fcl.pop(bid, None)
+        D, nd = (fc[0], fc[1]) if fc else (bits, 0)
+        assert not fc or fc[2] == 0, (bid, fc)
+        ha = min(h_data, D)
+        nca = min(nd, math.ceil(ha / 512)) if nd else 0
+        halves = (('a', list(range(0, ha)) + list(range(D, D + nca)), ha, nca),
+                  ('b', list(range(ha, D)) + list(range(D + nca, D + nd)), D - ha, nd - nca))
+        for tag, idx, dbits, ncl in halves:
+            e2 = []
+            for j, (inst, port) in enumerate(eps):
+                if inst in pair:
+                    e2.append((pair[inst][0 if tag == 'a' else 1].name, port))
+                else:
+                    rs, lo = [], idx[0]
+                    for q, v in enumerate(idx):
+                        if q + 1 == len(idx) or idx[q + 1] != v + 1:
+                            rs.append(f'{lo}:{v}')
+                            if q + 1 < len(idx):
+                                lo = idx[q + 1]
+                    e2.append((inst, f"{port}@{','.join(rs)}"))
+            nid = f'{bid}{tag}'
+            nb.append((nid, cls, dbits + ncl, e2))
+            if fc:
+                fcl[nid] = (dbits, ncl, 0)
+        ren[bid] = f'{bid}a'
+    m['buses'] = nb
+    m['paths'] = {p: [ren.get(b_, b_) for b_ in ids] for p, ids in m['paths'].items()}
+    for d_ in ('clocked', 'fwd_dom'):
+        dd = m.get(d_, {})
+        for n_, (a, b) in pair.items():
+            if n_ in dd:
+                dd[a.name] = dd[b.name] = dd.pop(n_)
+    for rec in m.get('meso', []):
+        if rec.get('inst') in pair:
+            rec['inst'] = pair[rec['inst']][0].name + '+' + pair[rec['inst']][1].name
+    fa = m['stn_faces'].pop(role, None)
+    if fa is not None:
+        m['stn_faces'][role + 'a'] = dict(fa)
+        m['stn_faces'][role + 'b'] = dict(fa)
+    r_ = m.get('station_roles', {}).pop(role, None)
+    if r_ is not None:
+        for t_ in 'ab':
+            m['station_roles'][role + t_] = dict(r_, split_of=role)
 
 
 def fix_ports_from_views(m, masters_):
@@ -1855,7 +1970,13 @@ def port_widths(m, k):
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         for inst, port in eps:
-            key = (by[inst].master, port)
+            mst = by[inst].master
+            if '@' in port and mst not in REAL:      # r23: a sliced generated endpoint
+                key = (mst, slice_port(port, k))
+                n_ = max(port_idx(port)) + 1 if k == 1 else n
+                w[key] = max(w.get(key, 0), n_)
+                continue
+            key = (mst, port)
             w[key] = max(w.get(key, 0), n)
     return w
 
@@ -1873,11 +1994,14 @@ def masters(m, k=1):
         first.setdefault(it.master, it)
     peers = defaultdict(list)
     ref = {}
+    slice_keys = set()
     pf = m['variant'].get('port_fix')
     for bid, cls, bits, eps in m['buses']:
         for i, (inst, port) in enumerate(eps):
             it = by[inst]
-            key = (it.master, port)
+            key = (it.master, slice_port(port, k) if it.master not in REAL else port)
+            if '@' in port and k > 1 and it.master not in REAL:
+                slice_keys.add(key)
             if pf:      # r10: a port that only another copy uses still gets its pin, placed from that copy's frame
                 if key in ref and ref[key] is not it and ref[key] is first[it.master]:
                     continue
@@ -1921,10 +2045,11 @@ def masters(m, k=1):
         ox = sum(o.x + o.w / 2 for o in others) / len(others)
         oy = sum(o.y + o.h / 2 for o in others) / len(others)
         lx, ly = ox - it.x, oy - it.y
+        bport = re.sub(r'_s\d+$', '', port) if (mname, port) in slice_keys else port   # r23 bundled slice port
         if mname == 'hfd_sm':
-            face = sm_fixed[port]                          # master frame
-        elif mname in m['stn_faces'] and port in m['stn_faces'][mname]:
-            face = m['stn_faces'][mname][port]             # stations are placed R0
+            face = sm_fixed[bport]                          # master frame
+        elif mname in m['stn_faces'] and bport in m['stn_faces'][mname]:
+            face = m['stn_faces'][mname][bport]             # stations are placed R0
         else:
             dx, dy = (ox - it.x - it.w / 2) / it.w, (oy - it.y - it.h / 2) / it.h
             face = ('E' if dx > 0 else 'W') if abs(dx) >= abs(dy) else ('N' if dy > 0 else 'S')   # die frame
@@ -2083,11 +2208,17 @@ def write_netlist(m, k, path, top='hfd_die'):
         V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
             mst = by[inst].master
-            if '@' in port:         # r16j: slice lo:hi of a real or bundled port (svc band <- PHY dfi range)
-                base, rng = port.split('@')
-                lo, hi = map(int, rng.split(':'))
+            if '@' in port and mst not in REAL:      # r23: sliced generated endpoint
+                if k == 1:
+                    conns[inst].append(('mslice', port_base(port), port_idx(port), net))
+                else:
+                    conns[inst].append((slice_port(port, k), net, n))
+            elif '@' in port:         # r16j: slice lo:hi of a real or bundled port (svc band <- PHY dfi range)
+                base = port_base(port)
+                idx = port_idx(port)
+                lo = idx[0]
                 if mst in rp and base in rp[mst]:
-                    conns[inst].append((rp[mst][base][lo:hi + 1], net))
+                    conns[inst].append(([rp[mst][base][i_] for i_ in idx], net))
                 else:
                     conns[inst].append(('slice', base, lo // k, n, net))
             elif mst in rp and port in rp[mst]:
@@ -2110,6 +2241,10 @@ def write_netlist(m, k, path, top='hfd_die'):
                 _, base, off, n, net = c
                 for i in range(n):
                     bus_bits[base].setdefault(off + i, f'{net}[{i}]')
+            elif c[0] == 'mslice':
+                _, base, idx, net = c
+                for i, b_ in enumerate(idx):
+                    bus_bits[base][b_] = f'{net}[{i}]'
             else:
                 port, net, n = c
                 parts.append(f'.{port}({net})')
