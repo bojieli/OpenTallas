@@ -119,6 +119,13 @@ BENCH['head_q_oreg'] = dict(BENCH['head_q_lret3'],
                      "wire [3:0] we_nx = rv ? (retired_we & ~write_veto) : 4'b0;"),
          'no_veto': (HT, "(retired_nx[PW-1-:4] & ~write_veto_nx)", "(retired_nx[PW-1-:4])"),
          'warm_late': (HT, "warm_r <= rw_nx && (|we_nx);", "warm_r <= rw && (|we_nx);")})
+BENCH['head_q_oreg2'] = dict(BENCH['head_q_oreg'],
+    params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=2', '-GHQ=1', '-GLRET=1', '-GOREG=2'],
+    mut=dict(BENCH['head_q_oreg']['mut'],
+         dec_low=(HT, "assign write_ok[ga] = wr_en[ga] && a_w >= LG_BASE_WORD && a_w < LIM && a_w[LG-1:0] == LOWB;",
+                  "assign write_ok[ga] = wr_en[ga] && a_w >= LG_BASE_WORD && a_w < LIM;"),
+         dec_lim=(HT, "assign read_ok[ga] = ra_re[ga] && a_r >= LG_BASE_WORD && a_r < LIM && a_r[LG-1:0] == LOWB;",
+                  "assign read_ok[ga] = ra_re[ga] && a_r >= LG_BASE_WORD && a_r[LG-1:0] == LOWB;")))
 BENCH['ack_split'] = dict(top='tb_fh_ack_split',
     srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
           f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/margin/tb_fh_ack_split.sv'],
