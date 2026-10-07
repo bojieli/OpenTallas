@@ -16,7 +16,7 @@ P="-GENABLE=1 -GCOMBINED_ENABLE=1 -GW2_RESULT_ENABLE=1 -GW2_SECTOR_ENABLE=1 -GSU
  -GNORM_KIND=0 -GNORM_N=64 -GNORM_D=5120 -GNORM_RD=0 -GNORM_AW=24 -GNORM_PUBLISH_QUANT=1 -GNORM_NATIVE_VM_ENABLE=1
  -GNORM_NATIVE_INPUT_CP=1 ${OT_EXTRA_G:-}"
 TMPDIR=$W/tmp /usr/bin/time -v -o $W/build_resources.log "$V" --cc --exe --build --hierarchical --timing -Wno-fatal -Werror-LATCH \
- --build-jobs 8 --verilate-jobs 1 --hierarchical-threads 1 -O2 --top-module tb_hbm_integrated_minimum_parent \
+ --build-jobs ${OT_BUILD_JOBS:-2} --verilate-jobs 1 --hierarchical-threads 1 -O2 --top-module tb_hbm_integrated_minimum_parent \
  --Mdir $W/obj ${OT_CFLAGS:+-CFLAGS "$OT_CFLAGS"} $P $M/minimum_parent_margin.vlt -f $M/minimum_parent_margin.files.f $S/$M/hbm_integrated_minimum_parent_main.cpp \
  > $W/build.log 2>&1
 rc=$?; echo $rc > $W/build.exit; [ $rc -eq 0 ] || exit $rc
