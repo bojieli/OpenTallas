@@ -40,9 +40,14 @@
     "mux_width_bits": 512
   },
   "routing": {
-    "leaf_tracks": 526,
-    "channel_capacity_tracks": null,
-    "fit": "OPEN: die geometry must bind real pin capacity and stations"
+    "leaf_tracks": 529,
+    "leaf_request_side_tracks": 14,
+    "leaf_response_side_tracks": 514,
+    "leaf_channel_capacity_tracks": 600,
+    "capacity_basis": "96.12 um usable side / 0.096 um conservative pitch x 60 percent",
+    "leaf_track_fit": true,
+    "die_channel_capacity_tracks": null,
+    "fit": "leaf planned fit; die geometry must bind real stations and distribution tree"
   },
   "area": {
     "macro_count": 4751,
@@ -53,18 +58,18 @@
     "legacy_reservation_fit": false,
     "leaf_frame_um": [
       270.0,
-      100.0
+      100.44
     ],
-    "leaf_macro_utilisation": 0.56769984,
+    "leaf_macro_utilisation": 0.5652129032258064,
     "leaf_logic_and_clock_fit": "OPEN until routed"
   },
   "latency": {
-    "leaf_cycles": 4,
+    "leaf_cycles": 6,
     "initiation_interval_cycles": 2,
-    "root_read_cycles": 16,
-    "code_row_service_cycles": 142,
+    "root_read_cycles": 18,
+    "code_row_service_cycles": 144,
     "baseline_one_cycle_row_cycles": 64,
-    "extra_code_row_cycles": 78,
+    "extra_code_row_cycles": 80,
     "scale_service": "parallel independent ROM path; not yet physically composed",
     "serial_token_contribution": "cold embedding only; die hops/stations and consumer credit return remain additive"
   },

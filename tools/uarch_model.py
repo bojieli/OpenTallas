@@ -12940,11 +12940,11 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
     macro_area = 121.824 * 62.910
     macro_count = 2 * pair_count + scale_macros
     tree_levels = math.ceil(math.log(pair_count, 4)) if pair_count > 1 else 0
-    leaf_frame = (270.0, 100.0)
+    leaf_frame = (270.0, 100.44)
     # Reserve a 4-way registered distribution/gather tree. A leaf accepts
     # once per two fast edges so a macro capture can use a real two-cycle
     # setup budget; the 739 ps SS macro clk->q is never replaced by a flop.
-    leaf_latency = 4
+    leaf_latency = 6
     read_latency = 2 * tree_levels + leaf_latency
     return dict(schema="opentallas.qwen.embedding_bank_closure.v1",
         default_off=True, rows=rows, embedding_elements_per_row=4096,
@@ -12961,8 +12961,11 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
         replica_mux_demux_cost=dict(fanout_per_stage=4,
             distribution_levels=tree_levels, gather_levels=tree_levels,
             gather_muxes_upper_bound=math.ceil((pair_count-1)/3), mux_width_bits=512),
-        routing=dict(leaf_tracks=526, channel_capacity_tracks=None,
-                     fit="OPEN: die geometry must bind real pin capacity and stations"),
+        routing=dict(leaf_tracks=529, leaf_request_side_tracks=14, leaf_response_side_tracks=514,
+                     leaf_channel_capacity_tracks=600,
+                     capacity_basis="96.12 um usable side / 0.096 um conservative pitch x 60 percent",
+                     leaf_track_fit=True, die_channel_capacity_tracks=None,
+                     fit="leaf planned fit; die geometry must bind real stations and distribution tree"),
         area=dict(macro_count=macro_count, raw_macro_mm2=macro_count*macro_area/1e6,
                   min_reserved_mm2=macro_count*macro_area/1e6/utilisation,
                   utilisation_target=utilisation, legacy_reservation_mm2=11.046,
