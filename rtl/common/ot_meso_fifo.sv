@@ -82,14 +82,16 @@ module ot_meso_fifo #(
 `endif
 );
     localparam int AW = $clog2(DEPTH);
-    logic wrst_i, rrst_i;
+    logic wrst_i, rrst_i, w_v_i; logic [W-1:0] w_d_i;
     generate if (PINREG) begin : g_pinreg
-        logic wq, rq;
-        always_ff @(posedge wclk) wq <= wrst_n;
+        // every input captured at its pin (fail-fast fix 2: 21e5409bf w_v -> ring write enables SS +4.7); the
+        // write is taken one cycle later and w_rdy looks ahead over the word in flight (exact credit accounting)
+        logic wq, rq, vq; logic [W-1:0] dq;
+        always_ff @(posedge wclk) begin wq <= wrst_n; vq <= w_v && w_rdy; dq <= w_d; end
         always_ff @(posedge rclk) rq <= rrst_n;
-        assign wrst_i = wq; assign rrst_i = rq;
+        assign wrst_i = wq; assign rrst_i = rq; assign w_v_i = vq; assign w_d_i = dq;
     end else begin : g_nopinreg
-        assign wrst_i = wrst_n; assign rrst_i = rrst_n;
+        assign wrst_i = wrst_n; assign rrst_i = rrst_n; assign w_v_i = w_v; assign w_d_i = w_d;
     end endgenerate
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
@@ -125,7 +127,7 @@ module ot_meso_fifo #(
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
         ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_data (
-            .tclk(wclk), .t_v(w_send), .t_d(w_d),
+            .tclk(wclk), .t_v(w_send), .t_d(w_d_i),
             .rclk(rclk), .r_align(r_align), .r_on(r_on),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
 `ifdef OT_MESO_DEBUG
@@ -160,8 +162,9 @@ module ot_meso_fifo #(
         logic w_flt; logic [2:0] w_arm;
         assign w_on     = (ws == S_READY) || (ws == S_RUN);
         assign w_live   = (ws == S_RUN);
-        assign w_rdy    = wrst_i && (ws == S_RUN) && !w_flt && (w_cred != '0);
-        assign w_send   = w_v && w_rdy;
+        wire   w_ok_i   = wrst_i && (ws == S_RUN) && !w_flt && (w_cred != '0);
+        assign w_rdy    = PINREG ? (w_ok_i && (w_cred != BW'(w_v_i))) : w_ok_i;   // PINREG: one word may be in flight
+        assign w_send   = w_v_i && w_ok_i;
         assign w_fault  = w_flt;
         assign w_align  = (ws == S_ALIGN) && (w_set == SW'(SETTLE));
         logic c_hit;                                   // credit-ring crossing term (valid in the expected lap)
