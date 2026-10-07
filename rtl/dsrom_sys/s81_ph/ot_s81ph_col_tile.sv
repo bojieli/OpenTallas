@@ -21,6 +21,69 @@
 // later DONE word of that lane (rule 4: no commit can pass an earlier fault).
 // ---------------------------------------------------------------------------------------------------------------
 
+// SRAM frame FIFO of the lane tile (redesign r2, colt_lane cd3337221: macro rd_out -> ot_fifo_sram_fwft ob write mux
+// -4.3 ps, wp -> bypass -> ob -1.7 ps at 18 levels).  Rule 5: the macro output is registered AT the macro (rq_r), the
+// head buffer is an OBD-entry shift register written from flops only, no bypass, and the read issue depends only on
+// registered occupancy (never on this cycle's pop).  In-order, lossless while not overflowed; a push into a full array
+// is dropped and latches ovf (fail closed).  Push -> head latency 4 cycles (fwft bypass: 1).
+module ot_s81ph_colt_fifo #(
+    parameter integer W     = 512,
+    parameter integer DEPTH = 256,           // 256 (2 x ot_sram_1r1w_256x256_m2_r2c2)
+    parameter integer OBD   = 4
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          push,
+    input  wire [W-1:0]  wdata,
+    input  wire          pop,
+    output wire          hv,
+    output wire [W-1:0]  head,
+    output reg           ovf
+);
+    localparam integer AW = $clog2(DEPTH);
+    localparam integer NT = (W + 255) / 256;
+    localparam integer OW = $clog2(OBD + 1);
+    reg  [AW:0]   wp, rp, cnt;               // cnt = records in the array
+    reg           ne;                        // cnt != 0 (registered)
+    reg           f1, f2;                    // read issued 1 / 2 edges ago (rd_out lands at f1, rq_r at f2)
+    reg  [OW-1:0] oc;                        // head buffer occupancy
+    wire          wr  = push && cnt != DEPTH;
+    wire          rd  = ne && ({1'b0, oc} + f1 + f2) < OBD;
+    wire [NT*256-1:0] rq;
+    reg  [W-1:0]  rq_r;
+    genvar t;
+    generate for (t = 0; t < NT; t = t + 1) begin : g_m
+        wire [255:0] wd = {{(NT*256-W){1'b0}}, wdata} >> (t * 256);
+        ot_sram_1r1w_256x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(rd), .r_addr_in(rp[AW-1:0]), .rd_out(rq[t*256 +: 256]),
+            .w_ce_in(wr), .w_addr_in(wp[AW-1:0]), .wd_in(wd), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    always @(posedge clk) rq_r <= rq[W-1:0];
+    reg  [W-1:0]  ob [0:OBD-1];
+    wire          dpop = pop && oc != 0;
+    wire [AW:0]   cnt_n = cnt + (wr ? 1'b1 : 1'b0) - (rd ? 1'b1 : 1'b0);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wp <= 0; rp <= 0; cnt <= 0; ne <= 1'b0; f1 <= 1'b0; f2 <= 1'b0; oc <= 0; ovf <= 1'b0; end
+        else begin
+            if (wr) wp <= wp + 1'b1;
+            if (rd) rp <= rp + 1'b1;
+            cnt <= cnt_n; ne <= cnt_n != 0;
+            f1 <= rd; f2 <= f1;
+            oc <= oc + (f2 ? 1'b1 : 1'b0) - (dpop ? 1'b1 : 1'b0);
+            if (push && cnt == DEPTH) ovf <= 1'b1;
+        end
+    integer e;
+    always @(posedge clk)
+        for (e = 0; e < OBD; e = e + 1) begin
+            if (dpop) begin
+                if (f2 && e == oc - 1) ob[e] <= rq_r;
+                else if (e + 1 < OBD) ob[e] <= ob[(e + 1) % OBD];
+            end else if (f2 && e == oc) ob[e] <= rq_r;
+        end
+    assign hv = oc != 0;
+    assign head = ob[0];
+endmodule
+
 module dsfd_colt_lane #(
     parameter integer DEPTH = 256,
     parameter integer DM    = 8              // merger landing FIFO depth = initial credits
@@ -84,7 +147,7 @@ module dsfd_colt_lane #(
     always @(posedge ck[0]) pd <= d;
     wire hv, ovf; wire [511:0] head;
     reg  pop;
-    ot_fifo_sram_fwft #(.W(512), .DEPTH(DEPTH), .MACRO(1)) u_q (.clk(ck[0]), .rst_n(rst_n), .push(push), .wdata(pd),
+    ot_s81ph_colt_fifo #(.W(512), .DEPTH(DEPTH)) u_q (.clk(ck[0]), .rst_n(rst_n), .push(push), .wdata(pd),
         .pop(pop), .hv(hv), .head(head), .ovf(ovf));
     // ---- frame sender: starts a frame only when it is complete in the FIFO, then sends its words under credits
     localparam integer FW = $clog2(DEPTH + 1);
