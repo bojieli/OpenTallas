@@ -146,5 +146,14 @@
    "verdict": "ECO MISS"
   },
   "conclusion": "~1,500 FF endpoints below the goal, all fixable by window, but every buffer costs setup: the slab hold class needs an RTL / boundary change (closure-loop rule: ECO miss -> NEEDS_RTL); the die STA keeps the pre-ECO s14 view (SS +44.55 / FF +4.57)"
+ },
+ "ir": {
+  "tile_field": 19.27,
+  "spine_hub": 23.61,
+  "shoreline_w": 19.86,
+  "spine_slab": 19.27,
+  "note": "r21 (relays at 430.56 um, slab M8 pins): every judged window (the same rectangles as r17-r19) evaluated inside a 200 um guard band of continuing grid and bumps (--ir-guard 200); worst rail-to-rail over the WHOLE judged window <= 23.61 mV (budget 35): the r19 window-edge overruns (36.9-83.2 mV) were boundary artefacts and sit in the guard band now (38 mV max there)",
+  "budget_mv": 35.0,
+  "pass": true
  }
 }
