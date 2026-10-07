@@ -69,7 +69,7 @@
  },
  "adopted": false,
  "physical": {
-  "state": "RUNNING (CTS)",
+  "state": "TERMINAL NOT CLOSED",
   "host": "ot-epyc1tb",
   "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair",
   "source": "3b26daaa5 (pinned archive src_pinned, commit 46ffc80a5)",
@@ -82,7 +82,38 @@
    "14:19 attempt: detailed placement DPL-0033 (10 overlaps / 15 site-alignment, bank-local cells next to the capture fences); kept fail_r1_dpl/",
    "14:38 attempt with the retained recipe diamond legalizer: DPL-0036, one repair buffer (INVx2) trapped inside data macro p0b0 beside the fence; kept fail_r2_dpl/",
    "attempt 3: capture fences dropped (POST_MACRO_PLACE hook removed), default legalizer; detailed placement legal (0 overlaps), in CTS at 15:30 PT. No timing setting changed."
-  ]
+  ],
+  "finished": "2026-10-06 ~18:20 PT",
+  "route_exit": 0,
+  "drc": 0,
+  "antenna": 0,
+  "orfs_770": {
+   "setup_wns_ns": -1.031,
+   "hold_wns_ns": -0.686
+  },
+  "signoff_833": {
+   "SS": {
+    "reg2reg": -176.81,
+    "in2reg": -500.93,
+    "reg2out": -967.3
+   },
+   "FF": {
+    "reg2reg_hold": -11.98,
+    "in2reg_hold": -467.85,
+    "reg2out_setup_FF": -248.01
+   }
+  },
+  "reg2reg_classes_SS": [
+   "wq_data -> per-bank wd (256-bit write data fanned to 10 banks over the 864 um block) -176.8",
+   "SRAM rd_out -> bank capture -175.7 (capture flops no longer fenced beside the macro; clk->q 691.8 + wire)",
+   "syn5 -> cd6 W6 correction -163.7",
+   "sel_code -> unc5 -74.8",
+   "metadata copy -> fault -70.6",
+   "msel -> coded mux -63.4"
+  ],
+  "io": "IO classes fail mainly on a ~950 ps SS clock insertion (deep CTS from a corner clock pin) against an ideal-clock 120 ps IO contract, plus same-cycle visible_v/wr_r outputs kept for the original ABI",
+  "evidence": "route_r1/",
+  "verdict": "NOT CLOSED; not adopted"
  },
  "probe_r0": {
   "host": "ot-epyc1tb",
@@ -109,5 +140,11 @@
   "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair/probe_r1",
   "scope": "rev2 floorplan-stage classes at 770 ps; stopped at IO placement",
   "classes": "probe_r1/prelayout_classes_770ps.txt"
- }
+ },
+ "next": [
+  "split write-data distribution: per-column registered copy + per-bank-pair kept stage (+1 internal write edge, not exposed)",
+  "restore capture-flop placement beside each data macro with a legal fence (region outside the macro halo and buffer escape, or a per-bank hardened leaf)",
+  "split W6 correction across two stages (+1 read edge) and move UE/flag logic one stage earlier",
+  "IO contract: budget against measured insertion per owner rule (150 ps die-clock term) or harden the bank as a leaf so the parent has a shallow tree; ABI same-cycle wr_r/visible_v need a parent decision"
+ ]
 }
