@@ -12917,3 +12917,58 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
+    """Size real embedding macros before physical bank RTL; no adoption credit.
+
+    A code bank is the existing 4096-word low/high macro pair (64 complete
+    vocabulary rows). Scale payload packs sixteen BF16 scales per macro word.
+    The frozen 11.046 mm2 reservation cannot contain this released payload.
+    """
+    import math
+    if rows <= 0 or not 0 < utilisation <= 1:
+        raise ValueError("positive rows and utilisation in (0, 1] required")
+    pair_count = math.ceil(rows * 64 / 4096)
+    scale_macros = math.ceil(rows / (4096 * 16))
+    macro_area = 121.824 * 62.910
+    macro_count = 2 * pair_count + scale_macros
+    tree_levels = math.ceil(math.log(pair_count, 4)) if pair_count > 1 else 0
+    leaf_frame = (270.0, 100.0)
+    # Reserve a 4-way registered distribution/gather tree. A leaf accepts
+    # once per two fast edges so a macro capture can use a real two-cycle
+    # setup budget; the 739 ps SS macro clk->q is never replaced by a flop.
+    leaf_latency = 4
+    read_latency = 2 * tree_levels + leaf_latency
+    return dict(schema="opentallas.qwen.embedding_bank_closure.v1",
+        default_off=True, rows=rows, embedding_elements_per_row=4096,
+        payload_bytes=rows*4096+rows*2, MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, communication_intensity="one 64-byte selected code word per accepted read",
+        replica_count=dict(code_bank_pairs=pair_count, scale_macros=scale_macros),
+        macro=dict(name="ot_rom_4096x266_m8", width_um=121.824, height_um=62.910,
+                   area_um2=macro_area, code_payload_bits_per_pair=512,
+                   unused_bits_per_pair=20, ROM_ECC=False, SS_clk_to_q_min_ps=739.2103),
+        memory_port_bytes_per_cycle=dict(each_macro_peak=266/8, each_macro_scheduled=266/16,
+                                         selected_code_pair_payload=32),
+        boundary_bits_per_cycle=dict(leaf_request=1+12, leaf_response=1+512,
+                                     address_tree_root=1+24, response_tree_root=1+512),
+        replica_mux_demux_cost=dict(fanout_per_stage=4,
+            distribution_levels=tree_levels, gather_levels=tree_levels,
+            gather_muxes_upper_bound=math.ceil((pair_count-1)/3), mux_width_bits=512),
+        routing=dict(leaf_tracks=526, channel_capacity_tracks=None,
+                     fit="OPEN: die geometry must bind real pin capacity and stations"),
+        area=dict(macro_count=macro_count, raw_macro_mm2=macro_count*macro_area/1e6,
+                  min_reserved_mm2=macro_count*macro_area/1e6/utilisation,
+                  utilisation_target=utilisation, legacy_reservation_mm2=11.046,
+                  legacy_reservation_fit=macro_count*macro_area/1e6 <= 11.046,
+                  leaf_frame_um=list(leaf_frame), leaf_macro_utilisation=2*macro_area/(leaf_frame[0]*leaf_frame[1]),
+                  leaf_logic_and_clock_fit="OPEN until routed"),
+        latency=dict(leaf_cycles=leaf_latency, initiation_interval_cycles=2,
+                     root_read_cycles=read_latency,
+                     code_row_service_cycles=(64-1)*2+read_latency,
+                     baseline_one_cycle_row_cycles=64,
+                     extra_code_row_cycles=(64-1)*2+read_latency-64,
+                     scale_service="parallel independent ROM path; not yet physically composed",
+                     serial_token_contribution="cold embedding only; die hops/stations and consumer credit return remain additive"),
+        physical_closed=False, adopted=False, headline_credit=0,
+        source="rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8")

@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.qwen.embedding_bank_closure.v1",
+  "default_off": true,
+  "rows": 151936,
+  "embedding_elements_per_row": 4096,
+  "payload_bytes": 622633728,
+  "MACs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity": "one 64-byte selected code word per accepted read",
+  "replica_count": {
+    "code_bank_pairs": 2374,
+    "scale_macros": 3
+  },
+  "macro": {
+    "name": "ot_rom_4096x266_m8",
+    "width_um": 121.824,
+    "height_um": 62.91,
+    "area_um2": 7663.94784,
+    "code_payload_bits_per_pair": 512,
+    "unused_bits_per_pair": 20,
+    "ROM_ECC": false,
+    "SS_clk_to_q_min_ps": 739.2103
+  },
+  "memory_port_bytes_per_cycle": {
+    "each_macro_peak": 33.25,
+    "each_macro_scheduled": 16.625,
+    "selected_code_pair_payload": 32
+  },
+  "boundary_bits_per_cycle": {
+    "leaf_request": 13,
+    "leaf_response": 513,
+    "address_tree_root": 25,
+    "response_tree_root": 513
+  },
+  "replica_mux_demux_cost": {
+    "fanout_per_stage": 4,
+    "distribution_levels": 6,
+    "gather_levels": 6,
+    "gather_muxes_upper_bound": 791,
+    "mux_width_bits": 512
+  },
+  "routing": {
+    "leaf_tracks": 526,
+    "channel_capacity_tracks": null,
+    "fit": "OPEN: die geometry must bind real pin capacity and stations"
+  },
+  "area": {
+    "macro_count": 4751,
+    "raw_macro_mm2": 36.41141618784,
+    "min_reserved_mm2": 60.6856936464,
+    "utilisation_target": 0.6,
+    "legacy_reservation_mm2": 11.046,
+    "legacy_reservation_fit": false,
+    "leaf_frame_um": [
+      270.0,
+      100.0
+    ],
+    "leaf_macro_utilisation": 0.56769984,
+    "leaf_logic_and_clock_fit": "OPEN until routed"
+  },
+  "latency": {
+    "leaf_cycles": 4,
+    "initiation_interval_cycles": 2,
+    "root_read_cycles": 16,
+    "code_row_service_cycles": 142,
+    "baseline_one_cycle_row_cycles": 64,
+    "extra_code_row_cycles": 78,
+    "scale_service": "parallel independent ROM path; not yet physically composed",
+    "serial_token_contribution": "cold embedding only; die hops/stations and consumer credit return remain additive"
+  },
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0,
+  "source": "rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8"
+}
