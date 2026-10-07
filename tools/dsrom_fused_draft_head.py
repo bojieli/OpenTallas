@@ -326,6 +326,8 @@ def cmd_run(a):
     if a.fpipe or a.safe:
         if not a.margin: raise ValueError("--fpipe/--safe require --margin")
         defs = defs + [f"+define+OT_FH_FPIPE={a.fpipe_level or (2 if a.safe else 1)}"] + ([f"+define+OT_FH_SAFE={a.safe_level}"] if a.safe else [])
+    if getattr(a, "half", False):
+        defs = defs + ["+define+OT_FH_HALF=1"] + (["+define+OT_FH_HALF_MUTANT=1"] if a.half_mutant else [])
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
@@ -351,6 +353,9 @@ def cmd_run(a):
         fh_m = FH.search(out)
         if fh_m:
             r.update(zip(("tokx", "exp_tokx", "tokx_bad", "stok_bad"), map(int, fh_m.groups())))
+        hm = re.search(r"HALF fast_cycles=(\d+) slow_cycles=(\d+)", out)
+        if hm:
+            r["half_fast_cycles"], r["half_slow_cycles"] = int(hm.group(1)), int(hm.group(2))
         r["tokx_events"] = [dict(tok=int(t), val=v, cyc=int(c)) for _, t, v, c in TOKX.findall(out)]
         if not m:
             r["tail"] = out.splitlines()[-10:]
@@ -462,6 +467,8 @@ def main():
     r.add_argument("--fpipe", action="store_true", help="Default-off registered endpoint fault aggregation (OT_FH_FPIPE: per-bank fault flops, registered reduce, release age 6, registered head ACK); needs --margin")
     r.add_argument("--safe", action="store_true", help="Default-off SAFE head: FPIPE=2 endpoint pin stage + retirement SAFE (+1 stage, registered receipt compare / sink busy); needs --margin")
     r.add_argument("--safe-level", type=int, choices=(1, 2), default=1, help="retirement SAFE level (2: split registered receipt comparison); requires --safe")
+    r.add_argument("--half", action="store_true", help="SAFE half-rate backstop: the draft-core domain on the die clock gated every other cycle (OT_FH_HALF); reports HALF fast_cycles")
+    r.add_argument("--half-mutant", action="store_true", help="negative control for --half: the protected return pipe left on the die clock")
     r.add_argument("--fpipe-level", type=int, default=0, help="override the endpoint FPIPE level (3: two input stages + registered outputs)")
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
