@@ -6,8 +6,8 @@
  "adds": [
   {
    "nodes": "*.attn.a_proj",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.attn.a_proj",
@@ -21,8 +21,8 @@
   },
   {
    "nodes": "*.attn.wq_b",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.attn.wq_b",
@@ -36,8 +36,8 @@
   },
   {
    "nodes": "*.attn.cmp.wk",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.attn.cmp.wk",
@@ -51,8 +51,8 @@
   },
   {
    "nodes": "*.attn.wo_a",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.attn.wo_a",
@@ -66,8 +66,8 @@
   },
   {
    "nodes": "*.attn.wo_b",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.attn.wo_b",
@@ -81,8 +81,8 @@
   },
   {
    "nodes": "*.ffn.router",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.ffn.router",
@@ -96,8 +96,8 @@
   },
   {
    "nodes": "*.ffn.shared_gu",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.ffn.shared_gu",
@@ -111,8 +111,8 @@
   },
   {
    "nodes": "*.ffn.experts_gu",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.ffn.experts_gu",
@@ -126,8 +126,8 @@
   },
   {
    "nodes": "*.ffn.down",
-   "cycles": 23,
-   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 160 (layer1) / 157 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing)"
+   "cycles": 26,
+   "source": "S81-RERUN v6 die (claude/s81-rerun-20261006): field round trip 163 (layer1) / 159 (scan) vs 137 / 136 for the r8 die at the same FH 192.24 frame: r9 hub stations + q banks + column relays, margin-first 215 um common-clock hops, budget-sheet hop stations (--hop-fix), meso FIFOs depth 8 (+1 a crossing), column FIFO v2 (+2: pin + output registers)"
   },
   {
    "nodes": "*.ffn.down",
