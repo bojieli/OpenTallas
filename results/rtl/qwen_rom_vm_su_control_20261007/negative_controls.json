@@ -1,0 +1,17 @@
+{
+  "read_enable": {
+    "exit_code": 1,
+    "failure": "AssertionError: (0, 'b', 'read-address/mask mismatch')",
+    "log_sha256": "208c8d16f87c35f8139c8c024dd2c1c4ce0875cc6b61c46a6515ee141137d191"
+  },
+  "write_address": {
+    "exit_code": 1,
+    "failure": "AssertionError: (2, 'write mismatch')",
+    "log_sha256": "18dde654e1f9941f73f6c7d0ed36eeaa58338a174d14ca703b401bb7395ad2dc"
+  },
+  "reducer_address": {
+    "exit_code": 1,
+    "failure": "AssertionError: (0, 'reducer mismatch')",
+    "log_sha256": "08961cea1dbf3b6c4d705579085c7664d527552841312b44857a6536d821516b"
+  }
+}
