@@ -1834,22 +1834,22 @@
    }
   },
   "ot_hbm_accel_smh_tile_e": {
-   "job": "hbm_smh_tile_e_m3f_f7f1a0ee4",
-   "source_commit": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+   "job": "hbm_smh_tile_e_area362p88_edd8613d6",
+   "source_commit": "edd8613d69a4a751943e4e0de9cd844f25148e26",
    "host": "ot-pve1",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_tile_e_m3f_f7f1a0ee4",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_tile_e_area362p88_edd8613d6",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T12:50:24-07:00",
+   "measured_at": "2026-10-07T15:58:40-07:00",
    "ss": {
-    "mean": 720,
-    "min": 702,
-    "max": 828
+    "mean": 759,
+    "min": 735,
+    "max": 847
    },
    "ff": {
-    "mean": 464,
-    "min": 448,
-    "max": 563
+    "mean": 486,
+    "min": 468,
+    "max": 564
    },
    "boundary_n": 13482,
    "budget": null
@@ -2668,5 +2668,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T15:13:38-07:00"
+ "updated": "2026-10-07T15:58:40-07:00"
 }
