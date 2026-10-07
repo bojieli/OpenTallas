@@ -88,7 +88,7 @@ def seg_stages(m, bid, L):
         return math.ceil(L / LINK_STAGE_UM)
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM)
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r17'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r18'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -285,7 +285,10 @@ R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.
 #  barrier_low: the barrier (only peer: cmdproc) moved into the cmdproc / coll gap, inside HUB-SP.
 #  The SM 3x3 grid (smh element) joins r17 when the SM view exports.
 R17 = dict(R16J, budget_stages=True, hub_stage_all=True, fwd_hub=True, spine_region=True, barrier_low=True)
-ADOPTED = R17
+# r18 (2026-10-06 ~21:45, views agent handover): r17 + the band clock pins at the block centre (CK_CENTRE, M7 area pin)
+#   + gath_r9 / stn_r19 re-read from their re-routed views (index) + fwd hub chain station directions (die_top_lint).
+R18 = dict(R17, ck_centre=True)
+ADOPTED = R18
 
 
 def build(variant=None):
@@ -584,6 +587,23 @@ def _jsonable(o):
     return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
 
 
+CK_CENTRE = ('hfd_index_q_b0', 'hfd_index_q_b1', 'hfd_index_q_b2', 'hfd_index_q_b3', 'hfd_index_q_b5',
+             'hfd_svc_SE_s0', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0')
+
+
+def ck_centre(mst_, sp_):
+    """r18 (views agent REQUEST 20:25 / 21:30, measured insertion 927-1,324 ps > the 900 ps target with ck at a band
+    edge): the band's ck is an M7 area pin at the band centre (0.064 x 0.288 um on the M7 track between the 10.8 um PG
+    stripes: x = 5.4 + 10.8 k + 0.032 nearest the centre; y on the 0.048 grid); the die clock leaf drops onto it from
+    M8 (the die owns M8 / M9).  rst stays on its edge."""
+    if mst_.name not in CK_CENTRE or 'ck' not in sp_:
+        return
+    k = round((mst_.w / 2 - 5.4 - 0.032) / 10.8)
+    cx = round(5.4 + 10.8 * k + 0.032, 4)
+    cy = round(round(mst_.h / 2 / 0.048) * 0.048, 4)
+    sp_['ck'] = ('area', 'M7', cx, cy, 0.064, 0.288)
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -615,6 +635,7 @@ def apply_splits(m, specs, lattice=None):
     """r16i: replace each instance of a split parent by its bands (same slot, mirrored with the parent), move every
     parent-port bus end to the band that owns the port, give every band the parent's ck / rst nets, add the cross buses
     between abutting bands, and fix the band masters' pin plans to the split record (m['fixed_ports'])."""
+    V_ck = (m.get('variant') or {}).get('ck_centre')
     fixed = m.setdefault('fixed_ports', {})
     lattice = lattice or {}
     for parent, rel in specs.items():
@@ -629,6 +650,8 @@ def apply_splits(m, specs, lattice=None):
                 sp_ = dict(spec)
                 if k > 1:
                     _bundle_pack(mst, sp_, order, k)
+                if V_ck:
+                    ck_centre(mst, sp_)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
@@ -731,6 +754,7 @@ def apply_splits_x(m, rel):
     port name (port_map), a bus on a port split by bit range (the svc PHY dfi bundle) becomes one bus per band whose
     real-macro end is the slice 'dfi@lo:hi', ck / rst reach every band, and the record's cross buses join abutting
     bands of each parent instance."""
+    V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
     fixed = m.setdefault('fixed_ports', {})
     for bn in sp['bands']:
@@ -743,6 +767,8 @@ def apply_splits_x(m, rel):
                     if t_[0] == 'xy':
                         sp_[pn] = ('face', len(t_[1]), 'S', 'M5', round(sum(t_[1]) / len(t_[1]), 4), 1)
                 _bundle_pack(mst, sp_, order, k)
+            if V_ck:
+                ck_centre(mst, sp_)
             mst.ports, mst.order = sp_, list(order)
         fixed[bn] = fn
     repl, pmap = {}, {}

@@ -135,7 +135,7 @@ def master_record(name):
         p['pins'].append([nm, layer] + [round(v, 4) for v in r])
     for base, p in ports.items():
         spec = mst.ports.get(base)
-        p['face'] = spec[2] if spec and spec[0] == 'face' else ('xy' if spec and spec[0] == 'xy' else '?')
+        p['face'] = spec[2] if spec and spec[0] == 'face' else (spec[0] if spec and spec[0] in ('xy', 'area') else '?')
         arr = pdir.get(name, {}).get(base)
         p['dir_segments'] = segs(arr) if arr else []
         kinds = set(arr or ['?'])
