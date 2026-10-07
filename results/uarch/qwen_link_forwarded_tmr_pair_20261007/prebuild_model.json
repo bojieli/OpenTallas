@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.qwen_forwarded_tmr_pair.prebuild.v1",
+  "model_before_RTL": true,
+  "adopted": false,
+  "shape": {
+    "stations": 2,
+    "NL": 1,
+    "bits_per_direction": 528,
+    "directions": 2,
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "input_and_output_bits_per_cycle_each": 1056,
+    "internal_data_tracks": 1056,
+    "internal_clock_tracks": 2,
+    "payload_FF": 2048,
+    "control_FF": 64,
+    "reset_sync_FF": 24,
+    "clock_inverters": 8,
+    "mux_demux_replication": "None: each stream uses its own 528 FF and 2 inverter clock path per hop",
+    "release_majority_gates": 4,
+    "reset_control_change": "RawPOR onlyon24releaseFF;localmajorityasyncCLRon64controlFF;zeroadditionalcycles"
+  },
+  "timing": {
+    "period_ps": 833.3333333333334,
+    "uncertainty_setup_ps": 60,
+    "uncertainty_hold_ps": 25,
+    "required_margin_ps": 15,
+    "cycles_per_path": 2,
+    "added_cycles_vs_two_existing_stations": 0,
+    "single_user_token_cycle_delta": 0,
+    "clocks": "ab root west, ba root east; each two-inverter stage forwards a real non-inverted clock. Root waveforms phase independent. No asynchronous groups/false paths/multicycle paths.",
+    "hold_requirement": "min(source clk-to-Q + routed data + capture input) - (capture propagated clock arrival - launch propagated clock arrival) - capture hold -25ps >=15ps",
+    "setup_requirement": "833.333ps + capture propagated clock arrival - launch propagated clock arrival - max(data) - capture setup -60ps >=15ps",
+    "reset_release": "All24rawPORsyncFFand64localmajoritytoCLRrecovery/removalaretimed;noexceptions"
+  },
+  "geometry": {
+    "frame_um": [
+      560.568,
+      69.072
+    ],
+    "frame_area_um2": 38719.552896,
+    "bay_frame_um": [
+      130.008,
+      69.072
+    ],
+    "west_bay_um": [
+      0,
+      0,
+      130.008,
+      69.072
+    ],
+    "east_bay_um": [
+      430.56,
+      0,
+      560.568,
+      69.072
+    ],
+    "station_center_span_um": 430.56,
+    "bay_gap_um": 300.552,
+    "corridor_track_pitch_um": 0.048,
+    "nominal_tracks_per_horizontal_layer": 1349,
+    "nominal_track_utilization": 0.7842846553002224,
+    "routing": "Center spacing does not bound full wire length. Actual endpoint segments, local clock insertion and routed wire length must be reported. Final station-to-pin segment <=100um gate remains open.",
+    "cell_area_proxy_um2": 631.314,
+    "bay_utilization_proxy": 0.0403535465332352,
+    "placement": "All west s0 cells, including both inverter pairs, fenced west; all east s1 cells fenced east. CTS/hold repair inserted cells require postroute audit.",
+    "measured_full_mapped_cell_area_um2": 724.742639999994
+  },
+  "scope": "Minimum full-width two-hop source synchronous route vehicle, not die endpoint or protection qualification. External data budgets are fixture assumptions only; internal paths use actual propagated clocks and parasitics.",
+  "remaining": [
+    "Actual root clock/data endpoint budgets",
+    "Link protection and mutable state integrity",
+    "Native endpoint credit/epoch and warm drain binding",
+    "Actual bay/final segment placement at die level",
+    "SS>=15ps FF>=15ps DRC0 with no clock flattening or bypass",
+    "169 real die relay frames mostly52.68x60.456um;130.008x69.072 station bay is a diagnostic frame, not a drop-in fit",
+    "Physical rawPOR rail and local majority clear recovery/removal",
+    "Whole-link protection, not covered by release-storage TMR"
+  ]
+}
