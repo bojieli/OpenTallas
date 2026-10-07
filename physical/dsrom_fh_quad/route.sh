@@ -18,8 +18,7 @@ for f in rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hd
   $D/capture_candidate/ot_hdc_v41_matvec.sv $D/capture_candidate/ot_hdc_v41_fh_ctx.sv; do args+=(--source $f); done
 if [ $V = quad ]; then
  TOP=ot_hdc_v41_fh_quad
- for f in $D/capture_candidate/ot_hdc_v41_fh_sram_return.sv $D/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv \
-   rtl/dft/ot_rom_secded_dec.sv $D/quad/ot_hdc_v41_fh_quad.sv; do args+=(--source $f); done
+ args+=(--source $D/quad/ot_hdc_v41_fh_quad.sv)   # the lane leaf comes from its liberty/LEF (--macro-view)
  args+=(--macro-view $L=$H/leaf --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl
    --die-area 0 0 610 560 --core-area 2 2 608 558 --false-path-from gid --core-utilization 30)
  MAC=(--macro $H/leaf)

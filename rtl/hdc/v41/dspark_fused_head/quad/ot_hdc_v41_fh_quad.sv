@@ -68,7 +68,7 @@ module ot_hdc_v41_fh_quad #(
         wire r_ok, w_ok;
         wire [8:0] r_row, w_row;
         wire [31:0] w_d;
-        ot_hdc_v41_fh_lane_req u_req (.clk(clk), .rst_n(rst_n),
+        ot_hdc_v41_fh_quad_lane_req u_req (.clk(clk), .rst_n(rst_n),
             .read_ok_d(rok), .read_row_d(rrow), .write_ok_d(wok && s_wmask[l]), .write_row_d(wrow), .wr_data_d(s_wdata[32*l+:32]),
             .read_ok(r_ok), .read_row(r_row), .write_ok(w_ok), .write_row(w_row), .wr_data(w_d));
         ot_hdc_v41_fh_sram_lane_hardened u_lane (
@@ -131,4 +131,21 @@ module ot_hdc_v41_fh_quad #(
         always @(posedge clk) c <= {mask_q[l], okey(res[32*l +: 32]), row_qg};
         assign leaf[CW*l +: CW] = c;
     end endgenerate
+endmodule
+
+// Kept per-lane request register (ADDR_PIPE stage 2), the quadrant's own copy of ot_hdc_v41_fh_lane_req (same logic): the
+// quadrant view is synthesised against the hardened lane LEAF (liberty), so it cannot read the lane RTL file.
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_quad_lane_req(
+    input wire clk,rst_n,read_ok_d,write_ok_d,
+    input wire [8:0] read_row_d,write_row_d,
+    input wire [31:0] wr_data_d,
+    output reg read_ok,write_ok,
+    output reg [8:0] read_row,write_row,
+    output reg [31:0] wr_data
+);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin read_ok<=0; write_ok<=0; end
+        else begin read_ok<=read_ok_d; write_ok<=write_ok_d; end
+    always @(posedge clk) begin read_row<=read_row_d; write_row<=write_row_d; wr_data<=wr_data_d; end
 endmodule
