@@ -26,7 +26,11 @@ module ot_dsrom_window_writer_pipeline #(
     parameter integer WIN_STACK = 0,
     parameter integer REFILL_CREDITS = 1,
     parameter integer WINDOW_SLOTS = 128,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    // 1: margin-first timing (takeover-ds 2026-10-06, default off).  Log-depth adders, the region/size
+    // admission predicate registered one state early, and the issue's address-range predicate registered
+    // with the address; the captured-vs-live region compare is a registered predicate.  Zero added cycles.
+    parameter bit MARGIN = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -177,7 +181,64 @@ module ot_dsrom_window_writer_pipeline #(
     wire [6:0] aslot = active_row[6:0];
     wire [SEC_W:0] region_end = {1'b0, region_base_sector} + {1'b0, region_sector_count};
     wire [SEC_W:0] addr_wide = checked_addr;
-    wire addr_bad = !config_matches || cfg_end[SEC_W] || checked_addr[SEC_W] || checked_addr >= cfg_end;
+    // ---- MARGIN: log-depth adders and registered predicates ----
+    wire [SEC_W:0] ks_cfg_end, ks_size, ks_uoff, ks_row1, ks_row2, ks_chk, ks_cnt_ge, ks_chk_ge;
+    wire cnt_ge_size, chk_ge_end;
+    reg cm_q, region_bad_q, range_bad_q;
+    generate if (MARGIN) begin : g_margin_add
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_end (.a({1'b0,cfg_base}), .b({1'b0,cfg_count}), .cin(1'b0), .s(ks_cfg_end), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_size (.a(user_plus << 11), .b(user_plus << 7), .cin(1'b0), .s(ks_size), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_uoff (.a((SEC_W+1)'(user_id) << 11), .b((SEC_W+1)'(user_id) << 7), .cin(1'b0),
+            .s(ks_uoff), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_row1 (.a({1'b0,cfg_base}), .b(user_offset), .cin(1'b0), .s(ks_row1), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_row2 (.a(row_base), .b(slot_offset), .cin(1'b0), .s(ks_row2), .cout());
+        ot_hdc_ksadd_k #(.W(SEC_W+1)) u_chk (.a(row_base), .b((SEC_W+1)'(sec)), .cin(1'b0), .s(ks_chk), .cout());
+        // Three-operand signed differences in 33 bits: one carry-save level, then one log-depth adder;
+        // the result's sign bit is the comparison.  user_plus <= 1024, so no operand is truncated.
+        wire [32:0] ga = {2'b0, cfg_count}, gb = ~{2'b0, user_plus << 11}, gc = ~{2'b0, user_plus << 7};
+        wire [32:0] gs = ga ^ gb ^ gc, gk = {((ga & gb) | (ga & gc) | (gb & gc)), 1'b1} ;
+        wire [32:0] gd;
+        ot_hdc_ksadd_k #(.W(33)) u_cge (.a(gs), .b(gk[32:0]), .cin(1'b1), .s(gd), .cout());
+        assign cnt_ge_size = !gd[32];
+        wire [32:0] ra = {2'b0, row_base}, rb = {28'd0, sec}, rc = ~{2'b0, cfg_end};
+        wire [32:0] rs = ra ^ rb ^ rc, rk = {((ra & rb) | (ra & rc) | (rb & rc)), 1'b0};
+        wire [32:0] rd;
+        ot_hdc_ksadd_k #(.W(33)) u_rge (.a(rs), .b(rk[32:0]), .cin(1'b1), .s(rd), .cout());
+        assign chk_ge_end = !rd[32];
+        assign ks_cnt_ge = '0; assign ks_chk_ge = '0;
+    end else begin : g_plain_add
+        assign ks_cfg_end = {1'b0,cfg_base} + {1'b0,cfg_count};
+        assign ks_size = (user_plus << 11) + (user_plus << 7);
+        assign ks_uoff = ((SEC_W+1)'(user_id) << 11) + ((SEC_W+1)'(user_id) << 7);
+        assign ks_row1 = {1'b0,cfg_base} + user_offset;
+        assign ks_row2 = row_base + slot_offset;
+        assign ks_chk = row_base + (SEC_W+1)'(sec);
+        assign cnt_ge_size = 1'b0; assign chk_ge_end = 1'b0; assign ks_cnt_ge = '0; assign ks_chk_ge = '0;
+    end endgenerate
+    // MARGIN: row-metadata writes are registered as one command with a pre-decoded slot and block
+    // select and applied at the next edge; the next command reads the metadata no earlier than two edges
+    // later (IDLE capture, CHECK1).  The CHECK1 read is eight 16:1 group reads, selected in CHECK2.
+    localparam [1:0] MC_PRIME = 0, MC_BLK0 = 1, MC_BLKN = 2, MC_DONE = 3;
+    reg mc_v; reg [1:0] mc_kind; reg [WINDOW_SLOTS-1:0] mc_sel; reg [15:0] mc_bsel; reg mc_last;
+    reg [POS_W-1:0] mc_row; reg [USER_W-1:0] mc_user;
+    reg [WINDOW_SLOTS-1:0] slot_oh; reg [15:0] bidx_oh;
+    reg [7:0] gm_active; reg [POS_W-1:0] gm_tag [0:7]; reg [USER_W-1:0] gm_user [0:7]; reg [15:0] gm_blocks [0:7];
+    wire c_active = MARGIN ? gm_active[slot[6:4]] : meta_active;
+    wire [POS_W-1:0] c_tag = MARGIN ? gm_tag[slot[6:4]] : meta_tag;
+    wire [USER_W-1:0] c_user = MARGIN ? gm_user[slot[6:4]] : meta_user;
+    wire [15:0] c_blocks = MARGIN ? gm_blocks[slot[6:4]] : meta_blocks;
+    integer mi;
+    wire addr_bad = MARGIN ? (!cm_q || range_bad_q) :
+                    (!config_matches || cfg_end[SEC_W] || checked_addr[SEC_W] || checked_addr >= cfg_end);
+    wire admit_region_bad = MARGIN ? region_bad_q :
+                    (cfg_end[SEC_W] || {1'b0,cfg_count} < required_size || !config_matches);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cm_q <= 1'b0; region_bad_q <= 1'b0; range_bad_q <= 1'b0; end
+        else if (MARGIN) begin
+            cm_q <= config_matches;
+            if (state == CHECK2) region_bad_q <= cfg_end[SEC_W] || !cnt_ge_size || !config_matches;
+            if (state == ADDR3) range_bad_q <= cfg_end[SEC_W] || ks_chk[SEC_W] || chk_ge_end;
+        end
     wire [4223:0] read_row = BANKED_STAGE ? '0 : stage[rslot];
     assign packed_valid = !BANKED_STAGE && stage_valid[pslot] && stage_tag[pslot] == packed_rrow &&
                           stage_user[pslot] == packed_ruser &&
@@ -299,8 +360,26 @@ module ot_dsrom_window_writer_pipeline #(
             st_sectors_read <= 0; st_sectors_written <= 0;
             rows_fetched_carry <= 0; blocks_written_carry <= 0;
             sectors_read_carry <= 0; sectors_written_carry <= 0;
-            row_active <= 0; row_valid <= 0; stage_valid <= 0;
+            row_active <= 0; row_valid <= 0; stage_valid <= 0; mc_v <= 1'b0;
         end else begin
+            mc_v <= 1'b0;
+            if (MARGIN && mc_v) for (mi = 0; mi < WINDOW_SLOTS; mi = mi + 1) if (mc_sel[mi]) begin
+                case (mc_kind)
+                    MC_PRIME: begin
+                        row_user[mi] <= mc_user; row_tag[mi] <= mc_row; row_active[mi] <= 1'b1;
+                        block_valid[mi] <= 16'hffff; row_valid[mi] <= 1'b1; stage_valid[mi] <= 1'b0;
+                    end
+                    MC_BLK0: begin
+                        row_tag[mi] <= mc_row; row_user[mi] <= mc_user; block_valid[mi] <= 16'h0;
+                        row_active[mi] <= 1'b1; row_valid[mi] <= 1'b0; stage_valid[mi] <= 1'b0;
+                    end
+                    MC_BLKN: stage_valid[mi] <= 1'b0;
+                    default: begin
+                        block_valid[mi] <= block_valid[mi] | mc_bsel;
+                        if (mc_last) row_valid[mi] <= 1'b1;
+                    end
+                endcase
+            end
             if (re) begin
                 if (BANKED_STAGE || !kv_ok || rrow != active_row || ruser != active_user ||
                     !row_valid[rslot] || row_tag[rslot] != rrow || row_user[rslot] != ruser) begin
@@ -327,46 +406,65 @@ module ot_dsrom_window_writer_pipeline #(
                     end
                 end
                 CHECK1: begin
-                    cfg_end <= {1'b0,cfg_base} + {1'b0,cfg_count};
+                    cfg_end <= ks_cfg_end;
                     user_plus <= (SEC_W+1)'(user_id) + 1'b1;
                     check_payload_bad <= row >= POS_W'(MAX_CONTEXT) ||
                         (!command_prime && (scale == 8'hff || poison_codes(codes)));
                     meta_active <= row_active[slot]; meta_tag <= row_tag[slot];
                     meta_user <= row_user[slot]; meta_blocks <= block_valid[slot];
+                    if (MARGIN) begin
+                        for (mi = 0; mi < 8; mi = mi + 1) begin
+                            gm_active[mi] <= row_active[{mi[2:0], slot[3:0]}];
+                            gm_tag[mi] <= row_tag[{mi[2:0], slot[3:0]}];
+                            gm_user[mi] <= row_user[{mi[2:0], slot[3:0]}];
+                            gm_blocks[mi] <= block_valid[{mi[2:0], slot[3:0]}];
+                        end
+                        slot_oh <= {{(WINDOW_SLOTS-1){1'b0}}, 1'b1} << slot;
+                        bidx_oh <= 16'h1 << bidx;
+                    end
                     state <= CHECK2;
                 end
                 CHECK2: begin
-                    required_size <= (user_plus << 11) + (user_plus << 7);
-                    user_offset <= ((SEC_W+1)'(user_id) << 11) + ((SEC_W+1)'(user_id) << 7);
+                    required_size <= ks_size;
+                    user_offset <= ks_uoff;
                     slot_offset <= ((SEC_W+1)'(slot) << 4) + (SEC_W+1)'(slot);
                     check_identity_bad <= !command_prime && bidx != 0 &&
-                        (!meta_active || meta_tag != row || meta_user != user_id ||
-                         meta_blocks != (16'h1 << bidx)-1);
+                        (!c_active || c_tag != row || c_user != user_id ||
+                         c_blocks != (16'h1 << bidx)-1);
                     state <= CHECK3;
                 end
                 CHECK3: begin
-                    if (check_payload_bad || check_identity_bad || cfg_end[SEC_W] ||
-                        {1'b0,cfg_count} < required_size || !config_matches) begin
+                    if (check_payload_bad || check_identity_bad || admit_region_bad) begin
                         fault <= 1'b1;
                         if (command_prime) fault_code[0] <= 1'b1;
                         else fault_code[1] <= 1'b1;
                         state <= IDLE;
                     end else if (command_prime) begin
-                        row_user[slot] <= user_id; row_tag[slot] <= row;
-                        row_active[slot] <= 1'b1; block_valid[slot] <= 16'hffff;
-                        row_valid[slot] <= 1'b1; stage_valid[slot] <= 1'b0;
+                        if (MARGIN) begin
+                            mc_v <= 1'b1; mc_kind <= MC_PRIME; mc_sel <= slot_oh; mc_row <= row; mc_user <= user_id;
+                        end else begin
+                            row_user[slot] <= user_id; row_tag[slot] <= row;
+                            row_active[slot] <= 1'b1; block_valid[slot] <= 16'hffff;
+                            row_valid[slot] <= 1'b1; stage_valid[slot] <= 1'b0;
+                        end
                         state <= IDLE;
                     end else begin
-                        if (bidx == 0) begin
-                            row_tag[slot] <= row; row_user[slot] <= user_id;
-                            block_valid[slot] <= 0; row_active[slot] <= 1'b1; row_valid[slot] <= 0;
+                        if (MARGIN) begin
+                            mc_v <= 1'b1; mc_kind <= bidx == 0 ? MC_BLK0 : MC_BLKN; mc_sel <= slot_oh;
+                            mc_row <= row; mc_user <= user_id;
+                        end else begin
+                            if (bidx == 0) begin
+                                row_tag[slot] <= row; row_user[slot] <= user_id;
+                                block_valid[slot] <= 0; row_active[slot] <= 1'b1; row_valid[slot] <= 0;
+                            end
+                            stage_valid[slot] <= 0;
                         end
-                        stage_valid[slot] <= 0; state <= ADDR1;
+                        state <= ADDR1;
                     end
                 end
-                ADDR1: begin row_base <= {1'b0,cfg_base} + user_offset; state <= ADDR2; end
-                ADDR2: begin row_base <= row_base + slot_offset; state <= ADDR3; end
-                ADDR3: begin checked_addr <= row_base + (SEC_W+1)'(sec); state <= sec == 16 ? WS : WC; end
+                ADDR1: begin row_base <= ks_row1; state <= ADDR2; end
+                ADDR2: begin row_base <= ks_row2; state <= ADDR3; end
+                ADDR3: begin checked_addr <= ks_chk; state <= sec == 16 ? WS : WC; end
                 WC: if (grant) begin
                     st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
                     sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
@@ -379,10 +477,13 @@ module ot_dsrom_window_writer_pipeline #(
                     state <= WS_DONE;
                 end
                 WS_DONE: if (done_write) begin
-                    block_valid[slot][bidx] <= 1'b1;
+                    if (MARGIN) begin
+                        mc_v <= 1'b1; mc_kind <= MC_DONE; mc_sel <= slot_oh; mc_bsel <= bidx_oh;
+                        mc_last <= bidx == 4'd15;
+                    end else block_valid[slot][bidx] <= 1'b1;
                     st_blocks_written <= stat_increment(st_blocks_written, blocks_written_carry);
                     blocks_written_carry <= stat_carry_after_increment(st_blocks_written);
-                    if (bidx == 4'd15) row_valid[slot] <= 1'b1;
+                    if (!MARGIN && bidx == 4'd15) row_valid[slot] <= 1'b1;
                     state <= IDLE;
                 end
                 FR: if (grant) state <= FR_DONE;

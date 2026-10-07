@@ -18,7 +18,12 @@ module ot_dsrom_window_stream_la_s81 #(
     parameter integer LENW   = 4,
     parameter integer BEATW  = 4,
     parameter integer IW     = 8,
-    parameter integer ISSUE_PC = 0       // 1: per-pseudo-channel issue (no all-or-nothing group)
+    parameter integer ISSUE_PC = 0,      // 1: per-pseudo-channel issue (no all-or-nothing group)
+    // 1: margin-first timing (takeover-ds 2026-10-06, default off, ISSUE_PC=1 only).  The job start is
+    // registered once (base adders split across two edges, +1 load cycle), the per-channel window
+    // bounds are kept copies, the landed-beat poison flags are computed at the first edge and carried as
+    // two bits (no 256-b data delay line), adders are log-depth, the population count is split in four.
+    parameter bit MARGIN = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -98,31 +103,61 @@ module ot_dsrom_window_stream_la_s81 #(
     reg  [TAGW-1:0] rtag [0:NPC-1];
     reg  inw; reg [4:0] gl1; reg [GW-6:0] gh, ghn;
     integer q;
-    wire [AW-3:0] sa0 = base[AW-1:2];                     // the job's first granule (at start)
-    wire [AW-3:0] sa1 = base[AW-1:2] + (NGRAN - 1);       // its last granule
+    // MARGIN: start_e/base_e are the start pulse and base one edge later; the last-granule sum is formed
+    // in that edge's register.
+    reg start_q; reg [AW-1:0] base_q; reg [AW-3:0] sa1_q;
+    wire [AW-3:0] sa1_c;
+    generate if (MARGIN) begin : g_sa1
+        ot_hdc_ksadd_k #(.W(AW-2)) u_sa1 (.a(base[AW-1:2]), .b((AW-2)'(NGRAN - 1)), .cin(1'b0), .s(sa1_c), .cout());
+    end else begin : g_sa1_plain
+        assign sa1_c = base[AW-1:2] + (NGRAN - 1);
+    end endgenerate
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin start_q <= 1'b0; base_q <= '0; sa1_q <= '0; end
+        else begin start_q <= start; if (start) begin base_q <= base; sa1_q <= sa1_c; end end
+    wire start_e = MARGIN ? start_q : start;
+    wire [AW-1:0] base_e = MARGIN ? base_q : base;
+    wire [AW-3:0] sa0 = base_e[AW-1:2];                   // the job's first granule (at start)
+    wire [AW-3:0] sa1 = MARGIN ? sa1_q : sa1_c;           // its last granule
     wire [GW-6:0] shi0 = sa0[AW-3:10];
+    // kept per-channel copies of the job bounds (MARGIN)
+    reg [GW-6:0] ghi0_c [0:NPC-1], ghi1_c [0:NPC-1];
+    reg [4:0] j0_c [0:NPC-1], j1_c [0:NPC-1], nlast_c [0:NPC-1];
+    wire [AW-8:0] nl_c;
+    wire [GW-6:0] shi1_c;
+    generate if (MARGIN) begin : g_nl
+        ot_hdc_ksadd_k #(.W(AW-7)) u_nl (.a(sa1[AW-3:5]), .b(~sa0[AW-3:5]), .cin(1'b1), .s(nl_c), .cout());
+        ot_hdc_inc_k #(.W(GW-5)) u_shi1 (.a(shi0), .inc(1'b1), .y(shi1_c), .co());
+    end else begin : g_nl_plain
+        assign nl_c = '0; assign shi1_c = '0;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             pdone <= '1; rv <= '0; ghi0 <= 0; ghi1 <= 0; j0 <= 0; j1 <= 0; nlast <= 0; hi_c <= 0;
             for (q = 0; q < NPC; q = q + 1) begin Glo[q] <= 0; Grel[q] <= 0; jq[q] <= 0; raddr[q] <= 0; rtag[q] <= 0; end
-        end else if (start && !run) begin
+        end else if (start_e && !run) begin
             pdone <= '0; rv <= '0; hi_c <= 0;
             ghi0 <= shi0; ghi1 <= shi0 + 1'b1; j0 <= sa0[4:0]; j1 <= sa1[4:0];
             nlast <= sa1[AW-3:5] - sa0[AW-3:5];
             for (q = 0; q < NPC; q = q + 1) begin
                 Glo[q] <= sa0[9:5]; Grel[q] <= 0; jq[q] <= q[4:0] ^ sa0[9:5] ^ shi0[4:0];
+                if (MARGIN) begin
+                    ghi0_c[q] <= shi0; ghi1_c[q] <= shi1_c; j0_c[q] <= sa0[4:0]; j1_c[q] <= sa1[4:0];
+                    nlast_c[q] <= nl_c[4:0];
+                end
             end
         end else for (q = 0; q < NPC; q = q + 1)
             if (!rv[q] || req_rdy[q]) begin
                 if (run && !pdone[q]) begin
-                    gh = hi_c[q] ? ghi1 : ghi0;
-                    inw = (Grel[q] != 5'd0 || jq[q] >= j0) && (Grel[q] != nlast || jq[q] <= j1);
+                    gh = hi_c[q] ? (MARGIN ? ghi1_c[q] : ghi1) : (MARGIN ? ghi0_c[q] : ghi0);
+                    inw = (Grel[q] != 5'd0 || jq[q] >= (MARGIN ? j0_c[q] : j0)) &&
+                          (Grel[q] != (MARGIN ? nlast_c[q] : nlast) || jq[q] <= (MARGIN ? j1_c[q] : j1));
                     rv[q] <= inw;
                     raddr[q] <= {gh, Glo[q], jq[q], 2'b00};
-                    rtag[q] <= {Grel[q], jq[q]} - {5'd0, j0};
-                    if (Grel[q] == nlast) pdone[q] <= 1'b1;
+                    rtag[q] <= {Grel[q], jq[q]} - {5'd0, (MARGIN ? j0_c[q] : j0)};
+                    if (Grel[q] == (MARGIN ? nlast_c[q] : nlast)) pdone[q] <= 1'b1;
                     gl1 = Glo[q] + 1'b1;
-                    ghn = (hi_c[q] || gl1 == 5'd0) ? ghi1 : ghi0;
+                    ghn = (hi_c[q] || gl1 == 5'd0) ? (MARGIN ? ghi1_c[q] : ghi1) : (MARGIN ? ghi0_c[q] : ghi0);
                     if (gl1 == 5'd0) hi_c[q] <= 1'b1;
                     Glo[q] <= gl1; Grel[q] <= Grel[q] + 1'b1; jq[q] <= q[4:0] ^ gl1 ^ ghn[4:0];
                 end else rv[q] <= 1'b0;
@@ -147,42 +182,78 @@ module ot_dsrom_window_stream_la_s81 #(
     reg [23:0] mm;
     reg pc_sim_bad;                                       // simulation assertion only (stays 0 in synthesis)
     integer p;
+    // landed-beat arithmetic as explicit wires (MARGIN: log-depth adders), poison flags (MARGIN)
+    wire [23:0] x2_c [0:NPC-1], mm_c [0:NPC-1];
+    wire [11:0] t4_c [0:NPC-1], k16d_c [0:NPC-1];
+    reg [NPC-1:0] pc1, pc2, pc3, pc4, pc5, ps1, ps2, ps3, ps4, ps5;
+    reg [3:0] nbp [0:3];
+`ifndef SYNTHESIS
+    initial if (MARGIN && (ISSUE_PC == 0 || NPC != 32)) $fatal(1, "ot_dsrom_window_stream_la_s81: MARGIN needs ISSUE_PC=1, NPC=32");
+`endif
+    genvar pg;
+    generate for (pg = 0; pg < NPC; pg = pg + 1) begin : g_land
+        if (MARGIN) begin : g_ks
+            ot_hdc_ksadd_k #(.W(24)) u_x2 (.a({12'd0, s1[pg]} << 12), .b(~({12'd0, s1[pg]} << 8)), .cin(1'b1),
+                .s(x2_c[pg]), .cout());
+            ot_hdc_ksadd_k #(.W(24)) u_mm (.a(x2[pg]), .b({12'd0, s2[pg]} << 4), .cin(1'b0), .s(mm_c[pg]), .cout());
+            ot_hdc_ksadd_k #(.W(12)) u_t4 (.a(s3[pg]), .b(~{1'b0, sl3[pg], 4'b0000}), .cin(1'b1), .s(t4_c[pg]), .cout());
+            ot_hdc_ksadd_k #(.W(12)) u_k16 (.a(t4[pg]), .b(~{5'd0, sl4[pg]}), .cin(1'b1), .s(k16d_c[pg]), .cout());
+        end else begin : g_plain
+            assign x2_c[pg] = ({12'd0, s1[pg]} << 12) - ({12'd0, s1[pg]} << 8);
+            assign mm_c[pg] = x2[pg] + ({12'd0, s2[pg]} << 4);
+            assign t4_c[pg] = s3[pg] - {sl3[pg], 4'b0000};
+            assign k16d_c[pg] = t4[pg] - sl4[pg];
+        end
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             v1 <= 0; v2 <= 0; v3 <= 0; v4 <= 0; v5 <= 0; rng2 <= 0; rng3 <= 0; rng4 <= 0; rng5 <= 0; k16_5 <= 0; bad_q <= 0;
             nb_a <= 0; nb_b <= 0; nb_q <= 0; pc_sim_bad <= 0;
+            nbp[0] <= 0; nbp[1] <= 0; nbp[2] <= 0; nbp[3] <= 0;
         end else begin
             v1 <= rsp_v; v2 <= v1; v3 <= v2; v4 <= v3; v5 <= v4;
             for (p = 0; p < NPC; p = p + 1) begin
                 s1[p] <= {rsp_tag[p*TAGW +: TAGW], 2'b00} + rsp_beat[p*BEATW +: BEATW];
                 d1[p] <= rsp_data[p*256 +: 256];
-                x2[p] <= ({12'd0, s1[p]} << 12) - ({12'd0, s1[p]} << 8);  // s1 * 3,840
+                x2[p] <= x2_c[p];                                         // s1 * 3,840
                 s2[p] <= s1[p]; rng2[p] <= s1[p] >= NSECT; d2[p] <= d1[p];
-                mm = x2[p] + ({12'd0, s2[p]} << 4);                         // s * 3,856; slot = s / 17 = mm >> 16
+                mm = mm_c[p];                                               // s * 3,856; slot = s / 17 = mm >> 16
                 sl3[p] <= mm[22:16]; s3[p] <= s2[p]; rng3[p] <= rng2[p]; d3[p] <= d2[p];
-                t4[p] <= s3[p] - {sl3[p], 4'b0000}; sl4[p] <= sl3[p];      // s - 16 slot
+                t4[p] <= t4_c[p]; sl4[p] <= sl3[p];                         // s - 16 slot
                 rng4[p] <= rng3[p]; d4[p] <= d3[p];
-                k16_5[p] <= (t4[p] - sl4[p]) == 12'd16;                      // s - 17 slot == 16: the scale sector
+                k16_5[p] <= k16d_c[p] == 12'd16;                             // s - 17 slot == 16: the scale sector
                 rng5[p] <= rng4[p]; d5[p] <= d4[p];
+                if (MARGIN) begin
+                    pc1[p] <= poison_codes(rsp_data[p*256 +: 256]); ps1[p] <= poison_scales(rsp_data[p*256 +: 128]);
+                    pc2[p] <= pc1[p]; pc3[p] <= pc2[p]; pc4[p] <= pc3[p]; pc5[p] <= pc4[p];
+                    ps2[p] <= ps1[p]; ps3[p] <= ps2[p]; ps4[p] <= ps3[p]; ps5[p] <= ps4[p];
+                end
 `ifndef SYNTHESIS
                 if (v1[p] && pc_of(b + s1[p]) != p) pc_sim_bad <= 1'b1;
 `endif
             end
             bad_q <= bad_beat;
-            nb_a <= $countones(v5[NPC/2-1:0]); nb_b <= $countones(v5[NPC-1:NPC/2]);
+            if (MARGIN) begin
+                // four eight-beat counts of v4 (= v5 one edge earlier), summed at nb_a/nb_b's edge
+                for (p = 0; p < 4; p = p + 1) nbp[p] <= $countones(v4[8*p +: 8]);
+                nb_a <= {1'b0, nbp[0]} + {1'b0, nbp[1]}; nb_b <= {1'b0, nbp[2]} + {1'b0, nbp[3]};
+            end else begin
+                nb_a <= $countones(v5[NPC/2-1:0]); nb_b <= $countones(v5[NPC-1:NPC/2]);
+            end
             nb_q <= nb_a + nb_b;
         end
     always @* begin
         for (p = 0; p < NPC; p = p + 1)
-            bad_beat[p] = v5[p] && (rng5[p] || (k16_5[p] ? poison_scales(d5[p][127:0]) : poison_codes(d5[p])));
+            bad_beat[p] = v5[p] && (rng5[p] || (MARGIN ? (k16_5[p] ? ps5[p] : pc5[p]) :
+                          (k16_5[p] ? poison_scales(d5[p][127:0]) : poison_codes(d5[p]))));
     end
     reg [11:0] rem;                                       // sectors still to land
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 0; gnext <= 0; fault <= 0; landed <= 0; b <= 0; rem <= 0;
-        end else if (start && !run) begin
-            run <= 1; gnext <= 0; landed <= 0; rem <= NSECT; b <= base;
-            if (base[4:0] != 0) fault <= 1'b1;
+        end else if (start_e && !run) begin
+            run <= 1; gnext <= 0; landed <= 0; rem <= NSECT; b <= base_e;
+            if (base_e[4:0] != 0) fault <= 1'b1;
         end else if (run) begin
             if (grp_ok) gnext <= gnext + IW;
             if (|bad_q || pc_sim_bad) fault <= 1'b1;

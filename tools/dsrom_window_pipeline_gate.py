@@ -31,7 +31,7 @@ def main():
                         24:['lf','lf_kg_p1','lf_kg_p2','lf_kgcon_p2']})
     gate.SOURCES.extend(PIPELINE)
     if a.ctl_leaf:
-        gate.SOURCES.extend(([MUTANT] if a.mutant_late_payload else []) + [CTL])
+        gate.SOURCES.extend(['rtl/hdc/ot_hdc_prefix.sv'] + ([MUTANT] if a.mutant_late_payload else []) + [CTL])
     for name in a.only.split(','):
         gate.CONFIGS[name]['WINDOW_PIPELINE'] = 1
         if a.ctl_leaf:

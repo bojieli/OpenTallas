@@ -18,7 +18,8 @@ SOURCES = [
     'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv',
     'rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv',
     'rtl/chip/ot_chip_v41x_window_stage4.sv',
-    'rtl/chip/ot_chip_v41x_window_row_codec.sv']
+    'rtl/chip/ot_chip_v41x_window_row_codec.sv',
+    'rtl/hdc/ot_hdc_prefix.sv']
 DIE = 480.0
 
 
@@ -26,6 +27,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--execute', action='store_true')
+    p.add_argument('--pnr-stop-after', choices=('floorplan', 'cts', 'finish'), default='finish',
+                   help='floorplan: ideal-clock logic-class screen before the one route')
     a = p.parse_args()
     out = a.out.resolve()
     (out / 'work/orfs/tmp').mkdir(parents=True, exist_ok=True)
@@ -35,14 +38,16 @@ def main():
            '--param', 'LA_ISSUE_PC=1',
            '--clock-period-ns', '0.770', '--clock-uncertainty-ns', '0.060',
            '--clock-uncertainty-hold-ns', '0.025', '--orfs-corner', 'WC', '--hold-corners', 'WC,BC',
-           '--io-delay-fraction', '0.2', '--stages', 'pnr', '--hold-margin-ns', '0.020',
+           '--io-delay-fraction', '0.2', '--stages', 'pnr', '--pnr-stop-after', a.pnr_stop_after,
+           '--hold-margin-ns', '0.020',
            '--max-fanout', '32',
            '--die-area', '0', '0', str(DIE), str(DIE), '--core-area', '5', '5', str(DIE - 5), str(DIE - 5),
            '--place-density', '0.5', '--orfs-var', 'ADDER_MAP_FILE=',
            '--orfs-var', 'IO_PLACER_H=M4 M6 M8', '--orfs-var', 'IO_PLACER_V=M5 M7 M9',
            '--orfs-var', 'TMPDIR=/work/tmp', '--routing-layers', 'M2', 'M9',
            '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
-           '--purpose', 'characterization', '--nickname-tag', 'window_source_ctl_margin_r1',
+           '--purpose', 'characterization',
+           '--nickname-tag', 'window_source_ctl_margin_r1' if a.pnr_stop_after == 'finish' else 'window_source_ctl_screen',
            '--keep-workdir', str(out / 'work'), '--output', str(out / 'physical.json')]
     sha = lambda f: hashlib.sha256((ROOT / f).read_bytes()).hexdigest()
     rec = dict(command=cmd, source_sha256={s: sha(s) for s in SOURCES},
