@@ -143,12 +143,13 @@ def main():
                     known[bid].append(cen(inst) + tuple(si[k_]))
         for bid, inst, p_ in sinks:
             k_ = f'{inst}/{p_}'
+            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]   # real macros: the pin of the die port
             if k_ in si:
-                lat[k_] = si[k_]
+                lat[pk] = si[k_]
             elif known[bid]:
                 x, y = cen(inst)
                 nb = min(known[bid], key=lambda q: abs(q[0] - x) + abs(q[1] - y))
-                lat[k_] = [nb[2], nb[3]]
+                lat[pk] = [nb[2], nb[3]]
         for ci, corner in enumerate(('ss', 'ff')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
                 f'set_clock_latency {v[ci]:.1f} [get_pins {{{k_}}}]\n' for k_, v in sorted(lat.items())))
@@ -167,12 +168,12 @@ def main():
             ci = 0 if corner == 'ss' else 1
             for n_, pin, per in srcs:
                 if n_.startswith('ck_col_'):
-                    root = pin.split('/')[0] + '/ck'
+                    root = pin.split('/')[0] + '/ck[0]' if pin.split('/')[0] + '/ck[0]' in lat else pin.split('/')[0] + '/ck'
                     if root in lat:
                         T.append(f'set_clock_latency -source {lat[root][ci]:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
-              'set_clock_groups -asynchronous ' + ' '.join(f'-group {{{n_}}}' for n_ in ('clk_serial', 'clk_hbm')
-                                                            if any(s[0] == n_ for s in srcs)) if False else '',
+              'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
+              'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
               f'report_checks -path_delay {"max" if corner == "ss" else "min"} -group_path_count 200 -endpoint_path_count 1 '
               f'-fields {{fanout}} -digits 1 > /kit/paths_{corner}.rpt',
               f'report_worst_slack -{"max" if corner == "ss" else "min"} -digits 1',
