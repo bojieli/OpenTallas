@@ -96,6 +96,11 @@ module ot_s81ph_coll_core #(
         else if (fv && ftype == 2'd3) begin rank <= fdata[1:0]; eng_en <= fdata[2]; end
     reg erst_n;                                            // engine reset: released one cycle after enable
     always @(posedge clk or negedge rst_n) if (!rst_n) erst_n <= 1'b0; else erst_n <= eng_en;
+    // v4: erst_n fans out to every engine flop (v3 route s81ph-dsfd_coll_core-34b3e75dd post-CTS recovery -681 ps);
+    // its release is a 3-cycle multicycle (physical/s81_ph_views/collective/core_tile.sdc, as rst_mcp2): the engine
+    // takes no input until 3 cycles after the release (eg[3]), so no engine flop changes state in that window.
+    reg [3:0] eg;
+    always @(posedge clk or negedge rst_n) if (!rst_n) eg <= 4'd0; else eg <= {eg[2:0], eng_en};
 
     // ------------------------------------------------------------------ input queues (VM credits)
     wire [5:0]  q_hv, q_pop, q_flt;
@@ -143,7 +148,7 @@ module ot_s81ph_coll_core #(
 
     // ------------------------------------------------------------------ engine (RANK 0, runtime relabel)
     reg           mq_ok;                                   // mode FIFO has room (registered; see below)
-    wire          e_iv = q_hv[0] && erst_n && mq_ok;
+    wire          e_iv = q_hv[0] && eg[3] && mq_ok;
     wire          e_ir;
     wire [3:0]    tx_valid, tx_ready;
     wire [PW-1:0] tx_rec;
