@@ -12,7 +12,8 @@
 #   2. hold_eco.tcl: two-corner session if it reproduces sign-off (SS max / FF min within 1 ps), else FF-only session
 #      with the SS session's per-endpoint slacks and critical nets; endpoint filter; repair; resistance-aware re-route
 #   3. sign-off: tools/w18/corner_sta.py with the same post-SDCs
-#   stop at the first pass that meets ACC_SS / ACC_FF; the next pass starts from the previous pass's routed db.
+#   stop at the first pass that meets ACC_SS and FF >= HM; every pass starts from the original route, the next with a
+#   larger hold allowance; the best pass is kept.
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps, ff_ps, drc, cells_added, pass, session, window}
 set -eo pipefail
@@ -52,10 +53,11 @@ for k in $(seq 1 ${PASSES:-2}); do
   EXP_SS=$(awk '/OT_CORNER_EFF ss ws_max/{printf "%.2f", $4*1e12}' $P/corner_ss.log)
   EXP_FF=$(awk '/OT_CORNER_EFF ff ws_max/{printf "%.2f", $6*1e12}' $P/corner_ff.log)
   # repair target = HM + a post-route allowance: the repair sees the new buffers' nets without wires, so the routed hold
-  # lands short (ctrl_pc / svcio_od / colt_lane: target 15 -> routed 6.5-14.6).  Pass 1 adds ALLOW (3 ps); a later pass
-  # adds twice the shortfall the previous pass left (3..12 ps).
-  TGT=$(python3 -c "hm=float('${HM:-18}'); a=float('${ALLOW:-3}'); prev='${PREV_FF:-}'
-print(hm + (a if not prev else min(12.0, max(a, 2 * (hm - float(prev))))))")
+  # lands short (ctrl_pc / svcio_od / colt_lane: target 15 -> routed 6.5-14.6).  Pass 1 adds ALLOW (3 ps); each later
+  # pass adds 1.5 x the shortfall the previous pass left under HM (allowance capped at 20 ps).
+  CUR_ALLOW=$(python3 -c "a=float('${CUR_ALLOW:-${ALLOW:-3}}'); prev='${PREV_FF:-}'; hm=float('${HM:-18}')
+print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
+  TGT=$(python3 -c "print(float('${HM:-18}') + float('$CUR_ALLOW'))")
   echo "OT_PASS $k hold repair target $TGT (post-route goal ${HM:-18}, acceptance $ACC_FF)" | tee -a $OUT/eco.log
   ECO_ENV=(-e OT_DB=/in/$CUR_DB -e OT_OUT=/p/orfs/results/asap7/$D/base -e OT_HOLD_MARGIN=$TGT -e OT_SETUP_MARGIN=${SM:-40}
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
@@ -95,8 +97,9 @@ PY
   if python3 -c "import sys; sys.exit(0 if $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
   # done when the routed result meets the post-route goal (FF >= HM), not merely the acceptance line
   python3 -c "import json,sys; r=json.load(open('$P/result.json')); sys.exit(0 if r['score'] >= 0 and r['ff_ps'] >= float('${HM:-18}') else 1)" && break
+  # the next pass restarts from the ORIGINAL route (its GRT guides intact) with a larger allowance: chaining passes on an
+  # ECO'd db hit DRT-0218 'Guide is not connected to design' (capt_x, hfd_svc_SE_s6 pass 2)
   PREV_FF=$(python3 -c "import json;print(json.load(open('$P/result.json'))['ff_ps'])")
-  CUR_DIR=$EB; CUR_DB=6_final.odb; CUR_SPEF=$EB/6_final.spef
 done
 [ -n "$best" ] || { echo "no ECO pass produced a result"; exit 9; }
 ln -sfn $(basename $best)/orfs $OUT/orfs
