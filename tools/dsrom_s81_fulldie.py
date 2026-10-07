@@ -3636,7 +3636,12 @@ def link_span_y(lk, port):
     return (min(ys) + max(ys)) / 2
 
 
-def link_ck_relay(m, P, lk, cor, nm):
+def _face_to(it, x, y):
+    dx, dy = x - (it.x + it.w / 2), y - (it.y + it.h / 2)
+    return ('E' if dx > 0 else 'W') if abs(dx) * it.h > abs(dy) * it.w else ('N' if dy > 0 else 'S')
+
+
+def link_ck_relay(m, P, lk, cor, nm, drv):
     """LINK_FIX: the forwarded-clock relay of a link macro, outside its ck pin on the ck face (SerDes: the die-edge
     side of the link column, freed by moving the macro to the core side; UCIe: the edge corridor at the pin)"""
     w, h = LKCK_WH[0] - SHAVE, LKCK_WH[1] - SHAVE
@@ -3651,7 +3656,10 @@ def link_ck_relay(m, P, lk, cor, nm):
                     [cor['edgeW'] if lk.name[3] == 'W' else cor['edgeE']], horiz=False, span=200.0, rows=8)
         assert pl, nm
         x, y = pl
-    return Inst(f'kc_{nm}', 'dsfd_lkck', x, y, w, h, 'R0', kind='lkck', region='link', domain='fwd')
+    it = Inst(f'kc_{nm}', 'dsfd_lkck', x, y, w, h, 'R0', kind='lkck', region='link', domain='fwd')
+    # faces fixed per instance by the master name: fi toward the driver (the tx chain tail), fo toward the ck pin
+    it.master = f'dsfd_lkck_{_face_to(it, drv.x + drv.w / 2, drv.y + drv.h / 2)}{_face_to(it, px, py)}'
+    return it
 
 
 def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
@@ -3701,7 +3709,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         rst = [it for it, _, _ in rs]
         ckd = (tail[0], tail[1])
         if LINK_FIX:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
-            ck = P.add(link_ck_relay(m, P, lk, cor, nm))
+            ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == tail[0])))
             CH8.bus(f'{nm}_ckf', 'fclk', 1, [ckd, (ck.name, 'fi')])
             ckd = (ck.name, 'fo')
         CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
@@ -3893,8 +3901,7 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
-        for p_, at in (('fi', 2.16), ('fo', 6.48)):
-            f_ = _peer_face(m, it, p_)
+        for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
     elif kind == 'qbank':
         ef = 'N' if mst.endswith('_S') else 'S'
