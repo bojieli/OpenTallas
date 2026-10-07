@@ -339,10 +339,10 @@ R22 = dict(R21, relay_all=True)
 #   ~55 % utilisation for the SU / attn / router agent), SFU between its consumers SU and HC as before; the centre
 #   channel (mid_ch) widens by the added quarter widths, so the die grows in x
 R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_stations=('hfd_mcast_r6',),
-           attn_tile_w_um=1778.544, attn_tile_w0_um=1349.136, attn_grow_mid=True,
+           attn_tile_w_um=1778.544, attn_tile_w0_um=1349.136, attn_grow_mid=True, serdes_w_um=2462.4, vm_cross_aligned=True,
            fix_station_pins=('hfd_cdist_r14', 'hfd_cdist_r15', 'hfd_gath_r10', 'hfd_gath_r24', 'hfd_gath_r25', 'hfd_gath_r8',
                              'hfd_gath_r9', 'hfd_meso_r28', 'hfd_meso_r32', 'hfd_stn_r2', 'hfd_stn_r34', 'hfd_stn_r18',
-                             'hfd_stn_r20'))
+                             'hfd_stn_r20', 'hfd_stn_r31'))
 ADOPTED = R23
 
 
@@ -578,6 +578,8 @@ def build(variant=None):
     links = []
     cxm = geo['cx']
     sd_w = dn(mid_ch - 2 * 64.8, GX)
+    if variant.get('serdes_w_um'):     # r23: the widened centre channel must not stretch the SerDes slab (r23b a_real:
+        sd_w = min(sd_w, up(variant['serdes_w_um'], GX))   # sd_N 8.65 mm wide snapped outside the die)
     sl = up(BLOCKS['serdes'][0] / 2 * 1e6 / sd_w, GY)
     MG = variant.get('serdes_mg', 103.68)          # channel E of each macro (its io pins); r14 option: wider
     for side, n in (('S', 5), ('N', 4)):
@@ -685,7 +687,7 @@ def _jsonable(o):
 # local x = 0 mod 0.016 and an x-mirrored copy at 0.008 mod 0.016: no single master has a legal origin in both.  Their
 # edge ck stays; the budget re-plans their die entry target from the measured insertion (the die tree arrives early).
 VM_CENTRE = tuple(f'hfd_vm_{q}' for q in ('sw', 'se', 'nw', 'ne'))
-CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',
+CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s1', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',   # SE_s1: 956 ps edge-ck
              'hfd_vm_sw', 'hfd_vm_se', 'hfd_vm_nw', 'hfd_vm_ne')   # r20: VM tiles (all placed R0)   # SW_s1 / SW_s7: edge-ck insertion 1,304 / 1,123 ps
 
 
@@ -899,7 +901,12 @@ def split_station(m, role, h_data=1024):
                 fcl[nid] = (dbits, ncl, 0)
         ren[bid] = f'{bid}a'
     m['buses'] = nb
-    m['paths'] = {p: [ren.get(b_, b_) for b_ in ids] for p, ids in m['paths'].items()}
+    np_ = {}
+    for p, ids in m['paths'].items():
+        np_[p] = [ren.get(b_, b_) for b_ in ids]
+        if any(b_ in ren for b_ in ids):          # the B half is a parallel path (its own stage count, priced)
+            np_[p + '_b'] = [f'{b_}b' if b_ in ren else b_ for b_ in ids]
+    m['paths'] = np_
     for d_ in ('clocked', 'fwd_dom'):
         dd = m.get(d_, {})
         for n_, (a, b) in pair.items():
@@ -916,6 +923,30 @@ def split_station(m, role, h_data=1024):
     if r_ is not None:
         for t_ in 'ab':
             m['station_roles'][role + t_] = dict(r_, split_of=role)
+
+
+def vm_cross_align(M, k):
+    """r23 (r23b GRT: 55k overflow at the abutting VM tile edges): every cross bus between two abutting VM tiles has its
+    pins at the SAME along-edge positions on both faces (zero-length die nets, as the index_q band cross buses), packed
+    from the edge middle at one track per bit (M4 on E / W, M5 on N / S)."""
+    pairs = (('sw', 'se', 'E', 'W', 'e', 'w'), ('nw', 'ne', 'E', 'W', 'e', 'w'),
+             ('sw', 'nw', 'N', 'S', 'n', 's'), ('se', 'ne', 'N', 'S', 'n', 's'))
+    for a, b, fa, fb, da, db in pairs:
+        A, B = M[f'hfd_vm_{a}'], M[f'hfd_vm_{b}']
+        L_ = 'M4' if fa in 'EW' else 'M5'
+        t = Q.TRK[L_][1] * k
+        along = A.h if fa in 'EW' else A.w
+        runs = [(A, f't_{da}_{nm}', B, f'f_{db}_{nm}') for nm in ('row', 'wr', 'ctl')] + \
+               [(A, f'f_{da}_{nm}', B, f't_{db}_{nm}') for nm in ('row', 'wr', 'ctl')]
+        bits = [A.ports[pa][1] for _, pa, _, _ in runs]
+        need = [max(1, b_) * t + 4 * t for b_ in bits]      # bits: the master's port width at this k (bundled)
+        y = along / 2 - sum(need) / 2
+        assert y > 2 * t, ('VM cross buses do not fit the edge', a, b)
+        for (X, pa, Y, pb), b_, nd in zip(runs, bits, need):
+            c = round(y + 2 * t + (nd - 4 * t) / 2, 4)
+            X.ports[pa] = ('face', b_, fa, L_, c, 1)
+            Y.ports[pb] = ('face', b_, fb, L_, c, 1)
+            y += nd
 
 
 def fix_ports_from_views(m, masters_):
@@ -2141,6 +2172,8 @@ def masters(m, k=1):
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
                 hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
+    if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
+        vm_cross_align(M, k)
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
         for q in ('sw', 'se', 'nw', 'ne'):
             if f'hfd_vm_{q}' in M:

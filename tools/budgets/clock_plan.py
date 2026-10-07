@@ -126,6 +126,9 @@ def merge_regions(d, regs, max_merge):
     return {(r if '+' not in r else r): l for r, l in regs.items()}
 
 
+FAMILY_ROOTS = [True]     # HBM: sibling regions share their family root point (see clock_nets)
+
+
 def clock_nets(d, trees, groups, group):
     """[(clock name, root xy, [(inst, port, x, y)])] for the case group"""
     nets = []
@@ -140,19 +143,44 @@ def clock_nets(d, trees, groups, group):
             nets.append((t, (rx, ry), l))
         return nets
     R = plan_regions(d, trees)
+    fam_root = {}
+    if d.get('die') == 'hbm' and FAMILY_ROOTS[0]:
+        # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
+        # quadrant (HUB-Q<q> cuts) diverged near the PLL, 150-160 ps): sibling regions share one root point (their
+        # family's sink bbox centre), so the trunk is common down to the family and only the region trees differ
+        for t, regs in R.items():
+            fam = defaultdict(list)
+            for r, sl in regs.items():
+                rect = r.split(':', 1)[1] if ':' in r else r
+                fk = re.sub(r'^(G[NS][EW])[we]$', r'\1', rect.split('.')[0])
+                fam[fk] += [(r, p) for p in sl]
+            for fk, l in fam.items():
+                xs, ys = [p[2] for _, p in l], [p[3] for _, p in l]
+                c = ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2)
+                for r in {r for r, _ in l}:
+                    fam_root[r] = c
     for t, regs in R.items():
         tr = trees[t]
         (rx, ry), _ = C.port_xy(d, d['by'][tr['root'][0]], tr['root'][1])
-        if group == 'htop':      # PLL -> every region root
-            l = []
+        if group == 'htop':      # PLL -> every region root (family members share ONE trunk sink at the family root)
+            l, seen = [], {}
             for r, sl in regs.items():
                 xs, ys = [p[2] for p in sl], [p[3] for p in sl]
-                l.append((f'REGION:{r}', '', (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2))
-            nets.append((t, (rx, ry), l))
+                cx, cy = fam_root.get(r, ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2))
+                if r in fam_root:
+                    k_ = (round(cx, 3), round(cy, 3))
+                    if k_ in seen:
+                        seen[k_][0] += '|' + r
+                        continue
+                    seen[k_] = [f'REGION:{r}', '', cx, cy]
+                    l.append(seen[k_])
+                else:
+                    l.append([f'REGION:{r}', '', cx, cy])
+            nets.append((t, (rx, ry), [tuple(x) for x in l]))
         else:                    # hreg: one tree per region from its root
             for r, sl in regs.items():
                 xs, ys = [p[2] for p in sl], [p[3] for p in sl]
-                nets.append((f'REGION:{r}', ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2), sl))
+                nets.append((f'REGION:{r}', fam_root.get(r, ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2)), sl))
     return nets
 
 
@@ -317,7 +345,8 @@ class Forest:
             sj, par, ass, aff = self.cases['htop']
             for sn, t, inst, port, x, y, ex in sj['sinks']:
                 k = 'htop:' + sn
-                top[inst[len('REGION:'):]] = (t, k)
+                for r_ in inst[len('REGION:'):].split('|'):     # a family sink serves every member region
+                    top[r_] = (t, k)
         for g, (sj, par, ass, aff) in self.cases.items():
             if g == 'htop':
                 continue
@@ -365,8 +394,11 @@ def record(a):
     for (inst, port), s_ in F.sinks.items():
         by_inst[inst].append((inst, port))
     pairs = {}
+    fb_ = set(d.get('fclk_buses', []))
     for bid, cls, bits, eps in d['buses']:
         if cls in ('clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'):
+            continue
+        if bid in fb_:      # a forwarded-clock segment: the capture clock travels with the data (no tree pair)
             continue
         for e in eps[1:]:
             for sa in by_inst.get(eps[0][0], []):

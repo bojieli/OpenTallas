@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r19b",
- "generator_sha256": "4b98e50f1ae66cae2e25eedfc4db66935e6952fe0ccde33595249a8610c03fca",
+ "generator_sha256": "6dcdd4183670b31d35441f76a89fc36992e96cbc44c8ef3986fca9fb16cce03d",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -1117,18 +1117,16 @@
    "lef": "hfd_serdes_slab.lef",
    "lib": null,
    "check": {
-    "verdict": "MISMATCH",
-    "problems": [
-     "size 2462.376 x 3656.856 != 8651.208 x 1041.096"
-    ],
+    "verdict": "MATCH",
+    "problems": [],
     "positions": "exact",
     "size_view": [
      2462.376,
      3656.856
     ],
     "size_gen": [
-     8651.208,
-     1041.096
+     2462.376,
+     3656.856
     ],
     "die_top_io_pins": []
    }
@@ -2051,7 +2049,7 @@
   "hfd_stn_r27": {
    "kind": "stations",
    "status": "closed",
-   "instances": 41,
+   "instances": 27,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
    "lef": "hfd_stn_r27.lef",
    "lib": {
