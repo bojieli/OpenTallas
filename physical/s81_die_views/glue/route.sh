@@ -12,7 +12,7 @@ P=physical/s81_die_views/ports/${DIE:-layer}/$master
 read DW DH < <(python3 -c "import json;d=json.load(open('$P/ports.json'));print(d['w_um'],d['h_um'])")
 cp $P/io_place.tcl $SRC/.views/$lab/io_place.tcl
 physical/s81_die_views/glue/${SDCGEN:-make_sdc_stn.sh} ${CK_SS_MEAN:-150} $SRC/.views/$lab/route.sdc
-srcargs="--source ${GLUE:-results/rtl/dsrom_s81_fulldie_20261004/r9m215/dsfd_glue.sv} --source rtl/common/ot_fwd_link_stage.sv"
+srcargs="--source ${GLUE:-results/rtl/dsrom_s81_fulldie_20261004/r9m215/dsfd_glue.sv} --source rtl/common/ot_fwd_link_stage.sv --source rtl/common/ot_meso_fifo.sv"
 for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 echo "master=$master DW=$DW DH=$DH L=${CK_SS_MEAN:-150} PD=${PD:-0.5} $*" > $W/args
 export OT_ORFS_NUM_CORES=${CORES:-8} NUM_CORES=${CORES:-8} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
@@ -22,7 +22,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.5} --routing-layers M2 M7 \
   --orfs-var PDN_TCL=/src/physical/s81_die_views/common/pdn_view.tcl --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= \
-  --step-tcl PRE_CTS=physical/s81_die_views/common/pre_cts_fclk_root_buf.tcl --step-tcl POST_CTS=physical/s81_die_views/common/post_cts_vclk.tcl \
+  --step-tcl PRE_CTS=physical/s81_die_views/common/pre_cts_fclk_root_buf.tcl --step-tcl POST_CTS=${POSTCTS:-physical/s81_die_views/common/post_cts_vclk.tcl} \
   --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 60 --hold-margin-ns 0.030 --purpose signoff_target --nickname-tag s81g_$(echo $lab | tr -c "A-Za-z0-9_\n" _) \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \

@@ -21,7 +21,8 @@ set_min_delay -ignore_clock_latency 0 -from [get_clocks wclk] -to [get_clocks rc
 set_min_delay -ignore_clock_latency 0 -from [get_clocks rclk] -to [get_clocks wclk]
 set_false_path -from [get_clocks vw] -to [get_clocks {rclk vr}]
 set_false_path -from [get_clocks vr] -to [get_clocks {wclk vw}]
-set_false_path -from [get_clocks {wclk rclk}] -to [get_clocks {vr vw}] -hold
+set_false_path -from [get_clocks wclk] -to [get_clocks vr]
+set_false_path -from [get_clocks rclk] -to [get_clocks vw]
 set_input_delay 316.667 -clock vw [get_ports {wrst_n w_v w_d*}]
 set_input_delay 316.667 -clock vr [get_ports {rrst_n r_rdy}]
 set_input_delay -min 0 -clock vw [get_ports {wrst_n w_v w_d*}]
