@@ -1,0 +1,35 @@
+{
+  "status": "R2_FAILED_R3_RUNNING",
+  "job": "route_r3",
+  "phase": "synthesis",
+  "historical_failures": {
+    "route_r1": "macro placement collision after automatic placer",
+    "route_r2": "PDN-0008 macro halo overlaps rows"
+  },
+  "live_job_preserved": true,
+  "remote_successor_hooks_captured": true,
+  "remaining": [
+    "Reuse route_r3; harvest terminal and source-pinned full-shape SS/FF/DRC including IO.",
+    "Do not promote historical floorplan fixes or exact gate into physical closure."
+  ],
+  "acceptance": {
+    "SS_setup_min_ps": 15,
+    "FF_hold_min_ps": 15,
+    "DRC": 0,
+    "IO_timed": true,
+    "constraints_relaxed": false
+  },
+  "adopted": false,
+  "evidence_sha256": {
+    "run_r3.sh": "1fc19dcbd239743540741a66b05b723ea56d858b7045cdbf240d695e499c5753",
+    "live_snapshot.json": "11bda583dcd5d508ea7ecb6f07ebdfdcccfe1b95f5d0a628e9104ac378d5661a",
+    "route_r2.log": "3828f7682bfdf66c68357ee00e2fb56deaddb86cff4dd4a8eb433166aa991202",
+    "route_r1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "manifest.json": "3ae23821649bb0304bd99f5027bdebf3a1e373749bf2e0e75fef0e7c413129be",
+    "route_r2.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "route_r1.log": "d841aa5b6d37257f445469d75586ffc32a4d9223051146d8816a471290c93ab4",
+    "src_7aa74e8da/physical/dsrom_window_columns/place_stage.tcl": "c34660a8a781fdcb878e8d99a353acca01c20bb17e82748052932969eb6f16af",
+    "src_7aa74e8da/physical/dsrom_window_columns/parent_pdn.tcl": "f611ccafa275f7e8a4896a7bb5e7bdb1e2881ebac28e0250b16e0f0c5a487697",
+    "route_r2/physical.json": "42fbbba277f6f7aa9ff65e493c4eff42000aa30b735636c1f23dcfd285d60a74"
+  }
+}

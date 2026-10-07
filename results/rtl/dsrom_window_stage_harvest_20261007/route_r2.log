@@ -1,0 +1,43 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO ODB-0303] The initial 6999 rows (244958001 sites) were cut with 68 shapes for a total of 34703 rows (188398017 sites).
+[INFO TAP-0004] Inserted 13998 endcaps.
+[INFO TAP-0005] Inserted 197943 tapcells.
+Design area 916335 um^2 26% utilization.
+write_db /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_3_floorplan_tapcell.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            6           1564 100a1941cd6c0515c75e
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/dsrom_window_columns/ot_dsrom_window_column_128/ot_dsrom_window_column_128_ss.lib
+read_liberty -corner WC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_128/ot_dsrom_window_column_128_ff.lib
+read_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ff.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[ERROR PDN-0008] window_columns - g_bank\[0\].g_col\[16\].g_split.g_scale.u_column halo overlaps row ROW_2413_1 (and 617 other row(s)); reduce the halo to at most "2.0520 2.1600 2.0500 2.1580".
+Error: pdn.tcl, 7 PDN-0008
+
+Elapsed time: 0:28.09[h:]min:sec. CPU time: user 27.15 sys 0.94 (100%). Peak memory: 2919752KB.
+Elapsed time: 35:07.44[h:]min:sec. CPU time: user 2338.33 sys 222.51 (121%). Peak memory: 6218588KB.
+Elapsed time: 16:53.52[h:]min:sec. CPU time: user 2008.12 sys 47.95 (202%). Peak memory: 5154036KB.
+Elapsed time: 0:06.89[h:]min:sec. CPU time: user 6.29 sys 0.60 (99%). Peak memory: 1601776KB.
+Elapsed time: 0:10.91[h:]min:sec. CPU time: user 10.22 sys 0.69 (99%). Peak memory: 2423008KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/takeover-ds/window-stage/route_r2/physical.json

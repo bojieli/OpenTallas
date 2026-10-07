@@ -1,0 +1,41 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ /src/physical/dsrom_window_columns/ot_dsrom_window_column_128/ot_dsrom_window_column_128_ss.lib
+read_liberty -corner WC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_128/ot_dsrom_window_column_128_ff.lib
+read_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ff.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (1900.00, 1900.00),  Floorplan Area: (5.02, 5.13) (1894.97, 1894.86)
+	Number of std cell instances: 1097870
+	Area of std cell instances: 145540.62
+	Number of macros: 68
+	Macros to be placed: 68
+	Area of macros: 762998.94
+	Base halo (L, B, R, T): (4.00, 4.00, 4.00, 4.00)
+	Area of macros with halos: 882339.35
+	Area of std cell instances + Area of macros: 908539.56
+	Floorplan area: 3571487.65
+	Design Utilization: 0.25
+	Floorplan Utilization: 0.05
+	Manufacturing Grid: 1
+
+[INFO MPL-0500] Runtime: 898.03s
+Took 898 seconds: rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55
+source /work/hooks/post_macro_place_place_stage.tcl
+Error: macro_place.tcl, 8 ot_mts::place: no legal, non-overlapping origin for g_bank\[0\].g_col\[0\].g_split.g_payload.u_column (ot_dsrom_window_column_256 R0) near (100.0, 100.0)
+
+Elapsed time: 0:24.21[h:]min:sec. CPU time: user 23.31 sys 0.90 (99%). Peak memory: 2919964KB.
+Elapsed time: 34:25.63[h:]min:sec. CPU time: user 2277.31 sys 217.27 (120%). Peak memory: 6255180KB.
+Elapsed time: 15:06.20[h:]min:sec. CPU time: user 1844.97 sys 44.73 (208%). Peak memory: 5140672KB.
+make[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1
+make: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier_margin/base/2_2_floorplan_macro.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/takeover-ds/window-stage/route_r1/physical.json
