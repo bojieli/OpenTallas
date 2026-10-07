@@ -63,7 +63,8 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
+PENDING_WINDOW_S = 600
+PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -83,7 +84,7 @@ DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 16
+WORKERS = 48
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
@@ -501,7 +502,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def own_pending(self, host):
         t0 = time.time() - PENDING_WINDOW_S
         self.pending[host] = [p for p in self.pending.get(host, []) if p[0] >= t0]
-        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host])
+        # RAM of a launch is held back 5 min (was 10: a route reaches its
+        # memory over hours, so 10 min of declared peaks hid 356 GB of EPYC3's 485 GB free at 07:48 while 38 jobs waited)
+        tr = time.time() - PENDING_RAM_WINDOW_S
+        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host] if p[0] >= tr)
 
     def fits(self, host, threads, ram):
         with FLEET_LOCK:
@@ -521,7 +525,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35
+        head = max(0.05 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
@@ -899,8 +903,22 @@ CAL_OWNER_ACTION = {
 
 def ship_helpers(host, run):
     """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
-    for helper in HELPERS:
-        ssh(host, f"mkdir -p {run}/cl && cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
+    # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
+    import io, tarfile
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        for helper in HELPERS:
+            tf.add(str(HERE / helper), arcname=helper)
+    if is_local(host):
+        os.makedirs(f"{run}/cl", exist_ok=True)
+        with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
+            tf.extractall(f"{run}/cl")
+        return
+    r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", host,
+                        f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"], input=buf.getvalue(), capture_output=True,
+                       timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
 
 
 def tag(st, j):
@@ -1048,6 +1066,12 @@ def get_metrics(j):
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
         last = [x for x in r.stdout.splitlines() if x.strip().startswith("{")]
+        if not last and r.returncode:
+            # no JSON and a failed command: an ssh drop (w2-rb-safe-no3 went NEEDS_HUMAN "verdict inputs missing" with
+            # raw {} while the same command printed the metrics a minute later) or a real error. Raise: transient ssh
+            # errors back off, anything else counts toward the 10-consecutive-errors NEEDS_HUMAN.
+            raise RuntimeError(f"verdict metrics_cmd produced no JSON (command failed rc={r.returncode}): "
+                               f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
         return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
                     raw=m)
@@ -1317,7 +1341,8 @@ def failure_text(j):
 
 
 def launch_ready(j, fleet, spec, stl, st):
-    """READY at a remote stage: capacity check, optional host move, launch (caller holds FLEET_LOCK)."""
+    """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
+    OUTSIDE the lock (launch_now) or None."""
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
@@ -1350,12 +1375,16 @@ def launch_ready(j, fleet, spec, stl, st):
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        launch_stage(j, st, st["cmd"])
-        fleet.launched(j["host"], st["threads"], st["ram"])
-        j["status"] = "RUNNING"
-        event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
-        experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
-        return
+        fleet._launched(j["host"], st["threads"], st["ram"])        # reservation, taken under FLEET_LOCK
+        return st
+
+
+def launch_now(j, fleet, st):
+    """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
+    launch_stage(j, st, st["cmd"])
+    j["status"] = "RUNNING"
+    event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
+    experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
 
 
 # ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
@@ -1404,6 +1433,7 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
+            fleet.probe(j["host"])
             with FLEET_LOCK:
                 ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
                 if not ok:
@@ -1411,10 +1441,10 @@ def bench_track(j, fleet, stl):
                         j["bwait"] = why
                         event(j, f"bench track: {k} waiting for capacity: {why}")
                     return True
-                n = (e or {}).get("n", 0) + 1
-                v = dict(j, attempt=f"{j['attempt']}b{n}")
-                launch_stage(v, st, st["cmd"])
-                fleet.launched(j["host"], st["threads"], st["ram"])
+                fleet._launched(j["host"], st["threads"], st["ram"])
+            n = (e or {}).get("n", 0) + 1
+            v = dict(j, attempt=f"{j['attempt']}b{n}")
+            launch_stage(v, st, st["cmd"])
             tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
@@ -1547,8 +1577,12 @@ def step(j, fleet):
                        f"SMOKE_OK on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')} (not published)")
                 return
             return do_commit(j)
+        fleet.probe(j["host"])                 # (cached 45 s) probe outside the lock
         with FLEET_LOCK:
-            return launch_ready(j, fleet, spec, stl, st)
+            go = launch_ready(j, fleet, spec, stl, st)
+        if go:
+            launch_now(j, fleet, go)
+        return
     if s == "RUNNING":
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
@@ -1579,9 +1613,14 @@ def step(j, fleet):
             event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
                      f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
-            if rc != 0 or not ok_extra:
+            if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
+                # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
+                # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
+                # to overwrite the evidence -> false NEEDS_HUMAN. The verdict stage judges the numbers.
+                event(j, f"{st['key']} rc={rc} with its evidence present (ok check passed): judged at the verdict")
+            elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
-            event(j, f"{st['key']} done (rc=0)")
+            event(j, f"{st['key']} done (rc={rc})")
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 try:
@@ -1666,6 +1705,10 @@ def do_verdict(j, fleet, stl):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
         ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
+        if not ok and TRANSIENT_RE.search(out):
+            # an ssh failure is not a failed check (hbm_stn_mcast_r6b: 'Connection reset by peer' failed lef_check_MATCH
+            # while check.json said MATCH): raise, so the verdict backs off and is re-taken
+            raise RuntimeError(f"verdict check {c['name']}: ssh/network failure: {out.strip()[-200:]}")
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
         if not ok:
             failed.append(c["name"])
@@ -2170,10 +2213,35 @@ def tick(fleet):
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
-    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        list(ex.map(lambda j: advance_job(j["name"], fleet),
-                    [j for j in all_jobs() if j["status"] not in TERMINAL]))
+    # persistent pool, no per-tick barrier (2026-10-07): a job still being stepped (a source sync, a 30-min verdict check)
+    # is skipped this tick instead of holding every other job until the next tick
+    global _POOL
+    if _POOL is None:
+        _POOL = ThreadPoolExecutor(max_workers=WORKERS)
+    for x in all_jobs():
+        if x["status"] in TERMINAL:
+            continue
+        with _INFLIGHT_LOCK:
+            if x["name"] in _INFLIGHT:
+                continue
+            _INFLIGHT.add(x["name"])
+        _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status()
+
+
+_POOL = None
+_INFLIGHT = set()
+_INFLIGHT_LOCK = threading.Lock()
+
+
+def _advance_and_release(name, fleet):
+    try:
+        advance_job(name, fleet)
+    except Exception:  # noqa: BLE001
+        log(f"[{name}] advance error:\n{traceback.format_exc()}")
+    finally:
+        with _INFLIGHT_LOCK:
+            _INFLIGHT.discard(name)
 
 
 def cmd_daemon(a):
@@ -2233,6 +2301,12 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
+    if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
+        stl = stage_list(j["spec"])
+        idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
+        if not idx:
+            sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
+        j["stage_idx"], j["stage_key"] = idx[0], a.at
     j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
@@ -2352,7 +2426,7 @@ def main():
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
-    r = sub.add_parser("retry"); r.add_argument("name")
+    r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")

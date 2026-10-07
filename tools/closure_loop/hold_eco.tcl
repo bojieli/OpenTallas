@@ -180,7 +180,10 @@ set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 if {[llength [dict get $win fixable]]} {
   if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 30] -verbose} err]} {
-    error "OT_ECO repair_timing failed: $err"
+    # the buffer cap (RSZ-0060) keeps what was inserted: continue and let the sign-off judge it (hfd_stn_r38 pass 2 died
+    # here at target +35); any other repair error stays fatal
+    if {![string match {*RSZ-0060*} $err]} { error "OT_ECO repair_timing failed: $err" }
+    puts "OT_ECO repair_timing hit the buffer cap (RSZ-0060): continuing with the cells inserted"
   }
 }
 # rev 3 SETUP GUARD (a): every SS path that now sits under the setup margin loses the ECO cells on it (they are removed
@@ -200,7 +203,20 @@ if {$session in {two mm} && [envd OT_SETUP_GUARD 1]} {
     }
   }
   if {[dict size $undo]} {
-    remove_buffers [get_cells [dict keys $undo]]
+    # close the incremental GRT round that saw the repair (its new nets get guides), then remove the guarded cells in a
+    # second round: remove_buffers inside the first round dropped nets GRT had not registered (router dv12 pass 2:
+    # GRT-0127 'net_id for db_net not found')
+    if {$guides} {
+      global_route -end_incremental -allow_congestion {*}[expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
+      global_route -start_incremental
+    }
+    # names as SEPARATE arguments: one list argument is taken as a single unknown name, and remove_buffers with no valid
+    # instance removes EVERY buffer of the design (measured: 49,885 -> 32,195 cells; router dv12 pass 2)
+    set n_before [llength [get_cells *]]
+    remove_buffers {*}[dict keys $undo]
+    if {$n_before - [llength [get_cells *]] > [dict size $undo]} {
+      error "OT_ECO setup_guard removed [expr {$n_before - [llength [get_cells *]]}] cells for [dict size $undo] requested"
+    }
     puts "OT_ECO setup_guard removed [dict size $undo] ECO cells on [llength $rows] SS paths under $sm ps"
   } else { puts "OT_ECO setup_guard: no ECO cell on an SS path under $sm ps" }
   puts "OT_ECO after_guard ss [ws max ss] ff [ws min ff]"

@@ -153,3 +153,10 @@ every one.
   HBM infeasible as planned: 0.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): VM early clock branch: HUB-V taps the stream trunk 300 ps early (the rest of the tree lifts 84.4 ps), the region flop instant is kept, so the four VM tiles have 300 ps die pad for deeper tile trees; svc SE_s5 centre ck.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): index_q b1 FF IO model from its routed boundary leaf (ff_min 540, kout hold); sheets_r23v/: the 8 VM sub-tile sheets of the r23v fallback (flag default off; VM early branch: 300 ps die pad each).
+- 2026-10-07 ~08:20 PT (CLAUDE HBM-ABSTRACTS coordinator phase 2): HUB EARLY CLOCK BRANCH. The serial trunk taps every
+  HUB-C sub-region 500 ps early (clock_plan.py EARLY_PS 'clk_serial:HUB-C', prefix key; early-branch lift now computed
+  once per tree), so the 5.53 mm hub quarters get a 500 ps die pad: hfd_su / hfd_sfu / hfd_hc / hfd_su_red pad 0 -> 500,
+  hfd_su_full 170 -> 670, entry targets 343.5 -> 843.5 ps; hfd_quant (HUB-C) follows. Clock plan max inter 58.5 -> 66.9 ps
+  (0 > 150). Same r23 die model and committed calibrations; HBM infeasible 0. Structural follow-up: r24 per-segment ck
+  pins on the hub quarters.
+- 2026-10-07 ~08:40 PT: r24 sheets (sheets_r24/, clock_plan/hbm_r24.json.gz; generator d3ebf06d9 preset r24 = r23 + 8 per-segment ck pins per hub quarter, ck0..ck7 on M4 W face): hub quarters' clock ports ck0..ck7, die pad 500 ps, entry 1,014 ps; 44 regions, max inter 66.9 ps. Use these for the multi-ck hub quarter variant; every other master's sheet equals sheets/ (r23).

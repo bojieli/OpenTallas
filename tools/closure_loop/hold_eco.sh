@@ -2,7 +2,7 @@
 # closure-loop HOLD-ECO stage (run by closure_loop.py, cwd = the job's src snapshot):
 #   hold_eco.sh <route results base (5_2_route.odb)> <sign-off ORFS base (6_final.sdc)> <out dir> <block> [post-SDC (src-rel)...]
 # env HM (post-route FF hold GOAL ps, default 18 = acceptance 15 + 3 for die context; the repair aims HM + ALLOW, see
-#     below; a pass that routes to SS >= ACC_SS and FF >= HM ends the ECO), ALLOW (3), SM (setup margin ps kept by repair_timing, 40), FILT (endpoint filter: repair only
+#     below; a pass that routes to SS >= ACC_SS and FF >= HM ends the ECO), ALLOW (12: the re-route costs 12-16 ps of the repaired FF hold, ctl r6 / router dv12 / stn_r38 pass 1), SM (setup margin ps kept by repair_timing, 40), FILT (endpoint filter: repair only
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
 #     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (mm by default = rev 3 multi-mode; ff = FF-only; auto = legacy two-corner detection),
@@ -59,7 +59,7 @@ for k in $(seq 1 ${PASSES:-2}); do
   # repair target = HM + a post-route allowance: the repair sees the new buffers' nets without wires, so the routed hold
   # lands short (ctrl_pc / svcio_od / colt_lane: target 15 -> routed 6.5-14.6).  Pass 1 adds ALLOW (3 ps); each later
   # pass adds 1.5 x the shortfall the previous pass left under HM (allowance capped at 20 ps).
-  CUR_ALLOW=$(python3 -c "a=float('${CUR_ALLOW:-${ALLOW:-3}}'); prev='${PREV_FF:-}'; hm=float('${HM:-18}')
+  CUR_ALLOW=$(python3 -c "a=float('${CUR_ALLOW:-${ALLOW:-12}}'); prev='${PREV_FF:-}'; hm=float('${HM:-18}')
 print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   TGT=$(python3 -c "print(float('${HM:-18}') + float('$CUR_ALLOW'))")
   echo "OT_PASS $k hold repair target $TGT (post-route goal ${HM:-18}, acceptance $ACC_FF)" | tee -a $OUT/eco.log

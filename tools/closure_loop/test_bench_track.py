@@ -20,6 +20,12 @@ class Fleet:
     def launched(self, *a):
         pass
 
+    def _launched(self, *a):
+        pass
+
+    def probe(self, *a):
+        return {}
+
 
 def job(**kw):
     j = dict(name="t", spec=SPEC, status="READY", stage_idx=0, attempt=1, benches={}, events=[], host="h", run="/r",
