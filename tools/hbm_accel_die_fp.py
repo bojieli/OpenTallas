@@ -345,6 +345,8 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
                              'hfd_stn_r20', 'hfd_stn_r31'))
 # r23v (OWNER 2026-10-07 VM fallback, flag default OFF): R23 with the VM quadrant tiles cut into south / north sub-tiles
 R23V = dict(R23, vm_split8=True)
+# r24 (coordinator 2026-10-07): R23 + 8 per-segment ck pins on every hub quarter (hfd_su / hfd_sfu / hfd_hc)
+R24 = dict(R23, hub_ck_seg=8)
 ADOPTED = R23
 
 
@@ -654,6 +656,13 @@ def build(variant=None):
             m['relay_count'] = dict(cnt)
         else:
             relay_ends(m)
+    if variant.get('hub_ck_seg'):       # r24: the hub quarters' ck becomes ck0..ck{n-1} (one die clock sink per segment)
+        hq = [it.name for it in m['insts'] if it.master in HUB_QUARTERS]
+        for i_, (bid, cls, bits, eps) in enumerate(m['buses']):
+            if cls == 'clock_trunk' and any(e[0] in hq and e[1] == 'ck' for e in eps):
+                eps2 = [e for e in eps if not (e[0] in hq and e[1] == 'ck')]
+                eps2 += [(e[0], f'ck{j}') for e in eps if e[0] in hq and e[1] == 'ck' for j in range(variant['hub_ck_seg'])]
+                m['buses'][i_] = (bid, cls, bits, eps2)
     if variant.get('pin_stage_roots') and not variant.get('relay_all'):
         # + the index-key chains' last segment into index b0 k (ik_<q>_e, 396 um, internal 179 ps: same pattern)
         m['pin_stage_buses'] = sorted(b[0] for b in m['buses'] if b[1] == 'attn_root' or re.match(r'ik_[NS][EW]_e$', b[0]))
@@ -839,6 +848,39 @@ def hub_pin_window(mst, window):
             sp_ = mst.ports[p_]
             mst.ports[p_] = ('face', sp_[1], f_, 'M4', round(y + 2 * t + n_ / 2, 4), pitch)
             y += n_ + 4 * t
+
+
+HUB_QUARTERS = ('hfd_su', 'hfd_sfu', 'hfd_hc')
+
+
+def hub_ck_seg(mst, n, k=1):
+    """r24 (coordinator 2026-10-07, SU/hub agent request): a 5.53 mm hub quarter cannot meet the 900 ps block insertion
+    from one ck pin (r16g interim HC quarter measured 4,680 ps SS).  The quarter gets n ck pins ck0..ck{n-1}, one per
+    band segment of h / n (691 um at n = 8), each a separate die clock sink (the die tree aligns them; the quarter
+    builds one sub-tree per segment from its pin).  M4 on the W face (E if a W port window covers a segment centre):
+    M4 face pins are legal in all four quarter orientations (R0 / MX / MY / R180), an M7 area pin is not."""
+    t = Q.TRK['M4'][1] * k
+    win = defaultdict(list)
+    for p_, sp_ in mst.ports.items():
+        if sp_[0] == 'face' and sp_[2] in 'EW' and not re.fullmatch(r'ck\d+', p_):
+            half = sp_[1] * sp_[5] * t / 2 + 2 * t
+            win[sp_[2]].append((sp_[4] - half, sp_[4] + half))
+    ys = [round(((i + 0.5) * mst.h / n) / t) * t for i in range(n)]
+    face = next((f_ for f_ in ('W', 'E') if not any(a_ - 2.0 <= y_ <= b_ + 2.0 for y_ in ys for a_, b_ in win[f_])), None)
+    if face is None:        # both faces have ports over a segment centre: each ck pin moves to the nearest free spot
+        face = 'W'
+
+        def free_(y_):
+            return 2.0 <= y_ <= mst.h - 2.0 and not any(a_ - 1.0 <= y_ <= b_ + 1.0 for a_, b_ in win[face])
+        ys = [next((y_ + s_ * d_ * t for d_ in range(0, 20000) for s_ in (1, -1) if free_(y_ + s_ * d_ * t)), y_)
+              for y_ in ys]
+    mst.ports.pop('ck', None)
+    if 'ck' in mst.order:
+        mst.order.remove('ck')
+    for i, y_ in enumerate(ys):
+        mst.ports[f'ck{i}'] = ('face', 1, face, 'M4', round(y_, 4), 1)
+        if f'ck{i}' not in mst.order:
+            mst.order.append(f'ck{i}')
 
 
 def split_station(m, role, h_data=1024):
@@ -2251,6 +2293,10 @@ def masters(m, k=1):
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
                 hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
+    if m['variant'].get('hub_ck_seg'):      # r24: per-segment ck pins on the 5.53 mm hub quarters
+        for nm_ in HUB_QUARTERS:
+            if nm_ in M:
+                hub_ck_seg(M[nm_], m['variant']['hub_ck_seg'], k)
     if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
         vm_cross_align(M, k)
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
@@ -2937,7 +2983,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
