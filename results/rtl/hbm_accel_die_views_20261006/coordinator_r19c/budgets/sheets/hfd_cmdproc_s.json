@@ -1,0 +1,491 @@
+{
+ "schema": "opentallas.budgets.sheet.v1",
+ "master": "hfd_cmdproc_s",
+ "kinds": [
+  "spine"
+ ],
+ "dies": {
+  "hbm": 1
+ },
+ "size_um": [
+  1399.656,
+  701.976
+ ],
+ "tile_of": null,
+ "clock": {
+  "ports": [
+   "ck"
+  ],
+  "domains": [
+   "stream_1p2"
+  ],
+  "regions": [
+   "hbm:clk_stream:HUB-SP"
+  ],
+  "n_regions": 1,
+  "entry_target_ss_ps": null,
+  "entry_target_ff_ps": null,
+  "die_pad_ss_ps": null,
+  "internal_insertion": {
+   "target_ss": 900.0,
+   "target_ff": 594.0,
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1287.4, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "tolerance_ps": 100.0,
+   "ss": 900.0,
+   "ff": 594.0,
+   "ss_min": 855.0,
+   "ss_max": 990.0,
+   "ff_min": 564.3,
+   "ff_max": 653.4,
+   "grade": "target",
+   "source": "no calibration yet: the target",
+   "over_target": false
+  },
+  "calibrate_check": {
+   "compare": "closure-loop CK_SS_MEAN vs internal_insertion.ss (the value the die plan compensates) and vs internal_insertion.target_ss",
+   "tolerance_ps": 100.0,
+   "on_deviation": "FLAG (NEEDS_BUDGET): re-plan the die pin target; never silently re-calibrate the IO SDC"
+  }
+ },
+ "skew": {
+  "intra_ps": 90.0,
+  "inter_ps": 150.0,
+  "hold_io_ps": 50.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "route_period_ps": 770.0,
+  "signoff_period_ps": 833.333,
+  "accept_ps": 15.0
+ },
+ "control": {
+  "max_fanout_internal": 32,
+  "rule": "nets above 32 loads get kept (dont_touch) replicas; reductions > 4 inputs get a register per 4-6 levels (DESIGN SIMPLIFICATION 3/5)"
+ },
+ "interfaces": [
+  {
+   "port": "cSE",
+   "dir": "output",
+   "bits": 827,
+   "bus_classes": [
+    "control"
+   ],
+   "neighbours": [
+    "hfd_stn_r12"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 1369.0,
+   "length_basis": "pins",
+   "skew_class": "fwd",
+   "skew_ps": 0.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->w97_ct_SE",
+   "also_cdc": false,
+   "input_delay_ss_ps": 518.4,
+   "output_delay_ss_ps": 459.4,
+   "input_fraction_of_T": 0.622,
+   "output_fraction_of_T": 0.551,
+   "internal_input_ps": 239.9,
+   "internal_output_ps": 298.9,
+   "as_planned_internal_input_ps": 239.9,
+   "as_planned_internal_output_ps": 298.9,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 491.0,
+   "stages_needed": 3,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 342.2,
+   "input_min_delay_ff_ps": 70.5,
+   "output_min_delay_ff_ps": -23.3,
+   "die_fanout": 1,
+   "feasible": true
+  },
+  {
+   "port": "cSW",
+   "dir": "output",
+   "bits": 827,
+   "bus_classes": [
+    "control"
+   ],
+   "neighbours": [
+    "hfd_stn_r12"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 1354.6,
+   "length_basis": "pins",
+   "skew_class": "fwd",
+   "skew_ps": 0.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->w34_ct_SW",
+   "also_cdc": false,
+   "input_delay_ss_ps": 514.4,
+   "output_delay_ss_ps": 455.4,
+   "input_fraction_of_T": 0.617,
+   "output_fraction_of_T": 0.546,
+   "internal_input_ps": 244.0,
+   "internal_output_ps": 303.0,
+   "as_planned_internal_input_ps": 244.0,
+   "as_planned_internal_output_ps": 303.0,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 491.0,
+   "stages_needed": 3,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 338.6,
+   "input_min_delay_ff_ps": 70.1,
+   "output_min_delay_ff_ps": -22.9,
+   "die_fanout": 1,
+   "feasible": true
+  },
+  {
+   "port": "f_loader",
+   "dir": "input",
+   "bits": 341,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_loader"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 980.7,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_loader",
+   "also_cdc": false,
+   "input_delay_ss_ps": 591.0,
+   "output_delay_ss_ps": 532.0,
+   "input_fraction_of_T": 0.709,
+   "output_fraction_of_T": 0.638,
+   "internal_input_ps": 167.3,
+   "internal_output_ps": 226.3,
+   "as_planned_internal_input_ps": 167.3,
+   "as_planned_internal_output_ps": 226.3,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 3,
+   "stages_planned": 3,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 326.9,
+   "input_min_delay_ff_ps": 68.8,
+   "output_min_delay_ff_ps": -21.6,
+   "feasible": true
+  },
+  {
+   "port": "f_router",
+   "dir": "input",
+   "bits": 64,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_router"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 366.3,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_router",
+   "also_cdc": false,
+   "input_delay_ss_ps": 427.9,
+   "output_delay_ss_ps": 368.9,
+   "input_fraction_of_T": 0.513,
+   "output_fraction_of_T": 0.443,
+   "internal_input_ps": 330.5,
+   "internal_output_ps": 389.5,
+   "as_planned_internal_input_ps": 330.5,
+   "as_planned_internal_output_ps": 389.5,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 1,
+   "stages_planned": 2,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 183.1,
+   "input_min_delay_ff_ps": 52.7,
+   "output_min_delay_ff_ps": -5.5,
+   "feasible": true
+  },
+  {
+   "port": "t_su_SE",
+   "dir": "output",
+   "bits": 64,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_su"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 1111.111,
+   "clock_domain": [
+    "serial_0p9"
+   ],
+   "timing": "sync",
+   "length_um": 1588.4,
+   "length_basis": "pins",
+   "skew_class": "xdomain",
+   "skew_ps": 150.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_su_SE",
+   "also_cdc": false,
+   "input_delay_ss_ps": 730.7,
+   "output_delay_ss_ps": 671.7,
+   "input_fraction_of_T": 0.658,
+   "output_fraction_of_T": 0.605,
+   "internal_input_ps": 305.4,
+   "internal_output_ps": 364.4,
+   "as_planned_internal_input_ps": 305.4,
+   "as_planned_internal_output_ps": 364.4,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 603.6,
+   "stages_needed": 3,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 397.1,
+   "input_min_delay_ff_ps": 76.7,
+   "output_min_delay_ff_ps": -29.5,
+   "die_fanout": 1,
+   "feasible": true
+  },
+  {
+   "port": "t_su_SW",
+   "dir": "output",
+   "bits": 64,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_su"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 1111.111,
+   "clock_domain": [
+    "serial_0p9"
+   ],
+   "timing": "sync",
+   "length_um": 1588.4,
+   "length_basis": "pins",
+   "skew_class": "xdomain",
+   "skew_ps": 150.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_su_SW",
+   "also_cdc": false,
+   "input_delay_ss_ps": 730.7,
+   "output_delay_ss_ps": 671.7,
+   "input_fraction_of_T": 0.658,
+   "output_fraction_of_T": 0.605,
+   "internal_input_ps": 305.4,
+   "internal_output_ps": 364.4,
+   "as_planned_internal_input_ps": 305.4,
+   "as_planned_internal_output_ps": 364.4,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 603.6,
+   "stages_needed": 3,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 397.1,
+   "input_min_delay_ff_ps": 76.7,
+   "output_min_delay_ff_ps": -29.5,
+   "die_fanout": 1,
+   "feasible": true
+  },
+  {
+   "port": "xb",
+   "dir": "input",
+   "bits": 16,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_cmdproc_n"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 0.0,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_cmdproc_n",
+   "also_cdc": false,
+   "input_delay_ss_ps": 220.0,
+   "output_delay_ss_ps": 161.0,
+   "input_fraction_of_T": 0.264,
+   "output_fraction_of_T": 0.193,
+   "internal_input_ps": 538.3,
+   "internal_output_ps": 597.3,
+   "as_planned_internal_input_ps": 538.3,
+   "as_planned_internal_output_ps": 597.3,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 0.0,
+   "input_min_delay_ff_ps": 32.2,
+   "output_min_delay_ff_ps": 15.0,
+   "feasible": true
+  },
+  {
+   "port": "xl",
+   "dir": "output",
+   "bits": 147,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_cmdproc_n"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 0.0,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_cmdproc_n",
+   "also_cdc": false,
+   "input_delay_ss_ps": 220.0,
+   "output_delay_ss_ps": 161.0,
+   "input_fraction_of_T": 0.264,
+   "output_fraction_of_T": 0.193,
+   "internal_input_ps": 538.3,
+   "internal_output_ps": 597.3,
+   "as_planned_internal_input_ps": 538.3,
+   "as_planned_internal_output_ps": 597.3,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 0.0,
+   "input_min_delay_ff_ps": 32.2,
+   "output_min_delay_ff_ps": 15.0,
+   "die_fanout": 1,
+   "feasible": true
+  },
+  {
+   "port": "xt",
+   "dir": "output",
+   "bits": 16,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_cmdproc_n"
+   ],
+   "connections": 1,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 0.0,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:hb_cmdproc_s<->hb_cmdproc_n",
+   "also_cdc": false,
+   "input_delay_ss_ps": 220.0,
+   "output_delay_ss_ps": 161.0,
+   "input_fraction_of_T": 0.264,
+   "output_fraction_of_T": 0.193,
+   "internal_input_ps": 538.3,
+   "internal_output_ps": 597.3,
+   "as_planned_internal_input_ps": 538.3,
+   "as_planned_internal_output_ps": 597.3,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 0.0,
+   "input_min_delay_ff_ps": 32.2,
+   "output_min_delay_ff_ps": 15.0,
+   "die_fanout": 1,
+   "feasible": true
+  }
+ ],
+ "totals": {
+  "ports": 9,
+  "sync": 9,
+  "cdc": 0,
+  "infeasible": 0,
+  "fanout_flags": 0,
+  "max_length_um": 1588.4,
+  "max_stages_needed": 3
+ },
+ "constants": {
+  "wire_ss_ps_per_um": 1.135,
+  "clkq_ss": 90.0,
+  "drv_out": 40.0,
+  "rcv_in": 41.0,
+  "setup_ss": 30.0,
+  "clkq_ff_min": 32.2,
+  "hold_ff": 15.0,
+  "wire_ff_credit_ps_per_um": 0.112
+ }
+}

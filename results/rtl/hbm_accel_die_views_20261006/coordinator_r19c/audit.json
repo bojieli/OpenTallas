@@ -1,0 +1,219 @@
+{
+  "schema": "opentallas.hbm_die_coordinator.r19c.v1",
+  "base_commit": "87677e3a8009726356e3bada2f10a6eb30b19dd0",
+  "input_sha256": {
+    "tools/hbm_accel_die_fp.py": "9f82d30c7c8a006b1f37931cd39399358a71603679c25d65a77aa2a7fbb356d3",
+    "tools/hbm_die_views.py": "afa5b838c8b81f81863fb79e734d1760afabfcc8aa681c03b9c2f1062abe91e8",
+    "tools/hbm_die_views_recompose.py": "9085f3967749505edf9669526af4c47c6b1ac3c1a8f94c3b7134a1c64658e890",
+    "tools/hbm_die_coordinator_audit.py": "830c962b9f32d8cea12d2bcb7218fa3f39f8e284f3d0147a56c597182cff12f0",
+    "physical/hbm_accel_die_views/index_q/split_stages.json": "45f6e236513ab16c413ece02e53c0f662f2d72813b0ccdf6a98e21af4531a493",
+    "results/rtl/hbm_accel_die_views_20261006/recompose_r19b_r13wire__cp_in_su.json": "01909c77ebca329c3eeb8a72a34b1c2dc0c9b1d5046cad325045484ff82d69f3",
+    "results/rtl/budgets_20261006/inputs/calibrations.json": "a733cc86d216c47aabe368e548aec78e9cf07d1b56345c2c33a7543985671509",
+    "physical/hbm_accel_die_views/insertion_override.json": "9db3a1f09885a5976dceeca7eb340acf6e8dd9efcb0ce070bb58a543243d45f5",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/zeno_9797836f2/hbm_idxq_b1_48529891f.json": "d1a5f4f01e00cf7821618119d5e167a0f029f3071e630a3c3920526c1f6b8283",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/zeno_9797836f2/lane.json": "d582ccc52d080edc99619be2021f743f71b7e1d3b83b6415b6e91210a5b4ff81",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/zeno_9797836f2/latest_delta.json": "379dbdbed57d47c48bc8e960d5fc929e66ebb0a358886794feb55631aa568326",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/zeno_9797836f2/parent_handoff.json": "abcd8403ad2b00484b55c690fafa9895eac6c81b3ce4757266e937f9c9d3ee04",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/zeno_9797836f2/source_paths.json": "62bd1e39b724d18ad8248725db2a4d227296deb8dc24352a7aa4e8e5b5be92fa",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/index.json": "65b00535c5a60689888ab2670bdefa1c4d66dce3a0c407a3b9533445e39f1284",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/budgets/summary.json": "18fee39fb86c5a79840b44494686a02fa78cd6a5cbb7ae9a6fe6fa44f2b4fba5",
+    "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/die_model_hbm.json.gz": "f90d5afa3e331c333ac4f3e6ef0dee35efad1be1670f450ab8bb8bab87f4841c"
+  },
+  "adopted": "r19b",
+  "candidate": "r19c",
+  "adopted_changed": false,
+  "new_jobs_launched": 0,
+  "physical_closed": false,
+  "functional_closed": false,
+  "measured_clock_plan": false,
+  "vm": [
+    {
+      "master": "hfd_vm_sw",
+      "origin_um": [
+        11069.568,
+        13122.0
+      ],
+      "size_um": [
+        699.816,
+        1000.056
+      ],
+      "clock_pin": [
+        "area",
+        "M7",
+        349.648,
+        500.016,
+        0.064,
+        0.288
+      ],
+      "M7_global_on_track": true
+    },
+    {
+      "master": "hfd_vm_se",
+      "origin_um": [
+        11769.408,
+        13122.0
+      ],
+      "size_um": [
+        699.816,
+        1000.056
+      ],
+      "clock_pin": [
+        "area",
+        "M7",
+        349.648,
+        500.016,
+        0.064,
+        0.288
+      ],
+      "M7_global_on_track": true
+    },
+    {
+      "master": "hfd_vm_nw",
+      "origin_um": [
+        11069.568,
+        14122.08
+      ],
+      "size_um": [
+        699.816,
+        1000.056
+      ],
+      "clock_pin": [
+        "area",
+        "M7",
+        349.648,
+        500.016,
+        0.064,
+        0.288
+      ],
+      "M7_global_on_track": true
+    },
+    {
+      "master": "hfd_vm_ne",
+      "origin_um": [
+        11769.408,
+        14122.08
+      ],
+      "size_um": [
+        699.816,
+        1000.056
+      ],
+      "clock_pin": [
+        "area",
+        "M7",
+        349.648,
+        500.016,
+        0.064,
+        0.288
+      ],
+      "M7_global_on_track": true
+    }
+  ],
+  "station_identities_unchanged": true,
+  "path_stage_changes": {},
+  "VM_write_alignment": {
+    "SW": 6,
+    "NW": 5,
+    "equal": false,
+    "status": "BLOCKED: equal external cycle count and atomic producer/CDC binding required; internal wrapper depth 5/5 is insufficient"
+  },
+  "index_counts": {
+    "interim-not-closed": 7,
+    "closed": 37,
+    "missing": 34,
+    "reservation": 2
+  },
+  "pin_mismatches": {
+    "hfd_router": [
+      "pins: 0 missing, 0 extra, 0 wrong face, 512 wrong layer",
+      "835 pins off the generator position (same face)"
+    ],
+    "hfd_sm": [
+      "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
+      "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer",
+      "3419 pins off the generator position (same face)"
+    ],
+    "hfd_stn_r18": [
+      "1041 pins off the generator position (same face)"
+    ],
+    "hfd_stn_r20": [
+      "1026 pins off the generator position (same face)"
+    ]
+  },
+  "cmdproc_n": {
+    "pin_match": "MATCH",
+    "receipt": "results/closure_loop/hbm_cmdproc_n_ac6ef1af3/verdict.json",
+    "functional_closed": false
+  },
+  "serial_clock_budget": {
+    "domains": [
+      "hfd_su",
+      "hfd_sfu",
+      "hfd_hc"
+    ],
+    "period_ps": 1111.111111111111,
+    "sheet_global_route_ps": 770,
+    "sheet_global_signoff_ps": 833.333,
+    "entry_arrivals_measured": false,
+    "status": "BLOCKED: per-domain sheet/parent SDC consistency and measured clock entry required"
+  },
+  "historical_total": {
+    "baseline_us": 537.376,
+    "added_us": 22.17,
+    "latency_us": 559.5459999999999,
+    "latency_increase_pct": 4.1256029297921755,
+    "throughput_decrease_pct": 3.9621407355248723
+  },
+  "pending_index": {
+    "cycles": 136,
+    "frequency_GHz": 1.2,
+    "added_us": 0.11333333333333333,
+    "physical_adopted": false,
+    "common_baseline": {
+      "baseline_us": 537.376,
+      "added_us": 22.283333333333335,
+      "latency_us": 559.6593333333333,
+      "latency_increase_pct": 4.1466930665555095,
+      "throughput_decrease_pct": 3.981588799853245
+    }
+  },
+  "pending_costs": [
+    {
+      "item": "SU reducer SAFE",
+      "cycles_per_reduction": 4,
+      "frequency_GHz": 0.9,
+      "us_per_reduction": 0.0044444444444444444,
+      "occurrences": null,
+      "adopted": false
+    },
+    {
+      "item": "HA2 edge",
+      "cycles_per_occurrence": 1,
+      "occurrences": null,
+      "frequency_GHz": null,
+      "adopted": false
+    },
+    {
+      "item": "mcast r6 extra tap",
+      "cycles_bound": 571,
+      "frequency_GHz": 1.2,
+      "us_bound": 0.47583333333333333,
+      "adopted": false,
+      "note": "Check event overlap before summing"
+    },
+    {
+      "item": "VM alignment / real publication path",
+      "cycles": null,
+      "adopted": false
+    },
+    {
+      "item": "SM 3x3 grid",
+      "credit_us": null,
+      "adopted": false,
+      "owner": "Boyle"
+    }
+  ],
+  "budget_limit": "Zero infeasible analytical ports uses historical calibration/nominal targets, not new VM measurements. 160 direction-resolution failures remain. No signoff or launch admission.",
+  "open_reservations": [
+    "hfd_su_red and hfd_su_full have only clock/reset in the die graph; Avicenna must supply real port binding including reducer S input/N result faces."
+  ]
+}

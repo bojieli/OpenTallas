@@ -89,7 +89,7 @@ def seg_stages(m, bid, L):
     extra = 1 if bid in m.get('pin_stage_buses', ()) else 0     # r19b: a station abutting the receiving pin
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM) + extra
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r20'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r21'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -302,7 +302,10 @@ R19C = dict(R19B, vm_centre_ck=True, split_masters=dict(R19B['split_masters'],
 # r20 (2026-10-07, coordinator): the VM tiles' ck at the tile centre (M7 area pin, as the svc bands: SW_s1 1,304 ->
 #   788 ps measured); tiles on x = 0 mod 1.728 (shift +0.432 um)
 R20 = dict(R19B, vm_ck_centre=True)
-ADOPTED = R20
+# r21 (2026-10-07): a station abutting each index b5 t_vm pin (iv_pin_stn; b5 FF hold -177 infeasible on the 313 um
+#   first segment)
+R21 = dict(R20, iv_pin_stn=True)
+ADOPTED = R21
 
 
 def build(variant=None):
@@ -1625,6 +1628,26 @@ def buses(m):
         m.setdefault('region_extra', []).append(dict(name='HUB-SP', clock='clk_stream',
                                                      rect=[round(w1.x, 1), round(w1.y, 1), round(w1.x + w1.w, 1), round(w1.y + w1.h, 1)]))
         B[:] = [b_ for b_ in B if b_[0] not in drop]
+    if V.get('iv_pin_stn') and V.get('fwd_hub'):
+        # r21 (closure loop hbm_idxq_b5_48529891f_r19b: FF hold -177 on t_vm, the hold ECO could not move it): index b5
+        # t_vm had 247.7 ps internal output budget over its 313 um first segment, no room for the hold delay the band's
+        # early output leaf (622 ps vs 856 mean FF) needs.  A station abutting the t_vm pin (last <= ~60 um) gives the
+        # output ~500 ps internal.  Appended after every other station (no station role renumbered); +1 hop per index
+        # scan on the index -> VM path.
+        for st in ('SW', 'SE', 'NW', 'NE'):
+            ix = m['scan'][st]['index']
+            half = st[1]
+            b0 = next(b_ for b_ in B if b_[0] == f'iv_{st}_0')
+            iy = (ix.y + ix.h - 200.0) if st[0] == 'S' else (ix.y + 200.0)
+            fa_, fb_ = ('W', 'E') if half == 'W' else ('E', 'W')
+            ps = station((ix.x + ix.w + SHAVE + 30.0) if half == 'W' else (ix.x - 30.0), iy, f'ivp_{st}', 512, fa_, fb_, True)
+            m.setdefault('clocked', {})[ps.name] = 'stream'
+            m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
+                                                         rect=[round(ps.x, 1), round(ps.y, 1), round(ps.x + ps.w, 1), round(ps.y + ps.h, 1)]))
+            i0 = B.index(b0)
+            B[i0] = (b0[0], b0[1], b0[2], [(ps.name, 'b')] + b0[3][1:])
+            B.append((f'iv_{st}_p', 'hub', 512, [b0[3][0], (ps.name, 'a')]))
+            P[f'index_vm_{st}'] = [f'iv_{st}_p'] + P[f'index_vm_{st}']
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)

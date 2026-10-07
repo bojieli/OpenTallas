@@ -54,8 +54,10 @@ import hbm_accel_die_price as PR  # noqa: E402
 # attention step.  --cp-in-su: the HBM CP binder placed inside the SU-side block, internal handshakes PIN_MARGIN 0
 # (coordinator decision 15:30, wt-hbm-su-cpin): cp_su / cp_native 0.
 LEDGER = dict(meso_extra=2, gather=1, cdist=2, cp_su=15, cp_native=3, barrier=4, coll=6, serdes=4, vm=6, router=5, cmdproc=2, quant=17,
-              quant_points_bound=161, quant_points_gate=0, svc_fetch=15, idx_keys=10, idx_rows=4, meso_hub=4,
+              quant_points_bound=161, quant_points_gate=0, svc_fetch=15, idx_keys=12, idx_rows=7, meso_hub=4,
               vm_split_x=2, vm_split_wr=2, cmdproc_rd3=3, loader_half=0)
+# 48529891f split bench: keys +12 and worst row (a0/a3) +7 vs margin view.
+# These are candidate latency costs; physical/functional adoption still requires owner gates.
 # r19 / views agent (2026-10-06 ~23:55, coordinator-accepted): VM split into 4 quadrant tiles -> a multicast row
 # read reaches the farthest tap 2 cross hops later (per serial x load, bound: owner diagonal) and an SU publication
 # write is forwarded up to 2 hops to its owning tile (per barrier); cmdproc +3 cycles per executed command (per barrier,
@@ -150,6 +152,8 @@ def main(argv=None):
         rows = {}
         for tag, us in (('gate_quant_off_path', us_gate), ('bound_quant_on_every_fused_point', us_bound)):
             rows[tag] = dict(added_us=us, AR_us=round(ar0 + us, 3), AR_delta_pct=round(100 * us / ar0, 2),
+                             AR_latency_increase_pct=round(100 * us / ar0, 4),
+                             AR_throughput_decrease_pct=round(100 * us / (ar0 + us), 4),
                              AR_tok_s=round(1e6 / (ar0 + us), 1), MTP_step_us=round(mtp0 + us, 3),
                              MTP_delta_pct=round(100 * us / mtp0, 2), MTP_tok_s=round(tau * 1e6 / (mtp0 + us), 1))
         qb, qm = base[key]['qwen_8k'], marg[key]['qwen_8k']
