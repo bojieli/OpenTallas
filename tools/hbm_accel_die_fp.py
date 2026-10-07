@@ -569,7 +569,8 @@ def build(variant=None):
     if variant.get('vm_split'):
         split_vm(m)
     if variant.get('pin_stage_roots'):  # r19b: attention root buses into the index bands end in a pin-abutting station
-        m['pin_stage_buses'] = sorted(b[0] for b in m['buses'] if b[1] == 'attn_root')
+        # + the index-key chains' last segment into index b0 k (ik_<q>_e, 396 um, internal 179 ps: same pattern)
+        m['pin_stage_buses'] = sorted(b[0] for b in m['buses'] if b[1] == 'attn_root' or re.match(r'ik_[NS][EW]_e$', b[0]))
     return m
 
 
@@ -1590,7 +1591,7 @@ def buses(m):
             drop.add(f'iv_{st}')
             n0 = len(insts)
             chain(f'iv_{st}', 'hub', 512, (ix.name, 't_vm'), (vm.name, f'i{st}'), pts, path=f'index_vm_{st}', fc=(512,),
-                  meso_end=True, local_src=True, first_um=HCH / 2 + 60.0)
+                  meso_end=True, local_src=True, first_um=60.0 if V.get('pin_stage_roots') else HCH / 2 + 60.0)
             w0 = insts[n0]          # the clocked first station: a sink of the index quarter's region
             m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
                                                          rect=[round(w0.x, 1), round(w0.y, 1), round(w0.x + w0.w, 1), round(w0.y + w0.h, 1)]))
