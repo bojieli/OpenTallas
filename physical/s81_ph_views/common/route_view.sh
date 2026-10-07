@@ -7,7 +7,7 @@
 # Adapted from the HBM-ABSTRACTS route_view.sh (claude/hbm-abstracts-hub-20261006).
 #   route_view.sh <label> <die> <master> <top-source> [extra run_abi3_physical args]
 # env: SRC (pinned source snapshot with SOURCE_COMMIT), OUT (route base), PD (0.45), CORES (16), NEED (GB, 24),
-#      SRCS (extra sources), CLK (clock port, ck), MAXL (M7), HM (hold margin ns 0.010), SDCX (extra sdc appended after
+#      SRCS (extra sources), CLK (clock port, ck), MAXL (M7), HM (hold margin ns 0.035: sign-off FF >= +15 needs repair beyond the route corner; svc_pc FF -5.3 / ctrl_ctr +8.4 at 0.010), SDCX (extra sdc appended after
 #      the margin sdc), CTSA, STEPS, PER (clock period ns, 0.833333; the VM serial domain 1.1111)
 set -u
 lab=$1; die=$2; master=$3; topsrc=$4; shift 4
@@ -30,7 +30,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
   --step-tcl PRE_CTS=${PRECTS:-physical/s81_ph_views/common/pre_cts_fclk_root_buf.tcl} --step-tcl POST_CTS=${POSTCTS:-physical/s81_ph_views/common/post_cts_vclk.tcl} \
   --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
-  --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag s81ph_$(echo $lab | tr -c "A-Za-z0-9_\n" "_") \
+  --slew-margin-percent 60 --hold-margin-ns ${HM:-0.035} --purpose signoff_target --nickname-tag s81ph_$(echo $lab | tr -c "A-Za-z0-9_\n" "_") \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
