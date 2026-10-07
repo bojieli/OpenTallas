@@ -363,6 +363,7 @@ R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.
 R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
 # Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
 R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True)
+R24SM3VO = dict(R24SM3V, native_owner_bays=True)
 ADOPTED = R23
 
 
@@ -679,6 +680,24 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                 bays.append(dict(sm=sm.name, box_um=box))
             m['result_pin_bays'] = bays
             m.setdefault('reserved_regions', []).extend(q['box_um'] for q in bays)
+            if variant.get('native_owner_bays'):
+                # Opt-in reservation for the protected native owner. Area/grid
+                # is priced before a physical master exists; this is not a cell.
+                owner_bays=[]
+                for sm in (i for i in insts if i.kind == 'sm'):
+                    cx=1538.22
+                    if sm.orient in ('MY','R180'):
+                        cx=sm.w-cx
+                    x0=round(round((sm.x+cx-256.176/2)/GX)*GX,6)
+                    if sm.orient in ('MX','R180'):
+                        y1=sm.y-2.16
+                        box=[x0,y1-129.6,x0+256.176,y1]
+                    else:
+                        y0=sm.y+sm.h+2.16
+                        box=[x0,y0,x0+256.176,y0+129.6]
+                    owner_bays.append(dict(sm=sm.name,box_um=[round(v,6) for v in box]))
+                m['native_owner_bays']=owner_bays
+                m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in owner_bays)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -954,8 +973,12 @@ def split_station(m, role, h_data=1024):
     for it in ins:
         a = Inst(it.name + 'a', role + 'a', it.x, it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         bx = None
+        def reserved_free(x, y):
+            return all(not (x < r[2] + 4 and r[0] < x + it.w + 4 and
+                            y < r[3] + 4 and r[1] < y + it.h + 4)
+                       for r in m.get('reserved_regions', []))
         for cand in (it.x + it.w + SHAVE + 8.64, it.x - it.w - SHAVE - 8.64):
-            if all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
+            if reserved_free(cand,it.y) and all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
                    for j in m['insts'] if j is not it):
                 bx = cand
                 break
@@ -966,7 +989,7 @@ def split_station(m, role, h_data=1024):
             for cy in (it.y + it.h + SHAVE + 8.64, it.y - it.h - SHAVE - 8.64):
                 if cy < EDGE or cy + it.h > m['geo']['H'] - EDGE:
                     continue
-                if all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(it.x,cy) and all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts'] if j is not it):
                     bx, by_ = it.x, cy
                     break
@@ -977,7 +1000,7 @@ def split_station(m, role, h_data=1024):
                 cx, cy = up(it.x + dx * 43.2, GX), up(it.y + dy * 43.2, GY)
                 if cx < EDGE or cy < EDGE or cx + it.w > m['geo']['W'] - EDGE or cy + it.h > m['geo']['H'] - EDGE:
                     continue
-                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts']):
                     bx, by_ = cx, cy
                     break
@@ -995,7 +1018,7 @@ def split_station(m, role, h_data=1024):
                         candidates.append((up(ex + dx, GX), up(ey + dy, GY)))
             candidates.sort(key=lambda xy: abs(xy[0]-it.x)+abs(xy[1]-it.y))
             for cx, cy in candidates:
-                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts']):
                     bx, by_ = cx, cy
                     break
