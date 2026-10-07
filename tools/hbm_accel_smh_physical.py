@@ -476,15 +476,20 @@ proc ::ot_place {re xlo xhi ylo yhi} {
     set x0 [expr {int(round(1.08 * $dbu))}]
     set sw [expr {int(round(0.054 * $dbu))}]
     set names {}
-    set occ [dict create]
+    set occ {}
+    set rh [expr {int(round(0.27 * $dbu))}]
     foreach i [$::ot_blk getInsts] {
         set n [$i getName]
         if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]] &&
             [$i getPlacementStatus] ne "FIRM"} { lappend names $i; continue }
         if {[$i isPlaced] || [$i getPlacementStatus] eq "FIRM"} {
+            # any placed cell or macro whose box crosses the window (a macro starting below ylo counts too:
+            # front_m2c DPL-0033, u_bmd flops placed over the ring macro whose yMin lay under the window)
             set bb [$i getBBox]
-            if {[$bb yMin] >= $ylo * $dbu - 1 && [$bb yMin] <= $yhi * $dbu} {
-                dict lappend occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+            set hl [expr {[[$i getMaster] isBlock] ? int(round(3.0 * $dbu)) : 0}]   ;# MACRO_PLACE_HALO 3 3
+            if {[$bb yMax] + $hl > $ylo * $dbu && [$bb yMin] - $hl <= $yhi * $dbu + $rh &&
+                [$bb xMax] + $hl > $xlo * $dbu - $sw && [$bb xMin] - $hl < $xhi * $dbu + $sw} {
+                lappend occ [list [expr {[$bb xMin] - $hl}] [expr {[$bb xMax] + $hl}] [expr {[$bb yMin] - $hl}] [expr {[$bb yMax] + $hl}]]
             }
         }
     }
@@ -501,7 +506,8 @@ proc ::ot_place {re xlo xhi ylo yhi} {
     set n [llength $names]
     foreach r $rows {
         set y [lindex $r 0]
-        set busy [expr {[dict exists $occ $y] ? [dict get $occ $y] : {}}]
+        set busy {}
+        foreach iv $occ { if {[lindex $iv 2] < $y + $rh && [lindex $iv 3] > $y} { lappend busy $iv } }
         set x [expr {$x0 + (int($xlo * $dbu) - $x0 + $sw - 1) / $sw * $sw}]
         while {$k < $n} {
             set inst [lindex $names $k]
