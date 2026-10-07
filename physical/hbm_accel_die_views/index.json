@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r19",
- "generator_sha256": "b87b53f35f2fb7dc3de92d3581e28aaa8704e87c423fc6c40aadb4233ae2c212",
+ "round": "r19b",
+ "generator_sha256": "bf8aafa63244ba555c89d6b72460c05e5e538a9d851654d5356485033cad58d7",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -53,6 +53,11 @@
     "sub_views": [
      "physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q"
     ]
+   },
+   "files_sha256": {
+    "hfd_attn_tile.lef": "a35a72f61fb7c7e330b3b9dbab977e060afb41f99f5c955609317c8327e1de83",
+    "hfd_attn_tile_ss.lib": "7cdaa1fad11156bae66caa9f3d71a918eba9ae3bd0ef7a807d8b5ea3f43ae29d",
+    "hfd_attn_tile_ff.lib": "a91595d4928707d60deb1aab5e51eb83ea83f6eb86a7ea25dd289b8d879cafd5"
    }
   },
   "hfd_barrier": {
@@ -94,6 +99,11 @@
     "seq_um2": 114.132,
     "core_um2": 49504.8,
     "macro_um2": 0
+   },
+   "files_sha256": {
+    "hfd_barrier.lef": "74bdd04c099997d76f0d2d4dfc0b7c9ae307f250ded52033ee3c88d3e8449031",
+    "hfd_barrier_ss.lib": "86076db0dcd336fe8246fc26a26a636b8a80c45a2b31fd14a21dc48c331b76a6",
+    "hfd_barrier_ff.lib": "23e3a09d644265ee3e23d5cb6b833c858e32e5593fd0e51ed55bc27bb5c30f15"
    },
    "margin": {
     "ss_setup_ps": 197.0,
@@ -361,13 +371,39 @@
   },
   "hfd_gath_r25": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 2,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r25",
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r25/route_cl",
    "lef": "hfd_gath_r25.lef",
    "lib": {
     "ss": "hfd_gath_r25_ss.lib",
     "ff": "hfd_gath_r25_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "336e4655eedd62111302f7e32aff1c32f7464e1e",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r25_336e4655e_kw",
+    "ss_setup_ps": 72.52,
+    "ff_hold_ps": 18.17,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T01:17:59-07:00"
+   },
+   "files_sha256": {
+    "hfd_gath_r25.lef": "6d9f0b19072f150519461a4ef12ecd94022022d7e4db66c623843f798aeefa0b",
+    "hfd_gath_r25_ss.lib": "1e166283b6eb0b88a2bbb02d402c1b5e2b558a5666a8398aa1f521e2c69fbd08",
+    "hfd_gath_r25_ff.lib": "7339765a328032789e90f8564389e713eb9173c75db19920402ddeb4b4b5a689",
+    "corner_sta.json": "150bb4d6fddb6e8f545de87b239309802d4c66e8d341a26bd588c283a1ca8a31",
+    "check.json": "fdc531eb17a20ed571e7851f4a1be76cf1d7278b3f6ac07c42fbe17ac089428e"
+   },
+   "receipt": "results/closure_loop/hbm_stn_gath_r25_336e4655e_kw/verdict.json",
+   "receipt_sha256": "c85dc83c81197e3ee50f7fa280bb5782edfbd1093135f0c249f4b7d34675c864",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 72.52,
+    "ff_hold_ps": 18.17,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
     "verdict": "MATCH",
@@ -382,38 +418,6 @@
      315.336
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_gath_r25",
-    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_gath_r25 top=physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_gath_r25/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": -9.23,
-    "ff_hold_ps": 17.79,
-    "drc": 0,
-    "closes_signoff": false,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 425,
-     "route_sdc": ".views/Q1_hfd_gath_r25/route.sdc",
-     "signoff_sdc": ".views/Q1_hfd_gath_r25/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": -72.23,
-     "ff": 17.79
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
    }
   },
   "hfd_gath_r8": {
@@ -487,11 +491,37 @@
    "kind": "stations",
    "status": "closed",
    "instances": 2,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r9",
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r9/route_cl",
    "lef": "hfd_gath_r9.lef",
    "lib": {
     "ss": "hfd_gath_r9_ss.lib",
     "ff": "hfd_gath_r9_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "fbf6b0da5cbbcb2afd95483e36182c40997774c0",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5",
+    "ss_setup_ps": 113.06,
+    "ff_hold_ps": 23.2,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T20:18:07-07:00"
+   },
+   "files_sha256": {
+    "hfd_gath_r9.lef": "957814c398c81d3cc736771d263ad57c537b7110c61d2583295055ccfda27fa2",
+    "hfd_gath_r9_ss.lib": "be5a1b607a0ecfcf451f9ebf694661fe8dcf58415b635c58f41131793cc12490",
+    "hfd_gath_r9_ff.lib": "73f71a136e44d41846eda192b372334ba52da31c4d385334c37be6511e2a77f0",
+    "corner_sta.json": "70a6df679ae286da8362ac9b0c53eb3035873ff2f2b02a6eab0ebe28e99bb516",
+    "check.json": "9c2b44519fb22c9c148727ea4a4feb6e24c3970e616c3e9771fc4f423a20b62a"
+   },
+   "receipt": "results/closure_loop/hbm_stn_gath_r9_pa_fbf6b0da5/verdict.json",
+   "receipt_sha256": "efe0a5deed4669b7fcb3fc8c0649f776333c511d406052f60dfc3e2fe526ea15",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 113.06,
+    "ff_hold_ps": 23.2,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
     "verdict": "MATCH",
@@ -506,43 +536,6 @@
      110.136
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5/routes/hbm_stn_gath_r9_pa_fbf6b0da5",
-    "SOURCE_COMMIT": "fbf6b0da5cbbcb2afd95483e36182c40997774c0",
-    "args": "SRC=/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5/src master=hfd_gath_r9 top=physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv DW=109.704 DH=110.136 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/hbm_stn_gath_r9_pa_fbf6b0da5/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_FACES=N",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": 113.06,
-    "ff_hold_ps": 23.2,
-    "drc": 0,
-    "closes_signoff": true,
-    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 230,
-     "route_sdc": ".views/hbm_stn_gath_r9_pa_fbf6b0da5/route.sdc",
-     "signoff_sdc": ".views/hbm_stn_gath_r9_pa_fbf6b0da5/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": 50.06,
-     "ff": 23.2
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
-   },
-   "margin": {
-    "ss_setup_ps": 113.06,
-    "ff_hold_ps": 23.2,
-    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
   "hfd_hc": {
@@ -631,6 +624,11 @@
     "seq_um2": 1270.09,
     "core_um2": 770661,
     "macro_um2": 0
+   },
+   "files_sha256": {
+    "hfd_index_q_b4.lef": "4d1391d59ae0ad4a3e03341d73a7963b9d032a7e369f5f6163fa17db6d414d20",
+    "hfd_index_q_b4_ss.lib": "3696a93cc05e3f74d3cbf059c3674036a7b4a818c6367eb308110326bbc558a2",
+    "hfd_index_q_b4_ff.lib": "0939e99d0f5161aef0ebdcc3c27da57e45da9e4869afbe57013609c51aec29e3"
    },
    "margin": {
     "ss_setup_ps": 95.43,
@@ -764,13 +762,39 @@
   },
   "hfd_mcast_r7": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 4,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r7",
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r7/route_cl",
    "lef": "hfd_mcast_r7.lef",
    "lib": {
     "ss": "hfd_mcast_r7_ss.lib",
     "ff": "hfd_mcast_r7_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "336e4655eedd62111302f7e32aff1c32f7464e1e",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r7_336e4655e",
+    "ss_setup_ps": 75.07,
+    "ff_hold_ps": 29.36,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T01:03:27-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r7.lef": "b064b085e3b62f3bdf736bb046dd226e25b58559a1074af181df3362e879a778",
+    "hfd_mcast_r7_ss.lib": "8c3346b5f0da2a5d6a7e5b1520b45e6ddad60042724ab6d6be14b59150ecf960",
+    "hfd_mcast_r7_ff.lib": "2645dd9b23b4a033dbe78578b7fe5645ea89be95103b66d6492e37139989c534",
+    "corner_sta.json": "21985381abdc72da0e52e91fc90faca51a8e6d015c73518db7c987bd81a98e0d",
+    "check.json": "d58e389bad0fdb8d6094b2fc1d98bc083494d9c205216baf406afc1d19e7b0a2"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r7_336e4655e/verdict.json",
+   "receipt_sha256": "a900197b84710ab41b693825d2515cb01913245d098ad0544c4a73c285a42365",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 75.07,
+    "ff_hold_ps": 29.36,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
     "verdict": "MATCH",
@@ -785,38 +809,6 @@
      120.936
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R1_hfd_mcast_r7",
-    "SOURCE_COMMIT": "693b941a77566e053f8969561a0b288bce0d1548",
-    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src24 master=hfd_mcast_r7 top=physical/hbm_accel_die_views/stations/hfd_mcast_r7/hfd_mcast_r7.sv DW=466.968 DH=120.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP=0 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R1_hfd_mcast_r7/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": 57.35,
-    "ff_hold_ps": 21.16,
-    "drc": 5,
-    "closes_signoff": true,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 331,
-     "route_sdc": ".views/R1_hfd_mcast_r7/route.sdc",
-     "signoff_sdc": ".views/R1_hfd_mcast_r7/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": -5.65,
-     "ff": 21.16
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_mcast_r7/hfd_mcast_r7.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_mcast_r7/hfd_mcast_r7.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
    }
   },
   "hfd_meso_r1": {
@@ -1007,13 +999,105 @@
   },
   "hfd_meso_r35": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 4
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r35/route_cl",
+   "lef": "hfd_meso_r35.lef",
+   "lib": {
+    "ss": "hfd_meso_r35_ss.lib",
+    "ff": "hfd_meso_r35_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r35_30f87bcc4",
+    "ss_setup_ps": 86.92,
+    "ff_hold_ps": 20.57,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T22:38:02-07:00"
+   },
+   "files_sha256": {
+    "hfd_meso_r35.lef": "61cd1b4362d95c8cece9948b6e79fa7304dee91353da78f71aaa205db6814848",
+    "hfd_meso_r35_ss.lib": "e9e2c8420c1696e3c866d48c35d6e88fb79cefb759daea3deb3bb1f48786b2a7",
+    "hfd_meso_r35_ff.lib": "8d1d6e1f9d8191009f1ad4eef312d567ba8a3cb9d48cc537f60ccaa263cc4246",
+    "corner_sta.json": "83fc8ba20d5832266a4fb7d2a908108d34fcf2d2a83978b57574fe6a30782f27",
+    "check.json": "ac773b00de9b2d9b677884622255de153153abdc6cb738f96e95dd95c2f21c19"
+   },
+   "receipt": "results/closure_loop/hbm_stn_meso_r35_30f87bcc4/verdict.json",
+   "receipt_sha256": "4241a993d57f2b2f1be6e694d46049e49d09ab0111c452c88abb58b7ddbb43cc",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 86.92,
+    "ff_hold_ps": 20.57,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     285.096
+    ],
+    "size_gen": [
+     39.288,
+     285.096
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_meso_r37": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 1
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r37/route_cl",
+   "lef": "hfd_meso_r37.lef",
+   "lib": {
+    "ss": "hfd_meso_r37_ss.lib",
+    "ff": "hfd_meso_r37_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r37_30f87bcc4",
+    "ss_setup_ps": 53.95,
+    "ff_hold_ps": 21.42,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T22:35:03-07:00"
+   },
+   "files_sha256": {
+    "hfd_meso_r37.lef": "2deacae32b1631887cb4ca3e93f16265f5cf00c4df9afa6752b8e16ee3475cd7",
+    "hfd_meso_r37_ss.lib": "1e53635883ab838793b22ad8cca62527f580612d9a23ca84d9f8c93c8192e37d",
+    "hfd_meso_r37_ff.lib": "66b0e06fbaead931b09410e5548b932ace4eebd0824f1fa536abc56bacf541bb",
+    "corner_sta.json": "e215812582932ee2fedd208930fe99ef459321315c2edc0f8d0e3be0920f3959",
+    "check.json": "b8e8998538912c0fa2935e7e46ae7444cacc4e50517b08973876249d27967f78"
+   },
+   "receipt": "results/closure_loop/hbm_stn_meso_r37_30f87bcc4/verdict.json",
+   "receipt_sha256": "f3052c1bad19bb32c8cef359f613ce06fd1f17b56f453de90e6d6d4e4017dee0",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 53.95,
+    "ff_hold_ps": 21.42,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     269.976,
+     41.016
+    ],
+    "size_gen": [
+     269.976,
+     41.016
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_quant": {
    "kind": "quant",
@@ -1062,6 +1146,11 @@
     "seq_um2": 10021.4,
     "core_um2": 185548,
     "macro_um2": 0
+   },
+   "files_sha256": {
+    "hfd_router.lef": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
+    "hfd_router_ss.lib": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
+    "hfd_router_ff.lib": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c"
    }
   },
   "hfd_serdes_slab": {
@@ -1513,7 +1602,7 @@
   },
   "hfd_stn_r18": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r18",
    "lef": "hfd_stn_r18.lef",
@@ -1579,11 +1668,37 @@
    "kind": "stations",
    "status": "closed",
    "instances": 4,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19",
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19/route_cl",
    "lef": "hfd_stn_r19.lef",
    "lib": {
     "ss": "hfd_stn_r19_ss.lib",
     "ff": "hfd_stn_r19_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "c50fcf0bae9091deb13a8ed2e3940d6994f28ba0",
+    "host": "ot-pve1",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25",
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T20:52:38-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r19.lef": "7fd74334daf40ceda6de755d5e46d6647d468d7d8af187433becb3f7f17a555e",
+    "hfd_stn_r19_ss.lib": "93ee3ceeae814fafc24e71b172b9d28b13d199eed1ad5dc1e317b5974e88fea0",
+    "hfd_stn_r19_ff.lib": "967524f11a460fcd2ab558d07759125d7717bf680e836a1b2b9d0e4472a14e55",
+    "corner_sta.json": "f60e36b751b3f1a0e965e844d31c17120beb0b0ce30a4e6da102c29d66dccc5b",
+    "check.json": "41676d7ea00029999f10ab9813cd82a631705e3ce0a29037f9d294df6fcc9ba0"
+   },
+   "receipt": "results/closure_loop/hbm_stn_r19_c50fcf0ba_k25/verdict.json",
+   "receipt_sha256": "7a8c61976fb25ddc570157219d0ecd35fca66324329aa3e888e02c6b8ee16f05",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
     "verdict": "MATCH",
@@ -1598,43 +1713,6 @@
      66.936
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25/routes/hbm_stn_r19_c50fcf0ba_k25",
-    "SOURCE_COMMIT": "c50fcf0bae9091deb13a8ed2e3940d6994f28ba0",
-    "args": "SRC=/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25/src master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/hbm_stn_r19_c50fcf0ba_k25/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": 86.82,
-    "ff_hold_ps": 474.03,
-    "drc": 0,
-    "closes_signoff": true,
-    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 0,
-     "route_sdc": ".views/hbm_stn_r19_c50fcf0ba_k25/route.sdc",
-     "signoff_sdc": ".views/hbm_stn_r19_c50fcf0ba_k25/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": 23.82,
-     "ff": 474.03
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
-   },
-   "margin": {
-    "ss_setup_ps": 86.82,
-    "ff_hold_ps": 474.03,
-    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
   "hfd_stn_r2": {
@@ -1706,7 +1784,7 @@
   },
   "hfd_stn_r20": {
    "kind": "stations",
-   "status": "closed",
+   "status": "interim-not-closed",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r20",
    "lef": "hfd_stn_r20.lef",
@@ -2333,13 +2411,105 @@
   },
   "hfd_stn_r34": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 4
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r34/route_cl",
+   "lef": "hfd_stn_r34.lef",
+   "lib": {
+    "ss": "hfd_stn_r34_ss.lib",
+    "ff": "hfd_stn_r34_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r34_30f87bcc4",
+    "ss_setup_ps": 106.24,
+    "ff_hold_ps": 481.15,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T22:28:34-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r34.lef": "c23b92f14e6390145be1f3e9baed6412b115a88667538bb37222a2678859d307",
+    "hfd_stn_r34_ss.lib": "498d1a8c35ed44609e14b38d63fbb389f339151678b5c0698ad418ea8af04c9a",
+    "hfd_stn_r34_ff.lib": "cde77515d6372f67bb0f16bffd829442bbdb1674e29dc7fb4f06fe7ce3f59e22",
+    "corner_sta.json": "e8902b57d8e526be6bf8ec2b40ade7c12e8738e7281f588588a949afd4bfa3c3",
+    "check.json": "6f2306dfe2ca34ec319a41ae26de08c469ee44dcdc09f7878605c028960277cd"
+   },
+   "receipt": "results/closure_loop/hbm_stn_stn_r34_30f87bcc4/verdict.json",
+   "receipt_sha256": "1eff3784c462a62341fc7b3f82ba9e878cd1f142bd496a02b56af62a37da069e",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 106.24,
+    "ff_hold_ps": 481.15,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     72.984,
+     41.016
+    ],
+    "size_gen": [
+     72.984,
+     41.016
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_stn_r36": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 1
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r36/route_cl",
+   "lef": "hfd_stn_r36.lef",
+   "lib": {
+    "ss": "hfd_stn_r36_ss.lib",
+    "ff": "hfd_stn_r36_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r36_30f87bcc4",
+    "ss_setup_ps": 104.56,
+    "ff_hold_ps": 469.56,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-06T22:28:55-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r36.lef": "f845230d6c14c92afb8d1ad1c999b5794347e82c37b71e88dbb5eebc8c3cc5ac",
+    "hfd_stn_r36_ss.lib": "c6346e91054c474fd68d38ee37cf71df5bf2e2589493caed697299e3d5dfef21",
+    "hfd_stn_r36_ff.lib": "0a54b5b69522fd581bfa3a9830fc88bb99f157efde06220a329afd3d06d85158",
+    "corner_sta.json": "a97a5d511c5b85157baa188e69ed4e76aaad41f978a21a1826a99518a486b30d",
+    "check.json": "2f98f47b247c4f0fc1eb0f05492491fa3ff25edbe838817acf1f4eb50098cbf7"
+   },
+   "receipt": "results/closure_loop/hbm_stn_stn_r36_30f87bcc4/verdict.json",
+   "receipt_sha256": "3e3324981e882c861bdafd7e1fc2be1eeab5211769cb229c7fda9b0daa508be7",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 104.56,
+    "ff_hold_ps": 469.56,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     77.736
+    ],
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_stn_r4": {
    "kind": "stations",
@@ -2450,8 +2620,54 @@
   },
   "hfd_svc_SE_s6": {
    "kind": "svc",
-   "status": "missing",
-   "instances": 2
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s6",
+   "lef": "hfd_svc_SE_s6.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s6_ss.lib",
+    "ff": "hfd_svc_SE_s6_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "41d57482796e648a579ea0178c770e196f026928",
+    "host": "ot-pve1",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud",
+    "ss_setup_ps": 136.79,
+    "ff_hold_ps": 23.52,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T04:00:26-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s6.lef": "8394e22bd6c3ca2f67bb01fc6d2c25e92566de4f483028a4d76aea297bffba22",
+    "hfd_svc_SE_s6_ss.lib": "cd2a4cffa73b8451b8e71014b11fd550aaf3be20aac8111e077bca15f6fd17da",
+    "hfd_svc_SE_s6_ff.lib": "99629e3424f203efb5c82e97052aaa8facc1074df443f4d3cfe12b367ca445cc",
+    "corner_sta.json": "747ebf16b3ca7f09473ec7b40bca45e241b43a6e759b5cfb2af3756351bb1dae",
+    "check.json": "0a972a43d94b31e0cb0ce8874060fb8a3c80468224f6f788739cb5863eb10ab3"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s6_41d574827_bud/verdict.json",
+   "receipt_sha256": "fff8f359cd9dbc21d77aa0ca4649575837773a33747ab25c5826976940711cf9",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 136.79,
+    "ff_hold_ps": 23.52,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     763.992,
+     259.176
+    ],
+    "size_gen": [
+     763.992,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_svc_SE_s7": {
    "kind": "svc",
@@ -2480,8 +2696,54 @@
   },
   "hfd_svc_SW_s4": {
    "kind": "svc",
-   "status": "missing",
-   "instances": 2
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4",
+   "lef": "hfd_svc_SW_s4.lef",
+   "lib": {
+    "ss": "hfd_svc_SW_s4_ss.lib",
+    "ff": "hfd_svc_SW_s4_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "41d57482796e648a579ea0178c770e196f026928",
+    "host": "ot-pve1",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud",
+    "ss_setup_ps": 95.47,
+    "ff_hold_ps": 22.16,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T03:02:05-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SW_s4.lef": "b85a8bd4e360d75390a2519c408050c62701b6f2214824b1538b58d5c657cba9",
+    "hfd_svc_SW_s4_ss.lib": "67dac1e9a3e3cd859c3fefa60345b5fc27a4d2cf0e54a1368c041f183b450143",
+    "hfd_svc_SW_s4_ff.lib": "d872c75a0f76c5faa887865bba7d7c5b9eeabe9e8aac2fe1381159dd09b749dc",
+    "corner_sta.json": "f6300341d4aebce734cff9c86867f8b418c8e5f356cbafc261f6feab26faabe4",
+    "check.json": "068720adcb139d57bb6d08087e5ccc6eff528e566d2a31453a74c61d4772f674"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SW_s4_41d574827_bud/verdict.json",
+   "receipt_sha256": "678c9105debec6ebda3412a00b2ee91dc9c89a96a139b0a538d0ced758c7c8b1",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 95.47,
+    "ff_hold_ps": 22.16,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     785.976,
+     259.176
+    ],
+    "size_gen": [
+     785.976,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_svc_SW_s5": {
    "kind": "svc",
@@ -2521,8 +2783,8 @@
  },
  "counts": {
   "interim-not-closed": 7,
-  "closed": 31,
-  "missing": 39,
+  "closed": 37,
+  "missing": 33,
   "reservation": 2
  }
 }

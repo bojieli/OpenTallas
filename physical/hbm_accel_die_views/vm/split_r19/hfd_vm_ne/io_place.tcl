@@ -1,5 +1,5 @@
-# hfd_vm_ne: every die pin at the generator's position (tools/hbm_die_views.py ports, r19)
-place_pin -pin_name {ck[0]} -layer M4 -location {0.0960 0.6360} -pin_size {0.1920 0.0240}
+# hfd_vm_ne: every die pin at the generator's position (tools/hbm_die_views.py ports, r20)
+place_pin -pin_name {ck[0]} -layer M7 -location {349.6480 500.0160} -pin_size {0.0640 0.2880}
 place_pin -pin_name {f_s_ctl[0]} -layer M5 -location {239.7720 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_s_ctl[1]} -layer M5 -location {239.8200 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_s_ctl[2]} -layer M5 -location {239.8680 0.0960} -pin_size {0.0240 0.1920}

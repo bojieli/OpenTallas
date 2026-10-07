@@ -13,6 +13,29 @@
 "hb_vm_se"
 ],
 "ports": {
+"ck": {
+"bits": 1,
+"layer": "M7",
+"pins": [
+[
+"ck[0]",
+"M7",
+349.616,
+499.872,
+349.68,
+500.16
+]
+],
+"face": "area",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
 "f_su_SE": {
 "bits": 2048,
 "layer": "M4",
@@ -58151,29 +58174,6 @@
 ]
 ],
 "direction": "output"
-},
-"ck": {
-"bits": 1,
-"layer": "M4",
-"pins": [
-[
-"ck[0]",
-"M4",
-0.0,
-0.624,
-0.192,
-0.648
-]
-],
-"face": "W",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
 },
 "rst": {
 "bits": 1,
@@ -211213,7 +211213,7 @@
 },
 "generator": {
 "file": "tools/hbm_accel_die_fp.py",
-"sha256": "8f3c8e495c40a43086b0530bcb93b43c43ed4b60c81a18ddce22962674648639",
-"round": "r19"
+"sha256": "bf8aafa63244ba555c89d6b72460c05e5e538a9d851654d5356485033cad58d7",
+"round": "r20"
 }
 }

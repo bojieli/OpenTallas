@@ -1,5 +1,5 @@
-# hfd_vm_sw: every die pin at the generator's position (tools/hbm_die_views.py ports, r19)
-place_pin -pin_name {ck[0]} -layer M5 -location {591.0840 0.0960} -pin_size {0.0240 0.1920}
+# hfd_vm_sw: every die pin at the generator's position (tools/hbm_die_views.py ports, r20)
+place_pin -pin_name {ck[0]} -layer M7 -location {349.6480 500.0160} -pin_size {0.0640 0.2880}
 place_pin -pin_name {f_e_ctl[0]} -layer M4 -location {699.7200 493.8840} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_e_ctl[1]} -layer M4 -location {699.7200 493.9320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_e_ctl[2]} -layer M4 -location {699.7200 493.9800} -pin_size {0.1920 0.0240}
@@ -12694,7 +12694,7 @@ place_pin -pin_name {qSW[578]} -layer M4 -location {0.0960 274.9080} -pin_size {
 place_pin -pin_name {qSW[579]} -layer M4 -location {0.0960 274.9560} -pin_size {0.1920 0.0240}
 place_pin -pin_name {qSW[580]} -layer M4 -location {0.0960 275.0040} -pin_size {0.1920 0.0240}
 place_pin -pin_name {qSW[581]} -layer M4 -location {0.0960 275.0520} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst[0]} -layer M5 -location {383.6760 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M5 -location {383.2440 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_e_ctl[0]} -layer M4 -location {699.7200 723.7080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_e_ctl[1]} -layer M4 -location {699.7200 723.7560} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_e_ctl[2]} -layer M4 -location {699.7200 723.8040} -pin_size {0.1920 0.0240}
