@@ -114,7 +114,11 @@
    "kind": "abutment through the channel"
   },
   {
-   "what": "tile t_vm / ctl t_st -> VM (serial)",
+   "what": "u_ctl t_sn (64 b status, stream) -> u_g3 f_sn; u_g3 t_st (serial) -> VM status (t_vm[13312 +: 64])",
+   "kind": "pin-to-pin in the S channel / abutment N face; f_sn of the other tiles tied 0, their t_st open"
+  },
+  {
+   "what": "tile t_vm -> VM (serial)",
    "kind": "abutment (N face), as G3"
   }
  ],

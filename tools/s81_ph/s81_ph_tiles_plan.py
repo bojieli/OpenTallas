@@ -196,17 +196,17 @@ def main():
                         ['t_sb', 2, 'output', 'S', 'M5', 1, 0.96], ['ck', 1, 'input', 'S', 'M5', 1, 0.03],
                         ['rst', 1, 'input', 'S', 'M5', 1, 0.04],
                         ['t_vm', 16 * 104, 'output', 'N', 'M5', 1, 0.5], ['ckv', 1, 'input', 'N', 'M5', 1, 0.05],
-                        ['rsv', 1, 'input', 'N', 'M5', 1, 0.06]]}
+                        ['rsv', 1, 'input', 'N', 'M5', 1, 0.06],
+                        ['f_sn', 64, 'input', 'S', 'M5', 1, 0.12], ['t_st', 64, 'output', 'N', 'M5', 1, 0.92]]}
     write('dsfd_capt_grp', GW, GH, 'stream_1p2+serial_0p9', plan(g_spec), g_spec)
     CTW = 86.4
-    k_spec = {'master': 'dsfd_capt_ctl', 'w_um': CTW, 'h_um': GH, 'domain': 'stream_1p2+serial_0p9',
+    k_spec = {'master': 'dsfd_capt_ctl', 'w_um': CTW, 'h_um': GH, 'domain': 'stream_1p2',
               'note': 'capture control tile; S face = gather control word + per-tile constant buses + tile status',
               'ports': [['f_ctl', 163, 'input', 'S', 'M5', 1, 0.3], ['t_k', 8 * KB, 'output', 'S', 'M5', 1, 0.65],
                         ['f_sb', 16, 'input', 'S', 'M5', 1, 0.95], ['ck', 1, 'input', 'S', 'M5', 1, 0.05],
                         ['rst', 1, 'input', 'S', 'M5', 1, 0.07],
-                        ['t_st', 64, 'output', 'N', 'M5', 1, 0.5], ['ckv', 1, 'input', 'N', 'M5', 1, 0.1],
-                        ['rsv', 1, 'input', 'N', 'M5', 1, 0.12]]}
-    write('dsfd_capt_ctl', CTW, GH, 'stream_1p2+serial_0p9', plan(k_spec), k_spec)
+                        ['t_sn', 64, 'output', 'S', 'M5', 1, 0.15]]}
+    write('dsfd_capt_ctl', CTW, GH, 'stream_1p2', plan(k_spec), k_spec)
     xs = [0.0, 118.8, 237.6, 356.4, 561.6, 680.4, 799.2, 918.0]
     cap = {'slab': 'dsfd_sp_capture', 'outline_um': [1036.8, r4(GH + CHAN)],
            'generator_change': 'G6 again: 1015.176 x 302.4 -> 1036.8 x 345.6 (tiles + the 21.6-um channel); the '
@@ -219,7 +219,9 @@ def main():
                      'length_um_max': 562.0, 'stations': 0,
                      'kind': 'pin-to-pin in the S channel (flop at both pins; <= 504 um SS reach at 1.2 GHz)'},
                     {'what': 'gather t_capture -> tile f_row / ctl f_ctl', 'kind': 'abutment through the channel'},
-                    {'what': 'tile t_vm / ctl t_st -> VM (serial)', 'kind': 'abutment (N face), as G3'}],
+                    {'what': 'u_ctl t_sn (64 b status, stream) -> u_g3 f_sn; u_g3 t_st (serial) -> VM status (t_vm[13312 +: 64])',
+                     'kind': 'pin-to-pin in the S channel / abutment N face; f_sn of the other tiles tied 0, their t_st open'},
+                    {'what': 'tile t_vm -> VM (serial)', 'kind': 'abutment (N face), as G3'}],
            'clock': 'ck and ckv per tile, own CTS trees'}
     out['capture'] = cap
     for kind, rec in out.items():

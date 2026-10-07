@@ -2,7 +2,7 @@
  "master": "dsfd_capt_ctl",
  "w_um": 86.4,
  "h_um": 324.0,
- "domain": "stream_1p2+serial_0p9",
+ "domain": "stream_1p2",
  "note": "capture control tile; S face = gather control word + per-tile constant buses + tile status",
  "ports": [
   [
@@ -51,31 +51,13 @@
    0.07
   ],
   [
-   "t_st",
+   "t_sn",
    64,
    "output",
-   "N",
+   "S",
    "M5",
    1,
-   0.5
-  ],
-  [
-   "ckv",
-   1,
-   "input",
-   "N",
-   "M5",
-   1,
-   0.1
-  ],
-  [
-   "rsv",
-   1,
-   "input",
-   "N",
-   "M5",
-   1,
-   0.12
+   0.15
   ]
  ]
 }
