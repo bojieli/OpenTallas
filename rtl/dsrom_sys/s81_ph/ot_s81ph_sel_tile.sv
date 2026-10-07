@@ -215,7 +215,16 @@ module dsfd_selt_c #(
     wire [15:0] c_T, c_st; wire [7:0] c_Bt; wire [3:0] c_cg, c_fg;
     wire c_fclr, c_ing, c_stop, c_p2, c_p3, c_rep, c_hclr, rep_req, ovf, busy;
     wire [Q*(KW+1)-1:0] c_rem;
-    generate if (SEARCH_PIPE != 0) begin : g_pipe
+    generate if (SEARCH_PIPE == 2) begin : g_half   // SAFE backstop: half-rate search units (ot_s81ph_sel_ctl_half.sv)
+    ot_s81ph_sel_ctl_half #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+        .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
+        .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
+        .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
+        .s_ovf(s_ovf),
+        .c_T(c_T), .c_Bt(c_Bt), .c_fclr(c_fclr), .c_cg(c_cg), .c_fg(c_fg), .c_ing(c_ing), .c_stop(c_stop),
+        .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
+        .rep_req(rep_req), .ovf(ovf), .busy(busy));
+    end else if (SEARCH_PIPE != 0) begin : g_pipe
     ot_s81ph_sel_ctl_pipe #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
