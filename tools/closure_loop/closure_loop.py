@@ -1603,25 +1603,29 @@ def auto_requeue(jobs):
     live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
                    for x in jobs if x["status"] not in TERMINAL}
     for j in jobs:
-        if j["status"] not in ("NEEDS_HUMAN", "CANCELLED") or not j.get("crashes"):
+        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
             continue
-        c = j["crashes"][-1]
-        stl = stage_list(j["spec"])
-        kind = next((x["kind"] for x in stl if x["key"] == c["stage"]), None)
-        for fid, k, rx in FIXED_SIGNATURES:
-            if kind != k or not rx.search(c.get("tail", "") + c.get("why", "")) or fid in j.get("fix_requeued", []):
+        with job_lock(j["name"]):
+            j = load_job(j["name"])  # cancellation may have won since the tick snapshot
+            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
                 continue
-            if (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
-                continue   # its owner already re-dropped it under another name
-            j.setdefault("fix_requeued", []).append(fid)
-            j["status"], j["retries_used"], j["attempt"], j["errors"], j["reason"] = "READY", 0, j["attempt"] + 1, [], None
-            j["stage_idx"] = next(i for i, x in enumerate(stl) if x["key"] == c["stage"])
-            event(j, f"auto re-queued after loop fix {fid} (died in {c['stage']} on that signature)")
-            ledger(j, f"REQUEUED automatically: loop fix {fid} (failed in {c['stage']}: {c.get('why', '')[:80]})")
-            experiment(j, f"running: re-queued after fix {fid}")
-            live_blocks.add((j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]))
-            save_job(j)
-            break
+            c = j["crashes"][-1]
+            stl = stage_list(j["spec"])
+            kind = next((x["kind"] for x in stl if x["key"] == c["stage"]), None)
+            for fid, k, rx in FIXED_SIGNATURES:
+                if kind != k or not rx.search(c.get("tail", "") + c.get("why", "")) or fid in j.get("fix_requeued", []):
+                    continue
+                if (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
+                    continue   # its owner already re-dropped it under another name
+                j.setdefault("fix_requeued", []).append(fid)
+                j["status"], j["retries_used"], j["attempt"], j["errors"], j["reason"] = "READY", 0, j["attempt"] + 1, [], None
+                j["stage_idx"] = next(i for i, x in enumerate(stl) if x["key"] == c["stage"])
+                event(j, f"auto re-queued after loop fix {fid} (died in {c['stage']} on that signature)")
+                ledger(j, f"REQUEUED automatically: loop fix {fid} (failed in {c['stage']}: {c.get('why', '')[:80]})")
+                experiment(j, f"running: re-queued after fix {fid}")
+                live_blocks.add((j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]))
+                save_job(j)
+                break
 
 
 def kill_own_stage(j):

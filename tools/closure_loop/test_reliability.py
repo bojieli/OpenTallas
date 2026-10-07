@@ -90,6 +90,33 @@ class ReliabilityTests(unittest.TestCase):
                 cl.cmd_cancel(SimpleNamespace(name="race"))
         self.assertEqual(cl.load_job("race")["status"], "CANCELLED")
 
+    def test_legacy_requeue_has_no_side_effects_for_cancelled_or_stale_snapshot(self):
+        self.j.update(status="NEEDS_HUMAN", attempt=2, stage_idx=0,
+                      crashes=[dict(stage="calibrate", tail="no ORFS base", why="rc=3")])
+        self.j["spec"].update(source={"commit": "fb5bc706e"},
+                              stages={"calibrate": {"cmd": "true", "base": "/base"}})
+        stale = copy.deepcopy(self.j)
+        self.j["status"] = "CANCELLED"
+        cl.save_job(self.j)
+        for snapshot in (copy.deepcopy(self.j), stale):
+            with patch.object(cl, "ledger") as ledger, patch.object(cl, "experiment") as experiment, \
+                    patch.object(cl, "save_job") as save, patch.object(cl, "event") as event:
+                cl.auto_requeue([snapshot])
+            for side_effect in (ledger, experiment, save, event):
+                side_effect.assert_not_called()
+        self.assertEqual(cl.load_job("race")["status"], "CANCELLED")
+
+    def test_legacy_requeue_still_handles_eligible_flow_failure(self):
+        self.j.update(status="NEEDS_HUMAN", attempt=2, stage_idx=0,
+                      crashes=[dict(stage="calibrate", tail="no ORFS base", why="rc=3")])
+        self.j["spec"].update(source={"commit": "fb5bc706e"},
+                              stages={"calibrate": {"cmd": "true", "base": "/base"}})
+        cl.save_job(self.j)
+        with patch.object(cl, "ledger"), patch.object(cl, "experiment"):
+            cl.auto_requeue([self.j])
+        j = cl.load_job("race")
+        self.assertEqual((j["status"], j["attempt"]), ("READY", 3))
+
     def test_cancelled_job_cannot_be_retried(self):
         self.j["status"] = "CANCELLED"
         cl.save_job(self.j)
