@@ -8,7 +8,7 @@
 set -u
 mode=$1; O=$2; G=${3:-results/rtl/dsrom_s81_fulldie_20261004/r9m215/dsfd_glue.sv}
 cd "$(dirname "$0")/../../.."; mkdir -p $O
-if [ $mode = mut ]; then sed 's/assign xb = xq\[548:283\];/assign xb = xq[549:284];/' $G > $O/glue_mut.sv; cmp -s $O/glue_mut.sv $G && { echo 'mutant not applied'; exit 0; }; G=$O/glue_mut.sv; fi
+if [ $mode = mut ]; then sed 's/xb = xq\[548:283\];/xb = xq[549:284];/; s/xb_r <= xq\[548:283\];/xb_r <= xq[549:284];/' $G > $O/glue_mut.sv; cmp -s $O/glue_mut.sv $G && { echo 'mutant not applied'; exit 0; }; G=$O/glue_mut.sv; fi
 cat > $O/tb.sv <<'EOT'
 `timescale 1ps/1ps
 module tb;

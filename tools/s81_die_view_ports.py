@@ -23,7 +23,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
-V5 = '--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --pairs 2050 --link-fix'
+V5 = ('--rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --pairs 2050 --link-fix --corr-interleave --hop-fix '
+      '--meso-d8 --cfifo-v2')   # the v6 die case
 
 
 def build(opts, die):

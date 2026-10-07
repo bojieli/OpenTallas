@@ -128,6 +128,8 @@ def cmd_geometry(a):
                     root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=mc)
         if m.get("hop_fix"):
             comp["hop_fwd"] = m["hop_fix"].get("fwd_rt_add", 0)
+        if getattr(S, "CFIFO_V2", False):
+            comp["cfifo_v2_regs"] = 2
         if f.get("bank_stages") is not None:          # r9: q-element boundary banks and column relays
             comp.update(q_banks=f.get("bank_stages", 0), column_relays_x=f.get("relay_x", 0),
                         column_relays_return=f.get("relay_ret", 0))
