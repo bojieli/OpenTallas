@@ -12968,3 +12968,63 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def hbm_su_divider_halfpair_model(serial_divides=1):
+    """Prebuild bound for two alternating exact DIV31 cores, one beat per fast edge.
+
+    This is a closure candidate, not a measured speed/area claim. The c12
+    composition already carries DDIV through M1, sigmoid/SiLU, softplus and
+    EGATE; selecting DDIV=64 prices each dependent divide at the same rounding
+    point. ROM designs do not select this HBM lane implementation.
+    """
+    assert isinstance(serial_divides, int) and serial_divides >= 0
+    fast_ghz = 1.2
+    depth = 64
+    old_full_area_um2 = 32015.784  # full31 d773c1033 mapped full-shape route
+    wrapper_ff = 2 * (65 + 34 + 34 + 1 + 2)
+    # Bound the extra pair by duplicating the ENTIRE measured full lane, not
+    # merely its two dividers; therefore no unmeasured leaf area subtraction.
+    cell_upper = 2 * old_full_area_um2 + wrapper_ff * .37908
+    corridor_um = 32
+    side_um = 400
+    tracks = int(corridor_um / .072)  # conservative >=72nm track pitch
+    return dict(schema='opentallas.hbm.su.divider_halfpair.prebuild.v1',
+        selected=False, adopted=False, default_parameter=dict(DDIV=21),
+        proposed_parameter=dict(DDIV=depth), MACs_per_cycle=0,
+        divides_per_fast_cycle=1, compute_intensity_divides_per_payload_byte=1/12,
+        memory_ports=dict(new_ports=0, bytes_per_fast_cycle=0),
+        boundary_bits_per_fast_cycle=dict(input=65, output=34, new_external_bits=0),
+        replicas=dict(cores_per_divider=2, divider_instances_per_full_lane=2,
+            input_capture_fanout=2, output_mux='34 parallel 2:1 muxes per divider',
+            demux='alternating physical clock gates; every input captured once',
+            added_wrapper_ff_bound=wrapper_ff),
+        clocks=dict(fast_ghz=fast_ghz, each_core_ghz=fast_ghz/2,
+            duty='one 50-percent-fast-clock high pulse every two fast periods',
+            phase0_master_edges=[1,2,5], phase1_master_edges=[3,4,7],
+            crossings='one fast input register; opposite-bank capture then output register',
+            setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            no_relaxation_of_fast_crossings=True),
+        area=dict(measured_full31_um2=old_full_area_um2,
+            conservative_cell_upper_um2=cell_upper,
+            source='EPYC3 full31 d773c1033 physical.json; not a divider-only estimate',
+            proposed_slot_um=[side_um,side_um], reserved_corridor_um=corridor_um,
+            planned_utilization_with_corridor=(cell_upper+corridor_um*side_um)/side_um**2,
+            target_utilization=.55, old_slot_um=[346.008,347.736],
+            old_slot_fit_with_corridor=False, proposed_slot_fit=(cell_upper+corridor_um*side_um)/side_um**2 <= .55),
+        routing=dict(bank_boundary_tracks_needed=2*(65+34)+2,
+            conservative_channel_track_capacity=tracks,
+            track_pitch_assumption_um=.072, requires_physical_validation=True),
+        latency=dict(divider_fast_cycles=depth, core_slow_cycles=31,
+            extra_vs_DDIV21=depth-21, extra_vs_DDIV31=depth-31,
+            serial_divides=serial_divides,
+            serial_chain_added_fast_cycles=serial_divides*(depth-21),
+            serial_chain_added_ns=serial_divides*(depth-21)/fast_ghz,
+            M1_and_SFU_both_divide_extra_cycles=2*(depth-21),
+            composed_by='tools/hbm_su_c12.py:set_c12 DDIV=64; controller H_MD/D_SIG/D_SP/D_EG',
+            per_design_selection={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+                'Qwen3-8B HBM':'conditional DDIV64','DeepSeek-V4.1 HBM':'conditional DDIV64'}),
+        adoption_gates=['small divider transaction scoreboard incl faults/reset/bubbles and negative',
+            'c12 controller/lane exact composition at DDIV64',
+            'full-lane physical shape SS>=15ps/FF>=15ps/DRC0 with generated clocks',
+            'expanded slot installed in die context and latency ledger recomposed'])
