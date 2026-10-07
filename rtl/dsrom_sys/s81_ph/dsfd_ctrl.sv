@@ -16,13 +16,9 @@ module dsfd_ctrl (
     output wire [31:0] wd,
     output reg  [1:0] st
 );
-    // resets: rst is asynchronous (false path at the pin); every column synchronises it locally; the PHY reset and
-    // the centre status use their own synchronisers next to the PHY control pins / the centre pins
-    wire hrst_n, srst_n;
-    ot_s81ph_sync u_hrs (.clk(ckh), .rst_n(rst), .d(1'b1), .q(hrst_n));
-    ot_s81ph_sync u_srs (.clk(cks), .rst_n(rst), .d(1'b1), .q(srst_n));
-    reg phy_rst_q;
-    always @(posedge ckh or negedge hrst_n) if (!hrst_n) phy_rst_q <= 1'b0; else phy_rst_q <= 1'b1;
+    // v2 (redesign pass): composed of 32 per-PC tiles dsfd_ctrl_pc + the centre tile dsfd_ctrl_ctr (resets, PHY
+    // reset, status); the unused PHY W port inputs are tie cells of the composition
+    wire [0:0] phy_rst_q;
     wire [31:0] p_k_v;
     wire [31:0] p_k_rdy;
     wire [959:0] p_k_addr;
@@ -19995,32 +19991,29 @@ module dsfd_ctrl (
     assign p_kr_data[8189] = phy[22235];
     assign p_kr_data[8190] = phy[22236];
     assign p_kr_data[8191] = phy[22237];
-    wire [31:0] s_ovf;
     wire [31:0] rv;
     genvar g;
-    // status chains {fault, live}: PC 0 -> PC 15 and PC 31 -> PC 16, one register per column, meeting at the centre
-    wire [1:0] ci [0:31];
+    // status chains {fault, live}: PC 0 -> PC 15 (W faces) and PC 31 -> PC 16 (E faces), one register per tile
+    // input; the unused face of every tile is tied {0, 1} (neutral)
     wire [1:0] co [0:31];
     generate for (g = 0; g < 32; g = g + 1) begin : g_pc
-        if (g == 0 || g == 31) begin : g_end assign ci[g] = 2'b01; end
-        else if (g < 16) begin : g_w assign ci[g] = co[g - 1]; end
-        else begin : g_e assign ci[g] = co[g + 1]; end
-        ot_s81ph_ctrl_pc u_pc (.cks(cks), .ckh(ckh), .rst(rst), .ci(ci[g]), .co(co[g]),
+        wire [1:0] ciw, cie;
+        if (g == 0) begin : g_w0 assign ciw = 2'b01; assign cie = 2'b01; end
+        else if (g < 16) begin : g_w assign ciw = co[g - 1]; assign cie = 2'b01; end
+        else if (g == 31) begin : g_e0 assign ciw = 2'b01; assign cie = 2'b01; end
+        else begin : g_e assign ciw = 2'b01; assign cie = co[g + 1]; end
+        dsfd_ctrl_pc u_pc (.cks(cks), .ckh(ckh), .rst(rst), .ci_w(ciw), .ci_e(cie), .co_w(co[g]), .co_e(),
             .rq(rq[g*341 +: 341]), .rk(rk[g]), .rv(rv[g]), .r_data(rd[g*256 +: 256]), .r_tag(rd[8192 + g*17 +: 17]),
-            .r_beat(rd[8736 + g*4 +: 4]), .wd(wd[g]), .s_ovf(s_ovf[g]),
+            .r_beat(rd[8736 + g*4 +: 4]), .wd(wd[g]),
             .k_v(p_k_v[g]), .k_rdy(p_k_rdy[g]), .k_addr(p_k_addr[g*30 +: 30]), .k_len(p_k_len[g*4 +: 4]),
             .k_tag(p_k_tag[g*17 +: 17]), .k_we(p_k_we[g]), .k_wdata(p_k_wdata[g*256 +: 256]),
             .k_wstrb(p_k_wstrb[g*32 +: 32]), .k_wr_done(p_k_wr_done[g]), .kr_v(p_kr_v[g]), .kr_rdy(p_kr_rdy[g]),
             .kr_tag(p_kr_tag[g*17 +: 17]), .kr_beat(p_kr_beat[g*4 +: 4]), .kr_data(p_kr_data[g*256 +: 256]));
     end endgenerate
     assign rd[8895:8864] = rv;
-    // status: PHY out-of-range (sticky, HBM domain) -> stream; live = both domains out of reset
-    reg oor_h;
-    always @(posedge ckh or negedge hrst_n) if (!hrst_n) oor_h <= 1'b0; else oor_h <= oor_h | p_k_oor | p_w_oor;
-    wire [1:0] hs;
-    ot_s81ph_sync #(.W(2)) u_hs (.clk(cks), .rst_n(srst_n), .d({oor_h, hrst_n}), .q(hs));
-    always @(posedge cks or negedge srst_n)
-        if (!srst_n) st <= 2'b00;
-        else st <= {st[1] | hs[1] | co[15][1] | co[16][1], hs[0] & co[15][0] & co[16][0]};
+    wire [1:0] st_w;
+    dsfd_ctrl_ctr u_ctr (.cks(cks), .ckh(ckh), .rst(rst), .co_w(co[15]), .co_e(co[16]), .k_oor(p_k_oor), .w_oor(p_w_oor),
+        .phy_rst_n(phy_rst_q), .st(st_w));
+    always @* st = st_w;
 endmodule
 `default_nettype wire
