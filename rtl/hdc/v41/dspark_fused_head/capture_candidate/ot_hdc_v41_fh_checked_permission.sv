@@ -24,6 +24,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  input wire [95:0] head_addr,input wire [63:0] head_mask,
  input wire [2047:0] head_data,
  input wire [ot_dsrom_vm_pkg::REP_BITS-1:0] checked_reply,
+ input wire bounds_in,   // FPIPE>=2: the bounds check registered at the endpoint pin stage (else unused)
  output wire bounds_fault,endpoint_fault,
  output wire [ot_dsrom_vm_pkg::REQ_BITS-1:0] captured_request,captured_request_check,
  output wire [ot_dsrom_vm_pkg::REP_BITS-1:0] captured_reply,captured_reply_check,
@@ -35,7 +36,17 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  localparam integer RB=(REQ_BITS+31)/32, PB=(REP_BITS+31)/32;
  localparam integer NCOLD=16;
  wire [NCOLD-1:0] cold_c;
- wire cold_n=cold_c[0];
+ // FPIPE>=2: a second kept cold level, one copy per bank / per metadata group (+1 on assertion and release)
+ localparam integer NC2=(REQ_BITS+31)/32+(REP_BITS+31)/32+9;
+ wire [NC2-1:0] cold_b;
+ for(genvar c=0;c<NC2;c=c+1) begin : g_cold2
+  if(FPIPE>=2) begin : g_k
+   ot_hdc_v41_fh_cold_copy u_cold2(.clk(fast_clk),.d(cold_c[c%NCOLD]),.q(cold_b[c]));
+  end else begin : g_n
+   assign cold_b[c]=cold_c[c%NCOLD];
+  end
+ end
+ wire cold_n=FPIPE>=2?cold_b[NC2-1]:cold_c[0];
  wire [15:0] take_rc;
  wire [7:0] take_pc;
  for(genvar c=0;c<NCOLD;c=c+1) begin : g_cold
@@ -52,7 +63,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  for(genvar g=0;g<4;g=g+1) begin : g_bounds
   assign bad_address[g]=head_we[g]&&(|head_addr[g*24+15+:9]);
  end
- assign bounds_fault=|bad_address;
+ assign bounds_fault=FPIPE>=2?bounds_in:(|bad_address);
  always @* begin
   wa=0;wm=0;wd=0;
   for(integer g=0;g<4;g=g+1) if(head_we[g]) begin
@@ -94,13 +105,13 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  for(genvar b=0;b<RB;b=b+1) begin : g_request_bank
   localparam integer N=(REQ_BITS-b*32>=32)?32:REQ_BITS-b*32;
   ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_bank (
-   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_rc[b%16]),.d(accepted_input[b*32+:N]),
+   .clk(fast_clk),.cold_n(cold_b[b]),.load(take_rc[b%16]),.d(accepted_input[b*32+:N]),
    .q(source_packet[b*32+:N]),.check(source_check[b*32+:N]),.bad(request_bad[b]));
  end
  for(genvar b=0;b<PB;b=b+1) begin : g_reply_bank
   localparam integer N=(REP_BITS-b*32>=32)?32:REP_BITS-b*32;
   ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_bank (
-   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_pc[b%8]),.d(checked_reply[b*32+:N]),
+   .clk(fast_clk),.cold_n(cold_b[RB+b]),.load(take_pc[b%8]),.d(checked_reply[b*32+:N]),
    .q(held_reply[b*32+:N]),.check(held_check[b*32+:N]),.bad(reply_bad[b]));
  end
  // Full native identity, never the bounded head ID alone. Keep eight local
@@ -113,7 +124,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  for(genvar b=0;b<8;b=b+1) begin : g_identity_bank
   localparam integer N=(239-b*32>=32)?32:239-b*32;
   ot_hdc_v41_fh_checked_match #(.BITS(N)) u_match (
-   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.a(expected_identity[b*32+:N]),
+   .clk(fast_clk),.cold_n(cold_b[RB+PB+b]),.a(expected_identity[b*32+:N]),
    .b(returned_identity[b*32+:N]),.match(match_q[b]),.check(match_check[b]));
  end
  wire identity_bad=match_q!=~match_check;
@@ -123,11 +134,19 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
   .clk(fast_clk),.cold_n(cold_n),
   .bad({metadata_bad,identity_bad,request_bad,reply_bad}),.fault(checked_error));
  wire wide_bad=FPIPE?checked_error:((|request_bad)||(|reply_bad));
- assign endpoint_fault=protocol_fault||metadata_bad||bounds_fault||
+ wire ep_fault=protocol_fault||metadata_bad||bounds_fault||
      wide_bad||identity_bad||
      (reply_active&&rep_age==0&&!matching_reply);
- assign request_checked_v=active&&req_age==0&&!endpoint_fault&&!checked_error;
- assign reply_checked_v=active&&reply_active&&rep_age==0&&matching_reply&&!endpoint_fault&&!checked_error;
+ // FPIPE>=2: the endpoint fault leaves a register (+1 to the retirement's arithmetic-fault row); grants use it unregistered
+ generate if(FPIPE>=2) begin : g_ep_reg
+  (* keep=1,dont_touch=1 *) reg ep_q;
+  always @(posedge fast_clk) if(!cold_n) ep_q<=0; else ep_q<=ep_fault;
+  assign endpoint_fault=ep_q;
+ end else begin : g_ep_direct
+  assign endpoint_fault=ep_fault;
+ end endgenerate
+ assign request_checked_v=active&&req_age==0&&!ep_fault&&!checked_error;
+ assign reply_checked_v=active&&reply_active&&rep_age==0&&matching_reply&&!ep_fault&&!checked_error;
  // Early held publication is refused until the matching check completes.
  // A wrong identity quarantines; a held correct publication is consumed once.
  wire consume=published_reply_v&&reply_checked_v&&!sent;

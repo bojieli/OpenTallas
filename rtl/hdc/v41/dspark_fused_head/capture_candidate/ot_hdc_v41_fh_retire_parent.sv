@@ -26,6 +26,7 @@ module ot_hdc_v41_fh_retire_parent #(
     output wire [PAYLOAD_BITS-1:0] retired_packet,
     output wire [7:0] retired_id,
     output wire [63:0] lane_veto,
+    output wire [63:0] lane_veto_pre,
     output wire [3:0] write_veto,
     output wire busy,warm_ack,
     output wire fault,
@@ -38,6 +39,7 @@ module ot_hdc_v41_fh_retire_parent #(
         assign retired_warm=warm;
         assign retired_id=0;
         assign lane_veto={64{f}};
+        assign lane_veto_pre={64{f}};
         assign write_veto={4{f}};
         assign busy=0;
         assign warm_debt=0;
@@ -84,7 +86,7 @@ module ot_hdc_v41_fh_retire_parent #(
             .poison(poison),.address_fault(address_fault),
             .arithmetic_fault(arithmetic_fault||protocol_fault),.group_fault(group_fault),
             .retired_v(retired_v),.retired_packet(retired),
-            .lane_veto(lane_veto),.write_veto(write_veto),
+            .lane_veto(lane_veto),.lane_veto_pre(lane_veto_pre),.write_veto(write_veto),
             .fault(pipe_fault),.busy(pipe_busy));
         assign retired_id=retired[PAYLOAD_BITS+:8];
         assign retired_packet=retired[PAYLOAD_BITS-1:0];

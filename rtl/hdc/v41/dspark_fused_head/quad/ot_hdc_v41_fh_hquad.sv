@@ -23,7 +23,11 @@ module ot_hdc_v41_fh_hquad #(
     // QPIN (redesign r2): the request inputs (rok/rrow/wok/wrow) and the write mask/data land on a group input-pin
     // register before the per-lane request registers (ADDR_PIPE 3, +1 request cycle, RETURN_EXTRA = 6): no input pin
     // fans out across the quadrant.
-    parameter integer QPIN = 0
+    parameter integer QPIN = 0,
+    // LRET (default 0; redesign r4): the lanes retire their own packet slice (leaf, data, mask, group address): an
+    // LRET-deep delay line here replaces those bits of the top's retirement packet pipe, and the lane veto copy (the
+    // fault tree's last level) is registered here from the top's previous copy level. Same cycles.
+    parameter integer LRET = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -50,7 +54,12 @@ module ot_hdc_v41_fh_hquad #(
     output reg  [W-1:0]      o_mask,
     output reg  [AW-1:0]     o_addr,
     output wire [W-1:0]      poison,
-    output reg               group_fault
+    output reg               group_fault,
+    input  wire [W-1:0]      lane_veto_in,   // LRET: the top's lane veto one register early
+    output wire [(1+32+NW)*W-1:0] r_leaf,    // LRET: retired, vetoed leaf
+    output wire [W*32-1:0]   r_o_data,
+    output wire [W-1:0]      r_o_mask,
+    output wire [AW-1:0]     r_o_addr
 );
     localparam integer LW = 4;              // lane index within the 16-lane group
     localparam integer CW = 1 + 32 + NW;
@@ -156,6 +165,22 @@ module ot_hdc_v41_fh_hquad #(
         reg [CW-1:0] c;
         always @(posedge clk) c <= {mask_q[l], okey(res[32*l +: 32]), row_qg};
         assign leaf[CW*l +: CW] = c;
+    end endgenerate
+    // ---- LRET: local retirement of the lane packet slice -----------------------------------------------------
+    generate if (LRET) begin : g_lret
+        localparam integer PS = CW*W + 32*W + W + AW;
+        wire [PS-1:0] pin = {leaf, o_data, o_mask, o_addr};
+        wire [PS-1:0] pout;
+        ot_hdc_delay #(.W(PS), .D(LRET)) u_rpipe (.clk(clk), .rst_n(rst_n), .d(pin), .q(pout));
+        wire [CW*W-1:0] rl;
+        assign {rl, r_o_data, r_o_mask, r_o_addr} = pout;
+        reg [W-1:0] veto_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) veto_q <= 0; else veto_q <= lane_veto_in;
+        for (l = 0; l < W; l = l + 1) begin : g_rv
+            assign r_leaf[CW*l +: CW] = {rl[CW*l+CW-1] && !veto_q[l], rl[CW*l +: CW-1]};
+        end
+    end else begin : g_nolret
+        assign r_leaf = 0; assign r_o_data = 0; assign r_o_mask = 0; assign r_o_addr = 0;
     end endgenerate
 endmodule
 
