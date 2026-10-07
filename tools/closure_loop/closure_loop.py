@@ -262,6 +262,7 @@ def stage_list(spec):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
+                        min_count_regex=b.get("min_count_regex"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
@@ -980,8 +981,36 @@ def bench_outcome(j, st, rc, ok_extra=True):
     else:
         raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
     if st["expect"] == "pass":
-        return rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+        ok = rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+        if ok:
+            work, note = bench_work(full, st.get("min_count_regex"))
+            j.setdefault("bench_work", {})[st["key"]] = note
+            if work is False:
+                return False
+        return ok
     return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
+
+
+WORK_RE = re.compile(r"\b(compared|comparisons|checks?|checked|vectors|cases|tokens|results|matches|transactions|"
+                     r"samples|tests|passed|beats|ops)\s*[=:]\s*(\d+)", re.I)
+
+
+def bench_work(log, min_count_regex=None):
+    """VACUOUS-PASS GUARD (2026-10-07: distro Verilator 5.032 ran the SU reducer benches with ZERO reducer results).
+    spec min_count_regex (one capture group): a pass needs a match and every captured count > 0.  Without it, generic
+    count lines (compared=N, checks: N, ...) all equal to 0 fail the pass; a pass log with no count line passes with a
+    warning.  Returns (False | True | None, note)."""
+    if min_count_regex:
+        m = [int(x) for x in re.findall(min_count_regex, log, re.M) if str(x).isdigit()]
+        if not m or min(m) <= 0:
+            return False, f"vacuous: min_count_regex {min_count_regex!r} counts {m[:8]}"
+        return True, f"work: {m[:8]}"
+    m = [(k, int(v)) for k, v in WORK_RE.findall(log)]
+    if m and all(v == 0 for _, v in m):
+        return False, f"vacuous: every count line is 0 ({m[:6]})"
+    if not m:
+        return None, "WARN: pass log has no count line (set min_count_regex)"
+    return True, f"work: {m[:6]}"
 
 
 def stage_tail(j, st, n=40):
@@ -1384,6 +1413,7 @@ def bench_track(j, fleet, stl):
                    f"NEEDS_HUMAN: bench {k} crashed twice (rc={rc}); route stopped\n" + "\n".join(tail.strip().splitlines()[-5:]))
             return False
         passed = bench_outcome(v, st, rc, ok_extra)
+        j.setdefault("bench_work", {}).update(v.get("bench_work") or {})
         e["state"] = "done"
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
@@ -1392,7 +1422,8 @@ def bench_track(j, fleet, stl):
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
-        event(j, f"bench track: {k} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc})")
+        event(j, f"bench track: {k} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
+                 f"{(j.get('bench_work') or {}).get(k, '')}")
     return True
 
 
@@ -1483,7 +1514,8 @@ def step(j, fleet):
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
-            event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc})")
+            event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
+                     f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
             if rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")

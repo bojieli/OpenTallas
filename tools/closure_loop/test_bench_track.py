@@ -90,6 +90,16 @@ class BenchTrack(unittest.TestCase):
         self.assertIsNone(cl.route_key_full(keys, "b@c", "a"))
 
 
+class VacuousPass(unittest.TestCase):
+    def test_work(self):
+        self.assertEqual(cl.bench_work("PASS compared=0 checks: 0")[0], False)
+        self.assertEqual(cl.bench_work("PASS compared=12")[0], True)
+        self.assertIsNone(cl.bench_work("all good")[0])
+        self.assertEqual(cl.bench_work("reducer results 0", r"reducer results (\d+)")[0], False)
+        self.assertEqual(cl.bench_work("reducer results 7", r"reducer results (\d+)")[0], True)
+        self.assertEqual(cl.bench_work("nothing", r"reducer results (\d+)")[0], False)
+
+
 class Transient(unittest.TestCase):
     def test_classify(self):
         import subprocess
