@@ -14,4 +14,11 @@ for seed in 1 2 3 4; do
  "$OUT/obj/Vtb_dsrom_su_fdiv_f12_eq" +N=2500000 +SEED="$seed" > "$OUT/seed_$seed.log" 2>&1
  grep -q 'FDIVEQ n=2500000 compared=2500000 reference=2500000 mismatches=0' "$OUT/seed_$seed.log"
 done
+for negative in INJECT_MISMATCH SHORT_DRAIN; do
+ if "$OUT/obj/Vtb_dsrom_su_fdiv_f12_eq" +N=128 +SEED=1 +"$negative" > "$OUT/negative_$negative.log" 2>&1; then
+  echo "FAIL negative unexpectedly passed: $negative" >&2
+  exit 1
+ fi
+ grep -q 'FDIVEQ incomplete or mismatching stream' "$OUT/negative_$negative.log"
+done
 printf 'PASS_DIV2B_10M_FULL_DRAIN\n' > "$OUT/verdict.txt"
