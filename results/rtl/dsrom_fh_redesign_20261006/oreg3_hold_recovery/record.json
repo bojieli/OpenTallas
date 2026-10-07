@@ -1,0 +1,57 @@
+{
+  "source_commit": "c91a967acd6976f7eaa5a87ad70a69705a76c50e",
+  "job": "dshead-ctl-oreg3-c91a967ac",
+  "original_metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/routes/dshead_ctl_oreg3_c91a967ac/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/routes/dshead_ctl_oreg3_c91a967ac/work/orfs/logs/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_oreg3_c91a967ac/base/5_2_route.json"
+    ],
+    "ss_ps": 31.99,
+    "ff_ps": -83.44,
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/routes/dshead_ctl_oreg3_c91a967ac/work/orfs",
+    "errors": [],
+    "ss_tns_ps": 0.0,
+    "post_sdc": [
+      "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+    ],
+    "drc": 0
+  },
+  "failed_eco": {
+    "tried": true,
+    "rb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/routes/dshead_ctl_oreg3_c91a967ac/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_oreg3_c91a967ac/base",
+    "ob": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/routes/dshead_ctl_oreg3_c91a967ac/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_oreg3_c91a967ac/base",
+    "out": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac/cl/eco",
+    "post_sdc": [
+      "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+    ],
+    "pre": {
+      "ss_ps": 31.99,
+      "ff_ps": -83.44
+    },
+    "started": "2026-10-07T08:10:42-07:00",
+    "result": {
+      "ss_ps": 46.19,
+      "ff_ps": -39.89,
+      "drc": 0,
+      "cells_added": 6816,
+      "errors": [],
+      "pass": 1,
+      "session": "ff",
+      "window": "endpoints_below_hm 4781 fixable 4780 tight 1 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+      "route_strategy": [
+        "incremental_original_guides"
+      ],
+      "score": -54.89
+    }
+  },
+  "diagnosis": "Both passes hit RSZ-0060 (6816 inserted hold buffers, 30 percent cap); best +46.19 SS / -39.89 FF, DRC0. Setup passes, so no RTL timing change is justified. Retry same pinned route with three passes and 60 percent buffer allowance through admission-guarded daemon. Signoff remains +15/+15 DRC0; not adopted.",
+  "retry_hold_eco": {
+    "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ctl --post-sdc physical/dsrom_fh_safe/gen/signoff_ctl.sdc  --out {RUN}/routes/{LABEL}/view",
+    "session": "ff",
+    "passes": 3,
+    "max_buffer_percent": 60
+  },
+  "log_sha256": "a85fdb3d3e9c4d6e05d68064dc748c63643282709a826ec0ef8d428443634b02"
+}
