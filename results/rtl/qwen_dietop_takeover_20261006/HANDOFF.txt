@@ -60,9 +60,13 @@ netlist and matching LEF/lib views before claiming implementation readiness.
 East seam remains a required gate: r20's slab M6 strip funnels east block words
 against tile M1-M7 obstruction into one gcell column. r21 moves slab block-word
 pins to M8. That generated relocation needs a matching real slab pin-access view;
-a pin-placement recipe alone does not prove it. Frozen elements cannot be
-re-hardened by this takeover. If no compatible frozen view exists, report this as
-a physical dependency rather than edit abstracts to make the congestion disappear.
+a pin-placement recipe alone does not prove it. CORRECTION from owner review:
+the 21:30 CLAUDE_OVERNIGHT_LOG decision explicitly permits pin-plan re-routing of
+affected blocks with the SAME RTL despite the element freeze. Use that exception
+to produce matching real views when necessary; no broad element RTL redesign or
+unmeasured obstruction removal is authorized. The named overnight log was not
+present in the inspected checkouts; this correction records the user's explicit
+quotation/authorization, not an independently located copy of that log.
 
 Next terminal and continuation
 1. On the next work turn, inspect the actual qfd_r21_pdn_run process/container
@@ -87,7 +91,7 @@ Next terminal and continuation
    of a completed DRT or a measured DRT peak.
 
 Admission for any later launch
-Latest rule: MemAvailable >= measured job peak + max(10% of peak, 32 GiB), with
+Latest rule: MemAvailable >= measured job peak + max(10% of HOST TOTAL memory, 32 GiB), with
 concurrent/ramping demand accounted for by the shared host admission guard.
 Snapshot: 953465454592 bytes available (~888 GiB), ~2.5 TiB disk free. That is an
 observation, not a reservation. Old r20 GRT peaks 40.4/74.9 GB are measurements of
