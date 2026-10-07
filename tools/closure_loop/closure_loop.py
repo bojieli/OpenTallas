@@ -1607,9 +1607,14 @@ def step(j, fleet):
             event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
                      f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
-            if rc != 0 or not ok_extra:
+            if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
+                # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
+                # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
+                # to overwrite the evidence -> false NEEDS_HUMAN. The verdict stage judges the numbers.
+                event(j, f"{st['key']} rc={rc} with its evidence present (ok check passed): judged at the verdict")
+            elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
-            event(j, f"{st['key']} done (rc=0)")
+            event(j, f"{st['key']} done (rc={rc})")
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 try:
@@ -2290,6 +2295,12 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
+    if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
+        stl = stage_list(j["spec"])
+        idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
+        if not idx:
+            sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
+        j["stage_idx"], j["stage_key"] = idx[0], a.at
     j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
@@ -2409,7 +2420,7 @@ def main():
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
-    r = sub.add_parser("retry"); r.add_argument("name")
+    r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
