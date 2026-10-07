@@ -1,0 +1,265 @@
+{
+  "schema": "opentallas.qwen-dietop-legacy-observation.v1",
+  "observed_at": "2026-10-07T05:44:07.887334+00:00",
+  "case": "/srv/opentallas-scratch/claude/qwen-die-r20/cases/r21_pdn",
+  "expected_container_id": "475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6",
+  "phase": "placement",
+  "container": {
+    "Id": "475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6",
+    "Name": "/qfd_r21_pdn_run",
+    "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "Created": "2026-10-07T05:28:26.234744967Z",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3938966,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-07T05:28:26.248406152Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/qwen-die-r20/cases/r21_pdn",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "command": [
+      "bash",
+      "-lc",
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc"
+    ],
+    "limits": {
+      "Memory": 322122547200,
+      "NanoCpus": 16000000000,
+      "AutoRemove": true
+    }
+  },
+  "inspect_error": null,
+  "source_verified": false,
+  "continuation_allowed": false,
+  "grt_complete": false,
+  "drt_complete": false,
+  "ssff_closed": false,
+  "blockers": [
+    "No launch-time immutable input/source binding for this legacy case",
+    "Real qfd_rly implementation netlists and matching closed LEF/lib views missing",
+    "Same-RTL east-seam pin-plan reroute and matching real views unverified"
+  ],
+  "inputs": {
+    "manifest.json": {
+      "sha256": "bdd0862859dcc9f8b95d2771e37a9fb716662e8266dba4ff1afe44a397f53902",
+      "size": 392,
+      "mtime_ns": 1791350316338051940,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "run.tcl": {
+      "sha256": "f83abbcc595b3e7ccefc58f5be6c605aa24aeb5c6c9747b1ddd5e733ca631d91",
+      "size": 2296,
+      "mtime_ns": 1791350315611038556,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "run_pdn.tcl": {
+      "sha256": "bffbcff7703d061e8eeba395591bd99d383e20cf2824b7ccd0b6c8e52559830b",
+      "size": 780,
+      "mtime_ns": 1791350316338051940,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "die.v": {
+      "sha256": "37525b029fa4f03c978f83454d078e786401b07164a76dcc5570e58dafff412a",
+      "size": 3238844,
+      "mtime_ns": 1791350315603038409,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "elements.lef": {
+      "sha256": "350dad8628ed9fff1986be5d69e6d41787f8c6d123f9f6f022465f8764357af6",
+      "size": 39496724,
+      "mtime_ns": 1791350316231049970,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "phy_ew.lef": {
+      "sha256": "b640d6229a29c17790a3a6b03649481fb61a7144154becc2a982d266cdd52011",
+      "size": 2103392,
+      "mtime_ns": 1791350315566037728,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "snap.tcl": {
+      "sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+      "size": 17860,
+      "mtime_ns": 1791350315566037728,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "place.tcl": {
+      "sha256": "cb10d8ab04fa7896c3b1ca56e29eb5d5e6f34c990f87e8666758f91c5d59147a",
+      "size": 1211703,
+      "mtime_ns": 1791350315611038556,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    },
+    "pdn.tcl": {
+      "sha256": "192415e8abbac3381e6ee237ea22714361c55e1106b036f40778bdda087d1689",
+      "size": 882068,
+      "mtime_ns": 1791350316337051921,
+      "ctime_ns": 1791350324581419863,
+      "stable_during_read": true,
+      "modified_after_start": false
+    }
+  },
+  "physical": {
+    "status": "NO_SUCCESSFUL_CONTAINER_TERMINAL"
+  },
+  "same_name_inventory": {
+    "argv": [
+      "docker",
+      "ps",
+      "-a",
+      "--no-trunc",
+      "--filter",
+      "name=qfd",
+      "--format",
+      "{{json .}}"
+    ],
+    "returncode": 0,
+    "stdout": "{\"Command\":\"\\\"bash -lc 'source /OpenROAD-flow-scripts/env.sh \\u003e/dev/null 2\\u003e\\u00261; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl \\u003e /work/run.log 2\\u003e\\u00261; rc=$?; chmod -R a+rwX /work; exit $rc'\\\"\",\"CreatedAt\":\"2026-10-07 05:28:26 +0000 UTC\",\"ID\":\"475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6\",\"Image\":\"openroad/orfs:asap7lock\",\"Labels\":\"org.opencontainers.image.version=22.04\",\"LocalVolumes\":\"0\",\"Mounts\":\"/srv/opentallas-scratch/claude/qwen-die-r20/cases/r21_pdn\",\"Names\":\"qfd_r21_pdn_run\",\"Networks\":\"bridge\",\"Platform\":{\"architecture\":\"amd64\",\"os\":\"linux\"},\"Ports\":\"\",\"RunningFor\":\"15 minutes ago\",\"Size\":\"8.19kB (virtual 4.93GB)\",\"State\":\"running\",\"Status\":\"Up 15 minutes\"}\n",
+    "stderr": ""
+  },
+  "untrusted_markers": {
+    "case.done": "done\n",
+    "run.log.start": "2026-10-07T05:28:26Z\n",
+    "run_pdn.log.exit": "1\n",
+    "run_pdn.log.start": "2026-10-07T05:18:44Z\n",
+    "run_pdn.log.end": "2026-10-07T05:18:44Z\n"
+  },
+  "log_observation": {
+    "size": 705248,
+    "head": [
+      "OpenROAD 26Q3-1510-g6cb3f2b704 ",
+      "Features included (+) or not (-): +GPU +GUI +Python",
+      "This program is licensed under the BSD-3 license. See the LICENSE file for details.",
+      "Components of this program may be licensed under more restrictive licenses which must be honored.",
+      "[INFO ORD-0030] Using 16 thread(s).",
+      "[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias",
+      "[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells",
+      "[INFO ODB-0227] LEF file: /work/phy_ew.lef, created 1 library cells",
+      "[INFO ODB-0221] 1000000 lines parsed!",
+      "[INFO ODB-0221] 2000000 lines parsed!",
+      "[INFO ODB-0227] LEF file: /work/elements.lef, created 80 library cells",
+      "[WARNING ORD-2011] LEF master qfd_cdc has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_ctrl has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_chead_w has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_chead_e has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_hub has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_io_collective has no liberty cell.",
+      "[WARNING ORD-2011] LEF master qfd_io_embedding_rom has no liberty cell."
+    ],
+    "tail": [
+      "OT_MTS_PLACE rly_cor_37_4_3 qfd_rly_323_NS_53x30 R0 requested (15291.936, 5929.200) placed (15291.936, 5929.200)",
+      "OT_MTS_PLACE rly_cor_37_3_0 qfd_rly_323_NS_53x30 R0 requested (15291.936, 5484.240) placed (15291.936, 5484.240)",
+      "OT_MTS_PLACE rly_cor_37_3_1 qfd_rly_323_NS_53x30 R0 requested (15291.936, 5201.280) placed (15291.936, 5201.280)",
+      "OT_MTS_PLACE rly_cor_37_3_2 qfd_rly_323_NS_53x30 R0 requested (15291.936, 4920.480) placed (15291.936, 4920.480)",
+      "OT_MTS_PLACE rly_cor_37_3_3 qfd_rly_323_NS_53x30 R0 requested (15291.936, 4637.520) placed (15291.936, 4637.520)",
+      "OT_MTS_PLACE rly_cor_37_2_0 qfd_rly_323_NS_53x30 R0 requested (15291.936, 4192.560) placed (15291.936, 4192.560)",
+      "OT_MTS_PLACE rly_cor_37_2_1 qfd_rly_323_NS_53x30 R0 requested (15291.936, 3909.600) placed (15291.936, 3909.600)",
+      "OT_MTS_PLACE rly_cor_37_2_2 qfd_rly_323_NS_53x30 R0 requested (15291.936, 3628.800) placed (15291.936, 3628.800)",
+      "OT_MTS_PLACE rly_cor_37_2_3 qfd_rly_323_NS_53x30 R0 requested (15291.936, 3345.840) placed (15291.936, 3345.840)",
+      "OT_MTS_PLACE rly_cor_37_1_0 qfd_rly_323_NS_53x30 R0 requested (15291.936, 2900.880) placed (15291.936, 2900.880)",
+      "OT_MTS_PLACE rly_cor_37_1_1 qfd_rly_323_NS_53x30 R0 requested (15291.936, 2617.920) placed (15291.936, 2617.920)",
+      "OT_MTS_PLACE rly_cor_37_1_2 qfd_rly_323_NS_53x30 R0 requested (15291.936, 2337.120) placed (15291.936, 2337.120)",
+      "OT_MTS_PLACE rly_cor_37_1_3 qfd_rly_323_NS_53x30 R0 requested (15291.936, 2054.160) placed (15291.936, 2054.160)",
+      "OT_MTS_PLACE rly_cor_37_0_0 qfd_rly_323_NS_53x30 R0 requested (15291.936, 1609.200) placed (15291.936, 1609.200)",
+      "OT_MTS_PLACE rly_cor_37_0_1 qfd_rly_323_NS_53x30 R0 requested (15291.936, 1326.240) placed (15291.936, 1326.240)"
+    ]
+  },
+  "processes": {
+    "argv": [
+      "docker",
+      "top",
+      "475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6",
+      "-eo",
+      "pid,ppid,etime,rss,args"
+    ],
+    "returncode": 0,
+    "stdout": "PID                 PPID                ELAPSED             RSS                 COMMAND\n3938966             3938941             15:41               3348                bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc\n3939019             3938966             15:41               1276                /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl\n3939022             3939019             15:41               8921364             openroad -threads 16 -no_init -exit /work/run.tcl\n",
+    "stderr": ""
+  },
+  "container_after": {
+    "Id": "475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6",
+    "Name": "/qfd_r21_pdn_run",
+    "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "Created": "2026-10-07T05:28:26.234744967Z",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3938966,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-07T05:28:26.248406152Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/qwen-die-r20/cases/r21_pdn",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "command": [
+      "bash",
+      "-lc",
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc"
+    ],
+    "limits": {
+      "Memory": 322122547200,
+      "NanoCpus": 16000000000,
+      "AutoRemove": true
+    }
+  },
+  "next_step": "PRESERVE_LIVE_RUN",
+  "recent_events": {
+    "argv": [
+      "docker",
+      "events",
+      "--since",
+      "1791265447",
+      "--until",
+      "1791351847",
+      "--filter",
+      "container=475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6",
+      "--format",
+      "{{json .}}"
+    ],
+    "returncode": 0,
+    "stdout": "{\"Type\":\"container\",\"Action\":\"top\",\"Actor\":{\"ID\":\"475f8fa34d675e19e7196c3055055fb59faf83ac181d992084e5c4a4643a6ac6\",\"Attributes\":{\"image\":\"openroad/orfs:asap7lock\",\"name\":\"qfd_r21_pdn_run\",\"org.opencontainers.image.version\":\"22.04\"}},\"scope\":\"local\",\"time\":1791351750,\"timeNano\":1791351750982379410}\n",
+    "stderr": ""
+  }
+}
