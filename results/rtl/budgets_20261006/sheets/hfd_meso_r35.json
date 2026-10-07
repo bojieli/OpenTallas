@@ -24,17 +24,17 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 3068.9,
-   "min": 3068.9,
-   "max": 3068.9
+   "mean": 3070.8,
+   "min": 3070.8,
+   "max": 3070.8
   },
   "entry_target_ff_ps": {
-   "mean": 1676.5,
-   "min": 1676.5,
-   "max": 1676.5
+   "mean": 1677.3,
+   "min": 1677.3,
+   "max": 1677.3
   },
   "die_pad_ss_ps": {
-   "mean": 378.0,
+   "mean": 377.6,
    "min": 376.6,
    "max": 378.5
   },
@@ -146,23 +146,23 @@
    "hold_io_ps": 50.0,
    "worst_instance": "hbm:w308_iv_NW<->hb_vm_nw",
    "also_cdc": false,
-   "input_delay_ss_ps": 617.5,
-   "output_delay_ss_ps": 558.5,
-   "input_fraction_of_T": 0.741,
-   "output_fraction_of_T": 0.67,
-   "internal_input_ps": 140.9,
-   "internal_output_ps": 199.9,
-   "as_planned_internal_input_ps": 140.9,
-   "as_planned_internal_output_ps": 199.9,
+   "input_delay_ss_ps": 531.4,
+   "output_delay_ss_ps": 472.4,
+   "input_fraction_of_T": 0.638,
+   "output_fraction_of_T": 0.567,
+   "internal_input_ps": 227.0,
+   "internal_output_ps": 286.0,
+   "as_planned_internal_input_ps": 227.0,
+   "as_planned_internal_output_ps": 286.0,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 440.8,
    "stages_needed": 4,
-   "stages_planned": 4,
+   "stages_planned": 5,
    "extra_stages_needed": 0,
-   "segment_after_stages_um": 379.3,
-   "input_min_delay_ff_ps": 74.7,
-   "output_min_delay_ff_ps": -27.5,
+   "segment_after_stages_um": 303.4,
+   "input_min_delay_ff_ps": 66.2,
+   "output_min_delay_ff_ps": -19.0,
    "die_fanout": 1,
    "feasible": true
   }

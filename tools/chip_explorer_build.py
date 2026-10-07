@@ -106,8 +106,8 @@ D['rates'] = dict(
         sens=V(dict(cycles=q['modelled_sensitivity']['cycles'], token_cycles=q['modelled_sensitivity']['token_cycles'], AR=q['modelled_sensitivity']['AR_tok_s']),
                'tok/s', 'analytical', CMP + ' qwen_rom.modelled_sensitivity (' + q['levers']['kv_map_m']['modelled_not_composed']['status'] + '; not a headline)'),
         AR_us=V(q['AR_us'], 'us', 'measured', CMP + ' qwen_rom.AR_us'),
-        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json (partial: tau third-party 3.1445)'),
-        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json'),
+        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json (partial: tau third-party 3.1445; r21 relays charged)'),
+        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
         AR=V(ds['AR_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.AR_tok_s (all-measured composition, recovery baseline + adopted levers, every off-package link on full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + ')'),
@@ -486,7 +486,7 @@ D['fused_chains'] = V([
 D['spec_table'] = V([
     ['Qwen3-8B ROM, 8K, STREAM4', 'none: compute-bound, KV fill hidden', 5282, '17,197 (4)', 3.26, 0.70],
     ['Qwen3-8B HBM accelerator, TP4, 8K', 'weight stream', 17237, '16,044 (4)', 0.93, 2.28],
-    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '597.0 us/token', '723.6 us (6)', 1.21, 2.73],
+    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '623.7 us/token', '755.6 us (6)', 1.21, 2.75],
 ], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row = ' + CMP + ' ds_rom (default q-element) at the published tau 3.8879, verify from ' + DSC + '.')
 assert D['spec_table']['v'][2][2] == f"{ds['AR_us']:.1f} us/token" and D['spec_table']['v'][2][3] == f"{dsc['MTP']['verify_us']:.1f} us (6)", 'Table 8-14a DS row is stale against ' + CMP
 assert D['spec_table']['v'][2][5] == round(ds['MTP_tok_s_tau_published'] / ds['AR_tok_s'], 2), 'Table 8-14a DS speculative ratio is stale'

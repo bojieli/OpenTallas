@@ -27,17 +27,17 @@
   ],
   "n_regions": 4,
   "entry_target_ss_ps": {
-   "mean": 2829.2,
-   "min": 2827.7,
-   "max": 2830.8
+   "mean": 2828.9,
+   "min": 2827.5,
+   "max": 2831.3
   },
   "entry_target_ff_ps": {
-   "mean": 1511.1,
-   "min": 1510.5,
-   "max": 1511.7
+   "mean": 1511.0,
+   "min": 1510.4,
+   "max": 1511.9
   },
   "die_pad_ss_ps": {
-   "mean": 137.5,
+   "mean": 137.0,
    "min": 136.1,
    "max": 138.0
   },
@@ -109,13 +109,13 @@
    "output_fraction_of_T": 0.319,
    "internal_input_ps": 433.1,
    "internal_output_ps": 492.1,
-   "as_planned_internal_input_ps": 151.1,
-   "as_planned_internal_output_ps": 210.1,
+   "as_planned_internal_input_ps": 179.4,
+   "as_planned_internal_output_ps": 238.4,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 419.1,
    "stages_needed": 11,
-   "stages_planned": 13,
+   "stages_planned": 14,
    "extra_stages_needed": 0,
    "segment_after_stages_um": 100.0,
    "input_min_delay_ff_ps": 43.4,

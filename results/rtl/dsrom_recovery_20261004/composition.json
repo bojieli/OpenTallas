@@ -4,11 +4,11 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 623.632,
- "AR_tok_s": 1603.5,
+ "AR_us": 623.698,
+ "AR_tok_s": 1603.3,
  "critical_path_us_by_class": {
   "zero": 0.0,
-  "measured": 550.411,
+  "measured": 550.478,
   "measured+vendor_phy": 50.432,
   "extra_S81_hops": 22.59,
   "cable_flight": 0.15
@@ -26,41 +26,41 @@
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
-    "busy_us": 25.419
+    "busy_us": 25.4273
    },
    {
     "first": "L13.ffn.hc_pre",
     "hop": "L14.substage_hop0",
-    "busy_us": 22.4693
+    "busy_us": 22.4776
    },
    {
     "first": "L7.ffn.hc_pre",
     "hop": "L8.substage_hop0",
-    "busy_us": 21.7599
+    "busy_us": 21.7683
    },
    {
     "first": "L1.ffn.hc_pre",
     "hop": "L2.substage_hop0",
-    "busy_us": 19.2849
+    "busy_us": 19.2932
    },
    {
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
-    "busy_us": 14.8915
+    "busy_us": 14.8998
    },
    {
     "first": "L31.ffn.hc_pre",
     "hop": "L32.substage_hop0",
-    "busy_us": 14.8915
+    "busy_us": 14.8998
    }
   ],
   "worst_stage": {
    "first": "L19.ffn.hc_pre",
    "hop": "L20.substage_hop0",
-   "busy_us": 25.419
+   "busy_us": 25.4273
   },
-  "II_us": 26.365,
-  "verify_us": 755.458,
+  "II_us": 26.374,
+  "verify_us": 755.566,
   "draft_us": 122.788,
   "draft_terms": {
    "block5_us": 38.3718,
@@ -70,25 +70,25 @@
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 881.463,
-  "MTP_tok_s": 4718.3,
+  "step_us": 881.572,
+  "MTP_tok_s": 4717.7,
   "tau": 4.159,
   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
   "mtp_over_ar": 2.942,
   "tau_sensitivity": {
    "published": {
     "tau": 3.8879,
-    "MTP_tok_s": 4410.7,
+    "MTP_tok_s": 4410.2,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
    },
    "published_low": {
     "tau": 3.43,
-    "MTP_tok_s": 3891.3,
+    "MTP_tok_s": 3890.8,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
    },
    "published_high": {
     "tau": 4.31748,
-    "MTP_tok_s": 4898.1,
+    "MTP_tok_s": 4897.5,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
   },
@@ -714,7 +714,7 @@
     "item": "sel_xstg",
     "nodes": "*.attn.idx.topk_local",
     "count": 8,
-    "cycles": 1,
+    "cycles": 6,
     "frac": 0
    },
    {
@@ -722,7 +722,7 @@
     "item": "sel_xstg",
     "nodes": "*.attn.cand.topk_local",
     "count": 1,
-    "cycles": 1,
+    "cycles": 6,
     "frac": 0
    },
    {
@@ -730,7 +730,7 @@
     "item": "sel_xstg",
     "nodes": "*.attn.gather",
     "count": 8,
-    "cycles": 1,
+    "cycles": 6,
     "frac": 0
    },
    {
@@ -3372,10 +3372,10 @@
   },
   {
    "node": "L20.attn.cand.topk_local",
-   "model_us": 9.7675,
-   "measured_us": 9.7842,
+   "model_us": 9.7717,
+   "measured_us": 9.7883,
    "cls": "measured",
-   "source": "ot_hdc_v41x_sel_cand on the golden 1M L20 scores (12366 cyc incl. 2 overflow re-streams; re-streams priced at the measured reader rate 5821 cyc) + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "ot_hdc_v41x_sel_cand on the golden 1M L20 scores (12366 cyc incl. 2 overflow re-streams; re-streams priced at the measured reader rate 5821 cyc) + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
@@ -23004,130 +23004,130 @@
   },
   {
    "node": "L2.attn.idx.topk_local",
-   "model_us": 1.7925,
-   "measured_us": 1.8092,
+   "model_us": 1.7967,
+   "measured_us": 1.8133,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.idx.topk_local",
-   "model_us": 1.8033,
-   "measured_us": 1.82,
+   "model_us": 1.8075,
+   "measured_us": 1.8242,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.idx.topk_local",
-   "model_us": 1.7917,
-   "measured_us": 1.8083,
+   "model_us": 1.7958,
+   "measured_us": 1.8125,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.idx.topk_local",
-   "model_us": 3.4992,
-   "measured_us": 3.5158,
+   "model_us": 3.5033,
+   "measured_us": 3.52,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.idx.topk_local",
-   "model_us": 0.17,
-   "measured_us": 0.1867,
+   "model_us": 0.1742,
+   "measured_us": 0.1908,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.idx.topk_local",
-   "model_us": 0.1967,
-   "measured_us": 0.2133,
+   "model_us": 0.2008,
+   "measured_us": 0.2175,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.idx.topk_local",
-   "model_us": 0.1967,
-   "measured_us": 0.2133,
+   "model_us": 0.2008,
+   "measured_us": 0.2175,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.idx.topk_local",
-   "model_us": 0.1967,
-   "measured_us": 0.2133,
+   "model_us": 0.2008,
+   "measured_us": 0.2175,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max))",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.attn.gather",
-   "model_us": 0.6675,
-   "measured_us": 0.6692,
+   "model_us": 0.6717,
+   "measured_us": 0.6733,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.attn.gather",
-   "model_us": 0.6675,
-   "measured_us": 0.6692,
+   "model_us": 0.6717,
+   "measured_us": 0.6733,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.attn.gather",
-   "model_us": 0.6675,
-   "measured_us": 0.6692,
+   "model_us": 0.6717,
+   "measured_us": 0.6733,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.attn.gather",
-   "model_us": 0.6767,
-   "measured_us": 0.6783,
+   "model_us": 0.6808,
+   "measured_us": 0.6825,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.attn.gather",
-   "model_us": 0.67,
-   "measured_us": 0.6717,
+   "model_us": 0.6742,
+   "measured_us": 0.6758,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.attn.gather",
-   "model_us": 0.67,
-   "measured_us": 0.6717,
+   "model_us": 0.6742,
+   "measured_us": 0.6758,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.attn.gather",
-   "model_us": 0.67,
-   "measured_us": 0.6717,
+   "model_us": 0.6742,
+   "measured_us": 0.6758,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.attn.gather",
-   "model_us": 0.67,
-   "measured_us": 0.6717,
+   "model_us": 0.6742,
+   "measured_us": 0.6758,
    "cls": "measured",
-   "source": "model + s81_die_tiles: 1 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
+   "source": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)",
    "modelled_part_us": 0.0
   }
  ],
@@ -24421,7 +24421,7 @@
   },
   {
    "node": "L2.attn.idx.topk_local",
-   "us": 1.8092,
+   "us": 1.8133,
    "cls": "measured"
   },
   {
@@ -24436,7 +24436,7 @@
   },
   {
    "node": "L2.attn.gather",
-   "us": 0.6692,
+   "us": 0.6733,
    "cls": "measured"
   },
   {
@@ -25726,7 +25726,7 @@
   },
   {
    "node": "L8.attn.idx.topk_local",
-   "us": 1.82,
+   "us": 1.8242,
    "cls": "measured"
   },
   {
@@ -25741,7 +25741,7 @@
   },
   {
    "node": "L8.attn.gather",
-   "us": 0.6692,
+   "us": 0.6733,
    "cls": "measured"
   },
   {
@@ -27046,7 +27046,7 @@
   },
   {
    "node": "L14.attn.idx.topk_local",
-   "us": 1.8083,
+   "us": 1.8125,
    "cls": "measured"
   },
   {
@@ -27061,7 +27061,7 @@
   },
   {
    "node": "L14.attn.gather",
-   "us": 0.6692,
+   "us": 0.6733,
    "cls": "measured"
   },
   {
@@ -28351,7 +28351,7 @@
   },
   {
    "node": "L20.attn.idx.topk_local",
-   "us": 3.5158,
+   "us": 3.52,
    "cls": "measured"
   },
   {
@@ -28366,7 +28366,7 @@
   },
   {
    "node": "L20.attn.gather",
-   "us": 0.6783,
+   "us": 0.6825,
    "cls": "measured"
   },
   {
@@ -29226,7 +29226,7 @@
   },
   {
    "node": "L24.attn.idx.topk_local",
-   "us": 0.1867,
+   "us": 0.1908,
    "cls": "measured"
   },
   {
@@ -29241,7 +29241,7 @@
   },
   {
    "node": "L24.attn.gather",
-   "us": 0.6717,
+   "us": 0.6758,
    "cls": "measured"
   },
   {
@@ -30106,7 +30106,7 @@
   },
   {
    "node": "L28.attn.idx.topk_local",
-   "us": 0.2133,
+   "us": 0.2175,
    "cls": "measured"
   },
   {
@@ -30121,7 +30121,7 @@
   },
   {
    "node": "L28.attn.gather",
-   "us": 0.6717,
+   "us": 0.6758,
    "cls": "measured"
   },
   {
@@ -30986,7 +30986,7 @@
   },
   {
    "node": "L32.attn.idx.topk_local",
-   "us": 0.2133,
+   "us": 0.2175,
    "cls": "measured"
   },
   {
@@ -31001,7 +31001,7 @@
   },
   {
    "node": "L32.attn.gather",
-   "us": 0.6717,
+   "us": 0.6758,
    "cls": "measured"
   },
   {
@@ -31866,7 +31866,7 @@
   },
   {
    "node": "L36.attn.idx.topk_local",
-   "us": 0.2133,
+   "us": 0.2175,
    "cls": "measured"
   },
   {
@@ -31881,7 +31881,7 @@
   },
   {
    "node": "L36.attn.gather",
-   "us": 0.6717,
+   "us": 0.6758,
    "cls": "measured"
   },
   {
@@ -32735,7 +32735,7 @@
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
   "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "fead73cad46dd969bddcd9aa4178a196d27cfb99b5f4320f2ab47975d44e1544",
   "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
-  "results/rtl/dsrom_recovery_20261004/levers/s81_die_tiles.json": "45e1203e020de2dc2c5cd49daa48d0213b35acd75bda2c2c2721a4519fca27ec",
+  "results/rtl/dsrom_recovery_20261004/levers/s81_die_tiles.json": "de7234141dbbe903678102f4723f6144b4484861c836e1adca09771cd6f0512c",
   "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
   "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "d93d1ea4fc1eb4ad2b4e36f5e8fe8d3962998d9e6d5a60c1c45b97349af6b9ba",
   "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
@@ -32752,7 +32752,7 @@
   "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "531d0a5fb955656f24147c4f2543d8f5a1a61b5a32c2965888dfe1a80c8c41b2",
+  "tools/dsrom_1m_allmeasured.py": "b3ca09a16378cf95a8a00391214966a3461102e55d7f0579118b685bfb47d3bf",
   "tools/dsrom_1m_measure.py": "bf3feec72e3211c22cc9d08616ecac10a50b2a43a2035e15676a91c3ee056a67"
  }
 }

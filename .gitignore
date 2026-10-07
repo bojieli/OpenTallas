@@ -66,3 +66,10 @@ results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/1_2_yosys.v
 results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/6_final.v
 results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/1_2_yosys.v
 results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/6_final.v
+
+# local tooling / scratch (not project files)
+node_modules/
+package.json
+package-lock.json
+*.pid
+codex_notes.txt

@@ -143,30 +143,30 @@
   },
   {
    "item": "sel_xstg",
-   "description": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
+   "description": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job",
    "cycles": [
     [
      "*.attn.cand.topk_local",
-     1,
+     6,
      0
     ],
     [
      "*.attn.gather",
-     1,
+     6,
      0
     ],
     [
      "*.attn.idx.topk_local",
-     1,
+     6,
      0
     ]
    ],
-   "ar_tok_s": 1617.6,
-   "mtp_tok_s": 4752.1,
-   "ar_pct": 0.0,
-   "mtp_pct": -0.002,
-   "cum_ar_pct": -3.427,
-   "cum_mtp_pct": -2.919
+   "ar_tok_s": 1617.4,
+   "mtp_tok_s": 4751.5,
+   "ar_pct": -0.012,
+   "mtp_pct": -0.015,
+   "cum_ar_pct": -3.439,
+   "cum_mtp_pct": -2.932
   },
   {
    "item": "vm_bank_group",
@@ -188,12 +188,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1613.3,
-   "mtp_tok_s": 4741.8,
+   "ar_tok_s": 1613.1,
+   "mtp_tok_s": 4741.3,
    "ar_pct": -0.266,
-   "mtp_pct": -0.217,
-   "cum_ar_pct": -3.684,
-   "cum_mtp_pct": -3.13
+   "mtp_pct": -0.215,
+   "cum_ar_pct": -3.696,
+   "cum_mtp_pct": -3.14
   },
   {
    "item": "gather_root_v4",
@@ -215,12 +215,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1610.0,
-   "mtp_tok_s": 4734.2,
-   "ar_pct": -0.205,
-   "mtp_pct": -0.16,
-   "cum_ar_pct": -3.881,
-   "cum_mtp_pct": -3.285
+   "ar_tok_s": 1609.9,
+   "mtp_tok_s": 4733.6,
+   "ar_pct": -0.198,
+   "mtp_pct": -0.162,
+   "cum_ar_pct": -3.887,
+   "cum_mtp_pct": -3.297
   },
   {
    "item": "capture",
@@ -242,12 +242,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.4,
-   "mtp_tok_s": 4730.4,
+   "ar_tok_s": 1608.3,
+   "mtp_tok_s": 4729.8,
    "ar_pct": -0.099,
    "mtp_pct": -0.08,
-   "cum_ar_pct": -3.976,
-   "cum_mtp_pct": -3.363
+   "cum_ar_pct": -3.982,
+   "cum_mtp_pct": -3.375
   },
   {
    "item": "selector",
@@ -264,12 +264,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.1,
-   "mtp_tok_s": 4729.2,
-   "ar_pct": -0.019,
+   "ar_tok_s": 1607.9,
+   "mtp_tok_s": 4728.6,
+   "ar_pct": -0.025,
    "mtp_pct": -0.025,
-   "cum_ar_pct": -3.994,
-   "cum_mtp_pct": -3.387
+   "cum_ar_pct": -4.006,
+   "cum_mtp_pct": -3.399
   },
   {
    "item": "collector",
@@ -281,12 +281,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1608.1,
-   "mtp_tok_s": 4729.1,
+   "ar_tok_s": 1607.9,
+   "mtp_tok_s": 4728.5,
    "ar_pct": 0.0,
    "mtp_pct": -0.002,
-   "cum_ar_pct": -3.994,
-   "cum_mtp_pct": -3.389
+   "cum_ar_pct": -4.006,
+   "cum_mtp_pct": -3.401
   },
   {
    "item": "svc_io",
@@ -308,12 +308,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1607.8,
-   "mtp_tok_s": 4728.6,
-   "ar_pct": -0.019,
+   "ar_tok_s": 1607.7,
+   "mtp_tok_s": 4728.0,
+   "ar_pct": -0.012,
    "mtp_pct": -0.011,
-   "cum_ar_pct": -4.012,
-   "cum_mtp_pct": -3.399
+   "cum_ar_pct": -4.018,
+   "cum_mtp_pct": -3.412
   },
   {
    "item": "softmax_safe_div",
@@ -325,12 +325,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1605.4,
-   "mtp_tok_s": 4722.8,
-   "ar_pct": -0.149,
+   "ar_tok_s": 1605.2,
+   "mtp_tok_s": 4722.2,
+   "ar_pct": -0.156,
    "mtp_pct": -0.123,
-   "cum_ar_pct": -4.155,
-   "cum_mtp_pct": -3.518
+   "cum_ar_pct": -4.167,
+   "cum_mtp_pct": -3.53
   },
   {
    "item": "bf_rowfix",
@@ -352,12 +352,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1604.8,
-   "mtp_tok_s": 4721.5,
+   "ar_tok_s": 1604.6,
+   "mtp_tok_s": 4720.9,
    "ar_pct": -0.037,
    "mtp_pct": -0.028,
-   "cum_ar_pct": -4.191,
-   "cum_mtp_pct": -3.544
+   "cum_ar_pct": -4.203,
+   "cum_mtp_pct": -3.557
   },
   {
    "item": "pq_qelem",
@@ -379,26 +379,148 @@
      0.0017
     ]
    ],
-   "ar_tok_s": 1603.5,
-   "mtp_tok_s": 4718.3,
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4717.7,
    "ar_pct": -0.081,
    "mtp_pct": -0.068,
-   "cum_ar_pct": -4.269,
-   "cum_mtp_pct": -3.61
+   "cum_ar_pct": -4.281,
+   "cum_mtp_pct": -3.622
   }
  ],
  "total": {
-  "ar_tok_s": 1603.5,
-  "mtp_tok_s": 4718.3,
-  "ar_pct": -4.269,
-  "mtp_pct": -3.61
+  "ar_tok_s": 1603.3,
+  "mtp_tok_s": 4717.7,
+  "ar_pct": -4.281,
+  "mtp_pct": -3.622
  },
+ "candidates": [
+  {
+   "item": "head_elem",
+   "description": "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT 8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+   "adds": [
+    [
+     "head.lm_head",
+     57,
+     0
+    ],
+    [
+     "draft.head_occ",
+     57,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.2,
+   "mtp_tok_s": 4716.2,
+   "ar_pct_vs_total": -0.006,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "fused_head",
+   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)",
+   "adds": [
+    [
+     "draft.head_occ",
+     25,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4717.1,
+   "ar_pct_vs_total": 0.0,
+   "mtp_pct_vs_total": -0.013
+  },
+  {
+   "item": "bf_half",
+   "description": "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     0,
+     0.8789
+    ],
+    [
+     "*.ffn.router",
+     0,
+     0.8976
+    ],
+    [
+     "*.attn.a_proj",
+     0,
+     0.7037
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.7748
+    ]
+   ],
+   "ar_tok_s": 1362.9,
+   "mtp_tok_s": 4124.0,
+   "ar_pct_vs_total": -14.994,
+   "mtp_pct_vs_total": -12.585
+  },
+  {
+   "item": "bf_recut",
+   "description": "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound +15 per field phase (wo_a 4 phases, a_proj 3)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     60,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     45,
+     0
+    ],
+    [
+     "*.ffn.router",
+     15,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     15,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     15,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     15,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     15,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     15,
+     0
+    ],
+    [
+     "*.ffn.down",
+     15,
+     0
+    ]
+   ],
+   "ar_tok_s": 1588.8,
+   "mtp_tok_s": 4683.3,
+   "ar_pct_vs_total": -0.904,
+   "mtp_pct_vs_total": -0.729
+  }
+ ],
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1603.5,
-  "mtp_tok_s": 4718.3,
-  "ar_pct": -4.269,
-  "mtp_pct": -3.61,
+  "ar_tok_s": 1603.3,
+  "mtp_tok_s": 4717.7,
+  "ar_pct": -4.281,
+  "mtp_pct": -3.622,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }

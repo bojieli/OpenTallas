@@ -10,9 +10,9 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+   "commit": "1d24ff50e2588bb094c0c88ea964f35b8248dc3c",
    "generator": "tools/hbm_accel_die_fp.py",
-   "options": "ADOPTED = R20 (r19b + VM tiles centre ck)",
+   "options": "ADOPTED = R22 (r21 + relay stations at every hardened-block pin of a > 100 um die segment)",
    "via": "tools/die_top_lint.py build(hbm)",
    "publication_commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
    "source_binding": "commit matches source_commit embedded in die model and clock plan; publication_commit identifies the coordinator publication revision"

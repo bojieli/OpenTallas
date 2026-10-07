@@ -13,6 +13,11 @@ module ot_hdc_v41_fh_head_top #(
     parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, ALAT = 7, RETURN_EXTRA = 5,
     parameter integer FPIPE = 1,
     parameter integer SAFE = 0,          // retirement SAFE + registered stand-in fold (with FPIPE=2)
+    parameter integer HQ = 0,            // half-quadrant views: q_group_fault carries 2 bits per group (ORed here)
+    // LRET (default 0; needs HQ): the lanes retire their packet slices (ot_hdc_v41_fh_hquad LRET) and the checked
+    // endpoint is its own view: the retirement packet here is the narrow control part (we, tag, valids), the lane
+    // veto leaves one register early (q_lane_veto), leaf/data/mask/address and the argmax stand-in live outside.
+    parameter integer LRET = 0,
     parameter integer ROWS = 505,
     parameter [AW-1:0] LG_BASE_WORD = 0
 ) (
@@ -67,7 +72,13 @@ module ot_hdc_v41_fh_head_top #(
     input  wire [G*W-1:0]    q_o_mask,
     input  wire [G*AW-1:0]   q_o_addr,
     input  wire [G*W-1:0]    q_poison,
-    input  wire [G-1:0]      q_group_fault
+    input  wire [(HQ?2:1)*G-1:0] q_group_fault,
+    // LRET: external endpoint results and the early lane veto
+    input  wire ep_ack_v, ep_fault, ep_guard_busy, ep_request_checked_v, ep_reply_checked_v,
+    input  wire [7:0] ep_ack_id,
+    input  wire [23:0] ep_ack_word,
+    input  wire [15:0] ep_ack_mask,
+    output wire [G*W-1:0] q_lane_veto
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
@@ -222,6 +233,7 @@ module ot_hdc_v41_fh_head_top #(
     wire [15:0] native_ack_mask;
     wire [2830:0] native_request_check_full;
     wire [1266:0] native_reply_check_full;
+    generate if(!LRET) begin : g_ep_in
     ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(1),.FPIPE(FPIPE)) u_native (
         .fast_clk(clk),.cold_n(native_cold_n),
         .request_accept((|o_we)&&native_request_ready),.request_warm(commit_warm),
@@ -233,6 +245,12 @@ module ot_hdc_v41_fh_head_top #(
         .captured_reply(native_captured_reply),.captured_reply_check(native_reply_check_full),
         .request_checked_v(native_request_checked_v),.reply_checked_v(native_reply_checked_v),.guard_busy(native_guard_busy),
         .head_ack_v(native_ack_v),.head_ack_id(native_ack_id),.head_ack_word(native_ack_word),.head_ack_mask(native_ack_mask));
+    end else begin : g_ep_out
+        assign native_ack_v=ep_ack_v; assign native_ack_id=ep_ack_id; assign native_ack_word=ep_ack_word;
+        assign native_ack_mask=ep_ack_mask; assign native_fault=ep_fault; assign native_guard_busy=ep_guard_busy;
+        assign native_request_checked_v=ep_request_checked_v; assign native_reply_checked_v=ep_reply_checked_v;
+        assign native_captured_request=0; assign native_captured_reply=0; assign native_bounds_fault=0;
+    end endgenerate
     (* keep=1,dont_touch=1 *) reg request_v,request_check,reply_v,reply_check;
     assign native_permission_capture={reply_check,reply_v,request_check,request_v};
     always @(posedge clk) begin
@@ -243,10 +261,17 @@ module ot_hdc_v41_fh_head_top #(
             reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
         end
     end
-    localparam integer PW=5512;
+    wire [G-1:0] group_fault_g;
+    genvar gg;
+    for(gg=0;gg<G;gg=gg+1) begin : g_gf
+        assign group_fault_g[gg]=HQ?(q_group_fault[2*gg]|q_group_fault[2*gg+1]):q_group_fault[gg];
+    end
+    localparam integer PW=LRET?(G+TW+4):5512;
     wire parent_fault, rv, rw, retired_warm_payload, retired_ov, retired_leaf_v;
     wire child_leaf_v = tv[0], child_ov = ov;
-    wire [PW-1:0] packet={q_leaf,o_we_q,q_o_addr,q_o_mask,q_o_data,r_tag_q,r_v_q,child_ov,child_leaf_v,warm_emit};
+    wire [PW-1:0] packet;
+    wire [63:0] veto_pre;
+    assign q_lane_veto = veto_pre;
     wire [PW-1:0] retired;
     wire [63:0] veto;
     wire [3:0] write_veto,retired_we;
@@ -256,14 +281,21 @@ module ot_hdc_v41_fh_head_top #(
     ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(1),.SAFE(SAFE)) u_parent (
         .clk(clk),.rst_n(rst_n),.packet_v(r_v_q||child_ov||(|o_we_q)||warm_emit||child_leaf_v),
         .warm(warm_emit),.packet(packet),.warm_word(q_o_addr[23:0]),.warm_mask(q_o_mask[15:0]),
-        .poison(q_poison),.address_fault(address_fault),.arithmetic_fault(native_fault),.group_fault(q_group_fault),
+        .poison(q_poison),.address_fault(address_fault),.arithmetic_fault(native_fault),.group_fault(group_fault_g),
         .sink_busy(commit_busy||native_guard_busy),.ack_v(native_ack_v),.ack_id(native_ack_id),
         .ack_word(native_ack_word),.ack_mask(native_ack_mask),
         .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),
-        .lane_veto(veto),.write_veto(write_veto),.busy(retire_busy),.warm_ack(retire_warm_ack),
+        .lane_veto(veto),.lane_veto_pre(veto_pre),.write_veto(write_veto),.busy(retire_busy),.warm_ack(retire_warm_ack),
         .fault(parent_fault),.warm_debt(commit_debt));
-    assign {retired_leaf,retired_we,o_addr,o_mask,o_data,raw_tag_out,raw_v_out,
-        retired_ov,retired_leaf_v,retired_warm_payload}=retired;
+    generate if(LRET) begin : g_narrow
+        assign packet={o_we_q,r_tag_q,r_v_q,child_ov,child_leaf_v,warm_emit};
+        assign {retired_we,raw_tag_out,raw_v_out,retired_ov,retired_leaf_v,retired_warm_payload}=retired;
+        assign retired_leaf=0; assign o_addr=0; assign o_mask=0; assign o_data=0;
+    end else begin : g_wide
+        assign packet={q_leaf,o_we_q,q_o_addr,q_o_mask,q_o_data,r_tag_q,r_v_q,child_ov,child_leaf_v,warm_emit};
+        assign {retired_leaf,retired_we,o_addr,o_mask,o_data,raw_tag_out,raw_v_out,
+            retired_ov,retired_leaf_v,retired_warm_payload}=retired;
+    end endgenerate
     assign o_we=rv?(retired_we&~write_veto):4'b0;
     assign commit_warm=rw&&(|o_we);
     genvar l;
@@ -273,14 +305,23 @@ module ot_hdc_v41_fh_head_top #(
     assign fault=parent_fault;
     assign r_tag = raw_tag_out; assign r_v = raw_v_out;
     wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1_full;
-    for(genvar p=0;p<G*W/2;p=p+1) begin : g_argmax_consumer
+    wire argmax_fold;
+    assign argmax_level1 = LRET ? 1'b0 : argmax_fold;
+    for(genvar p=0;p<(LRET?0:G*W/2);p=p+1) begin : g_argmax_consumer
         localparam integer CW=1+32+NW;
         wire [CW-1:0] x0=leaf[CW*(2*p)+:CW];
         wire [CW-1:0] x1=leaf[CW*(2*p+1)+:CW];
         wire x0_wins=x0[CW-1]&&(!x1[CW-1]||x0[CW-2-:32]>x1[CW-2-:32]||
             (x0[CW-2-:32]==x1[CW-2-:32]&&x0[NW-1:0]<x1[NW-1:0]));
         reg [CW-1:0] c;
-        always @(posedge clk) c<=x0_wins?x0:x1;
+        if(SAFE) begin : g_rin   // SAFE: the stand-in consumer registers its operands first (as the MARGIN glue faces)
+            reg [CW-1:0] r0,r1;
+            always @(posedge clk) begin r0<=x0; r1<=x1; end
+            wire r0_wins=r0[CW-1]&&(!r1[CW-1]||r0[CW-2-:32]>r1[CW-2-:32]||(r0[CW-2-:32]==r1[CW-2-:32]&&r0[NW-1:0]<r1[NW-1:0]));
+            always @(posedge clk) c<=r0_wins?r0:r1;
+        end else begin : g_rdir
+            always @(posedge clk) c<=x0_wins?x0:x1;
+        end
         assign argmax_level1_full[CW*p+:CW]=c;
     end
     if(SAFE) begin : g_fold_reg   // stand-in observation fold, registered (SAFE)
@@ -289,8 +330,8 @@ module ot_hdc_v41_fh_head_top #(
             reg [NF-1:0] f1; reg f2;
             integer fi;
             always @(posedge clk) begin for(fi=0;fi<NF;fi=fi+1) f1[fi]<=^ff[fi*64+:64]; f2<=^f1; end
-            assign argmax_level1=f2;
+            assign argmax_fold=f2;
         end else begin : g_fold_direct
-            assign argmax_level1=^argmax_level1_full;
+            assign argmax_fold=^argmax_level1_full;
         end
 endmodule

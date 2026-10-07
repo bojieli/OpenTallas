@@ -3961,29 +3961,29 @@
    "section": "rate",
    "key": "dspark_tok_s_8k_stream4",
    "label": "DSpark per-user accepted rate at 8K on STREAM4 (OFF: below AR; verify measured exact on STREAM4, ingest/Markov measured)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
    "pointer": "variants.baseline_np4.tok_s_upper",
    "unit": "tok/s",
    "status": "partial",
-   "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200; tau third-party 3.1445; 0.704x AR"
+   "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200 measured, + 98,838 r21 relay stages (1,003 ME ops x 96 + 96 collectives x 26 + 54, the AR headline's per-op deltas) = 967,038; tau third-party 3.1445; 0.705x AR (pre-relay 4,346.2, 0.704x)"
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "dspark_speedup_vs_ar_8k_stream4",
    "label": "DSpark speedup vs AR at 8K on STREAM4 (baseline verify program; every measured variant is below 1: DSpark off)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
    "pointer": "variants.baseline_np4.speedup_vs_ar_upper",
    "unit": "x",
    "status": "partial",
-   "note": "MERGE_SU np4 0.742x, MERGE_SU np3 0.691-0.744x; drafter layers on REAL_MEM path, argmax/gather priced"
+   "note": "r21 relays charged to verify and draft (same per-op deltas as AR); MERGE_SU np4 0.738x, MERGE_SU np3 0.695-0.746x; drafter layers on REAL_MEM path, argmax/gather priced"
   },
   {
    "target": "qwen_rom",
    "section": "levers",
    "key": "dspark_breakeven_verify_layer_8k_stream4",
    "label": "Break-even DSpark verify layer at 8K on STREAM4 (measured 17,197)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
    "pointer": "variants.baseline_np4.break_even_verify_layer_draft_upper",
    "unit": "cycles",
    "status": "composed_from_measured"
@@ -3993,7 +3993,7 @@
    "section": "levers",
    "key": "dspark_merge_su_np4_vs_ar",
    "label": "DSpark with per-position SU work merged (MERGE_SU, np4) vs AR on STREAM4",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
    "pointer": "variants.merge_su_np4.speedup_vs_ar_upper",
    "unit": "x",
    "status": "partial",
@@ -4004,11 +4004,11 @@
    "section": "levers",
    "key": "dspark_merge_su_np3_vs_ar",
    "label": "DSpark shorter draft (MERGE_SU, np3, tau 2.5441) vs AR on STREAM4, lower-draft bound",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
    "pointer": "variants.merge_su_np3.speedup_vs_ar_lower",
    "unit": "x",
    "status": "partial",
-   "note": "verify layer 13,104 exact; upper-draft bound 0.691x"
+   "note": "verify layer 13,104 exact; upper-draft bound 0.695x"
   },
   {
    "target": "hbm_ds",
@@ -4393,13 +4393,13 @@
    "pointer": "qwen_rom.AR_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) = 194,226 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) + 22,487 r21 die relay stations at the measured 430.56 um reach (owner ADOPT 2026-10-07, -10.4%; results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json) = 216,713 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode)."
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "token_cycles_8k_composed",
-   "label": "Qwen ROM P8191 token cycles incl. adopted lever cycles (core, slab, KV_MAP=1)",
+   "label": "Qwen ROM P8191 token cycles incl. adopted lever cycles (core, slab, KV_MAP=1, 430 um die relays)",
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "qwen_rom.token_cycles",
    "unit": "cycles",
@@ -4662,7 +4662,7 @@
     "gpu_qwen.h100_tp8_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
+   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1, 430 um die relays)",
    "unit": "x",
    "section": "ratios"
   },
@@ -4675,7 +4675,7 @@
     "gpu_qwen.h100_tp1_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1)",
+   "note": "not iso-area; ROM side = the closed-configuration headline (AR, STREAM4, KV_MAP=1, 430 um die relays)",
    "unit": "x",
    "section": "ratios"
   },
@@ -4969,8 +4969,8 @@
   },
   {
    "target": "qwen_rom",
-   "item": "DSpark on STREAM4 (off): drafter layers measured on the REAL_MEM path, draft argmax/gather priced, drafter layers at S < 3 bounded; single-pass MAC area is an estimate",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+   "item": "DSpark on STREAM4 (off): drafter layers measured on the REAL_MEM path, draft argmax/gather priced, drafter layers at S < 3 bounded, r21 relay stages priced per ME op/collective (not simulated); single-pass MAC area is an estimate",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json"
   }
  ],
  "physical_blocks": [
@@ -5409,8 +5409,8 @@
    "target": "qwen_rom",
    "lever": "DSpark speculative decoding",
    "verdict": "OFF at 8K (AR mode): built and exact, below AR on STREAM4",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
-   "numbers": "0.704x baseline, 0.742x MERGE_SU, 0.691-0.744x np3; free-draft 0.969x; break-even verify 10,069 vs 17,197; superseded: P255 0.833x reject, REAL_MEM 1.569x adopt",
+   "path": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json",
+   "numbers": "with the r21 relays: 0.705x baseline, 0.738x MERGE_SU, 0.695-0.746x np3; break-even verify 9,264 vs 17,197 (pre-relay 0.704x / 10,069); superseded: P255 0.833x reject, REAL_MEM 1.569x adopt",
    "figures": [
     "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
     "qwen_rom.dspark_breakeven_verify_layer_8k_stream4",

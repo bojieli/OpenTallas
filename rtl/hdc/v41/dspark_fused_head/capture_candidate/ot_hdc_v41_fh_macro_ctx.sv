@@ -265,7 +265,14 @@ module ot_hdc_v41_fh_macro_ctx #(
         wire x0_wins=x0[CW-1]&&(!x1[CW-1]||x0[CW-2-:32]>x1[CW-2-:32]||
             (x0[CW-2-:32]==x1[CW-2-:32]&&x0[NW-1:0]<x1[NW-1:0]));
         reg [CW-1:0] c;
-        always @(posedge clk) c<=x0_wins?x0:x1;
+        if(SAFE) begin : g_rin   // SAFE: the stand-in consumer registers its operands first (as the MARGIN glue faces)
+            reg [CW-1:0] r0,r1;
+            always @(posedge clk) begin r0<=x0; r1<=x1; end
+            wire r0_wins=r0[CW-1]&&(!r1[CW-1]||r0[CW-2-:32]>r1[CW-2-:32]||(r0[CW-2-:32]==r1[CW-2-:32]&&r0[NW-1:0]<r1[NW-1:0]));
+            always @(posedge clk) c<=r0_wins?r0:r1;
+        end else begin : g_rdir
+            always @(posedge clk) c<=x0_wins?x0:x1;
+        end
         assign argmax_level1_full[CW*p+:CW]=c;
     end
 endmodule

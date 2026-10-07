@@ -138,3 +138,8 @@ every one.
   HBM infeasible as planned: 0; clock plan 0 crossings > 150 ps.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r19b: every attention root bus (tile row -> index band a0..a3) and index-key chain end (-> b0 k) ends in a die station abutting the receiving pin (budget PIN_LAST_UM 100 um, +1 hop): index b5 a3 internal input budget 113.6 -> 428.1 ps; all index-band interfaces >= 387.8 ps.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r20 (VM quadrant tiles with the centre M7 ck). Clock plan unchanged in outcome (34 regions, max inter 141.4, 0 > 150).
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r21: a station opposite each index b5 t_vm pin run (87.7 um): b5 t_vm internal output budget 247.7 -> 501.1 ps. Clock plan 36 regions, max inter 141.4, 0 > 150.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER three rules): HBM on r22: a relay station abuts every hardened-block pin of every
+  die interface whose pin segment exceeds 100 um (500 relay ends, list relay_ends_hbm.json; last segment <= 100 um,
+  +1 hop each). HBM hardened blocks with an interface internal budget < 300 ps: 17 -> 1 (ot_pdie_serdes black box, 465 ps
+  after the link relay; hfd_su a at 339.7 ps). Clock plan unchanged (relays are not clock-tree instances).

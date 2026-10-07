@@ -1,0 +1,141 @@
+{
+ "name": "dshead-ep-r4-cd3cbef4b",
+ "spec": {
+  "name": "dshead-ep-r4-cd3cbef4b",
+  "block": "ot_hdc_v41_fh_ep_view",
+  "owner": "Claude:tk-ds-head (fused-head design agent)",
+  "purpose": "DS fused head r4 view ep: hquad = 8 lanes with lane-local retirement, ctl = control + narrow retirement, ep = checked endpoint (FPIPE=2); gold4 EXACT 63,128 (+55 vs margin v2)",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "cd3cbef4b38159ec87fbc50ba6bfb22173d6d26b"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "bash physical/dsrom_fh_safe/cl_route.sh ep {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "bash physical/dsrom_fh_safe/cl_route.sh ep {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_ep.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_ep.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ep_view --post-sdc physical/dsrom_fh_safe/gen/signoff_ep.sdc  --out {RUN}/routes/{LABEL}/view"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_fh_safe/closed/ep_r4"
+   }
+  ],
+  "cycles_added": "head total +55 vs margin v2 (63,073 -> 63,128, +0.09%); r4 structure 0",
+  "merge_target": "main",
+  "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)"
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/dshead-ep-r4-cd3cbef4b.json",
+ "created": "2026-10-07T02:20:01-07:00",
+ "status": "RUNNING",
+ "stage_idx": 1,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-agidock128",
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-07T02:20:01-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/dshead-ep-r4-cd3cbef4b.json",
+  "2026-10-07T02:21:29-07:00 source cd3cbef4b381 synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/dshead-ep-r4-cd3cbef4b/src",
+  "2026-10-07T02:22:53-07:00 calibrate waiting for capacity: AGIdock MemAvailable 98-40 GB < 40+32",
+  "2026-10-07T02:25:14-07:00 calibrate cannot start on AGIdock (AGIdock MemAvailable 97-40 GB < 40+32); moving to EPYC1",
+  "2026-10-07T02:27:35-07:00 source cd3cbef4b381 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/dshead-ep-r4-cd3cbef4b/src",
+  "2026-10-07T02:29:18-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+  "2026-10-07T02:43:42-07:00 calibrate done (rc=0)",
+  "2026-10-07T02:43:45-07:00 calibrated insertion CK_SS_MEAN=751 CK_SS_MIN=729 CK_SS_MAX=833 CK_FF_MEAN=484 CK_FF_MIN=464 CK_FF_MAX=558",
+  "2026-10-07T02:45:38-07:00 launched route (attempt 1) on ot-epyc1tb"
+ ],
+ "updated": "2026-10-07T04:14:25-07:00",
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-ep-r4-cd3cbef4b",
+ "commit_full": "cd3cbef4b38159ec87fbc50ba6bfb22173d6d26b",
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-07T02:45:38-07:00",
+ "unreachable": 0,
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 7774,
+    "mean": 751.4,
+    "min": 729.4,
+    "max": 833.4
+   },
+   "all": {
+    "n": 20762,
+    "mean": 750.2,
+    "min": 728.9,
+    "max": 833.5
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 7774,
+    "mean": 484.5,
+    "min": 464.4,
+    "max": 557.8
+   },
+   "all": {
+    "n": 20762,
+    "mean": 483.3,
+    "min": 464.3,
+    "max": 557.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 751,
+   "CK_SS_ALL_MEAN": 750,
+   "CK_SS_MIN": 729,
+   "CK_SS_ALL_MIN": 729,
+   "CK_SS_MAX": 833,
+   "CK_SS_ALL_MAX": 834,
+   "CK_FF_MEAN": 484,
+   "CK_FF_ALL_MEAN": 483,
+   "CK_FF_MIN": 464,
+   "CK_FF_ALL_MIN": 464,
+   "CK_FF_MAX": 558,
+   "CK_FF_ALL_MAX": 558
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ }
+}
