@@ -34,6 +34,7 @@ module ot_s81ph_link_ep #(
     parameter integer PHY_NUM        = 0,
     parameter integer PHY_DEN        = 1,
     parameter integer SRAM           = 0,
+    parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
     // derived frame widths (ports)
     parameter integer FFW_P = SEQW + 1 + FLIT_BYTES * 8 + 32,
     parameter integer RFW_P = 1 + SEQW + $clog2(CREDITS + 1) + 32
@@ -78,8 +79,8 @@ module ot_s81ph_link_ep #(
     localparam integer FFW  = FPW + 32;
     localparam integer RVW  = 1 + SEQW + CW;
     localparam integer RFW  = RVW + 32;
-    localparam integer RTT  = 2 * CHANNEL_CYCLES + TX_STAGES + RX_STAGES + 6;
-    localparam integer RTTB = 2 * CHANNEL_CYCLES_B + TX_STAGES + RX_STAGES + 6;
+    localparam integer RTT  = 2 * CHANNEL_CYCLES + TX_STAGES + 2 * PIPE + RX_STAGES + 6;
+    localparam integer RTTB = 2 * CHANNEL_CYCLES_B + TX_STAGES + 2 * PIPE + RX_STAGES + 6;
     localparam integer ATO  = (ACK_TIMEOUT == 0) ? (RTT + 2 * KEEPALIVE + 32) : ACK_TIMEOUT;
     localparam integer ATOB = (ACK_TIMEOUT == 0) ? (RTTB + 2 * KEEPALIVE + 32) : ACK_TIMEOUT;
     localparam integer TW   = $clog2(((ATOB > ATO) ? ATOB : ATO) + 2);
@@ -136,11 +137,22 @@ module ot_s81ph_link_ep #(
     wire            pace_ok = (PHY_NUM == 0) || pace_ok_r;
 
     wire [SEQW-1:0] occ = nxt - una;
-    wire            replaying = (snd != nxt);
+    // PIPE (coll lane v3, s81ph-dsfd_coll_lane_w-34b3e75dd SS -971: nxt -> occ / ack compare -> una_i add ->
+    // replay read address -> SRAM -> CRC -> tp, 30 levels, one cycle):
+    //  (1) in_ready and replaying are REGISTERS computed from the next-state values (same function, one flop)
+    //  (2) the replay read address is the snd_i register (read data one cycle later), payload registered (stage A
+    //      launch, stage B payload), CRC from registers: +2 TX cycles (RTT / ACK timeout include them)
+    //  (3) reverse frames: pin register -> pending slot P (newest frame wins; NAK sticky until taken) -> stage S2
+    //      (ack / credit differences against una / fr_seen, which only change when S2 applies) -> applied: one
+    //      reverse frame applied every other cycle at most; ACKs and freed counts are cumulative, so merging is exact
+    //      for the protocol (go-back-N recovers any NAK merged into a newer ACK)
+    //  (4) index registers are seq[IW-1:0] (RP a power of two): una_i_n = ack[IW-1:0], no add
+    reg             rdy_r, rep_r;
+    wire            replaying = PIPE ? rep_r : (snd != nxt);
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
-    assign in_ready = (occ < RPS) && !replaying && pace_ok;
+    assign in_ready = PIPE ? rdy_r : ((occ < RPS) && !replaying && pace_ok);
 `else
-    assign in_ready = (credits != 0) && (occ < RPS) && !replaying && pace_ok;
+    assign in_ready = PIPE ? rdy_r : ((credits != 0) && (occ < RPS) && !replaying && pace_ok);
 `endif
     wire            accept = in_valid && in_ready;
     wire            launch = (replaying && pace_ok) || accept;
@@ -153,10 +165,19 @@ module ot_s81ph_link_ep #(
     wire [W-1:0]    l_data = replaying ? rd_data : in_data;
     wire            l_last = replaying ? rd_last : in_last;
     wire [FPW-1:0]  l_pay  = {snd, l_last, l_data};
+    // PIPE TX stages A (launch, replay select, in word) / B (payload from the registered replay read)
+    reg             a_v, a_rep, b_v; reg [SEQW-1:0] a_snd; reg [W:0] a_in; reg [FPW-1:0] b_pay;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin a_v <= 1'b0; b_v <= 1'b0; end else begin a_v <= launch; b_v <= a_v; end
+    always @(posedge clk) begin
+        a_rep <= replaying; a_snd <= snd; a_in <= {in_last, in_data};
+        b_pay <= {a_snd, a_rep ? rb_q : a_in};
+    end
+    wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
+    wire            t_launch = PIPE ? b_v : launch;
     // (T) two-cycle forward CRC: partial CRCs of the halves (the CRC is affine: crc(a ^ b) = crc(a) ^ crc(b) ^ crc(0))
     wire [31:0]     l_crc_lo, l_crc_hi, crc_zero;
-    ot_link_crc32 #(.W(FPW)) u_tx_crc_lo (.d({{(FPW-HB){1'b0}}, l_pay[HB-1:0]}), .crc(l_crc_lo));
-    ot_link_crc32 #(.W(FPW)) u_tx_crc_hi (.d({l_pay[FPW-1:HB], {HB{1'b0}}}), .crc(l_crc_hi));
+    ot_link_crc32 #(.W(FPW)) u_tx_crc_lo (.d({{(FPW-HB){1'b0}}, t_pay[HB-1:0]}), .crc(l_crc_lo));
+    ot_link_crc32 #(.W(FPW)) u_tx_crc_hi (.d({t_pay[FPW-1:HB], {HB{1'b0}}}), .crc(l_crc_hi));
     ot_link_crc32 #(.W(FPW)) u_crc_zero (.d({FPW{1'b0}}), .crc(crc_zero));
 
     // reverse-frame receive register; (T) its CRC check is computed on the input and registered beside it
@@ -165,14 +186,32 @@ module ot_s81ph_link_ep #(
     reg             rr_crc_ok;
     wire [31:0]     r_rx_crc;
     ot_link_crc32 #(.W(RVW)) u_rv_crc_chk (.d(r_rx[RFW-1:32]), .crc(r_rx_crc));
-    wire            rr_ok   = rr_v && rr_crc_ok;
+    wire            rr_ok0  = rr_v && rr_crc_ok;
     wire            rr_bad  = rr_v && !rr_crc_ok;
-    wire            rr_nak  = rr_f[RFW-1];
-    wire [SEQW-1:0] rr_ack  = rr_f[RFW-2 -: SEQW];
-    wire [CW-1:0]   rr_fr   = rr_f[32 +: CW];
-    wire [SEQW-1:0] d_ack   = rr_ack - una;
+    wire            rr_nak0 = rr_f[RFW-1];
+    wire [SEQW-1:0] rr_ack0 = rr_f[RFW-2 -: SEQW];
+    wire [CW-1:0]   rr_fr0  = rr_f[32 +: CW];
+    // PIPE: pending slot P and decode stage S2
+    reg             pv, s2v, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr;
+    wire            p_take = pv && !s2v;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; end
+        else begin
+            s2v <= p_take;
+            if (rr_ok0) begin pv <= 1'b1; pnak <= rr_nak0 | (pv && !p_take && pnak); end
+            else if (p_take) begin pv <= 1'b0; pnak <= 1'b0; end
+        end
+    always @(posedge clk) begin
+        if (rr_ok0) begin pack <= rr_ack0; pfr <= rr_fr0; end
+        if (p_take) begin s2ack <= pack; s2fr <= pfr; s2nak <= pnak; s2dack <= pack - una; s2bad <= (pack - una) > occ; end
+    end
+    wire            rr_ok   = PIPE ? s2v : rr_ok0;
+    wire            rr_nak  = PIPE ? s2nak : rr_nak0;
+    wire [SEQW-1:0] rr_ack  = PIPE ? s2ack : rr_ack0;
+    wire [CW-1:0]   rr_fr   = PIPE ? s2fr : rr_fr0;
+    wire [SEQW-1:0] d_ack   = PIPE ? s2dack : (rr_ack - una);
     wire [CW-1:0]   d_fr    = rr_fr - fr_seen;
-    wire            ack_bad = rr_ok && (d_ack > occ);
+    wire            ack_bad = rr_ok && (PIPE ? s2bad : (d_ack > occ));
     wire [CW:0]     cred_sum = {1'b0, credits} + {1'b0, d_fr};
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            fr_bad  = 1'b0;
@@ -182,7 +221,7 @@ module ot_s81ph_link_ep #(
     wire            ack_ok  = rr_ok && !ack_bad;
     wire            progress = ack_ok && (d_ack != 0);
     wire [SEQW-1:0] una_n   = ack_ok ? rr_ack : una;
-    wire [IW-1:0]   una_i_n = ack_ok ? idx_add(una_i, d_ack) : una_i;
+    wire [IW-1:0]   una_i_n = ack_ok ? rr_ack[IW-1:0] : una_i;   // = una_i + d_ack (indices are seq mod RP)
     wire            timeout = (occ != 0) && !progress && (timer == ATO_W);
 `ifdef OT_DSROM_LINK_MUT_NOREPLAY
     wire            rewind  = 1'b0;
@@ -197,7 +236,7 @@ module ot_s81ph_link_ep #(
     wire [IW-1:0]   snd_i_nx  = (rewind || ack_skip) ? una_i_n : snd_i_l;
 
     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM)) u_rb (.clk(clk),
-        .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(snd_i_nx), .q(rb_q));
+        .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));
 
     // TX pipe: stage 0 = {payload, partial CRCs}; stage 1 = {payload, CRC}; stages 2.. copies
     reg             tp_v [0:TX_STAGES-1];
@@ -208,7 +247,7 @@ module ot_s81ph_link_ep #(
         if (gi == 0) begin : g_first
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) tp_v[gi] <= 1'b0;
-                else begin tp_v[gi] <= launch; tp_f[gi] <= {l_pay, 32'd0}; tp_lo <= l_crc_lo; tp_hi <= l_crc_hi; end
+                else begin tp_v[gi] <= t_launch; tp_f[gi] <= {t_pay, 32'd0}; tp_lo <= l_crc_lo; tp_hi <= l_crc_hi; end
         end else if (gi == 1) begin : g_crc
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) tp_v[gi] <= 1'b0;
@@ -319,10 +358,20 @@ module ot_s81ph_link_ep #(
     end
     wire pace_ok_launch = (pace >= PTH2);
     wire pace_ok_inc    = ({1'b0, pace} + {1'b0, PNUM_W}) >= {1'b0, PCOST_W};
+    wire [SEQW-1:0] nxt_nx = accept ? nxt + 1'b1 : nxt;
+    wire [SEQW-1:0] snd_nx = rewind ? una_n : (ack_skip ? rr_ack : snd_l);
+`ifdef OT_DSROM_LINK_MUT_FREECREDIT
+    wire            cred_ok_nx = 1'b1;
+`else
+    wire [CW-1:0]   cred_nx = credits - {{(CW-1){1'b0}}, accept} + ((rr_ok && !fr_bad) ? d_fr : {CW{1'b0}});
+    wire            cred_ok_nx = cred_nx != 0;
+`endif
+    wire            pace_ok_nx = (PHY_NUM == 0) ? 1'b1 : (launch ? pace_ok_launch : (!pace_ok ? pace_ok_inc : pace_ok_r));
+    wire [SEQW-1:0] occ_nx = nxt_nx - una_n;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            una <= 0; snd <= 0; nxt <= 0; una_i <= 0; snd_i <= 0; nxt_i <= 0;
+            una <= 0; snd <= 0; nxt <= 0; una_i <= 0; snd_i <= 0; nxt_i <= 0; rdy_r <= 1'b1; rep_r <= 1'b0;
             credits <= CREDITS[CW-1:0]; fr_seen <= 0; timer <= 0; retry <= 0;
             pace <= PCOST_W; pace_ok_r <= 1'b1; rb_fwd <= 1'b0; rb_fwd_d <= 0;
             rr_v <= 1'b0; rr_f <= 0; rr_crc_ok <= 1'b0;
@@ -346,6 +395,8 @@ module ot_s81ph_link_ep #(
                 nxt_i <= idx_add(nxt_i, 1);
             end
             una <= una_n; una_i <= una_i_n;
+            rdy_r <= cred_ok_nx && (occ_nx < RPS) && (snd_nx == nxt_nx) && pace_ok_nx;
+            rep_r <= snd_nx != nxt_nx;
             if (rewind) begin
                 snd <= una_n; snd_i <= una_i_n;
             end else if (ack_skip) begin

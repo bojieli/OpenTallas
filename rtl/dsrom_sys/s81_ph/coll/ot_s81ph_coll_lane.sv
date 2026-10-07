@@ -59,7 +59,7 @@ module ot_s81ph_coll_lane #(
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
-        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM)) u_ep (
+        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(1)) u_ep (
         .clk(clk), .rst_n(rst_n), .ch_b(ch_b),
         .in_valid(iv), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
