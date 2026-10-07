@@ -1,0 +1,227 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-07T06:15:08.926662+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_reindex_parent_physctx_margin",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "SPLIT_COUNTERS": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_physctx.sv",
+        "sha256": "4d82d674e8e88c452b7ce4ac2e47b9d84ac3b1fb77f652db8eb730849d54b25b",
+        "size_bytes": 3005
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv",
+        "sha256": "a7db8cffe264511ae0c495b5e978d142c4f957ea7e16d3cfc23563c62a5787dd",
+        "size_bytes": 5591
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv",
+        "sha256": "374d8dcf913293e93ad0269b63ee75a7aca2c06ff06bd19f7227a22200b5f356",
+        "size_bytes": 38339
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv",
+        "sha256": "efe426432312318e2f09cec91ba8119a7d5c346a60c65eba7f5cc5d25f0f3016",
+        "size_bytes": 6255
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv",
+        "sha256": "fc541e1b3e98d135659b33eb9339eb557f2f57e25768b911306247186dabf351",
+        "size_bytes": 1582
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv",
+        "sha256": "bff165be724d2e40dfd24f19eb3cc1b9f7e73b4c6dad6cde44b165ce8e6b439d",
+        "size_bytes": 2161
+      },
+      {
+        "path": "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_io_margin.sv",
+        "sha256": "2c01e7ac74e14f69b42d3348799035a9e8a625d491f6f5f615d7644cec9641f8",
+        "size_bytes": 9802
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+        "sha256": "ba479bdbfe3b4e23dfc17aa5cc31443aa6ffe87a5f112293c23b38212b35e268",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_dsrom_reindex_parent_physctx_margin"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib\nread_db /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_1_floorplan.odb\nread_sdc /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nrtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6\n[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.\nDie Area: (0.00, 0.00) (728.38, 460.96),  Floorplan Area: (2.05, 2.16) (726.30, 458.73)\n\tNumber of std cell instances: 538182\n\tArea of std cell instances: 63769.83\n\tNumber of macros: 16\n\tMacros to be placed: 16\n\tArea of macros: 82730.42\n\tBase halo (L, B, R, T): (2.00, 2.00, 2.00, 2.00)\n\tArea of macros with halos: 84768.00\n\tArea of std cell instances + Area of macros: 146500.25\n\tFloorplan area: 330669.91\n\tDesign Utilization: 0.44\n\tFloorplan Utilization: 0.26\n\tManufacturing Grid: 1\n\n[WARNING MPL-0055] Couldn't find a solution for the specified utilization. The utilization was adjusted to 0.63504004.\n[INFO MPL-0500] Runtime: 315.53s\nTook 315 seconds: rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6\nsource /work/hooks/post_macro_place_place.tcl\nOT_MTS_PLACE u_core.u_control.u_list.g_b\\[0\\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 314.164) placed (3.996, 313.200)\nError: macro_place.tcl, 8 ot_mts::place: no legal, non-overlapping origin for u_core.u_control.u_list.g_b\\[10\\].u_macro (ot_sram_1r1w_512x128_m4_r2c2 R0) near (368.192, 389.56399999999996)\n\nElapsed time: 0:12.05[h:]min:sec. CPU time: user 11.53 sys 0.52 (99%). Peak memory: 1529412KB.\nElapsed time: 8:11.94[h:]min:sec. CPU time: user 611.39 sys 238.86 (172%). Peak memory: 2889076KB.\nElapsed time: 5:21.11[h:]min:sec. CPU time: user 561.63 sys 66.08 (195%). Peak memory: 2300384KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_2_floorplan_macro.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T20:51:04.578757+00:00",
+  "git": {
+    "commit": "da3e7736a33ac30887e40a00ef1e9644be10973a",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_reindex_parent_physctx_margin",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_physctx.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv",
+      "--source",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_io_margin.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+      "--param",
+      "SPLIT_COUNTERS=1",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--hold-margin-ns",
+      "0.008",
+      "--max-transition-ns",
+      "library",
+      "--slew-margin-percent",
+      "20",
+      "--max-fanout",
+      "32",
+      "--io-delay-fraction",
+      "0.2",
+      "--die-area",
+      "0",
+      "0",
+      "728.384",
+      "460.964",
+      "--core-area",
+      "2.052",
+      "2.160",
+      "726.324",
+      "458.910",
+      "--macro-view",
+      "ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+      "--macro-place-halo",
+      "2",
+      "2",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/dsrom_reindex_parent/place.tcl",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_reindex_parent/regions.tcl",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--nickname-tag",
+      "reindex_parent",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/claude/takeover-ds/reindex/route_m1/work",
+      "--output",
+      "/srv/opentallas-scratch/claude/takeover-ds/reindex/route_m1/physical.json",
+      "--orfs-var",
+      "SYNTH_ARGS=-noshare",
+      "--nickname-tag",
+      "reindex_parent_margin"
+    ],
+    "driver": {
+      "commit": "da3e7736a33ac30887e40a00ef1e9644be10973a",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/claude/takeover-ds/reindex/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/claude/takeover-ds/reindex/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/claude/takeover-ds/reindex/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

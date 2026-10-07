@@ -1,0 +1,41 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (728.38, 460.96),  Floorplan Area: (2.05, 2.16) (726.30, 458.73)
+	Number of std cell instances: 538182
+	Area of std cell instances: 63769.83
+	Number of macros: 16
+	Macros to be placed: 16
+	Area of macros: 82730.42
+	Base halo (L, B, R, T): (2.00, 2.00, 2.00, 2.00)
+	Area of macros with halos: 84768.00
+	Area of std cell instances + Area of macros: 146500.25
+	Floorplan area: 330669.91
+	Design Utilization: 0.44
+	Floorplan Utilization: 0.26
+	Manufacturing Grid: 1
+
+[WARNING MPL-0055] Couldn't find a solution for the specified utilization. The utilization was adjusted to 0.63504004.
+[INFO MPL-0500] Runtime: 315.53s
+Took 315 seconds: rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6
+source /work/hooks/post_macro_place_place.tcl
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[0\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 314.164) placed (3.996, 313.200)
+Error: macro_place.tcl, 8 ot_mts::place: no legal, non-overlapping origin for u_core.u_control.u_list.g_b\[10\].u_macro (ot_sram_1r1w_512x128_m4_r2c2 R0) near (368.192, 389.56399999999996)
+
+Elapsed time: 0:12.05[h:]min:sec. CPU time: user 11.53 sys 0.52 (99%). Peak memory: 1529412KB.
+Elapsed time: 8:11.94[h:]min:sec. CPU time: user 611.39 sys 238.86 (172%). Peak memory: 2889076KB.
+Elapsed time: 5:21.11[h:]min:sec. CPU time: user 561.63 sys 66.08 (195%). Peak memory: 2300384KB.
+make[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1
+make: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_reindex_parent_physctx_margin_asap7_reindex_parent_margin/base/2_2_floorplan_macro.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/takeover-ds/reindex/route_m1/physical.json

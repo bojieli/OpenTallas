@@ -1,0 +1,23 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[0\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 314.164) placed (3.996, 313.200)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[10\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (368.192, 389.564) placed (368.172, 388.800)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[11\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (550.288, 389.564) placed (550.314, 388.800)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[12\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 427.264) placed (3.996, 427.680)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[13\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (186.096, 427.264) placed (186.084, 427.680)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[14\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (368.192, 427.264) placed (368.172, 427.680)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[15\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (550.288, 427.264) placed (550.314, 427.680)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[1\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (186.096, 314.164) placed (186.084, 313.200)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[2\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (368.192, 314.164) placed (368.172, 313.200)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[3\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (550.288, 314.164) placed (550.314, 313.200)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[4\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 351.864) placed (3.996, 352.080)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[5\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (186.096, 351.864) placed (186.084, 352.080)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[6\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (368.192, 351.864) placed (368.172, 352.080)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[7\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (550.288, 351.864) placed (550.314, 352.080)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[8\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (4.000, 389.564) placed (3.996, 388.800)
+OT_MTS_PLACE u_core.u_control.u_list.g_b\[9\].u_macro ot_sram_1r1w_512x128_m4_r2c2 R0 requested (186.096, 389.564) placed (186.084, 388.800)
+OT_MACRO_TRACK_ASSERT PASS label=dsrom_reindex_parent macros=16 pins_checked=6992 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+[ERROR ODB-0359] Attempt to change the origin of LOCKED instance u_core.u_control.u_list.g_b\[0\].u_macro
+Error: check_place_20261007.tcl, 9 ODB-0359

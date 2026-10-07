@@ -1,0 +1,33 @@
+{
+  "status": "R1_TERMINAL_FAIL_PLACEMENT_FIX_VALIDATED",
+  "job": "route_m1",
+  "failure": "Automatic macro placer leaves list macros placed; explicit grid collides with stale locations.",
+  "fix": "Release all sixteen list macros before explicit placement; same geometry, timing and IO.",
+  "validation": "Existing full-shape 2_1_floorplan.odb with legal locations cyclically permuted to exercise stale placement. Original hook fails; fixed hook passes 16 macros and 6992 pins on track, zero offtrack. This is a placement check, not route/DRC/timing closure.",
+  "remaining": [
+    "Continue from preserved synthesized/floorplan checkpoint in a separately recorded successor using fixed hook; do not resynthesize.",
+    "Complete route then SS/FF +15 ps, DRC0 including IO."
+  ],
+  "acceptance": {
+    "SS_setup_min_ps": 15,
+    "FF_hold_min_ps": 15,
+    "DRC": 0,
+    "IO_timed": true,
+    "constraints_relaxed": false
+  },
+  "adopted": false,
+  "evidence_sha256": {
+    "live_snapshot.json": "970ef8003736e5cdf0d7678584b53ad1d2295614919ff86c0292449aecb98baf",
+    "manifest.json": "8ccd35c79550a2bcc373f613c38dc2dd76250b10523325b65c358d9a6be1436e",
+    "check_place_20261007.log": "a0204cc28ebf664012d6cb9a3128e1b4d6038a3ed724e7a80ba3ad9f96b51f13",
+    "check_place_20261007.tcl": "613f096f97b0865a33ab2522b444c0ca4a58b7de4cafa93d1b9b00a36e9e953b",
+    "check_place_20261007_track_path_failure.log": "33a3805973dbd9fc0e8f9545cc8a77c18ba7b83c45f5ab48590c070b31f8a475",
+    "check_place_20261007_locked_fixture_failure.log": "99508793b987b524943aaba23dc2d6e84f159fb393dc09da67e6958827bb13e6",
+    "check_place_20261007.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "route_m1/physical.json": "66e1f1be8e76df07614aedff07771711a93f89377e80b77c9efdf20fc1d49475",
+    "route_m1/route.log": "f91fdec4dd1a1005cf77e8ecc4f0420172b5f7aa4f956f80fd5f92835f85d01a",
+    "route_m1/source.json": "f27821b5b4fb7d663f2ea4ef7e8bb9acea86410b20736faa9fe5955612272e28",
+    "route_m1/exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "src/physical/dsrom_reindex_parent/place.tcl": "54dc67d220a56ea2382ec1d11131a4c96d0e9a963d0921231dc96ad29a71fce0"
+  }
+}

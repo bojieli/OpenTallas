@@ -3,16 +3,8 @@
 source [file join /src physical/common/ot_macro_track_snap.tcl]
 set block [ord::get_db_block]
 set dbu [$block getDbUnitsPerMicron]
-# Release the placer's old locations before installing the complete explicit grid.
-# Otherwise an as-yet-unmoved list macro can block an earlier macro's target.
-set macros {}
-foreach inst [$block getInsts] {
-    if {[[$inst getMaster] getName] eq "ot_sram_1r1w_512x128_m4_r2c2"} {lappend macros $inst}
-}
-if {[llength $macros]!=16} {error "fullshape requires sixteen list macros, saw[llength $macros]"}
-foreach inst $macros {$inst setPlacementStatus UNPLACED}
 set count 0
-foreach inst $macros {
+foreach inst [$block getInsts] {
     if {[[$inst getMaster] getName] ne "ot_sram_1r1w_512x128_m4_r2c2"} {continue}
     # Flattened names may carry escaped brackets (g_b\[3\]); match on the unescaped name.
     if {![regexp {g_b\[([0-9]+)\].*u_macro} [string map {\\ {}} [$inst getName]] ignored i]} {error "unrecognized list macro [$inst getName]"}
