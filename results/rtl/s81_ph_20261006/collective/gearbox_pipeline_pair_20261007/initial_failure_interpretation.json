@@ -1,0 +1,5 @@
+{
+  "failure": "Initial test drove valid and counted ready during lane internal two-flop reset release, so its expected queue included reset-discarded transactions.",
+  "correction": "Wait four cycles after external reset release before driving valid/counting handshakes. No RTL change.",
+  "result": "Corrected harness PASS on actual100/400-cycle channels; initial test source and failure preserved."
+}

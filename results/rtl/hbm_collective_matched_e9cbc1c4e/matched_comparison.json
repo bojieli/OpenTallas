@@ -1,0 +1,33 @@
+{
+  "source_commit": "e9cbc1c4e",
+  "source_pins_validated_against_git": true,
+  "source_count": 21,
+  "traffic_calendar": "contributor-major hot-column; matched0/1 runs required for latency delta",
+  "packet0": {
+    "lanes": 16,
+    "PF": 384,
+    "owner_results": 24,
+    "issued": 384,
+    "peer_flits": 336,
+    "hub_stalls": 108,
+    "peer_stalls": 569,
+    "first_issue": 5,
+    "last_delivery": 533,
+    "elapsed": 529
+  },
+  "packet1": {
+    "lanes": 16,
+    "PF": 384,
+    "owner_results": 24,
+    "issued": 384,
+    "peer_flits": 336,
+    "hub_stalls": 108,
+    "peer_stalls": 221,
+    "first_issue": 5,
+    "last_delivery": 535,
+    "elapsed": 531
+  },
+  "elapsed_delta_cycles": 2,
+  "scope": "One fullPF384/16lane native endpoint on matched contributor-major traffic; no total-token/calendar/physical adoption",
+  "all_six_checks_pass": true
+}

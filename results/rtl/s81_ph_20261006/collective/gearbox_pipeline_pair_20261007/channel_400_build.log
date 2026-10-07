@@ -1,0 +1,175 @@
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:134:26: Operator VAR 'PTH2' expects 27 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  134 |     localparam [PAW-1:0] PTH2    = 2 * PCOST - PHY_NUM;         
+      |                          ^~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/link/ot_link_crc32.sv:29:26: Replication of more that --replication-limit 8192 is suspect: 18016
+                                                                                                       : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep.u_rx_crc_hi'
+   29 |             masks = {32*W{1'b0}};
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:63:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ic' generates 11 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   63 |     wire           idle_now = (ic == IDLE_P - 1);
+      |                                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:64:46: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   64 |     wire           need = !idle_now && (tcnt < G);
+      |                                              ^
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                         ^
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:34: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'tcnt' generates 11 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                  ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                               : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                           ^
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:86:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   86 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                                        ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:86:26: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                               : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+   86 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                          ^
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:112:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tcnt_a' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  112 |                 tcnt <= tcnt_a - G;
+      |                                ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:112:22: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  112 |                 tcnt <= tcnt_a - G;
+      |                      ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                               ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:45: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                             ^
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:37: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 10 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                     ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:21: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                     ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:141:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'mc' generates 8 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  141 |     wire           due = (mc == MP - 1);
+      |                              ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:143:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rcnt' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  143 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                                  ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:143:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  143 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                           ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:159:59: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'G' generates 32 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  159 |                             racc <= {{S{1'b0}}, bg}; rcnt <= G;
+      |                                                           ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:169:40: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  169 |                         rcnt <= rcnt_a - S;
+      |                                        ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:169:30: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                                : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  169 |                         rcnt <= rcnt_a - S;
+      |                              ^~
+%Warning-WIDTHEXPAND: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:165:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                                                                 : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_gb'
+  165 |                     if (rcnt_a >= S) begin
+      |                                ^~
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:151:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  151 |     wire            replaying = PIPE ? rep_r : (snd != nxt);
+      |                                      ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:155:28: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  155 |     assign in_ready = PIPE ? rdy_r : ((credits != 0) && (occ < RPS) && !replaying && pace_ok);
+      |                            ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:175:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  175 |     wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
+      |                                     ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:176:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  176 |     wire            t_launch = PIPE ? b_v : launch;
+      |                                     ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:208:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  208 |     wire            rr_ok   = PIPE ? s2v : rr_ok0;
+      |                                    ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:209:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  209 |     wire            rr_nak  = PIPE ? s2nak : rr_nak0;
+      |                                    ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:210:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  210 |     wire [SEQW-1:0] rr_ack  = PIPE ? s2ack : rr_ack0;
+      |                                    ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:211:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  211 |     wire [CW-1:0]   rr_fr   = PIPE ? s2fr : rr_fr0;
+      |                                    ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:212:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  212 |     wire [SEQW-1:0] d_ack   = PIPE ? s2dack : (rr_ack - una);
+      |                                    ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:214:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  214 |     wire            ack_bad = rr_ok && (PIPE ? s2bad : (d_ack > occ));
+      |                                              ^
+%Warning-WIDTHTRUNC: /tmp/s81-gearbox-pipeline-7aa6f7358-preflight/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:239:79: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                                                                      : ... note: In instance 'tb_s81ph_gbx_pipeline_pair.lanes[1].u.u_ep'
+  239 |         .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));
+      |                                                                               ^
+%Warning-WIDTHEXPAND: /tmp/tb_s81ph_gbx_pipeline_pair.sv:13:58: Operator XOR expects 552 bits on the LHS, but LHS's CONST '32'hdeadbeef' generates 32 bits.
+                                                              : ... note: In instance 'tb_s81ph_gbx_pipeline_pair'
+   13 |   begin d=0;for(j=0;j<18;j++)d=(d<<32)|552'(32'hdeadbeef ^ (n*32'h9e3779b9) ^ (side<<28) ^ j); return {n%11==10,d};end
+      |                                                          ^
+%Warning-WIDTHEXPAND: /tmp/tb_s81ph_gbx_pipeline_pair.sv:13:84: Operator SHIFTL expects 552 bits on the LHS, but LHS's VARREF 'side' generates 32 bits.
+                                                              : ... note: In instance 'tb_s81ph_gbx_pipeline_pair'
+   13 |   begin d=0;for(j=0;j<18;j++)d=(d<<32)|552'(32'hdeadbeef ^ (n*32'h9e3779b9) ^ (side<<28) ^ j); return {n%11==10,d};end
+      |                                                                                    ^~
+%Warning-WIDTHTRUNC: /tmp/tb_s81ph_gbx_pipeline_pair.sv:41:5: Logical operator IF expects 1 bit on the If, but If's ARRAYSEL generates 3 bits.
+                                                            : ... note: In instance 'tb_s81ph_gbx_pipeline_pair'
+   41 |     if(fault[i])$fatal(1,"lane fault side%0d code%0d",i,fault[i]);
+      |     ^~
+make: Entering directory '/tmp/s81-gbx-pipeline-pair-b400-r2/build'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_s81ph_gbx_pipeline_pair__pch.h -o Vtb_s81ph_gbx_pipeline_pair__pch.h.fast.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair_ot_sram_1r1w_512x128_m4_r2c2__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair_ot_sram_1r1w_512x128_m4_r2c2__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.fast -c Vtb_s81ph_gbx_pipeline_pair__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_s81ph_gbx_pipeline_pair__pch.h -o Vtb_s81ph_gbx_pipeline_pair__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair_ot_sram_1r1w_512x128_m4_r2c2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair_ot_sram_1r1w_512x128_m4_r2c2__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_pipeline_pair__pch.h.slow -c Vtb_s81ph_gbx_pipeline_pair__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_s81ph_gbx_pipeline_pair__ALL.a    -pthread -lpthread -latomic   -o Vtb_s81ph_gbx_pipeline_pair
+rm Vtb_s81ph_gbx_pipeline_pair__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/s81-gbx-pipeline-pair-b400-r2/build'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.435 MB sources in 13 modules, into 3.014 MB in 13 C++ files needing 0.059 MB
+- Verilator: Walltime 12.090 s (elab=1.510, cvt=0.195, bld=10.337); cpu 1.753 s on 1 threads; allocated 88.188 MB

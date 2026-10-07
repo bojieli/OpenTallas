@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "pc": 0,
+      "returncode": 0,
+      "scenarios": 41,
+      "upset_cases": 34,
+      "typed_cancels": 4
+    },
+    {
+      "pc": 31,
+      "returncode": 0,
+      "scenarios": 41,
+      "upset_cases": 34,
+      "typed_cancels": 4
+    }
+  ],
+  "negative": "cancel tag upset plus disabled replica comparator rejected at actual receiving edge",
+  "source_sha256": {
+    "ot_qwen_ctrl_write_cancel.sv": "864e3973f81c61ece490e32f5c6e10fcadb465b7b2100c3ad348a337f40154af",
+    "ot_qwen_ctrl_write_cancel_service_pc.sv": "632bc1b2cd43e18804641b67c4833d775a20d9ad2a7f5a5d807d7965bb72e24b",
+    "tb_qwen_ctrl_write_cancel.sv": "bbe98f186ffc753a3a9bce35b6ec4e22c4149dafd610350780bad8a3859c6d14"
+  }
+}

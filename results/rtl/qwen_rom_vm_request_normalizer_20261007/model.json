@@ -1,0 +1,49 @@
+{
+  "scope": "Default-off ROM native request normalization only; prior immutable model/evidence retained.",
+  "read_slots": 2256,
+  "write_slots": 865,
+  "source_geometry": {
+    "SW": 64,
+    "NVX": 2048,
+    "NPORT": 48,
+    "W": 16,
+    "VWA": 16,
+    "VM_ELEMS": 1048576
+  },
+  "source_cycles_added": 0,
+  "combinational_only": true,
+  "read_boundary_bits": 76704,
+  "write_boundary_bits": 56225,
+  "return_zero_mux_bits": 72192,
+  "required_read_zero_frame_sideband_bits": 2256,
+  "sideband_integration_implemented": false,
+  "default_aligned_bounds": {
+    "scalar_four_bit_zero_reductions": 2305,
+    "word_eight_bit_zero_reductions": 49,
+    "sequencer_bounds_constant_true": true
+  },
+  "two_input_or_gate_equivalent_lower_bound": 7258,
+  "qualification_gates": {
+    "read_valid": 2256,
+    "read_zero": 2256,
+    "write_valid": 865
+  },
+  "direct_clock_enable_fanout": 2832,
+  "maximum_shared_word_bound_fanout": 16,
+  "full_address_wire_before_check_bits": 32,
+  "shift_is_wiring": true,
+  "priority_muxes_added": 0,
+  "priority": "ordered slots ME768 MX16 SU64 reducer1 sequencer16, downstream must preserve last-writer priority",
+  "generic_partial_word_bounds": "Per-lane full32-bit bounds required; no aligned-extent shortcut.",
+  "replicas": 1,
+  "physical_area_um2": null,
+  "area_status": "Gate/bit inventory priced; cell-mapped area, buffering, placement, tracks and SS/FF delay unmeasured. Not admitted for physical implementation.",
+  "routing": "Wide2256/865 boundary not legalized; must partition physically and price stations before build/route.",
+  "adoption": false,
+  "read_address_expansion_bits": 18048,
+  "write_address_expansion_bits": 6920,
+  "interface_semantics": "Native ABI extent must remain1,048,576 unless a separate full-program extent proof permits reduction; reduced177808 capacity is not substituted.",
+  "response_hold_and_XVM": "read_publish_en qualifies eventual original register update; original held-when-disabled and XVM stages remain external and unbound.",
+  "maximum_zero_flag_data_fanout": 32,
+  "remaining_ownership": "2256 read-zero flags must be stored/protected with owned frame by future adapter join; this component has no state."
+}

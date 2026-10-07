@@ -1,0 +1,13 @@
+{
+  "contract_source": "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:48-52 out-of-domain values raise fault; their writtenword is unspecified and mustnot be read",
+  "producer": "rsqrt ORs13 internal stagefaults; aggregate event notresultmetadata; c12controller registers all lane/side/reducer events",
+  "executor": "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:212 latches native_fault into stickybad whileexecuting; req_v andrsp_rdy require!bad at154/160",
+  "owner": "SUCPbinder qualified_sticky dualrails captureexec_fault; positivepermits gated currentfault; state remainsquarantineduntilreset",
+  "test": "Real ot_hbm_su_cp_side selectedshape with early/middle/drain singlecyclefault injected intoexec_fault interface;3cases55checksPASS; interfacebypassmutant FAILatfirstfaultboundcheck",
+  "limitations": "This provescontrollerconsumer latch/quarantine semantics, not complete physical fault wire, actualexecutor-to-owner wiring, rollback ofalreadyacceptedwrites, or a token-level publication guarantee. No functional RTL correction selected.",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "30b7b872de2d67f5cac5ba21139a0d5fb3f2db3d881ea78786dcdca720ab79bb",
+    "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv": "cab80ae86b57afc86eb15ece85328cfb4149923e2d17d650f2d817f8ba672aef",
+    "tools/hbm_su_fault_event_gate.py": "c0912b9a2f0db4d5a7edb7c207d775e73f03e5288f795b22d863316993e76737"
+  }
+}

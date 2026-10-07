@@ -72,40 +72,55 @@ H_SRAM = "results/rtl/hbm_collective_full_20261007/storage_model.json"
 H_CLKIN = "results/uarch/hbm_die_clock_inputs_20261007/model.json"
 H_CLKENT = "results/uarch/hbm_collective_clock_entry_20261007/model.json"
 FULLSYS = "results/rtl/fullsys_recheck_20261007/status.json"
-# Claude CDC design (on branch claude/hbm-collective-cdc-design-20261007 only, b49366616; verified absent from origin/main 41cf0a266): packet-SRAM receive queue and
-# candidate protected CDC drain at II=3 (1/3 line rate per port); 3-bank rotation (option B) restores II=1
+# Since the merge of origin/main 54ff3c0af into this branch, every record below is in the tree; values are READ from it
+# and commits come from git history (commit_of).  Branch-only items are named as such.
+_J = lambda rel: json.loads((Path(__file__).resolve().parents[1] / rel).read_text())
+# CDC design v1 (on main at 8b7f55b31; originally b49366616): packet-SRAM receive queue / protected CDC drain at II=3
 H_CDC = "results/rtl/hbm_collective_cdc_design_20261007/options.json"
-H_CDC_COMMIT = "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
-# II1 refill (B prime): committed on origin/main at 9ead91a15 (cited, not merged: this branch's base 449ebc571 predates it)
+H_CDC_COMMIT = None
+# II1 refill (B prime): on main at 9ead91a15
 H_REFILL = "results/rtl/hbm_collective_cdc_20261007/refill_model.json"
 H_REFILL_PASS = "results/rtl/hbm_collective_cdc_20261007/final_pass/record.json"
-H_REFILL_COMMIT = "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
-# v2 CDC design recommending the refill: branch claude/hbm-collective-cdc-design-v2-20261007 only
+H_REFILL_COMMIT = None
+# CDC design v2 recommending the refill (on main at 092c84e1d; originally 2ae0d7d33)
 H_CDC2 = "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json"
-H_CDC2_COMMIT = "2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only)"
-# SM -> SU result-contract audit (Claude, branch claude/hbm-sm-su-result-contract-20261007 8c8bb2af2 only)
+H_CDC2_COMMIT = None
+# SM -> SU result-contract audit (on main at 10989fac4; originally 8c8bb2af2)
 H_SMSU = "results/rtl/hbm_sm_su_result_contract_20261007/contract.json"
-H_SMSU_COMMIT = "8c8bb2af2 (on branch origin/claude/hbm-sm-su-result-contract-20261007 only)"
-H_SMSU_V = dict(published=343, native=1029, store_forward=132520)
-H_CDC_V = dict(ii3_AR_us=30.78, ii3_MTP_us=171.99, ii3_AR_pct=6.48, ii3_MTP_pct=16.37, ser_AR=18470, ser_MTP=103196,
-               lat_us=1.017, lat_cycles=1220, rot_area_um2=12093.2)
+H_SMSU_COMMIT = None
+_s = _J(H_SMSU)["summary"]
+H_SMSU_V = dict(published=_s["published_cycles"], native=_s["native_cycles"], store_forward=_s["store_forward_floor_cycles"])
+_o = _J(H_CDC)
+_a = _o["options"]["A_credit_bound"]
+H_CDC_V = dict(ii3_AR_us=_a["cost_serialisation"]["AR_us"], ii3_MTP_us=_a["cost_serialisation"]["MTP_step_us"],
+               ii3_AR_pct=_a["cost_serialisation"]["AR_pct"], ii3_MTP_pct=_a["cost_serialisation"]["MTP_step_pct"],
+               ser_AR=int(_o["workload"]["matched_P1"]["serialisation_cycles"]), ser_MTP=int(_o["workload"]["matched_P6"]["serialisation_cycles"]),
+               lat_us=_a["cost_latency"]["AR_us"], lat_cycles=_a["cost_latency"]["AR_cycles"],
+               rot_area_um2=_o["options"]["B_rotated_II1"]["area_um2_added"])
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
-BF_BRANCH_COMMIT = "a30252b68"   # ledger.md bf_merge_ksplit row; released binding 332983233; both on the branch only
-# bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07). The record is ON MAIN at ece40d827
-# (blob 2526ad8f, identical to codex/bf-evidence-only 4534a8e5f) but not in this branch's base 449ebc571, so its values
-# are pinned here as constants (reproducible from a git archive of this branch)
+BF_BRANCH_COMMIT = "a30252b68"   # ledger.md bf_merge_ksplit row; released binding 332983233; both on that branch only
+# BF option records (on main at ece40d827)
 BFA_FILE = "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json"
-BFA_COMMIT = "ece40d827 (on origin/main; blob 2526ad8f; values pinned as constants because this branch's base 449ebc571 predates it)"
-BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96, regions=19056, base_regions=20928)
-# option B (mixed 2,304 pairs, 85 stages): numbers in the same main record ece40d827; the "DS ADOPT" label commit 505a9b484 is on
-# branch origin/codex/restore-bf-pairs-20261007 only (absent from origin/main 41cf0a266)
-BFB_COMMIT = "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
+BFA_COMMIT = None
+_bf = _J(BFA_FILE)
+BFA = dict(AR=_bf["options"]["A_f198_2048"]["AR"], MTP=_bf["options"]["A_f198_2048"]["MTP"],
+           base_AR=_bf["options"]["base_f198_2050"]["AR"], base_MTP=_bf["options"]["base_f198_2050"]["MTP"],
+           stages=_bf["options"]["A_f198_2048"]["stages"], regions=_bf["regions"]["A_f198_2048"]["region_runs"],
+           base_regions=_bf["regions"]["base_f198_2050"]["region_runs"])
+# option B: numbers in the same main record; its "DS ADOPT" label commit 505a9b484 is on branch
+# origin/codex/restore-bf-pairs-20261007 only (verified not an ancestor of origin/main 54ff3c0af)
+BFB_COMMIT = None
 GEO_B = None
-BFB = dict(AR=1754.3, MTP=5098.3, base_AR=1603.3, base_MTP=4717.7, stages=85, pairs=2304, layer_dies=340, regions=18288,
-           label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
-           physical="PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption.",
-           wire="ESTIMATED f183.60 round trips for mixed slot option")
-
+BFB = dict(AR=_bf["options"]["B_mixed_2304"]["AR"], MTP=_bf["options"]["B_mixed_2304"]["MTP"], base_AR=1603.3, base_MTP=4717.7,
+           stages=_bf["options"]["B_mixed_2304"]["stages"], pairs=2304, layer_dies=340, regions=_bf["regions"]["B_mixed_2304"]["region_runs"],
+           label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field (commit 505a9b484, branch origin/codex/restore-bf-pairs-20261007 only)",
+           physical=_bf["physical_status"], wire=_bf["wire_status"])
+# S81 full-shape PQ partition v2 (Claude design, branch claude/s81-pq-fullshape-design-v2-20261007 @ 9a8c86255 ONLY; main
+# carries the earlier version of the same record at 738ddfbc2 with +15 cycles / 0.47 %).  Branch values pinned here.
+PQ_FILE = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json"
+PQ_ROOT = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json"
+PQ_COMMIT = "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+PQ = dict(cycles_per_phase=18, ar_loss_frac=0.00564, roots_mm2_per_die=3.0, core_mm2=0.32, rwb_mm2=0.40)
 
 def load(rel):
     return json.loads((ROOT / rel).read_text())
@@ -200,12 +215,15 @@ def qwen():
           dict(unit="cycles", AR=ctrl["latency"]["composed_worst_case_token_cycles"]),
           [src(Q_CTRL, "latency.composed_worst_case_token_cycles"), src(Q_CTRL_Q, "status")],
           "%s: exact all 32 PCs; worst-case +%d cycles a token (3 request->PHY edges); predecessor SS %.2f / FF %.2f ps; "
-          "physical unmeasured; added mutable state unprotected (blocks production adoption)"
+          "physical unmeasured; added mutable state unprotected (blocks production adoption). Protected successor "
+          "(duplicated state, results/rtl/qwen_ctrl_protected_20261007/routed150, main 72bfeccb1): mapped-state retention PASS, "
+          "routed physical status not_met, so no cycle or closure credit"
           % (ctrlq["status"], ctrl["latency"]["composed_worst_case_token_cycles"],
              ctrlq["predecessor_measurement"]["ss_ps"], ctrlq["predecessor_measurement"]["ff_ps"]), "candidate"),
         L("forwarded_clocks", "Direction-owned forwarded link clocks (217 primitives, 442 directional clock nets)", "priced-candidate",
           dict(unit="cycles", AR=fwd["latency"]["replacement_added_single_user_token_cycles"]), src(Q_FWD, "latency"),
-          "same registered-hop count as r21 (0 added stage cycles); area proxy %.0f um2; active graph simulated=%s, adopted=%s"
+          "same registered-hop count as r21 (0 added stage cycles); area proxy %.0f um2; active graph simulated=%s, adopted=%s; "
+          "the protected-reset (TMR) successor graph r23 on main (8f68043a0) also adds 0 token cycles and is not adopted"
           % (fwd["area_proxy_um2"], fwdv["active_graph_simulated"], fwdv["adopted"]), "candidate"),
         L("link_credit_rtt", "Link credit capacity vs the forwarded-path transport round trip", "gated-unknown", None,
           src(Q_FWD, "paths[].transport_credit_roundtrip_cycles"),
@@ -376,6 +394,22 @@ def ds_rom():
           "(requested_fits=false, %s). Codex's branch label is quoted for history only, not promoted: '%s'"
           % (format(BFB["regions"], ","), format(BFB["regions"], ","), BFB["base_AR"], GEO_B["maximum_pairs_at_this_geometry"],
              DS_GEOM, BFB["label"]), "info"),
+        L("pq_fullshape_partition", "Full-shape PQ partition (root contract v2): +%d cycles per field phase" % PQ["cycles_per_phase"],
+          "priced-candidate", dict(unit="us", AR=round(PQ["ar_loss_frac"] * c["AR_us"], 3), MTP_step=None),
+          [src(PQ_FILE, "changes[item=added cycles per phase (vs the native production parent)].current", commit=PQ_COMMIT),
+           src(PQ_ROOT, "cam, parity", commit=PQ_COMMIT)],
+          "PARTIAL-PRICED CANDIDATE: about %.2f %% AR (per-phase delta x the historical +1-return-cycle sensitivity); the "
+          "per-token critical phases on the 1,792 mapping are not composed, and the geometry is provisional pending Codex's "
+          "221 / 1,728 layout. MTP not priced. Area: roots about %.1f mm2 a die in tier-channel rows, core %.2f mm2 in the "
+          "449 x 1,728 um slot, return write-back blocks %.2f mm2. +18 = pipelined CAM +1 per root pass (<= 4 passes on a "
+          "row chain) + 2 return-strip stations; main's earlier record (738ddfbc2) says +15 / 0.47 %%, superseded by %s"
+          % (100 * PQ["ar_loss_frac"], PQ["roots_mm2_per_die"], PQ["core_mm2"], PQ["rwb_mm2"], PQ_COMMIT), "candidate"),
+        L("pq_root_parity_cam_rtl", "PQ root parity + 2-stage pipelined CAM RTL (Codex)", "gated-unknown", None,
+          src(PQ_ROOT, "parity, cam", commit=PQ_COMMIT), "contract only: 141-pin face, odd parity, hazard rules H1-H3; RTL and exact adapter proof owned by Codex", "gate"),
+        L("pq_stage_b_timing", "PQ CAM stage-B timing", "gated-unknown", None, src(PQ_ROOT, "cam.stages", commit=PQ_COMMIT),
+          "unmeasured; stage-C fallback costs +1 cycle a pass", "gate"),
+        L("pq_half_serial_lane_exactness", "HALF serial-lane exactness for a beat shift of <= 2 cycles", "gated-unknown", None,
+          src(PQ_FILE, "changes", commit=PQ_COMMIT), "exactness of the HALF (BF-dedicated) serial lane under the <= 2-cycle beat shift not shown", "gate"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
         L("bf_half_physical", "BF half-rate clock root qualification (current exact BF closure path)", "gated-unknown", None,
@@ -506,7 +540,7 @@ def hbm_ds():
         L("cdc_refill_ss_timing", "SS/FF timing of the CDC refill", "gated-unknown", None,
           src(H_REFILL, "physical_risk", commit=H_REFILL_COMMIT),
           "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving "
-          "fix (registered head-pointer address) has been proposed (v2 design %s)" % H_CDC2_COMMIT, "gate"),
+          "fix (registered head-pointer address) has been proposed (v2 design %s)" % H_CDC2, "gate"),
         L("packet_sram_ii3_rate_cap", "Packet-SRAM receive queue still drains at II=3 (1/3 line rate per port)",
           "gated-unknown", None, src(H_CDC, "options.A_credit_bound.cost_serialisation", commit=H_CDC_COMMIT),
           "GATED until the same II=1 refill is applied to the packet SRAM: while it stays at II=3 the port is capped at a third "
@@ -615,13 +649,13 @@ def no_ecc():
         dict(target="ds_rom", item="Weight ROM (4096-row macros, 1792-pair mapping)", protection="none (ROM_ECC=false)", policy="compliant", source=s(f"{DS_MAP}/half_dedicated/inventory.json", "ROM_ECC")),
         dict(target="qwen_rom", item="STREAM4 KV transport, 128 pseudo-channel parallel landing (HBM -> die)", protection="none", policy="GAP: HBM/link protection is retained by policy; protected full-width transport not adopted", source=s(Q_CLOSURE, "kv_path.shipped")),
         dict(target="qwen_rom", item="Spine lane: 32x1536 payload FIFO, 32x32 tag FIFO, split/tag/valid pipeline, pointers/credits, fault/commit registers", protection="none (fault-free bench only)", policy="GAP: mutable state", source=s(Q_SPINE_P, "unprotected")),
-        dict(target="qwen_rom", item="Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)", protection="none", policy="GAP: blocks production adoption", source=s(Q_CTRL_P, "state_breakdown")),
+        dict(target="qwen_rom", item="Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)", protection="none in SHIFT; protected successor (duplicated state) routed on main at 72bfeccb1: retention PASS, physical not_met", policy="GAP: blocks production adoption", source=s(Q_CTRL_P, "state_breakdown")),
         dict(target="qwen_rom", item="Finite VM banks (ME/SU service)", protection="excluded from the service models (owner tags, protection/checks not sized)", policy="GAP: protected bank not bound", source=s(Q_VM_SU, "source_frame_storage_lower_bound_bits.excluded")),
         dict(target="qwen_rom", item="Forwarded-link opaque 16 control bits per stream", protection="integrity binding missing", policy="GAP (adoption gate)", source=s(Q_FWD, "endpoint_adoption_gates")),
         dict(target="qwen_rom", item="Relay stations (1,536) and column heads (64), 508-bit payload", protection="dual-fault replicas, default off", policy="candidate", source=s(Q_STATION, "replicas")),
         dict(target="ds_rom", item="S81 VM raw macro backend", protection="none (64 empty protection slots reserved, not RTL)", policy="GAP: mutable SRAM", source=s(DS_HBMB, "S81_r8_superseding_physical_binding.VM")),
         dict(target="hbm_ds", item="Collective packet SRAM", protection="protected full-depth candidate (default off, +2 queue cycles)", policy="candidate", source=s(H_SRAM, "queues")),
-        dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=dict(file="results/rtl/hbm_sm_command_20261007/protected_component.json", pointer="passed, selected", commit="65988656b (on origin/main; not in this branch's base 449ebc571)")),
+        dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=src("results/rtl/hbm_sm_command_20261007/protected_component.json", "passed, selected")),
         dict(target="all", item="Off-package links", protection="full RS(544,514) FEC", policy="compliant (owner 2026-10-06)", source=s(DS_LINKS, "decision")),
     ]
 

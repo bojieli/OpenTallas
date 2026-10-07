@@ -1,0 +1,8 @@
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=1
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=2
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=3
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=4
+FRAME kind=0 physical_edges=4325 read_delta=0 checked_ACK_delta=40 native=5
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=6
+FATAL: /tmp/qwen-vm-combined-ingress-packproc-20261007/src/bench.sv:82: UNPAID_NATIVE_ADVANCE
+       Time: 409876000 Scope: tb_qwen_vm_combined_ingress.frame

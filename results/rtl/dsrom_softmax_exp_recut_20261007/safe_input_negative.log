@@ -1,0 +1,4 @@
+/tmp/dsrom_softmax_exp_recut_20261007/source/rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv:419: warning: Port 2 (b) of ot_hdc_kadd expects 32 bits, got 46.
+/tmp/dsrom_softmax_exp_recut_20261007/source/rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv:419:        : Pruning 14 high bits of the expression.
+FATAL: /home/ubuntu/OpenTallas/rtl/experimental/dsrom_softmax_exp_recut_20261007/tb_exp_recut.sv:16: EXP_EXACT_MISMATCH index2 got402df855 expected402df854
+       Time: 151250121 Scope: tb_exp_recut

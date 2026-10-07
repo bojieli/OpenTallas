@@ -1,0 +1,46 @@
+{
+  "status": "COMPONENT_EXACTNESS_PASS_PHYSICAL_OPEN",
+  "full_shape": {
+    "bits": 64,
+    "stages": 8,
+    "flop_bits": 512
+  },
+  "baseline_checks": 2048,
+  "captures": 1024,
+  "asynchronous_reset_checks": 4,
+  "mutant_rejections": 3,
+  "selected": false,
+  "records": {
+    "baseline": {
+      "returncode": 0,
+      "stdout": "PASS full64x8 checks=2048 captures=1024 async_resets=4\n",
+      "stderr": "",
+      "source_sha256": "83aa03bce72ba3301aa9cdedca520122bee386c2868c560ab99f4085182cb69a"
+    },
+    "reject_short_latency": {
+      "returncode": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-hbm-die-resume-20261007/rtl/hbm_accel/result_delay_bank_20261007/tb_result_delay_bank.sv:28: cycle 7 wanted 0000000000000000 got 9e3779b97f4a7c17\n       Time: 76000 Scope: tb_result_delay_bank\n",
+      "stderr": "",
+      "source_sha256": "8bb6fa62f8eba7ad194506e5c47bc391d87ca73000144744b31ac3ddfcf8f5db"
+    },
+    "reject_synchronous_reset": {
+      "returncode": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-hbm-die-resume-20261007/rtl/hbm_accel/result_delay_bank_20261007/tb_result_delay_bank.sv:15: asynchronous cold reset failed\n       Time: 2000 Scope: tb_result_delay_bank.cold_reset\n",
+      "stderr": "",
+      "source_sha256": "c532f31a19f324efe73f816aae7ed4d689e1f11f45914f653a176f90d02633ed"
+    },
+    "reject_data_corruption": {
+      "returncode": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-hbm-die-resume-20261007/rtl/hbm_accel/result_delay_bank_20261007/tb_result_delay_bank.sv:28: cycle 7 wanted 0000000000000000 got 0000000000000001\n       Time: 76000 Scope: tb_result_delay_bank\n",
+      "stderr": "",
+      "source_sha256": "502e892c5a7bc17e2c49d09ff9da5901d854a20fb9390abb418f33f68bfa251f"
+    }
+  },
+  "model_sha256": "0cf239a1d0bb485641e4418bcb35e0962461eb3255dc3fca238fa8ffc97aca43",
+  "source_sha256": {
+    "rtl/hbm_accel/result_delay_bank_20261007/ot_hbm_result_delay_bank.sv": "83aa03bce72ba3301aa9cdedca520122bee386c2868c560ab99f4085182cb69a",
+    "rtl/hbm_accel/result_delay_bank_20261007/tb_result_delay_bank.sv": "5f5d18774c6382c641611a8d511bc0753771b5a22ea6acd78d8f18994863bec0",
+    "tools/hbm_result_delay_bank_gate.py": "33b91f9534721e0118f4378420d5d6870f297bd50847a0ca5babc63e77657f13"
+  },
+  "physical_gate": "No technology mapping, fixed BPin view, clock load, full physical placement or SS/FF qualification yet"
+}

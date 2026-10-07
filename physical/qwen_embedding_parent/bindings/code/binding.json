@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.qwen.embedding_parent_binding.v1",
+  "source_commit": "82c12047d09bcce0c2d4b9d68f57aeb5a29674e6",
+  "macro": "qfd_embed_ingress_code",
+  "input_padding": {
+    "stages_per_input": 10,
+    "input_bits": 15,
+    "fixed_buffer_cells": 150,
+    "cell_type": "BUFx2_ASAP7_75t_R",
+    "connectivity_verified": true
+  },
+  "reference_macro_pin": "u_ingress/clk",
+  "clock": {
+    "ss": {
+      "pin": "valid_q$_DFF_PN0_/CLK",
+      "max_ps": 74.779907,
+      "min_ps": 66.756798
+    },
+    "ff": {
+      "pin": "valid_q$_DFF_PN0_/CLK",
+      "max_ps": 37.080063,
+      "min_ps": 34.014729
+    }
+  },
+  "setup_internal_clock_ps": 74.779907,
+  "hold_internal_clock_ps": 34.014729,
+  "files": {
+    "view/qfd_embed_ingress_code.lef": "e5323fbdfe9a232143187e1b8982ca93f9c65f2abe4141cc0b0b13e8518ba340",
+    "view/qfd_embed_ingress_code_ss.lib": "ff29630790c28f0c0cc7d81a4a2f77f000cf758a0ca9f07954022d3972dfe90b",
+    "view/qfd_embed_ingress_code_ff.lib": "ff40ad64fbd57cfbde8a3d2bffd0a1032412cb7ea6238bc9122b5370987a15e3",
+    "view/interface.sdc": "24c244561fd03e3be565b5a237fcb09425dd0fb8ee0b346b5298e9c82c119305",
+    "view/abstract.json": "6ef91abb277830a51d2baffe5f746bb7a2029c77f85240cdc5be4a3c8f03f970",
+    "receipt/corner_sta.json": "1ce4d95c2f84032dee099641a8e84028305d9dbfaf6981b0bd47c5eb6dc56a8e",
+    "receipt/metadata_storage.json": "69e6d1282fe0580188d674d9f10fb9cfe2c32ccad3cc89f971e23a6039d7b4ac",
+    "receipt/qualification.json": "2ca173a604975cb7acbe23dcebb881e8208df922d52ec123b72b0bb30c9e1f4e",
+    "receipt/w18_sta_ss.log": "195b028b2bc67bad05aaef73656f27a2ef082b1fd334b673c268d173d54a1f3f",
+    "receipt/w18_sta_ff.log": "fc2421265cfc306b92a617070b2d87b7387b7446c58b866bc700d978e0ed9419",
+    "receipt/metadata_storage_synthesis.json": "db41accfaef8c14c54621702fc84959fc9b8419fa5c688ae07b663347064d658"
+  },
+  "shape_um": [
+    15.12,
+    15.12
+  ],
+  "parent_physical_closed": false
+}

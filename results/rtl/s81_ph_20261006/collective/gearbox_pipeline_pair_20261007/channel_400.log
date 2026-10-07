@@ -1,0 +1,5 @@
+PAIR PASS CH=400 BOARD=1 records=1200/1200 cycles=3317 stalls=3370 timeouts=0/0
+- /tmp/tb_s81ph_gbx_pipeline_pair.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 33us; walltime 0.185 s; speed 179.549 us/s
+- Verilator: cpu 0.185 s on 1 threads; allocated 7 MB

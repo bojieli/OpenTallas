@@ -136,7 +136,7 @@
        "commit": "95f7e75c1"
       }
      ],
-     "note": "EXACT_CANDIDATE_PHYSICAL_UNMEASURED: exact all 32 PCs; worst-case +144 cycles a token (3 request->PHY edges); predecessor SS -110.94 / FF -34.80 ps; physical unmeasured; added mutable state unprotected (blocks production adoption)"
+     "note": "EXACT_CANDIDATE_PHYSICAL_UNMEASURED: exact all 32 PCs; worst-case +144 cycles a token (3 request->PHY edges); predecessor SS -110.94 / FF -34.80 ps; physical unmeasured; added mutable state unprotected (blocks production adoption). Protected successor (duplicated state, results/rtl/qwen_ctrl_protected_20261007/routed150, main 72bfeccb1): mapped-state retention PASS, routed physical status not_met, so no cycle or closure credit"
     },
     {
      "id": "forwarded_clocks",
@@ -154,7 +154,7 @@
        "commit": "3267a11f5"
       }
      ],
-     "note": "same registered-hop count as r21 (0 added stage cycles); area proxy 67795 um2; active graph simulated=False, adopted=False"
+     "note": "same registered-hop count as r21 (0 added stage cycles); area proxy 67795 um2; active graph simulated=False, adopted=False; the protected-reset (TMR) successor graph r23 on main (8f68043a0) also adds 0 token cycles and is not adopted"
     },
     {
      "id": "link_credit_rtt",
@@ -801,7 +801,7 @@
       {
        "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
        "pointer": "options.A_f198_2048 vs options.base_f198_2050",
-       "commit": "ece40d827 (on origin/main; blob 2526ad8f; values pinned as constants because this branch's base 449ebc571 predates it)"
+       "commit": "ece40d827"
       }
      ],
      "note": "measured exact (option A 19,056/19,056 region runs, base_f198 20,928/20,928, both bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
@@ -816,7 +816,7 @@
       {
        "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
        "pointer": "options.B_mixed_2304",
-       "commit": "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
+       "commit": "ece40d827"
       },
       {
        "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -824,7 +824,76 @@
        "commit": "77ffa0428"
       }
      ],
-     "note": "NUMERICAL, LEGAL-FIT FAILED, NOT PHYSICALLY QUALIFIED. Field vehicle bit-exact 18,288/18,288 regions (a numerical result, not measured silicon); its 1,754.3 AR is a field-vehicle composition on the pre-su_meso base 1603.3, never a qualified rate. The mixed183 geometry requests 2,304 pairs but the legal maximum at that geometry is 2048 (requested_fits=false, results/uarch/dsrom_s81_mixed_geometry_20261007/model.json). Codex's branch label is quoted for history only, not promoted: 'DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field'"
+     "note": "NUMERICAL, LEGAL-FIT FAILED, NOT PHYSICALLY QUALIFIED. Field vehicle bit-exact 18,288/18,288 regions (a numerical result, not measured silicon); its 1,754.3 AR is a field-vehicle composition on the pre-su_meso base 1603.3, never a qualified rate. The mixed183 geometry requests 2,304 pairs but the legal maximum at that geometry is 2048 (requested_fits=false, results/uarch/dsrom_s81_mixed_geometry_20261007/model.json). Codex's branch label is quoted for history only, not promoted: 'DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field (commit 505a9b484, branch origin/codex/restore-bf-pairs-20261007 only)'"
+    },
+    {
+     "id": "pq_fullshape_partition",
+     "item": "Full-shape PQ partition (root contract v2): +18 cycles per field phase",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 3.532,
+      "MTP_step": null
+     },
+     "role": "candidate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json",
+       "pointer": "changes[item=added cycles per phase (vs the native production parent)].current",
+       "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json",
+       "pointer": "cam, parity",
+       "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+      }
+     ],
+     "note": "PARTIAL-PRICED CANDIDATE: about 0.56 % AR (per-phase delta x the historical +1-return-cycle sensitivity); the per-token critical phases on the 1,792 mapping are not composed, and the geometry is provisional pending Codex's 221 / 1,728 layout. MTP not priced. Area: roots about 3.0 mm2 a die in tier-channel rows, core 0.32 mm2 in the 449 x 1,728 um slot, return write-back blocks 0.40 mm2. +18 = pipelined CAM +1 per root pass (<= 4 passes on a row chain) + 2 return-strip stations; main's earlier record (738ddfbc2) says +15 / 0.47 %, superseded by 9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+    },
+    {
+     "id": "pq_root_parity_cam_rtl",
+     "item": "PQ root parity + 2-stage pipelined CAM RTL (Codex)",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json",
+       "pointer": "parity, cam",
+       "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+      }
+     ],
+     "note": "contract only: 141-pin face, odd parity, hazard rules H1-H3; RTL and exact adapter proof owned by Codex"
+    },
+    {
+     "id": "pq_stage_b_timing",
+     "item": "PQ CAM stage-B timing",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json",
+       "pointer": "cam.stages",
+       "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+      }
+     ],
+     "note": "unmeasured; stage-C fallback costs +1 cycle a pass"
+    },
+    {
+     "id": "pq_half_serial_lane_exactness",
+     "item": "HALF serial-lane exactness for a beat shift of <= 2 cycles",
+     "status": "gated-unknown",
+     "effect": null,
+     "role": "gate",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json",
+       "pointer": "changes",
+       "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+      }
+     ],
+     "note": "exactness of the HALF (BF-dedicated) serial lane under the <= 2-cycle beat shift not shown"
     },
     {
      "id": "field_phases_1792",
@@ -973,6 +1042,9 @@
      "bound": "none proven",
      "caveat": "BF16 doubling priced; field phases at this geometry unmeasured",
      "gated_by": [
+      "pq_root_parity_cam_rtl",
+      "pq_stage_b_timing",
+      "pq_half_serial_lane_exactness",
       "field_phases_1792",
       "bf_half_physical",
       "s81_die_closure",
@@ -1016,6 +1088,9 @@
      "bound": "none proven",
      "caveat": "BF16 doubling priced; shared-pair q-phase halving NOT priced (undercount); field phases unmeasured",
      "gated_by": [
+      "pq_root_parity_cam_rtl",
+      "pq_stage_b_timing",
+      "pq_half_serial_lane_exactness",
       "field_phases_1792",
       "bf_half_physical",
       "s81_die_closure",
@@ -1038,11 +1113,11 @@
      "dies": 340,
      "bf_rate": "full",
      "status": "numerical, legal-fit failed, not physically qualified (historical/competing numerical candidate)",
-     "codex_branch_label_quoted": "DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
+     "codex_branch_label_quoted": "DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field (commit 505a9b484, branch origin/codex/restore-bf-pairs-20261007 only)",
      "record": {
       "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
       "pointer": "options.B_mixed_2304",
-      "commit": "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
+      "commit": "ece40d827"
      },
      "legal_fit": {
       "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -1099,6 +1174,9 @@
     }
    },
    "gates": [
+    "pq_root_parity_cam_rtl",
+    "pq_stage_b_timing",
+    "pq_half_serial_lane_exactness",
     "field_phases_1792",
     "bf_half_physical",
     "s81_die_closure",
@@ -1820,7 +1898,7 @@
        "commit": "9ead91a15 (on origin/main; cited, not in this branch's base 449ebc571)"
       }
      ],
-     "note": "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving fix (registered head-pointer address) has been proposed (v2 design 2ae0d7d33 (on branch origin/claude/hbm-collective-cdc-design-v2-20261007 only))"
+     "note": "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving fix (registered head-pointer address) has been proposed (v2 design results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json)"
     },
     {
      "id": "packet_sram_ii3_rate_cap",
@@ -2260,7 +2338,7 @@
   {
    "target": "qwen_rom",
    "item": "Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)",
-   "protection": "none",
+   "protection": "none in SHIFT; protected successor (duplicated state) routed on main at 72bfeccb1: retention PASS, physical not_met",
    "policy": "GAP: blocks production adoption",
    "source": {
     "file": "results/rtl/qwen_ctrl_shift_20261007/runtime_protection_gate.json",
@@ -2398,6 +2476,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "2b55cca628167dbda9774d9fa22eac1ecf4ec68c743d6c0079f1919e95677fa3"
+  "sha256": "83b9d623d9eb8871b980dbe6f6d0f492a7b45e7b651e5407384366ea28e59d4d"
  }
 }

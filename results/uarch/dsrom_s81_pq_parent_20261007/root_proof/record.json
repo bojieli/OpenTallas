@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.s81.pq-parent-proof.v1",
+  "cases": [
+    {
+      "case": "positive",
+      "exit_code": 0,
+      "PASS": true
+    },
+    {
+      "case": "wrong_tag",
+      "exit_code": 1,
+      "PASS": true
+    },
+    {
+      "case": "drop_fault",
+      "exit_code": 1,
+      "PASS": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_root_adapter.sv": "a5e85b5d3465c5c85c8b065083150783f777e948303a6b9d05bc93b7b95bb091",
+    "tests/rtl/s81_pq_parent/root_adapter_tb.sv": "d63b53b5afe0fca2af77ab7425eab26bbd02634ca199b999cdba658f9d5f0766"
+  },
+  "scope": "MinimumR2 realROOTD128 numerical packing/error proof; optional fullR128 native elaboration only",
+  "whole_parent_exactness": false,
+  "physical_adopted": false
+}

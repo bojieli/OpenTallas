@@ -1151,6 +1151,12 @@ def cmd_block(a):
     (work / "constraint.sdc").write_text(sdc)
     nick = f"smh_{a.piece}_{a.variant}_{a.label}"
     (work / "config.mk").write_text(config_mk(name, nick, die, macros, extra))
+    if getattr(a, "rch_nonempty", False):
+        if a.piece != "front_s":
+            raise ValueError("--rch-nonempty applies only to front_s")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv\n"
+                    "export VERILOG_DEFINES += -DOT_SMH_RCH_NONEMPTY\n")
     write_abstract(work, name, macros, name)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
@@ -1278,6 +1284,7 @@ def main(argv=None):
                    "loop does its own admission)")
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
     b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
+    b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)

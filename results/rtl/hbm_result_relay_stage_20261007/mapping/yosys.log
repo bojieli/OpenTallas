@@ -1,0 +1,280 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv; hierarchy -top hfd_result_relay64_ew; proc; flatten; opt; techmap; opt; dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; stat; write_json /tmp/hbm-relay-stage-map-20261007/mapped.json' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_result_relay_slice'.
+Generating RTLIL representation for module `\hfd_result_relay64_ew'.
+Generating RTLIL representation for module `\hfd_result_relay64_ns'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \hfd_result_relay64_ew
+Used module:     \ot_hbm_result_relay_slice
+Parameter \W = 64
+Parameter \ENABLE = 1
+
+2.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_result_relay_slice'.
+Parameter \W = 64
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice'.
+
+2.3. Analyzing design hierarchy..
+Top module:  \hfd_result_relay64_ew
+Used module:     $paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice
+
+2.4. Analyzing design hierarchy..
+Top module:  \hfd_result_relay64_ew
+Used module:     $paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice
+Removing unused module `\hfd_result_relay64_ns'.
+Removing unused module `\ot_hbm_result_relay_slice'.
+Removed 2 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16$1 in module $paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 0 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.$proc$rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16$1'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.$proc$rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16$1'.
+     1/1: $0\g_registered.payload[63:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.\g_registered.payload' using process `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.$proc$rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16$1'.
+  created $adff cell `$procdff$7' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.$proc$rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16$1'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+Optimizing module $paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.
+<suppressed ~2 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\ot_hbm_result_relay_slice.
+<suppressed ~1 debug messages>
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hfd_result_relay64_ew'.
+Computing hashes of 4 cells of `\hfd_result_relay64_ew'.
+Finding duplicate cells in `\hfd_result_relay64_ew'.
+Removed a total of 0 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hfd_result_relay64_ew..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hfd_result_relay64_ew.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hfd_result_relay64_ew'.
+Computing hashes of 4 cells of `\hfd_result_relay64_ew'.
+Finding duplicate cells in `\hfd_result_relay64_ew'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hfd_result_relay64_ew..
+Removed 2 unused cells and 4 unused wires.
+<suppressed ~3 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hfd_result_relay64_ew..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hfd_result_relay64_ew.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hfd_result_relay64_ew'.
+Computing hashes of 2 cells of `\hfd_result_relay64_ew'.
+Finding duplicate cells in `\hfd_result_relay64_ew'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hfd_result_relay64_ew..
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing TECHMAP pass (map to technology primitives).
+
+6.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+6.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $adff.
+No more expansions possible.
+<suppressed ~78 debug messages>
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hfd_result_relay64_ew'.
+Computing hashes of 65 cells of `\hfd_result_relay64_ew'.
+Finding duplicate cells in `\hfd_result_relay64_ew'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hfd_result_relay64_ew..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hfd_result_relay64_ew.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hfd_result_relay64_ew'.
+Computing hashes of 65 cells of `\hfd_result_relay64_ew'.
+Finding duplicate cells in `\hfd_result_relay64_ew'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hfd_result_relay64_ew..
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hfd_result_relay64_ew.
+
+7.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\hfd_result_relay64_ew':
+  mapped 64 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+
+9. Printing statistics.
+
+=== hfd_result_relay64_ew ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       73 wires
+      388 wire bits
+        9 public wires
+      324 public wire bits
+        4 ports
+      130 port bits
+      129 cells
+       64   $_NOT_
+        1   $scopeinfo
+       64   DFFASRHQNx1_ASAP7_75t_R
+
+10. Executing JSON backend.
+
+End of script. Logfile hash: 00cdccb437, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 28.75 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 38% 1x dfflibmap (0 sec), 36% 3x read_verilog (0 sec), ...

@@ -1,0 +1,596 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19779, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19812, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19845, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19878, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19911, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19944, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 19977, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 21371, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 21404, timing group from output port.
+Warning 1212: /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib line 21437, timing group from output port.
+TMR_RESET_INVENTORY raw_POR=24 local_majority_CLR=64 total=88
+Clock                   Period          Waveform
+----------------------------------------------------
+ab_root                 833.33        0.00    416.67
+ba_root                 833.33      133.33    550.00
+ab_hop1                 833.33        0.00    416.67 (generated)
+ab_hop2                 833.33        0.00    416.67 (generated)
+ba_hop1                 833.33      133.33    550.00 (generated)
+ba_hop2                 833.33      133.33    550.00 (generated)
+Startpoint: rst_n (input port clocked by ab_root)
+Endpoint: s1/active.link[0].ab/_1069_
+          (removal check against rising-edge clock ab_hop1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_root (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  50.00   50.00 ^ input external delay
+   0.00   50.00 ^ rst_n (in)
+   0.00   50.00 ^ s1/active.link[0].ab/_1069_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          50.00   data arrival time
+
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1069_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00 1561.57   clock uncertainty
+   0.00 1561.57   clock reconvergence pessimism
+ 516.54 2078.11   library removal time
+        2078.11   data required time
+---------------------------------------------------------
+        2078.11   data required time
+         -50.00   data arrival time
+---------------------------------------------------------
+        -2028.11   slack (VIOLATED)
+
+
+Startpoint: rst_n (input port clocked by ab_root)
+Endpoint: s1/active.link[0].ab/_1070_
+          (removal check against rising-edge clock ab_hop1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_root (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  50.00   50.00 ^ input external delay
+   0.00   50.00 ^ rst_n (in)
+   0.00   50.00 ^ s1/active.link[0].ab/_1070_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          50.00   data arrival time
+
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00 1561.57   clock uncertainty
+   0.00 1561.57   clock reconvergence pessimism
+ 516.54 2078.11   library removal time
+        2078.11   data required time
+---------------------------------------------------------
+        2078.11   data required time
+         -50.00   data arrival time
+---------------------------------------------------------
+        -2028.11   slack (VIOLATED)
+
+
+Startpoint: s0/active.link[0].ab/_1091_
+            (rising edge-triggered flip-flop clocked by ab_root)
+Endpoint: s1/active.link[0].ab/_1091_
+          (rising edge-triggered flip-flop clocked by ab_hop1)
+Path Group: ab_hop1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_root (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   0.00    0.00 ^ s0/active.link[0].ab/_1091_/CLK (DFFHQNx1_ASAP7_75t_R)
+  63.90   63.90 ^ s0/active.link[0].ab/_1091_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.50   76.40 v s0/active.link[0].ab/_1041_/Y (INVx1_ASAP7_75t_R)
+   0.00   76.40 v s1/active.link[0].ab/_1091_/D (DFFHQNx1_ASAP7_75t_R)
+          76.40   data arrival time
+
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1091_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00 1561.57   clock uncertainty
+   0.00 1561.57   clock reconvergence pessimism
+ 432.28 1993.85   library hold time
+        1993.85   data required time
+---------------------------------------------------------
+        1993.85   data required time
+         -76.40   data arrival time
+---------------------------------------------------------
+        -1917.45   slack (VIOLATED)
+
+
+Startpoint: s0/active.link[0].ab/_1092_
+            (rising edge-triggered flip-flop clocked by ab_root)
+Endpoint: s1/active.link[0].ab/_1092_
+          (rising edge-triggered flip-flop clocked by ab_hop1)
+Path Group: ab_hop1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_root (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   0.00    0.00 ^ s0/active.link[0].ab/_1092_/CLK (DFFHQNx1_ASAP7_75t_R)
+  63.90   63.90 ^ s0/active.link[0].ab/_1092_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.50   76.40 v s0/active.link[0].ab/_1040_/Y (INVx1_ASAP7_75t_R)
+   0.00   76.40 v s1/active.link[0].ab/_1092_/D (DFFHQNx1_ASAP7_75t_R)
+          76.40   data arrival time
+
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1092_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00 1561.57   clock uncertainty
+   0.00 1561.57   clock reconvergence pessimism
+ 432.28 1993.85   library hold time
+        1993.85   data required time
+---------------------------------------------------------
+        1993.85   data required time
+         -76.40   data arrival time
+---------------------------------------------------------
+        -1917.45   slack (VIOLATED)
+
+
+Startpoint: s1/active.link[0].ab/_1070_
+            (rising edge-triggered flip-flop clocked by ab_hop1)
+Endpoint: s1/active.link[0].ab/_1075_
+          (recovery check against rising-edge clock ab_hop1)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 575.77 2112.35 v s1/active.link[0].ab/_1070_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 171.44 2283.79 ^ s1/active.link[0].ab/_1068_/Y (MAJIxp5_ASAP7_75t_R)
+   0.00 2283.79 ^ s1/active.link[0].ab/_1075_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        2283.79   data arrival time
+
+ 833.33  833.33   clock ab_hop1 (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk_ab (in)
+   4.64  837.97 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 1943.09 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1943.09 ^ s1/active.link[0].ab/_1075_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1883.09   clock uncertainty
+ 426.82 2309.91   clock reconvergence pessimism
+ 352.25 2662.16   library recovery time
+        2662.16   data required time
+---------------------------------------------------------
+        2662.16   data required time
+        -2283.79   data arrival time
+---------------------------------------------------------
+         378.36   slack (MET)
+
+
+Startpoint: s1/active.link[0].ab/_1070_
+            (rising edge-triggered flip-flop clocked by ab_hop1)
+Endpoint: s1/active.link[0].ab/_1076_
+          (recovery check against rising-edge clock ab_hop1)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 575.77 2112.35 v s1/active.link[0].ab/_1070_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 171.44 2283.79 ^ s1/active.link[0].ab/_1068_/Y (MAJIxp5_ASAP7_75t_R)
+   0.00 2283.79 ^ s1/active.link[0].ab/_1076_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        2283.79   data arrival time
+
+ 833.33  833.33   clock ab_hop1 (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk_ab (in)
+   4.64  837.97 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 1943.09 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1943.09 ^ s1/active.link[0].ab/_1076_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1883.09   clock uncertainty
+ 426.82 2309.91   clock reconvergence pessimism
+ 352.25 2662.16   library recovery time
+        2662.16   data required time
+---------------------------------------------------------
+        2662.16   data required time
+        -2283.79   data arrival time
+---------------------------------------------------------
+         378.36   slack (MET)
+
+
+Startpoint: s1/active.link[0].ab/_1069_
+            (rising edge-triggered flip-flop clocked by ab_hop1)
+Endpoint: s1/active.link[0].ab/_1070_
+          (rising edge-triggered flip-flop clocked by ab_hop1)
+Path Group: ab_hop1
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1069_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 564.93 2101.50 v s1/active.link[0].ab/_1069_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  16.73 2118.23 ^ s1/active.link[0].ab/_1058_/Y (INVx1_ASAP7_75t_R)
+   0.00 2118.23 ^ s1/active.link[0].ab/_1070_/D (DFFASRHQNx1_ASAP7_75t_R)
+        2118.23   data arrival time
+
+ 833.33  833.33   clock ab_hop1 (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk_ab (in)
+   4.64  837.97 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 1943.09 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1943.09 ^ s1/active.link[0].ab/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1883.09   clock uncertainty
+ 426.82 2309.91   clock reconvergence pessimism
+ 125.13 2435.04   library setup time
+        2435.04   data required time
+---------------------------------------------------------
+        2435.04   data required time
+        -2118.23   data arrival time
+---------------------------------------------------------
+         316.81   slack (MET)
+
+
+Startpoint: s1/active.link[0].ab/_1071_
+            (rising edge-triggered flip-flop clocked by ab_hop1)
+Endpoint: s1/active.link[0].ab/_1072_
+          (rising edge-triggered flip-flop clocked by ab_hop1)
+Path Group: ab_hop1
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ab_hop1 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_ab (in)
+   5.45    5.45 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1536.57 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1536.57 ^ s1/active.link[0].ab/_1071_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 564.93 2101.50 v s1/active.link[0].ab/_1071_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  16.73 2118.23 ^ s1/active.link[0].ab/_1060_/Y (INVx1_ASAP7_75t_R)
+   0.00 2118.23 ^ s1/active.link[0].ab/_1072_/D (DFFASRHQNx1_ASAP7_75t_R)
+        2118.23   data arrival time
+
+ 833.33  833.33   clock ab_hop1 (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk_ab (in)
+   4.64  837.97 v s0/active.link[0].ab/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 1943.09 ^ s0/active.link[0].ab/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1943.09 ^ s1/active.link[0].ab/_1072_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1883.09   clock uncertainty
+ 426.82 2309.91   clock reconvergence pessimism
+ 125.13 2435.04   library setup time
+        2435.04   data required time
+---------------------------------------------------------
+        2435.04   data required time
+        -2118.23   data arrival time
+---------------------------------------------------------
+         316.81   slack (MET)
+
+
+Startpoint: rst_n (input port clocked by ba_root)
+Endpoint: s0/active.link[0].ba/_1069_
+          (removal check against rising-edge clock ba_hop1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_root (rise edge)
+   0.00  133.33   clock network delay (propagated)
+  50.00  183.33 ^ input external delay
+   0.00  183.33 ^ rst_n (in)
+   0.00  183.33 ^ s0/active.link[0].ba/_1069_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         183.33   data arrival time
+
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1069_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00 1694.91   clock uncertainty
+   0.00 1694.91   clock reconvergence pessimism
+ 516.54 2211.44   library removal time
+        2211.44   data required time
+---------------------------------------------------------
+        2211.44   data required time
+        -183.33   data arrival time
+---------------------------------------------------------
+        -2028.11   slack (VIOLATED)
+
+
+Startpoint: rst_n (input port clocked by ba_root)
+Endpoint: s0/active.link[0].ba/_1070_
+          (removal check against rising-edge clock ba_hop1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_root (rise edge)
+   0.00  133.33   clock network delay (propagated)
+  50.00  183.33 ^ input external delay
+   0.00  183.33 ^ rst_n (in)
+   0.00  183.33 ^ s0/active.link[0].ba/_1070_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         183.33   data arrival time
+
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00 1694.91   clock uncertainty
+   0.00 1694.91   clock reconvergence pessimism
+ 516.54 2211.44   library removal time
+        2211.44   data required time
+---------------------------------------------------------
+        2211.44   data required time
+        -183.33   data arrival time
+---------------------------------------------------------
+        -2028.11   slack (VIOLATED)
+
+
+Startpoint: s1/active.link[0].ba/_1091_
+            (rising edge-triggered flip-flop clocked by ba_root)
+Endpoint: s0/active.link[0].ba/_1091_
+          (rising edge-triggered flip-flop clocked by ba_hop1)
+Path Group: ba_hop1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_root (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   0.00  133.33 ^ s1/active.link[0].ba/_1091_/CLK (DFFHQNx1_ASAP7_75t_R)
+  63.90  197.23 ^ s1/active.link[0].ba/_1091_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.50  209.73 v s1/active.link[0].ba/_1041_/Y (INVx1_ASAP7_75t_R)
+   0.00  209.73 v s0/active.link[0].ba/_1091_/D (DFFHQNx1_ASAP7_75t_R)
+         209.73   data arrival time
+
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1091_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00 1694.91   clock uncertainty
+   0.00 1694.91   clock reconvergence pessimism
+ 432.28 2127.19   library hold time
+        2127.19   data required time
+---------------------------------------------------------
+        2127.19   data required time
+        -209.73   data arrival time
+---------------------------------------------------------
+        -1917.45   slack (VIOLATED)
+
+
+Startpoint: s1/active.link[0].ba/_1092_
+            (rising edge-triggered flip-flop clocked by ba_root)
+Endpoint: s0/active.link[0].ba/_1092_
+          (rising edge-triggered flip-flop clocked by ba_hop1)
+Path Group: ba_hop1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_root (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   0.00  133.33 ^ s1/active.link[0].ba/_1092_/CLK (DFFHQNx1_ASAP7_75t_R)
+  63.90  197.23 ^ s1/active.link[0].ba/_1092_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.50  209.73 v s1/active.link[0].ba/_1040_/Y (INVx1_ASAP7_75t_R)
+   0.00  209.73 v s0/active.link[0].ba/_1092_/D (DFFHQNx1_ASAP7_75t_R)
+         209.73   data arrival time
+
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1092_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00 1694.91   clock uncertainty
+   0.00 1694.91   clock reconvergence pessimism
+ 432.28 2127.19   library hold time
+        2127.19   data required time
+---------------------------------------------------------
+        2127.19   data required time
+        -209.73   data arrival time
+---------------------------------------------------------
+        -1917.45   slack (VIOLATED)
+
+
+Startpoint: s0/active.link[0].ba/_1070_
+            (rising edge-triggered flip-flop clocked by ba_hop1)
+Endpoint: s0/active.link[0].ba/_1075_
+          (recovery check against rising-edge clock ba_hop1)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 575.77 2245.68 v s0/active.link[0].ba/_1070_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 171.44 2417.13 ^ s0/active.link[0].ba/_1068_/Y (MAJIxp5_ASAP7_75t_R)
+   0.00 2417.13 ^ s0/active.link[0].ba/_1075_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        2417.13   data arrival time
+
+ 966.67  966.67   clock ba_hop1 (rise edge)
+   0.00  966.67   clock source latency
+   0.00  966.67 ^ clk_ba (in)
+   4.64  971.30 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 2076.42 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 2076.42 ^ s0/active.link[0].ba/_1075_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 2016.42   clock uncertainty
+ 426.82 2443.24   clock reconvergence pessimism
+ 352.25 2795.49   library recovery time
+        2795.49   data required time
+---------------------------------------------------------
+        2795.49   data required time
+        -2417.13   data arrival time
+---------------------------------------------------------
+         378.36   slack (MET)
+
+
+Startpoint: s0/active.link[0].ba/_1070_
+            (rising edge-triggered flip-flop clocked by ba_hop1)
+Endpoint: s0/active.link[0].ba/_1076_
+          (recovery check against rising-edge clock ba_hop1)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 575.77 2245.68 v s0/active.link[0].ba/_1070_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 171.44 2417.13 ^ s0/active.link[0].ba/_1068_/Y (MAJIxp5_ASAP7_75t_R)
+   0.00 2417.13 ^ s0/active.link[0].ba/_1076_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        2417.13   data arrival time
+
+ 966.67  966.67   clock ba_hop1 (rise edge)
+   0.00  966.67   clock source latency
+   0.00  966.67 ^ clk_ba (in)
+   4.64  971.30 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 2076.42 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 2076.42 ^ s0/active.link[0].ba/_1076_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 2016.42   clock uncertainty
+ 426.82 2443.24   clock reconvergence pessimism
+ 352.25 2795.49   library recovery time
+        2795.49   data required time
+---------------------------------------------------------
+        2795.49   data required time
+        -2417.13   data arrival time
+---------------------------------------------------------
+         378.36   slack (MET)
+
+
+Startpoint: s0/active.link[0].ba/_1069_
+            (rising edge-triggered flip-flop clocked by ba_hop1)
+Endpoint: s0/active.link[0].ba/_1070_
+          (rising edge-triggered flip-flop clocked by ba_hop1)
+Path Group: ba_hop1
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1069_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 564.93 2234.83 v s0/active.link[0].ba/_1069_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  16.73 2251.56 ^ s0/active.link[0].ba/_1058_/Y (INVx1_ASAP7_75t_R)
+   0.00 2251.56 ^ s0/active.link[0].ba/_1070_/D (DFFASRHQNx1_ASAP7_75t_R)
+        2251.56   data arrival time
+
+ 966.67  966.67   clock ba_hop1 (rise edge)
+   0.00  966.67   clock source latency
+   0.00  966.67 ^ clk_ba (in)
+   4.64  971.30 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 2076.42 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 2076.42 ^ s0/active.link[0].ba/_1070_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 2016.42   clock uncertainty
+ 426.82 2443.24   clock reconvergence pessimism
+ 125.13 2568.37   library setup time
+        2568.37   data required time
+---------------------------------------------------------
+        2568.37   data required time
+        -2251.56   data arrival time
+---------------------------------------------------------
+         316.81   slack (MET)
+
+
+Startpoint: s0/active.link[0].ba/_1071_
+            (rising edge-triggered flip-flop clocked by ba_hop1)
+Endpoint: s0/active.link[0].ba/_1072_
+          (rising edge-triggered flip-flop clocked by ba_hop1)
+Path Group: ba_hop1
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 133.33  133.33   clock ba_hop1 (rise edge)
+   0.00  133.33   clock source latency
+   0.00  133.33 ^ clk_ba (in)
+   5.45  138.78 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1531.13 1669.91 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 1669.91 ^ s0/active.link[0].ba/_1071_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 564.93 2234.83 v s0/active.link[0].ba/_1071_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  16.73 2251.56 ^ s0/active.link[0].ba/_1060_/Y (INVx1_ASAP7_75t_R)
+   0.00 2251.56 ^ s0/active.link[0].ba/_1072_/D (DFFASRHQNx1_ASAP7_75t_R)
+        2251.56   data arrival time
+
+ 966.67  966.67   clock ba_hop1 (rise edge)
+   0.00  966.67   clock source latency
+   0.00  966.67 ^ clk_ba (in)
+   4.64  971.30 v s1/active.link[0].ba/inv0/_0_/Y (INVx1_ASAP7_75t_R)
+1105.12 2076.42 ^ s1/active.link[0].ba/inv1/_0_/Y (INVx1_ASAP7_75t_R)
+   0.00 2076.42 ^ s0/active.link[0].ba/_1072_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 2016.42   clock uncertainty
+ 426.82 2443.24   clock reconvergence pessimism
+ 125.13 2568.37   library setup time
+        2568.37   data required time
+---------------------------------------------------------
+        2568.37   data required time
+        -2251.56   data arrival time
+---------------------------------------------------------
+         316.81   slack (MET)
+
+
+Warning: There are 2 output ports missing set_output_delay.
+  clk_ab_o
+  clk_ba_o
+Warning: There are 2 unconstrained endpoints.
+  clk_ab_o
+  clk_ba_o
+FORWARDED_FRONTEND_PASS

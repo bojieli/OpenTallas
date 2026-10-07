@@ -361,6 +361,12 @@ R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.
 # W2/HA2 partial interfaces stay inside hb_coll; the earlier R24W
 # external sender reservation is historical diagnostic geometry only.
 R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+# Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
+R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
+R24SM3VO = dict(R24SM3V, native_owner_bays=True)
+R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
+R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
+R24SM3VOCEU = dict(R24SM3VOCE, native_control_u_corridors=True)
 ADOPTED = R23
 
 
@@ -677,6 +683,59 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                 bays.append(dict(sm=sm.name, box_um=box))
             m['result_pin_bays'] = bays
             m.setdefault('reserved_regions', []).extend(q['box_um'] for q in bays)
+            if variant.get('native_owner_bays'):
+                if any(abs(i.w-3075.84)>1e-6 or abs(i.h-1131.84)>1e-6 for i in insts if i.kind=='sm'):
+                    raise ValueError('native owner/descriptor pin reservations require original3075.84x1131.84 SM contract')
+                # Opt-in reservation for the protected native owner. Area/grid
+                # is priced before a physical master exists; this is not a cell.
+                owner_bays=[]
+                for sm in (i for i in insts if i.kind == 'sm'):
+                    cx=1538.22
+                    if sm.orient in ('MY','R180'):
+                        cx=sm.w-cx
+                    x0=round(round((sm.x+cx-256.176/2)/GX)*GX,6)
+                    if sm.orient in ('MX','R180'):
+                        y1=sm.y-2.16
+                        box=[x0,y1-129.6,x0+256.176,y1]
+                    else:
+                        y0=sm.y+sm.h+2.16
+                        box=[x0,y0,x0+256.176,y0+129.6]
+                    owner_bays.append(dict(sm=sm.name,box_um=[round(v,6) for v in box]))
+                m['native_owner_bays']=owner_bays
+                m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in owner_bays)
+                if variant.get('native_descriptor_bays'):
+                    descriptor_bays=[]
+                    for sm in (i for i in insts if i.kind=='sm'):
+                        x0,x1=1312.848,1441.152
+                        if sm.orient in ('MY','R180'):
+                            x0,x1=sm.w-x1,sm.w-x0
+                        if sm.orient in ('MX','R180'):
+                            y0,y1=sm.y+sm.h+2.16,sm.y+sm.h+66.96
+                        else:
+                            y0,y1=sm.y-66.96,sm.y-2.16
+                        descriptor_bays.append(dict(sm=sm.name,box_um=[round(sm.x+x0,6),round(y0,6),round(sm.x+x1,6),round(y1,6)]))
+                    m['native_descriptor_bays']=descriptor_bays
+                    m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in descriptor_bays)
+                    if variant.get('native_control_escape_bays'):
+                        escape_bays=[]
+                        sm_by={i.name:i for i in insts if i.kind=='sm'}
+                        for role,group in (('owner',owner_bays),('descriptor',descriptor_bays)):
+                            for bay in group:
+                                x0,y0,x1,y1=bay['box_um'];cy=(y0+y1)/2
+                                if sm_by[bay['sm']].orient in ('MY','R180'):
+                                    box=[x1,cy-24,x1+40,cy+24]
+                                else:
+                                    box=[x0-40,cy-24,x0,cy+24]
+                                escape_bays.append(dict(sm=bay['sm'],role=role,box_um=[round(v,6) for v in box]))
+                        m['native_control_escape_bays']=escape_bays
+                        m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in escape_bays)
+                        if variant.get('native_control_u_corridors'):
+                            if abs(geo['W']-30904.848)>1e-6 or abs(geo['H']-24051.6)>1e-6:
+                                raise ValueError('control U corridor proposal belongs to original retile outline')
+                            proposal=json.loads((ROOT/'results/uarch/hbm_sm_owner_reservation_20261007/control_u_successor/proposal.json').read_text())
+                            corridors=[dict(sm=row['sm'],box_um=box) for row in proposal['rows'] for box in row['corridor_rectangles_um']]
+                            m['native_control_u_corridors']=corridors
+                            m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in corridors)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -952,8 +1011,12 @@ def split_station(m, role, h_data=1024):
     for it in ins:
         a = Inst(it.name + 'a', role + 'a', it.x, it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         bx = None
+        def reserved_free(x, y):
+            return all(not (x < r[2] + 4 and r[0] < x + it.w + 4 and
+                            y < r[3] + 4 and r[1] < y + it.h + 4)
+                       for r in m.get('reserved_regions', []))
         for cand in (it.x + it.w + SHAVE + 8.64, it.x - it.w - SHAVE - 8.64):
-            if all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
+            if reserved_free(cand,it.y) and all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
                    for j in m['insts'] if j is not it):
                 bx = cand
                 break
@@ -964,7 +1027,7 @@ def split_station(m, role, h_data=1024):
             for cy in (it.y + it.h + SHAVE + 8.64, it.y - it.h - SHAVE - 8.64):
                 if cy < EDGE or cy + it.h > m['geo']['H'] - EDGE:
                     continue
-                if all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(it.x,cy) and all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts'] if j is not it):
                     bx, by_ = it.x, cy
                     break
@@ -975,7 +1038,7 @@ def split_station(m, role, h_data=1024):
                 cx, cy = up(it.x + dx * 43.2, GX), up(it.y + dy * 43.2, GY)
                 if cx < EDGE or cy < EDGE or cx + it.w > m['geo']['W'] - EDGE or cy + it.h > m['geo']['H'] - EDGE:
                     continue
-                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts']):
                     bx, by_ = cx, cy
                     break
@@ -993,7 +1056,7 @@ def split_station(m, role, h_data=1024):
                         candidates.append((up(ex + dx, GX), up(ey + dy, GY)))
             candidates.sort(key=lambda xy: abs(xy[0]-it.x)+abs(xy[1]-it.y))
             for cx, cy in candidates:
-                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
                        for j in m['insts']):
                     bx, by_ = cx, cy
                     break
@@ -1106,7 +1169,7 @@ def split_vm8(m):
     halves, own = {}, {}
     for nm, it in tiles.items():
         q = it.master[len('hfd_vm_'):]
-        dy = 1000.056 - 500.04
+        dy = 500.04 if m['variant'].get('vm8_nonoverlap') else 1000.056 - 500.04
         hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
                   region=it.region, domain=it.domain)
@@ -1152,9 +1215,28 @@ def split_vm8(m):
                 pitch = max(1, round((hi - lo) / max(1, n_ - 1) / tr)) if n_ > 1 else 1
                 spec[p_] = ('face', n_, face, v['layer'], round((lo + hi) / 2, 4), pitch)
             order.append(p_)
+        if m['variant'].get('vm8_exact_pins'):
+            # Preserve each requested rectangle and bit identity. Ranges lose
+            # single-pin faces and the half-track origin of even-width groups.
+            text=(ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/io_place.tcl').read_text()
+            pattern=r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
+            exact=defaultdict(dict)
+            for port,bit,layer,x,y,w_,h_ in re.findall(pattern,text):
+                bit=int(bit);x,y,w_,h_=map(float,(x,y,w_,h_))
+                if bit in exact[port]:
+                    raise ValueError(f'duplicate VM requested pin: {q}/{h}/{port}[{bit}]')
+                exact[port][bit]=(f'{port}[{bit}]',layer,(x-w_/2,y-h_/2,x+w_/2,y+h_/2))
+            if set(exact)!=set(rec['ports']):
+                raise ValueError(f'VM requested pin port mismatch: {q}/{h}')
+            for port,v in rec['ports'].items():
+                if set(exact[port])!=set(range(v['bits'])):
+                    raise ValueError(f'VM requested pin bit mismatch: {q}/{h}/{port}')
+                spec[port]=('rects',[exact[port][b] for b in range(v['bits'])])
 
         def fn(mst, k=1, spec=spec, order=order):
             sp_ = dict(spec)
+            if k > 1 and any(v[0]=='rects' for v in sp_.values()):
+                raise ValueError('exact VM requested pins require full width k=1')
             if k > 1:
                 _bundle_pack(mst, sp_, order, k)
             mst.ports, mst.order = sp_, list(order)

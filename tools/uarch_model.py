@@ -8115,7 +8115,10 @@ def main(argv=None):
     ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
                     help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
                          "assumed 3/40 x AR (reproduces records made before 2026-10-04)")
+    ap.add_argument("--s81-capture-startup-delay", action="store_true", help="screen exact capture startup hold cells against pinned SS/FF libraries")
     ap.add_argument("--s81-selector-quarter-retime", action="store_true", help="size exact existing-stage selector comparator retiming")
+    ap.add_argument("--s81-collective-gearbox-pipeline", action="store_true", help="price the two-cycle partitioned collective gearbox")
+    ap.add_argument("--s81-collective-gearbox", action="store_true", help="size the exact registered-head collective gearbox candidate")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
@@ -8202,8 +8205,32 @@ def main(argv=None):
             Path(a.out).write_text(payload)
         print(payload)
         return
+    if a.s81_capture_startup_delay:
+        from s81_capture_startup_delay_model import build
+        payload = json.dumps(build(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.s81_selector_quarter_retime:
         from s81_selector_quarter_retime_model import model
+        payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_collective_gearbox_pipeline:
+        from s81_collective_gearbox_pipeline_model import model
+        payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_collective_gearbox:
+        from s81_collective_gearbox_model import model
         payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
@@ -10929,6 +10956,40 @@ def dsrom_window_full_block_pipeline_model():
 
 
 
+def dsrom_window_column_halfwrite_model(clock=1.2e9):
+    """Full128-bit x32 WINDOW column with posedge ingress/negedge storage.
+
+    Candidate only. The payload is unchanged; the existing parent still owns
+    validity and mutable-state protection. No parent adoption is implied.
+    """
+    width, depth, row_groups, lane_groups = 128, 32, 8, 8
+    data_ff = width * row_groups
+    enable_ff = depth * lane_groups
+    return dict(candidate='WINDOW_COLUMN_HALFWRITE', adopted=False,
+        capacity_bits=width*depth, read_bytes_per_cycle=width//8,
+        write_bytes_per_cycle=width//8, row_enable_bits_per_cycle=depth,
+        boundary_bits_per_cycle=width+depth+1+5+width,
+        storage_replicas=1, write_data_copies=row_groups,
+        row_enable_copies=lane_groups,
+        max_data_storage_fanout=depth//row_groups,
+        max_enable_storage_fanout=width//lane_groups,
+        added_data_FF=data_ff, added_enable_FF=enable_ff,
+        added_FF=data_ff+enable_ff, added_cycles=0,
+        memory_commit_offset_cycles=0.5, read_latency_cycles=2,
+        period_ps=1e12/clock, half_cycle_ps=0.5e12/clock,
+        setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        area_sizing=dict(added_FF_um2_upper=(data_ff+enable_ff)*1.0,
+                        slot_utilization_target=0.55,
+                        added_slot_um2_upper=(data_ff+enable_ff)*1.0/0.55,
+                        basis='Conservative1um2/addedFF sizing allocation; actual mapped cell/clock/routing area pending'),
+        mux_cost=dict(read_8to1_bits=4*width, read_4to1_bits=width,
+                      storage_enable_bits=width*depth, unchanged=True),
+        exactness_obligation='Posedge read sees all prior writes and excludes same-edge write; later negedge commit must preserve multirow writes, resets and output holding.',
+        physical_obligation='Both edge polarities propagated; halfcycle ingress-to-store and store-to-read setup, trueFF hold, actualIO and M2-M6 PG accessibility.',
+        parent_cost='Zero read/write acceptance cycles; extra clock sinks and actual area must be composed for132columns before parent adoption',
+        gates=dict(exact=False, negative=False, SS_FF_DRC=False))
+
+
 def dsrom_window_column_split128_model(column_side_um=77.222, channel_um=32.0,
                                        routing_pitch_um=0.048):
     """Pre-build size of SPLIT_COLUMNS=2: 132 full-depth 128-bit columns.
@@ -13413,6 +13474,18 @@ def qwen_kvc_decode_pc_model():
     return model()
 
 
+def qwen_forwarded_link_tmr_model():
+    """Candidate protected forwarded-clock graph, without physical adoption."""
+    from uarch_model_qwen_forwarded_link_tmr import model
+    return model()
+
+
+def qwen_ctrl_protected_model():
+    """Two retained PC controllers with zero-cycle fail-closed qualification."""
+    from uarch_model_qwen_ctrl_protected import model
+    return model()
+
+
 def qwen_ctrl_shift_queue_model():
     """Exact oldest-first write queue with stored onehot bank identities."""
     from uarch_model_qwen_ctrl_shift import model
@@ -13504,6 +13577,24 @@ def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
     """Native-record command transport with conservative retirement ordering."""
     from hbm_sm_command_model import model
     return model(hops=hops, depth=depth, replicas=replicas)
+
+
+def hbm_result_relay_stage_model():
+    """Size all physical result-relay replicas before stage implementation."""
+    from hbm_result_relay_model import hbm_result_relay_stage_model as model
+    return model()
+
+
+def hbm_smh_front_s_hold_model():
+    """Price measured-endpoint hold repair without relaxing constraints."""
+    from hbm_smh_front_s_hold_model import model
+    return model()
+
+
+def hbm_smh_front_s_fifo_model():
+    """Price the registered-nonempty SM request-sink candidate."""
+    from hbm_smh_front_s_fifo_model import model
+    return model()
 
 
 def hbm_smh_tile_headroom_model():
@@ -13696,3 +13787,260 @@ def qwen_embedding_ingress_island_model(address_bits=18):
                    'Bind island LEF/LIB/clock and pin placement inside full leaf',
                    'Full leaf reset-removal and reg-to-reg hold remain independently open'],
         physical_closed=False,rate_credit=0)
+
+
+def s81_pq_r128_expanded_model():
+    """Area-only successor of measured d0178820d R128/PQ screen, not a parent die."""
+    side = 550.368
+    core_w, core_h = 546.048, 545.94  # ASAP7 0.054um site / 0.270um row snapping
+    area = core_w * core_h
+    baseline_cells = 148012.0
+    bw = sum((1, 6, 3, 1, 1, 2, 1, 8, 3, 2, 256, 10, 256, 10, 3, 3, 1, 3, 4, 32, 1024))
+    input_bits = 1+6+3+4*19+2+64*32+128*69+1
+    output_bits = 3+19+128*(1+19+32)+bw+2
+    return dict(schema='opentallas.s81.pq_r128_expanded.v1', adopted=False,
+        scope='Standalone screen PHW6 SAW8 KMAX256 R128 PQ1; ROM register models, not production parent',
+        source_commit='d0178820d', replica_count=1, production_replicas=None,
+        compute=dict(MACs_per_cycle_delta=0, arithmetic_unchanged=True,
+                     intensity_delta=0, note='Control/quantization spine; no added matrix MAC engine'),
+        memory=dict(vector_read_bytes_per_cycle=256,vector_write_bytes_per_cycle_max=512,
+                    phase_ROM_bytes_per_cycle=16,stream_ROM_bytes_per_cycle=6,
+                    bytes_per_cycle_delta=0),
+        boundary=dict(functional_input_bits_per_cycle=input_bits,functional_output_bits_per_cycle=output_bits,
+                      return_bits_per_cycle=128*69,fixture_ROM_write_bits=74,
+                      clock_reset_bits=2,bits_per_cycle_delta=0),
+        fanout=dict(added_muxes=0,added_demuxes=0,added_replicas=0,added_clock_sinks=0,
+                    observed_baseline_clock_buffers=16885,observed_baseline_clock_inverters=5454,
+                    note='New CTS insertion, repair count and energy must be measured'),
+        geometry=dict(die_um=[side,side],core_box_um=[2.16,2.16,548.208,548.10],
+                      core_area_um2=area,baseline_die_area_um2=230400,
+                      die_area_delta_um2=side**2-230400,
+                      measured_baseline_cell_area_um2=baseline_cells,
+                      measured_baseline_core_area_um2=226149,
+                      baseline_utilisation=baseline_cells/226149,
+                      projected_same_cell_utilisation=baseline_cells/area,
+                      repair_reserve_to_55pct_um2=.55*area-baseline_cells,
+                      repair_reserve_to_60pct_um2=.60*area-baseline_cells,
+                      slot_fit=baseline_cells<.55*area,parent_slot_assigned=False),
+        routing=dict(added_logical_tracks=0,baseline_ports_including_fixture=19357,
+                     M4_vertical_pitch_um=.036,M5_horizontal_pitch_um=.048,
+                     raw_edge_track_capacity=2*int(core_w/.036)+2*int(core_h/.048),
+                     note='Raw capacity before power/keepouts; legal pin assignment/congestion requires route; no parent corridor claimed'),
+        timing=dict(route_period_ps=770,signoff_period_ps=833.333,setup_uncertainty_ps=60,
+                    hold_uncertainty_ps=25,minimum_SS_FF_slack_ps=15,required_DRC=0,
+                    IO_max_ps=250,IO_min_ps=-50,
+                    input_clock_reference='q_go/CLK measured per corner',
+                    output_clock_reference='o_ready/CLK measured per corner',
+                    constraints_changed=False),
+        latency=dict(added_cycles=0,token_delta_ns=0,qualification='Source-identical logical schedule; no frequency or performance credit before closure'),
+        energy=dict(added_logic=0,physical_wire_clock_energy_delta=None,measurement_required=True),
+        physical_closed=False,remaining=['Fresh SS/FF timing including input and R2R hold',
+        'DRC, pin legality, real clock insertion, area and energy',
+        'Separate production parent mapping/ROM macro binding and released phase count'])
+
+
+def qwen_core_kv_boundary_model(*, sw=64, replicas=4, kv_write_instructions=108):
+    """Bank the existing KV write-history reduction without shifting its epoch.
+
+    Raw per-lane writes are grouped into eight-lane ORs before capture. The
+    bank registers replace the existing history vector; its any-write predicate
+    and following history bit remain cycle-identical. Flush uses the captured
+    bank bits and an equally delayed SU-idle bit, shifting that level one cycle.
+    """
+    if sw < 8 or sw % 8:raise ValueError('SW must be a multiple of eight')
+    banks=sw//8
+    return dict(default_enabled=False,adopted=False,physical_signoff=False,
+        MACs_per_cycle=0,new_memory_ports=0,new_boundary_bits=0,replicas=replicas,
+        old_history_registers=sw,new_history_and_idle_registers=banks+1,
+        register_delta=banks+1-sw,input_reduction_fanin=8,post_capture_reduction_fanin=banks,
+        new_external_routing_tracks=0,original_slot_unchanged=True,
+        predicate_epoch_delta_cycles=0,flush_latency_delta_cycles=1,
+        analytical_program_kv_write_instructions=kv_write_instructions,
+        continuous_ready_token_delta_upper_cycles=kv_write_instructions,
+        stall_sensitive_token_delta_cycles=None,
+        program_scope='Current analytical TP4 program833 instructions; no deployed program identity claim',
+        modeled_remaining_obligations=['Registered flush with actual vector bridge/RMW adapter',
+          'Arrival-side hold margin','ME write-enable boundary packet/gating separation',
+          'SS/FF actual interface timing'],clock_hz=1200000000,
+        setup_uncertainty_ps=60,hold_uncertainty_ps=25)
+
+
+def hbm_smh_front_s_hold_model():
+    """Full front_s zero-cycle boundary-delay budget; fresh corner closure pending."""
+    from hbm_smh_front_s_hold_model import model
+    return model()
+
+
+def qwen_rom_vm_ingress_capture_candidate():
+    """Existing-seat raw-ME qualification candidate; physical/parent join unqualified."""
+    from qwen_vm_rom_ingress_model import model
+    return model()
+
+
+def qwen_rom_vm_request_normalization_candidate():
+    """Full-shape default-off request normalizer inventory; physical join unqualified."""
+    from qwen_rom_vm_request_normalizer_model import model
+    return model()
+
+
+def qwen_embedding_padded_ingress_model(address_bits=18):
+    """Price ten physical BUFx2 stages on each ingress pin before building.
+
+    Endpoint delta estimates are retained in embedding_pad10_20261007 evidence.
+    They replace only measured predecessor buffer delays; no signoff credit.
+    """
+    m=qwen_embedding_ingress_island_model(address_bits)
+    count=10*(address_bits+3)
+    m['schema']='opentallas.qwen.embedding_padded_ingress.v1'
+    m['input_padding']=dict(stages_per_input=10,input_bits=address_bits+3,
+        fixed_buffer_cells=count,cell_type='BUFx2_ASAP7_75t_R',
+        fixed_buffer_area_um2=count*.0729,reset_included=True,
+        new_cycle_latency=0,physical_retention_required=True)
+    # Fixed cells consume part of the existing six-per-rail hold-cell reserve.
+    assert count<=m['area']['reserved_hold_buffers']
+    m['area']['remaining_hold_buffer_reserve']=m['area']['reserved_hold_buffers']-count
+    m['mux_demux_fanout']['input_fanout']=1
+    m['replicated_fixed_buffer_area_um2']=count*.0729*m['replica_count']
+    m['timing_estimate']=dict(min_guarded_SS_ps=59.8785642953 if address_bits==12 else 56.7648613579,
+        min_guarded_FF_ps=19.5207286031 if address_bits==12 else 21.5235240262,
+        analytical_guard_SS_ps=30,analytical_guard_FF_ps=15,
+        constraints_changed=False,setup_hold_closed=False,
+        limitations='Per-endpoint NLDM delta, below-table load extrapolation; placement/clock and routed delays remain unqualified')
+    m['remaining'].insert(0,'Verify all ten fixed buffer stages per input in synthesis and final routed netlists')
+    return m
+
+
+def s81_pq_return_delay_model(regions, selected_chain_counts):
+    """Size identity-function input delay stations on the unchanged standalone screen.
+
+    Counts must come from matched SS/FF front-return endpoint inventories. Cell
+    characterization is a prebuild bound; closure is measured after routing.
+    """
+    if regions not in (16, 128):
+        raise ValueError('Only measured R16/R128 screen vehicles are supported')
+    counts = {int(k): int(v) for k, v in selected_chain_counts.items()}
+    if any(k not in (3, 4) or v < 0 for k, v in counts.items()):
+        raise ValueError('Only characterized three/four-HB4 chains are supported')
+    endpoints = sum(counts.values())
+    if endpoints > 69*regions:
+        raise ValueError('Selected endpoints exceed actual return boundary width')
+    cells = sum(k*v for k, v in counts.items())
+    old_cells = 89698 if regions == 16 else 148012
+    core_area = 196407 if regions == 16 else s81_pq_r128_expanded_model()['geometry']['core_area_um2']
+    new_area = cells*.10206
+    return dict(schema='opentallas.s81.pq_return_delay.v1', adopted=False, physical_closed=False,
+        scope='Physical-only identity buffer station on d017 standalone registered screen; no production parent claim',
+        regions=regions, chain_counts=counts, selected_endpoints=endpoints,
+        MACs_per_cycle_delta=0,compute_intensity_delta=0,memory_bytes_per_cycle_delta=0,
+        boundary_bits_per_cycle=69*regions,boundary_bits_per_cycle_delta=0,
+        replica_count=endpoints, mux_count=0,demux_count=0,
+        fanout=dict(each_HB4_output=1,new_clock_sinks=0,source_buffer_loading='Must preserve original input buffer and check new first-cell capacitance'),
+        area=dict(cell='HB4xp67_ASAP7_75t_R',cell_count=cells,cell_area_um2=.10206,
+                  added_cell_um2=new_area,baseline_measured_cell_um2=old_cells,
+                  core_area_um2=core_area,projected_utilisation=(old_cells+new_area)/core_area,
+                  headroom_to_55pct_um2=.55*core_area-old_cells-new_area,
+                  fits_55pct=old_cells+new_area<=.55*core_area,
+                  parent_slot_assigned=False),
+        routing=dict(new_internal_nets=cells,new_external_tracks=0,per_link_wire_target_um=5,
+                     M3_cap_fF_per_um=.156,characterized_extra_cap_fF_per_net=.78,
+                     local_chain_tracks_per_endpoint=1,minimum_track_pitch_um=.036,
+                     minimum_station_track_capacity=int(5/.036),
+                     condition='Keep each chain beside its capture pin; actual legalization, congestion and wire RC must pass'),
+        clock=dict(period_ps=833.333,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+                   added_clock_domains=0,added_clock_exceptions=0,reference_clock_unchanged=True),
+        latency=dict(added_cycles=0,token_delta_ns=0,II_unchanged=True,qualification='Identity cells only; actual timing and topology must qualify'),
+        characterization=dict(three_HB4_min_FF_hold_gain_ps=117.875009,
+                              three_HB4_max_SS_setup_cost_ps=339.820038,
+                              four_HB4_min_FF_hold_gain_ps=156.516676,
+                              four_HB4_max_SS_setup_cost_ps=454.61435,
+                              input_slew_ps=[0,5,20],wire_cap_fF=[0,.2,.78],
+                              three_HB4_original_cap_max_fF=5.75,three_HB4_retained_cap_delta_limit_fF=.78,
+                              three_HB4_retained_wire_source='results/uarch/s81_pq_delay_chain_20261007/retained_wire_sweep/record.json',
+                              source='results/uarch/s81_pq_delay_chain_20261007/loaded_sweep/record.json',
+                              measured_route=False),
+        remaining=['Matched original SS/FF endpoint table and source hashes',
+                   'Real buffer topology positive/negative gate and source identity',
+                   'Routed SS/FF+15ps DRC0 including R2R holds outside return station',
+                   'Actual wire/clock energy and full production parent integration'])
+
+
+def ha2_truecredit_parent_clock_model():
+    """Price the actual ring-delay/launch-register closure candidate; not adopted."""
+    from tools.ha2_truecredit_parent_clock_model import model
+    return model()
+
+
+def qwen_core_vm_raw_boundary_model(*, groups=48, lanes=16, aw=24):
+    """Move existing ME strobes' enable qualification into owned VM capture.
+
+    Raw mode cannot be adopted standalone: source_me_wanted must be the
+    original enable before any VM lease/native_tick feedback, and the actual
+    capture collar must qualify all ME/MX lanes at the existing CAP epoch.
+    """
+    packet=1+aw+lanes+lanes*32
+    return dict(default_enabled=False,adopted=False,raw_mode_requires_capture_collar=True,
+        MACs_per_cycle=0,new_memory_ports=0,new_boundary_payload_bits=0,required_new_control_ports=2,
+        lease_binding_cost="Original-intent output and direct ME-lease input; one effective-enable AND plus fanout to existing execution/acceptance loads. This binding is not implemented by raw-write transform.",
+        source_register_delta=0,owned_capture_register_delta=0,
+        source_native_cycle_delta=0,replicas=4,me_groups=groups,lanes_per_group=lanes,
+        moved_enable_terms=groups+1,me_write_seats=groups*lanes+lanes,
+        source_enable='Original pre-lease supply/idle/wake enable; never post-admission lease',
+        immutable_epoch='Captured enable/address/mask/data are held through checked ACK; current me enable cannot requalify them',
+        fallback=dict(packet_bits_per_group=packet,me_only_register_bits=groups*packet,register_bits_including_mx=(groups+1)*packet,
+                      register_cell_area_floor_um2_including_mx=(groups+1)*packet*0.2916,write_visibility_delta_cycles=1),
+        physical_status='Core and actual ingress collar must both close SS/FF with real interface budgets',
+        final_clock_enrollment='Parent wrapper and collective peers must share checked native epoch; not supplied by this boundary transform')
+
+
+def hbm_su_installed_span_model():
+    """Price checked published-span scalar reads before endpoint construction."""
+    from tools.hbm_su_installed_span_model import model
+    return model()
+
+
+def qwen_core_meif_idle_capture_model(*, nw=18, aw=24, replicas=4):
+    """Remove return-status cone from the existing MEIF payload capture mux.
+
+    Speculate only while no ME command is pending; hold the complete packet
+    until its enabled engine edge. Both issue epoch and payload acceptance stay
+    unchanged. Active consumer uses must remain go-qualified.
+    """
+    bits=3*nw+13*aw+13
+    return dict(default_enabled=False,adopted=False,physical_signoff=False,
+        mechanism='Existing payload registers capture decoded input while !me_gop; freeze while pending',
+        MACs_per_cycle=0,new_memory_ports=0,new_memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0,added_routing_tracks=0,replicas=replicas,
+        payload_register_bits=bits,register_delta=0,mux_register_delta=0,
+        removed_enable_cone='SU take/status/ready to combined ME go to payload capture mux',
+        new_enable_cone='Local registered me_gop inversion to existing payload mux',
+        area_delta_first_order_um2=0,original_floorplan_slot_unchanged=True,
+        native_cycle_delta_per_instruction=0,token_latency_delta_cycles=0,
+        speculative_switching='Payload may update on other instruction epochs when no ME command is pending; no claim of energy saving',
+        exactness_obligations=['Full controller ME/SU accepted payload equality under source-enable stalls','Freeze packet over pending go','Actual instruction broadcast samples packet with matching go','Negative unconditional capture must fail'],
+        inherited_open_physical_obligations=['ME write ingress collar','prog_q and other input minimum delay','Clock output insertion/phase contract','SS/FF setup/hold +15ps and DRC0'])
+
+
+def qwen_ctrl_write_ledger_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_ledger import qwen_ctrl_write_ledger_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_service_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_service import qwen_ctrl_write_service_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_cancel_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_cancel import qwen_ctrl_write_cancel_model as impl
+    return impl()
+
+
+def qwen_ctrl_write_cancel_service_model():
+    """Source-bound native controller ownership/cancellation composition."""
+    from uarch_model_qwen_ctrl_write_cancel import qwen_ctrl_write_cancel_service_model as impl
+    return impl()
+
+

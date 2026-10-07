@@ -203,6 +203,14 @@ def run(placement, out):
             for rec,g,pins,side in items:
                 rec.setdefault('packing_failures',[]).append(dict(instance=key[0],face=key[1],side=side,reason=str(e)))
                 rec['failure']=str(e)
+    cluster_boxes=[];cluster_by_key={}
+    for key,items in batches.items():
+        bb=[g[side+'_station']['box_um'] for rec,g,pins,side in items if side+'_station' in g]
+        if bb:
+            cb=[min(b[0] for b in bb),min(b[1] for b in bb),max(b[2] for b in bb),max(b[3] for b in bb)]
+            cluster_boxes.append(cb);cluster_by_key[key]=cb
+    # Force each bundle outward before global transit; other endpoint arrays
+    # are opaque to transit, so a shortest path cannot steal their local aisles.
     # All endpoint boxes have been reserved before any corridor path is probed.
     for rec in records:
         if 'failure' in rec: continue
@@ -213,7 +221,33 @@ def run(placement, out):
             obstacles=[[q[0]-macro_extra,q[1]-macro_extra,q[2]+macro_extra,q[3]+macro_extra] for q in boxes]
             obstacles += [q for q in reservations if q!=a['box_um'] and q!=b['box_um']]
             try:
-                path=channel_path(a['centre_um'],b['centre_um'],obstacles,data['outline'],wire_clearance)
+                options=[]
+                transit_obstacles=obstacles[:len(boxes)]+cluster_boxes
+                for side,station,inst in [('source',a,rec['ends'][0][0]),('sink',b,rec['ends'][1][0])]:
+                    cb=cluster_by_key[(inst,g[side+'_face'])];pad=wire_clearance+2.16
+                    x0,y0,x1,y1=cb[0]-pad,cb[1]-pad,cb[2]+pad,cb[3]+pad
+                    x,y=station['centre_um']
+                    candidates=[(x0,y),(x1,y),(x,y0),(x,y1),(x0,y0),(x0,y1),(x1,y0),(x1,y1)]
+                    valid=[]
+                    for escape in candidates:
+                        try:
+                            channel_path(escape,escape,transit_obstacles,data['outline'],wire_clearance)
+                            leg=channel_path(station['centre_um'],escape,obstacles,data['outline'],wire_clearance)
+                        except ValueError:continue
+                        length=sum(abs(u[0]-v[0])+abs(u[1]-v[1]) for u,v in zip(leg,leg[1:]))
+                        valid.append((length,escape,leg))
+                    if not valid:raise ValueError('no legal endpoint-cluster escape along any exposed face')
+                    options.append(valid)
+                pairs=sorted((u[0]+v[0]+abs(u[1][0]-v[1][0])+abs(u[1][1]-v[1][1]),i,j)
+                    for i,u in enumerate(options[0]) for j,v in enumerate(options[1]))
+                for _,i,j in pairs:
+                    u,v=options[0][i],options[1][j]
+                    try:middle=channel_path(u[1],v[1],transit_obstacles,data['outline'],wire_clearance)
+                    except ValueError:continue
+                    path=u[2]+middle[1:]+list(reversed(v[2]))[1:]
+                    g['endpoint_cluster_escape_um']=[u[1],v[1]]
+                    break
+                else:raise ValueError('no global route between legal endpoint-cluster escapes')
                 lengths=[abs(x[0]-y[0])+abs(x[1]-y[1]) for x,y in zip(path,path[1:])]
                 g.update(path_um=path,route_length_um=sum(lengths),required_tracks=len(g['bit_indices']),
                     assumed_wire_bundle_width_um=len(g['bit_indices'])*.080,wire_centre_clearance_um=wire_clearance,

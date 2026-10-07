@@ -54,6 +54,7 @@ from pathlib import Path
 
 from ssh_transport import command as transport_command
 from source_archive import build_archive, repo_path
+from postroute_recovery import remote_command as postroute_probe_command
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -861,6 +862,30 @@ def publish_measured():
     stamp.write_text(now_iso())
 
 
+def checkpoint_location(j):
+    """Bind resume work to its actual checkpoint, never merely to synced source."""
+    if not j.get("resume"):
+        return None
+    if j.get("checkpoint_affinity"):
+        return j["checkpoint_affinity"]
+    resume = j["resume"] if isinstance(j["resume"], dict) else {}
+    proof = resume.get("next_stage_dryrun") or {}
+    location = dict(host=resume.get("to_host") or proof.get("host") or j.get("host"),
+                    run=resume.get("run") or proof.get("run") or j.get("run"))
+    if not location["host"] or not location["run"]:
+        raise ValueError("checkpoint resume lacks a host/run binding")
+    j["checkpoint_affinity"] = location
+    return location
+
+
+def require_checkpoint_location(j):
+    location = checkpoint_location(j)
+    if location and (j.get("host"), j.get("run")) != (location["host"], location["run"]):
+        raise ValueError("checkpoint resume host/run changed without a verified full checkpoint transfer: "
+                         f"expected {location['host']}:{location['run']}")
+    return location
+
+
 @contextmanager
 def prepared_source_archive(source, commit):
     """Check declared dependencies before remote mutation; yield the exact checked tar."""
@@ -875,6 +900,7 @@ def prepared_source_archive(source, commit):
 
 
 def sync_source(j):
+    require_checkpoint_location(j)
     j["source_synced"] = False
     spec, host = j["spec"], j["host"]
     src = spec["source"]
@@ -1340,7 +1366,41 @@ def finish(j, status, reason, ledger_text):
     experiment(j, f"{term} {reason[:120]}")
 
 
+def preserve_completed_route(j, st, why):
+    """Stop infrastructure repair at the existing route; never turn it into a reroute."""
+    if st["kind"] != "route":
+        return False
+    v = j["spec"].get("verdict", {})
+    if not v.get("corner_sta") or not v.get("drc_metrics"):
+        return False
+    root = str(Path(subst(v["corner_sta"], j)).parent)
+    metrics = subst(v["drc_metrics"], j)
+    if "/logs/" not in metrics:
+        return False
+    base = str(Path(metrics.replace("/logs/", "/results/", 1)).parent)
+    config = dict(route_root=root, odb_patterns=[base + "/6_final.odb", base + "/5_2_route.odb"])
+    r = ssh(j["host"], postroute_probe_command(config), timeout=60)
+    try:
+        if r.returncode:
+            raise ValueError(f"probe exited {r.returncode}")
+        evidence = json.loads(r.stdout)
+    except (ValueError, TypeError):
+        j["wait"] = "completed-route evidence unavailable; retry read before crash recovery"
+        return True
+    if evidence is None:
+        return False
+    j["postroute_repair"] = dict(host=j["host"], run=j["run"], stage=j["stage_tag"],
+                                source_commit=j.get("commit_full"), evidence=evidence, failure=why)
+    j["wait"] = None
+    finish(j, "NEEDS_HUMAN", "post-route helper failed; completed physical artifacts preserved",
+           "NEEDS_HUMAN: repair post-route helper and resume diagnostics against existing route; "
+           "no automatic reroute or migration\n" + ", ".join(x["path"] for x in evidence["helper_errors"]))
+    return True
+
+
 def crash(j, st, fleet, why):
+    if preserve_completed_route(j, st, why):
+        return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
     if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
@@ -1361,14 +1421,15 @@ def crash(j, st, fleet, why):
         return
     j["retries_used"] = 1
     j["attempt"] += 1
-    if resource:
+    if resource and not checkpoint_location(j):
         h, _ = fleet.choose(j["spec"], exclude=j["hosts_tried"])
         if h:
             event(j, f"{st['key']} crashed ({why}); resource-related -> retry once on {host_cfg(h)['label']}")
             j["hosts_tried"].append(h)
             j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
             j["status"] = "SYNC"
-            # benches are host independent: resume at the first non-bench stage
+            # Keep existing bench receipts; the bench chain retains its producer host/run.
+            # Resume the migrated physical track at its first non-bench stage.
             stl = stage_list(j["spec"])
             j["stage_idx"] = next(i for i, s in enumerate(stl) if s["kind"] != "bench")
             return
@@ -1421,11 +1482,12 @@ def failure_text(j):
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
+    require_checkpoint_location(j)
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
-        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
+        if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
@@ -1466,7 +1528,8 @@ def launch_now(j, fleet, st):
 
 
 # ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
-# calibrate -> route on the job's host, one bench at a time; they gate ADOPTION, not launch.  A bench with the wrong
+# calibrate -> route independently; one bench at a time stays beside its first producer artifacts.
+# Benches gate ADOPTION, not launch.  A bench with the wrong
 # verdict stops the route and ends the job NEEDS_RTL; the verdict waits until every bench has its expected verdict.
 # Opt out per job with spec "bench_first": true (benches before the route, as before).
 
@@ -1500,6 +1563,25 @@ def benches_done(j, stl):
     return all(k["key"] in j.get("benches", {}) for k in bench_stages(stl))
 
 
+def bench_location(j, stl):
+    """A serial bench chain shares artifacts even if the physical track moves hosts.
+
+    Recover older state from the first launched bench; completed receipts stay
+    untouched. Never copy or rerun a producer merely because its route migrated.
+    """
+    if j.get("bench_location"):
+        return j["bench_location"]
+    for st in bench_stages(stl):
+        entry = (j.get("btrack") or {}).get(st["key"])
+        if entry and entry.get("host") and entry.get("run"):
+            match = re.search(r"\.a([0-9]+)b[0-9]+$", entry.get("tag", ""))
+            location = dict(host=entry["host"], run=entry["run"],
+                            attempt=int(match.group(1)) if match else j["attempt"])
+            j["bench_location"] = location
+            return location
+    return dict(host=j["host"], run=j["run"], attempt=j["attempt"])
+
+
 def bench_track(j, fleet, stl):
     """advance the bench track; returns False if the job ended (bench failure)"""
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
@@ -1513,19 +1595,22 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
-            fleet.probe(j["host"])
+            location = bench_location(j, stl)
+            host = location["host"]
+            fleet.probe(host)
             with FLEET_LOCK:
-                ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+                ok, why = fleet.fits(host, st["threads"], st["ram"])
                 if not ok:
                     if j.get("bwait") != why:
                         j["bwait"] = why
-                        event(j, f"bench track: {k} waiting for capacity: {why}")
+                        event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                fleet._launched(j["host"], st["threads"], st["ram"])
+                fleet._launched(host, st["threads"], st["ram"])
             n = (e or {}).get("n", 0) + 1
-            v = dict(j, attempt=f"{j['attempt']}b{n}")
+            v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
             launch_stage(v, st, st["cmd"])
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
+            j["bench_location"] = location
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
@@ -1613,6 +1698,9 @@ def step(j, fleet):
         bench_par_decide(j, stl)
     if not bench_track(j, fleet, stl):
         return
+    if s == "QUEUED" and checkpoint_location(j):
+        require_checkpoint_location(j)
+        j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
         with FLEET_LOCK:
             h, why = fleet.choose(spec, exclude=[])
@@ -2083,11 +2171,11 @@ def auto_requeue(jobs):
     live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
                    for x in jobs if x["status"] not in TERMINAL}
     for j in jobs:
-        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
             continue
         with job_lock(j["name"]):
             j = load_job(j["name"])  # cancellation may have won since the tick snapshot
-            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
                 continue
             c = j["crashes"][-1]
             stl = stage_list(j["spec"])
@@ -2129,6 +2217,7 @@ def migrate_checkpoint(j, dest):
     whole run dir (src snapshot + work/orfs results/logs/objects) to the same path on dest (tar keeps mtimes), patch
     the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
     relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
+    require_checkpoint_location(j)
     src = j["host"]
     if src == dest or (is_local(src) and is_local(dest)):
         raise ValueError("checkpoint migration requires a different host")
@@ -2162,8 +2251,16 @@ def migrate_checkpoint(j, dest):
         raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
     dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
     orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
-    chk = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600).stdout if orfs else ""
-    j["resume"] = dict(from_host=src, at=now_iso(), transfer_s=round(time.time() - t0), check=chk.strip()[-400:])
+    if not orfs:
+        raise RuntimeError("checkpoint transfer cannot be verified: missing ORFS checkpoint path")
+    check = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600)
+    chk = check.stdout
+    if check.returncode or not re.search(r"^RESUME_OK=1$", chk, re.M):
+        raise RuntimeError(f"checkpoint transfer resume check failed rc={check.returncode}: {chk[-400:]}")
+    j["resume"] = dict(from_host=src, to_host=dest, run=run, at=now_iso(),
+                       transfer_s=round(time.time() - t0), check=chk.strip()[-400:],
+                       checkpoint_transfer_verified=True)
+    j["checkpoint_affinity"] = dict(host=dest, run=run)
     j["hosts_tried"].append(dest)
     j.update(host=dest, status="READY", attempt=j["attempt"] + 1, wait=None)
     event(j, f"checkpoint moved in {j['resume']['transfer_s']} s; make dry-run: {' '.join(chk.split())[-200:]}")
@@ -2175,7 +2272,7 @@ def migrate_overloaded(jobs, fleet):
     """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
     jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
     for j in jobs:
-        if j["status"] in TERMINAL or not j.get("host"):
+        if j["status"] in TERMINAL or not j.get("host") or checkpoint_location(j):
             continue
         cfg = host_cfg(j["host"])
         info = fleet.probe(j["host"])
@@ -2248,7 +2345,7 @@ def handle_transient(j, fleet, ex):
     st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
     movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
                                                      and not j.get("stage_tag"))
-    if n >= 3 and movable and j.get("host"):
+    if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
         h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
         if h:
             event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")

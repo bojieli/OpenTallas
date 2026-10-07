@@ -1,0 +1,30 @@
+{
+  "status": "pass",
+  "scope": "One actual379-bit instruction broadcast stage and matching go delay at actual source-derived gated ME clocks; full controller, real KV bridge retained. Existing41 stages compose the same identity; no engine arithmetic simulation.",
+  "rows": [
+    {
+      "stall": 0,
+      "negative": 0,
+      "passed": true,
+      "output": "CYCLES base=583 candidate=583 KVwrites=32/32 heldME=160/160\nBROADCAST checks=32\nPASS full controller FB3 BOUND AMQ NXREG MEIF SUIF PINREG: ME32 SU32 fields exact; no duplicate acceptance; reset abort; END\n"
+    },
+    {
+      "stall": 1,
+      "negative": 0,
+      "passed": true,
+      "output": "CYCLES base=593 candidate=593 KVwrites=32/32 heldME=160/160\nBROADCAST checks=32\nPASS full controller FB3 BOUND AMQ NXREG MEIF SUIF PINREG: ME32 SU32 fields exact; no duplicate acceptance; reset abort; END\n"
+    },
+    {
+      "stall": 0,
+      "negative": 2,
+      "passed": true,
+      "output": "FATAL: /tmp/qwen-core-meif-idle-capture-20261007/broadcast_gate/tb.sv:839: broadcast packet mismatch\n       Time: 230000 Scope: tb\n"
+    }
+  ],
+  "source_sha256": {
+    "/tmp/qwen-core-meif-idle-capture-20261007/broadcast_gate.py": "cd9837934f152d7af8e159d322420276e924c1019a6d63d64a081375f0562c57",
+    "/tmp/qwen-core-meif-idle-capture-20261007/broadcast_gate/tb.sv": "9b3f3040f6e50f31ab99b2cdf008872a765e5ffbfeb8f3770ac29c1535023b3a",
+    "/home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "/home/ubuntu/OpenTallas/rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+  }
+}

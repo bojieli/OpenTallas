@@ -1,0 +1,20 @@
+from pathlib import Path
+import subprocess,json,re,gzip,hashlib
+root=Path('/home/ubuntu/OpenTallas');w=Path('/tmp/pq-return-delay-characterize');w.mkdir(exist_ok=True)
+libdir=root/'results/uarch/topk_station_SSFF_cell_model_20261002/inputs'
+rows=[]
+for n in (1,2,3,4):
+ v='module top(input clk,input din,output q);\nwire ['+str(n)+':0] w; assign w[0]=din;\n'
+ for k in range(n):v+=f'HB4xp67_ASAP7_75t_R h{k}(.A(w[{k}]),.Y(w[{k+1}]));\n'
+ v+=f'DFFHQNx1_ASAP7_75t_R ff(.CLK(clk),.D(w[{n}]),.QN(q));\nendmodule\n'
+ (w/f'chain{n}.v').write_text(v)
+ for corner in ('SS','FF'):
+  libs=[libdir/f'asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz',libdir/f'asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib']
+  t='read_lef /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef\nread_lef /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef\n'+'\n'.join('read_liberty '+str(p) for p in libs)+f'\nread_verilog {w}/chain{n}.v\nlink_design top\ncreate_clock -name clk -period 833.333 [get_ports clk]\nset_input_delay 0 -clock clk [get_ports din]\nset_input_transition 0 [get_ports din]\n'
+  t+='report_checks -from [get_ports din] -to [get_pins ff/D] -path_delay min_max -format full_clock_expanded -digits 6\nexit\n'
+  p=w/f'chain{n}_{corner}.tcl';p.write_text(t);r=subprocess.run(['openroad','-no_init','-exit',str(p)],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+  (w/f'chain{n}_{corner}.log').write_text(r.stdout)
+  if '[ERROR' in r.stdout:print(r.stdout);raise SystemExit(1)
+  times=re.findall(r'([-0-9.]+)\s+data arrival time',r.stdout)
+  rows.append(dict(cells=n,corner=corner,arrival_ps=times,lib_sha256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in libs}))
+print(json.dumps(rows,indent=2));(w/'result.json').write_text(json.dumps(rows,indent=2)+'\n')

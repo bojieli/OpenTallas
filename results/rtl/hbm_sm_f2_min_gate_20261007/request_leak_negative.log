@@ -1,0 +1,15 @@
+ 0 warm-up (router gate shape)    bf16 K 5120 R  1 dep 1 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 1 s bf16 K5120 R1 (G10)          bf16 K 5120 R  1 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 2 s fp4 K2304 R2 (G2)            fp4  K 2304 R  2 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 3 s bf16 K512 R32 (G1)           bf16 K  512 R 32 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 4 s fp8 K8192 R2 (G8)            fp8  K 8192 R  2 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 5 s fp4 K5120 R1 (G3)            fp4  K 5120 R  1 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 6 s bf16 K5120 R3 (G10)          bf16 K 5120 R  3 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 7 s fp8 K1280 R16 (G2)           fp8  K 1280 R 16 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 8 s fp8 K1280 R2 reuse           fp8  K 1280 R  2 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+ 9 s bf16 K5120 R1 (G10) b        bf16 K 5120 R  1 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+10 s fp8 K2304 R2 (G3)            fp8  K 2304 R  2 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+11 s fp4 K2304 R2 (G2) b          fp4  K 2304 R  2 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+12 s bf16 K512 R32 (G1) b         bf16 K  512 R 32 dep 0 load0     -1 post     -1 first_line     -1 last_line     -1 done     -1 exact False
+FAIL total_cycles None /srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/request_leak_negative.json
+EXPECTED FAIL: yes

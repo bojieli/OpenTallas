@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.hbm.smh.failed_corner_receipt.v1",
+  "job": "hbm_smh_front_s_m3f_f7f1a0ee4_t8",
+  "source": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+  "verdict": "NEEDS_RTL",
+  "sha256": {
+    "config.mk": "bd531c4aeae322eb24fd69c7cc93621f022614fbfb0cf3e04aff97d42df2488d",
+    "constraint.sdc": "0abef3d332b017ed658a0d5388e6fa1773da638ef1e4a167dc817d2ddb1a75fc",
+    "w18_sta_ff.log": "eb4d78ca2f5f2568ae17be8b70821b90717b277e4b8c30852d5586223b58452d",
+    "corner_sta.json": "3b763e7751435a2120c0d7887999d2fe211efd8986bb64de0bd4a425ec268047",
+    "w18_sta_ss.log": "8f7195c974436ee07ea38b29ab619ad0a45570572a7a429b5200d08dc92c51d6",
+    "6_report.json": "bb554f3e21b59bf6edf44d7b66fd302fcf121224508ff673520376ee9df4d4fe"
+  },
+  "original_job_preserved": true,
+  "report_area_note": "Repeated JSON keys: 103058.27 includes fillers; final instance/stdcell area 5597.77 um2."
+}

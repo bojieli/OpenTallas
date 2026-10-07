@@ -27,6 +27,10 @@ from pathlib import Path
 def anchor(Mx, port):
     """face-port centre in master coordinates (Q.Master: ('face', width, face, layer, centre, pitch))"""
     p = Mx.ports.get(port)
+    if p and p[0] == 'rects':
+        if not p[1]:
+            return None
+        return [sum((r[axis]+r[axis+2])/2 for _,_,r in p[1])/len(p[1]) for axis in (0,1)]
     if not p or p[0] != 'face':
         if p and p[0] == 'area':
             return [p[2], p[3]]

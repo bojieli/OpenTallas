@@ -1,0 +1,35 @@
+{
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "pc0",
+      "negative": false,
+      "returncode": 0,
+      "qualified": true
+    },
+    {
+      "case": "pc31",
+      "negative": false,
+      "returncode": 0,
+      "qualified": true
+    },
+    {
+      "case": "disabled",
+      "negative": false,
+      "returncode": 0,
+      "qualified": true
+    },
+    {
+      "case": "cancel_tag_bypass_negative",
+      "negative": true,
+      "returncode": 1,
+      "qualified": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_ctrl_write_cancel.sv": "864e3973f81c61ece490e32f5c6e10fcadb465b7b2100c3ad348a337f40154af",
+    "rtl/test/tb_qwen_ctrl_write_cancel.sv": "bbe98f186ffc753a3a9bce35b6ec4e22c4149dafd610350780bad8a3859c6d14",
+    "rtl/test/tb_qwen_ctrl_write_cancel_disabled.sv": "c6a9be717bf8c520d4e367c59d0d987bb28fd2af0598758ad2949261aa3c5d57"
+  },
+  "scope": "Native typed cancellation, true completion, delayed ingress and68 single-state-upset cases; mapped independence, CDC, external refresh and global fence remain unqualified"
+}

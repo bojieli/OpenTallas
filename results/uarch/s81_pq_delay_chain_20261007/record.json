@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.s81.pq_delay_chain_characterization.v1",
+  "adopted": false,
+  "physical_closed": false,
+  "scope": "Prebuild ideal-wire actual-cell characterization, not route measurement",
+  "cell": "HB4xp67_ASAP7_75t_R",
+  "cell_area_um2": 0.10206,
+  "ff_load": "Actual DFFHQNx1 D pin (corner library)",
+  "input_transition_ps": 0,
+  "added_cycles": 0,
+  "rows": [
+    {
+      "cells": 1,
+      "corner": "SS",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      "min_cell_delay_ps": 66.910721,
+      "max_cell_delay_ps": 93.687073
+    },
+    {
+      "cells": 1,
+      "corner": "FF",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      "min_cell_delay_ps": 41.552822,
+      "max_cell_delay_ps": 42.070408
+    },
+    {
+      "cells": 2,
+      "corner": "SS",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      "min_cell_delay_ps": 142.333023,
+      "max_cell_delay_ps": 199.080551
+    },
+    {
+      "cells": 2,
+      "corner": "FF",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      "min_cell_delay_ps": 71.275864,
+      "max_cell_delay_ps": 89.355591
+    },
+    {
+      "cells": 3,
+      "corner": "SS",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      "min_cell_delay_ps": 217.78096,
+      "max_cell_delay_ps": 304.450745
+    },
+    {
+      "cells": 3,
+      "corner": "FF",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      "min_cell_delay_ps": 108.684357,
+      "max_cell_delay_ps": 136.647217
+    },
+    {
+      "cells": 4,
+      "corner": "SS",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      "min_cell_delay_ps": 293.228912,
+      "max_cell_delay_ps": 409.82016
+    },
+    {
+      "cells": 4,
+      "corner": "FF",
+      "lib_sha256": {
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+        "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      "min_cell_delay_ps": 146.09285,
+      "max_cell_delay_ps": 183.938828
+    }
+  ],
+  "R16_candidate": {
+    "chain_cells": 3,
+    "area_per_endpoint_um2": 0.30618,
+    "all_return_1104_endpoints_area_upper_bound_um2": 338.02272,
+    "same_original_ODB_worst_hold_ps": -82.29,
+    "same_endpoint_setup_ps": 461.6,
+    "required_hold_gain_to_15ps": 97.29,
+    "allowed_setup_cost_to_15ps": 446.6,
+    "estimated_min_cell_gain_ps": 108.684357,
+    "estimated_max_cell_cost_ps": 304.450745
+  },
+  "obligations": [
+    "Actual incoming slew and net parasitics; pre/post input buffer loading",
+    "Keep cells and constrain physical placement; full SS/FF >=15 with DRC0",
+    "Endpoint count and remaining R2R hold separately",
+    "Source-identical functional exactness and negative gate",
+    "No uniform R128 chain before paired endpoint budget"
+  ],
+  "file_sha256": {
+    "chain1_FF.log": "02d6e24edadc5fac94add6efcdbda57138469dc38fed12b2c39eaeb8471a8e81",
+    "chain3_FF.tcl": "fca7fa3db394a4606531e1f30f8c69a4b6d69ac7024e34a641bd34ccb0bc9f45",
+    "chain1_FF.tcl": "bfccf724ab4db4b96239823720b14cfb41eaf72e8ef2f1cef14bb11d78cc5248",
+    "chain1_SS.tcl": "7f86a9412638733490ecd85e5691b168f0a4ea60c952d908c3076991dd8c3bbf",
+    "chain2_SS.log": "6e3b29f329192167798c6d3abac714f4dfda0b68ee4e51c5c10b2de959a7c9a8",
+    "chain1.v": "28bde7f5c7eec64e2a09ef2052fb2325d3d8f513cb438cfd63c944fd421903e4",
+    "chain1_SS.log": "fa8b50d81779449a608232e4e925e32d2ebb59135cf0451f5e2e52e596710302",
+    "chain4_SS.tcl": "fc7da06c00034eb4aa119d164582cd9e65977bea32fa47882c74e2266a969c9a",
+    "chain4_FF.log": "1dd7cae9aa0c69ca42d4f8c5dc3038653f0f442d4ff5daba4046b7821822c682",
+    "chain4_FF.tcl": "de31cd54fd95690d2eec4b45bce41492fd67e7dac896b490b80354a1c215315a",
+    "chain2_SS.tcl": "73e74fceeb28af5a246ba7886493173c6ad6f472d22939b90b741dc3ad808727",
+    "r16_join.json": "e473eb5eb70c94c9421ff8bef9f53accc2895a3278cf064791a76cc141d45b5f",
+    "characterize.py.txt": "7bc45bc71c29d0d09f52a72b58ecb3ac1c962cf85f837f817b896fea7ee8086d",
+    "chain3_FF.log": "1ad08e573ba8ebc840b73d46e92cb8c74e2f782857de59eb5f48613c14ce2477",
+    "chain2_FF.log": "08d92e95fa54b4cf3d41af380c1ebc72c70655594a97c226b2517dd448780157",
+    "chain2_FF.tcl": "437f1ab10bc62966ba375098b6a31d1dd16467af20079bdd3def8c781e031ae5",
+    "chain2.v": "74b5996616a2a58fa9898d4238346c9390d2bba8339b149c4d6c096af6f68079",
+    "r16_ss.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "chain4_SS.log": "be5fced0a313d36382b13a798adf7d61ca07511231403074da2f70d0260b7ed5",
+    "chain4.v": "9917f4ead55be21ab177545f694d316029bf59705fdc3a72ddba4964e61d7517",
+    "chain3.v": "c197ed87d596e7d1bbd6c8dd81059226fdac43ff0f95014f301dbf79b2f75f3a",
+    "r16_endpoints.txt": "1cdbfc3218d2dce84b78a6867ef0f8e245859c1ac45f862fccfa1f491ce47c3d",
+    "r16_ss.log": "f1e96900156cdfb7e9abfeb70215b1776d50b6fed4ca5129a2746b078bfe8d51",
+    "r16_ff.log": "2c9dbbd189fc521145a86a8fe1a80124557d7a18e8a39617e68712696d74d75b",
+    "chain3_SS.log": "3f08faf105b9776eebf94df5c659dff6af4a10ee41b5eac7e0d1600f4963e09a",
+    "r16_ff.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "chain3_SS.tcl": "7754abecc0f7ca8b4e419ba95bf1b8d66a2dd3e83851792b264a03b606dc1de0"
+  }
+}

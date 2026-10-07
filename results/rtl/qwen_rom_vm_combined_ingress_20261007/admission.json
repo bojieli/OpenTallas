@@ -1,0 +1,12 @@
+{
+  "local_mem": {
+    "MemTotal": 202405810176,
+    "MemAvailable": 83917664256
+  },
+  "disk_free": 177181818880,
+  "reference_case_seconds": 94,
+  "reference_rss_mib": 55,
+  "parallel_sims": 1,
+  "source_derived_frame_bound": "2+2256*14+865*33+32; no walltime kill",
+  "shape": "full2256/865 with native normalizer, direct-readback checked bank and existing ingress seats"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "source_job": "s81ph-dsfd_capt_x-6fe9f807d",
+  "startup_hold_paths": [
+    {
+      "start": "g_r[12].u_x.w_st[0]",
+      "end": "g_r[12].u_x.w_st_r[0]",
+      "slack_ps": -11.11
+    },
+    {
+      "start": "g_r[0].u_x.r_st[0]",
+      "end": "g_r[0].u_x.r_st_w[0]",
+      "slack_ps": -8.79
+    }
+  ],
+  "output_hold": {
+    "start": "g_r[1].od[30]",
+    "end": "t_vm[135]",
+    "slack_ps": -0.86,
+    "launch": "ser_clk",
+    "incorrect_receiver": "vclk"
+  },
+  "root_cause": "Common post-CTS insertion hook reapplies core virtual-clock min-delay to serial outputs; legacy dual-clock hook adjusts serial latency only.",
+  "successor_hook": "physical/s81_ph_views/capture/post_cts_capt_domains.tcl",
+  "cost": {
+    "added_flops": 0,
+    "added_cycles": 0,
+    "added_area_um2": 0
+  },
+  "constraints": "Same 60ps setup/25ps hold signoff uncertainty and calibrated min-insertion+65ps output hold obligation, now using actual serial domain",
+  "remaining": "Startup state crossing hold still needs repair measured in a fresh STA session. Corrected output binding does not establish closure."
+}

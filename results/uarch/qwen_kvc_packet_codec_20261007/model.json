@@ -1,0 +1,102 @@
+{
+  "model_before_RTL": true,
+  "default_off": true,
+  "wire_bits": 510,
+  "body_bits": 478,
+  "crc_bits": 32,
+  "registered_bits_per_encoder_or_decoder": 512,
+  "registered_bits_per_pair": 1024,
+  "cycles_per_encoder_or_decoder": 1,
+  "initiation_interval": 1,
+  "bytes_per_cycle_wire": 63.75,
+  "MACs_per_cycle": 0,
+  "external_memory_bytes_per_cycle": 0,
+  "source_payload_bytes_per_WRITE": 32,
+  "source_metadata_bits_per_WRITE": 68,
+  "replicas": "One encoder+decoder per transmitting/receiving bridge endpoint; bridge owner prices actual replication.",
+  "physical_scope": "Combinational478-bit CRC feedback elaborates to XOR logic. Actual mapped area, routing, timing and slot fit unqualified; pipeline may need further staging with priced cycles.",
+  "reliability_scope": "CRC detects corrupt wire packet under its polynomial code; no claim of protection against coherent forged packet or mutable encoder/decoder/queue state fault. Epoch/PC/seq/tag/source validation remains bridge responsibility.",
+  "CRC": {
+    "polynomial": "04c11db7",
+    "init": "ffffffff",
+    "final_xor": "ffffffff",
+    "direction": "478bodybits MSB first,509 down32"
+  },
+  "layout": {
+    "version": [
+      509,
+      506
+    ],
+    "opcode": [
+      505,
+      502
+    ],
+    "epoch": [
+      501,
+      494
+    ],
+    "PC": [
+      493,
+      487
+    ],
+    "sequence": [
+      486,
+      471
+    ],
+    "tag": [
+      470,
+      462
+    ],
+    "sector": [
+      461,
+      438
+    ],
+    "data": [
+      437,
+      182
+    ],
+    "reserved_zero": [
+      181,
+      32
+    ],
+    "crc": [
+      31,
+      0
+    ]
+  },
+  "rules": "version1; WRITEop1; DONEop2 withsector/datazero; reservedzero; malformed packet emitsbadpulse and neverpublishedvalid; no ready: bridge reserves FIFOspace before i_v.",
+  "register_model_scope": "Original512 perwrapper is declared packet+valid+bad width, before constant pruning.",
+  "production_generic_synthesis": {
+    "tool": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+    "rows": [
+      {
+        "module": "ot_qwen_kvc_packet_encode",
+        "register_bits": 358,
+        "cells": {
+          "$_DFF_P_": 356,
+          "$_DFF_PN0_": 2,
+          "$_NOT_": 6131,
+          "$_XOR_": 318,
+          "$_OR_": 284,
+          "$_AND_": 4,
+          "$_MUX_": 6117
+        }
+      },
+      {
+        "module": "ot_qwen_kvc_packet_decode",
+        "register_bits": 512,
+        "cells": {
+          "$_DFF_PN0_": 2,
+          "$_DFF_P_": 510,
+          "$_NOT_": 6185,
+          "$_XOR_": 504,
+          "$_OR_": 467,
+          "$_AND_": 7,
+          "$_MUX_": 6166
+        }
+      }
+    ],
+    "total_register_bits": 870,
+    "scope": "Generic production synthesis only, no mapped area or timing."
+  }
+}

@@ -1,0 +1,4712 @@
+{
+  "selected": false,
+  "status": "MODEL_BEFORE_RTL_AND_PHYSICAL_BUILD",
+  "candidate_depth": 8,
+  "word_bits": 64,
+  "MACs_per_cycle": 0,
+  "boundary_input_bits_per_cycle": 64,
+  "boundary_output_bits_per_cycle": 64,
+  "register_stage_read_bytes_per_cycle": 8,
+  "register_stage_write_bytes_per_cycle": 8,
+  "SRAM_ports": 0,
+  "replicas": 725,
+  "bank_latency_cycles": 8,
+  "composed_balanced_path_cycles": 72,
+  "added_path_cycles_vs_fixed_delay_stations": 0,
+  "packet_contract": "opaque64bit slice; production fullpacket protection remains mandatory; no encodedword width reduction",
+  "flow_contract": "unconditional every-edge capture, no ready; async active-low cold reset zeros all stages; ENABLE default0",
+  "pin_tracks": {
+    "data_input": 64,
+    "data_output": 64,
+    "clock": 1,
+    "reset": 1,
+    "per_data_face_native_pitch_um": 0.048,
+    "reserved_pitch_um": 0.096,
+    "data_window_um": 6.144,
+    "proposed_face_um": 32.4
+  },
+  "choices": [
+    {
+      "depth": 8,
+      "proposed_bank_um": [
+        32.4,
+        32.4
+      ],
+      "flop_bits_per_bank": 512,
+      "ordinary_ff_area_lower_um2": 149.2992,
+      "ff_plus_one_mux_per_bit_proxy_um2": 306.06336,
+      "area_proxy_scope": "RVT DFFHQNx1 and constructive3NAND2+INV mux; this is not an asynchronous reset mapping",
+      "cell_budget_um2_at_55pct": 577.368,
+      "bank_count": 725,
+      "remaining_single_cycle_stations": 676,
+      "latency_only_reserved_area_um2": 1031476.0,
+      "prior_latency_only_reserved_area_um2": 2590400,
+      "area_reservation_reduction_um2": 1558924.0,
+      "transport_reserved_area_um2": 2939200,
+      "proposed_total_station_area_um2": 3970676.0,
+      "rows": [
+        {
+          "bus": "rl_sm0",
+          "group": 0,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 1,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 2,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 3,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 4,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 5,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 0,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 1,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 3,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 0,
+          "bank_count": 7,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 15,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 1,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 2,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 3,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 4,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 5,
+          "bank_count": 7,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 63,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 0,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 1,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 0,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 0,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 1,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 2,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 3,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 27,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 0,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 1,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 2,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 3,
+          "bank_count": 7,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 4,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 5,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 62,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 67,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 72,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 69,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 0,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 1,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 3,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 0,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 47,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 3,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 0,
+          "bank_count": 6,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 1,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 2,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 3,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 4,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 5,
+          "bank_count": 5,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 0,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 1,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 2,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 3,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 4,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 5,
+          "bank_count": 4,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        }
+      ]
+    },
+    {
+      "depth": 16,
+      "proposed_bank_um": [
+        45.36,
+        45.36
+      ],
+      "flop_bits_per_bank": 1024,
+      "ordinary_ff_area_lower_um2": 298.5984,
+      "ff_plus_one_mux_per_bit_proxy_um2": 612.12672,
+      "area_proxy_scope": "RVT DFFHQNx1 and constructive3NAND2+INV mux; this is not an asynchronous reset mapping",
+      "cell_budget_um2_at_55pct": 1131.64128,
+      "bank_count": 320,
+      "remaining_single_cycle_stations": 1356,
+      "latency_only_reserved_area_um2": 1200809.472,
+      "prior_latency_only_reserved_area_um2": 2590400,
+      "area_reservation_reduction_um2": 1389590.528,
+      "transport_reserved_area_um2": 2939200,
+      "proposed_total_station_area_um2": 4140009.472,
+      "rows": [
+        {
+          "bus": "rl_sm0",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 15,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 63,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 13,
+          "transport_stations": 27,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 1,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 2,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 3,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 4,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 5,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 62,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 67,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 72,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 69,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 13,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 13,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 13,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 47,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 0,
+          "bank_count": 3,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 0,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 1,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 2,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 3,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 4,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 5,
+          "bank_count": 2,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        }
+      ]
+    },
+    {
+      "depth": 32,
+      "proposed_bank_um": [
+        64.8,
+        64.8
+      ],
+      "flop_bits_per_bank": 2048,
+      "ordinary_ff_area_lower_um2": 597.1968,
+      "ff_plus_one_mux_per_bit_proxy_um2": 1224.25344,
+      "area_proxy_scope": "RVT DFFHQNx1 and constructive3NAND2+INV mux; this is not an asynchronous reset mapping",
+      "cell_budget_um2_at_55pct": 2309.472,
+      "bank_count": 117,
+      "remaining_single_cycle_stations": 2732,
+      "latency_only_reserved_area_um2": 1584087.68,
+      "prior_latency_only_reserved_area_um2": 2590400,
+      "area_reservation_reduction_um2": 1006312.3200000001,
+      "transport_reserved_area_um2": 2939200,
+      "proposed_total_station_area_um2": 4523287.68,
+      "rows": [
+        {
+          "bus": "rl_sm0",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 19,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm0",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm4",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm3",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 31,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm7",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm1",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm5",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 31,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm2",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 16,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm6",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 30,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 31,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm8",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 27,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 25,
+          "transport_stations": 15,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm12",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 30,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 27,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm11",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 27,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm15",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 63,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm9",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 30,
+          "transport_stations": 42,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm13",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 13,
+          "transport_stations": 27,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm10",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 22,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 27,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm14",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 19,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 17,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 19,
+          "transport_stations": 21,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 16,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm16",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 20,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm20",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm19",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 62,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 22,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 67,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 58,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 72,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm23",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 69,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 10,
+          "transport_stations": 30,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 9,
+          "transport_stations": 31,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm17",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 12,
+          "transport_stations": 28,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 27,
+          "transport_stations": 45,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 31,
+          "transport_stations": 41,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 29,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 29,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm21",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 16,
+          "transport_stations": 56,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 22,
+          "transport_stations": 50,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 19,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 20,
+          "transport_stations": 52,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm18",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 55,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 54,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm22",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 57,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm24",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 18,
+          "transport_stations": 22,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm28",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 28,
+          "transport_stations": 44,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 26,
+          "transport_stations": 46,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 29,
+          "transport_stations": 43,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm27",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 25,
+          "transport_stations": 47,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 0,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 24,
+          "transport_stations": 48,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 1,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 2,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 3,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 23,
+          "transport_stations": 49,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 4,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 21,
+          "transport_stations": 51,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm31",
+          "group": 5,
+          "bank_count": 0,
+          "remaining_single_cycle_stations": 19,
+          "transport_stations": 53,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 4,
+          "transport_stations": 36,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 1,
+          "transport_stations": 39,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm25",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 2,
+          "transport_stations": 38,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 5,
+          "transport_stations": 35,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 8,
+          "transport_stations": 32,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm29",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 17,
+          "transport_stations": 23,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 11,
+          "transport_stations": 29,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 15,
+          "transport_stations": 25,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm26",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 14,
+          "transport_stations": 26,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 0,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 1,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 2,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 3,
+          "transport_stations": 37,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 3,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 6,
+          "transport_stations": 34,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 4,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 7,
+          "transport_stations": 33,
+          "unchanged_total_cycles": 72
+        },
+        {
+          "bus": "rl_sm30",
+          "group": 5,
+          "bank_count": 1,
+          "remaining_single_cycle_stations": 0,
+          "transport_stations": 40,
+          "unchanged_total_cycles": 72
+        }
+      ]
+    }
+  ],
+  "gates": [
+    "actual async-reset technology mapping and full-bank synthesis area",
+    "all physical banks plus spatial hop stations placed jointly; no endpoint proximity assumed",
+    "actual fixed pin shapes and SS/FF >=15ps with60/25ps uncertainty",
+    "fullpacket end-to-end error protection and exact stage replacement",
+    "new clock tree load and shared PDN/control/result track capacity"
+  ],
+  "source_sha256": {
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_result_delay_bank_model.py": "7daad1fe9fc78ab068d41f52489c052a85fbf0126aad7ac40c6a3d9040e7acbd",
+    "/home/ubuntu/OpenTallas/results/uarch/hbm_relay_station_inventory_20261007/transport_balance_ledger.json": "8cad0120c40f747e3f7ecfda3e5b1d92bcf22b1cf1bb43d55e5d1d381bbf4b74"
+  }
+}

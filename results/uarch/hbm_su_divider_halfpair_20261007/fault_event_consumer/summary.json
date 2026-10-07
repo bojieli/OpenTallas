@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.hbm.su.aggregate_fault_event.v1",
+  "status": "PASS",
+  "production_rtl_changed": false,
+  "model_added_cycles": 0,
+  "scope": "Actual SU-side CP controller receives injected single-edge aggregate executor fault; arithmetic producer separately qualified. Does not simulate full executor memory/publication path.",
+  "shape": {
+    "OWN_IN": 1,
+    "OWN_OUT": 1,
+    "EXEC_IN": 0,
+    "EXEC_OUT": 1,
+    "OUT": 1
+  },
+  "injection_ages_after_owned": [
+    0,
+    32,
+    64
+  ],
+  "registered_fault_bound_edges": 2,
+  "observations": [
+    "fault sticky through completion and cleanup",
+    "no done after fault",
+    "new request permission suppressed within two edges",
+    "reset clears quarantine"
+  ],
+  "not_proved": [
+    "per-result aligned rsqrt fault metadata, which current interface does not implement",
+    "previously accepted memory writes rollback",
+    "physical timing or complete executor integration"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "fcd6c1b7a7d244e80d56857eae9b414e388ef873c0273f1c6ff93354320b0760",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "cd97f7cdca3c5d701949c91f829e9376bdc4f3474c788b24e67f7f1be9813ff9",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "2423b70ed5e126220b70857ff90390c7042fe82e697af1753c4668ecb5780a53",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_su_cp_side.sv": "986ca513cb5a69e622ccda605e9f6814271e817b68cde272f29be87908693b85",
+    "rtl/test/tb_hbm_su_fault_event.sv": "e7a6af937b47518f624fd49158db4220db594f0dc3c9ed5345f07215771dba95"
+  },
+  "results": {
+    "positive": {
+      "expected_gate_pass": true,
+      "exit_code": 0,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_fault_event",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/fault_event_gate/positive.out",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+        "rtl/hbm_accel/integrated_20261006/ot_hbm_su_cp_side.sv",
+        "rtl/test/tb_hbm_su_fault_event.sv"
+      ]
+    },
+    "bypass_negative": {
+      "expected_gate_pass": true,
+      "exit_code": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_fault_event",
+        "-DOT_NEG_SU_EVENT_BYPASS",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/fault_event_gate/bypass_negative.out",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+        "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+        "rtl/hbm_accel/integrated_20261006/ot_hbm_su_cp_side.sv",
+        "rtl/test/tb_hbm_su_fault_event.sv"
+      ]
+    }
+  }
+}

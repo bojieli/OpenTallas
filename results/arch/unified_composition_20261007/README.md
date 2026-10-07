@@ -29,6 +29,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
 | DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
 | DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
+| DS ROM 1M | + full-shape PQ partition (root contract v2) | — | — | **Partial-priced candidate**, line `pq_fullshape_partition`: +18 cycles a field phase, about 0.56% AR (MTP not priced). The per-token critical phases on the 1,792 mapping are not composed, and the geometry is provisional pending Codex's 221 / 1,728 layout. Area: roots ≈3.0 mm² a die (tier-channel rows), core 0.32 mm² (449 × 1,728 µm slot), return write-back blocks 0.40 mm². Gated on the root parity / pipelined-CAM RTL (Codex), stage-B timing (stage-C fallback +1 cycle a pass) and HALF serial-lane exactness for a ≤2-cycle beat shift. Source: 9a8c86255 (branch `claude/s81-pq-fullshape-design-v2-20261007` only; main 738ddfbc2 holds the earlier +15 / 0.47%). |
 | DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
@@ -61,7 +62,7 @@ DS ROM / HBM, per user, both sides candidates:
   - Qwen controller SHIFT state;
   - the Qwen VM banks and the forwarded-link control bits;
   - the S81 VM raw macro backend;
-  - the HBM SM serial path (protection work is not yet committed).
+  - the HBM SM serial path (protection gate committed at 65988656b and passed; selected=false, so adoption remains open).
 - **Stale publication claims and the actions taken:** `stale_claims`.
 
 The DSpark re-evaluation record is `qwen_dspark/dspark_ctrlshift_candidate.json`. It was produced by `tools/qwen_rom_dspark_verdict.py` with the same arguments as `relays_r21/dspark_verdict_relays.sh`, except `--ar-cycles 216857 --extra-per-step 198`. With the original arguments, the tool reproduces the committed record byte-identically, apart from its method text.

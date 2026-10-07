@@ -1,0 +1,8 @@
+{
+  "failed_receipt": "final_gate/verdict.json",
+  "failure": "Icarus treated an inline genvar used as a module port expression as a runtime wire and rejected generated array indexes.",
+  "change": "Capture the generate iteration in localparam integer STAGE=s and use STAGE!=0 for the constant load_encoded port.",
+  "failed_source": "final_gate/source/ot_hbm_collective_protected_flight.sv",
+  "functional_change_from_initial_pass": "Stages 1 through 13 now load the upstream SECDED codewords directly, only when every stage is normal. Stage 0 alone encodes accepted input and validity. No bad codeword advances during correction or fault.",
+  "test_refinement": "Correctable output validity injection now targets SECDED position 40 (zero-based bit 39), which encodes payload word 8 data bit 33, the actual W545 valid bit. The earlier test targeted a payload data bit in the same word."
+}

@@ -1,0 +1,141 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:134:26: Operator VAR 'PTH2' expects 27 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  134 |     localparam [PAW-1:0] PTH2    = 2 * PCOST - PHY_NUM;         
+      |                          ^~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/link/ot_link_crc32.sv:29:26: Replication of more that --replication-limit 8192 is suspect: 18016
+                                                     : ... note: In instance 'dsfd_coll_lane_e.u.u_ep.u_rx_crc_hi'
+   29 |             masks = {32*W{1'b0}};
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:63:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ic' generates 11 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   63 |     wire           idle_now = (ic == IDLE_P - 1);
+      |                                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:64:46: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   64 |     wire           need = !idle_now && (tcnt < G);
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:34: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'tcnt' generates 11 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:85:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                             : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   85 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:86:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   86 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:86:26: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                             : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+   86 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:112:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tcnt_a' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  112 |                 tcnt <= tcnt_a - G;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:112:22: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  112 |                 tcnt <= tcnt_a - G;
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:45: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:37: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 10 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:113:21: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  113 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                     ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:141:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'mc' generates 8 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  141 |     wire           due = (mc == MP - 1);
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:143:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rcnt' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  143 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:143:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  143 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:159:59: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'G' generates 32 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  159 |                             racc <= {{S{1'b0}}, bg}; rcnt <= G;
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:169:40: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  169 |                         rcnt <= rcnt_a - S;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:169:30: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                              : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  169 |                         rcnt <= rcnt_a - S;
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_pipeline.sv:165:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                               : ... note: In instance 'dsfd_coll_lane_e.u.u_gb'
+  165 |                     if (rcnt_a >= S) begin
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:151:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  151 |     wire            replaying = PIPE ? rep_r : (snd != nxt);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:155:28: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  155 |     assign in_ready = PIPE ? rdy_r : ((credits != 0) && (occ < RPS) && !replaying && pace_ok);
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:175:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  175 |     wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:176:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  176 |     wire            t_launch = PIPE ? b_v : launch;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:208:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  208 |     wire            rr_ok   = PIPE ? s2v : rr_ok0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:209:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  209 |     wire            rr_nak  = PIPE ? s2nak : rr_nak0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:210:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  210 |     wire [SEQW-1:0] rr_ack  = PIPE ? s2ack : rr_ack0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:211:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  211 |     wire [CW-1:0]   rr_fr   = PIPE ? s2fr : rr_fr0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:212:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  212 |     wire [SEQW-1:0] d_ack   = PIPE ? s2dack : (rr_ack - una);
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:214:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  214 |     wire            ack_bad = rr_ok && (PIPE ? s2bad : (d_ack > occ));
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:239:79: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                    : ... note: In instance 'dsfd_coll_lane_e.u.u_ep'
+  239 |         .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));
+      |                                                                               ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.376 MB sources in 12 modules, into 0.210 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 1.554 s (elab=1.521, cvt=0.024, bld=0.000); cpu 1.554 s on 1 threads; allocated 37.152 MB

@@ -1004,6 +1004,11 @@ def port_widths(m, k):
 
 def pin_rects(mst, k, wmap):
     out = []
+    for port, spec in mst.ports.items():
+        if spec[0] == 'rects':
+            if k != 1 or wmap.get(port, len(spec[1])) != len(spec[1]):
+                raise ValueError(f'exact physical pin rectangles require full width k=1: {mst.name}/{port}')
+            out.extend(spec[1])
     xy = {p: s for p, s in mst.ports.items() if s[0] == 'xy'}
     for port, spec in xy.items():
         n = wmap.get(port, len(spec[1]))
@@ -1014,7 +1019,7 @@ def pin_rects(mst, k, wmap):
             _, layer, cx, cy, w_, h_ = spec
             out.append((f'{port}[0]', layer, (cx - w_ / 2, cy - h_ / 2, cx + w_ / 2, cy + h_ / 2)))
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
-    rest.ports = {p: s for p, s in mst.ports.items() if s[0] not in ('xy', 'area')}
+    rest.ports = {p: s for p, s in mst.ports.items() if s[0] not in ('xy', 'area', 'rects')}
     rest.order = [p for p in mst.order if p in rest.ports]
     rects = Q.pin_rects(rest, k, wmap)
     if k > 1 and GEOMETRY_FIX:

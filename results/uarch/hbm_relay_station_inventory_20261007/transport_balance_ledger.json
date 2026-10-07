@@ -1,0 +1,6330 @@
+{
+  "schema": "opentallas.hbm_relay_transport_balance_inventory.v1",
+  "selected": false,
+  "source_sha256": {
+    "results/uarch/hbm_result_relay_stage_20261007/result_paths.json": "ae054a2bdcd2c88453a73a96534f01f4af21de101d4050edf5e329486c8c3a03"
+  },
+  "scope": "Categories from source-pinned independent path model, not a completed physical placement",
+  "transport_station_count_including_endpoints": 7348,
+  "latency_only_station_count": 6476,
+  "total_station_count": 13824,
+  "transport_assumed_slot_area_um2": 2939200,
+  "latency_only_assumed_slot_area_um2": 2590400,
+  "rows": [
+    {
+      "bus": "rl_sm0",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 21,
+      "modeled_latency_only_station_count": 51,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 19,
+      "modeled_latency_only_station_count": 53,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          591.328,
+          3515.3999999999996
+        ],
+        "previous_um": [
+          453.088,
+          3482.723493
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            454.896,
+            3546.72,
+            536.088,
+            3628.776
+          ],
+          [
+            527.904,
+            2622.24,
+            542.568,
+            2764.776
+          ],
+          [
+            797.472,
+            2820.96,
+            855.768,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 17,
+      "modeled_latency_only_station_count": 55,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 2,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 2,
+        "target_um": [
+          1945.1979718309858,
+          1573.4
+        ],
+        "previous_um": [
+          2170.478986,
+          1551.24
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            1249.344,
+            1207.44,
+            2266.344,
+            1466.616
+          ],
+          [
+            625.104,
+            1596.24,
+            3700.9440000000004,
+            2728.08
+          ],
+          [
+            2267.136,
+            1207.44,
+            3573.048,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 19,
+      "modeled_latency_only_station_count": 53,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          558.9280000000002,
+          3564.0
+        ],
+        "previous_um": [
+          497.408,
+          3519.175324
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            454.896,
+            3546.72,
+            536.088,
+            3628.776
+          ],
+          [
+            527.904,
+            2622.24,
+            542.568,
+            2764.776
+          ],
+          [
+            797.472,
+            2820.96,
+            855.768,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 19,
+      "modeled_latency_only_station_count": 53,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          1892.3198873239435,
+          1541.0
+        ],
+        "previous_um": [
+          2207.609915,
+          1541.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            1249.344,
+            1207.44,
+            2266.344,
+            1466.616
+          ],
+          [
+            625.104,
+            1596.24,
+            3700.9440000000004,
+            2728.08
+          ],
+          [
+            2267.136,
+            1207.44,
+            3573.048,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 22,
+      "modeled_latency_only_station_count": 50,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 2,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 2,
+        "target_um": [
+          5430.616563380282,
+          3213.56
+        ],
+        "previous_um": [
+          5695.028282,
+          3137.16
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5361.5199999999995,
+          3204.302422535211
+        ],
+        "previous_um": [
+          5427.0,
+          3193.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 39,
+      "modeled_latency_only_station_count": 33,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5363.679999999999,
+          3224.7660845070413
+        ],
+        "previous_um": [
+          5410.8,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5302.6040563380275,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          5378.4,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5413.653070422534,
+          3211.08
+        ],
+        "previous_um": [
+          5475.599999999999,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5380.202929577465,
+          3213.16
+        ],
+        "previous_um": [
+          5443.2,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 40,
+      "modeled_latency_only_station_count": 32,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 57,
+      "modeled_latency_only_station_count": 15,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 54,
+      "modeled_latency_only_station_count": 18,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 41,
+      "modeled_latency_only_station_count": 31,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 28,
+      "modeled_latency_only_station_count": 44,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 6,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 6,
+        "target_um": [
+          5596.205183098592,
+          4407.2
+        ],
+        "previous_um": [
+          5583.374986,
+          4540.16
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5530.032,
+            4419.36,
+            5585.736,
+            4484.1359999999995
+          ],
+          [
+            5596.128,
+            4503.6,
+            5615.112,
+            4622.376
+          ],
+          [
+            5414.256,
+            4395.6,
+            5481.192,
+            4456.0560000000005
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 60,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 60,
+        "target_um": [
+          7524.953464788733,
+          3230.536
+        ],
+        "previous_um": [
+          7245.012507,
+          3363.496
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7338.384,
+            2849.04,
+            7476.6,
+            2864.136
+          ],
+          [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 30,
+      "modeled_latency_only_station_count": 42,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 64,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 64,
+        "target_um": [
+          7763.669746478874,
+          3224.48
+        ],
+        "previous_um": [
+          7688.540282,
+          2964.616
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          5517.872,
+          4447.424225352113
+        ],
+        "previous_um": [
+          5238.995831,
+          4535.76
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5530.032,
+            4419.36,
+            5585.736,
+            4484.1359999999995
+          ],
+          [
+            5414.256,
+            4395.6,
+            5481.192,
+            4456.0560000000005
+          ],
+          [
+            5596.128,
+            4503.6,
+            5615.112,
+            4622.376
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5482.607436619718,
+          4567.56
+        ],
+        "previous_um": [
+          5475.599999999999,
+          4616.84
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5596.128,
+            4503.6,
+            5615.112,
+            4622.376
+          ],
+          [
+            5414.256,
+            4395.6,
+            5481.192,
+            4456.0560000000005
+          ],
+          [
+            5530.032,
+            4419.36,
+            5585.736,
+            4484.1359999999995
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 6,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 6,
+        "target_um": [
+          5581.63504225352,
+          4407.199999999999
+        ],
+        "previous_um": [
+          5257.702535,
+          4584.48
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5530.032,
+            4419.36,
+            5585.736,
+            4484.1359999999995
+          ],
+          [
+            5414.256,
+            4395.6,
+            5481.192,
+            4456.0560000000005
+          ],
+          [
+            5596.128,
+            4503.6,
+            5615.112,
+            4622.376
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          3074.464000000001,
+          3078.0
+        ],
+        "previous_um": [
+          3104.102197,
+          2942.056
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            2941.92,
+            3056.4,
+            3051.6240000000003,
+            3166.536
+          ],
+          [
+            3029.184,
+            2790.72,
+            3043.8480000000004,
+            2933.256
+          ],
+          [
+            3298.752,
+            2820.96,
+            3357.048,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 5,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 5,
+        "target_um": [
+          5215.137464788732,
+          1541.0
+        ],
+        "previous_um": [
+          5535.797972,
+          1496.68
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4630.176,
+            1207.44,
+            5703.144,
+            1466.616
+          ],
+          [
+            3960.576,
+            1596.24,
+            7036.416,
+            2728.08
+          ],
+          [
+            5703.264,
+            1207.44,
+            6489.24,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          5249.875943661972,
+          1573.4
+        ],
+        "previous_um": [
+          5502.957296,
+          1573.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4630.176,
+            1207.44,
+            5703.144,
+            1466.616
+          ],
+          [
+            3960.576,
+            1596.24,
+            7036.416,
+            2728.08
+          ],
+          [
+            5703.264,
+            1207.44,
+            6489.24,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 30,
+      "modeled_latency_only_station_count": 42,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          5253.403042253522,
+          1573.4
+        ],
+        "previous_um": [
+          5573.092282,
+          1506.92
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4630.176,
+            1207.44,
+            5703.144,
+            1466.616
+          ],
+          [
+            3960.576,
+            1596.24,
+            7036.416,
+            2728.08
+          ],
+          [
+            5703.264,
+            1207.44,
+            6489.24,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 31,
+      "modeled_latency_only_station_count": 41,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 30,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 30,
+        "target_um": [
+          6394.983661971832,
+          3222.3199999999997
+        ],
+        "previous_um": [
+          6698.726873,
+          3045.04
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          [
+            6215.616,
+            2797.2,
+            6682.584,
+            2918.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 30,
+      "modeled_latency_only_station_count": 42,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 29,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 29,
+        "target_um": [
+          6440.832788732395,
+          3222.3199999999997
+        ],
+        "previous_um": [
+          6743.546141,
+          2956.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          [
+            6215.616,
+            2797.2,
+            6682.584,
+            2918.136
+          ],
+          [
+            6743.088,
+            2820.96,
+            6801.384,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 10,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 10,
+        "target_um": [
+          7936.866478873239,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          8261.739831,
+          2982.04
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ],
+          [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 43,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 43,
+        "target_um": [
+          5367.684957746478,
+          3145.76
+        ],
+        "previous_um": [
+          5694.608563,
+          2946.32
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          [
+            5359.824,
+            2849.04,
+            5498.04,
+            2864.136
+          ],
+          [
+            5664.384,
+            3157.92,
+            5730.456,
+            3218.376
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          8964.445295774647,
+          1573.4
+        ],
+        "previous_um": [
+          8910.0,
+          1573.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            8615.808,
+            1207.44,
+            9751.872000000001,
+            1466.616
+          ],
+          [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          [
+            7552.656,
+            1207.44,
+            8614.632,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 40,
+      "modeled_latency_only_station_count": 32,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 41,
+      "modeled_latency_only_station_count": 31,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 5,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 5,
+        "target_um": [
+          9058.80056338028,
+          1573.4
+        ],
+        "previous_um": [
+          8892.912451,
+          1484.76
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            8615.808,
+            1207.44,
+            9751.872000000001,
+            1466.616
+          ],
+          [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          [
+            7552.656,
+            1207.44,
+            8614.632,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 57,
+      "modeled_latency_only_station_count": 15,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 29,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 29,
+        "target_um": [
+          5758.8989295774645,
+          4392.639999999999
+        ],
+        "previous_um": [
+          5357.05138,
+          4392.64
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5530.032,
+            4419.36,
+            5585.736,
+            4484.1359999999995
+          ],
+          [
+            5596.128,
+            4503.6,
+            5615.112,
+            4622.376
+          ],
+          [
+            5414.256,
+            4395.6,
+            5481.192,
+            4456.0560000000005
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 56,
+      "modeled_latency_only_station_count": 16,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 49,
+      "modeled_latency_only_station_count": 23,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 57,
+      "modeled_latency_only_station_count": 15,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm6",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 55,
+      "modeled_latency_only_station_count": 17,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 42,
+      "modeled_latency_only_station_count": 30,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          21978.488,
+          3110.3999999999996
+        ],
+        "previous_um": [
+          21831.623099,
+          3066.08
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22001.328,
+            3093.12,
+            22082.52,
+            3175.176
+          ],
+          [
+            22058.784,
+            3019.68,
+            22124.856,
+            3080.136
+          ],
+          [
+            22074.336,
+            2790.72,
+            22089.0,
+            2933.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 41,
+      "modeled_latency_only_station_count": 31,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          21373.955605633804,
+          1573.4
+        ],
+        "previous_um": [
+          21319.2,
+          1573.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            19670.688,
+            1596.24,
+            22746.528,
+            2728.08
+          ],
+          [
+            20293.632,
+            1207.44,
+            21310.632,
+            1466.616
+          ],
+          [
+            21311.424,
+            1207.44,
+            22612.392,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          21446.55369014084,
+          1573.4
+        ],
+        "previous_um": [
+          21169.555268,
+          1506.92
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            21311.424,
+            1207.44,
+            22612.392,
+            1466.616
+          ],
+          [
+            19670.688,
+            1596.24,
+            22746.528,
+            2728.08
+          ],
+          [
+            20293.632,
+            1207.44,
+            21310.632,
+            1466.616
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 40,
+      "modeled_latency_only_station_count": 32,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 45,
+      "modeled_latency_only_station_count": 27,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          21946.088,
+          3126.5999999999995
+        ],
+        "previous_um": [
+          21788.088,
+          3073.742423
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22001.328,
+            3093.12,
+            22082.52,
+            3175.176
+          ],
+          [
+            22058.784,
+            3019.68,
+            22124.856,
+            3080.136
+          ],
+          [
+            22074.336,
+            2790.72,
+            22089.0,
+            2933.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 15,
+      "modeled_latency_only_station_count": 57,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24432.040112676055,
+          3219.8399999999997
+        ],
+        "previous_um": [
+          24462.0,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24404.976,
+            2849.04,
+            24543.192,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24568.38828169014,
+          3211.08
+        ],
+        "previous_um": [
+          24591.6,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24575.616,
+            2827.44,
+            24590.280000000002,
+            2969.976
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 20,
+      "modeled_latency_only_station_count": 52,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24632.73194366197,
+          3211.08
+        ],
+        "previous_um": [
+          24656.399999999998,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24613.632,
+            2814.48,
+            24632.616,
+            2933.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 22,
+      "modeled_latency_only_station_count": 50,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24535.57363380282,
+          3211.08
+        ],
+        "previous_um": [
+          24559.2,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24575.616,
+            2827.44,
+            24590.280000000002,
+            2969.976
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 2,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 2,
+        "target_um": [
+          24530.1021971831,
+          3193.4
+        ],
+        "previous_um": [
+          24568.951099,
+          3193.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24575.616,
+            2827.44,
+            24590.280000000002,
+            2969.976
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 16,
+      "modeled_latency_only_station_count": 56,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24597.39785915493,
+          3213.16
+        ],
+        "previous_um": [
+          24624.0,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24613.632,
+            3006.72,
+            24632.616,
+            3125.4959999999996
+          ],
+          [
+            24459.84,
+            3019.68,
+            24526.776,
+            3080.136
+          ],
+          [
+            24575.616,
+            2827.44,
+            24590.280000000002,
+            2969.976
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          29482.328,
+          3564.0
+        ],
+        "previous_um": [
+          29546.328,
+          3464.562704
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          [
+            27762.048,
+            2797.2,
+            28229.016,
+            2918.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 42,
+      "modeled_latency_only_station_count": 30,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 16,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 16,
+        "target_um": [
+          23164.973070422533,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          22866.442254,
+          3292.28
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23636.016,
+            2849.04,
+            23774.232,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 45,
+      "modeled_latency_only_station_count": 27,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 36,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 36,
+        "target_um": [
+          25577.469408450706,
+          3178.6800000000003
+        ],
+        "previous_um": [
+          25234.218592,
+          3023.56
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            25260.768,
+            2926.8,
+            25727.736,
+            3047.7360000000003
+          ],
+          [
+            25260.768,
+            2797.2,
+            25727.736,
+            2918.136
+          ],
+          [
+            25788.24,
+            2820.96,
+            25846.536,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 70,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 70,
+        "target_um": [
+          29433.048,
+          3426.544676056341
+        ],
+        "previous_um": [
+          29428.768,
+          3087.289352
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          [
+            27762.048,
+            2797.2,
+            28229.016,
+            2918.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 16,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 16,
+        "target_um": [
+          23245.27729577465,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          22858.977465,
+          3336.6
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23636.016,
+            2849.04,
+            23774.232,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 36,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 36,
+        "target_um": [
+          25593.718985915493,
+          3180.76
+        ],
+        "previous_um": [
+          25206.209014,
+          3003.48
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            25260.768,
+            2926.8,
+            25727.736,
+            3047.7360000000003
+          ],
+          [
+            25260.768,
+            2797.2,
+            25727.736,
+            2918.136
+          ],
+          [
+            25788.24,
+            2820.96,
+            25846.536,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 45,
+      "modeled_latency_only_station_count": 27,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 70,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 70,
+        "target_um": [
+          29435.528,
+          3521.029408450708
+        ],
+        "previous_um": [
+          29546.328,
+          3249.698817
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          [
+            27762.048,
+            2797.2,
+            28229.016,
+            2918.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 52,
+      "modeled_latency_only_station_count": 20,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 52,
+      "modeled_latency_only_station_count": 20,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 63,
+      "modeled_latency_only_station_count": 9,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 31,
+      "modeled_latency_only_station_count": 41,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24359.804845070423,
+          1573.4
+        ],
+        "previous_um": [
+          24462.0,
+          1573.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23675.328,
+            1207.44,
+            25057.32,
+            1466.616
+          ],
+          [
+            23005.728,
+            1596.24,
+            26081.568,
+            2728.08
+          ],
+          [
+            20293.632,
+            21.6,
+            28793.688000000002,
+            1198.8
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 31,
+      "modeled_latency_only_station_count": 41,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          24314.244957746476,
+          1573.4
+        ],
+        "previous_um": [
+          24416.509972,
+          1484.76
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23675.328,
+            1207.44,
+            25057.32,
+            1466.616
+          ],
+          [
+            23005.728,
+            1596.24,
+            26081.568,
+            2728.08
+          ],
+          [
+            20293.632,
+            21.6,
+            28793.688000000002,
+            1198.8
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 31,
+      "modeled_latency_only_station_count": 41,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 34,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 34,
+        "target_um": [
+          22993.568,
+          3427.958197183098
+        ],
+        "previous_um": [
+          22838.448,
+          3102.039662
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22535.712,
+            2849.04,
+            22673.928,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 33,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 33,
+        "target_um": [
+          22993.568,
+          3360.603042253519
+        ],
+        "previous_um": [
+          23060.048,
+          3014.349859
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22535.712,
+            2849.04,
+            22673.928,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 34,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 34,
+        "target_um": [
+          22993.568,
+          3459.5001690140843
+        ],
+        "previous_um": [
+          22816.288,
+          3111.836282
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22535.712,
+            2849.04,
+            22673.928,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 34,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 34,
+        "target_um": [
+          22993.568,
+          3439.2528450704217
+        ],
+        "previous_um": [
+          23170.848,
+          3114.077408
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            2849.04,
+            22930.104,
+            2864.136
+          ],
+          [
+            23117.184,
+            2820.96,
+            23515.464,
+            2892.216
+          ],
+          [
+            22535.712,
+            2849.04,
+            22673.928,
+            2864.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          27713.94242253521,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          27799.199999999997,
+          3225.7999999999997
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27340.416,
+            2820.96,
+            27738.696,
+            2892.216
+          ],
+          [
+            27762.048,
+            2797.2,
+            28229.016,
+            2918.136
+          ],
+          [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 39,
+      "modeled_latency_only_station_count": 33,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          24465.512,
+          5929.2
+        ],
+        "previous_um": [
+          24536.757746,
+          6090.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24519.888,
+            5924.88,
+            24646.007999999998,
+            5974.536
+          ],
+          [
+            24488.352,
+            5788.8,
+            24598.056,
+            5898.936000000001
+          ],
+          [
+            24575.184,
+            6006.96,
+            24630.888000000003,
+            6071.736
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 20,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 20,
+        "target_um": [
+          26314.168450704223,
+          3387.28
+        ],
+        "previous_um": [
+          26306.448,
+          3091.461972
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            26126.928,
+            2849.04,
+            26265.144,
+            2864.136
+          ],
+          [
+            26383.536,
+            2849.04,
+            26521.752,
+            2864.136
+          ],
+          [
+            26684.208,
+            2820.96,
+            26742.503999999997,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 20,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 20,
+        "target_um": [
+          26328.608,
+          3391.229971830987
+        ],
+        "previous_um": [
+          26306.448,
+          3034.598873
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            26383.536,
+            2849.04,
+            26521.752,
+            2864.136
+          ],
+          [
+            26126.928,
+            2849.04,
+            26265.144,
+            2864.136
+          ],
+          [
+            26684.208,
+            2820.96,
+            26742.503999999997,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 42,
+      "modeled_latency_only_station_count": 30,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 70,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 70,
+        "target_um": [
+          24383.832,
+          5922.445746478874
+        ],
+        "previous_um": [
+          24687.003493,
+          5821.2
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24519.888,
+            5924.88,
+            24646.007999999998,
+            5974.536
+          ],
+          [
+            24488.352,
+            5788.8,
+            24598.056,
+            5898.936000000001
+          ],
+          [
+            24575.184,
+            6006.96,
+            24630.888000000003,
+            6071.736
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          27753.14050704225,
+          3225.7999999999997
+        ],
+        "previous_um": [
+          28095.000338,
+          3235.32
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27340.416,
+            2820.96,
+            27738.696,
+            2892.216
+          ],
+          [
+            27762.048,
+            2797.2,
+            28229.016,
+            2918.136
+          ],
+          [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          27729.08642253521,
+          1573.4
+        ],
+        "previous_um": [
+          27799.199999999997,
+          1573.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27162.0,
+            1207.44,
+            27925.992,
+            1466.616
+          ],
+          [
+            27926.208,
+            1207.44,
+            28396.199999999997,
+            1466.616
+          ],
+          [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          27645.552450704225,
+          1573.4
+        ],
+        "previous_um": [
+          27981.544338,
+          1506.92
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27162.0,
+            1207.44,
+            27925.992,
+            1466.616
+          ],
+          [
+            27926.208,
+            1207.44,
+            28396.199999999997,
+            1466.616
+          ],
+          [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 48,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 48,
+        "target_um": [
+          26328.608,
+          3361.979154929575
+        ],
+        "previous_um": [
+          26084.848,
+          3047.006423
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            26383.536,
+            2849.04,
+            26521.752,
+            2864.136
+          ],
+          [
+            26126.928,
+            2849.04,
+            26265.144,
+            2864.136
+          ],
+          [
+            26684.208,
+            2820.96,
+            26742.503999999997,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 47,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 47,
+        "target_um": [
+          26328.608,
+          3301.262197183097
+        ],
+        "previous_um": [
+          26461.568,
+          3051.856789
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            26383.536,
+            2849.04,
+            26521.752,
+            2864.136
+          ],
+          [
+            26126.928,
+            2849.04,
+            26265.144,
+            2864.136
+          ],
+          [
+            26684.208,
+            2820.96,
+            26742.503999999997,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 27,
+      "modeled_latency_only_station_count": 45,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 48,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 48,
+        "target_um": [
+          26328.608,
+          3386.627605633802
+        ],
+        "previous_um": [
+          26151.328,
+          3048.582197
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            26383.536,
+            2849.04,
+            26521.752,
+            2864.136
+          ],
+          [
+            26126.928,
+            2849.04,
+            26265.144,
+            2864.136
+          ],
+          [
+            26684.208,
+            2820.96,
+            26742.503999999997,
+            2892.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 25,
+      "modeled_latency_only_station_count": 47,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 58,
+      "modeled_latency_only_station_count": 14,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 50,
+      "modeled_latency_only_station_count": 22,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 45,
+      "modeled_latency_only_station_count": 27,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 25,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 25,
+        "target_um": [
+          22993.568,
+          5832.711436619718
+        ],
+        "previous_um": [
+          22993.568,
+          5650.621859
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22926.24,
+            5741.28,
+            22975.032000000003,
+            5868.696
+          ],
+          [
+            22755.168,
+            5741.28,
+            22803.960000000003,
+            5868.696
+          ],
+          [
+            22838.544,
+            6048.0,
+            22954.296000000002,
+            6067.416
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm14",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 58,
+      "modeled_latency_only_station_count": 14,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 19,
+      "modeled_latency_only_station_count": 53,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 17,
+      "modeled_latency_only_station_count": 55,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          558.928,
+          20736.0
+        ],
+        "previous_um": [
+          427.032676,
+          20736.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            454.896,
+            20679.84,
+            536.088,
+            20761.896
+          ],
+          [
+            527.904,
+            21282.48,
+            542.568,
+            21425.016
+          ],
+          [
+            795.312,
+            21155.04,
+            853.6080000000001,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 21,
+      "modeled_latency_only_station_count": 51,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 5,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 5,
+        "target_um": [
+          1876.3250704225372,
+          22476.04
+        ],
+        "previous_um": [
+          2165.428056,
+          22476.04
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            1249.344,
+            22584.96,
+            2266.344,
+            22844.136
+          ],
+          [
+            625.104,
+            21321.36,
+            3700.9440000000004,
+            22453.2
+          ],
+          [
+            2267.136,
+            22584.96,
+            3573.048,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 16,
+      "modeled_latency_only_station_count": 56,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          591.3280000000003,
+          20752.2
+        ],
+        "previous_um": [
+          475.248,
+          20781.161014
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            454.896,
+            20679.84,
+            536.088,
+            20761.896
+          ],
+          [
+            527.904,
+            21282.48,
+            542.568,
+            21425.016
+          ],
+          [
+            795.312,
+            21155.04,
+            853.6080000000001,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 20,
+      "modeled_latency_only_station_count": 52,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          591.3280000000002,
+          20784.6
+        ],
+        "previous_um": [
+          479.984,
+          20809.011493
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            454.896,
+            20679.84,
+            536.088,
+            20761.896
+          ],
+          [
+            527.904,
+            21282.48,
+            542.568,
+            21425.016
+          ],
+          [
+            795.312,
+            21155.04,
+            853.6080000000001,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 20,
+      "modeled_latency_only_station_count": 52,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          1960.8224225352105,
+          22465.36
+        ],
+        "previous_um": [
+          2272.026817,
+          22465.36
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            1249.344,
+            22584.96,
+            2266.344,
+            22844.136
+          ],
+          [
+            625.104,
+            21321.36,
+            3700.9440000000004,
+            22453.2
+          ],
+          [
+            2267.136,
+            22584.96,
+            3573.048,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5506.991661971832,
+          21097.24
+        ],
+        "previous_um": [
+          5572.8,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ],
+          [
+            5600.448,
+            21090.24,
+            5668.2480000000005,
+            21293.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5303.592788732394,
+          21085.0
+        ],
+        "previous_um": [
+          5378.4,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5361.5199999999995,
+          21088.26997183099
+        ],
+        "previous_um": [
+          5410.8,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ],
+          [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5414.185464788733,
+          21099.72
+        ],
+        "previous_um": [
+          5475.599999999999,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          5380.735323943662,
+          21097.64
+        ],
+        "previous_um": [
+          5443.2,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ],
+          [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 37,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 37,
+        "target_um": [
+          5839.729802816899,
+          21074.32
+        ],
+        "previous_um": [
+          5495.859268,
+          21295.92
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5748.624,
+            21155.04,
+            6146.9039999999995,
+            21226.296000000002
+          ],
+          [
+            5600.448,
+            21090.24,
+            5668.2480000000005,
+            21293.256
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 38,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 38,
+        "target_um": [
+          5876.84878873239,
+          21074.32
+        ],
+        "previous_um": [
+          5506.454873,
+          21074.32
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5748.624,
+            21155.04,
+            6146.9039999999995,
+            21226.296000000002
+          ],
+          [
+            5600.448,
+            21090.24,
+            5668.2480000000005,
+            21293.256
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 38,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 38,
+        "target_um": [
+          5887.704563380277,
+          21074.32
+        ],
+        "previous_um": [
+          5519.112338,
+          21207.28
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5748.624,
+            21155.04,
+            6146.9039999999995,
+            21226.296000000002
+          ],
+          [
+            5600.448,
+            21090.24,
+            5668.2480000000005,
+            21293.256
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 24,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 24,
+        "target_um": [
+          4525.405521126757,
+          21132.120000000003
+        ],
+        "previous_um": [
+          4413.596958,
+          21074.8
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4590.432,
+            21183.12,
+            4728.648,
+            21198.216
+          ],
+          [
+            4069.872,
+            21155.04,
+            4468.152,
+            21226.296000000002
+          ],
+          [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 62,
+      "modeled_latency_only_station_count": 10,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 50,
+      "modeled_latency_only_station_count": 22,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 67,
+      "modeled_latency_only_station_count": 5,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 58,
+      "modeled_latency_only_station_count": 14,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 72,
+      "modeled_latency_only_station_count": 0,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 69,
+      "modeled_latency_only_station_count": 3,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 30,
+      "modeled_latency_only_station_count": 42,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 28,
+      "modeled_latency_only_station_count": 44,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 2,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 2,
+        "target_um": [
+          5238.017577464789,
+          22476.04
+        ],
+        "previous_um": [
+          5529.808789,
+          22542.52
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4630.176,
+            22584.96,
+            5703.144,
+            22844.136
+          ],
+          [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          [
+            5703.264,
+            22584.96,
+            6489.24,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 28,
+      "modeled_latency_only_station_count": 44,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 46,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 46,
+        "target_um": [
+          3734.576,
+          20930.085183098592
+        ],
+        "previous_um": [
+          3623.776,
+          21267.10907
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            3746.736,
+            21183.12,
+            3884.9519999999998,
+            21198.216
+          ],
+          [
+            3490.56,
+            21183.12,
+            3628.776,
+            21198.216
+          ],
+          [
+            3296.592,
+            21155.04,
+            3354.888,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 30,
+      "modeled_latency_only_station_count": 42,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          5229.791436619721,
+          22476.04
+        ],
+        "previous_um": [
+          5565.860958,
+          22520.36
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            4630.176,
+            22584.96,
+            5703.144,
+            22844.136
+          ],
+          [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          [
+            5703.264,
+            22584.96,
+            6489.24,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 31,
+      "modeled_latency_only_station_count": 41,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 47,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 47,
+        "target_um": [
+          3734.576,
+          20885.132845070424
+        ],
+        "previous_um": [
+          3845.376,
+          21222.57138
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            3746.736,
+            21183.12,
+            3884.9519999999998,
+            21198.216
+          ],
+          [
+            3490.56,
+            21183.12,
+            3628.776,
+            21198.216
+          ],
+          [
+            3296.592,
+            21155.04,
+            3354.888,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 28,
+      "modeled_latency_only_station_count": 44,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 47,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 47,
+        "target_um": [
+          3713.1040000000003,
+          20926.418366197184
+        ],
+        "previous_um": [
+          3513.664,
+          21262.657465
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            3746.736,
+            21183.12,
+            3884.9519999999998,
+            21198.216
+          ],
+          [
+            3490.56,
+            21183.12,
+            3628.776,
+            21198.216
+          ],
+          [
+            3296.592,
+            21155.04,
+            3354.888,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 45,
+      "modeled_latency_only_station_count": 27,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 20,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 20,
+        "target_um": [
+          6884.9673239436615,
+          21078.08
+        ],
+        "previous_um": [
+          7187.228958,
+          21055.92
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6740.928,
+            21155.04,
+            6799.224,
+            21226.296000000002
+          ],
+          [
+            7081.776,
+            21183.12,
+            7219.992,
+            21198.216
+          ],
+          [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 41,
+      "modeled_latency_only_station_count": 31,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 20,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 20,
+        "target_um": [
+          6831.003380281689,
+          21078.08
+        ],
+        "previous_um": [
+          7175.671211,
+          20945.12
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6740.928,
+            21155.04,
+            6799.224,
+            21226.296000000002
+          ],
+          [
+            7081.776,
+            21183.12,
+            7219.992,
+            21198.216
+          ],
+          [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 43,
+      "modeled_latency_only_station_count": 29,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 34,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 34,
+        "target_um": [
+          5440.791774647886,
+          21132.120000000003
+        ],
+        "previous_um": [
+          5762.884958,
+          21287.24
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 43,
+      "modeled_latency_only_station_count": 29,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 23,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 23,
+        "target_um": [
+          6443.576788732392,
+          21078.08
+        ],
+        "previous_um": [
+          6743.509972,
+          21277.52
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          [
+            6740.928,
+            21155.04,
+            6799.224,
+            21226.296000000002
+          ],
+          [
+            5748.624,
+            21155.04,
+            6146.9039999999995,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 49,
+      "modeled_latency_only_station_count": 23,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 34,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 34,
+        "target_um": [
+          5434.229521126761,
+          21132.120000000003
+        ],
+        "previous_um": [
+          5714.014535,
+          21176.44
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            5359.824,
+            21183.12,
+            5498.04,
+            21198.216
+          ],
+          [
+            5414.256,
+            21245.76,
+            5481.192,
+            21306.215999999997
+          ],
+          [
+            5514.912,
+            21245.76,
+            5580.984,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 20,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 20,
+        "target_um": [
+          6796.787042253519,
+          21078.08
+        ],
+        "previous_um": [
+          7163.49769,
+          20812.16
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            6740.928,
+            21155.04,
+            6799.224,
+            21226.296000000002
+          ],
+          [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          [
+            7081.776,
+            21183.12,
+            7219.992,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 56,
+      "modeled_latency_only_station_count": 16,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 50,
+      "modeled_latency_only_station_count": 22,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          8448.962366197184,
+          22465.36
+        ],
+        "previous_um": [
+          8818.121577,
+          22531.84
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7552.656,
+            22584.96,
+            8614.632,
+            22844.136
+          ],
+          [
+            7295.616,
+            21321.36,
+            10371.456,
+            22453.2
+          ],
+          [
+            8615.808,
+            22584.96,
+            9751.872000000001,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 49,
+      "modeled_latency_only_station_count": 23,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 55,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 55,
+        "target_um": [
+          6966.969014084509,
+          18527.12
+        ],
+        "previous_um": [
+          7181.536,
+          18617.057577
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7078.32,
+            18180.72,
+            7127.112,
+            18308.136000000002
+          ],
+          [
+            7084.368,
+            19109.52,
+            7150.4400000000005,
+            19169.976
+          ],
+          [
+            7538.832,
+            17982.0,
+            7654.584000000001,
+            18001.416
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 53,
+      "modeled_latency_only_station_count": 19,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 52,
+      "modeled_latency_only_station_count": 20,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 53,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 53,
+        "target_um": [
+          7048.576000000001,
+          18706.31594366197
+        ],
+        "previous_um": [
+          7203.696,
+          19076.515718
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            7084.368,
+            19109.52,
+            7150.4400000000005,
+            19169.976
+          ],
+          [
+            7078.32,
+            18180.72,
+            7127.112,
+            18308.136000000002
+          ],
+          [
+            7295.616,
+            19252.08,
+            7762.584,
+            19373.016000000003
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 55,
+      "modeled_latency_only_station_count": 17,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 13,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 13,
+        "target_um": [
+          3158.1398309859146,
+          19683.28
+        ],
+        "previous_um": [
+          2820.43369,
+          19860.56
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            2941.92,
+            19716.48,
+            3051.6240000000003,
+            19826.615999999998
+          ],
+          [
+            625.104,
+            18539.28,
+            3700.9440000000004,
+            19671.12
+          ],
+          [
+            3029.184,
+            21114.0,
+            3043.8480000000004,
+            21256.536
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 54,
+      "modeled_latency_only_station_count": 18,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 54,
+      "modeled_latency_only_station_count": 18,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 54,
+      "modeled_latency_only_station_count": 18,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 57,
+      "modeled_latency_only_station_count": 15,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 15,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 15,
+        "target_um": [
+          3167.7814084507054,
+          19683.28
+        ],
+        "previous_um": [
+          2850.838648,
+          19816.24
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            2941.92,
+            19716.48,
+            3051.6240000000003,
+            19826.615999999998
+          ],
+          [
+            625.104,
+            18539.28,
+            3700.9440000000004,
+            19671.12
+          ],
+          [
+            3029.184,
+            21114.0,
+            3043.8480000000004,
+            21256.536
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 42,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 42,
+        "target_um": [
+          22758.688,
+          20883.55594366197
+        ],
+        "previous_um": [
+          22514.928,
+          21204.717183
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ],
+          [
+            22535.712,
+            21183.12,
+            22673.928,
+            21198.216
+          ],
+          [
+            22341.744,
+            21155.04,
+            22400.039999999997,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 39,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 39,
+        "target_um": [
+          22758.688,
+          21063.033464788732
+        ],
+        "previous_um": [
+          22847.328,
+          21382.350761
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ],
+          [
+            22535.712,
+            21183.12,
+            22673.928,
+            21198.216
+          ],
+          [
+            22341.744,
+            21155.04,
+            22400.039999999997,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          21570.257915492955,
+          22508.440000000002
+        ],
+        "previous_um": [
+          21229.423437,
+          22552.76
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            21311.424,
+            22584.96,
+            22612.392,
+            22844.136
+          ],
+          [
+            20293.632,
+            22584.96,
+            21310.632,
+            22844.136
+          ],
+          [
+            19670.688,
+            21321.36,
+            22746.528,
+            22453.2
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 41,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 41,
+        "target_um": [
+          22758.688,
+          20897.54422535211
+        ],
+        "previous_um": [
+          22647.888,
+          21240.162366
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ],
+          [
+            22535.712,
+            21183.12,
+            22673.928,
+            21198.216
+          ],
+          [
+            22341.744,
+            21155.04,
+            22400.039999999997,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 39,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 39,
+        "target_um": [
+          22758.688,
+          20939.724732394363
+        ],
+        "previous_um": [
+          22559.248,
+          21237.62738
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ],
+          [
+            22535.712,
+            21183.12,
+            22673.928,
+            21198.216
+          ],
+          [
+            22341.744,
+            21155.04,
+            22400.039999999997,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 3,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 3,
+        "target_um": [
+          21482.873014084507,
+          22476.04
+        ],
+        "previous_um": [
+          21165.328676,
+          22498.2
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            21311.424,
+            22584.96,
+            22612.392,
+            22844.136
+          ],
+          [
+            19670.688,
+            21321.36,
+            22746.528,
+            22453.2
+          ],
+          [
+            20293.632,
+            22584.96,
+            21310.632,
+            22844.136
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 22,
+      "modeled_latency_only_station_count": 50,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 21,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 21,
+        "target_um": [
+          23327.138704225352,
+          21085.0
+        ],
+        "previous_um": [
+          23624.939718,
+          21284.44
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24511.82095774648,
+          21117.4
+        ],
+        "previous_um": [
+          24575.4,
+          21117.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ],
+          [
+            24459.84,
+            21245.76,
+            24526.776,
+            21306.215999999997
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24476.72,
+          21097.48383098592
+        ],
+        "previous_um": [
+          24526.8,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ],
+          [
+            24459.84,
+            21245.76,
+            24526.776,
+            21306.215999999997
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24542.09814084507,
+          21099.72
+        ],
+        "previous_um": [
+          24591.6,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ],
+          [
+            24459.84,
+            21245.76,
+            24526.776,
+            21306.215999999997
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 25,
+      "modeled_latency_only_station_count": 47,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24517.86715492958,
+          21099.72
+        ],
+        "previous_um": [
+          24559.2,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ],
+          [
+            24459.84,
+            21245.76,
+            24526.776,
+            21306.215999999997
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          24556.1156056338,
+          21104.760000000002
+        ],
+        "previous_um": [
+          24607.8,
+          21117.4
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ],
+          [
+            24459.84,
+            21245.76,
+            24526.776,
+            21306.215999999997
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 44,
+      "modeled_latency_only_station_count": 28,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 31,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 31,
+        "target_um": [
+          24886.109408450702,
+          21078.08
+        ],
+        "previous_um": [
+          24583.603944,
+          21255.36
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24793.776,
+            21155.04,
+            25192.056,
+            21226.296000000002
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ],
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 30,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 30,
+        "target_um": [
+          24820.225915492956,
+          21078.08
+        ],
+        "previous_um": [
+          24540.811718,
+          21277.52
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ],
+          [
+            24793.776,
+            21155.04,
+            25192.056,
+            21226.296000000002
+          ],
+          [
+            24404.976,
+            21183.12,
+            24543.192,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 46,
+      "modeled_latency_only_station_count": 26,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 18,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 18,
+        "target_um": [
+          23437.613295774645,
+          21085.0
+        ],
+        "previous_um": [
+          23048.768113,
+          21306.6
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 17,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 17,
+        "target_um": [
+          23337.41261971831,
+          21101.84
+        ],
+        "previous_um": [
+          22971.160113,
+          21301.28
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 43,
+      "modeled_latency_only_station_count": 29,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 17,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 17,
+        "target_um": [
+          23421.273464788734,
+          21085.0
+        ],
+        "previous_um": [
+          23031.702085,
+          21173.64
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 47,
+      "modeled_latency_only_station_count": 25,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 17,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 17,
+        "target_um": [
+          23348.25994366197,
+          21085.0
+        ],
+        "previous_um": [
+          22959.590535,
+          21262.28
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 48,
+      "modeled_latency_only_station_count": 24,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 61,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 61,
+        "target_um": [
+          28495.36123943662,
+          21078.08
+        ],
+        "previous_um": [
+          28393.776563,
+          21074.8
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            28237.68,
+            21131.28,
+            28704.648,
+            21252.216
+          ],
+          [
+            27338.256,
+            21155.04,
+            27736.536,
+            21226.296000000002
+          ],
+          [
+            26340.768,
+            19930.32,
+            29416.608,
+            21062.16
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 49,
+      "modeled_latency_only_station_count": 23,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 36,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 36,
+        "target_um": [
+          25004.511661971832,
+          21078.08
+        ],
+        "previous_um": [
+          24619.952338,
+          21078.08
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24793.776,
+            21155.04,
+            25192.056,
+            21226.296000000002
+          ],
+          [
+            24645.6,
+            21090.24,
+            24713.399999999998,
+            21293.256
+          ],
+          [
+            25260.768,
+            21131.28,
+            25727.736,
+            21252.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 51,
+      "modeled_latency_only_station_count": 21,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          24203.090028169016,
+          19918.16
+        ],
+        "previous_um": [
+          24587.877521,
+          19896.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24459.84,
+            19800.72,
+            24526.776,
+            19861.176
+          ],
+          [
+            24575.184,
+            19805.04,
+            24630.888000000003,
+            19869.816000000003
+          ],
+          [
+            24667.2,
+            19692.72,
+            24778.2,
+            19908.696
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 53,
+      "modeled_latency_only_station_count": 19,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 36,
+      "modeled_latency_only_station_count": 36,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 31,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 31,
+        "target_um": [
+          22993.568,
+          20902.523605633804
+        ],
+        "previous_um": [
+          23126.528,
+          21271.701296
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22791.888,
+            21183.12,
+            22930.104,
+            21198.216
+          ],
+          [
+            23115.024,
+            21155.04,
+            23513.304,
+            21226.296000000002
+          ],
+          [
+            22535.712,
+            21183.12,
+            22673.928,
+            21198.216
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 39,
+      "modeled_latency_only_station_count": 33,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 46,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 46,
+        "target_um": [
+          22993.568,
+          19392.810929577467
+        ],
+        "previous_um": [
+          22993.568,
+          19738.273127
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          [
+            23355.648,
+            18180.72,
+            23404.440000000002,
+            18308.136000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 1,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 1,
+        "target_um": [
+          27710.59594366197,
+          21085.0
+        ],
+        "previous_um": [
+          27799.199999999997,
+          21085.0
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27338.256,
+            21155.04,
+            27736.536,
+            21226.296000000002
+          ],
+          [
+            26340.768,
+            19930.32,
+            29416.608,
+            21062.16
+          ],
+          [
+            27076.896,
+            21155.04,
+            27091.56,
+            21297.576
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 38,
+      "modeled_latency_only_station_count": 34,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 4,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 4,
+        "target_um": [
+          27566.114478873238,
+          21085.0
+        ],
+        "previous_um": [
+          27877.645859,
+          21306.6
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27338.256,
+            21155.04,
+            27736.536,
+            21226.296000000002
+          ],
+          [
+            27076.896,
+            21155.04,
+            27091.56,
+            21297.576
+          ],
+          [
+            26340.768,
+            19930.32,
+            29416.608,
+            21062.16
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 35,
+      "modeled_latency_only_station_count": 37,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 71,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 71,
+        "target_um": [
+          24465.512,
+          18208.8
+        ],
+        "previous_um": [
+          24628.072,
+          18217.717859
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            24488.352,
+            18172.08,
+            24598.056,
+            18282.216
+          ],
+          [
+            24519.888,
+            18098.64,
+            24646.007999999998,
+            18148.296
+          ],
+          [
+            24613.632,
+            18306.0,
+            24632.616,
+            18424.776
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 32,
+      "modeled_latency_only_station_count": 40,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 6,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 6,
+        "target_um": [
+          27399.93566197183,
+          21117.4
+        ],
+        "previous_um": [
+          27756.699718,
+          21228.2
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27338.256,
+            21155.04,
+            27736.536,
+            21226.296000000002
+          ],
+          [
+            27076.896,
+            21155.04,
+            27091.56,
+            21297.576
+          ],
+          [
+            26686.368,
+            21155.04,
+            26744.663999999997,
+            21226.296000000002
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 23,
+      "modeled_latency_only_station_count": 49,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 2,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 2,
+        "target_um": [
+          27668.312563380277,
+          22476.04
+        ],
+        "previous_um": [
+          27977.516282,
+          22498.2
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27162.0,
+            22584.96,
+            27925.992,
+            22844.136
+          ],
+          [
+            27926.208,
+            22584.96,
+            28396.199999999997,
+            22844.136
+          ],
+          [
+            26340.768,
+            21321.36,
+            29416.608,
+            22453.2
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 26,
+      "modeled_latency_only_station_count": 46,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 5,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 5,
+        "target_um": [
+          27653.362253521125,
+          22476.04
+        ],
+        "previous_um": [
+          27986.737803,
+          22564.68
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            27162.0,
+            22584.96,
+            27925.992,
+            22844.136
+          ],
+          [
+            27926.208,
+            22584.96,
+            28396.199999999997,
+            22844.136
+          ],
+          [
+            26340.768,
+            21321.36,
+            29416.608,
+            22453.2
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 29,
+      "modeled_latency_only_station_count": 43,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 25,
+      "modeled_latency_only_station_count": 47,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 26,
+      "modeled_latency_only_station_count": 46,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 0,
+      "useful_bits": 2,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 40,
+      "modeled_latency_only_station_count": 32,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 1,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 2,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 37,
+      "modeled_latency_only_station_count": 35,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 3,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 34,
+      "modeled_latency_only_station_count": 38,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 8,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 8,
+        "target_um": [
+          22188.767887323946,
+          19683.28
+        ],
+        "previous_um": [
+          21834.976901,
+          19882.72
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          [
+            22058.784,
+            18418.32,
+            22124.856,
+            18478.775999999998
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 4,
+      "useful_bits": 64,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 33,
+      "modeled_latency_only_station_count": 39,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 9,
+      "packed_attempt_complete": false,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": {
+        "stage": 9,
+        "target_um": [
+          22238.334084507038,
+          19683.28
+        ],
+        "previous_um": [
+          21904.421408,
+          19794.08
+        ],
+        "nearest_macro_boxes_um": [
+          [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          [
+            22058.784,
+            18418.32,
+            22124.856,
+            18478.775999999998
+          ]
+        ],
+        "reason": "deterministic local candidate search exhausted; not an infeasibility proof"
+      }
+    },
+    {
+      "bus": "rl_sm30",
+      "group": 5,
+      "useful_bits": 12,
+      "physical_bits": 64,
+      "modeled_transport_station_count": 40,
+      "modeled_latency_only_station_count": 32,
+      "balanced_cycles": 72,
+      "packed_attempt_station_count": 72,
+      "packed_attempt_complete": true,
+      "implementation_mapping": "OPEN: uniformly sampled search mixes both categories; no bank substituted",
+      "failure": null
+    }
+  ],
+  "gates": [
+    "Actual transport placement must preserve20x20stations and <=300um pin-to-pin hops.",
+    "A dedicated64-bit multicycle delay bank requires separate model/RTL/exactness/physicalview; baseline stays unchanged.",
+    "Delay-bank grouping, bank locations, inter-bank wires and final balanced72cycle binding remain unimplemented.",
+    "The independent path model samples each rectilinear segment; actual pin directions can change stationcount."
+  ]
+}

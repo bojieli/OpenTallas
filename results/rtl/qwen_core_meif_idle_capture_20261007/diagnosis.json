@@ -1,0 +1,85 @@
+{
+  "source_commit": "d9d511777",
+  "emitted_core_sha256": "23567de96a4c80a7bcbe8afddd6cb4701be28faa0568b09b64638e0b710a1bb2",
+  "verdict": "FAIL, immutable, no adoption or unchanged reroute",
+  "SS_ps": -27.21,
+  "FF_ps": -44.19,
+  "DRC": 0,
+  "real_R2R_SS_ps": -11.09,
+  "real_R2R_FF_ps": -4.87,
+  "I2R_hold_ps": -34.76,
+  "setup_paths": [
+    {
+      "start": "clk",
+      "end": "u_me.clk",
+      "slack_ps": -27.211233
+    },
+    {
+      "start": "st[0]$_DFFE_PN0P_/QN",
+      "end": "vw_me_we[13]",
+      "slack_ps": -11.558254
+    },
+    {
+      "start": "st[0]$_DFFE_PN0P_/QN",
+      "end": "vw_me_we[10]",
+      "slack_ps": -11.466717
+    },
+    {
+      "start": "g_vsu.su_tk_d$_DFF_PN0_/QN",
+      "end": "u_me.i_xks[2]$_DFFE_PP_/D",
+      "slack_ps": -11.085688
+    },
+    {
+      "start": "g_vsu.su_tk_d$_DFF_PN0_/QN",
+      "end": "u_me.i_xks[6]$_DFFE_PP_/D",
+      "slack_ps": -10.824452
+    },
+    {
+      "start": "g_vsu.su_tk_d$_DFF_PN0_/QN",
+      "end": "u_me.i_xks[5]$_DFFE_PP_/D",
+      "slack_ps": -10.611178
+    }
+  ],
+  "hold_starts": {
+    "rst_n": 14,
+    "u_me.o_we": 48,
+    "u_me.mx_we": 1,
+    "prog_q": 893,
+    "g_vsu.u_su.kv_we": 8,
+    "u_me.am_val": 32,
+    "u_me.am_any": 1,
+    "u_me.idle": 1,
+    "u_me.am_idx": 18,
+    "me_mem_ok": 1,
+    "token": 18,
+    "u_me.progress": 16,
+    "pos": 18,
+    "g_vsu.u_su.progress_rows": 16,
+    "u_me.fault": 1,
+    "g_vsu.u_su.progress": 16,
+    "kv_write_drained": 1,
+    "g_vsu.u_su.ready": 1,
+    "kv_ok": 1,
+    "start": 1,
+    "g_vsu.u_su.idle": 1,
+    "u_me.ready": 1,
+    "la_sh": 6,
+    "la_qh": 1
+  },
+  "scoped_comparison": "Both fbc and d9 use corrected131-port fullshape. d9 removes KV wide reduction bottleneck; old751 truncated view excluded from fullshape comparison.",
+  "successors": {
+    "MEIF": "Speculative capture while no pending ME command; freeze complete payload across enabled take",
+    "ME_write": "Raw write+original intent/direct lease+real CAP collar component package ready; parent binding and physical open",
+    "input_hold": "893 prog_q starts plus other direct captures need explicit arrival-side minimum delay/clock boundary enforcement",
+    "clock": "u_me.clk retains generic154ps data-output delay despite explicit exclusion; local OpenSTA audit identifies unset_output_delay missing-clock semantics. Actual routed engine confirmation and parent clock insertion budget remain open"
+  },
+  "source_sha256": {
+    "5_2_route.json": "2e07e5d87296a386a8172eadb2a57cf956c842df5b3895175544ec56536f4be9",
+    "physical.json": "78f0e38b28fc05c8a6debce71f12d3bc686c25c50f13bd5269a88631837f84eb",
+    "status": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12",
+    "job_state.json": "cae02739fa79fcba4912f4bd15544dcf4f800fa6e7029a1f48e4e3042fa1a1bf",
+    "w18_sta_ff.log": "9f25c33a8d62ba006774600837fcb6d780635aa892968cd7639f68c49d79f434",
+    "corner_sta.json": "f92cb44b6c5e00675ff0c06bd68e1d71a4c25e29efc7362dbe3c7a5d7f2e501a",
+    "w18_sta_ss.log": "0adb0e13a2be8116e5cbf850bd2e8233ba64d2dd4ba5b864dc1ccfe4310303f3"
+  }
+}

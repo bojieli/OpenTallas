@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "enabled": 0,
+      "FFs": 35290,
+      "area_um2": 19512.107820025452,
+      "mapped_sha256": "f2e9ff295c767c7c0a1acff095864e5d3de48d9e4f77c3e8a8892cb01b0fb039"
+    },
+    {
+      "enabled": 1,
+      "FFs": 35963,
+      "area_um2": 19889.19036002488,
+      "mapped_sha256": "5db5cdf73bc403e7b1685e0f28426aac93913b672546066f550ceed791a998b7"
+    }
+  ],
+  "FF_delta": 673,
+  "area_delta_um2": 377.08253999942826,
+  "scope": "Actual ASAP7 SS cellmapping fullNL4 hub; no physicalwire/clock/slot or SSFF closure.",
+  "metadata_ignored": "Yosys $scopeinfo records are not hardwarecells; every other mappedcell required actualASAP7 area.",
+  "source_sha256": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409",
+  "log_sha256": {
+    "actual_mapped_0.log": "94882da02b2819ba992de9366c7dd86a5cd10c90c718c5ccbd033eb79e4e2a99",
+    "actual_mapped_1.log": "d30ce3925a7aa4e043fb938a381e6b3677d57ffc3009d8d87aaaf7f9764374c3"
+  },
+  "recipe": "ProductionYosys0.68 readall4sourcefiles; chparamENABLE_IDENTITY0/1; synth -flatten; dfflibmapSEQ; abcINVBUF+SIMPLE; opt_clean; read_liberty; check -assert; write_json; sumlibrarycellareas."
+}

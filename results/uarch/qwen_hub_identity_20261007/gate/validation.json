@@ -1,0 +1,38 @@
+{
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "enabled",
+      "expected_pass": true,
+      "observed_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "defaultoff",
+      "expected_pass": true,
+      "observed_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "source_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "tag_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "credits_negative",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409",
+  "predecessor_sha256": "06d01e706d7b7790e4e6f0869e15dfa6f278a7e504f4a313b87daa6efe6d4a93",
+  "scope": "Four actual native lanes with stalls and independent clock phases. Both output metadata RTL mutations rejected. Existing outputs compared edge-for-edge against actual predecessor. No physical/protection qualification."
+}

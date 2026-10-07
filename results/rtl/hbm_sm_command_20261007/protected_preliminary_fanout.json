@@ -1,0 +1,10 @@
+{
+  "scope": "historical preliminary local generic map; no timing verdict",
+  "source": "results/rtl/hbm_sm_command_20261007/protected_all_payload_gate_historical.sv.txt",
+  "sha256": "0ecd0dd9b72865cfe54bf621b78cae7a7c08fcc2b5f1bffe249ccf82b6650a24",
+  "wrapper_gate_depth": 20,
+  "state_parity_gate_depth": 12,
+  "blocked_direct_pin_fanout": 2281,
+  "correction": "gate side-effect flags only; payload may remain visible while invalid. Current source reduces direct blocked fanout to13.",
+  "qualified": false
+}

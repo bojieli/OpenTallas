@@ -1,0 +1,76 @@
+ROM ingress qualification in the existing owned capture seats
+
+Candidate generator: tools/qwen_vm_rom_ingress.py. It accepts the immutable
+original finite VM adapter or a generated direct-readback successor as input,
+and emits a distinct ot_qwen_rom_vm_ingress_adapter module. ROM_INGRESS is off
+by default. No original module is edited, and no packet-stage register bank is
+added. The original-source and composed direct-readback manifests are retained;
+composed generation alone is not a combined RTL/physical qualification.
+
+The model precedes generation. ROM mode selects 2256 read seats, 865 write seats
+and VX0=208, matching VA/VB/VC/collective/VX order. The same existing 72-bit
+encoded read_seat/write_seat flops capture the same PRE frame on the original
+memory-service clock and CAP ownership event. There are 224,712 existing encoded
+seat bits at that shape, zero added packet bits, zero added epoch registers and
+zero added native pipeline cycles. The 26,544-bit packet fallback is not added.
+Physical area, clocks, routing, fanout and SS/FF remain unqualified.
+
+Core/collar contract
+- The core exposes raw 48 ME strobes, with unchanged address/mask/data packet.
+- Normalize bounds/masks with the normalizer's me_wanted tied true, then present
+  raw normalized service/zero intents to this collar. The collar qualifies VX
+  read/zero seats and the first 784 write seats (ME768+MX16) at existing CAP.
+- source_me_wanted MUST be original unleased memory-supply/idle/wake intent. Do
+  not feed the core's post-lease me_clk_en back here: it may be zero during CAP,
+  erasing the very held request admission is deciding. The integrated parent
+  must export/reconstruct original intent before native_tick/vm_me_lease feedback.
+- The same effective intents drive existing fast-empty detection and captured
+  protected enable bits; no request/grant circularity or extra packet stage.
+- After capture, service uses only stored wen/address/data. Later changes in
+  source_me_wanted or live payload cannot requalify an already owned write.
+
+Capture ownership and epoch
+The unchanged adapter's CAP guard is ENABLE && !fault && state==CAP, excluding
+fast_head/fast_empty. Its native source/controller clock remains held while
+memory-service clock processes the owned frame. Its original transaction owner
+contains native_epoch and serial; checked ACK identity/address/mask validates
+before ADMIT. Epoch advances only on unchanged admitted fast paths or ADMIT.
+This transform introduces no alternative epoch or ACK policy. The component gate
+below does not instantiate the complete bank/ACK FSM; those existing clock/epoch
+obligations remain a required integration gate.
+
+Protected invalid-read zero semantics
+Native invalid reads must publish zero while issuing no backing read. Their zero
+flag uses existing reserved encoded payload bit57, beside service-enable bit56.
+This consumes no additional storage compared with a separate 2256-bit sidecar;
+existing SECDED covers it. Invalid-only frames are not fast-empty. Ordinary and
+XVM publication use ren|read_zero and select zero data appropriately. The source
+read flag is preserved through XVM, while disabled native reads still hold.
+ROM mode excludes HEAD_CACHE/W1_FRAME special paths until separately enrolled.
+
+Gate and limits
+The minimum bench extracts the actual generated qualification and CAP encode
+statements at full 2256/865 shape. It checks all capture enable/address/data
+fields, original-intent false/true, protected zero metadata, held-frame immunity,
+and single-bit correction/double-bit rejection using the real SECDED package.
+The enhanced hold test changes original ME intent and live write data after
+capture and checks the stored group35 packet is unchanged. Negative controls
+bypassing ME qualification and dropping the protected zero bit must fail.
+The test drives the parent-owned capture event. It does not prove full adapter
+admission, epoch/ACK correctness or closed physical timing; the core-side owner
+separately tests the actual current core raw-output boundary against this contract.
+
+Outstanding integration debts
+The original backend's finite address capacity is not the native one-million-
+element ABI. This candidate retains the original backend unchanged and does not
+claim its full-range suitability. Bounds normalization, backing-capacity proof,
+actual raw-core emitter, joint core/sequencer/collective clocks, source reset
+ownership and the actual protected-provider ACK gate must be composed explicitly.
+Qualification relocation does not prove the reported −43.735 ps core hold path
+is closed; capture/ECC fanout and the final source-to-capture route need actual
+SS/FF evidence. No whole-ROM wrapper or bank adoption is delivered here.
+
+Existing sequential service cost remains visible: a zero-only owned frame needs
+4+NR+NW=3125 service state visits in the unmodified baseline FSM absent faults,
+external service events or ME supply stalls. That is not a guessed new bank
+latency, nor a measured physical/native token-rate claim.

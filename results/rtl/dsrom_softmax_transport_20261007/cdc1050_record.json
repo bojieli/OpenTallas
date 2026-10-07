@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.softmax_cdc1050_gate.v1",
+  "passed": true,
+  "adopted": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_softmax_cdc.sv": "d97cd5447426dbb7a11d228c6b3c743d81de15f42e7520416e74b9b9ad4f60a3",
+    "tools/dsrom_softmax_cdc_model.py": "53ec2d384d656c9a3978ee319d2312ae7c398e562292643bd921c22a47010b68"
+  },
+  "prebuild_model": "results/uarch/dsrom_softmax_transport_20261007/cdc1050_prebuild.json",
+  "prebuild_sha256": "978744b05cae818924836397b5336c847dd5e33ab773418fa5f846e5dbe27203",
+  "prebuild_written_UTC": "2026-10-07T18:31:36.609070+00:00",
+  "bench_written_UTC": "2026-10-07T18:32:16.698942+00:00",
+  "width": 1050,
+  "depth": 64,
+  "codewords_per_entry": 17,
+  "clocks_GHz": [
+    1.2,
+    0.9
+  ],
+  "positive_directions": [
+    "chain_to_stream",
+    "stream_to_chain"
+  ],
+  "flits_per_direction": 512,
+  "tests": [
+    "full64capacity",
+    "exact1050bit payload and tag/address/beat",
+    "contiguous readII3 first4beats",
+    "wraparound and stalls",
+    "stored last-codeword single error correction",
+    "incoherent pointer rails suppress grants",
+    "coordinated cold reset with outstanding beats then new payload",
+    "protected pointer doubleerror suppresses grants",
+    "protected head final-codeword doubleerror suppresses output"
+  ],
+  "negative": "SOFTMAX_CDC_CORRUPT_HEADER toggles output bit1049; scoreboard fails first payload",
+  "retained_failed_bench": {
+    "path": "cdc1050_ingress.log",
+    "reason": "Benchmark cycle counter advanced in separate posedge block, racing monitor; changed monitor counter to negedge. FIFO source unchanged."
+  },
+  "commands": {
+    "compile_base": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_softmax_cdc",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv",
+      "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv",
+      "rtl/experimental/dsrom_softmax_transport_20261007/tb_softmax_cdc.sv"
+    ],
+    "reverse_define": "SOFTMAX_CDC_REVERSE",
+    "negative_define": "SOFTMAX_CDC_CORRUPT_HEADER",
+    "execute": "vvp executable.vvp"
+  },
+  "logs": {
+    "cdc1050_ingress_r2.log": "PASS_CDC full1050x64 ratio3to4_512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double\n",
+    "cdc1050_egress.log": "PASS_CDC full1050x64 ratio3to4_512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double\n",
+    "cdc1050_header_negative.log": "FATAL: rtl/experimental/dsrom_softmax_transport_20261007/tb_softmax_cdc.sv:25: CDC_DATA mismatch 0\n       Time: 151250121 Scope: tb_softmax_cdc\n"
+  },
+  "limitations": [
+    "No production epoch/drain/late-reply integration",
+    "No unilateral reset support claimed",
+    "No numeric softmax engine integration",
+    "No physical setup/hold or slot qualification",
+    "FIFO modeled latency bound not an empirical credit-roundtrip measurement"
+  ]
+}

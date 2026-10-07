@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.native_sm.result_provider.component.v1",
+  "verdict": "PASS",
+  "scope": "full4096 native no-ready capture and acknowledged/readback publication component; provider peer is test memory, not die service",
+  "physical_admitted": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v": "76226bc1260ea5311e0c9ca2626f1f6b1ce1d5512753cc77b07b550253407664",
+    "rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv": "bf16ba804022422a3fdd1c8687178e9a9f0838f10d02245199b0f51881458632",
+    "rtl/hbm_accel/control_20261007/result_provider/tb_hbm_sm_result_provider.sv": "06f236a3a1501ba3bd135aea38fdd7bb7da76420e9e074aa725ae7713ee1af1f",
+    "tools/hbm_sm_result_provider_model.py": "73c9e5dc9adc2bb493dea7c49f9b43bedd844a03cf61255762d0b47fab0360ad",
+    "tools/hbm_sm_result_provider_gate.py": "83d6203fb5ac65013317d8511339cd1f8447328f108473ad63c92f598a1be9a2"
+  },
+  "model": {
+    "schema": "opentallas.native_sm.result_provider.model.v1",
+    "compute_macs_per_cycle": 0,
+    "rows": 4096,
+    "row_bits": 256,
+    "payload_bytes": 131072,
+    "encoded_bits_per_row": 288,
+    "physical_bits_per_row": 320,
+    "macro_count": 40,
+    "macro_area_um2": 182364.30719999998,
+    "macro_minimum_rectangle_um": [
+      654.4799999999999,
+      278.64
+    ],
+    "macro_ss_clk_to_q_ps": 488.15201633628925,
+    "macro_ff_hold_ps": 19.67222053777778,
+    "macro_read_mux_2to1_bit_cells": 2240,
+    "macro_write_address_max_fanout": 40,
+    "macro_write_data_max_fanout": 8,
+    "macro_read_bytes_per_cycle": 40,
+    "macro_write_bytes_per_cycle": 40,
+    "external_capture_tracks_required": 269,
+    "external_request_tracks_required": 312,
+    "external_response_tracks_required": 276,
+    "routing_channel_capacity": null,
+    "channel_admission": false,
+    "macro_source_sha256": "d5dd9e0bbc14c23ee4d0ab2a0567af21cf7e6b56a291cc07eaa60b9ae77417d9",
+    "capture_bytes_per_cycle": 32,
+    "capture_boundary_bits": 269,
+    "request_boundary_bits": 312,
+    "shared_provider_request_with_strobes_bits": 344,
+    "return_bits": 276,
+    "bitmap_protected_bits": 4608,
+    "metadata_control_payload_protected_bits": 648,
+    "minimum_reservation_setup_cycles": 64,
+    "minimum_capture_cycles": 4096,
+    "drain_cycles_per_row": "4 + write_request_stall + write_response_latency + read_request_stall + read_response_latency",
+    "drain_total_cycles": "rows * (4 + WrStall + WrRspLatency + RdStall + RdRspLatency)",
+    "publication_condition": "all unique rows captured; native_done received; every installed 32-byte destination write acknowledged and read back bit-exact",
+    "floorplan_fit": false,
+    "physical_admitted": false,
+    "protection_timing_qualified": false,
+    "notes": [
+      "One capture-only phase followed by drain: no concurrent macro read/write arbitration",
+      "Each 512-row bank has five exact existing512x64 macros; four SECDED72 chunks and32unused bits",
+      "Explicit installed37bit base/limit; actual shared provider arbitration/identity binding remains integration requirement",
+      "320-bit macro read mux and SECDED/control paths need registered physical successor if SS/FF fail; no present clock closure claim"
+    ]
+  },
+  "cases": [
+    {
+      "name": "full4096_reverse_order",
+      "returncode": 0,
+      "stdout": "PASS rows=4096 reverse-order capture writes=4096 reads=4096 cycles=31475\n",
+      "stderr": ""
+    },
+    {
+      "name": "duplicate_row",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=1 cycles=80\n",
+      "stderr": ""
+    },
+    {
+      "name": "out_of_range_row",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=2 cycles=80\n",
+      "stderr": ""
+    },
+    {
+      "name": "wrong_readback",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=3 cycles=85\n",
+      "stderr": ""
+    },
+    {
+      "name": "wrong_response_tag",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=4 cycles=83\n",
+      "stderr": ""
+    },
+    {
+      "name": "metadata_double_error",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=5 cycles=80\n",
+      "stderr": ""
+    },
+    {
+      "name": "sram_single_error_corrected",
+      "returncode": 0,
+      "stdout": "PASS rows=8 reverse-order capture writes=8 reads=8 cycles=133\n",
+      "stderr": ""
+    },
+    {
+      "name": "sram_double_error_rejected",
+      "returncode": 0,
+      "stdout": "PASS rejection mode=7 cycles=81\n",
+      "stderr": ""
+    },
+    {
+      "name": "readback_checker_bypass_must_fail",
+      "returncode": 1,
+      "stdout": "FATAL: rtl/hbm_accel/control_20261007/result_provider/tb_hbm_sm_result_provider.sv:65: bad input published\n       Time: 1305000 Scope: tb_hbm_sm_result_provider\n",
+      "stderr": ""
+    }
+  ]
+}

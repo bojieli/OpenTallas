@@ -1,0 +1,125 @@
+// Opt-in DMR candidate. Any disagreement aborts, never votes or retries.
+module ot_hbm_sm_serial_protected #(parameter ENABLE=0, MAX_RECORDS=256, PROTECT=0)(
+ input wire clk,rst_n,
+ input wire run_valid,output wire run_ready,input wire[31:0] program_base,
+ input wire[32:0] program_limit,input wire[15:0] record_count,
+ output wire mem_req_valid,input wire mem_req_ready,output wire[31:0] mem_req_addr,
+ input wire mem_rsp_valid,output wire mem_rsp_ready,input wire[31:0] mem_rsp_addr,mem_rsp_data,input wire mem_rsp_error,
+ output wire alloc_valid,input wire alloc_ready,output wire[15:0] alloc_record,
+ output wire[23:0] alloc_lines,
+ input wire alloc_rsp_valid,output wire alloc_rsp_ready,input wire[15:0] alloc_rsp_record,
+ input wire[31:0] alloc_rsp_base,input wire alloc_rsp_error,
+ output wire x_req_valid,input wire x_req_ready,output wire[15:0] x_req_record,
+ output wire[6:0] x_req_base,output wire[7:0] x_req_extent,
+ input wire x_valid,output wire x_ready,input wire[15:0] x_record,
+ input wire[6:0] x_ordinal,input wire[3:0] x_group,input wire[2047:0] x_data,input wire x_error,
+ output wire xw_en,output wire[6:0] xw_addr,xw_grp,output wire[2047:0] xw_data,
+ output wire d_valid,input wire d_ready,output wire[31:0] d_base,output wire[23:0] d_lines,
+ output wire start,input wire start_ready,output wire[12:0] op_rows,output wire[15:0] op_c,
+ output wire[7:0] op_g,output wire op_gs,output wire[1:0] op_fmt,output wire[6:0] op_xb,
+ input wire arrive,sm_fault,input wire publication_valid,output wire publication_ready,input wire[15:0] publication_record,
+ output wire done,input wire done_ready,output wire fault
+);
+ wire  a_run_ready,b_run_ready;
+ wire  a_mem_req_valid,b_mem_req_valid;
+ wire [31:0] a_mem_req_addr,b_mem_req_addr;
+ wire  a_mem_rsp_ready,b_mem_rsp_ready;
+ wire  a_alloc_valid,b_alloc_valid;
+ wire [15:0] a_alloc_record,b_alloc_record;
+ wire [23:0] a_alloc_lines,b_alloc_lines;
+ wire  a_alloc_rsp_ready,b_alloc_rsp_ready;
+ wire  a_x_req_valid,b_x_req_valid;
+ wire [15:0] a_x_req_record,b_x_req_record;
+ wire [6:0] a_x_req_base,b_x_req_base;
+ wire [7:0] a_x_req_extent,b_x_req_extent;
+ wire  a_x_ready,b_x_ready;
+ wire  a_xw_en,b_xw_en;
+ wire [6:0] a_xw_addr,b_xw_addr;
+ wire [6:0] a_xw_grp,b_xw_grp;
+ wire [2047:0] a_xw_data,b_xw_data;
+ wire  a_d_valid,b_d_valid;
+ wire [31:0] a_d_base,b_d_base;
+ wire [23:0] a_d_lines,b_d_lines;
+ wire  a_start,b_start;
+ wire [12:0] a_op_rows,b_op_rows;
+ wire [15:0] a_op_c,b_op_c;
+ wire [7:0] a_op_g,b_op_g;
+ wire  a_op_gs,b_op_gs;
+ wire [1:0] a_op_fmt,b_op_fmt;
+ wire [6:0] a_op_xb,b_op_xb;
+ wire  a_publication_ready,b_publication_ready;
+ wire  a_done,b_done;
+ wire  a_fault,b_fault;
+ wire a_parity,b_parity;
+ reg abort_latched;
+ wire mismatch;
+ (* keep = 1, keep_hierarchy = 1, dont_touch = 1 *) ot_hbm_sm_serial_protected_core #(.ENABLE(ENABLE),.MAX_RECORDS(MAX_RECORDS)) a(.clk(clk),.rst_n(rst_n),.run_valid(run_valid),.run_ready(a_run_ready),.program_base(program_base),.program_limit(program_limit),.record_count(record_count),.mem_req_valid(a_mem_req_valid),.mem_req_ready(mem_req_ready),.mem_req_addr(a_mem_req_addr),.mem_rsp_valid(mem_rsp_valid),.mem_rsp_ready(a_mem_rsp_ready),.mem_rsp_addr(mem_rsp_addr),.mem_rsp_data(mem_rsp_data),.mem_rsp_error(mem_rsp_error),.alloc_valid(a_alloc_valid),.alloc_ready(alloc_ready),.alloc_record(a_alloc_record),.alloc_lines(a_alloc_lines),.alloc_rsp_valid(alloc_rsp_valid),.alloc_rsp_ready(a_alloc_rsp_ready),.alloc_rsp_record(alloc_rsp_record),.alloc_rsp_base(alloc_rsp_base),.alloc_rsp_error(alloc_rsp_error),.x_req_valid(a_x_req_valid),.x_req_ready(x_req_ready),.x_req_record(a_x_req_record),.x_req_base(a_x_req_base),.x_req_extent(a_x_req_extent),.x_valid(x_valid),.x_ready(a_x_ready),.x_record(x_record),.x_ordinal(x_ordinal),.x_group(x_group),.x_data(x_data),.x_error(x_error),.xw_en(a_xw_en),.xw_addr(a_xw_addr),.xw_grp(a_xw_grp),.xw_data(a_xw_data),.d_valid(a_d_valid),.d_ready(d_ready),.d_base(a_d_base),.d_lines(a_d_lines),.start(a_start),.start_ready(start_ready),.op_rows(a_op_rows),.op_c(a_op_c),.op_g(a_op_g),.op_gs(a_op_gs),.op_fmt(a_op_fmt),.op_xb(a_op_xb),.arrive(arrive),.sm_fault(sm_fault),.publication_valid(publication_valid),.publication_ready(a_publication_ready),.publication_record(publication_record),.done(a_done),.done_ready(done_ready),.fault(a_fault),.state_parity(a_parity));
+ generate if(PROTECT)begin: g_secondary
+ (* keep = 1, keep_hierarchy = 1, dont_touch = 1 *) ot_hbm_sm_serial_protected_core #(.ENABLE(ENABLE),.MAX_RECORDS(MAX_RECORDS)) b(.clk(clk),.rst_n(rst_n),.run_valid(run_valid),.run_ready(b_run_ready),.program_base(program_base),.program_limit(program_limit),.record_count(record_count),.mem_req_valid(b_mem_req_valid),.mem_req_ready(mem_req_ready),.mem_req_addr(b_mem_req_addr),.mem_rsp_valid(mem_rsp_valid),.mem_rsp_ready(b_mem_rsp_ready),.mem_rsp_addr(mem_rsp_addr),.mem_rsp_data(mem_rsp_data),.mem_rsp_error(mem_rsp_error),.alloc_valid(b_alloc_valid),.alloc_ready(alloc_ready),.alloc_record(b_alloc_record),.alloc_lines(b_alloc_lines),.alloc_rsp_valid(alloc_rsp_valid),.alloc_rsp_ready(b_alloc_rsp_ready),.alloc_rsp_record(alloc_rsp_record),.alloc_rsp_base(alloc_rsp_base),.alloc_rsp_error(alloc_rsp_error),.x_req_valid(b_x_req_valid),.x_req_ready(x_req_ready),.x_req_record(b_x_req_record),.x_req_base(b_x_req_base),.x_req_extent(b_x_req_extent),.x_valid(x_valid),.x_ready(b_x_ready),.x_record(x_record),.x_ordinal(x_ordinal),.x_group(x_group),.x_data(x_data),.x_error(x_error),.xw_en(b_xw_en),.xw_addr(b_xw_addr),.xw_grp(b_xw_grp),.xw_data(b_xw_data),.d_valid(b_d_valid),.d_ready(d_ready),.d_base(b_d_base),.d_lines(b_d_lines),.start(b_start),.start_ready(start_ready),.op_rows(b_op_rows),.op_c(b_op_c),.op_g(b_op_g),.op_gs(b_op_gs),.op_fmt(b_op_fmt),.op_xb(b_op_xb),.arrive(arrive),.sm_fault(sm_fault),.publication_valid(publication_valid),.publication_ready(b_publication_ready),.publication_record(publication_record),.done(b_done),.done_ready(done_ready),.fault(b_fault),.state_parity(b_parity));
+ end else begin:g_unprotected
+ assign b_run_ready=a_run_ready;
+ assign b_mem_req_valid=a_mem_req_valid;
+ assign b_mem_req_addr=a_mem_req_addr;
+ assign b_mem_rsp_ready=a_mem_rsp_ready;
+ assign b_alloc_valid=a_alloc_valid;
+ assign b_alloc_record=a_alloc_record;
+ assign b_alloc_lines=a_alloc_lines;
+ assign b_alloc_rsp_ready=a_alloc_rsp_ready;
+ assign b_x_req_valid=a_x_req_valid;
+ assign b_x_req_record=a_x_req_record;
+ assign b_x_req_base=a_x_req_base;
+ assign b_x_req_extent=a_x_req_extent;
+ assign b_x_ready=a_x_ready;
+ assign b_xw_en=a_xw_en;
+ assign b_xw_addr=a_xw_addr;
+ assign b_xw_grp=a_xw_grp;
+ assign b_xw_data=a_xw_data;
+ assign b_d_valid=a_d_valid;
+ assign b_d_base=a_d_base;
+ assign b_d_lines=a_d_lines;
+ assign b_start=a_start;
+ assign b_op_rows=a_op_rows;
+ assign b_op_c=a_op_c;
+ assign b_op_g=a_op_g;
+ assign b_op_gs=a_op_gs;
+ assign b_op_fmt=a_op_fmt;
+ assign b_op_xb=a_op_xb;
+ assign b_publication_ready=a_publication_ready;
+ assign b_done=a_done;
+ assign b_fault=a_fault;
+ assign b_parity=a_parity;
+ end endgenerate
+ assign mismatch=PROTECT && (({a_run_ready,a_mem_req_valid,a_mem_rsp_ready,a_alloc_valid,a_alloc_rsp_ready,a_x_req_valid,a_x_ready,a_xw_en,a_d_valid,a_start,a_publication_ready,a_done,a_fault} != {b_run_ready,b_mem_req_valid,b_mem_rsp_ready,b_alloc_valid,b_alloc_rsp_ready,b_x_req_valid,b_x_ready,b_xw_en,b_d_valid,b_start,b_publication_ready,b_done,b_fault}) || (a_parity != b_parity) || (a_mem_req_valid && ({a_mem_req_addr} != {b_mem_req_addr})) || (a_alloc_valid && ({a_alloc_record,a_alloc_lines} != {b_alloc_record,b_alloc_lines})) || (a_x_req_valid && ({a_x_req_record,a_x_req_base,a_x_req_extent} != {b_x_req_record,b_x_req_base,b_x_req_extent})) || (a_xw_en && ({a_xw_addr,a_xw_grp,a_xw_data} != {b_xw_addr,b_xw_grp,b_xw_data})) || (a_d_valid && ({a_d_base,a_d_lines} != {b_d_base,b_d_lines})) || (a_start && ({a_op_rows,a_op_c,a_op_g,a_op_gs,a_op_fmt,a_op_xb} != {b_op_rows,b_op_c,b_op_g,b_op_gs,b_op_fmt,b_op_xb})));
+ wire blocked=abort_latched || mismatch || a_fault || b_fault;
+ always @(posedge clk or negedge rst_n)if(!rst_n)abort_latched<=0;else if(blocked)abort_latched<=1;
+ assign fault=blocked;
+ assign run_ready=blocked ? '0 : a_run_ready;
+ assign mem_req_valid=blocked ? '0 : a_mem_req_valid;
+ assign mem_req_addr=a_mem_req_addr;
+ assign mem_rsp_ready=blocked ? '0 : a_mem_rsp_ready;
+ assign alloc_valid=blocked ? '0 : a_alloc_valid;
+ assign alloc_record=a_alloc_record;
+ assign alloc_lines=a_alloc_lines;
+ assign alloc_rsp_ready=blocked ? '0 : a_alloc_rsp_ready;
+ assign x_req_valid=blocked ? '0 : a_x_req_valid;
+ assign x_req_record=a_x_req_record;
+ assign x_req_base=a_x_req_base;
+ assign x_req_extent=a_x_req_extent;
+ assign x_ready=blocked ? '0 : a_x_ready;
+ assign xw_en=blocked ? '0 : a_xw_en;
+ assign xw_addr=a_xw_addr;
+ assign xw_grp=a_xw_grp;
+ assign xw_data=a_xw_data;
+ assign d_valid=blocked ? '0 : a_d_valid;
+ assign d_base=a_d_base;
+ assign d_lines=a_d_lines;
+ assign start=blocked ? '0 : a_start;
+ assign op_rows=a_op_rows;
+ assign op_c=a_op_c;
+ assign op_g=a_op_g;
+ assign op_gs=a_op_gs;
+ assign op_fmt=a_op_fmt;
+ assign op_xb=a_op_xb;
+ assign publication_ready=blocked ? '0 : a_publication_ready;
+ assign done=blocked ? '0 : a_done;
+endmodule
