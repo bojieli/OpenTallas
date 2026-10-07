@@ -4,7 +4,7 @@ set b [ord::get_db_block]
 set dbu [$b getDbUnitsPerMicron]
 set gates {}; set phases {}; set inversions {}
 foreach inst [$b getInsts] {
-  set n [$inst getName]
+  set n [string map {/ .} [$inst getName]]
   if {[string match {*g_half.u_hcg.u_icg} $n]} {lappend gates $inst}
   if {[string match {*g_half.ph*} $n] && [string match {DFF*} [[$inst getMaster] getName]]} {lappend phases $inst}
   if {[string match {*g_half.g_root.u_inv?.u_inv} $n]} {lappend inversions $inst}

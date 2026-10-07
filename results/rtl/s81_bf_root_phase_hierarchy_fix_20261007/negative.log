@@ -1,0 +1,18 @@
+OpenROAD v2.0-17598-ga008522d8 
+Features included (+) or not (-): +Charts +GPU +GUI +Python : None
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+PIN g_half.g_root.u_inv0/u_inv/A
+PIN g_half.g_root.u_inv0/u_inv/Y
+PIN g_half.ph/CLK
+PIN g_half.ph/D
+PIN g_half.ph/QN
+PIN g_half.u_hcg.u_icg/ENA
+PIN g_half.u_hcg.u_icg/GCLK
+PIN g_half.u_hcg.u_icg/SE
+PIN g_half.u_hcg.u_icg/CLK
+PIN wrong_clock_root/u_inv/A
+PIN wrong_clock_root/u_inv/Y
+Error: clock.sdc, 13 BF_ROOT_PHASE real kept phase clock branch is missing or ambiguous
