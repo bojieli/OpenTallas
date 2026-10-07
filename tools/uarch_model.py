@@ -12871,3 +12871,96 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def hbm_norm_engine_mem1_model():
+    """Retrospective sizing of the pinned N64/D5120 MEM1 physical candidate.
+
+    The inherited Claude stream launched RTL/physical work before this model
+    entry existed. Recording that process gap does not qualify the design or
+    authorize adoption. This is a per-engine delta, not an assumed die count.
+    """
+    n, d, nv = 64, 5120, 80
+    slices, memories = n // 8, 2
+    macros = slices * memories
+    storage_bits = memories * n * nv * 32
+    macro_area = 94.824 * 41.064
+    # Mux equivalent counts exclude decoder, write-enable and arithmetic logic.
+    read_mux_bits = memories * n * 32 * (nv - 1)
+    channel_um, layers, pitch_um = 64, 4, .08
+    # One 256-bit read and write per macro; addresses/CE are shared per memory.
+    local_tracks = 256 + 256 + 7 + 7 + 2
+    return dict(
+        schema="opentallas.uarch.hbm_norm_mem1.v1",
+        process_order=dict(model_before_inherited_build=False,
+            classification="RETROSPECTIVE_MODEL_GAP",
+            inherited_RTL_commit="d59dc31a8",
+            inherited_route_commit="cc383b8fc"),
+        scope="DeepSeek HBM N64 D5120 HC1 QUANT1 LM5 LA6 RXS1 SXC1 FREG1 RW9 BW9",
+        other_design_deltas=dict(Qwen_ROM=0, DeepSeek_ROM=0, Qwen_HBM=0),
+        enabled_default=False, adopted=False, headline_rate_credit=0,
+        shape=dict(lanes=n, elements=d, vectors=nv, engine_replicas_in_this_record=1,
+            die_replica_count=None, macro_slices_per_memory=slices,
+            memories=memories, macro_replicas=macros),
+        compute=dict(added_MACs_per_cycle=0, fused_MACs_per_cycle=0,
+            separate_FP32_ops_peak=dict(HC_multiply=4*n, HC_add=3*n,
+                square_multiply=n, scale_multiply=2*n, in_vector_reduce_add=n-1),
+            peak_scope="Independent input and scale streams; excludes scalar/vector-tree and quantisation ops",
+            listed_peak_FP32_ops_per_cycle=11*n-1,
+            listed_peak_FP32_ops_per_internal_memory_byte=(11*n-1)/(4*n*4),
+            arithmetic="Unchanged separate rounded multiplies/adds and golden reduction order"),
+        memory_ports_bytes_per_cycle=dict(X_read=n*4, X_write=n*4,
+            gain_read=n*4, gain_write=n*4, per_macro_read=32, per_macro_write=32),
+        communication=dict(internal_memory_bytes_per_cycle_peak=4*n*4,
+            HC_input_bytes_per_cycle=4*n*4, gain_load_bytes_per_cycle=n*4,
+            normalized_output_bytes_per_cycle=n*4,
+            internal_bytes_per_normalized_element=16,
+            assumption="Peak port capacities, not a claim all streams remain active every cycle"),
+        boundary_bits_per_cycle=dict(HC_input=4*n*32, gain_load=n*32,
+            gain_index=8, pre=128, n_f=32, eps=32, cos_t=32, sin_t=32,
+            input_controls=3, reset=1, clock=1, normalized=n*32,
+            rope_observability=n*32, rstd=32, quant_codes=n//32*256,
+            quant_exponents=n//32*10, quant_values=n//32*512,
+            output_indices=16, output_valids=4, fault=1),
+        storage=dict(logical_bits=storage_bits, macro_bits=macros*128*256,
+            logical_utilization=nv/128, removed_storage_FF_bits=storage_bits,
+            retained_X_gain_output_register_bits=2*n*32,
+            added_lookahead_gain_index_delay_bits=8*(6-1),
+            nominal_macro_clock_pins=macros, removed_storage_clock_pins=storage_bits,
+            measured_mapped_FF_count=None, measured_CTS_sink_count=None),
+        replica_cost=dict(removed_read_mux_2to1_bit_equivalents=read_mux_bits,
+            removed_word_write_enable_destinations=memories*n*nv,
+            new_macro_read_address_fanout_per_bit=slices,
+            new_macro_write_address_fanout_per_bit=slices,
+            demultiplexer="Shared row decode inside each macro; 8 parallel 256-bit slices per memory",
+            prefetch="X next-cycle-index combinational lookahead; gain index shifted one cycle earlier",
+            ping_pong_banks=0, simultaneous_read_write="1R1W macro, read-before-write"),
+        routing=dict(per_slice_tracks_required=local_tracks,
+            per_slice_channel_capacity_tracks=int(channel_um*layers/pitch_um),
+            analytical_local_channel_fits=local_tracks <= int(channel_um*layers/pitch_um),
+            basis="Assumed dedicated 64um channel / 4 existing signal layers / 80nm pitch per slice",
+            added_hub_layers=0, actual_channel_allocation_verified=False,
+            whole_block_pin_access_verified=False),
+        area=dict(macro_LEF="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+            macro_um2_each=macro_area, macro_um2_total=macros*macro_area,
+            removed_FF_area_floor_um2=storage_bits*DFF_UM2,
+            added_gain_index_FF_area_floor_um2=40*DFF_UM2,
+            macro_vs_storage_FF_area_delta_um2=macros*macro_area-storage_bits*DFF_UM2,
+            read_mux_area_delta_unpriced=True, measured_total_um2=None,
+            inherited_core_um=[1100, 1100], inherited_target_density=.45,
+            macro_area_fraction_of_core=macros*macro_area/1100**2,
+            floorplan_slot_fit=None,
+            limitation="Macro area fits arithmetically; arithmetic, CTS, pin access and actual routing remain unqualified"),
+        latency=dict(baseline_receipt="results/rtl/hbm_norm_vm_boundary_20261006/model_delta.json",
+            baseline_HC_engine_cycles=323, baseline_receipt_is_new_MEM1_measurement=False,
+            storage_delta_cycles=0, boundary_capture_launch_cycles=2,
+            boundary_cycles_already_in_BCAST7_RET8=True, net_boundary_delta_cycles=0,
+            composed_HC_engine_cycles=323, candidate_clock_GHz=1.2,
+            composed_HC_engine_ns=323/1.2,
+            per_token_delta_cycles=0, per_token_delta_ns=0,
+            basis="Cycle-identical 4-row full-shape MEM1/MEM0 lockstep; preserve existing engine/calendar composition",
+            evidence="results/rtl/hbm_norm_engine_view_mem1_20261007/recovery_20261007/record.json"),
+        qualification=dict(exact_lockstep=True, negative_controls=True,
+            SS_setup=False, FF_hold=False, DRC0=False, die_context=False,
+            physical_closed=False, model_ready_for_adoption=False,
+            SRAM_reliability_contract="Unchanged research macro contract; no SRAM-protection waiver inferred"))
