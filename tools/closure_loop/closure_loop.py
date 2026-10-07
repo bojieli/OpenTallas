@@ -84,7 +84,7 @@ DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 16
+WORKERS = 48
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
@@ -2198,10 +2198,35 @@ def tick(fleet):
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
-    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        list(ex.map(lambda j: advance_job(j["name"], fleet),
-                    [j for j in all_jobs() if j["status"] not in TERMINAL]))
+    # persistent pool, no per-tick barrier (2026-10-07): a job still being stepped (a source sync, a 30-min verdict check)
+    # is skipped this tick instead of holding every other job until the next tick
+    global _POOL
+    if _POOL is None:
+        _POOL = ThreadPoolExecutor(max_workers=WORKERS)
+    for x in all_jobs():
+        if x["status"] in TERMINAL:
+            continue
+        with _INFLIGHT_LOCK:
+            if x["name"] in _INFLIGHT:
+                continue
+            _INFLIGHT.add(x["name"])
+        _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status()
+
+
+_POOL = None
+_INFLIGHT = set()
+_INFLIGHT_LOCK = threading.Lock()
+
+
+def _advance_and_release(name, fleet):
+    try:
+        advance_job(name, fleet)
+    except Exception:  # noqa: BLE001
+        log(f"[{name}] advance error:\n{traceback.format_exc()}")
+    finally:
+        with _INFLIGHT_LOCK:
+            _INFLIGHT.discard(name)
 
 
 def cmd_daemon(a):
