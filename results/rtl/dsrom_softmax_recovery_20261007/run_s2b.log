@@ -1,0 +1,12 @@
+L20.attn.softmax_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+L0.attn.softmax_T128 True {'attn.max': 72, 'attn.exp': 193, 'attn.den': 90, 'attn.sink': 20, 'attn.normalize': 171}
+L3.attn.softmax_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+L24.attn.softmax_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+stress0_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+stress1_T128 True {'attn.max': 72, 'attn.exp': 193, 'attn.den': 90, 'attn.sink': 20, 'attn.normalize': 171}
+stress2_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+stress3_T128 True {'attn.max': 72, 'attn.exp': 193, 'attn.den': 90, 'attn.sink': 20, 'attn.normalize': 171}
+stress4_T640 True {'attn.max': 104, 'attn.exp': 225, 'attn.den': 120, 'attn.sink': 20, 'attn.normalize': 171}
+stress5_T128 True {'attn.max': 72, 'attn.exp': 193, 'attn.den': 90, 'attn.sink': 20, 'attn.normalize': 171}
+RUN pass
+EXIT 0
