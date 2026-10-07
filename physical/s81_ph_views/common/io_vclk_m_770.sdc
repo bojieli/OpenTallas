@@ -10,6 +10,9 @@ set_input_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 150}]
 set_output_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 150}] -clock vclk [all_outputs]
 set_input_delay -min 0 -clock vclk $ot_in
 set_output_delay -min 0 -clock vclk [all_outputs]
+# input hold: die-context check (launch at the neighbour's FF min insertion - 50 ps), not repaired in the view; output
+# hold min delay is set per corner after CTS (vclk_latency.tcl)
+set_false_path -hold -from $ot_in
 # reset release (design intent, rst_mcp2): the wrapper's synchronised reset rst_s[1] fans out to every RTL flop of a
 # 1.4 mm view in one net; release is allowed 2 cycles to reach every flop (the die holds rst >= 3 cycles and sends no
 # input valid within 2 cycles of release; every bound block idles until its first input).  Steady-state timing unchanged.
