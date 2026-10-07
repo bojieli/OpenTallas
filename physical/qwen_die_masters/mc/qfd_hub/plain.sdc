@@ -55,5 +55,7 @@ set_input_delay 166.667 -clock fck2 [get_ports {l2_i[*]}]
 set_input_delay 166.667 -clock fck3 [get_ports {l3_i[*]}]
 set_false_path -from [get_ports {rst_n}]
 set_max_fanout 32 [current_design]
-set_load 3.898 [all_outputs]
+# die-wire context (r21 die STA): one <= 430.56 um hop + receiver pin
+set_load 80 [all_outputs]
+set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]

@@ -67,7 +67,9 @@ module tb_rom_oneshot_allreduce #(
                 go <= rst_n && (cyc >= 20 + SKEW * g) && ((rnd % 100) >= GAP);
                 if (iv[g] && ir[g]) begin
                     if (first < 0) first = cyc;
-                    if (w == WORDS - 1) begin w = 0; m = m + 1; end else w = w + 1;
+                    // non-blocking: a DUT that samples in_data at this edge (MARGIN pin registers) must see the
+                    // word it was offered, whatever the simulator's process order
+                    if (w == WORDS - 1) begin w <= 0; m <= m + 1; end else w <= w + 1;
                 end
             end
             reg [FW-1:0] word;

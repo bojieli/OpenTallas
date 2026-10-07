@@ -41,5 +41,7 @@ set_input_delay 166.667 -clock ckd [get_ports {i_seq_coll_v i_seq_coll[*]}]
 set_output_delay 166.667 -clock ckd [get_ports {i_seq_coll_cr fault_ckd}]
 set_false_path -from [get_ports rst_n]
 set_max_fanout 32 [current_design]
-set_load 3.898 [all_outputs]
+# die-wire context (r21 die STA): one <= 430.56 um hop + receiver pin
+set_load 80 [all_outputs]
+set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]

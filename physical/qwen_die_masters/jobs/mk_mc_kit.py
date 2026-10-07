@@ -70,7 +70,7 @@ K.mkdir(parents=True, exist_ok=True)
 shutil.copy(D / "repair_budget.tcl", K / "repair_budget.tcl")
 (K / "plain.sdc").write_text("\n".join([f"# {a.master}: multi-clock kit (jobs/mk_mc_kit.py); route over-constrained at 770 ps"]
                                        + clocks(770) + cross(770) + plainio() +
-                                       ["set_max_fanout 32 [current_design]", "set_load 3.898 [all_outputs]",
+                                       ["set_max_fanout 32 [current_design]", "# die-wire context (r21 die STA): one <= 430.56 um hop + receiver pin", "set_load 80 [all_outputs]", "set_input_transition 150 [all_inputs -no_clocks]",
                                         "set_max_transition 260 [current_design]"]) + "\n")
 (K / "io_plain.sdc").write_text("\n".join(["unset_input_delay [all_inputs]", "unset_output_delay [all_outputs]"] + plainio()) + "\n")
 (K / "io_ref_skew.sdc").write_text("\n".join(ref) + "\n")
